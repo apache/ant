@@ -166,7 +166,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      *
      * @param response The auto response value.
      */
-    public void setAutoresponse(String response){
+    public void setAutoresponse(String response) {
         super.setInternalAutoResponse(response);
     }
 
@@ -175,7 +175,7 @@ public class MSVSSCHECKOUT extends MSVSS {
      *
      * @param timestamp     The file time stamping behaviour.
      */
-    public void setFileTimeStamp(CurrentModUpdated timestamp){
+    public void setFileTimeStamp(CurrentModUpdated timestamp) {
         super.setInternalFileTimeStamp(timestamp);
     }
 

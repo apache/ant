@@ -460,7 +460,7 @@ public abstract class Definer extends Task {
     /**
      * Set the classname of the class that the definition
      * must be compatible with, either directly or
-     * by use of the adapeter class.
+     * by use of the adapter class.
      *
      * @param adaptTo the name of the adaptto class
      */

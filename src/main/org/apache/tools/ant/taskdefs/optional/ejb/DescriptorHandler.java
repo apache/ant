@@ -164,7 +164,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             // resolve relative to project basedir
             fileDTD = owningTask.getProject().resolveFile(location);
         }
-        
+
         if (fileDTD.exists()) {
             if (publicId != null) {
                 fileDTDs.put(publicId, fileDTD);
@@ -341,7 +341,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
 
     protected void processElement() {
-        if (inEJBRef || 
+        if (inEJBRef ||
             (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION && parseState != STATE_IN_MESSAGE)) {
             return;
         }

@@ -99,14 +99,14 @@ public class FieldRefCPInfo extends ConstantPoolEntry {
      *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        ClassCPInfo fieldClass 
+        ClassCPInfo fieldClass
             = (ClassCPInfo) constantPool.getEntry(classIndex);
 
         fieldClass.resolve(constantPool);
 
         fieldClassName = fieldClass.getClassName();
 
-        NameAndTypeCPInfo nt 
+        NameAndTypeCPInfo nt
             = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
 
         nt.resolve(constantPool);
@@ -126,10 +126,10 @@ public class FieldRefCPInfo extends ConstantPoolEntry {
         String value;
 
         if (isResolved()) {
-            value = "Field : Class = " + fieldClassName + ", name = " 
+            value = "Field : Class = " + fieldClassName + ", name = "
                 + fieldName + ", type = " + fieldType;
         } else {
-            value = "Field : Class index = " + classIndex 
+            value = "Field : Class index = " + classIndex
                 + ", name and type index = " + nameAndTypeIndex;
         }
 

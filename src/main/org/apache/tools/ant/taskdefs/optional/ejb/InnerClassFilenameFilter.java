@@ -68,7 +68,7 @@ public class InnerClassFilenameFilter implements FilenameFilter {
     }
 
     public boolean accept (File Dir, String filename){
-        if ((filename.lastIndexOf(".") != filename.lastIndexOf(".class")) 
+        if ((filename.lastIndexOf(".") != filename.lastIndexOf(".class"))
             || (filename.indexOf(baseClassName + "$") != 0)) {
             return false;
         }

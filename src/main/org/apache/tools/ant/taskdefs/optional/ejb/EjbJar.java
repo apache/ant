@@ -464,7 +464,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Gets the destination directory.
-     * 
+     *
      * @return destination directory
      * @since ant 1.6
      */
@@ -488,7 +488,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Gets the CMP version.
-     * 
+     *
      * @return CMP version
      * @since ant 1.6
      */
@@ -498,7 +498,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Sets the CMP version.
-     * 
+     *
      * @param version CMP version.
      * Must be either <code>1.0</code> or <code>2.0</code>.<br/>
      * Default is <code>1.0</code>.<br/>

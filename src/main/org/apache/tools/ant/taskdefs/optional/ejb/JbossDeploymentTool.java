@@ -83,7 +83,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
     public void setSuffix(String inString) {
         jarSuffix = inString;
     }
-    
+
     /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.

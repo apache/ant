@@ -67,11 +67,11 @@ public interface EJBDeploymentTool {
      * deployment files.
      *
      * @param descriptorFilename the name of the deployment descriptor
-     * @param saxParser a SAX parser which can be used to parse the deployment descriptor. 
+     * @param saxParser a SAX parser which can be used to parse the deployment descriptor.
      */
-    void processDescriptor(String descriptorFilename, SAXParser saxParser) 
+    void processDescriptor(String descriptorFilename, SAXParser saxParser)
         throws BuildException;
-    
+
     /**
      * Called to validate that the tool parameters have been configured.
      *
@@ -82,9 +82,9 @@ public interface EJBDeploymentTool {
      * Set the task which owns this tool
      */
     void setTask(Task task);
-    
+
     /**
      * Configure this tool for use in the ejbjar task.
      */
-    void configure(EjbJar.Config config);     
+    void configure(EjbJar.Config config);
 }

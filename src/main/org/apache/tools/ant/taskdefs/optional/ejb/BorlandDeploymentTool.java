@@ -418,7 +418,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         //debug ?
         if (java2iiopdebug) {
             commandline.createArgument().setValue("-VBJdebug");
-        } 
+        }
         //set the classpath
         commandline.createArgument().setValue("-VBJclasspath");
         commandline.createArgument().setPath(getCombinedClasspath());
@@ -426,12 +426,12 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         commandline.createArgument().setValue("-list_files");
         //no TIE classes
         commandline.createArgument().setValue("-no_tie");
-        
+
         if ( java2iioparams != null) {
             log("additional  "+java2iioparams +" to java2iiop " ,0);
-            commandline.createArgument().setValue(java2iioparams);            
+            commandline.createArgument().setValue(java2iioparams);
         }
-        
+
 
         //root dir
         commandline.createArgument().setValue("-root_dir");
@@ -441,7 +441,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         //add the home class
         while (ithomes.hasNext()) {
             commandline.createArgument().setValue(ithomes.next().toString());
-        } 
+        }
 
         try {
             log("Calling java2iiop", Project.MSG_VERBOSE);
@@ -476,8 +476,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                 String home = toClass(clazz);
                 homes.add(home);
                 log(" Home " + home, Project.MSG_VERBOSE);
-            } 
-        } 
+            }
+        }
 
         buildBorlandStubs(homes.iterator());
 
@@ -537,8 +537,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                     String classfile = toClassFile(javafile);
                     String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length() + 1);
                     _genfiles.put(key, new File(classfile));
-                } 
-            } 
+                }
+            }
             reader.close();
         } catch (Exception e) {
             String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
@@ -551,7 +551,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         String s = reader.readLine();
         if (s != null) {
             log("[java2iiop] " + s, Project.MSG_ERR);
-        } 
+        }
     }
 }
 

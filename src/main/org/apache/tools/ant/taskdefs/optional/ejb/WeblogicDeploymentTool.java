@@ -579,9 +579,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 javaTask.createArg().setValue("-keepgenerated");
             }
             if (compiler == null) {
-                // try to use the compiler specified by build.compiler. 
+                // try to use the compiler specified by build.compiler.
                 // Right now we are just going to allow Jikes
-                String buildCompiler 
+                String buildCompiler
                     = getTask().getProject().getProperty("build.compiler");
 
                 if (buildCompiler != null && buildCompiler.equals("jikes")) {
@@ -628,7 +628,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling " + ejbcClassName 
+            String msg = "Exception while calling " + ejbcClassName
                 + ". Details: " + e.toString();
 
             throw new BuildException(msg, e);

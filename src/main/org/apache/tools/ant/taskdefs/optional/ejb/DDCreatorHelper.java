@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,10 +68,10 @@ import javax.ejb.deployment.DeploymentDescriptor;
  */
 public class DDCreatorHelper {
     /**
-     * The root directory of the tree containing the textual deployment desciptors. 
+     * The root directory of the tree containing the textual deployment desciptors.
      */
     private File descriptorDirectory;
-    
+
     /**
      * The directory where generated serialised desployment descriptors are written.
      */
@@ -80,19 +80,19 @@ public class DDCreatorHelper {
     /**
      * The descriptor text files for which a serialised descriptor is to be created.
      */
-    String[] descriptors; 
+    String[] descriptors;
 
     /**
      * The main method.
      *
-     * The main method creates an instance of the DDCreatorHelper, passing it the 
+     * The main method creates an instance of the DDCreatorHelper, passing it the
      * args which it then processes.
-     */    
+     */
     public static void main(String[] args) throws Exception {
         DDCreatorHelper helper = new DDCreatorHelper(args);
         helper.process();
     }
-  
+
     /**
      * Initialise the helper with the command arguments.
      *
@@ -101,20 +101,20 @@ public class DDCreatorHelper {
         int index = 0;
         descriptorDirectory = new File(args[index++]);
         generatedFilesDirectory = new File(args[index++]);
-        
+
         descriptors = new String[args.length - index];
         for (int i = 0; index < args.length; ++i) {
             descriptors[i] = args[index++];
         }
     }
-    
+
     /**
      * Do the actual work.
      *
      * The work proceeds by examining each descriptor given. If the serialised
      * file does not exist or is older than the text description, the weblogic
      * DDCreator tool is invoked directly to build the serialised descriptor.
-     */    
+     */
     private void process() throws Exception {
         for (int i = 0; i < descriptors.length; ++i) {
             String descriptorName = descriptors[i];
@@ -128,12 +128,12 @@ public class DDCreatorHelper {
                 serName = descriptorName + ".ser";
             }
             File serFile = new File(generatedFilesDirectory, serName);
-                
+
             // do we need to regenerate the file
             if (!serFile.exists() || serFile.lastModified() < descriptorFile.lastModified()
                 || regenerateSerializedFile(serFile)) {
-                
-                String[] args = {"-noexit", 
+
+                String[] args = {"-noexit",
                                  "-d", serFile.getParent(),
                                  "-outputfile", serFile.getName(),
                                  descriptorFile.getPath()};
@@ -168,8 +168,8 @@ public class DDCreatorHelper {
             return false;
 
         } catch (Exception e) {
-            
-            // Weblogic will throw an error if the deployment descriptor does 
+
+            // Weblogic will throw an error if the deployment descriptor does
             // not match the class files.
             return true;
 

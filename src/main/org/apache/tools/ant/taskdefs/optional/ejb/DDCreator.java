@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,19 +76,19 @@ public class DDCreator extends MatchingTask {
      * on the EJBC task, as supported by the MatchingTask superclass.
      */
     private File descriptorDirectory;
-    
+
     /**
      * The directory where generated serialised deployment descriptors are placed.
      */
     private File generatedFilesDirectory;
-        
+
     /**
      * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
-     * classes necessary fro DDCreator <b>and</b> the implementation classes of the 
+     * classes necessary fro DDCreator <b>and</b> the implementation classes of the
      * home and remote interfaces.
      */
     private String classpath;
-    
+
     /**
      * Do the work.
      *
@@ -103,26 +103,26 @@ public class DDCreator extends MatchingTask {
     public void execute() throws BuildException {
         if (descriptorDirectory == null ||
             !descriptorDirectory.isDirectory()) {
-            throw new BuildException("descriptors directory " + descriptorDirectory.getPath() + 
+            throw new BuildException("descriptors directory " + descriptorDirectory.getPath() +
                                      " is not valid");
         }
         if (generatedFilesDirectory == null ||
             !generatedFilesDirectory.isDirectory()) {
-            throw new BuildException("dest directory " + generatedFilesDirectory.getPath() + 
+            throw new BuildException("dest directory " + generatedFilesDirectory.getPath() +
                                      " is not valid");
         }
-                                    
+
         String args = descriptorDirectory + " " + generatedFilesDirectory;
-            
+
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner(descriptorDirectory);
-    
+
         String[] files = ds.getIncludedFiles();
 
         for (int i = 0; i < files.length; ++i) {
             args += " " + files[i];
         }
-            
+
         String systemClassPath = System.getProperty("java.class.path");
         String execClassPath = getProject().translatePath(systemClassPath + ":" + classpath);
         Java ddCreatorTask = (Java) getProject().createTask("java");
@@ -132,7 +132,7 @@ public class DDCreator extends MatchingTask {
         Commandline.Argument arguments = ddCreatorTask.createArg();
         arguments.setLine(args);
         ddCreatorTask.setClasspath(new Path(getProject(), execClassPath));
-        if (ddCreatorTask.executeJava() != 0) {                         
+        if (ddCreatorTask.executeJava() != 0) {
             throw new BuildException("Execution of ddcreator helper failed");
         }
     }
@@ -146,7 +146,7 @@ public class DDCreator extends MatchingTask {
     public void setDescriptors(String dirName) {
         descriptorDirectory = new File(dirName);
     }
-    
+
     /**
      * Set the directory into which the serialized deployment descriptors are to
      * be written.

@@ -80,14 +80,14 @@ import org.apache.tools.ant.util.FileUtils;
 public class AntClassLoader2 extends AntClassLoader {
     /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
-    
+
     /**
      * Constructor
      */
     public AntClassLoader2() {
         fileUtils = FileUtils.newFileUtils();
     }
-    
+
     /**
      * Define a class given its bytes
      *
@@ -107,11 +107,11 @@ public class AntClassLoader2 extends AntClassLoader {
         definePackage(container, className);
         return defineClass(className, classData, 0, classData.length,
                            Project.class.getProtectionDomain());
-                                            
+
     }
 
     /**
-     * Get the manifest from the given jar, if it is indeed a jar and it has a 
+     * Get the manifest from the given jar, if it is indeed a jar and it has a
      * manifest
      *
      * @param container the File from which a manifest is required.
@@ -135,50 +135,50 @@ public class AntClassLoader2 extends AntClassLoader {
             }
         }
     }
-                
+
     /**
      * Define the package information associated with a class.
      *
      * @param container the file containing the class definition.
      * @param className the class name of for which the package information
      *        is to be determined.
-     * 
+     *
      * @exception IOException if the package information cannot be read from the
      *            container.
-     */                
-    protected void definePackage(File container, String className) 
+     */
+    protected void definePackage(File container, String className)
         throws IOException {
         int classIndex = className.lastIndexOf('.');
         if (classIndex == -1) {
             return;
         }
-        
+
         String packageName = className.substring(0, classIndex);
         if (getPackage(packageName) != null) {
-            // already defined 
+            // already defined
             return;
         }
-        
-        // define the package now 
+
+        // define the package now
         Manifest manifest = getJarManifest(container);
-        
+
         if (manifest == null) {
-            definePackage(packageName, null, null, null, null, null, 
+            definePackage(packageName, null, null, null, null, null,
                           null, null);
         } else {
             definePackage(container, packageName, manifest);
         }
     }
-    
+
     /**
-     * Define the package information when the class comes from a 
+     * Define the package information when the class comes from a
      * jar with a manifest
      *
      * @param container the jar file containing the manifest
      * @param packageName the name of the package being defined.
      * @param manifest the jar's manifest
      */
-    protected void definePackage(File container, String packageName, 
+    protected void definePackage(File container, String packageName,
                                  Manifest manifest) {
         String sectionName = packageName.replace('.', '/') + "/";
 
@@ -190,57 +190,57 @@ public class AntClassLoader2 extends AntClassLoader {
         String implementationVersion = null;
         String sealedString = null;
         URL sealBase = null;
-        
+
         Attributes sectionAttributes = manifest.getAttributes(sectionName);
         if (sectionAttributes != null) {
-            specificationTitle   
+            specificationTitle
                 = sectionAttributes.getValue(Name.SPECIFICATION_TITLE);
-            specificationVendor   
+            specificationVendor
                 = sectionAttributes.getValue(Name.SPECIFICATION_VENDOR);
-            specificationVersion   
+            specificationVersion
                 = sectionAttributes.getValue(Name.SPECIFICATION_VERSION);
-            implementationTitle   
+            implementationTitle
                 = sectionAttributes.getValue(Name.IMPLEMENTATION_TITLE);
-            implementationVendor   
+            implementationVendor
                 = sectionAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
-            implementationVersion   
+            implementationVersion
                 = sectionAttributes.getValue(Name.IMPLEMENTATION_VERSION);
-            sealedString   
+            sealedString
                 = sectionAttributes.getValue(Name.SEALED);
         }
-        
+
         Attributes mainAttributes = manifest.getMainAttributes();
         if (mainAttributes != null) {
             if (specificationTitle == null) {
-                specificationTitle   
+                specificationTitle
                     = mainAttributes.getValue(Name.SPECIFICATION_TITLE);
             }
             if (specificationVendor == null) {
-                specificationVendor   
+                specificationVendor
                     = mainAttributes.getValue(Name.SPECIFICATION_VENDOR);
             }
             if (specificationVersion == null) {
-                specificationVersion   
+                specificationVersion
                     = mainAttributes.getValue(Name.SPECIFICATION_VERSION);
             }
             if (implementationTitle == null) {
-                implementationTitle   
+                implementationTitle
                     = mainAttributes.getValue(Name.IMPLEMENTATION_TITLE);
             }
             if (implementationVendor == null) {
-                implementationVendor   
+                implementationVendor
                     = mainAttributes.getValue(Name.IMPLEMENTATION_VENDOR);
             }
             if (implementationVersion == null) {
-                implementationVersion   
+                implementationVersion
                     = mainAttributes.getValue(Name.IMPLEMENTATION_VERSION);
             }
             if (sealedString == null) {
-                sealedString   
+                sealedString
                     = mainAttributes.getValue(Name.SEALED);
             }
         }
-        
+
         if (sealedString != null && sealedString.equalsIgnoreCase("true")) {
             try {
                 sealBase = new URL("file:" + container.getPath());
@@ -248,15 +248,15 @@ public class AntClassLoader2 extends AntClassLoader {
                 // ignore
             }
         }
-        
-        definePackage(packageName, specificationTitle, specificationVersion, 
-                      specificationVendor, implementationTitle, 
+
+        definePackage(packageName, specificationTitle, specificationVersion,
+                      specificationVendor, implementationTitle,
                       implementationVersion, implementationVendor, sealBase);
     }
-    
-    
+
+
     /**
-     * Add a file to the path. This classloader reads the manifest, if 
+     * Add a file to the path. This classloader reads the manifest, if
      * available, and adds any additional class path jars specified in the
      * manifest.
      *
@@ -267,29 +267,29 @@ public class AntClassLoader2 extends AntClassLoader {
      */
     protected void addPathFile(File pathComponent) throws IOException {
         super.addPathFile(pathComponent);
-        
+
         if (pathComponent.isDirectory()) {
             return;
         }
-        
+
         String classpath = null;
         ZipFile jarFile = null;
         InputStream manifestStream = null;
         try {
             jarFile = new ZipFile(pathComponent);
-            manifestStream 
+            manifestStream
                 = jarFile.getInputStream(new ZipEntry("META-INF/MANIFEST.MF"));
 
             if (manifestStream == null) {
                 return;
-            }                
-            Reader manifestReader 
+            }
+            Reader manifestReader
                 = new InputStreamReader(manifestStream, "UTF-8");
             org.apache.tools.ant.taskdefs.Manifest manifest
                 = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
-            classpath 
+            classpath
                 = manifest.getMainSection().getAttributeValue("Class-Path");
-               
+
         } catch (org.apache.tools.ant.taskdefs.ManifestException e) {
             // ignore
         } finally {
@@ -300,7 +300,7 @@ public class AntClassLoader2 extends AntClassLoader {
                 jarFile.close();
             }
         }
-        
+
         if (classpath != null) {
             URL baseURL = fileUtils.getFileURL(pathComponent);
             StringTokenizer st = new StringTokenizer(classpath);
@@ -308,7 +308,7 @@ public class AntClassLoader2 extends AntClassLoader {
                 String classpathElement = st.nextToken();
                 URL libraryURL = new URL(baseURL, classpathElement);
                 if (!libraryURL.getProtocol().equals("file")) {
-                    log("Skipping jar library " + classpathElement 
+                    log("Skipping jar library " + classpathElement
                         + " since only relative URLs are supported by this"
                         + " loader", Project.MSG_VERBOSE);
                     continue;
