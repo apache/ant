@@ -14,6 +14,8 @@ enhancements of existing tasks.
 * unify multiple similar tasks to use similar forms (ie all the javacc
   type tools)
 
+* Obfuscating task
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
@@ -165,3 +167,10 @@ V. Things we probably don't agree on.
 
 * allow build file writers to modify logging (verbosity for example)
   on a target by target or task by task basis.
+
+* Simple flow control (if-then-else, for)
+
+  Either in core or - with the help of something like the Thomas
+  Christen's proposal
+  <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2> 
+  as tasks.
