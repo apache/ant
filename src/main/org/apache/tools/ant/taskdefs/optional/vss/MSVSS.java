@@ -63,8 +63,8 @@ import java.io.File;
  * A base class for creating tasks for executing commands on Visual SourceSafe.
  * <p>
  * The class extends the 'exec' task as it operates by executing the ss.exe program
- * supplied with SourceSafe. You will need to have ss.exe in your PATH to use this
- * task.
+ * supplied with SourceSafe. By default the task expects ss.exe to be in the path,
+ * you can override this be specifying the ssdir attribute.
  * </p>
  * <p>
  * This class provides set and get methods for 'login' and 'vsspath' attributes. It
@@ -76,8 +76,31 @@ import java.io.File;
  */
 public abstract class MSVSS extends Exec {
 
+    private String m_SSDir = "";
     private String m_vssLogin = null;
     private String m_vssPath = null;
+
+    /**
+     * Set the directory where ss.exe is located
+     *
+     * @param dir the directory containing ss.exe
+     */
+    public final void setSsdir(String dir) {
+        m_SSDir = project.translatePath(dir);
+    }
+    
+    /**
+     * Builds and returns the command string to execute ss.exe
+     */
+    public final String getSSCommand() {
+        String toReturn = m_SSDir;
+        if ( !toReturn.equals("") && !toReturn.endsWith("\\") ) {
+            toReturn += "\\";
+        }
+        toReturn += SS_EXE;
+        
+        return toReturn;
+    }
 
     /**
      * Set the login to use when accessing vss.
@@ -128,7 +151,7 @@ public abstract class MSVSS extends Exec {
     /**
      * Constant for the thing to execute
      */
-    public static final String SS_EXE = "ss";
+    private static final String SS_EXE = "ss";
 	/** */
     public static final String PROJECT_PREFIX = "$";
 

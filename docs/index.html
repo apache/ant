@@ -3704,42 +3704,48 @@ The following attributes are interpretted:
      <td>login</td>
      <td>username,password</td>
      <td>No</td>
-  <tr>
+  </tr>
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path</td>
      <td>Yes</td>
-  <tr>
+  </tr>
   <tr>
      <td>localpath</td>
      <td>Override the working directory and get to the specified path</td>
      <td>No</td>
-  <tr>
+  </tr>
   <tr>
      <td>writable</td>
      <td>true or false</td>
      <td>No</td>
-  <tr>
+  </tr>
   <tr>
      <td>recursive</td>
      <td>true or false</td>
      <td>No</td>
-  <tr>
+  </tr>
   <tr>
      <td>version</td>
      <td>a version number to get</td>
      <td>No</td>
-  <tr>
+  </tr>
   <tr>
      <td>date</td>
      <td>a date stamp to get at</td>
      <td>No</td>
-  <tr>
+  </tr>
   <tr>
      <td>label</td>
      <td>a label to get for</td>
      <td>No</td>
+  </tr>
   <tr>
+     <td>ssdir</td>
+     <td>directory where <code>ss.exe</code> resides. By default the
+     task expects it to be in the PATH.</td>
+     <td>No</td>
+  </tr>
 </table>
 <p>Note that only one of version, date or label should be specified</p>
 <h3>Examples</h3>

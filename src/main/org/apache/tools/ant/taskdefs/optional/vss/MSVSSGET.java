@@ -144,7 +144,7 @@ public class MSVSSGET extends MSVSS {
         // build the command line from what we got the format is
         // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
         // as specified in the SS.EXE help
-        commandLine.append(SS_EXE).append(' ').append(COMMAND_GET);
+        commandLine.append(getSSCommand()).append(' ').append(COMMAND_GET);
 
         // VSS items
         commandLine.append(getVsspath());
