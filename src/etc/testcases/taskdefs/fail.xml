@@ -10,4 +10,12 @@
     <fail message="test"/>
   </target>
 
+  <target name="testIf">
+    <fail if="foo" />
+  </target>
+
+  <target name="testUnless">
+    <fail unless="foo" />
+  </target>
+
 </project>

@@ -121,6 +121,9 @@ Other changes:
   <antcall> unless a reference of the same name already exists in the
   subbuild or inheritall has been set to false.
 
+* <fail> no supports builds to fail based on conditions via if and
+  unless attributes.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

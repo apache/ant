@@ -66,16 +66,27 @@ import org.apache.tools.ant.ProjectHelper;
  */
 public class Exit extends Task { 
     private String message;
+    private String ifCondition, unlessCondition;
     
     public void setMessage(String value) { 
         this.message = value;
     }
     
+    public void setIf(String c) {
+        ifCondition = c;
+    }
+
+    public void setUnless(String c) {
+        unlessCondition = c;
+    }
+
     public void execute() throws BuildException {
-        if (message != null && message.length() > 0) { 
-            throw new BuildException(message);
-        } else {
-            throw new BuildException("No message");
+        if (testIfCondition() && testUnlessCondition()) {
+            if (message != null && message.length() > 0) { 
+                throw new BuildException(message);
+            } else {
+                throw new BuildException("No message");
+            }
         }
     }
 
@@ -85,6 +96,21 @@ public class Exit extends Task {
     public void addText(String msg) {
         message += 
             ProjectHelper.replaceProperties(project, msg);
+    }
+
+    private boolean testIfCondition() {
+        if (ifCondition == null || "".equals(ifCondition)) {
+            return true;
+        }
+        
+        return project.getProperty(ifCondition) != null;
+    }
+
+    private boolean testUnlessCondition() {
+        if (unlessCondition == null || "".equals(unlessCondition)) {
+            return true;
+        }
+        return project.getProperty(unlessCondition) == null;
     }
 
 }

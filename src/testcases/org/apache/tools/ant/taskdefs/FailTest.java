@@ -54,10 +54,12 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public class FailTest extends BuildFileTest { 
     
@@ -75,5 +77,26 @@ public class FailTest extends BuildFileTest {
 
     public void test2() { 
         expectBuildException("test2", "it is required to fail :-)");
+    }
+
+    public void testIf() {
+        try {
+            executeTarget("testIf");
+        } catch (BuildException be) {
+            fail("foo has not been defined, testIf must not fail");
+        }
+        project.setProperty("foo", "");
+        expectBuildException("testIf", "testIf must fail if foo has been set");
+    }
+
+    public void testUnless() {
+        expectBuildException("testUnless", 
+                             "testUnless must fail unless foo has been set");
+        project.setProperty("foo", "");
+        try {
+            executeTarget("testUnless");
+        } catch (BuildException be) {
+            fail("foo has been defined, testUnless must not fail");
+        }
     }
 }
