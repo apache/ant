@@ -79,6 +79,9 @@ Fixed bugs:
 * "<rmic> always compiles on Java1.5" bugzilla report=33862. Fixed default
   stub version to always be "compat", even on Java1.5+. 
 
+* The .NET compilation tasks failed if filenames given as references
+  contained spaces.  Bugzilla Report 27170.
+
 Other changes:
 --------------
 
@@ -304,9 +307,6 @@ Other changes:
 
 * <csc>'s extraoptions can now contain multiple arguments.
   Bugzilla Report 23599.
-
-* The .NET compilation tasks failed if filenames given as references
-  contained spaces.  Bugzilla Report 27170.
 
 * <macrodef> with default values set by properties would be
   seen as new definitions when called twice with different properties.
