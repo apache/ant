@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -136,6 +136,7 @@ public class Checksum extends MatchingTask implements Condition {
 
     /**
      * Sets the file for which the checksum is to be calculated.
+     * @param file a <code>File</code> value
      */
     public void setFile(File file) {
         this.file = file;
@@ -144,7 +145,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the root directory where checksum files will be
      * written/read
-     *
+     * @param todir the directory to write to
      * @since Ant 1.6
      */
     public void setTodir(File todir) {
@@ -154,6 +155,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Specifies the algorithm to be used to compute the checksum.
      * Defaults to "MD5". Other popular algorithms like "SHA" may be used as well.
+     * @param algorithm a <code>String</code> value
      */
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;
@@ -162,6 +164,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the MessageDigest algorithm provider to be used
      * to calculate the checksum.
+     * @param provider a <code>String</code> value
      */
     public void setProvider(String provider) {
         this.provider = provider;
@@ -170,6 +173,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the file extension that is be to used to
      * create or identify destination file.
+     * @param fileext a <code>String</code> value
      */
     public void setFileext(String fileext) {
         this.fileext = fileext;
@@ -177,6 +181,7 @@ public class Checksum extends MatchingTask implements Condition {
 
     /**
      * Sets the property to hold the generated checksum.
+     * @param property a <code>String</code> value
      */
     public void setProperty(String property) {
         this.property = property;
@@ -185,6 +190,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the property to hold the generated total checksum
      * for all files.
+     * @param totalproperty a <code>String</code> value
      *
      * @since Ant 1.6
      */
@@ -195,6 +201,7 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the verify property.  This project property holds
      * the result of a checksum verification - "true" or "false"
+     * @param verifyProperty a <code>String</code> value
      */
     public void setVerifyproperty(String verifyProperty) {
         this.verifyProperty = verifyProperty;
@@ -204,6 +211,7 @@ public class Checksum extends MatchingTask implements Condition {
      * Whether or not to overwrite existing file irrespective of
      * whether it is newer than
      * the source file.  Defaults to false.
+     * @param forceOverwrite a <code>boolean</code> value
      */
     public void setForceOverwrite(boolean forceOverwrite) {
         this.forceOverwrite = forceOverwrite;
@@ -211,6 +219,7 @@ public class Checksum extends MatchingTask implements Condition {
 
     /**
      * The size of the read buffer to use.
+     * @param size an <code>int</code> value
      */
     public void setReadBufferSize(int size) {
         this.readBufferSize = size;
@@ -218,6 +227,7 @@ public class Checksum extends MatchingTask implements Condition {
 
     /**
      * Select the in/output pattern via a well know format name.
+     * @param e an <code>enumerated</code> value
      *
      * @since 1.7.0
      */
@@ -229,6 +239,7 @@ public class Checksum extends MatchingTask implements Condition {
      * Specify the pattern to use as a MessageFormat pattern.
      *
      * <p>{0} gets replaced by the checksum, {1} by the filename.</p>
+     * @param p a <code>String</code> value
      *
      * @since 1.7.0
      */
@@ -238,6 +249,7 @@ public class Checksum extends MatchingTask implements Condition {
 
     /**
      * Files to generate checksums for.
+     * @param set a fileset of files to generate checksums for.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -245,13 +257,15 @@ public class Checksum extends MatchingTask implements Condition {
 
     /**
      * Calculate the checksum(s).
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         isCondition = false;
         boolean value = validateAndExecute();
         if (verifyProperty != null) {
-            getProject().setNewProperty(verifyProperty,
-                                        new Boolean(value).toString());
+            getProject().setNewProperty(
+                verifyProperty,
+                (value ? Boolean.TRUE.toString() : Boolean.FALSE.toString()));
         }
     }
 
@@ -260,6 +274,7 @@ public class Checksum extends MatchingTask implements Condition {
      *
      * @return Returns true if the checksum verification test passed,
      * false otherwise.
+     * @throws BuildException on error
      */
     public boolean eval() throws BuildException {
         isCondition = true;
@@ -295,7 +310,7 @@ public class Checksum extends MatchingTask implements Condition {
         if (property != null) {
             if (forceOverwrite) {
                 throw new BuildException(
-                                         "ForceOverwrite cannot be used when Property is specified");
+                    "ForceOverwrite cannot be used when Property is specified");
             }
 
             if (file != null) {
@@ -453,7 +468,7 @@ public class Checksum extends MatchingTask implements Condition {
                 DigestInputStream dis = new DigestInputStream(fis,
                                                               messageDigest);
                 while (dis.read(buf, 0, readBufferSize) != -1) {
-                    ;
+                    // Empty statement
                 }
                 dis.close();
                 fis.close();
@@ -566,6 +581,9 @@ public class Checksum extends MatchingTask implements Condition {
      * number of elements.
      *
      * NOTE: This code is copied from jakarta-commons codec.
+     * @param data an array of characters representing hexadecimal values
+     * @return the converted array of bytes
+     * @throws BuildException on error
      */
     public static byte[] decodeHex(char[] data) throws BuildException {
         int l = data.length;
@@ -632,20 +650,33 @@ public class Checksum extends MatchingTask implements Condition {
             formatMap.put(SVF, new MessageFormat("MD5 ({1}) = {0}"));
         }
 
+        /** Constructor for FormatElement */
         public FormatElement() {
             super();
         }
 
+        /**
+         * Get the default value - CHECKSUM.
+         * @return the defaul value.
+         */
         public static FormatElement getDefault() {
             FormatElement e = new FormatElement();
             e.setValue(CHECKSUM);
             return e;
         }
 
+        /**
+         * Convert this enumerated type to a <code>MessageFormat</code>.
+         * @return a <code>MessageFormat</code> object.
+         */
         public MessageFormat getFormat() {
             return (MessageFormat) formatMap.get(getValue());
         }
 
+        /**
+         * Get the valid values.
+         * @return an array of values.
+         */
         public String[] getValues() {
             return new String[] {CHECKSUM, MD5SUM, SVF};
         }
