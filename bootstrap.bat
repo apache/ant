@@ -37,7 +37,7 @@ rem Copy all the property/manifest files into the temp directory
 echo ** BUILDING ANT DISTRIBUTION
 
 rem Build the distribution using the newly compiled classes in the temp directory
-java -classpath "%C%" org.apache.tools.ant.Main jar %1 %2 %3 %4 %5
+java -classpath "%C%" org.apache.tools.ant.Main main %1 %2 %3 %4 %5
 
 echo ** CLEANING UP BUILD DIRECTORIES
 

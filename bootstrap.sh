@@ -18,7 +18,7 @@ javac  -d ${CLASSDIR} ${SRCDIR}/taskdefs/*.java
 cp src/main/org/apache/tools/ant/taskdefs/defaults.properties ${CLASSDIR}/org/apache/tools/ant/taskdefs
 cp src/main/org/apache/tools/ant/parser.properties ${CLASSDIR}/org/apache/tools/ant
 
-java org.apache.tools.ant.Main jar
+java org.apache.tools.ant.Main main
 java org.apache.tools.ant.Main clean 
 
 if ! test -e bin; then mkdir bin; fi
