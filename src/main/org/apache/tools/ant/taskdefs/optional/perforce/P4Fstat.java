@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import java.io.File;
 import java.util.Vector;
 import java.util.ArrayList;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * P4Fstat  - find out which files are under Perforce control and which are not.
+ * P4Fstat--find out which files are under Perforce control and which are not.
  *
  * <br><b>Example Usage:</b><br>
  * <pre>
@@ -72,14 +72,14 @@ public class P4Fstat extends P4Base {
         = "Following files do not exist in perforce";
 
     /**
-     * sets the filter that one wants applied
+     * Sets the filter that one wants applied.
      * <table>
      * <tr><th>Option</th><th>Meaning</th></tr>
      * <tr><td>all</td><td>all files under Perforce control or not</td></tr>
      * <tr><td>existing</td><td>only files under Perforce control</td></tr>
      * <tr><td>non-existing</td><td>only files not under Perforce control or not</td></tr>
      * </table>
-     * @param filter should be one of all|existing|non-existing
+     * @param filter should be one of all|existing|non-existing.
      */
     public void setShowFilter(String filter) {
         if (filter.equalsIgnoreCase("all")) {
@@ -95,38 +95,35 @@ public class P4Fstat extends P4Base {
     }
 
     /**
-     * sets optionally a change list number
-     * @param changelist change list that one wants information about
-     * @throws BuildException if the change list number is negative
+     * Sets optionally a change list number.
+     * @param changelist change list that one wants information about.
+     * @throws BuildException if the change list number is negative.
      */
     public void setChangelist(int changelist) throws BuildException {
         if (changelist <= 0) {
             throw new BuildException("P4FStat: Changelist# should be a "
                 + "positive number");
         }
-
         this.changelist = changelist;
     }
 
     /**
-     * adds a fileset to be examined by p4fstat
-     * @param set the fileset to add
+     * Adds a fileset to be examined by p4fstat.
+     * @param set the fileset to add.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * executes the p4fstat task
-     * @throws BuildException if no files are specified
+     * Executes the p4fstat task.
+     * @throws BuildException if no files are specified.
      */
     public void execute() throws BuildException {
-
         handler = new FStatP4OutputHandler(this);
         if (P4View != null) {
             addCmd = P4View;
         }
-
         P4CmdOpts = (changelist > 0) ? ("-c " + changelist) : "";
 
         filelist = new StringBuffer();
@@ -134,7 +131,6 @@ public class P4Fstat extends P4Base {
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-            //File fromDir = fs.getDir(project);
 
             String[] srcFiles = ds.getIncludedFiles();
             fileNum = srcFiles.length;
@@ -157,29 +153,30 @@ public class P4Fstat extends P4Base {
                 log("No files specified to query status on!", Project.MSG_WARN);
             }
         }
-
         if (show == SHOW_ALL || show == SHOW_EXISTING) {
             printRes(handler.getExisting(), EXISTING_HEADER);
         }
-
         if (show == SHOW_ALL || show == SHOW_NON_EXISTING) {
             printRes(handler.getNonExisting(), NONEXISTING_HEADER);
         }
-
     }
 
     /**
-     * return the number of files seen
-     * @return the number of files seen
+     * Return the number of files seen.
+     * @return the number of files seen.
      */
     public int getLengthOfTask() {
         return fileNum;
     }
 
+    /**
+     * Return the number of passes to make.
+     * IS THIS BEING USED?
+     * @return number of passes (how many filesets).
+     */
     int getPasses() {
         return filesets.size();
     }
-
 
     private void printRes(ArrayList ar, String header) {
         log(header, Project.MSG_INFO);
