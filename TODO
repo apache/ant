@@ -21,8 +21,6 @@ remove items from this list once they are complete.
 
 * gcj support in Path.addJavaRuntime [Stefan]
 
-* toFile attribute in scp [Stefan]
-
 * review claimed AntClassLoader memory leak [Stefan]
 
 * <junitreport> and JDK 1.5 [Stefan hopes that Stephane solves it for

@@ -116,6 +116,26 @@ public class Scp extends SSHBase {
     }
 
     /**
+     * Changes the file name to the given name while receiving it,
+     * only useful if receiving a single file.
+     * @since Ant 1.6.2
+     */
+    public void setLocalTofile(String aToUri) {
+        this.toUri = aToUri;
+        this.isToRemote = false;
+    }
+
+    /**
+     * Changes the file name to the given name while sending it,
+     * only useful if sending a single file.
+     * @since Ant 1.6.2
+     */
+    public void setRemoteTofile(String aToUri) {
+        this.toUri = aToUri;
+        this.isToRemote = true;
+    }
+
+    /**
      * Adds a FileSet tranfer to remote host.  NOTE: Either
      * addFileSet() or setFile() are required.  But, not both.
      *
@@ -137,7 +157,8 @@ public class Scp extends SSHBase {
 
     public void execute() throws BuildException {
         if (toUri == null) {
-            throw new BuildException("The 'todir' attribute is required.");
+            throw new BuildException("Either 'todir' or 'tofile' attribute "
+                                     + "is required.");
         }
 
         if (fromUri == null && fileSets == null) {
