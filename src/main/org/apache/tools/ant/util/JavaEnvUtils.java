@@ -97,7 +97,7 @@ public class JavaEnvUtils {
     /** Version constant for Java 1.4 */
     public static final String JAVA_1_4 = "1.4";
 
-    /** array of packages in the runtime */ 
+    /** array of packages in the runtime */
     private static Vector jrePackages;
 
 
@@ -185,7 +185,7 @@ public class JavaEnvUtils {
             jExecutable = findInDir(javaHome + "/sh", command);
         }
 
-        if (jExecutable == null) { 
+        if (jExecutable == null) {
             jExecutable = findInDir(javaHome + "/bin", command);
         }
 
@@ -225,7 +225,7 @@ public class JavaEnvUtils {
             jExecutable = findInDir(javaHome + "/../sh", command);
         }
 
-        if (jExecutable == null) { 
+        if (jExecutable == null) {
             jExecutable = findInDir(javaHome + "/../bin", command);
         }
 
@@ -284,7 +284,7 @@ public class JavaEnvUtils {
                 jrePackages.addElement("org.w3c.dom");
                 jrePackages.addElement("org.xml.sax");
                 // fall through
-            case 13:    
+            case 13:
                 jrePackages.addElement("org.omg");
                 jrePackages.addElement("com.sun.corba");
                 jrePackages.addElement("com.sun.jndi");
@@ -295,12 +295,12 @@ public class JavaEnvUtils {
                 jrePackages.addElement("sunw.io");
                 jrePackages.addElement("sunw.util");
                 // fall through
-            case 12:    
+            case 12:
                 jrePackages.addElement("com.sun.java");
                 jrePackages.addElement("com.sun.image");
                 // are there any here that we forgot?
                 // fall through
-            case 11:    
+            case 11:
             default:
                 //things like sun.reflection, sun.misc, sun.net
                 jrePackages.addElement("sun");
@@ -311,8 +311,7 @@ public class JavaEnvUtils {
     }
 
     /**
-     * testing helper method; kept here for unification of changes.
-     * @return
+     * Testing helper method; kept here for unification of changes.
      */
     public static Vector getJrePackageTestCases() {
         Vector tests=new Vector();
@@ -354,9 +353,9 @@ public class JavaEnvUtils {
         return tests;
     }
     /**
-     * get a vector of strings of packages built into 
+     * get a vector of strings of packages built into
      * that platforms runtime jar(s)
-     * @return list of packages 
+     * @return list of packages
      */
     public static Vector getJrePackages() {
         if(jrePackages==null) {

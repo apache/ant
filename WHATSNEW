@@ -38,6 +38,10 @@ Fixed bugs:
 
 * the errorsbeginat attribute of the <http> condition didn't work.
 
+* Ant will try to force loading of certain packages like com.sun.*
+  from the system classloader.  The packages are determined by the
+  version of the JVM running Ant.
+
 Other changes:
 --------------
 
