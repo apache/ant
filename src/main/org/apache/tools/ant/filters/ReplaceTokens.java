@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ import java.io.Reader;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Replaces tokens in the original input with user-supplied values.
@@ -304,9 +305,18 @@ public final class ReplaceTokens
                     final String type = params[i].getType();
                     if ("tokenchar".equals(type)) {
                         final String name = params[i].getName();
+                        String value = params[i].getValue();
                         if ("begintoken".equals(name)) {
+                            if (value.length() == 0) {
+                                throw new BuildException("Begin token cannot " 
+                                    + "be empty");
+                            }
                             beginToken = params[i].getValue().charAt(0);
                         } else if ("endtoken".equals(name)) {
+                            if (value.length() == 0) {
+                                throw new BuildException("End token cannot " 
+                                    + "be empty");
+                            }
                             endToken = params[i].getValue().charAt(0);
                         }
                     } else if ("token".equals(type)) {
