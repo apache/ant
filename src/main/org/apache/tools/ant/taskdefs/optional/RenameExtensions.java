@@ -1,6 +1,6 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
@@ -50,7 +50,8 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
+ */
+/*
  * Task to rename files based on extension. This task has the following
  * properties which can be set:
  * <ul>

@@ -1,5 +1,4 @@
-/* ====================================================================
- *
+/*
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
@@ -51,9 +50,6 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
- * [Additional notices, if required by prior licensing conditions]
- *
  */
 package org.apache.tools.ant.taskdefs.optional.pvcs;
 
