@@ -10,11 +10,14 @@
 <h2><a name="telnet">Telnet</a></h2>
 <h3>Description</h3>
 Task to automate a remote telnet session. The task uses 
-nested &lt;read&gt; to indicate strings to wait for, and
-&lt;write&gt; tags to specify text to send.  
+nested <tt>&lt;read&gt;</tt> to indicate strings to wait for, and
+<tt>&lt;write&gt;<tt> tags to specify text to send.  
 
 <p>If you do specify a userid and password, the system will 
 assume a common unix prompt to wait on. This behavior can be easily over-ridden.</p>
+<p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
+See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -102,7 +105,9 @@ This task can be rewritten as:
 &lt;/telnet&gt;
 </pre></blockquote>
 
-A timeout can be specified at the &lt;telnet&gt; level or at the &lt;read&gt; level. This will connect, issue a sleep command that is suppressed from displaying and wait 10 seconds before quitting.
+A timeout can be specified at the &lt;telnet&gt; level or at the &lt;read&gt; level. 
+This will connect, issue a sleep command that is suppressed from displaying and wait 
+10 seconds before quitting.
 <blockquote><pre>
 &lt;telnet userid=&quot;bob&quot; password=&quot;badpass&quot; server=&quot;localhost&quot; timeout=&quot;20&quot;&gt;
    &lt;read&gt;/home/bob&lt;/read&gt;
@@ -120,8 +125,14 @@ The task can be used with other ports as well:
    &lt;read timeout=&quot;10&quot;&gt;&amp;lt;/HTML&amp;gt;&lt;/read&gt;
 &lt;/telnet&gt;
 </pre></blockquote>
+<p>
+To use this task against the WinNT telnet service, you need to configure the service to use 
+classic authentication rather than NTLM negotiated authentication. 
+This can be done in the Telnet Server Admin app: 
+select "display/change registry settings", then "NTLM", then set the value of NTLM to 1.
+</p>
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
