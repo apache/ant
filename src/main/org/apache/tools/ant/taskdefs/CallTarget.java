@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -177,7 +177,7 @@ public class CallTarget extends Task {
      *
      * @since Ant 1.5
      */
-    protected void handleOutput(String line) {
+    public void handleOutput(String line) {
         if (callee != null) {
             callee.handleOutput(line);
         } else {
@@ -190,7 +190,7 @@ public class CallTarget extends Task {
      *
      * @since Ant 1.5
      */
-    protected void handleErrorOutput(String line) {
+    public void handleErrorOutput(String line) {
         if (callee != null) {
             callee.handleErrorOutput(line);
         } else {
