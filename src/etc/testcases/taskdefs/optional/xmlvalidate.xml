@@ -38,14 +38,37 @@
       </xmlcatalog>
     </xmlvalidate>
   </target>
- 
-  <target name="xmlcatalogfiles">
+
+  <!-- The -override tests should pass without resolver.jar -->
+  <target name="xmlcatalogfiles-override">
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="**/about.xml"/>
       <xmlcatalog classpath="xml">
         <catalogfiles dir="xml" includes="catalog"/>
         <dtd publicID="-//stevo//DTD doc 1.0//EN"
              location="doc.dtd"/>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+ 
+  <target name="xmlcatalogpath-override">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogpath>
+          <pathelement location="xml/catalog"/>
+        </catalogpath>
+        <dtd publicID="-//stevo//DTD doc 1.0//EN"
+          location="doc.dtd"/>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
+ 
+  <target name="xmlcatalogfiles">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogfiles dir="xml" includes="catalog"/>
       </xmlcatalog>
     </xmlvalidate>
   </target>
@@ -57,8 +80,6 @@
         <catalogpath>
           <pathelement location="xml/catalog"/>
         </catalogpath>
-        <dtd publicID="-//stevo//DTD doc 1.0//EN"
-          location="doc.dtd"/>
       </xmlcatalog>
     </xmlvalidate>
   </target>

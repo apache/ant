@@ -1530,6 +1530,10 @@
           <exclude name="${optional.package}/XalanLiaisonTest.java"
                    unless="bsf.present"/>
 
+          <!-- needs resolver.jar to work -->
+          <exclude name="${optional.package}/XmlValidateCatalogTest.java"
+                   unless="apache.resolver.present"/>
+
           <!--
           XXX need to figure out what's causing this InvocationTargetException
           -->

@@ -123,6 +123,8 @@ public class ApacheCatalogResolver extends CatalogResolver {
         System.getProperties().put("xml.catalog.className",
                                    ApacheCatalog.class.getName());
 
+        CatalogManager.getStaticManager().setUseStaticCatalog(false);
+
         // debug
         // System.setProperty("xml.catalog.verbosity", "4");
     }

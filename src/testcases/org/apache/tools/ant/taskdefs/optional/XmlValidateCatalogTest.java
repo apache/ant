@@ -60,16 +60,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * Tests the XMLValidate optional task, by running targets in the test script
- * <code>src/etc/testcases/taskdefs/optional/xmlvalidate.xml</code>
- * <p>
+ * Tests the XMLValidate optional task with nested external catalogs.
  *
- * @see XmlValidateCatalogTest
+ * @see XmlValidateTest
  * @author steve loughran
  * @author Jeff Turner
- * @since Ant 1.5
+ * @since Ant 1.6
  */
-public class XmlValidateTest extends BuildFileTest {
+public class XmlValidateCatalogTest extends BuildFileTest {
 
     /**
      * where tasks run
@@ -82,7 +80,7 @@ public class XmlValidateTest extends BuildFileTest {
      *
      * @param name testname
      */
-    public XmlValidateTest(String name) {
+    public XmlValidateCatalogTest(String name) {
         super(name);
     }
 
@@ -102,113 +100,26 @@ public class XmlValidateTest extends BuildFileTest {
 
     }
 
-
     /**
-     * Basic inline 'dtd' element test.
-     */
-    public void testValidate() throws Exception {
-         executeTarget("testValidate");
-    }
-    
-
-    /**
-     * Test indirect validation.
-     */
-    public void testDeepValidate() throws Exception {
-         executeTarget("testDeepValidate");
-    }
-
-    /**
-     *
-     */
-    public void testXmlCatalog() {
-        executeTarget("xmlcatalog");
-    }
-
-    /**
-     * Test that the nested dtd element is used when resolver.jar is not
-     * present.  This test should pass either way.
+     * catalogfiles fileset should be ignored
+     * if resolver.jar is not present, but will 
+     * be used if it is.  either way, test should
+     * work b/c we have a nested dtd with the same
+     * entity
      */
     public void testXmlCatalogFiles() {
-        executeTarget("xmlcatalogfiles-override");
+        executeTarget("xmlcatalogfiles");
     }
 
     /**
      * Test nested catalogpath.
-     * Test that the nested dtd element is used when resolver.jar is not
-     * present.  This test should pass either way.
+     * It should be ignored if resolver.jar is not
+     * present, but will be used if it is.  either
+     * way, test should work b/c we have a nested
+     * dtd with the same entity
      */
     public void testXmlCatalogPath() {
-        executeTarget("xmlcatalogpath-override");
-    }
-
-    /**
-     * Test nested xmlcatalog definitions
-     */
-    public void testXmlCatalogNested() {
-        executeTarget("xmlcatalognested");
-    }
-
-    /**
-     * Test xml schema validation
-     */
-    public void testXmlSchemaGood() throws BuildException {
-        try {
-            executeTarget("testSchemaGood");
-        } catch (BuildException e) {
-            if (e.getMessage()
-                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema") ||
-                e.getMessage()
-                .endsWith(" doesn't support feature http://apache.org/xml/features/validation/schema")) {
-                System.err.println(" skipped, parser doesn't support schema");
-            } else {
-                throw e;
-            }
-        }
-    }
-    /**
-     * Test xml schema validation
-     */
-    public void testXmlSchemaBad() {
-        try {
-            executeTarget("testSchemaBad");
-            fail("Should throw BuildException because 'Bad Schema Validation'");
-
-            expectBuildExceptionContaining("testSchemaBad",
-                                           "Bad Schema Validation", 
-                                           "not a valid XML document");
-        } catch (BuildException e) {
-            if (e.getMessage()
-                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema") ||
-                e.getMessage()
-                .endsWith(" doesn't support feature http://apache.org/xml/features/validation/schema")) {
-                System.err.println(" skipped, parser doesn't support schema");
-            } else {
-                assertTrue(e.getMessage()
-                           .indexOf("not a valid XML document") > -1);
-            }
-        }
-    }
-
-    /**
-     * iso-2022-jp.xml is valid but wouldn't get recognized on systems
-     * with a different native encoding.
-     *
-     * Bug 11279
-     */
-    public void testIso2022Jp() {
-        executeTarget("testIso2022Jp");
-    }
-
-    /**
-     * utf-8.xml is invalid as it contains non-UTF-8 characters, but
-     * would pass on systems with a native iso-8859-1 (or similar)
-     * encoding.
-     *
-     * Bug 11279
-     */
-    public void testUtf8() {
-        expectBuildException("testUtf8", "invalid characters in file");
+        executeTarget("xmlcatalogpath");
     }
 
 }
