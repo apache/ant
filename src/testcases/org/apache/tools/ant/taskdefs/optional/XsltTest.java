@@ -98,12 +98,12 @@ public class XsltTest extends BuildFileTest {
     
     /**
      * A unit test for JUnit
+     */
     public void testCatchNoDtd() throws Exception {
         expectBuildExceptionContaining("testCatchNoDtd",
-                "expected failure",
-                "Fatal error during transformation");
+                                       "expected failure",
+                                       "Fatal error during transformation");
     }
-     */
 
     /**
      * A unit test for JUnit

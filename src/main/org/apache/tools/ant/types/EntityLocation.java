@@ -69,9 +69,4 @@ package org.apache.tools.ant.types;
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
 public class EntityLocation extends ResourceLocation {
-
-    public EntityLocation() {
-        super("URI");
-    }
-
 }

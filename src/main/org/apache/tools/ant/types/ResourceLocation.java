@@ -76,6 +76,9 @@ import java.net.URL;
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
+
+import java.net.URL;
+
 public class ResourceLocation {
 
     //-- Fields ----------------------------------------------------------------
@@ -98,14 +101,10 @@ public class ResourceLocation {
      * for an external catalog file is the directory in which it is
      * located.
      */
-    private String base = null;
+    private URL base = null;
 
     //-- Methods ---------------------------------------------------------------
 
-    protected ResourceLocation(String name) {
-        this.name = name;
-    }
-   
     /**
      * @param publicId uniquely identifies the resource.
      */
@@ -127,7 +126,7 @@ public class ResourceLocation {
      * it is resolved using the base.  The default base for an
      * external catalog file is the directory in which it is located.
      */
-    public void setBase(String base) {
+    public void setBase(URL base) {
         this.base = base;
     }
 
@@ -148,18 +147,8 @@ public class ResourceLocation {
     /**
      * @return the base of the resource identified by the publicId.
      */
-    public String getBase() {
+    public URL getBase() {
         return base;
-    }
-
-    /**
-     * @return the name of the catalog entry type.  Currently this is
-     * one of <code>PUBLIC</code> or <code>URI</code>.
-     * 
-     * @see org.apache.xml.resolver.Catalog
-     */
-    public String getName() {
-        return name;
     }
 
 } //-- ResourceLocation

@@ -132,7 +132,7 @@ public class ApacheCatalog extends Catalog {
                 Debug.message(1, "Internal Error: null ApacheCatalogResolver");
             }
             else {
-                resolver.addPublicEntry(publicid, systemid, base.toExternalForm());
+                resolver.addPublicEntry(publicid, systemid, base);
             }
 
         } else if (type == URI) {
@@ -144,7 +144,7 @@ public class ApacheCatalog extends Catalog {
                 Debug.message(1, "Internal Error: null ApacheCatalogResolver");
             }
             else {
-                resolver.addURIEntry(uri, altURI, base.toExternalForm());
+                resolver.addURIEntry(uri, altURI, base);
             }
 
         }

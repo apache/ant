@@ -65,7 +65,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.DTDLocation;
+import org.apache.tools.ant.types.ResourceLocation;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -248,8 +248,8 @@ public class XMLValidateTask extends Task {
      * This stores the location of a DTD. The DTD is identified
      * by its public Id.
      */
-    public DTDLocation createDTD() {
-        DTDLocation dtdLocation = new DTDLocation();
+    public ResourceLocation createDTD() {
+        ResourceLocation dtdLocation = new ResourceLocation();
         xmlCatalog.addDTD(dtdLocation);
         return dtdLocation;
     }

@@ -70,9 +70,4 @@ package org.apache.tools.ant.types;
  * @version $Id$
  */
 public class DTDLocation extends ResourceLocation {
-
-    public DTDLocation() {
-        super("PUBLIC");
-    }
-
 }

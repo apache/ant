@@ -57,12 +57,12 @@ package org.apache.tools.ant.types.resolver;
 import java.io.IOException;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.tools.ant.BuildException;
 
 import org.apache.tools.ant.types.XMLCatalog;
-import org.apache.tools.ant.types.DTDLocation;
-import org.apache.tools.ant.types.EntityLocation;
+import org.apache.tools.ant.types.ResourceLocation;
 
 import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.CatalogManager;
@@ -168,9 +168,9 @@ public class ApacheCatalogResolver extends CatalogResolver {
      */
     public void addPublicEntry(String publicid, 
                                String systemid,
-                               String base) {
+                               URL base) {
 
-        DTDLocation dtd = new DTDLocation();
+        ResourceLocation dtd = new ResourceLocation();
         dtd.setBase(base);
         dtd.setPublicId(publicid);
         dtd.setLocation(systemid);
@@ -194,9 +194,9 @@ public class ApacheCatalogResolver extends CatalogResolver {
      */
     public void addURIEntry(String uri, 
                             String altURI,
-                            String base) {
+                            URL base) {
 
-        EntityLocation entity = new EntityLocation();
+        ResourceLocation entity = new ResourceLocation();
         entity.setBase(base);
         entity.setPublicId(uri);
         entity.setLocation(altURI);

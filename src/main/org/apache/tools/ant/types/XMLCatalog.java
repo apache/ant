@@ -76,7 +76,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -95,6 +95,19 @@ import org.xml.sax.XMLReader;
  * in the <a href="http://java.sun.com/xml/jaxp">Java API for XML
  * Processing Specification</a>.</p>
  *
+ * <p>Resource locations can be specified either in-line or in
+ * external catalog file(s), or both.  In order to use an external
+ * catalog file, the xml-commons resolver library ("resolver.jar")
+ * must be in your classpath.  External catalog files may be either <a
+ * href="http://oasis-open.org/committees/entity/background/9401.html">
+ * plain text format</a> or <a
+ * href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
+ * XML format</a>.  If the xml-commons resolver library is not found
+ * in the classpath, external catalog files, specified in
+ * <code>&lt;catalogfiles&gt;</code> filesets, will be ignored and a
+ * warning will be logged.  In this case, however, processing of
+ * inline entries will proceed normally.</p>
+ *
  * <p>Currently, only <code>&lt;dtd&gt;</code> and
  * <code>&lt;entity&gt;</code> elements may be specified inline; these
  * correspond to OASIS catalog entry types <code>PUBLIC</code> and
@@ -108,6 +121,8 @@ import org.xml.sax.XMLReader;
  * &nbsp;&nbsp;&lt;dtd publicId="" location="/path/to/file2.jar" /&gt;<br>
  * &nbsp;&nbsp;&lt;entity publicId="" location="/path/to/file3.jar" /&gt;<br>
  * &nbsp;&nbsp;&lt;entity publicId="" location="/path/to/file4.jar" /&gt;<br>
+ * &nbsp;&nbsp;&lt;catalogfiles dir="${basedir}" includes="**\catalog" /&gt;<br>
+ * &nbsp;&nbsp;&lt;catalogfiles dir="/opt/catalogs/" includes="**\catalog.xml" /&gt;<br>
  * &lt;/xmlcatalog&gt;<br>
  * </code>
  * <p>
@@ -123,6 +138,7 @@ import org.xml.sax.XMLReader;
  * <ol>
  * <li>In the local filesystem</li>
  * <li>In the classpath</li>
+ * <li>Using the Apache xml-commons resolver (if it is available)</li>
  * <li>In URL-space</li>
  * </ol>
  * </p>
@@ -133,8 +149,7 @@ import org.xml.sax.XMLReader;
  * support for XMLCatalogs.</p>
  *
  * <p>Possible future extension could provide for additional OASIS
- * entry types to be specified inline, and external catalog files
- * using the xml-commons resolver library</p>
+ * entry types to be specified inline.</p>
  *
  * @author dIon Gillard
  * @author Erik Hatcher
@@ -143,8 +158,6 @@ import org.xml.sax.XMLReader;
  */
 public class XMLCatalog extends DataType 
     implements Cloneable, EntityResolver, URIResolver {
-    /** File utilities instance */
-    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     //-- Fields ----------------------------------------------------------------
 
@@ -171,10 +184,10 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Returns the elements of the catalog - ResolverLocation and FileSet
+     * Returns the elements of the catalog - ResourceLocation and FileSet
      * objects.
      *
-     * @return the elements of the catalog - ResolverLocation and FileSet
+     * @return the elements of the catalog - ResourceLocation and FileSet
      * objects
      */
     private Vector getElements() {
@@ -255,10 +268,11 @@ public class XMLCatalog extends DataType
         setChecked( false );
     }
 
-    /** Creates the nested <code>&lt;catalogfiles&gt;</code> element.  Not
-     * allowed if this catalog is itself a reference to another catalog -- that
-     * is, a catalog cannot both refer to another <em>and</em> contain elements
-     * or other attributes.
+    /** 
+     * Creates the nested <code>&lt;catalogfiles&gt;</code> element.
+     * Not allowed if this catalog is itself a reference to another
+     * catalog -- that is, a catalog cannot both refer to another
+     * <em>and</em> contain elements or other attributes.
      *
      * @param fs the fileset of external catalogs.
      * @exception BuildException
@@ -290,9 +304,6 @@ public class XMLCatalog extends DataType
         getElements().addElement(dtd);
         setChecked( false );
     }
-    public void addDTD(DTDLocation dtd) throws BuildException {
-        addDTD((ResourceLocation)dtd);
-    }
 
     /**
      * Creates the nested <code>&lt;entity&gt;</code> element.    Not
@@ -300,34 +311,13 @@ public class XMLCatalog extends DataType
      * catalog -- that is, a catalog cannot both refer to another
      * <em>and</em> contain elements or other attributes.
      *
-     * @param entity the information about the URI resource mapping to
-     * be added to the catalog.
+     * @param entity the information about the URI resource mapping to be
+     *       added to the catalog.
      * @exception BuildException if this is a reference and no nested
      *       elements are allowed.
      */
-    public void addEntity(EntityLocation entity) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        getElements().addElement(entity);
-    }
-
-    /**
-     * Creates the nested <code>&lt;entity&gt;</code> element.    Not
-     * allowed if this catalog is itself a reference to another
-     * catalog -- that is, a catalog cannot both refer to another
-     * <em>and</em> contain elements or other attributes.
-     *
-     * @param entity the information about the URI resource mapping to
-     * be added to the catalog.
-     * @exception BuildException if this is a reference and no nested
-     *       elements are allowed.
-     */
-    public void addEntity(DTDLocation entity) throws BuildException {
-        if (isReference()) {
-            throw noChildrenAllowed();
-        }
-        getElements().addElement(entity);
+    public void addEntity(ResourceLocation entity) throws BuildException {
+        addDTD(entity);
     }
 
     /**
@@ -432,12 +422,12 @@ public class XMLCatalog extends DataType
         }
 
         SAXSource source = null;
-
+        
         String uri = removeFragment(href);
 
         log("resolve: '" + uri + "' with base: '" + base + "'", Project.MSG_DEBUG);
 
-        source = resolveImpl(uri, base);
+        source = (SAXSource)getCatalogResolver().resolve(uri, base);
 
         if (source == null) {
             log("No matching catalog entry found, parser will use: '" +
@@ -447,12 +437,17 @@ public class XMLCatalog extends DataType
             // setEntityResolver (see setEntityResolver javadoc comment)
             //
             source = new SAXSource();
-            try
-                {
-                    URL baseURL = new URL(base);
-                    URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
-                    source.setInputSource(new InputSource(url.toString()));
+            URL baseURL = null;
+            try {
+                if (base == null) {
+                    baseURL = getProject().getBaseDir().toURL();
                 }
+                else {
+                    baseURL = new URL(base);
+                }
+                URL url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
+                source.setInputSource(new InputSource(url.toString()));
+            }
             catch (MalformedURLException ex) {
                 // At this point we are probably in failure mode, but
                 // try to use the bare URI as a last gasp
@@ -467,7 +462,7 @@ public class XMLCatalog extends DataType
     /**
      * The instance of the CatalogResolver strategy to use.
      */
-    private static CatalogResolver catalogResolver = null;
+    private CatalogResolver catalogResolver = null;
 
     /**
      * Factory method for creating the appropriate CatalogResolver
@@ -478,11 +473,6 @@ public class XMLCatalog extends DataType
      * appropriate implementation of CatalogResolver based on the answer.</p>
      * <p>This is an application of the Gang of Four Strategy Pattern
      * combined with Template Method.</p>
-     *
-     * @param publicId the publicId of the Resource for which local information
-     *        is required
-     * @return a ResourceLocation instance with information on the local location
-     *         of the Resource or null if no such information is available
      */
     private CatalogResolver getCatalogResolver() {
 
@@ -490,7 +480,7 @@ public class XMLCatalog extends DataType
 
             AntClassLoader loader = null;
 
-            loader = new AntClassLoader(project, Path.systemClasspath);
+            loader = new AntClassLoader(getProject(), Path.systemClasspath);
 
             try {
                 Class clazz = loader.forceLoadSystemClass(APACHE_RESOLVER);
@@ -524,7 +514,6 @@ public class XMLCatalog extends DataType
         }
         return catalogResolver;
     }
-
 
     /**
      * <p>This is called from the URIResolver to set an EntityResolver
@@ -568,8 +557,8 @@ public class XMLCatalog extends DataType
     /**
      * Find a ResourceLocation instance for the given publicId.
      *
-     * @param publicId the publicId of the Resource for which local information is 
-     *        required.
+     * @param publicId the publicId of the Resource for which local information
+     *        is required.
      * @return a ResourceLocation instance with information on the local location 
      *         of the Resource or null if no such information is available.
      */
@@ -616,32 +605,54 @@ public class XMLCatalog extends DataType
     private InputSource filesystemLookup(ResourceLocation matchingEntry) {
 
         String uri = matchingEntry.getLocation();
+        URL baseURL = null;
 
         //
         // The ResourceLocation may specify a relative path for its
         // location attribute.  This is resolved using the appropriate
         // base.
         //
-        File resFile = getProject().resolveFile(uri);
-        InputSource source = null;
-
-        if (resFile.exists() && resFile.canRead()) {
+        if (matchingEntry.getBase() != null) {
+            baseURL = matchingEntry.getBase();
+        } else {
             try {
-                source = new InputSource(new FileInputStream(resFile));
-                URL resFileURL = fileUtils.getFileURL(resFile);
-                String sysid = resFileURL.toExternalForm();
-                source.setSystemId(sysid);
-                log("catalog entry matched a readable file: '" +
-                    sysid + "'", Project.MSG_DEBUG);
-            } catch(FileNotFoundException ex) {
-                // ignore
-            } catch(MalformedURLException ex) {
-                // ignore
-            } catch(IOException ex) {
-                // ignore
+                baseURL = getProject().getBaseDir().toURL();                
+            }
+            catch (MalformedURLException ex) {
+                throw new BuildException("Project basedir cannot be converted to a URL");
             }
         }
-
+        
+        InputSource source = null;
+        URL url = null;
+        
+        try {
+            url = new URL(baseURL, uri);
+        }
+        catch (MalformedURLException ex) {
+            // ignore
+        }
+        
+        if (url != null) {
+            String fileName = url.getFile();
+            if (fileName != null) {
+                log("fileName"+fileName, Project.MSG_DEBUG);
+                File resFile = new File(fileName);
+                if (resFile.exists() && resFile.canRead()) {
+                    try {
+                        source = new InputSource(new FileInputStream(resFile));
+                        String sysid = JAXPUtils.getSystemId(resFile);
+                        source.setSystemId(sysid);
+                        log("catalog entry matched a readable file: '" +
+                            sysid + "'", Project.MSG_DEBUG);
+                    } catch(FileNotFoundException ex) {
+                        // ignore
+                    } catch(IOException ex) {
+                        // ignore
+                    }
+                }
+            }
+        }
         return source;
     }
 
@@ -686,19 +697,32 @@ public class XMLCatalog extends DataType
      * @return An InputSource for reading the resource, or <code>null</code>
      *    if the resource does not identify a valid URL or is not readable.
      */
-    private InputSource urlLookup(String uri, String base) {
+    private InputSource urlLookup(ResourceLocation matchingEntry) {
+        
+        String uri = matchingEntry.getLocation();
+        URL baseURL = null;
+
+        //
+        // The ResourceLocation may specify a relative url for its
+        // location attribute.  This is resolved using the appropriate
+        // base.
+        //
+        if (matchingEntry.getBase() != null) {
+            baseURL = matchingEntry.getBase();
+        } else {
+            try {
+                baseURL = getProject().getBaseDir().toURL();
+            }
+            catch (MalformedURLException ex) {
+                throw new BuildException("Project basedir cannot be converted to a URL");
+            }
+        }
 
         InputSource source = null;
         URL url = null;
 
         try {
-            if (base == null) {
-                url = new URL(uri);
-            }
-            else {
-                URL baseURL = new URL(base);
-                url = (uri.length() == 0 ? baseURL : new URL(baseURL, uri));
-            }
+            url = new URL(baseURL, uri);
         }
         catch (MalformedURLException ex) {
             // ignore
@@ -721,71 +745,6 @@ public class XMLCatalog extends DataType
 
         return source;
 
-    }
-
-    /**
-     * Implements the guts of the resolveEntity() lookup strategy.
-     */
-    /*
-      private InputSource resolveEntityImpl(String publicId) {
-
-      InputSource result = null;
-
-      ResourceLocation matchingEntry = findMatchingEntry(publicId);
-
-      if (matchingEntry != null) {
-
-      log("Matching catalog entry found for publicId: '" +
-      matchingEntry.getPublicId() + "' location: '" +
-      matchingEntry.getLocation() + "'",
-      Project.MSG_DEBUG);
-
-      result = filesystemLookup(matchingEntry);
-
-      if (result == null) {
-      result = classpathLookup(matchingEntry);
-      }
-
-      if (result == null) {
-      result = urlLookup(matchingEntry.getLocation(), null);
-      }
-      }
-      return result;
-      }
-    */
-
-    /**
-     * Implements the guts of the resolve() lookup strategy.
-     */
-    private SAXSource resolveImpl(String href, String base) {
-
-        SAXSource result = null;
-        InputSource source = null;
-
-        ResourceLocation matchingEntry = findMatchingEntry(href);
-
-        if (matchingEntry != null) {
-
-            log("Matching catalog entry found for uri: '" +
-                matchingEntry.getPublicId() + "' location: '" +
-                matchingEntry.getLocation() + "'",
-                Project.MSG_DEBUG);
-
-            source = filesystemLookup(matchingEntry);
-
-            if (source == null) {
-                source = classpathLookup(matchingEntry);
-            }
-
-            if (source == null) {
-                source = urlLookup(matchingEntry.getLocation(), base);
-            }
-
-            if (source != null) {
-                result = new SAXSource(source);
-            }
-        }
-        return result;
     }
 
     /**
@@ -815,9 +774,7 @@ public class XMLCatalog extends DataType
 
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
-
             InputSource result = null;
-
             ResourceLocation matchingEntry = findMatchingEntry(publicId);
 
             if (matchingEntry != null) {
@@ -834,13 +791,11 @@ public class XMLCatalog extends DataType
                 }
 
                 if (result == null) {
-                    result = urlLookup(matchingEntry.getLocation(), null);
+                    result = urlLookup(matchingEntry);
                 }
             }
             return result;
         }
-
-
 
         public Source resolve(String href, String base)
             throws TransformerException {
@@ -857,14 +812,38 @@ public class XMLCatalog extends DataType
                     matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
-                source = filesystemLookup(matchingEntry);
+                //
+                // Use the passed in base in preference to the base
+                // from matchingEntry, which is either null or the
+                // directory in which the external catalog file from
+                // which it was obtained is located.  We make a copy
+                // so matchingEntry's original base is untouched.
+                //
+                // This is the standard behavior as per my reading of
+                // the JAXP and XML Catalog specs.  CKS 11/7/2002
+                // 
+                ResourceLocation entryCopy = matchingEntry;
+                if (base != null) {
+                    try {
+                        URL baseURL = new URL(base);
+                        entryCopy = new ResourceLocation();
+                        entryCopy.setBase(baseURL);
+                    }
+                    catch (MalformedURLException ex) {
+                        // ignore
+                    }
+                }
+                entryCopy.setPublicId(matchingEntry.getPublicId());
+                entryCopy.setLocation(matchingEntry.getLocation());
+
+                source = filesystemLookup(entryCopy);
 
                 if (source == null) {
-                    source = classpathLookup(matchingEntry);
+                    source = classpathLookup(entryCopy);
                 }
 
                 if (source == null) {
-                    source = urlLookup(matchingEntry.getLocation(), base);
+                    source = urlLookup(entryCopy);
                 }
 
                 if (source != null) {
@@ -971,11 +950,11 @@ public class XMLCatalog extends DataType
             else {
                 //
                 // We didn't match a ResourceLocation, but since we
-                // only support PUBLIC and URI entry types, it is
-                // still possible that there is another entry in an
-                // external catalog that will match.  We call Apache
-                // resolver's resolveEntity method to cover this
-                // possibility.
+                // only support PUBLIC and URI entry types internally,
+                // it is still possible that there is another entry in
+                // an external catalog that will match.  We call
+                // Apache resolver's resolveEntity method to cover
+                // this possibility.
                 //
                 try {
                     result = 
@@ -1008,10 +987,36 @@ public class XMLCatalog extends DataType
                     matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
-                source = filesystemLookup(matchingEntry);
+                //
+                // Use the passed in base in preference to the base
+                // from matchingEntry, which is either null or the
+                // directory in which the external catalog file from
+                // which it was obtained is located.  We make a copy
+                // so matchingEntry's original base is untouched.  Of
+                // course, if there is no base, no need to make a
+                // copy...
+                //
+                // This is the standard behavior as per my reading of
+                // the JAXP and XML Catalog specs.  CKS 11/7/2002
+                // 
+                ResourceLocation entryCopy = matchingEntry;
+                if (base != null) {
+                    try {
+                        URL baseURL = new URL(base);
+                        entryCopy = new ResourceLocation();
+                        entryCopy.setBase(baseURL);
+                    }
+                    catch (MalformedURLException ex) {
+                        // ignore
+                    }
+                }
+                entryCopy.setPublicId(matchingEntry.getPublicId());
+                entryCopy.setLocation(matchingEntry.getLocation());
+
+                source = filesystemLookup(entryCopy);
 
                 if (source == null) {
-                    source = classpathLookup(matchingEntry);
+                    source = classpathLookup(entryCopy);
                 }
 
                 if (source != null) {
@@ -1031,11 +1036,11 @@ public class XMLCatalog extends DataType
             else {
                 //
                 // We didn't match a ResourceLocation, but since we
-                // only support PUBLIC and URI entry types, it is
-                // still possible that there is another entry in an
-                // external catalog that will match.  We call Apache
-                // resolver's resolveEntity method to cover this
-                // possibility.
+                // only support PUBLIC and URI entry types internally,
+                // it is still possible that there is another entry in
+                // an external catalog that will match.  We call
+                // Apache resolver's resolveEntity method to cover
+                // this possibility.
                 //
                 try {
                     result = 
@@ -1095,4 +1100,5 @@ public class XMLCatalog extends DataType
             externalCatalogsProcessed = true;
         }
     }
-}
+
+} //-- XMLCatalog
