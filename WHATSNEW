@@ -37,6 +37,11 @@ Fixed bugs:
 * <junitreport> created an empty junit-noframes.html if no format had
   been specified.
 
+* <basename> would remove more than it should if the file name
+  contained more than one dot.
+
+* <property environment=... /> now works on OS/400.
+
 Other changes:
 --------------
 
@@ -80,6 +85,8 @@ Other changes:
 
 * The SOS and VSS tasks will no longer unconditionally prepend a $ to
   vsspath or projectpath.
+
+* OS/400 now gets detected by the os condition.
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================

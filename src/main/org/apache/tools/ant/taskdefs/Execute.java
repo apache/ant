@@ -238,7 +238,7 @@ public class Execute {
             // Alternatively one could use: /bin/sh -c env
             String[] cmd = {"/usr/bin/env"};
             return cmd;
-        } else if (Os.isFamily("netware")) {
+        } else if (Os.isFamily("netware") || Os.isFamily("os/400")) {
             String[] cmd = {"env"};
             return cmd;
         } else {
@@ -259,7 +259,12 @@ public class Execute {
     public static String toString(ByteArrayOutputStream bos) {
         if (Os.isFamily("z/os")) {
             try {
-                bos.toString("Cp1047");
+                return bos.toString("Cp1047");
+            } catch (java.io.UnsupportedEncodingException e) {
+            }
+        } else if (Os.isFamily("os/400")) {
+            try {
+                return bos.toString("Cp500");
             } catch (java.io.UnsupportedEncodingException e) {
             }
         }

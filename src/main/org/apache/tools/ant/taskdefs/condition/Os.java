@@ -99,6 +99,7 @@ public class Os implements Condition {
      *               <li>windows</li>
      *               <li>win9x</li>
      *               <li>z/os</li>
+     *               <li>os/400</li>
      *               </ul>
      */
     public void setFamily(String f) {family = f.toLowerCase(Locale.US);}
@@ -224,6 +225,8 @@ public class Os implements Condition {
                 } else if (family.equals("z/os")) {
                     isFamily = osName.indexOf("z/os") > -1
                         || osName.indexOf("os/390") > -1;
+                } else if (family.equals("os/400")) {
+                    isFamily = osName.indexOf("os/400") > -1;
                 } else {
                     throw new BuildException(
                         "Don\'t know how to detect os family \""
