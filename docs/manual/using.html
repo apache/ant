@@ -503,11 +503,13 @@ is very different from what you expect under some circumstances.</p>
 <code>/dir:/dir2:/dir3</code> on Unix-like systems.</p>
 
 <h3><a name="references">References</a></h3>
-<p>The <code>id</code> attribute of the buildfile's elements can be
-used to refer to them. This can be useful if you are going to replicate
-the same snippet of XML over and over again - using a
-<code>&lt;classpath&gt;</code> structure more than once, for
-example.</p>
+
+<p>Any project element can be assigned an identifier using its
+<code>id</code> attribute. In most cases the element can subsequently
+be referenced by specifying the <code>refid</code> attribute on an
+element of the same type.  This can be useful if you are going to
+replicate the same snippet of XML over and over again--using a
+<code>&lt;classpath&gt;</code> structure more than once, for example.</p>
 <p>The following example:</p>
 <blockquote><pre>
 &lt;project ... &gt;
@@ -554,14 +556,20 @@ example.</p>
   &lt;/target&gt;
 &lt;/project&gt;
 </pre></blockquote>
-<p>All tasks that use nested elements for <a
-href="CoreTypes/patternset.html">PatternSet</a>s, <a href="CoreTypes/fileset.html">FileSet</a>s,
-<a href="CoreTypes/zipfileset.html">ZipFileSet</a>s  or
-<a href="#path">path-like structures</a> accept references to these
-structures as well.</p>
+<p>All tasks that use nested elements for
+<a href="CoreTypes/patternset.html">PatternSet</a>s,
+<a href="CoreTypes/fileset.html">FileSet</a>s,
+<a href="CoreTypes/zipfileset.html">ZipFileSet</a>s or
+<a href="#path">path-like structures</a> accept references to these structures
+as shown in the examples. Using <code>refid</code> on a task will ordinarily
+have the same effect (referencing a task already declared), but the user
+should be aware that the interpretation of this attribute is dependent on the
+implementation of the element upon which it is specified. Some tasks (the
+<a href="CoreTasks/property.html">property</a> task is a handy example)
+deliberately assign a different meaning to <code>refid</code>.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
