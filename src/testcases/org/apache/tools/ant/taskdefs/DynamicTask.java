@@ -72,7 +72,7 @@ public class DynamicTask extends Task implements DynamicConfigurator {
 
     public class Sub implements DynamicConfigurator {
         public void setDynamicAttribute(String name, String value) {
-            project.setNewProperty(name, value);
+            getProject().setNewProperty(name, value);
         }
 
         public Object createDynamicElement(String name) {
