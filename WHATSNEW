@@ -7,6 +7,9 @@ Changes that could break older environments:
 Other changes:
 --------------
 
+* The attributes zipfile, jarfile and warfile (from the Zip, Jar and War tasks)
+  have been deprecated and supersceded by a new attribute "file".
+
 Fixed bugs:
 -----------
 

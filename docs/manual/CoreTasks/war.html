@@ -26,7 +26,7 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">warfile</td>
+    <td valign="top">file</td>
     <td valign="top">the war-file to create.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
@@ -140,7 +140,7 @@ src/graphics/images/gifs/large/logo.gif
 </pre>
 then the war file <code>myapp.war</code> created with
 <pre>
-&lt;war warfile=&quot;myapp.war&quot; webxml=&quot;src/metadata/myapp.xml&quot;&gt;
+&lt;war file=&quot;myapp.war&quot; webxml=&quot;src/metadata/myapp.xml&quot;&gt;
   &lt;fileset dir=&quot;src/html/myapp&quot;/&gt;
   &lt;fileset dir=&quot;src/jsp/myapp&quot;/&gt;
   &lt;lib dir=&quot;thirdparty/libs&quot;&gt;
