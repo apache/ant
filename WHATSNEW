@@ -38,6 +38,8 @@ command line now.
 * the refid attribute for <property>s nested into <ant> or <param>s
 nested into <antcall> didn't work.
 
+* <replaceregexp> didn't work for nested <fileset>s.
+
 Other changes:
 --------------
 

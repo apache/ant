@@ -186,7 +186,8 @@ public class ReplaceRegExp extends Task {
 
     public void setReplace(String replace) {
         if (subs != null) {
-            throw new BuildException("Only one substitution expression is allowed");
+            throw new BuildException("Only one substitution expression is "
+                                     + "allowed");
         }
 
         subs = new Substitution();
@@ -226,7 +227,8 @@ public class ReplaceRegExp extends Task {
 
     public Substitution createSubstitution() {
         if (subs != null) {
-            throw new BuildException("Only one substitution expression is allowed");
+            throw new BuildException("Only one substitution expression is "
+                                     + "allowed");
         }
 
         subs = new Substitution();
@@ -252,7 +254,7 @@ public class ReplaceRegExp extends Task {
     /** Perform the replace on the entire file  */
     protected void doReplace(File f, int options)
          throws IOException {
-        File parentDir = new File(new File(f.getAbsolutePath()).getParent());
+        File parentDir = fileUtils.getParentFile(f);
         File temp = fileUtils.createTempFile("replace", ".txt", parentDir);
 
         FileReader r = null;
@@ -268,7 +270,8 @@ public class ReplaceRegExp extends Task {
 
             boolean changes = false;
 
-            log("Replacing pattern '" + regex.getPattern(project) + "' with '" + subs.getExpression(project) +
+            log("Replacing pattern '" + regex.getPattern(project) + 
+                "' with '" + subs.getExpression(project) +
                 "' in '" + f.getPath() + "'" +
                 (byline ? " by line" : "") +
                 (flags.length() > 0 ? " with flags: '" + flags + "'" : "") +
@@ -330,7 +333,6 @@ public class ReplaceRegExp extends Task {
                 }
             } catch (Exception e) {
             }
-            ;
 
             try {
                 if (w != null) {
@@ -338,7 +340,6 @@ public class ReplaceRegExp extends Task {
                 }
             } catch (Exception e) {
             }
-            ;
         }
     }
 
@@ -353,7 +354,8 @@ public class ReplaceRegExp extends Task {
         }
 
         if (file != null && filesets.size() > 0) {
-            throw new BuildException("You cannot supply the 'file' attribute and filesets at the same time.");
+            throw new BuildException("You cannot supply the 'file' attribute "
+                                     + "and filesets at the same time.");
         }
 
         int options = 0;
@@ -378,12 +380,13 @@ public class ReplaceRegExp extends Task {
             try {
                 doReplace(file, options);
             } catch (IOException e) {
-                log("An error occurred processing file: '" + file.getAbsolutePath() + "': " + e.toString(),
+                log("An error occurred processing file: '" 
+                    + file.getAbsolutePath() + "': " + e.toString(),
                     Project.MSG_ERR);
             }
         } else if (file != null) {
-            log("The following file is missing: '" + file.getAbsolutePath() + "'",
-                Project.MSG_ERR);
+            log("The following file is missing: '" 
+                + file.getAbsolutePath() + "'", Project.MSG_ERR);
         }
 
         int sz = filesets.size();
@@ -395,18 +398,19 @@ public class ReplaceRegExp extends Task {
             String files[] = ds.getIncludedFiles();
 
             for (int j = 0; j < files.length; j++) {
-                File f = new File(files[j]);
+                File f = new File(fs.getDir(getProject()), files[j]);
 
                 if (f.exists()) {
                     try {
                         doReplace(f, options);
                     } catch (Exception e) {
-                        log("An error occurred processing file: '" + f.getAbsolutePath() + "': " + e.toString(),
+                        log("An error occurred processing file: '" 
+                            + f.getAbsolutePath() + "': " + e.toString(),
                             Project.MSG_ERR);
                     }
                 } else {
-                    log("The following file is missing: '" + file.getAbsolutePath() + "'",
-                        Project.MSG_ERR);
+                    log("The following file is missing: '" 
+                        + f.getAbsolutePath() + "'", Project.MSG_ERR);
                 }
             }
         }
