@@ -58,9 +58,11 @@
       task using a notation similar to the ant property notation
       - @{attribute name}. (May be remembered as "put the substitution
       AT this location").
-      The escape sequence @@{x} is used to allow @{x} to be
-      placed in the text without substitution of x.
-      This corresponds to the $${x} escape sequence for properties.
+    </p>
+    <p>
+      The escape sequence @@ is used to escape @. This allows @{x} to be
+      placed in the text without substitution of x by using @@{x}.
+      This corresponds to the $$ escape sequence for properties.
     </p>
     <p>
       The case of the attribute is ignored, so @{myAttribute} is treated the
