@@ -147,9 +147,14 @@ public class Javac extends MatchingTask {
      * Javac task for compilation of Java files.
      */
     public Javac() {
-        if (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
-            JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2) {
-            facade = new FacadeTaskHelper("modern");
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            facade = new FacadeTaskHelper("javac1.1");
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
+            facade = new FacadeTaskHelper("javac1.2");
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
+            facade = new FacadeTaskHelper("javac1.3");
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
+            facade = new FacadeTaskHelper("javac1.4");
         } else {
             facade = new FacadeTaskHelper("classic");
         }
@@ -617,11 +622,16 @@ public class Javac extends MatchingTask {
      * @return array of command line arguments, guaranteed to be non-null.
      */
     public String[] getCurrentCompilerArgs() {
+        String chosen = facade.getExplicitChoice();
         // make sure facade knows about magic properties and fork setting
-        getCompiler();
-
-        return facade.getArgs();
+        facade.setImplementation(getCompiler());
+        try {
+            return facade.getArgs();
+        } finally {
+            facade.setImplementation(chosen);
+        }
     }
+        
 
     /**
      * Executes the task.
@@ -712,17 +722,20 @@ public class Javac extends MatchingTask {
      * <p>Defaults to the build.compiler property but can be overriden
      * via the compiler and fork attributes.</p>
      *
+     * <p>If fork has been set to true, the result will be extJavac
+     * and not classic or java1.2 - no matter what the compiler
+     * attribute looks like.</p>
+     * 
+     * @see #getCompilerVersion
+     * 
      * @since Ant 1.5
      */
     public String getCompiler() {
-        facade.setMagicValue(getProject().getProperty("build.compiler"));
-        String compilerImpl = facade.getImplementation();
-
+        String compilerImpl = getCompilerVersion();
         if (fork) {
             if (isJdkCompiler(compilerImpl)) {
                 log("Since fork is true, ignoring compiler setting.",
                     Project.MSG_WARN);
-                facade.setImplementation("extJavac");
                 compilerImpl = "extJavac";
             } else {
                 log("Since compiler setting isn't classic or modern,"
@@ -730,6 +743,24 @@ public class Javac extends MatchingTask {
             }
         }
         return compilerImpl;
+    }
+
+    /**
+     * The implementation for this particular task.
+     *
+     * <p>Defaults to the build.compiler property but can be overriden
+     * via the compiler attribute.</p>
+     *
+     * <p>This method does not take the fork attribute into
+     * account.</p>
+     * 
+     * @see #getCompiler
+     *
+     * @since Ant 1.5
+     */
+    public String getCompilerVersion() {
+        facade.setMagicValue(getProject().getProperty("build.compiler"));
+        return facade.getImplementation();
     }
 
     /**

@@ -70,8 +70,8 @@ attribute are:</p>
       its own).</li>
 </ul>
 </a>
-<p>For JDK 1.1/1.2, <code>classic</code> is the default.
-For JDK 1.3/1.4, <code>modern</code> is the default.
+<p>The default is <code>javac1.x</code> with <code>x</code> depending
+on the JDK version you use while you are running Ant.
 If you wish to use a different compiler interface than those
 supplied, you can write a class that implements the CompilerAdapter interface
 (<code>package org.apache.tools.ant.taskdefs.compilers</code>). Supply the full
@@ -82,6 +82,14 @@ classname in the <code>build.compiler</code> property or the
 or <code>compiler</code> attribute setting and
 expects a JDK1.1 or higher to be set in <code>JAVA_HOME</code>.
 </p>
+<p>You can also use the <code>compiler</code> attribute to tell Ant
+which JDK version it shall assume when it puts together the command
+line switches - even if you set <code>fork=&quot;true&quot;</code>.
+This is useful if you want to run the compiler of JDK 1.1 while you
+current JDK is 1.2+.  If you use
+<code>compiler=&quot;javac1.1&quot;</code> and (for example)
+<code>depend=&quot;true&quot;</code> Ant will use the command line
+switch <code>-depend</code> instead of <code>-Xdepend</code>.</p>
 <p>This task will drop all entries that point to non-existent
 files/directories from the classpath it passes to the compiler.</p>
 <p><strong>Windows Note:</strong>When the modern compiler is used

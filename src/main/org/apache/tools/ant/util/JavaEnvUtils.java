@@ -127,6 +127,18 @@ public class JavaEnvUtils {
     }
 
     /**
+     * Compares the current Java version to the passed in String -
+     * assumes the argument is one of the constants defined in this
+     * class.
+     * @return true if the version of Java is the same as the given
+     * version.
+     * @since Ant 1.5
+     */
+    public static boolean isJavaVersion(String version) {
+        return javaVersion == version;
+    }
+
+    /**
      * Finds an executable that is part of a JRE installation based on
      * the java.home system property.
      *

@@ -57,11 +57,13 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Creates the necessary compiler adapter, given basic criteria.
  *
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ * @since Ant 1.3
  */
 public class CompilerAdapterFactory {
 
@@ -77,11 +79,12 @@ public class CompilerAdapterFactory {
      * <ul><li>jikes = jikes compiler
      * <li>classic, javac1.1, javac1.2 = the standard compiler from JDK
      * 1.1/1.2
-     * <li>modern, javac1.3 = the new compiler of JDK 1.3
+     * <li>modern, javac1.3, javac1.4 = the compiler of JDK 1.3+
      * <li>jvc, microsoft = the command line compiler from Microsoft's SDK
      * for Java / Visual J++
      * <li>kjc = the kopi compiler</li>
      * <li>gcj = the gcj compiler from gcc</li>
+     * <li>sj, symantec = the Symantec Java compiler</li>
      * <li><i>a fully quallified classname</i> = the name of a compiler
      * adapter
      * </ul>
@@ -96,8 +99,8 @@ public class CompilerAdapterFactory {
         throws BuildException {
             boolean isClassicCompilerSupported = true;
             //as new versions of java come out, add them to this test
-            if (Project.getJavaVersion() == Project.JAVA_1_4) {
-                 isClassicCompilerSupported = false;
+            if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
+                isClassicCompilerSupported = false;
             }
 
             if (compilerType.equalsIgnoreCase("jikes")) {
@@ -107,41 +110,44 @@ public class CompilerAdapterFactory {
                 return new JavacExternal();
             }       
             if (compilerType.equalsIgnoreCase("classic") ||
-                    compilerType.equalsIgnoreCase("javac1.1") ||
-                    compilerType.equalsIgnoreCase("javac1.2")) {
+                compilerType.equalsIgnoreCase("javac1.1") ||
+                compilerType.equalsIgnoreCase("javac1.2")) {
                 if (isClassicCompilerSupported) {
                     return new Javac12();
                 } else {
                     throw new BuildException("This version of java does "
-                        + "not support the classic compiler");
+                                             + "not support the classic "
+                                             + "compiler");
                 }
 
             }
             //on java<=1.3 the modern falls back to classic if it is not found
             //but on java>=1.4 we just bail out early
             if (compilerType.equalsIgnoreCase("modern") ||
-                    compilerType.equalsIgnoreCase("javac1.3") ||
-                    compilerType.equalsIgnoreCase("javac1.4")) {
+                compilerType.equalsIgnoreCase("javac1.3") ||
+                compilerType.equalsIgnoreCase("javac1.4")) {
                 // does the modern compiler exist?
                 if (doesModernCompilerExist()) {
                     return new Javac13();
                 } else {
                     if (isClassicCompilerSupported) {
                         task.log("Modern compiler not found - looking for "
-                                + "classic compiler", Project.MSG_WARN);
+                                 + "classic compiler", Project.MSG_WARN);
                         return new Javac12();
                     } else {
                         throw new BuildException("Unable to find a javac " 
-                            + "compiler;\n"
-                            + "com.sun.tools.javac.Main is not on the " 
-                            + "classpath.\n"
-                            + "Perhaps JAVA_HOME does not point to the JDK");
+                                                 + "compiler;\n"
+                                                 + "com.sun.tools.javac.Main "
+                                                 + "is not on the " 
+                                                 + "classpath.\n"
+                                                 + "Perhaps JAVA_HOME does not"
+                                                 + " point to the JDK");
                     }
                 }
-                
             }
+
             if (compilerType.equalsIgnoreCase("jvc") ||
-                    compilerType.equalsIgnoreCase("microsoft")) {
+                compilerType.equalsIgnoreCase("microsoft")) {
                 return new Jvc();
             }
             if (compilerType.equalsIgnoreCase("kjc")) {
@@ -151,7 +157,7 @@ public class CompilerAdapterFactory {
                 return new Gcj();
             }
             if (compilerType.equalsIgnoreCase("sj") ||
-                    compilerType.equalsIgnoreCase("symantec")) {
+                compilerType.equalsIgnoreCase("symantec")) {
                 return new Sj();
             }
             return resolveClassName(compilerType);

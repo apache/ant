@@ -55,6 +55,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
+import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
+import org.apache.tools.ant.taskdefs.compilers.Javac12;
+import org.apache.tools.ant.taskdefs.compilers.JavacExternal;
 
 import junit.framework.TestCase;
 
@@ -176,12 +181,16 @@ public class JavacTest extends TestCase {
         String compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertTrue("default value", 
-                   "modern".equals(compiler) || "classic".equals(compiler));
+                   "javac1.1".equals(compiler) 
+                   || "javac1.2".equals(compiler) 
+                   || "javac1.3".equals(compiler) 
+                   || "javac1.4".equals(compiler) 
+                   || "classic".equals(compiler));
 
         javac.setFork(true);
-        compiler = javac.getCompiler();
-        assertNotNull(compiler);
-        assertEquals("extJavac", compiler);
+        assertNotNull(javac.getCompiler());
+        assertEquals("extJavac", javac.getCompiler());
+        assertEquals(compiler, javac.getCompilerVersion());
 
         // check build.compiler provides defaults
         javac = new Javac();
@@ -207,6 +216,19 @@ public class JavacTest extends TestCase {
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("jvc", compiler);
+    }
+
+    public void testCompilerAdapter() {
+        javac.setCompiler("javac1.1");
+        javac.setDepend(true);
+        CompilerAdapter adapter = 
+            CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
+        assertTrue(adapter instanceof Javac12);
+
+        javac.setFork(true);
+        adapter = 
+            CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
+        assertTrue(adapter instanceof JavacExternal);
     }
 
 }

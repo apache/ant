@@ -62,8 +62,8 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
-
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -211,12 +211,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             sourcepath = src;
         }
 
-        // we cannot be using Java 1.0 when forking, so we only have to
-        // distinguish between Java 1.1, and Java 1.2 and higher, as Java 1.1
-        // has its own parameter format
-        boolean usingJava1_1 
-            = Project.getJavaVersion().equals(Project.JAVA_1_1);
-        String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
+        String memoryParameterPrefix = assumeJava11() ? "-J-" : "-J-X";
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {
                 attributes.log("Since fork is false, ignoring "
@@ -256,7 +251,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
         // Just add "sourcepath" to classpath ( for JDK1.1 )
         // as well as "bootclasspath" and "extdirs"
-        if (Project.getJavaVersion().startsWith("1.1")) {
+        if (assumeJava11()) {
             Path cp = new Path(project);
             /*
              * XXX - This doesn't mix very well with build.systemclasspath,
@@ -297,10 +292,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             cmd.createArgument().setValue(encoding);
         }
         if (debug) {
-            if (useDebugLevel
-                && Project.getJavaVersion() != Project.JAVA_1_0
-                && Project.getJavaVersion() != Project.JAVA_1_1) {
-
+            if (useDebugLevel && !assumeJava11()) {
                 String debugLevel = attributes.getDebugLevel();
                 if (debugLevel != null) {
                     cmd.createArgument().setValue("-g:" + debugLevel);
@@ -310,8 +302,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else {
                 cmd.createArgument().setValue("-g");
             }
-        } else if (Project.getJavaVersion() != Project.JAVA_1_0 &&
-                   Project.getJavaVersion() != Project.JAVA_1_1) {
+        } else if (!assumeJava11()) {
             cmd.createArgument().setValue("-g:none");
         }
         if (optimize) {
@@ -319,9 +310,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
 
         if (depend) {
-            if (Project.getJavaVersion().startsWith("1.1")) {
+            if (assumeJava11()) {
                 cmd.createArgument().setValue("-depend");
-            } else if (Project.getJavaVersion().startsWith("1.2")) {
+            } else if (assumeJava12()) {
                 cmd.createArgument().setValue("-Xdepend");
             } else {
                 attributes.log("depend attribute is not supported by the "
@@ -472,6 +463,26 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     protected void addCurrentCompilerArgs(Commandline cmd) {
         cmd.addArguments(getJavac().getCurrentCompilerArgs());
+    }
+
+    /**
+     * Shall we assume JDK 1.1 command line switches?
+     * @since Ant 1.5
+     */
+    protected boolean assumeJava11() {
+        return "javac1.1".equals(attributes.getCompilerVersion()) ||
+            ("classic".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
+    }
+
+    /**
+     * Shall we assume JDK 1.2 command line switches?
+     * @since Ant 1.5
+     */
+    protected boolean assumeJava12() {
+        return "javac1.2".equals(attributes.getCompilerVersion()) ||
+            ("classic".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
     }
 
 }

@@ -62,6 +62,9 @@ Changes that could break older environments:
 * If the 'output' attribute of <ant> is set to a simple filename or a
   relative path, the file is created relative to ${basedir}, not ${user.dir}.
 
+* The default value for build.compiler is now javac1.x with x
+  depending on the JDK that is running Ant instead of classic/modern.
+
 Fixed bugs:
 -----------
 * A bug existed that prevented generated log files from being deleted as 

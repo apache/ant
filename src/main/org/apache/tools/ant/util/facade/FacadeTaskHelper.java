@@ -133,6 +133,13 @@ public class FacadeTaskHelper {
     }
 
     /**
+     * Retrieves the explicit user choice
+     */
+    public String getExplicitChoice() {
+        return userChoice;
+    }
+
+    /**
      * Command line argument.
      */
     public void addImplementationArgument(ImplementationSpecificArgument arg) {
