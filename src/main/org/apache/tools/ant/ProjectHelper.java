@@ -703,7 +703,7 @@ public class ProjectHelper {
      *
      * @param value the string to be scanned for property references.
      */
-    public static String replaceProperties(Project project, String value, Hashtable keys)
+     public static String replaceProperties(Project project, String value, Hashtable keys)
             throws BuildException {
         if (value == null) {
             return null;

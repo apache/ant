@@ -458,7 +458,7 @@ public class Main {
                 System.setErr(err);
             }
             if (projectHelp) {
-                    printTargets(project);
+                printTargets(project);
             }
         }
         catch(RuntimeException exc) {

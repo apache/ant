@@ -1099,6 +1099,7 @@ public class Project {
         System.out.flush();
         System.err.flush();
         BuildEvent event = new BuildEvent(task);
+        event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
