@@ -172,7 +172,6 @@ public class Tar
         try
         {
             tOut = new TarOutputStream( new FileOutputStream( tarFile ) );
-            tOut.setDebug( true );
             if( longFileMode.isTruncateMode() )
             {
                 tOut.setLongFileMode( TarOutputStream.LONGFILE_TRUNCATE );
