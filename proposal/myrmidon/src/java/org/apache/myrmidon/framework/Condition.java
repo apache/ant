@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.framework;
 
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.api.TaskContext;
@@ -22,9 +20,6 @@ import org.apache.myrmidon.api.TaskException;
 public class Condition
     implements Component
 {
-    private final static Resources REZ =
-        ResourceManager.getPackageResources( Condition.class );
-
     private String m_condition;
     private boolean m_isIfCondition;
 
