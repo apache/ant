@@ -63,6 +63,8 @@ import java.util.*;
  * Copies a directory.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ *
+ * @deprecated The copydir task is deprecated.  Use copy instead.
  */
 
 public class Copydir extends MatchingTask {

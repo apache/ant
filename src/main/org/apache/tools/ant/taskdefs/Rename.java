@@ -63,6 +63,8 @@ import java.io.File;
  * Renames a file.
  *
  * @author haas@softwired.ch
+ *
+ * @deprecated The rename task is deprecated.  Use move instead.
  */
 public class Rename extends Task {
 

@@ -100,20 +100,23 @@
       <exclude name="**/AntStarTeam*.java" unless="starteam.present" />
     </javac>
  
-    <copydir src="${src.dir}" dest="${build.classes}">
-      <include name="**/*.properties" />
-    </copydir>
+    <copy todir="${build.classes}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
 
     <filter token="VERSION" value="${version}" />
     <filter token="DATE" value="${TODAY}" />
     <filter token="TIME" value="${TSTAMP}" />
-    <copydir src="${src.dir}" 
-             dest="${build.classes}" 
-             forceoverwrite="true"
+    <copy    todir="${build.classes}" 
+             overwrite="true"
              filtering="on">
-      <include name="**/version.txt" />
-      <include name="**/defaultManifest.mf" />
-    </copydir>
+      <fileset dir="${src.dir}">
+        <include name="**/version.txt" />
+        <include name="**/defaultManifest.mf" />
+      </fileset>
+    </copy>
   </target>
 
   <!-- =================================================================== -->
@@ -133,7 +136,7 @@
   <!-- =================================================================== -->
   <target name="main" depends="jar" description="Creates the binary structure">
      <mkdir dir="${bin.dir}"/>
-     <copydir src="${src.bin.dir}" dest="${bin.dir}"/>
+     <copy dir="${src.bin.dir}" todir="${bin.dir}"/>
      <chmod perm="+x">
        <fileset dir="${bin.dir}">
          <patternset refid="chmod.patterns"/>
@@ -170,13 +173,13 @@
      <mkdir dir="${ant.dist.dir}/docs/api"/>
      <mkdir dir="${ant.dist.dir}/src"/>
 
-     <copydir src="${src.dir}" dest="${ant.dist.dir}/src"/>
-     <copydir src="${lib.dir}" dest="${ant.dist.dir}/lib"/>
+     <copy dir="${src.dir}" todir="${ant.dist.dir}/src"/>
+     <copy dir="${lib.dir}" todir="${ant.dist.dir}/lib"/>
 
-     <copyfile src="build.xml" dest="${ant.dist.dir}/lib/build.xml"/>
-     <copydir src="src/bin" dest="${ant.dist.dir}/bin"/>
-     <copydir src="${docs.dir}" dest="${ant.dist.dir}/docs"/>
-     <copydir src="${build.javadocs}" dest="${ant.dist.dir}/docs/api"/>
+     <copy file="build.xml" tofile="${ant.dist.dir}/lib/build.xml"/>
+     <copy dir="src/bin" todir="${ant.dist.dir}/bin"/>
+     <copy dir="${docs.dir}" todir="${ant.dist.dir}/docs"/>
+     <copy dir="${build.javadocs}" todir="${ant.dist.dir}/docs/api"/>
 
      <fixcrlf srcdir="${ant.dist.dir}/bin" includes="ant,antRun" cr="remove"/>
      <fixcrlf srcdir="${ant.dist.dir}/bin" includes="*.bat" cr="add"/>
@@ -186,10 +189,10 @@
        </fileset>
      </chmod>
 
-     <copyfile src="README" dest="${ant.dist.dir}/README"/>
-     <copyfile src="WHATSNEW" dest="${ant.dist.dir}/WHATSNEW"/>
-     <copyfile src="TODO" dest="${ant.dist.dir}/TODO"/>
-     <copyfile src="LICENSE" dest="${ant.dist.dir}/LICENSE"/>
+     <copy file="README" tofile="${ant.dist.dir}/README"/>
+     <copy file="WHATSNEW" tofile="${ant.dist.dir}/WHATSNEW"/>
+     <copy file="TODO" tofile="${ant.dist.dir}/TODO"/>
+     <copy file="LICENSE" tofile="${ant.dist.dir}/LICENSE"/>
   </target>
 
   <!-- =================================================================== -->
@@ -212,14 +215,14 @@
   <!-- =================================================================== -->
   <target name="bootstrap" depends="main" description="Installs the ant.jar library and binary files into ant.home">
     <echo message="copying bootstrapped files into bin and lib"/>
-    <copydir src="${lib.dir}" dest="lib"/>
-    <copydir src="${bin.dir}" dest="bin"/>
+    <copy dir="${lib.dir}" todir="lib"/>
+    <copy dir="${bin.dir}" todir="bin"/>
   </target>     
 
   <target name="install" depends="dist" if="ant.install">
     <echo message="installing full copy of ant into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
-    <copydir src="${ant.dist.dir}" dest="${ant.install}"/>
+    <copy dir="${ant.dist.dir}" todir="${ant.install}"/>
     <chmod perm="+x">
       <fileset dir="${ant.install}/bin">
         <patternset refid="chmod.patterns"/>
@@ -232,8 +235,8 @@
   <target name="mininstall" depends="main" if="ant.install">
     <echo message="copy minimal ant installation into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
-    <copydir src="${lib.dir}" dest="${ant.install}/lib"/>
-    <copydir src="${bin.dir}" dest="${ant.install}/bin"/>
+    <copy dir="${lib.dir}" todir="${ant.install}/lib"/>
+    <copy dir="${bin.dir}" todir="${ant.install}/bin"/>
     <chmod perm="+x">
       <fileset dir="${ant.install}/bin">
         <patternset refid="chmod.patterns"/>
@@ -245,15 +248,15 @@
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
   <target name="clean">
-    <deltree dir="${build.dir}"/>
-    <deltree dir="${ant.dist.dir}"/>
+    <delete dir="${build.dir}"/>
+    <delete dir="${ant.dist.dir}"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Total cleanup                                                       -->
   <!-- =================================================================== -->
   <target name="total-clean" depends="clean">
-    <deltree dir="${bin.dir}"/>
+    <delete dir="${bin.dir}"/>
     <delete file="${lib.dir}/${name}.jar"/>
     <delete file="${Name}-${version}.zip"/>
     <delete file="${Name}-${version}.tar"/>
@@ -322,8 +325,8 @@
     </junit>
 
     <!-- clean up again -->
-    <deltree dir="src/etc/testcases/taskdefs/taskdefs.tmp" />
-    <deltree dir="src/etc/testcases/taskdefs.tmp" />
+    <delete dir="src/etc/testcases/taskdefs/taskdefs.tmp" />
+    <delete dir="src/etc/testcases/taskdefs.tmp" />
   </target>
 
   <target name="run.single.test" if="testcase" depends="compiletests">

@@ -61,6 +61,8 @@ import java.io.*;
  *
  *
  * @author duncan@x180.com
+ *
+ * @deprecated The deltree task is deprecated.  Use delete instead.
  */
 
 public class Deltree extends Task {

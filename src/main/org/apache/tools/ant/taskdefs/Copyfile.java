@@ -63,6 +63,8 @@ import java.util.*;
  * Copies a file.
  *
  * @author duncan@x180.com
+ *
+ * @deprecated The copyfile task is deprecated.  Use copy instead.
  */
 
 public class Copyfile extends Task {

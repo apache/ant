@@ -228,7 +228,7 @@ public class Delete extends MatchingTask {
         }
 
         // delete the directory
-        if (dir != null && !usedMatchingTask) {
+        if (dir != null && dir.exists() && dir.isDirectory() && !usedMatchingTask) {
             log("Deleting directory " + dir.getAbsolutePath());
             removeDir(dir);
         }
