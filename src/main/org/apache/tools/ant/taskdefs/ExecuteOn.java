@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation.
+ * Copyright  2000-2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,14 +68,15 @@ public class ExecuteOn extends ExecTask {
     protected boolean srcIsFirst = true;
 
     /**
-     * Source files to operate upon.
+     * Add a set of files upon which to operate.
+     * @param set the FileSet to add.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Adds directories to operate on.
+     * Add a set of directories upon which to operate.
      *
      * @param  set the DirSet to add.
      *
@@ -84,18 +85,21 @@ public class ExecuteOn extends ExecTask {
     public void addDirset(DirSet set) {
         filesets.addElement(set);
     }
+
     /**
-     * Source files to operate upon.
+     * Add a list of source files upon which to operate.
+     * @param list the FileList to add.
      */
     public void addFilelist(FileList list) {
         filelists.addElement(list);
     }
 
     /**
-     * Whether the filenames should be passed on the command line as
+     * Set whether the filenames should be passed on the command line as
      * absolute or relative pathnames. Paths are relative to the base
      * directory of the corresponding fileset for source files or the
      * dest attribute for target files.
+     * @param relative whether to pass relative pathnames.
      */
     public void setRelative(boolean relative) {
         this.relative = relative;
@@ -103,38 +107,45 @@ public class ExecuteOn extends ExecTask {
 
 
     /**
+     * Set whether to execute in parallel mode.
      * If true, run the command only once, appending all files as arguments.
      * If false, command will be executed once for every file. Defaults to false.
+     * @param parallel whether to run in parallel.
      */
     public void setParallel(boolean parallel) {
         this.parallel = parallel;
     }
 
     /**
-     * Whether the command works only on files, directories or both?
+     * Set whether the command works only on files, directories or both.
+     * @param type a FileDirBoth EnumeratedAttribute.
      */
     public void setType(FileDirBoth type) {
         this.type = type.getValue();
     }
 
     /**
-     * If no source files have been found or are newer than their
-     * corresponding target files, do not run the command.
+     * Set whether empty filesets will be skipped.  If true and
+     * no source files have been found or are newer than their
+     * corresponding target files, the command will not be run.
+     * @param skip whether to skip empty filesets.
      */
     public void setSkipEmptyFilesets(boolean skip) {
         skipEmpty = skip;
     }
 
     /**
-     * The directory where target files are to be placed.
+     * Specify the directory where target files are to be placed.
+     * @param destDir the File object representing the destination directory.
      */
     public void setDest(File destDir) {
         this.destDir = destDir;
     }
 
     /**
-     * The source and target file names on Windows and OS/2 must use
-     * forward slash as file separator.
+     * Set whether the source and target file names on Windows and OS/2
+     * must use the forward slash as file separator.
+     * @param forwardSlash whether the forward slash will be forced.
      */
     public void setForwardslash(boolean forwardSlash) {
         this.forwardSlash = forwardSlash;
@@ -146,6 +157,9 @@ public class ExecuteOn extends ExecTask {
      *
      * <p>Set to &lt;= 0 for unlimited - this is the default.</p>
      *
+     * @param max <code>int</code> maximum number of sourcefiles
+     *            passed to the executable.
+     *
      * @since Ant 1.6
      */
     public void setMaxParallel(int max) {
@@ -153,9 +167,11 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Whether to send the source file name on the command line.
+     * Set whether to send the source file name on the command line.
      *
      * <p>Defaults to <code>true</code>.
+     *
+     * @param b whether to add the source file to the command line.
      *
      * @since Ant 1.6
      */
@@ -164,7 +180,9 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Whether to print a verbose summary after execution.
+     * Set whether to operate in verbose mode.
+     * If true, a verbose summary will be printed after execution.
+     * @param b whether to operate in verbose mode.
      *
      * @since Ant 1.6
      */
@@ -173,7 +191,8 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Whether to ignore nonexistent files from filelists.
+     * Set whether to ignore nonexistent files from filelists.
+     * @param b whether to ignore missing files.
      *
      * @since Ant 1.6.2
      */
@@ -182,17 +201,19 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Whether to bypass timestamp comparisons for target files.
+     * Set whether to bypass timestamp comparisons for target files.
+     * @param b whether to bypass timestamp comparisons.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public void setForce(boolean b) {
         force = b;
     }
 
     /**
-     * Marker that indicates where the name of the source file should
-     * be put on the command line.
+     * Create a placeholder indicating where on the command line
+     * the name of the source file should be inserted.
+     * @return <code>Commandline.Marker</code>.
      */
     public Commandline.Marker createSrcfile() {
         if (srcFilePos != null) {
@@ -204,8 +225,9 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Marker that indicates where the name of the target file should
-     * be put on the command line.
+     * Create a placeholder indicating where on the command line
+     * the name of the target file should be inserted.
+     * @return <code>Commandline.Marker</code>.
      */
     public Commandline.Marker createTargetfile() {
         if (targetFilePos != null) {
@@ -218,7 +240,9 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Mapper to use for mapping source files to target files.
+     * Create a nested Mapper element to use for mapping
+     * source files to target files.
+     * @return <code>Mapper</code>.
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
@@ -230,30 +254,28 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * A nested filenamemapper
-     * @param fileNameMapper the mapper to add
+     * Add a nested FileNameMapper.
+     * @param fileNameMapper the mapper to add.
      * @since Ant 1.6.3
      */
     public void add(FileNameMapper fileNameMapper) {
         createMapper().add(fileNameMapper);
     }
 
-
     /**
-     * @todo using taskName here is brittle, as a user could override it.
-     *       this should probably be modified to use the classname instead.
+     * Check the configuration of this ExecuteOn instance.
      */
     protected void checkConfiguration() {
+//     * @TODO using taskName here is brittle, as a user could override it.
+//     *       this should probably be modified to use the classname instead.
         if ("execon".equals(getTaskName())) {
             log("!! execon is deprecated. Use apply instead. !!");
         }
-
         super.checkConfiguration();
         if (filesets.size() == 0 && filelists.size() == 0) {
             throw new BuildException("no filesets and no filelists specified",
                                      getLocation());
         }
-
         if (targetFilePos != null || mapperElement != null
             || destDir != null) {
 
@@ -268,23 +290,34 @@ public class ExecuteOn extends ExecTask {
         }
     }
 
+    /**
+     * Create the ExecuteStreamHandler instance that will be used
+     * during execution.
+     * @return <code>ExecuteStreamHandler</code>.
+     */
     protected ExecuteStreamHandler createHandler() throws BuildException {
         //if we have a RedirectorElement, return a decoy
         return (redirectorElement == null)
             ? super.createHandler() : new PumpStreamHandler();
     }
 
+    /**
+     * Set up the I/O Redirector.
+     */
     protected void setupRedirector() {
         super.setupRedirector();
         redirector.setAppendProperties(true);
     }
 
+    /**
+     * Run the specified Execute object.
+     * @param exe the Execute instance representing the external process.
+     */
     protected void runExec(Execute exe) throws BuildException {
         int totalFiles = 0;
         int totalDirs = 0;
         boolean haveExecuted = false;
         try {
-
             Vector fileNames = new Vector();
             Vector baseDirs = new Vector();
             for (int i = 0; i < filesets.size(); i++) {
@@ -311,7 +344,6 @@ public class ExecuteOn extends ExecTask {
                         baseDirs.addElement(base);
                     }
                 }
-
                 if (!"file".equals(currentType)) {
                     String[] s = getDirs(base, ds);
                     for (int j = 0; j < s.length; j++) {
@@ -320,7 +352,6 @@ public class ExecuteOn extends ExecTask {
                         baseDirs.addElement(base);
                     }
                 }
-
                 if (fileNames.size() == 0 && skipEmpty) {
                     int includedCount
                         = ((!"dir".equals(currentType))
@@ -333,7 +364,6 @@ public class ExecuteOn extends ExecTask {
                         Project.MSG_INFO);
                     continue;
                 }
-
                 if (!parallel) {
                     String[] s = new String[fileNames.size()];
                     fileNames.copyInto(s);
@@ -347,7 +377,6 @@ public class ExecuteOn extends ExecTask {
                             setupRedirector();
                             redirectorElement.configure(redirector, s[j]);
                         }
-
                         if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
                             // reading of pipes;
@@ -361,7 +390,6 @@ public class ExecuteOn extends ExecTask {
                     baseDirs.removeAllElements();
                 }
             }
-
             for (int i = 0; i < filelists.size(); i++) {
                 FileList list = (FileList) filelists.elementAt(i);
                 File base = list.getDir(getProject());
@@ -377,12 +405,10 @@ public class ExecuteOn extends ExecTask {
                         } else {
                             totalDirs++;
                         }
-
                         fileNames.addElement(names[j]);
                         baseDirs.addElement(base);
                     }
                 }
-
                 if (fileNames.size() == 0 && skipEmpty) {
                     DirectoryScanner ds = new DirectoryScanner();
                     ds.setBasedir(base);
@@ -396,7 +422,6 @@ public class ExecuteOn extends ExecTask {
                         Project.MSG_INFO);
                     continue;
                 }
-
                 if (!parallel) {
                     String[] s = new String[fileNames.size()];
                     fileNames.copyInto(s);
@@ -410,7 +435,6 @@ public class ExecuteOn extends ExecTask {
                             setupRedirector();
                             redirectorElement.configure(redirector, s[j]);
                         }
-
                         if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
                             // reading of pipes;
@@ -424,12 +448,10 @@ public class ExecuteOn extends ExecTask {
                     baseDirs.removeAllElements();
                 }
             }
-
             if (parallel && (fileNames.size() > 0 || !skipEmpty)) {
                 runParallel(exe, fileNames, baseDirs);
                 haveExecuted = true;
             }
-
             if (haveExecuted) {
                 log("Applied " + cmdl.getExecutable() + " to "
                     + totalFiles + " file"
@@ -438,7 +460,6 @@ public class ExecuteOn extends ExecTask {
                     + (totalDirs != 1 ? "ies" : "y") + ".",
                     verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
             }
-
         } catch (IOException e) {
             throw new BuildException("Execute failed: " + e, e, getLocation());
         } finally {
@@ -452,8 +473,9 @@ public class ExecuteOn extends ExecTask {
     /**
      * Construct the command line for parallel execution.
      *
-     * @param srcFiles The filenames to add to the commandline
-     * @param baseDirs filenames are relative to this dir
+     * @param srcFiles The filenames to add to the commandline.
+     * @param baseDirs filenames are relative to this dir.
+     * @return the command line in the form of a String[].
      */
     protected String[] getCommandline(String[] srcFiles, File[] baseDirs) {
         final char fileSeparator = File.separatorChar;
@@ -487,7 +509,6 @@ public class ExecuteOn extends ExecTask {
         if (!addSourceFile) {
             srcFiles = new String[0];
         }
-
         String[] orig = cmdl.getCommandline();
         String[] result
             = new String[orig.length + srcFiles.length + targetFiles.length];
@@ -496,7 +517,6 @@ public class ExecuteOn extends ExecTask {
         if (srcFilePos != null) {
             srcIndex = srcFilePos.getPosition();
         }
-
         if (targetFilePos != null) {
             int targetIndex = targetFilePos.getPosition();
 
@@ -549,9 +569,7 @@ public class ExecuteOn extends ExecTask {
             System.arraycopy(orig, srcIndex, result,
                              srcIndex + srcFiles.length,
                              orig.length - srcIndex);
-
         }
-
         // fill in source file names
         for (int i = 0; i < srcFiles.length; i++) {
             if (!relative) {
@@ -571,8 +589,9 @@ public class ExecuteOn extends ExecTask {
     /**
      * Construct the command line for serial execution.
      *
-     * @param srcFile The filename to add to the commandline
-     * @param baseDir filename is relative to this dir
+     * @param srcFile The filename to add to the commandline.
+     * @param baseDir filename is relative to this dir.
+     * @return the command line in the form of a String[].
      */
     protected String[] getCommandline(String srcFile, File baseDir) {
         return getCommandline(new String[] {srcFile}, new File[] {baseDir});
@@ -581,6 +600,9 @@ public class ExecuteOn extends ExecTask {
     /**
      * Return the list of files from this DirectoryScanner that should
      * be included on the command line.
+     * @param baseDir the File base directory.
+     * @param ds the DirectoryScanner to use for file scanning.
+     * @return a String[] containing the filenames.
      */
     protected String[] getFiles(File baseDir, DirectoryScanner ds) {
         return restrict(ds.getIncludedFiles(), baseDir);
@@ -589,6 +611,9 @@ public class ExecuteOn extends ExecTask {
     /**
      * Return the list of Directories from this DirectoryScanner that
      * should be included on the command line.
+     * @param baseDir the File base directory.
+     * @param ds the DirectoryScanner to use for file scanning.
+     * @return a String[] containing the directory names.
      */
     protected String[] getDirs(File baseDir, DirectoryScanner ds) {
         return restrict(ds.getIncludedDirectories(), baseDir);
@@ -597,6 +622,8 @@ public class ExecuteOn extends ExecTask {
     /**
      * Return the list of files or directories from this FileList that
      * should be included on the command line.
+     * @param list the FileList to check.
+     * @return a String[] containing the directory names.
      *
      * @since Ant 1.6.2
      */
@@ -610,8 +637,11 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Runs the command in "parallel" mode, making sure that at most
+     * Run the command in "parallel" mode, making sure that at most
      * maxParallel sourcefiles get passed on the command line.
+     * @param exe the Executable to use.
+     * @param fileNames the Vector of filenames.
+     * @param baseDirs the Vector of base directories corresponding to fileNames.
      *
      * @since Ant 1.6
      */
@@ -645,7 +675,6 @@ public class ExecuteOn extends ExecTask {
                     setupRedirector();
                     redirectorElement.configure(redirector, null);
                 }
-
                 if (redirectorElement != null || currentOffset > 0) {
                     // need to reset the stream handler to restart
                     // reading of pipes;
