@@ -437,4 +437,9 @@ Legal:
     </delete>
   </target>
 
+  <target name="rebuild">
+    <antcall target="clean"/>
+    <antcall target="main"/>
+  </target>
+
 </project>
