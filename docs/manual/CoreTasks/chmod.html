@@ -104,6 +104,11 @@ href="../CoreTypes/filelist.html">filelist</a>s.</p>
 <p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
 UNIX system.</p>
 <blockquote>
+  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;</code></p>
+</blockquote>
+<p>makes the &quot;start.sh&quot; file readable, writable and executable only for the owner on a
+UNIX system.</p>
+<blockquote>
 <pre>
 &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; 
        includes=&quot;**/*.sh&quot;/&gt;
