@@ -14,7 +14,6 @@ import java.util.Iterator;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -92,7 +91,7 @@ public class Move extends Copy
                 try
                 {
                     final String message = "Attempting to rename dir: " + fromDir +
-                                             " to " + toDir;
+                        " to " + toDir;
                     getLogger().debug( message );
                     renameFile( fromDir, toDir, isFiltering(), isForceOverwrite() );
                 }
@@ -148,7 +147,7 @@ public class Move extends Copy
                         {
                             getLogger().debug( "Moving " + fromFile + " to " + toFile );
 
-                            final FilterSetCollection executionFilters = getFilters();
+                            final FilterSetCollection executionFilters = buildFilterSet();
                             if( isForceOverwrite() )
                             {
                                 FileUtil.forceDelete( d );
@@ -214,21 +213,6 @@ public class Move extends Copy
                 }
             }
         }
-    }
-
-    private FilterSetCollection getFilters()
-    {
-        final FilterSetCollection executionFilters = new FilterSetCollection();
-        if( isFiltering() )
-        {
-            executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
-        }
-
-        for( Iterator filterEnum = getFilterSets().iterator(); filterEnum.hasNext(); )
-        {
-            executionFilters.addFilterSet( (FilterSet)filterEnum.next() );
-        }
-        return executionFilters;
     }
 
     /**
