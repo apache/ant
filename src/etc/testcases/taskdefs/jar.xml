@@ -43,8 +43,6 @@
 
   <target name="testRecreateNewerFileSetup" depends="test4">
     <touch file="jar.xml"/>
-    <sleep seconds="3"/>
-    <touch file="${tmp.jar}"/>
   </target>
 
   <target name="testRecreateWithoutUpdateAdditionalFiles">

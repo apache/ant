@@ -77,7 +77,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -101,7 +100,7 @@ import org.apache.tools.zip.ZipOutputStream;
  *
  * @ant.task category="packaging"
  */
-public class Zip extends MatchingTask implements ResourceFactory {
+public class Zip extends MatchingTask {
 
     protected File zipFile;
     // use to scan own archive
@@ -127,7 +126,6 @@ public class Zip extends MatchingTask implements ResourceFactory {
 
     protected boolean doubleFilePass = false;
     protected boolean skipWriting = false;
-    private FileUtils fileUtils;
 
 
     /**
@@ -659,14 +657,14 @@ public class Zip extends MatchingTask implements ResourceFactory {
         return true;
     }
 
-    public Resource getResource(String name) {
-        if (zs==null) {
+    private synchronized ZipScanner getZipScanner() {
+        if (zs == null) {
             zs=new ZipScanner();
             // set the task of the zip scanner so that it can log properly
             zs.setTask(this);
             zs.setSrc(zipFile);
         }
-        return zs.getResource(name);
+        return zs;
     }
 
     /**
@@ -741,7 +739,8 @@ public class Zip extends MatchingTask implements ResourceFactory {
                 Resource[] newerSources = 
                     SourceSelector.selectOutOfDateSources(this,
                                                           resourceNames[i],
-                                                          myMapper, this);
+                                                          myMapper,
+                                                          getZipScanner());
                 result = (newerSources.length == 0);
                 if (!result) {
                     return result;
