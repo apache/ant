@@ -72,7 +72,8 @@ public class ClassFileTest extends TestCase {
 
     public void testVector() throws IOException {
         String classname = ClassTest.class.getName().replace('.', '/') + ".class";
-        InputStream is = ClassLoader.getSystemResourceAsStream(classname);
+        InputStream is = getClass().getClassLoader().getResourceAsStream(classname);
+		assertNotNull("Unable to find resource " + classname + "in caller classloader");
         ClassFile clazzfile = new ClassFile(is);
         assertEquals("ClassTest", clazzfile.getName());
         assertEquals("ClassFileTest.java", clazzfile.getSourceFile());
