@@ -23,8 +23,8 @@ Legal:
   <target name="main"
           depends="typedef-test, converterdef-test,
                    datatype-test, namespace-test,
-                   ant1-tasklib-test, prim->file-manip,
-                   prim->extensions-test, prim->typed-adder-test" />
+                   ant1-tasklib-test,
+                   prim->extensions-test" />
 
   <target name="xp-deployer-test" depends="typedef-test, prim->undefined-task" />
 

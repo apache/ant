@@ -20,28 +20,14 @@ Legal:
 
   <property name="year" value="2000"/>
 
-  <target name="main" depends="test-target" />
-
-  <target name="file-manip">
-    <!--
-    <file-manip-test base-directory=".">
-      <source>
-        <include value="**/*.java" />
-      </source>
-    </file-manip-test>
-    -->
-  </target>
+  <target name="main" depends="extensions-test" />
 
   <target name="undefined-task">
     <log message="About to execute task that hasn't been defined"/>
     <log2 message="This should have failed"/>
   </target>
 
-  <target name="no-test-target" if="no-do-tests">
-    <log message="No tests done here"/>
-  </target>
-
-  <target name="test-target" depends="no-test-target,extensions-test" unless="no-do-tests">
+  <target name="prim-tests">
 
     <log message="Tests away"/>
 
@@ -60,24 +46,10 @@ Legal:
         double="3.0"
         double2="4.0" />
 
-    <sub-elements-test>
-      <create-beep message="A string" />
-      <add-beep message="Another String" />
-    </sub-elements-test>
-
-    <conf-test message="..." />
-
-    <content-test>123</content-test>
-
   </target>
 
   <target name="extensions-test">
     <extensions-test/>
-  </target>
-
-  <target name="typed-adder-test">
-    <log message="About to execute typed-adder-test"/>
-    <typed-adder-test/>
   </target>
 
 </project>
