@@ -19,6 +19,7 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -245,6 +246,66 @@ public class DirectoryScanner
 
     /** Whether or not everything tested so far has been included. */
     protected boolean everythingIncluded = true;
+
+    /**
+     * Set of all include patterns that are full file names and don't
+     * contain any wildcards.
+     *
+     * <p>If this instance is not case sensitive, the file names get
+     * turned to lower case.</p>
+     *
+     * <p>Gets lazily initialized on the first invocation of
+     * isIncluded or isExcluded and cleared at the end of the scan
+     * method (cleared in clearCaches, actually).</p>
+     *
+     * @since Ant 1.7
+     */
+    private Set includeNonPatterns = new HashSet();
+
+    /**
+     * Set of all include patterns that are full file names and don't
+     * contain any wildcards.
+     *
+     * <p>If this instance is not case sensitive, the file names get
+     * turned to lower case.</p>
+     *
+     * <p>Gets lazily initialized on the first invocation of
+     * isIncluded or isExcluded and cleared at the end of the scan
+     * method (cleared in clearCaches, actually).</p>
+     *
+     * @since Ant 1.7
+     */
+    private Set excludeNonPatterns = new HashSet();
+
+    /**
+     * Array of all include patterns that contain wildcards.
+     *
+     * <p>Gets lazily initialized on the first invocation of
+     * isIncluded or isExcluded and cleared at the end of the scan
+     * method (cleared in clearCaches, actually).</p>
+     *
+     * @since Ant 1.7
+     */
+    private String[] includePatterns;
+
+    /**
+     * Array of all exclude patterns that contain wildcards.
+     *
+     * <p>Gets lazily initialized on the first invocation of
+     * isIncluded or isExcluded and cleared at the end of the scan
+     * method (cleared in clearCaches, actually).</p>
+     *
+     * @since Ant 1.7
+     */
+    private String[] excludePatterns;
+
+    /**
+     * Have the non-pattern sets and pattern arrays for in- and
+     * excludes been initialized?
+     *
+     * @since Ant 1.7
+     */
+    private boolean areNonPatternSetsReady = false;
 
     /**
      * Sole constructor.
@@ -699,7 +760,7 @@ public class DirectoryScanner
                     }
                 }
 
-                if ((myfile == null || !myfile.exists()) && !isCaseSensitive) {
+                if ((myfile == null || !myfile.exists()) && !isCaseSensitive()) {
                     File f = findFileCaseInsensitive(basedir, currentelement);
                     if (f.exists()) {
                         // adapt currentelement to the case we've
@@ -732,10 +793,10 @@ public class DirectoryScanner
                             scandir(myfile, currentelement, true);
                         }
                     } else {
-                        if (isCaseSensitive
+                        if (isCaseSensitive()
                             && originalpattern.equals(currentelement)) {
                             accountForIncludedFile(currentelement, myfile);
-                        } else if (!isCaseSensitive
+                        } else if (!isCaseSensitive()
                                    && originalpattern
                                    .equalsIgnoreCase(currentelement)) {
                             accountForIncludedFile(currentelement, myfile);
@@ -950,8 +1011,21 @@ public class DirectoryScanner
      *         include pattern, or <code>false</code> otherwise.
      */
     protected boolean isIncluded(String name) {
-        for (int i = 0; i < includes.length; i++) {
-            if (matchPath(includes[i], name, isCaseSensitive)) {
+        if (!areNonPatternSetsReady) {
+            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
+            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
+            areNonPatternSetsReady = true;
+        }
+
+        if ((isCaseSensitive() && includeNonPatterns.contains(name))
+            ||
+            (!isCaseSensitive() 
+             && includeNonPatterns.contains(name.toUpperCase()))) {
+                return true;
+        }
+
+        for (int i = 0; i < includePatterns.length; i++) {
+            if (matchPath(includePatterns[i], name, isCaseSensitive())) {
                 return true;
             }
         }
@@ -968,7 +1042,7 @@ public class DirectoryScanner
      */
     protected boolean couldHoldIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
-            if (matchPatternStart(includes[i], name, isCaseSensitive)) {
+            if (matchPatternStart(includes[i], name, isCaseSensitive())) {
                 if (isMorePowerfulThanExcludes(name, includes[i])) {
                     return true;
                 }
@@ -1011,8 +1085,21 @@ public class DirectoryScanner
      *         exclude pattern, or <code>false</code> otherwise.
      */
     protected boolean isExcluded(String name) {
-        for (int i = 0; i < excludes.length; i++) {
-            if (matchPath(excludes[i], name, isCaseSensitive)) {
+        if (!areNonPatternSetsReady) {
+            includePatterns = fillNonPatternSet(includeNonPatterns, includes);
+            excludePatterns = fillNonPatternSet(excludeNonPatterns, excludes);
+            areNonPatternSetsReady = true;
+        }
+        
+        if ((isCaseSensitive() && excludeNonPatterns.contains(name))
+            ||
+            (!isCaseSensitive() 
+             && excludeNonPatterns.contains(name.toUpperCase()))) {
+                return true;
+        }
+
+        for (int i = 0; i < excludePatterns.length; i++) {
+            if (matchPath(excludePatterns[i], name, isCaseSensitive())) {
                 return true;
             }
         }
@@ -1414,5 +1501,33 @@ public class DirectoryScanner
     private void clearCaches() {
         fileListMap.clear();
         scannedDirs.clear();
+        includeNonPatterns.clear();
+        excludeNonPatterns.clear();
+        includePatterns = excludePatterns = null;
+        areNonPatternSetsReady = false;
     }
+
+    /**
+     * Adds all patterns that are no real patterns (doesn't contain
+     * wildcards) to the set and returns the real patterns.
+     *
+     * @since Ant 1.7
+     */
+    private String[] fillNonPatternSet(Set set, String[] patterns) {
+        ArrayList al = new ArrayList(patterns.length);
+        for (int i = 0; i < patterns.length; i++) {
+            if (!SelectorUtils.hasWildcards(patterns[i])) {
+                if (isCaseSensitive()) {
+                    set.add(patterns[i]);
+                } else {
+                    set.add(patterns[i].toUpperCase());
+                }
+            } else {
+                al.add(patterns[i]);
+            }
+        }
+        return set.size() == 0 ? patterns 
+            : (String[]) al.toArray(new String[al.size()]);
+    }
+
 }
