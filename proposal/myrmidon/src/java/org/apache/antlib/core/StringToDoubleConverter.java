@@ -17,6 +17,7 @@ import org.apache.myrmidon.converter.ConverterException;
  * String to double converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:converter source="java.lang.String" destination="java.lang.Double"
  */
 public class StringToDoubleConverter
     extends AbstractConverter

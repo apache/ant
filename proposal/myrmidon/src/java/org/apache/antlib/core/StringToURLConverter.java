@@ -19,6 +19,7 @@ import org.apache.myrmidon.converter.ConverterException;
  * String to url converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:converter source="java.lang.String" destination="java.net.URL"
  */
 public class StringToURLConverter
     extends AbstractConverter

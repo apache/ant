@@ -21,6 +21,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
  * This task loads properties from a property file and places them in the context.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:task name="load-properties"
  */
 public class LoadProperties
     extends AbstractContainerTask

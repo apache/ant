@@ -17,6 +17,7 @@ import org.apache.myrmidon.converter.ConverterException;
  * String to short converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:converter source="java.lang.String" destination="java.lang.Short"
  */
 public class StringToShortConverter
     extends AbstractConverter

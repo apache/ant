@@ -456,4 +456,26 @@ Legal:
     <antcall target="main"/>
   </target>
 
+  <target name="xdoclet">
+    <path id="xdoclet.classpath">
+      <pathelement location="lib/xdoclet.jar"/>
+      <pathelement location="lib/log4j-core.jar"/>
+      <!-- javadoc is needed -->
+      <pathelement path="${java.class.path}"/>
+      <pathelement location="${build.classes}"/>
+    </path>
+    <taskdef name="xdoclet"
+           classname="xdoclet.DocletTask"
+           classpath="lib/xdoclet.jar"/>
+    <xdoclet sourcepath="${java.dir}"
+              destdir="${build.dir}"
+              classpathref="xdoclet.classpath">
+      <fileset dir="${java.dir}">
+        <include name="**/*.java" />
+      </fileset>
+      <template templateFile="${manifest.dir}/core-ant-descriptor.template"
+                destinationfile="core-ant-descriptor.xml"/>
+    </xdoclet>
+  </target>
+  
 </project>

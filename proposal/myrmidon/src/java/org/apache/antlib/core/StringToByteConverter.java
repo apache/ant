@@ -17,6 +17,7 @@ import org.apache.myrmidon.converter.ConverterException;
  * String to byte converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:converter source="java.lang.String" destination="java.lang.Byte"
  */
 public class StringToByteConverter
     extends AbstractConverter

@@ -1,0 +1,26 @@
+<ant-lib>
+
+  <types>
+
+    <XDtClass:forAllClasses type="org.apache.myrmidon.api.AbstractTask" extent="hierarchy">
+      <XDtClass:ifHasClassTag tagName="ant:task">
+        <task name="<XDtClass:classTagValue tagName="ant:task" paramName="name"/>"
+              classname="<XDtClass:fullClassName/>"/>
+      </XDtClass:ifHasClassTag>
+    </XDtClass:forAllClasses>
+
+  </types>
+
+  <converters>
+
+    <XDtClass:forAllClasses type="org.apache.myrmidon.converter.AbstractConverter">
+      <XDtClass:ifHasClassTag tagName="ant:converter">
+        <converter classname="<XDtClass:fullClassName/>"
+                   source="<XDtClass:classTagValue tagName="ant:converter" paramName="source"/>"
+                   destination="<XDtClass:classTagValue tagName="ant:converter" paramName="destination"/>"/>
+      </XDtClass:ifHasClassTag>
+    </XDtClass:forAllClasses>
+
+  </converters>
+
+</ant-lib>

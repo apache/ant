@@ -17,6 +17,7 @@ import org.apache.myrmidon.converter.ConverterException;
  * String to class converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:converter source="java.lang.String" destination="java.lang.Class"
  */
 public class StringToClassConverter
     extends AbstractConverter
