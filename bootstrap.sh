@@ -21,7 +21,7 @@ cp src/main/org/apache/tools/ant/parser.properties ${CLASSDIR}/org/apache/tools/
 java org.apache.tools.ant.Main main
 java org.apache.tools.ant.Main clean 
 
-if ! test -e bin; then mkdir bin; fi
+if test ! -d bin; then mkdir bin; fi
 cp src/bin/antRun bin
 chmod +x bin/antRun
 
