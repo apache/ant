@@ -16,6 +16,14 @@ import java.util.Locale;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
+import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
+import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
+import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
+import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
+import org.apache.myrmidon.framework.exec.launchers.PerlCommandLauncher;
+import org.apache.myrmidon.framework.exec.ExecMetaData;
+import org.apache.myrmidon.framework.exec.launchers.ExecUtil;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -33,7 +41,7 @@ public class Execute
     public final static int INVALID = Integer.MAX_VALUE;
 
     protected static String c_antWorkingDirectory = System.getProperty( "user.dir" );
-    private static CommandLauncher c_vmLauncher;
+    private static CommandLauncher c_launcher;
     private static CommandLauncher c_shellLauncher;
     private static Vector c_procEnvironment;
 
@@ -64,41 +72,21 @@ public class Execute
 
         try
         {
-            // Try using a JDK 1.3 launcher
-            try
-            {
-                c_vmLauncher = new Java13CommandLauncher();
-            }
-            catch( NoSuchMethodException exc )
-            {
-                // Ignore and keep try
-            }
+            c_launcher = new DefaultCommandLauncher();
 
             if( Os.isFamily( "mac" ) )
             {
                 // Mac
-                c_shellLauncher = new MacCommandLauncher( new CommandLauncher() );
+                c_shellLauncher = new MacCommandLauncher();
             }
             else if( Os.isFamily( "os/2" ) )
             {
                 // OS/2 - use same mechanism as Windows 2000
-                c_shellLauncher = new WinNTCommandLauncher( new CommandLauncher() );
+                c_shellLauncher = new WinNTCommandLauncher();
             }
             else if( Os.isFamily( "windows" ) )
             {
                 // Windows.  Need to determine which JDK we're running in
-
-                CommandLauncher baseLauncher;
-                if( System.getProperty( "java.version" ).startsWith( "1.1" ) )
-                {
-                    // JDK 1.1
-                    baseLauncher = new Java11CommandLauncher();
-                }
-                else
-                {
-                    // JDK 1.2
-                    baseLauncher = new CommandLauncher();
-                }
 
                 // Determine if we're running under 2000/NT or 98/95
                 String osname =
@@ -107,35 +95,23 @@ public class Execute
                 if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
                 {
                     // Windows 2000/NT
-                    c_shellLauncher = new WinNTCommandLauncher( baseLauncher );
+                    c_shellLauncher = new WinNTCommandLauncher();
                 }
                 else
                 {
                     // Windows 98/95 - need to use an auxiliary script
-                    c_shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat", baseLauncher );
+                    c_shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat" );
                 }
             }
             else if( (new Os( "netware" )).eval() )
             {
                 // NetWare.  Need to determine which JDK we're running in
-                CommandLauncher baseLauncher;
-                if( System.getProperty( "java.version" ).startsWith( "1.1" ) )
-                {
-                    // JDK 1.1
-                    baseLauncher = new Java11CommandLauncher();
-                }
-                else
-                {
-                    // JDK 1.2
-                    baseLauncher = new CommandLauncher();
-                }
-
-                c_shellLauncher = new PerlScriptCommandLauncher( "bin/antRun.pl", baseLauncher );
+                c_shellLauncher = new PerlCommandLauncher( "bin/antRun.pl" );
             }
             else
             {
                 // Generic
-                c_shellLauncher = new ScriptCommandLauncher( "bin/antRun", new CommandLauncher() );
+                c_shellLauncher = new ScriptCommandLauncher( "bin/antRun" );
             }
         }
         catch( TaskException e )
@@ -438,13 +414,17 @@ public class Execute
     public int execute()
         throws IOException, TaskException
     {
-        CommandLauncher launcher = c_vmLauncher != null ? c_vmLauncher : c_shellLauncher;
+        CommandLauncher launcher = c_launcher != null ? c_launcher : c_shellLauncher;
         if( !m_useVMLauncher )
         {
             launcher = c_shellLauncher;
         }
 
-        final Process process = launcher.exec( m_project, getCommandline(), getEnvironment(), m_workingDirectory );
+        if( null == m_workingDirectory ) m_workingDirectory = new File( "." );
+        final ExecMetaData metaData =
+            new ExecMetaData( getCommandline(), getEnvironment(),
+                              m_workingDirectory, false );
+        final Process process = launcher.exec( metaData );
         try
         {
             m_streamHandler.setProcessInputStream( process.getOutputStream() );
