@@ -324,13 +324,26 @@ public class XSLTProcess
             while( params.hasNext() )
             {
                 final XSLTParam param = (XSLTParam)params.next();
-                m_liaison.addParam( param.getName(), param.getExpression() );
+
+                final String expression = param.getExpression();
+                if( expression == null )
+                {
+                    throw new TaskException( "Expression attribute is missing." );
+                }
+
+                final String name = param.getName();
+                if( name == null )
+                {
+                    throw new TaskException( "Name attribute is missing." );
+                }
+
+                m_liaison.addParam( name, expression );
             }
         }
         catch( final Exception e )
         {
             getLogger().info( "Failed to read stylesheet " + stylesheet );
-            throw new TaskException( "Error", e );
+            throw new TaskException( e.getMessage(), e );
         }
     }
 
@@ -342,8 +355,8 @@ public class XSLTProcess
         {
             if( !directory.mkdirs() )
             {
-                throw new TaskException( "Unable to create directory: "
-                                         + directory.getAbsolutePath() );
+                throw new TaskException( "Unable to create directory: " +
+                                         directory.getAbsolutePath() );
             }
         }
     }

@@ -9,7 +9,7 @@ package org.apache.antlib.xml;
 
 import org.apache.myrmidon.api.TaskException;
 
-public class XSLTParam
+public final class XSLTParam
 {
     private String m_name;
     private String m_expression;
@@ -24,23 +24,13 @@ public class XSLTParam
         m_name = name;
     }
 
-    public String getExpression()
-        throws TaskException
+    protected String getExpression()
     {
-        if( m_expression == null )
-        {
-            throw new TaskException( "Expression attribute is missing." );
-        }
         return m_expression;
     }
 
-    public String getName()
-        throws TaskException
+    protected String getName()
     {
-        if( m_name == null )
-        {
-            throw new TaskException( "Name attribute is missing." );
-        }
         return m_name;
     }
 }

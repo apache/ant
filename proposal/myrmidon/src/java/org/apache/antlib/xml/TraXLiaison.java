@@ -208,5 +208,4 @@ public class TraXLiaison
 
         getLogger().info( msg.toString() );
     }
-
-}//-- TraXLiaison
+}

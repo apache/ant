@@ -59,7 +59,6 @@ public class XMLValidateTask
     private boolean m_warn = true;
     private boolean m_lenient;
     private String m_readerClassName = DEFAULT_XML_READER_CLASSNAME;
-
     private File m_file;// file to be validated
     private ArrayList m_filesets = new ArrayList();
 
@@ -74,7 +73,7 @@ public class XMLValidateTask
     /**
      * to report sax parsing errors
      */
-    private ValidatorErrorHandler m_errorHandler = new ValidatorErrorHandler();
+    private ValidatorErrorHandler m_errorHandler;
     private Hashtable m_features = new Hashtable();
 
     /**
@@ -234,9 +233,10 @@ public class XMLValidateTask
         getLogger().info( message );
     }
 
-    private EntityResolver getEntityResolver()
+    private EntityResolver buildEntityResolver()
     {
         final LocalResolver resolver = new LocalResolver();
+        setupLogger( resolver );
 
         for( int i = 0; i < m_dtdLocations.size(); i++ )
         {
@@ -377,7 +377,10 @@ public class XMLValidateTask
             throw new TaskException( INIT_FAILED_MSG + m_readerClassName, e );
         }
 
-        m_xmlReader.setEntityResolver( getEntityResolver() );
+        m_xmlReader.setEntityResolver( buildEntityResolver() );
+
+        m_errorHandler = new ValidatorErrorHandler( m_warn );
+        setupLogger( m_errorHandler );
         m_xmlReader.setErrorHandler( m_errorHandler );
 
         if( !( m_xmlReader instanceof ParserAdapter ) )
@@ -403,175 +406,4 @@ public class XMLValidateTask
         }
     }
 
-    /*
-     * ValidatorErrorHandler role :
-     * <ul>
-     * <li> log SAX parse exceptions,
-     * <li> remember if an error occured
-     * </ul>
-     */
-    private class ValidatorErrorHandler
-        implements ErrorHandler
-    {
-        private File currentFile;
-        private String lastErrorMessage;
-        private boolean failed;
-
-        // did an error happen during last parsing ?
-        public boolean getFailure()
-        {
-            return failed;
-        }
-
-        public void error( SAXParseException exception )
-        {
-            failed = true;
-            getLogger().error( getMessage( exception ), exception );
-        }
-
-        public void fatalError( SAXParseException exception )
-        {
-            failed = true;
-            getLogger().error( getMessage( exception ), exception );
-        }
-
-        public void init( File file )
-        {
-            currentFile = file;
-            failed = false;
-        }
-
-        public void warning( SAXParseException exception )
-        {
-            // depending on implementation, XMLReader can yield hips of warning,
-            // only output then if user explicitely asked for it
-            if( m_warn )
-            {
-                getLogger().warn( getMessage( exception ), exception );
-            }
-        }
-
-        private String getMessage( SAXParseException e )
-        {
-            String sysID = e.getSystemId();
-            if( sysID != null )
-            {
-                try
-                {
-                    int line = e.getLineNumber();
-                    int col = e.getColumnNumber();
-                    return new URL( sysID ).getFile() +
-                        ( line == -1 ? "" : ( ":" + line +
-                        ( col == -1 ? "" : ( ":" + col ) ) ) ) +
-                        ": " + e.getMessage();
-                }
-                catch( MalformedURLException mfue )
-                {
-                }
-            }
-            return e.getMessage();
-        }
-    }
-
-    private class LocalResolver
-        implements EntityResolver
-    {
-        private Hashtable fileDTDs = new Hashtable();
-        private Hashtable resourceDTDs = new Hashtable();
-        private Hashtable urlDTDs = new Hashtable();
-
-        public void registerDTD( String publicId, String location )
-        {
-            if( location == null )
-            {
-                return;
-            }
-
-            File fileDTD = new File( location );
-            if( fileDTD.exists() )
-            {
-                if( publicId != null )
-                {
-                    fileDTDs.put( publicId, fileDTD );
-                    getLogger().debug( "Mapped publicId " + publicId + " to file " + fileDTD );
-                }
-                return;
-            }
-
-            if( LocalResolver.this.getClass().getResource( location ) != null )
-            {
-                if( publicId != null )
-                {
-                    resourceDTDs.put( publicId, location );
-                    getLogger().debug( "Mapped publicId " + publicId + " to resource " + location );
-                }
-            }
-
-            try
-            {
-                if( publicId != null )
-                {
-                    URL urldtd = new URL( location );
-                    urlDTDs.put( publicId, urldtd );
-                }
-            }
-            catch( MalformedURLException e )
-            {
-                //ignored
-            }
-        }
-
-        public void registerDTD( DTDLocation location )
-        {
-            registerDTD( location.getPublicId(), location.getLocation() );
-        }
-
-        public InputSource resolveEntity( String publicId, String systemId )
-            throws SAXException
-        {
-            File dtdFile = (File)fileDTDs.get( publicId );
-            if( dtdFile != null )
-            {
-                try
-                {
-                    getLogger().debug( "Resolved " + publicId + " to local file " + dtdFile );
-                    return new InputSource( new FileInputStream( dtdFile ) );
-                }
-                catch( FileNotFoundException ex )
-                {
-                    // ignore
-                }
-            }
-
-            String dtdResourceName = (String)resourceDTDs.get( publicId );
-            if( dtdResourceName != null )
-            {
-                InputStream is = getClass().getResourceAsStream( dtdResourceName );
-                if( is != null )
-                {
-                    getLogger().debug( "Resolved " + publicId + " to local resource " + dtdResourceName );
-                    return new InputSource( is );
-                }
-            }
-
-            URL dtdUrl = (URL)urlDTDs.get( publicId );
-            if( dtdUrl != null )
-            {
-                try
-                {
-                    InputStream is = dtdUrl.openStream();
-                    getLogger().debug( "Resolved " + publicId + " to url " + dtdUrl );
-                    return new InputSource( is );
-                }
-                catch( IOException ioe )
-                {
-                    //ignore
-                }
-            }
-
-            getLogger().info( "Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity" );
-
-            return null;
-        }
-    }
 }
