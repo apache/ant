@@ -1150,7 +1150,7 @@ public class FileUtils {
      * This was originally an emulation of File.createNewFile for JDK 1.1,
      * but it is now implemented using that method (Ant1.7 onwards).
      *
-     * <p>This method has not historically <strong>not</strong> guaranteed that the
+     * <p>This method has historically <strong>not</strong> guaranteed that the
      * operation was atomic. In its current implementation it is.
      *
      * @param f the file to be created
