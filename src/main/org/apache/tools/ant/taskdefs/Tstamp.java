@@ -85,8 +85,7 @@ public class Tstamp extends Task {
             project.setProperty("TODAY", today.format(d));
             
             Enumeration i = customFormats.elements();
-            while(i.hasMoreElements())
-            {
+            while(i.hasMoreElements()) {
                 CustomFormat cts = (CustomFormat)i.nextElement();
                 cts.execute(project,d, location);
             }
@@ -107,6 +106,9 @@ public class Tstamp extends Task {
     {
         private String propertyName;
         private String pattern;
+        private String language;
+        private String country;
+        private String variant;
         private int offset = 0;
         private int field = Calendar.DATE;
         
@@ -122,6 +124,29 @@ public class Tstamp extends Task {
         public void setPattern(String pattern)
         {
             this.pattern = pattern;
+        }
+        
+        public void setLocale(String locale)
+        {
+            StringTokenizer st = new StringTokenizer( locale, " \t\n\r\f,");
+            try {
+                language = st.nextToken();
+                if (st.hasMoreElements()) {
+                    country = st.nextToken();
+                    if (st.hasMoreElements()) {
+                        country = st.nextToken();
+                        if (st.hasMoreElements()) {
+                            throw new BuildException( "bad locale format", location);
+                        }
+                    }
+                }
+                else {
+                    country = "";
+                }
+            }
+            catch (NoSuchElementException e) {
+                throw new BuildException( "bad locale format", e, location);
+            }
         }
         
         public void setOffset(int offset) {
@@ -168,7 +193,16 @@ public class Tstamp extends Task {
                 throw new BuildException("pattern attribute must be provided", location);
             }
             
-            SimpleDateFormat sdf = new SimpleDateFormat (pattern);
+            SimpleDateFormat sdf;
+            if (language == null) {
+                sdf = new SimpleDateFormat(pattern);
+            }
+            else if (variant == null) {
+                sdf = new SimpleDateFormat(pattern, new Locale(language, country));
+            }
+            else {
+                sdf = new SimpleDateFormat(pattern, new Locale(language, country, variant));
+            }
             if (offset != 0) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
