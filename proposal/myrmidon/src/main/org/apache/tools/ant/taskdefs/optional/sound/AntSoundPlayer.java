@@ -19,10 +19,9 @@ import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.Project;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.myrmidon.listeners.AbstractProjectListener;
 
 /**
  * This class is designed to be used by any AntTask that requires audio output.
@@ -35,8 +34,8 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  * @version $Revision$, $Date$
  */
 public class AntSoundPlayer
-    extends AbstractLogEnabled
-    implements LineListener, BuildListener
+    extends AbstractProjectListener
+    implements LineListener, LogEnabled
 {
     private File m_fileSuccess;
     private int m_loopsSuccess;
@@ -46,8 +45,40 @@ public class AntSoundPlayer
     private int m_loopsFail;
     private Long m_durationFail;
 
-    public AntSoundPlayer()
+    private Logger m_logger;
+
+    /**
+     * Provide component with a logger.
+     *
+     * @param logger the logger
+     */
+    public void enableLogging( final Logger logger )
     {
+        m_logger = logger;
+    }
+
+    protected final Logger getLogger()
+    {
+        return m_logger;
+    }
+
+    /**
+     * Notify listener of projectFinished event.
+     */
+    public void projectFinished()
+    {
+        success();
+    }
+
+    /**
+     * Notify listener of log message event.
+     *
+     * @param message the message
+     * @param throwable the throwable
+     */
+    public void log( final String message, final Throwable throwable )
+    {
+        failure();
     }
 
     /**
@@ -79,80 +110,6 @@ public class AntSoundPlayer
     }
 
     /**
-     * Fired after the last target has finished. This event will still be thrown
-     * if an error occured during the build.
-     *
-     * @see BuildEvent#getException()
-     */
-    public void buildFinished( BuildEvent event )
-    {
-        if( event.getException() == null && m_fileSuccess != null )
-        {
-            // build successfull!
-            play( m_fileSuccess, m_loopsSuccess, m_durationSuccess );
-        }
-        else if( event.getException() != null && m_fileFail != null )
-        {
-            play( m_fileFail, m_loopsFail, m_durationFail );
-        }
-    }
-
-    /**
-     * Fired before any targets are started.
-     */
-    public void buildStarted( BuildEvent event )
-    {
-    }
-
-    /**
-     * Fired whenever a message is logged.
-     *
-     * @see BuildEvent#getMessage()
-     * @see BuildEvent#getPriority()
-     */
-    public void messageLogged( BuildEvent event )
-    {
-    }
-
-    /**
-     * Fired when a target has finished. This event will still be thrown if an
-     * error occured during the build.
-     *
-     * @see BuildEvent#getException()
-     */
-    public void targetFinished( BuildEvent event )
-    {
-    }
-
-    /**
-     * Fired when a target is started.
-     *
-     * @see BuildEvent#getTarget()
-     */
-    public void targetStarted( BuildEvent event )
-    {
-    }
-
-    /**
-     * Fired when a task has finished. This event will still be throw if an
-     * error occured during the build.
-     *
-     * @see BuildEvent#getException()
-     */
-    public void taskFinished( BuildEvent event )
-    {
-    }
-
-    /**
-     * Fired when a task is started.
-     *
-     * @see BuildEvent#getTask()
-     */
-    public void taskStarted( BuildEvent event )
-    {
-    }
-
-    /**
      * This is implemented to listen for any line events and closes the clip if
      * required.
      */
@@ -171,6 +128,23 @@ public class AntSoundPlayer
              * So we have to exit ourselves.
              */
             //System.exit(0);
+        }
+    }
+
+    protected void success()
+    {
+        if( null != m_fileSuccess )
+        {
+            // build successfull!
+            play( m_fileSuccess, m_loopsSuccess, m_durationSuccess );
+        }
+    }
+
+    protected void failure()
+    {
+        if( null != m_fileFail )
+        {
+            play( m_fileFail, m_loopsFail, m_durationFail );
         }
     }
 
