@@ -53,30 +53,24 @@
  */
 package org.apache.tools.ant;
 
-/**
- * Used to report exit status of classes which call System.exit()
- *
- * @see NoExitSecurityManager
- *
- * @author Conor MacNeill
- */
-public class ExitException extends SecurityException {
+import java.security.Permission;
 
-    private int status;
-    
-    /**
-     * Constructs an exit exception.
-     * @param status the status code returned via System.exit()
-     */
-    public ExitException(int status) {
-        super("ExitException: status " + status);
-        this.status = status;
+/**
+ * This is intended as a replacement for the default system manager.
+ * The goal is to intercept System.exit calls and make it throw an
+ * exception instead so that a System.exit in a task does not
+ * fully terminate Ant.
+ *
+ * @see ExitException
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ */
+public class NoExitSecurityManager extends SecurityManager {
+
+    public void checkExit(int status) {
+        throw new ExitException(status);
     }
 
-    /**
-     * @return the status code return via System.exit()
-     */
-    public int getStatus() {
-        return status;
+    public void checkPermission(Permission perm) {
+        // no permission here
     }
 }

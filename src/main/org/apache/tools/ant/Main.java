@@ -417,8 +417,15 @@ public class Main {
 
             PrintStream err = System.err;
             PrintStream out = System.out;
-            SecurityManager oldsm = System.getSecurityManager();
 
+            // use a system manager that prevents from System.exit()
+            // only in JDK > 1.1
+            SecurityManager oldsm = null;
+            if ( !Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
+                !Project.JAVA_1_1.equals(Project.getJavaVersion()) ){
+                oldsm = System.getSecurityManager();
+                System.setSecurityManager(new NoExitSecurityManager());
+            }
             try {
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
                 System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
@@ -468,6 +475,10 @@ public class Main {
                 project.executeTargets(targets);
             }
             finally {
+                // put back the original security manager
+                if (oldsm != null){
+                    System.setSecurityManager(oldsm);
+                }
                 System.setOut(out);
                 System.setErr(err);
             }
