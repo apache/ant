@@ -1090,8 +1090,19 @@ public class Project {
      */
     public void executeTargets(Vector targetNames) throws BuildException {
 
+        BuildException thrownException = null;
         for (int i = 0; i < targetNames.size(); i++) {
-            executeTarget((String) targetNames.elementAt(i));
+            try {
+                executeTarget((String) targetNames.elementAt(i));
+            } catch (BuildException ex) {
+                if (!(keepGoingMode)) {
+                    throw ex; // Throw further
+                }
+                thrownException = ex;
+            }
+        }
+        if (thrownException != null) {
+            throw thrownException;
         }
     }
 
