@@ -182,8 +182,7 @@ public class FormatterElement {
      * used if the property has been set, otherwise it won't.
      * @param ifProperty name of property
      */
-    public void setIf(String ifProperty)
-    {
+    public void setIf(String ifProperty) {
         this.ifProperty = ifProperty;
     }
 
@@ -193,8 +192,7 @@ public class FormatterElement {
      * will be used.
      * @param unlessProperty name of property
      */
-    public void setUnless(String unlessProperty)
-    {
+    public void setUnless(String unlessProperty) {
         this.unlessProperty = unlessProperty;
     }
 

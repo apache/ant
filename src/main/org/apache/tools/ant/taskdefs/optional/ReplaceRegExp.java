@@ -371,8 +371,7 @@ public class ReplaceRegExp extends Task {
                             // first CR in this line
                             hasCR = true;
                         }
-                    }
-                    else if (c == '\n') {
+                    } else if (c == '\n') {
                         // LF -> EOL
                         line = linebuf.toString();
                         res  = doReplace(regex, subs, line, options);

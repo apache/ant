@@ -63,8 +63,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * A representation of a Java command line that is nothing more
- * than a composite of 2 <tt>Commandline</tt>. One is used for the 
- * vm/options and one for the classname/arguments. It provides 
+ * than a composite of 2 <tt>Commandline</tt>. One is used for the
+ * vm/options and one for the classname/arguments. It provides
  * specific methods for a java command line.
  *
  * @author thomas.haas@softwired-inc.com
@@ -105,7 +105,7 @@ public class CommandlineJava implements Cloneable {
         public String[] getVariables() throws BuildException {
             String[] props = super.getVariables();
             Properties p = mergePropertySets();
-      
+
             if (props == null) {
                 if (p.size() == 0) {
                     return null;
@@ -124,7 +124,7 @@ public class CommandlineJava implements Cloneable {
                 String value = p.getProperty(key);
                 result[i++] = "-D" + key + "=" + value;
             }
-            
+
             return result;
         }
 
@@ -182,7 +182,7 @@ public class CommandlineJava implements Cloneable {
 
         private Properties mergePropertySets() {
             Properties p = new Properties();
-            for (Enumeration e = propertySets.elements(); 
+            for (Enumeration e = propertySets.elements();
                  e.hasMoreElements();) {
                 PropertySet ps = (PropertySet) e.nextElement();
                 p.putAll(ps.getProperties());
@@ -227,7 +227,7 @@ public class CommandlineJava implements Cloneable {
      * set a jar file to execute via the -jar option.
      * @param jarpathname the pathname of the jar to execute
      */
-    public void setJar(String jarpathname){
+    public void setJar(String jarpathname) {
         javaCommand.setExecutable(jarpathname);
         executeJar = true;
     }
@@ -237,8 +237,8 @@ public class CommandlineJava implements Cloneable {
      * or <tt>null</tt> if there is no jar to run.
      * @see #getClassname()
      */
-    public String getJar(){
-        if (executeJar){
+    public String getJar() {
+        if (executeJar) {
             return javaCommand.getExecutable();
         }
         return null;
@@ -309,7 +309,7 @@ public class CommandlineJava implements Cloneable {
 
         if (haveClasspath()) {
             result[pos++] = "-classpath";
-            result[pos++] = 
+            result[pos++] =
                 classpath.concatSystemClasspath("ignore").toString();
         }
 
@@ -317,13 +317,13 @@ public class CommandlineJava implements Cloneable {
         // a bug in JDK < 1.4 that forces the jvm type to be specified as the first
         // option, it is appended here as specified in the docs even though there is
         // in fact no order.
-        if (executeJar){
+        if (executeJar) {
             result[pos++] = "-jar";
         }
 
         // this is the classname to run as well as its arguments.
         // in case of 'executeJar', the executable is a jar file.
-        System.arraycopy(javaCommand.getCommandline(), 0, 
+        System.arraycopy(javaCommand.getCommandline(), 0,
                          result, pos, javaCommand.size());
 
         return result;
@@ -333,7 +333,7 @@ public class CommandlineJava implements Cloneable {
      * Specify max memory of the JVM
      * -mx or -Xmx depending on VM version
      */
-    public void setMaxmemory(String max){
+    public void setMaxmemory(String max) {
         this.maxMemory = max;
     }
 
@@ -379,7 +379,7 @@ public class CommandlineJava implements Cloneable {
             }
         }
         return actualVMCommand;
-    }        
+    }
 
     /**
      * The size of the java command line.
@@ -397,7 +397,7 @@ public class CommandlineJava implements Cloneable {
             size++;
         }
         // jar execution requires an additional -jar option
-        if (executeJar){
+        if (executeJar) {
             size++ ;
         }
         return size;
@@ -467,9 +467,9 @@ public class CommandlineJava implements Cloneable {
      * @since Ant 1.6
      */
     private boolean haveClasspath() {
-        Path fullClasspath = classpath != null 
+        Path fullClasspath = classpath != null
             ? classpath.concatSystemClasspath("ignore") : null;
-        return fullClasspath != null 
+        return fullClasspath != null
             && fullClasspath.toString().trim().length() > 0;
     }
 
@@ -484,7 +484,7 @@ public class CommandlineJava implements Cloneable {
      * @since Ant 1.6
      */
     private boolean haveBootclasspath(boolean log) {
-        if (bootclasspath != null 
+        if (bootclasspath != null
             && bootclasspath.toString().trim().length() > 0) {
 
             /*

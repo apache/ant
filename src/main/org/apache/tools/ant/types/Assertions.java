@@ -150,7 +150,7 @@ public class Assertions extends DataType {
      * <code>super.setRefid</code>.</p>
      */
     public void setRefid(Reference ref) {
-        if(assertionList.size()>0 || enableSystemAssertions!=null) {
+        if (assertionList.size()>0 || enableSystemAssertions!=null) {
             throw tooManyAttributes();
         }
         super.setRefid(ref);
@@ -161,11 +161,11 @@ public class Assertions extends DataType {
      * @return the object that contains the assertion info
      */
     private Assertions getFinalReference() {
-        if(getRefid()==null) {
+        if (getRefid()==null) {
             return this;
         } else {
             Object o = getRefid().getReferencedObject(getProject());
-            if(!(o instanceof Assertions)) {
+            if (!(o instanceof Assertions)) {
                 throw new BuildException("reference is of wrong type");
             }
             return (Assertions)o;
@@ -179,7 +179,7 @@ public class Assertions extends DataType {
     public void applyAssertions(CommandlineJava command) {
         Assertions clause=getFinalReference();
         //do the system assertions
-        if(Boolean.TRUE.equals(clause.enableSystemAssertions)) {
+        if (Boolean.TRUE.equals(clause.enableSystemAssertions)) {
             addVmArgument(command,"-enablesystemassertions");
         } else if (Boolean.FALSE.equals(clause.enableSystemAssertions)) {
             addVmArgument(command, "-disablesystemassertions");
@@ -260,20 +260,20 @@ public class Assertions extends DataType {
          */
         public String toCommand() {
             //catch invalidness
-            if(getPackageName()!=null && getClassName()!=null) {
+            if (getPackageName()!=null && getClassName()!=null) {
                 throw new BuildException("Both package and class have been set");
             }
             StringBuffer command=new StringBuffer(getCommandPrefix());
             //see if it is a package or a class
-            if(getPackageName() != null) {
+            if (getPackageName() != null) {
                 //packages get a ... prefix
                 command.append(':');
                 command.append(getPackageName());
-                if(!command.toString().endsWith("...")) {
+                if (!command.toString().endsWith("...")) {
                     //append the ... suffix if not there already
                     command.append("...");
                 }
-            } else if(getClassName()!=null) {
+            } else if (getClassName()!=null) {
                 //classes just get the classname
                 command.append(':');
                 command.append(getClassName());

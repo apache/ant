@@ -77,19 +77,18 @@ public class SunRmic extends DefaultRmicAdapter {
 
         // Create an instance of the rmic, redirecting output to
         // the project log
-        LogOutputStream logstr = new LogOutputStream(getRmic(), 
+        LogOutputStream logstr = new LogOutputStream(getRmic(),
                                                      Project.MSG_WARN);
 
         try {
             Class c = Class.forName("sun.rmi.rmic.Main");
-            Constructor cons = c.getConstructor(new Class[] 
-                { OutputStream.class, String.class });
+            Constructor cons = c.getConstructor(new Class[]  { OutputStream.class, String.class });
             Object rmic = cons.newInstance(new Object[] { logstr, "rmic" });
 
-            Method doRmic = c.getMethod("compile", 
+            Method doRmic = c.getMethod("compile",
                                         new Class [] { String[].class });
-            Boolean ok = 
-                (Boolean) doRmic.invoke(rmic, 
+            Boolean ok =
+                (Boolean) doRmic.invoke(rmic,
                                        (new Object[] {cmd.getArguments()}));
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
@@ -102,7 +101,7 @@ public class SunRmic extends DefaultRmicAdapter {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting SUN rmic: ", 
+                throw new BuildException("Error starting SUN rmic: ",
                                          ex, getRmic().getLocation());
             }
         } finally {

@@ -79,8 +79,7 @@ import org.apache.tools.ant.filters.TokenFilter;
  * @author Magesh Umasankar
  */
 public final class FilterChain extends DataType
-    implements Cloneable
-{
+    implements Cloneable {
 
     private Vector filterReaders = new Vector();
 
@@ -170,8 +169,7 @@ public final class FilterChain extends DataType
      * containsregex
      * @since Ant 1.6
      */
-    public void addContainsRegex(TokenFilter.ContainsRegex filter)
-    {
+    public void addContainsRegex(TokenFilter.ContainsRegex filter) {
         filterReaders.addElement(filter);
     }
 
@@ -179,8 +177,7 @@ public final class FilterChain extends DataType
      * replaceregex
      * @since Ant 1.6
      */
-    public void addReplaceRegex(TokenFilter.ReplaceRegex filter)
-    {
+    public void addReplaceRegex(TokenFilter.ReplaceRegex filter) {
         filterReaders.addElement(filter);
     }
 
@@ -188,8 +185,7 @@ public final class FilterChain extends DataType
      * trim
      * @since Ant 1.6
      */
-    public void addTrim(TokenFilter.Trim filter)
-    {
+    public void addTrim(TokenFilter.Trim filter) {
         filterReaders.addElement(filter);
     }
 
@@ -198,8 +194,7 @@ public final class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addReplaceString(
-        TokenFilter.ReplaceString filter)
-    {
+        TokenFilter.ReplaceString filter) {
         filterReaders.addElement(filter);
     }
 
@@ -208,8 +203,7 @@ public final class FilterChain extends DataType
      * @since Ant 1.6
      */
     public void addIgnoreBlank(
-        TokenFilter.IgnoreBlank filter)
-    {
+        TokenFilter.IgnoreBlank filter) {
         filterReaders.addElement(filter);
     }
 

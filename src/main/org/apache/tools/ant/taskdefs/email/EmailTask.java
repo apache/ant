@@ -103,8 +103,7 @@ public class EmailTask
          * @return a list of valid entries
          */
         public String[] getValues() {
-            return new String[]
-                {AUTO, MIME, UU, PLAIN};
+            return new String[] {AUTO, MIME, UU, PLAIN};
         }
     }
 
@@ -605,7 +604,7 @@ public class EmailTask
                 throw e;
             }
         }
-        catch(Exception e){
+        catch (Exception e) {
           log("Failed to send email", Project.MSG_WARN);
           if (failOnError) {
             throw new BuildException(e);

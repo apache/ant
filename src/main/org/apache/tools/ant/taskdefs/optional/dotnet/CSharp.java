@@ -392,7 +392,7 @@ public class CSharp extends DotnetCompile {
     protected String getDefinitionsParameter() {
         String predecessors=super.getDefinitionsParameter();
         if (notEmpty(definitions)) {
-            if(predecessors==null) {
+            if (predecessors==null) {
                 predecessors= "/define:";
             }
             return  predecessors+ definitions;

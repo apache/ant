@@ -168,8 +168,7 @@ public abstract class DotnetCompile
      *  need to reference mscorlib.dll, cos it is always there
      */
 
-    protected static final String[] DEFAULT_REFERENCE_LIST_DOTNET_10 =
-           {"Accessibility.dll",
+    protected static final String[] DEFAULT_REFERENCE_LIST_DOTNET_10 = {"Accessibility.dll",
             "cscompmgd.dll",
             "CustomMarshalers.dll",
             "Mscorcfg.dll",
@@ -712,13 +711,13 @@ public abstract class DotnetCompile
         while (defEnum.hasMoreElements()) {
             //loop through all definitions
             DotnetDefine define = (DotnetDefine) defEnum.nextElement();
-            if(define.isSet(this)) {
+            if (define.isSet(this)) {
                 //add those that are set, and a delimiter
                 defines.append(define.getValue(this));
                 defines.append(getDefinitionsDelimiter());
             }
         }
-        if(defines.length()==0) {
+        if (defines.length()==0) {
             return null;
         } else {
             return "/D:"+defines;
@@ -937,7 +936,7 @@ public abstract class DotnetCompile
                     outputTimestamp);
         }
         //bail out early if there were no files
-        if(filesToBuild.size()==0) {
+        if (filesToBuild.size()==0) {
             return 0;
         }
         StringBuffer referenceList= new StringBuffer(REFERENCE_OPTION);
@@ -945,7 +944,7 @@ public abstract class DotnetCompile
         Enumeration files = filesToBuild.elements();
         while (files.hasMoreElements()) {
             File file = (File) files.nextElement();
-            if(isFileManagedBinary(file)) {
+            if (isFileManagedBinary(file)) {
                 referenceList.append(file.toString());
                 referenceList.append(getReferenceDelimiter());
             } else {

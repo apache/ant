@@ -96,12 +96,12 @@ public class ApacheCatalog extends Catalog {
         cat.setResolver(resolver);
         return cat;
     }
-    
+
     /** Set the resolver object to callback. */
     public void setResolver(ApacheCatalogResolver resolver) {
         this.resolver = resolver;
     }
-    
+
     /**
      * <p>This method overrides the superclass method of the same name
      * in order to add catalog entries back to the controlling
@@ -131,26 +131,24 @@ public class ApacheCatalog extends Catalog {
             if (resolver == null) {
                 catalogManager.debug
                     .message(1, "Internal Error: null ApacheCatalogResolver");
-            }
-            else {
+            } else {
                 resolver.addPublicEntry(publicid, systemid, base);
             }
 
         } else if (type == URI) {
-            
+
             String uri = normalizeURI(entry.getEntryArg(0));
             String altURI = normalizeURI(entry.getEntryArg(1));
 
             if (resolver == null) {
                 catalogManager.debug
                     .message(1, "Internal Error: null ApacheCatalogResolver");
-            }
-            else {
+            } else {
                 resolver.addURIEntry(uri, altURI, base);
             }
 
         }
-        
+
         super.addEntry(entry);
     }
 

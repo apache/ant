@@ -262,11 +262,11 @@ class ChangeLogParser {
             return null;
         }
     }
-    
+
     /**
      * reset all internal attributes except status.
      */
-    private void reset(){
+    private void reset() {
         m_file = null;
         m_date = null;
         m_author = null;

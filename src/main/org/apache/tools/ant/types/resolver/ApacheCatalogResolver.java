@@ -75,7 +75,7 @@ import org.apache.xml.resolver.tools.CatalogResolver;
  * class.  XMLCatalog calls methods in this class using Reflection in
  * order to avoid requiring the xml-commons resolver library in the
  * path.</p>
- * 
+ *
  * <p>The {@link org.apache.tools.ant.types.resolver.ApacheCatalog
  * ApacheCatalog} class is used to parse external catalog files, which
  * can be in either <a
@@ -83,7 +83,7 @@ import org.apache.xml.resolver.tools.CatalogResolver;
  * plain text format</a> or <a
  * href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
  * XML format</a>.</p>
- * 
+ *
  * <p>For each entry found in an external catalog file, if any, an
  * instance of {@link org.apache.tools.ant.types.ResourceLocation
  * ResourceLocation} is created and added to the controlling
@@ -102,9 +102,8 @@ public class ApacheCatalogResolver extends CatalogResolver {
 
     /** The XMLCatalog object to callback. */
     private XMLCatalog xmlCatalog = null;
-    
-    static
-    {
+
+    static {
         //
         // If you don't do this, you get all sorts of annoying
         // warnings about a missing properties file.  However, it
@@ -133,7 +132,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
         this.xmlCatalog = xmlCatalog;
     }
 
-    /** 
+    /**
      * XMLCatalog calls this to add an external catalog file for each
      * file within a <code>&lt;catalogfiles&gt;</code> fileset.
      */
@@ -147,10 +146,10 @@ public class ApacheCatalogResolver extends CatalogResolver {
         try {
             catalog.parseCatalog(file);
         }
-        catch(MalformedURLException ex) {
+        catch (MalformedURLException ex) {
             throw new BuildException(ex);
         }
-        catch(IOException ex) {
+        catch (IOException ex) {
             throw new BuildException(ex);
         }
     }
@@ -166,9 +165,9 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * specifies a relative URL/pathname, it is resolved using the
      * base.  The default base for an external catalog file is the
      * directory in which the catalog is located.
-     * 
+     *
      */
-    public void addPublicEntry(String publicid, 
+    public void addPublicEntry(String publicid,
                                String systemid,
                                URL base) {
 
@@ -176,7 +175,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
         dtd.setBase(base);
         dtd.setPublicId(publicid);
         dtd.setLocation(systemid);
-        
+
         xmlCatalog.addDTD(dtd);
     }
 
@@ -192,9 +191,9 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * specifies a relative URL/pathname, it is resolved using the
      * base.  The default base for an external catalog file is the
      * directory in which the catalog is located.
-     * 
+     *
      */
-    public void addURIEntry(String uri, 
+    public void addURIEntry(String uri,
                             String altURI,
                             URL base) {
 
@@ -202,7 +201,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
         entity.setBase(base);
         entity.setPublicId(uri);
         entity.setLocation(altURI);
-        
+
         xmlCatalog.addEntity(entity);
     }
 

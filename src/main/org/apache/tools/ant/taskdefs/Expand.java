@@ -247,7 +247,7 @@ public class Expand extends Task {
                 Project.MSG_VERBOSE);
             // create intermediary directories - sometimes zip don't add them
             File dirF = fileUtils.getParentFile(f);
-            if ( dirF != null ) {
+            if ( dirF != null) {
                 dirF.mkdirs();
             }
 

@@ -263,7 +263,7 @@ public class Replace extends MatchingTask {
             if (replaceFilterFile != null) {
                 Properties props = getProperties(replaceFilterFile);
                 Enumeration enum = props.keys();
-                while (enum.hasMoreElements()){
+                while (enum.hasMoreElements()) {
                     String token =  enum.nextElement().toString();
                     Replacefilter replaceFilter = createReplacefilter();
                     replaceFilter.setToken(token);

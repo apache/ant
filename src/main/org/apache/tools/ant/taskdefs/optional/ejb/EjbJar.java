@@ -505,7 +505,7 @@ public class EjbJar extends MatchingTask {
      * Initially, only the JBoss implementation does something specific for CMP 2.0.<br/>
      * @since ant 1.6
      */
-    public void setCmpversion( CMPVersion version ) {
+    public void setCmpversion( CMPVersion version) {
         this.cmpVersion = version.getValue();
     }
 

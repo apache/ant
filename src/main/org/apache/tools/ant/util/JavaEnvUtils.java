@@ -358,7 +358,7 @@ public class JavaEnvUtils {
      * @return list of packages
      */
     public static Vector getJrePackages() {
-        if(jrePackages==null) {
+        if (jrePackages==null) {
             buildJrePackages();
         }
         return jrePackages;

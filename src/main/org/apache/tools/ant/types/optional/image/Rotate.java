@@ -66,22 +66,19 @@ import java.awt.*;
  * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.tasks.optional.image.Image
  */
-public class Rotate extends TransformOperation implements DrawOperation
-{
+public class Rotate extends TransformOperation implements DrawOperation {
     protected float angle = 0.0F;
 
     /**
      * Sets the angle of rotation in degrees.
      * @param ang The angle at which to rotate the image
      */
-    public void setAngle(String ang)
-    {
+    public void setAngle(String ang) {
         angle = Float.parseFloat(ang);
     }
 
 
-    public PlanarImage performRotate(PlanarImage image)
-    {
+    public PlanarImage performRotate(PlanarImage image) {
         float t_angle = (float) (angle * (Math.PI / 180.0F));
         ParameterBlock pb = new ParameterBlock();
         pb.addSource(image);
@@ -97,24 +94,19 @@ public class Rotate extends TransformOperation implements DrawOperation
      *  Performs the image rotation when being handled as a TransformOperation.
      * @param image The image to perform the transformation on.
      */
-    public PlanarImage executeTransformOperation(PlanarImage image)
-    {
+    public PlanarImage executeTransformOperation(PlanarImage image) {
         BufferedImage bi = null;
         Graphics2D graphics = null;
-        for (int i = 0; i < instructions.size(); i++)
-        {
+        for (int i = 0; i < instructions.size(); i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
-            if (instr instanceof DrawOperation)
-            {
+            if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children
                 // then Rotate the first child and return.
                 System.out.println("Execing Draws");
                 PlanarImage op = ((DrawOperation) instr).executeDrawOperation();
                 image = performRotate(op);
                 return image;
-            }
-            else if (instr instanceof TransformOperation)
-            {
+            } else if (instr instanceof TransformOperation) {
                 bi = image.getAsBufferedImage();
                 graphics = (Graphics2D) bi.getGraphics();
                 System.out.println("Execing Transforms");
@@ -135,13 +127,10 @@ public class Rotate extends TransformOperation implements DrawOperation
      *  ONE image.
      * @param image The image to perform the transformation on.
      */
-    public PlanarImage executeDrawOperation()
-    {
-        for (int i = 0; i < instructions.size(); i++)
-        {
+    public PlanarImage executeDrawOperation() {
+        for (int i = 0; i < instructions.size(); i++) {
             ImageOperation instr = ((ImageOperation) instructions.elementAt(i));
-            if (instr instanceof DrawOperation)
-            {
+            if (instr instanceof DrawOperation) {
                 // If this TransformOperation has DrawOperation children
                 // then Rotate the first child and return.
                 PlanarImage op = ((DrawOperation) instr).executeDrawOperation();

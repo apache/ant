@@ -168,7 +168,7 @@ public final class LoadProperties extends Task {
                 }
 
                 ByteArrayInputStream tis = null;
-                if ( encoding == null ) {
+                if ( encoding == null) {
                     tis = new ByteArrayInputStream(text.getBytes());
                 } else {
                     tis = new ByteArrayInputStream(text.getBytes(encoding));

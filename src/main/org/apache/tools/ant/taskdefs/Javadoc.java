@@ -512,7 +512,7 @@ public class Javadoc extends Task {
      * @param max a string indicating the maximum memory according to the
      *        JVM conventions (e.g. 128m is 128 Megabytes)
      */
-    public void setMaxmemory(String max){
+    public void setMaxmemory(String max) {
         if (javadoc1) {
             cmd.createArgument().setValue("-J-mx" + max);
         } else {
@@ -525,7 +525,7 @@ public class Javadoc extends Task {
      *
      * @param add the additional command line parameter for the javadoc task.
      */
-    public void setAdditionalparam(String add){
+    public void setAdditionalparam(String add) {
         cmd.createArgument().setLine(add);
     }
 

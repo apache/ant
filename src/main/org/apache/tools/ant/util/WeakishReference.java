@@ -76,7 +76,7 @@ public abstract class WeakishReference  {
      * @return reference to the Object.
      */
     public static WeakishReference createReference(Object object) {
-        if(referenceConstructor==null) {
+        if (referenceConstructor==null) {
             createReferenceConstructor();
         }
         try {

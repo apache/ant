@@ -528,7 +528,7 @@ public class FixCRLF extends MatchingTask {
                 // Handle CTRLZ
                 if (ctrlz == ASIS) {
                     outWriter.write(lines.getEofStr());
-                } else if (ctrlz == ADD){
+                } else if (ctrlz == ADD) {
                     outWriter.write(CTRLZ);
                 }
             } catch (IOException e) {

@@ -127,7 +127,7 @@ public class Java extends Task {
             throw new BuildException("Classname must not be null.");
         }
 
-        if (!fork && cmdl.getJar() != null){
+        if (!fork && cmdl.getJar() != null) {
             throw new BuildException("Cannot execute a jar in non-forked mode."
                                      + " Please set fork='true'. ");
         }
@@ -221,7 +221,7 @@ public class Java extends Task {
      * The location of the JAR file to execute.
      */
     public void setJar(File jarfile) throws BuildException {
-        if (cmdl.getClassname() != null){
+        if (cmdl.getClassname() != null) {
             throw new BuildException("Cannot use 'jar' and 'classname' "
                                      + "attributes in same command.");
         }
@@ -232,7 +232,7 @@ public class Java extends Task {
      * Sets the Java class to execute.
      */
     public void setClassname(String s) throws BuildException {
-        if (cmdl.getJar() != null){
+        if (cmdl.getJar() != null) {
             throw new BuildException("Cannot use 'jar' and 'classname' "
                                      + "attributes in same command");
         }
@@ -403,7 +403,7 @@ public class Java extends Task {
     /**
      * Corresponds to -mx or -Xmx depending on VM version.
      */
-    public void setMaxmemory(String max){
+    public void setMaxmemory(String max) {
         cmdl.setMaxmemory(max);
     }
 

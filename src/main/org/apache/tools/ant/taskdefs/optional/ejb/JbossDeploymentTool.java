@@ -97,7 +97,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
             return;
         }
         String descriptorFileName = JBOSS_CMP10D;
-        if ( EjbJar.CMPVersion.CMP2_0.equals( getParent().getCmpversion() ) ) {
+        if ( EjbJar.CMPVersion.CMP2_0.equals( getParent().getCmpversion() )) {
             descriptorFileName = JBOSS_CMP20D;
         }
         File jbossCMPD = new File(getConfig().descriptorDir, ddPrefix + descriptorFileName);

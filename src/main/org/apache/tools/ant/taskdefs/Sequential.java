@@ -64,8 +64,7 @@ import org.apache.tools.ant.TaskContainer;
 /**
  * Sequential is a container task - it can contain other Ant tasks. The nested
  * tasks are simply executed in sequence. Sequential's primary use is to support
- * the sequential execution of a subset of tasks within the
- {@link Parallel Parallel Task}
+ * the sequential execution of a subset of tasks within the {@link Parallel Parallel Task}
 
  * <p>
  * The sequential task has no attributes and does not support any nested

@@ -273,7 +273,7 @@ public class EchoProperties extends Task {
                 Properties props = new Properties();
                 props.load(in);
                 CollectionUtils.putAll(allProps, props);
-            } catch(FileNotFoundException fnfe) {
+            } catch (FileNotFoundException fnfe) {
                 String message =
                     "Could not find file " + inFile.getAbsolutePath();
                 if (failonerror) {
@@ -282,7 +282,7 @@ public class EchoProperties extends Task {
                     log(message, Project.MSG_WARN);
                 }
                 return;
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 String message =
                     "Could not read file " + inFile.getAbsolutePath();
                 if (failonerror) {
@@ -293,10 +293,10 @@ public class EchoProperties extends Task {
                 return;
             } finally {
                 try {
-                    if(null != in) {
+                    if (null != in) {
                         in.close();
                     }
-                } catch(IOException ioe) {}
+                } catch (IOException ioe) {}
             }
         }
 
@@ -389,7 +389,7 @@ public class EchoProperties extends Task {
         // output properties
         String name;
         Enumeration e = props.propertyNames();
-        while(e.hasMoreElements()) {
+        while (e.hasMoreElements()) {
             name = (String)e.nextElement();
             Element propElement = doc.createElement(PROPERTY);
             propElement.setAttribute(ATTR_NAME, name);
@@ -403,10 +403,10 @@ public class EchoProperties extends Task {
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             (new DOMElementWriter()).write(rootElement, wri, 0, "\t");
             wri.flush();
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             throw new BuildException("Unable to write XML file", ioe);
         } finally {
-            if(wri != null) {
+            if (wri != null) {
                 wri.close();
             }
         }
@@ -476,7 +476,7 @@ public class EchoProperties extends Task {
     private static DocumentBuilder getDocumentBuilder() {
         try {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
         }
     }

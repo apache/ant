@@ -246,7 +246,7 @@ public class BorlandGenerateClient extends Task {
         if ( version == BorlandDeploymentTool.BAS) {
             executeForkV4();
         }
-        if ( version == BorlandDeploymentTool.BES ) {
+        if ( version == BorlandDeploymentTool.BES) {
             executeForkV5();
         }
     }

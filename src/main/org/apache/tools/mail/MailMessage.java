@@ -207,7 +207,7 @@ public class MailMessage {
      * @param port the port to use for connection.
      * @see #DEFAULT_PORT
      */
-    public void setPort(int port){
+    public void setPort(int port) {
         this.port = port;
     }
 

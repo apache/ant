@@ -106,8 +106,7 @@ import org.apache.tools.ant.types.Path;
  * @author     <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  */
-public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler
-{
+public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler {
     public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
@@ -295,7 +294,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             verifyBorlandJarV4(sourceJar);
             return ;
         }
-        if ( version == BES ) {
+        if ( version == BES) {
             verifyBorlandJarV5(sourceJar);
             return;
         }

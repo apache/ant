@@ -77,7 +77,7 @@ public class CollectionUtils {
         if (v1 == v2) {
             return true;
         }
-        
+
         if (v1 == null || v2 == null) {
             return false;
         }
@@ -93,7 +93,7 @@ public class CollectionUtils {
                 return false;
             }
         }
-        
+
         // don't need to check e2.hasMoreElements as the Vectors have
         // same size.
 
@@ -111,7 +111,7 @@ public class CollectionUtils {
         if (d1 == d2) {
             return true;
         }
-        
+
         if (d1 == null || d2 == null) {
             return false;
         }
@@ -129,7 +129,7 @@ public class CollectionUtils {
                 return false;
             }
         }
-        
+
         // don't need the opposite check as the Dictionaries have the
         // same size, so we've also covered all keys of d2 already.
 
@@ -142,7 +142,7 @@ public class CollectionUtils {
      * @since Ant 1.6
      */
     public static void putAll(Dictionary m1, Dictionary m2) {
-        for(Enumeration it = m2.keys(); it.hasMoreElements();) {
+        for (Enumeration it = m2.keys(); it.hasMoreElements();) {
             Object key = it.nextElement();
             m1.put(key, m2.get(key));
         }

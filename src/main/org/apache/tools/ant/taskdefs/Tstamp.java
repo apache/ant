@@ -227,7 +227,7 @@ public class Tstamp extends Task {
          * @param id
          * @see java.util.TimeZone
          */
-        public void setTimezone(String id){
+        public void setTimezone(String id) {
             timeZone = TimeZone.getTimeZone(id);
         }
 
@@ -308,7 +308,7 @@ public class Tstamp extends Task {
                 calendar.add(field, offset);
                 date = calendar.getTime();
             }
-            if (timeZone != null){
+            if (timeZone != null) {
                 sdf.setTimeZone(timeZone);
             }
             Tstamp.this.setProperty(propertyName, sdf.format(date));

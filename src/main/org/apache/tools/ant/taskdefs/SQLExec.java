@@ -420,14 +420,14 @@ public class SQLExec extends JDBCTask {
                         out.close();
                     }
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
                     } catch (SQLException ex) {}
                 }
                 throw new BuildException(e, location);
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
@@ -463,7 +463,7 @@ public class SQLExec extends JDBCTask {
 
         BufferedReader in = new BufferedReader(reader);
 
-        while ((line = in.readLine()) != null){
+        while ((line = in.readLine()) != null) {
             if (!keepformat) {
                 line = line.trim();
             }
@@ -509,7 +509,7 @@ public class SQLExec extends JDBCTask {
             }
         }
         // Catch any statements not followed by ;
-        if (!sql.equals("")){
+        if (!sql.equals("")) {
             execSQL(sql.toString(), out);
         }
     }
@@ -535,19 +535,13 @@ public class SQLExec extends JDBCTask {
             ret = statement.execute(sql);
             updateCount = statement.getUpdateCount();
             resultSet = statement.getResultSet();
-            do
-            {
-                if (!ret)
-                {
-                    if (updateCount != -1)
-                    {
+            do {
+                if (!ret) {
+                    if (updateCount != -1) {
                         updateCountTotal += updateCount;
                     }
-                }
-                else
-                {
-                    if (print)
-                    {
+                } else {
+                    if (print) {
                         printResults(out);
                     }
                 }
@@ -559,15 +553,14 @@ public class SQLExec extends JDBCTask {
             log(updateCountTotal + " rows affected",
                 Project.MSG_VERBOSE);
 
-            if (print)
-            {
+            if (print) {
                 StringBuffer line = new StringBuffer();
                 line.append(updateCountTotal + " rows affected");
                 out.println(line);
             }
 
             SQLWarning warning = conn.getWarnings();
-            while (warning != null){
+            while (warning != null) {
                 log(warning + " sql warning", Project.MSG_VERBOSE);
                 warning = warning.getNextWarning();
             }

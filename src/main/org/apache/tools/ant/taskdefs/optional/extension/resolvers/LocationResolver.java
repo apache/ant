@@ -67,21 +67,17 @@ import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
  * @version $Revision$ $Date$
  */
 public class LocationResolver
-    implements ExtensionResolver
-{
+    implements ExtensionResolver {
     private String m_location;
 
-    public void setLocation( final String location )
-    {
+    public void setLocation( final String location) {
         m_location = location;
     }
 
     public File resolve( final Extension extension,
                          final Project project )
-        throws BuildException
-    {
-        if( null == m_location )
-        {
+        throws BuildException {
+        if (null == m_location) {
             final String message = "No location specified for resolver";
             throw new BuildException( message );
         }
@@ -89,8 +85,7 @@ public class LocationResolver
         return project.resolveFile( m_location );
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "Location[" + m_location + "]";
     }
 }

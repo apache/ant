@@ -71,7 +71,7 @@ import java.util.TimeZone;
  * @author Stefan Bodewig
  *
  * @since Ant 1.5
- * 
+ *
  * @version $Revision$
  */
 public final class DateUtils {
@@ -108,11 +108,9 @@ public final class DateUtils {
 
     private static final double[] LIMITS = {0, 1, 2};
 
-    private static final String[] MINUTES_PART =
-            {"", "1 minute ", "{0,number} minutes "};
+    private static final String[] MINUTES_PART = {"", "1 minute ", "{0,number} minutes "};
 
-    private static final String[] SECONDS_PART =
-            {"0 seconds", "1 second", "{1,number} seconds"};
+    private static final String[] SECONDS_PART = {"0 seconds", "1 second", "{1,number} seconds"};
 
     private static final ChoiceFormat MINUTES_FORMAT =
             new ChoiceFormat(LIMITS, MINUTES_PART);
@@ -236,7 +234,7 @@ public final class DateUtils {
     public static String getDateForHeader() {
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();
-        int offset = tz.getOffset(cal.get(Calendar.ERA), 
+        int offset = tz.getOffset(cal.get(Calendar.ERA),
                                   cal.get(Calendar.YEAR),
                                   cal.get(Calendar.MONTH),
                                   cal.get(Calendar.DAY_OF_MONTH),

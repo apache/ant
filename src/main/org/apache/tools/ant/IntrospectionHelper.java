@@ -417,8 +417,7 @@ public class IntrospectionHelper implements BuildListener {
      *
      * @return a helper for the specified class
      */
-    public static synchronized IntrospectionHelper getHelper(Project p, Class c)
-    {
+    public static synchronized IntrospectionHelper getHelper(Project p, Class c) {
         IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
         if (ih == null) {
             ih = new IntrospectionHelper(c);

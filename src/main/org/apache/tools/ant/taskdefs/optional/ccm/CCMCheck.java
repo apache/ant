@@ -74,7 +74,7 @@ public class CCMCheck extends Continuus {
     private File file = null;
     private String comment = null;
     private String task = null;
- 
+
     protected Vector filesets = new Vector();
 
     public CCMCheck() {
@@ -158,16 +158,16 @@ public class CCMCheck extends Continuus {
         if (file != null && file.exists() && file.isDirectory()) {
             throw new BuildException("CCMCheck cannot be generated for directories");
         }
-        
+
         if (file != null  && filesets.size() > 0) {
             throw new BuildException("Choose between file and fileset !");
         }
 
-        if ( getFile() !=null ) {
+        if ( getFile() !=null) {
             doit();
             return ;
         }
-                        
+
         int sizeofFileSet = filesets.size();
         for (int i = 0; i < sizeofFileSet; i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
@@ -180,12 +180,11 @@ public class CCMCheck extends Continuus {
             }
         }
     }
-    
+
     /**
      * check the file given by getFile().
      */
-    private void doit()
-    {
+    private void doit() {
         Commandline commandLine = new Commandline();
 
         // build the command line from what we got the format is
@@ -194,9 +193,9 @@ public class CCMCheck extends Continuus {
 
         commandLine.setExecutable(getCcmCommand());
         commandLine.createArgument().setValue(getCcmAction());
-        
+
         checkOptions(commandLine);
-        
+
         int result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
@@ -217,11 +216,11 @@ public class CCMCheck extends Continuus {
         if (getTask() != null) {
             cmd.createArgument().setValue(FLAG_TASK);
             cmd.createArgument().setValue(getTask());
-        } 
+        }
 
         if (getFile() != null) {
             cmd.createArgument().setValue(file.getAbsolutePath());
-        } 
+        }
     }
 
     /**

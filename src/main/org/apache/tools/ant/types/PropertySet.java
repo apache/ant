@@ -206,8 +206,7 @@ public class PropertySet extends DataType {
             if (!getDynamic()) {
                 cachedNames = names;
             }
-        }
-        else {
+        } else {
             names = cachedNames;
         }
 
@@ -247,16 +246,14 @@ public class PropertySet extends DataType {
                 if (prj.getProperty(ref.name) != null) {
                     names.addElement(ref.name);
                 }
-            }
-            else if (ref.prefix != null) {
+            } else if (ref.prefix != null) {
                 for (Enumeration p = properties.keys(); p.hasMoreElements();) {
                     String name = (String) p.nextElement();
                     if (name.startsWith(ref.prefix)) {
                         names.addElement(name);
                     }
                 }
-            }
-            else if (ref.regex != null) {
+            } else if (ref.regex != null) {
                 RegexpMatcherFactory matchMaker = new RegexpMatcherFactory();
                 RegexpMatcher matcher = matchMaker.newRegexpMatcher();
                 matcher.setPattern(ref.regex);

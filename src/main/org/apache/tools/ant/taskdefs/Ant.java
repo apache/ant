@@ -542,7 +542,7 @@ public class Ant extends Task {
 
             String value = props.get(key).toString();
             // don't re-set user properties, avoid the warning message
-            if (newProject.getProperty(key) == null){
+            if (newProject.getProperty(key) == null) {
                 // no user property
                 newProject.setNewProperty(key, value);
             }

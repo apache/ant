@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.Reference;
  * <pre><code>
  * ClasspathUtils.Delegate cpDelegate;
  *
- * public void init(){
+ * public void init() {
  *     this.cpDelegate = ClasspathUtils.getDelegate(this);
  *     super.init();
  * }

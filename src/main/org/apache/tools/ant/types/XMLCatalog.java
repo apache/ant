@@ -927,23 +927,19 @@ public class XMLCatalog extends DataType
             try {
                 setXMLCatalog =
                     resolverImplClass.getMethod("setXMLCatalog",
-                                                new Class[]
-                        {XMLCatalog.class});
+                                                new Class[] {XMLCatalog.class});
 
                 parseCatalog =
                     resolverImplClass.getMethod("parseCatalog",
-                                                new Class[]
-                        {String.class});
+                                                new Class[] {String.class});
 
                 resolveEntity =
                     resolverImplClass.getMethod("resolveEntity",
-                                                new Class[]
-                        {String.class, String.class});
+                                                new Class[] {String.class, String.class});
 
                 resolve =
                     resolverImplClass.getMethod("resolve",
-                                                new Class[]
-                        {String.class, String.class});
+                                                new Class[] {String.class, String.class});
             } catch (NoSuchMethodException ex) {
                 throw new BuildException(ex);
             }
@@ -977,8 +973,7 @@ public class XMLCatalog extends DataType
                     try {
                         result =
                             (InputSource) resolveEntity.invoke(resolverImpl,
-                                                              new Object[]
-                                {publicId, systemId});
+                                                              new Object[] {publicId, systemId});
                     } catch (Exception ex) {
                         throw new BuildException(ex);
                     }
@@ -995,8 +990,7 @@ public class XMLCatalog extends DataType
                 try {
                     result =
                         (InputSource) resolveEntity.invoke(resolverImpl,
-                                                          new Object[]
-                            {publicId, systemId});
+                                                          new Object[] {publicId, systemId});
                 } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
@@ -1059,8 +1053,7 @@ public class XMLCatalog extends DataType
                     try {
                         result =
                             (SAXSource) resolve.invoke(resolverImpl,
-                                                      new Object[]
-                                {href, base});
+                                                      new Object[] {href, base});
                     } catch (Exception ex) {
                         throw new BuildException(ex);
                     }
@@ -1077,8 +1070,7 @@ public class XMLCatalog extends DataType
                 try {
                     result =
                         (SAXSource) resolve.invoke(resolverImpl,
-                                                  new Object[]
-                            {href, base});
+                                                  new Object[] {href, base});
                 } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
@@ -1099,8 +1091,7 @@ public class XMLCatalog extends DataType
 
                 try {
                     setXMLCatalog.invoke(resolverImpl,
-                                         new Object[]
-                    {XMLCatalog.this});
+                                         new Object[] {XMLCatalog.this});
                 } catch (Exception ex) {
                     throw new BuildException(ex);
                 }
@@ -1117,8 +1108,7 @@ public class XMLCatalog extends DataType
                         log("Parsing " + catFile, Project.MSG_DEBUG);
                         try {
                             parseCatalog.invoke(resolverImpl,
-                                    new Object[]
-                                    {catFile.getPath()});
+                                    new Object[] {catFile.getPath()});
                         } catch (Exception ex) {
                             throw new BuildException(ex);
                         }

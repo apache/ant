@@ -258,8 +258,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
 
-            if(getConfig() != null && getConfig().length()>0)
-            {
+            if (getConfig() != null && getConfig().length()>0) {
                 commandLine.createArgument().setValue("-c" + getConfig());
             }
 

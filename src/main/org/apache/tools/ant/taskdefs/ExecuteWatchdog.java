@@ -66,7 +66,7 @@ import org.apache.tools.ant.util.Watchdog;
  * Execute exec = new Execute(myloghandler, watchdog);
  * exec.setCommandLine(mycmdline);
  * int exitvalue = exec.execute();
- * if (exitvalue != SUCCESS && watchdog.killedProcess()){
+ * if (exitvalue != SUCCESS && watchdog.killedProcess()) {
  *              // it was killed on purpose by the watchdog
  * }
  * </pre>
@@ -156,7 +156,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
             } catch (IllegalThreadStateException itse) {
                 // the process is not terminated, if this is really
                 // a timeout and not a manual stop then kill it.
-                if (watch){
+                if (watch) {
                     killedProcess = true;
                     process.destroy();
                 }
@@ -196,7 +196,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * @return  <tt>true</tt> if the process is still running, otherwise
      *          <tt>false</tt>.
      */
-    public boolean isWatching(){
+    public boolean isWatching() {
         return watch;
     }
 
@@ -205,7 +205,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * @return  <tt>true</tt> if the process was killed otherwise
      *          <tt>false</tt>.
      */
-    public boolean killedProcess(){
+    public boolean killedProcess() {
         return killedProcess;
     }
 }

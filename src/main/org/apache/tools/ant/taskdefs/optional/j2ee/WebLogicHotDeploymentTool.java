@@ -72,14 +72,12 @@ import org.apache.tools.ant.taskdefs.Java;
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool implements HotDeploymentTool
-{
+public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool implements HotDeploymentTool {
     /** The classname of the tool to run **/
     private static final String WEBLOGIC_DEPLOY_CLASS_NAME = "weblogic.deploy";
 
     /** All the valid actions that weblogic.deploy permits **/
-    private static final String[] VALID_ACTIONS =
-            {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
+    private static final String[] VALID_ACTIONS = {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
 
     /** Represents the "-debug" flag from weblogic.deploy **/
     private boolean debug;
@@ -126,21 +124,21 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
             throw new BuildException("The password attribute must be set.");
 
         // check for missing application on deploy & update
-        if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) 
+        if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
             && application == null)
-            throw new BuildException("The application attribute must be set " 
+            throw new BuildException("The application attribute must be set "
                 + "if action = " + action);
 
         // check for missing source on deploy & update
-        if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) 
+        if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
             && getTask().getSource() == null)
-            throw new BuildException("The source attribute must be set if " 
+            throw new BuildException("The source attribute must be set if "
                 + "action = " + action);
 
         // check for missing application on delete & undeploy
-        if ((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) 
+        if ((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY))
             && application == null)
-            throw new BuildException("The application attribute must be set if " 
+            throw new BuildException("The application attribute must be set if "
                 + "action = " + action);
     }
 
@@ -221,7 +219,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
         if (component != null) {
             args = "-component " + component + " " + args;
         }
-        
+
         return args;
     }
 
@@ -268,7 +266,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
      * It is in the form <code>&lt;component&gt;:&lt;target1&gt;,&lt;target2&gt;...</code>
      * Where component is the archive name (minus the .jar, .ear, .war
      * extension).  Targets are the servers where the components will be deployed
-    
+
      *  @param component A String representing the value of the "-component"
      *  argument of the weblogic.deploy command line argument.
      */

@@ -664,7 +664,7 @@ public class JUnitTask extends Task {
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
-            if(fe.shouldUse(this)) {
+            if (fe.shouldUse(this)) {
                 formatterArg.append("formatter=");
                 formatterArg.append(fe.getClassname());
                 File outFile = getOutput(fe, test);
@@ -881,7 +881,7 @@ public class JUnitTask extends Task {
             final FormatterElement[] feArray = mergeFormatters(test);
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];
-                if(fe.shouldUse(this)) {
+                if (fe.shouldUse(this)) {
                     File outFile = getOutput(fe, test);
                     if (outFile != null) {
                         fe.setOutfile(outFile);

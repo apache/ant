@@ -184,7 +184,7 @@ public class Jar extends Zip {
      * Set whether or not to create an index list for classes.
      * This may speed up classloading in some cases.
      */
-    public void setIndex(boolean flag){
+    public void setIndex(boolean flag) {
         index = flag;
     }
 
@@ -456,7 +456,7 @@ public class Jar extends Zip {
             // @fixme do we need to check for directories starting by ./ ?
             dir = dir.replace('\\', '/');
             int pos = dir.lastIndexOf('/');
-            if (pos != -1){
+            if (pos != -1) {
                 dir = dir.substring(0, pos);
             }
 

@@ -259,7 +259,7 @@ public class DemuxOutputStream extends OutputStream {
             if (blockLength > 0) {
                 bufferInfo.buffer.write(b, blockStartOffset, blockLength);
             }
-            while(remaining > 0 && (b[offset] == 0x0a || b[offset] == 0x0d)) {
+            while (remaining > 0 && (b[offset] == 0x0a || b[offset] == 0x0d)) {
                 write(b[offset]);
                 offset++;
                 remaining--;

@@ -166,8 +166,7 @@ public class MailLogger extends DefaultLogger {
                     (success) ? "Build Success" : "Build Failure");
             if (user.equals("") && password.equals("") && !ssl) {
                 sendMail(mailhost, port,  from, replytoList, toList, subject, buffer.substring(0));
-            }
-            else {
+            } else {
                 sendMimeMail(event.getProject(), mailhost, port, user, password, ssl, from, replytoList, toList, subject, buffer.substring(0));
             }
         } catch (Exception e) {

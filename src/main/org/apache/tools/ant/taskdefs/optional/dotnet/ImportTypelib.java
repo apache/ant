@@ -170,7 +170,7 @@ public class ImportTypelib extends Task {
             throw new BuildException(
                     "source file is a directory");
         }
-        if(namespace==null) {
+        if (namespace==null) {
             throw new BuildException("No namespace");
         }
     }

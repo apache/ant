@@ -309,7 +309,7 @@ public class Main implements AntMain {
             } else if (arg.equals("-version")) {
                 printVersion();
                 return;
-            } else if (arg.equals("-diagnostics")){
+            } else if (arg.equals("-diagnostics")) {
                 Diagnostics.doReport(System.out);
                 return;
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
@@ -482,7 +482,7 @@ public class Main implements AntMain {
                 if (fis != null) {
                     try {
                         fis.close();
-                    } catch (IOException e){
+                    } catch (IOException e) {
                     }
                 }
             }
@@ -606,7 +606,7 @@ public class Main implements AntMain {
             // only in JDK > 1.1
             SecurityManager oldsm = null;
             if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0) &&
-                !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)){
+                !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
                 oldsm = System.getSecurityManager();
 
                 //SecurityManager can not be installed here for backwards
@@ -660,7 +660,7 @@ public class Main implements AntMain {
             } finally {
                 // put back the original security manager
                 //The following will never eval to true. (PD)
-                if (oldsm != null){
+                if (oldsm != null) {
                     System.setSecurityManager(oldsm);
                 }
 

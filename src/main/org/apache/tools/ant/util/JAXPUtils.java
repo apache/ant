@@ -205,7 +205,7 @@ public class JAXPUtils {
      * @return the systemid corresponding to the given file.
      * @since Ant 1.5.2
      */
-    public static String getSystemId(File file){
+    public static String getSystemId(File file) {
         return fu.toURI(file.getAbsolutePath());
     }
 

@@ -194,7 +194,7 @@ public final class ChainReaderHelper {
                                         break;
                                     }
                                 }
-                                if ( !consPresent ) {
+                                if ( !consPresent) {
                                     throw new BuildException( className +
                                             " does not define a public constructor" +
                                             " that takes in a Reader as its single argument.");

@@ -134,7 +134,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
     protected int buildFileList(NetCommand command, Hashtable filesToBuild, long outputTimestamp) {
         int filesOutOfDate=0;
         boolean scanImplicitFileset=getSrcDir()!=null || filesets.size()==0;
-        if(scanImplicitFileset) {
+        if (scanImplicitFileset) {
             //scan for an implicit fileset if there was a srcdir set
             //or there was no srcDir set but the @
             if (getSrcDir() == null) {

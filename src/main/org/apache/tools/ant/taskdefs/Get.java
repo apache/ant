@@ -179,7 +179,7 @@ public class Get extends Task {
                 if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_UNAUTHORIZED)  {
                     String message="HTTP Authorization failure";
-                    if(ignoreErrors) {
+                    if (ignoreErrors) {
                         log(message,Project.MSG_WARN);
                         return;
                     } else {

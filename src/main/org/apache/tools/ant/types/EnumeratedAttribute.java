@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
  * <p>See {@link org.apache.tools.ant.taskdefs.FixCRLF FixCRLF} for an
  * example.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public abstract class EnumeratedAttribute {
 
@@ -87,7 +87,7 @@ public abstract class EnumeratedAttribute {
     public abstract String[] getValues();
 
     /** bean constructor */
-    protected EnumeratedAttribute(){
+    protected EnumeratedAttribute() {
     }
 
     /**
@@ -116,13 +116,13 @@ public abstract class EnumeratedAttribute {
      * or -1 if it cannot be found.
      * @see #getValues()
      */
-    public final int indexOfValue(String value){
+    public final int indexOfValue(String value) {
         String[] values = getValues();
         if (values == null || value == null) {
             return -1;
         }
-        for (int i = 0; i < values.length; i++){
-            if (value.equals(values[i])){
+        for (int i = 0; i < values.length; i++) {
+            if (value.equals(values[i])) {
                 return i;
             }
         }
@@ -149,7 +149,7 @@ public abstract class EnumeratedAttribute {
      * Convert the value to its string form.
      *
      * @return the string form of the value.
-     */        
+     */
     public String toString() {
         return getValue();
     }

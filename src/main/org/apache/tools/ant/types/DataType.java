@@ -62,7 +62,7 @@ import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Base class for those classes that can appear inside the build file
- * as stand alone data types.  
+ * as stand alone data types.
  *
  * <p>This class handles the common description attribute and provides
  * a default implementation for reference handling and checking for
@@ -70,7 +70,7 @@ import org.apache.tools.ant.ProjectComponent;
  * nested inside elements of the same type (i.e. &lt;patternset&gt;
  * but not &lt;path&gt;).</p>
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public abstract class DataType extends ProjectComponent {
     /**
@@ -103,12 +103,12 @@ public abstract class DataType extends ProjectComponent {
      *   {@link #isChecked} instead.
      */
     protected boolean checked = true;
-    
-    /** 
+
+    /**
      * Sets a description of the current data type. It will be useful
-     * in commenting what we are doing.  
+     * in commenting what we are doing.
      */
-    public void setDescription( final String desc ) {
+    public void setDescription( final String desc) {
         description = desc;
     }
 
@@ -132,9 +132,9 @@ public abstract class DataType extends ProjectComponent {
      * <p>Subclasses may need to check whether any other attributes
      * have been set as well or child elements have been created and
      * thus override this method. if they do the must call
-     * <code>super.setRefid</code>.</p> 
+     * <code>super.setRefid</code>.</p>
      */
-    public void setRefid( final Reference ref ) {
+    public void setRefid( final Reference ref) {
         this.ref = ref;
         checked = false;
     }
@@ -149,11 +149,11 @@ public abstract class DataType extends ProjectComponent {
      * #circularReference circularReference}.</p>
      *
      * <p>This implementation is appropriate only for a DataType that
-     * cannot hold other DataTypes as children.</p> 
+     * cannot hold other DataTypes as children.</p>
      *
      * <p>The general contract of this method is that it shouldn't do
      * anything if {@link #checked <code>checked</code>} is true and
-     * set it to true on exit.</p> 
+     * set it to true on exit.</p>
      */
     protected void dieOnCircularReference( final Stack stack,
                                            final Project project )
@@ -163,7 +163,7 @@ public abstract class DataType extends ProjectComponent {
             return;
         }
         Object o = ref.getReferencedObject(project);
-        
+
         if (o instanceof DataType) {
             if (stack.contains(o)) {
                 throw circularReference();
@@ -178,16 +178,16 @@ public abstract class DataType extends ProjectComponent {
 
     /**
      * Performs the check for circular references and returns the
-     * referenced object.  
+     * referenced object.
      */
     protected Object getCheckedRef( final Class requiredClass,
-                                    final String dataTypeName ) {
+                                    final String dataTypeName) {
         if (!checked) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, getProject());
         }
-        
+
         Object o = ref.getReferencedObject(getProject());
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
             String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
@@ -199,28 +199,28 @@ public abstract class DataType extends ProjectComponent {
 
     /**
      * Creates an exception that indicates that refid has to be the
-     * only attribute if it is set.  
+     * only attribute if it is set.
      */
     protected BuildException tooManyAttributes() {
-        return new BuildException("You must not specify more than one " 
+        return new BuildException("You must not specify more than one "
             + "attribute when using refid");
     }
 
     /**
      * Creates an exception that indicates that this XML element must
-     * not have child elements if the refid attribute is set.  
+     * not have child elements if the refid attribute is set.
      */
     protected BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested elements " 
+        return new BuildException("You must not specify nested elements "
             + "when using refid");
     }
 
     /**
      * Creates an exception that indicates the user has generated a
-     * loop of data types referencing each other.  
+     * loop of data types referencing each other.
      */
     protected BuildException circularReference() {
-        return new BuildException("This data type contains a circular " 
+        return new BuildException("This data type contains a circular "
             + "reference.");
     }
 
@@ -228,7 +228,7 @@ public abstract class DataType extends ProjectComponent {
         return checked;
     }
 
-    protected void setChecked( final boolean checked ) {
+    protected void setChecked( final boolean checked) {
         this.checked = checked;
     }
 
@@ -236,8 +236,7 @@ public abstract class DataType extends ProjectComponent {
      * get the reference set on this object
      * @return the reference or null
      */
-    protected Reference getRefid()
-    {
+    protected Reference getRefid() {
         return ref;
     }
 

@@ -61,32 +61,26 @@ import java.util.Vector;
  * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.tasks.optional.image.Image
  */
-public abstract class ImageOperation extends DataType
-{
+public abstract class ImageOperation extends DataType {
     protected Vector instructions = new Vector();
 
-    public void addRotate(Rotate instr)
-    {
+    public void addRotate(Rotate instr) {
         instructions.add(instr);
     }
 
-    public void addDraw(Draw instr)
-    {
+    public void addDraw(Draw instr) {
         instructions.add(instr);
     }
 
-    public void addRectangle(Rectangle instr)
-    {
+    public void addRectangle(Rectangle instr) {
         instructions.add(instr);
     }
 
-    public void addText(Text instr)
-    {
+    public void addText(Text instr) {
         instructions.add(instr);
     }
 
-    public void addScale(Scale instr)
-    {
+    public void addScale(Scale instr) {
         instructions.add(instr);
     }
 }

@@ -250,7 +250,7 @@ public class Symlink extends Task {
 
                     // fill up a Properties object with link and resource
                     // names
-                    while(eachlink.hasMoreElements()) {
+                    while (eachlink.hasMoreElements()) {
                         File alink = (File) eachlink.nextElement();
                         try {
                             linksToStore.put(alink.getName(),
@@ -269,8 +269,7 @@ public class Symlink extends Task {
                     writePropertyFile(linksToStore, writeTo,
                                       "Symlinks from " + writeTo.getParent());
                 }
-            }
-            else {
+            } else {
                 handleError("Invalid action specified in symlink");
             }
         } finally {

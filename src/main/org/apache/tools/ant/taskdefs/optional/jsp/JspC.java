@@ -421,7 +421,7 @@ public class JspC extends MatchingTask {
                 getProject().createClassLoader(compilerClasspath));
 
         //if we are a webapp, hand off to the compiler, which had better handle it
-        if(webApp!=null) {
+        if (webApp!=null) {
             doCompilation(compiler);
             return;
         }
@@ -537,7 +537,7 @@ public class JspC extends MatchingTask {
             String filename = files[i];
             File srcFile = new File(srcDir, filename);
             File javaFile = mapToJavaFile(mangler, srcFile, srcDir, dest);
-            if(javaFile==null) {
+            if (javaFile==null) {
                 continue;
             }
 

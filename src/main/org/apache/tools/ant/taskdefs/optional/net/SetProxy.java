@@ -229,7 +229,7 @@ public class SetProxy extends Task {
                     sysprops.put("https.nonProxyHosts", nonProxyHosts);
                     sysprops.put("ftp.nonProxyHosts", nonProxyHosts);
                 }
-                if(proxyUser!=null) {
+                if (proxyUser!=null) {
                     sysprops.put("http.proxyUser", proxyUser);
                     sysprops.put("http.proxyPassword", proxyPassword);
                 }

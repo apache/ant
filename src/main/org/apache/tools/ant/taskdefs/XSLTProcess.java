@@ -266,7 +266,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (performDirectoryScan) {
                 // Process all the directories marked for styling
                 dirs = scanner.getIncludedDirectories();
-                for (int j = 0; j < dirs.length; ++j){
+                for (int j = 0; j < dirs.length; ++j) {
                     list = new File(baseDir, dirs[j]).list();
                     for (int i = 0; i < list.length; ++i) {
                         process(baseDir, list[i], destDir, stylesheet);
@@ -432,7 +432,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      *
      * @param outFile the output File instance.
      */
-    public void setOut(File outFile){
+    public void setOut(File outFile) {
         this.outFile = outFile;
     }
 
@@ -442,7 +442,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      *
      * @param inFile the input file
      */
-    public void setIn(File inFile){
+    public void setIn(File inFile) {
         this.inFile = inFile;
     }
 
@@ -618,7 +618,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          *
          * @param name the name of the parameter.
          */
-        public void setName(String name){
+        public void setName(String name) {
             this.name = name;
         }
 
@@ -628,7 +628,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * @param expression the XSL expression representing the
          *   parameter's value.
          */
-        public void setExpression(String expression){
+        public void setExpression(String expression) {
             this.expression = expression;
         }
 
@@ -759,7 +759,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * like the exact copy of JAXP interface..
      * @param liaison the TRaXLiaison to configure.
      */
-    protected void configureTraXLiaison(TraXLiaison liaison){
+    protected void configureTraXLiaison(TraXLiaison liaison) {
         if (factory != null) {
             liaison.setFactory(factory.getName());
 
@@ -887,7 +887,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     // a value must be of a given type
                     // say boolean|integer|string that are mostly used.
                     if ("true".equalsIgnoreCase(value)
-                            || "false".equalsIgnoreCase(value) ){
+                            || "false".equalsIgnoreCase(value) ) {
                         this.value = new Boolean(value);
                     } else {
                         try {

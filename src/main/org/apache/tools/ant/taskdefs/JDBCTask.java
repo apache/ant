@@ -90,7 +90,7 @@ public class SQLExampleTask extends JDBCTask {
         Connection conn = getConnection();
         Statement stmt=null;
         try {
-            if (tableName == null ) {
+            if (tableName == null) {
                 throw new BuildException("TableName must be specified",location);
             }
             String sql = "SELECT * FROM "+tableName;
@@ -103,10 +103,10 @@ public class SQLExampleTask extends JDBCTask {
 
         } finally {
             if (stmt != null) {
-                try {stmt.close();}catch (SQLException ingore){}
+                try {stmt.close();}catch (SQLException ingore) {}
             }
             if (conn != null) {
-                try {conn.close();}catch (SQLException ingore){}
+                try {conn.close();}catch (SQLException ingore) {}
             }
         }
     }

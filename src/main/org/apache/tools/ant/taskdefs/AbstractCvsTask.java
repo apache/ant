@@ -283,7 +283,7 @@ public abstract class AbstractCvsTask extends Task {
                     System.getProperty("user.home"))
                 + File.separatorChar + ".cvspass");
 
-            if(defaultPassFile.exists()) {
+            if (defaultPassFile.exists()) {
                 this.setPassfile(defaultPassFile);
             }
         }
@@ -411,7 +411,7 @@ public abstract class AbstractCvsTask extends Task {
         }
     }
 
-    private String executeToString(Execute execute){
+    private String executeToString(Execute execute) {
 
         StringBuffer stringBuffer =
             new StringBuffer(Commandline.describeCommand(execute
@@ -425,7 +425,7 @@ public abstract class AbstractCvsTask extends Task {
             stringBuffer.append(newLine);
             stringBuffer.append("environment:");
             stringBuffer.append(newLine);
-            for (int z = 0; z < variableArray.length; z++){
+            for (int z = 0; z < variableArray.length; z++) {
                 stringBuffer.append(newLine);
                 stringBuffer.append("\t");
                 stringBuffer.append(variableArray[z]);
@@ -452,7 +452,7 @@ public abstract class AbstractCvsTask extends Task {
         this.cvsRoot = root;
     }
 
-    public String getCvsRoot(){
+    public String getCvsRoot() {
 
         return this.cvsRoot;
     }
@@ -473,7 +473,7 @@ public abstract class AbstractCvsTask extends Task {
         this.cvsRsh = rsh;
     }
 
-    public String getCvsRsh(){
+    public String getCvsRsh() {
 
         return this.cvsRsh;
     }
@@ -483,11 +483,11 @@ public abstract class AbstractCvsTask extends Task {
      *
      * @param port
      */
-    public void setPort(int port){
+    public void setPort(int port) {
         this.port = port;
     }
 
-    public int getPort(){
+    public int getPort() {
 
         return this.port;
     }
@@ -497,11 +497,11 @@ public abstract class AbstractCvsTask extends Task {
      *
      * @param passFile
      */
-    public void setPassfile(File passFile){
+    public void setPassfile(File passFile) {
         this.passFile = passFile;
     }
 
-    public File getPassFile(){
+    public File getPassFile() {
 
         return this.passFile;
     }
@@ -515,7 +515,7 @@ public abstract class AbstractCvsTask extends Task {
         this.dest = dest;
     }
 
-    public File getDest(){
+    public File getDest() {
 
         return this.dest;
     }
@@ -529,7 +529,7 @@ public abstract class AbstractCvsTask extends Task {
         this.cvsPackage = p;
     }
 
-    public String getPackage(){
+    public String getPackage() {
 
         return this.cvsPackage;
     }
@@ -550,11 +550,11 @@ public abstract class AbstractCvsTask extends Task {
      * This needs to be public to allow configuration
      *      of commands externally.
      */
-    public void addCommandArgument(String arg){
+    public void addCommandArgument(String arg) {
         this.addCommandArgument(cmd, arg);
     }
 
-    public void addCommandArgument(Commandline c, String arg){
+    public void addCommandArgument(Commandline c, String arg) {
         c.createArgument().setValue(arg);
     }
 
@@ -619,7 +619,7 @@ public abstract class AbstractCvsTask extends Task {
      * Whether to append output/error when redirecting to a file.
      * @param value
      */
-    public void setAppend(boolean value){
+    public void setAppend(boolean value) {
         this.append = value;
     }
 

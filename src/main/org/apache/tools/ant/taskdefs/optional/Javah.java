@@ -344,7 +344,7 @@ public class Javah extends Task {
             try {
                 // first search for the "old" javah class in 1.4.2 tools.jar
                 javahMainClass = Class.forName("com.sun.tools.javah.oldjavah.Main");
-            } catch(ClassNotFoundException cnfe) {
+            } catch (ClassNotFoundException cnfe) {
                 // assume older than 1.4.2 tools.jar
                 javahMainClass = Class.forName("com.sun.tools.javah.Main");
             }

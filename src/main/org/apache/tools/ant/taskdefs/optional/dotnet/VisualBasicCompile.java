@@ -364,7 +364,7 @@ public class VisualBasicCompile extends DotnetCompile {
     protected void validate()
             throws BuildException {
         super.validate();
-        if(getDestFile()==null) {
+        if (getDestFile()==null) {
             throw new BuildException("DestFile was not specified");
         }
     }

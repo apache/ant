@@ -121,15 +121,15 @@ public class WhichResource extends Task {
      */
     private void validate() {
         int setcount=0;
-        if(classname != null) {
+        if (classname != null) {
             setcount++;
         }
-        if(resource!=null) {
+        if (resource!=null) {
             setcount++;
         }
 
 
-        if(setcount == 0) {
+        if (setcount == 0) {
             throw new BuildException(
                     "One of classname or resource must be specified");
         }
@@ -137,7 +137,7 @@ public class WhichResource extends Task {
             throw new BuildException(
                     "Only one of classname or resource can be specified");
         }
-        if(property==null) {
+        if (property==null) {
             throw new BuildException("No property defined");
         }
     }
@@ -162,19 +162,19 @@ public class WhichResource extends Task {
                     getProject(),
                     classpath, false);
         String location=null;
-        if(classname!=null) {
+        if (classname!=null) {
             //convert a class name into a resource
             classname= classname.replace('.', '/');
             resource="/"+ classname +".class";
         } else {
-            if(!resource.startsWith("/")) {
+            if (!resource.startsWith("/")) {
                 resource="/"+resource;
             }
         }
         log("Searching for "+resource,Project.MSG_VERBOSE);
         URL url;
         url=loader.getResource(resource);
-        if(url!=null) {
+        if (url!=null) {
             //set the property
             location = url.toExternalForm();
             getProject().setNewProperty(property,location);

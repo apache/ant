@@ -252,8 +252,7 @@ public final class TailFilter
                     if (lineList.size() > skip) {
                         return (String) lineList.removeFirst();
                     }
-                }
-                else {
+                } else {
                     long linesToKeep = lines + (skip > 0 ? skip : 0);
                     if (linesToKeep < lineList.size()) {
                         lineList.removeFirst();

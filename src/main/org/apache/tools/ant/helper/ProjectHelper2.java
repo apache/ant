@@ -145,9 +145,9 @@ public class ProjectHelper2 extends ProjectHelper {
 
         if (source instanceof File) {
             buildFile = (File) source;
-//         } else if (source instanceof InputStream ) {
-//         } else if (source instanceof URL ) {
-//         } else if (source instanceof InputSource ) {
+//         } else if (source instanceof InputStream) {
+//         } else if (source instanceof URL) {
+//         } else if (source instanceof InputSource) {
         } else {
             throw new BuildException("Source " + source.getClass().getName() +
                                      " not supported by this plugin");
@@ -432,7 +432,7 @@ public class ProjectHelper2 extends ProjectHelper {
             if (qname.equals("project")) {
                 return ProjectHelper2.projectHandler;
             } else {
-//                 if (context.importlevel > 0 ) {
+//                 if (context.importlevel > 0) {
 //                     // we are in an imported file. Allow top-level <target>.
 //                     if (qname.equals( "target" ) )
 //                         return ProjectHelper2.targetHandler;

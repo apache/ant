@@ -69,31 +69,26 @@ import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
  * @version $Revision$ $Date$
  */
 public class URLResolver
-    implements ExtensionResolver
-{
+    implements ExtensionResolver {
     private File m_destfile;
     private File m_destdir;
     private URL m_url;
 
-    public void setUrl( final URL url )
-    {
+    public void setUrl( final URL url) {
         m_url = url;
     }
 
-    public void setDestfile( final File destfile )
-    {
+    public void setDestfile( final File destfile) {
         m_destfile = destfile;
     }
 
-    public void setDestdir( final File destdir )
-    {
+    public void setDestdir( final File destdir) {
         m_destdir = destdir;
     }
 
     public File resolve( final Extension extension,
                          final Project project )
-        throws BuildException
-    {
+        throws BuildException {
         validate();
 
         final File file = getDest();
@@ -106,25 +101,17 @@ public class URLResolver
         return file;
     }
 
-    private File getDest()
-    {
-        if( null != m_destfile )
-        {
+    private File getDest() {
+        if (null != m_destfile) {
             return m_destfile;
-        }
-        else
-        {
+        } else {
             final String file = m_url.getFile();
             String filename = null;
-            if( null == file || file.length() <= 1 )
-            {
+            if (null == file || file.length() <= 1) {
                 filename = "default.file";
-            }
-            else
-            {
+            } else {
                 int index = file.lastIndexOf( '/' );
-                if( -1 == index )
-                {
+                if (-1 == index) {
                     index = 0;
                 }
                 filename = file.substring( index );
@@ -134,28 +121,22 @@ public class URLResolver
         }
     }
 
-    private void validate()
-    {
-        if( null == m_url )
-        {
+    private void validate() {
+        if (null == m_url) {
             final String message = "Must specify URL";
             throw new BuildException( message );
         }
 
-        if( null == m_destdir && null == m_destfile )
-        {
+        if (null == m_destdir && null == m_destfile) {
             final String message = "Must specify destination file or directory";
             throw new BuildException( message );
-        }
-        else if( null != m_destdir && null != m_destfile )
-        {
+        } else if (null != m_destdir && null != m_destfile) {
             final String message = "Must not specify both destination file or directory";
             throw new BuildException( message );
         }
     }
 
-    public String toString()
-    {
+    public String toString() {
         return "URL[" + m_url + "]";
     }
 }

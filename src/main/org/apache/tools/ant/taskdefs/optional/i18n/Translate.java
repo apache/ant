@@ -548,8 +548,7 @@ public class Translate extends MatchingTask {
                                 // If there is a white space or = or :, then
                                 // it isn't to be treated as a valid key.
                                 boolean validToken = true;
-                                for (int k = 0; k < token.length() && validToken; k++)
-                                {
+                                for (int k = 0; k < token.length() && validToken; k++) {
                                     char c = token.charAt(k);
                                     if (c == ':' || c == '='
                                         || Character.isSpaceChar(c)) {

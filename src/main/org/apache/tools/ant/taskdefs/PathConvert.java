@@ -419,12 +419,12 @@ public class PathConvert extends Task {
             // Place the result into the specified property,
             // unless setonempty == false
             String value = rslt.toString();
-            if(setonempty) {
+            if (setonempty) {
                 log("Set property " + property + " = " + value,
                     Project.MSG_VERBOSE);
                 getProject().setNewProperty(property, value);
             } else {
-                if(rslt.length() > 0) {
+                if (rslt.length() > 0) {
                     log("Set property " + property + " = " + value,
                         Project.MSG_VERBOSE);
                     getProject().setNewProperty(property, value);

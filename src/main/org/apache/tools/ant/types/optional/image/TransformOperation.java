@@ -59,12 +59,10 @@ import javax.media.jai.PlanarImage;
  * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.tasks.optional.image.Image
  */
-public abstract class TransformOperation extends ImageOperation
-{
+public abstract class TransformOperation extends ImageOperation {
     public abstract PlanarImage executeTransformOperation(PlanarImage img);
 
-    public void addRectangle(Rectangle instr)
-    {
+    public void addRectangle(Rectangle instr) {
         instructions.add(instr);
     }
 
