@@ -1,7 +1,0 @@
-<ant-lib version="1.0">
-  <types>
-    <!-- tasks to test operation of engine -->
-    <task name="prim-test" classname="org.apache.antlib.selftest.PrimitiveTypesTest" />
-    <task name="extensions-test" classname="org.apache.antlib.selftest.ExtensionsTest" />
-  </types>
-</ant-lib>
