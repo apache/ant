@@ -53,18 +53,17 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import com.starbase.starteam.File;
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Item;
 import com.starbase.starteam.Status;
+import com.starbase.starteam.TypeNames;
 import com.starbase.starteam.View;
 import com.starbase.starteam.ViewConfiguration;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
@@ -72,8 +71,6 @@ import org.apache.tools.ant.Project;
  * Checks files into a StarTeam project.  
  * Optionally adds files and in the local tree that
  * are not managed by the repository to its control.
- *
- *
  * Created: Sat Dec 15 20:26:07 2001
  *
  * @author <a href="mailto:scohen@localhost.localdomain">Steve Cohen</a>
@@ -181,15 +178,50 @@ public class StarTeamCheckin extends TreeBasedTask {
 
     /**
      * Implements base-class abstract function to define tests for
-     * any preconditons required by the task
+     * any preconditons required by the task.
      *
-     * @exception BuildException not thrown in this implementation
+     * @exception BuildException thrown if both rootLocalFolder 
+     * and viewRootLocalFolder are defined
      */
     protected void testPreconditions() throws BuildException {
-        if (null != getRootLocalFolder() && !isForced()) {
-            log("Warning: rootLocalFolder specified, but forcing off.",
-                    Project.MSG_WARN);
+    }
+    /**
+     * Implements base-class abstract function to emit to the log an 
+     * entry describing the parameters that will be used by this operation.
+     *
+     * @param starteamrootFolder
+     *               root folder in StarTeam for the operation
+     * @param targetrootFolder
+     *               root local folder for the operation 
+     * (whether specified by the user or not).
+     */
+    protected void logOperationDescription(
+        Folder starteamrootFolder, java.io.File targetrootFolder) 
+    {
+        log((this.isRecursive() ? "Recursive" : "Non-recursive")
+            +" Checkin from" 
+            + (null == getRootLocalFolder() ? " (default): " : ": ") 
+            + targetrootFolder.getAbsolutePath());
+        
+        log("Checking in to: " + starteamrootFolder.getFolderHierarchy());
+        logIncludes();
+        logExcludes();
+
+        if (this.lockStatus == Item.LockType.UNLOCKED) {
+            log("  Items will be checked in unlocked.");
+        } 
+        else {
+            log("  Items will be checked in with no change in lock status.");
         }
+
+        if (this.isForced()) {
+            log("  Items will be checked in in accordance with repository status and regardless of lock status.");
+        } 
+        else {
+            log("  Items will be checked in regardless of repository status only if locked." );
+        }
+
+
     }
 
     /**
@@ -202,129 +234,174 @@ public class StarTeamCheckin extends TreeBasedTask {
      * @exception BuildException if any error occurs
      */
     protected void visit(Folder starteamFolder, java.io.File targetFolder)
-            throws BuildException {
+            throws BuildException 
+    {
         try {
-            Hashtable localFiles = listLocalFiles(targetFolder);
-
-            // If we have been told to create the working folders
-            // For all Files in this folder, we need to check
-            // if there have been modifications.
-
-            Item[] files = starteamFolder.getItems("File");
-            for (int i = 0; i < files.length; i++) {
-                File eachFile = (File) files[i];
-                String filename = eachFile.getName();
-                java.io.File localFile =
-                        new java.io.File(targetFolder, filename);
-
-                delistLocalFile(localFiles, localFile);
-
-                // If the file doesn't pass the include/exclude tests, skip it.
-                if (!shouldProcess(filename)) {
-                    log("Skipping " + eachFile.toString(), Project.MSG_INFO);
-                    continue;
-                }
-
-
-                // If forced is not set then we may save ourselves some work by
-                // looking at the status flag.
-                // Otherwise, we care nothing about these statuses.
-
-                if (!isForced()) {
-                    int fileStatus = (eachFile.getStatus());
-
-                    // We try to update the status once to give StarTeam
-                    // another chance.
-                    if (fileStatus == Status.MERGE
-                            || fileStatus == Status.UNKNOWN) {
-                        eachFile.updateStatus(true, true);
-                        fileStatus = (eachFile.getStatus());
-                    }
-                    if (fileStatus == Status.CURRENT) {
-                        log("Not processing " + eachFile.toString()
-                                + " as it is current.",
-                                Project.MSG_INFO);
-                        continue;
-                    }
-                }
-
-                // Check in anything else.
-
-                log("Checking In: " + (localFile.toString()), Project.MSG_INFO);
-                eachFile.checkinFrom(localFile, this.comment,
-                        this.lockStatus,
-                        true, true, true);
+            if (null != getRootLocalFolder()) {
+                starteamFolder.setAlternatePathFragment(
+                    targetFolder.getAbsolutePath());
             }
 
-            // Now we recursively call this method on all sub folders in this
-            // folder unless recursive attribute is off.
-            Folder[] subFolders = starteamFolder.getSubFolders();
-            for (int i = 0; i < subFolders.length; i++) {
-                java.io.File targetSubfolder =
-                        new java.io.File(targetFolder, subFolders[i].getName());
-                delistLocalFile(localFiles, targetSubfolder);
+            Folder[] foldersList = starteamFolder.getSubFolders();
+            Item[] stFiles = starteamFolder.getItems(getTypeNames().FILE);
+            
+            // note, it's important to scan the items BEFORE we make the
+            // UnmatchedFileMap because that creates a bunch of NEW
+            // folders and files (unattached to repository) and we
+            // don't want to include those in our traversal.
+
+            UnmatchedFileMap ufm = 
+                new CheckinMap().init(
+                    targetFolder.getAbsoluteFile(), starteamFolder);
+
+
+            for (int i = 0, size = foldersList.length; i < size; i++) {
+                Folder stFolder = foldersList[i];
+                java.io.File subfolder = 
+                    new java.io.File(targetFolder, stFolder.getName());
+
+                ufm.removeControlledItem(subfolder);
 
                 if (isRecursive()) {
-                    visit(subFolders[i], targetSubfolder);
+                    visit(stFolder, subfolder);
                 }
             }
-            if (this.addUncontrolled) {
-                addUncontrolledItems(localFiles, starteamFolder);
+
+           
+            for (int i = 0, size = stFiles.length; i < size; i++) {
+                com.starbase.starteam.File stFile = 
+                    (com.starbase.starteam.File) stFiles[i];
+                processFile(stFile);
+                
+                ufm.removeControlledItem(
+                    new java.io.File(targetFolder, stFile.getName()));
             }
 
+            if (this.addUncontrolled) {
+                ufm.processUncontrolledItems();
+            }
 
         } catch (IOException e) {
             throw new BuildException(e);
         }
+
     }
 
     /**
-     * Adds to the StarTeam repository everything on the local machine that
-     * is not currently in the repository.
-     * @param folder - StarTeam folder to which these items are to be added.
+     * provides a string showing from and to full paths for logging
+     * 
+     * @param remotefile the Star Team file being processed.
+     * 
+     * @return a string showing from and to full paths
      */
-    private void addUncontrolledItems(Hashtable localFiles, Folder folder)
-            throws IOException {
-        try {
-            Enumeration e = localFiles.keys();
-            while (e.hasMoreElements()) {
-                java.io.File file =
-                        new java.io.File(e.nextElement().toString());
-                add(folder, file);
+    private String describeCheckin(com.starbase.starteam.File remotefile)
+    {
+        StringBuffer sb = new StringBuffer();
+        sb.append(remotefile.getFullName())
+          .append(" --> ")
+          .append(getFullRepositoryPath(remotefile));
+        return sb.toString();
+    }
+
+    /**
+     * Processes (checks-out) <code>stFiles</code>files from StarTeam folder.
+     *
+     * @param eachFile repository file to process
+     * @param targetFolder a java.io.File (Folder) to work
+     * @throws IOException when StarTeam API fails to work with files
+     */
+    private void processFile(com.starbase.starteam.File eachFile)
+        throws IOException {
+        String filename = eachFile.getName();
+
+        // If the file doesn't pass the include/exclude tests, skip it.
+        if (!shouldProcess(filename)) {
+            log("Excluding " + getFullRepositoryPath(eachFile));
+                return;
+        }
+
+        boolean checkin = true;
+        int fileStatus = (eachFile.getStatus());
+
+        // We try to update the status once to give StarTeam
+        // another chance.
+
+        if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
+            eachFile.updateStatus(true, true);
+            fileStatus = (eachFile.getStatus());
+        }
+
+        if (fileStatus == Status.MODIFIED) {
+            log("Checking in: " + describeCheckin(eachFile));
+        } 
+        else if (fileStatus == Status.MISSING) {
+            log("Local file missing: " + describeCheckin(eachFile));
+            checkin = false;
+        }
+        else {
+            if (isForced()) {
+                log("Forced checkin of " + describeCheckin(eachFile) + 
+                    " over status " + Status.name(fileStatus));
+            } else {
+                log("Skipping: " + getFullRepositoryPath(eachFile) + 
+                    " - status: " + Status.name(fileStatus));
+                checkin = false;
             }
-        } catch (SecurityException e) {
-            log("Error adding file: " + e, Project.MSG_ERR);
+        }
+        if (checkin) {
+            eachFile.checkin(this.comment, this.lockStatus, 
+                             this.isForced(), true, true);
         }
     }
 
     /**
-     * Deletes the file from the local drive.
-     * @param file the file or directory to delete.
-     * @return true if the file was successfully deleted otherwise false.
+     * handles the deletion of uncontrolled items
      */
-    private void add(Folder parentFolder, java.io.File file)
-            throws IOException {
-        // If the current file is a Directory, we need to process all
-        // of its children as well.
-        if (file.isDirectory()) {
-            log("Adding new folder to repository: " + file.getAbsolutePath(),
-                    Project.MSG_INFO);
-            Folder newFolder = new Folder(parentFolder);
-            newFolder.setName(file.getName());
-            newFolder.update();
+    private class CheckinMap extends UnmatchedFileMap {
+        protected boolean isActive() {
+            return StarTeamCheckin.this.addUncontrolled;
+        }
 
-            // now visit this new folder to take care of adding any files
-            // or subfolders within it.
-            if (isRecursive()) {
-                visit(newFolder, file);
+    
+        /**
+         * This override adds all its members to the repository.  It is assumed 
+         * that this method will not be called until all the items in the 
+         * corresponding folder have been processed, and that the internal map
+         * will contain only uncontrolled items.
+         */
+        void processUncontrolledItems() throws BuildException {
+            if (this.isActive()) {
+                Enumeration e = this.keys();
+                while (e.hasMoreElements()) {
+                    java.io.File local = (java.io.File) e.nextElement();
+                    Item remoteItem = (Item) this.get(local);
+                    remoteItem.update();
+    
+                    // once we find a folder that isn't in the repository, 
+                    // we know we can add it.
+                    if (local.isDirectory()) {
+                        Folder folder = (Folder) remoteItem;
+                        log("Added uncontrolled folder " 
+                            + folder.getFolderHierarchy()
+                            + " from " + local.getAbsoluteFile());
+                        if (isRecursive()) {
+                            UnmatchedFileMap submap = 
+                                new CheckinMap().init(local, folder);
+                            submap.processUncontrolledItems();
+                        }
+                    } else {
+                        com.starbase.starteam.File remoteFile =
+                            (com.starbase.starteam.File) remoteItem;
+                        log("Added uncontrolled file " 
+                            + TreeBasedTask.getFullRepositoryPath(remoteFile)
+                            + " from " + local.getAbsoluteFile());
+    
+                    }
+                }
             }
-        } else {
-            log("Adding new file to repository: " + file.getAbsolutePath(),
-                    Project.MSG_INFO);
-            File newFile = new File(parentFolder);
-            newFile.addFromStream(new FileInputStream(file),
-                    file.getName(),
-                    null, this.comment, 3, true);
         }
     }
+
 }
+
+

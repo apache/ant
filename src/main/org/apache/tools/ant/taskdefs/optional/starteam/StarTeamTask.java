@@ -53,14 +53,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import java.util.StringTokenizer;
-
+import com.starbase.starteam.BuildNumber;
 import com.starbase.starteam.Server;
 import com.starbase.starteam.StarTeamFinder;
+import com.starbase.starteam.TypeNames;
 import com.starbase.starteam.User;
 import com.starbase.starteam.View;
-
+import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -114,6 +115,12 @@ public abstract class StarTeamTask extends Task {
      */
     private Server server = null;
 
+    private void logStarteamVersion() {
+        log("StarTeam version: "+ 
+            BuildNumber.getDisplayString(), Project.MSG_DEBUG);
+    }
+
+
     /////////////////////////////////////////////////////////
     // GET/SET methods.
     // Setters, of course are where ant user passes in values.
@@ -125,7 +132,7 @@ public abstract class StarTeamTask extends Task {
      * @param servername a <code>String</code> value
      * @see #setURL(String)
      */
-    public void setServername(String servername) {
+    public final void setServername(String servername) {
         this.servername = servername;
     }
 
@@ -135,7 +142,7 @@ public abstract class StarTeamTask extends Task {
      * @return the name of the StarTeam server
      * @see #getURL()
      */
-    public String getServername() {
+    public final String getServername() {
         return this.servername;
     }
 
@@ -145,7 +152,7 @@ public abstract class StarTeamTask extends Task {
      * @param serverport port number to be set
      * @see #setURL(String)
      */
-    public void setServerport(String serverport) {
+    public final void setServerport(String serverport) {
         this.serverport = serverport;
     }
 
@@ -155,7 +162,7 @@ public abstract class StarTeamTask extends Task {
      * @return the port number of the StarTeam connection
      * @see #getURL()
      */
-    public String getServerport() {
+    public final String getServerport() {
         return this.serverport;
     }
 
@@ -166,7 +173,7 @@ public abstract class StarTeamTask extends Task {
      * @param projectname the name of the StarTeam project to be acted on
      * @see #setURL(String)
      */
-    public void setProjectname(String projectname) {
+    public final void setProjectname(String projectname) {
         this.projectname = projectname;
     }
 
@@ -176,7 +183,7 @@ public abstract class StarTeamTask extends Task {
      * @return the name of the StarTeam project to be acted on
      * @see #getURL()
      */
-    public String getProjectname() {
+    public final String getProjectname() {
         return this.projectname;
     }
 
@@ -187,7 +194,7 @@ public abstract class StarTeamTask extends Task {
      * @param projectname the name of the StarTeam view to be acted on
      * @see #setURL(String)
      */
-    public void setViewname(String viewname) {
+    public final void setViewname(String viewname) {
         this.viewname = viewname;
     }
 
@@ -197,7 +204,7 @@ public abstract class StarTeamTask extends Task {
      * @return the name of the StarTeam view to be acted on
      * @see #getURL()
      */
-    public String getViewname() {
+    public final String getViewname() {
         return this.viewname;
     }
 
@@ -214,7 +221,7 @@ public abstract class StarTeamTask extends Task {
      * @see #setProjectname(String)
      * @see #setViewname(String)
      */
-    public void setURL(String url) {
+    public final void setURL(String url) {
         StringTokenizer t = new StringTokenizer(url, "/");
         if (t.hasMoreTokens()) {
             String unpw = t.nextToken();
@@ -248,7 +255,7 @@ public abstract class StarTeamTask extends Task {
      * @see #getProjectname()
      * @see #getViewname()
      */
-    public String getURL() {
+    public final String getURL() {
         return
                 this.servername + ":" +
                 this.serverport + "/" +
@@ -257,11 +264,20 @@ public abstract class StarTeamTask extends Task {
     }
 
     /**
+     * returns an URL string useful for interacting with many StarTeamFinder
+     * methods.
+     * 
+     * @return the URL string for this task.
+     */
+    protected final String getViewURL() {
+        return getUserName() + ":" + getPassword() + "@" + getURL();
+    }
+    /**
      * set the name of the StarTeam user, needed for the connection
      *
      * @param userName name of the user to be logged in
      */
-    public void setUserName(String userName) {
+    public final void setUserName(String userName) {
         this.userName = userName;
     }
 
@@ -270,7 +286,7 @@ public abstract class StarTeamTask extends Task {
      *
      * @return the name of the StarTeam user
      */
-    public String getUserName() {
+    public final String getUserName() {
         return this.userName;
     }
 
@@ -279,7 +295,7 @@ public abstract class StarTeamTask extends Task {
      *
      * @param password the password to be used for login
      */
-    public void setPassword(String password) {
+    public final void setPassword(String password) {
         this.password = password;
     }
 
@@ -288,7 +304,7 @@ public abstract class StarTeamTask extends Task {
      *
      * @return the password used for login
      */
-    public String getPassword() {
+    public final String getPassword() {
         return this.password;
     }
 
@@ -298,10 +314,18 @@ public abstract class StarTeamTask extends Task {
      *
      * @return a reference to the server
      */
-    protected Server getServer() {
+    protected final Server getServer() {
         return this.server;
     }
 
+    /**
+     * returns a list of TypeNames known to the server.
+     *
+     * @return a reference to the server's TypeNames
+     */
+    protected final TypeNames getTypeNames() {
+        return this.server.getTypeNames();
+    }
     /**
      * Derived classes must override <code>createSnapshotView</code>
      * defining the kind of configured view appropriate to its task.
@@ -309,7 +333,8 @@ public abstract class StarTeamTask extends Task {
      * @param rawview the unconfigured <code>View</code>
      * @return the snapshot <code>View</code> appropriately configured.
      */
-    protected abstract View createSnapshotView(View rawview);
+    protected abstract View createSnapshotView(View rawview) 
+    throws BuildException;
 
     /**
      * All subclasses will call on this method to open the view needed for
@@ -322,10 +347,15 @@ public abstract class StarTeamTask extends Task {
      * @see #getServer()
      */
     protected View openView() throws BuildException {
-        View view =
-                StarTeamFinder.openView(getUserName() + ":"
-                + getPassword()
-                + "@" + getURL());
+
+        logStarteamVersion();
+        View view = null;
+        try {
+            view = StarTeamFinder.openView(getViewURL());
+        } catch (Exception e) {
+            throw new BuildException(
+                "Failed to connect to " + getURL(), e);
+        }
 
         if (null == view) {
             throw new BuildException("Cannot find view" + getURL() +
@@ -344,7 +374,7 @@ public abstract class StarTeamTask extends Task {
      * @param userID a user's ID
      * @return the name of the user with ID userID
      */
-    protected String getUserName(int userID) {
+    protected final String getUserName(int userID) {
         User u = this.server.getUser(userID);
         if (null == u) {
             return "";

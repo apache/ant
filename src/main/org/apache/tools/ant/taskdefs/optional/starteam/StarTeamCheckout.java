@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,17 +53,16 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import com.starbase.starteam.File;
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Item;
 import com.starbase.starteam.Status;
+import com.starbase.starteam.TypeNames;
 import com.starbase.starteam.View;
 import com.starbase.starteam.ViewConfiguration;
-
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
@@ -112,8 +111,8 @@ public class StarTeamCheckout extends TreeBasedTask {
     }
 
     /**
-     * Should all all local files <i>not<i> in StarTeam be deleted?
-     * Optional, defaults to "true".     
+     * Whether or not all local files <i>not<i> in StarTeam should be deleted.
+     * Optional, defaults to <code>true</code>.
      * @param value  the value to set the attribute to.
      */
     public void setDeleteUncontrolled(boolean value) {
@@ -174,39 +173,131 @@ public class StarTeamCheckout extends TreeBasedTask {
     }
 
     /**
+     * should checked out files get the timestamp from the repository
+     * or the time they are checked out.  True means use the repository 
+     * timestamp.
+     */
+    private boolean useRepositoryTimeStamp = false;
+
+    /**
+     * sets the useRepositoryTimestmp member.
+     * 
+     * @param useRepositoryTimeStamp
+     *               true means checked out files will get the repository timestamp.
+     *               false means the checked out files will be timestamped at the time
+     *               of checkout.
+     */
+    public void setUseRepositoryTimeStamp(boolean useRepositoryTimeStamp)
+    {
+        this.useRepositoryTimeStamp = useRepositoryTimeStamp;
+    }
+
+    /**
+     * returns the value of the useRepositoryTimestamp member
+     * 
+     * @return the value of the useRepositoryTimestamp member
+     */
+    public boolean getUseRepositoryTimeStamp() {
+        return this.useRepositoryTimeStamp;
+    }
+    /**
      * Override of base-class abstract function creates an
      * appropriately configured view for checkouts - either
-     * the current view or a view from this.label.
-     *
-     * @param raw the unconfigured <code>View</code>
+     * the current view or a view from this.label or the raw
+     * view itself in the case of a revision label.
+     * 
+     * @param raw    the unconfigured <code>View</code>
+     * 
      * @return the snapshot <code>View</code> appropriately configured.
+     * @exception BuildException
      */
-    protected View createSnapshotView(View raw) {
+    protected View createSnapshotView(View raw) 
+    throws BuildException
+    {
 
         int labelID = getLabelID(raw);
 
-        // if a label has been supplied, use it to configure the view
-        // otherwise use current view
-        if (labelID >= 0) {
+        // if a label has been supplied and it is a view label, use it 
+        // to configure the view
+        if (this.isUsingViewLabel()) {
             return new View(raw, ViewConfiguration.createFromLabel(labelID));
-        } else {
+        } 
+        // if a label has been supplied and it is a revision label, use the raw 
+        // the view as the snapshot
+        else if (this.isUsingRevisionLabel()) {
+            return raw;
+        }
+        // otherwise, use this view configured as the tip.
+        else {
             return new View(raw, ViewConfiguration.createTip());
         }
     }
 
     /**
      * Implements base-class abstract function to define tests for
-     * any preconditons required by the task
+     * any preconditons required by the task.
      *
-     * @exception BuildException not thrown in this implementation
+     * @exception BuildException thrown if both rootLocalFolder 
+     * and viewRootLocalFolder are defined
      */
     protected void testPreconditions() throws BuildException {
-        if (null != getRootLocalFolder() && !isForced()) {
-            log("Warning: rootLocalFolder specified, but forcing off.",
-                    Project.MSG_WARN);
+        if (this.isUsingRevisionLabel() && this.createDirs) {
+            log("Ignoring createworkingdirs while using a revision label." +
+                "  Folders will be created only as needed.",
+                Project.MSG_WARN);
+            this.createDirs=false;
         }
     }
 
+    /**
+     * extenders should emit to the log an entry describing the parameters
+     * that will be used by this operation.
+     * 
+     * @param starteamrootFolder
+     *               root folder in StarTeam for the operation
+     * @param targetrootFolder
+     *               root local folder for the operation (whether specified 
+     * by the user or not.
+     */
+
+    protected void logOperationDescription(
+        Folder starteamrootFolder, java.io.File targetrootFolder)
+    {
+        log((this.isRecursive() ? "Recursive" : "Non-recursive") + 
+            " Checkout from: " + starteamrootFolder.getFolderHierarchy());
+
+        log("  Checking out to" 
+            + (null == getRootLocalFolder() ? "(default): " : ": ") 
+            + targetrootFolder.getAbsolutePath());
+
+
+        logLabel();
+        logIncludes();
+        logExcludes();
+
+        if (this.lockStatus == Item.LockType.EXCLUSIVE) {
+            log("  Items will be checked out with Exclusive locks.");
+        }
+        else if (this.lockStatus == Item.LockType.UNLOCKED) {
+            log("  Items will be checked out unlocked (even if presently locked).");
+        } 
+        else {
+            log("  Items will be checked out with no change in lock status.");
+        }
+        log("  Items will be checked out with " + 
+            (this.useRepositoryTimeStamp ? "repository timestamps."  
+                                        : "the current timestamp."));
+        log("  Items will be checked out " +
+            (this.isForced() ? "regardless of" : "in accordance with") +
+            " repository status.");
+        if (this.deleteUncontrolled) {
+            log("  Local items not found in the repository will be deleted.");
+        }
+        log("  Directories will be created"+
+            (this.createDirs ? " wherever they exist in the repository, even if empty." 
+                             : " only where needed to check out files."));
+        
+    }
     /**
      * Implements base-class abstract function to perform the checkout
      * operation on the files in each folder of the tree.
@@ -217,91 +308,92 @@ public class StarTeamCheckout extends TreeBasedTask {
      * @exception BuildException if any error occurs
      */
     protected void visit(Folder starteamFolder, java.io.File targetFolder)
-            throws BuildException {
+            throws BuildException 
+    {  
         try {
-            Hashtable localFiles = listLocalFiles(targetFolder);
 
-            // If we have been told to create the working folders
-            if (createDirs) {
-                // Create if it doesn't exist
-                if (!targetFolder.exists()) {
-                    targetFolder.mkdir();
-                }
+
+            if (null != getRootLocalFolder()) {
+                starteamFolder.setAlternatePathFragment(
+                    targetFolder.getAbsolutePath());
             }
-            // For all Files in this folder, we need to check
-            // if there have been modifications.
-
-            Item[] files = starteamFolder.getItems("File");
-            for (int i = 0; i < files.length; i++) {
-                File eachFile = (File) files[i];
-                String filename = eachFile.getName();
-                java.io.File localFile =
-                        new java.io.File(targetFolder, filename);
-
-                delistLocalFile(localFiles, localFile);
-
-                // If the file doesn't pass the include/exclude tests, skip it.
-                if (!shouldProcess(filename)) {
-                    log("Skipping " + eachFile.toString(), Project.MSG_INFO);
-                    continue;
-                }
-
-
-                // If forced is not set then we may save ourselves some work by
-                // looking at the status flag.
-                // Otherwise, we care nothing about these statuses.
-
-                if (!isForced()) {
-                    int fileStatus = (eachFile.getStatus());
-
-                    // We try to update the status once to give StarTeam
-                    // another chance.
-                    if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
-                        eachFile.updateStatus(true, true);
-                        fileStatus = (eachFile.getStatus());
-                    }
-                    if (fileStatus == Status.CURRENT) {
-                        log("Not processing " + eachFile.toString()
-                                + " as it is current.",
-                                Project.MSG_INFO);
-                        continue;
+            
+            if (!targetFolder.exists()) {
+                if (!this.isUsingRevisionLabel()) {
+                    if (this.createDirs) {
+                        if (targetFolder.mkdirs()) {
+                            log("Creating folder: " + targetFolder);
+                        } else {
+                            throw new BuildException(
+                                "Failed to create local folder " + targetFolder);
+                        }
                     }
                 }
-
-
-                // Check out anything else.
-                // Just a note: StarTeam has a status for NEW which implies
-                // that there is an item  on your local machine that is not
-                // in the repository.  These are the items that show up as
-                // NOT IN VIEW in the Starteam GUI.
-                // One would think that we would want to perhaps checkin the
-                // NEW items (not in all cases! - Steve Cohen 15 Dec 2001)
-                // Unfortunately, the sdk doesn't really work, and we can't
-                // actually see  anything with a status of NEW. That is why
-                // we can just check out  everything here without worrying
-                // about losing anything.
-
-                log("Checking Out: " + (localFile.toString()), Project.MSG_INFO);
-                eachFile.checkoutTo(localFile, this.lockStatus,
-                        true, true, true);
             }
+            
+            
+            Folder[] foldersList = starteamFolder.getSubFolders();
+            Item[] filesList = starteamFolder.getItems(getTypeNames().FILE);
 
-            // Now we recursively call this method on all sub folders in this
-            // folder unless recursive attribute is off.
-            Folder[] subFolders = starteamFolder.getSubFolders();
-            for (int i = 0; i < subFolders.length; i++) {
-                java.io.File targetSubfolder =
-                        new java.io.File(targetFolder, subFolders[i].getName());
-                delistLocalFile(localFiles, targetSubfolder);
-                if (isRecursive()) {
-                    visit(subFolders[i], targetSubfolder);
+            if (this.isUsingRevisionLabel()) {
+
+                // prune away any files not belonging to the revision label
+                // this is one ugly API from Starteam SDK
+                
+                Hashtable labelItems = new Hashtable(filesList.length);
+                int s = filesList.length;
+                int[] ids = new int[s];
+                for (int i=0; i < s; i++) {
+                    ids[i]=filesList[i].getItemID();
+                    labelItems.put(new Integer(ids[i]), new Integer(i));
                 }
+                int[] foundIds = getLabelInUse().getLabeledItemIDs(ids);
+                s = foundIds.length;
+                Item[] labeledFiles = new Item[s];
+                for (int i=0; i < s; i++) {
+                    Integer ID = new Integer(foundIds[i]);
+                    labeledFiles[i] = 
+                        filesList[((Integer) labelItems.get(ID)).intValue()];
+                }
+                filesList = labeledFiles;
             }
+            
+            
+            // note, it's important to scan the items BEFORE we make the
+            // Unmatched file map because that creates a bunch of NEW
+            // folders and files (unattached to repository) and we
+            // don't want to include those in our traversal.
 
+            UnmatchedFileMap ufm = 
+                new CheckoutMap().
+                    init(targetFolder.getAbsoluteFile(), starteamFolder);
+
+
+
+            for (int i = 0; i < foldersList.length; i++) {
+                Folder stFolder = foldersList[i];
+
+                java.io.File subfolder = 
+                     new java.io.File(targetFolder, stFolder.getName());
+
+                 ufm.removeControlledItem(subfolder);
+
+                 if (isRecursive()) {
+                         visit(stFolder, subfolder);
+                     }
+                 }
+
+            for (int i = 0; i < filesList.length; i++) {
+                com.starbase.starteam.File stFile = 
+                    (com.starbase.starteam.File) filesList[i];
+                processFile( stFile, targetFolder);
+                
+                ufm.removeControlledItem(
+                    new java.io.File(targetFolder, stFile.getName()));
+            }
             if (this.deleteUncontrolled) {
-                deleteUncontrolledItems(localFiles);
+                ufm.processUncontrolledItems();
             }
-
         } catch (IOException e) {
             throw new BuildException(e);
         }
@@ -309,51 +401,211 @@ public class StarTeamCheckout extends TreeBasedTask {
 
 
     /**
-     * Deletes everything on the local machine that is not in the repository.
-     *
-     * @param localFiles the list of filenames whose elements are to be deleted
+     * provides a string showing from and to full paths for logging
+     * 
+     * @param remotefile the Star Team file being processed.
+     * 
+     * @return a string showing from and to full paths
      */
-    private void deleteUncontrolledItems(Hashtable localFiles) {
-        try {
-            Enumeration e = localFiles.keys();
-            while (e.hasMoreElements()) {
-                java.io.File file =
-                        new java.io.File(e.nextElement().toString());
-                delete(file);
+    private String describeCheckout(com.starbase.starteam.File remotefile,
+                                    java.io.File localFile)
+    {
+        StringBuffer sb = new StringBuffer();
+        sb.append(getFullRepositoryPath(remotefile))
+          .append(" --> ");
+        if (null == localFile) {
+            sb.append(remotefile.getFullName());
+        } else {
+            sb.append(localFile);
+        }
+        return sb.toString();
+    }
+    private String describeCheckout(com.starbase.starteam.File remotefile) {
+        return describeCheckout(remotefile,null);
+    }
+    /**
+     * Processes (checks out) <code>stFiles</code>files from StarTeam folder.
+     *
+     * @param eachFile repository file to process
+     * @param targetFolder a java.io.File (Folder) to work
+     * @throws IOException when StarTeam API fails to work with files
+     */
+    private void processFile(com.starbase.starteam.File eachFile, 
+                             java.io.File targetFolder )
+    throws IOException 
+    {
+        String filename = eachFile.getName();
+
+        java.io.File localFile = new java.io.File(targetFolder, filename);
+
+        // If the file doesn't pass the include/exclude tests, skip it.
+        if (!shouldProcess(filename)) {
+            log("Excluding " + getFullRepositoryPath(eachFile), 
+                Project.MSG_INFO);
+                return;
+        }
+
+        if (this.isUsingRevisionLabel()) {
+            if (!targetFolder.exists()) {
+                if (targetFolder.mkdirs()) {
+                    log("Creating folder: " + targetFolder);
+                } else {
+                    throw new BuildException(
+                        "Failed to create local folder " + targetFolder);
+                }
             }
-        } catch (SecurityException e) {
-            log("Error deleting file: " + e, Project.MSG_ERR);
+            boolean success = eachFile.checkoutByLabelID(
+                localFile,
+                getIDofLabelInUse(),
+                this.lockStatus,
+                !this.useRepositoryTimeStamp,
+                true,
+                false);
+            if (success) {
+                log("Checked out " + describeCheckout(eachFile, localFile));
+            }
+        }
+        else {
+            boolean checkout = true;
+
+            // Just a note: StarTeam has a status for NEW which implies
+            // that there is an item  on your local machine that is not
+            // in the repository.  These are the items that show up as
+            // NOT IN VIEW in the Starteam GUI.
+            // One would think that we would want to perhaps checkin the
+            // NEW items (not in all cases! - Steve Cohen 15 Dec 2001)
+            // Unfortunately, the sdk doesn't really work, and we can't
+            // actually see  anything with a status of NEW. That is why
+            // we can just check out  everything here without worrying
+            // about losing anything.
+
+            int fileStatus = (eachFile.getStatus());
+
+            // We try to update the status once to give StarTeam
+            // another chance.
+
+            if (fileStatus == Status.MERGE || 
+                fileStatus == Status.UNKNOWN) 
+            {
+                eachFile.updateStatus(true, true);
+                fileStatus = (eachFile.getStatus());
+            }
+
+            log(eachFile.toString() + " has status of " + 
+                Status.name(fileStatus), Project.MSG_DEBUG);
+
+
+            switch (fileStatus) {
+            case Status.OUTOFDATE:
+            case Status.MISSING:
+                log("Checking out: " + describeCheckout(eachFile));
+                break;
+            default:
+                if (isForced()) {
+                    log("Forced checkout of " 
+                        + describeCheckout(eachFile) 
+                        + " over status " + Status.name(fileStatus));
+                } else {
+                    log("Skipping: " + getFullRepositoryPath(eachFile) + 
+                        " - status: " + Status.name(fileStatus));
+                    checkout = false;
+                }
+            }
+
+            if (checkout) {
+                if (!targetFolder.exists()) {
+                    if (targetFolder.mkdirs()) {
+                        log("Creating folder: " + targetFolder);
+                    } else {
+                        throw new BuildException(
+                            "Failed to create local folder " + targetFolder);
+                    }
+                }
+                eachFile.checkout(this.lockStatus, 
+                                 !this.useRepositoryTimeStamp, true, true);
+            }
         }
     }
-
     /**
-     * Deletes the file from the local drive.
-     * @param file the file or directory to delete.
-     * @return true if the file was successfully deleted otherwise false.
+     * handles the deletion of uncontrolled items
      */
-    private boolean delete(java.io.File file) {
-        // If the current file is a Directory, we need to delete all
-        // of its children as well.
-        if (file.isDirectory()) {
-            java.io.File[] children = file.listFiles();
-            for (int i = 0; i < children.length; i++) {
-                delete(children[i]);
-            }
+    private class CheckoutMap extends UnmatchedFileMap {
+        protected boolean isActive() {
+            return StarTeamCheckout.this.deleteUncontrolled;
         }
 
-        log("Deleting: " + file.getAbsolutePath(), Project.MSG_INFO);
-        return file.delete();
+        /**
+         * override of the base class init.  It can be much simpler, since
+         * the action to be taken is simply to delete the local files.  No
+         * further interaction with the repository is necessary.
+         * 
+         * @param localFolder
+         *        the local folder from which the mappings will be made.
+         * @param remoteFolder
+         *        not used in this implementation
+         */
+        UnmatchedFileMap init(java.io.File localFolder, Folder remoteFolder) {
+            if (!localFolder.exists()) {
+                return this;
+            }
+
+            String[] localFiles = localFolder.list();
+    
+            for (int i=0; i < localFiles.length; i++) {
+                java.io.File localFile = 
+                    new java.io.File(localFolder, localFiles[i]).getAbsoluteFile();
+                
+                log("adding " + localFile + " to UnmatchedFileMap",
+                    Project.MSG_DEBUG);
+    
+                if (localFile.isDirectory()) {
+                    this.put(localFile, "");
+                } 
+                else {
+                    this.put(localFile, "");
+                }
+            }
+            return this;
+        }
+
+
+    
+        /**
+         * deletes uncontrolled items from the local tree.  It is assumed
+         * that this method will not be called until all the items in the
+         * corresponding folder have been processed, and that the internal map
+         * will contain only uncontrolled items.
+         */
+        void processUncontrolledItems() throws BuildException {
+            if (this.isActive()) {
+                Enumeration e = this.keys();
+                while (e.hasMoreElements()) {
+                    java.io.File local = (java.io.File) e.nextElement();
+                    delete(local);
+                }
+            }
+        }
+    
+        /**
+         * deletes all files and if the file is a folder recursively deletes
+         * everything in it.
+         * 
+         * @param local  The local file or folder to be deleted.
+         */
+        void delete(java.io.File local) {
+            // once we find a folder that isn't in the repository, 
+            // anything below it can be deleted.
+            if (local.isDirectory() && isRecursive()) {
+                String[] contents = local.list();
+                for (int i=0; i< contents.length; i++) {
+                    java.io.File file = new java.io.File(local, contents[i]);
+                    delete(file);
+                }
+            } 
+            local.delete();
+            log("Deleted uncontrolled item " + local.getAbsolutePath());
+        }
     }
 
 
 }
-
-
-
-
-
-
-
-
-
-
