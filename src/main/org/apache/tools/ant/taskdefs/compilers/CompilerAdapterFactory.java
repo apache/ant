@@ -191,8 +191,8 @@ public class CompilerAdapterFactory {
             Object o = c.newInstance();
             return (CompilerAdapter) o;
         } catch (ClassNotFoundException cnfe) {
-            throw new BuildException("Compiler Adapter "+className 
-                    + " can\'t be found.", cnfe);
+            throw new BuildException("Compiler Adapter '"+className 
+                    + "' can\'t be found.", cnfe);
         } catch (ClassCastException cce) {
             throw new BuildException(className + " isn\'t the classname of "
                     + "a compiler adapter.", cce);
