@@ -108,6 +108,7 @@ public class Rmic extends MatchingTask {
     private String  iiopopts;
     private boolean idl  = false;
     private String  idlopts;
+    private boolean debug  = false;
 
     private Vector compileList = new Vector();
 
@@ -131,6 +132,10 @@ public class Rmic extends MatchingTask {
 
     public void setFiltering(boolean filter) {
         filtering = filter;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**
@@ -272,6 +277,9 @@ public class Rmic extends MatchingTask {
             cmd.createArgument().setValue("-idl");
             if( idlopts != null ) 
                 cmd.createArgument().setValue(idlopts);
+        }
+        if( debug )  {
+            cmd.createArgument().setValue("-g");
         }
 
         int fileCount = compileList.size();
