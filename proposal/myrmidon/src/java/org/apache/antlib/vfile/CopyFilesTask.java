@@ -23,7 +23,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  *
- * @ant:task name="v-copy"
+ * @ant.task name="v-copy"
  */
 public class CopyFilesTask
     extends AbstractTask

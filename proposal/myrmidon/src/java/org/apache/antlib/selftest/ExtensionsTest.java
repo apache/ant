@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
  * This is to test whether extension is loaded.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="extensions-test"
+ * @ant.task name="extensions-test"
  */
 public class ExtensionsTest
     extends AbstractTask

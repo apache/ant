@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * A task to sleep for a period of time
  *
- * @ant:task name="sleep"
+ * @ant.task name="sleep"
  * @author steve_l@iseran.com steve loughran
  * @version $Revision$ $Date$
  */

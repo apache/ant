@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="bzip2"
+ * @ant.task name="bzip2"
  */
 public class BZip2
     extends Pack

@@ -24,7 +24,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  *
- * @ant:task name="condition"
+ * @ant.task name="condition"
  */
 public class ConditionTask
     extends AbstractTask

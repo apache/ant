@@ -27,7 +27,7 @@ import org.apache.tools.todo.types.ScannerUtil;
  *
  * If the file to touch doesn't exist, an empty one is created. </p>
  *
- * @ant:task name="touch"
+ * @ant.task name="touch"
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>

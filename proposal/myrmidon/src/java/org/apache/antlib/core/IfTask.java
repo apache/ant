@@ -23,7 +23,7 @@ import org.apache.myrmidon.framework.conditions.NotCondition;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:task name="if"
+ * @ant.task name="if"
  */
 public class IfTask
     extends AbstractContainerTask

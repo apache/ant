@@ -15,7 +15,7 @@ import org.apache.myrmidon.framework.LogLevel;
  * This is a task used to log messages in the build file.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="log"
+ * @ant.task name="log"
  */
 public class Log
     extends AbstractTask

@@ -23,7 +23,7 @@ import org.apache.myrmidon.framework.file.Path;
  *      stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:task name="java"
+ * @ant.task name="java"
  */
 public class JavaTask
     extends AbstractTask

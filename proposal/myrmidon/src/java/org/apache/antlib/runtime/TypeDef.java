@@ -14,7 +14,7 @@ import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
  * Task to define a type.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="type-def"
+ * @ant.task name="type-def"
  */
 public class TypeDef
     extends AbstractTypeDef

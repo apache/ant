@@ -16,7 +16,7 @@ import org.apache.tools.todo.types.Commandline;
  * Generates a key.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="generate-key"
+ * @ant.task name="generate-key"
  */
 public class GenerateKey
     extends AbstractTask

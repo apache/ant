@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
  * Useful for forcing a build to fail on a certain condition.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="fail"
+ * @ant.task name="fail"
  */
 public class Fail
     extends AbstractTask

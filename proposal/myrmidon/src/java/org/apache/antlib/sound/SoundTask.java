@@ -26,7 +26,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
  * plans for the future: - use the midi api to define sounds (or drum beat etc)
  * in xml and have Ant play them back
  *
- * @ant:task name="sound-listener"
+ * @ant.task name="sound-listener"
  * @author Nick Pellow
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$, $Date$

@@ -20,7 +20,7 @@ import org.apache.myrmidon.framework.TaskList;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:task name="try-catch"
+ * @ant.task name="try-catch"
  */
 public final class TryCatchTask
     extends AbstractContainerTask

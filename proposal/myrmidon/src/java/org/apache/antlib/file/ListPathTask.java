@@ -18,7 +18,7 @@ import org.apache.myrmidon.framework.file.Path;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:task name="list-path"
+ * @ant.task name="list-path"
  */
 public class ListPathTask
     extends AbstractTask

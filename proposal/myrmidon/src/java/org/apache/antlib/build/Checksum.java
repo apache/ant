@@ -30,7 +30,7 @@ import org.apache.tools.todo.types.ScannerUtil;
  * This task can be used to create checksums for files. It can also be used to
  * verify checksums.
  *
- * @ant:task name="checksum"
+ * @ant.task name="checksum"
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$ $Date$
  */

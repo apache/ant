@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.AbstractTask;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:jimcook@visualxs.com">Jim Cook</a>
  * @version $Revision$ $Date$
- * @ant:task name="property-dump"
+ * @ant.task name="property-dump"
  */
 public class PropertyDump
     extends AbstractTask

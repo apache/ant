@@ -28,7 +28,7 @@ import org.apache.myrmidon.framework.filters.LineFilterSet;
  * A task used to copy files and simultaneously apply a
  * filter on said files.
  *
- * @ant:task name="filtered-copy"
+ * @ant.task name="filtered-copy"
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */

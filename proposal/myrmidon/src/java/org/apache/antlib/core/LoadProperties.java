@@ -21,7 +21,7 @@ import org.apache.myrmidon.api.TaskException;
  * This task loads properties from a property file and places them in the context.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="load-properties"
+ * @ant.task name="load-properties"
  */
 public class LoadProperties
     extends AbstractTask

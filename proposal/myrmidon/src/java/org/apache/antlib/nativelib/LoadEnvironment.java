@@ -22,7 +22,7 @@ import org.apache.myrmidon.api.TaskException;
  * prefix.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="load-environment"
+ * @ant.task name="load-environment"
  */
 public class LoadEnvironment
     extends AbstractTask

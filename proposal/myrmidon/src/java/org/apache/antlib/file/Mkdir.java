@@ -16,7 +16,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * Creates specified directory.
  *
- * @ant:task name="mkdir"
+ * @ant.task name="mkdir"
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author duncan@x180.com
  * @version $Revision$ $Date$

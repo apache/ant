@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:task name="v-list-fileset"
+ * @ant.task name="v-list-fileset"
  */
 public class ListFileSetTask
     extends AbstractTask

@@ -17,7 +17,7 @@ import org.apache.myrmidon.api.TaskException;
  * used to compress non-compressed archives such as TAR files.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
- * @ant:task name="bunzip2"
+ * @ant.task name="bunzip2"
  */
 public class BUnzip2
     extends Unpack

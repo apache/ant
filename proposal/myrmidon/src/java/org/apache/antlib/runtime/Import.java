@@ -20,7 +20,7 @@ import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
  * Task to import a tasklib.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="import"
+ * @ant.task name="import"
  */
 public class Import
     extends AbstractTask

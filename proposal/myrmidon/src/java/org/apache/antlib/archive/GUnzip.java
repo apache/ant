@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
- * @ant:task name="gunzip"
+ * @ant.task name="gunzip"
  */
 public class GUnzip
     extends Unpack

@@ -18,7 +18,7 @@ import org.apache.tools.todo.types.Commandline;
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.
  *
- * @ant:task name="patchx"
+ * @ant.task name="patchx"
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$

@@ -20,7 +20,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:task name="gzip"
+ * @ant.task name="gzip"
  */
 public class GZip
     extends Pack

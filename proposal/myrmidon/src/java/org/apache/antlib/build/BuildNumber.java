@@ -28,7 +28,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:task name="build-number"
+ * @ant.task name="build-number"
  */
 public class BuildNumber
     extends AbstractTask

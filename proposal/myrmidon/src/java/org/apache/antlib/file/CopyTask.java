@@ -28,7 +28,7 @@ import org.apache.tools.todo.util.mappers.IdentityMapper;
 /**
  * This is a task used to copy files.
  *
- * @ant:task name="copy"
+ * @ant.task name="copy"
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>

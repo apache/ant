@@ -14,7 +14,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 /**
  * A task used to move files.
  *
- * @ant:task name="move"
+ * @ant.task name="move"
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */

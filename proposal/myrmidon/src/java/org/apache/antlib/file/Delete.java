@@ -20,7 +20,7 @@ import org.apache.tools.todo.types.ScannerUtil;
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
  *
- * @ant:task name="delete"
+ * @ant.task name="delete"
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tad1@cornell.edu">Tom Dimock</a>

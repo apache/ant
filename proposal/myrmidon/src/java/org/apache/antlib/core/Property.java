@@ -20,7 +20,7 @@ import org.apache.myrmidon.framework.DataType;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:task name="property"
+ * @ant.task name="property"
  */
 public class Property
     extends AbstractTask

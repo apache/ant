@@ -22,7 +22,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="jeff@custommonkey.org">Jeff Martin</a>
  * @version $Revision$ $Date$
- * @ant:task name="cvs-pass"
+ * @ant.task name="cvs-pass"
  */
 public class CVSPass
     extends AbstractTask
