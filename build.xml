@@ -51,6 +51,7 @@
     <available property="ejb.wls.present" classname="weblogic.Server" />
     <available property="junit.present" classname="junit.framework.TestCase" />
     <available property="ftp.present" classname="com.oroinc.net.ftp.FTPClient" />
+    <available property="starteam.present" classname="com.starbase.util.Platform" />
   </target>
 
   <!-- =================================================================== -->
@@ -85,6 +86,7 @@
       <exclude name="**/*DeploymentTool.java" unless="jdk1.2+" />
       <exclude name="**/junit/*" unless="junit.present" />
       <exclude name="**/FTP*.java" unless="ftp.present" />
+      <exclude name="**/AntStarTeam*.java" unless="starteam.present" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
