@@ -172,6 +172,8 @@ public class JUnitTask extends Task {
     private boolean includeAntRuntime = true;
     private Path antRuntimeClasses = null;
 
+    private boolean showOutput = false;
+
     /**
      * Tells this task whether to smartly filter the stack frames of
      * JUnit testcase errors and failures before reporting them.
@@ -468,6 +470,20 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Whether to send output of the testcases to Ant's logging system or not.
+     *
+     * <p>Output will always be passed to the formatters and not by
+     * shown by default.  This option should for example be set for
+     * tests that are interactive and prompt the user to do
+     * something.</p>
+     *
+     * @since Ant 1.5
+     */
+    public void setShowOutput(boolean showOutput) {
+        this.showOutput = showOutput;
+    }
+
+    /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      *
      * @since Ant 1.2
@@ -590,6 +606,9 @@ public class JUnitTask extends Task {
                 .setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
         }
 
+        cmd.createArgument().setValue("showoutput=" 
+                                      + String.valueOf(showOutput));
+
         StringBuffer formatterArg = new StringBuffer(128);
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
@@ -674,6 +693,9 @@ public class JUnitTask extends Task {
     protected void handleOutput(String line) {
         if (runner != null) {
             runner.handleOutput(line);
+            if (showOutput) {
+                super.handleOutput(line);
+            }
         } else {
             super.handleOutput(line);
         }
@@ -688,6 +710,9 @@ public class JUnitTask extends Task {
     protected void handleErrorOutput(String line) {
         if (runner != null) {
             runner.handleErrorOutput(line);
+            if (showOutput) {
+                super.handleErrorOutput(line);
+            }
         } else {
             super.handleErrorOutput(line);
         }

@@ -65,19 +65,20 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.framework.AssertionFailedError;
 import java.lang.reflect.Method;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
-
 import java.util.Vector;
 
 /**
@@ -90,13 +91,15 @@ import java.util.Vector;
  *     public static junit.framework.Test suite()
  * </code></pre>
  *
- * <p> If no such method exists, all public methods starting with "test" and taking no
- * argument will be run. 
+ * <p> If no such method exists, all public methods starting with
+ * "test" and taking no argument will be run.
  *
  * <p> Summary output is generated at the end. 
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
+ *
+ * @since Ant 1.2
  */
 
 public class JUnitTestRunner implements TestListener {
@@ -131,6 +134,11 @@ public class JUnitTestRunner implements TestListener {
      */
     private static boolean filtertrace = true;
     
+    /**
+     * Do we send output to System.out/.err in addition to the formatters?
+     */
+    private boolean showOutput = false;
+
     private static final String[] DEFAULT_TRACE_FILTERS = new String[] {
                 "junit.framework.TestCase",
                 "junit.framework.TestResult",
@@ -187,20 +195,41 @@ public class JUnitTestRunner implements TestListener {
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.  
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError, boolean filtertrace,
-                           boolean haltOnFailure) {
-        this(test, haltOnError, filtertrace, haltOnFailure, null);
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
+                           boolean filtertrace, boolean haltOnFailure) {
+        this(test, haltOnError, filtertrace, haltOnFailure, false);
+    }
+
+    /**
+     * Constructor for fork=true or when the user hasn't specified a
+     * classpath.  
+     */
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
+                           boolean filtertrace, boolean haltOnFailure,
+                           boolean showOutput) {
+        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, null);
     }
 
     /**
      * Constructor to use when the user has specified a classpath.
      */
-    public JUnitTestRunner(JUnitTest test, boolean haltOnError, boolean filtertrace,
-                           boolean haltOnFailure, ClassLoader loader) {
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
+                           boolean filtertrace, boolean haltOnFailure, 
+                           ClassLoader loader) {
+        this(test, haltOnError, filtertrace, haltOnFailure, false, loader);
+    }
+
+    /**
+     * Constructor to use when the user has specified a classpath.
+     */
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError, 
+                           boolean filtertrace, boolean haltOnFailure, 
+                           boolean showOutput, ClassLoader loader) {
         this.filtertrace = filtertrace;
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
+        this.showOutput = showOutput;
 
         try {
             Class testClass = null;
@@ -269,9 +298,26 @@ public class JUnitTestRunner implements TestListener {
 
             if (forked) {
                 savedOut = System.out;
-                System.setOut(systemOut);
                 savedErr = System.err;
-                System.setErr(systemError);
+                if (!showOutput) {
+                    System.setOut(systemOut);
+                    System.setErr(systemError);
+                } else {
+                    System.setOut(new PrintStream(
+                                      new TeeOutputStream(
+                                          new OutputStream[] {savedOut, 
+                                                              systemOut}
+                                          )
+                                      )
+                                  );
+                    System.setErr(new PrintStream(
+                                      new TeeOutputStream(
+                                          new OutputStream[] {savedErr, 
+                                                              systemError}
+                                          )
+                                      )
+                                  );
+                }
             }
             
 
@@ -384,13 +430,15 @@ public class JUnitTestRunner implements TestListener {
 
     private void fireStartTestSuite() {
         for (int i = 0; i < formatters.size(); i++) {
-            ((JUnitResultFormatter) formatters.elementAt(i)).startTestSuite(junitTest);
+            ((JUnitResultFormatter) formatters.elementAt(i))
+                .startTestSuite(junitTest);
         }
     }
 
     private void fireEndTestSuite() {
         for (int i = 0; i < formatters.size(); i++) {
-            ((JUnitResultFormatter) formatters.elementAt(i)).endTestSuite(junitTest);
+            ((JUnitResultFormatter) formatters.elementAt(i))
+                .endTestSuite(junitTest);
         }
     }
 
@@ -417,6 +465,9 @@ public class JUnitTestRunner implements TestListener {
      * classname,filename. If filename is ommitted, System.out is
      * assumed.</td><td>none</td></tr>
      *
+     * <tr><td>showoutput</td><td>send output to System.err/.out as
+     * well as to the formatters?</td><td>false</td></tr>
+     *
      * </table> 
      */
     public static void main(String[] args) throws IOException {
@@ -425,6 +476,7 @@ public class JUnitTestRunner implements TestListener {
         boolean haltFail = false;
         boolean stackfilter = true;
         Properties props = new Properties();
+        boolean showOut = false;
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
@@ -446,9 +498,12 @@ public class JUnitTestRunner implements TestListener {
                     System.exit(ERRORS);
                 }
             } else if (args[i].startsWith("propsfile=")) {
-                FileInputStream in = new FileInputStream(args[i].substring(10));
+                FileInputStream in = new FileInputStream(args[i]
+                                                         .substring(10));
                 props.load(in);
                 in.close();
+            } else if (args[i].startsWith("showoutput=")) {
+                showOut = Project.toBoolean(args[i].substring(11));
             }
         }
         
@@ -462,7 +517,8 @@ public class JUnitTestRunner implements TestListener {
         }
         t.setProperties(props);
 
-        JUnitTestRunner runner = new JUnitTestRunner(t, haltError, stackfilter, haltFail);
+        JUnitTestRunner runner = new JUnitTestRunner(t, haltError, stackfilter,
+                                                     haltFail, showOut);
         runner.forked = true;
         transferFormatters(runner);
         runner.run();
@@ -473,7 +529,8 @@ public class JUnitTestRunner implements TestListener {
 
     private static void transferFormatters(JUnitTestRunner runner) {
         for (int i = 0; i < fromCmdLine.size(); i++) {
-            runner.addFormatter((JUnitResultFormatter) fromCmdLine.elementAt(i));
+            runner.addFormatter((JUnitResultFormatter) fromCmdLine
+                                .elementAt(i));
         }
     }
 
@@ -537,4 +594,25 @@ public class JUnitTestRunner implements TestListener {
         return false;
     }
     
+    /**
+     * Helper class that sends output sent to multiple streams.
+     *
+     * @since Ant 1.5
+     */
+    private class TeeOutputStream extends OutputStream {
+
+        private OutputStream[] outs;
+
+        private TeeOutputStream(OutputStream[] outs) {
+            this.outs = outs;
+        }
+
+        public void write(int b) throws IOException {
+            for (int i = 0; i  < outs.length; i++) {
+                outs[i].write(b);
+            }
+        }
+
+    }
+
 } // JUnitTestRunner

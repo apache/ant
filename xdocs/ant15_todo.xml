@@ -90,13 +90,6 @@
           </tr>
 
           <tr>
-            <td>JUnit's System.err/.out handling</td>
-            <td>Currently this is coupled to SummaryResultFormatter -
-            no SummaryFormatter, no output.  Want to decouple it.</td>
-            <td>Stefan, others welcome</td>
-          </tr>
-
-          <tr>
             <td>Make javadoc a real directory based task</td>
             <td></td>
             <td>Stefan, others welcome</td>
@@ -141,8 +134,15 @@
             <td>PGP signing task if possible</td>
             <td>Not done, but deemed impossible - at least in the 1.5
               time frame.</td>
-            <td>Stefan, others welcome</td>
+            <td>Stefan</td>
           </tr>
+          <tr>
+            <td>JUnit's System.err/.out handling</td>
+            <td>showoutput attribute has been added - doesn't work in
+              some cases yet (same reason as bug PR 7980)</td>
+            <td>Stefan</td>
+          </tr>
+
         </table>
       </subsection>
 
