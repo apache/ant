@@ -97,8 +97,7 @@ Fixed bugs:
 
 * JDependTask did not close an output file. Bugzilla Report 28557.
 
-* Using <macrodef> could break XmlLogger. Bugzilla Report 28993
-.
+* Using <macrodef> could break XmlLogger. Bugzilla Report 28993.
 
 * <genkey> no longer requires keytool to be in your PATH.  Bugzilla
   Report 29382.
@@ -148,8 +147,6 @@ Other changes:
 
 * New attribute "negate" on <propertyset> to invert selection criteria.
 
-* Target now supports a Location member.  Bugzilla Report 28599.
-
 * New "pattern" attribute for <date> selector.
 
 * <junit> has a new forkmode attribute that controls the number of
@@ -185,6 +182,10 @@ Other changes:
 * Add implicit nested element to <macrodef>. Bugzilla Report 25633.
 
 * Add deleteonexit attribute to <delete>.
+
+* Target now supports a Location member.  Bugzilla Report 28599.
+
+* Added Target.getIf/Unless().  Bugzilla Report 29320.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================

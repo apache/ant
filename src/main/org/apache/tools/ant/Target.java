@@ -42,6 +42,8 @@ public class Target implements TaskContainer {
     private List dependencies = null;
     /** Children of this target (tasks and data types). */
     private List children = new ArrayList();
+    /** Since Ant 1.6.2 */
+    private Location location = Location.UNKNOWN_LOCATION;
 
     /** Project this target belongs to. */
     private Project project;
@@ -71,6 +73,24 @@ public class Target implements TaskContainer {
      */
     public Project getProject() {
         return project;
+    }
+
+    /**
+     * Sets the location of this target's definition.
+     *
+     * @param location   <CODE>Location</CODE>
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    /**
+     * Get the location of this target's definition.
+     *
+     * @return <CODE>Location</CODE>
+     */
+    public Location getLocation() {
+        return location;
     }
 
     /**
@@ -227,6 +247,16 @@ public class Target implements TaskContainer {
     }
 
     /**
+     * Returns the "if" property condition of this target.
+     *
+     * @return the "if" property condition or <code>null</code> if no
+     *         "if" condition had been defined.
+     */
+    public String getIf() {
+        return ("".equals(ifCondition) ? null : ifCondition);
+    }
+
+    /**
      * Sets the "unless" condition to test on execution. This is the
      * name of a property to test for existence - if the property
      * is set, the task will not execute. The property goes
@@ -241,6 +271,16 @@ public class Target implements TaskContainer {
      */
     public void setUnless(String property) {
         this.unlessCondition = (property == null) ? "" : property;
+    }
+
+    /**
+     * Returns the "unless" property condition of this target.
+     *
+     * @return the "unless" property condition or <code>null</code>
+     *         if no "unless" condition had been defined.
+     */
+    public String getUnless() {
+        return ("".equals(unlessCondition) ? null : unlessCondition);
     }
 
     /**

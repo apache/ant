@@ -15,8 +15,6 @@ remove items from this list once they are complete.
 
 * merge cygwin changes for ant script from HEAD [Matt]
 
-* merge Target.set/getLocation() from HEAD [Matt]
-
 * merge "<apply> differentiates between empty & up-to-date" from HEAD [Matt]
 
 * Fix or at least document support for tomcat 5.0 jsp
@@ -32,8 +30,6 @@ remove items from this list once they are complete.
 
 * telnet doesn't disconnect properly (PR 25935) [Stefan unless Peter
   is faster].
-
-* merge Target.getIf/Unless() from HEAD [Matt]
 
 * Xml NS on nested elements resolution [Start thread, Peter]
 
