@@ -30,7 +30,6 @@ import org.apache.log.format.PatternFormatter;
 import org.apache.log.output.io.StreamTarget;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Project;
@@ -50,6 +49,7 @@ public class CLIMain
     private final static Resources REZ =
         ResourceManager.getPackageResources( CLIMain.class );
 
+    private final String DEFAULT_EMBEDDOR_CLASS = "org.apache.myrmidon.components.embeddor.DefaultEmbeddor";
     private final static String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
 
     //defines for the Command Line options
@@ -356,7 +356,7 @@ public class CLIMain
                                        "org.apache.myrmidon.components.executor.PrintingExecutor" );
         }
 
-        final Embeddor embeddor = new DefaultEmbeddor();
+        final Embeddor embeddor = createEmbeddor();
         setupLogger( embeddor );
         embeddor.parameterize( m_parameters );
         embeddor.initialize();
@@ -402,6 +402,13 @@ public class CLIMain
 
         embeddor.stop();
         embeddor.dispose();
+    }
+
+    private Embeddor createEmbeddor()
+        throws Exception
+    {
+        final Class clazz = Class.forName( DEFAULT_EMBEDDOR_CLASS );
+        return (Embeddor)clazz.newInstance();
     }
 
     /**
