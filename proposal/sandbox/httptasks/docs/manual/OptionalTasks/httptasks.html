@@ -1,0 +1,429 @@
+<html>
+<head>
+<title>Http Tasks</title>
+</head>
+<body>
+<h2>Http Tasks</h2>
+
+Tasks do to make the basic HTTP requests: get, post, head, put, with authentication.
+There is also a task to configure the proxy settings of the http tasks.
+<p>
+These tasks significantly extend the basic <a
+href="../CoreTasks/get.html">get task</a>, but are split off into the optional section
+so that
+<ol>
+<li> The core ant file doesn't get so big
+<li> this implementation can move to using an optional jar (HttpClient) to work around
+limitations of the HTTP support built in to the Java platform.   
+</ol>
+
+<h3>Core Functionality and Parameters</h3>
+
+<p>Common functionality to the core tasks tasks is </p>
+
+<ol>
+
+<li>Ability to name the remote url which the target of the request.</li>
+
+<li>Ability to name a local file as the local store of any returned
+content.</li>
+
+<li>Ability to name a property as the local store of any returned
+content.</li>
+
+<li>Ability to name a property to be set to &quot;true&quot; when a
+request succeeds.</li>
+
+<li>The option to list a number of parameters, each with a name and a
+value. Some methods (HttpGet, HttpHead) attach these parameters to the
+stated url to generate the url to actually fetch. Others (HttpPost) send
+the parameters up in the standard representation of form data.</li>
+
+<li>The option to state the authentication policy and then the username
+and password. Currently only basic authentication is used, which is
+utterly insecure except over an https link</li>
+
+<li>A 'verbose' option which provides extra information and progess
+information during a download.</li>
+
+<li>Timestamp control, using the <i>usetimestamp</i> flag. When set the
+timestamp of downloaded content is set to match that of the remote file
+(Java 1.2 or later only), and the local timestamp of the destination
+file (if it exists) used to set the if-modified-since header in the
+request, which will trigger optional download only. </li>
+
+</ol>
+
+<h3>Parameters</h3>
+
+<p> The <i>url</i> parameter specifies the URL to access. The optional
+<i>dest</i> parameter specifies a destination to which the retrieved
+page will be written. The optional <i>destinationproperty </i>parameter
+specifies a name of a property to save the content to, instead of a
+property. If neither <i>dest</i> nor <i>destinationproperty</i>
+specified, the contents of the specified URL are discarded (this is
+useful when accessing the URL for the purpose of causing some action on
+the remote server).</p>
+
+<p> When the <i>verbose</i> option is enabled, the task displays a '.' for every 
+  64 KB retrieved. If the <i>blocksize</i> parameter is adjusted then files are 
+  uploaded or downloaded in a different size block from this, and progress markers 
+  appear appropriately. </p>
+
+The <i>usetimestamp</i> option enables you to control downloads so that
+the remote file is only fetched if newer than the local copy. If there
+is no local copy, the download always takes place. When a file is
+downloaded, the timestamp of the downloaded file is set to the remote
+timestamp, if the JVM is Java1.2 or later. NB: This timestamp facility
+only works on downloads using the HTTP protocol.
+
+<p>The <i>authtype</i>, <i>username</i>, and <i>password</i> options enable support 
+  for password protected pages. Currently only 'Basic' authentication is used, 
+  which is notoriously insecure except over an encrypted https channel.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr> 
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr> 
+    <td valign="top">authtype</td>
+    <td valign="top">the HTTP authentication protocol to use, <i>none</i> or <i>basic</i>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">blocksize</td>
+    <td valign="top">size (in kilobytes) of the data block used for upload and 
+      download. Default: 64.<br>
+      Keep this to a multiple of the hard disk sector size for file IO performance.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top"><b>dest</b></td>
+    <td valign="top">the file where to store the retrieved file.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">destinationProperty</td>
+    <td valign="top">the name of a property to fill with the returned content. 
+      Ignored if <i>dest</i> is set</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">failonerror</td>
+    <td valign="top">stop the build if the request failed. default: true</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">password</td>
+    <td valign="top">the password for authentication.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">successProperty</td>
+    <td valign="top">the name of a property to set to &quot;true&quot; if the 
+      request succeeds.<br>
+      Set <i>failonerror</i> to false for this to be of use.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top"><b>url</b></td>
+    <td valign="top">the URL from which to retrieve a file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr> 
+    <td valign="top">usecaches</td>
+    <td valign="top">boolean to enable 'caching' of content during the fetch process. 
+      default:false</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">useresponsecode</td>
+    <td valign="top">boolean to enable success/failure to be determined by result 
+      of the received response code. HTTP only. default=true.</td>
+    <td align="center" valign="top">&nbsp;</td>
+  </tr>
+  <tr> 
+    <td valign="top">username</td>
+    <td valign="top">the user name for authentication.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">usetimestamp</td>
+    <td valign="top">boolean flag to conditionally download a file based on the 
+      timestamp of the local copy. HTTP only</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr> 
+    <td valign="top">verbose</td>
+    <td valign="top"> boolean flag to control progress information display.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<p> The <i>successProperty</i> names a property which will be set to "true" if 
+  the request was deemed successful. For any non-http protocol, success is defined 
+  as the request completing. For http and https, success is defined as the request 
+  completing, and the response code from the serving being one of the 'success' 
+  values -any number between 200 and 299 inclusive. The usual HTTP_OK (200) is 
+  therefore a success, as is HTTP_ACCEPTED (202). But failures such as BAD_REQUEST 
+  (400) and the ubiquitous HTTP_NOT_FOUND (404) are most definately errors. So 
+  an attempt to access a missing url may result 'failure',even though some content 
+  was download (such as, perhaps, the 'file not found' text). If this is not what 
+  you desire, then set <i>useresponsecode</i>=&quot;false&quot; for the system 
+  to interpret any data back as a success. 
+<h3>Parameters specified as nested elements</h3>
+
+<p><b>param</b></p>
+
+<p>Specifies an HTTP request parameter to send as part of the request.
+For <i>get</i> and <i>head</i> request methods the parameters are
+encoded as part of the URL. For <i>post</i> request methods, the
+parameters are sent as the POST request data.</p>
+
+<table cellspacing="0" cellpadding="2" border="1">
+  <tbody>
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="middle"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the request property to set.</td>
+    <td valign="top" align="middle">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the value of the request property. You may alternatively
+      specify the value as text between the beginning and ending param tags.</td>
+    <td valign="center" align="middle">Yes</td>
+  </tr>
+  </tbody>
+</table>
+
+<p><b>header</b></p>
+
+<p>Specifies an arbitrary HTTP request header that will be sent with the
+request.</p>
+
+<table cellspacing="0" cellpadding="2" border="1">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="middle"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the HTTP request header</td>
+    <td valign="top" align="middle">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the value of the HTTP request header. You may alternatively
+      specify the value as text between the beginning and ending header tags.</td>
+    <td valign="center" align="middle">Yes</td>
+  </tr>
+</table>
+<h3>Quirky Limitations of java.net classes</h3>
+Multiple HTTP headers can with the same name can <b>not</b> be set, even 
+though the protocol permits it. Java1.1 and Java 1.2 <i>may</i> permit multiple 
+cookies to be set, but this behaviour is explicitly not supported on Java1.3,
+as someone went and change the code to stop this (Java bug ID #4242254). 
+You need to set multiple cookies in one go and hope the far end can handle it
+<p>
+Bug ID #4160499 covers another issue, to wit: some versions of Java throw
+exceptions when an error code is greater than 400 and the dest file isn't
+one of a few simple file types, but Java 1.2 and 1.3 do not. So there
+is no way to get the error text when a jsp page throws some exception.
+<p>
+Also, although this isnt going to be filed until we have a short
+test case, but if you recieve a short response with less content than 
+the content-length header promises, the library seems to silently 
+reduce the content length header to match, which seems the wrong action.     
+
+  
+  
+<h2><a name="httpget">HttpGet</a></h2>
+<h3>Description</h3>
+
+<p>Accesses a URL to retrieve a file or to cause some action on the server.</p>
+
+<p> This task should be preferred above the <a href="#cvs">CVS task</a> when doing 
+  automated builds. CVS is significantly slower than loading a compressed archive 
+  with http/ftp. This task will also retrieve content using other supported protocols, 
+  such as ftp: and file: 
+<p>All the attributes of httptask may be used. Note that a quirk of the implementation 
+  of the http client in java makes it impossible to reliably fetch the response 
+  details from any unsuccessful request against a URL which doesn't end in '.htm,.html 
+  or .txt'. This means that if the task is used to compile jsp pages by issuing 
+  request against them, the text details of any errors will not be picked up. 
+<h3>Examples</h3>
+
+<pre>  &lt;httpget url=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
+<p>Fetches the index page of http://jakarta.apache.org/, and stores it in the 
+  file <code>help/index.html</code>. </p>
+
+<pre>    &lt;httpget src=&quot;http://jakarta.apache.org/builds/tomcat/nightly/ant.zip&quot;
+        dest=&quot;optional.jar&quot;
+        verbose=&quot;true&quot;
+        usetimestamp=&quot;true&quot;
+	&gt;
+        &lt;header name=&quot;Cookie&quot; value=&quot;someid=43ff2b&quot;/&gt;
+    &lt;/httpget&gt;</pre>
+<p> Retrieves the nightly ant build from the tomcat distribution, if the local 
+  copy is missing or out of date. Uses the verbose option for progress information. 
+  A cookie is supplied for the server's benefit.</p>
+<pre>    &lt;httpget url="https://www.pizzaservices.com/prices.jsp"
+         dest="pizza-prices.xml&quot;&gt;
+       &lt;param name=&quot;zipcode&quot;&gt;57340&lt;/param&gt;
+       &lt;param name=&quot;pizza&quot;&gt;pepperoni&lt;/param&gt;
+    &lt;/httpget&gt;</pre>
+<p>Builds a URL by adding parameters (&quot;?zipcode=57340&amp;pizza=pepperoni&quot;) 
+  to the base URL and then fetches the contents (fictional example)</p>
+<h2><a name="httphead">HttpHead</a> </h2>
+<p>The http HEAD request is similar to the normal GET request , except it, by 
+  definition, returns no content, just a success code and http headers. Accordingly, 
+  the destination properties of the base class -<i>dest</i> and -, <i>destinationpropertyname</i>) 
+  are not supported -any attempt to use them will result in a build failure. Note 
+  also that the http and https protocols are the only protocols supported. </p>
+<p>
+HttpHead is useful for triggering server side actions, but note that many servers
+interpret a HEAD very differently from a GET. An HttpGet request with the
+return data discarded is often a more reliable approach.
+</p>
+
+<p> Where head can be useful is in testing for the availability and reachability 
+  of servers, such as in the following test for apache being reachable, which 
+  sets a variable on success:- 
+<pre>
+    &lt;httphead url="http://www.apache.org/"
+    	 failonerror="false"
+    	 successproperty="reachable.apache"
+    	 /&gt;
+</pre>
+
+<p>Note that sometimes a missing file on a mis-configured server still generates 
+  a successful '200' response to a GET request -and returns a 'missing' file page, 
+  but a HEAD request will reliably pick up the 'missing file' error. </p>
+<h2><a name="httppost">HttpPost</a></h2>
+
+<p>This implements the POST request. Supplied parameter data is turned into form 
+  data and sent as the body of the request, rather than appended to the URL. If 
+  a file to upload is specified instead, using <i>uploadFile</i>, the parameter 
+  values are ignored. Instead the content type of the file is sent in the header 
+  -based on the <i>contentType</i> attribute or what the java runtime thinks the 
+  content type is based on the file extension. The file is uploaded. </p>
+
+<p>Like HttpGet, this command can return a content which can downloaded to a file,
+  to a property, or just ignored.</p>
+
+<p>This task adds two new attributes to the base set. </p>
+<table cellspacing="0" cellpadding="2" border="1">
+  <tr>
+    <td valign="top" width="78"><b>Attribute</b></td>
+    <td valign="top" width="559"><b>Description</b></td>
+    <td valign="top" align="middle" width="62"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top" width="78">uploadFile</td>
+    <td valign="top" width="559">a file to upload. when specified, all parameters
+      are ignored.</td>
+    <td valign="top" align="middle" width="62">
+      <div align="center">no</div>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="78">contentType </td>
+    <td valign="top" width="559">the type of the content (text/html, text/xml,
+      application/binary, etc). Only of relevance when a file is being uploaded,
+      and still optional in that case. </td>
+    <td valign="center" align="middle" width="62">
+      <div align="center">no</div>
+    </td>
+  </tr>
+</table>
+<h3></h3>
+<pre>
+   &lt;httppost url=&quot;http://www.example.com/servlet/docserver&quot;
+           authtype=&quot;basic&quot; username=&quot;joe&quot; password=&quot;silly&quot;&gt;
+       &lt;param name=&quot;action&quot; value=&quot;getdoc&quot;/&gt;
+       &lt;param name=&quot;ISBN&quot;&gt;038550120X&lt;/param&gt;
+       &lt;param name=&quot;pages&quot;&gt;19-20&lt;/param&gt;
+       &lt;header name=&quot;Accept-Language&quot; value=&quot;en-us&quot;/&gt;
+   &lt;/httppost&gt;</pre>
+<p>Accesses a server at www.foo.com, passing a request to some servlet asking it
+to retrieve several pages from a stored book. An HTTP header specifying
+acceptable languages for the returned contents is also sent. Basic
+authentication is used with a user name of &quot;joe&quot; and a password of
+&quot;silly&quot;.</p>
+<p>
+<pre>    &lt;httppost url="https://www.pizzaservices.com"
+         uploadFile="pizza-order.xml"
+         contentType="text/xml"&gt;
+</pre>
+<p>Sends a pre-prepared order for a pizza to a pizza vendor accepting orders using 
+  xml-rpc requests. (NB: fictional example) </p>
+<h2><a name="SetProxy"></a>SetProxy</h2>
+<p>This task configures the proxy settings for all http tasks which follow it 
+  in the build. That includes the original Get task, but not the telnet and FTP 
+  tasks. The proxy settings remain in place until changed or the build finishes, 
+  and will also hold for other ant build files invoked and even non-forked java 
+  invocations, and even URL resolutions of XML parsers running in the same JVM
+  </p>
+<table cellspacing="0" cellpadding="2" border="1">
+  <tr> 
+    <td valign="top" width="78"><b>Attribute</b></td>
+    <td valign="top" width="559"><b>Description</b></td>
+    <td valign="top" align="middle" width="62"><b>Required</b></td>
+  </tr>
+  <tr> 
+    <td valign="top" width="78">proxyHost</td>
+    <td valign="top" width="559">hostname of a web/ftp proxy server</td>
+    <td valign="top" align="middle" width="62"> 
+      <div align="center">no</div>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top" width="78">proxyPort </td>
+    <td valign="top" width="559">integer; the port of the proxy server</td>
+    <td valign="center" align="middle" width="62"> 
+      <div align="center">no</div>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top" width="78">socksProxyHost</td>
+    <td valign="top" width="559">hostname of a SOCKS4 proxy server</td>
+    <td valign="center" align="middle" width="62"> 
+      <div align="center">no</div>
+    </td>
+  </tr>
+  <tr> 
+    <td valign="top" width="78">socksProxyPort</td>
+    <td valign="top" width="559">integer; port number of a SOCKS4 server (default=1080)</td>
+    <td valign="center" align="middle" width="62"> 
+      <div align="center">no</div>
+    </td>
+  </tr>
+</table>
+<h3></h3>
+<p>Turn off all proxies</p>
+<pre>    &lt;setproxy proxyhost=&quot;&quot; socksProxyHost=&quot;&quot; /&gt;</pre>
+<p>Set web proxy to 'web-proxy:80'; do not make any changes to existing socks 
+  settings (if any)</p>
+<pre>    &lt;setproxy proxyHost=&quot;web-proxy&quot; proxyPort=&quot;80&quot;/&gt;</pre>
+<p>Turn on socks</p>
+<pre>    &lt;setproxy socksProxyHost=&quot;socks-server&quot; socksProxyPort=&quot;1080&quot;/&gt;</pre>
+<p>Do nothing</p>
+<pre>    &lt;setproxy/&gt;</pre>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
+
+
+
+
+
