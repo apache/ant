@@ -1,7 +1,7 @@
 <project name="ant1-compatibility" default="main">
 
     <property name="ant1compat.source" value="src/ant1compat"/>
-    
+
     <property name="manifest.dir" value="src/manifest"/>
     <property name="java.dir" value="src/java"/>
 
@@ -10,7 +10,7 @@
     <property name="build.classes" value="${build.dir}/classes"/>
 
     <property name="custom-tasks-dir" value="build/tasks"/>
-    
+
     <path id="project.class.path">
         <pathelement location="build/classes"/>
         <fileset dir="lib">
@@ -18,7 +18,8 @@
         </fileset>
     </path>
 
-   <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
+    <taskdef name="antlib-jar"
+             classname="org.apache.myrmidon.build.AntlibJarTask">
         <classpath location="${custom-tasks-dir}"/>
     </taskdef>
 
@@ -31,11 +32,11 @@
     <!-- Builds the Ant1 compatibility layer -->
     <target name="antlib"
             description="Builds the Ant1 compatibility layer.">
-            
+
         <property name="ant1compat.dir" value="src/ant1compat"/>
         <property name="ant1.jar" value="${ant1compat.dir}/jar/ant.jar"/>
         <property name="ant1optional.jar" value="${ant1compat.dir}/jar/optional.jar"/>
-        
+
         <property name="ant1.package" value="org/apache/tools"/>
 
         <property name="build.ant1classes" value="${build.dir}/ant1classes"/>
@@ -57,16 +58,17 @@
             <src location="${ant1compat.dir}"/>
             <include name="${ant1.package}/**"/>
         </javac>
-        
+
         <patternset id="ant1.omit">
           <exclude name="${ant1.package}/ant/Main.class"/>
           <exclude name="${ant1.package}/ant/Task.class"/>
-          <exclude name="${ant1.package}/ant/taskdefs/Ant.class"/>
-          <exclude name="${ant1.package}/ant/taskdefs/CallTarget.class"/>
+          <exclude name="${ant1.package}/ant/types/Path.class"/>
         </patternset>
 
+        <property name="antlib.file" value="${build.lib}/ant1compat.atl"/>
+
         <!-- Create the ant1compat antlib -->
-        <antlib-jar jarfile="${build.lib}/ant1compat.atl"
+        <antlib-jar jarfile="${antlib.file}"
                     descriptor="${ant1compat.dir}/ant-descriptor.xml"
                     rolesDescriptor="${manifest.dir}/empty-roles.xml"
                     manifest="${ant1compat.dir}/ant1compat.mf">
@@ -79,7 +81,7 @@
             </fileset>
         </antlib-jar>
 
-        <copy todir="dist/lib" file="${build.lib}/ant1compat.atl"/>
+        <copy todir="dist/lib" file="${antlib.file}"/>
     </target>
 
     <!-- Runs the supplied build file through the XSL converter -->

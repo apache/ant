@@ -35,6 +35,12 @@ public class Ant1CompatProject extends Project
         super();
         m_context = context;
         setBaseDir( m_context.getBaseDirectory() );
+        String projectName = (String)
+            m_context.getProperty( org.apache.myrmidon.interfaces.model.Project.PROJECT );
+        if( projectName != null )
+        {
+            setName( projectName );
+        }
     }
 
     /**
@@ -237,106 +243,5 @@ public class Ant1CompatProject extends Project
         TypeManager typeManager = (TypeManager)m_context.getService( TypeManager.class );
         typeManager.registerType( roleType, typeName, factory );
     }
-
-
-    //    /**
-    //     * Sets a property. Any existing property of the same name
-    //     * is overwritten, unless it is a user property.
-    //     * @param name The name of property to set.
-    //     *             Must not be <code>null</code>.
-    //     * @param value The new value of the property.
-    //     *              Must not be <code>null</code>.
-    //     */
-    //    public void setProperty( String name, String value )
-    //    {
-    //        if( null != getProperty( name ) )
-    //        {
-    //            log( "Overriding previous definition of property " + name,
-    //                 MSG_VERBOSE );
-    //        }
-    //
-    //        doSetProperty( name, value );
-    //    }
-    //
-    //    /**
-    //     * Sets a property if no value currently exists. If the property
-    //     * exists already, a message is logged and the method returns with
-    //     * no other effect.
-    //     *
-    //     * @param name The name of property to set.
-    //     *             Must not be <code>null</code>.
-    //     * @param value The new value of the property.
-    //     *              Must not be <code>null</code>.
-    //     * @since 1.5
-    //     */
-    //    public void setNewProperty( String name, String value )
-    //    {
-    //        if( null != getProperty( name ) )
-    //        {
-    //            log( "Override ignored for property " + name, MSG_VERBOSE );
-    //            return;
-    //        }
-    //        log( "Setting project property: " + name + " -> " +
-    //             value, MSG_DEBUG );
-    //        doSetProperty( name, value );
-    //    }
-    //
-    //    private void doSetProperty( String name, String value )
-    //    {
-    //        try
-    //        {
-    //            m_context.setProperty( name, value );
-    //        }
-    //        catch( TaskException e )
-    //        {
-    //            throw new BuildException( e );
-    //        }
-    //    }
-    //
-    //    /**
-    //     * Returns the value of a property, if it is set.
-    //     *
-    //     * @param name The name of the property.
-    //     *             May be <code>null</code>, in which case
-    //     *             the return value is also <code>null</code>.
-    //     * @return the property value, or <code>null</code> for no match
-    //     *         or if a <code>null</code> name is provided.
-    //     */
-    //    public String getProperty( String name )
-    //    {
-    //        if( name == null )
-    //        {
-    //            return null;
-    //        }
-    //        Object value = m_context.getProperty( name );
-    //        if( value == null )
-    //        {
-    //            return null;
-    //        }
-    //        return String.valueOf( value );
-    //    }
-    //
-    //    /**
-    //     * Returns a copy of the properties table.
-    //     * @return a hashtable containing all properties
-    //     *         (including user properties).
-    //     */
-    //    public Hashtable getProperties()
-    //    {
-    //        Map properties = m_context.getProperties();
-    //        Hashtable propertiesCopy = new Hashtable();
-    //
-    //        Iterator iterator = properties.keySet().iterator();
-    //        while( iterator.hasNext() )
-    //        {
-    //            String key = (String)iterator.next();
-    //            String value = (String)properties.get( key );
-    //
-    //            propertiesCopy.put( key, value );
-    //
-    //        }
-    //
-    //        return propertiesCopy;
-    //    }
 
 }

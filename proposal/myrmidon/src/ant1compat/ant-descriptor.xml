@@ -6,10 +6,20 @@
             classname="org.apache.tools.ant.Ant1CompatTypeInstanceTask" />
         <task name="ant1.patternset"
             classname="org.apache.tools.ant.Ant1CompatTypeInstanceTask" />
+        <task name="ant1.filterset"
+            classname="org.apache.tools.ant.Ant1CompatTypeInstanceTask" />
 
         <!-- TaskAdapter tasks -->
         <task name="ant1.condition"
             classname="org.apache.tools.ant.Ant1CompatTaskAdapter" />
+
+        <!-- Tasks not currently supported.
+
+                <task name="ant1.antcall"
+                    classname="org.apache.tools.ant.taskdefs.CallTarget" />
+                <task name="ant1.ant"
+                    classname="org.apache.tools.ant.taskdefs.Ant" />
+        -->
 
         <!-- standard ant tasks -->
         <task name="ant1.mkdir"
@@ -58,8 +68,6 @@
             classname="org.apache.tools.ant.taskdefs.Property" />
         <task name="ant1.taskdef"
             classname="org.apache.tools.ant.taskdefs.Taskdef" />
-        <task name="ant1.ant"
-            classname="org.apache.tools.ant.taskdefs.Ant" />
         <task name="ant1.exec"
             classname="org.apache.tools.ant.taskdefs.ExecTask" />
         <task name="ant1.tar"
@@ -86,8 +94,6 @@
             classname="org.apache.tools.ant.taskdefs.AntStructure" />
         <task name="ant1.execon"
             classname="org.apache.tools.ant.taskdefs.ExecuteOn" />
-        <task name="ant1.antcall"
-            classname="org.apache.tools.ant.taskdefs.CallTarget" />
         <task name="ant1.sql"
             classname="org.apache.tools.ant.taskdefs.SQLExec" />
         <task name="ant1.mail"

@@ -27,7 +27,7 @@ import org.apache.myrmidon.api.TaskException;
 public class Task extends OriginalAnt1Task
     implements org.apache.myrmidon.api.Task, Configurable
 {
-    private TaskContext m_context;
+    protected TaskContext m_context;
 
     /**
      * Specify the context in which the task operates in.
@@ -62,6 +62,7 @@ public class Task extends OriginalAnt1Task
     public void configure( Configuration configuration ) throws ConfigurationException
     {
         configure( this, configuration );
+        this.init();
     }
 
     protected void configure( Object target, Configuration configuration ) throws ConfigurationException
@@ -114,30 +115,6 @@ public class Task extends OriginalAnt1Task
             configure( nestedElement, nestedConfig );
             helper.storeElement( project, target, nestedElement, name );
         }
-
-        /*
-        task.setLocation(new Location(helperImpl.buildFile.toString(), helperImpl.locator.getLineNumber(),
-                                      helperImpl.locator.getColumnNumber()));
-        String id = attr.getValue("id");
-        if (id != null) {
-            project.addReference(id, target);
-        }
-
-        // Top level tasks don't have associated targets
-        if (target != null) {
-            task.setOwningTarget(target);
-            container.addTask(task);
-            task.init();
-            wrapper = task.getRuntimeConfigurableWrapper();
-            wrapper.setAttributes(attrs);
-            if (parentWrapper != null) {
-                parentWrapper.addChild(wrapper);
-            }
-        } else {
-            task.init();
-            configure(task, attrs, helperImpl.project);
-        }
-        */
 
     }
 

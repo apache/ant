@@ -56,5 +56,5 @@ TODO
   to register tasks? (similar for DataTypes)
 * Get a version of <ant> and <antcall> working
 * Test heaps more tasks
-* Fix problem with classloaders and <taskdef>
+* Check that "if" and "unless" conversions are working.
 
