@@ -1505,7 +1505,7 @@ public class JUnitTask extends Task {
     /**
      * Logs information about failed tests, potentially stops
      * processing (by throwing a BuildException) if a failure/error
-     * occured or sets a property.
+     * occurred or sets a property.
      *
      * @since Ant 1.6.2
      */
@@ -1520,7 +1520,7 @@ public class JUnitTask extends Task {
     /**
      * Logs information about failed tests, potentially stops
      * processing (by throwing a BuildException) if a failure/error
-     * occured or sets a property.
+     * occurred or sets a property.
      *
      * @since Ant 1.7
      */
@@ -1571,10 +1571,11 @@ public class JUnitTask extends Task {
         }
         
         protected void processLine(String line, int level) {
-            if (line.startsWith(TESTLISTENER_PREFIX))
+            if (line.startsWith(TESTLISTENER_PREFIX)) {
                 task.log(line, Project.MSG_VERBOSE);
-            else
+            } else {
                 super.processLine(line, level);
+            }
         }
     }
 
