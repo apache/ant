@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -74,6 +74,10 @@ import java.util.Date;
  * <li>stubVersion: The version of the stub prototol to use (1.1, 1.2, compat)
  * <li>sourceBase: The base directory for the generated stubs and skeletons
  * <li>classpath: Additional classpath, appended before the system classpath
+ * <li>iiop: Generate IIOP compatable output 
+ * <li>iiopopts: Include IIOP options 
+ * <li>idl: Generate IDL output 
+ * <li>idlopts: Include IDL options 
  * </ul>
  * Of these arguments, <b>base</b> is required.
  * <p>
@@ -95,6 +99,11 @@ public class Rmic extends MatchingTask {
     private Path compileClasspath;
     private boolean verify = false;
     private boolean filtering = false;
+
+    private boolean iiop = false;
+    private String  iiopopts;
+    private boolean idl  = false;
+    private String  idlopts;
 
     private Vector compileList = new Vector();
 
@@ -154,6 +163,38 @@ public class Rmic extends MatchingTask {
         this.verify = verify;
     }
 
+    /**
+     * Indicates that IIOP compatible stubs should
+     * be generated.  This defaults to false 
+     * if not set.  
+     */
+    public void setIiop(boolean iiop) {
+        this.iiop = iiop;
+    }
+
+    /**
+     * pass additional arguments for iiop 
+     */
+    public void setIiopopts(String iiopopts) {
+        this.iiopopts = iiopopts;
+    }
+
+    /**
+     * Indicates that IDL output should be 
+     * generated.  This defaults to false 
+     * if not set.  
+     */
+    public void setIdl(boolean idl) {
+        this.idl = idl;
+    }
+
+    /**
+     * pass additional arguments for idl compile 
+     */
+    public void setIdlopts(String idlopts) {
+        this.idlopts = idlopts;
+    }
+
     public void execute() throws BuildException {
         File baseDir = project.resolveFile(base);
         if (baseDir == null) {
@@ -165,6 +206,18 @@ public class Rmic extends MatchingTask {
 
         if (verify) {
             log("Verify has been turned on.", Project.MSG_INFO);
+        }
+        if (iiop) {
+            log("IIOP has been turned on.", Project.MSG_INFO);
+            if( iiopopts != null ) {
+                log("IIOP Options: " + iiopopts, Project.MSG_INFO );
+            }
+        }
+        if (idl) {
+            log("IDL has been turned on.", Project.MSG_INFO);
+            if( idlopts != null ) {
+                log("IDL Options: " + idlopts, Project.MSG_INFO );
+            }
         }
         File sourceBaseFile = null;
         if (null != sourceBase) {
@@ -188,6 +241,19 @@ public class Rmic extends MatchingTask {
         int i = 0;
         if (null != stubVersion) argCount++;
         if (null != sourceBase) argCount++;
+        if (iiop) {
+            argCount++;
+            if( iiopopts != null ) {
+                argCount++;
+            }
+        }
+        if (idl) {
+            argCount++;
+            if( idlopts != null ) {
+                argCount++;
+            }
+        }
+        
         if (compileList.size() > 0) argCount += compileList.size() - 1;
         String[] args = new String[argCount];
         args[i++] = "-d";
@@ -203,6 +269,19 @@ public class Rmic extends MatchingTask {
                 args[i++] = "-vcompat";
         }
         if (null != sourceBase) args[i++] = "-keepgenerated";
+
+        if( iiop ) {
+             args[i++] = "-iiop";
+             if( iiopopts != null ) 
+                args[i++] = iiopopts;
+        }
+
+        if( idl )  {
+             args[i++] = "-idl";
+             if( idlopts != null ) 
+                args[i++] = idlopts;
+        }
+
 
         if (classname != null) {
             if (shouldCompile(new File(baseDir, classname.replace('.', File.separatorChar) + ".class"))) {
