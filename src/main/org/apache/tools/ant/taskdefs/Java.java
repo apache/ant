@@ -405,7 +405,7 @@ public class Java extends Task {
     }
 
     /**
-     * Set the command used to start the VM (only if not forking).
+     * Set the command used to start the VM (only if forking).
      *
      * @param s command to start the VM
      */
