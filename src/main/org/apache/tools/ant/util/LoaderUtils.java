@@ -54,8 +54,6 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.launch.Locator;
 
@@ -65,50 +63,15 @@ import org.apache.tools.ant.launch.Locator;
  * @author Conor MacNeill
  */
 public class LoaderUtils {
-    /** The getContextClassLoader method */
-    private static Method getContextClassLoader;
-    /** The setContextClassLoader method */
-    private static Method setContextClassLoader;
-
-    // Set up the reflection-based Java2 methods if possible
-    static {
-        try {
-            getContextClassLoader
-                 = Thread.class.getMethod("getContextClassLoader",
-                new Class[0]);
-            Class[] setContextArgs = new Class[]{ClassLoader.class};
-            setContextClassLoader
-                 = Thread.class.getMethod("setContextClassLoader",
-                setContextArgs);
-        } catch (Exception e) {
-            // ignore any problems accessing the methods - probably JDK 1.1
-        }
-    }
-
     /**
-     * JDK1.1 compatible access to get the context class loader. Has no
-     * effect on JDK 1.1
+     * Set the context classloader
      *
      * @param loader the ClassLoader to be used as the context class loader
      *      on the current thread.
      */
     public static void setContextClassLoader(ClassLoader loader) {
-        if (setContextClassLoader == null) {
-            return;
-        }
-
-        try {
-            Thread currentThread = Thread.currentThread();
-            setContextClassLoader.invoke(currentThread,
-                new Object[]{loader});
-        } catch (IllegalAccessException e) {
-            throw new BuildException
-                ("Unexpected IllegalAccessException", e);
-        } catch (InvocationTargetException e) {
-            throw new BuildException
-                ("Unexpected InvocationTargetException", e);
-        }
-
+        Thread currentThread = Thread.currentThread();
+        currentThread.setContextClassLoader(loader);
     }
 
 
@@ -119,21 +82,8 @@ public class LoaderUtils {
      *      classloader on the current thread. Returns null on JDK 1.1
      */
     public static ClassLoader getContextClassLoader() {
-        if (getContextClassLoader == null) {
-            return null;
-        }
-
-        try {
-            Thread currentThread = Thread.currentThread();
-            return (ClassLoader) getContextClassLoader.invoke(currentThread,
-                new Object[0]);
-        } catch (IllegalAccessException e) {
-            throw new BuildException
-                ("Unexpected IllegalAccessException", e);
-        } catch (InvocationTargetException e) {
-            throw new BuildException
-                ("Unexpected InvocationTargetException", e);
-        }
+        Thread currentThread = Thread.currentThread();
+        return currentThread.getContextClassLoader();
     }
 
     /**
@@ -143,8 +93,7 @@ public class LoaderUtils {
      *      classloader are available.
      */
     public static boolean isContextLoaderAvailable() {
-        return getContextClassLoader != null
-                && setContextClassLoader != null;
+        return true;
     }
 
     /**
@@ -170,7 +119,9 @@ public class LoaderUtils {
     /**
      * Find the directory or jar file the class has been loaded from.
      *
-     * @return null if we cannot determine the location.
+     * @param c the class whose location is required.
+     * @return the file or jar with the class or null if we cannot
+     *         determine the location.
      *
      * @since Ant 1.6
      */
@@ -181,7 +132,11 @@ public class LoaderUtils {
     /**
      * Find the directory or a give resource has been loaded from.
      *
-     * @return null if we cannot determine the location.
+     * @param c the classloader to be consulted for the source
+     * @param resource the resource whose location is required.
+     *
+     * @return the file with the resource source or null if
+     *         we cannot determine the location.
      *
      * @since Ant 1.6
      */
