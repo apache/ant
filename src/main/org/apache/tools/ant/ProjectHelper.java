@@ -98,10 +98,14 @@ public class ProjectHelper {
      * Parses the project file.
      */
     private void parse() throws BuildException {
+        FileInputStream inputStream = null;
+        
         try {
             SAXParser saxParser = getParserFactory().newSAXParser();
             parser = saxParser.getParser();
-            saxParser.parse(buildFile, new RootHandler());
+            
+            inputStream = new FileInputStream(buildFile);
+            saxParser.parse(inputStream, new RootHandler());
         }
         catch(ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
@@ -133,6 +137,16 @@ public class ProjectHelper {
         }
         catch(IOException exc) {
             throw new BuildException("Error reading project file", exc);
+        }
+        finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                }
+                catch (IOException ioe) {
+                    // ignore this
+                }
+            }
         }
     }
 
