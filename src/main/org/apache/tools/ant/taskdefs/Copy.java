@@ -203,8 +203,8 @@ public class Copy extends Task {
             throw new BuildException("One of destfile or destdir must be set.");
         }
 
-        if (file != null && destFile != null && file.exists() && file.isDirectory()) {
-            throw new BuildException("Use the dir attribute to copy directories.");
+        if (file != null && file.exists() && file.isDirectory()) {
+            throw new BuildException("Use a fileset to copy directories.");
         }
 
         if (destFile != null && filesets.size() > 0) {
