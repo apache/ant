@@ -79,8 +79,10 @@ import org.apache.tools.ant.types.Reference;
  * @author Conor MacNeill
  */
 public class Depend extends MatchingTask {
-    /** Tolerance on time checks to take into account inner to outer class dependencies when
-     * the classes are written at slightly different times 
+    /** 
+     * Tolerance on time checks to take into account inner to outer 
+     * class dependencies when the classes are written at slightly different 
+     * times 
      */
     static private final int TIME_TOLERANCE = 100; 
 
@@ -297,8 +299,9 @@ public class Depend extends MatchingTask {
             depCacheFileExists = depCacheFile.exists();
             depCacheFileLastModified = depCacheFile.lastModified();
         }
-        for (Enumeration e = getClassFiles(destPath).elements(); e.hasMoreElements();) {
-            ClassFileInfo info = (ClassFileInfo)e.nextElement();
+        Enumeration classfileEnum = getClassFiles(destPath).elements();
+        while (classfileEnum.hasMoreElements()) {
+            ClassFileInfo info = (ClassFileInfo)classfileEnum.nextElement();
             log("Adding class info for " + info.className, Project.MSG_DEBUG);
             classFileInfoMap.put(info.className, info);
 
@@ -337,7 +340,8 @@ public class Depend extends MatchingTask {
 
             // This class depends on each class in the dependency list. For each
             // one of those, add this class into their affected classes list
-            for (Enumeration depEnum = dependencyList.elements(); depEnum.hasMoreElements(); ) {
+            Enumeration depEnum = dependencyList.elements();
+            while (depEnum.hasMoreElements()) {
                 String dependentClass = (String)depEnum.nextElement();
 
                 Hashtable affectedClasses 
@@ -365,7 +369,8 @@ public class Depend extends MatchingTask {
                 Vector dependencyList = (Vector)dependencyMap.get(className);
                 Hashtable dependencies = new Hashtable();
                 classpathDependencies.put(className, dependencies);
-                for (Enumeration e2 = dependencyList.elements(); e2.hasMoreElements();) {
+                Enumeration e2 = dependencyList.elements();
+                while (e2.hasMoreElements()) {
                     String dependency = (String)e2.nextElement();
                     Object classpathFileObject 
                         = classpathFileCache.get(dependency);
@@ -482,6 +487,90 @@ public class Depend extends MatchingTask {
     }
 
     /**
+     * Dump the dependency information loaded from the classes to the Ant log
+     */
+    private void dumpDependencies() {
+        log("Reverse Dependency Dump for " + affectedClassMap.size() +
+            " classes:", Project.MSG_DEBUG);
+
+        Enumeration classEnum = affectedClassMap.keys();                    
+        while (classEnum.hasMoreElements()) {
+            String className = (String)classEnum.nextElement();
+            log(" Class " + className + " affects:", Project.MSG_DEBUG);
+            Hashtable affectedClasses 
+                = (Hashtable)affectedClassMap.get(className);
+            Enumeration affectedClassEnum = affectedClasses.keys();                
+            while (affectedClassEnum.hasMoreElements()) {
+                String affectedClass = (String)affectedClassEnum.nextElement();
+                ClassFileInfo info 
+                    = (ClassFileInfo)affectedClasses.get(affectedClass);
+                log("    " + affectedClass + " in " 
+                    + info.absoluteFile.getPath(), Project.MSG_DEBUG);
+            }
+        }
+
+        if (classpathDependencies != null) {
+            log("Classpath file dependencies (Forward):", Project.MSG_DEBUG);
+            
+            Enumeration classpathEnum = classpathDependencies.keys(); 
+            while (classpathEnum.hasMoreElements()) {
+                String className = (String)classpathEnum.nextElement();
+                log(" Class " + className + " depends on:", Project.MSG_DEBUG);
+                Hashtable dependencies 
+                    = (Hashtable)classpathDependencies.get(className);
+
+                Enumeration classpathFileEnum = dependencies.elements();                    
+                while (classpathFileEnum.hasMoreElements()) {
+                    File classpathFile = (File)classpathFileEnum.nextElement();
+                    log("    " + classpathFile.getPath(), Project.MSG_DEBUG);
+                }
+            }
+        }
+    }
+
+    private void determineOutOfDateClasses(String[] srcPathList) {
+        outOfDateClasses = new Hashtable();
+        for (int i = 0; i < srcPathList.length; i++) {
+            File srcDir = (File)project.resolveFile(srcPathList[i]);
+            if (srcDir.exists()) {
+                DirectoryScanner ds = this.getDirectoryScanner(srcDir);
+                String[] files = ds.getIncludedFiles();
+                scanDir(srcDir, files);
+            }
+        }
+    
+        // now check classpath file dependencies
+        if (classpathDependencies == null) {
+            return;
+        }
+
+        Enumeration classpathDepsEnum = classpathDependencies.keys();
+        while (classpathDepsEnum.hasMoreElements()) {
+            String className = (String)classpathDepsEnum.nextElement();
+            if (outOfDateClasses.containsKey(className)) {
+                continue;
+            }
+            ClassFileInfo info = (ClassFileInfo)classFileInfoMap.get(className);
+
+            // if we have no info about the class - it may have been deleted already and we
+            // are using cached info.
+            if (info != null) {
+                Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
+                for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements(); ) {
+                    File classpathFile = (File)e2.nextElement();
+                    if (classpathFile.lastModified() 
+                        > (info.absoluteFile.lastModified() + TIME_TOLERANCE)) {
+                        log("Class " + className +
+                            " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
+                        outOfDateClasses.put(className, className);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * Does the work.
      *
      * @exception BuildException Thrown in case of an unrecoverable error.
@@ -516,78 +605,15 @@ public class Depend extends MatchingTask {
             determineDependencies();
 
             if (dump) {
-                log("Reverse Dependency Dump for " + affectedClassMap.size() +
-                    " classes:", Project.MSG_DEBUG);
-                for (Enumeration e = affectedClassMap.keys(); e.hasMoreElements();) {
-                    String className = (String)e.nextElement();
-                    log(" Class " + className + " affects:", Project.MSG_DEBUG);
-                    Hashtable affectedClasses = (Hashtable)affectedClassMap.get(className);
-                    for (Enumeration e2 = affectedClasses.keys(); e2.hasMoreElements();) {
-                        String affectedClass = (String)e2.nextElement();
-                        ClassFileInfo info = (ClassFileInfo)affectedClasses.get(affectedClass);
-                        log("    " + affectedClass + " in " + info.absoluteFile.getPath(), Project.MSG_DEBUG);
-                    }
-                }
-
-                if (classpathDependencies != null) {
-                    log("Classpath file dependencies (Forward):", Project.MSG_DEBUG);
-                    for (Enumeration e = classpathDependencies.keys(); e.hasMoreElements(); ) {
-                        String className = (String)e.nextElement();
-                        log(" Class " + className + " depends on:", Project.MSG_DEBUG);
-                        Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
-                        for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements(); ) {
-                            File classpathFile = (File)e2.nextElement();
-                            log("    " + classpathFile.getPath(), Project.MSG_DEBUG);
-                        }
-                    }
-                }
+                dumpDependencies();
             }
 
-            // we now need to scan for out of date files. When we have the list
-            // we go through and delete all class files which are affected by 
-            // these files.
-            outOfDateClasses = new Hashtable();
-            for (int i = 0; i < srcPathList.length; i++) {
-                File srcDir = (File)project.resolveFile(srcPathList[i]);
-                if (srcDir.exists()) {
-                    DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-                    String[] files = ds.getIncludedFiles();
-                    scanDir(srcDir, files);
-                }
-            }
-
-            // now check classpath file dependencies
-            if (classpathDependencies != null) {
-                for (Enumeration e = classpathDependencies.keys(); e.hasMoreElements();) {
-                    String className = (String)e.nextElement();
-                    if (!outOfDateClasses.containsKey(className)) {
-                        ClassFileInfo info = (ClassFileInfo)classFileInfoMap.get(className);
-
-                        // if we have no info about the class - it may have been deleted already and we
-                        // are using cached info.
-                        if (info != null) {
-                            Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
-                            for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements(); ) {
-                                File classpathFile = (File)e2.nextElement();
-                                if (classpathFile.lastModified() 
-                                    > (info.absoluteFile.lastModified() + TIME_TOLERANCE)) {
-                                    log("Class " + className +
-                                        " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
-                                    outOfDateClasses.put(className, className);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // we now have a complete list of classes which are out of date
-            // We scan through the affected classes, deleting any affected classes.
+            determineOutOfDateClasses(srcPathList);
             int count = deleteAllAffectedFiles();
 
             long duration = (System.currentTimeMillis() - start) / 1000;
-            log("Deleted " + count + " out of date files in " + duration + " seconds");
+            log("Deleted " + count + " out of date files in " 
+                + duration + " seconds");
         } catch (Exception e) {
             throw new BuildException(e);
         }
