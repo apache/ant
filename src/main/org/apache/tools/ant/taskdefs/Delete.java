@@ -61,6 +61,22 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.selectors.AndSelector;
+import org.apache.tools.ant.types.selectors.ContainsSelector;
+import org.apache.tools.ant.types.selectors.DateSelector;
+import org.apache.tools.ant.types.selectors.DependSelector;
+import org.apache.tools.ant.types.selectors.DepthSelector;
+import org.apache.tools.ant.types.selectors.ExtendSelector;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.FilenameSelector;
+import org.apache.tools.ant.types.selectors.MajoritySelector;
+import org.apache.tools.ant.types.selectors.NoneSelector;
+import org.apache.tools.ant.types.selectors.NotSelector;
+import org.apache.tools.ant.types.selectors.OrSelector;
+import org.apache.tools.ant.types.selectors.PresentSelector;
+import org.apache.tools.ant.types.selectors.SelectSelector;
+import org.apache.tools.ant.types.selectors.SelectorContainer;
+import org.apache.tools.ant.types.selectors.SizeSelector;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -260,6 +276,139 @@ public class Delete extends MatchingTask {
     public void setExcludesfile(File excludesfile) {
         usedMatchingTask = true;
         super.setExcludesfile(excludesfile);
+    }
+
+    /**
+     * Sets case sensitivity of the file system
+     *
+     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
+     *                           sensitive, "false"|"off"|"no" when not.
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+        usedMatchingTask = true;
+        super.setCaseSensitive(isCaseSensitive);
+    }
+
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        usedMatchingTask = true;
+        super.setFollowSymlinks(followSymlinks);
+    }
+
+    /**
+     * add a "Select" selector entry on the selector list
+     */
+    public void addSelector(SelectSelector selector) {
+        usedMatchingTask = true;
+        super.addSelector(selector);
+    }
+
+    /**
+     * add an "And" selector entry on the selector list
+     */
+    public void addAnd(AndSelector selector) {
+        usedMatchingTask = true;
+        super.addAnd(selector);
+    }
+
+    /**
+     * add an "Or" selector entry on the selector list
+     */
+    public void addOr(OrSelector selector) {
+        usedMatchingTask = true;
+        super.addOr(selector);
+    }
+
+    /**
+     * add a "Not" selector entry on the selector list
+     */
+    public void addNot(NotSelector selector) {
+        usedMatchingTask = true;
+        super.addNot(selector);
+    }
+
+    /**
+     * add a "None" selector entry on the selector list
+     */
+    public void addNone(NoneSelector selector) {
+        usedMatchingTask = true;
+        super.addNone(selector);
+    }
+
+    /**
+     * add a majority selector entry on the selector list
+     */
+    public void addMajority(MajoritySelector selector) {
+        usedMatchingTask = true;
+        super.addMajority(selector);
+    }
+
+    /**
+     * add a selector date entry on the selector list
+     */
+    public void addDate(DateSelector selector) {
+        usedMatchingTask = true;
+        super.addDate(selector);
+    }
+
+    /**
+     * add a selector size entry on the selector list
+     */
+    public void addSize(SizeSelector selector) {
+        usedMatchingTask = true;
+        super.addSize(selector);
+    }
+
+    /**
+     * add a selector filename entry on the selector list
+     */
+    public void addFilename(FilenameSelector selector) {
+        usedMatchingTask = true;
+        super.addFilename(selector);
+    }
+
+    /**
+     * add an extended selector entry on the selector list
+     */
+    public void addCustom(ExtendSelector selector) {
+        usedMatchingTask = true;
+        super.addCustom(selector);
+    }
+
+    /**
+     * add a contains selector entry on the selector list
+     */
+    public void addContains(ContainsSelector selector) {
+        usedMatchingTask = true;
+        super.addContains(selector);
+    }
+
+    /**
+     * add a present selector entry on the selector list
+     */
+    public void addPresent(PresentSelector selector) {
+        usedMatchingTask = true;
+        super.addPresent(selector);
+    }
+
+    /**
+     * add a depth selector entry on the selector list
+     */
+    public void addDepth(DepthSelector selector) {
+        usedMatchingTask = true;
+        super.addDepth(selector);
+    }
+
+    /**
+     * add a depends selector entry on the selector list
+     */
+    public void addDepend(DependSelector selector) {
+        usedMatchingTask = true;
+        super.addDepend(selector);
     }
 
     /**
