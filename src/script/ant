@@ -44,8 +44,8 @@ if [ -z "$ANT_HOME" ] ; then
   fi
 
   ## resolve links - $0 may be a link to ant's home
-  PRG=$0
-  progname=`basename $0`
+  PRG="$0"
+  progname=`basename "$0"`
   saveddir=`pwd`
 
   # need this for relative symlinks
@@ -57,7 +57,7 @@ if [ -z "$ANT_HOME" ] ; then
     if expr "$link" : '.*/.*' > /dev/null; then
 	PRG="$link"
     else
-	PRG="`dirname $PRG`/$link"
+	PRG=`dirname "$PRG"`"/$link"
     fi
   done
   
@@ -80,7 +80,7 @@ if $cygwin ; then
 fi
 
 # set ANT_LIB location
-ANT_LIB=${ANT_HOME}/lib
+ANT_LIB="${ANT_HOME}/lib"
 
 if [ -z "$JAVACMD" ] ; then 
   if [ -n "$JAVA_HOME"  ] ; then
@@ -111,14 +111,14 @@ if $rpm_mode; then
   for i in ant ant-optional jaxp_parser xml_apis 
   do
     if [ -z "$LOCALCLASSPATH" ] ; then
-      LOCALCLASSPATH=$JAVALIBDIR/$i.jar
+      LOCALCLASSPATH="$JAVALIBDIR/$i.jar"
     else
       LOCALCLASSPATH="$JAVALIBDIR/$i.jar":"$LOCALCLASSPATH"
     fi
   done
 
 # in rpm mode ant/lib is in /usr/share/java/ant
-ANT_LIB=${JAVALIBDIR}/ant
+ANT_LIB="${JAVALIBDIR}/ant"
 
 fi
 
@@ -127,9 +127,9 @@ for i in "${ANT_LIB}"/*.jar
 do
   # if the directory is empty, then it will return the input string
   # this is stupid, so case for it
-  if [ "$i" != "${ANT_LIB}/*.jar" ] ; then
+  if [ -f "$i" ] ; then
     if [ -z "$LOCALCLASSPATH" ] ; then
-      LOCALCLASSPATH=$i
+      LOCALCLASSPATH="$i"
     else
       LOCALCLASSPATH="$i":"$LOCALCLASSPATH"
     fi
@@ -151,7 +151,7 @@ if [ -n "$JAVA_HOME" ] ; then
     if [ -d ${OSXHACK} ] ; then
       for i in ${OSXHACK}/*.jar
       do
-        JIKESPATH=$JIKESPATH:$i
+        JIKESPATH="$JIKESPATH:$i"
       done
     fi
   fi
