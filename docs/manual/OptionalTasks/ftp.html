@@ -28,6 +28,13 @@ This task does not currently use the proxy information set by the
 <a href="setproxy.html">&lt;setproxy&gt;</a> task, and cannot go through
 a firewall via socks. 
 <p>
+<b>Use of the FTP task with Microsoft FTP servers
+</b>
+<p>
+To use the FTP task with Microsoft FTP servers, you need a build of commons-net and of
+jakarta-oro coming from the CVS HEAD of these two projects.
+It is expected that the commons-net 1.2.0 release will fix these issues.
+</p>
 <b>Warning: </b> there have been problems reported concerning the ftp get with newer attribute.
 Problems might be due to format of ls -l differing from what is expected by commons-net,
 for instance due to specificities of langage used by the ftp server in the directory listing.
