@@ -88,6 +88,7 @@ public class CCMkelem extends CCMatchingTask {
         if (parent == null){
             parent = new CCFile(file.getParent());
             if ( !parent.isVersioned() ){
+                mkelemDirectory(parent);
                 // ensure versioned dir
             } else if ( parent.isCheckedIn() ){
                 utils.checkout( parent );
@@ -137,6 +138,41 @@ public class CCMkelem extends CCMatchingTask {
         }
         v.addElement("<pname>"); // dummy arg for file
         return v;
+    }
+
+    private void mkelemDirectory(CCFile dir) throws BuildException {
+        // resolve symoblic link if any...
+        dir = new CCFile( utils.resolveSymbolicLink(dir.getAbsoluteFile()).getAbsolutePath() );
+
+        // make sure that the parent is versioned...
+        CCFile parent = new CCFile(dir.getParent());
+        boolean should_ci = false;
+        if ( !parent.isVersioned() ){
+            mkelemDirectory(parent);
+            codirs.put(parent.getPath(), parent.getAbsoluteFile());
+        }
+        // ...and checkout it if already checked in.
+        if ( parent.isCheckedIn() ){
+            utils.checkout(parent.getAbsoluteFile());
+            codirs.put(parent.getPath(), parent.getAbsoluteFile());
+        }
+
+        // rename the unversioned directory into a temporary one...
+        File mkelem_file = new File(dir.getAbsolutePath() + "_mkelem");
+        dir.renameTo( mkelem_file );
+        // then create it via Clearcase...
+        utils.mkdir( dir );
+        codirs.put(dir.getPath(), dir.getAbsoluteFile());
+        // .. and populate it back with its files...
+        File[] files = dir.listFiles();
+        for (int i = 0; i < files.length; i++){
+            File newFile = new File(dir, files[i].getName());
+            if ( !files[i].renameTo( newFile ) ) {
+                throw new BuildException("Could not rename dir '" + files[i] + "' into '" + newFile + "'" );
+            }
+        }
+        // delete this one only if things went smoothly...
+        mkelem_file.delete();
     }
 
 // bean setters
