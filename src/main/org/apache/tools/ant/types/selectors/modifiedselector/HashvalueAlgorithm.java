@@ -60,18 +60,18 @@ import java.io.File;
 
 /**
  * Computes a 'hashvalue' for the content of file using String.hashValue().
- * Use of this algorithm doesn´t require any additional nested <param>s and
- * doesn´t support any.
+ * Use of this algorithm doesn't require any additional nested <param>s and
+ * doesn't support any.
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */
 public class HashvalueAlgorithm implements Algorithm {
 
     /**
-     * This algorithm doesn´t need any configuration.
-     * Therefore it´s always valid.
+     * This algorithm doesn't need any configuration.
+     * Therefore it's always valid.
      * @return always true
      */
     public boolean isValid() {
@@ -83,7 +83,7 @@ public class HashvalueAlgorithm implements Algorithm {
      * It reads the content of a file, convert that to String and use the
      * String.hashCode() method.
      * @param file  The file for which the value should be computed
-     * @return the hashvalue or <i>null</i> if the file couldn´t be read
+     * @return the hashvalue or <i>null</i> if the file couldn't be read
      */
      // Because the content is only read the file will not be damaged. I tested
      // with JPG, ZIP and PDF as binary files.

@@ -77,7 +77,7 @@ import org.apache.tools.ant.types.Parameter;
  *
  * @since 1.6
  * @version 2003-09-23
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  */
 public final class ConcatFilter extends BaseParamFilterReader
     implements ChainableReader {
