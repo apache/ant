@@ -471,25 +471,8 @@ public class XMLValidateTask extends Task {
         }
     }
 
-    public static class DTDLocation {
-        private String publicId = null;
-        private String location = null;
-
-        public void setPublicId(String publicId) {
-            this.publicId = publicId;
-        }
-
-        public void setLocation(String location) {
-            this.location = location;
-        }
-
-        public String getPublicId() {
-            return publicId;
-        }
-
-        public String getLocation() {
-            return location;
-        }
+    public static class DTDLocation 
+        extends org.apache.tools.ant.types.DTDLocation {
     }
 
     private class LocalResolver

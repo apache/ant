@@ -100,49 +100,8 @@ public class EjbJar extends MatchingTask {
     /**
      * Inner class used to record information about the location of a local DTD
      */
-    public static class DTDLocation {
-        /** The public ID of the DTD */
-        private String publicId = null;
-        /** The DTD's local location */
-        private String location = null;
-
-        
-        /**
-         * Sets the publicId of the DTDLocation
-         *
-         * @param publicId the new publicId value
-         */
-        public void setPublicId(String publicId) {
-            this.publicId = publicId;
-        }
-
-        /**
-         * Sets the location of the DTDLocation. This value may be file path or
-         * a local resource on the classpath
-         *
-         * @param location the new location value
-         */
-        public void setLocation(String location) {
-            this.location = location;
-        }
-
-        /**
-         * Gets the publicId of the DTDLocation
-         *
-         * @return the publicId value
-         */
-        public String getPublicId() {
-            return publicId;
-        }
-
-        /**
-         * Gets the location of the DTDLocation
-         *
-         * @return the location value
-         */
-        public String getLocation() {
-            return location;
-        }
+    public static class DTDLocation 
+        extends org.apache.tools.ant.types.DTDLocation {
     }
 
     /**
