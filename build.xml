@@ -295,8 +295,8 @@
 
     <java fork="yes"
           classname="junit.textui.TestRunner"
-          args="org.apache.tools.ant.AllJUnitTests"
           taskname="junit">
+      <arg value="org.apache.tools.ant.AllJUnitTests" />
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />

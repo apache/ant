@@ -146,7 +146,7 @@ public class WLRun extends Task {
         String execClassPath = project.translatePath(classpath);
             
         Java weblogicServer = (Java)project.createTask("java");
-        weblogicServer.setFork("yes");
+        weblogicServer.setFork(true);
         weblogicServer.setClassname("weblogic.Server");
         String jvmArgs = "";
         if (weblogicClasspath != null) {

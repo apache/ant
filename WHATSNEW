@@ -10,11 +10,13 @@ Changes that could break older environments:
 * Path and EnumeratedAttribute have been moved from
 org.apache.tools.ant to org.apache.tools.ant.types.
 
+* the class attribute of <java> has been removed.
+
 Other changes:
 --------------
 
-* New tasks: sql, junit, javacc, execon. All pending documentation,
-most of them pending review.
+* New tasks: sql, junit, mparse, execon. All except sql pending
+documentation, most of them pending review.
 
 * <java> uses ClassLoader of its own in no-fork mode if a classpath is
 specified.

@@ -57,8 +57,13 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -68,28 +73,35 @@ import java.util.*;
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
-public class Java extends Exec {
+public class Java extends Task {
 
-    private String classname = null;
-    private String args = null;
-    private String jvmargs = null;
-    private Path classpath = null;
+    private CommandlineJava cmdl = new CommandlineJava();
     private boolean fork = false;
+    private File dir = null;
+    private boolean failOnError = false;
     
     /**
      * Do the execution.
      */
     public void execute() throws BuildException {
-        executeJava();
+        int err = -1;
+        if ((err = executeJava()) != 0) {
+            if (failOnError) {
+                throw new BuildException("Java returned: "+err, location);
+            } else {
+                log("Java Result: " + err, Project.MSG_ERR);
+            }
+        }
     }
 
     /**
      * Do the execution and return a return code.
      *
-     * @return the return code from the execute java cklass if it was executed in 
+     * @return the return code from the execute java class if it was executed in 
      * a separate VM (fork = "yes").
      */
     public int executeJava() throws BuildException {
+        String classname = cmdl.getClassname();
         log("Calling " + classname, Project.MSG_VERBOSE);
 
         if (classname == null) {
@@ -97,32 +109,16 @@ public class Java extends Exec {
         }
 
         if (fork) {
-            StringBuffer b = new StringBuffer();
-            b.append("java ");
-            if (classpath != null) {
-                b.append("-classpath ");
-                b.append(classpath.toString());
-                b.append(" ");
+            return run(cmdl.getCommandline());
+        } else {
+            if (cmdl.getVmCommand().size() > 1) {
+                log("JVM args ignored when same JVM is used.", Project.MSG_WARN);
             }
-            if (jvmargs != null) {
-                b.append(jvmargs);
-                b.append(" ");
-            }
-            b.append(classname);
-            if (args != null) {
-                b.append(" ");
-                b.append(args);
+            if (dir != null) {
+                log("Working directory ignored when same JVM is used.", Project.MSG_WARN);
             }
             
-            return run(b.toString());
-        } else {
-            Vector argList = tokenize(args);
-            if (jvmargs != null) {
-                log("JVM args and classpath ignored when same JVM is used.", Project.MSG_VERBOSE);
-            }
-        
-            log("Java args: " + argList.toString(), Project.MSG_VERBOSE);
-            run(classname, argList);
+            run(cmdl);
             return 0;
         }
     }
@@ -131,123 +127,117 @@ public class Java extends Exec {
      * Set the classpath to be used for this compilation.
      */
     public void setClasspath(Path s) {
-        if (this.classpath == null) {
-            this.classpath = s;
-        } else {
-            this.classpath.append(s);
-        }
+        createClasspath().append(s);
     }
     
     /**
      * Creates a nested classpath element
      */
     public Path createClasspath() {
-        if (classpath == null) {
-            classpath = new Path(project);
-        }
-        return classpath;
+        return cmdl.createClasspath(project);
     }
 
     /**
-     * Set the source file (deprecated).
-     */
-    public void setClass(String s) {
-        log("The class attribute is deprecated. " +
-            "Please use the classname attribute.",
-            Project.MSG_WARN);
-        this.classname = s;
-    }
-
-    /**
-     * Set the source file.
+     * Set the class name.
      */
     public void setClassname(String s) {
-        this.classname = s;
+        cmdl.setClassname(s);
     }
 
     /**
-     * Set the destination file.
+     * Set the command line arguments for the class.
      */
     public void setArgs(String s) {
-        this.args = s;
+        cmdl.createArgument().setLine(s);
+    }
+
+    /**
+     * Creates a nested arg element.
+     */
+    public Commandline.Argument createArg() {
+        return cmdl.createArgument();
     }
 
     /**
      * Set the forking flag.
      */
-    public void setFork(String s) {
-        this.fork = Project.toBoolean(s);
+    public void setFork(boolean s) {
+        this.fork = s;
     }
 
     /**
-     * Set the jvm arguments.
+     * Set the command line arguments for the JVM.
      */
     public void setJvmargs(String s) {
-        this.jvmargs = s;
+        cmdl.createVmArgument().setLine(s);
     }
         
+    /**
+     * Creates a nested jvmarg element.
+     */
+    public Commandline.Argument createJvmarg() {
+        return cmdl.createVmArgument();
+    }
+
+    /**
+     * Throw a BuildException if process returns non 0.
+     */
+    public void setFailonerror(boolean fail) {
+        failOnError = fail;
+    }
+
+    /**
+     * The working directory of the process
+     */
+    public void setDir(File d) {
+        this.dir = d;
+    }
+
+    /**
+     * Executes the given classname with the given arguments as it
+     * was a command line application.
+     */
+    private void run(CommandlineJava command) throws BuildException {
+        ExecuteJava exe = new ExecuteJava();
+        exe.setJavaCommand(command.getJavaCommand());
+        exe.setClasspath(command.getClasspath());
+        exe.execute(project);
+    }
+
+    /**
+     * Executes the given classname with the given arguments in a separate VM.
+     */
+    private int run(String[] command) throws BuildException {
+        Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
+                                                       Project.MSG_WARN), 
+                                  null);
+        exe.setAntRun(project);
+
+        if (dir == null) dir = project.getBaseDir();
+        exe.setWorkingDirectory(dir);
+
+        exe.setCommandline(command);
+        try {
+            return exe.execute();
+        } catch (IOException e) {
+            throw new BuildException(e, location);
+        }
+    }
+
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.
      */
     protected void run(String classname, Vector args) throws BuildException {
-        try {
-            Class c = null;
-            if (classpath == null) {
-                c = Class.forName(classname);
-            } 
-            else {
-                AntClassLoader loader = new AntClassLoader(project, classpath);
-                c = loader.forceLoadClass(classname);
-            }
-        
-            Class[] param = { Class.forName("[Ljava.lang.String;") };
-            Method main = c.getMethod("main", param);
-            Object[] a = { array(args) };
-            main.invoke(null, a);
-        } catch (NullPointerException e) {
-            throw new BuildException("Could not find main() method in " + classname);
-        } catch (ClassNotFoundException e) {
-            throw new BuildException("Could not find " + classname + ". Make sure you have it in your classpath");
-        } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (!(t instanceof SecurityException)) {
-                throw new BuildException(t.toString());
-            }
-            // else ignore because the security exception is thrown
-            // if the invoked application tried to call System.exit()
-        } catch (Exception e) {
-            throw new BuildException(e.toString());
+        CommandlineJava cmdj = new CommandlineJava();
+        cmdj.setClassname(classname);
+        for (int i=0; i<args.size(); i++) {
+            cmdj.createArgument().setValue((String) args.elementAt(i));
         }
+        if (cmdl.getClasspath() != null) {
+            cmdj.createClasspath(project).append(cmdl.getClasspath());
+        }
+        run(cmdj);
     }
 
-    /**
-     * Transforms an argument string into a vector of strings.
-     */
-    protected Vector tokenize(String args) {
-        Vector v = new Vector();
-        if (args == null) return v;
-
-        StringTokenizer t = new StringTokenizer(args, " ");
-        
-        while (t.hasMoreTokens()) {
-            v.addElement(t.nextToken());
-        }
-
-        return v;
-    }
-    
-    /**
-     * Transforms a vector of strings into an array.
-     */
-    protected String[] array(Vector v) {
-        String[] s = new String[v.size()];
-        Enumeration e = v.elements();
-        
-        for (int i = 0; e.hasMoreElements(); i++) {
-            s[i] = (String) e.nextElement();
-        }
-        
-        return s;
-    }
 }

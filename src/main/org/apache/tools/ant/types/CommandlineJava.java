@@ -93,6 +93,10 @@ public class CommandlineJava {
         javaCommand.setExecutable(classname);
     }
 
+    public String getClassname() {
+        return javaCommand.getExecutable();
+    }
+
     public Path createClasspath(Project p) {
         if (classpath == null) {
             classpath = new Path(p);
@@ -134,5 +138,17 @@ public class CommandlineJava {
             size += 2;
         }
         return size;
+    }
+
+    public Commandline getJavaCommand() {
+        return javaCommand;
+    }
+
+    public Commandline getVmCommand() {
+        return vmCommand;
+    }
+
+    public Path getClasspath() {
+        return classpath;
     }
 }

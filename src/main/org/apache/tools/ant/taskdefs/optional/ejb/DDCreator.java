@@ -126,7 +126,7 @@ public class DDCreator extends MatchingTask {
         String systemClassPath = System.getProperty("java.class.path");
         String execClassPath = project.translatePath(systemClassPath + ":" + classpath);
         Java ddCreatorTask = (Java)project.createTask("java");
-        ddCreatorTask.setFork("yes");
+        ddCreatorTask.setFork(true);
         ddCreatorTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper");
         ddCreatorTask.setArgs(args);
         ddCreatorTask.setClasspath(new Path(project, execClassPath));                         

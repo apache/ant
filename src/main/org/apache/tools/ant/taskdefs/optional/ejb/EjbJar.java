@@ -448,7 +448,7 @@ public class EjbJar extends MatchingTask {
             javaTask = (Java) this.project.createTask("java");
             javaTask.setClassname("weblogic.ejbc");
             javaTask.setArgs(args);
-            javaTask.setFork("false");
+            javaTask.setFork(false);
 
             this.log("Calling weblogic.ejbc for " + sourceJar.toString(),
                      Project.MSG_INFO);

@@ -55,9 +55,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -69,17 +71,28 @@ import java.lang.reflect.Method;
 public class ExecuteJava {
 
     private Commandline javaCommand = null;
+    private Path classpath = null;
 
     public void setJavaCommand(Commandline javaCommand) {
         this.javaCommand = javaCommand;
     }
 
-    public void execute() throws BuildException{
+    public void setClasspath(Path p) {
+        classpath = p;
+    }
+
+    public void execute(Project project) throws BuildException{
         final String classname = javaCommand.getExecutable();
         final Object[] argument = { javaCommand.getArguments() };
-        final Class[] param = { argument[0].getClass() };
         try {
-            final Class target = Class.forName(classname);
+            final Class[] param = { Class.forName("[Ljava.lang.String;") };
+            Class target = null;
+            if (classpath == null) {
+                target = Class.forName(classname);
+            } else {
+                AntClassLoader loader = new AntClassLoader(project, classpath);
+                target = loader.forceLoadClass(classname);
+            }
             final Method main = target.getMethod("main", param);
             main.invoke(null, argument);
         } catch (NullPointerException e) {
@@ -89,7 +102,7 @@ public class ExecuteJava {
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (!(t instanceof SecurityException)) {
-                throw new BuildException(t.toString());
+                throw new BuildException(t);
             }
             // else ignore because the security exception is thrown
             // if the invoked application tried to call System.exit()

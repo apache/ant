@@ -137,7 +137,7 @@ public class Ejbc extends MatchingTask {
         String[] files = ds.getIncludedFiles();
 
         Java helperTask = (Java)project.createTask("java");
-        helperTask.setFork("yes");
+        helperTask.setFork(true);
         helperTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.EjbcHelper");
         String args = "";
         args += " " + descriptorDirectory;
