@@ -132,6 +132,14 @@ public class IntrospectionHelper implements BuildListener {
                 continue;
             }
             
+            // hide addTask for TaskContainers
+            if (org.apache.tools.ant.TaskContainer.class.isAssignableFrom(bean) 
+                && args.length == 1 && "addTask".equals(name) 
+                && org.apache.tools.ant.Task.class.equals(args[0])) {
+                continue;
+            }
+            
+
             if ("addText".equals(name)
                 && java.lang.Void.TYPE.equals(returnType)
                 && args.length == 1

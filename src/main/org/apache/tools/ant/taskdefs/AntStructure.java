@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.util.Enumeration;
@@ -69,11 +70,17 @@ import java.io.*;
  * Creates a partial DTD for Ant from the currently known tasks.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @version $Revision$
  */
 
 public class AntStructure extends Task {
 
     private final String lSep = System.getProperty("line.separator");
+
+    private final String BOOLEAN = "%boolean;";
+    private final String TASKS = "%tasks;";
+    private final String TYPES = "%types;";
 
     private Hashtable visited = new Hashtable();
 
@@ -95,10 +102,10 @@ public class AntStructure extends Task {
         PrintWriter out = null;
         try {
             try {
-                out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "ISO8859_1"));
+                out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), "UTF8"));
             } catch (UnsupportedEncodingException ue) {
                 /*
-                 * Plain impossible with ISO8859_1, see
+                 * Plain impossible with UTF8, see
                  * http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html
                  *
                  * fallback to platform specific anyway.
@@ -106,26 +113,21 @@ public class AntStructure extends Task {
                 out = new PrintWriter(new FileWriter(output));
             }
             
+            printHead(out, project.getTaskDefinitions().keys(), 
+                      project.getDataTypeDefinitions().keys());
+
+            printTargetDecl(out);
+
             Enumeration dataTypes = project.getDataTypeDefinitions().keys();
-            printHead(out, dataTypes);
-
-            Vector tasks = new Vector();
-            Enumeration enum = project.getTaskDefinitions().keys();
-            while (enum.hasMoreElements()) {
-                String taskName = (String) enum.nextElement();
-                tasks.addElement(taskName);
-            }
-            printTargetDecl(out, tasks);
-
-            dataTypes = project.getDataTypeDefinitions().keys();
             while (dataTypes.hasMoreElements()) {
                 String typeName = (String) dataTypes.nextElement();
                 printElementDecl(out, typeName, 
                                  (Class) project.getDataTypeDefinitions().get(typeName));
             }
             
-            for (int i=0; i<tasks.size(); i++) {
-                String taskName = (String) tasks.elementAt(i);
+            Enumeration tasks = project.getTaskDefinitions().keys();
+            while (tasks.hasMoreElements()) {
+                String taskName = (String) tasks.nextElement();
                 printElementDecl(out, taskName, 
                                  (Class) project.getTaskDefinitions().get(taskName));
             }
@@ -142,17 +144,39 @@ public class AntStructure extends Task {
         }
     }
 
-    private void printHead(PrintWriter out, Enumeration enum) {
-        out.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
+    private void printHead(PrintWriter out, Enumeration tasks, 
+                           Enumeration types) {
+        out.println("<?xml version=\"1.0\" ?>");
         out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
+        out.print("<!ENTITY % tasks \"");
+        boolean first = true;
+        while (tasks.hasMoreElements()) {
+            String taskName = (String) tasks.nextElement();
+            if (!first) {
+                out.print(" | ");
+            } else {
+                first = false;
+            }
+            out.print(taskName);
+        }
+        out.println("\">");
+        out.print("<!ENTITY % types \"");
+        first = true;
+        while (types.hasMoreElements()) {
+            String typeName = (String) types.nextElement();
+            if (!first) {
+                out.print(" | ");
+            } else {
+                first = false;
+            }
+            out.print(typeName);
+        }
+        out.println("\">");
+
         out.println("");
         
-        out.print("<!ELEMENT project (target | property | taskdef");
-        while (enum.hasMoreElements()) {
-            String typeName = (String) enum.nextElement();
-            out.print(" | "+typeName);
-        }
-
+        out.print("<!ELEMENT project (target | property | taskdef | ");
+        out.print(TYPES);
         out.println(")*>");
         out.println("<!ATTLIST project");
         out.println("          name    CDATA #REQUIRED");
@@ -161,16 +185,11 @@ public class AntStructure extends Task {
         out.println("");
     }
 
-    private void printTargetDecl(PrintWriter out, Vector tasks) {
+    private void printTargetDecl(PrintWriter out) {
         out.print("<!ELEMENT target (");
-        for (int i=0; i<tasks.size(); i++) {
-            String taskName = (String) tasks.elementAt(i);
-            if (i > 0) {
-                out.print(" | ");
-            }
-            out.print(taskName);
-        }
-                 
+        out.print(TASKS);
+        out.print(" | ");
+        out.print(TYPES);
         out.println(")*>");
         out.println("");
 
@@ -222,6 +241,10 @@ public class AntStructure extends Task {
             v.addElement("#PCDATA");
         }
 
+        if (TaskContainer.class.isAssignableFrom(element)) {
+            v.addElement(TASKS);
+        }
+
         Enumeration enum = ih.getNestedElements();
         while (enum.hasMoreElements()) {
             v.addElement((String) enum.nextElement());
@@ -258,7 +281,7 @@ public class AntStructure extends Task {
             Class type = ih.getAttributeType(attrName);
             if (type.equals(java.lang.Boolean.class) || 
                 type.equals(java.lang.Boolean.TYPE)) {
-                sb.append("%boolean; ");
+                sb.append(BOOLEAN).append(" ");
             } else if (org.apache.tools.ant.types.Reference.class.isAssignableFrom(type)) { 
                 sb.append("IDREF ");
             } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(type)) {
@@ -295,7 +318,10 @@ public class AntStructure extends Task {
 
         for (int i=0; i<v.size(); i++) {
             String nestedName = (String) v.elementAt(i);
-            if (!"#PCDATA".equals(nestedName)) {
+            if (!"#PCDATA".equals(nestedName) &&
+                !TASKS.equals(nestedName) &&
+                !TYPES.equals(nestedName)
+                ) {
                 printElementDecl(out, nestedName, ih.getElementType(nestedName));
             }
         }
