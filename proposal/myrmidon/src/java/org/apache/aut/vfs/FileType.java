@@ -20,6 +20,17 @@ public final class FileType
     private final static Resources REZ =
         ResourceManager.getPackageResources( FileType.class );
 
+    /**
+     * A folder, which can contain other files, but does not have any data
+     * content.
+     */
+    public final static FileType FOLDER = new FileType( REZ.getString( "folder.name" ) );
+
+    /**
+     * A regular file, which has data content, but cannot contain other files.
+     */
+    public final static FileType FILE = new FileType( REZ.getString( "file.name" ) );
+
     private String m_name;
 
     private FileType( String name )
@@ -38,15 +49,4 @@ public final class FileType
     {
         return m_name;
     }
-
-    /**
-     * A folder, which can contain other files, but does not have any data
-     * content.
-     */
-    public static final FileType FOLDER = new FileType( REZ.getString( "folder.name" ) );
-
-    /**
-     * A regular file, which has data content, but cannot contain other files.
-     */
-    public static final FileType FILE = new FileType( REZ.getString( "file.name" ) );
 }

@@ -15,25 +15,6 @@ package org.apache.aut.vfs;
  */
 public final class NameScope
 {
-    private String m_name;
-
-    private NameScope( String name )
-    {
-        m_name = name;
-    }
-
-    /** Returns the name of the scope. */
-    public String toString()
-    {
-        return m_name;
-    }
-
-    /** Returns the name of the scope. */
-    public String getName()
-    {
-        return m_name;
-    }
-
     /**
      * Resolve against the children of the base file.
      *
@@ -59,4 +40,23 @@ public final class NameScope
      * and relative if it does not.
      */
     public static final NameScope FILE_SYSTEM = new NameScope( "filesystem" );
+
+    private String m_name;
+
+    private NameScope( final String name )
+    {
+        m_name = name;
+    }
+
+    /** Returns the name of the scope. */
+    public String toString()
+    {
+        return m_name;
+    }
+
+    /** Returns the name of the scope. */
+    public String getName()
+    {
+        return m_name;
+    }
 }
