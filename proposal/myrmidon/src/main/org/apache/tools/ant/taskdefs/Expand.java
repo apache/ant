@@ -21,7 +21,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
+import org.apache.myrmidon.framework.PatternSet;
 import org.apache.tools.ant.types.ScannerUtil;
 
 /**

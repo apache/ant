@@ -16,7 +16,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
+import org.apache.myrmidon.framework.PatternSet;
 
 /**
  * Chmod equivalent for unix-like environments.

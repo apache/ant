@@ -10,7 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
-import org.apache.tools.ant.types.PatternSet;
+import org.apache.myrmidon.framework.PatternSet;
 
 /**
  * Export packages from the Visual Age for Java workspace. The packages are

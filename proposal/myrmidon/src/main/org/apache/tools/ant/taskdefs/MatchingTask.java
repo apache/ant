@@ -13,7 +13,7 @@ import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.PatternSet;
+import org.apache.myrmidon.framework.PatternSet;
 
 /**
  * This is an abstract task that should be used by all those tasks that require

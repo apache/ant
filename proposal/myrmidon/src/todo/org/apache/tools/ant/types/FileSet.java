@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
+import org.apache.myrmidon.framework.PatternSet;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
