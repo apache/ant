@@ -1,5 +1,5 @@
 /*
- * Copyright  2001,2004 The Apache Software Foundation
+ * Copyright  2001,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public interface ZipExtraField {
 
     /**
      * The Header-ID.
-     *
+     * @return the header id
      * @since 1.1
      */
     ZipShort getHeaderId();
@@ -42,7 +42,7 @@ public interface ZipExtraField {
     /**
      * Length of the extra field in the local file data - without
      * Header-ID or length specifier.
-     *
+     * @return the length of the field in the local file data
      * @since 1.1
      */
     ZipShort getLocalFileDataLength();
@@ -50,7 +50,7 @@ public interface ZipExtraField {
     /**
      * Length of the extra field in the central directory - without
      * Header-ID or length specifier.
-     *
+     * @return the length of the field in the central directory
      * @since 1.1
      */
     ZipShort getCentralDirectoryLength();
@@ -58,7 +58,7 @@ public interface ZipExtraField {
     /**
      * The actual data to put into local file data - without Header-ID
      * or length specifier.
-     *
+     * @return the data
      * @since 1.1
      */
     byte[] getLocalFileDataData();
@@ -66,15 +66,19 @@ public interface ZipExtraField {
     /**
      * The actual data to put central directory - without Header-ID or
      * length specifier.
-     *
+     * @return the data
      * @since 1.1
      */
     byte[] getCentralDirectoryData();
 
     /**
      * Populate data from this array as if it was in local file data.
+     * @param data an array of bytes
+     * @param offset the start offset
+     * @param length the number of bytes in the array from offset
      *
      * @since 1.1
+     * @throws ZipException on error
      */
     void parseFromLocalFileData(byte[] data, int offset, int length)
         throws ZipException;
