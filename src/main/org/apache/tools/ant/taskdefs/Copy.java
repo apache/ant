@@ -415,10 +415,8 @@ public class Copy extends Task {
 
                 String[] srcFiles = ds.getIncludedFiles();
                 String[] srcDirs = ds.getIncludedDirectories();
-                boolean isEverythingIncluded = ds.isEverythingIncluded()
-                    && (!fs.hasSelectors() && !fs.hasPatterns());
-                if (isEverythingIncluded
-                    && !flatten && mapperElement == null) {
+                if (!flatten && mapperElement == null
+                    && ds.isEverythingIncluded() && !fs.hasPatterns()) {
                     completeDirMap.put(fromDir, destDir);
                 }
                 scan(fromDir, destDir, srcFiles, srcDirs);
