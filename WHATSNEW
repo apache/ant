@@ -67,6 +67,12 @@ Changes that could break older environments:
   java executable to Ant's wrapper scripts must not contain additional
   command line parameters any longer - please use the environment
   variable ANT_OPTS for such parameters now.
+  
+* Ant's wrapper scripts now quote the CLASSPATH environment variable, thus
+  supporting classpaths which refer to directories containing spaces. This means
+  that the CLASSPATH environment variable cannot have quotes. Any quotes should
+  be removed. This will not affect the operation of the CLASSPATH environment
+  variable in other contexts.
 
 * A delete task like
   <delete includeEmptyFilesets="true">
