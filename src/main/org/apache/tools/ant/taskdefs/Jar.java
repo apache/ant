@@ -98,7 +98,7 @@ public class Jar extends Zip {
 	    InputStream in = this.getClass().getResourceAsStream(s);
             if ( in == null )
 		throw new BuildException ( "Could not find: " + s );
-	    zipFile(in, zOut, "META-INF/MANIFEST.MF");
+	    zipFile(in, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
  	}
      }
 

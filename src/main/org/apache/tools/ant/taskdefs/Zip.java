@@ -161,10 +161,12 @@ public class Zip extends MatchingTask {
     {
     }
 
-    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath)
+    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
+                           long lastModified)
         throws IOException
     {
         ZipEntry ze = new ZipEntry(vPath);
+        ze.setTime(lastModified);
 
         /*
          * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
@@ -222,7 +224,7 @@ public class Zip extends MatchingTask {
         throws IOException
     {
         FileInputStream fIn = new FileInputStream(file);
-        zipFile(fIn, zOut, vPath);
+        zipFile(fIn, zOut, vPath, file.lastModified());
         fIn.close();
     }
 }
