@@ -34,6 +34,10 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Shipped XML parser is now Xerces-J 2.6.1
+
+* upgrade to xml-apis.jar from Xerces-J 2.6.1.
+
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
 * <p4submit> has 2 new attributes, needsresolveproperty and changeproperty.
