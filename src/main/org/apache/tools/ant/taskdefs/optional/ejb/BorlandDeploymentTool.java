@@ -96,7 +96,7 @@ import org.apache.tools.ant.types.Path;
  *      &lt;ejbjar srcdir=&quot;${build.classes}&quot;  basejarname=&quot;vsmp&quot;  descriptordir=&quot;${rsc.dir}/hrmanager&quot;&gt;
  *        &lt;borland destdir=&quot;tstlib&quot;&gt;
  *          &lt;classpath refid=&quot;classpath&quot; /&gt;
- *        &lt;/borland&gt;      
+ *        &lt;/borland&gt;
  *        &lt;include name=&quot;**\ejb-jar.xml&quot;/&gt;
  *        &lt;support dir=&quot;${build.classes}&quot;&gt;
  *          &lt;include name=&quot;demo\smp\*.class&quot;/&gt;
@@ -107,18 +107,18 @@ import org.apache.tools.ant.types.Path;
  * @author     <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  */
-public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler 
+public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler
 {
     public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
-    protected static final String DEFAULT_BAS45_EJB11_DTD_LOCATION 
+    protected static final String DEFAULT_BAS45_EJB11_DTD_LOCATION
     = "/com/inprise/j2ee/xml/dtds/ejb-jar.dtd";
-    
-    protected static final String DEFAULT_BAS_DTD_LOCATION 
-    = "/com/inprise/j2ee/xml/dtds/ejb-inprise.dtd";       
-    
-    protected static final String BAS_DD = "ejb-inprise.xml";    
+
+    protected static final String DEFAULT_BAS_DTD_LOCATION
+    = "/com/inprise/j2ee/xml/dtds/ejb-inprise.dtd";
+
+    protected static final String BAS_DD = "ejb-inprise.xml";
 
     /** Java2iiop executable **/
     protected static final String JAVA2IIOP = "java2iiop";
@@ -131,7 +131,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
     /** Instance variable that stores the location of the borland DTD file. */
     private String borlandDTD;
-        
+
     /** Instance variable that determines whether the debug mode is on */
     private boolean java2iiopdebug = false;
 
@@ -143,21 +143,21 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
     private Hashtable _genfiles = new Hashtable();
 
-    /** 
+    /**
      * set the debug mode for java2iiop (default false)
      **/
     public void setDebug(boolean debug) {
         this.java2iiopdebug = debug;
     }
 
-    /** 
+    /**
      * set the verify  mode for the produced jar (default true)
      **/
     public void setVerify(boolean verify) {
         this.verify = verify;
     }
 
-   
+
     /**
      * Setter used to store the suffix for the generated borland jar file.
      * @param inString the string to use as the suffix.
@@ -174,17 +174,17 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     public void setVerifyArgs(String args) {
         this.verifyArgs = args;
     }
-        
+
     /**
-     * Setter used to store the location of the borland DTD. This can be a file on the system 
-     * or a resource on the classpath. 
+     * Setter used to store the location of the borland DTD. This can be a file on the system
+     * or a resource on the classpath.
      * @param inString the string to use as the DTD location.
      */
     public void setBASdtd(String inString) {
         this.borlandDTD = inString;
     }
 
-        
+
     /**
      * setter used to store whether the task will include the generate client task.
      * (see : BorlandGenerateClient task)
@@ -202,27 +202,27 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                             // Get the filename of vendor specific descriptor
                             String fileNameWithMETA = currentText;
                             //trim the META_INF\ off of the file name
-                            String fileName 
-                                = fileNameWithMETA.substring(META_DIR.length(), 
+                            String fileName
+                                = fileNameWithMETA.substring(META_DIR.length(),
                                     fileNameWithMETA.length());
                             File descriptorFile = new File(srcDir, fileName);
-                       
+
                             ejbFiles.put(fileNameWithMETA, descriptorFile);
                         }
                     }
                 };
-        handler.registerDTD(PUBLICID_BORLAND_EJB, 
+        handler.registerDTD(PUBLICID_BORLAND_EJB,
                             borlandDTD == null ? DEFAULT_BAS_DTD_LOCATION : borlandDTD);
-                            
+
         for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
             EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
             handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
         }
-        return handler;                                    
+        return handler;
     }
 
     /**
-     * Add any vendor specific files which should be included in the 
+     * Add any vendor specific files which should be included in the
      * EJB Jar.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
@@ -232,17 +232,17 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             log("Borland specific file found " + borlandDD,  Project.MSG_VERBOSE);
             ejbFiles.put(META_DIR + BAS_DD,  borlandDD);
         } else {
-            log("Unable to locate borland deployment descriptor. It was expected to be in " + 
+            log("Unable to locate borland deployment descriptor. It was expected to be in " +
                 borlandDD.getPath(), Project.MSG_WARN);
             return;
         }
     }
-    
+
     /**
      * Get the vendor specific name of the Jar that will be output. The modification date
      * of this jar will be checked against the dependent bean classes.
      */
-    File getVendorOutputJarFile(String baseName) {   
+    File getVendorOutputJarFile(String baseName) {
         return new File(getDestDir(), baseName +  jarSuffix);
     }
 
@@ -255,26 +255,26 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         log("verify " + sourceJar, Project.MSG_INFO);
         try {
 
-            String args = verifyArgs;            
+            String args = verifyArgs;
             args += " " + sourceJar.getPath();
-            
+
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("verify");
             javaTask.setClassname(VERIFY);
             Commandline.Argument arguments = javaTask.createArg();
             arguments.setLine(args);
-            Path classpath = getCombinedClasspath();             
+            Path classpath = getCombinedClasspath();
             if (classpath != null)  {
                 javaTask.setClasspath(classpath);
                 javaTask.setFork(true);
             }
-            
-            log("Calling " + VERIFY + " for " + sourceJar.toString(), 
+
+            log("Calling " + VERIFY + " for " + sourceJar.toString(),
                 Project.MSG_VERBOSE);
             javaTask.execute();
         } catch (Exception e) {
             //TO DO : delete the file if it is not a valid file.
-            String msg = "Exception while calling " + VERIFY + " Details: " 
+            String msg = "Exception while calling " + VERIFY + " Details: "
                 + e.toString();
             throw new BuildException(msg, e);
         }
@@ -292,13 +292,10 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
         log("generate client for " + sourceJar, Project.MSG_INFO);
         try {
-            String args = verifyArgs;            
-            args += " " + sourceJar.getPath();
-            
             gentask = (BorlandGenerateClient) getTask().getProject().createTask("internal_bas_generateclient");
             gentask.setEjbjar(sourceJar);
-            gentask.setDebug(java2iiopdebug);            
-            Path classpath = getCombinedClasspath();             
+            gentask.setDebug(java2iiopdebug);
+            Path classpath = getCombinedClasspath();
             if (classpath != null) {
                 gentask.setClasspath(classpath);
             }
@@ -306,7 +303,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             gentask.execute();
         } catch (Exception e) {
             //TO DO : delete the file if it is not a valid file.
-            String msg = "Exception while calling " + VERIFY + " Details: " 
+            String msg = "Exception while calling " + VERIFY + " Details: "
                 + e.toString();
             throw new BuildException(msg, e);
         }
@@ -325,14 +322,14 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         Project project = getTask().getProject();
         execTask.setAntRun(project);
         execTask.setWorkingDirectory(project.getBaseDir());
-        
+
         Commandline commandline = new Commandline();
         commandline.setExecutable(JAVA2IIOP);
         //debug ?
         if (java2iiopdebug) {
-            commandline.createArgument().setValue("-VBJdebug");                
+            commandline.createArgument().setValue("-VBJdebug");
         } // end of if ()
-        //set the classpath 
+        //set the classpath
         commandline.createArgument().setValue("-VBJclasspath");
         commandline.createArgument().setPath(getCombinedClasspath());
         //list file
@@ -346,11 +343,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         commandline.createArgument().setValue("-compile");
         //add the home class
         while (ithomes.hasNext()) {
-            commandline.createArgument().setValue(ithomes.next().toString());                
+            commandline.createArgument().setValue(ithomes.next().toString());
         } // end of while ()
 
         try {
-            log("Calling java2iiop", Project.MSG_VERBOSE);                       
+            log("Calling java2iiop", Project.MSG_VERBOSE);
             log(commandline.describeCommand(), Project.MSG_DEBUG);
             execTask.setCommandline(commandline.getCommandline());
             int result = execTask.execute();
@@ -358,11 +355,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                 String msg = "Failed executing java2iiop (ret code is "
                     + result + ")";
                 throw new BuildException(msg, getTask().getLocation());
-            }                       
+            }
         } catch (java.io.IOException e) {
             log("java2iiop exception :" + e.getMessage(), Project.MSG_ERR);
             throw new BuildException(e, getTask().getLocation());
-        }            
+        }
     }
 
     /**
@@ -370,7 +367,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
      */
-    protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId) 
+    protected void writeJar(String baseName, File jarFile, Hashtable files, String publicId)
         throws BuildException {
         //build the home classes list.
         Vector homes = new Vector();
@@ -382,14 +379,14 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                 String home = toClass(clazz);
                 homes.add(home);
                 log(" Home " + home, Project.MSG_VERBOSE);
-            } // end of if ()                                    
+            } // end of if ()
         } // end of while ()
-        
+
         buildBorlandStubs(homes.iterator(), files);
 
         //add the gen files to the collection
         files.putAll(_genfiles);
-        
+
         super.writeJar(baseName, jarFile, files, publicId);
 
         if (verify) {
@@ -398,7 +395,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
         if (generateclient) {
             generateClient(jarFile);
-        } // end of if ()                       
+        } // end of if ()
     }
 
     /**
@@ -441,29 +438,25 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             while ((javafile = reader.readLine()) != null) {
                 log("buffer:" + javafile, Project.MSG_DEBUG);
                 if (javafile.endsWith(".java")) {
-                    String classfile = toClassFile(javafile);                  
+                    String classfile = toClassFile(javafile);
                     String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length() + 1);
                     log(" generated : " + classfile, Project.MSG_DEBUG);
                     log(" key       : " + key, Project.MSG_DEBUG);
-                    _genfiles.put(key, new File(classfile));                                           
-                } // end of if ()                
+                    _genfiles.put(key, new File(classfile));
+                } // end of if ()
             } // end of while ()
-            reader.close();            
+            reader.close();
         } catch (Exception e) {
             String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
             throw new BuildException(msg, e);
         }
     }
 
-    /**
-     * @param param1
-     * @exception java.io.IOException
-     */
     public void setProcessErrorStream(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String s = reader.readLine();
         if (s != null) {
             log("[java2iiop] " + s, Project.MSG_DEBUG);
-        } // end of if ()        
+        } // end of if ()
     }
 }
