@@ -299,7 +299,7 @@ public class Checksum extends MatchingTask implements Condition {
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             String[] srcFiles = ds.getIncludedFiles();
             for (int j = 0; j < srcFiles.length; j++) {
-                File src = new File(srcFiles[j]);
+                File src = new File(fs.getDir(project), srcFiles[j]);
                 addToIncludeFileMap(src);
             }
         }
