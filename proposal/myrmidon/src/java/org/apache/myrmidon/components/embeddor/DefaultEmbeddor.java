@@ -30,6 +30,7 @@ import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.type.TypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.components.model.Project;
 
@@ -43,7 +44,6 @@ public class DefaultEmbeddor
     extends AbstractLoggable
     implements Embeddor
 {
-    private ProjectBuilder           m_builder;
     private Deployer                 m_deployer;
     private RoleManager              m_roleManager;
 
@@ -85,21 +85,41 @@ public class DefaultEmbeddor
             type = guessTypeFor( location );
         }
 
-        final ProjectBuilder builder = getProjectBuilder( type );
-        return builder.build( location, parameters );
+        final ProjectBuilder builder = getProjectBuilder( type, parameters );
+        return builder.build( location );
     }
 
     private String guessTypeFor( final String location )
     {
-        //TODO: use hueristics to map filename extention to type
-        return "ant";
+        return FileUtil.getExtension( location );
     }
 
-    private ProjectBuilder getProjectBuilder( final String type )
+    private ProjectBuilder getProjectBuilder( final String type, 
+                                              final Parameters parameters )
         throws Exception
     {
-        //FIXME: Should not be ignoring type
-        return m_builder;
+
+        final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.ROLE );
+        final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
+
+        setupLogger( builder );
+
+        if( builder instanceof Composable )
+        {
+            ((Composable)builder).compose( m_componentManager );
+        }
+
+        if( builder instanceof Parameterizable )
+        {
+            ((Parameterizable)builder).parameterize( parameters );
+        }        
+
+        if( builder instanceof Initializable )
+        {
+            ((Initializable)builder).initialize();
+        }        
+
+        return builder;
     }
 
     public ProjectManager createProjectManager( final Project project, 
@@ -179,7 +199,6 @@ public class DefaultEmbeddor
         m_converterRegistry = null;
         m_converter = null;
         m_executor = null;
-        m_builder = null;
         m_deployer = null;
         m_configurer = null;
         m_componentManager = null;
@@ -221,8 +240,9 @@ public class DefaultEmbeddor
                                "org.apache.myrmidon.components.executor.AspectAwareExecutor" );
         defaults.setParameter( ProjectManager.ROLE,
                                "org.apache.myrmidon.components.manager.DefaultProjectManager" );
-        defaults.setParameter( ProjectBuilder.ROLE,
-                               "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
+        //defaults.setParameter( ProjectBuilder.ROLE,
+        //"org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
+        //"org.apache.myrmidon.components.builder.XSLProjectBuilder" );
         defaults.setParameter( Deployer.ROLE,
                                "org.apache.myrmidon.components.deployer.DefaultDeployer" );
         defaults.setParameter( Configurer.ROLE,
@@ -243,7 +263,7 @@ public class DefaultEmbeddor
         componentManager.put( MasterConverter.ROLE, m_converter );
 
         //Following components required when Myrmidon is used as build tool
-        componentManager.put( ProjectBuilder.ROLE, m_builder );
+        componentManager.put( Embeddor.ROLE, this );
 
         //Following components required when Myrmidon allows user deployment of tasks etal.
         componentManager.put( RoleManager.ROLE, m_roleManager );
@@ -295,9 +315,6 @@ public class DefaultEmbeddor
 
         component = getParameter( Executor.ROLE );
         m_executor = (Executor)createComponent( component, Executor.class );
-
-        component = getParameter( ProjectBuilder.ROLE );
-        m_builder = (ProjectBuilder)createComponent( component, ProjectBuilder.class );
     }
 
     /**
@@ -313,7 +330,6 @@ public class DefaultEmbeddor
         setupComponent( m_converterRegistry );
         setupComponent( m_converter );
         setupComponent( m_executor );
-        setupComponent( m_builder );
         setupComponent( m_deployer );
         setupComponent( m_configurer );
     }
