@@ -554,10 +554,11 @@ public class Javadoc extends Exec {
     }
 
     /**
-     * This is a java comment stripper reader that filters comments out
-     * for more significant java parsing. Since this class heavily relies on
-     * the single char read function, you are reccomended to make it work
-     * on top of a buffered reader.
+     * This is a java comment and string stripper reader that filters 
+     * these lexical tokens out for purposes of simple Java parsing.
+     * (if you have more complex Java parsing needs, use a real lexer).
+     * Since this class heavily relies on the single char read function, 
+     * you are reccomended to make it work on top of a buffered reader.
      */
     class JavaReader extends FilterReader {
 
@@ -569,18 +570,36 @@ public class Javadoc extends Exec {
             int c = in.read();
             if (c == '/') {
                 c = in.read();
-                if (c == '*') {
+                if (c == '/') {
+                    while (c != '\n') c = in.read();
+                } else if (c == '*') {
                     while (true) {
                         c = in.read();
                         if (c == '*') {
                             c = in.read();
                             if (c == '/') {
-                                c = in.read();
+                                c = read();
                                 break;
                             }
                         }
                     }
                 }
+            }
+            if (c == '"') {
+                while (true) {
+                    c = in.read();
+                    if (c == '\\') c = in.read();
+                    if (c == '"') {
+                        c = read();
+                        break;
+                    }
+                }
+            }
+            if (c == '\'') {
+                c = in.read();
+                if (c == '\\') c = in.read();
+                c = in.read();
+                c = read();
             }
             return c;
         }
