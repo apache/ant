@@ -69,6 +69,8 @@ public class Exec extends Task {
     private String dir;
     private String command;
 
+    private static final int BUFFER_SIZE = 512;
+
     public void execute() throws BuildException {
         // test if os match
         String myos = System.getProperty("os.name");
@@ -103,13 +105,22 @@ public class Exec extends Task {
                 fos=new PrintWriter( new FileWriter( out ) );
                 project.log("Output redirected to " + out, Project.MSG_VERBOSE);
             }
-            pipeOutput(proc.getInputStream(), "exec", fos);
-            pipeOutput(proc.getErrorStream(), "error", fos);
-            if (null != fos)
-        	fos.close();
 
+            // copy input and error to the output stream
+            StreamPumper inputPumper = 
+                new StreamPumper(proc.getInputStream(), "exec", project, fos);
+            StreamPumper errorPumper = 
+                new StreamPumper(proc.getErrorStream(), "error", project, fos);
+
+            inputPumper.start();
+            errorPumper.start();
+
+            // Wait for everything to finish
             proc.waitFor();
-            
+            inputPumper.join();
+            errorPumper.join();
+            proc.destroy();
+
             // close the output file if required 
             if (fos != null) fos.close();
 
@@ -140,20 +151,54 @@ public class Exec extends Task {
         this.out = out;
     }
 
-    private void pipeOutput(InputStream is, String name, PrintWriter fos) 
-        throws IOException 
-    {
-project.log("pipeOutput", name, Project.MSG_INFO);
-        InputStreamReader isr=new InputStreamReader(is);
-        BufferedReader din = new BufferedReader(isr);
+    // Inner class for continually pumping the input stream during
+    // Process's runtime.
+    class StreamPumper extends Thread {
+	private BufferedReader din;
+        private String name;
+	private boolean endOfStream = false;
+	private int SLEEP_TIME = 5;
+        private Project project;
+	private PrintWriter fos;
 
-        // pipe output to STDOUT
-        String line;
-        while((line = din.readLine()) != null) {
-        if( fos==null)
-            project.log(line, name, Project.MSG_INFO);
-        else
-            fos.println(line);
-        }
+	public StreamPumper(InputStream is, String name, Project project, PrintWriter fos) {
+            this.din     = new BufferedReader(new InputStreamReader(is));
+            this.name    = name;
+            this.project = project;
+	    this.fos     = fos;
+	}
+
+	public void pumpStream()
+	    throws IOException
+	{
+	    byte[] buf = new byte[BUFFER_SIZE];
+	    if (!endOfStream) {
+                String line = din.readLine();
+
+		if (line != null) {
+                    if (fos==null)
+                        project.log(line, name, Project.MSG_INFO);
+                    else
+                        fos.println(line);
+		} else {
+		    endOfStream=true;
+		}
+	    }
+	}
+
+	public void run() {
+            try {
+	        try {
+		    while (!endOfStream) {
+		        pumpStream();
+		        sleep(SLEEP_TIME);
+		    }
+	        } catch (InterruptedException ie) {
+                }
+                din.close();
+	    } catch (IOException ioe) {
+	    }
+	}
     }
+
 }

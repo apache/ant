@@ -11,4 +11,4 @@ if test -e $CMD.sh; then
 fi
 
 echo $CMD $@
-$CMD $@ 2>&1
+$CMD $@
