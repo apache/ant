@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -731,7 +731,13 @@ public class Manifest {
                     + defManifest);
             }
             try {
-                return new Manifest(new InputStreamReader(in, "ASCII"));
+                Manifest defaultManifest 
+                    = new Manifest(new InputStreamReader(in, "ASCII"));
+                Attribute createdBy = new Attribute("Created-By", 
+                    System.getProperty("java.vm.version") + " ("
+                    + System.getProperty("java.vm.vendor") + ")" );
+                defaultManifest.getMainSection().storeAttribute(createdBy);
+                return defaultManifest;
             } catch (UnsupportedEncodingException e) {
                 return new Manifest(new InputStreamReader(in));
             }

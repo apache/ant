@@ -91,6 +91,11 @@ Other changes:
 
 * **/.DS_Store has been added to the list of default pattern excludes.
 
+
+* The Created-BY header in the default manifest now contains the JVM vendor and
+  version according to the jar specification. A new header Ant-Version provides 
+  the Ant version used to create the jar.  
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
