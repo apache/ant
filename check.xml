@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project default="htmlreport" name="CheckAnt">
+<project default="checkstyle" name="CheckAnt">
+
 <!--  <import file="build.xml"/> --> 
   <property name="src.dir" value="src"/>
   <property name="java.dir" value="${src.dir}/main"/>
@@ -26,6 +27,7 @@
       <formatter type="xml" toFile="${checkstyle.raw}"/>
       <fileset dir="${java.dir}">
         <include name="${tocheck}"/>
+        <exclude name="**/BZip2Constants.java"/>
       </fileset>
     </checkstyle>
   </target>
@@ -51,6 +53,11 @@
     </style>
   </target>
 
+  <target name="dumptext" depends="checkstyle, textreport">
+    <concat>
+      <filelist dir="${checkstyle.reportdir}" files="report.txt"/>
+    </concat>
+  </target>
   
 </project>
 

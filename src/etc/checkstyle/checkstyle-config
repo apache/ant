@@ -17,10 +17,7 @@
     </module>        
     
     <!-- element naming -->
-    <module name="PackageName">
-      <!-- no uppercase letters, between 2 and 8 characters -->
-      <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]{1,7})*$"/>
-    </module>
+    <module name="PackageName"/>
     <module name="TypeName"/>
     <module name="ConstantName"/>
     <module name="LocalFinalVariableName"/>
@@ -102,4 +99,5 @@
     <module name="TodoComment"/>
     <module name="UpperEll"/>
   </module>
+  <module name="au.com.redhillconsulting.simian.SimianCheck"/>
 </module>
