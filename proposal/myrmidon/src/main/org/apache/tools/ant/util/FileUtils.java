@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
@@ -102,24 +103,16 @@ public class FileUtils
                     line = in.readLine();
                 }
 
-                out.close();
-                in.close();
+                IOUtil.shutdownReader( in );
+                IOUtil.shutdownWriter( out );
             }
             else
             {
-                FileInputStream in = new FileInputStream( sourceFile );
-                FileOutputStream out = new FileOutputStream( destFile );
-
-                byte[] buffer = new byte[ 8 * 1024 ];
-                int count = 0;
-                do
-                {
-                    out.write( buffer, 0, count );
-                    count = in.read( buffer, 0, buffer.length );
-                } while( count != -1 );
-
-                in.close();
-                out.close();
+                final FileInputStream in = new FileInputStream( sourceFile );
+                final FileOutputStream out = new FileOutputStream( destFile );
+                IOUtil.copy( in, out );
+                IOUtil.shutdownStream( in );
+                IOUtil.shutdownStream( out );
             }
         }
     }
