@@ -167,8 +167,8 @@ public final class DOMUtil {
         final int len = childList.getLength();
         for (int i = 0; i < len; i++) {
             Node child = childList.item(i);
-            if (child != null && child.getNodeType() == Node.ELEMENT_NODE &&
-                 child.getNodeName().equals(tagname)) {
+            if (child != null && child.getNodeType() == Node.ELEMENT_NODE
+                && child.getNodeName().equals(tagname)) {
                 return (Element) child;
             }
         }

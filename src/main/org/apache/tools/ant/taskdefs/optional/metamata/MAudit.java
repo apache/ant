@@ -68,10 +68,11 @@ import org.apache.tools.ant.types.Path;
 /**
  * Invokes the Metamata Audit/ Webgain Quality Analyzer on a set of Java files.
  * <p>
- * <i>maudit</i> performs static analysis of the Java source code and byte code files to find and report
- * errors of style and potential problems related to performance, maintenance and robustness.
- *  As a convenience, a stylesheet is given in <tt>etc</tt> directory, so that an HTML report
- * can be generated from the XML file.
+ * <i>maudit</i> performs static analysis of the Java source code and byte
+ * code files to find and report errors of style and potential problems related
+ * to performance, maintenance and robustness. As a convenience, a stylesheet
+ * is given in <tt>etc</tt> directory, so that an HTML report can be generated
+ * from the XML file.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
@@ -310,10 +311,12 @@ public class MAudit extends AbstractMetamataTask {
     protected void checkOptions() throws BuildException {
         super.checkOptions();
         if (unused && searchPath == null) {
-            throw new BuildException("'searchpath' element must be set when looking for 'unused' declarations.");
+            throw new BuildException("'searchpath' element must be set when "
+                + "looking for 'unused' declarations.");
         }
         if (!unused && searchPath != null) {
-            log("'searchpath' element ignored. 'unused' attribute is disabled.", Project.MSG_WARN);
+            log("'searchpath' element ignored. 'unused' attribute is disabled.",
+                Project.MSG_WARN);
         }
         if (rulesPath != null) {
             cmdl.createClasspath(getProject()).addExisting(rulesPath);

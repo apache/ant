@@ -96,7 +96,8 @@ public class Arc extends BasicShape implements DrawOperation {
     }
 
     public PlanarImage executeDrawOperation() {
-        BufferedImage bi = new BufferedImage(width + (stroke_width * 2), height + (stroke_width * 2), BufferedImage.TYPE_4BYTE_ABGR_PRE);
+        BufferedImage bi = new BufferedImage(width + (stroke_width * 2),
+            height + (stroke_width * 2), BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
         Graphics2D graphics = (Graphics2D) bi.getGraphics();
 
@@ -104,12 +105,14 @@ public class Arc extends BasicShape implements DrawOperation {
             BasicStroke b_stroke = new BasicStroke(stroke_width);
             graphics.setColor(ColorMapper.getColorByName(stroke));
             graphics.setStroke(b_stroke);
-            graphics.draw(new Arc2D.Double(stroke_width, stroke_width, width, height, start, stop, type));
+            graphics.draw(new Arc2D.Double(stroke_width, stroke_width, width,
+                height, start, stop, type));
         }
 
         if (!fill.equals("transparent")) {
             graphics.setColor(ColorMapper.getColorByName(fill));
-            graphics.fill(new Arc2D.Double(stroke_width, stroke_width, width, height, start, stop, type));
+            graphics.fill(new Arc2D.Double(stroke_width, stroke_width,
+                width, height, start, stop, type));
         }
 
 

@@ -117,7 +117,9 @@ public class Jikes {
                 && args.length > 250) {
                 PrintWriter out = null;
                 try {
-                    tmpFile = new File("jikes" + (new Random(System.currentTimeMillis())).nextLong());
+                    String tempFileName = "jikes"
+                        + (new Random(System.currentTimeMillis())).nextLong();
+                    tmpFile = new File(tempFileName);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = 0; i < args.length; i++) {
                         out.println(args[i]);

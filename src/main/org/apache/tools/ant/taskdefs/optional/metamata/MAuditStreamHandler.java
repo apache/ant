@@ -167,18 +167,24 @@ class MAuditStreamHandler implements ExecuteStreamHandler {
         Enumeration keys = auditedFiles.keys();
         Hashtable filemapping = task.getFileMapping();
         final Date now = new Date();
-        rootElement.setAttribute("snapshot_created", DateUtils.format(now, DateUtils.ISO8601_DATETIME_PATTERN));
-        rootElement.setAttribute("elapsed_time", String.valueOf(now.getTime() - program_start.getTime()));
-        rootElement.setAttribute("program_start", DateUtils.format(now, DateUtils.ISO8601_DATETIME_PATTERN));
-        rootElement.setAttribute("audited", String.valueOf(filemapping.size()));
-        rootElement.setAttribute("reported", String.valueOf(auditedFiles.size()));
+        rootElement.setAttribute("snapshot_created",
+            DateUtils.format(now, DateUtils.ISO8601_DATETIME_PATTERN));
+        rootElement.setAttribute("elapsed_time",
+            String.valueOf(now.getTime() - program_start.getTime()));
+        rootElement.setAttribute("program_start",
+            DateUtils.format(now, DateUtils.ISO8601_DATETIME_PATTERN));
+        rootElement.setAttribute("audited",
+            String.valueOf(filemapping.size()));
+        rootElement.setAttribute("reported",
+            String.valueOf(auditedFiles.size()));
         int errors = 0;
         while (keys.hasMoreElements()) {
             String filepath = (String) keys.nextElement();
             Vector v = (Vector) auditedFiles.get(filepath);
             String fullclassname = (String) filemapping.get(filepath);
             if (fullclassname == null) {
-                task.getProject().log("Could not find class mapping for " + filepath, Project.MSG_WARN);
+                task.getProject().log("Could not find class mapping for "
+                    + filepath, Project.MSG_WARN);
                 continue;
             }
             int pos = fullclassname.lastIndexOf('.');

@@ -107,7 +107,7 @@ public class TarInputStream extends FilterInputStream {
     /**
      * Sets the debugging flag.
      *
-     * @param debugF True to turn on debugging.
+     * @param debug True to turn on debugging.
      */
     public void setDebug(boolean debug) {
         this.debug = debug;

@@ -288,8 +288,8 @@ public class Move extends Copy {
         throws IOException, BuildException {
 
         boolean renamed = true;
-        if ((getFilterSets() != null && getFilterSets().size() > 0) ||
-            (getFilterChains() != null && getFilterChains().size() > 0)) {
+        if ((getFilterSets() != null && getFilterSets().size() > 0)
+            || (getFilterChains() != null && getFilterChains().size() > 0)) {
             renamed = false;
         } else {
             if (!filtering) {

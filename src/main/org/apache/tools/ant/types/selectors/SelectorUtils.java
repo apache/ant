@@ -490,9 +490,9 @@ public final class SelectorUtils {
                                 + j]) {
                             continue strLoop;
                         }
-                        if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                                Character.toUpperCase(strArr[strIdxStart + i
-                                + j])) {
+                        if (!isCaseSensitive
+                            && Character.toUpperCase(ch)
+                                != Character.toUpperCase(strArr[strIdxStart + i + j])) {
                             continue strLoop;
                         }
                     }

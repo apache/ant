@@ -203,7 +203,8 @@ private void checkOptions(Commandline cmd) {
     /**
      * Get the 'comment' command
      *
-     * @param cmd containing the command line string with or without the comment flag and value appended
+     * @param cmd containing the command line string with or without the
+     *            comment flag and value appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() == null) {
@@ -222,7 +223,8 @@ private void checkOptions(Commandline cmd) {
     /**
      * Get the 'pname' command
      *
-     * @param cmd containing the command line string with or without the pname flag and value appended
+     * @param cmd containing the command line string with or without the
+     *            pname flag and value appended
      */
     private void getPnameCommand(Commandline cmd) {
         if (getPname() == null) {
@@ -241,7 +243,8 @@ private void checkOptions(Commandline cmd) {
     /**
      * Get the 'pname' command
      *
-     * @param cmd containing the command line string with or without the pname flag and value appended
+     * @param cmd containing the command line string with or without
+     *        the pname flag and value appended
      */
     private void getObjselectCommand(Commandline cmd) {
         if (getObjselect() == null) {

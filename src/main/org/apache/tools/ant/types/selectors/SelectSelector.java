@@ -179,11 +179,11 @@ public class SelectSelector extends BaseSelectorContainer {
      * on it with <code>if</code> and <code>unless</code>.
      */
     public boolean passesConditions() {
-        if (ifProperty != null &&
-                getProject().getProperty(ifProperty) == null) {
+        if (ifProperty != null
+            && getProject().getProperty(ifProperty) == null) {
             return false;
-        } else if (unlessProperty != null &&
-                getProject().getProperty(unlessProperty) != null) {
+        } else if (unlessProperty != null
+            && getProject().getProperty(unlessProperty) != null) {
             return false;
         }
         return true;

@@ -72,12 +72,14 @@ import org.apache.tools.ant.taskdefs.Java;
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool implements HotDeploymentTool {
+public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool
+                                       implements HotDeploymentTool {
     /** The classname of the tool to run **/
     private static final String WEBLOGIC_DEPLOY_CLASS_NAME = "weblogic.deploy";
 
     /** All the valid actions that weblogic.deploy permits **/
-    private static final String[] VALID_ACTIONS = {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
+    private static final String[] VALID_ACTIONS
+        = {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
 
     /** Represents the "-debug" flag from weblogic.deploy **/
     private boolean debug;

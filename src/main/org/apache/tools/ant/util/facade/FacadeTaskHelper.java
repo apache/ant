@@ -101,7 +101,7 @@ public class FacadeTaskHelper {
     /**
      * @param defaultValue The default value for the implementation.
      * Must not be null.
-     * @param magic the value of a magic property that may hold a user
+     * @param magicValue the value of a magic property that may hold a user
      * choice.  May be null.
      */
     public FacadeTaskHelper(String defaultValue, String magicValue) {

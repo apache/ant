@@ -210,8 +210,7 @@ public class Touch extends Task {
             }
         }
 
-        if (millis >= 0 &&
-            JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+        if (millis >= 0 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             log("modification time of files cannot be set in JDK 1.1",
                 Project.MSG_WARN);
             return;

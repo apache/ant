@@ -74,16 +74,19 @@ import org.apache.tools.ant.types.Path;
  *
  * required attributes
  *      src : root of source tree for JSP, ie, the document root for your weblogic server
- *      dest : root of destination directory, what you have set as WorkingDir in the weblogic properties
+ *      dest : root of destination directory, what you have set as
+ *             WorkingDir in the weblogic properties
  *      package : start package name under which your JSP's would be compiled
  *
  * other attributes
  *     classpath
  *
- * A classpath should be set which contains the weblogic classes as well as all application classes
- * referenced by the JSP. The system classpath is also appended when the jspc is called, so you may
- * choose to put everything in the classpath while calling Ant. However, since presumably the JSP's will reference
- * classes being build by Ant, it would be better to explicitly add the classpath in the task
+ * A classpath should be set which contains the weblogic classes as well as all
+ * application classes referenced by the JSP. The system classpath is also
+ * appended when the jspc is called, so you may choose to put everything in
+ * the classpath while calling Ant. However, since presumably the JSP's will
+ * reference classes being build by Ant, it would be better to explicitly add
+ * the classpath in the task
  *
  * The task checks timestamps on the JSP's and the generated classes, and compiles
  * only those files that have changed.
@@ -92,13 +95,15 @@ import org.apache.tools.ant.types.Path;
  *  <b> _dirName/_fileName.class for dirname/fileName.jsp   </b>
  *
  * Limitation: It compiles the files thru the Classic compiler only.
- * Limitation: Since it is my experience that weblogic jspc throws out of memory error on being given too
- *             many files at one go, it is called multiple times with one jsp file each.
+ * Limitation: Since it is my experience that weblogic jspc throws out of
+ *             memory error on being given too many files at one go, it is
+ *             called multiple times with one jsp file each.
  *
  * <pre>
  * example
  * &lt;target name="jspcompile" depends="compile"&gt;
- *   &lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt;
+ *   &lt;wljspc src="c:\\weblogic\\myserver\\public_html"
+ *           dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt;
  *   &lt;classpath&gt;
  *          &lt;pathelement location="${weblogic.classpath}" /&gt;
  *           &lt;pathelement path="${compile.dest}" /&gt;
@@ -305,8 +310,8 @@ public class WLJspc extends MatchingTask {
             }
 
             String filePath = pack + File.separator + "_";
-            int startingIndex
-                = files[i].lastIndexOf(File.separator) != -1 ? files[i].lastIndexOf(File.separator) + 1 : 0;
+            int startingIndex = files[i].lastIndexOf(File.separator) != -1
+                    ? files[i].lastIndexOf(File.separator) + 1 : 0;
             int endingIndex = files[i].indexOf(".jsp");
             if (endingIndex == -1) {
                 log("Skipping " + files[i] + ". Not a JSP",

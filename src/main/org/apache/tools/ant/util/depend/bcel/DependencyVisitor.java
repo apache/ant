@@ -118,6 +118,8 @@ public class DependencyVisitor extends EmptyVisitor {
      * Visit a name and type ref
      *
      * Look for class references in this
+     *
+     * @param obj the name and type reference being visited.
      */
     public void visitConstantNameAndType(ConstantNameAndType obj) {
         String name = obj.getName(constantPool);

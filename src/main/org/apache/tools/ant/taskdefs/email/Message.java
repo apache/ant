@@ -146,7 +146,7 @@ public class Message extends ProjectComponent {
     /**
      * Prints the message onto an output stream
      *
-     * @param out The print stream to write to
+     * @param ps The print stream to write to
      * @throws IOException if an error occurs
      */
     public void print(PrintStream ps)

@@ -366,7 +366,8 @@ public class ProjectHelperImpl extends ProjectHelper {
             if (tag.equals("project")) {
                 new ProjectHandler(helperImpl, this).init(tag, attrs);
             } else {
-                throw new SAXParseException("Config file is not of expected XML type", helperImpl.locator);
+                throw new SAXParseException("Config file is not of expected "
+                    + "XML type", helperImpl.locator);
             }
         }
 
@@ -462,8 +463,9 @@ public class ProjectHelperImpl extends ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         helperImpl.project.setBasedir(baseDir);
                     } else {
-                        helperImpl.project.setBaseDir(helperImpl.project.resolveFile(baseDir,
-                                                                                     helperImpl.buildFileParent));
+                        File resolvedBaseDir = helperImpl.project.resolveFile(baseDir,
+                                helperImpl.buildFileParent);
+                        helperImpl.project.setBaseDir(resolvedBaseDir);
                     }
                 }
             }
@@ -577,7 +579,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                 } else if (key.equals("description")) {
                     description = value;
                 } else {
-                    throw new SAXParseException("Unexpected attribute \"" + key + "\"", helperImpl.locator);
+                    throw new SAXParseException("Unexpected attribute \""
+                        + key + "\"", helperImpl.locator);
                 }
             }
 
@@ -731,7 +734,8 @@ public class ProjectHelperImpl extends ProjectHelper {
          *                      Must not be <code>null</code>.
          */
         public TaskHandler(ProjectHelperImpl helperImpl, DocumentHandler parentHandler,
-                           TaskContainer container, RuntimeConfigurable parentWrapper, Target target) {
+                           TaskContainer container,
+                           RuntimeConfigurable parentWrapper, Target target) {
             super(helperImpl, parentHandler);
             this.container = container;
             this.parentWrapper = parentWrapper;
@@ -975,7 +979,8 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param target The parent target of this element.
          *               Must not be <code>null</code>.
          */
-        public DataTypeHandler(ProjectHelperImpl helperImpl, DocumentHandler parentHandler, Target target) {
+        public DataTypeHandler(ProjectHelperImpl helperImpl,
+                               DocumentHandler parentHandler, Target target) {
             super(helperImpl, parentHandler);
             this.target = target;
         }

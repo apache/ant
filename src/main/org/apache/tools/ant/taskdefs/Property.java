@@ -101,8 +101,8 @@ import org.apache.tools.ant.types.Reference;
  * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  * @since Ant 1.1
  *
- * @ant.attribute.group name="name"      description="One of these, when using the name attribute"
- * @ant.attribute.group name="noname"    description="One of these, when not using the name attribute"
+ * @ant.attribute.group name="name" description="One of these, when using the name attribute"
+ * @ant.attribute.group name="noname" description="One of these, when not using the name attribute"
  */
 public class Property extends Task {
 

@@ -205,15 +205,14 @@ public class UpToDate extends Task implements Condition {
 
         if (_sourceFile != null) {
             if (mapperElement == null) {
-                upToDate = upToDate &&
-                    (_targetFile.lastModified() >= _sourceFile.lastModified());
+                upToDate = upToDate
+                    && (_targetFile.lastModified() >= _sourceFile.lastModified());
             } else {
                 SourceFileScanner sfs = new SourceFileScanner(this);
-                upToDate = upToDate &&
-                    (sfs.restrict(new String[] {_sourceFile.getAbsolutePath()},
+                upToDate = upToDate
+                    && (sfs.restrict(new String[] {_sourceFile.getAbsolutePath()},
                                   null, null,
-                                  mapperElement.getImplementation())
-                     .length == 0);
+                                  mapperElement.getImplementation()).length == 0);
             }
         }
         return upToDate;

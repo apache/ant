@@ -61,7 +61,8 @@ import org.apache.tools.ant.Project;
 
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
-    private static final String TL_DTD_LOC = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
+    private static final String TL_DTD_LOC
+        = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
 
     private String toplinkDescriptor;
     private String toplinkDTD;
@@ -76,9 +77,12 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
     /**
      * Setter used to store the location of the toplink DTD file.
-     * This is expected to be an URL (file or otherwise). If running this on NT using a file URL, the safest
-     * thing would be to not use a drive spec in the URL and make sure the file resides on the drive that
-     * ANT is running from.  This will keep the setting in the build XML platform independent.
+     * This is expected to be an URL (file or otherwise). If running
+     * this on NT using a file URL, the safest thing would be to not use a
+     * drive spec in the URL and make sure the file resides on the drive that
+     * ANT is running from.  This will keep the setting in the build XML
+     * platform independent.
+     *
      * @param inString the string to use as the DTD location.
      */
     public void setToplinkdtd(String inString) {
@@ -88,11 +92,11 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = super.getDescriptorHandler(srcDir);
         if (toplinkDTD != null) {
-            handler.registerDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
-                                toplinkDTD);
+            handler.registerDTD("-//The Object People, Inc.//"
+                + "DTD TOPLink for WebLogic CMP 2.5.1//EN", toplinkDTD);
         } else {
-            handler.registerDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
-                                TL_DTD_LOC);
+            handler.registerDTD("-//The Object People, Inc.//"
+                + "DTD TOPLink for WebLogic CMP 2.5.1//EN", TL_DTD_LOC);
         }
         return handler;
     }

@@ -154,9 +154,8 @@ public class SplashTask extends Task {
             try {
                 URLConnection conn = null;
 
-                if (useProxy &&
-                   (proxy != null && proxy.length() > 0) &&
-                   (port != null && port.length() > 0)) {
+                if (useProxy && (proxy != null && proxy.length() > 0)
+                    && (port != null && port.length() > 0)) {
 
                     log("Using proxied Connection",  Project.MSG_DEBUG);
                     System.getProperties().put("http.proxySet", "true");
@@ -186,7 +185,8 @@ public class SplashTask extends Task {
 
                 in = conn.getInputStream();
 
-                // Catch everything - some of the above return nulls, throw exceptions or generally misbehave
+                // Catch everything - some of the above return nulls,
+                // throw exceptions or generally misbehave
                 // in the event of a problem etc
 
             } catch (Throwable ioe) {

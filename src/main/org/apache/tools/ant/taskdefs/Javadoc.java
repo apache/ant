@@ -1227,7 +1227,7 @@ public class Javadoc extends Task {
     /**
      * Create link to javadoc output at the given URL.
      *
-     * @param link argument to configure
+     * @return link argument to configure
      */
     public LinkArgument createLink() {
         LinkArgument la = new LinkArgument();

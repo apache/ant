@@ -481,9 +481,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             } else {
                 outFile = new File(destDir, xmlFile + fileExt);
             }
-            if (force ||
-                inFile.lastModified() > outFile.lastModified() ||
-                styleSheetLastModified > outFile.lastModified()) {
+            if (force
+                || inFile.lastModified() > outFile.lastModified()
+                || styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile);
 
@@ -521,9 +521,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 Project.MSG_DEBUG);
             log("Style file " + xslFile + " time: " + styleSheetLastModified,
                 Project.MSG_DEBUG);
-            if (force ||
-                inFile.lastModified() > outFile.lastModified() ||
-                styleSheetLastModified > outFile.lastModified()) {
+            if (force || inFile.lastModified() > outFile.lastModified()
+                || styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile,
                     Project.MSG_INFO);

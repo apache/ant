@@ -143,8 +143,8 @@ public class LoaderUtils {
      *      classloader are available.
      */
     public static boolean isContextLoaderAvailable() {
-        return getContextClassLoader != null &&
-            setContextClassLoader != null;
+        return getContextClassLoader != null
+                && setContextClassLoader != null;
     }
 
     /**

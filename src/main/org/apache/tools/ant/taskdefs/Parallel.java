@@ -245,8 +245,8 @@ public class Parallel extends Task
                 if (firstException == null) {
                     firstException = t;
                 }
-                if (t instanceof BuildException &&
-                        firstLocation == Location.UNKNOWN_LOCATION) {
+                if (t instanceof BuildException
+                    && firstLocation == Location.UNKNOWN_LOCATION) {
                     firstLocation = ((BuildException) t).getLocation();
                 }
                 exceptionMessage.append(StringUtils.LINE_SEP);

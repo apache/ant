@@ -134,8 +134,8 @@ public class ServerDeploy extends Task {
      *  <p>This method calls the deploy() method on each of the vendor-specific tools
      *  in the <code>vendorTools</code> collection.  This performs the actual
      *  process of deployment on each tool.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete, or
-     *  a failure occurs in the deployment process.
+     *  @exception org.apache.tools.ant.BuildException if the attributes
+     *  are invalid or incomplete, or a failure occurs in the deployment process.
      */
     public void execute() throws BuildException {
         for (Enumeration enum = vendorTools.elements();

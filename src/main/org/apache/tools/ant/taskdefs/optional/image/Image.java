@@ -74,12 +74,15 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * A MatchingTask which relies on <A HREF="http://java.sun.com/products/java-media/jai">JAI (Java Advanced Imaging)</A>
+ * A MatchingTask which relies on
+ * <A HREF="http://java.sun.com/products/java-media/jai">JAI (Java Advanced Imaging)</A>
  * to perform image manipulation operations on existing images.  The
  * operations are represented as ImageOperation DataType objects.
  * The operations are arranged to conform to the Chaining Model
  * of JAI.
- * Check out the <A HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">JAI Programming Guide</A>
+ * Check out the
+ * <A HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">
+ *   JAI Programming Guide</A>
  *
  * @see org.apache.tools.ant.types.optional.image.ImageOperation
  * @see org.apache.tools.ant.types.DataType
@@ -121,7 +124,9 @@ public class Image extends MatchingTask {
     }
 
     /**
-     * Set the image encoding type.  <A HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/Encode.doc.html#56610">See this table in the JAI Programming Guide</A>.
+     * Set the image encoding type.
+     * <A HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/Encode.doc.html#56610">
+     *     See this table in the JAI Programming Guide</A>.
      */
     public void setEncoding(String encoding) {
         str_encoding = encoding;
@@ -144,7 +149,7 @@ public class Image extends MatchingTask {
 
     /**
      * Sets the destination directory for manipulated images.
-     * @param destination The destination directory
+     * @param destDir The destination directory
      */
     public void setDestDir(File destDir) {
         this.destDir = destDir;
@@ -284,7 +289,8 @@ public class Image extends MatchingTask {
                 ArrayList filesToRemove = new ArrayList();
                 for (Iterator i = filesList.iterator(); i.hasNext();) {
                     File f = (File) i.next();
-                    File new_file = new File(destDir.getAbsolutePath() + File.separator + f.getName());
+                    File new_file = new File(destDir.getAbsolutePath()
+                        + File.separator + f.getName());
                     if (new_file.exists()) {
                         filesToRemove.add(f);
                     }

@@ -172,7 +172,8 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
             attr.addAttribute("", "company", "company", "CDATA", "metamata");
             attr.addAttribute("", "snapshot_created", "snapshot_created", "CDATA",
                     DateUtils.format(now, DateUtils.ISO8601_DATETIME_PATTERN));
-//            attr.addAttribute("", "elapsed_time", "elapsed_time", "CDATA", String.valueOf(now.getTime() - program_start.getTime()));
+            // attr.addAttribute("", "elapsed_time", "elapsed_time", "CDATA",
+            //    String.valueOf(now.getTime() - program_start.getTime()));
             attr.addAttribute("", "program_start", "program_start", "CDATA",
                     DateUtils.format(new Date(), DateUtils.ISO8601_DATETIME_PATTERN));
             metricsHandler.startElement("", "metrics", "metrics", attr);
@@ -424,7 +425,8 @@ class MetricsElement {
 
         // there should be exactly 14 tokens (1 name + 13 metrics), if not, there is a problem !
         if (metrics.size() != 14) {
-            throw new ParseException("Could not parse the following line as a metrics: -->" + line + "<--", -1);
+            throw new ParseException("Could not parse the following line as "
+                + "a metrics: -->" + line + "<--", -1);
         }
 
         // remove the first token it's made of the indentation string and the

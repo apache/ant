@@ -168,7 +168,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (fileDTD.exists()) {
             if (publicId != null) {
                 fileDTDs.put(publicId, fileDTD);
-                owningTask.log("Mapped publicId " + publicId + " to file " + fileDTD, Project.MSG_VERBOSE);
+                owningTask.log("Mapped publicId " + publicId + " to file "
+                    + fileDTD, Project.MSG_VERBOSE);
             }
             return;
         }
@@ -176,7 +177,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (getClass().getResource(location) != null) {
             if (publicId != null) {
                 resourceDTDs.put(publicId, location);
-                owningTask.log("Mapped publicId " + publicId + " to resource " + location, Project.MSG_VERBOSE);
+                owningTask.log("Mapped publicId " + publicId + " to resource "
+                    + location, Project.MSG_VERBOSE);
             }
         }
 
@@ -198,7 +200,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         File dtdFile = (File) fileDTDs.get(publicId);
         if (dtdFile != null) {
             try {
-                owningTask.log("Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE);
+                owningTask.log("Resolved " + publicId + " to local file "
+                    + dtdFile, Project.MSG_VERBOSE);
                 return new InputSource(new FileInputStream(dtdFile));
             } catch (FileNotFoundException ex) {
                 // ignore
@@ -209,7 +212,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (dtdResourceName != null) {
             InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
             if (is != null) {
-                owningTask.log("Resolved " + publicId + " to local resource " + dtdResourceName, Project.MSG_VERBOSE);
+                owningTask.log("Resolved " + publicId + " to local resource "
+                    + dtdResourceName, Project.MSG_VERBOSE);
                 return new InputSource(is);
             }
         }
@@ -218,15 +222,16 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (dtdUrl != null) {
             try {
                 InputStream is = dtdUrl.openStream();
-                owningTask.log("Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE);
+                owningTask.log("Resolved " + publicId + " to url "
+                    + dtdUrl, Project.MSG_VERBOSE);
                 return new InputSource(is);
             } catch (IOException ioe) {
                 //ignore
             }
         }
 
-        owningTask.log("Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity",
-                        Project.MSG_INFO);
+        owningTask.log("Could not resolve ( publicId: " + publicId
+            + ", systemId: " + systemId + ") to a local entity", Project.MSG_INFO);
 
         return null;
     }
@@ -341,17 +346,19 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
 
     protected void processElement() {
-        if (inEJBRef ||
-            (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION && parseState != STATE_IN_MESSAGE)) {
+        if (inEJBRef
+            || (parseState != STATE_IN_ENTITY
+                && parseState != STATE_IN_SESSION
+                && parseState != STATE_IN_MESSAGE)) {
             return;
         }
 
-        if (currentElement.equals(HOME_INTERFACE)   ||
-            currentElement.equals(REMOTE_INTERFACE) ||
-            currentElement.equals(LOCAL_INTERFACE) ||
-            currentElement.equals(LOCAL_HOME_INTERFACE) ||
-            currentElement.equals(BEAN_CLASS)       ||
-            currentElement.equals(PK_CLASS)) {
+        if (currentElement.equals(HOME_INTERFACE)
+            || currentElement.equals(REMOTE_INTERFACE)
+            || currentElement.equals(LOCAL_INTERFACE)
+            || currentElement.equals(LOCAL_HOME_INTERFACE)
+            || currentElement.equals(BEAN_CLASS)
+            || currentElement.equals(PK_CLASS)) {
 
             // Get the filename into a String object
             File classFile = null;
@@ -359,8 +366,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
             // If it's a primitive wrapper then we shouldn't try and put
             // it into the jar, so ignore it.
-            if (!className.startsWith("java.") &&
-                !className.startsWith("javax.")) {
+            if (!className.startsWith("java.")
+                && !className.startsWith("javax.")) {
                 // Translate periods into path separators, add .class to the
                 // name, create the File object and add it to the Hashtable.
                 className = className.replace('.', File.separatorChar);

@@ -129,7 +129,8 @@ public class StarTeamList extends TreeBasedTask {
      * @param targetrootFolder
      *               root local folder for the operation (whether specified by the user or not.
      */
-    protected void logOperationDescription(Folder starteamrootFolder, java.io.File targetrootFolder) {
+    protected void logOperationDescription(Folder starteamrootFolder,
+                                           java.io.File targetrootFolder) {
         log((this.isRecursive() ? "Recursive" : "Non-recursive")
             + " Listing of: " + starteamrootFolder.getFolderHierarchy());
 

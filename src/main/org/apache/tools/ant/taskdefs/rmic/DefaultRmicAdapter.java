@@ -318,8 +318,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             String base = name.substring(0, name.length() - 6);
 
             String classname = base.replace(File.separatorChar, '.');
-            if (attributes.getVerify() &&
-                !attributes.isValidRmiRemote(classname)) {
+            if (attributes.getVerify()
+                && !attributes.isValidRmiRemote(classname)) {
                 return null;
             }
 

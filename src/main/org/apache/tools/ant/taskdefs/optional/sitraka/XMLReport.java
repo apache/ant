@@ -94,7 +94,10 @@ public class XMLReport {
     /** parsed document */
     private Document report;
 
-    /** mapping of class names to <code>ClassFile</code>s from the reference classpath.  It is used to filter the JProbe report. */
+    /**
+     * mapping of class names to <code>ClassFile</code>s from the reference
+     * classpath.  It is used to filter the JProbe report.
+     */
     private Hashtable classFiles;
 
     /** mapping package name / package node for faster access */
@@ -160,7 +163,8 @@ public class XMLReport {
                 for (int k = methodlen - 1; k > -1; k--) {
                     Element meth = (Element) methods.item(k);
                     StringBuffer methodname = new StringBuffer(meth.getAttribute("name"));
-                    methodname.delete(methodname.toString().indexOf("("), methodname.toString().length());
+                    methodname.delete(methodname.toString().indexOf("("),
+                        methodname.toString().length());
                     String signature = classname + "." + methodname + "()";
                     if (filters.accept(signature)) {
                         log("kept method:" + signature);
@@ -280,8 +284,8 @@ public class XMLReport {
             MethodInfo method = methods[i];
             String methodSig = getMethodSignature(method);
             Element methodNode = (Element) methodNodeList.get(methodSig);
-            if (methodNode != null &&
-                    Utils.isAbstract(method.getAccessFlags())) {
+            if (methodNode != null
+                && Utils.isAbstract(method.getAccessFlags())) {
                 log("\tRemoving abstract method " + methodSig);
                 classNode.removeChild(methodNode);
             }
@@ -441,7 +445,8 @@ public class XMLReport {
             int pkg_total_methods = 0;
             int pkg_hit_lines = 0;
             int pkg_total_lines = 0;
-            //System.out.println("Processing package '" + pkgname + "': " + classes.length + " classes");
+            //System.out.println("Processing package '" + pkgname + "': "
+            // + classes.length + " classes");
             for (int j = 0; j < classes.length; j++) {
                 Element clazz = classes[j];
                 String classname = clazz.getAttribute("name");
@@ -457,7 +462,8 @@ public class XMLReport {
                     pkg_hit_lines += Integer.parseInt(covdata.getAttribute("hit_lines"));
                     pkg_total_lines += Integer.parseInt(covdata.getAttribute("total_lines"));
                 } catch (NumberFormatException e) {
-                    log("Error parsing '" + classname + "' (" + j + "/" + classes.length + ") in package '" + pkgname + "'");
+                    log("Error parsing '" + classname + "' (" + j + "/"
+                        + classes.length + ") in package '" + pkgname + "'");
                     throw e;
                 }
             }
@@ -493,7 +499,8 @@ public class XMLReport {
                 }
             }
         }
-        throw new NoSuchElementException("Could not find 'cov.data' element in parent '" + parent.getNodeName() + "'");
+        throw new NoSuchElementException("Could not find 'cov.data' "
+            + "element in parent '" + parent.getNodeName() + "'");
     }
 
     protected Hashtable getMethods(Element clazz) {

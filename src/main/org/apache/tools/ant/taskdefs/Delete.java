@@ -478,8 +478,8 @@ public class Delete extends MatchingTask {
         }
 
         // delete the directory
-        if (dir != null && dir.exists() && dir.isDirectory() &&
-            !usedMatchingTask) {
+        if (dir != null && dir.exists() && dir.isDirectory()
+            && !usedMatchingTask) {
             /*
                If verbosity is MSG_VERBOSE, that mean we are doing
                regular logging (backwards as that sounds).  In that

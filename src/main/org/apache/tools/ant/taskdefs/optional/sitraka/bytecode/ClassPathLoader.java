@@ -340,7 +340,8 @@ final class DirectoryLoader implements ClassPathLoader.FileLoader {
      * @param   recurse     tells whether or not the listing is recursive.
      * @return  the list instance that was passed as the <tt>list</tt> argument.
      */
-    private static Vector listFilesTo(Vector list, File directory, FilenameFilter filter, boolean recurse) {
+    private static Vector listFilesTo(Vector list, File directory,
+                                      FilenameFilter filter, boolean recurse) {
         String[] files = directory.list(filter);
         for (int i = 0; i < files.length; i++) {
             list.addElement(new File(directory, files[i]));

@@ -147,7 +147,8 @@ public abstract class ClearCase extends Task {
     protected int run(Commandline cmd) {
         try {
             Project aProj = getProject();
-            Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
+            Execute exe
+                = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
             exe.setAntRun(aProj);
             exe.setWorkingDirectory(aProj.getBaseDir());
             exe.setCommandline(cmd.getCommandline());

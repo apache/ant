@@ -110,9 +110,9 @@ public class CompilerAdapterFactory {
             if (compilerType.equalsIgnoreCase("extJavac")) {
                 return new JavacExternal();
             }
-            if (compilerType.equalsIgnoreCase("classic") ||
-                compilerType.equalsIgnoreCase("javac1.1") ||
-                compilerType.equalsIgnoreCase("javac1.2")) {
+            if (compilerType.equalsIgnoreCase("classic")
+                || compilerType.equalsIgnoreCase("javac1.1")
+                || compilerType.equalsIgnoreCase("javac1.2")) {
                 if (isClassicCompilerSupported) {
                     return new Javac12();
                 } else {
@@ -125,9 +125,9 @@ public class CompilerAdapterFactory {
             }
             //on java<=1.3 the modern falls back to classic if it is not found
             //but on java>=1.4 we just bail out early
-            if (compilerType.equalsIgnoreCase("modern") ||
-                compilerType.equalsIgnoreCase("javac1.3") ||
-                compilerType.equalsIgnoreCase("javac1.4")) {
+            if (compilerType.equalsIgnoreCase("modern")
+                || compilerType.equalsIgnoreCase("javac1.3")
+                || compilerType.equalsIgnoreCase("javac1.4")) {
                 // does the modern compiler exist?
                 if (doesModernCompilerExist()) {
                     return new Javac13();
@@ -148,8 +148,8 @@ public class CompilerAdapterFactory {
                 }
             }
 
-            if (compilerType.equalsIgnoreCase("jvc") ||
-                compilerType.equalsIgnoreCase("microsoft")) {
+            if (compilerType.equalsIgnoreCase("jvc")
+                || compilerType.equalsIgnoreCase("microsoft")) {
                 return new Jvc();
             }
             if (compilerType.equalsIgnoreCase("kjc")) {
@@ -158,8 +158,8 @@ public class CompilerAdapterFactory {
             if (compilerType.equalsIgnoreCase("gcj")) {
                 return new Gcj();
             }
-            if (compilerType.equalsIgnoreCase("sj") ||
-                compilerType.equalsIgnoreCase("symantec")) {
+            if (compilerType.equalsIgnoreCase("sj")
+                || compilerType.equalsIgnoreCase("symantec")) {
                 return new Sj();
             }
             return resolveClassName(compilerType);

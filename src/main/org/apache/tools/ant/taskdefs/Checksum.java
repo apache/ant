@@ -403,8 +403,8 @@ public class Checksum extends MatchingTask implements Condition {
             if (file.exists()) {
                 if (property == null) {
                     File checksumFile = getChecksumFile(file);
-                    if (forceOverwrite || isCondition ||
-                        (file.lastModified() > checksumFile.lastModified())) {
+                    if (forceOverwrite || isCondition
+                        || (file.lastModified() > checksumFile.lastModified())) {
                         includeFileMap.put(file, checksumFile);
                     } else {
                         log(file + " omitted as " + checksumFile + " is up to date.",
@@ -413,10 +413,12 @@ public class Checksum extends MatchingTask implements Condition {
                             // Read the checksum from disk.
                             String checksum = null;
                             try {
-                                BufferedReader diskChecksumReader = new BufferedReader(new FileReader(checksumFile));
+                                BufferedReader diskChecksumReader
+                                    = new BufferedReader(new FileReader(checksumFile));
                                 checksum = diskChecksumReader.readLine();
                             } catch (IOException e) {
-                                throw new BuildException("Couldn't read checksum file " + checksumFile, e);
+                                throw new BuildException("Couldn't read checksum file "
+                                    + checksumFile, e);
                             }
                             byte[] digest = decodeHex(checksum.toCharArray());
                             allDigests.put(file, digest);
@@ -486,8 +488,8 @@ public class Checksum extends MatchingTask implements Condition {
                 if (destination instanceof java.lang.String) {
                     String prop = (String) destination;
                     if (isCondition) {
-                        checksumMatches = checksumMatches &&
-                            checksum.equals(property);
+                        checksumMatches
+                            = checksumMatches && checksum.equals(property);
                     } else {
                         getProject().setNewProperty(prop, checksum);
                     }
@@ -503,8 +505,8 @@ public class Checksum extends MatchingTask implements Condition {
                             fis = null;
                             br.close();
                             isr.close();
-                            checksumMatches = checksumMatches &&
-                                checksum.equals(suppliedChecksum);
+                            checksumMatches = checksumMatches
+                                && checksum.equals(suppliedChecksum);
                         } else {
                             checksumMatches = false;
                         }

@@ -108,8 +108,8 @@ public class JUnitVersionHelper {
                     getNameMethod = t.getClass().getMethod("name",
                                                            new Class [0]);
                 }
-                if (getNameMethod != null &&
-                    getNameMethod.getReturnType() == String.class) {
+                if (getNameMethod != null
+                    && getNameMethod.getReturnType() == String.class) {
                     return (String) getNameMethod.invoke(t, new Object[0]);
                 }
             } catch (Throwable e) {

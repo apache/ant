@@ -109,7 +109,8 @@ public class ReportFilters {
                 result = result && !matcher.matches(methodname);
             } else {
                 //not possible
-                throw new IllegalArgumentException("Invalid filter element: " + filter.getClass().getName());
+                throw new IllegalArgumentException("Invalid filter element: "
+                    + filter.getClass().getName());
             }
         }
         return result;

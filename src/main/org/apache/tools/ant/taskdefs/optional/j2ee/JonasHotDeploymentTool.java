@@ -89,7 +89,8 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
     /**
      *  All the valid actions that weblogic.deploy permits *
      */
-    private static final String[] VALID_ACTIONS = {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
+    private static final String[] VALID_ACTIONS
+        = {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
 
     /**
      *  Description of the Field

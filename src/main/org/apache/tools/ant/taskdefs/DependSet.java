@@ -208,8 +208,8 @@ public class DependSet extends MatchingTask {
                      Project.MSG_WARN);
               }
 
-              if (oldestTarget == null ||
-                  dest.lastModified() < oldestTargetTime) {
+              if (oldestTarget == null
+                || dest.lastModified() < oldestTargetTime) {
                   oldestTargetTime = dest.lastModified();
                   oldestTarget = dest;
               }
@@ -241,8 +241,8 @@ public class DependSet extends MatchingTask {
                      Project.MSG_WARN);
               }
 
-              if (oldestTarget == null ||
-                  dest.lastModified() < oldestTargetTime) {
+              if (oldestTarget == null
+                  || dest.lastModified() < oldestTargetTime) {
                   oldestTargetTime = dest.lastModified();
                   oldestTarget = dest;
               }

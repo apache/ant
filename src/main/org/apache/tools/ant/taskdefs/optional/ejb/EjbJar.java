@@ -456,8 +456,8 @@ public class EjbJar extends MatchingTask {
      */
     public void setNaming(NamingScheme namingScheme) {
         config.namingScheme = namingScheme;
-        if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
-            config.baseJarName != null) {
+        if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)
+            && config.baseJarName != null) {
             throw new BuildException("The basejarname attribute is not "
                 + "compatible with the "
                 + config.namingScheme.getValue() + " naming scheme");
@@ -578,8 +578,8 @@ public class EjbJar extends MatchingTask {
         if (config.namingScheme == null) {
             config.namingScheme = new NamingScheme();
             config.namingScheme.setValue(NamingScheme.DESCRIPTOR);
-        } else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
-                 config.baseJarName == null) {
+        } else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)
+                    && config.baseJarName == null) {
             throw new BuildException("The basejarname attribute must "
                 + "be specified with the basejarname naming scheme");
         }

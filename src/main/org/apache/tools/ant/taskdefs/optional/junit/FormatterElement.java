@@ -63,14 +63,16 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * <p> A wrapper for the implementations of <code>JUnitResultFormatter</code>.
- * In particular, used as a nested <code>&lt;formatter&gt;</code> element in a <code>&lt;junit&gt;</code> task.
+ * In particular, used as a nested <code>&lt;formatter&gt;</code> element in
+ * a <code>&lt;junit&gt;</code> task.
  * <p> For example,
  * <code><pre>
  *       &lt;junit printsummary="no" haltonfailure="yes" fork="false"&gt;
  *           &lt;formatter type="plain" usefile="false" /&gt;
  *           &lt;test name="org.apache.ecs.InternationalCharTest" /&gt;
  *       &lt;/junit&gt;</pre></code>
- * adds a <code>plain</code> type implementation (<code>PlainJUnitResultFormatter</code>) to display the results of the test.
+ * adds a <code>plain</code> type implementation
+ * (<code>PlainJUnitResultFormatter</code>) to display the results of the test.
  *
  * <p> Either the <code>type</code> or the <code>classname</code> attribute
  * must be set.
@@ -104,7 +106,8 @@ public class FormatterElement {
      * <li> The <code>plain</code> type (the default) uses a <code>PlainJUnitResultFormatter</code>.
      * </ul>
      *
-     * <p> Sets <code>classname</code> attribute - so you can't use that attribute if you use this one.
+     * <p> Sets <code>classname</code> attribute - so you can't use that
+     * attribute if you use this one.
      */
     public void setType(TypeAttribute type) {
         if ("xml".equals(type.getValue())) {
@@ -202,8 +205,8 @@ public class FormatterElement {
     public boolean shouldUse(Task t) {
         if (ifProperty != null && t.getProject().getProperty(ifProperty) == null) {
             return false;
-        } else if (unlessProperty != null &&
-                   t.getProject().getProperty(unlessProperty) != null) {
+        } else if (unlessProperty != null
+                    && t.getProject().getProperty(unlessProperty) != null) {
             return false;
         }
 

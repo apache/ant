@@ -62,8 +62,9 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * Starts a WebLogic server.
- * A number of parameters are used to control the operation of the weblogic instance. Note that the task,
- * and hence ant, will not complete until the weblogic instance is stopped.</p>
+ * A number of parameters are used to control the operation of the weblogic
+ * instance. Note that the task, and hence ant, will not complete until the
+ * weblogic instance is stopped.</p>
  *
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
@@ -73,8 +74,9 @@ public class WLRun extends Task {
     protected static final String DEFAULT_PROPERTIES_FILE = "weblogic.properties";
 
     /**
-     * The classpath to be used when running the Java VM. It must contain the weblogic
-     * classes <b>and</b> the implementation classes of the home and remote interfaces.
+     * The classpath to be used when running the Java VM. It must contain the
+     * weblogic classes <b>and</b> the implementation classes of the home and
+     * remote interfaces.
      */
     private Path classpath;
 

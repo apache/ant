@@ -317,7 +317,8 @@ public class VAJAntToolGUI extends Frame {
                     getFileDialog().setFile("*.xml");
                     getFileDialog().show();
                     if (!getFileDialog().getFile().equals("")) {
-                        getBuildFileTextField().setText(getFileDialog().getDirectory() + getFileDialog().getFile());
+                        getBuildFileTextField().setText(getFileDialog().getDirectory()
+                        + getFileDialog().getFile());
                     }
                 }
                 // dispose and exit application
@@ -394,10 +395,12 @@ public class VAJAntToolGUI extends Frame {
          * PropertyChangeListener method
          */
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
-            if (evt.getSource() == VAJAntToolGUI.this.getBuildInfo() && (evt.getPropertyName().equals("projectName"))) {
+            if (evt.getSource() == VAJAntToolGUI.this.getBuildInfo()
+                && (evt.getPropertyName().equals("projectName"))) {
                 connectProjectNameToLabel();
             }
-            if (evt.getSource() == VAJAntToolGUI.this.getBuildInfo() && (evt.getPropertyName().equals("buildFileName"))) {
+            if (evt.getSource() == VAJAntToolGUI.this.getBuildInfo()
+                && (evt.getPropertyName().equals("buildFileName"))) {
                 connectBuildFileNameToTextField();
             }
         }
@@ -453,9 +456,8 @@ public class VAJAntToolGUI extends Frame {
     }
     /**
      * AntMake constructor called by VAJAntTool integration.
-     * @param buildInfo VAJBuildInfo
+     * @param newBuildInfo VAJBuildInfo
      */
-
     public VAJAntToolGUI(VAJBuildInfo newBuildInfo) {
         super();
         setBuildInfo(newBuildInfo);
@@ -570,7 +572,8 @@ public class VAJAntToolGUI extends Frame {
                 iAboutContactLabel = new Label();
                 iAboutContactLabel.setName("AboutContactLabel");
                 iAboutContactLabel.setAlignment(java.awt.Label.CENTER);
-                iAboutContactLabel.setText("contact: wolf.siberski@tui.de or christoph.wilhelms@tui.de");
+                iAboutContactLabel.setText("contact: wolf.siberski@tui.de or "
+                    + "christoph.wilhelms@tui.de");
             } catch (Throwable iExc) {
                 handleException(iExc);
             }
@@ -971,8 +974,10 @@ public class VAJAntToolGUI extends Frame {
                 iMessageCommandPanel = new Panel();
                 iMessageCommandPanel.setName("MessageCommandPanel");
                 iMessageCommandPanel.setLayout(new FlowLayout());
-                getMessageCommandPanel().add(getMessageClearLogButton(), getMessageClearLogButton().getName());
-                getMessageCommandPanel().add(getMessageOkButton(), getMessageOkButton().getName());
+                getMessageCommandPanel().add(getMessageClearLogButton(),
+                                             getMessageClearLogButton().getName());
+                getMessageCommandPanel().add(getMessageOkButton(),
+                                             getMessageOkButton().getName());
             } catch (Throwable iExc) {
                 handleException(iExc);
             }
@@ -1011,7 +1016,9 @@ public class VAJAntToolGUI extends Frame {
                 iMessageFrame.setBounds(0, 0, 750, 250);
                 iMessageFrame.setTitle("Message Log");
                 iMessageFrame.add(getMessageContentPanel(), "Center");
-                iMessageFrame.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width / 2) - (iMessageFrame.getSize().width / 2), (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2));
+                iMessageFrame.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width / 2)
+                        - (iMessageFrame.getSize().width / 2),
+                    (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2));
             } catch (Throwable iExc) {
                 handleException(iExc);
             }
@@ -1150,19 +1157,25 @@ public class VAJAntToolGUI extends Frame {
                 constraintsTargetList.insets = new Insets(4, 4, 4, 4);
                 getOptionenPanel().add(getTargetList(), constraintsTargetList);
 
-                GridBagConstraints constraintsMessageOutputLevelLabel = new GridBagConstraints();
-                constraintsMessageOutputLevelLabel.gridx = 0; constraintsMessageOutputLevelLabel.gridy = 4;
+                GridBagConstraints constraintsMessageOutputLevelLabel
+                    = new GridBagConstraints();
+                constraintsMessageOutputLevelLabel.gridx = 0;
+                constraintsMessageOutputLevelLabel.gridy = 4;
                 constraintsMessageOutputLevelLabel.anchor = GridBagConstraints.WEST;
                 constraintsMessageOutputLevelLabel.insets = new Insets(4, 4, 4, 4);
-                getOptionenPanel().add(getMessageOutputLevelLabel(), constraintsMessageOutputLevelLabel);
+                getOptionenPanel().add(getMessageOutputLevelLabel(),
+                                       constraintsMessageOutputLevelLabel);
 
-                GridBagConstraints constraintsMessageOutputLevelChoice = new GridBagConstraints();
-                constraintsMessageOutputLevelChoice.gridx = 1; constraintsMessageOutputLevelChoice.gridy = 4;
+                GridBagConstraints constraintsMessageOutputLevelChoice
+                    = new GridBagConstraints();
+                constraintsMessageOutputLevelChoice.gridx = 1;
+                constraintsMessageOutputLevelChoice.gridy = 4;
                 constraintsMessageOutputLevelChoice.fill = GridBagConstraints.HORIZONTAL;
                 constraintsMessageOutputLevelChoice.anchor = GridBagConstraints.WEST;
                 constraintsMessageOutputLevelChoice.weightx = 1.0;
                 constraintsMessageOutputLevelChoice.insets = new Insets(4, 4, 4, 4);
-                getOptionenPanel().add(getMessageOutputLevelChoice(), constraintsMessageOutputLevelChoice);
+                getOptionenPanel().add(getMessageOutputLevelChoice(),
+                                       constraintsMessageOutputLevelChoice);
             } catch (Throwable iExc) {
                 handleException(iExc);
             }
@@ -1333,7 +1346,10 @@ public class VAJAntToolGUI extends Frame {
         } catch (Throwable iExc) {
             handleException(iExc);
         }
-        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width / 2) - (getSize().width / 2), (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2) - (getSize().height));
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width / 2)
+                - (getSize().width / 2),
+            (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2)
+                - (getSize().height));
         if ((getTargetList().getItemCount() == 0) || (getTargetList().getSelectedIndex() < 0)) {
             getBuildButton().setEnabled(false);
         }
@@ -1373,8 +1389,10 @@ public class VAJAntToolGUI extends Frame {
                 // Select the log-level given by BuildInfo
                 getMessageOutputLevelChoice().select(iBuildInfo.getOutputMessageLevel());
                 fillList();
-                // BuildInfo can conly be saved to a VAJ project if tool API is called via the projects context-menu
-                if ((iBuildInfo.getVAJProjectName() == null) || (iBuildInfo.getVAJProjectName().equals(""))) {
+                // BuildInfo can conly be saved to a VAJ project if tool API
+                // is called via the projects context-menu
+                if ((iBuildInfo.getVAJProjectName() == null)
+                    || (iBuildInfo.getVAJProjectName().equals(""))) {
                     getSaveMenuItem().setEnabled(false);
                 }
             } catch (Throwable iExc) {

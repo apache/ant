@@ -224,11 +224,11 @@ public class Os implements Condition {
                     isFamily = pathSep.equals(":")
                         && (!isFamily("mac") || osName.endsWith("x"));
                 } else if (family.equals("win9x")) {
-                    isFamily = isFamily("windows") &&
-                        (osName.indexOf("95") >= 0 ||
-                         osName.indexOf("98") >= 0 ||
-                         osName.indexOf("me") >= 0 ||
-                         osName.indexOf("ce") >= 0);
+                    isFamily = isFamily("windows")
+                        && (osName.indexOf("95") >= 0
+                            || osName.indexOf("98") >= 0
+                            || osName.indexOf("me") >= 0
+                            || osName.indexOf("ce") >= 0);
                 } else if (family.equals("z/os")) {
                     isFamily = osName.indexOf("z/os") > -1
                         || osName.indexOf("os/390") > -1;

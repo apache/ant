@@ -86,8 +86,10 @@ public class TaskOutputStream extends OutputStream {
      */
 
     TaskOutputStream(Task task, int msgOutputLevel) {
-        System.err.println("As of Ant 1.2 released in October 2000, the TaskOutputStream class");
-        System.err.println("is considered to be dead code by the Ant developers and is unmaintained.");
+        System.err.println("As of Ant 1.2 released in October 2000, the "
+            + "TaskOutputStream class");
+        System.err.println("is considered to be dead code by the Ant "
+            + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
 
         this.task = task;

@@ -270,8 +270,8 @@ public class SetProxy extends Task {
 
 
         //for Java1.1 we need to tell the system that the settings are new
-        if (settingsChanged &&
-            JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+        if (settingsChanged
+            && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             legacyResetProxySettingsCall(enablingProxy);
         }
     }

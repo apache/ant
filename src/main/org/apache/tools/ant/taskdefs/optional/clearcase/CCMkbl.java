@@ -323,9 +323,11 @@ public class CCMkbl extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified, otherwise an empty string
+     * @return the 'comment' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the comment flag and string appended
+     * @param CommandLine containing the command line string with or
+     *                    without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -342,9 +344,11 @@ public class CCMkbl extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified, otherwise an empty string
+     * @return the 'commentfile' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the commentfile flag and file appended
+     * @param cmd CommandLine containing the command line string with or
+     *                    without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {

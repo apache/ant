@@ -124,7 +124,8 @@ public class ContainsSelector extends BaseExtendSelector {
     /**
      * Whether to ignore whitespace in the string being searched.
      *
-     * @param ignorewhitespace whether to ignore any whitespace (spaces, tabs, etc.) in the searchstring
+     * @param ignorewhitespace whether to ignore any whitespace
+     *        (spaces, tabs, etc.) in the searchstring
      */
     public void setIgnorewhitespace(boolean ignorewhitespace) {
         this.ignorewhitespace = ignorewhitespace;

@@ -85,22 +85,28 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>global</td>
- *      <td>Either global or ordinary can be specified, not both. Creates a label type that is global to the VOB or to VOBs that use this VOB</td>
+ *      <td>Either global or ordinary can be specified, not both.
+ *          Creates a label type that is global to the VOB or to
+ *          VOBs that use this VOB</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
  *      <td>ordinary</td>
- *      <td>Either global or ordinary can be specified, not both. Creates a label type that can be used only in the current VOB. <B>Default</B></td>
+ *      <td>Either global or ordinary can be specified, not both.
+ *          Creates a label type that can be used only in the current
+ *          VOB. <B>Default</B></td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
  *      <td>pbranch</td>
- *      <td>Allows the label type to be used once per branch in a given element's version tree</td>
+ *      <td>Allows the label type to be used once per branch in a given
+ *          element's version tree</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
  *      <td>shared</td>
- *      <td>Sets the way mastership is checked by ClearCase. See ClearCase documentation for details</td>
+ *      <td>Sets the way mastership is checked by ClearCase. See ClearCase
+ *          documentation for details</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
@@ -110,7 +116,8 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>commentfile</td>
- *      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+ *      <td>Specify a file containing a comment. Only one of comment or
+ *          cfile may be used.</td>
  *      <td>No</td>
  *   <tr>
  * </table>
@@ -319,8 +326,8 @@ public class CCMklbtype extends ClearCase {
      *
      * @param shared the status to set the flag to
      */
-    public void setShared(boolean shar) {
-        m_Shared = shar;
+    public void setShared(boolean shared) {
+        m_Shared = shared;
     }
 
     /**
@@ -372,9 +379,11 @@ public class CCMklbtype extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified, otherwise an empty string
+     * @return the 'comment' command if the attribute was specified,
+     * otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the comment flag and string appended
+     * @param CommandLine containing the command line string with or
+     *        without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -391,9 +400,11 @@ public class CCMklbtype extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified, otherwise an empty string
+     * @return the 'commentfile' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the commentfile flag and file appended
+     * @param CommandLine containing the command line string with or
+     *        without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {
@@ -410,9 +421,11 @@ public class CCMklbtype extends ClearCase {
     /**
      * Get the type-name specifier
      *
-     * @return the 'type-name-specifier' command if the attribute was specified, otherwise an empty string
+     * @return the 'type-name-specifier' command if the attribute was
+     *         specified, otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the type-name
+     * @param CommandLine containing the command line string with or
+     *        without the type-name
      */
     private String getTypeSpecifier() {
         String typenm = null;

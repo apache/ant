@@ -226,8 +226,8 @@ public class RExecTask extends Task {
                     Calendar endTime = Calendar.getInstance();
                     endTime.add(Calendar.SECOND, timeout.intValue());
                     while (sb.toString().indexOf(s) == -1) {
-                        while (Calendar.getInstance().before(endTime) &&
-                               is.available() == 0) {
+                        while (Calendar.getInstance().before(endTime)
+                            && is.available() == 0) {
                             Thread.sleep(250);
                         }
                         if (is.available() == 0) {

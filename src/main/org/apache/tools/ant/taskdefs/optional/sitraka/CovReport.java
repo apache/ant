@@ -294,13 +294,15 @@ public class CovReport extends CovBase {
             }
 
             // use the custom handler for stdin issues
-            LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
+            LogStreamHandler handler
+                = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());
             int exitValue = exec.execute();
             if (exitValue != 0) {
-                throw new BuildException("JProbe Coverage Report failed (" + exitValue + ")");
+                throw new BuildException("JProbe Coverage Report failed ("
+                    + exitValue + ")");
             }
             log("coveragePath: " + coveragePath, Project.MSG_VERBOSE);
             log("format: " + format, Project.MSG_VERBOSE);
@@ -396,7 +398,8 @@ public class CovReport extends CovBase {
                 Result res = new StreamResult("file:///" + tofile.toString());
                 transformer.transform(src, res);
             } catch (Exception e) {
-                throw new BuildException("Error while performing enhanced XML report from file " + tofile, e);
+                throw new BuildException("Error while performing enhanced XML "
+                    + "report from file " + tofile, e);
             }
         }
     }

@@ -85,11 +85,13 @@ import org.apache.tools.ant.util.FileUtils;
  *    <li>Map.mapxmi</li>
  *    <li>Schema.dbxmi</li>
  * </ul>
- * In terms of WebSphere, the generation of container code and stubs is called <code>deployment</code>.
- * This step can be performed by the websphere element as part of the jar generation process. If the
- * switch <code>ejbdeploy</code> is on, the ejbdeploy tool from the websphere toolset is called for
- * every ejb-jar. Unfortunately, this step only works, if you use the ibm jdk. Otherwise, the rmic
- * (called by ejbdeploy) throws a ClassFormatError. Be sure to switch ejbdeploy off, if run ant with
+ * In terms of WebSphere, the generation of container code and stubs is
+ * called <code>deployment</code>. This step can be performed by the websphere
+ * element as part of the jar generation process. If the switch
+ * <code>ejbdeploy</code> is on, the ejbdeploy tool from the websphere toolset
+ * is called for every ejb-jar. Unfortunately, this step only works, if you
+ * use the ibm jdk. Otherwise, the rmic (called by ejbdeploy) throws a
+ * ClassFormatError. Be sure to switch ejbdeploy off, if run ant with
  * sun jdk.
  *
  * @author <a href="mailto:msahu@interkeel.com">Maneesh Sahu</a>
@@ -98,7 +100,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Enumerated attribute with the values for the database vendor types
      *
-     * @author Conor MacNeill
      */
     public static class DBVendor extends EnumeratedAttribute {
         public String[] getValues() {
@@ -600,7 +601,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 javaTask.createArg().setValue(tempdir);
                 javaTask.createArg().setValue(destJar.getPath());
                 javaTask.createArg().setLine(getOptions());
-                if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0) {
+                if (getCombinedClasspath() != null
+                    && getCombinedClasspath().toString().length() > 0) {
                     javaTask.createArg().setValue("-cp");
                     javaTask.createArg().setValue(getCombinedClasspath().toString());
                 }
@@ -669,7 +671,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         if (ejbdeploy) {
             String home = getTask().getProject().getProperty("websphere.home");
             if (home == null) {
-                throw new BuildException("The 'websphere.home' property must be set when 'ejbdeploy=true'");
+                throw new BuildException("The 'websphere.home' property must "
+                    + "be set when 'ejbdeploy=true'");
             }
             websphereHome = getTask().getProject().resolveFile(home);
         }
@@ -709,8 +712,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         JarOutputStream newJarStream = null;
 
         try {
-            log("Checking if websphere Jar needs to be rebuilt for jar " + websphereJarFile.getName(),
-                Project.MSG_VERBOSE);
+            log("Checking if websphere Jar needs to be rebuilt for jar "
+                + websphereJarFile.getName(), Project.MSG_VERBOSE);
             // Only go forward if the generic and the websphere file both exist
             if (genericJarFile.exists() && genericJarFile.isFile()
                  && websphereJarFile.exists() && websphereJarFile.isFile()) {
@@ -747,12 +750,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         JarEntry genericEntry = (JarEntry) genericEntries.get(filepath);
                         JarEntry wasEntry = (JarEntry) wasEntries.get(filepath);
 
-                        if ((genericEntry.getCrc() != wasEntry.getCrc()) ||
-                            (genericEntry.getSize() != wasEntry.getSize())) {
+                        if ((genericEntry.getCrc() != wasEntry.getCrc())
+                            || (genericEntry.getSize() != wasEntry.getSize())) {
 
                             if (genericEntry.getName().endsWith(".class")) {
                                 //File are different see if its an object or an interface
-                                String classname = genericEntry.getName().replace(File.separatorChar, '.');
+                                String classname
+                                    = genericEntry.getName().replace(File.separatorChar, '.');
 
                                 classname = classname.substring(0, classname.lastIndexOf(".class"));
 
@@ -760,7 +764,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
                                 if (genclass.isInterface()) {
                                     //Interface changed   rebuild jar.
-                                    log("Interface " + genclass.getName() + " has changed", Project.MSG_VERBOSE);
+                                    log("Interface " + genclass.getName()
+                                        + " has changed", Project.MSG_VERBOSE);
                                     rebuild = true;
                                     break;
                                 } else {
@@ -771,7 +776,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                                 // is it the manifest. If so ignore it
                                 if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
                                     //File other then class changed   rebuild
-                                    log("Non class file " + genericEntry.getName() + " has changed", Project.MSG_VERBOSE);
+                                    log("Non class file " + genericEntry.getName()
+                                        + " has changed", Project.MSG_VERBOSE);
                                     rebuild = true;
                                 }
                                 break;
@@ -780,7 +786,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     } else {
                         // a file doesn't exist rebuild
 
-                        log("File " + filepath + " not present in websphere jar", Project.MSG_VERBOSE);
+                        log("File " + filepath + " not present in websphere jar",
+                            Project.MSG_VERBOSE);
                         rebuild = true;
                         break;
                     }
@@ -803,8 +810,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         InputStream is;
                         JarEntry je = (JarEntry) e.nextElement();
 
-                        if (je.getCompressedSize() == -1 ||
-                            je.getCompressedSize() == je.getSize()) {
+                        if (je.getCompressedSize() == -1
+                            || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);
                         } else {
                             newJarStream.setLevel(9);
@@ -830,7 +837,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         is.close();
                     }
                 } else {
-                    log("websphere Jar rebuild needed due to changed interface or XML", Project.MSG_VERBOSE);
+                    log("websphere Jar rebuild needed due to changed "
+                        + "interface or XML", Project.MSG_VERBOSE);
                 }
             } else {
                 rebuild = true;

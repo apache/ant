@@ -123,7 +123,8 @@ abstract class XalanExecutor {
                 xalan1missing.printStackTrace(new PrintWriter(swr));
                 caller.task.log("Didn't find Xalan1.", Project.MSG_DEBUG);
                 caller.task.log(swr.toString(), Project.MSG_DEBUG);
-                throw new BuildException("Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j");
+                throw new BuildException("Could not find xalan2 nor xalan1 "
+                    + "in the classpath. Check http://xml.apache.org/xalan-j");
             }
         }
         String version = getXalanVersion(procVersion);

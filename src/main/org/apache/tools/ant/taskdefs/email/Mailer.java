@@ -84,7 +84,7 @@ public abstract class Mailer {
     /**
      * Sets the mail server
      *
-     * @param host
+     * @param host the mail server name
      */
     public void setHost(String host) {
         this.host = host;
@@ -94,7 +94,7 @@ public abstract class Mailer {
     /**
      * Sets the smtp port
      *
-     * @param port
+     * @param port the SMTP port
      */
     public void setPort(int port) {
         this.port = port;
@@ -103,7 +103,7 @@ public abstract class Mailer {
     /**
      * Sets the user for smtp auth
      *
-     * @param user
+     * @param user the username
      * @since ant 1.6
      */
     public void setUser(String user) {
@@ -113,7 +113,7 @@ public abstract class Mailer {
     /**
      * Sets the password for smtp auth
      *
-     * @param password
+     * @param password the authentication password
      * @since ant 1.6
      */
     public void setPassword(String password) {
@@ -123,7 +123,7 @@ public abstract class Mailer {
     /**
      * Sets whether the user wants to send the mail through SSL
      *
-     * @param SSL
+     * @param SSL if true use SSL transport
      * @since ant 1.6
      */
     public void setSSL(boolean SSL) {
@@ -133,7 +133,7 @@ public abstract class Mailer {
     /**
      * Sets the message
      *
-     * @param m
+     * @param m the message content
      */
     public void setMessage(Message m) {
         this.message = m;
@@ -143,7 +143,7 @@ public abstract class Mailer {
     /**
      * Sets the address to send from
      *
-     * @param from
+     * @param from the sender
      */
     public void setFrom(EmailAddress from) {
         this.from = from;
@@ -153,7 +153,7 @@ public abstract class Mailer {
     /**
      * Sets the replyto addresses
      *
-     * @param list
+     * @param list a vector of reployTo addresses
      * @since ant 1.6
      */
     public void setReplyToList(Vector list) {
@@ -164,7 +164,7 @@ public abstract class Mailer {
     /**
      * Set the to addresses
      *
-     * @param list
+     * @param list a vector of recipient addresses
      */
     public void setToList(Vector list) {
         this.toList = list;
@@ -174,7 +174,7 @@ public abstract class Mailer {
     /**
      * Sets the cc addresses
      *
-     * @param list
+     * @param list a vector of cc addresses
      */
     public void setCcList(Vector list) {
         this.ccList = list;
@@ -184,7 +184,7 @@ public abstract class Mailer {
     /**
      * Sets the bcc addresses
      *
-     * @param list
+     * @param list a vector of the bcc addresses
      */
     public void setBccList(Vector list) {
         this.bccList = list;
@@ -194,7 +194,7 @@ public abstract class Mailer {
     /**
      * Sets the files to attach
      *
-     * @param files
+     * @param files list of files to attach to the email.
      */
     public void setFiles(Vector files) {
         this.files = files;
@@ -204,7 +204,7 @@ public abstract class Mailer {
     /**
      * Sets the subject
      *
-     * @param subject
+     * @param subject the subject line
      */
     public void setSubject(String subject) {
         this.subject = subject;
@@ -214,7 +214,7 @@ public abstract class Mailer {
     /**
      * Sets the owning task
      *
-     * @param task
+     * @param task the owning task instance
      */
     public void setTask(Task task) {
         this.task = task;
@@ -224,7 +224,7 @@ public abstract class Mailer {
     /**
      * Indicates whether filenames should be listed in the body
      *
-     * @param b
+     * @param b if true list attached file names in the body content.
      */
     public void setIncludeFileNames(boolean b) {
         this.includeFileNames = b;
@@ -234,7 +234,7 @@ public abstract class Mailer {
     /**
      * This method should send the email
      *
-     * @throws BuildException
+     * @throws BuildException if the email can't be sent.
      */
     public abstract void send()
          throws BuildException;
@@ -242,6 +242,8 @@ public abstract class Mailer {
     /**
      * Returns the current Date in a format suitable for a SMTP date
      * header.
+     *
+     * @return the current date in SMTP suitable format.
      *
      * @since Ant 1.5
      */

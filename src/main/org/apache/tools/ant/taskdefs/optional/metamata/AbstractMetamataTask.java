@@ -335,7 +335,8 @@ public abstract class AbstractMetamataTask extends Task {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             ds.scan();
             String[] f = ds.getIncludedFiles();
-            log(i + ") Adding " + f.length + " files from directory " + ds.getBasedir(), Project.MSG_VERBOSE);
+            log(i + ") Adding " + f.length + " files from directory "
+                + ds.getBasedir(), Project.MSG_VERBOSE);
             for (int j = 0; j < f.length; j++) {
                 String pathname = f[j];
                 if (pathname.endsWith(".java")) {

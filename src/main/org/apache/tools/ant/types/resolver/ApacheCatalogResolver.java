@@ -184,7 +184,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
      * ApacheCatalog calls this for each URI entry found in an external
      * catalog file.</p>
      *
-     * @param URI The URI of the resource
+     * @param uri The URI of the resource
      * @param altURI The URI to which the resource should be mapped
      * (aka the location)
      * @param base The base URL of the resource.  If the altURI

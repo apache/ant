@@ -124,8 +124,7 @@ public class Sync extends Task {
 
         // If the destination directory didn't already exist,
         // or was empty, then no previous file removal is necessary!
-        boolean noRemovalNecessary = !toDir.exists() ||
-            toDir.list().length < 1;
+        boolean noRemovalNecessary = !toDir.exists() || toDir.list().length < 1;
 
         // Copy all the necessary out-of-date files
         log("PASS#1: Copying files to " + toDir, Project.MSG_DEBUG);

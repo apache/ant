@@ -130,7 +130,8 @@ public class CovMerge extends CovBase {
                 cmdl.createArgument().setValue(tofile.getPath());
             }
 
-            LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
+            LogStreamHandler handler
+                = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());

@@ -527,8 +527,8 @@ public class ProjectHelper2 extends ProjectHelper {
             String dup = project.getProperty(antFileProp);
             if (dup != null && nameAttributeSet) {
                 File dupFile = new File(dup);
-                if (context.isIgnoringProjectTag() &&
-                    !dupFile.equals(context.getBuildFile())) {
+                if (context.isIgnoringProjectTag()
+                    && !dupFile.equals(context.getBuildFile())) {
                     project.log("Duplicated project name in import. Project "
                         + context.getCurrentProjectName() + " defined first in "
                         + dup + " and again in " + context.getBuildFile(),

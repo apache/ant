@@ -204,8 +204,8 @@ public class CCMklabel extends ClearCase {
      *
      * @param replace the status to set the flag to
      */
-    public void setReplace(boolean repl) {
-        m_Replace = repl;
+    public void setReplace(boolean replace) {
+        m_Replace = replace;
     }
 
     /**
@@ -240,8 +240,8 @@ public class CCMklabel extends ClearCase {
      *
      * @param version the status to set the flag to
      */
-    public void setVersion(String ver) {
-        m_Version = ver;
+    public void setVersion(String version) {
+        m_Version = version;
     }
 
     /**
@@ -328,9 +328,11 @@ public class CCMklabel extends ClearCase {
     /**
      * Get the 'version' command
      *
-     * @return the 'version' command if the attribute was specified, otherwise an empty string
+     * @return the 'version' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the version flag and string appended
+     * @param cmd CommandLine containing the command line string with or
+     *                    without the version flag and string appended
      */
     private void getVersionCommand(Commandline cmd) {
         if (getVersion() != null) {
@@ -347,9 +349,11 @@ public class CCMklabel extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified, otherwise an empty string
+     * @return the 'comment' command if the attribute was
+     *         specified, otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the comment flag and string appended
+     * @param CommandLine containing the command line string with or
+     *        without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -366,9 +370,11 @@ public class CCMklabel extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified, otherwise an empty string
+     * @return the 'commentfile' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the commentfile flag and file appended
+     * @param CommandLine containing the command line string with or
+     *                    without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {
@@ -385,9 +391,11 @@ public class CCMklabel extends ClearCase {
     /**
      * Get the type-name
      *
-     * @return the 'type-name-specifier' command if the attribute was specified, otherwise an empty string
+     * @return the 'type-name-specifier' command if the attribute
+     *         was specified, otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the type-name
+     * @param CommandLine containing the command line string with or
+     *        without the type-name
      */
     private void getTypeCommand(Commandline cmd) {
         String typenm = null;

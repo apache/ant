@@ -410,7 +410,7 @@ public class ExecuteOn extends ExecTask {
      * Construct the command line for parallel execution.
      *
      * @param srcFiles The filenames to add to the commandline
-     * @param baseDir filenames are relative to this dir
+     * @param baseDirs filenames are relative to this dir
      */
     protected String[] getCommandline(String[] srcFiles, File[] baseDirs) {
         final char fileSeparator = File.separatorChar;

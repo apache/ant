@@ -636,6 +636,7 @@ public class Manifest {
         /**
          * Clone this section
          *
+         * @return the cloned Section
          * @since Ant 1.5.2
          */
         public Object clone() {

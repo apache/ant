@@ -92,7 +92,8 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>ignore</td>
- *      <td>Used with trigger types only. Forces removal of trigger type even if a pre-operation trigger would prevent its removal</td>
+ *      <td>Used with trigger types only. Forces removal of trigger type
+ *          even if a pre-operation trigger would prevent its removal</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
@@ -107,7 +108,8 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>commentfile</td>
- *      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+ *      <td>Specify a file containing a comment. Only one of comment or cfile
+ *          may be used.</td>
  *      <td>No</td>
  *   <tr>
  * </table>
@@ -336,9 +338,11 @@ public class CCRmtype extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified, otherwise an empty string
+     * @return the 'comment' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the comment flag and string appended
+     * @param CommandLine containing the command line string with or
+     *        without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -355,9 +359,11 @@ public class CCRmtype extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified, otherwise an empty string
+     * @return the 'commentfile' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the commentfile flag and file appended
+     * @param CommandLine containing the command line string with or
+     *        without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {

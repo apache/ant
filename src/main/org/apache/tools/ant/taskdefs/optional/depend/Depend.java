@@ -412,7 +412,8 @@ public class Depend extends MatchingTask {
 
                         if (!dependency.startsWith("java.")
                             && !dependency.startsWith("javax.")) {
-                            URL classURL = loader.getResource(dependency.replace('.', '/') + ".class");
+                            URL classURL
+                                = loader.getResource(dependency.replace('.', '/') + ".class");
                             if (classURL != null) {
                                 if (classURL.getProtocol().equals("jar")) {
                                     String jarFilePath = classURL.getFile();
@@ -524,8 +525,8 @@ public class Depend extends MatchingTask {
                     Project.MSG_VERBOSE);
                 ClassFileInfo topLevelClassInfo
                      = (ClassFileInfo) classFileInfoMap.get(topLevelClassName);
-                if (topLevelClassInfo != null &&
-                    topLevelClassInfo.absoluteFile.exists()) {
+                if (topLevelClassInfo != null
+                    && topLevelClassInfo.absoluteFile.exists()) {
                     log("Deleting file "
                         + topLevelClassInfo.absoluteFile.getPath()
                         + " since one of its inner classes was removed",
@@ -618,7 +619,8 @@ public class Depend extends MatchingTask {
                     if (classpathFile.lastModified()
                         > info.absoluteFile.lastModified()) {
                         log("Class " + className
-                            + " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
+                            + " is out of date with respect to "
+                            + classpathFile, Project.MSG_DEBUG);
                         outOfDateClasses.put(className, className);
                         break;
                     }

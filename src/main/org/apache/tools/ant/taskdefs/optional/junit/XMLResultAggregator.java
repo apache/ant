@@ -278,15 +278,19 @@ public class XMLResultAggregator extends Task implements XMLConstants {
                     addTestSuite(rootElement, elem);
                 } else {
                     // issue a warning.
-                    log("the file " + files[i] + " is not a valid testsuite XML document", Project.MSG_WARN);
+                    log("the file " + files[i]
+                        + " is not a valid testsuite XML document",
+                        Project.MSG_WARN);
                 }
             } catch (SAXException e) {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
-                log("The file " + files[i] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN);
+                log("The file " + files[i] + " is not a valid XML document. "
+                    + "It is possibly corrupted.", Project.MSG_WARN);
                 log(StringUtils.getStackTrace(e), Project.MSG_DEBUG);
             } catch (IOException e) {
-                log("Error while accessing file " + files[i] + ": " + e.getMessage(), Project.MSG_ERR);
+                log("Error while accessing file " + files[i] + ": "
+                    + e.getMessage(), Project.MSG_ERR);
             }
         }
         return rootElement;

@@ -681,8 +681,7 @@ public class JUnitTask extends Task {
         // forked test
         File propsFile =
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
-                                                    tmpDir != null ? tmpDir :
-                                                    getProject().getBaseDir());
+                tmpDir != null ? tmpDir : getProject().getBaseDir());
         cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());
         Hashtable p = getProject().getProperties();

@@ -161,8 +161,8 @@ public class Copydir extends MatchingTask {
             } else {
                 destFile = new File(to, filename);
             }
-            if (forceOverwrite ||
-                (srcFile.lastModified() > destFile.lastModified())) {
+            if (forceOverwrite
+                || (srcFile.lastModified() > destFile.lastModified())) {
                 filecopyList.put(srcFile.getAbsolutePath(),
                                  destFile.getAbsolutePath());
             }

@@ -540,7 +540,8 @@ public class JDependTask extends Task {
             commandline.createArgument().setValue(f.getPath());
         }
 
-        Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), watchdog);
+        Execute execute = new Execute(new LogStreamHandler(this,
+            Project.MSG_INFO, Project.MSG_WARN), watchdog);
         execute.setCommandline(commandline.getCommandline());
         if (getDir() != null) {
             execute.setWorkingDirectory(getDir());

@@ -294,7 +294,8 @@ public abstract class JDBCTask extends Task {
 
                 log("Version = " + theVersion, Project.MSG_VERBOSE);
                 if (theVersion == null
-                        || !(theVersion.startsWith(version) || theVersion.indexOf(" " + version) >= 0)) {
+                        || !(theVersion.startsWith(version)
+                        || theVersion.indexOf(" " + version) >= 0)) {
                     log("Not the required version: \"" + version + "\"", Project.MSG_VERBOSE);
                     return false;
                 }
@@ -317,10 +318,14 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Creates a new Connection as using the driver, url, userid and password specified.
+     * Creates a new Connection as using the driver, url, userid and password
+     * specified.
+     *
      * The calling method is responsible for closing the connection.
+     *
      * @return Connection the newly created connection.
-     * @throws BuildException if the UserId/Password/Url is not set or there is no suitable driver or the driver fails to load.
+     * @throws BuildException if the UserId/Password/Url is not set or there
+     * is no suitable driver or the driver fails to load.
      */
     protected Connection getConnection() throws BuildException {
         if (userId == null) {
@@ -379,22 +384,23 @@ public abstract class JDBCTask extends Task {
                         loader = (AntClassLoader) loaderMap.get(driver);
                     }
                     if (loader == null) {
-                        log(
-                                "Loading " + driver + " using AntClassLoader with classpath " + classpath,
-                                Project.MSG_VERBOSE);
+                        log("Loading " + driver
+                            + " using AntClassLoader with classpath "
+                            + classpath, Project.MSG_VERBOSE);
                         loader = getProject().createClassLoader(classpath);
                         if (caching) {
                             loaderMap.put(driver, loader);
                         }
                     } else {
-                        log(
-                                "Loading " + driver + " using a cached AntClassLoader.",
+                        log("Loading " + driver
+                            + " using a cached AntClassLoader.",
                                 Project.MSG_VERBOSE);
                     }
                 }
                 dc = loader.loadClass(driver);
             } else {
-                log("Loading " + driver + " using system loader.", Project.MSG_VERBOSE);
+                log("Loading " + driver + " using system loader.",
+                    Project.MSG_VERBOSE);
                 dc = Class.forName(driver);
             }
             driverInstance = (Driver) dc.newInstance();

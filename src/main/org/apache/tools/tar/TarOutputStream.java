@@ -126,7 +126,7 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Sets the debugging flag in this stream's TarBuffer.
      *
-     * @param debugF True to turn on debugging.
+     * @param debug True to turn on debugging.
      */
     public void setBufferDebug(boolean debug) {
         this.buffer.setDebug(debug);

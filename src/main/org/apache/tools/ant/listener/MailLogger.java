@@ -135,6 +135,7 @@ public class MailLogger extends DefaultLogger {
                     try {
                         is.close();
                     } catch (IOException e) {
+                        // ignore
                     }
                 }
             }
@@ -272,9 +273,11 @@ public class MailLogger extends DefaultLogger {
      * @param  subject          mail subject
      * @param  message          mail body
      */
-    private void sendMimeMail(Project project, String host, int port, String user, String password, boolean ssl,
-                              String from, String replyToString, String toString,
-                          String subject, String message)  {
+    private void sendMimeMail(Project project, String host, int port,
+                              String user, String password, boolean ssl,
+                              String from, String replyToString,
+                              String toString, String subject,
+                              String message)  {
         // convert the replyTo string into a vector of emailaddresses
         Mailer mailer = null;
             try {

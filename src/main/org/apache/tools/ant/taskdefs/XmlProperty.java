@@ -275,7 +275,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
               factory.setValidating(validate);
               factory.setNamespaceAware(false);
 
-              Element topElement = factory.newDocumentBuilder().parse(configurationStream).getDocumentElement();
+              Element topElement
+                = factory.newDocumentBuilder().parse(configurationStream).getDocumentElement();
 
               // Keep a hashtable of attributes added by this task.
               // This task is allow to override its own properties

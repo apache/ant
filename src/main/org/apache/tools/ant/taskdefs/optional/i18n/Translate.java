@@ -344,15 +344,12 @@ public class Translate extends MatchingTask {
         Locale locale = new Locale(bundleLanguage,
                                    bundleCountry,
                                    bundleVariant);
-        String language = locale.getLanguage().length() > 0 ?
-            "_" + locale.getLanguage() :
-            "";
-        String country = locale.getCountry().length() > 0 ?
-            "_" + locale.getCountry() :
-            "";
-        String variant = locale.getVariant().length() > 0 ?
-            "_" + locale.getVariant() :
-            "";
+        String language = locale.getLanguage().length() > 0
+            ? "_" + locale.getLanguage() : "";
+        String country = locale.getCountry().length() > 0
+            ? "_" + locale.getCountry() : "";
+        String variant = locale.getVariant().length() > 0
+            ? "_" + locale.getVariant() : "";
         String bundleFile = bundle + language + country + variant;
         processBundle(bundleFile, 0, false);
 
@@ -369,15 +366,12 @@ public class Translate extends MatchingTask {
         //using default file encoding scheme.
         locale = Locale.getDefault();
 
-        language = locale.getLanguage().length() > 0 ?
-            "_" + locale.getLanguage() :
-            "";
-        country = locale.getCountry().length() > 0 ?
-            "_" + locale.getCountry() :
-            "";
-        variant = locale.getVariant().length() > 0 ?
-            "_" + locale.getVariant() :
-            "";
+        language = locale.getLanguage().length() > 0
+            ? "_" + locale.getLanguage() : "";
+        country = locale.getCountry().length() > 0
+            ? "_" + locale.getCountry() : "";
+        variant = locale.getVariant().length() > 0
+            ? "_" + locale.getVariant() : "";
         bundleEncoding = System.getProperty("file.encoding");
 
         bundleFile = bundle + language + country + variant;
@@ -530,20 +524,23 @@ public class Translate extends MatchingTask {
                         // is there a startToken
                         // and there is still stuff following the startToken
                         int startIndex = line.indexOf(startToken);
-                        while (startIndex >= 0 && (startIndex + startToken.length()) <= line.length()) {
+                        while (startIndex >= 0
+                            && (startIndex + startToken.length()) <= line.length()) {
                             // the new value, this needs to be here
                             // because it is required to calculate the next position to search from
                             // at the end of the loop
                             String replace = null;
 
                             // we found a starttoken, is there an endtoken following?
-                            // start at token+tokenlength because start and end token may be indentical
+                            // start at token+tokenlength because start and end
+                            // token may be indentical
                             int endIndex = line.indexOf(endToken, startIndex + startToken.length());
                             if (endIndex < 0) {
                                 startIndex += 1;
                             } else {
                                 // grab the token
-                                String token = line.substring(startIndex + startToken.length(), endIndex);
+                                String token
+                                    = line.substring(startIndex + startToken.length(), endIndex);
 
                                 // If there is a white space or = or :, then
                                 // it isn't to be treated as a valid key.

@@ -194,7 +194,7 @@ public class ClasspathUtils {
      * created loader with that id, and of course store it there upon
      * creation.</p>
      * @param path Path object to be used as classpath for this classloader
-     * @param loaderID identification for this Loader,
+     * @param loaderId identification for this Loader,
      * @param reverseLoader if set to true this new loader will take
      * precedence over it's parent (which is contra the regular
      * @param p Ant Project where the handled components are living in.
@@ -210,8 +210,8 @@ public class ClasspathUtils {
         // magic property
         if (loaderId != null && reuseLoader) {
             Object reusedLoader = p.getReference(loaderId);
-            if (reusedLoader != null &&
-                !(reusedLoader instanceof ClassLoader)) {
+            if (reusedLoader != null
+                && !(reusedLoader instanceof ClassLoader)) {
                 throw new BuildException("The specified loader id " + loaderId
                     + " does not reference a class loader");
             }

@@ -171,11 +171,16 @@ public class EjbcHelper {
             DeploymentDescriptor dd = (DeploymentDescriptor) ois.readObject();
             fis.close();
 
-            String homeInterfacePath = dd.getHomeInterfaceClassName().replace('.', '/') + ".java";
-            String remoteInterfacePath = dd.getRemoteInterfaceClassName().replace('.', '/') + ".java";
+            String homeInterfacePath
+                = dd.getHomeInterfaceClassName().replace('.', '/') + ".java";
+            String remoteInterfacePath
+                = dd.getRemoteInterfaceClassName().replace('.', '/') + ".java";
             String primaryKeyClassPath = null;
             if (dd instanceof EntityDescriptor) {
-                primaryKeyClassPath = ((EntityDescriptor) dd).getPrimaryKeyClassName().replace('.', '/') + ".java";;
+                primaryKeyClassPath
+                    = ((EntityDescriptor) dd).getPrimaryKeyClassName();
+                primaryKeyClassPath
+                    = primaryKeyClassPath.replace('.', '/') + ".java";;
             }
 
             File homeInterfaceSource = new File(sourceDirectory, homeInterfacePath);
@@ -197,8 +202,9 @@ public class EjbcHelper {
                 = new File(generatedFilesDirectory, beanClassBase + "EOImpl_WLStub.class");
 
             // if the implementation classes don;t exist regenerate
-            if (!ejbImplentationClass.exists() || !homeImplementationClass.exists() ||
-                    !beanStubClass.exists()) {
+            if (!ejbImplentationClass.exists()
+                || !homeImplementationClass.exists()
+                || !beanStubClass.exists()) {
                 return true;
             }
 
@@ -212,18 +218,19 @@ public class EjbcHelper {
                 classModificationTime = beanStubClass.lastModified();
             }
 
-            if (descriptorFile.lastModified() > classModificationTime ||
-                    homeInterfaceSource.lastModified() > classModificationTime ||
-                    remoteInterfaceSource.lastModified() > classModificationTime) {
+            if (descriptorFile.lastModified() > classModificationTime
+                || homeInterfaceSource.lastModified() > classModificationTime
+                || remoteInterfaceSource.lastModified() > classModificationTime) {
                 return true;
             }
 
-            if (primaryKeyClassSource != null &&
-                    primaryKeyClassSource.lastModified() > classModificationTime) {
+            if (primaryKeyClassSource != null
+                && primaryKeyClassSource.lastModified() > classModificationTime) {
                 return true;
             }
         } catch (Throwable descriptorLoadException) {
-            System.out.println("Exception occurred reading " + descriptorFile.getName() + " - continuing");
+            System.out.println("Exception occurred reading "
+                + descriptorFile.getName() + " - continuing");
             // any problems - just regenerate
             return true;
         } finally {
@@ -251,7 +258,8 @@ public class EjbcHelper {
             } else {
                 System.out.println(descriptorFile.getName() + " is up to date");
             }
-            manifest += "Name: " + descriptorName.replace('\\', '/') + "\nEnterprise-Bean: True\n\n";
+            manifest += "Name: " + descriptorName.replace('\\', '/')
+                        + "\nEnterprise-Bean: True\n\n";
         }
 
         FileWriter fw = new FileWriter(manifestFile);

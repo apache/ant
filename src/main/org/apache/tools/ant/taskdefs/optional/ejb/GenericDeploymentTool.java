@@ -549,7 +549,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
              * look like much, we use a SAXParser and an inner class to
              * get hold of all the classfile names for the descriptor.
              */
-            descriptorStream = new FileInputStream(new File(config.descriptorDir, descriptorFileName));
+            descriptorStream
+                = new FileInputStream(new File(config.descriptorDir, descriptorFileName));
             saxParser.parse(new InputSource(descriptorStream), handler);
 
             ejbFiles = handler.getFiles();
@@ -660,9 +661,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
         if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)) {
             ddPrefix = baseName + config.baseNameTerminator;
-        } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.BASEJARNAME) ||
-                   config.namingScheme.getValue().equals(EjbJar.NamingScheme.EJB_NAME) ||
-                   config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
+        } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.BASEJARNAME)
+            || config.namingScheme.getValue().equals(EjbJar.NamingScheme.EJB_NAME)
+            || config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
             String canonicalDescriptor = descriptorFileName.replace('\\', '/');
             int index = canonicalDescriptor.lastIndexOf('/');
             if (index == -1) {
@@ -797,8 +798,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                     String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
                     in = this.getClass().getResourceAsStream(defaultManifest);
                     if (in == null) {
-                        throw new BuildException("Could not find default manifest: " + defaultManifest,
-                                                  getLocation());
+                        throw new BuildException("Could not find "
+                            + "default manifest: " + defaultManifest);
                     }
                 }
 
@@ -842,7 +843,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                         if (entryIndex < 0) {
                             entryName = innerfiles[i];
                         } else {
-                            entryName = entryName.substring(0, entryIndex) + File.separatorChar + innerfiles[i];
+                            entryName = entryName.substring(0, entryIndex)
+                                + File.separatorChar + innerfiles[i];
                         }
                         // link the file
                         entryFile = new File(config.srcDir, entryName);

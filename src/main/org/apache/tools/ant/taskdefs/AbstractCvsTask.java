@@ -706,8 +706,8 @@ public abstract class AbstractCvsTask extends Task {
      * level, AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL.
      */
     public void setCompression(boolean usecomp) {
-        setCompressionLevel(usecomp ?
-                            AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL : 0);
+        setCompressionLevel(usecomp
+            ? AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL : 0);
     }
 
 }

@@ -487,7 +487,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 saxParserFactory.setValidating(true);
 
                 SAXParser saxParser = saxParserFactory.newSAXParser();
-                DescriptorHandler handler = getWeblogicDescriptorHandler(ejbDescriptor.getParentFile());
+                DescriptorHandler handler
+                    = getWeblogicDescriptorHandler(ejbDescriptor.getParentFile());
 
                 saxParser.parse(new InputSource
                     (new FileInputStream(weblogicDD)),
@@ -570,7 +571,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 } else if (PUBLICID_EJB20.equals(publicId)) {
                     ejbcClassName = COMPILER_EJB20;
                 } else {
-                    log("Unrecognized publicId " + publicId + " - using EJB 1.1 compiler", Project.MSG_WARN);
+                    log("Unrecognized publicId " + publicId
+                        + " - using EJB 1.1 compiler", Project.MSG_WARN);
                     ejbcClassName = COMPILER_EJB11;
                 }
             }
@@ -747,7 +749,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
                             if (genericEntry.getName().endsWith(".class")) {
                                 //File are different see if its an object or an interface
-                                String classname = genericEntry.getName().replace(File.separatorChar, '.');
+                                String classname
+                                    = genericEntry.getName().replace(File.separatorChar, '.');
 
                                 classname = classname.substring(0, classname.lastIndexOf(".class"));
 
@@ -755,7 +758,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
                                 if (genclass.isInterface()) {
                                     //Interface changed   rebuild jar.
-                                    log("Interface " + genclass.getName() + " has changed", Project.MSG_VERBOSE);
+                                    log("Interface " + genclass.getName()
+                                        + " has changed", Project.MSG_VERBOSE);
                                     rebuild = true;
                                     break;
                                 } else {
@@ -766,7 +770,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                                 // is it the manifest. If so ignore it
                                 if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
                                     //File other then class changed   rebuild
-                                    log("Non class file " + genericEntry.getName() + " has changed", Project.MSG_VERBOSE);
+                                    log("Non class file " + genericEntry.getName()
+                                        + " has changed", Project.MSG_VERBOSE);
                                     rebuild = true;
                                     break;
                                 }
@@ -775,7 +780,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     } else {
                         // a file doesnt exist rebuild
 
-                        log("File " + filepath + " not present in weblogic jar", Project.MSG_VERBOSE);
+                        log("File " + filepath + " not present in weblogic jar",
+                            Project.MSG_VERBOSE);
                         rebuild = true;
                         break;
                     }
@@ -798,8 +804,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         InputStream is;
                         JarEntry je = (JarEntry) e.nextElement();
 
-                        if (je.getCompressedSize() == -1 ||
-                            je.getCompressedSize() == je.getSize()) {
+                        if (je.getCompressedSize() == -1
+                            || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);
                         } else {
                             newJarStream.setLevel(9);
@@ -807,7 +813,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
                         // Update with changed Bean class
                         if (replaceEntries.containsKey(je.getName())) {
-                            log("Updating Bean class from generic Jar " + je.getName(), Project.MSG_VERBOSE);
+                            log("Updating Bean class from generic Jar "
+                                + je.getName(), Project.MSG_VERBOSE);
                             // Use the entry from the generic jar
                             je = (JarEntry) replaceEntries.get(je.getName());
                             is = genericJar.getInputStream(je);

@@ -69,6 +69,12 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  */
 public class AncestorAnalyzer extends AbstractAnalyzer {
 
+    /**
+     * Default constructor
+     *
+     * Causes the BCEL classes to load to ensure BCEL dependencies can
+     * be satisfied
+     */
     public AncestorAnalyzer() {
         // force BCEL classes to load now
         try {

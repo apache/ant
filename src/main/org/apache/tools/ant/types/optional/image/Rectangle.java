@@ -86,7 +86,8 @@ public class Rectangle extends BasicShape implements DrawOperation {
     }
 
     public PlanarImage executeDrawOperation() {
-        log("\tCreating Rectangle w=" + width + " h=" + height + " arcw=" + arcwidth + " arch=" + archeight);
+        log("\tCreating Rectangle w=" + width + " h=" + height + " arcw="
+            + arcwidth + " arch=" + archeight);
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR_PRE);
 
         Graphics2D graphics = (Graphics2D) bi.getGraphics();
@@ -106,9 +107,12 @@ public class Rectangle extends BasicShape implements DrawOperation {
         if (!fill.equals("transparent")) {
             graphics.setColor(ColorMapper.getColorByName(fill));
             if ((arcwidth != 0) || (archeight != 0)) {
-                graphics.fillRoundRect(stroke_width, stroke_width, width - (stroke_width * 2), height - (stroke_width * 2), arcwidth, archeight);
+                graphics.fillRoundRect(stroke_width, stroke_width,
+                    width - (stroke_width * 2), height - (stroke_width * 2),
+                    arcwidth, archeight);
             } else {
-                graphics.fillRect(stroke_width, stroke_width, width - (stroke_width * 2), height - (stroke_width * 2));
+                graphics.fillRect(stroke_width, stroke_width,
+                    width - (stroke_width * 2), height - (stroke_width * 2));
             }
         }
 
@@ -120,7 +124,8 @@ public class Rectangle extends BasicShape implements DrawOperation {
                 graphics.drawImage(img.getAsBufferedImage(), null, 0, 0);
             } else if (instr instanceof TransformOperation) {
                 graphics = (Graphics2D) bi.getGraphics();
-                PlanarImage image = ((TransformOperation) instr).executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
+                PlanarImage image
+                    = ((TransformOperation) instr).executeTransformOperation(PlanarImage.wrapRenderedImage(bi));
                 bi = image.getAsBufferedImage();
             }
         }

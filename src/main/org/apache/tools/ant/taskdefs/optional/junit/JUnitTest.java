@@ -178,8 +178,8 @@ public class JUnitTest extends BaseTest implements Cloneable {
     public boolean shouldRun(Project p) {
         if (ifProperty != null && p.getProperty(ifProperty) == null) {
             return false;
-        } else if (unlessProperty != null &&
-                   p.getProperty(unlessProperty) != null) {
+        } else if (unlessProperty != null
+                    && p.getProperty(unlessProperty) != null) {
             return false;
         }
 

@@ -119,7 +119,8 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *
  *   Attributes:
  *
- *     file    --&gt; A single file to operation on (mutually exclusive with the fileset subelements)
+ *     file    --&gt; A single file to operation on (mutually exclusive
+ *                    with the fileset subelements)
  *     match   --&gt; The Regular expression to match
  *     replace --&gt; The Expression replacement string
  *     flags   --&gt; The options to give to the replacement

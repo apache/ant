@@ -242,7 +242,7 @@ public class FixCRLF extends MatchingTask {
     /**
      * Specify how carriage return (CR) characters are to be handled.
      *
-     * @param option valid values:
+     * @param attr valid values:
      * <ul>
      * <li>add: ensure that there is a CR before every LF
      * <li>asis: leave CR characters alone

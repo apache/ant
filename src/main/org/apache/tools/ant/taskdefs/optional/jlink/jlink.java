@@ -201,7 +201,8 @@ public class jlink extends Object {
         jlink linker = new jlink();
 
         linker.setOutfile(args[0]);
-        //To maintain compatibility with the command-line version, we will only add files to be merged.
+        // To maintain compatibility with the command-line version,
+        // we will only add files to be merged.
         for (int i = 1; i < args.length; i++) {
             linker.addMergeFile(args[i]);
         }
@@ -250,7 +251,8 @@ public class jlink extends Object {
                         //It was the duplicate entry.
                         continue;
                     } else {
-                        //I hate to admit it, but we don't know what happened here.  Throw the Exception.
+                        // I hate to admit it, but we don't know what happened
+                        // here.  Throw the Exception.
                         throw ex;
                     }
                 }
@@ -273,7 +275,8 @@ public class jlink extends Object {
     /*
      * Adds contents of a directory to the output.
      */
-    private void addDirContents(ZipOutputStream output, File dir, String prefix, boolean compress) throws IOException {
+    private void addDirContents(ZipOutputStream output, File dir, String prefix,
+                                boolean compress) throws IOException {
         String[] contents = dir.list();
 
         for (int i = 0; i < contents.length; ++i) {
@@ -310,7 +313,8 @@ public class jlink extends Object {
             } catch (IOException ioe) {
             }
         }
-        System.out.println("From " + file.getPath() + " and prefix " + prefix + ", creating entry " + prefix + name);
+        System.out.println("From " + file.getPath() + " and prefix " + prefix
+            + ", creating entry " + prefix + name);
         return (prefix + name);
     }
 
@@ -318,7 +322,8 @@ public class jlink extends Object {
     /*
      * Adds a file to the output stream.
      */
-    private void addFile(ZipOutputStream output, File file, String prefix, boolean compress) throws IOException {
+    private void addFile(ZipOutputStream output, File file, String prefix,
+                         boolean compress) throws IOException {
         //Make sure file exists
         if (!file.exists()) {
             return;
@@ -339,7 +344,8 @@ public class jlink extends Object {
     /*
      * A convenience method that several other methods might call.
      */
-    private void addToOutputStream(ZipOutputStream output, InputStream input, ZipEntry ze) throws IOException {
+    private void addToOutputStream(ZipOutputStream output, InputStream input,
+                                   ZipEntry ze) throws IOException {
         try {
             output.putNextEntry(ze);
         } catch (ZipException zipEx) {

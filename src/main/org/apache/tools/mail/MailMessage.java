@@ -211,16 +211,16 @@ public class MailMessage {
         this.port = port;
     }
 
-  /**
-   * Sets the from address.  Also sets the "From" header.  This method should
-   * be called only once.
-   *
-   * @exception IOException if there's any problem reported by the mail server
-   */
-  public void from(String from) throws IOException {
-    sendFrom(from);
-    this.from = from;
-  }
+    /**
+     * Sets the from address.  Also sets the "From" header.  This method should
+     * be called only once.
+     *
+     * @exception IOException if there's any problem reported by the mail server
+     */
+    public void from(String from) throws IOException {
+        sendFrom(from);
+        this.from = from;
+    }
 
     /**
      * Sets the replyto address
@@ -469,12 +469,14 @@ public class MailMessage {
             try {
                 in.close();
             } catch (IOException e) {
+                // ignore
             }
         }
         if (socket != null) {
             try {
                 socket.close();
             } catch (IOException e) {
+                // ignore
             }
         }
     }

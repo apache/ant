@@ -514,11 +514,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * @since Ant 1.5
      */
     protected boolean assumeJava11() {
-        return "javac1.1".equals(attributes.getCompilerVersion()) ||
-            ("classic".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) ||
-            ("extJavac".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
+        return "javac1.1".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
     }
 
     /**
@@ -526,11 +526,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * @since Ant 1.5
      */
     protected boolean assumeJava12() {
-        return "javac1.2".equals(attributes.getCompilerVersion()) ||
-            ("classic".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) ||
-            ("extJavac".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
+        return "javac1.2".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
     }
 
     /**
@@ -538,13 +538,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * @since Ant 1.5
      */
     protected boolean assumeJava13() {
-        return "javac1.3".equals(attributes.getCompilerVersion()) ||
-            ("classic".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
-            ("modern".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
-            ("extJavac".equals(attributes.getCompilerVersion())
-             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
+        return "javac1.3".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
     }
 
 }

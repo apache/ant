@@ -117,7 +117,7 @@ public class DefaultExcludes extends Task {
      /**
      * Pattern to remove from the default excludes.
      *
-     * @param msg Sets the value for the pattern that
+     * @param remove Sets the value for the pattern that
      *            should nolonger be excluded.
      */
     public void setRemove(String remove) {

@@ -93,7 +93,9 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
         if (jbossDD.exists()) {
             ejbFiles.put(META_DIR + JBOSS_DD, jbossDD);
         } else {
-            log("Unable to locate jboss deployment descriptor. It was expected to be in " + jbossDD.getPath(), Project.MSG_WARN);
+            log("Unable to locate jboss deployment descriptor. "
+                + "It was expected to be in " + jbossDD.getPath(),
+                Project.MSG_WARN);
             return;
         }
         String descriptorFileName = JBOSS_CMP10D;

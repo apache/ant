@@ -69,6 +69,7 @@ import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Reference;
 
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
@@ -307,12 +308,12 @@ public class AntStructure extends Task {
 
             sb.append(lSep).append("          ").append(attrName).append(" ");
             Class type = ih.getAttributeType(attrName);
-            if (type.equals(java.lang.Boolean.class) ||
-                type.equals(java.lang.Boolean.TYPE)) {
+            if (type.equals(java.lang.Boolean.class)
+                || type.equals(java.lang.Boolean.TYPE)) {
                 sb.append(BOOLEAN).append(" ");
-            } else if (org.apache.tools.ant.types.Reference.class.isAssignableFrom(type)) {
+            } else if (Reference.class.isAssignableFrom(type)) {
                 sb.append("IDREF ");
-            } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(type)) {
+            } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
                 try {
                     EnumeratedAttribute ea =
                         (EnumeratedAttribute) type.newInstance();
@@ -363,9 +364,8 @@ public class AntStructure extends Task {
         for (int i = 0; i < length; i++) {
             char c = s.charAt(i);
             // XXX - we are ommitting CombiningChar and Extender here
-            if (!Character.isLetterOrDigit(c) &&
-                c != '.' && c != '-' &&
-                c != '_' && c != ':') {
+            if (!Character.isLetterOrDigit(c)
+                && c != '.' && c != '-' && c != '_' && c != ':') {
                 return false;
             }
         }

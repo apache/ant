@@ -63,12 +63,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * <p> Create then run <code>JUnitTest</code>'s based on the list of files given by the fileset attribute.
+ * <p> Create then run <code>JUnitTest</code>'s based on the list of files
+ *     given by the fileset attribute.
  *
  * <p> Every <code>.java</code> or <code>.class</code> file in the fileset is
  * assumed to be a testcase.
- * A <code>JUnitTest</code> is created for each of these named classes with basic setup
- * inherited from the parent <code>BatchTest</code>.
+ * A <code>JUnitTest</code> is created for each of these named classes with
+ * basic setup inherited from the parent <code>BatchTest</code>.
  *
  * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @author Stefan Bodewig

@@ -822,7 +822,7 @@ public class FileUtils {
      * </ul>
      *
      * @param path the path to be normalized
-     * @param the normalized version of the path.
+     * @return the normalized version of the path.
      *
      * @throws java.lang.NullPointerException if the file path is
      * equal to null.
@@ -876,8 +876,8 @@ public class FileUtils {
             // Eliminate consecutive slashes after the drive spec
             StringBuffer sbPath = new StringBuffer();
             for (int i = colon + 1; i < ca.length; i++) {
-                if ((ca[i] != '\\') ||
-                    (ca[i] == '\\' && ca[i - 1] != '\\')) {
+                if ((ca[i] != '\\')
+                    || (ca[i] == '\\' && ca[i - 1] != '\\')) {
                     sbPath.append(ca[i]);
                 }
             }

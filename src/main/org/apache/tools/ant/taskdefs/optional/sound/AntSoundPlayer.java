@@ -100,9 +100,12 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     }
 
     /**
-     * @param source the location of the audio file to be played when the build is successful
-     * @param loops the number of times the file should be played when the build is successful
-     * @param duration the number of milliseconds the file should be played when the build is successful
+     * @param file the location of the audio file to be played when the
+     *        build is successful
+     * @param loops the number of times the file should be played when
+     *        the build is successful
+     * @param duration the number of milliseconds the file should be
+     *        played when the build is successful
      */
     public void addBuildSuccessfulSound(File file, int loops, Long duration) {
         this.fileSuccess = file;
@@ -112,9 +115,12 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
 
     /**
-     * @param fileName the location of the audio file to be played when the build fails
-     * @param loops the number of times the file should be played when the build is fails
-     * @param duration the number of milliseconds the file should be played when the build fails
+     * @param fileFail the location of the audio file to be played
+     *        when the build fails
+     * @param loopsFail the number of times the file should be played
+     *        when the build is fails
+     * @param durationFail the number of milliseconds the file should be
+     *        played when the build fails
      */
     public void addBuildFailedSound(File fileFail, int loopsFail, Long durationFail) {
         this.fileFail = fileFail;

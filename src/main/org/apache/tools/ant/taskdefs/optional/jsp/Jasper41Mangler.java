@@ -81,8 +81,8 @@ public class Jasper41Mangler implements JspMangler {
         int end = jspUri.length();
         StringBuffer modifiedClassName;
         modifiedClassName = new StringBuffer(jspUri.length() - start);
-        if (!Character.isJavaIdentifierStart(jspUri.charAt(start)) ||
-                jspUri.charAt(start) == '_') {
+        if (!Character.isJavaIdentifierStart(jspUri.charAt(start))
+            || jspUri.charAt(start) == '_') {
             // If the first char is not a start of Java identifier or is _
             // prepend a '_'.
             modifiedClassName.append('_');

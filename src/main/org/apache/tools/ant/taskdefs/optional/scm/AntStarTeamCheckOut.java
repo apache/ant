@@ -241,8 +241,8 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
         // Because of the way I create the full target path, there
         // must be NO slash at the end of targetFolder and folderName
         // However, if the slash or backslash is the only character, leave it alone
-        if ((getTargetFolder().endsWith("/") ||
-            getTargetFolder().endsWith("\\"))
+        if ((getTargetFolder().endsWith("/")
+                || getTargetFolder().endsWith("\\"))
              && getTargetFolder().length() > 1) {
             setTargetFolder(getTargetFolder().substring(0, getTargetFolder().length() - 1));
         }
@@ -453,7 +453,8 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
             // Replace the projectName in the file's absolute path to the viewName.
             // This makes the root target of a checkout operation equal to:
             // targetFolder + dirName
-            StringTokenizer pathTokenizer = new StringTokenizer(rootSourceFolder.getFolderHierarchy(), delim);
+            StringTokenizer pathTokenizer
+                = new StringTokenizer(rootSourceFolder.getFolderHierarchy(), delim);
             String currentToken = null;
             boolean foundRoot = false;
 
@@ -500,7 +501,8 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
             Folder[] subfolders = f.getSubFolders();
 
             for (int i = 0; i < subfolders.length; i++) {
-                runFolder(s, p, v, t, subfolders[i], new java.io.File(tgt, subfolders[i].getName()));
+                runFolder(s, p, v, t, subfolders[i],
+                          new java.io.File(tgt, subfolders[i].getName()));
             }
         }
     }
@@ -881,7 +883,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
     /**
      * Sets the <CODE>targetFolder</CODE> attribute to the given value.
      *
-     * @param target The target path on the local machine to check out to.
+     * @param targetFolder The target path on the local machine to check out to.
      * @see #getTargetFolder()
      */
     public void setTargetFolder(String targetFolder) {
@@ -988,7 +990,8 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
      * <BR>
      * Separate multiple inlcude filters by <I>spaces</I> , not commas as Ant
      * uses. For example, if you want to check out all .java and .class\
-     * files, you would put the following line in your program: <CODE>setIncludes("*.java *.class");</CODE>
+     * files, you would put the following line in your program:
+     * <CODE>setIncludes("*.java *.class");</CODE>
      * Finally, note that filters have no effect on the <B>directories</B>
      * that are scanned; you could not check out files from directories with
      * names beginning only with "build," for instance. Of course, you could
@@ -1042,7 +1045,8 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
      * <BR>
      * Separate multiple exlcude filters by <I>spaces</I> , not commas as Ant
      * uses. For example, if you want to check out all files except .XML and
-     * .HTML files, you would put the following line in your program: <CODE>setExcludes("*.XML *.HTML");</CODE>
+     * .HTML files, you would put the following line in your program:
+     * <CODE>setExcludes("*.XML *.HTML");</CODE>
      * Finally, note that filters have no effect on the <B>directories</B>
      * that are scanned; you could not skip over all files in directories
      * whose names begin with "project," for instance. <BR>

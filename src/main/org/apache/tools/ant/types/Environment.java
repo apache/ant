@@ -144,7 +144,8 @@ public class Environment {
          */
         public String getContent() throws BuildException {
             if (key == null || value == null) {
-                throw new BuildException("key and value must be specified for environment variables.");
+                throw new BuildException("key and value must be specified "
+                    + "for environment variables.");
             }
             StringBuffer sb = new StringBuffer(key.trim());
             sb.append("=").append(value.trim());

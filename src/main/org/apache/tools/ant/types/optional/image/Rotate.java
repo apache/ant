@@ -125,7 +125,6 @@ public class Rotate extends TransformOperation implements DrawOperation {
      *  It absolutely requires that there be a DrawOperation nested beneath it,
      *  but only the FIRST DrawOperation will be handled since it can only return
      *  ONE image.
-     * @param image The image to perform the transformation on.
      */
     public PlanarImage executeDrawOperation() {
         for (int i = 0; i < instructions.size(); i++) {

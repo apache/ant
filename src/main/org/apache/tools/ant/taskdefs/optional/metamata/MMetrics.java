@@ -177,11 +177,14 @@ Format Options
             throw new BuildException("Output XML file must be set via 'tofile' attribute.");
         }
         if (path == null && fileSets.size() == 0) {
-            throw new BuildException("Must set either paths (path element) or files (fileset element)");
+            throw new BuildException("Must set either paths (path element) "
+                + "or files (fileset element)");
         }
-        // I don't accept dirs and files at the same time, I cannot recognize the semantic in the result
+        // I don't accept dirs and files at the same time,
+        // I cannot recognize the semantic in the result
         if (path != null && fileSets.size() > 0) {
-            throw new BuildException("Cannot set paths (path element) and files (fileset element) at the same time");
+            throw new BuildException("Cannot set paths (path element) and "
+                + "files (fileset element) at the same time");
         }
         tmpFile = createTmpFile();
     }

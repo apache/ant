@@ -525,8 +525,8 @@ public class Jar extends Zip {
                 throw new BuildException("Unsupported encoding while reading "
                     + "manifest: " + e.getMessage(), e);
             }
-        } else if (filesetManifestConfig != null &&
-                   !filesetManifestConfig.getValue().equals("skip")) {
+        } else if (filesetManifestConfig != null
+                    && !filesetManifestConfig.getValue().equals("skip")) {
             // we add this to our group of fileset manifests
             log("Found manifest to merge in file " + file,
                 Project.MSG_VERBOSE);

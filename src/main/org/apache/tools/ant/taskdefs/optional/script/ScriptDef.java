@@ -331,11 +331,9 @@ public class ScriptDef extends Task {
     /**
      * Execute the script.
      *
-     * @param scriptConfig the RuntimeConfigurable which contains the attribute
-     * definitions for the script task instance.
+     * @param attributes collection of attributes
      *
-     * @param elements a list of UnknownElements which contain the configuration
-     * of the nested elements of the script instance.
+     * @param elements a list of nested element values.
      */
     public void executeScript(Map attributes, Map elements) {
         try {

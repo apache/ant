@@ -181,11 +181,11 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
                 output.write(results.toString());
                 output.flush();
             } finally {
-                if (out != System.out &&
-                        out != System.err) {
+                if (out != System.out && out != System.err) {
                     try {
                         out.close();
                     } catch (IOException e) {
+                        // ignore
                     }
                 }
             }

@@ -798,7 +798,8 @@ public class IContract extends MatchingTask {
                     if (targetPrinter != null) {
                         targetPrinter.println(srcFile.getAbsolutePath());
                     }
-                    File classFile = new File(buildDir, files[i].substring(0, files[i].indexOf(".java")) + ".class");
+                    File classFile
+                        = new File(buildDir, files[i].substring(0, files[i].indexOf(".java")) + ".class");
 
                     if (srcFile.lastModified() > now) {
                         log("Warning: file modified in the future: "

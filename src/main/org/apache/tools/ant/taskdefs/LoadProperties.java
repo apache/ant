@@ -106,7 +106,8 @@ public final class LoadProperties extends Task {
      * Encoding to use for input, defaults to the platform's default
      * encoding. <p>
      *
-     * For a list of possible values see <a href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
+     * For a list of possible values see
+     * <a href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
      * http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html
      * </a>.</p>
      *

@@ -82,9 +82,12 @@ import org.apache.tools.ant.types.Path;
  * whether the produced jar is valid or not.
  * The supported options are:
  * <ul>
- * <li>debug  (boolean)    : turn on the debug mode for generation of stubs and skeletons (default:false)</li>
- * <li>verify (boolean)    : turn on the verification at the end of the jar production    (default:true) </li>
- * <li>verifyargs (String) : add optional argument to verify command (see vbj com.inprise.ejb.util.Verify)</li>
+ * <li>debug  (boolean)    : turn on the debug mode for generation of
+ *                           stubs and skeletons (default:false)</li>
+ * <li>verify (boolean)    : turn on the verification at the end of the jar
+ *                           production  (default:true) </li>
+ * <li>verifyargs (String) : add optional argument to verify command
+ *                           (see vbj com.inprise.ejb.util.Verify)</li>
  * <li>basdtd (String)     : location of the BAS DTD </li>
  * <li>generateclient (boolean) : turn on the client jar file generation </li>
  * <li>version (int)       : tell what is the borland appserver version 4 or 5 </li>
@@ -92,7 +95,9 @@ import org.apache.tools.ant.types.Path;
  *
  *<PRE>
  *
- *      &lt;ejbjar srcdir=&quot;${build.classes}&quot;  basejarname=&quot;vsmp&quot;  descriptordir=&quot;${rsc.dir}/hrmanager&quot;&gt;
+ *      &lt;ejbjar srcdir=&quot;${build.classes}&quot;
+ *               basejarname=&quot;vsmp&quot;
+ *               descriptordir=&quot;${rsc.dir}/hrmanager&quot;&gt;
  *        &lt;borland destdir=&quot;tstlib&quot;&gt;
  *          &lt;classpath refid=&quot;classpath&quot; /&gt;
  *        &lt;/borland&gt;
@@ -106,7 +111,8 @@ import org.apache.tools.ant.types.Path;
  * @author     <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  */
-public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler {
+public class BorlandDeploymentTool extends GenericDeploymentTool
+                                   implements ExecuteStreamHandler {
     public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
@@ -150,7 +156,10 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     private int version = BAS;
 
 
-    /** Instance variable that determines whether it is necessary to verify the produced jar */
+    /**
+     * Instance variable that determines whether it is necessary to verify the
+     * produced jar
+     */
     private boolean verify     = true;
     private String  verifyArgs = "";
 
@@ -383,7 +392,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
         log("generate client for " + sourceJar, Project.MSG_INFO);
         try {
-            gentask = (BorlandGenerateClient) getTask().getProject().createTask("internal_bas_generateclient");
+            Project project = getTask().getProject();
+            gentask
+                = (BorlandGenerateClient) project.createTask("internal_bas_generateclient");
             gentask.setEjbjar(sourceJar);
             gentask.setDebug(java2iiopdebug);
             Path classpath = getCombinedClasspath();

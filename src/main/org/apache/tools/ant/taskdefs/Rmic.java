@@ -79,14 +79,15 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * class and this class is a class nested into another class, you have to
  * specify the classname in the form <code>Outer$$Inner</code> instead of
  * <code>Outer.Inner</code>.</p>
- * <p>It is possible to refine the set of files that are being rmiced. This can be
- * done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>,
+ * <p>It is possible to refine the set of files that are being rmiced. This can
+ * be done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>,
  * <i>excludesfile</i> and <i>defaultexcludes</i>
- * attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
- * have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+ * attributes. With the <i>includes</i> or <i>includesfile</i> attribute you
+ * specify the files you want to have included by using patterns. The
+ * <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
  * the files you want to have excluded. This is also done with patterns. And
- * finally with the <i>defaultexcludes</i> attribute, you can specify whether you
- * want to use default exclusions or not. See the section on
+ * finally with the <i>defaultexcludes</i> attribute, you can specify whether
+ * you want to use default exclusions or not. See the section on
  * directory based tasks</a>, on how the
  * inclusion/exclusion of files works, and how to write patterns.</p>
  * <p>This task forms an implicit FileSet and

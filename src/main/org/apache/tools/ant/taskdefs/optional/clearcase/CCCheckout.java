@@ -367,9 +367,11 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'out' command
      *
-     * @return the 'out' command if the attribute was specified, otherwise an empty string
+     * @return the 'out' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the out flag and path appended
+     * @param CommandLine containing the command line string with or
+     *                    without the out flag and path appended
      */
     private void getOutCommand(Commandline cmd) {
         if (getOut() != null) {
@@ -386,9 +388,11 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'branch' command
      *
-     * @return the 'branch' command if the attribute was specified, otherwise an empty string
+     * @return the 'branch' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the branch flag and name appended
+     * @param CommandLine containing the command line string with or
+                          without the branch flag and name appended
      */
     private void getBranchCommand(Commandline cmd) {
         if (getBranch() != null) {
@@ -406,9 +410,11 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified, otherwise an empty string
+     * @return the 'comment' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the comment flag and string appended
+     * @param CommandLine containing the command line string with or
+     *                    without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -425,9 +431,11 @@ public class CCCheckout extends ClearCase {
     /**
      * Get the 'cfile' command
      *
-     * @return the 'cfile' command if the attribute was specified, otherwise an empty string
+     * @return the 'cfile' command if the attribute was specified,
+     *         otherwise an empty string
      *
-     * @param CommandLine containing the command line string with or without the cfile flag and file appended
+     * @param CommandLine containing the command line string with or
+     *                    without the cfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {

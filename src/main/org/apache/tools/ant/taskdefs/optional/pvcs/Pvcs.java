@@ -524,7 +524,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * should be set to the bin directory of the PVCS installation containing
      * the executables mentioned before. If this attribute isn't specified the
      * tag expects the executables to be found using the PATH environment variable.
-     * @param ws String
+     * @param bin PVCS bin directory
      * @todo use a File setter and resolve paths.
      */
     public void setPvcsbin(String bin) {

@@ -129,7 +129,7 @@ public class TarUtils {
     /**
      * Determine the number of bytes in an entry name.
      *
-     * @param header The header buffer from which to parse.
+     * @param name The header name from which to parse.
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
      * @return The number of bytes in a header's entry name.
@@ -151,7 +151,7 @@ public class TarUtils {
     /**
      * Parse an octal integer from a header buffer.
      *
-     * @param header The header buffer from which to parse.
+     * @param value The header value
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
      * @return The integer value of the octal bytes.
@@ -184,7 +184,7 @@ public class TarUtils {
     /**
      * Parse an octal long integer from a header buffer.
      *
-     * @param header The header buffer from which to parse.
+     * @param value The header value
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
      * @return The long value of the octal bytes.
@@ -201,7 +201,7 @@ public class TarUtils {
     /**
      * Parse the checksum octal integer from a header buffer.
      *
-     * @param header The header buffer from which to parse.
+     * @param value The header value
      * @param offset The offset into the buffer from which to parse.
      * @param length The number of header bytes to parse.
      * @return The integer value of the entry's checksum.

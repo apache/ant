@@ -65,7 +65,7 @@ public interface ResourceFactory {
     /**
      * Query a resource (file, zipentry, ...) by name
      *
-     * @param Name relative path of the resource about which
+     * @param name relative path of the resource about which
      * information is sought.  Expects &quot;/&quot; to be used as the
      * directory separator.
      * @return instance of Resource; the exists attribute of Resource

@@ -233,7 +233,7 @@ public abstract class SOS extends Task implements SOSCmd {
     /**
      * Get the executable to run. Add the path if it was specifed in the build file
      *
-     * @return    String the executable to run
+     * @return the executable to run
      */
     protected String getSosCommand() {
         if (sosCmdDir == null) {
@@ -245,7 +245,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the comment
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getComment() {
         return comment;
@@ -253,7 +253,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the version
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getVersion() {
         return version;
@@ -261,7 +261,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the label
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getLabel() {
         return label;
@@ -269,7 +269,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the username
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getUsername() {
         return sosUsername;
@@ -277,7 +277,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the password
-     * @return String empty string if it wans't set
+     * @return empty string if it wans't set
      */
     protected String getPassword() {
         return sosPassword;
@@ -285,7 +285,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the project path
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getProjectPath() {
         return projectPath;
@@ -293,7 +293,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the VSS server path
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getVssServerPath() {
         return vssServerPath;
@@ -301,7 +301,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the SOS home directory
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getSosHome() {
         return sosHome;
@@ -309,7 +309,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the SOS serve path
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getSosServerPath() {
         return sosServerPath;
@@ -317,7 +317,7 @@ public abstract class SOS extends Task implements SOSCmd {
 
     /**
      * Get the filename to be acted upon
-     * @return String if it was set, null if not
+     * @return if it was set, null if not
      */
     protected String getFilename() {
         return filename;
@@ -326,7 +326,8 @@ public abstract class SOS extends Task implements SOSCmd {
     /**
      * Get the NoCompress flag
      *
-     * @return    String the 'nocompress' Flag if the attribute was 'true', otherwise an empty string
+     * @return the 'nocompress' Flag if the attribute was 'true',
+     *         otherwise an empty string
      */
     protected String getNoCompress() {
         return noCompress ? FLAG_NO_COMPRESSION : "";
@@ -335,7 +336,7 @@ public abstract class SOS extends Task implements SOSCmd {
     /**
      * Get the NoCache flag
      *
-     * @return    String the 'nocache' Flag if the attribute was 'true', otherwise an empty string
+     * @return the 'nocache' Flag if the attribute was 'true', otherwise an empty string
      */
     protected String getNoCache() {
         return noCache ? FLAG_NO_CACHE : "";
@@ -344,7 +345,7 @@ public abstract class SOS extends Task implements SOSCmd {
     /**
      * Get the 'verbose' Flag
      *
-     * @return    String the 'verbose' Flag if the attribute was 'true', otherwise an empty string
+     * @return the 'verbose' Flag if the attribute was 'true', otherwise an empty string
      */
     protected String getVerbose() {
         return verbose ? FLAG_VERBOSE : "";
@@ -353,7 +354,7 @@ public abstract class SOS extends Task implements SOSCmd {
     /**
      * Get the 'recursive' Flag
      *
-     * @return    String the 'recursive' Flag if the attribute was 'true', otherwise an empty string
+     * @return the 'recursive' Flag if the attribute was 'true', otherwise an empty string
      */
     protected String getRecursive() {
         return recursive ? FLAG_RECURSION : "";
@@ -364,7 +365,7 @@ public abstract class SOS extends Task implements SOSCmd {
      * <p>
      * The localpath is created if it didn't exist
      *
-     * @return    String the absolute path of the working directory
+     * @return the absolute path of the working directory
      */
     protected String getLocalPath() {
         if (localPath == null) {

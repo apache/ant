@@ -197,8 +197,8 @@ public class ExtendSelector extends BaseSelector {
             setError("The classname attribute is required");
         } else if (dynselector == null) {
             setError("Internal Error: The custom selector was not created");
-        } else if (!(dynselector instanceof ExtendFileSelector) &&
-                (paramVec.size() > 0)) {
+        } else if (!(dynselector instanceof ExtendFileSelector)
+                    && (paramVec.size() > 0)) {
             setError("Cannot set parameters on custom selector that does not "
                     + "implement ExtendFileSelector");
         }

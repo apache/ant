@@ -201,7 +201,8 @@ public class Utils {
                 // think about it.
 
                 //ooooops should never happen
-                //throw new IllegalArgumentException("Invalid descriptor symbol: '" + i + "' in '" + descriptor + "'");
+                //throw new IllegalArgumentException("Invalid descriptor
+                // symbol: '" + i + "' in '" + descriptor + "'");
         }
         sb.append(dim.toString());
         return ++i;

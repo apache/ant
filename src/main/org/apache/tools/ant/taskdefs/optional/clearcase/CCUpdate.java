@@ -100,12 +100,14 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>currenttime</td>
- *      <td>Specifies that modification time should be written as the current time. Either currenttime or preservetime can be specified.</td>
+ *      <td>Specifies that modification time should be written as the current
+ *          time. Either currenttime or preservetime can be specified.</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
  *      <td>preservetime</td>
- *      <td>Specifies that modification time should preserved from the VOB time. Either currenttime or preservetime can be specified.</td>
+ *      <td>Specifies that modification time should preserved from the VOB
+ *          time. Either currenttime or preservetime can be specified.</td>
  *      <td>No</td>
  *   <tr>
  * </table>

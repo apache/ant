@@ -115,6 +115,9 @@ public class ManifestTask extends Task {
         }
     }
 
+    /**
+     * Default constructor
+     */
     public ManifestTask() {
         mode = new Mode();
         mode.setValue("replace");

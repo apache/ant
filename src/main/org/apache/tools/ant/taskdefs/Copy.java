@@ -351,9 +351,8 @@ public class Copy extends Task {
                         destFile = new File(destDir, file.getName());
                     }
 
-                    if (forceOverwrite ||
-                        !destFile.exists() ||
-                        (file.lastModified() > destFile.lastModified())) {
+                    if (forceOverwrite || !destFile.exists()
+                        || (file.lastModified() > destFile.lastModified())) {
                         fileCopyMap.put(file.getAbsolutePath(),
                                         destFile.getAbsolutePath());
                     } else {

@@ -69,6 +69,12 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class FullAnalyzer extends AbstractAnalyzer {
+    /**
+     * Default constructor
+     *
+     * Causes the BCEL classes to load to ensure BCEL dependencies can
+     * be satisfied
+     */
     public FullAnalyzer() {
         // force BCEL classes to load now
         try {

@@ -160,7 +160,7 @@ public final class DateUtils {
      * <li>seconds are always displayed in plural form (ie "0 seconds" or
      * "10 seconds") except for 1 (ie "1 second")</li>
      * </ul>
-     * @param time the elapsed time to report in milliseconds.
+     * @param millis the elapsed time to report in milliseconds.
      * @return the formatted text in minutes/seconds.
      */
     public static String formatElapsedTime(long millis) {

@@ -373,11 +373,11 @@ public class Ant extends Task {
 
             // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
-            if (newProject.getBaseDir().equals(getProject().getBaseDir()) &&
-                newProject.getProperty("ant.file").equals(getProject().getProperty("ant.file"))
+            if (newProject.getBaseDir().equals(getProject().getBaseDir())
+                && newProject.getProperty("ant.file").equals(getProject().getProperty("ant.file"))
                 && getOwningTarget() != null
-                && (getOwningTarget().getName().equals("") ||
-                    getOwningTarget().getName().equals(target))) {
+                && (getOwningTarget().getName().equals("")
+                    || getOwningTarget().getName().equals(target))) {
                 throw new BuildException("ant task calling its own parent "
                                          + "target");
             }

@@ -172,8 +172,8 @@ public class Replace extends MatchingTask {
                 }
 
                 //Make sure property exists in property file
-                if (properties == null ||
-                    properties.getProperty(property) == null) {
+                if (properties == null
+                    || properties.getProperty(property) == null) {
                     String message = "property \"" + property
                         + "\" was not found in " + propertyFile.getPath();
                     throw new BuildException(message);
