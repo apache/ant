@@ -112,8 +112,8 @@ public class Project {
 
     private Vector listeners = new Vector();
 
-    /** The system classloader - may be null */    
-    private ClassLoader systemLoader = null;
+    /** The Ant core classloader - may be null if using system loader */    
+    private ClassLoader coreLoader = null;
 
     /** Records the latest task on a thread */ 
     private Hashtable threadTasks = new Hashtable();
@@ -216,12 +216,12 @@ public class Project {
         setSystemProperties();
     }
 
-    public void setSystemLoader(ClassLoader systemLoader) {
-        this.systemLoader = systemLoader;
+    public void setCoreLoader(ClassLoader coreLoader) {
+        this.coreLoader = coreLoader;
     }
     
-    public ClassLoader getSystemLoader() {
-        return systemLoader;
+    public ClassLoader getCoreLoader() {
+        return coreLoader;
     }
     
     public void addBuildListener(BuildListener listener) {

@@ -132,7 +132,7 @@ public class Main {
      * Entry point allowing for more options from other front ends
      */
     public static void start(String[] args, Properties additionalUserProperties,
-                             ClassLoader systemLoader) {
+                             ClassLoader coreLoader) {
         Main m = null;
 
         try {
@@ -151,7 +151,7 @@ public class Main {
         }
         
         try {
-            m.runBuild(systemLoader);
+            m.runBuild(coreLoader);
             System.exit(0);
         } catch (BuildException be) {
             if (m.err != System.err) {
@@ -390,7 +390,7 @@ public class Main {
     /**
      * Executes the build.
      */
-    private void runBuild(ClassLoader systemLoader) throws BuildException {
+    private void runBuild(ClassLoader coreLoader) throws BuildException {
 
         if (!readyToRun) {
             return;
@@ -403,7 +403,7 @@ public class Main {
         }
 
         final Project project = new Project();
-        project.setSystemLoader(systemLoader);
+        project.setCoreLoader(coreLoader);
         
         Throwable error = null;
 
