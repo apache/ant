@@ -93,7 +93,7 @@ public class SymlinkTest extends BuildFileTest {
 
     public void setUp() {
         if (supportsSymlinks) {
-            configureProject("src/etc/testcases/taskdefs/optional/symlink.xml");
+            configureProject("src/etc/testcases/taskdefs/optional/unix/symlink.xml");
             executeTarget("setup");
         }
     }
