@@ -77,18 +77,6 @@ public class XSLTProcess
     }
 
     /**
-     * Set the classpath to load the Processor through via reference
-     * (attribute).
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
-    }
-
-    /**
      * Set the destination directory into which the XSL result files should be
      * copied to
      *
