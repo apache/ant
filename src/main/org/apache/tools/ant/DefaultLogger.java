@@ -254,7 +254,7 @@ public class DefaultLogger implements BuildLogger {
                 String name = event.getTask().getTaskName();
                 String label = "[" + name + "] ";
                 int size = LEFT_COLUMN_SIZE - label.length();
-                StringBuffer tmp = new StringBuffer(size);
+                StringBuffer tmp = new StringBuffer();
                 for (int i = 0; i < size; i++) {
                     tmp.append(" ");
                 }
