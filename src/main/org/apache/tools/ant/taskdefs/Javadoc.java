@@ -239,7 +239,7 @@ public class Javadoc extends Task {
     }
 
     public void setAdditionalparam(String add){
-        cmd.createArgument().setValue(add);
+        cmd.createArgument().setLine(add);
     }
     
     public void setSourcepath(Path src) {
