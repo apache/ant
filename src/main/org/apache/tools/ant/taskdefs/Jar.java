@@ -93,7 +93,7 @@ public class Jar extends Zip {
     /** The index file name. */
     private static final String INDEX_NAME = "META-INF/INDEX.LIST";
 
-    /** The mainfest file name. */
+    /** The manifest file name. */
     private static final String MANIFEST_NAME = "META-INF/MANIFEST.MF";
 
     /** merged manifests added through addConfiguredManifest */
@@ -483,7 +483,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Overriden from Zip class to deal with manifests and index lists.
+     * Overridden from Zip class to deal with manifests and index lists.
      */
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)

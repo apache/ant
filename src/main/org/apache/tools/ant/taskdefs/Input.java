@@ -92,7 +92,7 @@ public class Input extends Task {
     /**
      * Defines the name of a property to be created from input. Behaviour is
      * according to property task which means that existing properties
-     * cannot be overriden.
+     * cannot be overridden.
      *
      * @param addproperty Name for the property to be created from input
      */

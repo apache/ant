@@ -803,7 +803,7 @@ public class Java extends Task {
      *
      * @return new watchdog
      *
-     * @throws BuildException under unknown circumnstances
+     * @throws BuildException under unknown circumstances
      *
      * @since Ant 1.5
      */

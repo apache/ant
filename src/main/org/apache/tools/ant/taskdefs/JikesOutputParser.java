@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -117,7 +117,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     /**
      * Construct a new Parser object
-     * @param task - task in whichs context we are called
+     * @param task - task in which context we are called
      */
     protected JikesOutputParser(Task task, boolean emacsMode) {
         super();
@@ -147,7 +147,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     private void parseStandardOutput(BufferedReader reader) throws IOException {
         String line;
         String lower;
-        // We assume, that every output, jike does, stands for an error/warning
+        // We assume, that every output, jikes does, stands for an error/warning
         // XXX
         // Is this correct?
 
@@ -201,7 +201,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     /**
      * Indicate if there were errors during the compile
-     * @return if errors ocured
+     * @return if errors occurred
      */
     protected boolean getErrorFlag() {
         return errorFlag;

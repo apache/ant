@@ -1173,7 +1173,7 @@ public class Javadoc extends Task {
     /**
      * Control warnings about serial tag.
      *
-     * @param b if true, generate warning aboutthe serial tag.
+     * @param b if true, generate warning about the serial tag.
      */
     public void setSerialwarn(boolean b) {
         add12ArgIf(b, "-serialwarn");

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -111,7 +111,7 @@ public class Kjc extends DefaultCompilerAdapter {
     protected Commandline setupKjcCommand() {
         Commandline cmd = new Commandline();
 
-        // generate classpath, because kjc does't support sourcepath.
+        // generate classpath, because kjc doesn't support sourcepath.
         Path classpath = getCompileClasspath();
 
         if (deprecation == true) {

@@ -373,7 +373,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
-     * &qout;niceSourceList&quot;
+     * &quot;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         attributes.log("Compilation " + cmd.describeArguments(),
@@ -503,7 +503,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
-     * Adds the command line arguments specifc to the current implementation.
+     * Adds the command line arguments specific to the current implementation.
      */
     protected void addCurrentCompilerArgs(Commandline cmd) {
         cmd.addArguments(getJavac().getCurrentCompilerArgs());

@@ -77,7 +77,7 @@ import org.apache.tools.tar.TarInputStream;
  * <p>PatternSets are used to select files to extract
  * <I>from</I> the archive.  If no patternset is used, all files are extracted.
  * </p>
- * <p>FileSet>s may be used used to select archived files
+ * <p>FileSet>s may be used to select archived files
  * to perform unarchival upon.
  * </p>
  * <p>File permissions will not be restored on extracted files.</p>
@@ -160,7 +160,7 @@ public class Untar extends Expand {
     public static final class UntarCompressionMethod
         extends EnumeratedAttribute {
 
-        // permissable values for compression attribute
+        // permissible values for compression attribute
         /**
          *  No compression
          */

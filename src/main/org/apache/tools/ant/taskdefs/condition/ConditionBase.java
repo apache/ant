@@ -253,7 +253,7 @@ public abstract class ConditionBase extends ProjectComponent {
     }
 
     /**
-     * Add an arbitary condition
+     * Add an arbitrary condition
      * @param c a  condition
      * @since Ant 1.6
      */

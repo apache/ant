@@ -172,7 +172,7 @@ public class Jikes extends DefaultCompilerAdapter {
          * Jikes has the nice feature to print error
          * messages in a form readable by emacs, so
          * that emacs can directly set the cursor
-         * to the place, where the error occured.
+         * to the place, where the error occurred.
          */
         String emacsProperty = project.getProperty("build.compiler.emacs");
         if (emacsProperty != null && Project.toBoolean(emacsProperty)) {

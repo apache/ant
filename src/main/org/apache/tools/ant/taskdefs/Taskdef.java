@@ -76,7 +76,7 @@ import org.apache.tools.ant.TaskAdapter;
 public class Taskdef extends Typedef {
 
     /**
-     * Default constuctor.
+     * Default constructor.
      * Creates a new Taskdef instance.
      * This sets the adapter and the adaptto classes to
      * TaskAdapter and Task.

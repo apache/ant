@@ -509,7 +509,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Process the input file to the output file with the given stylesheet.
      *
      * @param inFile the input file to process.
-     * @param outFile the detination file.
+     * @param outFile the destination file.
      * @param stylesheet the stylesheet to use.
      * @exception BuildException if the processing fails.
      */
@@ -709,7 +709,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /**
          * Set whether this param should NOT be used. It
-         * will not be used if the property has been set, orthwise it
+         * will not be used if the property has been set, otherwise it
          * will be used.
          * @param unlessProperty name of property
          */

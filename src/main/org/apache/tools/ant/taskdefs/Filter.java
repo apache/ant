@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,7 @@ import org.apache.tools.ant.Task;
 
 /**
  * Sets a token filter that is used by the file copy tasks
- * to do token substitution. Sets mutiple tokens by
+ * to do token substitution. Sets multiple tokens by
  * reading these from a file.
  *
  * @author Stefano Mazzocchi

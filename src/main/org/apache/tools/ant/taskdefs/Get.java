@@ -171,7 +171,7 @@ public class Get extends Task {
                     //not modified so no file download. just return
                     //instead and trace out something so the user
                     //doesn't think that the download happened when it
-                    //didnt
+                    //didn't
                     log("Not modified - so not downloaded");
                     return;
                 }
@@ -192,7 +192,7 @@ public class Get extends Task {
             //REVISIT: at this point even non HTTP connections may
             //support the if-modified-since behaviour -we just check
             //the date of the content and skip the write if it is not
-            //newer. Some protocols (FTP) dont include dates, of
+            //newer. Some protocols (FTP) don't include dates, of
             //course.
 
             InputStream is = null;

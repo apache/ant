@@ -87,7 +87,7 @@ public class KeySubst extends Task {
     */
     public void execute() throws BuildException {
         log("!! KeySubst is deprecated. Use Filter + Copy instead. !!");
-        log("Performing Substitions");
+        log("Performing Substitutions");
         if (source == null || dest == null) {
             log("Source and destinations must not be null");
             return;
@@ -148,7 +148,7 @@ public class KeySubst extends Task {
     }
 
     /**
-        Sets the seperator between name=value arguments
+        Sets the separator between name=value arguments
         in setKeys(). By default it is "*".
     */
     public void setSep(String sep) {

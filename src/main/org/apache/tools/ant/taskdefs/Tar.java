@@ -172,7 +172,7 @@ public class Tar extends MatchingTask {
      * Allowable values are
      * <ul>
      * <li>  truncate - paths are truncated to the maximum length
-     * <li>  fail - paths greater than the maximim cause a build exception
+     * <li>  fail - paths greater than the maximum cause a build exception
      * <li>  warn - paths greater than the maximum cause a warning and GNU is used
      * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
      * <li>  omit - paths greater than the maximum are omitted from the archive
@@ -196,7 +196,7 @@ public class Tar extends MatchingTask {
      * Allowable values are
      * <ul>
      * <li>  truncate - paths are truncated to the maximum length
-     * <li>  fail - paths greater than the maximim cause a build exception
+     * <li>  fail - paths greater than the maximum cause a build exception
      * <li>  warn - paths greater than the maximum cause a warning and GNU is used
      * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
      * <li>  omit - paths greater than the maximum are omitted from the archive
@@ -596,7 +596,7 @@ public class Tar extends MatchingTask {
      */
     public static class TarLongFileMode extends EnumeratedAttribute {
 
-        // permissable values for longfile attribute
+        // permissible values for longfile attribute
         public static final String WARN = "warn";
         public static final String FAIL = "fail";
         public static final String TRUNCATE = "truncate";
@@ -641,7 +641,7 @@ public class Tar extends MatchingTask {
      */
     public static final class TarCompressionMethod extends EnumeratedAttribute {
 
-        // permissable values for compression attribute
+        // permissible values for compression attribute
         /**
          *    No compression
          */

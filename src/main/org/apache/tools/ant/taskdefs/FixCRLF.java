@@ -672,7 +672,7 @@ public class FixCRLF extends MatchingTask {
 
 
     /**
-     * Process a BufferLine string which is not part of of a string constant.
+     * Process a BufferLine string which is not part of a string constant.
      * The start position of the string is given by the 'next' field.
      * Sets the 'next' and 'column' fields in the BufferLine.
      *

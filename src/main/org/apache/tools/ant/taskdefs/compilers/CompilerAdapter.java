@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,10 +58,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Javac;
 
 /**
- * The interface that all compiler adapters must adher to.
+ * The interface that all compiler adapters must adhere to.
  *
  * <p>A compiler adapter is an adapter that interprets the javac's
- * parameters in preperation to be passed off to the compier this
+ * parameters in preparation to be passed off to the compiler this
  * adapter represents.  As all the necessary values are stored in the
  * Javac task itself, the only thing all adapters need is the javac
  * task, the execute command and a parameterless constructor (for

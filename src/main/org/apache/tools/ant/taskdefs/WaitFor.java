@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,7 +65,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * Wait for an external process to start or to complete some
  * task. This is useful with the <code>parallel</code> task to
- * syncronize the execution of tests with server startup.
+ * synchronize the execution of tests with server startup.
  *
  * The following attributes can be specified on a waitfor task:
  * <ul>
@@ -77,7 +77,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * </ul>
  *
  * The maxwaitunit and checkeveryunit are allowed to have the following values:
- * millesond, second, minute, hour, day and week. The default is millisecond.
+ * millisecond, second, minute, hour, day and week. The default is millisecond.
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  * @author Magesh Umasankar

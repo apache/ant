@@ -193,7 +193,7 @@ public class Copy extends Task {
 
     /**
      * Give the copied files the same last modified time as the original files.
-     * @param preserve if true preserve the modified time, default is false
+     * @param preserve if true perverse the modified time, default is false
      */
     public void setPreserveLastModified(boolean preserve) {
         preserveLastModified = preserve;

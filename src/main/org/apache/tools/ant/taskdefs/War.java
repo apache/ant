@@ -174,7 +174,7 @@ public class War extends Jar {
     }
 
     /**
-     * Overriden from Zip class to deal with web.xml
+     * Overridden from Zip class to deal with web.xml
      */
     protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)

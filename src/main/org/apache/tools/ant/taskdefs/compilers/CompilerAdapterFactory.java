@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,7 +86,7 @@ public class CompilerAdapterFactory {
      * <li>kjc = the kopi compiler</li>
      * <li>gcj = the gcj compiler from gcc</li>
      * <li>sj, symantec = the Symantec Java compiler</li>
-     * <li><i>a fully quallified classname</i> = the name of a compiler
+     * <li><i>a fully qualified classname</i> = the name of a compiler
      * adapter
      * </ul>
      *
@@ -167,7 +167,7 @@ public class CompilerAdapterFactory {
 
     /**
      * query for the Modern compiler existing
-     * @return true iff classic os on the classpath
+     * @return true if classic os on the classpath
      */
     private static boolean doesModernCompilerExist() {
         try {

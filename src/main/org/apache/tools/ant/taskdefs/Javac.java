@@ -82,7 +82,7 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * <li>encoding
  * <li>target
  * <li>depend
- * <li>vebose
+ * <li>verbose
  * <li>failonerror
  * <li>includeantruntime
  * <li>includejavaruntime
@@ -243,7 +243,7 @@ public class Javac extends MatchingTask {
 
     /**
      * Gets the source dirs to find the source java files.
-     * @return the source directorys as a path
+     * @return the source directories as a path
      */
     public Path getSrcdir() {
         return src;
@@ -660,7 +660,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Sets the the name of the javac executable.
+     * Sets the name of the javac executable.
      *
      * <p>Ignored unless fork is true or extJavac has been specified
      * as the compiler.</p>
@@ -765,7 +765,7 @@ public class Javac extends MatchingTask {
      * Where Ant should place temporary files.
      *
      * @since Ant 1.6
-     * @return the temorary directory
+     * @return the temporary directory
      */
     public File getTempdir() {
         return tmpDir;
@@ -875,7 +875,7 @@ public class Javac extends MatchingTask {
     /**
      * The implementation for this particular task.
      *
-     * <p>Defaults to the build.compiler property but can be overriden
+     * <p>Defaults to the build.compiler property but can be overridden
      * via the compiler and fork attributes.</p>
      *
      * <p>If fork has been set to true, the result will be extJavac
@@ -906,7 +906,7 @@ public class Javac extends MatchingTask {
     /**
      * The implementation for this particular task.
      *
-     * <p>Defaults to the build.compiler property but can be overriden
+     * <p>Defaults to the build.compiler property but can be overridden
      * via the compiler attribute.</p>
      *
      * <p>This method does not take the fork attribute into

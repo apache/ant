@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,7 +101,7 @@ public class Tstamp extends Task {
 
     /**
      * create the timestamps. Custom ones are done before
-     * the standard ones, to get their retalation in early.
+     * the standard ones, to get their retaliation in early.
      * @throws BuildException
      */
     public void execute() throws BuildException {
@@ -130,7 +130,7 @@ public class Tstamp extends Task {
     }
 
     /**
-     * create a custom format with the the current prefix.
+     * create a custom format with the current prefix.
      * @return a ready to fill-in format
      */
     public CustomFormat createFormat() {

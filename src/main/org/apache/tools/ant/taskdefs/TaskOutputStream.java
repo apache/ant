@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -117,7 +117,7 @@ public class TaskOutputStream extends OutputStream {
     }
 
     /**
-     * Processes a line of input and determines if an error occured.
+     * Processes a line of input and determines if an error occurred.
      */
 
     private void processLine() {

@@ -168,7 +168,7 @@ public class Sync extends Task {
     }
 
     /**
-     * Removes all files and folders not found as keyes of a table
+     * Removes all files and folders not found as keys of a table
      * (used as a set!).
      *
      * <p>If the provided file is a directory, it is recursively

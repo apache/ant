@@ -899,7 +899,7 @@ public class Zip extends MatchingTask {
     /**
      * Fetch all included and not excluded resources from the sets.
      *
-     * <p>Included directories will preceede included files.</p>
+     * <p>Included directories will precede included files.</p>
      *
      * @since Ant 1.5.2
      */
