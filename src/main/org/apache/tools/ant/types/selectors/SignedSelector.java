@@ -18,7 +18,7 @@
 package org.apache.tools.ant.types.selectors;
 import java.io.File;
 import org.apache.tools.ant.types.DataType;
-import org.apache.tools.ant.taskdefs.IsSigned;
+import org.apache.tools.ant.taskdefs.condition.IsSigned;
 
 /**
  * Selector that chooses files based on whether they are signed or not.

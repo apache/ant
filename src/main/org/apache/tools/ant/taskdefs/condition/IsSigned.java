@@ -14,10 +14,11 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.DataType;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -30,7 +31,7 @@ import java.util.Enumeration;
  * particular signature; otherwise the file is checked for the
  * existence of any signature.
  */
-public class IsSigned extends ConditionAndTask {
+public class IsSigned extends DataType implements Condition {
 
     private static final String SIG_START = "META-INF/";
     private static final String SIG_END = ".SF";
@@ -63,7 +64,7 @@ public class IsSigned extends ConditionAndTask {
      * specified, if the file contains a signature.
      * @return true if the file is signed.
      */
-    protected boolean evaluate() {
+    public boolean eval() {
         if (file == null) {
             throw new BuildException("The file attribute must be set.");
         }
