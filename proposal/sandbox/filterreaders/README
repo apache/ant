@@ -1,0 +1,59 @@
+Ant Filter Readers
+==================
+
+Usecase:
+========
+* Usage of filtering has become a common pattern in 
+  Ant's tasks.  Filtering is being performed one way or
+  another in tasks like <copy>, <move>, <fixcrlf>,
+  <loadfile>, etc.
+
+* There is no generic way to add custom filters
+  currently to these tasks.  User has to either extend
+  the task to add custom filter processing or add
+  more attributes as needed to the task itself.
+  
+* If user is provided with a pluggable filtering
+  mechanism, changes to built-in tasks can be mininized,
+  while at the same time providing increased flexibility
+  to the user.
+
+Design:
+======
+* FilterReaderSet is a collection of 'AntFilterReader's
+
+* Each AntFilterReader encloses the custom class representing 
+  the actual java.io.FilterReader and contains configuration 
+  parameters that may be used by the custom class if it
+  implements the org.apache.tools.ant.types.Configurable
+  interface.
+  
+* Custom filter readers can be created easily even
+  without using any of Ant's API - all one needs to
+  do to create a custom filter is to extend 
+  java.io.FilterReader.
+  
+* If the extended class also implements Configurable,
+  operation parameters can be made available to the
+  custom filter.
+
+* Each FilterReader is piped through the other, if any, in
+  the chain, in the order of declaration.
+
+Example:
+=======
+
+<loadfile srcFile="foo" property="bar">
+    <filterreaderset classname="org.apache.tools.ant.filters.StripLineComments">
+        <param name="cpp.comment" value="//"/>
+        <param name="oracle.comment" value="REM"/>
+        <param name="dbms.comment" value="--"/>
+    </filterreaderset>
+    <filterreaderset classname="org.apache.tools.ant.filters.StripLineBreaks"/>
+</loadfile>
+
+The above example loads the contents of the file foo,
+filters out the lines that begin with //, REM and --,
+removes line breaks and then stores the result in
+the property named bar.
+
