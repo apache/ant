@@ -103,7 +103,7 @@ import org.apache.tools.ant.types.*;
  */
 public class EjbJar extends MatchingTask {
     
-    static class DTDLocation {
+    public static class DTDLocation {
         private String publicId;
         private String location;
         
@@ -155,7 +155,7 @@ public class EjbJar extends MatchingTask {
         /**
          * A Fileset of support classes
          */
-        public FileSet supportFileSet = null;
+        public List supportFileSets = new ArrayList();
         
         /**
          * The list of configured DTD locations
@@ -238,8 +238,9 @@ public class EjbJar extends MatchingTask {
      * @return a fileset which can be populated with support files.
      */
     public FileSet createSupport() {
-        config.supportFileSet = new FileSet();
-        return config.supportFileSet;
+        FileSet supportFileSet = new FileSet();
+        config.supportFileSets.add(supportFileSet);
+        return supportFileSet;
     }
     
 

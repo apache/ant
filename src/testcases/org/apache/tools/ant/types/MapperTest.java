@@ -57,6 +57,7 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.*;
+import org.apache.tools.ant.taskdefs.TaskdefsTest;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -173,5 +174,25 @@ public class MapperTest extends TestCase {
         String[] result = fmm.mapFileName("a.java");
         assertEquals("a.java should match", 1, result.length);
         assertEquals("a.class", result[0]);
+    }
+
+    public void testCopyTaskWithTwoFilesets() {
+        TaskdefForCopyTest t = new TaskdefForCopyTest("test1");
+        t.setUp();
+        t.test1();
+    }
+
+    private class TaskdefForCopyTest extends TaskdefsTest {
+        TaskdefForCopyTest(String name) {
+            super(name);
+        }
+
+        public void setUp() { 
+            configureProject("src/etc/testcases/types/mapper.xml");
+        }
+
+        public void test1() { 
+            executeTarget("test1");
+        }
     }
 }

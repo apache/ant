@@ -95,7 +95,7 @@ import org.apache.tools.ant.types.FileSet;
  *   <td align="center" valign="top"><b>Required</b></td>
  * </tr>
  * <tr>
- *   <td valign="top">project</td>
+ *   <td valign="top">vajproject</td>
  *   <td valign="top">the name of the Project to import to</td>
  *   <td align="center" valign="top">Yes</td>
  * </tr>
@@ -130,7 +130,7 @@ public class VAJImport extends Task {
     /**
      * The VisualAge for Java Project name to import into.
      */
-    public void setProject(String projectName) {
+    public void setVajproject(String projectName) {
         this.importProject = projectName;
     }
 

@@ -64,6 +64,7 @@ import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.util.EventObject;
+import java.util.Date;
 
 /**
  * Logging console display.
@@ -78,6 +79,8 @@ public class BuildConsole extends AntModule {
     private JComboBox _logLevel = null;
     /** Display styles. */
     private ConsoleStyleContext _styles = null;
+	/** ClearLog Button. */
+	private JButton _clearLog = null;
     
 	/** 
 	 * Default ctor.
@@ -112,10 +115,32 @@ public class BuildConsole extends AntModule {
         _logLevel.setSelectedItem(LogLevelEnum.INFO);
         controls.add(_logLevel);
         
+        // Padding.
+        controls.add(Box.createHorizontalStrut(10));
+		_clearLog = new JButton(
+            context.getResources().getString(
+                getClass(), "clearLog"));
+		_clearLog.addActionListener(new ActionHandler());
+		controls.add(_clearLog);
+
         add(BorderLayout.NORTH, controls);
 
     }
 
+
+    /** 
+     * Clear the contents of the console.
+     * 
+     */
+    private void clearDisplay() {
+        Document doc = _text.getDocument();
+        try {
+            doc.remove(0, doc.getLength());
+        }
+        catch(Exception ex) {
+            // Intentionally ignored.
+        }
+    }
 
     /** Class for handling project events. */
     private class Handler implements BusMember {
@@ -132,20 +157,6 @@ public class BuildConsole extends AntModule {
         }
         
         /** 
-         * Clear the contents of the console.
-         * 
-         */
-        private void clearDisplay() {
-            Document doc = _text.getDocument();
-            try {
-                doc.remove(0, doc.getLength());
-            }
-            catch(Exception ex) {
-                // Intentionally ignored.
-            }
-        }
-
-        /** 
          * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
@@ -154,7 +165,6 @@ public class BuildConsole extends AntModule {
          */
         public boolean eventPosted(EventObject event) {
             if(event instanceof ProjectSelectedEvent) {
-                clearDisplay();
                 return true;
             }
 
@@ -164,9 +174,10 @@ public class BuildConsole extends AntModule {
 
             switch(buildEvent.getType().getValue()) {
               case BuildEventType.BUILD_STARTED_VAL:
-                  clearDisplay();
+
               case BuildEventType.BUILD_FINISHED_VAL:
-                  text = buildEvent.getType().toString();
+                  text = buildEvent.getType().toString() + 
+                      " (" + new Date().toString() + ")";
                   style = _styles.getHeadingStyle();
                   break;
               case BuildEventType.TARGET_STARTED_VAL:
@@ -205,6 +216,14 @@ public class BuildConsole extends AntModule {
             return true;
         }
     }
+
+	/** Handles press of the ClearLog button. */
+	private class ActionHandler implements java.awt.event.ActionListener {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if (e.getSource() == _clearLog)	clearDisplay();
+		}
+	}
+
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
         /** 

@@ -5,9 +5,17 @@
     <property name="docs.src" value="./xdocs"/>
     <property name="docs.dest" value="./docs"/>
 
+    <path id="anakia.classpath">
+        <fileset dir="../../jakarta-site2/lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
     <target name="prepare">    
         <available classname="org.apache.velocity.anakia.AnakiaTask" 
-            property="AnakiaTask.present"/>
+                   property="AnakiaTask.present">
+            <classpath refid="anakia.classpath"/>
+        </available>
     </target>
 
     <target depends="prepare" name="prepare-error" unless="AnakiaTask.present">
@@ -18,7 +26,10 @@
     </target>
 
     <target name="docs" depends="prepare-error" if="AnakiaTask.present">
-        <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask"/>
+        <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask">
+            <classpath refid="anakia.classpath"/>
+        </taskdef>
+        
         <anakia basedir="${docs.src}" destdir="${docs.dest}/"
              extension=".html" style="./site.vsl"
              projectFile="stylesheets/project.xml"

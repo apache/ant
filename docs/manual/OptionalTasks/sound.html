@@ -1,0 +1,95 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="sound">Sound</a></h2>
+<h3>Description</h3>
+<p>Plays a sound-file at the end of the build, according to whether
+the build failed or succeeded. You can specify either a specific
+sound-file to play, or, if a directory is specified, the
+<code>&lt;sound&gt;</code> task will randomly select a file to play.
+Note: At this point, the random selection is based on all the files
+in the directory, not just those ending in appropriate suffixes
+for sound-files, so be sure you only have sound-files in the 
+directory you specify.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">loops</td>
+    <td valign="top">the number of extra times to play the sound-file;
+      default is <code>0</code>.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">duration</td>
+    <td valign="top">the amount of time (in milliseconds) to play
+      the sound-file.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<p>
+To specify the sound-files or the sound-file directories, use the
+nested <code>&lt;success&gt;</code> and <code>&lt;fail&gt;</code> 
+elements:</p>
+<blockquote>
+<pre>
+&lt;success&gt;     the path to a sound-file directory, or the name of a
+              specific sound-file, to be played if the build succeeded.
+&lt;fail&gt;        the path to a sound-file directory, or the name of a
+              specific sound-file, to be played if the build succeeded.
+</pre>
+</blockquote>
+
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
+  &lt;sound loops=&quot;2&quot;&gt;
+    &lt;success source=&quot;${user.home}/sounds/bell.wav&quot;/&gt;
+    &lt;fail source=&quot;${user.home}/sounds/ohno.wav&quot;/&gt;
+  &lt;/sound&gt;
+  &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
+&lt;/target&gt;
+</pre>
+</blockquote>
+plays the <code>bell.wav</code> sound-file if the build succeeded, or
+the <code>ohno.wav</code> sound-file if the build failed, three times,
+if the <code>fun</code> property is set to <code>true</code>.
+If the target
+is a dependency of an &quot;initialization&quot; target that other
+targets depend on, the
+<code>fun.done</code> property prevents the target from being executed
+more than once.
+<blockquote>
+<pre>
+&lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
+  &lt;sound>
+    &lt;success source=&quot;//intranet/sounds/success&quot;/&gt;
+    &lt;fail source=&quot;//intranet/sounds/failure&quot;/&gt;
+  &lt;/sound&gt;
+  &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
+&lt;/target&gt;
+</pre>
+</blockquote>
+randomly selects a sound-file to play when the build succeeds or fails.
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

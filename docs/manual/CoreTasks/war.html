@@ -1,0 +1,149 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="war">War</a></h2>
+<h3>Description</h3>
+<p>An extension of the <a href="jar.html">Jar</a> task with special
+treatment for files that should end up in the
+<code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
+<code>WEB-INF</code> directories of the Web Application Archive.</p>
+<p>(The War task is a shortcut for specifying the particular layout of a WAR file. 
+The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
+attributes of zipfilesets in a Zip or Jar task.)</p>
+<p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">warfile</td>
+    <td valign="top">the war-file to create.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">webxml</td>
+    <td valign="top">The deployment descriptor to use (WEB-INF/web.xml).</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory from which to jar the files.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compress</td>
+    <td valign="top">Not only store data but also compress them, defaults to true</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">manifest</td>
+    <td valign="top">the manifest file to use.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">whenempty</td>
+    <td valign="top">Behavior to use if no files match.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Nested elements</h3>
+<h4>lib</h4>
+<p>The nested <code>lib</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
+end up in the <code>WEB-INF/lib</code> directory of the war file.</p>
+<h4>classes</h4>
+<p>The nested <code>classes</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
+end up in the <code>WEB-INF/classes</code> directory of the war file.</p>
+<h4>webinf</h4>
+<p>The nested <code>webinf</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset will
+end up in the <code>WEB-INF</code> directory of the war file. If this
+fileset includes a file named <code>web.xml</code>, the file is
+ignored and you will get a warning.</p>
+<h3>Examples</h3>
+<p>Assume the following structure in the project's base directory:</p>
+<pre>
+thirdparty/libs/jdbc1.jar
+thirdparty/libs/jdbc2.jar
+build/main/com/myco/myapp/Servlet.class
+src/metadata/myapp.xml
+src/html/myapp/index.html
+src/jsp/myapp/front.jsp
+src/graphics/images/gifs/small/logo.gif
+src/graphics/images/gifs/large/logo.gif
+</pre>
+then the war file <code>myapp.war</code> created with
+<pre>
+&lt;war warfile=&quot;myapp.war&quot; webxml=&quot;src/metadata/myapp.xml&quot;&gt;
+  &lt;fileset dir=&quot;src/html/myapp&quot;/&gt;
+  &lt;fileset dir=&quot;src/jsp/myapp&quot;/&gt;
+  &lt;lib dir=&quot;thirdparty/libs&quot;&gt;
+    &lt;exclude name=&quot;jdbc1.jar&quot;/&gt;
+  &lt;/lib&gt;
+  &lt;classes dir=&quot;build/main&quot;/&gt;
+  &lt;zipfileset dir=&quot;src/graphics/images/gifs&quot; 
+              prefix=&quot;images&quot;/&gt;
+&lt;/war&gt;
+</pre>
+will consist of
+<pre>
+WEB-INF/web.xml
+WEB-INF/lib/jdbc2.jar
+WEB-INF/classes/com/myco/myapp/Servlet.class
+META-INF/MANIFEST.MF
+index.html
+front.jsp
+images/small/logo.gif
+images/large/logo.gif
+</pre>
+using Ant's default manifest file. The content of
+<code>WEB-INF/web.xml</code> is identical to
+<code>src/metadata/myapp.xml</code>.
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

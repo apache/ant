@@ -289,14 +289,15 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             Hashtable ejbFiles = handler.getFiles();
                     
             // add in support classes if any
-            if (config.supportFileSet != null) {
-                Project project = task.getProject();
-                File supportBaseDir = config.supportFileSet.getDir(project);
-                DirectoryScanner supportScanner = config.supportFileSet.getDirectoryScanner(project);
+            Project project = task.getProject();
+            for (Iterator i = config.supportFileSets.iterator(); i.hasNext();) {
+                FileSet supportFileSet = (FileSet)i.next();
+                File supportBaseDir = supportFileSet.getDir(project);
+                DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
                 supportScanner.scan();
                 String[] supportFiles = supportScanner.getIncludedFiles();
-                for (int i = 0; i < supportFiles.length; ++i) {
-                    ejbFiles.put(supportFiles[i], new File(supportBaseDir, supportFiles[i]));
+                for (int j = 0; j < supportFiles.length; ++j) {
+                    ejbFiles.put(supportFiles[j], new File(supportBaseDir, supportFiles[j]));
                 }
             }            
 
@@ -455,9 +456,16 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             jarfile.getParentFile().mkdirs();
             jarfile.createNewFile();
             
+            String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
+            InputStream in = this.getClass().getResourceAsStream(defaultManifest);
+            if ( in == null ) {
+                throw new BuildException ( "Could not find: " + defaultManifest );
+            }
+            
+            Manifest manifest = new Manifest(in);
             // Create the streams necessary to write the jarfile
             
-            jarStream = new JarOutputStream(new FileOutputStream(jarfile));
+            jarStream = new JarOutputStream(new FileOutputStream(jarfile), manifest);
             jarStream.setMethod(JarOutputStream.DEFLATED);
             
             // Loop through all the class files found and add them to the jar

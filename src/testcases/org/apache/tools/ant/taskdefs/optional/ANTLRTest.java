@@ -87,7 +87,7 @@ public class ANTLRTest extends TaskdefsTest {
     }
 
     public void test4() {
-        expectBuildException("test4", "ANTLR exited with an error code of 1 ( try forking )");
+        executeTarget("test4");
     }
 
     public void test5() {

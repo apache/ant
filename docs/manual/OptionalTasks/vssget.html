@@ -1,0 +1,91 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="vssget">VssGet</a></h2>
+<h3>Description</h3>
+Task to perform GET commands to Microsoft Visual Source Safe.
+<p>If you specify two or more attributes from version, date and 
+label only one will be used in the order version, date, label.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <th>Attribute</th>
+    <th>Values</th>
+    <th>Required</th>
+  </tr>
+  <tr>
+     <td>login</td>
+     <td>username,password</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>vsspath</td>
+     <td>SourceSafe path</td>
+     <td>Yes</td>
+  </tr>
+  <tr>
+     <td>localpath</td>
+     <td>Override the working directory and get to the specified path</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>writable</td>
+     <td>true or false</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>recursive</td>
+     <td>true or false</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>version</td>
+     <td>a version number to get</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>date</td>
+     <td>a date stamp to get at</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>label</td>
+     <td>a label to get for</td>
+     <td>No</td>
+  </tr>
+  <tr>
+     <td>ssdir</td>
+     <td>directory where <code>ss.exe</code> resides. By default the
+     task expects it to be in the PATH.</td>
+     <td>No</td>
+  </tr>
+</table>
+<p>Note that only one of version, date or label should be specified</p>
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;vssget localPath=&quot;C:\mysrc\myproject&quot;
+        recursive=&quot;true&quot; 
+        label=&quot;Release1&quot;
+        login=&quot;me,mypassword&quot;
+        vsspath=&quot;/source/aProject&quot;
+        writable=&quot;true&quot;/&gt;
+</pre>
+</blockquote>
+<p>Does a get on the VSS-Project <i>$/source/aproject</i> using the username
+<i>me</i> and the password <i>mypassword</i>. It will recursively get the files 
+which are labeled <i>Release1</i> and write them to the local directory
+<i>C:\mysrc\myproject</i>. The local files will be writable.</p>
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

@@ -2,8 +2,6 @@
 
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-unset CLASSPATH
-
 if [ "$JAVA_HOME" != "" ] ; then
   if [ -f $JAVA_HOME/lib/tools.jar ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
@@ -43,7 +41,7 @@ if [ -d "bootstrap" ] ; then
   rm -r bootstrap
 fi
 
-CLASSPATH=lib/parser.jar:lib/jaxp.jar:${CLASSPATH}
+CLASSPATH=lib/parser.jar:lib/jaxp.jar:lib/optional/junit.jar:${CLASSPATH}
 
 TOOLS=src/main/org/apache/tools
 CLASSDIR=classes

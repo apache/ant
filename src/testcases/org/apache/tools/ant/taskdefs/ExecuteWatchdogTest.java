@@ -65,7 +65,7 @@ import java.io.*;
  */
 public class ExecuteWatchdogTest extends TestCase {
 
-	private final static int TIME_OUT = 2000;
+	private final static int TIME_OUT = 5000;
 
 	private final static String TEST_CLASSPATH = getTestClassPath();
 
@@ -89,7 +89,6 @@ public class ExecuteWatchdogTest extends TestCase {
 			System.err.println("WARNING: 'build.tests' property is not available !");
 			classpath = System.getProperty("java.class.path");
 		}
-		System.out.println("Using classpath: " + classpath);		
 		return classpath;
 	}
 
