@@ -73,7 +73,11 @@ import org.apache.tools.ant.Task;
  */
 public class LogOutputStream extends OutputStream {
 
-    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    /** Initial buffer size. */
+    private static final int INTIAL_SIZE = 132;
+
+    private ByteArrayOutputStream buffer
+        = new ByteArrayOutputStream(INTIAL_SIZE);
     private boolean skip = false;
 
     private Task task;
@@ -157,4 +161,29 @@ public class LogOutputStream extends OutputStream {
     public int getMessageLevel() {
         return level;
     }
+
+    public void write(byte b[], int off, int len) throws IOException {
+        // find the line breaks and pass other chars through in blocks
+        int offset = off;
+        int blockStartOffset = offset;
+        int remaining = len;
+        while (remaining > 0) {
+            while (remaining > 0 && b[offset] != 0x0a && b[offset] != 0x0d) {
+                offset++;
+                remaining--;
+            }
+            // either end of buffer or a line separator char
+            int blockLength = offset - blockStartOffset;
+            if (blockLength > 0) {
+                buffer.write(b, blockStartOffset, blockLength);
+            }
+            while(remaining > 0 && (b[offset] == 0x0a || b[offset] == 0x0d)) {
+                write(b[offset]);
+                offset++;
+                remaining--;
+            }
+            blockStartOffset = offset;
+        }
+    }
+
 }

@@ -89,6 +89,9 @@ public class DemuxOutputStream extends OutputStream {
     /** Maximum buffer size. */
     private static final int MAX_SIZE = 1024;
 
+    /** Initial buffer size. */
+    private static final int INTIAL_SIZE = 132;
+
     /** Mapping from thread to buffer (Thread to BufferInfo). */
     private Hashtable buffers = new Hashtable();
 
@@ -127,7 +130,7 @@ public class DemuxOutputStream extends OutputStream {
         BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
         if (bufferInfo == null) {
             bufferInfo = new BufferInfo();
-            bufferInfo.buffer = new ByteArrayOutputStream();
+            bufferInfo.buffer = new ByteArrayOutputStream(INTIAL_SIZE);
             bufferInfo.crSeen = false;
             buffers.put(current, bufferInfo);
         }
@@ -237,6 +240,32 @@ public class DemuxOutputStream extends OutputStream {
         BufferInfo bufferInfo = getBufferInfo();
         if (bufferInfo.buffer.size() > 0) {
             processFlush(bufferInfo.buffer);
+        }
+    }
+
+    public void write(byte b[], int off, int len) throws IOException {
+        // find the line breaks and pass other chars through in blocks
+        int offset = off;
+        int blockStartOffset = offset;
+        int remaining = len;
+        BufferInfo bufferInfo = getBufferInfo();
+        while (remaining > 0) {
+            while (remaining > 0 && b[offset] != 0x0a && b[offset] != 0x0d) {
+                offset++;
+                remaining--;
+            }
+            // either end of buffer or a line separator char
+            int blockLength = offset - blockStartOffset;
+            if (blockLength > 0) {
+                project.log("Sending " + blockLength);
+                bufferInfo.buffer.write(b, blockStartOffset, blockLength);
+            }
+            while(remaining > 0 && (b[offset] == 0x0a || b[offset] == 0x0d)) {
+                write(b[offset]);
+                offset++;
+                remaining--;
+            }
+            blockStartOffset = offset;
         }
     }
 }
