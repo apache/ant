@@ -9,6 +9,7 @@ package org.apache.myrmidon.interfaces.configurer;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Resolvable;
 import org.apache.myrmidon.api.TaskContext;
 
 /**
@@ -18,13 +19,19 @@ import org.apache.myrmidon.api.TaskContext;
  * @version $Revision$ $Date$
  */
 public class TaskContextAdapter
-    implements Context
+    implements Context, Resolvable
 {
     private final TaskContext m_context;
 
     public TaskContextAdapter( final TaskContext context )
     {
         m_context = context;
+    }
+
+    public Object resolve( Context context )
+        throws ContextException
+    {
+        return m_context;
     }
 
     public Object get( Object key )
