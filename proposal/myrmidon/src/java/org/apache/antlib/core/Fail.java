@@ -7,7 +7,6 @@
  */
 package org.apache.antlib.core;
 
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Condition;
@@ -53,30 +52,23 @@ public class Fail
     public void execute()
         throws TaskException
     {
-        try
+        boolean failed = true;
+
+        if( null != m_condition )
         {
-            boolean failed = true;
-
-            if( null != m_condition )
-            {
-                failed = m_condition.evaluate( getContext() );
-            }
-
-            if( failed )
-            {
-                if( null != m_message )
-                {
-                    throw new TaskException( m_message );
-                }
-                else
-                {
-                    throw new TaskException();
-                }
-            }
+            failed = m_condition.evaluate( getContext() );
         }
-        catch( final ContextException ce )
+
+        if( failed )
         {
-            throw new TaskException( ce.toString(), ce );
+            if( null != m_message )
+            {
+                throw new TaskException( m_message );
+            }
+            else
+            {
+                throw new TaskException();
+            }
         }
     }
 
