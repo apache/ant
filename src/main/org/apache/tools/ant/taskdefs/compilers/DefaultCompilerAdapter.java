@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -167,20 +167,16 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
 
         // Combine the build classpath with the system classpath, in an
-        // order determined by the value of build.classpath
+        // order determined by the value of build.sysclasspath
 
-        if (compileClasspath == null) {
-            if (includeAntRuntime) {
-                classpath.addExisting(Path.systemClasspath);
-            }
+        Path cp = compileClasspath;
+        if (cp == null) {
+            cp = new Path(project);
+        }
+        if (includeAntRuntime) {
+            classpath.addExisting(cp.concatSystemClasspath("last"));
         } else {
-            if (includeAntRuntime) {
-                classpath.addExisting(compileClasspath
-                                      .concatSystemClasspath("last"));
-            } else {
-                classpath.addExisting(compileClasspath
-                                      .concatSystemClasspath("ignore"));
-            }
+            classpath.addExisting(cp.concatSystemClasspath("ignore"));
         }
 
         if (includeJavaRuntime) {

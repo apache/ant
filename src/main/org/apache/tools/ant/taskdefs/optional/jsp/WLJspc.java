@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -150,7 +150,7 @@ public class WLJspc extends MatchingTask {
             compileClasspath = new Path(getProject());
         }
         
-        compileClasspath.append(Path.systemClasspath);
+        compileClasspath = compileClasspath.concatSystemClasspath();
         String[] files = ds.getIncludedFiles();
         
         //Weblogic.jspc calls System.exit() ... have to fork

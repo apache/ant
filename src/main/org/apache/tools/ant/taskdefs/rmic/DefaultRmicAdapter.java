@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,18 +144,15 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
         // Combine the build classpath with the system classpath, in an 
         // order determined by the value of build.sysclasspath
-        if (attributes.getClasspath() == null) {
-            if (attributes.getIncludeantruntime()) {
-                classpath.addExisting(Path.systemClasspath);
-            }
+        
+        Path cp = attributes.getClasspath();
+        if (cp == null) {
+            cp = new Path(attributes.getProject());
+        }
+        if (attributes.getIncludeantruntime()) {
+            classpath.addExisting(cp.concatSystemClasspath("last"));
         } else {
-            if (attributes.getIncludeantruntime()) {
-                classpath.addExisting(attributes.getClasspath()
-                                      .concatSystemClasspath("last"));
-            } else {
-                classpath.addExisting(attributes.getClasspath()
-                                      .concatSystemClasspath("ignore"));
-            }
+            classpath.addExisting(cp.concatSystemClasspath("ignore"));
         }
 
         if (attributes.getIncludejavaruntime()) {

@@ -88,6 +88,8 @@ Fixed bugs:
 * The <get> task can now be compiled (and Ant thus bootstrapped) using
   Kaffee.
 
+* build.sysclasspath will now be honored by more tasks.
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.
