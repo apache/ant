@@ -153,7 +153,12 @@ public class Launcher {
             StringTokenizer myTokenizer
                 = new StringTokenizer(libPath, System.getProperty("path.separator"));
             while (myTokenizer.hasMoreElements()) {
-                File element = new File(myTokenizer.nextToken());
+                String elementName = myTokenizer.nextToken();
+                File element = new File(elementName);
+                if (elementName.startsWith("%") && elementName.endsWith("%") 
+                    && !element.exists()) {
+                    continue;
+                }
                 if (element.isDirectory()) {
                     // add any jars in the directory
                     URL[] dirURLs = Locator.getLocationURLs(element);
