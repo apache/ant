@@ -965,14 +965,12 @@ properties (param's in this context)</p>
 <h4>param</h4>
 <p>Specifies the properties to set before running the specified target. See <a
 href="#property">property</a> for usage guidelines.</p>
-<p>This will only set the specified properties if the property is not already
-set in the current project!</p>
 <h3>Examples</h3>
 <pre>
   &lt;target name=&quot;default&quot;&gt;
-    &lt;calltarget target=&quot;doSomethingElse&quot;&gt;
+    &lt;antcall target=&quot;doSomethingElse&quot;&gt;
       &lt;param name=&quot;param1&quot; value=&quot;value&quot;/&gt;
-    &lt;/calltarget&gt;
+    &lt;/antcall&gt;
   &lt;/target&gt;
 
   &lt;target name=&quot;doSomethingElse&quot;&gt;
