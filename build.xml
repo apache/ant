@@ -417,7 +417,9 @@
     </copy>
 
     <copy todir="${src.dist.docs}">
-      <fileset dir="${docs.dir}"/>
+      <fileset dir="${docs.dir}">
+        <exclude name="manual/api/**"/>
+      </fileset>
     </copy>
 
     <copy todir="${src.dist.dir}">
