@@ -121,7 +121,7 @@ public abstract class MatchingTask extends Task {
      *
      * @param itemString the string containing the files to include.
      */
-    public void setItems(String itemString) {
+    public void XsetItems(String itemString) {
         log("The items attribute is deprecated. " +
             "Please use the includes attribute.",
             Project.MSG_WARN);
@@ -155,7 +155,7 @@ public abstract class MatchingTask extends Task {
      *
      * @param ignoreString the string containing the files to ignore.
      */
-    public void setIgnore(String ignoreString) {
+    public void XsetIgnore(String ignoreString) {
         log("The ignore attribute is deprecated." + 
             "Please use the excludes attribute.",
             Project.MSG_WARN);

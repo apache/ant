@@ -8,6 +8,8 @@ the filtering attribute.
 
 * the <expand> and <keysubst> tasks have been removed.
 
+* the ignore and items attributes of directory based tasks have been removed.
+
 * the command line switches _not_ starting with - have been removed.
 
 * Path and EnumeratedAttribute have been moved from
@@ -37,8 +39,7 @@ specified.
 * <style> will create the necessary target directories and reprocess
 all files if the stylesheet changes.
 
-* New data types fileset and patternset - expected to get a broader
-use, pending documentation.
+* New data types fileset and patternset - expected to get a broader use.
 
 * You can specify environment variables to <exec>.
 

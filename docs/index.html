@@ -604,6 +604,125 @@ They are:
 </pre>
 If you do not want these default excludes applied, you may disable them with the 
 <code>defaultexcludes=&quot;no&quot;</code> attribute.</p>
+<h3><a name="patternset">PatternSets</a></h3>
+<p>Patterns can be group to sets and later be referenced by their ID
+attribute. They are defined via a <code>patternset</code> element -
+which can currently only appear nested into a <a
+href="#fileset">FileSet</a> or a directory based task that constitutes
+an implicit FileSet.</p>
+<p>Patterns can be specified by nested <code>&lt;include&gt;</code> or
+<code>&lt;exclude&gt;</code> elements or the following attributes.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+  </tr>
+</table>
+<h4>Examples:</h4>
+<blockquote><pre>
+&lt;patternset ID=&quot;non.test.sources&quot; &gt;
+  &lt;include name=&quot;**/*.java&quot; /&gt;
+  &lt;exclude name=&quot;**/*Test*&quot; /&gt;
+&lt;/patternset&gt;
+</pre></blockquote>
+<p>Builds a set of patterns, that matches all <code>.java</code> files
+that do not contain the text <code>Test</code> in their name. This set
+can be referred to via <code>&lt;patternsetref
+refid=&quot;non.test.sources&quot; /&gt;</code> by tasks that support
+this feature or by FileSets.</p>
+<h3><a name="fileset">FileSets</a></h3>
+<p>FileSets are groups of files. These files can be found in a
+directory tree starting in a base directory and are matched by
+patterns taken from a number of <a
+href="#patternset">PatternSets</a>. Currently FileSets can only appear
+inside task that support this feature.</p>
+<p>PatternSets can be specified as nested
+<code>&lt;patternset&gt;</code> or <code>&lt;patternsetref&gt;</code>
+elements. In addition FileSet holds an implicit PatternSet and
+supports the nested <code>&lt;include&gt;</code> and
+<code>&lt;exclude&gt;</code> elements of PatternSet directly as well
+as PatternSet's attributes.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">The root of the directory tree of this FileSet.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h4>Examples:</h4>
+<blockquote><pre>
+&lt;fileset dir=&quot;${server.src}&quot; &gt;
+  &lt;patternset ID=&quot;non.test.sources&quot; &gt;
+    &lt;include name=&quot;**/*.java&quot; /&gt;
+    &lt;exclude name=&quot;**/*Test*&quot; /&gt;
+  &lt;/patternset&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups all files in directory <code>${server.src}</code> that are Java
+source files and don't have the text <code>Test</code> in their
+name.</p>
+<blockquote><pre>
+&lt;fileset dir=&quot;${client.src}&quot; &gt;
+  &lt;patternsetref refid=&quot;non.test.sources&quot; /&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups all files in directory <code>${client.src}</code> using the
+same patterns as the example before.</p>
 <hr>
 <h2><a name="tasks">Built in tasks</a></h2>
 <ul>
@@ -840,10 +959,6 @@ want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns. The patterns are
 relative to the <i>src</i> directory.</p>
-<p>The <i>ignore</i> attribute contains the names of the files/directories that
-must be excluded from the copy. The names specified in the <i>ignore</i>
-attribute are just names, they do not contain any path information! Note that
-this attribute has been replaced by the <i>excludes</i> attribute.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -860,13 +975,6 @@ this attribute has been replaced by the <i>excludes</i> attribute.</p>
     <td valign="top">dest</td>
     <td valign="top">the directory to copy to.</td>
     <td valign="top" align="center">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">ignore</td>
-    <td valign="top">comma separated list of filenames/directorynames to ignore.
-      No files (except default excludes) are excluded when omitted. (<b>deprecated</b>,
-      use <i>excludes</i> instead).</td>
-    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
@@ -1692,17 +1800,6 @@ want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns. The patterns are
 relative to the <i>basedir</i> directory.</p>
-<p>The <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i> attributes
-replace the <i>items</i> and <i>ignore</i> attributes. The following explains
-how the deprecated <i>items</i> and <i>ignore</i> attribute behave.</p>
-<p>When &quot;*&quot; is used for <i>items</i>, all files in the basedir, and
-its subdirectories, will be jarred. Otherwise all the files and directories
-mentioned in the items list will jarred. When a directory is specified, then all
-files within it are also jarred.</p>
-<p>With the <i>ignore</i> attribute, you can specify files or directories to
-ignore. These files will not be jarred. The items in the <i>ignore</i> attribute
-override the items in the <i>items</i> attribute. The names specified in the <i>ignore</i>
-attribute are just names, they do not contain any path information!</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1724,20 +1821,6 @@ attribute are just names, they do not contain any path information!</p>
     <td valign="top">compress</td>
     <td valign="top">Not only store data but also compress them, defaults to true</td>
     <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">items</td>
-    <td valign="top">a comma separated list of the files/directories to jar. All
-      files are included when omitted. (<b>deprecated</b>, use <i>includes</i>
-      instead).</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">ignore</td>
-    <td valign="top">comma separated list of filenames/directorynames to exclude
-      from the jar. No files (except default excludes) are excluded when
-      omitted. (<b>deprecated</b>, use <i>excludes</i> instead).</td>
-    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
@@ -1795,14 +1878,6 @@ with the name <code>Test.class</code> are excluded.</p>
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
-<h3>Deprecated examples</h3>
-<pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot; items=&quot;*&quot; /&gt;</pre>
-<p>jars all files in the <code>${build}/classes</code> directory in a file
-called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
-<pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot; items=&quot;*&quot; ignore=&quot;Test.class&quot; /&gt;</pre>
-<p>jars all files in the <code>${build}/classes</code> directory in a file
-called <code>app.jar</code> in the <code>${dist}/lib</code> directory.
-Files/directories with the name <code>Test.class</code> are excluded.</p>
 <hr>
 <h2><a name="java">Java</a></h2>
 <h3>Description</h3>
@@ -1905,9 +1980,6 @@ href="#path">PATH like structure</a> and can also be set via a nested
 <p>The source and destination directory will be recursively scanned for Java
 source files to compile. Only Java files that have no corresponding class file
 or where the class file is older than the java file will be compiled.</p>
-<p>Files in the source tree, that are no java files, are copied to the
-destination directory, allowing support files to be located properly in the
-classpath.</p>
 <p>The directory structure of the source tree should follow the package
 hierarchy.</p>
 <p>It is possible to refine the set of files that are being compiled/copied.
@@ -2011,11 +2083,6 @@ relative to the <i>srcdir</i> directory.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">filtering</td>
-    <td valign="top">indicates whether token filtering should take place</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
     <td valign="top">target</td>
     <td valign="top">Generate class files for specific VM version, e.g. "1.1" or "1.2".</td>
     <td align="center" valign="top">No</td>
@@ -2043,8 +2110,7 @@ href="#path">PATH like structure</a> and can also be set via nested
          debug=&quot;on&quot;
   /&gt;</pre>
 <p>compiles all .java files under the directory <code>${src}</code>, and stores
-the .class files in the directory <code>${build}</code>. It also copies the non-java
-files from the tree under <code>${src}</code> to the tree under <code>${build}</code>.
+the .class files in the directory <code>${build}</code>. 
 The classpath used contains <code>xyz.jar</code>, and debug information is on.</p>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot;
@@ -2054,8 +2120,7 @@ The classpath used contains <code>xyz.jar</code>, and debug information is on.</
          debug=&quot;on&quot;
   /&gt;</pre>
 <p>compiles .java files under the directory <code>${src}</code>, and stores the
-.class files in the directory <code>${build}</code>. It also copies the non-java
-files from the tree under <code>${src}</code> to the tree under <code>${build}</code>.
+.class files in the directory <code>${build}</code>. 
 The classpath used contains <code>xyz.jar</code>, and debug information is on.
 Only files under <code>mypackage/p1</code> and <code>mypackage/p2</code> are
 used. Files in the <code>mypackage/p1/testpackage</code> directory are excluded
@@ -2562,6 +2627,7 @@ the diff output looked like
 +++ a/mod1.1/A	Mon Jun  5 17:28:49 2000
 </pre> 
 the leading <i>a/</i> will be stripped.
+<hr>
 <h2><a name="property">Property</a></h2>
 <h3>Description</h3>
 <p>Sets a property (by name and value), or set of properties (from file or
@@ -2956,17 +3022,6 @@ want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns. The patterns are
 relative to the <i>basedir</i> directory.</p>
-<p>The <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i> attributes
-replace the <i>items</i> and <i>ignore</i> attributes. The following explains
-how the deprecated <i>items</i> and <i>ignore</i> attribute behave.</p>
-<p>When &quot;*&quot; is used for <i>items</i>, all files in the basedir, and
-its subdirectories, will be tarred. Otherwise all the files and directories
-mentioned in the items list will tarred. When a directory is specified, then all
-files within it are also tarred.</p>
-<p>With the <i>ignore</i> attribute, you can specify files or directories to
-ignore. These files will not be tarred. The items in the <i>ignore</i> attribute
-override the items in the <i>items</i> attribute. The names specified in the <i>ignore</i>
-attribute are just names, they do not contain any path information!</p>
 <p>Note that this task does not perform compression. You might want to use the <a href="#gzip">GZip</a>
 task to come up with a .tar.gz package.</p>
 <h3>Parameters</h3>
@@ -3291,17 +3346,6 @@ want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns. The patterns are
 relative to the <i>basedir</i> directory.</p>
-<p>The <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i> attributes
-replace the <i>items</i> and <i>ignore</i> attributes. The following explains
-how the deprecated <i>items</i> and <i>ignore</i> attribute behave.</p>
-<p>When &quot;*&quot; is used for <i>items</i>, all files in the basedir, and
-its subdirectories, will be zipped. Otherwise all the files and directories
-mentioned in the items list will zipped. When a directory is specified, then all
-files within it are also zipped.</p>
-<p>With the <i>ignore</i> attribute, you can specify files or directories to
-ignore. These files will not be zipped. The items in the <i>ignore</i> attribute
-override the items in the <i>items</i> attribute. The names specified in the <i>ignore</i>
-attribute are just names, they do not contain any path information!</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3323,20 +3367,6 @@ attribute are just names, they do not contain any path information!</p>
     <td valign="top">compress</td>
     <td valign="top">Not only store data but also compress them, defaults to true</td>
     <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">items</td>
-    <td valign="top">a comma separated list of the files/directories to zip. All
-      files are included when omitted. (<b>deprecated</b>, use <i>includes</i>
-      instead).</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">ignore</td>
-    <td valign="top">comma separated list of filenames/directorynames to exclude
-      from the zip. No files (except default excludes) are excluded when
-      omitted. (<b>deprecated</b>, use <i>excludes</i> instead).</td>
-    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
@@ -3390,21 +3420,6 @@ or files with the name <code>todo.html</code> are excluded.</p>
 <p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory. Only html files under the directory <code>api</code>
 are zipped, and files with the name <code>todo.html</code> are excluded.</p>
-<h3>Deprecated examples</h3>
-<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
-       basedir=&quot;htdocs/manual&quot;
-       items=&quot;*&quot;
-  /&gt;</pre>
-<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
-in the <code>${dist}</code> directory.</p>
-<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
-       basedir=&quot;htdocs/manual&quot;
-       items=&quot;*&quot;
-       ignore=&quot;mydocs, todo.html&quot;
-  /&gt;</pre>
-<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
-in the <code>${dist}</code> directory. Files/directories with the names <code>mydocs</code>
-and <code>todo.html</code> are excluded.</p>
 
 <hr>
 <h2><a name="optionaltasks">Optional tasks</a></h2>
