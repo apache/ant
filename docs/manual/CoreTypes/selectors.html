@@ -66,6 +66,9 @@
       <li><a href="#modified"><code>&lt;modified&gt;</code></a> - Select files if
         the return value of the configured algorithm is different from that
         stored in a cache.</li>
+      <li><a href="#signedselector"><code>&lt;signedselector&gt;</code></a> - Select files if
+        they are signed, and optionally if they have a signative of a certain name.
+      </li>
     </ul>
 
     <a name="containsselect"></a>
@@ -894,6 +897,28 @@
   instantiation. There is a problem in the initialization algorithm for this
   case. Therefore you should not use this (or tell me the workaround :-).</p>
 
+      <a name="signedselector"></a>
+      <h4>Signed Selector</h4>
+
+      <p>
+        The <code>&lt;signedselector&gt;</code> tag selects signed files and optionaly
+        signed with a certain name.
+      </p>
+      <p>
+        This selector has been added in Apache Ant 1.7.
+      </p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="top"><b>Attribute</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td align="center" valign="top"><b>Required</b></td>
+        </tr>
+        <tr>
+          <td valign="top">name</td>
+          <td valign="top"> The signature name to check for.</td>
+          <td valign="top" align="center">no</td>
+        </tr>
+      </table>
 
 
     <a name="selectcontainers"></a>
