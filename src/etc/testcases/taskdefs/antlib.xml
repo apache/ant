@@ -17,5 +17,7 @@
   <target name="ns.current">
     <typedef file="antlib.current-test.xml" uri="abc"/>
     <x:useecho2 xmlns:x="abc"/>
+    <x:preset.echo xmlns:x="abc" name="p"/>
+    <x:p xmlns:x="abc">Hello from x:p</x:p>
   </target>
 </project>
