@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.javadoc;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -21,9 +21,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -68,30 +66,29 @@ public class Javadoc extends Task
 
     private Commandline cmd = new Commandline();
 
-    private boolean foundJavaFile = false;
-    private boolean failOnError = false;
-    private Path sourcePath = null;
-    private File destDir = null;
+    private boolean foundJavaFile;
+    private Path sourcePath;
+    private File destDir;
     private ArrayList sourceFiles = new ArrayList();
     private ArrayList packageNames = new ArrayList( 5 );
     private ArrayList excludePackageNames = new ArrayList( 1 );
     private boolean author = true;
     private boolean version = true;
-    private DocletInfo doclet = null;
-    private Path classpath = null;
-    private Path bootclasspath = null;
-    private String group = null;
+    private DocletInfo doclet;
+    private Path classpath;
+    private Path bootclasspath;
+    private String group;
     private ArrayList compileList = new ArrayList( 10 );
-    private String packageList = null;
+    private String packageList;
     private ArrayList links = new ArrayList( 2 );
     private ArrayList groups = new ArrayList( 2 );
     private boolean useDefaultExcludes = true;
-    private Html doctitle = null;
-    private Html header = null;
-    private Html footer = null;
-    private Html bottom = null;
-    private boolean useExternalFile = false;
-    private File tmpList = null;
+    private Html doctitle;
+    private Html header;
+    private Html footer;
+    private Html bottom;
+    private boolean useExternalFile;
+    private File tmpList;
 
     public void setAccess( AccessType at )
     {
@@ -254,19 +251,6 @@ public class Javadoc extends Task
             cmd.createArgument().setValue( "-extdirs" );
             cmd.createArgument().setValue( src );
         }
-    }
-
-    /**
-     * Should the build process fail if javadoc fails (as indicated by a non
-     * zero return code)? <p>
-     *
-     * Default is false.</p>
-     *
-     * @param b The new Failonerror value
-     */
-    public void setFailonerror( boolean b )
-    {
-        failOnError = b;
     }
 
     public void setFooter( String src )
@@ -913,8 +897,8 @@ public class Javadoc extends Task
 
         log( "Javadoc execution", Project.MSG_INFO );
 
-        JavadocOutputStream out = new JavadocOutputStream( Project.MSG_INFO );
-        JavadocOutputStream err = new JavadocOutputStream( Project.MSG_WARN );
+        JavadocOutputStream out = new JavadocOutputStream( this, Project.MSG_INFO );
+        JavadocOutputStream err = new JavadocOutputStream( this, Project.MSG_WARN );
         Execute exe = new Execute();
         exe.setOutput( out );
         exe.setError( err );
@@ -929,8 +913,8 @@ public class Javadoc extends Task
         try
         {
             exe.setCommandline( toExecute.getCommandline() );
-            int ret = exe.execute();
-            if( ret != 0 && failOnError )
+            final int ret = exe.execute();
+            if( ret != 0 )
             {
                 throw new TaskException( "Javadoc returned " + ret );
             }
@@ -948,10 +932,10 @@ public class Javadoc extends Task
                 tmpList = null;
             }
 
-            out.logFlush();
-            err.logFlush();
             try
             {
+                out.flush();
+                err.flush();
                 out.close();
                 err.close();
             }
@@ -1180,162 +1164,6 @@ public class Javadoc extends Task
         }
     }
 
-    public static class AccessType extends EnumeratedAttribute
-    {
-        public String[] getValues()
-        {
-            // Protected first so if any GUI tool offers a default
-            // based on enum #0, it will be right.
-            return new String[]{"protected", "public", "package", "private"};
-        }
-    }
-
-    public static class Html
-    {
-        private StringBuffer text = new StringBuffer();
-
-        public String getText()
-        {
-            return text.toString();
-        }
-
-        public void addText( String t )
-        {
-            text.append( t );
-        }
-    }
-
-    public static class PackageName
-    {
-        private String name;
-
-        public void setName( String name )
-        {
-            this.name = name;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public String toString()
-        {
-            return getName();
-        }
-    }
-
-    public static class SourceFile
-    {
-        private File file;
-
-        public void setFile( File file )
-        {
-            this.file = file;
-        }
-
-        public File getFile()
-        {
-            return file;
-        }
-    }
-
-    public class DocletInfo
-    {
-
-        private ArrayList params = new ArrayList();
-        private String name;
-        private Path path;
-
-        public void setName( String name )
-        {
-            this.name = name;
-        }
-
-        public void setPath( Path path )
-            throws TaskException
-        {
-            if( this.path == null )
-            {
-                this.path = path;
-            }
-            else
-            {
-                this.path.append( path );
-            }
-        }
-
-        /**
-         * Adds a reference to a CLASSPATH defined elsewhere.
-         *
-         * @param r The new PathRef value
-         */
-        public void setPathRef( Reference r )
-            throws TaskException
-        {
-            createPath().setRefid( r );
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public Iterator getParams()
-        {
-            return params.iterator();
-        }
-
-        public Path getPath()
-        {
-            return path;
-        }
-
-        public DocletParam createParam()
-        {
-            DocletParam param = new DocletParam();
-            params.add( param );
-
-            return param;
-        }
-
-        public Path createPath()
-            throws TaskException
-        {
-            if( path == null )
-            {
-                path = new Path( getProject() );
-            }
-            return path.createPath();
-        }
-    }
-
-    public class DocletParam
-    {
-        private String name;
-        private String value;
-
-        public void setName( String name )
-        {
-            this.name = name;
-        }
-
-        public void setValue( String value )
-        {
-            this.value = value;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public String getValue()
-        {
-            return value;
-        }
-    }
-
     public class GroupArgument
     {
         private ArrayList packages = new ArrayList( 3 );
@@ -1391,96 +1219,6 @@ public class Javadoc extends Task
         public void addTitle( Html text )
         {
             title = text;
-        }
-    }
-
-    public class LinkArgument
-    {
-        private boolean offline = false;
-        private String href;
-        private File packagelistLoc;
-
-        public LinkArgument()
-        {
-        }
-
-        public void setHref( String hr )
-        {
-            href = hr;
-        }
-
-        public void setOffline( boolean offline )
-        {
-            this.offline = offline;
-        }
-
-        public void setPackagelistLoc( File src )
-        {
-            packagelistLoc = src;
-        }
-
-        public String getHref()
-        {
-            return href;
-        }
-
-        public File getPackagelistLoc()
-        {
-            return packagelistLoc;
-        }
-
-        public boolean isLinkOffline()
-        {
-            return offline;
-        }
-    }
-
-    private class JavadocOutputStream extends LogOutputStream
-    {
-
-        //
-        // Override the logging of output in order to filter out Generating
-        // messages.  Generating messages are set to a priority of VERBOSE
-        // unless they appear after what could be an informational message.
-        //
-        private String queuedLine = null;
-
-        JavadocOutputStream( int level )
-        {
-            super( Javadoc.this, level );
-        }
-
-        protected void logFlush()
-        {
-            if( queuedLine != null )
-            {
-                super.processLine( queuedLine, Project.MSG_VERBOSE );
-                queuedLine = null;
-            }
-        }
-
-        protected void processLine( String line, int messageLevel )
-        {
-            if( messageLevel == Project.MSG_INFO && line.startsWith( "Generating " ) )
-            {
-                if( queuedLine != null )
-                {
-                    super.processLine( queuedLine, Project.MSG_VERBOSE );
-                }
-                queuedLine = line;
-            }
-            else
-            {
-                if( queuedLine != null )
-                {
-                    if( line.startsWith( "Building " ) )
-                        super.processLine( queuedLine, Project.MSG_VERBOSE );
-                    else
-                        super.processLine( queuedLine, Project.MSG_INFO );
-                    queuedLine = null;
-                }
-                super.processLine( line, messageLevel );
-            }
         }
     }
 
