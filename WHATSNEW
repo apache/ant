@@ -325,6 +325,9 @@ Fixed bugs:
 * <zip>'s defaultexcludes attribute was ignored when an archive was
   updated.  Bugzilla Report 33412.
 
+* <zip> couldn't store files with size between 2GB and 4GB (the
+  upper limit set by the ZIP format itself).  Bugzilla Report 33310.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

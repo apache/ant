@@ -336,8 +336,8 @@ public class ZipOutputStream extends FilterOutputStream {
                 deflate();
             }
 
-            entry.setSize(def.getTotalIn());
-            entry.setComprSize(def.getTotalOut());
+            entry.setSize(adjustToLong(def.getTotalIn()));
+            entry.setComprSize(adjustToLong(def.getTotalOut()));
             entry.setCrc(realCrc);
 
             def.reset();
@@ -877,4 +877,19 @@ public class ZipOutputStream extends FilterOutputStream {
             out.write(data, offset, length);
         }
     }
+
+    /**
+     * Assumes a negative integer really is a positive integer that
+     * has wrapped around and re-creates the original value.
+     *
+     * @since 1.34
+     */
+    protected static long adjustToLong(int i) {
+        if (i < 0) {
+            return 2 * ((long) Integer.MAX_VALUE) + 2 + i;
+        } else {
+            return i;
+        }
+    }
+
 }
