@@ -146,6 +146,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 thread = new Thread(this, "ExecuteJava");
                 Task currentThreadTask
                     = project.getThreadTask(Thread.currentThread());
+                // XXX is the following really necessary? it is in the same thread group...
                 project.registerThreadTask(thread, currentThreadTask);
                 // if we run into a timeout, the run-away thread shall not
                 // make the VM run forever - if no timeout occurs, Ant's
@@ -179,6 +180,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                                      + " Make sure you have it in your"
                                      + " classpath");
         } catch (SecurityException e) {
+            throw e;
+        } catch (ThreadDeath e) {
+            // XXX could perhaps also call thread.stop(); not sure if anyone cares
             throw e;
         } catch (Throwable e) {
             throw new BuildException(e);
