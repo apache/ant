@@ -235,7 +235,7 @@ public class JUnitTestRunner implements TestListener {
         }
 
         Test suite = null;
-        Exception exception = null;
+        Throwable exception = null;
 
         try {
 
@@ -268,7 +268,7 @@ public class JUnitTestRunner implements TestListener {
                     suite = new TestSuite(testClass);
                 }
 
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 retCode = ERRORS;
                 exception = e;
             }
