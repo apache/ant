@@ -773,14 +773,15 @@ public class DirectoryScanner
 
                 if (basedir == null) {
                     illegal = new IllegalStateException("No basedir set");
-                }
-                if (!basedir.exists()) {
-                    illegal = new IllegalStateException("basedir " + basedir
-                                                    + " does not exist");
-                }
-                if (!basedir.isDirectory()) {
-                    illegal = new IllegalStateException("basedir " + basedir
-                                                    + " is not a directory");
+                } else {
+                    if (!basedir.exists()) {
+                        illegal = new IllegalStateException("basedir " + basedir
+                                                        + " does not exist");
+                    }
+                    if (!basedir.isDirectory()) {
+                        illegal = new IllegalStateException("basedir " + basedir
+                                                        + " is not a directory");
+                    }
                 }
                 if (illegal != null) {
                     throw illegal;
