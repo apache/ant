@@ -480,7 +480,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Ignore emacs mode, as it has no meaning in XML format
      *
-     * @param emacsMode true if no loggher should produce emacs compatible 
+     * @param emacsMode true if logger should produce emacs compatible 
      *        output
      */
     public void setEmacsMode(boolean emacsMode) {
