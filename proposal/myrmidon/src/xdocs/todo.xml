@@ -75,13 +75,22 @@ File[] files = cm.getOutOfDate();
 </source>
             </subsection>
 
+            <subsection name="Antlibs storing templates">
+                <p>After a templating system is formalized it would useful to define
+                a mechanism via which you can store templates in an antlib. These
+                templates could then be loaded and used by build files through a
+                "standard" mechanism. This may need to be merged with the XML catalog
+                system.</p>
+            </subsection>
+
+            <subsection name="Antlibs Storing General Resources">
+                <p>Add a system via which ant libs can store general resources for
+                consumption by build users. This could be used to store the XML fragments
+                for the XML catalog, the template fragments for templates, images for
+                documentation system and so forth.</p>
+            </subsection>
+
             <!--
-            <subsection name="">
-            </subsection>
-
-            <subsection name="">
-            </subsection>
-
             <subsection name="">
             </subsection>
 
