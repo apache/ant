@@ -306,7 +306,7 @@ public class Sync extends Task {
      * are not present in any source directory.
      *
      * <p>You must not invoke this method more than once.</p>
-     *
+     * @param s a deletefromtarget nested element
      * @since Ant 1.7
      */
     public void addDeleteFromTarget(SyncTarget s) {
@@ -374,11 +374,22 @@ public class Sync extends Task {
      */
     public static class SyncTarget extends AbstractFileSet {
 
+        /**
+         * Constructor for SyncTarget.
+         * This just changes the default value of "defaultexcludes" from
+         * true to false.
+         */
         public SyncTarget() {
             super();
             setDefaultexcludes(false);
         }
 
+        /**
+         * Override AbstractFileSet#setDir(File) to disallow
+         * setting the directory. This is now set by #setTargetDir(File).
+         * @param dir ignored
+         * @throws BuildException always
+         */
         public void setDir(File dir) throws BuildException {
             throw new BuildException("synctarget doesn't support the dir "
                                      + "attribute");
