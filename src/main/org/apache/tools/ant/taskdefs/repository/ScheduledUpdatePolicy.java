@@ -33,8 +33,8 @@ import java.util.ListIterator;
 import java.util.Properties;
 
 /**
- * This {@link org.apache.tools.ant.taskdefs.repository.LibraryPolicy} updates the files only when the schedule
- * indicates that it should.
+ * This {@link org.apache.tools.ant.taskdefs.repository.LibraryPolicy} updates the files only
+ * when the schedule indicates that it should.
  * <p/>
  * The default interval is eleven hours; it's prime, it encourages
  * regular but not excessive days.
@@ -53,10 +53,14 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      */
     private Properties markerFileToSave;
 
-    public static final String ERROR_NO_MARKER_FILE = "No marker file";
-    public static final String MARKER_MISMATCH = "No match between last update and current one";
-    public static final String INTERVAL_TRIGGERS_UPDATE = "Interval between updates is long; updating";
-    public static final String INTERVAL_SHORT_NO_UPDATE = "Interval between updates is short; no update";
+    public static final String ERROR_NO_MARKER_FILE
+        = "No marker file";
+    public static final String MARKER_MISMATCH
+        = "No match between last update and current one";
+    public static final String INTERVAL_TRIGGERS_UPDATE
+        = "Interval between updates is long; updating";
+    public static final String INTERVAL_SHORT_NO_UPDATE
+        = "Interval between updates is short; no update";
 
 
     public File getMarkerFile() {
@@ -148,7 +152,8 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
             markerFileToSave = now;
             return true;
         } catch (IOException e) {
-            throw new BuildException("Marker file " + markerFile.getAbsolutePath() + " access failed", e);
+            throw new BuildException(
+                "Marker file " + markerFile.getAbsolutePath() + " access failed", e);
         }
     }
 
