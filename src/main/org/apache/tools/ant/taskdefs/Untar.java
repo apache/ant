@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,7 +74,8 @@ public class Untar extends Expand {
 
     /**
      * No encoding support in Untar.
-     *
+     * @param encoding not used
+     * @throws BuildException always
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
@@ -83,6 +84,9 @@ public class Untar extends Expand {
                                  + " attribute", getLocation());
     }
 
+    /**
+     * @see Expand#expandFile(FileUtils, File, File)
+     */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         TarInputStream tis = null;
         try {
