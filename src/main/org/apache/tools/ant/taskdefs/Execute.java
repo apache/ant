@@ -198,7 +198,7 @@ public class Execute {
     /**
      * This is the operation to get our environment.
      * It is a notorious troublespot pre-Java1.5, and should be approached
-     * with extreme cuation.
+     * with extreme caution.
      * @return
      */
     private static String[] getProcEnvCommand() {
