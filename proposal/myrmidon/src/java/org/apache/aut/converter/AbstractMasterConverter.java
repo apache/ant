@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.converter;
+package org.apache.aut.converter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.myrmidon.components.converter.DefaultMasterConverter;
 
 /**
  * This is an abstract implementation of a <code>MasterConverter</code>.
@@ -58,7 +59,7 @@ public class AbstractMasterConverter
      * @param original the original object
      * @param context the context in which to convert
      * @return the converted object
-     * @exception ConverterException if an error occurs
+     * @exception org.apache.aut.converter.ConverterException if an error occurs
      */
     public Object convert( final Class destination,
                            final Object original,
@@ -136,7 +137,7 @@ public class AbstractMasterConverter
      *
      * @param name the name of converter
      * @return the created converter instance
-     * @throws Exception if converter can not be created.
+     * @throws java.lang.Exception if converter can not be created.
      */
     protected abstract Converter createConverter( final String name )
         throws Exception;

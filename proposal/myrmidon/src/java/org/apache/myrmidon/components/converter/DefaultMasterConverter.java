@@ -8,6 +8,7 @@
 package org.apache.myrmidon.components.converter;
 
 import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.AbstractMasterConverter;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
