@@ -101,6 +101,16 @@
       </and>
    </condition>
    <property name="mono.executable" value="mint"/>
+
+   <!-- now set a prop of the compiler name to whatever we found --> 
+   <condition property="cs.compiler" value="csc">
+      <isset property="csc.found"/>
+   </condition>   
+
+   <condition property="cs.compiler" value="mcs">
+      <isset property="mcs.found"/>
+   </condition>   
+   
   </target>
 
   <target name="init" depends="probe_for_apps">
@@ -333,6 +343,21 @@
     </jsharpc>
     <exec executable="${jsharp.exe}" failonerror="true" />
   </target>
+
+  <target name="testCSCresponseFile" depends="validate_csc" >
+    <property name="testCSCresponseFile.exe"
+      location="${build.dir}/testCSCresponseFile.exe" />
+    <csc
+      destFile="${testCSCresponseFile.exe}"
+      targetType="exe"
+      executable="${cs.compiler}"
+      useResponseFile="true"
+      >
+    </csc>
+    <available property="app.created" file="${testCSCresponseFile.exe}"/>
+    <fail unless="app.created">No app ${testCSCresponseFile.exe} created</fail>
+    <delete file="${testCSCresponseFile.exe}"/>
+  </target>  
 
 
 </project>

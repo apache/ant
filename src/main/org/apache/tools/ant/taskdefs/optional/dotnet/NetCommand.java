@@ -65,12 +65,17 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
@@ -129,6 +134,21 @@ public class NetCommand {
      * directory is used.
      */
     private File directory;
+
+    /**
+     * flag to set to to use @file based command cache
+     */
+    private boolean useResponseFile=false;
+
+    /**
+     * name of a temp file; may be null
+     */
+    private File temporaryCommandFile;
+
+    /**
+     * internal threshold for auto-switch
+     */
+    private int automaticResponseFileThreshold = 64;
 
     /**
      *  constructor
@@ -232,6 +252,38 @@ public class NetCommand {
     }
 
     /**
+     * getter
+     * @return response file state
+     */
+    public boolean isUseResponseFile() {
+        return useResponseFile;
+    }
+
+    /**
+     * set this to true to always use the response file
+     * @param useResponseFile
+     */
+    public void setUseResponseFile(boolean useResponseFile) {
+        this.useResponseFile = useResponseFile;
+    }
+
+    /**
+     * getter for threshold
+     * @return 0 for disabled, or a threshold for enabling response files
+     */
+    public int getAutomaticResponseFileThreshold() {
+        return automaticResponseFileThreshold;
+    }
+
+    /**
+     * set threshold for automatically using response files -use 0 for off
+     * @param automaticResponseFileThreshold
+     */
+    public void setAutomaticResponseFileThreshold(int automaticResponseFileThreshold) {
+        this.automaticResponseFileThreshold = automaticResponseFileThreshold;
+    }
+
+    /**
      *  set up the command sequence..
      */
     protected void prepareExecutor() {
@@ -272,7 +324,7 @@ public class NetCommand {
                 //in verbose mode we always log stuff
                 logVerbose(commandLine.describeCommand());
             }
-            executable.setCommandline(commandLine.getCommandline());
+            setExecutableCommandLine();
             err = executable.execute();
             if (Execute.isFailure(err)) {
                 if (failOnError) {
@@ -283,6 +335,54 @@ public class NetCommand {
             }
         } catch (IOException e) {
             throw new BuildException(title + " failed: " + e, e, owner.getLocation());
+        } finally {
+            if (temporaryCommandFile != null) {
+                temporaryCommandFile.delete();
+            }
+        }
+    }
+
+    /**
+     * set the executable command line
+     */
+    private void setExecutableCommandLine() {
+
+        String[] commands = commandLine.getCommandline();
+        //always trigger file mode if commands are big enough
+        if (automaticResponseFileThreshold>0 &&
+                commands.length > automaticResponseFileThreshold) {
+            useResponseFile = true;
+        }
+        if (!useResponseFile || commands.length <= 1) {
+            //the simple action is to send the command line in as is
+            executable.setCommandline(commands);
+        } else {
+            //but for big operations, we save all the params to a temp file
+            //and set @tmpfile as the command -then we remember to delete the tempfile
+            //afterwards
+            FileOutputStream fos = null;
+            FileUtils fileUtils = FileUtils.newFileUtils();
+
+            temporaryCommandFile = fileUtils.createTempFile("cmd", ".txt", null);
+            owner.log("Using response file"+temporaryCommandFile,Project.MSG_VERBOSE);
+
+            try {
+                fos = new FileOutputStream(temporaryCommandFile);
+                PrintWriter out = new PrintWriter(new BufferedOutputStream(fos));
+                //start at 1 because element 0 is the executable name
+                for (int i = 1; i < commands.length; ++i) {
+                    out.println(commands[i]);
+                }
+                out.flush();
+                out.close();
+            } catch (IOException ex) {
+                throw new BuildException("saving command stream to " + temporaryCommandFile, ex);
+            }
+
+            String newCommandLine[] = new String[2];
+            newCommandLine[0] = commands[0];
+            newCommandLine[1] = "@" + temporaryCommandFile.getAbsolutePath();
+            executable.setCommandline(newCommandLine);
         }
     }
 
