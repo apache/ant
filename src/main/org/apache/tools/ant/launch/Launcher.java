@@ -36,6 +36,9 @@ public class Launcher {
     /** The Ant Home property */
     public static final String ANTHOME_PROPERTY = "ant.home";
 
+    /** The Ant Library Directory property */
+    public static final String ANTLIBDIR_PROPERTY = "ant.library.dir";
+
     /** The location of a per-user library directory */
     public static final String USER_LIBDIR = ".ant/lib";
 
@@ -138,7 +141,18 @@ public class Launcher {
         // Now try and find JAVA_HOME
         File toolsJar = Locator.getToolsJar();
 
-        URL[] systemJars = Locator.getLocationURLs(jarDir);
+        // determine ant library directory for system jars: use property
+        // or default using location of ant-launcher.jar
+        File antLibDir = null;
+        String antLibDirProperty = System.getProperty(ANTLIBDIR_PROPERTY);
+        if (antLibDirProperty != null) {
+            antLibDir = new File(antLibDirProperty);
+        }
+        if ((antLibDir == null) || ! antLibDir.exists()) {
+            antLibDir = jarDir;
+            System.setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
+        }
+        URL[] systemJars = Locator.getLocationURLs(antLibDir);
 
         File userLibDir
             = new File(System.getProperty("user.home"), USER_LIBDIR);
