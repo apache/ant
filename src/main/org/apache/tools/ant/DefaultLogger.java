@@ -224,11 +224,11 @@ public class DefaultLogger implements BuildLogger {
             return Long.toString(minutes) + " minute"
                 + (minutes == 1 ? " " : "s ")
                 + Long.toString(seconds%60) + " second"
-                + (seconds%60 == 1 ? "" : "s");
+                + (seconds%60 > 1 ? "s" : "");
         }
         else {
             return Long.toString(seconds) + " second"
-                + (seconds%60 == 1 ? "" : "s");
+                + (seconds%60 > 1 ? "s" : "");
         }
 
     }
