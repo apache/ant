@@ -18,6 +18,8 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public interface ExecutionFrame
 {
+    String ROLE = ExecutionFrame.class.getName();
+
     TypeManager getTypeManager();
 
     Logger getLogger();

@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
 public interface Executor
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.executor.Executor";
+    String ROLE = Executor.class.getName();
 
     /**
      * execute a task.
