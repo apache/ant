@@ -160,96 +160,84 @@ public class GenerateKey extends Task
             throw new TaskException( "dname must be set" );
         }
 
-        final StringBuffer sb = new StringBuffer();
+        log( "Generating Key for " + alias );
+        final ExecTask cmd = (ExecTask)project.createTask( "exec" );
+        cmd.setExecutable( "keytool" );
 
-        sb.append( "keytool -genkey " );
+        cmd.createArg().setValue( "-genkey " );
 
         if( verbose )
         {
-            sb.append( "-v " );
+            cmd.createArg().setValue( "-v " );
         }
 
-        sb.append( "-alias \"" );
-        sb.append( alias );
-        sb.append( "\" " );
+        cmd.createArg().setValue( "-alias" );
+        cmd.createArg().setValue( alias );
 
         if( null != dname )
         {
-            sb.append( "-dname \"" );
-            sb.append( dname );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-dname" );
+            cmd.createArg().setValue( dname );
         }
 
         if( null != expandedDname )
         {
-            sb.append( "-dname \"" );
-            sb.append( expandedDname );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-dname" );
+            cmd.createArg().setValue( expandedDname.toString() );
         }
 
         if( null != keystore )
         {
-            sb.append( "-keystore \"" );
-            sb.append( keystore );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-keystore" );
+            cmd.createArg().setValue( keystore );
         }
 
         if( null != storepass )
         {
-            sb.append( "-storepass \"" );
-            sb.append( storepass );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-storepass" );
+            cmd.createArg().setValue( storepass );
         }
 
         if( null != storetype )
         {
-            sb.append( "-storetype \"" );
-            sb.append( storetype );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-storetype" );
+            cmd.createArg().setValue( storetype );
         }
 
-        sb.append( "-keypass \"" );
+        cmd.createArg().setValue( "-keypass" );
         if( null != keypass )
         {
-            sb.append( keypass );
+            cmd.createArg().setValue( keypass );
         }
         else
         {
-            sb.append( storepass );
+            cmd.createArg().setValue( storepass );
         }
-        sb.append( "\" " );
 
         if( null != sigalg )
         {
-            sb.append( "-sigalg \"" );
-            sb.append( sigalg );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-sigalg" );
+            cmd.createArg().setValue( sigalg );
         }
 
         if( null != keyalg )
         {
-            sb.append( "-keyalg \"" );
-            sb.append( keyalg );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-keyalg" );
+            cmd.createArg().setValue( keyalg );
         }
 
         if( 0 < keysize )
         {
-            sb.append( "-keysize \"" );
-            sb.append( keysize );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-keysize" );
+            cmd.createArg().setValue( "" + keysize );
         }
 
         if( 0 < validity )
         {
-            sb.append( "-validity \"" );
-            sb.append( validity );
-            sb.append( "\" " );
+            cmd.createArg().setValue( "-validity" );
+            cmd.createArg().setValue( "" + validity );
         }
 
-        log( "Generating Key for " + alias );
-        final ExecTask cmd = (ExecTask)project.createTask( "exec" );
-        cmd.setCommand( new Commandline( sb.toString() ) );
         cmd.setFailonerror( true );
         cmd.execute();
     }

@@ -165,7 +165,7 @@ public class Cab extends MatchingTask
                     exec.setOutput( outFile );
                 }
 
-                exec.setCommand( createCommand( listFile ) );
+                setupCommand( listFile, exec );
                 exec.execute();
 
                 if( outFile != null )
@@ -280,30 +280,27 @@ public class Cab extends MatchingTask
      * @param listFile Description of Parameter
      * @return Description of the Returned Value
      */
-    protected Commandline createCommand( File listFile )
+    protected void setupCommand( File listFile, ExecTask exec )
         throws TaskException
     {
-        Commandline command = new Commandline();
-        command.setExecutable( "cabarc" );
-        command.createArgument().setValue( "-r" );
-        command.createArgument().setValue( "-p" );
+        exec.setExecutable( "cabarc" );
+        exec.createArg().setValue( "-r" );
+        exec.createArg().setValue( "-p" );
 
         if( !doCompress )
         {
-            command.createArgument().setValue( "-m" );
-            command.createArgument().setValue( "none" );
+            exec.createArg().setValue( "-m" );
+            exec.createArg().setValue( "none" );
         }
 
         if( cmdOptions != null )
         {
-            command.createArgument().setLine( cmdOptions );
+            exec.createArg().setLine( cmdOptions );
         }
 
-        command.createArgument().setValue( "n" );
-        command.createArgument().setFile( cabFile );
-        command.createArgument().setValue( "@" + listFile.getAbsolutePath() );
-
-        return command;
+        exec.createArg().setValue( "n" );
+        exec.createArg().setFile( cabFile );
+        exec.createArg().setValue( "@" + listFile.getAbsolutePath() );
     }
 
     /**

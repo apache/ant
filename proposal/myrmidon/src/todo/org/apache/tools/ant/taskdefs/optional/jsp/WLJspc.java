@@ -229,7 +229,7 @@ public class WLJspc extends MatchingTask
             System.out.println( "arg = " + arg );
 
             helperTask.clearArgs();
-            helperTask.setArgs( arg );
+            helperTask.createArg().setValue( arg );
             helperTask.setClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )
             {

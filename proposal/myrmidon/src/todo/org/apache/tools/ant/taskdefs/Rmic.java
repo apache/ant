@@ -17,6 +17,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
+import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -680,7 +681,15 @@ public class Rmic extends MatchingTask
             File newFile = new File( sourceBaseFile, sourceFileName );
             try
             {
-                FileUtils.newFileUtils().copyFile( oldFile, newFile, filtering );
+                if( filtering )
+                {
+                    final FilterSetCollection filters = new FilterSetCollection( project.getGlobalFilterSet() );
+                    FileUtils.newFileUtils().copyFile( oldFile, newFile, filters );
+                }
+                else
+                {
+                    FileUtils.newFileUtils().copyFile( oldFile, newFile );
+                }
                 oldFile.delete();
             }
             catch( IOException ioe )
