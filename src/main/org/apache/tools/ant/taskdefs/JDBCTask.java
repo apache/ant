@@ -70,7 +70,57 @@ import java.util.Properties;
 
 /**
  * Handles JDBC configuration needed by SQL type tasks.
- *
+ * <p>
+ * The following example class prints the contents of the first column of each row in TableName.
+ *</p>
+ *<code><pre>
+package examples;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.JDBCTask;
+
+public class SQLExampleTask extends JDBCTask {	
+
+    private String tableName;
+
+    public void execute() throws BuildException {
+        Connection conn = getConnection();
+        Statement stmt=null;
+        try {
+            if (tableName == null ) {
+                throw new BuildException("TableName must be specified",location);
+            }             
+            String sql = "SELECT * FROM "+tableName;
+            stmt= conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                log(rs.getObject(1).toString());
+            }
+        } catch (SQLException e) {
+        
+        } finally {
+            if (stmt != null) {
+                try {stmt.close();}catch (SQLException ingore){}
+            }
+            if (conn != null) {
+                try {conn.close();}catch (SQLException ingore){}
+            }
+        }
+    }
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+}
+
+ 
+</pre></code>
+
+
  * @author <a href="mailto:nick@chalko.com">Nick Chalko</a>
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
