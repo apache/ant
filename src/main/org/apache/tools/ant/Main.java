@@ -131,7 +131,10 @@ public class Main {
             System.exit(0);
         }
         catch(Throwable exc) {
-            System.err.println(exc.getMessage());
+            String message = exc.getMessage();
+            if (message != null) {
+                System.err.println(message);
+            }
             System.exit(1);
         }
     }
