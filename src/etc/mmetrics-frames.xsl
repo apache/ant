@@ -4,7 +4,7 @@
   xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect"
   exclude-result-prefixes="xalan"
   extension-element-prefixes="redirect">
-<xsl:output method="html" indent="yes"/>
+<xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
  The Apache Software License, Version 1.1
