@@ -113,13 +113,12 @@ public class BasicLogger
         {
             sb.append( message );
         }
+        System.out.println( sb );
 
         if( null != throwable )
         {
             final String stackTrace = ExceptionUtil.printStackTrace( throwable, 8, true, true );
-            sb.append( stackTrace );
+            System.out.println( stackTrace );
         }
-
-        System.out.println( sb.toString() );
     }
 }
