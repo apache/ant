@@ -99,6 +99,11 @@ import org.apache.tools.ant.types.Commandline;
  * update those files that have a modification time (in PVCS) that is newer
  * than the existing workfile.
  *
+ * <b>25-10-2002</b> <p>Added a revision attribute that currently is a
+ * synonym for label, but in a future release the behavior of the label
+ * attribute will change to use the -v option of GET.  See bug #13847 for
+ * discussion.
+ *
  * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
  * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
  * @author <a href="mailto:snewton@standard.com">Steven E. Newton</a>
@@ -112,6 +117,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private String force;
     private String promotiongroup;
     private String label;
+    private String revision;
     private boolean ignorerc;
     private boolean updateOnly;
     private String filenameFormat;
@@ -262,6 +268,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
             } else {
                 if (getLabel() != null) {
                     commandLine.createArgument().setValue("-r" + getLabel());
+                } else {
+                    if (getRevision() != null) {
+                        commandLine.createArgument().setValue("-r"
+                            + getRevision());
+                    }
                 }
             }
 
@@ -570,6 +581,22 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     public void setLabel(String l) {
         label = l;
+    }
+
+    /**
+     * Get value of revision
+     * @return String
+     */
+    public String getRevision() {
+        return revision;
+    }
+
+    /**
+     * Only files with this revision are extract; optional.
+     * @param r String
+     */
+    public void setRevision(String r) {
+        revision = r;
     }
 
     /**
