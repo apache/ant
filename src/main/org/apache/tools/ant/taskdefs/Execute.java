@@ -27,11 +27,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -40,7 +37,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Runs an external program.
@@ -485,6 +481,10 @@ public class Execute {
                 watchdog.checkException();
             }
             return getExitValue();
+        } catch (ThreadDeath t) {
+            // #31928: forcibly kill it before continuing.
+            process.destroy();
+            throw t;
         } finally {
             // remove the process to the list of those to destroy if
             // the VM exits
