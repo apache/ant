@@ -189,6 +189,7 @@ public class WsdlToDotnet extends Task  {
             command.addArgument("/server");
         }
         command.addArgument("/namespace:",namespace);
+        command.addArgument(extraOptions);
         //because these args arent added when null, we can 
         //set both of these and let either of them 
         command.addArgument(srcFile.toString());
