@@ -129,4 +129,51 @@
     <xmlvalidate warn="false" file="xml/utf-8.xml"/>
   </target>
 
+
+  <!-- Tests property element with XML file that satisfies schema -->
+  <target name="testProperty.validXML">
+
+    <!-- Converts path to URL format -->
+    <pathconvert dirsep="/" property="xsd.file">
+    <path>
+    <pathelement location="xml/doc.xsd"/>
+    </path>
+    </pathconvert>
+
+    <xmlvalidate file="xml/endpiece-noSchema.xml" lenient="false"
+        failonerror="true" warn="true">
+
+        <attribute name="http://apache.org/xml/features/validation/schema"
+            value="true"/>
+
+        <property
+        name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+        value="${xsd.file}"/>
+    </xmlvalidate>
+  </target>
+
+
+  <!-- Tests property element with XML file that fails schema validation -->
+  <target name="testProperty.invalidXML">
+
+      <!-- Converts path to URL format -->
+      <pathconvert dirsep="/" property="xsd.file">
+          <path>
+              <pathelement location="xml/doc.xsd"/>
+          </path>
+      </pathconvert>
+
+      <xmlvalidate file="xml/endpiece-noSchema-invalid.xml" lenient="false"
+        failonerror="true" warn="true">
+
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
+
+        <property
+            name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/>
+      </xmlvalidate>
+  </target>
+
 </project>
+

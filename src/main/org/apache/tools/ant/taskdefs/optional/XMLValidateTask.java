@@ -35,6 +35,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
+
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -68,7 +69,7 @@ public class XMLValidateTask extends Task {
     protected boolean failOnError = true;
     protected boolean warn = true;
     protected boolean lenient = false;
-    protected String  readerClassName = null;
+    protected String readerClassName = null;
 
     /** file to be validated */
     protected File file = null;
@@ -76,20 +77,24 @@ public class XMLValidateTask extends Task {
     protected Vector filesets = new Vector();
     protected Path classpath;
 
-
     /**
      * the parser is viewed as a SAX2 XMLReader. If a SAX1 parser is specified,
      * it's wrapped in an adapter that make it behave as a XMLReader.
      * a more 'standard' way of doing this would be to use the JAXP1.1 SAXParser
      * interface.
      */
-    protected XMLReader xmlReader = null; // XMLReader used to validation process
-    protected ValidatorErrorHandler errorHandler
-        = new ValidatorErrorHandler(); // to report sax parsing errors
+    protected XMLReader xmlReader = null;
+    // XMLReader used to validation process
+    protected ValidatorErrorHandler errorHandler = new ValidatorErrorHandler();
+    // to report sax parsing errors
 
     /** The vector to store all attributes (features) to be set on the parser. **/
     private Vector attributeList = new Vector();
 
+    /**
+     * List of properties.
+     */
+    private final Vector propertyList = new Vector();
 
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
@@ -99,6 +104,7 @@ public class XMLValidateTask extends Task {
      * <p>
      * If set to <code>true</code> (default), throw a buildException if the
      * parser yields an error.
+     * @param fail if set to <code>false</code> do not fail on error
      */
     public void setFailOnError(boolean fail) {
         failOnError = fail;
@@ -108,6 +114,7 @@ public class XMLValidateTask extends Task {
      * Specify how parser error are to be handled.
      * <p>
      * If set to <code>true</true> (default), log a warn message for each SAX warn event.
+     * @param bool if set to <code>false</code> do not send warnings
      */
     public void setWarn(boolean bool) {
         warn = bool;
@@ -122,6 +129,7 @@ public class XMLValidateTask extends Task {
      * <p>
      * this option is ignored if the specified class
      * with {@link #setClassName(String)} is not a SAX2 XMLReader.
+     * @param bool if set to <code>false</code> only fail on malformed XML
      */
     public void setLenient(boolean bool) {
         lenient = bool;
@@ -142,9 +150,9 @@ public class XMLValidateTask extends Task {
         readerClassName = className;
     }
 
-
     /**
      * Specify the classpath to be searched to load the parser (optional)
+     * @param classpath the classpath to load the parser
      */
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
@@ -156,6 +164,7 @@ public class XMLValidateTask extends Task {
 
     /**
      * @see #setClasspath
+     * @return the classpath created
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -167,6 +176,7 @@ public class XMLValidateTask extends Task {
     /**
      * Where to find the parser class; optional.
      * @see #setClasspath
+     * @param r reference to a classpath defined elsewhere
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -174,6 +184,7 @@ public class XMLValidateTask extends Task {
 
     /**
      * specify the file to be checked; optional.
+     * @param file the file to be checked
      */
     public void setFile(File file) {
         this.file = file;
@@ -181,6 +192,7 @@ public class XMLValidateTask extends Task {
 
     /**
      * add an XMLCatalog as a nested element; optional.
+     * @param catalog XMLCatalog to use
      */
     public void addConfiguredXMLCatalog(XMLCatalog catalog) {
         xmlCatalog.addConfiguredXMLCatalog(catalog);
@@ -188,6 +200,7 @@ public class XMLValidateTask extends Task {
 
     /**
      * specify a set of file to be checked
+     * @param set the fileset to check
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -198,6 +211,7 @@ public class XMLValidateTask extends Task {
      * features of the SAX parser.
      * Valid attributes
      * <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include</a>
+     * @return attribute created
      * @since ant1.6
      */
     public Attribute createAttribute() {
@@ -206,6 +220,23 @@ public class XMLValidateTask extends Task {
         return feature;
     }
 
+    /**
+     * Creates a property.
+     *
+     * @return a property.
+     * @since ant 1.6.2
+     */
+    public Property createProperty() {
+        final Property prop = new Property();
+        propertyList.addElement(prop);
+        return prop;
+    }
+
+    /**
+     * Called by the project to let the task initialize properly.
+     *
+     * @exception BuildException if something goes wrong with the build
+     */
     public void init() throws BuildException {
         super.init();
         xmlCatalog.setProject(getProject());
@@ -215,29 +246,36 @@ public class XMLValidateTask extends Task {
      * Create a DTD location record; optional.
      * This stores the location of a DTD. The DTD is identified
      * by its public Id.
+     * @return created DTD location
      */
     public DTDLocation createDTD() {
         DTDLocation dtdLocation = new DTDLocation();
         xmlCatalog.addDTD(dtdLocation);
         return dtdLocation;
     }
-
+    /**
+     * accessor to the xmlCatalog used in the task
+     * @return xmlCatalog reference
+     */
     protected EntityResolver getEntityResolver() {
         return xmlCatalog;
     }
-
+    /**
+     * execute the task
+     * @throws BuildException if <code>failonerror</code> is true and an error happens
+     */
     public void execute() throws BuildException {
 
         int fileProcessed = 0;
         if (file == null && (filesets.size() == 0)) {
-            throw new BuildException("Specify at least one source - "
-                + "a file or a fileset.");
+            throw new BuildException(
+                "Specify at least one source - " + "a file or a fileset.");
         }
 
         initValidator();
 
         if (file != null) {
-            if (file.exists() && file.canRead() && file.isFile())  {
+            if (file.exists() && file.canRead() && file.isFile()) {
                 doValidate(file);
                 fileProcessed++;
             } else {
@@ -256,7 +294,7 @@ public class XMLValidateTask extends Task {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             String[] files = ds.getIncludedFiles();
 
-            for (int j = 0; j < files.length; j++)  {
+            for (int j = 0; j < files.length; j++) {
                 File srcFile = new File(fs.getDir(getProject()), files[j]);
                 doValidate(srcFile);
                 fileProcessed++;
@@ -284,8 +322,8 @@ public class XMLValidateTask extends Task {
             try {
                 // load the parser class
                 if (classpath != null) {
-                    AntClassLoader loader
-                        = getProject().createClassLoader(classpath);
+                    AntClassLoader loader =
+                        getProject().createClassLoader(classpath);
                     readerClass = Class.forName(readerClassName, true, loader);
                 } else {
                     readerClass = Class.forName(readerClassName);
@@ -304,19 +342,22 @@ public class XMLValidateTask extends Task {
         // then check it implements XMLReader
         if (reader instanceof XMLReader) {
             xmlReader = (XMLReader) reader;
-            log("Using SAX2 reader " + reader.getClass().getName(),
+            log(
+                "Using SAX2 reader " + reader.getClass().getName(),
                 Project.MSG_VERBOSE);
         } else {
 
             // see if it is a SAX1 Parser
             if (reader instanceof Parser) {
                 xmlReader = new ParserAdapter((Parser) reader);
-                log("Using SAX1 parser " + reader.getClass().getName(),
+                log(
+                    "Using SAX1 parser " + reader.getClass().getName(),
                     Project.MSG_VERBOSE);
-            }  else {
-                throw new BuildException(INIT_FAILED_MSG
-                    + reader.getClass().getName()
-                    + " implements nor SAX1 Parser nor SAX2 XMLReader.");
+            } else {
+                throw new BuildException(
+                    INIT_FAILED_MSG
+                        + reader.getClass().getName()
+                        + " implements nor SAX1 Parser nor SAX2 XMLReader.");
             }
         }
 
@@ -334,6 +375,12 @@ public class XMLValidateTask extends Task {
                 setFeature(feature.getName(), feature.getValue());
 
             }
+
+            // Sets properties
+            for (int i = 0; i < propertyList.size(); i++) {
+                final Property prop = (Property) propertyList.elementAt(i);
+                setProperty(prop.getName(), prop.getValue());
+            }
         }
     }
 
@@ -341,8 +388,6 @@ public class XMLValidateTask extends Task {
      * Set a feature on the parser.
      * @param feature the name of the feature to set
      * @param value the value of the feature
-     * @param warn whether to war if the parser does not support the feature
-
      */
     private void setFeature(String feature, boolean value)
         throws BuildException {
@@ -350,13 +395,55 @@ public class XMLValidateTask extends Task {
         try {
             xmlReader.setFeature(feature, value);
         } catch (SAXNotRecognizedException e) {
-            throw new BuildException("Parser " + xmlReader.getClass().getName()
-                                     + " doesn't recognize feature "
-                                     + feature, e, getLocation());
-        } catch (SAXNotSupportedException  e) {
-            throw new BuildException("Parser " + xmlReader.getClass().getName()
-                                     + " doesn't support feature "
-                                     + feature, e, getLocation());
+            throw new BuildException(
+                "Parser "
+                    + xmlReader.getClass().getName()
+                    + " doesn't recognize feature "
+                    + feature,
+                e,
+                getLocation());
+        } catch (SAXNotSupportedException e) {
+            throw new BuildException(
+                "Parser "
+                    + xmlReader.getClass().getName()
+                    + " doesn't support feature "
+                    + feature,
+                e,
+                getLocation());
+        }
+    }
+
+    /**
+     * Sets a property.
+     *
+     * @param name a property name
+     * @param value a property value.
+     * @throws BuildException if an error occurs.
+     */
+    private void setProperty(String name, String value) throws BuildException {
+        // Validates property
+        if (name == null || value == null) {
+            throw new BuildException("Property name and value must be specified.");
+        }
+
+        try {
+            xmlReader.setProperty(name, value);
+        } catch (SAXNotRecognizedException e) {
+            throw new BuildException(
+                "Parser "
+                    + xmlReader.getClass().getName()
+                    + " doesn't recognize property "
+                    + name,
+                e,
+                getLocation());
+        } catch (SAXNotSupportedException e) {
+            throw new BuildException(
+                "Parser "
+                    + xmlReader.getClass().getName()
+                    + " doesn't support property "
+                    + name,
+                e,
+                getLocation());
         }
     }
 
@@ -373,18 +460,21 @@ public class XMLValidateTask extends Task {
             xmlReader.parse(is);
         } catch (SAXException ex) {
             if (failOnError) {
-                throw new BuildException("Could not validate document "
-                    + afile);
+                throw new BuildException(
+                    "Could not validate document " + afile);
+            } else {
+                log("Could not validate document " + afile + ": " + ex.toString());
             }
         } catch (IOException ex) {
-            throw new BuildException("Could not validate document " + afile,
+            throw new BuildException(
+                "Could not validate document " + afile,
                 ex);
         }
 
         if (errorHandler.getFailure()) {
             if (failOnError) {
-                throw new BuildException(afile
-                    + " is not a valid XML document.");
+                throw new BuildException(
+                    afile + " is not a valid XML document.");
             } else {
                 log(afile + " is not a valid XML document", Project.MSG_ERR);
             }
@@ -403,28 +493,42 @@ public class XMLValidateTask extends Task {
         protected File currentFile = null;
         protected String lastErrorMessage = null;
         protected boolean failed = false;
-
+        /**
+         * initialises the class
+         * @param file file used
+         */
         public void init(File file) {
             currentFile = file;
             failed = false;
         }
-
-        // did an error happen during last parsing ?
+        /**
+         * did an error happen during last parsing ?
+         * @return did an error happen during last parsing ?
+         */
         public boolean getFailure() {
-
             return failed;
         }
 
+        /**
+         * record a fatal error
+         * @param exception the fatal error
+         */
         public void fatalError(SAXParseException exception) {
             failed = true;
             doLog(exception, Project.MSG_ERR);
         }
-
+        /**
+         * receive notification of a recoverable error
+         * @param exception the error
+         */
         public void error(SAXParseException exception) {
             failed = true;
             doLog(exception, Project.MSG_ERR);
         }
-
+        /**
+         * receive notification of a warning
+         * @param exception the warning
+         */
         public void warning(SAXParseException exception) {
             // depending on implementation, XMLReader can yield hips of warning,
             // only output then if user explicitly asked for it
@@ -445,9 +549,11 @@ public class XMLValidateTask extends Task {
                     int line = e.getLineNumber();
                     int col = e.getColumnNumber();
                     return new URL(sysID).getFile()
-                        + (line == -1 ? "" : (":" + line
-                                        + (col == -1 ? "" : (":" + col))))
-                        + ": " + e.getMessage();
+                        + (line == -1
+                            ? ""
+                            : (":" + line + (col == -1 ? "" : (":" + col))))
+                        + ": "
+                        + e.getMessage();
                 } catch (MalformedURLException mfue) {
                     // ignore and just return exception message
                 }
@@ -481,7 +587,7 @@ public class XMLValidateTask extends Task {
         }
         /**
          * Set the feature value to true or false.
-         * @param value
+         * @param value feature value
          */
         public void setValue(boolean value) {
             attributeValue = value;
@@ -503,4 +609,47 @@ public class XMLValidateTask extends Task {
             return attributeValue;
         }
     }
+
+    /**
+     * A Parser property.
+     * See <a href="http://xml.apache.org/xerces-j/properties.html">
+     * XML parser properties</a> for usable properties
+     * @since ant 1.6.2
+     */
+    public final class Property {
+
+        private String name;
+        private String value;
+        /**
+         * accessor to the name of the property
+         * @return name of the property
+         */
+        public String getName() {
+            return name;
+        }
+        /**
+         * setter for the name of the property
+         * @param name name of the property
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * getter for the value of the property
+         * @return value of the property
+         */
+        public String getValue() {
+            return value;
+        }
+        /**
+         * sets the value of the property
+         * @param value value of the property
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+    } // Property
+
 }
