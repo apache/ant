@@ -102,7 +102,11 @@ public class Replace extends MatchingTask {
     public class Replacefilter {
         private String token;
         private String value;
+        private String replaceValue;
         private String property;
+
+        private StringBuffer inputBuffer;
+        private StringBuffer outputBuffer = new StringBuffer();
 
         /**
          * validate the filter's configuration
@@ -147,6 +151,8 @@ public class Replace extends MatchingTask {
                     throw new BuildException(message);
                 }
             }
+
+            replaceValue = getReplaceValue();
         }
 
         /**
@@ -216,6 +222,200 @@ public class Replace extends MatchingTask {
         public String getProperty() {
             return property;
         }
+
+        /**
+         * Retrieves the output buffer of this filter. The filter guarantees
+         * that data is only appended to the end of this StringBuffer.
+         * @return The StringBuffer containing the output of this filter.
+         */
+        StringBuffer getOutputBuffer() {
+            return outputBuffer;
+        }
+
+        /**
+         * Sets the input buffer for this filter.
+         * The filter expects from the component providing the input that data
+         * is only addded by that component to the end of this StringBuffer.
+         * This StringBuffer will be modified by this filter, and expects that
+         * another component will only apped to this StringBuffer.
+         * @param input The input for this filter.
+         */
+        void setInputBuffer(StringBuffer input) {
+            inputBuffer = input;
+        }
+
+        /**
+         * Processes the buffer as far as possible. Takes into account that
+         * appended data may make it possible to replace the end of the already
+         * received data, when the token is split over the "old" and the "new"
+         * part.
+         * @return true if some data has been made available in the
+         *         outputBuffer.
+         */
+        boolean process() {
+            if (inputBuffer.length() > token.length()) {
+                int pos = replace();
+                pos = Math.max((inputBuffer.length() - token.length()), pos);
+                outputBuffer.append(inputBuffer.substring(0, pos));
+                inputBuffer.delete(0, pos);
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Processes the buffer to the end. Does not take into account that
+         * appended data may make it possible to replace the end of the already
+         * received data.
+         */
+        void flush() {
+            int pos = replace();
+            outputBuffer.append(inputBuffer);
+            inputBuffer.delete(0, inputBuffer.length());
+        }
+
+        /**
+         * Performs the replace operation.
+         * @return The position of the last character that was inserted as
+         *         replacement.
+         */
+        private int replace() {
+            int found = inputBuffer.toString().indexOf(token);
+            int pos = -1;
+            while (found >= 0) {
+                inputBuffer.replace(found, found + token.length(),
+                        replaceValue);
+                pos = found + replaceValue.length();
+                found = inputBuffer.toString().indexOf(token, pos);
+                ++replaceCount;
+            }
+            return pos;
+        }
+    }
+
+    /**
+     * Class reading a file in small chuncks, and presenting these chuncks in
+     * a StringBuffer. Compatible with the Replacefilter.
+     * @since 1.7
+     */
+    private class FileInput {
+        private StringBuffer outputBuffer;
+        private Reader reader;
+        private char[] buffer;
+        private static final int BUFF_SIZE = 4096;
+
+        /**
+         * Constructs the input component. Opens the file for reading.
+         * @param source The file to read from.
+         * @throws IOException When the file cannot be read from.
+         */
+        FileInput(File source) throws IOException {
+            outputBuffer = new StringBuffer();
+            buffer = new char[BUFF_SIZE];
+            if (encoding == null) {
+                reader = new BufferedReader(new FileReader(source));
+            } else {
+                reader = new BufferedReader(new InputStreamReader(
+                        new FileInputStream(source), encoding));
+            }
+        }
+
+        /**
+         * Retrieves the output buffer of this filter. The component guarantees
+         * that data is only appended to the end of this StringBuffer.
+         * @return The StringBuffer containing the output of this filter.
+         */
+        StringBuffer getOutputBuffer() {
+            return outputBuffer;
+        }
+
+        /**
+         * Reads some data from the file.
+         * @return true when the end of the file has not been reached.
+         * @throws IOException When the file cannot be read from.
+         */
+        boolean readChunck() throws IOException {
+            int bufferLength = 0;
+            bufferLength = reader.read(buffer);
+            if (bufferLength < 0) {
+                return false;
+            }
+            outputBuffer.append(new String(buffer, 0, bufferLength));
+            return true;
+        }
+
+        /**
+         * Closes the file.
+         * @throws IOException When the file cannot be closed.
+         */
+        void close() throws IOException {
+            reader.close();
+        }
+
+    }
+
+    /**
+     * Component writing a file in chuncks, taking the chunks from the
+     * Replacefilter.
+     * @since 1.7
+     */
+    private class FileOutput {
+        private StringBuffer inputBuffer;
+        private Writer writer;
+
+        /**
+         * Constructs the output component. Opens the file for writing.
+         * @param source The file to read from.
+         * @throws IOException When the file cannot be read from.
+         */
+        FileOutput(File out) throws IOException {
+                if (encoding == null) {
+                    writer = new BufferedWriter(new FileWriter(out));
+                } else {
+                    writer = new BufferedWriter(new OutputStreamWriter
+                            (new FileOutputStream(out), encoding));
+                }
+        }
+
+        /**
+         * Sets the input buffer for this component.
+         * The filter expects from the component providing the input that data
+         * is only addded by that component to the end of this StringBuffer.
+         * This StringBuffer will be modified by this filter, and expects that
+         * another component will only apped to this StringBuffer.
+         * @param input The input for this filter.
+         */
+        void setInputBuffer(StringBuffer input) {
+            inputBuffer = input;
+        }
+
+        /**
+         * Writes the buffer as far as possible.
+         * @return false to be inline with the Replacefilter.
+         * (Yes defining an interface crossed my mind, but would publish the
+         * internal behavior.)
+         */
+        boolean process() throws IOException {
+            writer.write(inputBuffer.toString());
+            inputBuffer.delete(0, inputBuffer.length());
+            return false;
+        }
+
+        /**
+         * Processes the buffer to the end.
+         */
+        void flush() throws IOException {
+            process();
+            writer.flush();
+        }
+
+        /**
+         * Closes the file.
+         * @throws IOException When the file cannot be closed.
+         */
+        void close() throws IOException {
+            writer.close();
+        }
     }
 
     /**
@@ -233,11 +433,11 @@ public class Replace extends MatchingTask {
             // in order to compare with the file contents, replace them
             // as needed
             StringBuffer val = new StringBuffer(value.getText());
-            stringReplace(val, "\r\n", "\n", false);
-            stringReplace(val, "\n", StringUtils.LINE_SEP, false);
+            stringReplace(val, "\r\n", "\n");
+            stringReplace(val, "\n", StringUtils.LINE_SEP);
             StringBuffer tok = new StringBuffer(token.getText());
-            stringReplace(tok, "\r\n", "\n", false);
-            stringReplace(tok, "\n", StringUtils.LINE_SEP, false);
+            stringReplace(tok, "\r\n", "\n");
+            stringReplace(tok, "\n", StringUtils.LINE_SEP);
             Replacefilter firstFilter = createPrimaryfilter();
             firstFilter.setToken(tok.toString());
             firstFilter.setValue(val.toString());
@@ -383,89 +583,103 @@ public class Replace extends MatchingTask {
         }
 
         File temp = null;
-        Reader reader = null;
-        Writer writer = null;
+        FileInput in = null;
+        FileOutput out = null;
         try {
-            reader = encoding == null ? new FileReader(src)
-                : new InputStreamReader(new FileInputStream(src), encoding);
+            in = new FileInput(src);
 
-            BufferedReader br = new BufferedReader(reader);
-
-            String buf = FileUtils.readFully(br);
-            br.close();
-            reader = null;
-
-            if (buf == null) {
-                buf = "";
-            }
-
-            StringBuffer buffer = new StringBuffer(buf);
-            buf = null;
+            temp = fileUtils.createTempFile("rep", ".tmp",
+                    src.getParentFile());
+            out = new FileOutput(temp);
 
             int repCountStart = replaceCount;
 
-            processReplacefilters(buffer, src.getPath());
+            out.setInputBuffer(buildFilterChain(in.getOutputBuffer()));
+
+            while (in.readChunck()) {
+                if (processFilterChain()) {
+                    out.process();
+                }
+            }
+
+            flushFilterChain();
+
+            out.flush();
+            in.close();
+            in = null;
+            out.close();
+            out = null;
 
             boolean changes = (replaceCount != repCountStart);
             if (changes) {
-                String out = buffer.toString();
-                temp = fileUtils.createTempFile("rep", ".tmp",
-                        src.getParentFile());
-                temp.deleteOnExit();
-                writer = encoding == null ? new FileWriter(temp)
-                        : new OutputStreamWriter(new FileOutputStream(temp), encoding);
-                BufferedWriter bw = new BufferedWriter(writer);
-                bw.write(out, 0, out.length());
-                bw.flush();
-                bw.close();
-                writer = null;
-                ++fileCount;
                 fileUtils.rename(temp, src);
                 temp = null;
             }
         } catch (IOException ioe) {
             throw new BuildException("IOException in " + src + " - "
-                                    + ioe.getClass().getName() + ":"
-                                    + ioe.getMessage(), ioe, getLocation());
+                    + ioe.getClass().getName() + ":"
+                    + ioe.getMessage(), ioe, getLocation());
         } finally {
-            if (reader != null) {
+            if (in != null) {
                 try {
-                    reader.close();
+                    in.close();
                 } catch (IOException e) {
                     // ignore
                 }
             }
-            if (writer != null) {
+            if (out != null) {
                 try {
-                    writer.close();
+                    out.close();
                 } catch (IOException e) {
                     // ignore
                 }
             }
             if (temp != null) {
-                temp.delete();
+                if (!temp.delete()) {
+                    temp.deleteOnExit();
+                }
             }
         }
-
     }
 
     /**
-     * apply all replace filters to a buffer
-     * @param buffer stringbuffer to filter
-     * @param filename filename for logging purposes
+     * Flushes all filters.
      */
-    private void processReplacefilters(StringBuffer buffer, String filename) {
+    private void flushFilterChain() {
         for (int i = 0; i < replacefilters.size(); i++) {
             Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
-
-            //for each found token, replace with value
-            log("Replacing in " + filename + ": " + filter.getToken()
-                + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE);
-            stringReplace(buffer, filter.getToken(),
-                                      filter.getReplaceValue(), true);
+            filter.flush();
         }
     }
 
+    /**
+     * Performs the normal processing of the filters.
+     * @return true if the filter chain produced new output.
+     */
+    private boolean processFilterChain() {
+        for (int i = 0; i < replacefilters.size(); i++) {
+            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            if (!filter.process()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Creates the chain of filters to operate.
+     * @param inputBuffer The buffer that contains the input for the first filter
+     * @return The StringBuffer that cointains the output of the last filter.
+     */
+    private StringBuffer buildFilterChain(StringBuffer inputBuffer) {
+        StringBuffer buf = inputBuffer;
+        for (int i = 0; i < replacefilters.size(); i++) {
+            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            filter.setInputBuffer(buf);
+            buf = filter.getOutputBuffer();
+        }
+        return buf;
+    }
 
     /**
      * Set the source file; required unless <code>dir</code> is set.
@@ -591,15 +805,11 @@ public class Replace extends MatchingTask {
     /**
      * Replace occurrences of str1 in stringbuffer str with str2
      */
-    private void stringReplace(StringBuffer str, String str1, String str2,
-                                 boolean countReplaces) {
-        int found = str.indexOf(str1);
+    private void stringReplace(StringBuffer str, String str1, String str2) {
+        int found = str.toString().indexOf(str1);
         while (found >= 0) {
             str.replace(found, found + str1.length(), str2);
-            found = str.indexOf(str1, found + str2.length());
-            if (countReplaces) {
-                ++replaceCount;
-            }
+            found = str.toString().indexOf(str1, found + str2.length());
         }
     }
 
