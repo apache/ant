@@ -30,13 +30,15 @@ EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the Java class to execute.</td>
-    <td align="center" valign="top">Either jar or classname</td>
+    <td align="center" valign="top">Either <tt>jar</tt> or <tt>classname</tt></td>
   </tr>
   <tr>
     <td valign="top">jar</td>
     <td valign="top">the location of the jar file to execute (must have a
-    Main-Class entry in the manifest). Fork must be set to true if this option is selected.</td>
-    <td align="center" valign="top">Either jar or classname</td>
+    Main-Class entry in the manifest). Fork must be set to true if this option is selected.
+    See notes below for more details.
+    </td>
+    <td align="center" valign="top">Either <tt>jar</tt> or <tt>classname</tt></td>
   </tr>
   <tr>
     <td valign="top">args</td>
@@ -276,6 +278,16 @@ error and would mean the build exits.
 <p> Similarly, if <code>failonerror="false"</code> and <code>fork="false"</code>
 , then <code>&lt;java&gt;</code> <b>must</b> return 0 otherwise the build will exit, as the class was run by the build jvm.</p>
 
+<h3>JAR file execution</h3>
+
+The parameter of the <tt>jar</tt> attribute is of type <tt>File</tt>;
+that is, the parameter is resolved to an absolute file relative to the
+base directory of the project, <i>not</i> the directory in which the Java
+task is run. If you need to locate a JAR file relative to the directory
+the task will be run in, you need to explicitly create the full path
+to the JAR file.
+
+
 <h3>Examples</h3>
 <pre>
        &lt;java classname=&quot;test.Main&quot;&gt;
@@ -300,8 +312,29 @@ Run a class in this JVM with a new jar on the classpath
          &lt;/classpath&gt;
        &lt;/java&gt;
 </pre>
-Run the jar using the manifest supplied entry point, forking (as required),
+Run the JAR test.jar in this project's dist/lib directory.
+using the manifest supplied entry point, forking (as required),
 and with a maximum memory of 128MB. Any non zero return code breaks the build.
+
+<pre>        &lt;java
+           dir="${exec.dir}"
+           jar=&quot;${exec.dir}/dist/test.jar&quot;
+           fork="true"
+           failonerror="true"
+           maxmemory="128m"
+           &gt;
+         &lt;arg value=&quot;-h&quot;/&gt;
+         &lt;classpath&gt;
+           &lt;pathelement location=&quot;dist/test.jar&quot;/&gt;
+           &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
+         &lt;/classpath&gt;
+       &lt;/java&gt;
+</pre>
+
+Run the JAR dist/test.jar relative to the directory
+<tt>${exec.dir}</tt>, this being the same directory into which the JVM
+is to start up. 
+
 
 <pre>  &lt;java classname=&quot;test.Main&quot;/&gt;</pre>
 <pre>  &lt;java classname=&quot;test.Main&quot;
