@@ -19,7 +19,7 @@
   </target>
 
   <target name="test5">
-    <gzip src="." zipfile="gzip.tmp"/>
+    <gzip src="gzip.xml" zipfile="gzip.tmp"/>
   </target>
 
 </project>
