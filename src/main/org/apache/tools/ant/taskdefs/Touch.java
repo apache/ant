@@ -316,13 +316,13 @@ public class Touch extends Task {
     }
 
     private void touch(File fromDir, String filename, long defaultTimestamp) {
-        File file = fileUtils.resolveFile(fromDir, filename);
+        File f = fileUtils.resolveFile(fromDir, filename);
         if (fileNameMapper == null) {
-            touch(file, defaultTimestamp);
+            touch(f, defaultTimestamp);
         } else {
             String[] mapped = fileNameMapper.mapFileName(filename);
             if (mapped != null && mapped.length > 0) {
-                long modTime = (file.exists()) ? file.lastModified() : defaultTimestamp;
+                long modTime = (f.exists()) ? f.lastModified() : defaultTimestamp;
                 for (int i = 0; i < mapped.length ; i++) {
                     touch(getProject().resolveFile(mapped[i]), modTime);
                 }
