@@ -34,6 +34,9 @@ Fixed bugs:
 
 * <tstamp>'s prefix attribute failed to apply to nested <format> elements.
 
+* <junitreport> created an empty junit-noframes.html if no format had
+  been specified.
+
 Other changes:
 --------------
 
