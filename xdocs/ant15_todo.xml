@@ -15,7 +15,7 @@
             <th>Details</th>
             <th>Assigned</th>
           </tr>
-          
+
           <tr>
             <td>Bugzilla bugs under 30</td>
             <td>or at least address most of them in some way</td>
@@ -53,25 +53,14 @@
           </tr>
 
           <tr>
-            <td>Extension utilities</td>
-            <td>Port across task that prints out details of extensions for
-            a certain library/jar, or all jars in a path. Port across task
-            that generates a manifest (including dependencies and extension 
-            specification) based on a set of jars in path. Port across task
-            that checks that the list of pre-req extensions are present in 
-            path.</td>
-            <td>Peter</td>
-          </tr>
-
-          <tr>
             <td>Fully functional on Java 1.4</td>
-            <td>Fix outstanding java1.4 defects, maybe add an 
+            <td>Fix outstanding java1.4 defects, maybe add an
             assertions datatype for java and other tasks (junit?)
             which lets people turn on asserts.
             </td>
             <td>Steve + any other help he can get</td>
           </tr>
-          
+
 <!-- for cut and paste use
           <tr>
             <td></td>
@@ -79,16 +68,27 @@
             <td></td>
           </tr>
 -->
-          
+
         </table>
       </subsection>
-      
+
       <subsection name="Done">
         <table>
           <tr>
             <th>Item</th>
             <th>Details</th>
             <th>Assigned</th>
+          </tr>
+
+          <tr>
+            <td>Extension utilities</td>
+            <td>Port across task that prints out details of extensions for
+            a certain library/jar, or all jars in a path. Port across task
+            that generates a manifest (including dependencies and extension
+            specification) based on a set of jars in path. Port across task
+            that checks that the list of pre-req extensions are present in
+            path.</td>
+            <td>Peter</td>
           </tr>
           <tr>
             <td>XmlLogger implements BuildLogger</td>
