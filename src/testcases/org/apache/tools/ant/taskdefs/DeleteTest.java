@@ -75,9 +75,10 @@ public class DeleteTest extends TaskdefsTest {
         executeTarget("test2");
     }
 
-    public void test3() { 
-        expectBuildException("test3", "Not a directory");
-    }
+    // delete now handles files *and* directories --SB
+//    public void test3() { 
+//        expectBuildException("test3", "Not a directory");
+//    }
 
     public void test4() { 
         executeTarget("test4");

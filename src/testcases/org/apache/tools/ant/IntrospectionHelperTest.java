@@ -62,7 +62,7 @@ import java.util.*;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.IntrospectionHelper.
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 
 public class IntrospectionHelperTest extends TestCase {
@@ -409,7 +409,7 @@ public class IntrospectionHelperTest extends TestCase {
         if (isUnixStyle) { 
             assertEquals("/tmp/2", f.getAbsolutePath());
         } else {
-            assertEquals("c:\\tmp\\2", f.getAbsolutePath().toLowerCase());
+            assertEquals(":\\tmp\\2", f.getAbsolutePath().toLowerCase().substring(1));
         }
     }
 

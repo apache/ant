@@ -80,7 +80,7 @@ public class CopydirTest extends TaskdefsTest {
     }
 
     public void test4() { 
-        expectLog("test4", "Warning: src == dest");
+        expectLog("test4", "DEPRECATED - The copydir task is deprecated.  Use copy instead.Warning: src == dest");
     }
     
     public void test5() { 

@@ -65,7 +65,7 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Path
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 
 public class PathTest extends TestCase {
@@ -92,8 +92,8 @@ public class PathTest extends TestCase {
             assertEquals("/a", l[0]);
             assertEquals("/b", l[1]);
         } else {
-            assertEquals("\\a", l[0]);
-            assertEquals("\\b", l[1]);
+            assertEquals(":\\a", l[0].substring(1));
+            assertEquals(":\\b", l[1].substring(1));
         }        
 
         p = new Path(project, "\\a;\\b");
@@ -103,8 +103,8 @@ public class PathTest extends TestCase {
             assertEquals("/a", l[0]);
             assertEquals("/b", l[1]);
         } else {
-            assertEquals("\\a", l[0]);
-            assertEquals("\\b", l[1]);
+            assertEquals(":\\a", l[0].substring(1));
+            assertEquals(":\\b", l[1].substring(1));
         }        
 
         p = new Path(project, "\\a;\\b:/c");
@@ -115,9 +115,9 @@ public class PathTest extends TestCase {
             assertEquals("/b", l[1]);
             assertEquals("/c", l[2]);
         } else {
-            assertEquals("\\a", l[0]);
-            assertEquals("\\b", l[1]);
-            assertEquals("\\c", l[2]);
+            assertEquals(":\\a", l[0].substring(1));
+            assertEquals(":\\b", l[1].substring(1));
+            assertEquals(":\\c", l[2].substring(1));
         }        
 
         p = new Path(project, "c:\\test");
@@ -154,7 +154,7 @@ public class PathTest extends TestCase {
             assertEquals("/a", l[0]);
         } else {
             assertEquals(1, l.length);
-            assertEquals("\\a", l[0]);
+            assertEquals(":\\a", l[0].substring(1));
         }
     }
 
@@ -314,7 +314,7 @@ public class PathTest extends TestCase {
         if (isUnixStyle) {
             assertEquals("/a", l[0]);
         } else {
-            assertEquals("\\a", l[0]);
+            assertEquals(":\\a", l[0].substring(1));
         }
     }
 
