@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -359,8 +359,9 @@ public class Concat extends Task {
                     // Make sure input != output.
                     if (destinationFile != null &&
                         destinationFile.getAbsolutePath().equals(input[i])) {
-                        log(destinationFile.getName() + ": input file is " + 
-                            "output file.", Project.MSG_WARN);
+                        throw new BuildException("Input file \"" 
+                            + destinationFile.getName() 
+                            + "\" is the same as the output file.");
                     }
 
                     is = new FileInputStream(input[i]);
