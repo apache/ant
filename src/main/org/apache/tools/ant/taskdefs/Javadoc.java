@@ -1085,7 +1085,8 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue("-taglet");
                     toExecute.createArgument().setValue(tagletInfo.getName());
                     if (tagletInfo.getPath() != null) {
-                        System.out.println("Taglet base path is " + tagletInfo.getPath());
+                        log("Taglet base path is " + tagletInfo.getPath(),
+                            MSG_DEBUG);
                         Path tagletPath 
                             = tagletInfo.getPath().concatSystemClasspath("ignore");
                         if (tagletPath.size() != 0) {
