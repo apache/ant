@@ -54,6 +54,7 @@
 package org.apache.tools.tar;
 
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import junit.framework.TestCase;
 
