@@ -36,6 +36,34 @@ public class RegexpPatternMapper implements FileNameMapper {
         reg = (new RegexpMatcherFactory()).newRegexpMatcher();
     }
 
+    private boolean handleDirChar = false;
+    private int     regexpOptions = 0;
+
+    /**
+     * Attribute specifing whether to ignore the difference
+     * between / and \ (the two common directory characters).
+     * @param handleDirChar a boolean, default is false.
+     * @since Ant 1.6.3
+     */
+    public void setHandleDirChar(boolean handleDirChar) {
+        this.handleDirChar = handleDirChar;
+    }
+
+    /**
+     * Attribute specifing whether to ignore the case difference
+     * in the names.
+     *
+     * @param caseSensitive a boolean, default is false.
+     * @since Ant 1.6.3
+     */
+    public void setCaseSensitive(boolean caseSensitive) {
+        if (!caseSensitive) {
+            regexpOptions = RegexpMatcher.MATCH_CASE_INSENSITIVE;
+        } else {
+            regexpOptions = 0;
+        }
+    }
+
     /**
      * Sets the &quot;from&quot; pattern. Required.
      */
@@ -63,8 +91,13 @@ public class RegexpPatternMapper implements FileNameMapper {
      * translated file otherwise.
      */
     public String[] mapFileName(String sourceFileName) {
+        if (handleDirChar) {
+            if (sourceFileName.indexOf("\\") != -1) {
+                sourceFileName = sourceFileName.replace('\\', '/');
+            }
+        }
         if (reg == null  || to == null
-            || !reg.matches(sourceFileName)) {
+            || !reg.matches(sourceFileName, regexpOptions)) {
             return null;
         }
         return new String[] {replaceReferences(sourceFileName)};
@@ -75,7 +108,7 @@ public class RegexpPatternMapper implements FileNameMapper {
      * groups of the source.
      */
     protected String replaceReferences(String source) {
-        Vector v = reg.getGroups(source);
+        Vector v = reg.getGroups(source, regexpOptions);
 
         result.setLength(0);
         for (int i = 0; i < to.length; i++) {
