@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class Description extends DataType {
     }
 
     /**
-     * return the descriptions from all the targets of
+     * Return the descriptions from all the targets of
      * a project.
      *
      * @param project the project to get the descriptions for.
@@ -73,8 +73,11 @@ public class Description extends DataType {
      *         the targets.
      */
     public static String getDescription(Project project) {
-        StringBuffer description = new StringBuffer();
         Vector targets = (Vector) project.getReference("ant.targets");
+        if (targets == null) {
+            return null;
+        }
+        StringBuffer description = new StringBuffer();
         for (int i = 0; i < targets.size(); i++) {
             Target t = (Target) targets.elementAt(i);
             concatDescriptions(project, t, description);
