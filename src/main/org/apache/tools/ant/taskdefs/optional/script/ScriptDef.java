@@ -53,10 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.script;
 
+import org.apache.tools.ant.AntTypeDefinition;
+import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.MagicNames;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.taskdefs.DefBase;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -75,7 +78,7 @@ import org.apache.tools.ant.util.ScriptRunner;
  * @author Conor MacNeill
  * @since Ant 1.6
  */
-public class ScriptDef extends Task {
+public class ScriptDef extends DefBase {
     /** Used to run the script */
     private ScriptRunner runner = new ScriptRunner();
 
@@ -268,8 +271,13 @@ public class ScriptDef extends Task {
             }
         }
 
+        name = ProjectHelper.genComponentName(getUri(), name);
         scriptRepository.put(name, this);
-        project.addTaskDefinition(name, ScriptDefBase.class);
+        AntTypeDefinition def = new AntTypeDefinition();
+        def.setName(name);
+        def.setClass(ScriptDefBase.class);
+        ComponentHelper.getComponentHelper(
+            getProject()).addDataTypeDefinition(def);
     }
 
     /**
@@ -294,9 +302,12 @@ public class ScriptDef extends Task {
                 instance = getProject().createDataType(definition.type);
             }
         } else {
+            /*
             // try the context classloader
             ClassLoader loader
                 = Thread.currentThread().getContextClassLoader();
+            */
+            ClassLoader loader = createLoader();
 
             Class instanceClass = null;
             try {
