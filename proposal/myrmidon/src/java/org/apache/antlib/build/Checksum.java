@@ -7,13 +7,11 @@
  */
 package org.apache.antlib.build;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,8 +21,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -36,8 +33,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class Checksum
-    extends MatchingTask
-    implements Condition
+    extends AbstractMatchingTask
 {
     /**
      * File for which checksum is to be calculated.
@@ -73,11 +69,6 @@ public class Checksum
      * Create new destination file? Defaults to false.
      */
     private boolean m_forceOverwrite;
-
-    /**
-     * is this task being used as a nested condition element?
-     */
-    private boolean m_isCondition;
 
     /**
      * Message Digest instance
@@ -179,19 +170,6 @@ public class Checksum
     }
 
     /**
-     * Calculate the checksum(s)
-     *
-     * @return Returns true if the checksum verification test passed, false
-     *      otherwise.
-     */
-    public boolean eval()
-        throws TaskException
-    {
-        m_isCondition = true;
-        return validateAndExecute();
-    }
-
-    /**
      * Calculate the checksum(s).
      *
      * @exception TaskException Description of Exception
@@ -224,7 +202,7 @@ public class Checksum
                 if( m_property == null )
                 {
                     final File dest = new File( file.getParent(), file.getName() + m_fileext );
-                    if( m_forceOverwrite || m_isCondition ||
+                    if( m_forceOverwrite ||
                         ( file.lastModified() > dest.lastModified() ) )
                     {
                         m_includeFileMap.put( file, dest );
@@ -262,11 +240,8 @@ public class Checksum
         while( includes.hasMoreElements() )
         {
             final File src = (File)includes.nextElement();
-            if( !m_isCondition )
-            {
-                final String message = "Calculating " + m_algorithm + " checksum for " + src;
-                getLogger().info( message );
-            }
+            final String message = "Calculating " + m_algorithm + " checksum for " + src;
+            getLogger().info( message );
 
             checksumMatches = z( src, checksumMatches );
         }
@@ -301,47 +276,16 @@ public class Checksum
             if( destination instanceof String )
             {
                 final String prop = (String)destination;
-                if( m_isCondition )
-                {
-                    checksumMatches = checksum.equals( m_property );
-                }
-                else
-                {
-                    final Object value = checksum;
-                    getContext().setProperty( prop, value );
-                }
+                checksumMatches = checksum.equals( m_property );
+                getContext().setProperty( prop, checksum );
             }
             else if( destination instanceof File )
             {
                 final File file = (File)destination;
-                if( m_isCondition )
-                {
-                    if( file.exists() &&
-                        file.length() == checksum.length() )
-                    {
-                        fis = new FileInputStream( file );
-                        InputStreamReader isr = new InputStreamReader( fis );
-                        BufferedReader br = new BufferedReader( isr );
-                        String suppliedChecksum = br.readLine();
-                        fis.close();
-                        fis = null;
-                        br.close();
-                        isr.close();
-                        checksumMatches =
-                            checksum.equals( suppliedChecksum );
-                    }
-                    else
-                    {
-                        checksumMatches = false;
-                    }
-                }
-                else
-                {
-                    fos = new FileOutputStream( file );
-                    fos.write( checksum.getBytes() );
-                    fos.close();
-                    fos = null;
-                }
+                fos = new FileOutputStream( file );
+                fos.write( checksum.getBytes() );
+                fos.close();
+                fos = null;
             }
         }
         catch( final Exception e )
@@ -425,20 +369,9 @@ public class Checksum
             }
         }
 
-        if( m_verifyProperty != null )
-        {
-            m_isCondition = true;
-        }
-
         if( m_verifyProperty != null && m_forceOverwrite )
         {
             final String message = "VerifyProperty and ForceOverwrite cannot co-exist.";
-            throw new TaskException( message );
-        }
-
-        if( m_isCondition && m_forceOverwrite )
-        {
-            final String message = "ForceOverwrite cannot be used when conditions are being used.";
             throw new TaskException( message );
         }
 
