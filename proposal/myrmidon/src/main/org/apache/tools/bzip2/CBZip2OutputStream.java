@@ -399,7 +399,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
 
     private void allocateCompressStructures()
     {
-        int n = baseBlockSize * blockSize100k;
+        int n = BASE_BLOCK_SIZE * blockSize100k;
         block = new char[ ( n + 1 + NUM_OVERSHOOT_BYTES ) ];
         quadrant = new int[ ( n + NUM_OVERSHOOT_BYTES ) ];
         zptr = new int[ n ];
@@ -871,7 +871,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         /*
          * 20 is just a paranoia constant
          */
-        allowableBlockSize = baseBlockSize * blockSize100k - 20;
+        allowableBlockSize = BASE_BLOCK_SIZE * blockSize100k - 20;
     }
 
     private void initialize()
@@ -1277,7 +1277,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         {
             if( rNToGo == 0 )
             {
-                rNToGo = (char)rNums[ rTPos ];
+                rNToGo = (char)RAND_NUMS[ rTPos ];
                 rTPos++;
                 if( rTPos == 512 )
                     rTPos = 0;
