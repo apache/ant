@@ -59,6 +59,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
@@ -219,6 +220,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     
     public void fatalError(TransformerException e)  {
         logError(e, "Fatal Error");
+        throw new BuildException("Fatal error during transformation", e);
     }
     
     public void warning(TransformerException e)  {
