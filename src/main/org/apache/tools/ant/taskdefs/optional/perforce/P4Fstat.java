@@ -204,11 +204,12 @@ public class P4Fstat extends P4Base {
     }
 
     private void execP4Fstat(StringBuffer list) {
+        String l = list.substring(0);
         if (debug) {
-            log("Executing fstat " + P4CmdOpts + " " + addCmd + list + "\n",
+            log("Executing fstat " + P4CmdOpts + " " + addCmd + l + "\n",
                 Project.MSG_INFO);
         }
-        execP4Command("fstat " + P4CmdOpts + " " + addCmd + list, handler);
+        execP4Command("fstat " + P4CmdOpts + " " + addCmd + l, handler);
     }
 
 }
