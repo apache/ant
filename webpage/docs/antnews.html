@@ -14,7 +14,7 @@
                                                     <meta name="author" value="Conor MacNeill">
             <meta name="email" value="conor@cortexebusiness.com.au">
             
-            <title>The Jakarta Site - Ant</title>
+            <title>The Jakarta Site - Ant News</title>
         </head>
 
         <body bgcolor="#ffffff" text="#000000" link="#525D76">        
@@ -112,138 +112,70 @@
                                                                     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td bgcolor="#525D76">
         <font color="#ffffff" face="arial,helvetica,sanserif">
-          <strong>Ant</strong>
+          <strong>Ant 2.0 Requirements</strong>
         </font>
       </td></tr>
       <tr><td>
         <blockquote>
-                                    <p>
-Ant is a Java based build tool. In theory it is kind of like make without
-make's wrinkles.
-</p>
-                                                <p>
-Why another build tool when there is already make, gnumake, nmake, jam, and
-others? Because all of those tools have limitations that Ant's original author
-couldn't live with when developing software across multiple platforms. Make-like
-tools are inherently shell based. They evaluate a set of dependencies and then
-execute commands not unlike what you would issue on a shell. This means that you
-can easily extend these tools by using or writing any program for the OS that
-you are working on. However, this also means that you limit yourself to the OS,
-or at least the OS type such as Unix, that you are working on.
-</p>
-                                                <p>
-Makefiles are inherently evil as well. Anybody who has worked on them for any
-time has run into the dreaded tab problem. "Is my command not executing
-because I have a space in front of my tab!!!" said the original author of
-Ant way too many times. Tools like Jam took care of this to a great degree, but
-still use yet another format to use and remember.
-</p>
-                                                <p>
-Ant is different. Instead of a model where it is extended with shell based
-commands, it is extended using Java classes. Instead of writing shell commands,
-the configuration files are XML based calling out a target tree where various
-tasks get executed. Each task is run by an object which implements a particular
-Task interface.
-</p>
-                                                <p>
-Granted, this removes some of the expressive power that is inherent by being
-able to construct a shell command such as `find . -name foo -exec rm {}` but it
-gives you the ability to be cross platform. To work anywhere and everywhere. And
-hey, if you really need to execute a shell command, Ant has an exec rule that
-allows different commands to be executed based on the OS that it is executing
-on.
-</p>
-                            </blockquote>
-      </td></tr>
-    </table>
-                                                <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica,sanserif">
-          <strong>Documentation</strong>
-        </font>
-      </td></tr>
-      <tr><td>
-        <blockquote>
-                                    <p>
-You can view the documentation for the most recent release 
-<a href="manual/index.html">online</a>
-</p>
-                                                <p>
-Comprehensive documentation is included in the source and binary distribtions. 
-</p>
-                            </blockquote>
-      </td></tr>
-    </table>
-                                                <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica,sanserif">
-          <strong>Latest Release</strong>
-        </font>
-      </td></tr>
-      <tr><td>
-        <blockquote>
-                                    <p>
-    You can download the latest release:
+                                    <p>Ant has been in use for quite some time and has been used in ways never conceived when it
+       was originally written. While Ant 1.x has continued to sucessfully evolve and grow, there 
+       are a number of limitations and inconsistencies that are now apparent and which need to 
+       be addressed. 
     </p>
-                                                <ul>
-        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin/">
-                Download the binary release</a></li>
-        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/src/">
-                Download the source release</a></li>
-        <li><a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/rpms/">
-                Download source and binary RPMs</a></li>
-    </ul>
+                                                <p>
+       As we continue to evolve and enhance Ant 1.x, it is now time to define what Ant 2.0 will
+       encompass. Ant 2.0 will be a major rearchitecting of Ant. It has a number of goals including:
+       <ul>
+         <li>Define the "contract" with build file writers to which Ant will be bound.</li>
+         <li>Define the "contract" between the Ant core and Task writers.</li>
+         <li>Make Ant more easily extendable by allowing additional tasks to be "dropped" in.</li>
+         <li>Allow Ant to function as a component to simplify integration with GUIs and IDEs.</li>
+         <li>Make Ant more regular and logical.</li>
+       </ul>
+       
+       It is expected that Ant 2.0 will break Ant 1.x based build files. The intention is to
+       make this the last time that will happen.
+     </p>
+                                                <p>
+        To advance the definition of Ant, user requirements are now being accepted on the 
+        Ant-Dev mailing list. Any requirement will be accepted for consideration. The 
+        requirements are being collected into a document which is available 
+        <a href="/ant/ant2/requested-features.txt">on-line</a>. New features will be excepted 
+        until March 21st, 2001. At that time, each requirement will be discussed 
+        for inclusion in an Ant 2.0 requirement document.
+      </p>
+                                                <p>
+        For your reference some of the goals which have shaped the development of Ant 1.x are
+        available <a href="/ant/ant2/original-specification.html">here</a>. These continue to be
+        relevant to Ant 2.0.
+      </p>
+                                                <p>
+        If you want to shape the future of Ant, join the 
+        <a href="/site/mail.html">Ant-Dev mailing list</a> and contribute
+        your ideas.
+      </p>
                             </blockquote>
       </td></tr>
     </table>
                                                 <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td bgcolor="#525D76">
         <font color="#ffffff" face="arial,helvetica,sanserif">
-          <strong>Nightly Builds</strong>
+          <strong>Ant 1.3 Released</strong>
         </font>
       </td></tr>
       <tr><td>
         <blockquote>
                                     <p>
-    If you wish to use the latest Ant features, you can try downloading a nightly 
-    build from <a href="http://jakarta.apache.org/builds/jakarta-ant/nightly/">here</a>
+    Ant 1.3 has been released after going through three betas. Thanks to everyone who
+    took the time to test the beta and report bugs and enhancements.
     </p>
-                            </blockquote>
-      </td></tr>
-    </table>
-                                                <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica,sanserif">
-          <strong>Towards Ant2</strong>
-        </font>
-      </td></tr>
-      <tr><td>
-        <blockquote>
-                                    <p>
-    We are currently collecting feature requests for Ant2. Please
-    read the latest <a href="/ant/antnews.html">Ant news</a> for more details.
+                                                <p>You can download the release from here 
+        <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/">here</a>. 
+       Both source and binary releases are available in zip, tarball and RPM formats.
     </p>
-                            </blockquote>
-      </td></tr>
-    </table>
-                                                <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica,sanserif">
-          <strong>Get Involved</strong>
-        </font>
-      </td></tr>
-      <tr><td>
-        <blockquote>
-                                    <ul>
-<li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>
-<li><a href="http://jakarta.apache.org/getinvolved/mail.html">Join Mailing Lists</a></li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
-</li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>
-</li>
-<li><a href="/jyve-faq/Turbine/screen/DisplayTopics/action/SetAll/project_id/2/faq_id/16">FAQ</a>
-</li>
-</ul>
+                                                <p>Please report all bugs using the 
+        <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant">Apache Bugzilla</a>
+    </p>
                             </blockquote>
       </td></tr>
     </table>

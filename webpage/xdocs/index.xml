@@ -90,20 +90,8 @@ Comprehensive documentation is included in the source and binary distribtions.
   
   <section name="Towards Ant2">
     <p>
-    While development of Ant 1.x continues and is supposed to produce
-    results that are backwards compatible (back to Ant 1.2), we've
-    felt that some areas could need a major overhaul and backwards
-    compatibility would stand in our way - this is where the next
-    major version of Ant comes into the game.
-    </p>
-
-    <p>
-    Currently we are collecting feature requests for Ant2. Up to March
-    21st, all requests sent to the Dev mailing list will be collected
-    <a href="ant2/requested-features.txt">here</a>. Following that a
-    discussion and voting process outlined <a
-    href="http://marc.theaimsgroup.com/?l=ant-dev&amp;m=98379315617029&amp;w=2">here</a>
-    will result in a detailed requirements document.
+    We are currently collecting feature requests for Ant2. Please
+    read the latest <a href="/ant/antnews.html">Ant news</a> for more details.
     </p>
   </section>
   
