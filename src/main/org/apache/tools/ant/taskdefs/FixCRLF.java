@@ -389,55 +389,6 @@ public class FixCRLF extends MatchingTask {
     }
 
 
-    /**
-     * Checks for the inequality of two files
-     */
-    private boolean filesEqual(File file1, File file2) {
-        BufferedReader reader1 = null;
-        BufferedReader reader2 = null;
-        char buf1[] = new char[INBUFLEN];
-        char buf2[] = new char[INBUFLEN];
-        int buflen;
-
-        if (file1.length() != file2.length()) {
-            return false;
-        }
-        
-        try {
-             reader1 = new BufferedReader
-                     (getReader(file1), INBUFLEN);
-             reader2 = new BufferedReader
-                     (getReader(file2), INBUFLEN);
-             while ((buflen = reader1.read(buf1, 0, INBUFLEN)) != -1 ) {
-                 reader2.read(buf2, 0, INBUFLEN);
-                 // Compare the contents of the buffers
-                 // There must be an easier way to do this, but I don''t
-                 // know what it is
-                 for (int i = 0; i < buflen; i++) {
-                     if (buf1[i] != buf2[i]) {
-                         return false;
-                     } // end of if (buf1[i] != buf2[i])
-                 }
-             }
-             return true;   // equal
-        } catch (IOException e) {
-            throw new BuildException("IOException in filesEqual: " +
-                                      file1 + " : " + file2);
-        } finally {
-            if (reader1 != null) {
-                try {
-                    reader1.close();
-                } catch (IOException e) {}
-            }
-            if (reader2 != null) {
-                try {
-                    reader2.close();
-                } catch (IOException e) {}
-            }
-        }
-    }
-
-
     private void processFile(String file) throws BuildException {
         File srcFile = new File(srcDir, file);
         File destD = destDir == null ? srcDir : destDir;
@@ -602,7 +553,7 @@ public class FixCRLF extends MatchingTask {
             if (destFile.exists()) {
                 // Compare the destination with the temp file
                 log("destFile exists", Project.MSG_DEBUG);
-                if ( ! filesEqual(destFile, tmpFile)) {
+                if (!fileUtils.contentEquals(destFile, tmpFile)) {
                     log(destFile + " is being written", Project.MSG_DEBUG);
                     if (!destFile.delete()) {
                         throw new BuildException("Unable to delete "
@@ -638,6 +589,8 @@ public class FixCRLF extends MatchingTask {
 
             tmpFile = null;
 
+        } catch (IOException e) {
+            throw new BuildException(e);
         } finally {
             try {
                 if (lines != null) {

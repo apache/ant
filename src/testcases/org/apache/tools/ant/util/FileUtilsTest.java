@@ -299,6 +299,24 @@ public class FileUtilsTest extends TestCase {
     }
 
     /**
+     * Test contentEquals
+     */
+    public void testContentEquals() throws IOException {
+        assertTrue("Non existing files", fu.contentEquals(new File("foo"), 
+                                                          new File("bar")));
+        assertTrue("One exists, the other one doesn\'t", 
+                   !fu.contentEquals(new File("foo"), new File("build.xml")));
+        assertTrue("Don\'t compare directories",
+                   !fu.contentEquals(new File("src"), new File("src")));
+        assertTrue("File equals itself",
+                   fu.contentEquals(new File("build.xml"), 
+                                    new File("build.xml")));
+        assertTrue("Files are different",
+                   !fu.contentEquals(new File("build.xml"), 
+                                     new File("docs.xml")));
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {
