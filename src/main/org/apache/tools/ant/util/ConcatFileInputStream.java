@@ -33,7 +33,7 @@ import org.apache.tools.ant.Project;
 public class ConcatFileInputStream extends InputStream {
 
     private static final int EOF = -1;
-    private int currentIndex = 0;
+    private int currentIndex = -1;
     private boolean eof = false;
     private File[] file;
     private InputStream currentStream;
@@ -47,7 +47,6 @@ public class ConcatFileInputStream extends InputStream {
    */
     public ConcatFileInputStream(File[] file) throws IOException {
         this.file = file;
-        openFile(currentIndex);
     }
 
     // inherit doc
