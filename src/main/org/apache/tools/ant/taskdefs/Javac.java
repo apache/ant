@@ -494,7 +494,7 @@ public class Javac extends MatchingTask {
             Method compile = c.getMethod ("compile",
                 new Class [] {(new String [] {}).getClass ()});
             int result = ((Integer) compile.invoke
-                          (compiler, cmd.getArguments())) .intValue ();
+                          (compiler, new Object[] {cmd.getArguments()})) .intValue ();
             if (result != MODERN_COMPILER_SUCCESS) {
                 String msg = 
                     "Compile failed, messages should have been provided.";
