@@ -44,7 +44,7 @@ mkdir %CLASSDIR%
 echo.
 echo ... Compiling Ant Classes
 
-%JAVAC% -d %CLASSDIR% %TOOLS%\tar\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java
+%JAVAC% -d %CLASSDIR% %TOOLS%\tar\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\*.java
 
 echo.
 echo ... Copying Required Files

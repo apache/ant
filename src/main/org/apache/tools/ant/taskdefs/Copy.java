@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -244,36 +245,35 @@ public class Copy extends Task {
      * copied.
      */
     protected void scan(File fromDir, File toDir, String[] files, String[] dirs) {
-        for (int i = 0; i < files.length; i++) {
-            String filename = files[i];
-            File src = new File(fromDir, filename);
-            File dest;
-            if (flatten) {
-                dest = new File(toDir, new File(filename).getName());
-            } else {
-                dest = new File(toDir, filename);
-            }
-            if (forceOverwrite ||
-                (src.lastModified() > dest.lastModified())) {
-                fileCopyMap.put(src.getAbsolutePath(),
-                                 dest.getAbsolutePath());
-            }
+        FileNameMapper mapper = null;
+        if (flatten) {
+            mapper = new FlatFileNameMapper();
+        } else {
+            mapper = new IdentityMapper();
         }
 
+        buildMap(fromDir, toDir, files, mapper, fileCopyMap);
+
         if (includeEmpty) {
-            for (int i = 0; i < dirs.length; i++) {
-                String dname = dirs[i];
-                File sd = new File(fromDir, dname);
-                File dd;
-                if (flatten) {
-                    dd = new File(toDir, new File(dname).getName());
-                } else {
-                    dd = new File(toDir, dname);
-                }
-                if (forceOverwrite || (sd.lastModified() > dd.lastModified())) {
-                    dirCopyMap.put(sd.getAbsolutePath(), dd.getAbsolutePath());
-                }
-            }
+            buildMap(fromDir, toDir, dirs, mapper, dirCopyMap);
+        }
+    }
+
+    protected void buildMap(File fromDir, File toDir, String[] names,
+                            FileNameMapper mapper, Hashtable map) {
+
+        String[] toCopy = null;
+        if (forceOverwrite) {
+            toCopy = names;
+        } else {
+            SourceFileScanner ds = new SourceFileScanner();
+            toCopy = ds.restrict(names, fromDir, toDir, mapper);
+        }
+        
+        for (int i = 0; i < toCopy.length; i++) {
+            File src = new File(fromDir, toCopy[i]);
+            File dest = new File(toDir, mapper.mapFileName(toCopy[i])[0]);
+            map.put(src.getAbsolutePath(), dest.getAbsolutePath());
         }
     }
 
