@@ -137,7 +137,7 @@ Legal:
     <mkdir dir="${build.src}"/>
     <copy todir="${build.src}">
       <fileset dir="${java.dir}">
-      <include name="${constants.file}" />
+        <include name="${constants.file}" />
       </fileset>
     </copy>
  
