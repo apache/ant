@@ -19,22 +19,22 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.Vector;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.selectors.FileSelector;
-import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
