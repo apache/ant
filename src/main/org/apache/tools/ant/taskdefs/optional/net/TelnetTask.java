@@ -56,11 +56,6 @@ public class TelnetTask extends Task {
     private int port = 23;
 
     /**
-     *  The Object which handles the telnet session.
-     */
-    private AntTelnetClient telnet = null;
-
-    /**
      *  The list of read/write commands for this session
      */
     private Vector telnetTasks = new Vector();
@@ -97,24 +92,36 @@ public class TelnetTask extends Task {
        }
 
        /**  Create the telnet client object */
-       telnet = new AntTelnetClient();
+       AntTelnetClient telnet = null;
        try {
-           telnet.connect(server, port);
-       } catch (IOException e) {
-           throw new BuildException("Can't connect to " + server);
-       }
-       /**  Login if userid and password were specified */
-       if (userid != null && password != null) {
-          login();
-       }
-       /**  Process each sub command */
-       Enumeration tasksToRun = telnetTasks.elements();
-       while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-           TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
-           if (task instanceof TelnetRead && defaultTimeout != null) {
-               ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
+           telnet = new AntTelnetClient();
+           try {
+               telnet.connect(server, port);
+           } catch (IOException e) {
+               throw new BuildException("Can't connect to " + server);
            }
-           task.execute(telnet);
+           /**  Login if userid and password were specified */
+           if (userid != null && password != null) {
+               login(telnet);
+           }
+           /**  Process each sub command */
+           Enumeration tasksToRun = telnetTasks.elements();
+           while (tasksToRun != null && tasksToRun.hasMoreElements()) {
+               TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
+               if (task instanceof TelnetRead && defaultTimeout != null) {
+                   ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
+               }
+               task.execute(telnet);
+           }
+       } finally {
+           if (telnet != null) {
+               try {
+                   telnet.disconnect();
+               } catch (IOException e) {
+                   throw new BuildException("Error disconnecting from " 
+                                            + server);
+               }
+           }
        }
     }
 
@@ -122,7 +129,7 @@ public class TelnetTask extends Task {
      *  Process a 'typical' login.  If it differs, use the read
      *  and write tasks explicitely
      */
-    private void login() {
+    private void login(AntTelnetClient telnet) {
        if (addCarriageReturn) {
           telnet.sendString("\n", true);
        }
