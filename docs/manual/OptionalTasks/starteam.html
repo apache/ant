@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>StartTeam Tasks</title>
+<title>StarTeam Tasks</title>
 </head>
 <body>
 <h1>StarTeam Support</h1>
@@ -98,7 +98,10 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
   <tr>
     <td valign="top">rootstarteamfolder</td>
     <td valign="top">The root of the subtree in the StarTeam repository from which to 
-    check out files.  Defaults to the root folder of the view ('/'). </td>
+    check out files.  Defaults to the root folder of the view ('/'). 
+      <b><i>If supplied, this should always be an "absolute" path, that is, it should begin with a '/'.  
+      Relative paths have little meaning in this context and confuse StarTeam.</i></b>
+      </td>
     <td align="center" valign="top">no</td>
   </tr>  
   <tr>
@@ -141,9 +144,7 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
   <tr>
     <td valign="top">forced</td>
     <td valign="top">If true, checkouts will occur regardless of the status 
-that StarTeam is maintaining for the file.  If rootlocalfolder is set then 
-this should be set "true" as otherwise the checkout will be based on statuses 
-which do not relate to the target folder.  Defaults to "false".</td>
+that StarTeam is maintaining for the file.   If false, status will be used to determine which files to check out. Defaults to "false".</td>
     <td align="center" valign="top">no</td>
   </tr> 
  <tr>
@@ -156,8 +157,16 @@ users.  If false (default) has no effect.
     <td valign="top">unlocked</td>
     <td valign="top">If true, file will be unlocked so that other users may
 change it.  This is a way to reverse changes that have not yet been checked in.
-If false (default) has no effect. 
+If false (default) has no effect.</td> 
   </tr>
+  <tr>
+    <td valign="top">userepositorytimestamp</td>
+    <td valign="top">true means checked out files will get the repository timestamp.
+false(default) means the checked out files will be timestamped at the time
+of checkout.</td>    <td align="center" valign="top">no</td>
+
+  </tr>
+    
 </table>
 
 <h3>Examples</h3>
@@ -290,7 +299,9 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
   <tr>
     <td valign="top">rootstarteamfolder</td>
     <td valign="top">The root of the subtree in the StarTeam repository into which to 
-    files will be checked.  Defaults to the root folder of the view ('/'). </td>
+    files will be checked.  Defaults to the root folder of the view ('/').
+       <b><i>If supplied, this should always be an "absolute" path, that is, it should begin with a '/'.  
+      Relative paths have little meaning in this context and confuse StarTeam.</i></b></td>
     <td align="center" valign="top">no</td>
   </tr>  
   <tr>
@@ -330,9 +341,7 @@ added to the repository.  Defaults to "false".</td>
   <tr>
     <td valign="top">forced</td>
     <td valign="top">If true, checkins will occur regardless of the status 
-that StarTeam is maintaining for the file.  If rootlocalfolder is set then 
-this should be set "true" as otherwise the checkin will be based on statuses 
-which do not relate to the target folder.  Defaults to "false".</td>
+that StarTeam is maintaining for the file.  If false, checkins will use this status to decide which files to update.  Defaults to "false".</td>
     <td align="center" valign="top">no</td>
   </tr>
     <td valign="top">unlocked</td>
@@ -499,10 +508,24 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     <td valign="top">The name to be given to the label</td>
     <td align="center" valign="top">yes</td>
   </tr> 
+  <tr>
+    <td valign="top">revisionlabel</td>
+    <td valign="top">Yes means that the label attribute is to be saved as a &quot;revision label&quot;.  No (default) means that it will be saved as a &quot;view label&quot;</td>
+    <td align="center" valign="top">no</td>
+  </tr> 
+  <tr>
+    <td valign="top">buildlabel</td>
+    <td valign="top">Yes (default) means that the label attribute is to be saved as a &quot;build label&quot;.  
+      This means that Change Requests which have an &quot;AddressedIn&quot; field value of &quot;next build&quot;
+       will have this label assigned to that field when the label is created.  
+       No means that no CRs will have this label assigned to them.  This will have no effect if <b>revisionlabel</b> is also true.  </td>
+    <td align="center" valign="top">no</td>
+  </tr> 
+
  <tr>
     <td valign="top">lastbuild</td>
     <td valign="top">The timestamp of the build that will be stored with the label.  Must be formatted <code>yyyyMMddHHmmss</code></td>
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">no</td>
   </tr>
   <tr>
     <td valign="top">description</td>
@@ -513,8 +536,8 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
 
 <h3>Examples</h3>
 
-This example shows the use of this tag.  It will create a label named <i>Version 6.2</i> with
-<i>"Thorough description"</i> as its description.
+This example shows the use of this tag.  It will create a View label that is a build label named <i>Version 6.2</i> with
+<i>&quot;Thorough description&quot;</i> as its description.
 <pre>
   &lt;tstamp&gt;
     &lt;format property="nowstamp" pattern="yyyyMMddHHmmss" locale="en"/&gt;
@@ -527,6 +550,35 @@ This example shows the use of this tag.  It will create a label named <i>Version
            description="Thorough description"
   /&gt;
 </pre>
+This example creates a non-build View label named <i>Version 6.3</i> with
+<i>&quot;Thorough description&quot;</i> as its description.
+<pre>
+  &lt;tstamp&gt;
+    &lt;format property="nowstamp" pattern="yyyyMMddHHmmss" locale="en"/&gt;
+  &lt;/tstamp&gt;  
+  &lt;stlabel URL="STARTEAM:49201/Aproject/AView"
+           username="auser"
+           password="secret"
+           label="Version 6.3"
+           lastbuild="${nowstamp}"
+           description="Thorough description"
+           buildlabel="false"
+  /&gt;
+</pre>
+This example will create a Revision label that is a build label named <i>Version 6.2.00.001</i> with
+<i>&quot;revision label&quot;</i> as its description.
+<pre>
+  &lt;tstamp&gt;
+    &lt;format property="nowstamp" pattern="yyyyMMddHHmmss" locale="en"/&gt;
+  &lt;/tstamp&gt;  
+  &lt;stlabel URL="STARTEAM:49201/Aproject/AView"
+           username="auser"
+           password="secret"
+           label="Version 6.2.00.001"
+           description="revision label"
+           revisionlabel="true"
+  /&gt;
+</pre>
 
 <hr></hr>
 <a name="stlist">
@@ -534,7 +586,7 @@ This example shows the use of this tag.  It will create a label named <i>Version
 
 <h3>Description</h3>
 
-Produces a listing of the contents of the StarTeam repository at the specified view and StarTeamFolder.  The listing will contain the name of the user, if any, who has the file locked, the size of the file, its lastModifiedDate in the repository, and the name of the file.  Unless the rootLocalFolder is specified, listing will also show the status of the local file in the default local directory relative to the repository. 
+Produces a listing of the contents of the StarTeam repository at the specified view and StarTeamFolder.  The listing will contain the name of the user, if any, who has the file locked, the size of the file, its lastModifiedDate in the repository, the name of the file, and the status of the local file in the default local directory relative to the repository. 
 
 <h3>Parameters</h3>
 See also <A href="#common-params">the required common StarTeam parameters</A>.<br></br>
@@ -547,7 +599,8 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
 
   <tr>
     <td valign="top">rootstarteamfolder</td>
-    <td valign="top">The root of the subtree in the StarTeam repository to be listed.  Defaults to the root folder of the view ('/'). </td>
+    <td valign="top">The root of the subtree in the StarTeam repository to be listed.  Defaults to the root folder of the view ('/'). <b><i>If supplied, this should always be an "absolute" path, that is, it should begin with a '/'.  
+      Relative paths have little meaning in this context and confuse StarTeam.</i></b></td>
     <td align="center" valign="top">no</td>
   </tr>  
   <tr>
@@ -576,6 +629,13 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     <td valign="top">Indicates if subfolders should be searched for files to list.  Defaults to "true".</td>
     <td align="center" valign="top">no</td>
   </tr>
+    <tr>
+    <td valign="top">listuncontrolled</td>
+    <td valign="top">if true, any files or folders NOT in StarTeam will be included in the listing.
+    If false, they won't.  Defaults to "true".</td>
+    <td align="center" valign="top">no</td>
+    </tr>
+
 </table>
 <h3>Examples</h3>
 
