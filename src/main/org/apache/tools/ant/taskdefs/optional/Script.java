@@ -99,6 +99,8 @@ public class Script extends Task {
 
             beans.put("project", getProject());
 
+            beans.put("self", this);
+
             BSFManager manager = new BSFManager ();
 
             for (Enumeration e = beans.keys() ; e.hasMoreElements() ;) {
