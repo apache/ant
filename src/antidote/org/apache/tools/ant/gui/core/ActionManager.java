@@ -72,6 +72,8 @@ import java.lang.reflect.Constructor;
 public class ActionManager {
     /** Parameters for the Command constructor. */
     private static final Class[] COMMAND_CTOR_PARAMS = { AppContext.class };
+    private static final Class[] COMMAND_CTOR_PARAMS_WITH_EVENT =
+        { AppContext.class, EventObject.class };
 
     /** Externalized resources. */
     private ResourceManager _resources = null;
@@ -207,6 +209,12 @@ public class ActionManager {
 
         for(int i = 0; i < _actionIDs.length; i++) {
             AntAction action = (AntAction) _actions.get(_actionIDs[i]);
+            
+            // If the action is hidden do not display it.
+            if(action.isHidden()) {
+                continue;
+            }
+            
             // If it has an icon, then we add it to the toolbar.
             if(action.getIcon() != null) {
                 if(action.isPreceededBySeparator()) {
@@ -232,22 +240,39 @@ public class ActionManager {
         return retval;
     }
 
-	/**
+	/** 
 	 * Create a popup menu with the given actionIDs.
-     * XXX check this for object leak. Does the button
-     * get added to the action as a listener? There are also some
-     * changes to this behavior in 1.3.
-	 *
+         * XXX check this for object leak. Does the button
+         * get added to the action as a listener? There are also some
+         * changes to this behavior in 1.3.
+	 * 
 	 * @param actionIDs List of action IDs for actions
-     *  to appear in popup menu.
+         *  to appear in popup menu.
+	 * @param defaultID Use this action ID if the item 
+         * from the list is not found.
 	 * @return Popup menu to display.
 	 */
-    public JPopupMenu createPopup(String[] actionIDs) {
+    public JPopupMenu createPopup(String[] actionIDs, String defaultID) {
+       
         JPopupMenu retval = new JPopupMenu();
 
         for(int i = 0; i < actionIDs.length; i++) {
             AntAction action = (AntAction) _actions.get(actionIDs[i]);
-            if(action != null) {
+            
+            // If the ID is not found, use the default.
+            if (action == null && defaultID != null) {
+                action = (AntAction) _actions.get(defaultID);
+                AbstractButton button = retval.add(action);
+                
+                // Set the button text to the action ID.
+                button.setText(actionIDs[i]);
+                addNiceStuff(button, action);
+            } else {
+                if(action.isPopupPreceededBySeparator() &&
+                    retval.getComponentCount() > 0) {
+                    retval.addSeparator();
+                }
+                
                 AbstractButton button = retval.add(action);
                 addNiceStuff(button, action);
             }
@@ -256,27 +281,37 @@ public class ActionManager {
         return retval;
     }
 
-	/**
+	/** 
 	 * Get the command assocaited with the Action with the given id.
-	 *
+	 * 
 	 * @param actionID Id of action to get command for.
 	 * @return Command associated with action, or null if none available.
 	 */
-    public Command getActionCommand(String actionID, AppContext context) {
+    public Command getActionCommand(String actionID,
+                                    AppContext context,
+                                    EventObject event) {
         Command retval = null;
         AntAction action = (AntAction) _actions.get(actionID);
         if(action != null) {
             Class clazz = action.getCommandClass();
             if(clazz != null) {
                 try {
-                    Constructor ctor =
+                    Constructor ctor = 
                         clazz.getConstructor(COMMAND_CTOR_PARAMS);
                     retval = (Command) ctor.newInstance(
                         new Object[] { context });
                 }
                 catch(Exception ex) {
-                    // XXX log me.
-                    ex.printStackTrace();
+                    try {
+                        Constructor ctor = clazz.getConstructor(
+                            COMMAND_CTOR_PARAMS_WITH_EVENT);
+                        retval = (Command) ctor.newInstance(
+                            new Object[] { context, event });
+                    }
+                    catch (Exception ex2) {
+                        // XXX log me.
+                        ex.printStackTrace();
+                    }
                 }
             }
         }

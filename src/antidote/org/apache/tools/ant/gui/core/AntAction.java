@@ -73,6 +73,7 @@ public class AntAction extends AbstractAction {
     /** Property name for the parent menu item. */
     public static final String PARENT_MENU_NAME = "parentMenuName";
     public static final String SEPARATOR = "separator";
+    public static final String POPUP_SEPARATOR = "popupSeparator";
     public static final String ACCELERATOR = "accelerator";
     public static final String ENABLED = "enabled";
     public static final String ENABLE_ON = "enableOn";
@@ -81,6 +82,7 @@ public class AntAction extends AbstractAction {
     public static final String CHECKED_TRUE_ON = "checkedTrueOn";
     public static final String CHECKED_FALSE_ON = "checkedFalseOn";
     public static final String COMMAND = "command";
+    public static final String HIDDEN = "hidden";
 
     /** Property resources. */
     private  ResourceManager _resources =  null;
@@ -118,6 +120,8 @@ public class AntAction extends AbstractAction {
         putValue(SHORT_DESCRIPTION, getString("shortDescription"));
         putValue(PARENT_MENU_NAME, getString(PARENT_MENU_NAME));
         putValue(SEPARATOR, getString(SEPARATOR));
+        putValue(POPUP_SEPARATOR, getString(POPUP_SEPARATOR));
+        putValue(HIDDEN, getString(HIDDEN));
 
 
         // Set the default enabled state.
@@ -268,6 +272,28 @@ public class AntAction extends AbstractAction {
         return (Icon) getValue(SMALL_ICON);
     }
 
+    /** 
+     * Determine if a separator should appear before the action
+     * when the popup menu is created.
+     * 
+     * @return True if add separator, false otherwise.
+     */
+    public boolean isPopupPreceededBySeparator() {
+        return Boolean.valueOf(
+            String.valueOf(getValue(POPUP_SEPARATOR))).booleanValue();
+    }
+    
+    /** 
+     * Determine if the action is hidden and should not
+     * be displayed from a button.
+     * 
+     * @return True the action is hidden.
+     */
+    public boolean isHidden() {
+        return Boolean.valueOf(
+            String.valueOf(getValue(HIDDEN))).booleanValue();
+    }
+    
 	/**
 	 * Get the accelerator keystroke.
 	 *

@@ -60,9 +60,7 @@ import java.net.URL;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import com.sun.xml.parser.Parser;
-import com.sun.xml.tree.SimpleElementFactory;
-import com.sun.xml.tree.XmlDocument;
-import com.sun.xml.tree.XmlDocumentBuilder;
+import com.sun.xml.tree.*;
 import java.util.Properties;
 import java.util.Enumeration;
 import com.sun.xml.parser.Resolver;
@@ -92,7 +90,7 @@ public class ACSFactory {
                 String name = (String) enum.nextElement();
                 // XXX the name of the class needs to be stored externally.
                 _elementMap.setProperty(
-                    name, "org.apache.tools.ant.gui.acs.ACSTaskElement");
+                    name, "org.apache.tools.ant.gui.acs.ACSDtdDefinedElement");
             }
 
             // Then we add/override the local definitions.
@@ -164,7 +162,6 @@ public class ACSFactory {
             sax.parse(location.openStream(), null);
 
             doc = builder.getDocument();
-
         }
         catch(ParserConfigurationException ex) {
             ex.printStackTrace();
@@ -235,6 +232,22 @@ public class ACSFactory {
         return retval;
     }
 
+    /** 
+     * Create a new element.
+     * 
+     * @param node the Node to assign the property to.
+     * @param name the new elements type.
+     * @return New, unnamed property.
+     */
+    public ACSElement createElement(ACSElement node, String name) {
+        ACSElement retval = (ACSElement) node.
+            getOwnerDocument().createElement(name);
+        // XXX fixme.
+        indent(node, 1);
+        node.appendChild(retval);
+        return retval;
+    }
+    
     /** 
      * Insert a new line and indentation at the end of the given
      * node in preparation for a new element being added.

@@ -138,12 +138,18 @@ public class ElementNavigator extends AntModule {
                 // The project node has changed.
                 model.fireNodeChanged((ACSElement)event.getSource());
             }
+            else if(event instanceof RefreshDisplayEvent && model != null) {
+                _tree.updateUI();
+            }
             else if(event instanceof NewElementEvent && model != null) {
                 ACSElement element = ((NewElementEvent)event).getNewElement();
                 model.fireNodeAdded(element);
                 TreePath path = new TreePath(model.getPathToRoot(element));
                 _selections.setSelectionPath(path);
                 _tree.scrollPathToVisible(path);
+            }
+            else if(event instanceof DeleteElementEvent && model != null) {
+                _tree.updateUI();
             }
             else {
                 ACSProjectElement project = null;
@@ -163,11 +169,31 @@ public class ElementNavigator extends AntModule {
                     ElementSelectionEvent.createEvent(getContext(), null);
                 }
                 else {
-                    _tree.setModel(new ElementTreeModel(project));
-                    _selections = new ElementTreeSelectionModel();
-                    _selections.addTreeSelectionListener(
-                        new SelectionForwarder());
-                    _tree.setSelectionModel(_selections);
+                    boolean updateModel = false;
+                    TreeModel testModel = _tree.getModel();
+                    
+                    // Set the model if's not an ElementTreeModel
+                    if (testModel instanceof ElementTreeModel) {
+                        ElementTreeModel etm = (ElementTreeModel) testModel;
+                        ACSProjectElement currentProject = 
+                            (ACSProjectElement) etm.getRoot();
+                        
+                        // Set the model if the project is wrong
+                        if (currentProject != project) {
+                            updateModel = true;
+                        }
+                    } else {
+                        updateModel = true;
+                    }
+
+                    // Should we update the tree model
+                    if (updateModel) {
+                        _tree.setModel(new ElementTreeModel(project));
+                        _selections = new ElementTreeSelectionModel();
+                        _selections.addTreeSelectionListener(
+                            new SelectionForwarder());
+                        _tree.setSelectionModel(_selections);
+                    }
                 }
             }
             return true;
@@ -195,7 +221,9 @@ public class ElementNavigator extends AntModule {
             return event instanceof ProjectSelectedEvent ||
                 event instanceof ProjectClosedEvent ||
                 event instanceof NewElementEvent ||
-                event instanceof PropertyChangeEvent;
+                event instanceof PropertyChangeEvent ||
+                event instanceof DeleteElementEvent ||
+                event instanceof RefreshDisplayEvent;
         }
     }
 
@@ -203,11 +231,42 @@ public class ElementNavigator extends AntModule {
     private class PopupHandler extends MouseAdapter {
         private void handle(MouseEvent e) {
             if(e.isPopupTrigger()) {
-                ActionManager mgr = getContext().getActions();
-                JPopupMenu menu = mgr.createPopup(
-                    getContext().getResources().getStringArray(
-                        ElementNavigator.class, "popupActions"));
-                menu.show((JComponent)e.getSource(), e.getX(), e.getY());
+                Object source = e.getSource();
+                String[] menuStr = null;
+                JTree tree = (JTree) source;
+                
+                // Find the selected path.
+                TreePath selPath = tree.getPathForLocation(
+                    e.getX(), e.getY());
+                if (selPath == null) {
+                    return;
+                }
+
+                // Update the selection. 
+                tree.setSelectionPath(selPath);
+
+                // Find the selected object.
+                Object selObj = selPath.getLastPathComponent();
+
+                String defaultID = null;
+                
+                // Does the item provide its own menu?
+                if (selObj instanceof ACSInfoProvider) {
+                    ACSInfoProvider ip = (ACSInfoProvider) selObj;
+                    menuStr = ip.getMenuString();
+                    defaultID = ip.getDefaultActionID();
+                } else {
+                    // Get the menu from the prop file.
+                    menuStr = getContext().getResources().getStringArray(
+                        ElementNavigator.class, defaultID);
+                }
+
+                // Should we create a menu?
+                if (menuStr != null && menuStr.length != 0) {
+                    ActionManager mgr = getContext().getActions();
+                    JPopupMenu menu = mgr.createPopup(menuStr, defaultID);
+                    menu.show((JComponent)e.getSource(), e.getX(), e.getY());
+                }
             }
         }
 

@@ -113,9 +113,8 @@ public class EventResponder {
          */
         public boolean eventPosted(EventObject event) {
             String command = ((ActionEvent)event).getActionCommand();
-
             Command cmd = 
-                _context.getActions().getActionCommand(command, _context);
+                _context.getActions().getActionCommand(command, _context, event);
             if(cmd != null) {
                 cmd.run();
                 return false;

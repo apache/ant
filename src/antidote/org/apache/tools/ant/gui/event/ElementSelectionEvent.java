@@ -132,18 +132,22 @@ public class ElementSelectionEvent extends AntEvent {
 
         if(selected != null && selected.length > 0) {
             Class type = selected[selected.length - 1].getClass();
-            if(type.isAssignableFrom(ACSTargetElement.class)) {
+            if(ACSTargetElement.class.isAssignableFrom(type)) {
                 retval = new TargetSelectionEvent(context, selected);
             }
-            else if(type.isAssignableFrom(ACSTaskElement.class)) {
+            else if(ACSTaskElement.class.isAssignableFrom(type)) {
                 retval = new TaskSelectionEvent(context, selected);
             }
-            else if(type.isAssignableFrom(ACSPropertyElement.class)) {
+            else if(ACSPropertyElement.class.isAssignableFrom(type)) {
                 retval = new PropertySelectionEvent(context, selected);
             }
-            else if(type.isAssignableFrom(ACSProjectElement.class)) {
+            else if(ACSProjectElement.class.isAssignableFrom(type)) {
                 retval = new ProjectSelectedEvent(
                     context, (ACSProjectElement) selected[0]);
+            }
+            else if(ACSDtdDefinedElement.class.isAssignableFrom(type)) {
+                retval = new DtdDefinedElementSelectionEvent(
+                    context, selected);
             }
             else {
                 // For elements without a specific event

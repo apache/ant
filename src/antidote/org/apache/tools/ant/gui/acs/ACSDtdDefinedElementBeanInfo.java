@@ -52,76 +52,82 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.acs;
-
-import com.sun.xml.tree.ElementNode;
-import java.util.StringTokenizer;
+import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
+import java.beans.*;
 
 /**
- * Class representing an element with a name and description.
+ * BeanInfo for the ACSDtdDefinedElement class.
  * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ * @version $Revision$
+ * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
-public class ACSNamedElement extends ACSDtdDefinedElement {
-    /** The 'name' property name. */
-    public static final String NAME = "name";
-    /** The discription property name. */
-    public static final String DESCRIPTION = "description";
-
+public class ACSDtdDefinedElementBeanInfo extends BaseBeanInfo {
 	/** 
 	 * Default ctor.
 	 * 
 	 */
-    public ACSNamedElement() {
+    public ACSDtdDefinedElementBeanInfo() {
     }
 
 	/** 
-	 * Get the target name.
+	 * Get the type that this BeanInfo represents.
 	 * 
-	 * @return Target name.
+	 * @return Type.
 	 */
-    public String getName() {
-        return getAttribute(NAME);
+    public Class getType() {
+        return ACSDtdDefinedElement.class;
     }
 
 	/** 
-	 * Set the name.
+	 * Get the customizer type.
 	 * 
-	 * @param name New name value.
+	 * @return Customizer type.
 	 */
-    public void setName(String name) {
-        String old = getName();
-        setAttribute(NAME, name);
-        firePropertyChange(NAME, old, name);
+    public Class getCustomizerType() {
+        return Customizer.class;
     }
 
 	/** 
-	 * Get the long description of the target.
+	 * Get the property descriptors.
 	 * 
-	 * @return Target description.
+         * @return Property descriptors.
 	 */
-    public String getDescription() {
-        return getAttribute(DESCRIPTION);
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        PropertyDescriptor[] retval = null;
+
+        try {
+            retval = new PropertyDescriptor[] {
+                new PropertyDescriptor(ACSDtdDefinedElement.TASK_TYPE, 
+                                       ACSDtdDefinedElement.class,
+                                       "getTaskType", null),
+                new PropertyDescriptor(ACSDtdDefinedElement.NAMED_VALUES, 
+                    ACSDtdDefinedElement.class),
+                new PropertyDescriptor(ACSDtdDefinedElement.XML_STRING, 
+                    ACSDtdDefinedElement.class,
+                    "getXMLString", null)
+            };
+            int pos = 0;
+            retval[pos++].setDisplayName(getResources().getString(
+                getClass(),ACSDtdDefinedElement.TASK_TYPE));
+            retval[pos++].setDisplayName(getResources().getString(
+                getClass(),ACSDtdDefinedElement.NAMED_VALUES));
+            retval[pos++].setDisplayName(getResources().getString(
+                getClass(),ACSDtdDefinedElement.XML_STRING));
+            
+            setSortingOrder(retval);
+        } catch(IntrospectionException ex) { 
+            ex.printStackTrace();
+            throw new Error(ex.toString());
+        }
+            
+        return retval;
     }
 
-	/** 
-	 * Set the description
-	 * 
-	 * @param description New description value.
-	 */
-    public void setDescription(String description) {
-        String old = getDescription();
-        setAttribute(DESCRIPTION, description);
-        firePropertyChange(DESCRIPTION, old, description);
+    /** Customizer for this bean info. */
+    public static class Customizer extends DynamicCustomizer {
+        public Customizer() {
+            super(ACSDtdDefinedElement.class);
+        }
     }
-
-	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getName();
-    }
-
 }
+

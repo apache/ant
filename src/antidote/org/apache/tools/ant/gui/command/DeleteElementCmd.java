@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,77 +51,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.acs;
-
-import com.sun.xml.tree.ElementNode;
-import java.util.StringTokenizer;
+package org.apache.tools.ant.gui.command;
+import java.util.EventObject;
+import javax.swing.JOptionPane;
+import org.w3c.dom.Node;
+import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.event.DeleteElementEvent;
+import org.apache.tools.ant.gui.acs.*;
 
 /**
- * Class representing an element with a name and description.
+ * Command for removing the selected element.
  * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ * @version $Revision$
+ * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
-public class ACSNamedElement extends ACSDtdDefinedElement {
-    /** The 'name' property name. */
-    public static final String NAME = "name";
-    /** The discription property name. */
-    public static final String DESCRIPTION = "description";
-
+public class DeleteElementCmd extends AbstractCommand {
+    
 	/** 
-	 * Default ctor.
+	 * Standard ctor.
 	 * 
-	 */
-    public ACSNamedElement() {
+	 * @param context Application context.
+	 */ 
+    public DeleteElementCmd(AppContext context) {
+        super(context);
     }
 
-	/** 
-	 * Get the target name.
-	 * 
-	 * @return Target name.
-	 */
-    public String getName() {
-        return getAttribute(NAME);
-    }
+    /** 
+     * Delete the selected element.
+     */
+    public void run() {
+        
+        // Ask "Are you sure?"
+        int option = JOptionPane.showConfirmDialog(null, "Are You Sure?",
+            "Confirm Delete", JOptionPane.YES_NO_OPTION);
+        
+        if (option == JOptionPane.YES_OPTION) {
+            // Find the element to remove
+            ACSElement[] vals = getContext().getSelectionManager().
+                getSelectedElements();
+            if(vals != null && vals.length > 0) {
+                Node item = vals[vals.length - 1];
+                
+                // Find the parent and remove the element.
+                Node parent = item.getParentNode();
+                parent.removeChild(item);
 
-	/** 
-	 * Set the name.
-	 * 
-	 * @param name New name value.
-	 */
-    public void setName(String name) {
-        String old = getName();
-        setAttribute(NAME, name);
-        firePropertyChange(NAME, old, name);
+                // Notify the tree the element was removed.
+                DeleteElementEvent event = new DeleteElementEvent(
+                    getContext(), (ACSElement) parent);
+                getContext().getEventBus().postEvent(event);
+            }
+        }
     }
-
-	/** 
-	 * Get the long description of the target.
-	 * 
-	 * @return Target description.
-	 */
-    public String getDescription() {
-        return getAttribute(DESCRIPTION);
-    }
-
-	/** 
-	 * Set the description
-	 * 
-	 * @param description New description value.
-	 */
-    public void setDescription(String description) {
-        String old = getDescription();
-        setAttribute(DESCRIPTION, description);
-        firePropertyChange(DESCRIPTION, old, description);
-    }
-
-	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getName();
-    }
-
 }

@@ -61,7 +61,7 @@ import com.sun.xml.tree.ElementNode;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ACSPropertyElement extends ACSTreeNodeElement {
+public class ACSPropertyElement extends ACSDtdDefinedElement {
     /** The 'name' property name. */
     public static final String NAME = "name";
     /** The 'value' property name. */

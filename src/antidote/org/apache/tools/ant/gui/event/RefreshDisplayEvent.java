@@ -51,77 +51,24 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.acs;
+package org.apache.tools.ant.gui.event;
 
-import com.sun.xml.tree.ElementNode;
-import java.util.StringTokenizer;
+import org.apache.tools.ant.gui.core.*;
+import org.apache.tools.ant.gui.command.*;
 
 /**
- * Class representing an element with a name and description.
- * 
- * @version $Revision$ 
- * @author Simeon Fitch 
+ * Request to show the console pane
+ *
+ * @version $Revision$
+ * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
-public class ACSNamedElement extends ACSDtdDefinedElement {
-    /** The 'name' property name. */
-    public static final String NAME = "name";
-    /** The discription property name. */
-    public static final String DESCRIPTION = "description";
-
-	/** 
-	 * Default ctor.
-	 * 
+public class RefreshDisplayEvent extends AntEvent {
+	/**
+	 * Standard ctor.
+	 *
+	 * @param context application context.
 	 */
-    public ACSNamedElement() {
+    public RefreshDisplayEvent(AppContext context) {
+        super(context);
     }
-
-	/** 
-	 * Get the target name.
-	 * 
-	 * @return Target name.
-	 */
-    public String getName() {
-        return getAttribute(NAME);
-    }
-
-	/** 
-	 * Set the name.
-	 * 
-	 * @param name New name value.
-	 */
-    public void setName(String name) {
-        String old = getName();
-        setAttribute(NAME, name);
-        firePropertyChange(NAME, old, name);
-    }
-
-	/** 
-	 * Get the long description of the target.
-	 * 
-	 * @return Target description.
-	 */
-    public String getDescription() {
-        return getAttribute(DESCRIPTION);
-    }
-
-	/** 
-	 * Set the description
-	 * 
-	 * @param description New description value.
-	 */
-    public void setDescription(String description) {
-        String old = getDescription();
-        setAttribute(DESCRIPTION, description);
-        firePropertyChange(DESCRIPTION, old, description);
-    }
-
-	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getName();
-    }
-
 }
