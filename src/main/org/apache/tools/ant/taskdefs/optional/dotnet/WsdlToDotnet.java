@@ -17,6 +17,9 @@
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
+import java.util.Vector;
+import java.util.Iterator;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -87,9 +90,30 @@ public class WsdlToDotnet extends Task  {
     protected String extraOptions = null;
 
     /**
+     * mono flag; we ignore the Rotor implementation of the CLR
      * @since Ant 1.7
      */
     private boolean isMono = !Os.isFamily("windows");
+
+
+    /**
+     * protocol string. Exact value set depends on SOAP stack version.
+     * @since Ant 1.7
+     */
+    private String protocol = null;
+
+    /**
+     * should errors come in a machine parseable format. This
+     * is WSE only.
+     * @since Ant 1.7
+     */
+    private boolean parseableErrors = false;
+
+    /**
+     * filesets of file to compile
+     * @since Ant 1.7
+     */
+    private Vector schemas = new Vector();
 
     /**
      * Name of the file to generate. Required
@@ -111,7 +135,7 @@ public class WsdlToDotnet extends Task  {
 
     /**
      * The local WSDL file to parse; either url or srcFile is required.
-     * @param srcFile name of WSDL file
+     * @param srcFileName name of WSDL file
      */
     public void setSrcFile(String srcFileName) {
         if (new File(srcFileName).isAbsolute()) {
@@ -180,6 +204,40 @@ public class WsdlToDotnet extends Task  {
         isMono = b;
     }
 
+
+    /**
+     * Should errors be machine parseable?
+     * Optional, default=true
+     *
+     * @since Ant 1.7
+     * @param parseableErrors
+     */
+    public void setParseableErrors(boolean parseableErrors) {
+        this.parseableErrors = parseableErrors;
+    }
+
+    /**
+     * what protocol to use. SOAP, SOAP1.2, HttpPost and HttpGet
+     * are the base options. Different version and implementations may.
+     * offer different options.
+     * @since Ant 1.7
+     *
+     * @param protocol
+     */
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    /**
+     * add a new source schema to the compilation
+     * @since Ant 1.7
+     *
+     * @param source
+     */
+    public void addSchema(Schema source) {
+        schemas.add(source);
+    }
+
     /**
      * validation code
      * @throws  BuildException  if validation failed
@@ -233,10 +291,17 @@ public class WsdlToDotnet extends Task  {
             command.addArgument("/server");
         }
         command.addArgument("/namespace:", namespace);
+        if(protocol!=null) {
+            command.addArgument("/protocol:"+protocol);
+        }
+        if(parseableErrors) {
+            command.addArgument("/parseableErrors");
+        }
         command.addArgument(extraOptions);
 
         //set source and rebuild options
         boolean rebuild = true;
+        long destLastModified = -1;
         if (srcFileName != null) {
             File srcFile = getProject().resolveFile(srcFileName);
             if (isMono) {
@@ -246,8 +311,11 @@ public class WsdlToDotnet extends Task  {
                 command.addArgument(srcFile.toString());
             }
             //rebuild unless the dest file is newer than the source file
-            if (srcFile.exists() && destFile.exists()
-                && srcFile.lastModified() <= destFile.lastModified()) {
+            if ( destFile.exists() ) {
+                destLastModified = destFile.lastModified();
+            }
+            if (srcFile.exists()
+                && srcFile.lastModified() <= destLastModified) {
                 rebuild = false;
             }
         } else {
@@ -256,8 +324,88 @@ public class WsdlToDotnet extends Task  {
             rebuild = true;
             command.addArgument(url);
         }
+        //add in any extra files.
+        //this is an error in mono, but we do not warn on it as they may fix that outside
+        //the ant build cycle.
+        Iterator it=schemas.iterator();
+        while ( it.hasNext() ) {
+            Schema schema = (Schema) it.next();
+            //get date, mark for a rebuild if we are newer
+            long schemaTimestamp;
+            schemaTimestamp=schema.getTimestamp();
+            if(schemaTimestamp>destLastModified) {
+                rebuild=true;
+            }
+            command.addArgument(schema.evaluate());
+        }
+        //conditionally compile
         if (rebuild) {
             command.runCommand();
+        }
+    }
+
+
+    /**
+     * nested schema class
+     * Only supported on NET until mono add multi-URL handling on the command line
+     */
+    public static class Schema {
+        private File file;
+        private String url;
+        public static final String ERROR_NONE_DECLARED = "One of file and url must be set";
+        public static final String ERROR_BOTH_DECLARED = "Only one of file or url can be set";
+        public static final String ERROR_FILE_NOT_FOUND = "Not found: ";
+
+        public  void validate() {
+
+            if(file!=null && !file.exists()) {
+                throw new BuildException(ERROR_FILE_NOT_FOUND+file.toString());
+            }
+            if(file!=null && url!=null) {
+                throw new BuildException(ERROR_BOTH_DECLARED);
+            }
+            if(file==null && url==null) {
+                throw new BuildException(ERROR_NONE_DECLARED);
+            }
+        }
+
+        /**
+         * validate our settings then return either the url or the full file path.
+         * @return
+         */
+        public String evaluate() {
+            validate();
+            if(file!=null) {
+                return file.toString();
+            } else {
+                return getUrl();
+            }
+        }
+        public File getFile() {
+            return file;
+        }
+
+        public void setFile(File file) {
+            this.file = file;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        /**
+         * return the timestamp of a file, or -1 for a url (meaning we do not know its age)
+         * @return
+         */
+        public long getTimestamp() {
+            if(file!=null) {
+                return file.lastModified();
+            } else
+                return -1;
         }
     }
 }

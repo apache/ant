@@ -20,6 +20,7 @@ import java.io.*;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.taskdefs.optional.dotnet.WsdlToDotnet;
 
 /**
  * Tests the WsdlToDotnet task.
@@ -155,5 +156,43 @@ public class WsdlToDotnetTest extends BuildFileTest {
                 "expected failure",
                 "WSDL returned:");
     }
+
+    /**
+     * as if parseable errors were not ignored, mono and WSE1.0 would
+     * crash and burn. So here we verify the property exists,
+     * and that it is not passed to the app when false
+     */
+    public void testParseableErrorsIgnoredWhenFalse() throws Exception {
+        executeTarget("testLocalWsdl");
+    }
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testSchemaFileMustExist() throws Exception {
+        expectBuildExceptionContaining("testSchemaFileMustExist",
+                "expected failure",
+                WsdlToDotnet.Schema.ERROR_FILE_NOT_FOUND);
+    }
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testSchemaFileMustHaveOneOptionOnly() throws Exception {
+        expectBuildExceptionContaining("testSchemaFileMustHaveOneOptionOnly",
+                "expected failure",
+                WsdlToDotnet.Schema.ERROR_BOTH_DECLARED);
+    }
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testSchemaMustBeSet() throws Exception {
+        expectBuildExceptionContaining("testSchemaMustBeSet",
+                "expected failure",
+                WsdlToDotnet.Schema.ERROR_NONE_DECLARED);
+    }
+
+
 }
 

@@ -187,6 +187,40 @@
       srcFile="${local.wsdl}"
       extraOptions="/newOption:not-one-known-of"
       />
-  </target>    
+  </target>
 
+
+  <target name="testParseableErrorsIgnoredWhenFalse" depends="init">
+    <wsdltodotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      parseableErrors="false"
+      >
+    </wsdltodotnet>
+  </target>
+
+  <target name="testSchemaMustBeSet" depends="init">
+    <wsdltodotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      >
+      <schema/>
+    </wsdltodotnet>
+  </target>
+
+  <target name="testSchemaFileMustExist" depends="init">
+    <wsdltodotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      >
+      <schema file="this-file-does-not-exist.xsd"/>
+    </wsdltodotnet>
+  </target>
+
+  <target name="testSchemaFileMustHaveOneOptionOnly" depends="init">
+    <wsdltodotnet destFile="${out.csc}"
+      srcFile="${local.wsdl}"
+      >
+      <schema file="wsdlToDotnet.xml"
+        url="http://ant.apache.org/xml/AntSchema.xsd"/>
+    </wsdltodotnet>
+  </target>
+  
 </project>
