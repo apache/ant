@@ -7,203 +7,195 @@
  */
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import com.oroinc.net.telnet.TelnetClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Class to provide automated telnet protocol support for the Ant build tool
  *
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
  * @version $Revision$
  */
-
-public class TelnetTask extends Task
+public class TelnetTask
+    extends AbstractTask
 {
     /**
      * The userid to login with, if automated login is used
      */
-    private String userid = null;
+    private String m_userid;
 
     /**
      * The password to login with, if automated login is used
      */
-    private String password = null;
+    private String m_password;
 
     /**
      * The server to connect to.
      */
-    private String server = null;
+    private String m_server;
 
     /**
      * The tcp port to connect to.
      */
-    private int port = 23;
-
-    /**
-     * The Object which handles the telnet session.
-     */
-    private AntTelnetClient telnet = null;
+    private int m_port = 23;
 
     /**
      * The list of read/write commands for this session
      */
-    private ArrayList telnetTasks = new ArrayList();
+    private ArrayList m_telnetTasks = new ArrayList();
 
     /**
      * If true, adds a CR to beginning of login script
      */
-    private boolean addCarriageReturn = false;
+    private boolean m_addCarriageReturn;
 
     /**
      * Default time allowed for waiting for a valid response for all child
      * reads. A value of 0 means no limit.
      */
-    private Integer defaultTimeout = null;
+    private Integer m_defaultTimeout;
 
     /**
      * Set the tcp port to connect to attribute
-     *
-     * @param b The new InitialCR value
      */
-    public void setInitialCR( boolean b )
+    public void setInitialCR( final boolean addCarriageReturn )
     {
-        this.addCarriageReturn = b;
+        m_addCarriageReturn = addCarriageReturn;
     }
 
     /**
      * Set the password attribute
-     *
-     * @param p The new Password value
      */
-    public void setPassword( String p )
+    public void setPassword( final String password )
     {
-        this.password = p;
+        m_password = password;
     }
 
     /**
      * Set the tcp port to connect to attribute
-     *
-     * @param p The new Port value
      */
-    public void setPort( int p )
+    public void setPort( final int port )
     {
-        this.port = p;
+        m_port = port;
     }
 
     /**
      * Set the server address attribute
-     *
-     * @param m The new Server value
      */
-    public void setServer( String m )
+    public void setServer( final String server )
     {
-        this.server = m;
+        m_server = server;
     }
 
     /**
      * Change the default timeout to wait for valid responses
-     *
-     * @param i The new Timeout value
      */
-    public void setTimeout( Integer i )
+    public void setTimeout( final Integer defaultTimeout )
     {
-        this.defaultTimeout = i;
+        m_defaultTimeout = defaultTimeout;
     }
 
     /**
      * Set the userid attribute
-     *
-     * @param u The new Userid value
      */
-    public void setUserid( String u )
+    public void setUserid( final String userid )
     {
-        this.userid = u;
+        m_userid = userid;
     }
 
     /**
      * A subTask &lt;read&gt; tag was found. Create the object, Save it in our
      * list, and return it.
-     *
-     * @return Description of the Returned Value
      */
-
-    public TelnetSubTask createRead()
+    public void addRead( final TelnetRead read )
     {
-        TelnetSubTask task = (TelnetSubTask)new TelnetRead();
-        telnetTasks.add( task );
-        return task;
+        m_telnetTasks.add( read );
     }
 
     /**
      * A subTask &lt;write&gt; tag was found. Create the object, Save it in our
      * list, and return it.
-     *
-     * @return Description of the Returned Value
      */
-    public TelnetSubTask createWrite()
+    public void addWrite( final TelnetWrite write )
     {
-        TelnetSubTask task = (TelnetSubTask)new TelnetWrite();
-        telnetTasks.add( task );
-        return task;
+        m_telnetTasks.add( write );
     }
 
     /**
      * Verify that all parameters are included. Connect and possibly login
      * Iterate through the list of Reads and writes
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
     {
-        /**
-         * A server name is required to continue
-         */
-        if( server == null )
-            throw new TaskException( "No Server Specified" );
-        /**
-         * A userid and password must appear together if they appear. They are
-         * not required.
-         */
-        if( userid == null && password != null )
-            throw new TaskException( "No Userid Specified" );
-        if( password == null && userid != null )
-            throw new TaskException( "No Password Specified" );
+        validate();
 
         /**
          * Create the telnet client object
          */
-        telnet = new AntTelnetClient();
+        final AntTelnetClient telnet = new AntTelnetClient( this );
         try
         {
-            telnet.connect( server, port );
+            telnet.connect( m_server, m_port );
         }
-        catch( IOException e )
+        catch( final IOException ioe )
         {
-            throw new TaskException( "Can't connect to " + server );
+            throw new TaskException( "Can't connect to " + m_server, ioe );
         }
         /**
          * Login if userid and password were specified
          */
-        if( userid != null && password != null )
-            login();
-        /**
-         * Process each sub command
-         */
-        Iterator tasksToRun = telnetTasks.iterator();
-        while( tasksToRun != null && tasksToRun.hasNext() )
+        if( m_userid != null && m_password != null )
         {
-            TelnetSubTask task = (TelnetSubTask)tasksToRun.next();
-            if( task instanceof TelnetRead && defaultTimeout != null )
-                ( (TelnetRead)task ).setDefaultTimeout( defaultTimeout );
+            login( telnet );
+        }
+
+        processTasks( telnet );
+    }
+
+    /**
+     * Process each sub command
+     */
+    private void processTasks( final AntTelnetClient telnet )
+        throws TaskException
+    {
+        final Iterator tasks = m_telnetTasks.iterator();
+        while( tasks != null && tasks.hasNext() )
+        {
+            final TelnetSubTask task = (TelnetSubTask)tasks.next();
+            if( task instanceof TelnetRead && m_defaultTimeout != null )
+            {
+                ( (TelnetRead)task ).setDefaultTimeout( m_defaultTimeout );
+            }
             task.execute( telnet );
+        }
+    }
+
+    private void validate()
+        throws TaskException
+    {
+        //A server name is required to continue
+        if( m_server == null )
+        {
+            throw new TaskException( "No Server Specified" );
+        }
+
+        //A userid and password must appear together if they appear. They are
+        //not required.
+        if( m_userid == null && m_password != null )
+        {
+            throw new TaskException( "No Userid Specified" );
+        }
+        if( m_password == null && m_userid != null )
+        {
+            throw new TaskException( "No Password Specified" );
         }
     }
 
@@ -211,194 +203,81 @@ public class TelnetTask extends Task
      * Process a 'typical' login. If it differs, use the read and write tasks
      * explicitely
      */
-    private void login()
+    private void login( final AntTelnetClient telnet )
+        throws TaskException
     {
-        if( addCarriageReturn )
+        if( m_addCarriageReturn )
+        {
             telnet.sendString( "\n", true );
+        }
         telnet.waitForString( "ogin:" );
-        telnet.sendString( userid, true );
+        telnet.sendString( m_userid, true );
         telnet.waitForString( "assword:" );
-        telnet.sendString( password, false );
+        telnet.sendString( m_password, false );
     }
 
-    /**
-     * This class handles the abstraction of the telnet protocol. Currently it
-     * is a wrapper around <a href="www.oroinc.com">ORO</a> 's NetComponents
-     *
-     * @author RT
-     */
-    public class AntTelnetClient extends TelnetClient
+    protected void doSendString( final OutputStream output,
+                                 final String string,
+                                 final boolean echoString )
+        throws TaskException
     {
-
-        /**
-         * Write this string to the telnet session.
-         *
-         * @param s Description of Parameter
-         * @param echoString Description of Parameter
-         * @parm echoString Logs string sent
-         */
-        public void sendString( String s, boolean echoString )
+        try
         {
-            OutputStream os = this.getOutputStream();
-            try
+            output.write( ( string + "\n" ).getBytes() );
+            if( echoString )
             {
-                os.write( ( s + "\n" ).getBytes() );
-                if( echoString )
-                    getLogger().info( s );
-                os.flush();
+                getLogger().info( string );
             }
-            catch( Exception e )
-            {
-                throw new TaskException( "Error", e );
-            }
+            output.flush();
         }
-
-        /**
-         * Read from the telnet session until the string we are waiting for is
-         * found
-         *
-         * @param s Description of Parameter
-         * @parm s The string to wait on
-         */
-        public void waitForString( String s )
+        catch( final Exception e )
         {
-            waitForString( s, null );
+            throw new TaskException( e.getMessage(), e );
         }
+    }
 
-        /**
-         * Read from the telnet session until the string we are waiting for is
-         * found or the timeout has been reached
-         *
-         * @param s Description of Parameter
-         * @param timeout Description of Parameter
-         * @parm s The string to wait on
-         * @parm timeout The maximum number of seconds to wait
-         */
-        public void waitForString( String s, Integer timeout )
+    protected void doWaitForString( final InputStream input,
+                                    final String string,
+                                    final Integer timeout )
+        throws TaskException
+    {
+        try
         {
-            InputStream is = this.getInputStream();
-            try
+            final StringBuffer sb = new StringBuffer();
+            if( timeout == null || timeout.intValue() == 0 )
             {
-                StringBuffer sb = new StringBuffer();
-                if( timeout == null || timeout.intValue() == 0 )
+                while( sb.toString().indexOf( string ) == -1 )
                 {
-                    while( sb.toString().indexOf( s ) == -1 )
-                    {
-                        sb.append( (char)is.read() );
-                    }
+                    sb.append( (char)input.read() );
                 }
-                else
+            }
+            else
+            {
+                final Calendar endTime = Calendar.getInstance();
+                endTime.add( Calendar.SECOND, timeout.intValue() );
+                while( sb.toString().indexOf( string ) == -1 )
                 {
-                    Calendar endTime = Calendar.getInstance();
-                    endTime.add( Calendar.SECOND, timeout.intValue() );
-                    while( sb.toString().indexOf( s ) == -1 )
+                    while( Calendar.getInstance().before( endTime ) &&
+                        input.available() == 0 )
                     {
-                        while( Calendar.getInstance().before( endTime ) &&
-                            is.available() == 0 )
-                        {
-                            Thread.sleep( 250 );
-                        }
-                        if( is.available() == 0 )
-                            throw new TaskException( "Response Timed-Out" );
-                        sb.append( (char)is.read() );
+                        Thread.sleep( 250 );
                     }
+                    if( input.available() == 0 )
+                    {
+                        throw new TaskException( "Response Timed-Out" );
+                    }
+                    sb.append( (char)input.read() );
                 }
-                getLogger().info( sb.toString() );
             }
-            catch( TaskException be )
-            {
-                throw be;
-            }
-            catch( Exception e )
-            {
-                throw new TaskException( "Error", e );
-            }
+            getLogger().info( sb.toString() );
         }
-    }
-
-    /**
-     * This class reads the output from the connected server until the required
-     * string is found.
-     *
-     * @author RT
-     */
-    public class TelnetRead extends TelnetSubTask
-    {
-        private Integer timeout = null;
-
-        /**
-         * Sets the default timeout if none has been set already
-         *
-         * @param defaultTimeout The new DefaultTimeout value
-         */
-        public void setDefaultTimeout( Integer defaultTimeout )
+        catch( final TaskException te )
         {
-            if( timeout == null )
-                timeout = defaultTimeout;
+            throw te;
         }
-
-        /**
-         * Override any default timeouts
-         *
-         * @param i The new Timeout value
-         */
-        public void setTimeout( Integer i )
+        catch( final Exception e )
         {
-            this.timeout = i;
-        }
-
-        public void execute( AntTelnetClient telnet )
-            throws TaskException
-        {
-            telnet.waitForString( taskString, timeout );
-        }
-    }
-
-    /**
-     * This class is the parent of the Read and Write tasks. It handles the
-     * common attributes for both.
-     *
-     * @author RT
-     */
-    public class TelnetSubTask
-    {
-        protected String taskString = "";
-
-        public void setString( String s )
-        {
-            taskString += s;
-        }
-
-        public void addContent( String s )
-        {
-            setString( s );
-        }
-
-        public void execute( AntTelnetClient telnet )
-            throws TaskException
-        {
-            throw new TaskException( "Shouldn't be able instantiate a SubTask directly" );
-        }
-    }
-
-    /**
-     * This class sends text to the connected server
-     *
-     * @author RT
-     */
-    public class TelnetWrite extends TelnetSubTask
-    {
-        private boolean echoString = true;
-
-        public void setEcho( boolean b )
-        {
-            echoString = b;
-        }
-
-        public void execute( AntTelnetClient telnet )
-            throws TaskException
-        {
-            telnet.sendString( taskString, echoString );
+            throw new TaskException( e.getMessage(), e );
         }
     }
 }
