@@ -1,7 +1,0 @@
-Combined filter test
-1111 - should change
-2222 - should change
-@cccc@ - should not change
-3333 - should change
-^dddd% - should not change
-4444 - should change
