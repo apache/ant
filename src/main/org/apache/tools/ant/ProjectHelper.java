@@ -115,6 +115,7 @@ public class ProjectHelper {
     public static void configureProject(Project project, File buildFile) 
         throws BuildException {
         ProjectHelper helper = ProjectHelper.getProjectHelper();
+        project.addReference("ant.projectHelper", helper);
         helper.parse(project, buildFile);
     }
 
@@ -122,6 +123,38 @@ public class ProjectHelper {
     public ProjectHelper() {
     }
 
+    // -------------------- Common properties  --------------------
+    // The following properties are required by import ( and other tasks
+    // that read build files using ProjectHelper ).
+
+    // A project helper may process multiple files. We'll keep track
+    // of them - to avoid loops and to allow caching. The caching will
+    // probably accelerate things like <antCall>.
+    // The key is the absolute file, the value is a processed tree.
+    // Since the tree is composed of UE and RC - it can be reused !
+    // protected Hashtable processedFiles=new Hashtable();
+
+    protected Vector importStack=new Vector();
+
+    // Temporary - until we figure a better API
+    /** EXPERIMENTAL WILL_CHANGE
+     *
+     */
+//    public Hashtable getProcessedFiles() {
+//        return processedFiles;
+//    }
+
+    /** EXPERIMENTAL WILL_CHANGE
+     *  Import stack.
+     *  Used to keep track of imported files. Error reporting should
+     *  display the import path.
+     */
+    public Vector getImportStack() {
+        return importStack;
+    }
+
+
+    // --------------------  Parse method  --------------------
     /**
      * Parses the project file, configuring the project as it goes.
      *
@@ -285,7 +318,8 @@ public class ProjectHelper {
      *               Must not be <code>null</code>.
      * @param project The project containing the target. 
      *                Must not be <code>null</code>.
-     * 
+     *
+     * @deprecated
      * @exception BuildException if any of the attributes can't be handled by
      *                           the target
      */
@@ -311,44 +345,6 @@ public class ProjectHelper {
             } catch (BuildException be) {
                 // id attribute must be set externally
                 if (!attrs.getName(i).equals("id")) {
-                    throw be;
-                }
-            }
-        }
-    }
-
-    /** Configure a component using SAX2 attributes.
-     */
-    public static void configure( Object target, Attributes attrs, Project project )
-        throws BuildException
-    {
-        if (target instanceof TaskAdapter) {
-            target = ((TaskAdapter) target).getProxy();
-        }
-
-        IntrospectionHelper ih =
-            IntrospectionHelper.getHelper(target.getClass());
-
-        // Why ???
-        project.addBuildListener(ih);
-
-        for (int i = 0; i < attrs.getLength(); i++) {
-            // reflect these into the target
-            String attValue=attrs.getValue(i);
-
-            // XXX ADD SPECIAL CASE FOR ${property} - don't convert to string
-            // and support ARRAYS.
-            // reflect these into the target
-            //String value = replaceProperties(attValue);
-            String value = replaceProperties(project, attValue,
-                                           project.getProperties());
-            try {
-                ih.setAttribute(project, target,
-                                attrs.getQName(i).toLowerCase(Locale.US), value);
-
-            } catch (BuildException be) {
-                // id attribute must be set externally
-                if (!attrs.getQName(i).equals("id")) {
                     throw be;
                 }
             }
