@@ -187,10 +187,10 @@ public class ExecTask extends Task {
     protected boolean isValidOs() {
         // test if os match
         String myos = System.getProperty("os.name");
-        log("Myos = " + myos, Project.MSG_VERBOSE);
+        log("Current OS is " + myos, Project.MSG_VERBOSE);
         if ((os != null) && (os.indexOf(myos) < 0)){
             // this command will be executed only on the specified OS
-            log("Not found in " + os, Project.MSG_VERBOSE);
+            log("This OS, " + myos + " was not found in the specified list of valid OSes: " + os, Project.MSG_VERBOSE);
             return false;
         }
         return true;
