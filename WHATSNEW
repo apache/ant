@@ -80,6 +80,8 @@ Other changes:
 
 * Added nested file element to filelist.
 
+* spelling fixes, occurred. Bugzilla Report 27282.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
