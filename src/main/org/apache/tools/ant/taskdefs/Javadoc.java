@@ -388,32 +388,57 @@ public class Javadoc extends Task {
     }
     public void setWindowtitle(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-windowtitle");
-            cmd.createArgument().setValue(src);
+            if (src != null && src.length() != 0) {
+                cmd.createArgument().setValue("-windowtitle");
+                cmd.createArgument().setValue(src);
+            } else {
+                project.log(this, "Warning: Leaving out empty 'windowtitle'", 
+                            Project.MSG_WARN);
+            }
         }
     }
     public void setDoctitle(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-doctitle");
-            cmd.createArgument().setValue(src);
+            if (src != null && src.length() != 0) {
+                cmd.createArgument().setValue("-doctitle");
+                cmd.createArgument().setValue(src);
+            } else {
+                project.log(this, "Warning: Leaving out empty 'doctitle'", 
+                            Project.MSG_WARN);
+            }
         }
     }
     public void setHeader(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-header");
-            cmd.createArgument().setValue(src);
+            if (src != null && src.length() != 0) {
+                cmd.createArgument().setValue("-header");
+                cmd.createArgument().setValue(src);
+            } else {
+                project.log(this, "Warning: Leaving out empty 'header'", 
+                            Project.MSG_WARN);
+            }
         }
     }
     public void setFooter(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-footer");
-            cmd.createArgument().setValue(src);
+            if (src != null && src.length() != 0) {
+                cmd.createArgument().setValue("-footer");
+                cmd.createArgument().setValue(src);
+            } else {
+                project.log(this, "Warning: Leaving out empty 'footer'", 
+                            Project.MSG_WARN);
+            }
         }
     }
     public void setBottom(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-bottom");
-            cmd.createArgument().setValue(src);
+            if (src != null && src.length() != 0) {
+                cmd.createArgument().setValue("-bottom");
+                cmd.createArgument().setValue(src);
+            } else {
+                project.log(this, "Warning: Leaving out empty 'bottom'", 
+                            Project.MSG_WARN);
+            }
         }
     }
     public void setLinkoffline(String src) {
@@ -554,8 +579,13 @@ public class Javadoc extends Task {
     
     public void setCharset(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-charset");
-            cmd.createArgument().setValue(src);
+            if (src != null && src.length() != 0) {
+                cmd.createArgument().setValue("-charset");
+                cmd.createArgument().setValue(src);
+            } else {
+                project.log(this, "Warning: Leaving out empty 'charset'", 
+                            Project.MSG_WARN);
+            }
         }
     }
 
