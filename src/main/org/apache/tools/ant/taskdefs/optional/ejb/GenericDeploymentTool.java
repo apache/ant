@@ -58,15 +58,23 @@ import java.io.*;
 import java.util.*;
 import java.util.jar.*;
 import java.util.zip.*;
+import java.net.*;
 
 import javax.xml.parsers.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
+/**
+ * A deployment tool which creates generic EJB jars. Generic jars contains
+ * only those classes and META-INF entries specified in the EJB 1.1 standard
+ *
+ * This class is also used as a framework for the creation of vendor specific
+ * deployment tools. A number of template methods are provided through which the
+ * vendor specific tool can hook into the EJB creation process.
+ */
 public class GenericDeploymentTool implements EJBDeploymentTool {
     /** Private constants that are used when constructing the standard jarfile */
     protected static final String META_DIR  = "META-INF/";
@@ -84,6 +92,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /** Instance variable that stores the jar file name when not using the naming standard */
     private String baseJarName;
 
+    /** The classpath to use with this deployment tool. */
+    private Path classpath;
+
     /**
      * Instance variable that determines whether to use a package structure
      * of a flat directory as the destination for the jar files.
@@ -97,10 +108,22 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     private String genericJarSuffix = "-generic.jar";
 
     /**
-     * The task to which this tool belongs.
+     * The task to which this tool belongs. This is used to access services provided
+     * by the ant core, such as logging.
      */
     private Task task;
     
+    /**
+     * The classloader generated from the given classpath to load
+     * the super classes and super interfaces.
+     */
+    private ClassLoader classpathLoader = null;
+    
+     /**
+     * List of files have been loaded into the EJB jar
+     */
+    private List addedfiles;
+
     /**
      * Setter used to store the value of destination directory prior to execute()
      * being called.
@@ -177,15 +200,48 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     /**
+     * creates a nested classpath element.
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(task.getProject());
+        }
+        return classpath.createPath();
+    }
+
+    /**
+     * Set the classpath to be used for this compilation.
+     */
+    public void setClasspath(Path classpath) {
+        this.classpath = classpath;
+    }
+
+    protected Path getClasspath() {
+        return classpath;
+    }
+    
+    protected void log(String message, int level) {
+        getTask().log(message, level);
+    }
+
+
+    /**
      * Configure this tool for use in the ejbjar task.
      */
     public void configure(File srcDir, File descriptorDir, String baseNameTerminator, 
-                          String baseJarName, boolean flatDestDir) {
+                          String baseJarName, boolean flatDestDir, Path classpath) {
         this.srcDir = srcDir;
         this.descriptorDir = descriptorDir;
         this.baseJarName = baseJarName;
         this.baseNameTerminator = baseNameTerminator;
         this.flatDestDir = flatDestDir;
+        if (this.classpath != null) {
+            this.classpath.append(classpath);
+        }
+        else {
+            this.classpath = classpath;
+        }
+        classpathLoader = null;
     }
 
     /**
@@ -194,38 +250,51 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * constructed.
      * @param jStream A JarOutputStream into which to write the
      *        jar entry.
-     * @param iStream A FileInputStream from which to read the
+     * @param inputFile A File from which to read the
      *        contents the file being added.
-     * @param filename A String representing the name, including
+     * @param logicalFilename A String representing the name, including
      *        all relevant path information, that should be stored for the entry
      *        being added.
      */
     protected void addFileToJar(JarOutputStream jStream,
-                                FileInputStream iStream,
-                                String          filename)
+                                File inputFile,
+                                String logicalFilename)
         throws BuildException {
+        FileInputStream iStream = null;
         try {
-            // Create the zip entry and add it to the jar file
-            ZipEntry zipEntry = new ZipEntry(filename);
-            jStream.putNextEntry(zipEntry);
-            
-            // Create the file input stream, and buffer everything over
-            // to the jar output stream
-            byte[] byteBuffer = new byte[2 * 1024];
-            int count = 0;
-            do {
-                jStream.write(byteBuffer, 0, count);
-                count = iStream.read(byteBuffer, 0, byteBuffer.length);
-            } while (count != -1);
-            
-            // Close up the file input stream for the class file
-            iStream.close();
+            if (!addedfiles.contains(logicalFilename)) {
+                iStream = new FileInputStream(inputFile);
+                // Create the zip entry and add it to the jar file
+                ZipEntry zipEntry = new ZipEntry(logicalFilename);
+                jStream.putNextEntry(zipEntry);
+                   
+                // Create the file input stream, and buffer everything over
+                // to the jar output stream
+                byte[] byteBuffer = new byte[2 * 1024];
+                int count = 0;
+                do {
+                    jStream.write(byteBuffer, 0, count);
+                    count = iStream.read(byteBuffer, 0, byteBuffer.length);
+                } while (count != -1);
+                
+                //add it to list of files in jar
+                addedfiles.add(logicalFilename);
+           }       
         }
         catch (IOException ioe) {
             String msg = "IOException while adding entry "
-                         + filename + "to jarfile."
+                         + logicalFilename + " to jarfile from " + inputFile.getPath() + "."
                          + ioe.getMessage();
             throw new BuildException(msg, ioe);
+        }
+        finally {
+            // Close up the file input stream for the class file
+            if (iStream != null) {
+                try {
+                    iStream.close();
+                }
+                catch (IOException closeException) {}
+            }
         }
     }
 
@@ -234,6 +303,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
     
     public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
+        FileInputStream descriptorStream = null;
+
         try {
             DescriptorHandler handler = getDescriptorHandler(srcDir);
             
@@ -241,10 +312,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
              * look like much, we use a SAXParser and an inner class to
              * get hold of all the classfile names for the descriptor.
              */
-            saxParser.parse(new InputSource
-                            (new FileInputStream
-                            (new File(getDescriptorDir(), descriptorFileName))),
-                            handler);
+            descriptorStream = new FileInputStream(new File(getDescriptorDir(), descriptorFileName));
+            saxParser.parse(new InputSource(descriptorStream), handler);
                             
             Hashtable ejbFiles = handler.getFiles();
             
@@ -273,8 +342,12 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
                          new File(getDescriptorDir(), descriptorFileName));
-                         
+            
+            // now the vendor specific files, if any             
             addVendorFiles(ejbFiles, baseName);
+			
+		    // add any inherited files
+		    checkAndAddInherited(ejbFiles);
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!
@@ -304,6 +377,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 while( (needBuild == false) && (fileIter.hasNext()) ) {
                     File currentFile = (File) fileIter.next();
                     needBuild = ( lastBuild < currentFile.lastModified() );
+                    if (needBuild) {
+                        log("Build needed because " + currentFile.getPath() + " is out of date",
+                            Project.MSG_VERBOSE);
+                    }
                 }
             }
             
@@ -311,7 +388,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // doing the work!
             if (needBuild) {
                 // Log that we are going to build...
-                getTask().log( "building "
+                log( "building "
                               + jarFile.getName()
                               + " with "
                               + String.valueOf(ejbFiles.size())
@@ -324,7 +401,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             }
             else {
                 // Log that the file is up to date...
-                getTask().log(jarFile.toString() + " is up to date.",
+                log(jarFile.toString() + " is up to date.",
                               Project.MSG_INFO);
             }
 
@@ -345,6 +422,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 + ioe.getMessage();
             throw new BuildException(msg, ioe);
         }
+        finally {
+            if (descriptorStream != null) {
+                try {
+                    descriptorStream.close();
+                }
+                catch (IOException closeException) {}
+            }
+        }
     }
     
     /**
@@ -352,6 +437,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * EJB Jar.
      */
     protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+        // nothing to add for generic tool.
     }
 
 
@@ -369,14 +455,12 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * ejbFiles.
      */
     protected void writeJar(String baseName, File jarfile, Hashtable files) throws BuildException{
-        JarOutputStream jarStream = null;
-        Iterator entryIterator = null;
-        String entryName = null;
-        File entryFile = null;
-	File entryDir = null;
-	String innerfiles[] = null;
 
+        JarOutputStream jarStream = null;
         try {
+            // clean the addedfiles Vector 
+            addedfiles = new ArrayList();
+
             /* If the jarfile already exists then whack it and recreate it.
              * Should probably think of a more elegant way to handle this
              * so that in case of errors we don't leave people worse off
@@ -389,45 +473,39 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             jarfile.createNewFile();
             
             // Create the streams necessary to write the jarfile
+            
             jarStream = new JarOutputStream(new FileOutputStream(jarfile));
             jarStream.setMethod(JarOutputStream.DEFLATED);
             
             // Loop through all the class files found and add them to the jar
-            entryIterator = files.keySet().iterator();
-            while (entryIterator.hasNext()) {
-                entryName = (String) entryIterator.next();
-                entryFile = (File) files.get(entryName);
+            for (Iterator entryIterator = files.keySet().iterator(); entryIterator.hasNext(); ) {
+                String entryName = (String) entryIterator.next();
+                File entryFile = (File) files.get(entryName);
                 
-                getTask().log("adding file '" + entryName + "'",
+                log("adding file '" + entryName + "'",
                               Project.MSG_VERBOSE);
 
-                addFileToJar(jarStream,
-                             new FileInputStream(entryFile),
-                             entryName);
+                addFileToJar(jarStream, entryFile, entryName);
 
-		// See if there are any inner classes for this class and add them in if there are
-		InnerClassFilenameFilter flt = new InnerClassFilenameFilter(entryFile.getName());
-		entryDir = entryFile.getParentFile();
-		innerfiles = entryDir.list(flt);
-		for (int i=0, n=innerfiles.length; i < n; i++) {
-	
-			//get and clean up innerclass name
-			entryName = entryName.substring(0, entryName.lastIndexOf(entryFile.getName())-1) + File.separatorChar + innerfiles[i];
-
-			// link the file
-			entryFile = new File(srcDir, entryName);
-
-			getTask().log("adding innerclass file '" + entryName + "'", 
-				    Project.MSG_VERBOSE);
-
-			addFileToJar(jarStream,
-                                     new FileInputStream(entryFile),
-                                     entryName);
-
-		}
+                // See if there are any inner classes for this class and add them in if there are
+                InnerClassFilenameFilter flt = new InnerClassFilenameFilter(entryFile.getName());
+                File entryDir = entryFile.getParentFile();
+                String[] innerfiles = entryDir.list(flt);
+                for (int i=0, n=innerfiles.length; i < n; i++) {
+            
+                    //get and clean up innerclass name
+                    entryName = entryName.substring(0, entryName.lastIndexOf(entryFile.getName())-1) + File.separatorChar + innerfiles[i];
+        
+                    // link the file
+                    entryFile = new File(srcDir, entryName);
+        
+                    log("adding innerclass file '" + entryName + "'", 
+                            Project.MSG_VERBOSE);
+        
+                    addFileToJar(jarStream, entryFile, entryName);
+        
+                }
             }
-            // All done.  Close the jar stream.
-            jarStream.close();
         }
         catch(IOException ioe) {
             String msg = "IOException while processing ejb-jar file '"
@@ -436,12 +514,217 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 + ioe.getMessage();
             throw new BuildException(msg, ioe);
         }
+        finally {
+            if (jarStream != null) {
+                try {
+                    jarStream.close();
+                }
+                catch (IOException closeException) {}
+            }
+        }
     } // end of writeJar
 
+    /**
+     * Check if a EJB Class Inherits from a Superclass, and if a Remote Interface
+     * extends an interface other then javax.ejb.EJBObject directly.  Then add those 
+     * classes to the generic-jar so they dont have to added elsewhere.
+     *
+     */
+    protected void checkAndAddInherited(Hashtable checkEntries) throws BuildException
+    {
+        //Copy hashtable so were not changing the one we iterate through
+        Hashtable copiedHash = (Hashtable)checkEntries.clone();
+
+        // Walk base level EJBs and see if they have superclasses or extend extra interfaces which extend EJBObject
+        for (Iterator entryIterator = copiedHash.keySet().iterator(); entryIterator.hasNext(); ) 
+        {
+            String entryName = (String)entryIterator.next();
+            File entryFile = (File)copiedHash.get(entryName);
+
+            // only want class files, xml doesnt reflect very well =)
+            if (entryName.endsWith(".class"))
+            {
+                String classname = entryName.substring(0,entryName.lastIndexOf(".class")).replace(File.separatorChar,'.');
+                ClassLoader loader = getClassLoaderForBuild();
+                try {
+                    Class c = loader.loadClass(classname);
+
+                    // No primatives!!  sanity check, probably not nessesary
+                    if (!c.isPrimitive())
+                    {
+                        if (c.isInterface()) //get as an interface
+                        {
+                            log("looking at interface " + c.getName(),  Project.MSG_VERBOSE);
+                            Class[] interfaces = c.getInterfaces();
+                            for (int i = 0; i < interfaces.length; i++){
+
+                                log("     implements " + interfaces[i].getName(),  Project.MSG_VERBOSE);
+                                if (!interfaces[i].getName().equals("javax.ejb.EJBObject")) // do not add home interfaces
+                                { 
+                                    File superClassFile = new File(srcDir.getAbsolutePath() 
+                                                                    + File.separatorChar 
+                                                                    + interfaces[i].getName().replace('.',File.separatorChar)
+                                                                    + ".class"
+                                                                    );
+                                    if (superClassFile.exists() && superClassFile.isFile())
+                                    {
+                                        if (checkInterfaceClasses(interfaces[i].getName().replace('.',File.separatorChar)+".class", 
+                                              superClassFile, checkEntries))
+                                        {
+                                            checkEntries.put(interfaces[i].getName().replace('.',File.separatorChar)+".class",
+                                                 superClassFile);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else  // get as a class
+                        {
+                            log("looking at class " + c.getName(),  Project.MSG_VERBOSE);
+                            Class s = c.getSuperclass();
+                            if (!s.getName().equals("java.lang.Object"))
+                            {
+                                File superClassFile = new File(srcDir.getAbsolutePath() 
+                                + File.separatorChar 
+                                + s.getName().replace('.',File.separatorChar)
+                                + ".class"
+                                );
+                                if (superClassFile.exists() && superClassFile.isFile())
+                                {
+                                    checkSuperClasses(s.getName().replace('.',File.separatorChar) + ".class", 
+                                    superClassFile, checkEntries);
+                                    checkEntries.put(s.getName().replace('.',File.separatorChar) + ".class", 
+                                    superClassFile);
+                                }               
+                            }
+                        }
+                    } //if primative
+                }
+                catch (ClassNotFoundException cnfe) {
+                    log("Could not load class " + classname + " for super class check", 
+                                  Project.MSG_WARN);
+                }                            
+            } //if 
+        } // while 
+    }
+     
+    /**
+     * Returns a Classloader object which parses the passed in generic EjbJar classpath.
+     * The loader is used to dynamically load classes from javax.ejb.* and the classes 
+     * being added to the jar.
+     *
+     */ 
+    protected ClassLoader getClassLoaderForBuild()
+    {
+        if (classpathLoader != null) {
+            return classpathLoader;
+        }
+        
+        // only generate a URLClassLoader if we have a classpath
+        if (classpath == null) {
+            classpathLoader = getClass().getClassLoader();
+        }
+        else {
+            classpathLoader = new AntClassLoader(getTask().getProject(), classpath);
+        }
+        
+        return classpathLoader;
+    }
  
+    /**
+     * Checks to see if a Superclass of an Object needs to be included in the EJB Jar.
+     * This is done my checking the class and if it inherits from a superclass and that
+     * superclass is available then it includes that in the Hashtable of entries to be added
+     * to the Jar. 
+     *
+     */
+    protected void checkSuperClasses(String entryName, File entryFile, Hashtable checkEntries)
+    {
+        try
+        {
+            if (entryName.endsWith(".class")) //sanity check
+            {
+                // Load class to check superclass and interfaces
+                ClassLoader loader = getClassLoaderForBuild();
+                String classname = entryName.substring(0,entryName.lastIndexOf(".class")).replace(File.separatorChar,'.');
+                Class c = loader.loadClass(classname);
 
+                Class s = c.getSuperclass();
+                if (!s.getName().equals("java.lang.Object"))
+                {
+                    File superClassFile = new File(srcDir.getAbsolutePath() 
+                                    + File.separatorChar 
+                                    + s.getName().replace('.',File.separatorChar)
+                                    + ".class"
+                                    );
+                    if (superClassFile.exists() && superClassFile.isFile()){
+                        checkSuperClasses(s.getName().replace('.',File.separatorChar) + ".class", superClassFile, checkEntries);
+                        checkEntries.put(s.getName().replace('.',File.separatorChar) + ".class", superClassFile);
+                    }               
+                }
+            }
+        }
+        catch(ClassNotFoundException cnfe){
+            String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
+                        + ". Details: "
+                + cnfe.getMessage();
+            throw new BuildException(cnfmsg, cnfe);
+        }
+    }
+
+    /**
+     * Checks to see if an interface extends another interface and if the final interface on the 
+     * chain implements javax.ejb.EJBObject the it includes all interfaces in that chain in the Jar.
+     *
+     */
+    protected boolean checkInterfaceClasses(String entryName, File entryFile, Hashtable checkEntries)
+    {
+        boolean addit = false;
+        try
+        {
+            if (entryName.endsWith(".class")) //sanity check
+            {
+                // Load class to check superclass and interfaces
+                ClassLoader loader = getClassLoaderForBuild();
+                String classname = entryName.substring(0,entryName.lastIndexOf(".class")).replace(File.separatorChar,'.');
+                Class c = loader.loadClass(classname);
+
+                Class[] interfaces = c.getInterfaces();
+                for (int i = 0; i < interfaces.length; i++){
+                    if (!interfaces[i].getName().equals("javax.ejb.EJBObject")){ // do not add home interfaces  
+                        File superClassFile = new File(srcDir.getAbsolutePath() 
+                                    + File.separatorChar 
+                                    + interfaces[i].getName().replace('.',File.separatorChar)
+                                    + ".class"
+                                    );
+                        if (superClassFile.exists() && superClassFile.isFile()){
+                            log("looking at interface " + interfaces[i].getName(),  Project.MSG_VERBOSE);
+                        
+                            addit = checkInterfaceClasses(interfaces[i].getName().replace('.',File.separatorChar)+".class", 
+                                          superClassFile, checkEntries);
+                            if (addit)
+                            {
+                                log("adding at interface " + interfaces[i].getName(),  Project.MSG_VERBOSE);
+                                checkEntries.put(interfaces[i].getName().replace('.',File.separatorChar)+".class",
+                                         superClassFile);
+                            }
+                        }
+                    }
+                    else {
+                        addit = true;
+                    }
+                }
+            }
+        }
+        catch(ClassNotFoundException cnfe){
+            String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
+                            + ". Details: "
+                            + cnfe.getMessage();
+            throw new BuildException(cnfmsg, cnfe);
+        }
+        return addit;
+    }
     
-
     /**
      * Called to validate that the tool parameters have been configured.
      *

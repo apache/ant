@@ -60,6 +60,7 @@ import javax.xml.parsers.SAXParser;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.*;
 
 public interface EJBDeploymentTool {
     /**
@@ -87,5 +88,5 @@ public interface EJBDeploymentTool {
      * Configure this tool for use in the ejbjar task.
      */
     public void configure(File srcDir, File descriptorDir, String basenameTerminator, 
-                          String baseJarName, boolean flatDestDir);     
+                          String baseJarName, boolean flatDestDir, Path classpath);     
 }

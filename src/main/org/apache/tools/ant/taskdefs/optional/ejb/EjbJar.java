@@ -69,6 +69,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.*;
 
 /**
  * <p>Provides automated ejb jar file creation for ant.  Extends the MatchingTask
@@ -113,6 +114,11 @@ public class EjbJar extends MatchingTask {
 
     /** Stores a handle to the destination EJB Jar file */
     private String baseJarName;
+
+    /**
+     * The classpath to use when loading classes
+     */
+    private Path classpath;
  
     /**
      * Instance variable that determines whether to use a package structure
@@ -131,6 +137,12 @@ public class EjbJar extends MatchingTask {
      */
     private ArrayList deploymentTools = new ArrayList();
 
+    /**
+     * Create a weblogic nested element used to configure a
+     * deployment tool for Weblogic server.
+     *
+     * @return the deployment tool instance to be configured.
+     */
     public WeblogicDeploymentTool createWeblogic() {
         WeblogicDeploymentTool tool = new WeblogicDeploymentTool();
         tool.setTask(this);
@@ -138,6 +150,12 @@ public class EjbJar extends MatchingTask {
         return tool;
     }
 
+    /**
+     * Create a nested element for weblogic when using the Toplink
+     * Object- Relational mapping.
+     *
+     * @return the deployment tool instance to be configured.
+     */
     public WeblogicTOPLinkDeploymentTool createWeblogictoplink() {
         WeblogicTOPLinkDeploymentTool tool = new WeblogicTOPLinkDeploymentTool();
         tool.setTask(this);
@@ -146,7 +164,25 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Setter used to store the value of srcDir prior to execute() being called.
+     * creates a nested classpath element.
+     *
+     * This classpath is used to locate the super classes and interfaces
+     * of the classes that will make up the EJB jar.
+     * 
+     * @return the path to be configured.
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(project);
+        }
+        return classpath.createPath();
+    }
+
+    /**
+     * Set the srcdir attribute. The source directory is the directory that contains
+     * the classes that will be added to the EJB jar. Typically this will include the 
+     * home and remote interfaces and the bean class.
+     *
      * @param inDir the source directory.
      */
     public void setSrcdir(File inDir) {
@@ -154,7 +190,13 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Setter used to store the value of descriptorDir prior to execute() being called.
+     * Set the descriptor directory.
+     *
+     * The descriptor directory contains the EJB deployment descriptors. These are XML
+     * files that declare the properties of a bean in a particular deployment scenario. Such
+     * properties include, for example, the transactional nature of the bean and the security
+     * access control to the bean's methods.  
+     *
      * @param inDir the directory containing the deployment descriptors.
      */
     public void setDescriptordir(File inDir) {
@@ -162,16 +204,26 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Setter used to store the value of descriptorDir prior to execute() being called.
-     * @param inDir the directory containing the deployment descriptors.
+     * Set the base name of the EJB jar that is to be created if it is not to be
+     * determined from the name of the deployment descriptor files. 
+     * 
+     * @param inValue the basename that will be used when writing the jar file containing
+     * the EJB
      */
     public void setBasejarname(String inValue) {
         this.baseJarName = inValue;
     }
 
     /**
-     * Setter used to store the value of destination directory prior to execute()
-     * being called.
+     * Set the destination directory.
+     * 
+     * The EJB jar files will be written into this directory. The jar files that exist in
+     * this directory are also used when determining if the contents of the jar file 
+     * have changed.
+     *
+     * Note that this parameter is only used if no deployment tools are specified. Typically
+     * each deployment tool will specify its own destination directory.
+     * 
      * @param inFile the destination directory.
      */
     public void setDestdir(File inDir) {
@@ -179,15 +231,37 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Setter used to store the value of flatDestDir.
-     * @param inValue a string, either 'true' or 'false'.
+     * Set the classpath to use when resolving classes for inclusion in the jar. 
+     *
+     * @param classpath the classpath to use.
+     */
+    public void setClasspath(Path classpath) {
+        this.classpath = classpath;
+    }
+
+    /**
+     * Set the flat dest dir flag.
+     *
+     * This flag controls whether the destination jars are written out in the 
+     * destination directory with the same hierarchal structure from which 
+     * the deployment descriptors have been read. If this is set to true the 
+     * generated EJB jars are written into the root of the destination directory,
+     * otherwise they are written out in the same relative position as the deployment
+     * descriptors in the descriptor directory.
+     * 
+     * @param inValue the new value of the flatdestdir flag.
      */
     public void setFlatdestdir(boolean inValue) {
         this.flatDestDir = inValue;
     }
      
     /**
-     * Setter used to store the suffix for the generated jar file.
+     * Set the suffix for the generated jar file.
+     * When generic jars are generated, they have a suffix which is appended to the
+     * the bean name to create the name of the jar file. Note that this suffix includes
+     * the extension fo te jar file and should therefore end with an appropriate 
+     * extension such as .jar or .ear
+     * 
      * @param inString the string to use as the suffix.
      */
     public void setGenericjarsuffix(String inString) {
@@ -195,7 +269,13 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Setter used to store the value of baseNameTerminator
+     * Set the baseNameTerminator.
+     *
+     * The basename terminator is the string which terminates the bean name. The convention
+     * used by this task is that bean descriptors are named as the BeanName with some suffix. 
+     * The baseNameTerminator string separates the bean name and the suffix and is used to
+     * determine the bean name.
+     *
      * @param inValue a string which marks the end of the basename.
      */
     public void setBasenameterminator(String inValue) {
@@ -203,23 +283,16 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Setter used to store the value of generateweblogic.
-     * @param inValue a string, either 'true' or 'false'.
-     */
-    public void setGenerateweblogic(String inValue) {
-        log("The syntax for using ejbjar with Weblogic has changed.", Project.MSG_ERR);
-        log("Please refer to the ejbjar documentation" +
-            " for information on the using the <weblogic> nested element", Project.MSG_ERR);
-        throw new BuildException("generateweblogic not supported - use nested <weblogic> element");
-    }
-
-    /**
      * Invoked by Ant after the task is prepared, when it is ready to execute
-     * this task.  Parses the XML deployment descriptor to acquire the list of
-     * files, then constructs the destination jar file (first deleting it if it
-     * already exists) from the list of classfiles encountered and the descriptor
-     * itself.  File will be of the expected format with classes under full
-     * package hierarchies and the descriptor in META-INF/ejb-jar.xml
+     * this task.  
+     *
+     * This will configure all of the nested deployment tools to allow them to 
+     * process the jar. If no deployment tools have been configured a generic 
+     * tool is created to handle the jar.
+     * 
+     * A parser is configured and then each descriptor found is passed to all
+     * the deployment tool elements for processing.
+     *
      * @exception BuildException thrown whenever a problem is
      *            encountered that cannot be recovered from, to signal to ant
      *            that a major problem occurred within this task.
@@ -234,7 +307,6 @@ public class EjbJar extends MatchingTask {
             genericTool.setDestdir(destDir);
             genericTool.setTask(this);
             genericTool.setGenericJarSuffix(genericJarSuffix);
-
             deploymentTools.add(genericTool);
         }
         
@@ -245,7 +317,7 @@ public class EjbJar extends MatchingTask {
         
         for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
             EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
-            tool.configure(srcDir, scanDir, baseNameTerminator, baseJarName, flatDestDir);
+            tool.configure(srcDir, scanDir, baseNameTerminator, baseJarName, flatDestDir, classpath);
             tool.validateConfigured();
         }
         
