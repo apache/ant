@@ -843,7 +843,11 @@ public class Manifest extends Task {
      */
     public void addConfiguredAttribute(Attribute attribute)
          throws ManifestException {
-        mainSection.addConfiguredAttribute(attribute);
+        if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_MANIFEST_VERSION)) {
+            manifestVersion = attribute.getValue();
+        } else {
+            mainSection.addConfiguredAttribute(attribute);
+        }
     }
 
     /**
