@@ -75,9 +75,13 @@
 #macro ( td $value)
   #if ($value.getAttributeValue("colspan"))
     #set ($colspan = $value.getAttributeValue("colspan"))
+  #else
+    #set ($colspan = 1)
   #end
   #if ($value.getAttributeValue("rowspan"))
     #set ($rowspan = $value.getAttributeValue("rowspan"))
+  #else
+    #set ($rowspan = 1)
   #end
   <td colspan="$!colspan" rowspan="$!rowspan"
       valign="top" align="left">
@@ -92,9 +96,13 @@
 #macro ( th $value)
   #if ($value.getAttributeValue("colspan"))
     #set ($colspan = $value.getAttributeValue("colspan"))
+  #else
+    #set ($colspan = 1)
   #end
   #if ($value.getAttributeValue("rowspan"))
     #set ($rowspan = $value.getAttributeValue("rowspan"))
+  #else
+    #set ($rowspan = 1)
   #end
   <th colspan="$!colspan" rowspan="$!rowspan"
       valign="top" align="left">
@@ -117,8 +125,8 @@
 #end
 
 #macro ( metaauthor $author $email )
-  <meta name="author" value="$author">
-  <meta name="email" value="$email">
+  <meta name="author" content="$author">
+  <meta name="email" content="$email">
 #end
 
 #macro ( image $value )
@@ -131,8 +139,11 @@
   #if ($value.getAttributeValue("align"))
     #set ($align=$value.getAttributeValue("align"))
   #end
+  #if ($value.getAttributeValue("alt"))
+    #set ($align=$value.getAttributeValue("alt"))
+  #end
   <img src="$relativePath$value.getAttributeValue("src")"
-       width="$!width" height="$!height" align="$!align">
+       width="$!width" height="$!height" align="$!align" alt="$!alt">
 #end
 
 #macro ( source $value)
@@ -165,7 +176,7 @@
 #macro (getProjectImage)
   #if ($project.getChild("logo"))
     <td align="left">
-    <a href="http://jakarta.apache.org"><img src="images/jakarta-logo.gif" border="0"/></a>
+    <a href="http://jakarta.apache.org"><img src="images/jakarta-logo.gif" alt="Apache Jakarta Project" border="0"/></a>
     </td>
     <td align="right">
     #set ( $logoString = $project.getChild("logo").getAttributeValue("href") )
@@ -177,7 +188,7 @@
     </td>
   #else
     <td colspan="2">
-    <a href="http://jakarta.apache.org"><img src="http://jakarta.apache.org/images/jakarta-logo.gif" align="left" border="0"/></a>
+    <a href="http://jakarta.apache.org"><img src="http://jakarta.apache.org/images/jakarta-logo.gif"  alt="Apache Jakarta Project" align="left" border="0"/></a>
     </td>
   #end
 #end
