@@ -456,7 +456,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Sets whether to fork the javac compiler.
+     * Is this a forked invocation of JDK's javac?
      */
     public boolean isForkedJavac() {
         return fork || 
