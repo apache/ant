@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,16 +53,23 @@
  */
 package org.apache.tools.ant.taskdefs.email;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.Vector;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -72,17 +79,75 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+
 import org.apache.tools.ant.BuildException;
 
 /**
  * Uses the JavaMail classes to send Mime format email.
  *
  * @author roxspring@yahoo.com Rob Oxspring
+ * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
  * @since Ant 1.5
  */
 class MimeMailer extends Mailer {
-    /** Sends the email  */
-    public void send() {
+    // Default character set
+    private static final String defaultCharset = System.getProperty("file.encoding");
+
+    // To work poperly with national charsets we have to use
+    // implementation of interface javax.activation.DataSource
+    /**
+     * @since Ant 1.6
+     */
+    class StringDataSource implements javax.activation.DataSource {
+      private String data=null;
+      private String type=null;
+      private String charset = null;
+      private ByteArrayOutputStream out;
+
+      public InputStream getInputStream() throws IOException {
+        if(data == null && out == null)
+          throw new IOException("No data");
+        else {
+          if(out!=null) {
+            data=(data!=null)?data.concat(out.toString(charset)):out.toString(charset);
+            out=null;
+          }
+          return new ByteArrayInputStream(data.getBytes(charset));
+        }
+      }
+
+      public OutputStream getOutputStream() throws IOException {
+        if(out==null) {
+          out=new ByteArrayOutputStream();
+        }
+        return out;
+      }
+
+      public void setContentType(String type) {
+        this.type=type.toLowerCase();
+      }
+
+      public String getContentType() {
+        if(type !=null && type.indexOf("charset")>0 && type.startsWith("text/"))
+          return type;
+        // Must be like "text/plain; charset=windows-1251"
+        return type!=null?type.concat("; charset=".concat(charset)):
+                     "text/plain".concat("; charset=".concat(charset));
+      }
+
+      public String getName() {
+        return "StringDataSource";
+      }
+      public void setCharset(String charset) {
+        this.charset = charset;
+      }
+      public String getCharset() {
+        return charset;
+      }
+  }
+
+  /** Sends the email  */
+  public void send() {
         try {
             Properties props = new Properties();
 
@@ -113,20 +178,38 @@ class MimeMailer extends Mailer {
             msg.setRecipients(Message.RecipientType.BCC,
                 internetAddresses(bccList));
 
-            if (subject != null) {
-                msg.setSubject(subject);
+            // Choosing character set of the mail message
+            // First: looking it from MimeType
+            String charset = parseCharSetFromMimeType(message.getMimeType());
+            if(charset!=null) {
+              // Assign/reassign message charset from MimeType
+                message.setCharset(charset);
             }
+            // Next: looking if charset having explict definition
+            else {
+              charset = message.getCharset();
+              if(charset==null) {
+                // Using default
+                charset=defaultCharset;
+                message.setCharset(charset);
+              }
+            }
+
+            // Using javax.activation.DataSource paradigm
+            StringDataSource sds = new StringDataSource();
+            sds.setContentType(message.getMimeType());
+            sds.setCharset(charset);
+
+            if (subject != null)
+                msg.setSubject(subject,charset);
             msg.addHeader("Date", getDate());
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PrintStream out = new PrintStream(baos);
-
+            PrintStream out = new PrintStream(sds.getOutputStream());
             message.print(out);
             out.close();
 
             MimeBodyPart textbody = new MimeBodyPart();
-
-            textbody.setContent(baos.toString(), message.getMimeType());
+            textbody.setDataHandler(new DataHandler(sds));
             attachments.addBodyPart(textbody);
 
             Enumeration e = files.elements();
@@ -176,6 +259,16 @@ class MimeMailer extends Mailer {
         }
 
         return addrs;
+    }
+
+    private String parseCharSetFromMimeType(String type){
+      int pos;
+      if(type==null || (pos=type.indexOf("charset"))<0)
+        return null;
+      // Assuming mime type in form "text/XXXX; charset=XXXXXX"
+      StringTokenizer token = new StringTokenizer(type.substring(pos),"=; ");
+      token.nextToken();// Skip 'charset='
+      return token.nextToken();
     }
 }
 

@@ -101,6 +101,13 @@ Library Dependencies</a> for more information.
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">charset</td>
+    <td valign="top">Character set of the email.<br>
+    You can also set the charset in the message nested element.<br>
+    These options are mutually exclusive.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">subject</td>
     <td valign="top">Email subject line.</td>
     <td align="center" valign="top">No</td>
@@ -151,6 +158,13 @@ attributes:</p>
     <td valign="top">The content type to use for the message.</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">charset</td>
+    <td valign="top">Character set of the message<br>
+    You can also set the charset as attribute of the enclosing mail task.<br>
+    These options are mutually exclusive.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <p>If the <code>src</code> attribute is not specified, then text can be added
@@ -187,6 +201,21 @@ the <code>&lt;message&gt;</code> element.</p>
 task will attempt to use JavaMail and fall back to UU encoding or no encoding in
 that order depending on what support classes are available. <code>${buildname}</code>
 will be replaced with the <code>buildname</code> property's value.</p>
+
+<blockquote><pre>
+&lt;property name=&quot;line2&quot; value=&quot;some_international_message&quot;/&gt;
+&lt;echo message=&quot;${line2}&quot;/&gt;
+
+&lt;mail mailhost=&quot;somehost@xyz.com&quot; mailport=&quot;25&quot; subject=&quot;Test build&quot;  charset=&quot;utf-8&quot;&gt;
+  &lt;from address=&quot;me@myist.com&quot;/&gt;
+  &lt;to address=&quot;all@xyz.com&quot; /&gt;
+  &lt;message&gt;some international text:${line2}&lt;/message&gt;
+&lt;/mail&gt;
+</pre></blockquote>
+
+<p>Sends an eMail from <i>me@myisp.com</i> to <i>all@xyz.com</i> with a subject of
+<i>Test Build</i>, the message body being coded in UTF-8
+
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>

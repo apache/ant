@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @author roxspring@imapmail.org Rob Oxspring
+ * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
  * @since Ant 1.5
  * @ant.task name="mail" category="network"
  */
@@ -132,6 +133,8 @@ public class EmailTask
     /** file list  */
     private Vector files = new Vector();
     private Vector filesets = new Vector();
+    /** Character set for MimeMailer*/
+    private String charset=null;
 
 
     /**
@@ -410,7 +413,7 @@ public class EmailTask
                     autoFound = true;
                     log("Using MIME mail", Project.MSG_VERBOSE);
                 } catch (Throwable e) {
-                    log("Failed to initialise MIME mail", Project.MSG_WARN);
+                    log("Failed to initialise MIME mail: "+e.getMessage(),Project.MSG_WARN);
                 }
             }
 
@@ -468,6 +471,15 @@ public class EmailTask
                     message.setMimeType(messageMimeType);
                 }
             }
+            // set the character set if not done already (and required)
+            if (charset != null) {
+                if (message.getCharset()!=null) {
+                    throw new BuildException("The charset can only be "
+                         + "specified in one location");
+                } else {
+                    message.setCharset(charset);
+                }
+            }
 
             // identify which files should be attached
             Enumeration e = filesets.elements();
@@ -519,10 +531,34 @@ public class EmailTask
             if (failOnError) {
                 throw e;
             }
+        }
+        catch(Exception e){
+          log("Failed to send email", Project.MSG_WARN);
+          if (failOnError) {
+            throw new BuildException(e);
+          }
         } finally {
             message = savedMessage;
             files = savedFiles;
         }
+    }
+    /**
+     * Sets the character set of mail message.
+     * Will be ignored if mimeType contains ....; Charset=... substring or
+     * encoding is not a <code>mime</code>
+     * @since Ant 1.6
+     */
+    public void setCharset(String charset) {
+      this.charset = charset;
+    }
+    /**
+     * Returns the character set of mail message.
+     *
+     * @return Charset of mail message.
+     * @since Ant 1.6
+     */
+    public String getCharset() {
+      return charset;
     }
 }
 

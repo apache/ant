@@ -57,13 +57,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+
 import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Class representing an email message.
  *
  * @author roxspring@yahoo.com Rob Oxspring
+ * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
  * @since Ant 1.5
  */
 public class Message extends ProjectComponent {
@@ -71,7 +75,7 @@ public class Message extends ProjectComponent {
     private StringBuffer buffer = new StringBuffer();
     private String mimeType = "text/plain";
     private boolean specified = false;
-
+    private String charset=null;
 
     /** Creates a new empty message  */
     public Message() {
@@ -145,8 +149,13 @@ public class Message extends ProjectComponent {
      * @param out The print stream to write to
      * @throws IOException if an error occurs
      */
-    public void print(PrintStream out)
+    public void print(PrintStream ps)
          throws IOException {
+        // We need character encoding aware printing here.
+        // So, using PrintWriter over OutputStreamWriter instead of PrintStream
+        PrintWriter out = charset!=null?
+                          new PrintWriter(new OutputStreamWriter(ps,charset)):
+                          new PrintWriter(ps);
         if (messageSource != null) {
             // Read message from a file
             FileReader freader = new FileReader(messageSource);
@@ -154,7 +163,6 @@ public class Message extends ProjectComponent {
             try {
                 BufferedReader in = new BufferedReader(freader);
                 String line = null;
-
                 while ((line = in.readLine()) != null) {
                     out.println(getProject().replaceProperties(line));
                 }
@@ -164,6 +172,7 @@ public class Message extends ProjectComponent {
         } else {
             out.println(getProject().replaceProperties(buffer.substring(0)));
         }
+        out.flush();
     }
 
 
@@ -174,6 +183,23 @@ public class Message extends ProjectComponent {
      */
     public boolean isMimeTypeSpecified() {
         return specified;
+    }
+    /**
+     * Sets the character set of mail message.
+     * Will be ignored if mimeType contains ....; Charset=... substring.
+     * @since Ant 1.6
+     */
+    public void setCharset(String charset) {
+      this.charset = charset;
+    }
+    /**
+     * Returns the charset of mail message.
+     *
+     * @return Charset of mail message.
+     * @since Ant 1.6
+     */
+    public String getCharset() {
+      return charset;
     }
 }
 
