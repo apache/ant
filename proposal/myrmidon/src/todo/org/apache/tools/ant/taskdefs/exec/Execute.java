@@ -19,6 +19,7 @@ import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
+import org.apache.myrmidon.framework.exec.ProcessDestroyer;
 import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
