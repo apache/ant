@@ -167,10 +167,7 @@ Legal:
     </copy>
 
     <copy todir="${dist.lib}">
-      <fileset dir="${lib.dir}">
-        <exclude name="xalan*" />
-        <exclude name="StyleBook*" />
-      </fileset>
+      <fileset dir="${lib.dir}"/>
     </copy>
 
     <copy todir="${dist.bin}">
