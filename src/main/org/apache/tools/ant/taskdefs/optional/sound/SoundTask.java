@@ -62,16 +62,18 @@ import java.util.*;
 /**
  * This is an example of an AntTask that makes of use of the AntSoundPlayer.
  *
- * There are four attributes to be set:
+ * There are three attributes to be set:
  *
  * <code>source</code>: the location of the audio file to be played
  * <code>duration</code>: play the sound file continuously until "duration" milliseconds has expired
  * <code>loops</code>: the number of times the sound file should be played until stopped
  *
- * I have only tested this with .WAV and .AIFF sound file formats. Both seem to work fine.
+ * I have only tested this with .WAV and .AIFF sound file formats. Both seem
+ * to work fine.
  *
  * plans for the future:
- * - use the midi api to define sounds (or drum beat etc) in xml and have Ant play them back
+ * - use the midi api to define sounds (or drum beat etc) in xml and have
+ *   Ant play them back
  *
  * @author Nick Pellow
  * @version $Revision$, $Date$
@@ -79,7 +81,7 @@ import java.util.*;
 
 public class SoundTask extends Task {
 
-    private BuildAlert  success = null;
+    private BuildAlert success = null;
     private BuildAlert fail = null;
 
     public BuildAlert createSuccess() {
@@ -98,28 +100,35 @@ public class SoundTask extends Task {
     public void init(){
     }
 
-    public void execute() throws BuildException {
-        if ( success == null && fail == null) {
-            throw new BuildException("No nested elements provided.");
-        }
+    public void execute() {
 
         AntSoundPlayer soundPlayer = new AntSoundPlayer();
-        if (success != null) {
-            soundPlayer.addBuildSuccesfulSound(success.getSource(), success.getLoops(), success.getDuration());
+
+        if ( success == null ) {
+            log("No nested success element found.", Project.MSG_WARN);
+        } else {
+            soundPlayer.addBuildSuccessfulSound(success.getSource(),
+              success.getLoops(), success.getDuration());
         }
-        
-        if (fail != null) {
-            soundPlayer.addBuildFailedSound(fail.getSource(), fail.getLoops(), fail.getDuration());
+
+        if (fail == null) {
+            log("No nested failure element found.", Project.MSG_WARN);
+        } else {
+            soundPlayer.addBuildFailedSound(fail.getSource(),
+              fail.getLoops(), fail.getDuration());
         }
+
         getProject().addBuildListener(soundPlayer);
+
     }
 
     /**
-     * A static class to be extended by any BuildAlert's that require the output of sound.
+     * A class to be extended by any BuildAlert's that require the output
+     * of sound.
      */
-    public static class BuildAlert {
-        private File file = null;
-        private int loops = 1;
+    public class BuildAlert {
+        private File source = null;
+        private int loops = 0;
         private Long duration = null;
 
         /**
@@ -132,15 +141,14 @@ public class SoundTask extends Task {
         /**
          * Sets the location of the file to get the audio.
          *
-         * @param fileName the location of the audio file
+         * @param source the name a sound-file directory or of the audio file
          */
-        public void setSource(File file) {
-            this.file = file;
+        public void setSource(File source) {
+            this.source = source;
         }
 
         /**
-         * This attribute sets the number of times the source file should
-         * be played.
+         * Sets the number of times the source file should be played.
          *
          * @param loops the number of loops to play the source file
          */
@@ -149,27 +157,43 @@ public class SoundTask extends Task {
         }
 
         /**
-         * Gets the duration in milliseconds the file should be played.
-         */
-        public Long getDuration() {
-            return this.duration;
-        }
-
-        /**
          * Gets the location of the file to get the audio.
          */
         public File getSource() {
-            return this.file;
+            File nofile = null ;
+            // Check if source is a directory
+            if( source.exists() ) {
+                if( source.isDirectory() ) {
+                    // get the list of files in the dir
+                    File[] files = source.listFiles() ; 
+                    int numfiles = files.length ;
+                    // get a random number between 0 and the number of files
+                    Random rn = new Random() ;
+                    int i = rn.nextInt(numfiles) ;
+                    // set the source to the file at that location
+                    this.source = files[i] ;
+                }
+            } else {
+                log(source + ": invalid path.", Project.MSG_WARN) ;
+                this.source = nofile ;
+            }
+            return this.source ;
         }
 
         /**
-         * This attribute sets the number of times the source file should
-         * be played.
+         * Sets the number of times the source file should be played.
          *
          * @return the number of loops to play the source file
          */
         public int getLoops() {
             return this.loops;
+        }
+
+        /**
+         * Gets the duration in milliseconds the file should be played.
+         */
+        public Long getDuration() {
+            return this.duration;
         }
     }
 }

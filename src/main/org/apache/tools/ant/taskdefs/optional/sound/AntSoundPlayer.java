@@ -81,11 +81,11 @@ import java.util.*;
 public class AntSoundPlayer implements LineListener, BuildListener {
 
     private File fileSuccess = null;
-    private int loopsSuccess = 1;
+    private int loopsSuccess = 0;
     private Long durationSuccess = null;
 
     private File fileFail = null;
-    private int loopsFail = 1;
+    private int loopsFail = 0;
     private Long durationFail = null;
 
     public AntSoundPlayer() {
@@ -93,11 +93,11 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     }
 
     /**
-     * @param fileName the location of the audio file to be played when the build is succesful
-     * @param loops the number of times the file should be played when the build is succesful
-     * @param duration the number of milliseconds the file should be played when the build is succesful
+     * @param source the location of the audio file to be played when the build is successful
+     * @param loops the number of times the file should be played when the build is successful
+     * @param duration the number of milliseconds the file should be played when the build is successful
      */
-    public void addBuildSuccesfulSound(File file, int loops, Long duration) {
+    public void addBuildSuccessfulSound(File file, int loops, Long duration) {
         this.fileSuccess = file;
         this.loopsSuccess = loops;
         this.durationSuccess = duration;
@@ -116,7 +116,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     }
 
     /**
-     * Plays the file for duration milliseconds or loops loops.
+     * Plays the file for duration milliseconds or loops.
      */
     private void play(Project project, File file, int loops, Long duration) {
 
@@ -137,7 +137,8 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
 		if (audioInputStream != null) {
 			AudioFormat	format = audioInputStream.getFormat();
-			DataLine.Info	info = new DataLine.Info(Clip.class, format, AudioSystem.NOT_SPECIFIED);
+			DataLine.Info	info = new DataLine.Info(Clip.class, format,
+                                             AudioSystem.NOT_SPECIFIED);
 			try {
 				audioClip = (Clip) AudioSystem.getLine(info);
 				audioClip.addLineListener(this);
@@ -160,7 +161,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
             audioClip.close();
 		}
 		else {
-			project.log("SoundTask: can't get data from file " + file.getName());
+			project.log("Can't get data from file " + file.getName());
 		}
     }
 
@@ -183,7 +184,8 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     }
 
     /**
-     * This is implemented to listen for any line events and closes the clip if required.
+     * This is implemented to listen for any line events and closes the
+     * clip if required.
      */
     public void update(LineEvent event) {
         if (event.getType().equals(LineEvent.Type.STOP)) {
@@ -217,7 +219,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         if (event.getException() == null && fileSuccess != null) {
             // build successfull!
             play(event.getProject(), fileSuccess, loopsSuccess, durationSuccess);
-        } else if (fileFail != null) {
+        } else if ( event.getException() != null && fileFail != null) {
             play(event.getProject(), fileFail, loopsFail, durationFail);
         }
     }
