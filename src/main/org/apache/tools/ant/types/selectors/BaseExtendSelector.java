@@ -51,15 +51,11 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Parameter;
-
 
 /**
  * Convenience base class for all selectors accessed through ExtendSelector.
@@ -70,8 +66,9 @@ import org.apache.tools.ant.types.Parameter;
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
-public abstract class BaseExtendSelector extends BaseSelector implements
-        ExtendFileSelector {
+public abstract class BaseExtendSelector
+    extends BaseSelector
+    implements ExtendFileSelector {
 
     /** The passed in parameter array. */
     protected Parameter[] parameters = null;
