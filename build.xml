@@ -594,7 +594,6 @@
          Creates the API documentation                             
        =================================================================== 
   -->
-  
   <target name="javadoc_check">
     <uptodate property="javadoc.notrequired" 
               targetfile="${build.javadocs}/packages.html" >

@@ -74,7 +74,7 @@ public class SignJar extends Task {
     /**
      * The name of the jar file.
      */
-    protected String jar;
+    protected File jar;
 
     /**
      * The alias of signer.
@@ -84,12 +84,13 @@ public class SignJar extends Task {
     /**
      * The name of keystore file.
      */
-    protected String keystore;
+    protected File keystore;
+
     protected String storepass;
     protected String storetype;
     protected String keypass;
-    protected String sigfile;
-    protected String signedjar;
+    protected File sigfile;
+    protected File signedjar;
     protected boolean verbose;
     protected boolean internalsf;
     protected boolean sectionsonly;
@@ -104,7 +105,7 @@ public class SignJar extends Task {
      */
     protected boolean lazy;
 
-    public void setJar(final String jar) {
+    public void setJar(final File jar) {
         this.jar = jar;
     }
 
@@ -112,7 +113,7 @@ public class SignJar extends Task {
         this.alias = alias;
     }
 
-    public void setKeystore(final String keystore) {
+    public void setKeystore(final File keystore) {
         this.keystore = keystore;
     }
 
@@ -128,11 +129,11 @@ public class SignJar extends Task {
         this.keypass = keypass;
     }
 
-    public void setSigfile(final String sigfile) {
+    public void setSigfile(final File sigfile) {
         this.sigfile = sigfile;
     }
 
-    public void setSignedjar(final String signedjar) {
+    public void setSignedjar(final File signedjar) {
         this.signedjar = signedjar;
     }
 
@@ -176,13 +177,13 @@ public class SignJar extends Task {
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] jarFiles = ds.getIncludedFiles();
                 for(int j=0; j<jarFiles.length; j++) {
-                    doOneJar(jarFiles[j], null);
+                    doOneJar( new File( jarFiles[j] ), null);
                 }
             }
         }
     }
 
-    private void doOneJar(String jarSource, String jarTarget) throws BuildException {
+    private void doOneJar(File jarSource, File jarTarget) throws BuildException {
         if (project.getJavaVersion().equals(Project.JAVA_1_1)) {
             throw new BuildException("The signjar task is only available on JDK versions 1.2 or greater");
         }
@@ -204,7 +205,7 @@ public class SignJar extends Task {
 
         if (null != keystore) {
             cmd.createArg().setValue("-keystore");
-            cmd.createArg().setValue(keystore);
+            cmd.createArg().setValue( keystore.toString() );
         }
 
         if (null != storepass) {
@@ -224,12 +225,12 @@ public class SignJar extends Task {
 
         if (null != sigfile) {
             cmd.createArg().setValue("-sigfile");
-            cmd.createArg().setValue(sigfile);
+            cmd.createArg().setValue( sigfile.toString() );
         }
 
         if (null != jarTarget) {
             cmd.createArg().setValue("-signedjar");
-            cmd.createArg().setValue(jarTarget);
+            cmd.createArg().setValue( jarTarget.toString() );
         }
 
         if (verbose) {
@@ -244,26 +245,22 @@ public class SignJar extends Task {
             cmd.createArg().setValue("-sectionsonly");
         }
 
-        cmd.createArg().setValue(jarSource);
-
+        cmd.createArg().setValue( jarSource.toString() );
 
         cmd.createArg().setValue(alias);
 
-        log("Signing Jar : " + (new File(jarSource)).getAbsolutePath());
+        log("Signing Jar : " + jarSource.getAbsolutePath());
         cmd.setFailonerror(true);
         cmd.setTaskName( getTaskName() );
         cmd.execute();
     }
 
-    protected boolean isUpToDate(String jarSource, String jarTarget) {
-        if( null == jarSource ) {
+    protected boolean isUpToDate(File jarFile, File signedjarFile) {
+        if( null == jarFile ) {
             return false;
         }
 
-        if( null != jarTarget ) {
-
-            final File jarFile = new File(jarSource);
-            final File signedjarFile = new File(jarTarget);
+        if( null != signedjarFile ) {
 
             if(!jarFile.exists()) return false;
             if(!signedjarFile.exists()) return false;
@@ -272,18 +269,17 @@ public class SignJar extends Task {
                 return true;
         } else {
             if( lazy ) {
-                return isSigned(jarSource);
+                return isSigned(jarFile);
             }
         }
 
         return false;
     }
 
-    protected boolean isSigned(String jarFilename) {
+    protected boolean isSigned(File file) {
         final String SIG_START = "META-INF/";
         final String SIG_END = ".SF";
 
-        File file = new File(jarFilename);
         if( !file.exists() ) {
             return false;
         }
