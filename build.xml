@@ -335,7 +335,10 @@
                    classpathref="classpath"/>
       </and>
     </condition>
-    <condition property="trax.present">
+    <available property="trax.present"
+               classname="javax.xml.transform.Transformer"
+               classpathref="classpath" />
+    <condition property="trax.impl.present">
       <or>
         <and>
           <isset property="javax.xml.transform.TransformerFactory"/>
@@ -405,10 +408,6 @@
                classpathref="classpath"/>
     <available property="commons.logging.present"
                classname="org.apache.commons.logging.LogFactory"
-               classpathref="classpath"/>
-    <!-- this is just a way to check for a TraX implementation -->
-    <available property="trax.impl.present"
-               resource="META-INF/services/javax.xml.transform.TransformerFactory"
                classpathref="classpath"/>
     <available property="xalan.envcheck"
                classname="org.apache.xalan.xslt.EnvironmentCheck"
@@ -1282,11 +1281,11 @@
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="${optional.package}/PvcsTest.java" />
 
-          <!-- ehm, these are not really TraX tests but rather xalan2 tests..-->
+          <!-- These tests need a TraX implementation like xalan2 or saxon -->
           <exclude name="${optional.package}/TraXLiaisonTest.java"
-                   unless="xalan2.present"/>
+                   unless="trax.impl.present"/>
           <exclude name="${optional.package}/XsltTest.java"
-                   unless="xalan2.present"/>
+                   unless="trax.impl.present"/>
 
           <!-- needs BSF to work -->
           <exclude name="${optional.package}/XalanLiaisonTest.java"
