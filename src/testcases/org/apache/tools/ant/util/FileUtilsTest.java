@@ -119,7 +119,12 @@ public class FileUtilsTest extends TestCase {
         }
         
 
-        fu.setFileLastModified(removeThis, 123456);
+        // number of milliseconds in a day
+        final int millisperday=24 * 3600 * 1000;
+        // in a previous version, the date of the file was set to 123456
+        // milliseconds since 01.01.1970
+        // it did not work on a computer running JDK 1.4.1_02 + Windows 2000
+        fu.setFileLastModified(removeThis, secondModTime + millisperday);
         long thirdModTime = removeThis.lastModified();
         try {
             Class.forName("java.lang.ThreadLocal");
@@ -421,17 +426,25 @@ public class FileUtilsTest extends TestCase {
      * test toUri
      */
     public void testToURI() {
+        String dosRoot = null;
+        if (Os.isFamily("dos")) {
+            dosRoot = "C:/";
+        }
+        else
+        {
+            dosRoot = "";
+        }
         if (Os.isFamily("dos")) {
             assertEquals("file:///C:/foo", fu.toURI("c:\\foo"));
         }
-        assertEquals("file:///foo", fu.toURI("/foo"));
+        assertEquals("file:///" + dosRoot + "foo", fu.toURI("/foo"));
         assertEquals("file:./foo",  fu.toURI("./foo"));
-        assertEquals("file:///foo", fu.toURI("\\foo"));
+        assertEquals("file:///" + dosRoot + "foo", fu.toURI("\\foo"));
         assertEquals("file:./foo",  fu.toURI(".\\foo"));
-        assertEquals("file:///foo%20bar", fu.toURI("/foo bar"));
-        assertEquals("file:///foo%20bar", fu.toURI("\\foo bar"));
-        assertEquals("file:///foo%23bar", fu.toURI("/foo#bar"));
-        assertEquals("file:///foo%23bar", fu.toURI("\\foo#bar"));
+        assertEquals("file:///" + dosRoot + "foo%20bar", fu.toURI("/foo bar"));
+        assertEquals("file:///" + dosRoot + "foo%20bar", fu.toURI("\\foo bar"));
+        assertEquals("file:///" + dosRoot + "foo%23bar", fu.toURI("/foo#bar"));
+        assertEquals("file:///" + dosRoot + "foo%23bar", fu.toURI("\\foo#bar"));
     }
 
     /**
