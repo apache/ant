@@ -60,6 +60,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.apache.tools.ant.AntTypeDefinition;
@@ -217,26 +218,41 @@ public abstract class Definer extends DefBase {
                     + "together with file or resource.";
                 throw new BuildException(msg, getLocation());
             }
-            URL url = null;
+            Enumeration/*<URL>*/ urls = null;
             if (file != null) {
-                url = fileToURL();
-            }
-            if (resource != null) {
-                url = resourceToURL(al);
-            }
-
-            if (url == null) {
-                return;
-            }
-
-            if (url.toString().toLowerCase(Locale.US).endsWith(".xml")) {
-                format = Format.XML;
-            }
-
-            if (format == Format.PROPERTIES) {
-                loadProperties(al, url);
+                final URL url = fileToURL();
+                urls = new Enumeration() {
+                    private boolean more = true;
+                    public boolean hasMoreElements() {
+                        return more;
+                    }
+                    public Object nextElement() throws NoSuchElementException {
+                        if (more) {
+                            more = false;
+                            return url;
+                        } else {
+                            throw new NoSuchElementException();
+                        }
+                    }
+                };
             } else {
-                loadAntlib(al, url);
+                urls = resourceToURLs(al);
+            }
+
+            while (urls.hasMoreElements()) {
+                URL url = (URL) urls.nextElement();
+
+                int format = this.format;
+                if (url.toString().toLowerCase(Locale.US).endsWith(".xml")) {
+                    format = Format.XML;
+                }
+
+                if (format == Format.PROPERTIES) {
+                    loadProperties(al, url);
+                    break;
+                } else {
+                    loadAntlib(al, url);
+                }
             }
         }
     }
@@ -259,9 +275,16 @@ public abstract class Definer extends DefBase {
         }
     }
 
-    private URL resourceToURL(ClassLoader classLoader) {
-        URL ret = classLoader.getResource(resource);
-        if (ret == null) {
+    private Enumeration/*<URL>*/ resourceToURLs(ClassLoader classLoader) {
+        Enumeration ret;
+        try {
+            ret = classLoader.getResources(resource);
+        } catch (IOException e) {
+            throw new BuildException(
+                "Could not fetch resources named " + resource,
+                e, getLocation());
+        }
+        if (!ret.hasMoreElements()) {
             if (onError != OnError.IGNORE) {
                 log("Could not load definitions from resource "
                     + resource + ". It could not be found.",

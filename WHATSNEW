@@ -58,6 +58,9 @@ Other changes:
   by UNICODE escapes.
   Bugzilla report 23919.
 
+* load all xml resources for typedef not just the first
+  Bugzilla report 24024
+
 Changes from Ant 1.6.B1 to Ant 1.6.B2
 =====================================
 
