@@ -17,11 +17,8 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
-
 public class Target
 {
-    private String ifCondition = "";
-    private String unlessCondition = "";
     private Vector dependencies = new Vector( 2 );
     private Vector children = new Vector( 5 );
     private String description = null;
@@ -71,11 +68,6 @@ public class Target
         this.description = description;
     }
 
-    public void setIf( String property )
-    {
-        this.ifCondition = ( property == null ) ? "" : property;
-    }
-
     public void setName( String name )
     {
         this.name = name;
@@ -84,11 +76,6 @@ public class Target
     public void setProject( Project project )
     {
         this.project = project;
-    }
-
-    public void setUnless( String property )
-    {
-        this.unlessCondition = ( property == null ) ? "" : property;
     }
 
     public Enumeration getDependencies()
@@ -166,31 +153,18 @@ public class Target
     public void execute()
         throws TaskException
     {
-        if( testIfCondition() && testUnlessCondition() )
+        Enumeration enum = children.elements();
+        while( enum.hasMoreElements() )
         {
-            Enumeration enum = children.elements();
-            while( enum.hasMoreElements() )
+            Object o = enum.nextElement();
+            if( o instanceof Task )
             {
-                Object o = enum.nextElement();
-                if( o instanceof Task )
-                {
-                    Task task = (Task)o;
-                    task.perform();
-                }
-                else
-                {
-                }
+                Task task = (Task)o;
+                task.perform();
             }
-        }
-        else if( !testIfCondition() )
-        {
-            project.log( this, "Skipped because property '" + this.ifCondition + "' not set.",
-                         Project.MSG_VERBOSE );
-        }
-        else
-        {
-            project.log( this, "Skipped because property '" + this.unlessCondition + "' set.",
-                         Project.MSG_VERBOSE );
+            else
+            {
+            }
         }
     }
 
@@ -207,28 +181,4 @@ public class Target
             children.setElementAt( o, index );
         }
     }
-
-    private boolean testIfCondition()
-        throws TaskException
-    {
-        if( "".equals( ifCondition ) )
-        {
-            return true;
-        }
-
-        String test = project.replaceProperties( ifCondition );
-        return project.getProperty( test ) != null;
-    }
-
-    private boolean testUnlessCondition()
-        throws TaskException
-    {
-        if( "".equals( unlessCondition ) )
-        {
-            return true;
-        }
-        String test = project.replaceProperties( unlessCondition );
-        return project.getProperty( test ) == null;
-    }
-
 }
