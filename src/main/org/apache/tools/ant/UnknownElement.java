@@ -456,15 +456,15 @@ public class UnknownElement extends Task {
      * @param what The kind of thing being created. For example, when
      *             a task name could not be found, this would be
      *             <code>"task"</code>. Should not be <code>null</code>.
-     * @param elementName The name of the element which could not be found.
-     *                    Should not be <code>null</code>.
+     * @param name The name of the element which could not be found.
+     *             Should not be <code>null</code>.
      *
      * @return a detailed description of what might have caused the problem.
      */
     protected BuildException getNotFoundException(String what,
-                                                  String elementName) {
+                                                  String name) {
         ComponentHelper helper = ComponentHelper.getComponentHelper(getProject());
-        String msg = helper.diagnoseCreationFailure(elementName, what);
+        String msg = helper.diagnoseCreationFailure(name, what);
         return new BuildException(msg, getLocation());
     }
 
