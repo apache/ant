@@ -24,10 +24,19 @@ Fixed bugs:
 
 * <linecontains> filterreader could swallow lines.
 
+* <sequential> will used to configure the tasks (set their attributes)
+before the first task has been executed.  This means that properties
+that have been set by nested task seemed to be unset for the other
+tasks in the same <sequential> element.
+
 Other changes:
 --------------
 
 * <checksum> now uses a buffer (of configurable size).
+
+* The "Trying to override task definition" warning has been degraded
+to verbose level if the two task definitions only differ in the class
+loader instance that has loaded the definition.
 
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================

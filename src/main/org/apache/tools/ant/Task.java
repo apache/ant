@@ -342,6 +342,15 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
+     * Has this task been marked invalid?
+     *
+     * @since Ant 1.5
+     */
+    protected final boolean isInvalid() {
+        return invalid;
+    }
+
+    /**
      * Replacement element used if this task is invalidated.
      */
     private UnknownElement replacement;

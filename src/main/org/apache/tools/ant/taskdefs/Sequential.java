@@ -76,6 +76,21 @@ public class Sequential extends Task
     private Vector nestedTasks = new Vector();
 
     /**
+     * Override {@link org.apache.tools.ant.Task#maybeConfigure
+     * maybeConfigure} in a way that leaves the nested tasks
+     * unconfigured until they get executed.
+     *
+     * @since Ant 1.5
+     */
+    public void maybeConfigure() throws BuildException {
+        if (isInvalid()) {
+            super.maybeConfigure();
+        } else {
+            getRuntimeConfigurableWrapper().maybeConfigure(getProject(), false);
+        }
+    }
+
+    /**
      * Add a nested task to Sequential.
      * <p>
      * @param nestedTask  Nested task to execute Sequential

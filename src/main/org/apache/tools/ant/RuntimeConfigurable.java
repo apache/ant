@@ -199,6 +199,30 @@ public class RuntimeConfigurable {
      *            an element which doesn't accept it.
      */
     public void maybeConfigure(Project p) throws BuildException {
+        maybeConfigure(p, true);
+    }
+
+    /**
+     * Configures the wrapped element.  The attributes and text for
+     * the wrapped element are configured.  Each time the wrapper is
+     * configured, the attributes and text for it are reset.
+     *
+     * If the element has an <code>id</code> attribute, a reference
+     * is added to the project as well.
+     *
+     * @param p The project containing the wrapped element.
+     *          Must not be <code>null</code>.
+     *
+     * @param configureChildren Whether to configure child elements as
+     * well.  if true, child elements will be configured after the
+     * wrapped element.
+     *
+     * @exception BuildException if the configuration fails, for instance due
+     *            to invalid attributes or children, or text being added to
+     *            an element which doesn't accept it.
+     */
+    public void maybeConfigure(Project p, boolean configureChildren) 
+        throws BuildException {
         String id = null;
 
         if (proxyConfigured) {
@@ -219,14 +243,20 @@ public class RuntimeConfigurable {
             if (child.wrappedObject instanceof Task) {
                 Task childTask = (Task) child.wrappedObject;
                 childTask.setRuntimeConfigurableWrapper(child);
-                childTask.maybeConfigure();
-            } else {
-                child.maybeConfigure(p);
             }
-            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject,
-                child.getElementTag().toLowerCase(Locale.US));
-        }
 
+            if (configureChildren) {
+                if (child.wrappedObject instanceof Task) {
+                    Task childTask = (Task) child.wrappedObject;
+                    childTask.maybeConfigure();
+                } else {
+                    child.maybeConfigure(p);
+                }
+                ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject,
+                                         child.getElementTag()
+                                         .toLowerCase(Locale.US));
+            }
+        }
         if (id != null) {
             p.addReference(id, wrappedObject);
         }
