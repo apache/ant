@@ -71,7 +71,8 @@ public class Jar extends Zip {
     private File manifestFile;
     private Manifest manifest;
     private Manifest execManifest;    
-
+    private boolean buildFileManifest = false;
+    
     public Jar() {
         super();
         archiveType = "jar";
@@ -83,6 +84,14 @@ public class Jar extends Zip {
         super.setZipfile(jarFile);
     }
 
+    public void addConfiguredManifest(Manifest newManifest) throws ManifestException {
+        if (manifest == null) {
+            manifest = getDefaultManifest();
+        }
+        manifest.merge(newManifest);
+        buildFileManifest = true;
+    }
+    
     public void setManifest(File manifestFile) {
         if (!manifestFile.exists()) {
             throw new BuildException("Manifest file: " + manifestFile + " does not exist.", 
@@ -264,7 +273,35 @@ public class Jar extends Zip {
      */
     protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException {
         // need to handle manifest as a special check
-        if (manifestFile != null && manifestFile.lastModified() > zipFile.lastModified()) {
+        if (buildFileManifest || manifestFile == null) {
+            java.util.zip.ZipFile theZipFile = null;
+            try {
+                theZipFile = new java.util.zip.ZipFile(zipFile);
+                java.util.zip.ZipEntry entry = theZipFile.getEntry("META-INF/MANIFEST.MF");
+                if (entry == null) {
+                    return false;
+                }
+                Manifest currentManifest = new Manifest(theZipFile.getInputStream(entry));
+                if (!currentManifest.equals(manifest)) {
+                    return false;
+                }
+            }
+            catch (Exception e) {
+                // any problems and we will rebuild
+                return false;
+            }
+            finally {
+                if (theZipFile != null) {
+                    try {
+                        theZipFile.close();
+                    }
+                    catch (IOException e) {
+                        //ignore
+                    }
+                }
+            }
+        }
+        else if (manifestFile.lastModified() > zipFile.lastModified()) {
             return false;
         }
         return super.isUpToDate(scanners, zipFile);

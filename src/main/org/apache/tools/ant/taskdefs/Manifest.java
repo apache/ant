@@ -57,6 +57,8 @@ package org.apache.tools.ant.taskdefs;
 import java.util.*;
 import java.io.*;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * Class to manage Manifest information
  * 
@@ -84,7 +86,7 @@ public class Manifest {
     /**
      * Class to hold manifest attributes
      */
-    private class Attribute {
+    static public class Attribute {
         /** The attribute's name */
         private String name = null;
         
@@ -118,6 +120,17 @@ public class Manifest {
             this.value = value;
         }
         
+        public boolean equals(Object rhs) {
+            if (!(rhs instanceof Attribute)) {
+                return false;
+            }
+            
+            Attribute rhsAttribute = (Attribute)rhs;
+            return (name != null && rhsAttribute.name != null &&
+                    name.toLowerCase().equals(rhsAttribute.name.toLowerCase()) &&
+                    value != null && value.equals(rhsAttribute.value));
+        }
+                    
         /**
          * Parse a line into name and value pairs
          *
@@ -214,7 +227,9 @@ public class Manifest {
      * Manifest. A section consists of a set of attribute values,
      * separated from other sections by a blank line.
      */
-    private class Section {
+    static public class Section {
+        private Vector warnings = new Vector();
+        
         /** The section's name if any. The main section in a manifest is unnamed.*/
         private String name = null;
         
@@ -266,7 +281,7 @@ public class Manifest {
                 }
                 else {
                     attribute = new Attribute(line);
-                    String nameReadAhead = addAttribute(attribute);
+                    String nameReadAhead = addAttributeAndCheck(attribute);
                     if (nameReadAhead != null) {
                         return nameReadAhead;
                     }
@@ -291,6 +306,11 @@ public class Manifest {
                 String attributeName = (String)e.nextElement();
                 // the merge file always wins
                 attributes.put(attributeName, section.attributes.get(attributeName));
+            }
+            
+            // add in the warnings
+            for (Enumeration e = section.warnings.elements(); e.hasMoreElements();) {
+                warnings.addElement(e.nextElement());
             }
         }
         
@@ -337,6 +357,14 @@ public class Manifest {
         public void removeAttribute(String attributeName) {
             attributes.remove(attributeName.toLowerCase());
         }
+
+        public void addConfiguredAttribute(Attribute attribute) throws ManifestException {
+            String check = addAttributeAndCheck(attribute);
+            if (check != null) {
+                throw new BuildException("Use the \"name\" attribute of the <section> element rather than using " +
+                                         "the \"Name\" attribute");
+            }
+        }
         
         /**
          * Add an attribute to the section
@@ -347,7 +375,10 @@ public class Manifest {
          *
          * @throws ManifestException if the attribute already exists in this section.
          */
-        public String addAttribute(Attribute attribute) throws ManifestException {
+        public String addAttributeAndCheck(Attribute attribute) throws ManifestException {
+            if (attribute.getName() == null || attribute.getValue() == null) {
+                throw new BuildException("Attributes must have name and value");
+            }
             if (attribute.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
                 warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
                                     "main section and must be the first element in all " + 
@@ -368,7 +399,33 @@ public class Manifest {
             }
             return null;
         }
-    }
+
+        public Enumeration getWarnings() {
+            return warnings.elements();
+        }
+        
+        public boolean equals(Object rhs) {
+            if (!(rhs instanceof Section)) {
+                return false;
+            }
+            
+            Section rhsSection = (Section)rhs;
+            if (attributes.size() != rhsSection.attributes.size()) {
+                return false;
+            }
+        
+            for (Enumeration e = attributes.elements(); e.hasMoreElements();) {
+                Attribute attribute  = (Attribute)e.nextElement();
+                Attribute rshAttribute = (Attribute)rhsSection.attributes.get(attribute.getName().toLowerCase());
+                if (!attribute.equals(rshAttribute)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+    }        
+
 
     /** The version of this manifest */
     private String manifestVersion = DEFAULT_MANIFEST_VERSION;
@@ -379,9 +436,6 @@ public class Manifest {
     /** The named sections of this manifest */
     private Hashtable sections = new Hashtable();
 
-    /** Warnings for this manifest file */
-    private Vector warnings = new Vector();
-    
     /** Construct an empty manifest */
     public Manifest() {
     }
@@ -428,13 +482,24 @@ public class Manifest {
                 // this line is the first attribute. set it and then let the normal
                 // read handle the rest
                 Attribute firstAttribute = new Attribute(line);
-                section.addAttribute(firstAttribute);
+                section.addAttributeAndCheck(firstAttribute);
             }
                     
             section.setName(nextSectionName);
             nextSectionName = section.read(reader);
-            sections.put(section.getName().toLowerCase(), section);
+            addConfiguredSection(section);
         }
+    }
+    
+    public void addConfiguredSection(Section section) throws ManifestException {
+        if (section.getName() == null) {
+            throw new BuildException("Sections must have a name");
+        }
+        sections.put(section.getName().toLowerCase(), section);
+    }
+    
+    public void addConfiguredAttribute(Attribute attribute) throws ManifestException {
+        mainSection.addConfiguredAttribute(attribute);
     }
     
     /**
@@ -460,10 +525,6 @@ public class Manifest {
             }
         }
         
-        // add in the warnings
-        for (Enumeration e = other.warnings.elements(); e.hasMoreElements();) {
-            warnings.addElement(e.nextElement());
-        }
     }
     
     /**
@@ -483,7 +544,7 @@ public class Manifest {
         mainSection.write(writer);
         if (signatureVersion != null) {
             try {
-                mainSection.addAttribute(new Attribute(ATTRIBUTE_SIGNATURE_VERSION, signatureVersion));
+                mainSection.addConfiguredAttribute(new Attribute(ATTRIBUTE_SIGNATURE_VERSION, signatureVersion));
             }
             catch (ManifestException e) {
                 // shouldn't happen - ignore
@@ -518,6 +579,48 @@ public class Manifest {
      * @return an enumeration of warning strings
      */
     public Enumeration getWarnings() {
+        Vector warnings = new Vector();
+        
+        for (Enumeration e2 = mainSection.getWarnings(); e2.hasMoreElements();) {
+            warnings.addElement(e2.nextElement());
+        }
+        
+        // create a vector and add in the warnings for all the sections
+        for (Enumeration e = sections.elements(); e.hasMoreElements();) {
+            Section section = (Section)e.nextElement();
+            for (Enumeration e2 = section.getWarnings(); e2.hasMoreElements();) {
+                warnings.addElement(e2.nextElement());
+            }
+        }
+        
         return warnings.elements();
+    }
+    
+    public boolean equals(Object rhs) {
+        if (!(rhs instanceof Manifest)) {
+            return false;
+        }
+        
+        Manifest rhsManifest = (Manifest)rhs;
+        if (!manifestVersion.equals(rhsManifest.manifestVersion)) {
+            return false;
+        }
+        if (sections.size() != rhsManifest.sections.size()) {
+            return false;
+        }
+        
+        if (!mainSection.equals(rhsManifest.mainSection)) {
+            return false;
+        }
+        
+        for (Enumeration e = sections.elements(); e.hasMoreElements();) {
+            Section section = (Section)e.nextElement();
+            Section rhsSection = (Section)rhsManifest.sections.get(section.getName().toLowerCase());
+            if (!section.equals(rhsSection)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

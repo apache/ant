@@ -295,8 +295,9 @@ public class Zip extends MatchingTask {
             } finally {
                 // Close the output stream.
                 try {
-                    if (zOut != null)
-                        zOut.close ();
+                    if (zOut != null) {
+                        zOut.close();
+                    }
                 } catch(IOException ex) {
                     // If we're in this finally clause because of an exception, we don't 
                     // really care if there's an exception when closing the stream. E.g. if it
@@ -317,7 +318,7 @@ public class Zip extends MatchingTask {
             }
 
             if (reallyDoUpdate) {
-                if (!renamedFile.renameTo (zipFile)) {
+                if (!renamedFile.renameTo(zipFile)) {
                     msg+=" (and I couldn't rename the temporary file "+
                         renamedFile.getName()+" back)";
                 }
@@ -327,11 +328,14 @@ public class Zip extends MatchingTask {
         } finally {
             cleanUp();
         }
+        
         // If we've been successful on an update, delete the temporary file
-        if (success && reallyDoUpdate)
-            if (!renamedFile.delete())
-                log ("Warning: unable to delete temporary file "+
+        if (success && reallyDoUpdate) {
+            if (!renamedFile.delete()) {
+                log ("Warning: unable to delete temporary file " +
                      renamedFile.getName(), Project.MSG_WARN);
+            }
+        }
     }
 
     /**
