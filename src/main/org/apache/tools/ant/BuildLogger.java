@@ -89,4 +89,12 @@ public interface BuildLogger extends BuildListener {
      * editors can parse files names, etc.
      */
     public void setEmacsMode(boolean emacsMode);
+
+    /**
+     * Set the output stream to which this logger is to send error messages.
+     *
+     * @param err the error stream for the logger.
+     */
+    public void setErrorPrintStream(PrintStream err);
+    
 }

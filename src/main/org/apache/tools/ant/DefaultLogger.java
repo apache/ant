@@ -65,6 +65,7 @@ public class DefaultLogger implements BuildLogger {
     private static int LEFT_COLUMN_SIZE = 12;
 
     private PrintStream out;
+    private PrintStream err;
     private int msgOutputLevel;
     private long startTime = System.currentTimeMillis();
 	
@@ -95,6 +96,15 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
+     * Set the output stream to which this logger is to send error messages.
+     *
+     * @param err the error stream for the logger.
+     */
+    public void setErrorPrintStream(PrintStream err) {
+        this.err = err;
+    }
+
+    /**
      * Set this logger to produce emacs (and other editor) friendly output.
      *
      * @param emacsMode true if output is to be unadorned so that emacs and other
@@ -120,18 +130,18 @@ public class DefaultLogger implements BuildLogger {
             out.println(lSep + "BUILD SUCCESSFUL");
         }
         else {
-            out.println(lSep + "BUILD FAILED" + lSep);
+            err.println(lSep + "BUILD FAILED" + lSep);
 
             if (error instanceof BuildException) {
-                out.println(error.toString());
+                err.println(error.toString());
 
                 Throwable nested = ((BuildException)error).getException();
                 if (nested != null) {
-                    nested.printStackTrace(out);
+                    nested.printStackTrace(err);
                 }
             }
             else {
-                error.printStackTrace(out);
+                error.printStackTrace(err);
             }
         }
 
@@ -152,6 +162,8 @@ public class DefaultLogger implements BuildLogger {
 
     public void messageLogged(BuildEvent event) {
 
+        PrintStream logTo = event.getPriority() == Project.MSG_ERR ? err : out;
+
         // Filter out messages based on priority
         if (event.getPriority() <= msgOutputLevel) {
 
@@ -162,14 +174,14 @@ public class DefaultLogger implements BuildLogger {
                 if (!emacsMode) {
                     String msg = "[" + name + "] ";
                     for (int i = 0; i < (LEFT_COLUMN_SIZE - msg.length()); i++) {
-                        out.print(" ");
+                        logTo.print(" ");
                     }
-                    out.print(msg);
+                    logTo.print(msg);
                 }
             }
 
             // Print the message
-            out.println(event.getMessage());
+            logTo.println(event.getMessage());
         }
     }
 

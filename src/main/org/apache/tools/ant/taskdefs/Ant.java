@@ -123,6 +123,7 @@ public class Ant extends Task {
                 DefaultLogger logger = new DefaultLogger();
                 logger.setMessageOutputLevel(Project.MSG_INFO);
                 logger.setOutputPrintStream(out);
+                logger.setErrorPrintStream(out);
                 p1.addBuildListener(logger);
             }
             catch( IOException ex ) {

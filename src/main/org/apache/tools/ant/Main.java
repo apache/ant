@@ -81,6 +81,9 @@ public class Main {
     /** Stream that we are using for logging */
     private PrintStream out = System.out;
 
+    /** Stream that we are using for logging error messages */
+    private PrintStream err = System.err;
+
     /** The build targets */
     private Vector targets = new Vector(5);
 
@@ -152,6 +155,7 @@ public class Main {
                     File logFile = new File(args[i+1]);
                     i++;
                     out = new PrintStream(new FileOutputStream(logFile));
+                    err = out;
                     System.setOut(out);
                     System.setErr(out);
                 } catch (IOException ioe) {
@@ -367,6 +371,7 @@ public class Main {
         
         logger.setMessageOutputLevel(msgOutputLevel);
         logger.setOutputPrintStream(out);
+        logger.setErrorPrintStream(err);
         logger.setEmacsMode(emacsMode);
         
         return logger;
