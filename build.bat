@@ -11,11 +11,9 @@ call .\bin\ant.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :install_ant
-set ANT_INSTALL="-Dant.install%REALANTHOME%"
-call .\bin\ant.bat -Dant.install=%REALANTHOME% %1 %2 %3 %4 %5 %6 %7 %8 %9
+call .\bin\ant.bat -Dant.install="%REALANTHOME%" %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem clean up
 :cleanup
 set ANT_HOME=%REALANTHOME%
 set REALANTHOME=
-set ANT_INSTALL=

@@ -36,12 +36,12 @@ goto end
 :checkJava
 if "%JAVACMD%" == "" set JAVACMD=java
 
-set LOCALCLASSPATH=%CLASSPATH%
-for %%i in (%ANT_HOME%\lib\*.jar) do call %ANT_HOME%\bin\lcp.bat %%i
+set LOCALCLASSPATH="%CLASSPATH%"
+for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" "%%i"
 
 if "%JAVA_HOME%" == "" goto noJavaHome
-if exist %JAVA_HOME%\lib\tools.jar call %ANT_HOME%\bin\lcp.bat %JAVA_HOME%\lib\tools.jar
-if exist %JAVA_HOME%\lib\classes.zip call %ANT_HOME%\bin\lcp.bat %JAVA_HOME%\lib\classes.zip
+if exist "%JAVA_HOME%\lib\tools.jar" call "%ANT_HOME%\bin\lcp.bat" "%JAVA_HOME%\lib\tools.jar"
+if exist "%JAVA_HOME%\lib\classes.zip" call "%ANT_HOME%\bin\lcp.bat" "%JAVA_HOME%\lib\classes.zip"
 goto checkJikes
 
 :noJavaHome
@@ -56,11 +56,11 @@ echo.
 if not "%JIKESPATH%" == "" goto runAntWithJikes
 
 :runAnt
-%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
+%JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 goto end
 
 :runAntWithJikes
-%JAVACMD% -classpath "%LOCALCLASSPATH%" -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
+%JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" -Djikes.class.path=%JIKESPATH% %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 
 :end
 set LOCALCLASSPATH=
