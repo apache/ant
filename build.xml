@@ -234,6 +234,7 @@
   <selector id="needs.commons.net">
     <or>
       <filename name="${optional.package}/net/FTP*"/>
+      <filename name="${optional.package}/net/RExec*"/>
       <filename name="${optional.package}/net/TelnetTask*"/>
     </or>
   </selector>

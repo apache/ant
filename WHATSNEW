@@ -316,6 +316,9 @@ Other changes:
 * <rpm> will detect the rpmbuild executable of RedHat 8.0 and newer
   and use that if it is on your PATH.  Bugzilla Report 14650.
 
+* A new task <rexec> has been added that requires commons-net to work.
+  Bugzilla Report 19541.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import org.apache.commons.net.telnet.TelnetClient;
+import org.apache.commons.net.bsd.RExecClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,13 +67,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
- * Automates the telnet protocol.
+ * Automates the rexec protocol.
  *
- * @author <a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
- * @version $Revision$
+ * @since Ant 1.6
  */
 
-public class TelnetTask extends Task {
+public class RExecTask extends Task {
     /**
      *  The userid to login with, if automated login is used
      */
@@ -84,24 +84,29 @@ public class TelnetTask extends Task {
     private String password = null;
 
     /**
-     *  The server to connect to.
+     *  The command to execute
+     */
+    private String command = null;
+
+    /**
+     *  The server to connect to. 
      */
     private String server  = null;
 
     /**
-     *  The tcp port to connect to.
+     *  The tcp port to connect to. 
      */
-    private int port = 23;
+    private int port = RExecClient.DEFAULT_PORT;
 
     /**
-     *  The Object which handles the telnet session.
+     *  The Object which handles the rexec session.
      */
-    private AntTelnetClient telnet = null;
+    private AntRExecClient rexec = null;
 
     /**
      *  The list of read/write commands for this session
      */
-    private Vector telnetTasks = new Vector();
+    private Vector rexecTasks = new Vector();
 
     /**
      *  If true, adds a CR to beginning of login script
@@ -114,129 +119,13 @@ public class TelnetTask extends Task {
      */
     private Integer defaultTimeout = null;
 
-    /**
-     *  Verify that all parameters are included.
-     *  Connect and possibly login
-     *  Iterate through the list of Reads and writes
-     */
-    public void execute() throws BuildException {
-       /**  A server name is required to continue */
-       if (server == null) {
-           throw new BuildException("No Server Specified");
-       }
-       /**  A userid and password must appear together
-        *   if they appear.  They are not required.
-        */
-       if (userid == null && password != null) {
-           throw new BuildException("No Userid Specified");
-       }
-       if (password == null && userid != null) {
-           throw new BuildException("No Password Specified");
-       }
-
-       /**  Create the telnet client object */
-       telnet = new AntTelnetClient();
-       try {
-           telnet.connect(server, port);
-       } catch (IOException e) {
-           throw new BuildException("Can't connect to " + server);
-       }
-       /**  Login if userid and password were specified */
-       if (userid != null && password != null) {
-          login();
-       }
-       /**  Process each sub command */
-       Enumeration tasksToRun = telnetTasks.elements();
-       while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-           TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
-           if (task instanceof TelnetRead && defaultTimeout != null) {
-               ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
-           }
-           task.execute(telnet);
-       }
-    }
-
-    /**
-     *  Process a 'typical' login.  If it differs, use the read
-     *  and write tasks explicitely
-     */
-    private void login() {
-       if (addCarriageReturn) {
-          telnet.sendString("\n", true);
-       }
-       telnet.waitForString("ogin:");
-       telnet.sendString(userid, true);
-       telnet.waitForString("assword:");
-       telnet.sendString(password, false);
-    }
-
-    /**
-     * Set the the login id to use on the server;
-     * required if <tt>password</tt> is set.
-     */
-    public void setUserid(String u) { this.userid = u; }
-
-    /**
-     *  Set the the login password to use
-     * required if <tt>userid</tt> is set.
-     */
-    public void setPassword(String p) { this.password = p; }
-
-    /**
-     *  Set the hostname or address of the remote server.
-     */
-    public void setServer(String m) { this.server = m; }
-
-    /**
-     *  Set the tcp port to connect to; default is 23.
-     */
-    public void setPort(int p) { this.port = p; }
-
-    /**
-     *  send a carriage return after connecting; optional, defaults to false.
-     */
-    public void setInitialCR(boolean b) {
-       this.addCarriageReturn = b;
-    }
-
-    /**
-     * set a default timeout in seconds to wait for a response,
-     * zero means forever (the default)
-     */
-    public void setTimeout(Integer i) {
-       this.defaultTimeout = i;
-    }
-
-    /**
-     *  A string to wait for from the server.
-     *  A subTask &lt;read&gt; tag was found.  Create the object,
-     *  Save it in our list, and return it.
-     */
-
-    public TelnetSubTask createRead() {
-        TelnetSubTask task = (TelnetSubTask) new TelnetRead();
-        telnetTasks.addElement(task);
-        return task;
-    }
-
-    /**
-     *  Add text to send to the server
-     *  A subTask &lt;write&gt; tag was found.  Create the object,
-     *  Save it in our list, and return it.
-     */
-    public TelnetSubTask createWrite() {
-        TelnetSubTask task = (TelnetSubTask) new TelnetWrite();
-        telnetTasks.addElement(task);
-        return task;
-    }
-
-    /**
+    /**  
      *  This class is the parent of the Read and Write tasks.
      *  It handles the common attributes for both.
      */
-    public class TelnetSubTask {
+    public class RExecSubTask {
         protected String taskString = "";
-        public void execute(AntTelnetClient telnet)
+        public void execute(AntRExecClient rexec) 
                 throws BuildException {
             throw new BuildException("Shouldn't be able instantiate a SubTask directly");
         }
@@ -259,11 +148,11 @@ public class TelnetTask extends Task {
     /**
      *  Sends text to the connected server
      */
-    public class TelnetWrite extends TelnetSubTask {
+    public class RExecWrite extends RExecSubTask {
         private boolean echoString = true;
-        public void execute(AntTelnetClient telnet)
+        public void execute(AntRExecClient rexec) 
                throws BuildException {
-           telnet.sendString(taskString, echoString);
+           rexec.sendString(taskString, echoString);
         }
 
         /**
@@ -279,11 +168,11 @@ public class TelnetTask extends Task {
      *  Reads the output from the connected server
      *  until the required string is found or we time out.
      */
-    public class TelnetRead extends TelnetSubTask {
+    public class RExecRead extends RExecSubTask {
         private Integer timeout = null;
-        public void execute(AntTelnetClient telnet)
+        public void execute(AntRExecClient rexec) 
                throws BuildException {
-            telnet.waitForString(taskString, timeout);
+            rexec.waitForString(taskString, timeout);
         }
         /**
          *  a timeout value that overrides any task wide timeout.
@@ -304,23 +193,23 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  This class handles the abstraction of the telnet protocol.
+     *  This class handles the abstraction of the rexec protocol.
      *  Currently it is a wrapper around <a
      *  href="http://jakarta.apache.org/commons/net/index.html">Jakarta
      *  Commons Net</a>.
      */
-    public class AntTelnetClient extends TelnetClient {
+    public class AntRExecClient extends RExecClient {
         /**
-         * Read from the telnet session until the string we are
-         * waiting for is found
-         * @param s The string to wait on
+         * Read from the rexec session until the string we are 
+         * waiting for is found 
+         * @param s The string to wait on 
          */
         public void waitForString(String s) {
             waitForString(s, null);
         }
 
         /**
-         * Read from the telnet session until the string we are
+         * Read from the rexec session until the string we are 
          * waiting for is found or the timeout has been reached
          * @param s The string to wait on
          * @param timeout The maximum number of seconds to wait
@@ -358,9 +247,9 @@ public class TelnetTask extends Task {
         }
 
         /**
-        * Write this string to the telnet session.
-        * @param echoString  Logs string sent
-        */
+         * Write this string to the rexec session.
+         * @param echoString  Logs string sent
+         */
         public void sendString(String s, boolean echoString) {
             OutputStream os = this.getOutputStream();
             try {
@@ -373,5 +262,172 @@ public class TelnetTask extends Task {
                 throw new BuildException(e, getLocation());
             }
         }
+        /**
+         * Read from the rexec session until the EOF is found or
+         * the timeout has been reached
+         * @param timeout The maximum number of seconds to wait
+         */
+        public void waitForEOF(Integer timeout) {
+            InputStream is = this.getInputStream();
+            try {
+                StringBuffer sb = new StringBuffer();
+                if (timeout == null || timeout.intValue() == 0) {
+	            int read;
+                    while ((read = is.read()) != -1) {
+                        char c = (char) read;
+                        sb.append(c);
+                        if (c == '\n') {
+	                    log(sb.toString(), Project.MSG_INFO);
+	                    sb.delete(0, sb.length());
+                        }
+                    }
+                } else {
+                    Calendar endTime = Calendar.getInstance();
+                    endTime.add(Calendar.SECOND, timeout.intValue());
+	            int read = 0;
+                    while (read != -1) {
+                        while (Calendar.getInstance().before(endTime) && is.available() == 0) {
+                            Thread.sleep(250);
+                        }
+                        if (is.available() == 0) {
+	                    log(sb.toString(), Project.MSG_INFO);
+                            throw new BuildException(
+                                                     "Response timed-out waiting for EOF",
+                                                     getLocation());
+                        }
+                        read =  is.read();
+                        if (read != -1) {
+	                    char c = (char) read;
+	                    sb.append(c);
+	                    if (c == '\n') {
+                                log(sb.toString(), Project.MSG_INFO);
+                                sb.delete(0, sb.length());
+	                    }
+                        }
+                    }
+                }
+                if (sb.length() > 0) {
+	            log(sb.toString(), Project.MSG_INFO);
+                }
+            } catch (BuildException be) {
+                throw be;
+            } catch (Exception e) {
+                throw new BuildException(e, getLocation());
+            }
+        }
+
     }
+    /**
+     *  A string to wait for from the server. 
+     *  A subTask &lt;read&gt; tag was found.  Create the object, 
+     *  Save it in our list, and return it.
+     */
+   
+    public RExecSubTask createRead() {
+        RExecSubTask task = (RExecSubTask) new RExecRead();
+        rexecTasks.addElement(task);
+        return task;
+    }
+    /**
+     *  Add text to send to the server
+     *  A subTask &lt;write&gt; tag was found.  Create the object, 
+     *  Save it in our list, and return it.
+     */
+    public RExecSubTask createWrite() {
+        RExecSubTask task = (RExecSubTask) new RExecWrite();
+        rexecTasks.addElement(task);
+        return task;
+    }
+    /** 
+     *  Verify that all parameters are included. 
+     *  Connect and possibly login
+     *  Iterate through the list of Reads and writes 
+     */
+    public void execute() throws BuildException {
+        /**  A server name is required to continue */
+        if (server == null) {
+            throw new BuildException("No Server Specified");
+        }
+        /**  A userid and password must appear together 
+         *   if they appear.  They are not required.
+         */
+        if (userid == null && password != null) {
+            throw new BuildException("No Userid Specified");
+        }
+        if (password == null && userid != null) {
+            throw new BuildException("No Password Specified");
+        }
+
+        /**  Create the telnet client object */
+        rexec = new AntRExecClient();
+        try {
+            rexec.connect(server, port);
+        } catch (IOException e) {
+            throw new BuildException("Can't connect to " + server);
+        }
+        /**  Login if userid and password were specified */
+        if (userid != null && password != null) {
+            login();
+        }
+        /**  Process each sub command */
+        Enumeration tasksToRun = rexecTasks.elements();
+        while (tasksToRun != null && tasksToRun.hasMoreElements()) {
+            RExecSubTask task = (RExecSubTask) tasksToRun.nextElement();
+            if (task instanceof RExecRead && defaultTimeout != null) {
+                ((RExecRead) task).setDefaultTimeout(defaultTimeout);
+            }
+            task.execute(rexec);
+        }
+
+        /** Keep reading input stream until end of it or time-out */
+        rexec.waitForEOF(defaultTimeout);
+    }
+    /**  
+     *  Process a 'typical' login.  If it differs, use the read 
+     *  and write tasks explicitely
+     */
+    private void login() {
+        if (addCarriageReturn) {
+            rexec.sendString("\n", true);
+        }
+        rexec.waitForString("ogin:");
+        rexec.sendString(userid, true);
+        rexec.waitForString("assword:");
+        rexec.sendString(password, false);
+    }
+    /**
+     * Set the the comand to execute on the server; 
+     */
+    public void setCommand(String c) { this.command = c; }
+    /**
+     *  send a carriage return after connecting; optional, defaults to false.
+     */
+    public void setInitialCR(boolean b) {
+        this.addCarriageReturn = b;
+    }
+    /**
+     *  Set the the login password to use
+     * required if <tt>userid</tt> is set. 
+     */
+    public void setPassword(String p) { this.password = p; }
+    /**
+     *  Set the tcp port to connect to; default is 23.
+     */
+    public void setPort(int p) { this.port = p; }
+    /**
+     *  Set the hostname or address of the remote server.
+     */
+    public void setServer(String m) { this.server = m; }
+    /**
+     * set a default timeout in seconds to wait for a response, 
+     * zero means forever (the default) 
+     */
+    public void setTimeout(Integer i) {
+        this.defaultTimeout = i;
+    }
+    /**
+     * Set the the login id to use on the server; 
+     * required if <tt>password</tt> is set. 
+     */
+    public void setUserid(String u) { this.userid = u; }
 }
