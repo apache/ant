@@ -359,7 +359,7 @@ public class DefaultConfigurer
         }
         catch( final ContextException e )
         {
-            final String message = REZ.getString( "get-ref.error", id );
+            final String message = REZ.getString( "unknown-reference.error", id );
             throw new ConfigurationException( message, e );
         }
 
