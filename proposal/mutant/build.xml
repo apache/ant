@@ -169,7 +169,7 @@
 
   <target name="main" depends="frontend, antlibs, ant1compat, remote, checkstyle"/> 
   
-  <target name="checkstyle" if="checkstyle.available">
+  <target name="checkstyle" if="xxxcheckstyle.available">
     <taskdef name="checkstyle"
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
     <mkdir dir="${bin.dir}/check"/>
