@@ -1,12 +1,18 @@
 #!/bin/sh
 
-#   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+#   Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
 #   reserved.
 
 # OS specific support.  $var _must_ be set to either true or false.
 cygwin=false;
+darwin=false;
 case "`uname`" in
   CYGWIN*) cygwin=true ;;
+  Darwin*) darwin=true
+           if [ -z "$JAVA_HOME" ] ; then
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home   
+           fi
+           ;;
 esac
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
