@@ -86,7 +86,7 @@ public class BaseStreamFormatter extends BaseFormatter {
     private PrintWriter writer;
 
     public void init(Properties props) throws BuildException {
-        String file = props.getProperty("file");
+        String file = props.getProperty(FILE_KEY);
         OutputStream os = null;
         if (file != null) {
             try {

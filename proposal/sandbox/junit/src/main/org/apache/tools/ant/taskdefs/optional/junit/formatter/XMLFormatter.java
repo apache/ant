@@ -54,12 +54,16 @@
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import java.util.Hashtable;
+import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
+
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.BuildException;
 
 /**
  * XML Formatter. Due to the nature of the XML we are forced to store
@@ -68,7 +72,7 @@ import org.w3c.dom.Text;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class XMLFormatter extends BaseFormatter {
+public class XMLFormatter extends BaseStreamFormatter {
 
     /** the testsuites element for the aggregate document */
     public final static String TESTSUITES = "testsuites";
@@ -125,10 +129,10 @@ public class XMLFormatter extends BaseFormatter {
     public final static String ATTR_VALUE = "value";
 
     /** The XML document. */
-    private Document doc;
+    private Document doc = getDocumentBuilder().newDocument();
 
     /**  The wrapper for the whole testsuite. */
-    private Element rootElement;
+    private Element rootElement = doc.createElement(TESTSUITE);
 
     /** Element for the current test. */
     private Hashtable testElements = new Hashtable();
@@ -158,8 +162,8 @@ public class XMLFormatter extends BaseFormatter {
         currentTest.setAttribute(ATTR_TIME, Float.toString(time));
         super.onTestEnded(testname);
         // remove the test objects
-        testStarts.remove(testname);
-        testElements.remove(testname);
+        //testStarts.remove(testname);
+        //testElements.remove(testname);
     }
 
     public void onTestFailed(int status, String testname, String trace) {
@@ -197,6 +201,19 @@ public class XMLFormatter extends BaseFormatter {
 
     public void onTestRunStopped(long elapsedtime) {
         super.onTestRunStopped(elapsedtime);
+    }
+
+    protected void close() {
+        DOMElementWriter domWriter = new DOMElementWriter();
+        // the underlying writer uses UTF8 encoding
+        getWriter().println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        try {
+            domWriter.write(rootElement, getWriter(), 0, "  ");
+        } catch (IOException e){
+            throw new BuildException(e);
+        } finally {
+            super.close();
+        }
     }
 
     private static DocumentBuilder getDocumentBuilder() {
