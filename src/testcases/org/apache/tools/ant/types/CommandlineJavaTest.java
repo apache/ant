@@ -150,6 +150,7 @@ public class CommandlineJavaTest extends TestCase {
             assertEquals(currentClasspath, newClasspath);
             assertNotNull(System.getProperty("key"));
             assertEquals("value", System.getProperty("key"));
+            assertTrue(System.getProperties().containsKey("java.class.path"));
         } finally {
             c.restoreSystemProperties();
         }

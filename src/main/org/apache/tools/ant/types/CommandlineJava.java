@@ -111,8 +111,12 @@ public class CommandlineJava implements Cloneable {
 
         public void setSystem() throws BuildException {
             try {
-                Properties p = new Properties(sys = System.getProperties());
-        
+                sys = System.getProperties();
+                Properties p = new Properties();
+                for (Enumeration e = sys.keys(); e.hasMoreElements(); ) {
+                    Object o = e.nextElement();
+                    p.put(o, sys.get(o));
+                }
                 for (Enumeration e = variables.elements(); e.hasMoreElements(); ) {
                     Environment.Variable v = (Environment.Variable) e.nextElement();
                     p.put(v.getKey(), v.getValue());
