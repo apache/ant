@@ -15,6 +15,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Will set the given property if the requested resource is available at
@@ -24,7 +25,6 @@ import org.apache.tools.ant.types.Path;
  *      stefano@apache.org</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-
 public class Available
     extends Task
     implements Condition
@@ -123,7 +123,7 @@ public class Available
 
         if( m_classpath != null )
         {
-            final URL[] urls = m_classpath.toURLs();
+            final URL[] urls = PathUtil.toURLs( m_classpath );
             m_classLoader = new URLClassLoader( urls );
         }
 
@@ -340,32 +340,6 @@ public class Available
         else
         {
             return m_classLoader;
-        }
-    }
-
-    public static class FileDir extends EnumeratedAttribute
-    {
-
-        private final static String[] values = {"file", "dir"};
-
-        public String[] getValues()
-        {
-            return values;
-        }
-
-        public boolean isDir()
-        {
-            return "dir".equalsIgnoreCase( getValue() );
-        }
-
-        public boolean isFile()
-        {
-            return "file".equalsIgnoreCase( getValue() );
-        }
-
-        public String toString()
-        {
-            return getValue();
         }
     }
 }
