@@ -403,7 +403,7 @@ public class CLIMain
         if( m_priority <= BasicLogger.LEVEL_INFO )
         {
             // Verbose mode - include the stack traces
-            message = ExceptionUtil.printStackTrace( throwable, 5, true, true );
+            message = ExceptionUtil.printStackTrace( throwable, 8, true, true );
         }
         else
         {

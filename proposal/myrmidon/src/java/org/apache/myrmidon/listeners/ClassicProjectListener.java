@@ -95,7 +95,7 @@ public class ClassicProjectListener
         final Throwable throwable = event.getThrowable();
         if( throwable != null )
         {
-            getWriter().println( ExceptionUtil.printStackTrace( throwable, 5, true ) );
+            getWriter().println( ExceptionUtil.printStackTrace( throwable, 8, true ) );
         }
     }
 }
