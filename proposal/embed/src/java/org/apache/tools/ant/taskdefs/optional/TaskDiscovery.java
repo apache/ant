@@ -60,10 +60,9 @@ import org.apache.tools.ant.*;
 
 import java.util.*;
 
-import org.apache.commons.discovery.ResourceName;
-import org.apache.commons.discovery.ResourceNameIterator;
+import org.apache.commons.discovery.*;
 import org.apache.commons.discovery.jdk.JDKHooks;
-import org.apache.commons.discovery.resource.DiscoverResources;
+import org.apache.commons.discovery.resource.*;
 
 
 /**
@@ -82,7 +81,7 @@ public class TaskDiscovery extends Task implements ProjectComponentFactory
     // Also discovery the 'legacy' names - in ant1.6 the initial preloaded tasks
     // should be deprecated.
     
-    ResourceName[] discoveredTasks = null;
+    Resource[] discoveredTasks = null;
 
     Hashtable taskDefs=new Hashtable();
 
@@ -126,18 +125,18 @@ public class TaskDiscovery extends Task implements ProjectComponentFactory
         disc.addClassLoader( JDKHooks.getJDKHooks().getThreadContextClassLoader() );
         disc.addClassLoader( this.getClass().getClassLoader() );
         
-        ResourceNameIterator enum = disc.findResources(RESOURCE_NAME);
+        ResourceIterator enum = disc.findResources(RESOURCE_NAME);
         
         Vector vector = new Vector();
         while (enum.hasNext()) {
-            ResourceName resourceInfo = enum.nextResourceName();
+            Resource resourceInfo = enum.nextResource();
             vector.add(resourceInfo);
             System.out.println("Found " + resourceInfo);
 
             
         }
         
-        discoveredTasks = new ResourceName[vector.size()];
+        discoveredTasks = new Resource[vector.size()];
         vector.copyInto(discoveredTasks);
     }
         
