@@ -78,12 +78,19 @@ import com.jcraft.jsch.Session;
  */
 public class SSHExec extends SSHBase {
 
-    private String command = null;   // the command to execute via ssh
-    private long maxwait = 0;   // units are milliseconds, default is 0=infinite
-    private Thread thread = null;   // for waiting for the command to finish
+    private final int BUFFER_SIZE = 1024;
 
-    private String output_property = null;   // like <exec>
-    private File output_file = null;   // like <exec>
+    /** the command to execute via ssh */
+    private String command = null;
+
+    /** units are milliseconds, default is 0=infinite */
+    private long maxwait = 0;
+
+    /** for waiting for the command to finish */
+    private Thread thread = null;
+
+    private String outputProperty = null;   // like <exec>
+    private File outputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
 
     /**
@@ -119,7 +126,7 @@ public class SSHExec extends SSHBase {
      * @param output  The file to write to.
      */
     public void setOutput(File output) {
-        output_file = output;
+        outputFile = output;
     }
 
     /**
@@ -140,7 +147,7 @@ public class SSHExec extends SSHBase {
      *      will be stored.
      */
     public void setOutputproperty(String property) {
-        output_property = property;
+        outputProperty = property;
     }
 
     /**
@@ -155,7 +162,7 @@ public class SSHExec extends SSHBase {
         if (getUserInfo().getName() == null) {
             throw new BuildException("Username is required.");
         }
-        if (getUserInfo().getKeyfile() == null 
+        if (getUserInfo().getKeyfile() == null
             && getUserInfo().getPassword() == null) {
             throw new BuildException("Password or Keyfile is required.");
         }
@@ -170,7 +177,7 @@ public class SSHExec extends SSHBase {
             // execute the command
             Session session = openSession();
             session.setTimeout((int) maxwait);
-            final ChannelExec channel=(ChannelExec) session.openChannel("exec");
+            final ChannelExec channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
             channel.setOutputStream(tee);
             channel.connect();
@@ -191,25 +198,25 @@ public class SSHExec extends SSHBase {
                         }
                     }
                 };
-                    
+
             thread.start();
             thread.join(maxwait);
-            
+
             if (thread.isAlive()) {
                 // ran out of time
                 thread = null;
                 log("Timeout period exceeded, connection dropped.");
             } else {
                 // completed successfully
-                if (output_property != null) {
-                    getProject().setProperty(output_property, out.toString());
+                if (outputProperty != null) {
+                    getProject().setProperty(outputProperty, out.toString());
                 }
-                if (output_file != null) {
-                    writeToFile(out.toString(), append, output_file);
+                if (outputFile != null) {
+                    writeToFile(out.toString(), append, outputFile);
                 }
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
             } else {
@@ -228,20 +235,20 @@ public class SSHExec extends SSHBase {
      * @param append         if true, append to existing file, else overwrite
      * @exception Exception  most likely an IOException
      */
-    private void writeToFile(String from, boolean append, File to) 
+    private void writeToFile(String from, boolean append, File to)
         throws IOException {
         FileWriter out = null;
         try {
             out = new FileWriter(to.getAbsolutePath(), append);
             StringReader in = new StringReader(from);
             char[] buffer = new char[8192];
-            int bytes_read;
+            int bytesRead;
             while (true) {
-                bytes_read = in.read(buffer);
-                if (bytes_read == -1) {
+                bytesRead = in.read(buffer);
+                if (bytesRead == -1) {
                     break;
                 }
-                out.write(buffer, 0, bytes_read);
+                out.write(buffer, 0, bytesRead);
             }
             out.flush();
         } finally {

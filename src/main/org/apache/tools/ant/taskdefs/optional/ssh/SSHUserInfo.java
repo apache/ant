@@ -60,19 +60,19 @@ import com.jcraft.jsch.UserInfo;
  * @author rhanderson
  */
 public class SSHUserInfo implements UserInfo {
-	
+
     private String name;
     private String password = null;
     private String keyfile;
     private String passphrase = null;
     private boolean firstTime = true;
     private boolean trustAllCertificates;
-    
+
     public SSHUserInfo() {
-    	super();
-    	this.trustAllCertificates = true;
+        super();
+        this.trustAllCertificates = true;
     }
-    
+
     public SSHUserInfo(String password, boolean trustAllCertificates) {
         super();
         this.password = password;
@@ -85,21 +85,21 @@ public class SSHUserInfo implements UserInfo {
     public String getName() {
         return name;
     }
-    
+
     /**
      * @see com.jcraft.jsch.UserInfo#getPassphrase(String)
      */
     public String getPassphrase(String message) {
         return passphrase;
     }
-    
+
     /**
      * @see com.jcraft.jsch.UserInfo#getPassword()
      */
     public String getPassword() {
         return password;
     }
-    
+
     /**
      * @see com.jcraft.jsch.UserInfo#prompt(String)
      */
@@ -140,7 +140,7 @@ public class SSHUserInfo implements UserInfo {
 
     /**
      * Sets the trust.
-     * @param boolean
+     * @param trust whether to trust or not.
      */
     public void setTrust(boolean trust) {
         this.trustAllCertificates = trust;
@@ -180,9 +180,9 @@ public class SSHUserInfo implements UserInfo {
     /**
      * @see com.jcraft.jsch.UserInfo#promptPassword(String)
      */
-    public boolean promptPassword( String passwordPrompt ) {
-        //log( passwordPrompt, Project.MSG_DEBUG );
-        if( firstTime ) {
+    public boolean promptPassword(String passwordPrompt) {
+        //log(passwordPrompt, Project.MSG_DEBUG);
+        if (firstTime) {
             firstTime = false;
             return true;
         }
@@ -193,7 +193,7 @@ public class SSHUserInfo implements UserInfo {
      * @see com.jcraft.jsch.UserInfo#promptYesNo(String)
      */
     public boolean promptYesNo(String message) {
-        //log( prompt, Project.MSG_DEBUG );
+        //log(prompt, Project.MSG_DEBUG);
         return trustAllCertificates;
     }
 
@@ -201,7 +201,7 @@ public class SSHUserInfo implements UserInfo {
      * @see com.jcraft.jsch.UserInfo#showMessage(String)
      */
     public void showMessage(String message) {
-        //log( message, Project.MSG_DEBUG );
+        //log(message, Project.MSG_DEBUG);
     }
 
 }

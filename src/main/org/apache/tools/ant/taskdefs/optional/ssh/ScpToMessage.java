@@ -57,11 +57,17 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.JSchException;
-
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Iterator;
 
 public class ScpToMessage extends AbstractSshMessage {
+
+    private final int BUFFER_SIZE = 1024;
 
     private File localFile;
     private String remotePath;
@@ -69,27 +75,27 @@ public class ScpToMessage extends AbstractSshMessage {
 
     public ScpToMessage(Session session,
                         File aLocalFile,
-                        String aRemotePath ) {
+                        String aRemotePath) {
         super(session);
 
         this.localFile = aLocalFile;
         this.remotePath = aRemotePath;
     }
 
-    public ScpToMessage( Session session,
+    public ScpToMessage(Session session,
                          List aDirectoryList,
-                         String aRemotePath ) {
-        super( session );
+                         String aRemotePath) {
+        super(session);
 
         this.directoryList = aDirectoryList;
         this.remotePath = aRemotePath;
     }
 
     public void execute() throws IOException, JSchException {
-        if( directoryList != null ) {
+        if (directoryList != null) {
             doMultipleTransfer();
         }
-        if( localFile != null ) {
+        if (localFile != null) {
             doSingleTransfer();
         }
         log("done.\n");
@@ -97,7 +103,7 @@ public class ScpToMessage extends AbstractSshMessage {
 
     private void doSingleTransfer() throws IOException, JSchException {
         String cmd = "scp -t " + remotePath;
-        Channel channel = openExecChannel( cmd );
+        Channel channel = openExecChannel(cmd);
         try {
 
             OutputStream out = channel.getOutputStream();
@@ -109,13 +115,14 @@ public class ScpToMessage extends AbstractSshMessage {
             sendFileToRemote(localFile, in, out);
             waitForAck(in);
         } finally {
-            if( channel != null )
+            if (channel != null) {
                 channel.disconnect();
+            }
         }
     }
 
     private void doMultipleTransfer() throws IOException, JSchException {
-        Channel channel = openExecChannel( "scp -d -t " + remotePath );
+        Channel channel = openExecChannel("scp -d -t " + remotePath);
         try {
             OutputStream out = channel.getOutputStream();
             InputStream in = channel.getInputStream();
@@ -123,69 +130,71 @@ public class ScpToMessage extends AbstractSshMessage {
             channel.connect();
 
             waitForAck(in);
-            for( Iterator i = directoryList.iterator(); i.hasNext(); ) {
-                Directory current = (Directory)i.next();
-                sendDirectory( current, in, out );
+            for (Iterator i = directoryList.iterator(); i.hasNext();) {
+                Directory current = (Directory) i.next();
+                sendDirectory(current, in, out);
             }
             waitForAck(in);
         } finally {
-            if( channel != null )
+            if (channel != null) {
                 channel.disconnect();
+            }
         }
     }
 
     private void sendDirectory(Directory current,
                                InputStream in,
                                OutputStream out) throws IOException {
-        for( Iterator fileIt = current.filesIterator(); fileIt.hasNext(); ) {
-            sendFileToRemote( (File)fileIt.next(), in, out );
+        for (Iterator fileIt = current.filesIterator(); fileIt.hasNext();) {
+            sendFileToRemote((File) fileIt.next(), in, out);
         }
-        for( Iterator dirIt = current.directoryIterator(); dirIt.hasNext(); ) {
+        for (Iterator dirIt = current.directoryIterator(); dirIt.hasNext();) {
             Directory dir = (Directory) dirIt.next();
-            sendDirectoryToRemote( dir, in ,out );
+            sendDirectoryToRemote(dir, in, out);
         }
     }
 
-    private void sendDirectoryToRemote( Directory directory,
+    private void sendDirectoryToRemote(Directory directory,
                                         InputStream in,
-                                        OutputStream out ) throws IOException {
+                                        OutputStream out) throws IOException {
         String command = "D0755 0 ";
         command += directory.getDirectory().getName();
         command += "\n";
 
-        out.write( command.getBytes() );
+        out.write(command.getBytes());
         out.flush();
 
         waitForAck(in);
-        sendDirectory( directory, in, out );
-        out.write( "E\n".getBytes() );
+        sendDirectory(directory, in, out);
+        out.write("E\n".getBytes());
     }
 
-    private void sendFileToRemote( File localFile,
+    private void sendFileToRemote(File localFile,
                                    InputStream in,
-                                   OutputStream out ) throws IOException {
+                                   OutputStream out) throws IOException {
         // send "C0644 filesize filename", where filename should not include '/'
         int filesize = (int) localFile.length();
         String command = "C0644 " + filesize + " ";
         command += localFile.getName();
         command += "\n";
 
-        out.write( command.getBytes() );
+        out.write(command.getBytes());
         out.flush();
 
         waitForAck(in);
 
         // send a content of lfile
         FileInputStream fis = new FileInputStream(localFile);
-        byte[] buf = new byte[1024];
+        byte[] buf = new byte[BUFFER_SIZE];
         long startTime = System.currentTimeMillis();
         int totalLength = 0;
         try {
-            log( "Sending: " + localFile.getName() + " : " + 
-                 localFile.length());
+            log("Sending: " + localFile.getName() + " : " + localFile.length());
             while (true) {
                 int len = fis.read(buf, 0, buf.length);
-                if (len <= 0) break;
+                if (len <= 0) {
+                    break;
+                }
                 out.write(buf, 0, len);
                 totalLength += len;
             }
@@ -193,7 +202,7 @@ public class ScpToMessage extends AbstractSshMessage {
             sendAck(out);
         } finally {
             long endTime = System.currentTimeMillis();
-            logStats( startTime, endTime, totalLength );
+            logStats(startTime, endTime, totalLength);
             fis.close();
         }
     }

@@ -54,9 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.File;
+
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -113,11 +116,11 @@ public class Scp extends SSHBase {
      *
      * @param set FileSet to send to remote host.
      */
-    public void addFileset( FileSet set ) {
-        if( fileSets == null ) {
+    public void addFileset(FileSet set) {
+        if (fileSets == null) {
             fileSets = new LinkedList();
         }
-        fileSets.add( set );
+        fileSets.add(set);
     }
 
     public void init() throws BuildException {
@@ -132,34 +135,34 @@ public class Scp extends SSHBase {
             throw new BuildException("The 'todir' attribute is required.");
         }
 
-        if ( fromUri == null && fileSets == null ) {
-            throw new BuildException("Either the 'file' attribute or one " +
-                                     "FileSet is required.");
+        if (fromUri == null && fileSets == null) {
+            throw new BuildException("Either the 'file' attribute or one "
+                + "FileSet is required.");
         }
 
         boolean isFromRemote = false;
-        if( fromUri != null ) {
+        if (fromUri != null) {
             isFromRemote = isRemoteUri(fromUri);
         }
         boolean isToRemote = isRemoteUri(toUri);
         try {
             if (isFromRemote && !isToRemote) {
-                download( fromUri, toUri );
+                download(fromUri, toUri);
             } else if (!isFromRemote && isToRemote) {
-                if( fileSets != null ) {
-                    upload( fileSets, toUri );
+                if (fileSets != null) {
+                    upload(fileSets, toUri);
                 } else {
-                    upload( fromUri, toUri );
+                    upload(fromUri, toUri);
                 }
             } else if (isFromRemote && isToRemote) {
                 // not implemented yet.
             } else {
-                throw new BuildException("'todir' and 'file' attributes " +
-                                         "must have syntax like the following: " +
-                                         "user:password@host:/path");
+                throw new BuildException("'todir' and 'file' attributes "
+                    + "must have syntax like the following: "
+                    + "user:password@host:/path");
             }
         } catch (Exception e) {
-            if(getFailonerror()) {
+            if (getFailonerror()) {
                 throw new BuildException(e);
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
@@ -167,64 +170,67 @@ public class Scp extends SSHBase {
         }
     }
 
-    private void download( String fromSshUri, String toPath )
+    private void download(String fromSshUri, String toPath)
         throws JSchException, IOException {
         String file = parseUri(fromSshUri);
 
         Session session = null;
         try {
             session = openSession();
-            ScpFromMessage message = new ScpFromMessage( session,
+            ScpFromMessage message = new ScpFromMessage(session,
                                                          file,
-                                                         new File( toPath ),
-                                                         fromSshUri.endsWith("*") );
-            log("Receiving file: " + file );
-            message.setLogListener( this );
+                                                         new File(toPath),
+                                                         fromSshUri.endsWith("*"));
+            log("Receiving file: " + file);
+            message.setLogListener(this);
             message.execute();
         } finally {
-            if( session != null )
+            if (session != null) {
                 session.disconnect();
+            }
         }
     }
 
-    private void upload( List fileSet, String toSshUri )
+    private void upload(List fileSet, String toSshUri)
         throws IOException, JSchException {
         String file = parseUri(toSshUri);
 
         Session session = null;
         try {
             session = openSession();
-            List list = new ArrayList( fileSet.size() );
-            for( Iterator i = fileSet.iterator(); i.hasNext(); ) {
+            List list = new ArrayList(fileSet.size());
+            for (Iterator i = fileSet.iterator(); i.hasNext();) {
                 FileSet set = (FileSet) i.next();
-                list.add( createDirectory( set ) );
+                list.add(createDirectory(set));
             }
-            ScpToMessage message = new ScpToMessage( session,
+            ScpToMessage message = new ScpToMessage(session,
                                                      list,
                                                      file);
-            message.setLogListener( this );
+            message.setLogListener(this);
             message.execute();
         } finally {
-            if( session != null )
+            if (session != null) {
                 session.disconnect();
+            }
         }
     }
 
-    private void upload( String fromPath, String toSshUri )
+    private void upload(String fromPath, String toSshUri)
         throws IOException, JSchException {
         String file = parseUri(toSshUri);
 
         Session session = null;
         try {
             session = openSession();
-            ScpToMessage message = new ScpToMessage( session,
-                                                     new File( fromPath ),
-                                                     file );
-            message.setLogListener( this );
+            ScpToMessage message = new ScpToMessage(session,
+                                                     new File(fromPath),
+                                                     file);
+            message.setLogListener(this);
             message.execute();
         } finally {
-            if( session != null )
+            if (session != null) {
                 session.disconnect();
+            }
         }
     }
 
@@ -251,7 +257,7 @@ public class Scp extends SSHBase {
         if (indexOfPath == -1) {
             throw new BuildException("no remote path in " + uri);
         }
-        
+
         setHost(uri.substring(indexOfAt + 1, indexOfPath));
         return uri.substring(indexOfPath + 1);
     }
@@ -265,22 +271,22 @@ public class Scp extends SSHBase {
         return isRemote;
     }
 
-    private Directory createDirectory( FileSet set ) {
-        DirectoryScanner scanner = set.getDirectoryScanner( getProject() );
-        Directory root = new Directory( scanner.getBasedir() );
+    private Directory createDirectory(FileSet set) {
+        DirectoryScanner scanner = set.getDirectoryScanner(getProject());
+        Directory root = new Directory(scanner.getBasedir());
         String[] files = scanner.getIncludedFiles();
         for (int j = 0; j < files.length; j++) {
-            String[] path = Directory.getPath( files[j] );
+            String[] path = Directory.getPath(files[j]);
             Directory current = root;
             File currentParent = scanner.getBasedir();
-            for( int i = 0; i < path.length; i++ ) {
-                File file = new File( currentParent, path[i] );
-                if( file.isDirectory() ) {
-                    current.addDirectory( new Directory( file ) );
-                    current = current.getChild( file );
+            for (int i = 0; i < path.length; i++) {
+                File file = new File(currentParent, path[i]);
+                if (file.isDirectory()) {
+                    current.addDirectory(new Directory(file));
+                    current = current.getChild(file);
                     currentParent = current.getDirectory();
-                } else if( file.isFile() ) {
-                    current.addFile( file );
+                } else if (file.isFile()) {
+                    current.addFile(file);
                 }
             }
         }

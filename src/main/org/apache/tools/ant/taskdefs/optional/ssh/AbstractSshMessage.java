@@ -66,8 +66,8 @@ import java.text.NumberFormat;
 
 public abstract class AbstractSshMessage {
 
-    protected Session session;
-    protected LogListener listener = new LogListener() {
+    private Session session;
+    private LogListener listener = new LogListener() {
         public void log(String message) {
             // do nothing;
         }
@@ -77,9 +77,9 @@ public abstract class AbstractSshMessage {
         this.session = session;
     }
 
-    protected Channel openExecChannel( String command ) throws JSchException {
-        ChannelExec channel = (ChannelExec) session.openChannel( "exec" );
-        channel.setCommand( command );
+    protected Channel openExecChannel(String command) throws JSchException {
+        ChannelExec channel = (ChannelExec) session.openChannel("exec");
+        channel.setCommand(command);
 
         return channel;
     }
@@ -87,7 +87,7 @@ public abstract class AbstractSshMessage {
     protected void sendAck(OutputStream out) throws IOException {
         byte[] buf = new byte[1];
         buf[0] = 0;
-        out.write( buf );
+        out.write(buf);
         out.flush();
     }
 
@@ -100,23 +100,23 @@ public abstract class AbstractSshMessage {
 
     public abstract void execute() throws IOException, JSchException;
 
-    public void setLogListener( LogListener aListener ) {
+    public void setLogListener(LogListener aListener) {
         listener = aListener;
     }
 
-    protected void log( String message ) {
-        listener.log( message );
+    protected void log(String message) {
+        listener.log(message);
     }
 
-    protected void logStats( long timeStarted,
+    protected void logStats(long timeStarted,
                              long timeEnded,
                              int totalLength) {
         double duration = (timeEnded - timeStarted) / 1000.0;
         NumberFormat format = NumberFormat.getNumberInstance();
-        format.setMaximumFractionDigits( 2 );
-        format.setMinimumFractionDigits( 1 );
-        listener.log( "File transfer time: " + format.format( duration ) +
-                " Average Rate: " + format.format( totalLength / duration ) +
-                " B/s" );
+        format.setMaximumFractionDigits(2);
+        format.setMinimumFractionDigits(1);
+        listener.log("File transfer time: " + format.format(duration)
+            + " Average Rate: " + format.format(totalLength / duration)
+            + " B/s");
     }
 }

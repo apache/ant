@@ -66,24 +66,25 @@ public class Directory {
     private ArrayList files;
     private Directory parent;
 
-    public Directory( File directory ) {
-        this( directory,  null );
+    public Directory(File directory) {
+        this(directory,  null);
     }
 
-    public Directory( File directory , Directory parent ) {
+    public Directory(File directory , Directory parent) {
         this.parent = parent;
         this.childDirectories = new ArrayList();
         this.files = new ArrayList();
         this.directory = directory;
     }
 
-    public void addDirectory( Directory directory ) {
-        if( !childDirectories.contains( directory ) )
-            childDirectories.add( directory );
+    public void addDirectory(Directory directory) {
+        if (!childDirectories.contains(directory)) {
+            childDirectories.add(directory);
+        }
     }
 
-    public void addFile( File file ) {
-        files.add( file );
+    public void addFile(File file) {
+        files.add(file);
     }
 
     public Iterator directoryIterator() {
@@ -106,10 +107,10 @@ public class Directory {
         return directory;
     }
 
-    public Directory getChild( File dir ) {
-        for( int i = 0; i < childDirectories.size(); i++ ) {
+    public Directory getChild(File dir) {
+        for (int i = 0; i < childDirectories.size(); i++) {
             Directory current = (Directory) childDirectories.get(i);
-            if( current.getDirectory().equals( dir ) ) {
+            if (current.getDirectory().equals(dir)) {
                 return current;
             }
         }
@@ -118,13 +119,17 @@ public class Directory {
     }
 
     public boolean equals(Object obj) {
-        if( obj == this ) return true;
+        if (obj == this) {
+            return true;
+        }
 
-        if( !(obj instanceof Directory) ) return false;
+        if (!(obj instanceof Directory)) {
+            return false;
+        }
 
-        Directory d = (Directory)obj;
+        Directory d = (Directory) obj;
 
-        return this.directory.equals( d.directory );
+        return this.directory.equals(d.directory);
     }
 
     public int hashCode() {
@@ -132,16 +137,16 @@ public class Directory {
     }
 
     public String[] getPath() {
-        return getPath( directory.getAbsolutePath() );
+        return getPath(directory.getAbsolutePath());
     }
 
-    public static String[] getPath( String thePath ) {
-        StringTokenizer tokenizer = new StringTokenizer( thePath,
-                File.separator );
+    public static String[] getPath(String thePath) {
+        StringTokenizer tokenizer = new StringTokenizer(thePath,
+                File.separator);
         String[] path = new String[ tokenizer.countTokens() ];
 
         int i = 0;
-        while( tokenizer.hasMoreTokens() ) {
+        while (tokenizer.hasMoreTokens()) {
             path[i] = tokenizer.nextToken();
             i++;
         }
