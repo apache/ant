@@ -61,6 +61,7 @@ public class Expand extends Task {
     private static final String NATIVE_ENCODING = "native-encoding";
 
     private String encoding = "UTF8";
+    /** Error message when more that one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
 
     /**
@@ -115,9 +116,9 @@ public class Expand extends Task {
     /**
      * This method is to be overridden by extending unarchival tasks.
      *
-     * @param fileUtils
-     * @param srcF
-     * @param dir
+     * @param fileUtils the fileUtils
+     * @param srcF      the source file
+     * @param dir       the destination directory
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
@@ -144,7 +145,7 @@ public class Expand extends Task {
 
     /**
      * get a mapper for a file
-     * @return
+     * @return a filenamemapper for a file
      */
     protected FileNameMapper getMapper() {
         FileNameMapper mapper = null;
@@ -158,15 +159,15 @@ public class Expand extends Task {
 
     /**
      * extract a file to a directory
-     * @param fileUtils
-     * @param srcF
-     * @param dir
-     * @param compressedInputStream
-     * @param entryName
-     * @param entryDate
-     * @param isDirectory
-     * @param mapper
-     * @throws IOException
+     * @param fileUtils             a fileUtils object
+     * @param srcF                  the source file
+     * @param dir                   the destination directory
+     * @param compressedInputStream the input stream
+     * @param entryName             the name of the entry
+     * @param entryDate             the date of the entry
+     * @param isDirectory           if this is true the entry is a directory
+     * @param mapper                the filename mapper to use
+     * @throws IOException on error
      */
     protected void extractFile(FileUtils fileUtils, File srcF, File dir,
                                InputStream compressedInputStream,
@@ -302,13 +303,15 @@ public class Expand extends Task {
     /**
      * Should we overwrite files in dest, even if they are newer than
      * the corresponding entries in the archive?
+     * @param b a <code>boolean</code> value
      */
     public void setOverwrite(boolean b) {
         overwrite = b;
     }
 
     /**
-     * Add a patternset
+     * Add a patternset.
+     * @param set a pattern set
      */
     public void addPatternset(PatternSet set) {
         patternsets.addElement(set);
@@ -316,6 +319,7 @@ public class Expand extends Task {
 
     /**
      * Add a fileset
+     * @param set a file set
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -351,7 +355,7 @@ public class Expand extends Task {
      *
      * <p>Set to <code>native-encoding</code> if you want your
      * platform's native encoding, defaults to UTF8.</p>
-     *
+     * @param encoding the name of the character encoding
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
