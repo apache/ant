@@ -302,7 +302,11 @@ public class Javac extends MatchingTask {
     // XXX
     // we need a way to not use the current classpath.
 
-    private String getCompileClasspath() {
+    /**
+     * @param addRuntime Shall <code>rt.jar</code> or
+     * <code>classes.zip</code> be added to the classpath.  
+     */
+    private String getCompileClasspath(boolean addRuntime) {
         StringBuffer classpath = new StringBuffer();
 
         // add dest dir to classpath so that previously compiled and
@@ -321,6 +325,21 @@ public class Javac extends MatchingTask {
         // add the system classpath
 
         addExistingToClasspath(classpath,System.getProperty("java.class.path"));
+        if (addRuntime) {
+            if (Project.getJavaVersion() == Project.JAVA_1_1) {
+                addExistingToClasspath(classpath,
+                                       System.getProperty("java.home")
+                                       + File.separator + "lib"
+                                       + File.separator + "classes.zip");
+            } else {
+                addExistingToClasspath(classpath,
+                                       System.getProperty("java.home")
+                                       + File.separator +"jre"
+                                       + File.separator + "lib"
+                                       + File.separator + "rt.jar");
+            }
+        }
+            
         return classpath.toString();
     }
 
@@ -360,7 +379,7 @@ public class Javac extends MatchingTask {
 
     private void doClassicCompile() throws BuildException {
         project.log("Using classic compiler", project.MSG_VERBOSE);
-        String classpath = getCompileClasspath();
+        String classpath = getCompileClasspath(false);
         Vector argList = new Vector();
 
         if (deprecation == true)
@@ -441,7 +460,7 @@ public class Javac extends MatchingTask {
 
     private void doModernCompile() throws BuildException {
         project.log("Using modern compiler", project.MSG_VERBOSE);
-        String classpath = getCompileClasspath();
+        String classpath = getCompileClasspath(false);
         Vector argList = new Vector();
 
         if (deprecation == true)
@@ -538,7 +557,7 @@ public class Javac extends MatchingTask {
         project.log("Using jikes compiler",project.MSG_VERBOSE);
 
         StringBuffer classpath = new StringBuffer();
-        classpath.append(getCompileClasspath());
+        classpath.append(getCompileClasspath(true));
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
