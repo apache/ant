@@ -14,6 +14,22 @@
     <mytask/>
   </target>
 
+  <target name="antlib.resource">
+    <typedef resource="taskdefs/test.antlib.xml">
+        <classpath>
+            <!-- To load the task classes: -->
+            <path refid="testclasses"/>
+            <!-- For test.antlib.xml: -->
+            <pathelement location=".."/>
+            <!-- For test2.antlib.xml: -->
+            <pathelement location="${testcases.dir}/org/apache/tools/ant/taskdefs/test2-antlib.jar"/>
+        </classpath>
+    </typedef>
+    <mytask/>
+    <echo>-and-then-</echo>
+    <mytask2/>
+  </target>
+
   <target name="ns.current">
     <typedef file="antlib.current-test.xml" uri="abc"/>
     <x:useecho2 xmlns:x="abc"/>
