@@ -1,0 +1,64 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Do Task</title>
+</head>
+
+<body>
+
+<h2><a name="echo">Do</a></h2>
+<h3>Description</h3>
+<p>
+This task is similar to the
+<a href="antcall.html"><code>&lt;antcall&gt;</code></a>
+task; however, <code>&lt;do&gt;</code> will not
+re-run common dependencies. Using
+<code>&lt;antcall&gt;</code> to run several targets that all have
+the same dependency(s) will cause the dependent
+target(s) for each called target to be run again.
+This results in common targets, such as &quot;init&quot;-type targets,
+being run many times.  Using <code>&lt;do&gt;</code>
+instead of <code>&lt;antcall&gt;</code> prevents any common dependencies
+from being run more than once.
+</p>
+<p>
+<strong>Note:</strong> The <code>&lt;do&gt;</code> task will still re-run
+any dependent target that was run prior to the <code>&lt;do&gt;</code> task(s)
+being run.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">The target to run.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+
+<pre>
+  &lt;target name=&quot;all&quot;&gt;
+    &lt;do target=&quot;target1&quot;/&gt;
+    &lt;do target=&quot;target2&quot;/&gt;
+  &lt;/target&gt;
+</pre>
+
+will run the targets <code>target1</code> and <code>target2</code>.
+If both <code>target1</code> and <code>target2</code> depend on,
+for example, the <code>init</code> target, it will only be run once
+rather than once for <code>target1</code> and again for <code>target2</code>.
+
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software Foundation.
+All rights Reserved.</p>
+
+</body>
+</html>
+
