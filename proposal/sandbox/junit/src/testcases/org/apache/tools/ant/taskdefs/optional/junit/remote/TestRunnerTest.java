@@ -60,7 +60,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.framework.TestListener;
 
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.DefaultTestRunListener;
+import org.apache.tools.ant.taskdefs.optional.junit.formatter.PlainFormatter;
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
 
@@ -114,7 +114,7 @@ public class TestRunnerTest extends TestCase
 
     public void testNullTestCase() throws Exception {
         runner.addTestClassName(TestCases.NullTestCase.class.getName());
-//        server.addListener( new DefaultTestRunListener() );
+//        server.addListener( new PlainFormatter() );
         runner.run();
         synchronized(this){ while (!done){ wait(); } }
         assertEquals(new Integer(3), recorder.runStarted.elementAt(0));
