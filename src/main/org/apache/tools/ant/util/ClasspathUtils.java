@@ -63,37 +63,37 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Offers some helper methods on the Path structure in ant.
  *
- * <p>Basic idea behind this utility class is to use it from inside the 
- * different ant objects (and user defined objects) that need classLoading 
+ * <p>Basic idea behind this utility class is to use it from inside the
+ * different ant objects (and user defined objects) that need classLoading
  * for their operation.
- * Normally those would have a setClasspathRef() {for the @classpathref} 
+ * Normally those would have a setClasspathRef() {for the @classpathref}
  * and/or a createClasspath() {for the nested &lt;classpath&gt;}
- * Typically one would have in your Ant Task or DataType</p> 
+ * Typically one would have in your Ant Task or DataType</p>
  *
  * <pre><code>
  * ClasspathUtils.Delegate cpDelegate;
- * 
+ *
  * public void init(){
  *     this.cpDelegate = ClasspathUtils.getDelegate(this);
  *     super.init();
  * }
- * 
+ *
  * public void setClasspathRef(Reference r) {
  *     this.cpDelegate.setClasspathRef(r);
  * }
- * 
+ *
  * public Path createClasspath() {
  *     return this.cpDelegate.createClasspath();
  * }
- * 
+ *
  * public void setClassname(String fqcn) {
  *     this.cpDelegate.setClassname(fqcn);
  * }
  * </code></pre>
- * 
- * <p>At execution time, when you actually need the classloading 
+ *
+ * <p>At execution time, when you actually need the classloading
  * you can just:</p>
- * 
+ *
  * <pre><code>
  *     Object o = this.cpDelegate.newInstance();
  * </code></pre>
@@ -102,15 +102,18 @@ import org.apache.tools.ant.types.Reference;
  */
 public class ClasspathUtils {
     private static final String LOADER_ID_PREFIX = "ant.loader.";
+    /**
+     * Name of the magic property that controls classloader reuse in Ant 1.4.
+     */
     public static final String REUSE_LOADER_REF = "ant.reuse.loader";
 
-    /** 
+    /**
      * Convenience overloaded version of {@link
      * #getClassLoaderForPath(Project, Reference, boolean)}.
      *
      * <p>Assumes the logical 'false' for the reverseLoader.</p>
-     *  
-     * @param path 
+     *
+     * @param path
      * @param pathId
      * @return
      */
@@ -120,7 +123,7 @@ public class ClasspathUtils {
         return getClassLoaderForPath(p, ref, false);
     }
 
-    /** 
+    /**
      * Convenience overloaded version of {@link #geClassLoader(Project, Path,
      * String, boolean)}.
      *
@@ -136,7 +139,7 @@ public class ClasspathUtils {
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Reference ref, boolean reverseLoader) {
-            
+
         String pathId = ref.getRefId();
         Object path = p.getReference(pathId);
         if (!(path instanceof Path)) {
@@ -149,13 +152,13 @@ public class ClasspathUtils {
         return getClassLoaderForPath(p, (Path) path, loaderId, reverseLoader);
     }
 
-    /** 
+    /**
      * Convenience overloaded version of {@link
      * #getClassLoaderForPath(Project, Path, String, boolean)}.
      *
      * <p>Assumes the logical 'false' for the reverseLoader.</p>
-     *  
-     * @param path 
+     *
+     * @param path
      * @param loaderId
      * @return
      */
@@ -165,14 +168,14 @@ public class ClasspathUtils {
         return getClassLoaderForPath(p, path, loaderId, false);
     }
 
-    /** 
+    /**
      * Convenience overloaded version of {@link
      * #getClassLoaderForPath(Project, Path, String, boolean, boolean)}.
      *
      * <p>Sets value for 'reuseLoader' to true if the magic property
      * has been set.</p>
-     *  
-     * @param path 
+     *
+     * @param path
      * @param loaderId
      * @return
      */
@@ -191,12 +194,12 @@ public class ClasspathUtils {
      * created loader with that id, and of course store it there upon
      * creation.</p>
      * @param path Path object to be used as classpath for this classloader
-     * @param loaderID identification for this Loader, 
+     * @param loaderID identification for this Loader,
      * @param reverseLoader if set to true this new loader will take
      * precedence over it's parent (which is contra the regular
-     * @param p Ant Project where the handled components are living in. 
+     * @param p Ant Project where the handled components are living in.
      * classloader behaviour)
-     * @return ClassLoader that uses the Path as its classpath. 
+     * @return ClassLoader that uses the Path as its classpath.
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Path path, String loaderId, boolean reverseLoader,
@@ -207,7 +210,7 @@ public class ClasspathUtils {
         // magic property
         if (loaderId != null && reuseLoader) {
             Object reusedLoader = p.getReference(loaderId);
-            if (reusedLoader != null && 
+            if (reusedLoader != null &&
                 !(reusedLoader instanceof ClassLoader)) {
                 throw new BuildException("The specified loader id " + loaderId +
                                          " does not reference a class loader");
@@ -240,7 +243,7 @@ public class ClasspathUtils {
         Path path,
         boolean reverseLoader) {
 
-        AntClassLoader acl = p.createClassLoader(path != null 
+        AntClassLoader acl = p.createClassLoader(path != null
                                                  ? path : Path.systemClasspath);
         if (reverseLoader) {
             acl.setParentFirst(false);
@@ -252,11 +255,11 @@ public class ClasspathUtils {
 
     /**
      * Creates a fresh object instance of the specified classname.
-     * 
-     * <p> This uses the userDefinedLoader to load the specified class, 
+     *
+     * <p> This uses the userDefinedLoader to load the specified class,
      * and then makes an instance using the default no-argument constructor
      * </p>
-     * 
+     *
      * @param className the full qualified class name to load.
      * @param userDefinedLoader the classloader to use.
      * @return
@@ -294,7 +297,7 @@ public class ClasspathUtils {
 
     /**
      * Obtains a delegate that helps out with classic classpath configuration.
-     * 
+     *
      * @param component your projectComponent that needs the assistence
      * @return the helper, delegate.
      * @see ClasspathUtils.Delegate
@@ -311,22 +314,22 @@ public class ClasspathUtils {
         return p.getProperty(REUSE_LOADER_REF) != null;
     }
 
-    /** 
+    /**
      * Delegate that helps out any specific ProjectComponent that needs
      * dynamic classloading.
-     *  
+     *
      * <p>Ant ProjectComponents that need a to be able to dynamically load
      * Classes and instantiate them often expose the following ant syntax
      * sugar: </p>
-     * 
+     *
      * <ul><li> nested &lt;classpath&gt; </li>
      * <li> attribute @classpathref </li>
      * <li> attribute @classname </li></ul>
-     * 
+     *
      * <p> This class functions as a delegate handling the configuration
-     * issues for this recuring pattern.  It's usage pattern, as the name 
+     * issues for this recuring pattern.  It's usage pattern, as the name
      * suggests is delegation, not inheritance. </p>
-     * 
+     *
      * @since Ant 1.6
      */
     public static class Delegate {
@@ -336,7 +339,7 @@ public class ClasspathUtils {
         private String className;
         private String loaderId;
         private boolean reverseLoader = false;
-        
+
         /**
          * Constructs Delegate
          * @param component
@@ -344,12 +347,12 @@ public class ClasspathUtils {
         Delegate(ProjectComponent component) {
             this.component = component;
         }
-        
+
         /**
          * Delegate method handling the @classpath attribute
-         * 
-         * <p>This attribute can set a path to add to the classpath</p> 
-         * 
+         *
+         * <p>This attribute can set a path to add to the classpath</p>
+         *
          * @param classpath
          */
         public void setClasspath(Path classpath) {
@@ -359,13 +362,13 @@ public class ClasspathUtils {
                 this.classpath.append(classpath);
             }
         }
-        
-        /** 
+
+        /**
          * Delegate method handling the &lt;classpath&gt; tag.
-         * 
+         *
          * <p>This nested path-like structure can set a path to add to the
          * classpath</p>
-         * 
+         *
          * @return
          */
         public Path createClasspath() {
@@ -374,45 +377,45 @@ public class ClasspathUtils {
             }
             return this.classpath.createPath();
         }
-        
+
         /**
          * Delegate method handling the @classname attribute.
-         * 
+         *
          * <p>This attribute sets the full qualified class name of the class
          * to lad and instantiate</p>
-         * 
+         *
          * @param fcqn
          */
         public void setClassname(String fcqn) {
             this.className = fcqn;
         }
-        
-        /** 
+
+        /**
          * Delegate method handling the @classpathref attribute.
-         * 
+         *
          * <p>This attribute can add a referenced path-like structure to the
-         * classpath</p> 
-         * 
+         * classpath</p>
+         *
          * @param r
          */
         public void setClasspathref(Reference r) {
             this.classpathId = r.getRefId();
             createClasspath().setRefid(r);
-        }        
-        
+        }
+
         /**
          * Delegate method handling the @reverseLoader attribute.
-         * 
-         * <p>This attribute can set a boolean indicating that the used 
+         *
+         * <p>This attribute can set a boolean indicating that the used
          * classloader should NOT follow the classical parent-first scheme.
          * </p>
-         * 
+         *
          * <p>By default this is supposed to be false</p>
-         * 
+         *
          * <p>Caution: this behaviour is contradictory to the normal way
          * classloaders work.  Do not let your ProjectComponent use it if
-         * you are not really sure</p> 
-         * 
+         * you are not really sure</p>
+         *
          * @param reverseLoader
          */
         public void setReverseLoader(boolean reverseLoader) {
@@ -420,15 +423,15 @@ public class ClasspathUtils {
         }
 
         /**
-         * Sets the loaderRef 
+         * Sets the loaderRef
          * @param r
          */
         public void setLoaderRef(Reference r) {
             this.loaderId = r.getRefId();
         }
-            
 
-        /** 
+
+        /**
          * Finds or creates the classloader for this
          * @return
          */
@@ -439,16 +442,16 @@ public class ClasspathUtils {
                     this.classpath,
                     getClassLoadId(),
                     this.reverseLoader,
-                    loaderId != null 
+                    loaderId != null
                     || isMagicPropertySet(getContextProject()));
             return cl;
         }
-                
+
         /**
          * The project of the ProjectComponent we are working for.
          */
         private Project getContextProject() {
-            return this.component.getProject();            
+            return this.component.getProject();
         }
 
         /**
@@ -459,13 +462,13 @@ public class ClasspathUtils {
                 return ClasspathUtils.LOADER_ID_PREFIX + this.classpathId;
             } else {
                 return this.loaderId;
-            }            
+            }
         }
 
-        /** 
+        /**
          * Helper method obtaining a fresh instance of the class specified
          * in the @classname and using the specified classpath.
-         *   
+         *
          * @return the fresh instantiated object.
          */
         public Object newInstance() {
