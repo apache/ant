@@ -150,6 +150,10 @@ public class Project {
         return this.out;
     }
 
+    public void setOutput(PrintStream out) {
+        this.out=out;
+    }
+
     public int getOutputLevel() {
         return this.msgOutputLevel;
     }

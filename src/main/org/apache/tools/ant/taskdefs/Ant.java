@@ -82,6 +82,7 @@ public class Ant extends Task {
     private String dir = null;
     private String antFile = null;
     private String target = null;
+    private String output = null;
 
     Vector properties=new Vector();
     Project p1;
@@ -104,6 +105,16 @@ public class Ant extends Task {
      */
     public void execute() throws BuildException {
         if( dir==null) dir=".";
+	
+	if( output != null ) {
+	    try {
+		PrintStream out=new PrintStream(new FileOutputStream(output));
+		p1.setOutput( out );
+	    } catch( IOException ex ) {
+		project.log( "Ant: Can't set output to " + output );
+	    }
+	}
+
 	p1.setBasedir(dir);
         p1.setUserProperty("basedir" , dir);
 
@@ -137,6 +148,10 @@ public class Ant extends Task {
 
     public void setTarget(String s) {
         this.target = s;
+    }
+
+    public void setOutput(String s) {
+        this.output = s;
     }
 
     // XXX replace with createProperty!!
