@@ -14,8 +14,9 @@
   <li>James Duncan Davison (<a href="mailto:(duncan@x180.com">duncan@x180.com</a>)</li>
   <li>Arnout J. Kuiper (<a href="mailto:(ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:(stefano@apache.org">stefano@apache.org</a>)</li>
+  <li>Sam Ruby (<a href="mailto:(rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
 </ul>
-<p>Version 1.0.4 - 2000/02/10</p>
+<p>Version 1.0.5 - 2000/02/12</p>
 <hr>
 <h2>Table of Contents</h2>
 <ul>
@@ -430,6 +431,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
   <li><a href="#expand">Expand</a></li>
   <li><a href="#get">Get</a></li>
   <li><a href="#gzip">GZip</a></li>
+  <li><a href="#fixcrlf">FixCRLF</a></li>
   <li><a href="#jar">Jar</a></li>
   <li><a href="#java">Java</a></li>
   <li><a href="#javac">Javac</a></li>
@@ -900,6 +902,122 @@ archive with http/ftp.</p>
   <p><code>&lt;gzip src=&quot;test.tar&quot; zipfile=&quot;test.tar.gz&quot;
   /&gt;</code></p>
 </blockquote>
+<hr>
+<h2><a name="fixcrlf">FixCRLF</a></h2>
+<h3>Description</h3>
+<p>Adjusts a text file to local.</p>
+<p>The <i>basedir</i> attribute is the reference directory from where to jar.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">srcDir</td>
+    <td valign="top">Where to find the files to be fixed up.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destDir</td>
+    <td valign="top">Where to place the corrected files.  Defaults to
+      srcDir (replacing the original file)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">cr</td>
+    <td valign="top">Specifies how carriage return (CR) characters are to
+      be handled.  Valid values for this property are:
+      <ul>
+      <li>add: ensure that there is a CR before every LF
+      <li>asis: leave CR characters alone
+      <li>remove: remove all CR characters
+      </ul>
+      Default is based on the platform on which you are running this task.
+      For Unix platforms, the default is remove.  For DOS based systems
+      (including Windows), the default is add.
+      <p>
+      Note: Unless this property is specified as "asis", extra CR characters
+      which do not preceed a LF will be removed.
+      </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tab</td>
+    <td valign="top">Specifies how tab characters are to be handled.  Valid 
+      values for this property are:
+      <ul>
+      <li>add: convert sequences of spaces which span a tab stop to tabs
+      <li>asis: leave tab and space characters alone
+      <li>remove: convert tabs to spaces
+      </ul>
+      Default for this parameter is "asis".
+      <p>
+      Note: Unless this property is specified as "asis", extra spaces and
+      tabs after the last non-whitespace character on the line will be removed.
+      </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">eof</td>
+    <td valign="top">Specifies how DOS end of file (control-Z) characters are 
+      to be handled.  Valid values for this property are:
+      <ul>
+      <li>add: ensure that there is an EOF character at the end of the file 
+      <li>asis: leave EOF characters alone
+      <li>remove: remove any EOF character found at the end
+      </ul>
+      Default is based on the platform on which you are running this task.
+      For Unix platforms, the default is remove.  For DOS based systems
+      (including Windows), the default is asis.
+      </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       cr="remove" eof="remove"
+       includes=&quot;**/*.sh&quot;
+  /&gt;</pre>
+<p>Removes carriage return and eof characters from the shell scripts.  Tabs and
+spaces are left as is. 
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       cr="add"
+       includes=&quot;**/*.bat&quot;
+  /&gt;</pre>
+<p>Ensures that there are carriage return characters prior to evey line feed.
+Tabs and spaces are left as is.  
+EOF characters are left alone if run on
+DOS systems, and are removed if run on Unix systems.</p>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       tabs="add"
+       includes=&quot;**/Makefile&quot;
+  /&gt;</pre>
+<p>Adds or removes CR characters to match local OS conventions, and
+converts spaces to tabs when appropriate.  EOF characters are left alone if 
+run on DOS systems, and are removed if run on Unix systems.
+Many versions of make require tabs prior to commands.</p>
+<pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
+       tabs="remove"
+       includes=&quot;**/README*&quot;
+  /&gt;</pre>
+<p>Adds or removes CR characters to match local OS conventions, and
+converts all tabs to spaces.  EOF characters are left alone if run on
+DOS systems, and are removed if run on Unix systems.
+You never know what editor a user will use to browse README's.</p>
 <hr>
 <h2><a name="jar">Jar</a></h2>
 <h3>Description</h3>

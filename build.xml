@@ -69,6 +69,8 @@
      <copydir src="${src.bin.dir}" dest="${bin.dir}"/>
      <chmod perm="+x" src="${bin.dir}/ant"/>
      <chmod perm="+x" src="${bin.dir}/antRun"/>
+     <fixcrlf srcdir="${bin.dir}" includes="ant,antRun" cr="remove"/>
+     <fixcrlf srcdir="${bin.dir}" includes="*.bat" cr="add"/>
   </target>
 
   <!-- =================================================================== -->
