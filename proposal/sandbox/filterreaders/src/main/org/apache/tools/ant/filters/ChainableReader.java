@@ -55,6 +55,11 @@ package org.apache.tools.ant.filters;
 
 import java.io.Reader;
 
+/**
+ * Chains readers.
+ *
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ */
 public interface ChainableReader {
     public Reader chain(Reader rdr);
 }
