@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -320,7 +320,13 @@ public class Tar extends MatchingTask {
                 }
             }
 
-            TarEntry te = new TarEntry(vPath);
+            String prefix = tarFileSet.getPrefix();
+            // '/' is appended for compatibility with the zip task.
+            if(prefix.length() > 0 && !prefix.endsWith("/")) {
+                prefix = prefix + "/";
+            }
+
+            TarEntry te = new TarEntry(prefix + vPath);
             te.setModTime(file.lastModified());
             if (!file.isDirectory()) {
                 te.setSize(file.length());
@@ -364,7 +370,7 @@ public class Tar extends MatchingTask {
 
         private String userName = "";
         private String groupName = "";
-
+        private String prefix = "";
 
         public TarFileSet(FileSet fileset) {
             super(fileset);
@@ -417,6 +423,13 @@ public class Tar extends MatchingTask {
             return groupName;
         }
 
+        public void setPrefix(String prefix) {
+            this.prefix = prefix;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
     }
 
     /**

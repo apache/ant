@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,6 +96,23 @@ public class TarTest extends BuildFileTest {
 
     public void test6() {
         expectBuildException("test6", "Invalid value specified for longfile attribute.");
+    }
+
+    public void test7() {
+        executeTarget("test7");
+        java.io.File f1
+            = new java.io.File("src/etc/testcases/taskdefs/test7-prefix");
+
+        if (!(f1.exists() && f1.isDirectory())) {
+            fail("The prefix attribute is not working properly.");
+        }
+
+        java.io.File f2
+            = new java.io.File("src/etc/testcases/taskdefs/test7dir");
+
+        if (!(f2.exists() && f2.isDirectory())) {
+            fail("The prefix attribute is not working properly.");
+        }
     }
 
     public void tearDown() {

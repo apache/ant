@@ -31,11 +31,27 @@
     <tar destfile="blah" longfile="Foo"/>
   </target>
 
+  <target name="test7">
+    <mkdir dir="test7dir"/>
+    <tar destfile="test7.tar">
+      <tarfileset dir="." prefix="test7-prefix/">
+        <include name="test7dir"/>
+      </tarfileset>
+      <tarfileset dir="." prefix="">
+        <include name="test7dir"/>
+      </tarfileset>
+    </tar>
+    <untar src="test7.tar" dest="."/>
+  </target>
+
   <target name="cleanup"> 
     <delete file="test4.tar"/>
     <delete file="test5.tar"/>
     <delete file="asf-logo.gif.tar"/>
     <delete dir="test5dir"/>
+    <delete dir="test7dir"/>
+    <delete dir="test7-prefix"/>
+    <delete file="test7.tar"/>
   </target>
 
   <target name="feather">

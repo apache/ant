@@ -12,36 +12,36 @@
 <p>Creates a tar archive.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to tar.</p>
 <p>This task is a <a href="../dirtasks.html#directorybasedtasks">directory based task</a>
-and, as such, forms an implicit <a href="../CoreTypes/fileset.html">Fileset</a>. This 
+and, as such, forms an implicit <a href="../CoreTypes/fileset.html">Fileset</a>. This
 defines which files, relative to the <i>basedir</i>, will be included in the
 archive. The tar task supports all the attributes of Fileset to refine the
 set of files to be included in the implicit fileset.</p>
 
 <p>In addition to the implicit fileset, the tar task supports nested filesets. These
-filesets are extended to allow control over the access mode, username and groupname 
-to be applied to the tar entries. This is useful, for example, when preparing archives for 
+filesets are extended to allow control over the access mode, username and groupname
+to be applied to the tar entries. This is useful, for example, when preparing archives for
 Unix systems where some files need to have execute permission.</p>
 
-<p>Early versions of tar did not support path lengths greater than 100 
+<p>Early versions of tar did not support path lengths greater than 100
 characters. Modern versions of tar do so, but in incompatible ways.
-The behaviour of the tar task when it encounters such paths is 
-controlled by the <i>longfile</i> attribute. 
-If the longfile attribute is set to <code>fail</code>, any long paths will 
-cause the tar task to fail.  If the longfile attribute is set to 
-<code>truncate</code>, any long paths will be truncated to the 100 character 
-maximum length prior to adding to the archive. If the value of the longfile 
-attribute is set to <code>omit</code> then files containing long paths will be 
-omitted from the archive.  Either option ensures that the archive can be 
-untarred by any compliant version of tar. If the loss of path or file 
-information is not acceptable, and it rarely is, longfile may be set to the 
-value <code>gnu</code>. The tar task will then produce a GNU tar file which 
-can have arbitrary length paths. Note however, that the resulting archive will 
-only be able to be untarred with GNU tar.  The default for the longfile 
-attribute is <code>warn</code> which behaves just like the gnu option except 
-that it produces a warning for each file path encountered that does not match 
+The behaviour of the tar task when it encounters such paths is
+controlled by the <i>longfile</i> attribute.
+If the longfile attribute is set to <code>fail</code>, any long paths will
+cause the tar task to fail.  If the longfile attribute is set to
+<code>truncate</code>, any long paths will be truncated to the 100 character
+maximum length prior to adding to the archive. If the value of the longfile
+attribute is set to <code>omit</code> then files containing long paths will be
+omitted from the archive.  Either option ensures that the archive can be
+untarred by any compliant version of tar. If the loss of path or file
+information is not acceptable, and it rarely is, longfile may be set to the
+value <code>gnu</code>. The tar task will then produce a GNU tar file which
+can have arbitrary length paths. Note however, that the resulting archive will
+only be able to be untarred with GNU tar.  The default for the longfile
+attribute is <code>warn</code> which behaves just like the gnu option except
+that it produces a warning for each file path encountered that does not match
 the limit.</p>
 
-<p>Note that this task does not perform compression. You might want to use the 
+<p>Note that this task does not perform compression. You might want to use the
 <a href="gzip.html">GZip</a> task to prepare a .tar.gz package.</p>
 
 <h3>Parameters</h3>
@@ -63,9 +63,9 @@ the limit.</p>
   </tr>
   <tr>
     <td valign="top">longfile</td>
-    <td valign="top">Determines how long files (&gt;100 chars) are to be 
-       handled.  Allowable values are &quot;truncate&quot;, &quot;fail&quot;, 
-       &quot;warn&quot;, &quot;omit&quot; and &quot;gnu&quot;.  Default is 
+    <td valign="top">Determines how long files (&gt;100 chars) are to be
+       handled.  Allowable values are &quot;truncate&quot;, &quot;fail&quot;,
+       &quot;warn&quot;, &quot;omit&quot; and &quot;gnu&quot;.  Default is
        &quot;warn&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -114,20 +114,26 @@ attributes
   </tr>
   <tr>
     <td valign="top">mode</td>
-    <td valign="top">An 3 digit octal string, specify the user, group and other modes in 
+    <td valign="top">An 3 digit octal string, specify the user, group and other modes in
                      the standard Unix fashion</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">username</td>
-    <td valign="top">The username for the tar entry. This is not the same as the UID, which is 
+    <td valign="top">The username for the tar entry. This is not the same as the UID, which is
                      not currently set by the tar task.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">group</td>
-    <td valign="top">The groupname for the tar entry. This is not the same as the GID, which is 
+    <td valign="top">The groupname for the tar entry. This is not the same as the GID, which is
                      not currently set by the tar task.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">prefix</td>
+    <td valign="top">If the prefix attribute is set, all files in the fileset
+    are prefixed with that path in the archive.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -151,8 +157,8 @@ or files with the name <code>todo.html</code> are excluded.</p>
   &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
-  &lt;/tarfileset&gt; 
-  &lt;tarfileset dir=&quot;${dist.name}/..&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt; 
+  &lt;/tarfileset&gt;
+  &lt;tarfileset dir=&quot;${dist.name}/..&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/**&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/build.sh&quot;/&gt;
@@ -166,7 +172,7 @@ fileset selects just the executable files. The second fileset must exclude
 the executable files and include all others. </p>
 
 <p><strong>Note: </strong> The tar task does not ensure that a file is only selected
-by one fileset. If the same file is selected by more than one fileset, it will be included in the 
+by one fileset. If the same file is selected by more than one fileset, it will be included in the
 tar file twice, with the same path.</p>
 
 <p><strong>Note:</strong> The patterns in the include and exclude
@@ -177,7 +183,7 @@ of a directory, so <code>${dist.name}</code> is a valid path relative
 to <code>${dist.name}/..</code>.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
