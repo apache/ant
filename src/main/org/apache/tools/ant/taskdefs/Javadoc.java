@@ -58,6 +58,7 @@ import java.util.*;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.*;
 
@@ -627,22 +628,23 @@ public class Javadoc extends Task {
     }
 
     public class GroupArgument {
-        private String title;
-        private Html title2;
+        private Html title;
         private Vector packages = new Vector(3);
 
         public GroupArgument() {
         }
 
         public void setTitle(String src) {
-            title = src;
+            Html h = new Html();
+            h.addText(src);
+            addTitle(h);
         }
         public void addTitle(Html text) {
-            title2 = text;
+            title = text;
         }
 
         public String getTitle() {
-            return title2 != null ? title2.getText() : title;
+            return title != null ? title.getText() : null;
         }
 
         public void setPackages(String src) {
@@ -700,19 +702,19 @@ public class Javadoc extends Task {
 
         if (doctitle != null) {
             cmd.createArgument().setValue("-doctitle");
-            cmd.createArgument().setValue(doctitle.getText());
+            cmd.createArgument().setValue(expand(doctitle.getText()));
         }
         if (header != null) {
             cmd.createArgument().setValue("-header");
-            cmd.createArgument().setValue(header.getText());
+            cmd.createArgument().setValue(expand(header.getText()));
         }
         if (footer != null) {
             cmd.createArgument().setValue("-footer");
-            cmd.createArgument().setValue(footer.getText());
+            cmd.createArgument().setValue(expand(footer.getText()));
         }
         if (bottom != null) {
             cmd.createArgument().setValue("-bottom");
-            cmd.createArgument().setValue(bottom.getText());
+            cmd.createArgument().setValue(expand(bottom.getText()));
         }
 
         Commandline toExecute = (Commandline)cmd.clone();
@@ -844,7 +846,7 @@ public class Javadoc extends Task {
                         throw new BuildException("The title and packages must be specified for group elements.");
                     }
                     toExecute.createArgument().setValue("-group");
-                    toExecute.createArgument().setValue(title);
+                    toExecute.createArgument().setValue(expand(title));
                     toExecute.createArgument().setValue(packages);
                 }
             }
@@ -1037,6 +1039,14 @@ public class Javadoc extends Task {
                 queuedLine = null;
             }
         }
+    }
+
+    /**
+     * Convenience method to expand properties.
+     */
+    protected String expand(String content) {
+        return ProjectHelper.replaceProperties(project, content, 
+                                               project.getProperties());
     }
 
 }
