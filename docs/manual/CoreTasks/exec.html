@@ -160,6 +160,11 @@ argument and cause most calls to fail.</p>
 <p><b>Note2:</b> If you are using Ant on Windows and a new DOS-Window pops up
 for every command which is executed this may be a problem of the JDK you are using.
 This problem may occur with all JDK's &lt; 1.2.</p>
+<p>
+<b>Timeouts: </b> If a timeout is specified, when it is reached the 
+sub process is killed and a message printed to the log. The return
+value of the execution will be "-1", which will halt the build if
+<tt>failonerror=true</tt>, but be ignored otherwise.
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
