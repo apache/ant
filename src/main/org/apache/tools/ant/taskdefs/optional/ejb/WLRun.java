@@ -75,12 +75,15 @@ public class WLRun extends Task {
      * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
      * classes <b>and</b> the implementation classes of the home and remote interfaces.
      */
-    private String classpath;
+    private Path classpath;
 
     /**
      * The weblogic classpath to the be used when running weblogic.
      */
-    private String weblogicClasspath = "";
+    private Path weblogicClasspath;
+
+    private String weblogicMainClass = "weblogic.Server";
+    private String additionalArgs = "";
     
     /**
      * The security policy to use when running the weblogic server
@@ -102,6 +105,11 @@ public class WLRun extends Task {
      * The file containing the weblogic properties for this server.
      */
     private String weblogicPropertiesFile = "weblogic.properties";
+
+    /**
+     * additional args to pass to the spawned jvm
+     */
+    private String additionalJvmArgs = "";
     
     /**
      * Do the work.
@@ -143,23 +151,27 @@ public class WLRun extends Task {
                                      " was not found.");
         }
 
-        String execClassPath = project.translatePath(classpath);
-            
         Java weblogicServer = (Java)project.createTask("java");
+        weblogicServer.setTaskName(getTaskName());
         weblogicServer.setFork(true);
-        weblogicServer.setClassname("weblogic.Server");
+        weblogicServer.setClassname(weblogicMainClass);
+
         String jvmArgs = "";
+        
         if (weblogicClasspath != null) {
-            jvmArgs += "-Dweblogic.class.path=" + project.translatePath(weblogicClasspath);
+            jvmArgs += " -Dweblogic.class.path=" + weblogicClasspath;
         }
             
         jvmArgs += " -Djava.security.manager -Djava.security.policy==" + securityPolicyFile;
         jvmArgs += " -Dweblogic.system.home=" + weblogicSystemHome;
         jvmArgs += " -Dweblogic.system.name=" + weblogicSystemName;
         jvmArgs += " -Dweblogic.system.propertiesFile=" + weblogicPropertiesFile;
+        jvmArgs += " " + additionalJvmArgs;
 
-        weblogicServer.setJvmargs(jvmArgs);
-        weblogicServer.setClasspath(new Path(project, execClassPath));                         
+        weblogicServer.createJvmarg().setLine(jvmArgs);
+        weblogicServer.createArg().setLine(additionalArgs);
+        
+        weblogicServer.setClasspath(classpath);                         
         if (weblogicServer.executeJava() != 0) {                         
             throw new BuildException("Execution of weblogic server failed");
         }
@@ -171,8 +183,8 @@ public class WLRun extends Task {
      *
      * @param s the classpath to use when executing the weblogic task.
      */
-    public void setClasspath(String s) {
-        this.classpath = project.translatePath(s);
+    public void setClasspath(Path classpath) {
+        this.classpath = classpath;
     }
     
     /**
@@ -182,7 +194,7 @@ public class WLRun extends Task {
      *
      * @param weblogicClasspath the weblogic classpath
      */
-    public void setWlclasspath(String weblogicClasspath) {
+    public void setWlclasspath(Path weblogicClasspath) {
         this.weblogicClasspath = weblogicClasspath;
     }
     
@@ -223,5 +235,21 @@ public class WLRun extends Task {
      */
     public void setProperties(String propertiesFilename) {
         this.weblogicPropertiesFile = propertiesFilename;
+    }
+
+    /**
+     * Set the additional arguments to pass to the weblogic JVM
+     * @param args the arguments to be passed to the JVM
+     */
+    public void setJvmargs(String args) {
+        this.additionalJvmArgs = args;
+    }
+    public void setArgs(String args) 
+    {
+        additionalArgs = args;
+    }
+    public void setWeblogicMainClass(String c)
+    {
+        weblogicMainClass = c;
     }
 }
