@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
@@ -179,7 +180,19 @@ public class ImportTask extends Task {
             return;
         }
 
-        helper.parse(getProject(), importedFile);
+        try {
+            helper.parse(getProject(), importedFile);
+        } catch (BuildException ex) {
+            Location exLocation = ex.getLocation();
+            if (exLocation == null) {
+                throw ex;
+            }
+            throw new BuildException(
+                "Error executing import file"
+                + System.getProperty("line.separator")
+                + exLocation.toString()
+                + " " + ex.getMessage());
+        }
     }
 
     private static String getPath(File file) {
