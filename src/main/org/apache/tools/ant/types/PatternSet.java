@@ -123,7 +123,7 @@ public class PatternSet extends DataType implements Cloneable {
         }
 
         public String toString() {
-            StringBuffer buf = new StringBuffer(name);
+            StringBuffer buf = new StringBuffer(name != null ? name : "");
             if ((ifCond != null) || (unlessCond != null)) {
                 buf.append(":");
                 String connector = "";
