@@ -22,6 +22,7 @@ import org.apache.aut.nativelib.impl.launchers.MacCommandLauncher;
 import org.apache.aut.nativelib.impl.launchers.ScriptCommandLauncher;
 import org.apache.aut.nativelib.impl.launchers.WinNTCommandLauncher;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * Default implementation of <code>ExecManager</code>.
@@ -62,7 +63,15 @@ public class DefaultExecManager
     {
         final LogOutputStream output = new LogOutputStream( handler, false );
         final LogOutputStream error = new LogOutputStream( handler, true );
-        return execute( execMetaData, null, output, error, timeout );
+        try
+        {
+            return execute( execMetaData, null, output, error, timeout );
+        }
+        finally
+        {
+            IOUtil.shutdownStream( output );
+            IOUtil.shutdownStream( error );
+        }
     }
 
     /**
