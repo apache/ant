@@ -220,7 +220,8 @@ public class ExecTask extends Task {
     }
     
     /**
-     * ant attribute
+     * fail if execution is wrong
+     * @since Ant 1.5     
      */
     public void setFailIfExecutionFails(boolean flag) {
         failIfExecFails=flag;
@@ -274,7 +275,9 @@ public class ExecTask extends Task {
         log("Current OS is " + myos, Project.MSG_VERBOSE);
         if ((os != null) && (os.indexOf(myos) < 0)){
             // this command will be executed only on the specified OS
-            log("This OS, " + myos + " was not found in the specified list of valid OSes: " + os, Project.MSG_VERBOSE);
+            log("This OS, " + myos 
+                + " was not found in the specified list of valid OSes: " + os,
+                Project.MSG_VERBOSE);
             return false;
         }
         return true;
