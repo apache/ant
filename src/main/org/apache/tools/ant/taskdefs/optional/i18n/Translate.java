@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -391,18 +391,18 @@ public class Translate extends MatchingTask {
     /**
      * Process each file that makes up this bundle.
      */
-    private void processBundle(String bundleFile, int i,
-                                 boolean checkLoaded) throws BuildException {
-        bundleFile += ".properties";
+    private void processBundle(final String bundleFile, final int i,
+                               final boolean checkLoaded) throws BuildException {
+        String l_BundleFile = bundleFile + ".properties";
         FileInputStream ins = null;
         try {
-            ins = new FileInputStream(bundleFile);
+            ins = new FileInputStream(l_BundleFile);
             loaded = true;
-            bundleLastModified[i] = new File(bundleFile).lastModified();
-            log("Using " + bundleFile, Project.MSG_DEBUG);
+            bundleLastModified[i] = new File(l_BundleFile).lastModified();
+            log("Using " + l_BundleFile, Project.MSG_DEBUG);
             loadResourceMap(ins);
         } catch (IOException ioe) {
-            log(bundleFile + " not found.", Project.MSG_DEBUG);
+            log(l_BundleFile + " not found.", Project.MSG_DEBUG);
             //if all resource files associated with this bundle
             //have been scanned for and still not able to
             //find a single resrouce file, throw exception
@@ -524,50 +524,49 @@ public class Translate extends MatchingTask {
                                                                                      srcEncoding));
                         String line;
                         while((line = in.readLine()) != null) {
-                            StringBuffer newline = new StringBuffer(line);
                             int startIndex = -1;
                             int endIndex = -1;
-                        outer:                      while (true) {
-                            startIndex = line.indexOf(startToken, endIndex + 1);
-                            if (startIndex < 0 ||
-                                startIndex + 1 >= line.length()) {
-                                break;
-                            }
-                            endIndex = line.indexOf(endToken, startIndex + 1);
-                            if (endIndex < 0) {
-                                break;
-                            }
-                            String matches = line.substring(startIndex + 1,
-                                                            endIndex);
-                                //If there is a white space or = or :, then
-                                //it isn't to be treated as a valid key.
-                            for (int k = 0; k < matches.length(); k++) {
-                                char c = matches.charAt(k);
-                                if (c == ':' ||
-                                    c == '=' ||
-                                    Character.isSpaceChar(c)) {
-                                    endIndex = endIndex - 1;
-                                    continue outer;
+outer:                      while (true) {
+                                startIndex = line.indexOf(startToken, endIndex + 1);
+                                if (startIndex < 0 ||
+                                    startIndex + 1 >= line.length()) {
+                                    break;
+                                }
+                                endIndex = line.indexOf(endToken, startIndex + 1);
+                                if (endIndex < 0) {
+                                    break;
+                                }
+                                String matches = line.substring(startIndex + 1,
+                                                                endIndex);
+                                    //If there is a white space or = or :, then
+                                    //it isn't to be treated as a valid key.
+                                for (int k = 0; k < matches.length(); k++) {
+                                    char c = matches.charAt(k);
+                                    if (c == ':' ||
+                                        c == '=' ||
+                                        Character.isSpaceChar(c)) {
+                                        endIndex = endIndex - 1;
+                                        continue outer;
+                                    }
+                                }
+                                String replace = null;
+                                replace = (String) resourceMap.get(matches);
+                                    //If the key hasn't been loaded into resourceMap,
+                                    //use the key itself as the value also.
+                                if (replace == null) {
+                                    log("Warning: The key: " + matches
+                                        + " hasn't been defined.",
+                                        Project.MSG_DEBUG);
+                                    replace = matches;
+                                }
+                                line = line.substring(0, startIndex)
+                                    + replace
+                                    + line.substring(endIndex + 1);
+                                endIndex = startIndex + replace.length() + 1;
+                                if (endIndex + 1 >= line.length()) {
+                                    break;
                                 }
                             }
-                            String replace = null;
-                            replace = (String) resourceMap.get(matches);
-                                //If the key hasn't been loaded into resourceMap,
-                                //use the key itself as the value also.
-                            if (replace == null) {
-                                log("Warning: The key: " + matches
-                                    + " hasn't been defined.",
-                                    Project.MSG_DEBUG);
-                                replace = matches;
-                            }
-                            line = line.substring(0, startIndex)
-                                + replace
-                                + line.substring(endIndex + 1);
-                            endIndex = startIndex + replace.length() + 1;
-                            if (endIndex + 1 >= line.length()) {
-                                break;
-                            }
-                        }
                             out.write(line);
                             out.newLine();
                         }
