@@ -300,7 +300,7 @@ public class RuntimeConfigurable implements Serializable {
             String value=(String) attMap.get(name);
 
             // reflect these into the target
-            value = ProjectHelper.replaceProperties(p, value,p.getProperties());
+            value = p.replaceProperties(value);
             try {
                 ih.setAttribute(p, target,
                         name.toLowerCase(Locale.US), value);
