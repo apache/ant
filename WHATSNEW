@@ -23,9 +23,6 @@ Other changes:
 * <echoproperties> now (alphanumerically) sorts the property list
   before echoing, when you request XML output (format="xml"). 
 
-* Enable to choose the regexp implementation without system property.
-  Bugzilla Report 15390.
-
 * Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
 * A new base class DispatchTask has been added to facilitate elegant 
@@ -54,6 +51,9 @@ Other changes:
 
 * Javadoc fixes for Location, Project, and RuntimeConfigurable
   Bugzilla 30160.
+
+* Enable to choose the regexp implementation without system property.
+  Bugzilla Report 15390.
 
 Fixed bugs:
 -----------
