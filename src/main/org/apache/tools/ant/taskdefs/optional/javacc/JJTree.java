@@ -187,8 +187,9 @@ public class JJTree extends Task {
         cmdl.createArgument().setValue(
             "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath().replace('\\', '/'));
         
-        final File javaFile = new File(
-            target.toString().substring(0, target.toString().indexOf(".jjt")) + ".jj");
+        String targetName = target.getName();
+        final File javaFile = new File(outputDirectory,
+            targetName.substring(0, targetName.indexOf(".jjt")) + ".jj");
         if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
             project.log("Target is already built - skipping (" + target + ")");
             return;

@@ -136,6 +136,9 @@ Fixed bugs:
 
 * perform proper uptodate check in <rmic> when compiling for IIOP.
 
+* <jjtree>'s uptodate test works even if outputdirectory is not the
+  parent dir of target
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
