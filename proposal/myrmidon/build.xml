@@ -110,26 +110,33 @@ Legal:
          manifest="${manifest.dir}/myrmidon-manifest.mf">
       <include name="org/apache/**" />
       <exclude name="org/apache/myrmidon/launcher/*" />
+      <exclude name="org/apache/myrmidon/libs/*" />
       <exclude name="org/apache/ant/**" />
 
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
         <include name="base-ant-roles.xml"/>
       </zipfileset>
 
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-types.xml">
-        <include name="base-ant-types.xml"/>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="base-ant-descriptor.xml"/>
       </zipfileset>
 
     </jar>
 
     <jar jarfile="${build.lib}/core.tsk" basedir="${build.classes}">
       <include name="org/apache/ant/modules/**" />
-
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-types.xml">
-        <include name="core-ant-types.xml"/>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="core-ant-descriptor.xml"/>
       </zipfileset>
-
     </jar>
+
+    <jar jarfile="${build.lib}/runtime.tsk" basedir="${build.classes}">
+      <include name="org/apache/myrmidon/libs/runtime/**"/>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="runtime-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
   </target>
 
   <!-- Creates the distribution -->
