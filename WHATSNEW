@@ -12,7 +12,7 @@ Other changes:
 
 * A GUI Frontend: Antidote
 
-* New tasks: propertyfile, depend, antlr, telnet, csc, ilasm, transform
+* New tasks: stylebook, propertyfile, depend, antlr, telnet, csc, ilasm, transform
 
 * Added output attribute to <java>.
 
