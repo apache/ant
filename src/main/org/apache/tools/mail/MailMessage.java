@@ -125,7 +125,7 @@ public class MailMessage {
   Vector to, cc;
   Hashtable headers;
   MailPrintStream out;
-  BufferedReader in;
+  SmtpResponseReader in;
   Socket socket;
 
   /**
@@ -150,7 +150,7 @@ public class MailMessage {
     to = new Vector();
     cc = new Vector();
     headers = new Hashtable();
-    setHeader("X-Mailer", "com.oreilly.servlet.MailMessage (www.servlets.com)");
+    setHeader("X-Mailer", "org.apache.tools.mail.MailMessage (jakarta.apache.org)");
     connect();
     sendHelo();
   }
@@ -276,6 +276,7 @@ public class MailMessage {
    */
   public void sendAndClose() throws IOException {
     sendDot();
+    sendQuit();
     disconnect();
   }
 
@@ -323,12 +324,12 @@ public class MailMessage {
     out = new MailPrintStream(
           new BufferedOutputStream(
           socket.getOutputStream())); 
-    in = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
+    in = new SmtpResponseReader(socket.getInputStream());
     getReady();
   }
 
   void getReady() throws IOException {
-    String response = in.readLine();
+    String response = in.getResponse();
     int[] ok = { 220 };
     if (!isResponseOK(response, ok)) {
       throw new IOException(
@@ -370,7 +371,7 @@ public class MailMessage {
   void send(String msg, int[] ok) throws IOException {
     out.rawPrint(msg + "\r\n");  // raw supports <CRLF>.<CRLF>
     //System.out.println("S: " + msg);
-    String response = in.readLine();
+    String response = in.getResponse();
     //System.out.println("R: " + response);
     if (!isResponseOK(response, ok)) {
       throw new IOException(
@@ -440,3 +441,4 @@ class MailPrintStream extends PrintStream {
     }
   }
 }
+

@@ -60,6 +60,9 @@ Fixed bugs:
 * <rmic> uses the the same classpath to verify a class can be rmic'd
   as it passes to the compiler. 
 
+* org.apache.tools.mail.MailMessage (and therefore <mail>) can now
+  handle SMTP servers sending multi line responses.
+
 Changes from Ant 1.1 to Ant 1.2
 ===============================
 
