@@ -100,7 +100,17 @@ public class Move extends Copy {
 
                 try {
                     log("Moving " + fromFile + " to " + toFile, verbosity);
-                    project.copyFile(fromFile, toFile, filtering, forceOverwrite);
+                    
+                    FilterSet executionFilterSet = new FilterSet();
+                    if (filtering) {
+                        executionFilterSet.addFilterSet(project.getGlobalFilterSet());
+                    }
+                    for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
+                        executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
+                    }
+                    FileUtils.copyFile(fromFile, toFile, executionFilterSet,
+                                       forceOverwrite);
+
                     File f = new File(fromFile);
                     if (!f.delete()) {
                         throw new BuildException("Unable to delete file " + f.getAbsolutePath());

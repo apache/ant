@@ -58,6 +58,8 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
+import org.apache.tools.ant.types.FilterSet; 
+
 /**
  * Central representation of an Ant project. This class defines a
  * Ant project with all of it's targets and tasks. It also provides
@@ -91,8 +93,8 @@ public class Project {
     public static final String JAVA_1_3 = "1.3";
     public static final String JAVA_1_4 = "1.4";
 
-    public static final String TOKEN_START = "@";
-    public static final String TOKEN_END = "@";
+    public static final String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
+    public static final String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
 
     private String name;
 
@@ -103,13 +105,10 @@ public class Project {
     private Hashtable dataClassDefinitions = new Hashtable();
     private Hashtable taskClassDefinitions = new Hashtable();
     private Hashtable targets = new Hashtable();
-    private Hashtable filters = new Hashtable();
+    private FilterSet globalFilterSet = new FilterSet();
     private File baseDir;
 
     private Vector listeners = new Vector();
-
-    private static java.lang.reflect.Method setLastModified = null;
-    private static Object lockReflection = new Object();
 
     /** The system classloader - may be null */    
     private ClassLoader systemLoader = null;
@@ -254,6 +253,12 @@ public class Project {
         fireMessageLogged(target, msg, msgLevel);
     }
 
+  
+    public FilterSet getGlobalFilterSet() {
+        return globalFilterSet;
+    }
+    
+    
     public void setProperty(String name, String value) {
         // command line properties take precedence
         if (null != userProperties.get(name)) {
@@ -315,15 +320,19 @@ public class Project {
         return name;
     }
 
+    /** @deprecated */
     public void addFilter(String token, String value) {
-        if (token == null) return;
-        log("Setting token to filter: " + token + " -> "
-            + value, MSG_DEBUG);
-        this.filters.put(token, value);
+        if (token == null) {
+            return;
+        }
+        
+        globalFilterSet.addFilter(new FilterSet.Filter(token, value));
     }
 
+    /** @deprecated */
     public Hashtable getFilters() {
-        return filters;
+        // we need to build the hashtable dynamically
+        return globalFilterSet.getFilterHash();
     }
 
     // match basedir attribute in xml
@@ -505,6 +514,9 @@ public class Project {
             } else {
                  o = ctor.newInstance(new Object[] {this});
             }
+            if (o instanceof ProjectComponent) {
+                ((ProjectComponent)o).setProject(this);
+            }
             String msg = "   +DataType: " + typeName;
             log (msg, MSG_DEBUG);
             return o;
@@ -674,9 +686,11 @@ public class Project {
      * No filtering is performed.
      *
      * @throws IOException
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile) throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), false);
+        FileUtils.copyFile(sourceFile, destFile);
     }
 
     /**
@@ -686,9 +700,8 @@ public class Project {
      * @throws IOException
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
-        throws IOException
-    {
-        copyFile(new File(sourceFile), new File(destFile), filtering);
+        throws IOException {
+        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
     }
 
     /**
@@ -700,8 +713,7 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), filtering, 
-                 overwrite);
+        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
     }
 
      /**
@@ -716,8 +728,8 @@ public class Project {
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), filtering, 
-                 overwrite, preserveLastModified);
+        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
+                           overwrite, preserveLastModified);
     }
 
     /**
@@ -727,7 +739,7 @@ public class Project {
      * @throws IOException
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
-        copyFile(sourceFile, destFile, false);
+        FileUtils.copyFile(sourceFile, destFile);
     }
 
     /**
@@ -738,7 +750,7 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException {
-        copyFile(sourceFile, destFile, filtering, false);
+        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
     }
 
     /**
@@ -750,7 +762,7 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        copyFile(sourceFile, destFile, filtering, overwrite, false);
+        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
     }
 
     /**
@@ -765,63 +777,8 @@ public class Project {
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        
-        if (overwrite || !destFile.exists() ||
-            destFile.lastModified() < sourceFile.lastModified()) {
-
-            if (destFile.exists() && destFile.isFile()) {
-                destFile.delete();
-            }
-
-            log("Copy: " + sourceFile.getAbsolutePath() + " -> "
-                    + destFile.getAbsolutePath(), MSG_VERBOSE);
-
-            // ensure that parent dir of dest file exists!
-            // not using getParentFile method to stay 1.1 compat
-            File parent = new File(destFile.getParent());
-            if (!parent.exists()) {
-                parent.mkdirs();
-            }
-
-            if (filtering) {
-                BufferedReader in = new BufferedReader(new FileReader(sourceFile));
-                BufferedWriter out = new BufferedWriter(new FileWriter(destFile));
-
-                int length;
-                String newline = null;
-                String line = in.readLine();
-                while (line != null) {
-                    if (line.length() == 0) {
-                        out.newLine();
-                    } else {
-                        newline = replace(line, filters);
-                        out.write(newline);
-                        out.newLine();
-                    }
-                    line = in.readLine();
-                }
-
-                out.close();
-                in.close();
-            } else {
-                FileInputStream in = new FileInputStream(sourceFile);
-                FileOutputStream out = new FileOutputStream(destFile);
-
-                byte[] buffer = new byte[8 * 1024];
-                int count = 0;
-                do {
-                    out.write(buffer, 0, count);
-                    count = in.read(buffer, 0, buffer.length);
-                } while (count != -1);
-
-                in.close();
-                out.close();
-            }
-
-            if (preserveLastModified) {
-                setFileLastModified(destFile, sourceFile.lastModified());
-            }
-        }
+        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
+                           overwrite, preserveLastModified);
     }
 
     /**
@@ -833,82 +790,8 @@ public class Project {
                 + " in JDK 1.1", Project.MSG_WARN);
             return;
         }
-        if (setLastModified == null) {
-            synchronized (lockReflection) {
-                if (setLastModified == null) {
-                    try {
-                        setLastModified = 
-                            java.io.File.class.getMethod("setLastModified", 
-                                                         new Class[] {Long.TYPE});
-                    } catch (NoSuchMethodException nse) {
-                        throw new BuildException("File.setlastModified not in JDK > 1.1?",
-                                                 nse);
-                    }
-                }
-            }
-        }
-        Long[] times = new Long[1];
-        if (time < 0) {
-            times[0] = new Long(System.currentTimeMillis());
-        } else {
-            times[0] = new Long(time);
-        }
-        try {
-            log("Setting modification time for " + file, MSG_VERBOSE);
-            setLastModified.invoke(file, times);
-        } catch (java.lang.reflect.InvocationTargetException ite) {
-            Throwable nested = ite.getTargetException();
-            throw new BuildException("Exception setting the modification time "
-                                     + "of " + file, nested);
-        } catch (Throwable other) {
-            throw new BuildException("Exception setting the modification time "
-                                     + "of " + file, other);
-        }
-    }
-
-    /**
-     * Does replacement on the given string using the given token table.
-     *
-     * @returns the string with the token replaced.
-     */
-    private String replace(String s, Hashtable tokens) {
-        int index = s.indexOf(TOKEN_START);
-
-        if (index > -1) {
-            try {
-                StringBuffer b = new StringBuffer();
-                int i = 0;
-                String token = null;
-                String value = null;
-
-                do {
-                    int endIndex = s.indexOf(TOKEN_END, 
-                                             index + TOKEN_START.length() + 1);
-                    if (endIndex == -1) {
-                        break;
-                    }
-                    token = s.substring(index + TOKEN_START.length(), endIndex);
-                    b.append(s.substring(i, index));
-                    if (tokens.containsKey(token)) {
-                        value = (String) tokens.get(token);
-                        log("Replacing: " + TOKEN_START + token + TOKEN_END + " -> " + value, MSG_VERBOSE);
-                        b.append(value);
-                        i = index + TOKEN_START.length() + token.length() + TOKEN_END.length();
-                    } else {
-                        // just append TOKEN_START and search further
-                        b.append(TOKEN_START);
-                        i = index + TOKEN_START.length();
-                    }
-                } while ((index = s.indexOf(TOKEN_START, i)) > -1);
-
-                b.append(s.substring(i));
-                return b.toString();
-            } catch (StringIndexOutOfBoundsException e) {
-                return s;
-            }
-        } else {
-            return s;
-        }
+        FileUtils.setFileLastModified(file, time);
+        log("Setting modification time for " + file, MSG_VERBOSE);
     }
 
     /**

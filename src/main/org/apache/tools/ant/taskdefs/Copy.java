@@ -73,6 +73,7 @@ import java.util.*;
  *
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  */
 public class Copy extends Task {
     protected File file = null;     // the source file 
@@ -91,7 +92,8 @@ public class Copy extends Task {
     protected Hashtable dirCopyMap = new Hashtable();
 
     protected Mapper mapperElement = null;
-
+    private Vector filterSets = new Vector();
+    
     /**
      * Sets a single source file to copy.
      */
@@ -114,12 +116,30 @@ public class Copy extends Task {
     }
 
     /**
+     * Create a nested filterset
+     */
+    public FilterSet createFilterSet() {
+        FilterSet filterSet = new FilterSet();
+        filterSets.addElement(filterSet);
+        return filterSet;
+    }
+    
+    /**
      * Give the copied files the same last modified time as the original files.
      */
     public void setPreserveLastModified(String preserve) {
         preserveLastModified = Project.toBoolean(preserve);
     }
 
+    /**
+     * Get the filtersets being applied to this operation.
+     *
+     * @return a vector of FilterSet objects
+     */
+    protected Vector getFilterSets() {
+        return filterSets;
+    }
+    
     /**
      * Sets filtering.
      */
@@ -338,11 +358,15 @@ public class Copy extends Task {
                 try {
                     log("Copying " + fromFile + " to " + toFile, verbosity);
                     
-                    project.copyFile(fromFile, 
-                                     toFile, 
-                                     filtering, 
-                                     forceOverwrite,
-                                     preserveLastModified);
+                    FilterSet executionFilterSet = new FilterSet();
+                    if (filtering) {
+                        executionFilterSet.addFilterSet(project.getGlobalFilterSet());
+                    }
+                    for (Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements();) {
+                        executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
+                    }
+                    FileUtils.copyFile(fromFile, toFile, executionFilterSet,
+                                       forceOverwrite, preserveLastModified);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
