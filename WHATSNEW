@@ -238,7 +238,7 @@ Other changes:
 * A new attribute named skip is added to the TailFilter and
   HeadFilter filter readers.
 
-* Shipped XML parser is now Xerces 2.4.0
+* Shipped XML parser is now Xerces 2.5.0
 
 * The filesetmanifest attribute of <jar> has been reenabled.
 
