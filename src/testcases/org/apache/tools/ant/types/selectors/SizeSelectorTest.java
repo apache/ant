@@ -158,7 +158,7 @@ public class SizeSelectorTest extends BaseSelectorTest {
             s.setValue(32);
             s.setWhen(equal);
             results = selectionString(s);
-            assertEquals("TTFFTFFFFFFT", results);
+            assertEquals("TFFFTFFFFFFT", results);
 
             s = (SizeSelector)getInstance();
             s.setValue(7);
