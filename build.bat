@@ -7,7 +7,7 @@ if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap
 call bootstrap.bat
 
 :runAnt
-set CLASSPATH=%CLASSPATH%;lib\parser.jar;lib\jaxp.jar
+set CLASSPATH=bootstrap\lib\ant.jar;lib\parser.jar;lib\jaxp.jar;%CLASSPATH%
 if not "%REAL_ANT_HOME%" == "" goto install_ant
 call bootstrap\bin\ant.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
