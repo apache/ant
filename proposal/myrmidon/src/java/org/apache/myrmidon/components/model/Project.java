@@ -28,10 +28,32 @@ public interface Project
     String PROJECT          = "ant.project.name";
 
     // the name of currently executing project
-    String PROJECT_FILE     = "ant.project.file";
+    //String PROJECT_FILE     = "ant.project.file";
 
     // the name of currently executing target
-    String TARGET           = "ant.target.name";
+    //String TARGET           = "ant.target.name";
+
+    /**
+     * Get the imports for project.
+     *
+     * @return the imports
+     */
+    Import[] getImports();
+
+    /**
+     * Get names of projects referred to by this project.
+     *
+     * @return the names
+     */
+    String[] getProjectNames();
+
+    /**
+     * Retrieve project reffered to by this project.
+     *
+     * @param name the project name
+     * @return the Project or null if none by that name
+     */
+    Project getProject( String name );
 
     /**
      * Get name of default target.

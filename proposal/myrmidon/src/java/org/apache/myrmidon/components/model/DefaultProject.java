@@ -9,6 +9,7 @@ package org.apache.myrmidon.components.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,6 +20,12 @@ import java.util.HashMap;
 public class DefaultProject
     implements Project
 {
+    ///The imports
+    private final ArrayList m_imports         = new ArrayList();
+
+    ///The projects refferred to by this project
+    private final HashMap   m_projects        = new HashMap();
+
     ///The targets contained by this project
     private final HashMap   m_targets         = new HashMap();
 
@@ -30,6 +37,37 @@ public class DefaultProject
 
     ///The base directory of project
     private File            m_baseDirectory;
+
+    /**
+     * Get the imports for project.
+     *
+     * @return the imports
+     */
+    public Import[] getImports()
+    {
+        return (Import[])m_imports.toArray( new Import[ 0 ] );
+    }
+
+    /**
+     * Get names of projects referred to by this project.
+     *
+     * @return the names
+     */
+    public String[] getProjectNames()
+    {
+        return (String[])m_projects.keySet().toArray( new String[ 0 ] );
+    }
+
+    /**
+     * Retrieve project reffered to by this project.
+     *
+     * @param name the project name
+     * @return the Project or null if none by that name
+     */
+    public Project getProject( final String name )
+    {
+        return (Project)m_projects.get( name );
+    }
 
     /**
      * Retrieve base directory of project.
@@ -113,8 +151,13 @@ public class DefaultProject
         m_baseDirectory = baseDirectory;
     }
 
+    public final void addImport( final Import importEntry )
+    {
+        m_imports.add( importEntry );
+    }
+
     /**
-     * Add a target to project.
+     * Add a target.
      *
      * @param name the name of target
      * @param target the Target
@@ -124,7 +167,7 @@ public class DefaultProject
     {
         if( null != m_targets.get( name ) )
         {
-            throw new IllegalArgumentException( "Can not have two targets in a " + 
+            throw new IllegalArgumentException( "Can not have two targets in a " +
                                                 "file with the name " + name );
         }
         else
@@ -132,6 +175,24 @@ public class DefaultProject
             m_targets.put( name, target );
         }
     }
+
+    /**
+     * Add a project reference.
+     *
+     * @param name the name of target
+     * @param project the Project
+     * @exception IllegalArgumentException if project already exists with same name
+     */
+    public final void addProject( final String name, final Project project )
+    {
+        if( null != m_projects.get( name ) )
+        {
+            throw new IllegalArgumentException( "Can not have two projects referenced in a " +
+                                                "file with the name " + name );
+        }
+        else
+        {
+            m_projects.put( name, project );
+        }
+    }
 }
-
-
