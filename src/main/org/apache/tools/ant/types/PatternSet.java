@@ -277,9 +277,10 @@ public class PatternSet extends DataType {
     private void readPatterns(File patternfile, Vector patternlist, Project p)
         throws BuildException {
         
+        BufferedReader patternReader = null;
         try {
             // Get a FileReader
-            BufferedReader patternReader = 
+            patternReader = 
                 new BufferedReader(new FileReader(patternfile)); 
         
             // Create one NameEntry in the appropriate pattern list for each 
@@ -297,6 +298,14 @@ public class PatternSet extends DataType {
             String msg = "An error occured while reading from pattern file: " 
                 + patternfile;
             throw new BuildException(msg, ioe);
+        } finally {
+            if( null != patternReader ) {
+                try {
+                    patternReader.close();
+                } catch(IOException ioe) { 
+                    //Ignore exception
+                }
+            }
         }
     }
 
