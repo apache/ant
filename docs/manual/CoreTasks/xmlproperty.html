@@ -8,7 +8,7 @@
 <h2><a name="xmlproperty">XmlProperty</a></h2>
 <h3>Description</h3>
 <p>
-Loads property values from a valid xml file.  This XML property file:
+Loads property values from a well-formed xml file.  This XML property file:
 <pre>
   &lt;root&gt;
     &lt;properties&gt;
@@ -16,7 +16,7 @@ Loads property values from a valid xml file.  This XML property file:
     &lt;/properties&gt;
   &lt;/root&gt;
 </pre>
-is roughly equivalent to this java property file:
+is roughly equivalent to this Java property file:
 <pre>
   root.properties.foo = bar
 </pre>
@@ -25,7 +25,7 @@ is roughly equivalent to this java property file:
 By default, this load
 does <em>no</em> processing of the input.  In particular, unlike the
 <a href="property.html">Property task</a>, property references
-(i.e., ${foo}) are not resolved.
+(i.e., <samp>${foo}</samp>) are not resolved.
 <p>
 <a name="semanticAttributes">
 <h3>Semantic Attributes</h3>
@@ -98,7 +98,7 @@ is roughly equivalent to the following fragments in a build.xml file:
   </tr>  
   <tr>
     <td valign="top">validate</td>
-    <td valign="top">Validate the input file.</td>
+    <td valign="top">Validate the input file (e.g. by a DTD). Otherwise the XML must only be well-formed.</td>
     <td valign="top" align="center">No, default is <i>false</i>.</td>
   </tr>
   <tr>
@@ -250,11 +250,10 @@ is equivalent to the following entries in a build file:
   &lt;/classpath&gt;
 </pre>
 
-<hr/>
+<hr>
 
-<p align="center">Copyright &copy; 2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2002-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
 </html>
-
