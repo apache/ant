@@ -183,6 +183,11 @@ public class SQLExec extends Task {
      * Action to perform if an error is found
      **/
     private String onError = "abort";
+    
+    /**
+     * Encoding to use when reading SQL statements from a file
+     */
+    private String encoding = null;
 
     /**
      * Set the classpath for loading the driver.
@@ -263,6 +268,16 @@ public class SQLExec extends Task {
     public void setUserid(String userId) {
         this.userId = userId;
     }
+
+    /**
+     * Set the file encoding to use on the sql files read in
+     *
+     * @param encoding the encoding to use on the files
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+    
     
     /**
      * Set the password for the DB connection.
@@ -684,7 +699,8 @@ public class SQLExec extends Task {
             if (tSrcFile != null) {
                 log("Executing file: " + tSrcFile.getAbsolutePath(), 
                     Project.MSG_INFO);
-                FileReader reader = new FileReader(tSrcFile);
+                Reader reader = (encoding == null) ? new FileReader(tSrcFile)
+                                                   : new InputStreamReader(new FileInputStream(tSrcFile), encoding);
                 runStatements(reader, out);
                 reader.close();
             }
