@@ -8,4 +8,5 @@ distribution
 *.iws
 *.pif
 velocity.log*
-
+patch.txt
+patch.tar.gz
