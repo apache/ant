@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,75 +51,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.core.*;
-import org.apache.tools.ant.gui.util.XMLHelper;
-import org.apache.tools.ant.gui.command.LoadFileCmd;
-import org.apache.tools.ant.gui.event.EventBus;
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.io.File;
+package org.apache.tools.ant.gui.core;
+
+import org.apache.tools.ant.gui.event.BusMember;
+import org.apache.tools.ant.gui.event.BusFilter;
+import java.util.EventObject;
 
 /**
- * Launch point for the Antidote GUI. Configurs it as an application.
- * 
+ * Class that prints all events to stderr.
+ *
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Main {
-	/** 
-	 * Application start.
-	 * 
-	 * @param args TBD
-	 */
-    public static void main(String[] args) {
-        XMLHelper.init();
+public class EventDebugMonitor implements BusMember {
 
-        try {
-            JFrame f = new JFrame("Antidote");
-            AppContext context = new AppContext(f);
-            EventResponder resp = new EventResponder(context);
-            Antidote gui = new Antidote(context);
+    /** Filter for all events. */
+    private final Filter _filter = new Filter();
 
-            f.setDefaultCloseOperation(3 /*JFrame.EXIT_ON_CLOSE*/);
-            JMenuBar menu = context.getActions().createMenuBar();
-            f.setJMenuBar(menu);
-            f.getContentPane().add(BorderLayout.CENTER, gui);
-            f.getContentPane().add(BorderLayout.NORTH, 
-                                   context.getActions().createToolBar());
+    /** 
+     * Defatult ctor.
+     * 
+     */
+    public EventDebugMonitor() {
+    }
 
-            // Add the project selection menu.
-            ProjectSelectionMenu ps = new ProjectSelectionMenu(context);
-            ps.insertInto(menu);
+    /** 
+     * Get the filter to that is used to determine if an event should
+     * to to the member.
+     * 
+     * @return Filter to use.
+     */
+    public BusFilter getBusFilter() {
+        return _filter;
+    }
+        
+    /** 
+     * Called when an event is to be posed to the member.
+     * 
+     * @param event Event to post.
+     * @return true if event should be propogated, false if
+     * it should be cancelled.
+     */
+    public boolean eventPosted(EventObject event) {
+        System.err.println(event);
+        return true;
+    }
 
-            // Add debugging items.
-            if(context.isDebugOn()) {
-                context.getEventBus().addMember(
-                    EventBus.VETOING, new EventDebugMonitor());
-            }
-
-            ImageIcon icon = 
-                context.getResources().loadImageIcon("icon-small.gif");
-            if(icon != null) {
-                f.setIconImage(icon.getImage());
-            }
-            else {
-                System.out.println("Application icon not found.");
-            }
-            f.pack();
-
-            f.setVisible(true);
-
-            // XXX this will change once full command line argument parsing
-            // is supported.
-            if(args.length > 0) {
-                LoadFileCmd load = new LoadFileCmd(context);
-                load.setFile(new File(args[0]));
-                load.run();
-            }
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
+    /** Filter for all events. */
+    private static class Filter implements BusFilter {
+        public boolean accept(EventObject event) {
+            return true;
         }
     }
 }

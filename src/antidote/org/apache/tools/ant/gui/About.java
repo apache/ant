@@ -82,7 +82,6 @@ public class About extends JDialog {
 
 		String version = null;
 		String date = null;
-		String contributors = null;
 
 		Properties props = new Properties();
 
@@ -97,21 +96,10 @@ public class About extends JDialog {
 
 		version = props.getProperty("VERSION", "??");
 		date = props.getProperty("DATE", "??");
-		// XXX eventually this should be tokenized on commas and
-		// presented nicely in box.
-		contributors = props.getProperty("CONTRIBUTORS", "??");
-
-        StringBuffer buf = new StringBuffer();
-        StringTokenizer tok = new StringTokenizer(contributors, ",");
-        while(tok.hasMoreTokens()) {
-            String name = tok.nextToken();
-            buf.append(name);
-            buf.append("<br>\n");
-        }
 
 		String message = context.getResources().getMessage(
 			getClass(), "message", 
-			new Object[] { version, date, buf.toString() });
+			new Object[] { version, date });
 
 		String title = context.getResources().getString(
 			getClass(), "title");

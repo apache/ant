@@ -1,6 +1,2 @@
 VERSION=@VERSION@
 DATE=@DATE@
-CONTRIBUTORS=\
-    Simeon H.K. Fitch (simeon@fitch.net), \
-    Erik Meade (emeade@geekfarm.org), \
-    Ant Development Team (ant-dev@jakarta.apache.org)
