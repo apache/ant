@@ -58,9 +58,14 @@ import java.util.*;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
-/*
+/**
+ * A representation of a Java command line that is nothing more
+ * than a composite of 2 <tt>Commandline</tt>. 1 for the vm/options and
+ * 1 for the classname/arguments. It provides specific methods for
+ * a java command line.
  *
  * @author thomas.haas@softwired-inc.com
+ * @author <a href="sbailliez@apache.org>Stephane Bailliez</a>
  */
 public class CommandlineJava implements Cloneable {
 
@@ -70,6 +75,12 @@ public class CommandlineJava implements Cloneable {
     private Path classpath = null;
     private String vmVersion;
     private String maxMemory = null;
+
+    /**
+     * Indicate whether it will execute a jar file or not, in this case
+     * the first vm option must be a -jar and the 'executable' is a jar file.
+     */
+     private boolean executeJar  = false;
 
     /**
      * Specialized Environment class for System properties
@@ -128,11 +139,15 @@ public class CommandlineJava implements Cloneable {
 
     }
 
+
     public CommandlineJava() {
         setVm(getJavaExecutableName());
         setVmversion(Project.getJavaVersion());
     }
 
+    /**
+     * cr
+     */
     public Commandline.Argument createArgument() {
         return javaCommand.createArgument();
     }
@@ -153,12 +168,45 @@ public class CommandlineJava implements Cloneable {
         vmVersion = value;
     }
 
-    public void setClassname(String classname) {
-        javaCommand.setExecutable(classname);
+    /**
+     * set a jar file to execute via the -jar option.
+     * @param the pathname of the jar to execute
+     */
+    public void setJar(String jarpathname){
+        javaCommand.setExecutable(jarpathname);
+        executeJar = true;
     }
 
+    /**
+     * @return the pathname of the jar file to run via -jar option
+     * or <tt>null</tt> if there is no jar to run.
+     * @see #getClassname()
+     */
+    public String getJar(){
+        if (executeJar){
+            return javaCommand.getExecutable();
+        }
+        return null;
+    }
+
+    /**
+     * set the classname to execute
+     * @param classname the fully qualified classname.
+     */
+    public void setClassname(String classname) {
+        javaCommand.setExecutable(classname);
+        executeJar = false;
+    }
+
+    /**
+     * @return the name of the class to run or <tt>null</tt> if there is no class.
+     * @see #getJar()
+     */
     public String getClassname() {
-        return javaCommand.getExecutable();
+        if (!executeJar) {
+            return javaCommand.getExecutable();
+        }
+        return null;
     }
 
     public Path createClasspath(Project p) {
@@ -172,29 +220,38 @@ public class CommandlineJava implements Cloneable {
         return vmVersion;
     }
 
+    /**
+     * get the command line to run a java vm.
+     * @return the list of all arguments necessary to run the vm.
+     */
     public String[] getCommandline() {
-        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
-        Commandline actualVMCommand = getActualVMCommand();
-        int size = 
-            actualVMCommand.size() + javaCommand.size() + sysProperties.size();
-        if (fullClasspath != null && fullClasspath.size() > 0) {
-            size += 2;
-        }
+       String[] result = new String[size()];
+        int pos = 0;
+        String[] vmArgs = vmCommand.getCommandline();
+        // first argument is the java.exe path...
+        result[pos++] = vmArgs[0];
         
-        String[] result = new String[size];
-        System.arraycopy(actualVMCommand.getCommandline(), 0, 
-                         result, 0, actualVMCommand.size());
-
-        int pos = actualVMCommand.size();
+        // -jar must be the first option in the command line.
+        if (executeJar){
+            result[pos++] = "-jar";
+        }
+        // next follows the vm options
+        System.arraycopy(vmArgs, 1, result, pos, vmArgs.length - 1);
+        pos += vmArgs.length - 1;
+        // properties are part of the vm options...
         if (sysProperties.size() > 0) {
             System.arraycopy(sysProperties.getVariables(), 0,
                              result, pos, sysProperties.size());
             pos += sysProperties.size();
         }
+        // classpath is a vm option too..
+        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
         if (fullClasspath != null && fullClasspath.toString().trim().length() > 0) {
             result[pos++] = "-classpath";
             result[pos++] = fullClasspath.toString();
         }
+        // this is the classname to run as well as its arguments.
+        // in case of 'executeJar', the executable is a jar file.
         System.arraycopy(javaCommand.getCommandline(), 0, 
                          result, pos, javaCommand.size());
         return result;
@@ -223,11 +280,21 @@ public class CommandlineJava implements Cloneable {
         }
         return actualVMCommand;
     }        
-    
+
+    /**
+     * The size of the java command line.
+     * @return the total number of arguments in the java command line.
+     * @see #getCommandline()
+     */
     public int size() {
-        int size = getActualVMCommand().size() + javaCommand.size();
+        int size = vmCommand.size() + javaCommand.size() + sysProperties.size();
+        // classpath is "-classpath <classpath>" -> 2 args
         if (classpath != null && classpath.size() > 0) {
             size += 2;
+        }
+        // jar execution requires an additional -jar option
+        if (executeJar){
+            size++ ;
         }
         return size;
     }
@@ -266,6 +333,7 @@ public class CommandlineJava implements Cloneable {
             c.classpath = (Path) classpath.clone();
         }
         c.vmVersion = vmVersion;
+        c.executeJar = executeJar;
         return c;
     }
 
