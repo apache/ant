@@ -2,41 +2,44 @@
 
 <project name="java-test" basedir="." default="foo">
 
-  <property name="app" 
+  <property name="app"
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
 
-  <property name="app2" 
+  <property name="app2"
     value="org.apache.tools.ant.taskdefs.JavaTest$$ExceptingEntryPoint" />
-    
+
+  <property name="spawnapp"
+    value="org.apache.tools.ant.taskdefs.JavaTest$$SpawnEntryPoint" />
+
   <path id="test.classpath">
     <pathelement location="${build.tests}"/>
   </path>
-  
+
   <target name="testNoJarNoClassname">
     <java/>
   </target>
 
   <target name="testJarNoFork">
     <java jar="test.jar" fork="false"/>
-  </target>  
-  
-  
+  </target>
+
+
   <target name="testJarAndClassName">
     <java jar="test.jar" classname="${app}" />
   </target>
-  
+
   <target name="testClassnameAndJar">
     <java classname="${app}" jar="test.jar"  />
-  </target>  
-  
+  </target>
+
   <target name="testRun">
-    <fail unless="tests-classpath.value" /> 
+    <fail unless="tests-classpath.value" />
     <java classname="${app}"
       classpath="${tests-classpath.value}"/>
   </target>
 
   <target name="testRunFail">
-    <java classname="${app}" 
+    <java classname="${app}"
       classpath="${tests-classpath.value}"
       >
       <arg value="-1"/>
@@ -88,7 +91,7 @@
         fork="true">
     </java>
   </target>
-  
+
   <target name="testResultPropertyZero">
     <java classname="${app}"
         classpath="${tests-classpath.value}"
@@ -97,7 +100,7 @@
     </java>
     <echo message="exitcode = ${exitcode}"/>
   </target>
-  
+
   <target name="testResultPropertyNonZero">
     <java classname="${app}"
         classpath="${tests-classpath.value}"
@@ -109,6 +112,13 @@
     </java>
     <echo message="exitcode = ${exitcode}"/>
   </target>
-  
+
+  <target name="testSpawn">
+    <java classname="${spawnapp}" fork="true" spawn="true" classpath="${tests-classpath.value}">
+      <arg value="${timeToWait}"/>
+      <arg value="${logFile}" />
+    </java>
+  </target>
+
   <target name="foo" />
 </project>

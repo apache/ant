@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import junit.framework.*;
 import java.io.*;
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * stress out java task
@@ -65,7 +66,8 @@ import org.apache.tools.ant.*;
  * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
  * */
 public class JavaTest extends BuildFileTest {
-    
+
+    private static final int TIME_TO_WAIT = 4;
     private boolean runFatalTests=false;
     
     public JavaTest(String name) { 
@@ -176,7 +178,23 @@ public class JavaTest extends BuildFileTest {
         executeTarget("testResultPropertyNonZero");
         assertEquals("-1",project.getProperty("exitcode"));
     }
-    
+
+    public void testSpawn() {
+        FileUtils fileutils  = FileUtils.newFileUtils();
+        File logFile = fileutils.createTempFile("spawn","log", project.getBaseDir());
+        // this is guaranteed by FileUtils#createTempFile
+        assertTrue("log file not existing", !logFile.exists());
+        project.setProperty("logFile", logFile.getAbsolutePath());
+        project.setProperty("timeToWait", Long.toString(TIME_TO_WAIT));
+        project.executeTarget("testSpawn");
+        try {
+            Thread.sleep(TIME_TO_WAIT * 1000 + 400);
+        } catch (Exception ex) {
+            System.out.println("my sleep was interrupted");
+        }
+        assertTrue("log file exists", logFile.exists());
+    }
+
     /**
      * entry point class with no dependencies other
      * than normal JRE runtime
@@ -223,6 +241,38 @@ public class JavaTest extends BuildFileTest {
          */
         public static void main(String[] argv) {
             throw new NullPointerException("Exception raised inside called program");
+        }
+    }
+    /**
+     * test class for spawn
+     */
+    public static class SpawnEntryPoint {
+        public static void main(String [] argv) {
+            int sleepTime = 10;
+            String logFile = "spawn.log";
+            if (argv.length >= 1) {
+                sleepTime = Integer.parseInt(argv[0]);
+            }
+            if (argv.length >= 2)
+            {
+                logFile = argv[1];
+            }
+            OutputStreamWriter out = null;
+            try {
+                Thread.sleep(sleepTime * 1000);
+            } catch (InterruptedException ex) {
+                System.out.println("my sleep was interrupted");
+            }
+
+            try {
+                File dest = new File(logFile);
+                FileOutputStream fos = new FileOutputStream(dest);
+                out = new OutputStreamWriter(fos);
+                out.write("bye bye\n");
+            } catch (Exception ex) {}
+            finally {
+                try {out.close();} catch (IOException ioe) {}}
+
         }
     }
 }

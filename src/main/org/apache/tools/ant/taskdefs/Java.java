@@ -94,6 +94,8 @@ public class Java extends Task {
     private Long timeout = null;
     private Redirector redirector = new Redirector(this);
     private String resultProperty;
+    private boolean spawn = false;
+    private boolean incompatibleWithSpawn = false;
     /**
      * Do the execution.
      * @throws BuildException if failOnError is set to true and the application
@@ -136,7 +138,17 @@ public class Java extends Task {
             throw new BuildException("Cannot execute a jar in non-forked mode."
                                      + " Please set fork='true'. ");
         }
-
+        if (spawn && !fork) {
+            throw new BuildException("Cannot spawn a java process in non-forked mode."
+                                     + " Please set fork='true'. ");
+        }
+        if (spawn && incompatibleWithSpawn) {
+            getProject().log("spawn does not allow attributes related to input, "
+            + "output, error, result", Project.MSG_ERR);
+            getProject().log("spawn does not also not allow timeout", Project.MSG_ERR);
+            throw new BuildException("You have used an attribute which is "
+            + "not compatible with spawn");
+        }
         if (fork) {
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         } else {
@@ -165,7 +177,12 @@ public class Java extends Task {
 
         try {
             if (fork) {
-                return run(cmdl.getCommandline());
+                if (!spawn) {
+                    return run(cmdl.getCommandline());
+                } else {
+                    spawn(cmdl.getCommandline());
+                    return 0;
+                }
             } else {
                 try {
                     run(cmdl);
@@ -189,6 +206,16 @@ public class Java extends Task {
                 return 0;
             }
         }
+    }
+
+    /**
+     * set whether or not you want the process to be spawned
+     * default is not spawned
+     * @param spawn if true you do not want ant to wait for the end of the process
+     * @since ant 1.6
+     */
+    public void setSpawn(boolean spawn) {
+        this.spawn = spawn;
     }
 
     /**
@@ -373,6 +400,7 @@ public class Java extends Task {
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -392,6 +420,7 @@ public class Java extends Task {
      */
     public void setOutput(File out) {
         redirector.setOutput(out);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -401,6 +430,7 @@ public class Java extends Task {
      */
     public void setInput(File input) {
         redirector.setInput(input);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -410,6 +440,7 @@ public class Java extends Task {
      */
     public void setInputString(String inputString) {
         redirector.setInputString(inputString);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -422,6 +453,7 @@ public class Java extends Task {
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -433,6 +465,7 @@ public class Java extends Task {
      */
     public void setError(File error) {
         redirector.setError(error);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -444,6 +477,7 @@ public class Java extends Task {
      */
     public void setOutputproperty(String outputProp) {
         redirector.setOutputProperty(outputProp);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -456,6 +490,7 @@ public class Java extends Task {
      */
     public void setErrorProperty(String errorProperty) {
         redirector.setErrorProperty(errorProperty);
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -510,6 +545,7 @@ public class Java extends Task {
      */
     public void setAppend(boolean append) {
         this.append = append;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -521,6 +557,7 @@ public class Java extends Task {
      */
     public void setTimeout(Long value) {
         timeout = value;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -665,6 +702,42 @@ public class Java extends Task {
             }
     }
 
+    /**
+     * Executes the given classname with the given arguments in a separate VM.
+     */
+    private void spawn(String[] command) throws BuildException {
+
+            Execute exe
+                = new Execute();
+            exe.setAntRun(getProject());
+
+            if (dir == null) {
+                dir = getProject().getBaseDir();
+            } else if (!dir.exists() || !dir.isDirectory()) {
+                throw new BuildException(dir.getAbsolutePath()
+                                         + " is not a valid directory",
+                                         getLocation());
+            }
+
+            exe.setWorkingDirectory(dir);
+
+            String[] environment = env.getVariables();
+            if (environment != null) {
+                for (int i = 0; i < environment.length; i++) {
+                    log("Setting environment variable: " + environment[i],
+                        Project.MSG_VERBOSE);
+                }
+            }
+            exe.setNewenvironment(newEnvironment);
+            exe.setEnvironment(environment);
+
+            exe.setCommandline(command);
+            try {
+                exe.spawn();
+            } catch (IOException e) {
+                throw new BuildException(e, getLocation());
+            }
+    }
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.
