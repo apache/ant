@@ -36,10 +36,10 @@ to support additional EJB Servers.
 <h2><a name="ejbtasks">EJB Tasks</a></h2>
 <table border="1" cellpadding="5">
  <tr><td>Task</td><td>Application Servers</td></tr>
- <tr><td><a href="#ddcreator">ddcreator</a></td><td>Weblogic 4.5</td></tr>
- <tr><td><a href="#ejbc">ejbc</a></td><td>Weblogic 4.5</td></tr>
- <tr><td><a href="#wlrun">wlrun</a></td><td>Weblogic 4.5</td></tr>
- <tr><td><a href="#wlstop">wlstop</a></td><td>Weblogic 4.5</td></tr>
+ <tr><td><a href="#ddcreator">ddcreator</a></td><td>Weblogic 4.5.1</td></tr>
+ <tr><td><a href="#ejbc">ejbc</a></td><td>Weblogic 4.5.1</td></tr>
+ <tr><td><a href="#wlrun">wlrun</a></td><td>Weblogic 4.5.1 and 5.1</td></tr>
+ <tr><td><a href="#wlstop">wlstop</a></td><td>Weblogic 4.5.1 and 5.1</td></tr>
  <tr><td><a href="#ejbjar">ejbjar</a></td><td>Weblogic 5.1</td></tr>
 </table>
 
@@ -151,12 +151,113 @@ or are out of date, the ejbc tool is run to generate new versions.
 <hr>
 <h2><a name="wlrun">wlrun</a></h2>
 <h3><b>Description:</b></h3>
-<p>This is an experimental task and is not currently documented.
+<p>The <code>wlrun</code> task is used to start a weblogic server. The task runs
+a weblogic instance in a separate Java Virtual Machine. A number of parameters 
+are used to control the operation of the weblogic instance. Note that the task, 
+and hence ant, will not complete until the weblogic instance is stopped.
+
+<h3>Parameters:</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">home</td>
+    <td valign="top">The location of the weblogic home that is to be used. This is the location 
+                     where weblogic is installed.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to be used with the Java Virtual Machine that runs the Weblogic 
+                     Server. This is typically set to the Weblogic boot classpath.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">wlclasspath</td>
+    <td valign="top">The weblogic classpath used by the Weblogic Server.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">properties</td>
+    <td valign="top">The name of the server's properties file within the weblogic home directory
+                     used to control the weblogic instance.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the weblogic server within the weblogic home which is to be run. 
+                     This defaults to &quot;myserver&quot;</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">policy</td>
+    <td valign="top">The name of the security policy file within the weblogic home directory that 
+                     is to be used. If not specified, the default policy file <code>weblogic.policy</code>
+                     is used.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">jvmargs</td>
+    <td valign="top">Additional argument string passed to the Java Virtual Machine used to run the
+                     Weblogic instance.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">args</td>
+    <td valign="top">Additional argument string passed to the Weblogic instance.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
 
 <hr>
 <h2><a name="wlstop">wlstop</a></h2>
 <h3><b>Description:</b></h3>
-<p>This is an experimental task and is not currently documented.
+<p>The <code>wlstop</code> task is used to stop a weblogic instance which is currently running.
+To shut down an instance you must supply both a username and a password. These will be stored 
+in the clear in the build script used to stop the instance. For security reasons, this task is 
+therefore only appropriate in a development environment. 
+
+<h3>Parameters:</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to be used with the Java Virtual Machine that runs the Weblogic 
+                     Shutdown comment.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">user</td>
+    <td valign="top">The username of the account which will be used to shutdown the server</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">The password for the account specified in the user parameter.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">url</td>
+    <td valign="top">The URL which describes the port to which the server is listening for T3 connections. 
+                     For example, t3://localhost:7001</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">delay</td>
+    <td valign="top">The delay in seconds after which the server will stop. This defaults to an
+                     immediate shutdown.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
 
 <hr>
 <h2><a name="ejbjar">ejbjar</a></h2>
