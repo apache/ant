@@ -73,7 +73,8 @@ public class Log4jListener implements BuildListener {
     public Log4jListener() {
         initialized = false;
         Category cat = Category.getInstance("org.apache.tools.ant");
-        if (!(cat.getAllAppenders() instanceof NullEnumeration)) {
+        Category rootCat = Category.getRoot();
+        if (!(rootCat.getAllAppenders() instanceof NullEnumeration)) {
             initialized = true;
         }
         else {
