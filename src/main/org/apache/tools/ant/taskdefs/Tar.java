@@ -91,6 +91,7 @@ public class Tar extends MatchingTask {
 
     /**
      * Add a new fileset with the option to specify permissions
+     * @return the tar fileset to be used as the nested element.
      */
     public TarFileSet createTarFileSet() {
         TarFileSet fileset = new TarFileSet();
@@ -101,6 +102,7 @@ public class Tar extends MatchingTask {
 
     /**
      * Set is the name/location of where to create the tar file.
+     * @param tarFile the location of the tar file.
      * @deprecated for consistency with other tasks, please use setDestFile()
      */
     public void setTarfile(File tarFile) {
@@ -118,6 +120,7 @@ public class Tar extends MatchingTask {
 
     /**
      * This is the base directory to look in for things to tar.
+     * @param baseDir the base directory.
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
@@ -135,6 +138,7 @@ public class Tar extends MatchingTask {
      * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
      * <li>  omit - paths greater than the maximum are omitted from the archive
      * </ul>
+     * @param mode the mode string to handle long files.
      * @deprecated setLongFile(String) is deprecated and is replaced with
      *             setLongFile(Tar.TarLongFileMode) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
@@ -159,6 +163,7 @@ public class Tar extends MatchingTask {
      * <li>  gnu - GNU extensions are used for any paths greater than the maximum.
      * <li>  omit - paths greater than the maximum are omitted from the archive
      * </ul>
+     * @param mode the mode to handle long file names.
      */
     public void setLongfile(TarLongFileMode mode) {
         this.longFileMode = mode;
@@ -172,6 +177,7 @@ public class Tar extends MatchingTask {
      * <li>  gzip - Gzip compression
      * <li>  bzip2 - Bzip2 compression
      * </ul>
+     * @param mode the compression method.
      */
     public void setCompression(TarCompressionMethod mode) {
         this.compression = mode;
@@ -179,6 +185,7 @@ public class Tar extends MatchingTask {
 
     /**
      * do the business
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         if (tarFile == null) {
@@ -298,6 +305,11 @@ public class Tar extends MatchingTask {
 
     /**
      * tar a file
+     * @param file the file to tar
+     * @param tOut the output stream
+     * @param vPath the path name of the file to tar
+     * @param tarFileSet the fileset that the file came from.
+     * @throws IOException on error
      */
     protected void tarFile(File file, TarOutputStream tOut, String vPath,
                            TarFileSet tarFileSet)
@@ -389,6 +401,9 @@ public class Tar extends MatchingTask {
     }
 
     /**
+     * Is the archive up to date in relationship to a list of files.
+     * @param files the files to check
+     * @return true if the archive is up to date.
      * @deprecated use the two-arg version instead.
      */
     protected boolean archiveIsUpToDate(String[] files) {
@@ -396,6 +411,10 @@ public class Tar extends MatchingTask {
     }
 
     /**
+     * Is the archive up to date in relationship to a list of files.
+     * @param files the files to check
+     * @param dir   the base directory for the files.
+     * @return true if the archive is up to date.
      * @since Ant 1.5.2
      */
     protected boolean archiveIsUpToDate(String[] files, File dir) {
@@ -407,6 +426,7 @@ public class Tar extends MatchingTask {
 
     /**
      * This is a FileSet with the option to specify permissions
+     * and other attributes.
      */
     public static class TarFileSet extends FileSet {
         private String[] files = null;
@@ -420,17 +440,28 @@ public class Tar extends MatchingTask {
         private String fullpath = "";
         private boolean preserveLeadingSlashes = false;
 
+        /**
+         * Creates a new <code>TarFileSet</code> instance.
+         * Using a fileset as a constructor argument.
+         *
+         * @param fileset a <code>FileSet</code> value
+         */
         public TarFileSet(FileSet fileset) {
             super(fileset);
         }
 
+        /**
+         * Creates a new <code>TarFileSet</code> instance.
+         *
+         */
         public TarFileSet() {
             super();
         }
 
         /**
          *  Get a list of files and directories specified in the fileset.
-         *  @return a list of file and directory names, relative to
+         * @param p the current project.
+         * @return a list of file and directory names, relative to
          *    the baseDir for the project.
          */
         public String[] getFiles(Project p) {
@@ -451,12 +482,16 @@ public class Tar extends MatchingTask {
          * A 3 digit octal string, specify the user, group and
          * other modes in the standard Unix fashion;
          * optional, default=0644
+         * @param octalString a 3 digit octal string.
          */
         public void setMode(String octalString) {
             this.fileMode =
                 UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
         }
 
+        /**
+         * @return the current mode.
+         */
         public int getMode() {
             return fileMode;
         }
@@ -466,6 +501,7 @@ public class Tar extends MatchingTask {
          * other modes in the standard Unix fashion;
          * optional, default=0755
          *
+         * @param octalString a 3 digit octal string.
          * @since Ant 1.6
          */
         public void setDirMode(String octalString) {
@@ -474,6 +510,7 @@ public class Tar extends MatchingTask {
         }
 
         /**
+         * @return the current directory mode
          * @since Ant 1.6
          */
         public int getDirMode() {
@@ -484,11 +521,15 @@ public class Tar extends MatchingTask {
          * The username for the tar entry
          * This is not the same as the UID, which is
          * not currently set by the task.
+         * @param userName the user name for the tar entry.
          */
         public void setUserName(String userName) {
             this.userName = userName;
         }
 
+        /**
+         * @return the user name for the tar entry
+         */
         public String getUserName() {
             return userName;
         }
@@ -497,11 +538,15 @@ public class Tar extends MatchingTask {
          * The groupname for the tar entry; optional, default=""
          * This is not the same as the GID, which is
          * not currently set by the task.
+         * @param groupName the group name string.
          */
         public void setGroup(String groupName) {
             this.groupName = groupName;
         }
 
+        /**
+         * @return the group name string.
+         */
         public String getGroup() {
             return groupName;
         }
@@ -510,11 +555,15 @@ public class Tar extends MatchingTask {
          * If the prefix attribute is set, all files in the fileset
          * are prefixed with that path in the archive.
          * optional.
+         * @param prefix the path prefix.
          */
         public void setPrefix(String prefix) {
             this.prefix = prefix;
         }
 
+        /**
+         * @return the path prefix for the files in the fileset.
+         */
         public String getPrefix() {
             return prefix;
         }
@@ -524,11 +573,15 @@ public class Tar extends MatchingTask {
          * is written with that path in the archive. The prefix attribute,
          * if specified, is ignored. It is an error to have more than one file specified in
          * such a fileset.
+         * @param fullpath the path to use for the file in a fileset.
          */
         public void setFullpath(String fullpath) {
             this.fullpath = fullpath;
         }
 
+        /**
+         * @return the path to use for a single file fileset.
+         */
         public String getFullpath() {
             return fullpath;
         }
@@ -537,11 +590,15 @@ public class Tar extends MatchingTask {
          * Flag to indicates whether leading `/'s should
          * be preserved in the file names.
          * Optional, default is <code>false</code>.
+         * @param b the leading slashes flag.
          */
         public void setPreserveLeadingSlashes(boolean b) {
             this.preserveLeadingSlashes = b;
         }
 
+        /**
+         * @return the leading slashes flag.
+         */
         public boolean getPreserveLeadingSlashes() {
             return preserveLeadingSlashes;
         }
@@ -553,40 +610,60 @@ public class Tar extends MatchingTask {
      */
     public static class TarLongFileMode extends EnumeratedAttribute {
 
-        // permissible values for longfile attribute
-        public static final String WARN = "warn";
-        public static final String FAIL = "fail";
-        public static final String TRUNCATE = "truncate";
-        public static final String GNU = "gnu";
-        public static final String OMIT = "omit";
+        /** permissible values for longfile attribute */
+        public static final String
+            WARN = "warn",
+            FAIL = "fail",
+            TRUNCATE = "truncate",
+            GNU = "gnu",
+            OMIT = "omit";
 
         private final String[] validModes = {WARN, FAIL, TRUNCATE, GNU, OMIT};
 
+        /** Constructor, defaults to "warn" */
         public TarLongFileMode() {
             super();
             setValue(WARN);
         }
 
+        /**
+         * @return the possible values for this enumerated type.
+         */
         public String[] getValues() {
             return validModes;
         }
 
+        /**
+         * @return true if value is "truncate".
+         */
         public boolean isTruncateMode() {
             return TRUNCATE.equalsIgnoreCase(getValue());
         }
 
+        /**
+         * @return true if value is "warn".
+         */
         public boolean isWarnMode() {
             return WARN.equalsIgnoreCase(getValue());
         }
 
+        /**
+         * @return true if value is "gnu".
+         */
         public boolean isGnuMode() {
             return GNU.equalsIgnoreCase(getValue());
         }
 
+        /**
+         * @return true if value is "fail".
+         */
         public boolean isFailMode() {
             return FAIL.equalsIgnoreCase(getValue());
         }
 
+        /**
+         * @return true if value is "omit".
+         */
         public boolean isOmitMode() {
             return OMIT.equalsIgnoreCase(getValue());
         }
