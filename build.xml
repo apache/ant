@@ -1353,6 +1353,8 @@
       <tag name="todo" description="To do:" scope="all"/>
       <tag name="ant.task" enabled="false" description="Task:" scope="types"/>
       <tag name="ant.datatype" enabled="false" description="Data type:" scope="types"/>
+      <tag name="ant.attribute" enabled="false" description="Attribute:" scope="types"/>
+      <tag name="ant.element" enabled="false" description="Nested element:" scope="types"/>
       <group title="Apache Ant Core" packages="org.apache.tools.ant*"/>
       <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*"/>
       <group title="Core Types" packages="org.apache.tools.ant.types*"/>
