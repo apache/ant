@@ -54,13 +54,13 @@
 package org.apache.tools.ant.types.optional.image;
 
 import javax.media.jai.PlanarImage;
-//import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
  *
  * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
- * @see org.apache.tools.ant.tasks.optional.image.Image
+ * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Draw extends TransformOperation {
     protected int xloc = 0;
