@@ -1,4 +1,4 @@
-<antlib>
+<ant-lib version="1.0">
 
     <types>
         <!-- Register a data-type -->
@@ -15,4 +15,4 @@
                    destination="org.apache.myrmidon.components.deployer.TestType1"/>
     </types>
 
-</antlib>
+</ant-lib>
