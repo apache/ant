@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public final class ZipShort implements Cloneable {
      * @param value the Java int to convert to bytes
      * @return the converted int as a byte array in big endian byte order
      */
-    public static byte[] getBytes(int value){
+    public static byte[] getBytes(int value) {
         byte[] result = new byte[2];
         result[0] = (byte) (value & 0xFF);
         result[1] = (byte) ((value & 0xFF00) >> 8);
@@ -94,7 +94,7 @@ public final class ZipShort implements Cloneable {
      * @param offset the offset to start
      * @return the correspondanding java int value
      */
-    public static int getValue(byte[] bytes, int offset){
+    public static int getValue(byte[] bytes, int offset) {
         int value = (bytes[offset + 1] << 8) & 0xFF00;
         value += (bytes[offset] & 0xFF);
         return value;
@@ -105,13 +105,14 @@ public final class ZipShort implements Cloneable {
      * @param bytes the array of bytes
      * @return the correspondanding java int value
      */
-    public static int getValue(byte[] bytes){
-        return getValue(bytes, 0);    
+    public static int getValue(byte[] bytes) {
+        return getValue(bytes, 0);
     }
 
     /**
      * Override to make two instances with same value equal.
      * @param o an object to compare
+     * @return true if the objects are equal
      * @since 1.1
      */
     public boolean equals(Object o) {
