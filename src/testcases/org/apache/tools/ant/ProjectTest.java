@@ -70,6 +70,7 @@ import junit.framework.TestSuite;
 public class ProjectTest extends TestCase {
 
     private Project p;
+    private String root;
 
     public ProjectTest(String name) {
         super(name);
@@ -78,6 +79,7 @@ public class ProjectTest extends TestCase {
     public void setUp() {
         p = new Project();
         p.init();
+        root = new File(File.separator).getAbsolutePath();
     }
 
     public void testDataTypes() throws BuildException {
@@ -147,6 +149,7 @@ public class ProjectTest extends TestCase {
      * adapt file separators to local conventions
      */
     private String localize(String path) {
+        path = root + path.substring(1);
         return path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
     }
 }
