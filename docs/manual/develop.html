@@ -18,7 +18,7 @@
     name of the method must begin with <code>set</code>, followed by the
     attribute name, with the first character of the name in uppercase, and the rest in
 
-    lowercase.  That is, to support an attribute named
+    lowercase<a href="#footnote-1"><sup>*</sup></a>.  That is, to support an attribute named
     <code>file</code> you create a method <code>setFile</code>.
     Depending on the type of the argument, Ant will perform some
     conversions for you, see <a href="#set-magic">below</a>.</li>
@@ -51,6 +51,11 @@ followed by the element name.  For a more complete discussion see
 throws a <code>BuildException</code>. This method implements the task
 itself.</li>
 </ol>
+
+<hr>
+<p><a name="footnote-1">*</a> Actually the case of the letters after
+the first one doesn't really matter to Ant, using all lower case is a
+good convention, though.</p>
 
 <h3>The Life-cycle of a Task</h3>
 <ol>
