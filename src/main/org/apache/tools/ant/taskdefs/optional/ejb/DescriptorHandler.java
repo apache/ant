@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.util.*;
 import java.io.*;
+import java.net.*;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -129,6 +130,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     
     private Hashtable resourceDTDs = new Hashtable();
 
+    private Hashtable urlDTDs = new Hashtable();
+
     /**
      * The directory containing the bean classes and interfaces. This is 
      * used for performing dependency file lookups.
@@ -160,6 +163,16 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
                 owningTask.log("Mapped publicId " + publicId + " to resource " + location, Project.MSG_VERBOSE);
             }
         }
+
+        try {
+            if (publicId != null) {
+                URL urldtd = new URL(location);
+                urlDTDs.put(publicId, urldtd);
+            }            
+        } catch ( java.net.MalformedURLException   e) {
+            //ignored
+        } 
+        
     }
 
     public InputSource resolveEntity(String publicId, String systemId)
@@ -180,12 +193,23 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         String dtdResourceName = (String)resourceDTDs.get(publicId); 
         if (dtdResourceName != null) {
             InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
-            if( is != null ) {
+            if (is != null) {
                 owningTask.log("Resolved " + publicId + " to local resource " + dtdResourceName, Project.MSG_VERBOSE);
                 return new InputSource(is);
             }
         }
-        
+
+        URL dtdUrl = (URL) urlDTDs.get(publicId);
+        if ( dtdUrl != null ) {
+            try {
+                InputStream is = dtdUrl.openStream();
+                owningTask.log("Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE);
+                return new InputSource(is);
+            } catch ( IOException ioe) {
+                //ignore
+            }            
+        } 
+                
         owningTask.log("Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity", 
                         Project.MSG_INFO);
         
