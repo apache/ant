@@ -73,6 +73,9 @@ Fixed bugs:
 * I/O-intensive processes hung when executed via <exec spawn="true">.
   Bugzilla reports 23893/26852.
 
+* -projecthelp swallowed (configuration) errors silently.
+  Bugzilla report 27732.
+
 Other changes:
 --------------
 
