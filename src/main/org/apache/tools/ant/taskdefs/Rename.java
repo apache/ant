@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 
 import java.io.File;
 
@@ -94,7 +95,7 @@ public class Rename extends Task {
      * @param replace <code>on</code>, if an existing file should be replaced.
      */
     public void setReplace(String replace) {
-        this.replace = project.toBoolean(replace);
+        this.replace = Project.toBoolean(replace);
     }
 
 
