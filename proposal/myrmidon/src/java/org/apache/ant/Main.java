@@ -20,15 +20,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.ant.project.LogTargetToListenerAdapter;
 import org.apache.ant.project.Project;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.project.ProjectListener;
-import org.apache.ant.runtime.AntEngine;
-import org.apache.ant.runtime.DefaultAntEngine;
+import org.apache.myrmidon.components.embeddor.Embeddor;
+import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
 import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.DefaultTaskContext;
@@ -45,6 +44,7 @@ import org.apache.avalon.framework.camelot.CamelotUtil;
 import org.apache.avalon.framework.camelot.Deployer;
 import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Hierarchy;
 import org.apache.log.Logger;
 import org.apache.log.LogTarget;
@@ -275,10 +275,10 @@ public class Main
         //that was set up by launcher.
         if( null == homeDir ) homeDir = System.getProperty( "ant.home" );
 
-        final Properties properties = new Properties();
-        properties.setProperty( "ant.home", homeDir );
+        final Parameters parameters = new Parameters();
+        parameters.setParameter( "ant.home", homeDir );
 
-        if( null != taskLibDir ) properties.setProperty( "ant.path.task-lib", taskLibDir );
+        if( null != taskLibDir ) parameters.setParameter( "ant.path.task-lib", taskLibDir );
 
         m_homeDir = (new File( homeDir )).getAbsoluteFile();
         if( !m_homeDir.isDirectory() )
@@ -309,17 +309,17 @@ public class Main
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
 
-        final AntEngine antEngine = new DefaultAntEngine();
-        setupLogger( antEngine );
-        antEngine.setProperties( properties );
-        antEngine.initialize();
+        final Embeddor embeddor = new MyrmidonEmbeddor();
+        setupLogger( embeddor );
+        embeddor.parameterize( parameters );
+        embeddor.initialize();
 
-        final ProjectBuilder builder = antEngine.getProjectBuilder();
+        final ProjectBuilder builder = embeddor.getProjectBuilder();
 
         //create the project
         final Project project = builder.build( buildFile );
 
-        final ProjectEngine engine = antEngine.getProjectEngine();
+        final ProjectEngine engine = embeddor.getProjectEngine();
         engine.addProjectListener( listener );
 
         BufferedReader reader = null;
@@ -352,7 +352,7 @@ public class Main
 
         }
 
-        antEngine.dispose();
+        embeddor.dispose();
     }
 
     /**

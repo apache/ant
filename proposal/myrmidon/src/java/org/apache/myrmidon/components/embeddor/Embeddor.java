@@ -5,34 +5,26 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.runtime;
+package org.apache.myrmidon.components.embeddor;
 
-import java.util.Properties;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.Parameterizable;
 
 /**
- * Interface to the Ant runtime.
+ * Interface through which you embed Myrmidon into applications.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface AntEngine
-    extends Component, Initializable, Disposable
+public interface Embeddor
+    extends Component, Parameterizable, Initializable, Disposable
 {
     /**
-     * Setup basic properties of engine.
-     * Called before init() and can be used to specify alternate components in system.
-     *
-     * @param properties the properties
-     */
-    void setProperties( Properties properties );
-
-    /**
      * Retrieve builder for runtime.
-     * Valid after init() call
+     * Valid after initialize() call
      *
      * @return the ProjectBuilder
      */
@@ -40,7 +32,7 @@ public interface AntEngine
 
     /**
      * Retrieve project engine for runtime.
-     * Valid after init() call
+     * Valid after initialize() call
      *
      * @return the ProjectBuilder
      */
