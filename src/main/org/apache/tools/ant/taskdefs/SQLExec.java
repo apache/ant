@@ -210,6 +210,13 @@ public class SQLExec extends JDBCTask {
     private boolean keepformat = false;
 
     /**
+     * Argument to Statement.setEscapeProcessing
+     *
+     * @since Ant 1.6
+     */
+    private boolean escapeProcessing = true;
+
+    /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      */
@@ -328,6 +335,15 @@ public class SQLExec extends JDBCTask {
     }
     
     /**
+     * Set escape processing for statements.
+     *
+     * @since Ant 1.6
+     */
+    public void setEscapeProcessing(boolean enable) {
+        escapeProcessing = enable;
+    }
+
+    /**
      * Load the sql file and then execute it
      */
     public void execute() throws BuildException {
@@ -375,7 +391,7 @@ public class SQLExec extends JDBCTask {
             }
             try {
                 statement = conn.createStatement();
-
+                statement.setEscapeProcessing(escapeProcessing);
             
                 PrintStream out = System.out;
                 try {

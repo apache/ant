@@ -223,6 +223,8 @@ Other changes:
 
 * <javacc> and <jjtree> will now autodetect JavaCC 3.x and can use it.
 
+* <sql> has a new attribute to control escape processing.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
