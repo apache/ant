@@ -5,11 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.api;
+package org.apache.myrmidon.framework;
 
 import java.util.HashMap;
 import java.util.Set;
 import org.apache.avalon.framework.Enum;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Type safe Enum for Log Levels and utility method
