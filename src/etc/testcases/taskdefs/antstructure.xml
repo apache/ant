@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<project name="antstructure-test" basedir=".">
+
+  <target name="test1">
+    <antstructure/>
+  </target>
+
+</project>

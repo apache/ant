@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <unzip/>
+  </target>
+
+  <target name="test2">
+    <unzip src=""/>
+  </target>
+
+  <target name="test3">
+    <unzip dest=""/>
+  </target>
+
+</project>

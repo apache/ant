@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="delete-test" basedir=".">
+
+  <target name="test1">
+    <delete/>
+  </target>
+
+  <target name="test2">
+    <copydir src="." 
+             dest="taskdefs.tmp"/>
+    <delete file="taskdefs.tmp"/>
+  </target>
+
+  <target name="test3">
+    <copydir src="." 
+             dest="taskdefs.tmp"/>
+    <delete dir="taskdefs.tmp/ant.xml"/>
+  </target>
+
+  <target name="test4">
+    <copydir src="." 
+             dest="taskdefs.tmp"/>
+    <delete dir="taskdefs.tmp"/>
+  </target>
+
+
+</project>

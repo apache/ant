@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <mkdir/>
+  </target>
+
+  <target name="test2">
+    <mkdir dir="template.xml"/>
+  </target>
+
+  <target name="test3">
+    <mkdir dir="testdir.tmp"/>
+  </target>
+
+</project>

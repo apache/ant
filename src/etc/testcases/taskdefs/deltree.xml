@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project name="deltree-test" basedir=".">
+
+  <target name="test1">
+    <deltree/>
+  </target>
+
+  <target name="test2">
+    <deltree dir="src/etc/testcases/taskdefs.tmp"/>
+  </target>
+
+</project>

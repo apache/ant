@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<project name="copydir-test" basedir=".">
+
+  <target name="test1">
+    <copydir/>
+  </target>
+
+  <target name="test2">
+    <copydir src=""/>
+  </target>
+
+  <target name="test3">
+    <copydir dest=""/>
+  </target>
+
+  <target name="test4">
+    <copydir src="." 
+             dest="."/>
+  </target>
+
+  <target name="test5">
+    <mkdir dir="../taskdefs.tmp" />
+    <copydir src="." 
+             dest="../taskdefs.tmp"/>
+  </target>
+
+  <target name="test6">
+    <copydir src="." 
+             dest="template.xml"/>
+  </target>
+
+</project>

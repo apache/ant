@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <gunzip/>
+  </target>
+
+  <target name="test2">
+    <gunzip src=""/>
+  </target>
+
+  <target name="test3">
+    <gunzip src="gzip.tmp"
+            dest="gzip.tmp2"/>
+  </target>
+
+</project>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <tar/>
+  </target>
+
+  <target name="test2">
+    <tar tarfile=""/>
+  </target>
+
+  <target name="test3">
+    <tar basedir=""/>
+  </target>
+
+</project>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="ant-test" basedir=".">
+
+  <target name="all" depends="test1,test2,test3,test4"/>
+
+  <target name="test1">
+    <ant antfile="ant.xml" dir="." target="test1"/>
+  </target>
+
+  <target name="test2">
+    <antcall/>
+  </target>
+
+  <target name="test3">
+    <antcall target="test3"/>
+  </target>
+
+  <target name="test4">
+    <antcall target=""/>
+  </target>
+
+  <target name="test5">
+    <antcall target="dummy"/>
+  </target>
+
+  <target name="test6">
+    <ant antfile="ant.xml" dir="." target="dummy"/>
+  </target>
+
+  <target name="dummy">
+  </target>
+
+</project>

@@ -308,10 +308,22 @@
       <batchtest>
         <fileset dir="${src.tests.dir}">
           <include name="**/*Test*" />
-          <exclude name="**/All*" />
+          <!-- abstract class, not a testcase -->
+          <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
+
+          <!-- these depend on order -->
+          <exclude name="org/apache/tools/ant/taskdefs/GUnzipTest.java" />
+          <exclude name="org/apache/tools/ant/taskdefs/GzipTest.java" />
         </fileset>
       </batchtest>
+
+      <test name="org.apache.tools.ant.taskdefs.GzipTest" />
+      <test name="org.apache.tools.ant.taskdefs.GUnzipTest" />
     </junit>
+
+    <!-- clean up again -->
+    <deltree dir="src/etc/testcases/taskdefs/taskdefs.tmp" />
+    <deltree dir="src/etc/testcases/taskdefs.tmp" />
   </target>
 
 </project>

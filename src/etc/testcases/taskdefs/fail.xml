@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project name="fail-test" basedir=".">
+
+  <target name="test1">
+    <fail/>
+  </target>
+
+  <target name="test2">
+    <fail message="test"/>
+  </target>
+
+</project>

@@ -52,30 +52,35 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.types;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+package org.apache.tools.ant.taskdefs;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
- *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author Nico Seessle <nico@seessle.de> 
  */
-public class AllJUnitTests extends TestCase {
-
-    public AllJUnitTests(String name) {
+public class FilterTest extends TaskdefsTest { 
+    
+    public FilterTest(String name) { 
         super(name);
+    }    
+    
+    public void setUp() { 
+        configureProject("src/etc/testcases/taskdefs/filter.xml");
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(CommandlineTest.class);
-        suite.addTest(new TestSuite(CommandlineJavaTest.class));
-        suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
-        suite.addTest(new TestSuite(PathTest.class));
-        suite.addTest(new TestSuite(PatternSetTest.class));
-        suite.addTest(new TestSuite(FileSetTest.class));
-        return suite;
-   }
+    public void test1() { 
+        expectBuildException("test1", "required argument missing");
+    }
+
+    public void test2() { 
+        expectBuildException("test2", "required argument missing");
+    }
+
+    public void test3() { 
+        expectBuildException("test3", "required argument missing");
+    }
+    
+    public void test4() { 
+        executeTarget("test4");
+    }
+    
 }

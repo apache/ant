@@ -52,27 +52,39 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+package org.apache.tools.ant.taskdefs;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
- *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author Nico Seessle <nico@seessle.de> 
  */
-public class AllJUnitTests extends TestCase {
-
-    public AllJUnitTests(String name) {
+public class MkdirTest extends TaskdefsTest { 
+    
+    public MkdirTest(String name) { 
         super(name);
+    }    
+    
+    public void setUp() { 
+        configureProject("src/etc/testcases/taskdefs/mkdir.xml");
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-	suite.addTest(new TestSuite(org.apache.tools.ant.ProjectTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    public void test1() { 
+        expectBuildException("test1", "required argument missing");
+    }
+
+    public void test2() {
+        executeTarget("test2");
+        String log = getLog();
+        assert(log.indexOf("Warning: Specified directory is a file: ") > -1);
+    }
+
+    public void test3() { 
+        executeTarget("test3");
+        java.io.File f = new java.io.File("src/etc/testcases/taskdefs/testdir.tmp");
+        if (!f.exists() || !f.isDirectory()) { 
+            fail("mkdir failed");
+        } else {
+            f.delete();
+        }
+    }
+    
 }

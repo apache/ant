@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <gzip/>
+  </target>
+
+  <target name="test2">
+    <gzip src=""/>
+  </target>
+
+  <target name="test3">
+    <gzip zipfile=""/>
+  </target>
+
+  <target name="test4">
+    <gzip src="." zipfile=""/>
+  </target>
+
+  <target name="test5">
+    <gzip src="." zipfile="gzip.tmp"/>
+  </target>
+
+</project>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<project name="filter-test" basedir=".">
+
+  <target name="test1">
+    <filter/>
+  </target>
+
+  <target name="test2">
+    <filter token=""/>
+  </target>
+
+  <target name="test3">
+    <filter value=""/>
+  </target>
+
+  <target name="test4">
+    <filter token="" value=""/>
+  </target>
+
+</project>

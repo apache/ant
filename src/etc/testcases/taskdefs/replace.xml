@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <replace/>
+  </target>
+
+  <target name="test2">
+    <replace file=""/>
+  </target>
+
+  <target name="test3">
+    <replace file="template.xml"/>
+  </target>
+
+  <target name="test4">
+    <replace file="template.xml" token=""/>
+  </target>
+
+  <target name="test5">
+    <replace file="template.xml" 
+             token="dont_want_to_really_replace_something"/>
+  </target>
+
+</project>

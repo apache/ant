@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<project name="echo-test" basedir=".">
+
+  <target name="test1">
+    <echo/>
+  </target>
+
+  <target name="test2">
+    <echo message="OUTPUT OF ECHO"/>
+  </target>
+
+  <target name="test3">
+    <echo>
+    This 
+    is
+    a 
+    multiline
+    message
+    </echo>
+  </target>
+
+</project>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<project name="xxx-test" basedir=".">
+
+  <target name="test1">
+    <get/>
+  </target>
+
+  <target name="test2">
+    <get src=""/>
+  </target>
+
+  <target name="test3">
+    <get src="" dest=""/>
+  </target>
+
+  <target name="test4">
+    <get src="" dest=""/>
+  </target>
+
+  <target name="test5">
+    <get src="http://localhost" dest=""/>
+  </target>
+
+  <target name="test6">
+    <get src="http://localhost" dest="get.tmp"/>
+  </target>
+
+</project>
