@@ -25,6 +25,9 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * "Keep-going" Target executor implementation.
+ * Differs from {@link DefaultExecutor} in that a failure in one target does
+ * not halt execution; all targets are attempted, in order. The last failure,
+ * if any, is reported to the caller.
  * @since Ant 1.6.3
  */
 public class KeepGoingExecutor implements Executor {

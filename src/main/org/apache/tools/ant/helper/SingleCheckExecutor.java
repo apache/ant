@@ -27,6 +27,8 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * "Single-check" Target executor implementation.
+ * Differs from {@link DefaultExecutor} in that the dependencies for all
+ * targets are computed together, so that shared dependencies are run just once.
  * @since Ant 1.6.3
  */
 public class SingleCheckExecutor implements Executor {
