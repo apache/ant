@@ -69,7 +69,6 @@
            debug="on"
            deprecation="off"
            optimize="on" >
-      <include name="**/*.java"/>
       <exclude name="**/version.txt" />
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
