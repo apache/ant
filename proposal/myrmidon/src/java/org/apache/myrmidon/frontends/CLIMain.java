@@ -486,7 +486,7 @@ public class CLIMain
     private void prepareLogging() throws Exception
     {
         //handle logging...
-        final BasicLogger logger = new BasicLogger( "myrmidon", m_priority );
+        final BasicLogger logger = new BasicLogger( "[myrmidon] ", m_priority );
         enableLogging( logger );
     }
 
