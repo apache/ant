@@ -198,7 +198,7 @@ public class Javac extends MatchingTask {
      *
      * If you use this attribute together with jikes, you must
      * make sure that your version of jikes supports the -source switch.
-     * Legal values are 1.3 and 1.4 – by default, no -source argument
+     * Legal values are 1.3 and 1.4 - by default, no -source argument
      * will be used at all.
      *
      * @param v  Value to assign to source.
@@ -220,7 +220,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Recreate src
+     * Recreate src.
      *
      * @return a nested src element.
      */
@@ -417,8 +417,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Proceed if compilation fails, but use
-     * failonerror instead.
+     * @ant.attribute ignore="true"
      */
     public void setProceed(boolean proceed) {
         failOnError = !proceed;
