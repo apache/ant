@@ -54,23 +54,20 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ExitException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
-import org.apache.tools.ant.taskdefs.ExecuteJava;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Environment;
 
 /**
  * ANTLR task.
@@ -165,21 +162,21 @@ public class ANTLR extends Task {
             if (u.startsWith("jar:file:")) {
                 int pling = u.indexOf("!");
                 String jarName = u.substring(9, pling);
-                log("Implicitly adding "+jarName+" to classpath",
-                    Project.MSG_DEBUG);
+                log("Implicitly adding " + jarName + " to classpath",
+                        Project.MSG_DEBUG);
                 createClasspath().setLocation(new File((new File(jarName)).getAbsolutePath()));
             } else if (u.startsWith("file:")) {
                 int tail = u.indexOf(resource);
                 String dirName = u.substring(5, tail);
-                log("Implicitly adding "+dirName+" to classpath",
-                    Project.MSG_DEBUG);
+                log("Implicitly adding " + dirName + " to classpath",
+                        Project.MSG_DEBUG);
                 createClasspath().setLocation(new File((new File(dirName)).getAbsolutePath()));
             } else {
-                log("Don\'t know how to handle resource URL "+u,
-                    Project.MSG_DEBUG);
+                log("Don\'t know how to handle resource URL " + u,
+                        Project.MSG_DEBUG);
             }
         } else {
-            log("Couldn\'t find "+resource, Project.MSG_DEBUG);
+            log("Couldn\'t find " + resource, Project.MSG_DEBUG);
         }
     }
 
@@ -194,14 +191,14 @@ public class ANTLR extends Task {
             log("Forking " + commandline.toString(), Project.MSG_VERBOSE);
             int err = run(commandline.getCommandline());
             if (err == 1) {
-                throw new BuildException("ANTLR returned: "+err, location);
+                throw new BuildException("ANTLR returned: " + err, location);
             }
         } else {
             log("Skipped grammar file. Generated file is newer.", Project.MSG_VERBOSE);
         }
     }
 
-    private void validateAttributes() throws BuildException{
+    private void validateAttributes() throws BuildException {
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
@@ -223,7 +220,7 @@ public class ANTLR extends Task {
             String line;
             while ((line = in.readLine()) != null) {
                 int extendsIndex = line.indexOf(" extends ");
-                if (line.startsWith("class ") &&  extendsIndex > -1) {
+                if (line.startsWith("class ") && extendsIndex > -1) {
                     generatedFileName = line.substring(6, extendsIndex).trim();
                     break;
                 }
@@ -241,9 +238,9 @@ public class ANTLR extends Task {
     /** execute in a forked VM */
     private int run(String[] command) throws BuildException {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
-                                                       Project.MSG_WARN), null);
+                Project.MSG_WARN), null);
         exe.setAntRun(project);
-        if (workingdir != null){
+        if (workingdir != null) {
             exe.setWorkingDirectory(workingdir);
         }
         exe.setCommandline(command);
