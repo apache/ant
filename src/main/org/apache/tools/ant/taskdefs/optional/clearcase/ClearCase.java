@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,15 +71,17 @@ import org.apache.tools.ant.types.Commandline;
  * in the path, * you can override this be specifying the cleartooldir attribute.
  * </p>
  * <p>
- * This class provides set and get methods for the 'viewpath' attribute. It
- * also contains constants for the flags that can be passed to cleartool.
+ * This class provides set and get methods for the 'viewpath' and 'objselect'
+ * attribute. It also contains constants for the flags that can be passed to
+ * cleartool.
  * </p>
  *
- * @author Curtis White
+ * @author Curtis White (Exteneded by Sean P. Kane)
  */
 public abstract class ClearCase extends Task {
     private String m_ClearToolDir = "";
     private String m_viewPath = null;
+    private String m_objSelect = null;
 
     /**
      * Set the directory where the cleartool executable is located.
@@ -124,6 +126,23 @@ public abstract class ClearCase extends Task {
         return m_viewPath;
     }
 
+    /**
+     * Set the object to operate on.
+     *
+     * @param objSelect object to operate on
+     */
+    public final void setObjSelect(String objSelect) {
+        m_objSelect = objSelect;
+    }
+
+    /**
+     * Get the object to operate on
+     *
+     * @return m_objSelect
+     */
+    public String getObjSelect() {
+        return m_objSelect;
+    }
 
     protected int run(Commandline cmd) {
         try {
@@ -159,6 +178,30 @@ public abstract class ClearCase extends Task {
      * The 'UndoCheckout' command
      */
     public static final String COMMAND_UNCHECKOUT = "uncheckout";
+    /**
+     * The 'Lock' command
+     */
+    public static final String COMMAND_LOCK = "lock";
+    /**
+     * The 'Unlock' command
+     */
+    public static final String COMMAND_UNLOCK = "unlock";
+    /**
+     * The 'Mkbl' command
+     */
+    public static final String COMMAND_MKBL = "mkbl";
+    /**
+     * The 'Mklabel' command
+     */
+    public static final String COMMAND_MKLABEL = "mklabel";
+    /**
+     * The 'Mklbtype' command
+     */
+    public static final String COMMAND_MKLBTYPE = "mklbtype";
+    /**
+     * The 'Rmtype' command
+     */
+    public static final String COMMAND_RMTYPE = "rmtype";
 
 }
 
