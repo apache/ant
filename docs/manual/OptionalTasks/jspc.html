@@ -11,12 +11,26 @@
 <h3>Description</h3>
 
 <p> Ant task to run the jsp compiler.
+<p>
 
-<p> This task takes the given jsp files and compiles them into java files. It
-is then up to the user to compile the java files into classes.
+It can be used to precompile jsp pages for fast initial invocation
+of JSP pages, deployment on a server without the full JDK installed, 
+or simply to syntax check the pages without deploying them. 
+In most cases, a javac task is usually the next stage in the build process.
+The task does basic dependency checking to prevent unnecessary recompilation -this
+checking compares source and destination timestamps, and does not factor
+in class or taglib dependencies.  
 
-<p><h3>Parameters</h3>
-The Task has the following attributes:
+<p>
+
+The task needs jasper.jar and jasper-runtime.jar, which come with 
+builds of Tomcat 4/Catalina from the 
+<a href="http://jakarta.apache.org/tomcat/">Jakarta Tomcat project</a>
+
+
+<h3>Parameters</h3>
+The Task has the following attributes:<p>
+
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -36,7 +50,7 @@ The Task has the following attributes:
   </tr>
   <tr>
     <td valign="top">verbose</td>
-    <td valign="top">The verbose flag to pass to the compiler.</td>
+    <td valign="top">The verbosity integer to pass to the compiler. Default="0"</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -58,9 +72,10 @@ The Task has the following attributes:
   </tr>
   <tr>
     <td valign="top">classpath</td>
-    <td valign="top">The classpath to use to run the jsp compiler, if the
-    compiler is not already in the ant classpath. This can also be specified
-    by the nested element <code>classpath</code> (a
+    <td valign="top">The classpath to use to run the jsp compiler,
+    and bring in any tag libraries. 
+    This can also be specified
+    by the nested element <code>classpath</code> 
     <a href="../using.html#path">Path</a>).</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -70,31 +85,85 @@ The Task has the following attributes:
     per <code>classpath</code></td>
     <td valign="top" align="center">No</td>
   </tr>
- * classes and classpath (the classpath to use when running the jsp
- * compiler).
- * <p> This task supports the nested elements classpath (A Path) and
- * classpathref (A Reference) which can be used in preference to the
- * attribute classpath, if the jsp compiler is not already in the ant
- * classpath.
-</table>
-<p> This task is a <a href="../dirtasks.html">directory based task</a>, like
-<strong>javac</strong>, so the jsp files to be compiled are located as java
-files are by <strong>javac</strong>.
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">flag to control action on compile failures: default=yes</td>
+    <td valign="top" align="center">No</td>
+  </tr>  
+  </table>
+  
+<P>The <tt>mapped</tt> option will, if set to true, split the JSP text content into a
+one line per call format.  There are comments above and below the mapped
+write calls to localize where in the JSP file each line of text comes
+from.  This can lead to a minor performance degradation (but it is bound 
+by a linear complexity).  Without this options all adjacent writes are
+concatenated into a single write.</P>
 
-<p><h3>Example</h3>
+<P>The <tt>ieplugin</tt> option is used by the <tt>&lt;jsp:plugin&gt;</tt> tags.
+If the Java Plug-in COM Class-ID you want to use changes then it can be
+specified here.  This should not need to be altered.</P>
+
+<h3>Parameters specified as nested elements</h3>
+
+This task is a <a href="../dirtasks.html">directory based task</a>, like
+<strong>javac</strong>, so the jsp files to be compiled are located as java
+files are by <strong>javac</strong>. That is, elements such as <tt>includes</tt> and 
+<tt>excludes</tt> can be used directly inside the task declaration. 
+
+<p>
+
+Elements specific to the jspc task are:- 
+
+<h4>classpath</h4>
+
+The classpath used to compile the JSP pages is specified as for any other
+classpath. Even if the jasper jars are in the ant library directory, or 
+are on the classpath in some other means, this element is important when
+referring to tag libraries.  
+
+<h4>classpathref</h4>
+a reference to an existing classpath
+
+<h3>Example</h3>
 <pre>
 &lt;jspc srcdir="${basedir}/src/war"
       destdir="${basedir}/gensrc"
       package="com.i3sp.jsp"
       verbose="9"&gt;
-  &lt;include name="**\/*.jsp" /&gt;
+  &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
-
 </pre>
+Build all jsp pages under src/war into the destination /gensrc, in a 
+package heirarchy beginning with com.i3sp.jsp.
+<pre>
+
+&lt;jspc 
+      destdir="interim"
+      verbose="1"&gt;
+      classpath="lib/taglibs.jar"
+      srcdir="src"
+      package="com.i3sp.jsp"
+  &lt;include name="**/*.jsp" /&gt;
+&lt;/jspc&gt;
+&lt;depends 
+         srcdir="interim"
+         destdir="build"
+         cache="build/dependencies"
+         classpath="lib/taglibs.jar"/&gt;
+&lt;javac
+         srcdir="interim"
+         destdir="build"
+         classpath="lib/taglibs.jar"
+         debug="on" /&gt;
+</pre>
+Generate jsp pages then javac them down to
+bytecodes. Include lib/taglib jar in the 
+JSP build and the compilation. Dependency checking is used to scrub the 
+java files if class dependencies indicate it is needed. 
 
 <p><h4>Notes</h4>
 <p> At present, this task only supports the jasper compiler. In future,
-other compilers will be supported by setting the jsp.compiler property.
+other compilers will be supported by setting the <tt>jsp.compiler</tt> property.
 <p> The jasper compiler option <code>-webapp</code> is not supported. Using
 the <code>package</code> attribute it is possible to identify the resulting
 java files and thus do full dependency checking - this task only rebuilds
