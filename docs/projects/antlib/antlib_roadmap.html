@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+        <html lang="en">
+    <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
+    <head>
+      <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Apache Ant - Antlib Roadmap</title>
+        <link type="text/css" href="../../page.css" rel="stylesheet">
+          <meta name="author" content="Antoine Levy-Lambert">
+  <meta name="email" content="antoine@apache.org">
+      </head>
+
+    <body>
+      <p class="navpath">
+        <script src="../../breadcrumbs.js" language="JavaScript" type="text/javascript"></script>
+      </p>
+
+      <div class="logobar">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="left"><img border="0" alt="Apache Ant site" src="../../images/group-logo.gif"></td>
+            <td align="center" width="100%"><img alt="Apache Ant logo" border="0" src="../../images/project-logo.gif"></td>
+            <td align="right">
+              <form target="_blank" onsubmit="q.value = query.value + ' site:ant.apache.org'" action="http://www.google.com/search" method="get">
+                <table summary="search" border="0" cellspacing="0" cellpadding="0" bgcolor="#4C6C8F">
+                  <tr>
+                    <td colspan="3"><img height="10" width="1" alt="" src="../../images/spacer.gif"></td>
+                  </tr>
+                  <tr>
+                    <td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td>
+                    <td nowrap="nowrap" class="searchcaption">
+                      <input name="q" type="hidden">
+                      <input size="15" id="query" type="text">
+                      <img height="1" width="5" alt="" src="../../images/spacer.gif">
+                      <input name="Search" value="Search" type="submit">
+                      <br>
+                      the Apache Ant site
+                    </td>
+                    <td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td>
+                  </tr>
+                  <tr>
+                    <td><img alt="" border="0" height="10" width="9" src="../../images/search-left.gif"></td>
+                    <td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td>
+                    <td><img alt="" border="0" height="10" width="9" src="../../images/search-right.gif"></td>
+                  </tr>
+                </table>
+              </form>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+                  <div class="tab">
+              <table summary="tab bar" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                                  <td width="5"><img alt="" height="8" width="8" src="../../images/spacer.gif"></td><td valign="bottom">
+                      <table summary="non selected tab" style="height: 1.4em" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-left.gif"></td><td valign="middle" bgcolor="#B2C4E0"><a href="../../index.html"><font size="2" face="Arial, Helvetica, Sans-serif">Home</font></a></td><td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-right.gif"></td>
+                        </tr>
+                      </table>
+                    </td>
+                                    <td width="5"><img alt="" height="8" width="8" src="../../images/spacer.gif"></td><td valign="bottom">
+                      <table summary="non selected tab" style="height: 1.4em" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-left.gif"></td><td valign="middle" bgcolor="#B2C4E0"><a href="../../projects/index.html"><font size="2" face="Arial, Helvetica, Sans-serif">Projects</font></a></td><td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-right.gif"></td>
+                        </tr>
+                      </table>
+                    </td>
+                            </tr>
+              </table>
+            </div>
+
+      <div class="bluebar"></div>
+                                                      
+  <div class="menucontainer">
+    <div class="menu">
+      <ul>
+            </ul>
+    </div>
+    <img style="float: left" height="10" width="10" border="0" alt="" src="../../images/menu-left.gif">
+    <img style="float: right" height="10" width="10" border="0" alt="" src="../../images/menu-right.gif">
+  </div>  
+      <div class="lightbluebar">&nbsp;</div>
+  <div class="main">
+  <div class="content">
+    <h1 class="title">Antlib Roadmap</h1>
+            <h3 class="section">
+      <a name="Antlib with tasks and types only"></a>
+      Antlib with tasks and types only
+    </h3>
+                        <p>
+Let me quote here Stefan Bodewig - April 24th 2003.
+</p>
+                                <p>
+Let's make a version of antlib that knows about two predefined roles,
+task and data-type.  I think this is already feature complete in the
+proposal (which does even more).
+</p>
+                                <p>
+Let's move this code with the restriction to tasks and types into the
+main branch ASAP.  Let's sort out the classloading requirements as
+well as the interplay of antlib with taskdef and typedef here.
+</p>
+                                <p>
+After this flies, I'd expect us to get roles sorted out.  If we feel
+like removing the difference between tasks and types, we can do so
+then as well.
+</p>
+                        <h3 class="section">
+      <a name="Roles and components in build files"></a>
+      Roles and components in build files
+    </h3>
+                        <p>
+A second step : make a detailed proposal concerning roles and  implement roles and components in ant core. 
+</p>
+                        <h3 class="section">
+      <a name="Roles and components in antlibs"></a>
+      Roles and components in antlibs
+    </h3>
+                        <p>
+  Once roles and components are properly defined and implemented in ant core, we would revisit &lt;antlib&gt; and implement roles and components there.
+  </p>
+                        <h3 class="section">
+      <a name="Namespaces"></a>
+      Namespaces
+    </h3>
+                        <p>
+  After we have antlibs, roles, and components, we should specify how we are going to proceed concerning namespaces and prefixes.
+  </p>
+                
+    </div>
+  </div>
+
+        <p class="copyright">
+        Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.
+        <script type="text/javascript" language="JavaScript"><!--
+                document.write(" - "+"Last Published: " + document.lastModified);
+              //  -->
+        </script>
+      </p>
+    </body>
+  </html>
+
+
+
+
+
+
+
+
+
