@@ -50,7 +50,7 @@ Note: This document was created in the context of releasing Ant 1.5.
     for i in distribution/*
     do
          echo "Signing " $i
-         gpg -a -b $i
+         gpg -a -b --force-v3-sigs $i
     done
 
     Try to do this on Linux since the gpg signatures generated on Windows may 
