@@ -221,6 +221,7 @@ public class AggregateTransformer {
 
     public void transform() throws BuildException {
         checkOptions();
+        final long t0 = System.currentTimeMillis();
         try {
             Element root = document.getDocumentElement();
                         
@@ -237,9 +238,10 @@ public class AggregateTransformer {
                 createAllPackageDetails(root);
             }
         } catch (Exception e){
-            e.printStackTrace();
             throw new BuildException("Errors while applying transformations", e);
         }
+        final long dt = System.currentTimeMillis() - t0;
+        task.log("Transform time: " + dt + "ms");
     }
 
     /** check for invalid options */
@@ -447,7 +449,6 @@ public class AggregateTransformer {
      */
     protected void transform(Node root, String xslname, String htmlname) throws SAXException {
         try{
-            final long t0 = System.currentTimeMillis();
             XSLTInputSource xsl_source = getXSLStreamSource(xslname);
             XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
             File htmlfile = new File(toDir, htmlname);
@@ -458,8 +459,6 @@ public class AggregateTransformer {
             }
             task.log("Applying '" + xslname + "'. Generating '" + htmlfile + "'", Project.MSG_VERBOSE);
             processor.process( new XSLTInputSource(root), xsl_source, new XSLTResultTarget(htmlfile.getAbsolutePath()) );
-            final long dt = System.currentTimeMillis() - t0;
-            task.log("Transform time for " + xslname + ": " + dt + "ms");
         } catch (IOException e){
             task.log(e.getMessage(), Project.MSG_ERR);
             e.printStackTrace(); //@todo bad, change this
@@ -482,7 +481,7 @@ public class AggregateTransformer {
         } else {
             File f = new File(styleDir, name);
             in= new FileInputStream(f);
-            systemId = f.getAbsolutePath();
+            systemId = "file:///" + f.getAbsolutePath();
         }
         XSLTInputSource ss = new XSLTInputSource(in);
         ss.setSystemId(systemId);
