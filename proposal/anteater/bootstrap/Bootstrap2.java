@@ -87,7 +87,7 @@ public class Bootstrap2 {
         cmdarray[7] = base + "source/main.ant"; 
         cmdarray[8] = "default";
         
-        Bootstrap.runCommand(cmdarray);
+        Bootstrap.runCommand(cmdarray, args);
         
         System.out.println();
         System.out.println("-------------------------------------------");

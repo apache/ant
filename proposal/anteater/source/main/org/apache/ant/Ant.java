@@ -23,22 +23,17 @@ public class Ant {
     /**
      *
      */
-    private Hashtable abstractTaskClasses = new Hashtable();
+    private File buildfile;
     
     /**
-     *
+     * The front end running this.
      */
-    private File buildfile;
+    private AntFrontEnd frontEnd;
     
     /**
      * Manager of tasks.
      */
     private TaskManager taskManager = new TaskManager();
-    
-    /**
-     *
-     */
-    private Vector taskPathNodes = new Vector();
 
     /**
      *
@@ -52,7 +47,8 @@ public class Ant {
     /**
      * Constructs a new Ant instance.
      */
-    public Ant() {
+    public Ant(AntFrontEnd frontEnd) {
+        this.frontEnd = frontEnd;
         setUpTaskPath();
     }
     
@@ -61,26 +57,30 @@ public class Ant {
     // ----------------------------------------------------------------- 
     
     /**
-     * Sets additional path nodes onto the task lookup path. These nodes
-     * take precendence over all previously set path nodes.
+     * Sets additional path nodes onto the task lookup path. 
      */   
     public void addTaskPathNode(File node) {
-        taskPathNodes.insertElementAt(node, 0);
         taskManager.addTaskPathNode(node);
     }
     
     /**
-     *
+     * Builds a target.
      */
     public void buildTarget(String targetName) throws AntException {
         
+        // notify FrontEnd that we are starting a build on a project
+        frontEnd.notifyProjectStart(project);
+        
         Target target = project.getTarget(targetName);
+        
+        frontEnd.notifyTargetStart(target);
         
         // XXX don't forget to execute dependancies first!
         
         Enumeration enum = target.getTasks().elements();
         while (enum.hasMoreElements()) {
             Task task = (Task)enum.nextElement();
+            frontEnd.notifyTaskStart(task);
             AbstractTask aTask = taskManager.getTaskInstance(task.getType());
             try {
                 aTask.setProject(project);
@@ -94,7 +94,12 @@ public class Ant {
                 // XXX yes yes yes, this shouldn't be a catch all...
                 throw new AntException("ERR: " + e);
             }
+            frontEnd.notifyTaskEnd(task);
         }
+        
+        // notify frontEnd that we are done
+        frontEnd.notifyTargetEnd(target);
+        frontEnd.notifyProjectEnd(project);
     }
     
     /**

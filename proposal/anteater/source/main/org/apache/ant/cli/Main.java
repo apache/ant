@@ -5,85 +5,73 @@
 package org.apache.ant.cli;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
-import org.apache.ant.*;
 
 /**
- * Entry point for Ant on the Command Line Interface.
+ * Entry point for Ant on the Command Line Interface. This class sets
+ * up the basic environment that Ant will execute in and then hands
+ * off the the CLIFrontEnd class.
  *
  * @author James Duncan Davidson (duncan@apache.org)
  */
 public class Main {
 
     /**
-     * Command line entry point.
+     * Command line entry point. Here we set up the environment via
+     * a URLCLassLoader and then execute in the scope of that class loader
+     * so that the user doesnt have to set things up themselves.
      */
-    public static void main(String[] args) {
-        Ant ant = new Ant();
-        String target = "";
-        
-        System.out.println("Ant(Eater) -- Proposed Ant 2.0");
-
-        // flip through args and set things accordingly
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
-            // scan through -- all -aaa args come first.
-            if (arg.startsWith("-")) {
-                if (arg.equals("-help")) {
-                    printHelp();
-                    return; 
-                } else if (arg.equals("-taskpath")) {
-                    // XXX
-                    // need to seperate on pathsep, but not today
-                    ant.addTaskPathNode(new File(args[++i]));
-                } else if (arg.equals("-buildfile")) {
-                    // XXX
-                    // need to check file to make sure it exists!
-                    try {
-                        ant.setBuildfile(new File(args[++i]));
-                    } catch (AntException ae) {
-                        System.out.println("ICK: " + ae);
-                        System.out.println(ae.getMessage());
-                        return;
-                    }
-                }
-            } else {
-                target = arg;
-            }
-        }
-        
-        // XXX do something if we dont' have a buildfile set!
-        
-        // XXX really should check to make sure that the target is set to something
-
-        // set our listeners on the project
-        
-        Project project = ant.getProject();
-        project.setOutput(System.out);
-
-        System.out.println();
-        System.out.println("Executing Target: " + target);
-        
-        try {
-            ant.buildTarget(target);
-        } catch (AntException ae) {
-            System.out.println("Problem while building: " + ae);
-            System.out.println(ae.getMessage());
-        }
-    }
-
-    // -----------------------------------------------------------------
-    // PRIVATE METHODS
-    // -----------------------------------------------------------------  
+    public static void main(String[] args) throws Exception {
     
-    /**
-     * Prints help to System.out
-     */  
-    private static void printHelp() {
-        System.out.println("Usage: ant [args] [target]");
-        System.out.println("   Arguments:");
-        System.out.println("       -help");
-        System.out.println("       -taskpath [path]");
-        System.out.println("       -buildfile [file]");
+        CLIFrontEnd frontEnd;
+    
+        // check a few things out and make sure we have the right things
+        // that we need in our classpath -- set those up in a custom class
+        // loader and execute from there...
+    
+        Vector classpathNodes = new Vector();
+      
+        // check to see if we have a compiler on the classpath. Right now
+        // we're just checking for the old compiler, but that does tell us
+        // if we have tools.jar or not
+        try {
+            Class clazz = Class.forName("sun.tools.javac.Main");
+        } catch (ClassNotFoundException cnfe) { 
+            String javaHome = System.getProperty("java.home");
+            if (javaHome.endsWith("jre")) {
+                javaHome = javaHome.substring(0, javaHome.length() - 4);
+            }
+            // XXX should check if this exists and bail out if it doesn't
+            String classpath = javaHome + "/lib/tools.jar";
+            URL url = new File(classpath).toURL();
+            classpathNodes.addElement(url);
+        }
+        
+        // XXX add handling for -cp [classpath] argument to set up more classpath
+        // nodes
+        
+        URL[] urls = new URL[classpathNodes.size()];
+        Enumeration enum = classpathNodes.elements();
+        int i = 0;
+        while (enum.hasMoreElements()) {
+            urls[i++] = (URL)enum.nextElement();
+        }
+        
+        URLClassLoader classLoader = new URLClassLoader(urls);
+        try {
+            frontEnd = (CLIFrontEnd)classLoader.loadClass(
+                             "org.apache.ant.cli.CLIFrontEnd").newInstance();
+        } catch (ClassNotFoundException cnfe) {
+            System.out.println("Crap: " + cnfe);
+            return;
+        } catch (InstantiationException ie) {
+            System.out.println("Crap: " + ie);
+            return;
+        } catch (IllegalAccessException iae) {
+            System.out.println("Crap: " + iae);
+            return;
+        }        
+        frontEnd.run(args);
     }
 }

@@ -51,7 +51,8 @@ public class Bootstrap {
         if (classpath == null) {
             command = new String[] {"javac", "./Bootstrap2.java"};
         } else {
-            command = new String[] {"javac", "-classpath", classpath, "./Bootstrap2.java"};
+            command = new String[] {"javac", "-classpath", classpath, 
+                                    "./Bootstrap2.java"};
         }
         runCommand(command);
         
@@ -61,13 +62,20 @@ public class Bootstrap {
         } else {
             command = new String[] {"java", "-cp", classpath, "Bootstrap2"};
         }
-        runCommand(command);
+        runCommand(command, args);
     }
     
     /** 
      * Utility method for execing processes
      */
     static void runCommand(String[] command) throws IOException {
+    
+        System.out.print("Exec'ing: ");
+        for (int i = 0; i < command.length; i++) {
+            System.out.print(command[i] + " ");
+        }
+        System.out.println();
+    
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec(command);
             
@@ -93,6 +101,21 @@ public class Bootstrap {
                 count = in.read(buf, 0, buf.length);
             }
         }
+    }
+    
+    /**
+     * Utility method for running processes that let some additional args
+     * be specified.
+     */
+    static void runCommand(String[] command, String[] addtlArgs) throws IOException {
+        String[] newCommand = new String[command.length + addtlArgs.length];
+        for (int i = 0; i < command.length; i++) {
+            newCommand[i] = command[i];
+        }
+        for (int i = 0; i < addtlArgs.length; i++) {
+            newCommand[command.length + i] = addtlArgs[i];
+        }
+        runCommand(newCommand);
     }
 } 
  
