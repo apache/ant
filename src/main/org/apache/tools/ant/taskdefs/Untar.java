@@ -164,11 +164,11 @@ public class Untar extends Expand {
         private InputStream decompress(final File file,
                                        final InputStream istream)
             throws IOException, BuildException {
-            final String value = getValue();
-            if (GZIP.equals(value)) {
+            final String v = getValue();
+            if (GZIP.equals(v)) {
                 return new GZIPInputStream(istream);
             } else {
-                if (BZIP2.equals(value)) {
+                if (BZIP2.equals(v)) {
                     final char[] magic = new char[] {'B', 'Z'};
                     for (int i = 0; i < magic.length; i++) {
                         if (istream.read() != magic[i]) {

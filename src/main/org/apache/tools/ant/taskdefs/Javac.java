@@ -80,7 +80,7 @@ public class Javac extends MatchingTask {
     private boolean deprecation = false;
     private boolean depend = false;
     private boolean verbose = false;
-    private String target;
+    private String targetAttribute;
     private Path bootclasspath;
     private Path extdirs;
     private boolean includeAntRuntime = true;
@@ -565,7 +565,7 @@ public class Javac extends MatchingTask {
      * @param target the target VM
      */
     public void setTarget(String target) {
-        this.target = target;
+        this.targetAttribute = target;
     }
 
     /**
@@ -573,7 +573,7 @@ public class Javac extends MatchingTask {
      * @return the target VM
      */
     public String getTarget() {
-        return target;
+        return targetAttribute;
     }
 
     /**

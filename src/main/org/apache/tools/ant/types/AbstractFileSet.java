@@ -304,9 +304,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      */
     protected String getDataTypeName() {
         // look up the types in project and see if they match this class
-        Project project = getProject();
-        if (project != null) {
-            Hashtable typedefs = project.getDataTypeDefinitions();
+        Project p = getProject();
+        if (p != null) {
+            Hashtable typedefs = p.getDataTypeDefinitions();
             for (Enumeration e = typedefs.keys(); e.hasMoreElements();) {
                 String typeName = (String) e.nextElement();
                 Class typeClass = (Class) typedefs.get(typeName);

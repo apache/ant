@@ -642,13 +642,13 @@ public class Delete extends MatchingTask {
         if (dirs.length > 0 && includeEmpty) {
             int dirCount = 0;
             for (int j = dirs.length - 1; j >= 0; j--) {
-                File dir = new File(d, dirs[j]);
-                String[] dirFiles = dir.list();
+                File currDir = new File(d, dirs[j]);
+                String[] dirFiles = currDir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
-                    log("Deleting " + dir.getAbsolutePath(), verbosity);
-                    if (!delete(dir)) {
+                    log("Deleting " + currDir.getAbsolutePath(), verbosity);
+                    if (!delete(currDir)) {
                         String message = "Unable to delete directory "
-                                + dir.getAbsolutePath();
+                                + currDir.getAbsolutePath();
                         if (failonerror) {
                             throw new BuildException(message);
                         } else {

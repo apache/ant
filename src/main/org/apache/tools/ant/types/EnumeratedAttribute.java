@@ -56,11 +56,11 @@ public abstract class EnumeratedAttribute {
      * Invoked by {@link org.apache.tools.ant.IntrospectionHelper IntrospectionHelper}.
      */
     public final void setValue(String value) throws BuildException {
-        int index = indexOfValue(value);
-        if (index == -1) {
+        int idx = indexOfValue(value);
+        if (idx == -1) {
             throw new BuildException(value + " is not a legal value for this attribute");
         }
-        this.index = index;
+        this.index = idx;
         this.value = value;
     }
 

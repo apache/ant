@@ -495,16 +495,16 @@ public class Property extends Task {
         resolveAllProperties(props);
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            String value = props.getProperty(name);
+            String propertyName = (String) e.nextElement();
+            String propertyValue = props.getProperty(propertyName);
 
-            String v = getProject().replaceProperties(value);
+            String v = getProject().replaceProperties(propertyValue);
 
             if (prefix != null) {
-                name = prefix + name;
+                propertyName = prefix + propertyName;
             }
 
-            addProperty(name, v);
+            addProperty(propertyName, v);
         }
     }
 
@@ -531,9 +531,9 @@ public class Property extends Task {
      */
     private void resolveAllProperties(Properties props) throws BuildException {
         for (Enumeration e = props.keys(); e.hasMoreElements();) {
-            String name = (String) e.nextElement();
+            String propertyName = (String) e.nextElement();
             Stack referencesSeen = new Stack();
-            resolve(props, name, referencesSeen);
+            resolve(props, propertyName, referencesSeen);
         }
     }
 
@@ -554,10 +554,11 @@ public class Property extends Task {
                                      + "defined.");
         }
 
-        String value = props.getProperty(name);
+        String propertyValue = props.getProperty(name);
         Vector fragments = new Vector();
         Vector propertyRefs = new Vector();
-        ProjectHelper.parsePropertyString(value, fragments, propertyRefs);
+        ProjectHelper.parsePropertyString(propertyValue, fragments,
+                                          propertyRefs);
 
         if (propertyRefs.size() != 0) {
             referencesSeen.push(name);
@@ -580,8 +581,8 @@ public class Property extends Task {
                 }
                 sb.append(fragment);
             }
-            value = sb.toString();
-            props.put(name, value);
+            propertyValue = sb.toString();
+            props.put(name, propertyValue);
             referencesSeen.pop();
         }
     }

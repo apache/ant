@@ -137,8 +137,8 @@ public class SizeSelector extends BaseExtendSelector {
      *
      * @param cmp The comparison to perform, an EnumeratedAttribute
      */
-    public void setWhen(SizeComparisons cmp) {
-        this.cmp = cmp.getIndex();
+    public void setWhen(SizeComparisons scmp) {
+        this.cmp = scmp.getIndex();
     }
 
     /**
@@ -165,9 +165,9 @@ public class SizeSelector extends BaseExtendSelector {
                     units.setValue(parameters[i].getValue());
                     setUnits(units);
                 } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
-                    SizeComparisons cmp = new SizeComparisons();
-                    cmp.setValue(parameters[i].getValue());
-                    setWhen(cmp);
+                    SizeComparisons scmp = new SizeComparisons();
+                    scmp.setValue(parameters[i].getValue());
+                    setWhen(scmp);
                 } else {
                     setError("Invalid parameter " + paramname);
                 }

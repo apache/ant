@@ -230,10 +230,10 @@ public class TarInputStream extends FilterInputStream {
         if (this.currEntry != null && this.currEntry.isGNULongNameEntry()) {
             // read in the name
             StringBuffer longName = new StringBuffer();
-            byte[] buffer = new byte[256];
+            byte[] buf = new byte[256];
             int length = 0;
-            while ((length = read(buffer)) >= 0) {
-                longName.append(new String(buffer, 0, length));
+            while ((length = read(buf)) >= 0) {
+                longName.append(new String(buf, 0, length));
             }
             getNextEntry();
 

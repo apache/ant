@@ -127,7 +127,7 @@ public class WhichResource extends Task {
         loader = new AntClassLoader(getProject().getCoreLoader(),
                     getProject(),
                     classpath, false);
-        String location = null;
+        String loc = null;
         if (classname != null) {
             //convert a class name into a resource
             resource = classname.replace('.', '/') + ".class";
@@ -146,8 +146,8 @@ public class WhichResource extends Task {
         url = loader.getResource(resource);
         if (url != null) {
             //set the property
-            location = url.toExternalForm();
-            getProject().setNewProperty(property, location);
+            loc = url.toExternalForm();
+            getProject().setNewProperty(property, loc);
         }
     }
 

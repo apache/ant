@@ -138,7 +138,7 @@ public final class ChainReaderHelper {
                         = (AntFilterReader) finalFilters.elementAt(i);
                     final String className = filter.getClassName();
                     final Path classpath = filter.getClasspath();
-                    final Project project = filter.getProject();
+                    final Project pro = filter.getProject();
                     if (className != null) {
                         try {
                             Class clazz = null;
@@ -146,7 +146,7 @@ public final class ChainReaderHelper {
                                 clazz = Class.forName(className);
                             } else {
                                 AntClassLoader al
-                                    = project.createClassLoader(classpath);
+                                    = pro.createClassLoader(classpath);
                                 clazz = Class.forName(className, true, al);
                             }
                             if (clazz != null) {

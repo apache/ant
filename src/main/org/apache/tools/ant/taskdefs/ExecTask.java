@@ -416,8 +416,8 @@ public class ExecTask extends Task {
             }
 
             if (p == null) {
-            Vector env = Execute.getProcEnvironment();
-            Enumeration e = env.elements();
+            Vector envVars = Execute.getProcEnvironment();
+            Enumeration e = envVars.elements();
             while (e.hasMoreElements()) {
                 String line = (String) e.nextElement();
                 if (isPath(line)) {

@@ -233,10 +233,10 @@ public class Replace extends MatchingTask {
                 Properties props = getProperties(replaceFilterFile);
                 Enumeration e = props.keys();
                 while (e.hasMoreElements()) {
-                    String token =  e.nextElement().toString();
+                    String tok =  e.nextElement().toString();
                     Replacefilter replaceFilter = createReplacefilter();
-                    replaceFilter.setToken(token);
-                    replaceFilter.setValue(props.getProperty(token));
+                    replaceFilter.setToken(tok);
+                    replaceFilter.setValue(props.getProperty(tok));
                 }
             }
 
@@ -326,12 +326,12 @@ public class Replace extends MatchingTask {
      * @throws BuildException if the file could not be found or read
      */
     public Properties getProperties(File propertyFile) throws BuildException {
-        Properties properties = new Properties();
+        Properties props = new Properties();
 
         FileInputStream in = null;
         try {
             in = new FileInputStream(propertyFile);
-            properties.load(in);
+            props.load(in);
         } catch (FileNotFoundException e) {
             String message = "Property file (" + propertyFile.getPath()
                 + ") not found.";
@@ -350,7 +350,7 @@ public class Replace extends MatchingTask {
             }
         }
 
-        return properties;
+        return props;
     }
 
     /**
@@ -382,7 +382,7 @@ public class Replace extends MatchingTask {
             BufferedReader br = new BufferedReader(reader);
             BufferedWriter bw = new BufferedWriter(writer);
 
-            String buf = fileUtils.readFully(br);
+            String buf = FileUtils.readFully(br);
             if (buf == null) {
                 buf = "";
             }

@@ -142,8 +142,8 @@ public class DateSelector extends BaseExtendSelector {
      *
      * @param cmp The comparison to perform, an EnumeratedAttribute
      */
-    public void setWhen(TimeComparisons cmp) {
-        this.cmp = cmp.getIndex();
+    public void setWhen(TimeComparisons tcmp) {
+        this.cmp = tcmp.getIndex();
     }
 
     /**
@@ -187,9 +187,9 @@ public class DateSelector extends BaseExtendSelector {
                             + parameters[i].getValue());
                     }
                 } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
-                    TimeComparisons cmp = new TimeComparisons();
-                    cmp.setValue(parameters[i].getValue());
-                    setWhen(cmp);
+                    TimeComparisons tcmp = new TimeComparisons();
+                    tcmp.setValue(parameters[i].getValue());
+                    setWhen(tcmp);
                 } else if (PATTERN_KEY.equalsIgnoreCase(paramname)) {
                     setPattern(parameters[i].getValue());
                 } else {

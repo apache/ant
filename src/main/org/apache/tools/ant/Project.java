@@ -830,9 +830,9 @@ public class Project {
         Properties systemP = System.getProperties();
         Enumeration e = systemP.propertyNames();
         while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            String value = systemP.getProperty(name);
-            this.setPropertyInternal(name.toString(), value);
+            String propertyName = (String) e.nextElement();
+            String value = systemP.getProperty(propertyName);
+            this.setPropertyInternal(propertyName, value);
         }
     }
 

@@ -102,9 +102,9 @@ public class AntStructure extends Task {
 
             Enumeration tasks = getProject().getTaskDefinitions().keys();
             while (tasks.hasMoreElements()) {
-                String taskName = (String) tasks.nextElement();
-                printElementDecl(out, taskName,
-                                 (Class) getProject().getTaskDefinitions().get(taskName));
+                String tName = (String) tasks.nextElement();
+                printElementDecl(out, tName,
+                                 (Class) getProject().getTaskDefinitions().get(tName));
             }
 
         } catch (IOException ioe) {
@@ -131,13 +131,13 @@ public class AntStructure extends Task {
         out.print("<!ENTITY % tasks \"");
         boolean first = true;
         while (tasks.hasMoreElements()) {
-            String taskName = (String) tasks.nextElement();
+            String tName = (String) tasks.nextElement();
             if (!first) {
                 out.print(" | ");
             } else {
                 first = false;
             }
-            out.print(taskName);
+            out.print(tName);
         }
         out.println("\">");
         out.print("<!ENTITY % types \"");

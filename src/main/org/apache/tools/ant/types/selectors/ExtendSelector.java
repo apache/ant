@@ -69,9 +69,9 @@ public class ExtendSelector extends BaseSelector {
                     c = Class.forName(classname, true, al);
                 }
                 dynselector = (FileSelector) c.newInstance();
-                final Project project = getProject();
-                if (project != null) {
-                    project.setProjectReference(dynselector);
+                final Project p = getProject();
+                if (p != null) {
+                    p.setProjectReference(dynselector);
                 }
             } catch (ClassNotFoundException cnfexcept) {
                 setError("Selector " + classname

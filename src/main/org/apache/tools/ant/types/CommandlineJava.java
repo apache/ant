@@ -106,10 +106,11 @@ public class CommandlineJava implements Cloneable {
                     listIt.add("-D" + props[i]);
                 }
             }
-            Properties propertySets = mergePropertySets();
-            for (Enumeration e = propertySets.keys(); e.hasMoreElements();) {
+            Properties propertySetProperties = mergePropertySets();
+            for (Enumeration e = propertySetProperties.keys();
+                 e.hasMoreElements();) {
                 String key = (String) e.nextElement();
-                String value = propertySets.getProperty(key);
+                String value = propertySetProperties.getProperty(key);
                 listIt.add("-D" + key + "=" + value);
             }
         }

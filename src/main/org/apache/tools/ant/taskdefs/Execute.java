@@ -535,10 +535,10 @@ public class Execute {
             }
         };
 
-        ExecuteStreamHandler streamHandler = new PumpStreamHandler(dummyOut);
-        streamHandler.setProcessErrorStream(process.getErrorStream());
-        streamHandler.setProcessOutputStream(process.getInputStream());
-        streamHandler.start();
+        ExecuteStreamHandler handler = new PumpStreamHandler(dummyOut);
+        handler.setProcessErrorStream(process.getErrorStream());
+        handler.setProcessOutputStream(process.getInputStream());
+        handler.start();
         process.getOutputStream().close();
 
         project.log("spawned process " + process.toString(), Project.MSG_VERBOSE);

@@ -257,8 +257,8 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         RuntimeConfigurable rc = new RuntimeConfigurable(
             ret, ue.getTaskName());
         rc.setPolyType(ue.getWrapper().getPolyType());
-        Map map = ue.getWrapper().getAttributeMap();
-        for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
+        Map m = ue.getWrapper().getAttributeMap();
+        for (Iterator i = m.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry) i.next();
             rc.setAttribute(
                 (String) entry.getKey(),

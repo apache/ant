@@ -473,9 +473,9 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.14
      */
     public void write(int b) throws IOException {
-        byte[] buf = new byte[1];
-        buf[0] = (byte) (b & 0xff);
-        write(buf, 0, 1);
+        byte[] buff = new byte[1];
+        buff[0] = (byte) (b & 0xff);
+        write(buff, 0, 1);
     }
 
     /**
@@ -694,8 +694,8 @@ public class ZipOutputStream extends FilterOutputStream {
         if (comm == null) {
             comm = "";
         }
-        byte[] comment = getBytes(comm);
-        writeOut((new ZipShort(comment.length)).getBytes());
+        byte[] commentB = getBytes(comm);
+        writeOut((new ZipShort(commentB.length)).getBytes());
         written += 2;
 
         // disk number start
@@ -723,8 +723,8 @@ public class ZipOutputStream extends FilterOutputStream {
         written += extra.length;
 
         // file comment
-        writeOut(comment);
-        written += comment.length;
+        writeOut(commentB);
+        written += commentB.length;
     }
 
     /**

@@ -460,15 +460,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                          File stylesheet)
         throws BuildException {
 
-        File   outFile = null;
-        File   inFile = null;
+        File   outF = null;
+        File   inF = null;
 
         try {
             long styleSheetLastModified = stylesheet.lastModified();
-            inFile = new File(baseDir, xmlFile);
+            inF = new File(baseDir, xmlFile);
 
-            if (inFile.isDirectory()) {
-                log("Skipping " + inFile + " it is a directory.",
+            if (inF.isDirectory()) {
+                log("Skipping " + inF + " it is a directory.",
                     Project.MSG_VERBOSE);
                 return;
             }
@@ -491,23 +491,23 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 return;
             }
 
-            outFile = new File(destDir, outFileName[0]);
+            outF = new File(destDir, outFileName[0]);
 
             if (force
-                || inFile.lastModified() > outFile.lastModified()
-                || styleSheetLastModified > outFile.lastModified()) {
-                ensureDirectoryFor(outFile);
-                log("Processing " + inFile + " to " + outFile);
+                || inF.lastModified() > outF.lastModified()
+                || styleSheetLastModified > outF.lastModified()) {
+                ensureDirectoryFor(outF);
+                log("Processing " + inF + " to " + outF);
 
                 configureLiaison(stylesheet);
-                liaison.transform(inFile, outFile);
+                liaison.transform(inF, outF);
             }
         } catch (Exception ex) {
             // If failed to process document, must delete target document,
             // or it will not attempt to process it the second time
             log("Failed to process " + inFile, Project.MSG_INFO);
-            if (outFile != null) {
-                outFile.delete();
+            if (outF != null) {
+                outF.delete();
             }
 
             throw new BuildException(ex);

@@ -205,7 +205,7 @@ public class TarEntry implements TarConstants {
 
         this.file = file;
 
-        String name = file.getPath();
+        String fileName = file.getPath();
         String osname = System.getProperty("os.name").toLowerCase(Locale.US);
 
         if (osname != null) {
@@ -214,35 +214,35 @@ public class TarEntry implements TarConstants {
             // REVIEW Would a better check be "(File.separator == '\')"?
 
             if (osname.startsWith("windows")) {
-                if (name.length() > 2) {
-                    char ch1 = name.charAt(0);
-                    char ch2 = name.charAt(1);
+                if (fileName.length() > 2) {
+                    char ch1 = fileName.charAt(0);
+                    char ch2 = fileName.charAt(1);
 
                     if (ch2 == ':'
                             && ((ch1 >= 'a' && ch1 <= 'z')
                                 || (ch1 >= 'A' && ch1 <= 'Z'))) {
-                        name = name.substring(2);
+                        fileName = fileName.substring(2);
                     }
                 }
             } else if (osname.indexOf("netware") > -1) {
-                int colon = name.indexOf(':');
+                int colon = fileName.indexOf(':');
                 if (colon != -1) {
-                    name = name.substring(colon + 1);
+                    fileName = fileName.substring(colon + 1);
                 }
             }
         }
 
-        name = name.replace(File.separatorChar, '/');
+        fileName = fileName.replace(File.separatorChar, '/');
 
         // No absolute pathnames
         // Windows (and Posix?) paths can start with "\\NetworkDrive\",
         // so we loop on starting /'s.
-        while (name.startsWith("/")) {
-            name = name.substring(1);
+        while (fileName.startsWith("/")) {
+            fileName = fileName.substring(1);
         }
 
         this.linkName = new StringBuffer("");
-        this.name = new StringBuffer(name);
+        this.name = new StringBuffer(fileName);
 
         if (file.isDirectory()) {
             this.mode = DEFAULT_DIR_MODE;
@@ -600,9 +600,9 @@ public class TarEntry implements TarConstants {
             outbuf[offset++] = 0;
         }
 
-        long checkSum = TarUtils.computeCheckSum(outbuf);
+        long chk = TarUtils.computeCheckSum(outbuf);
 
-        TarUtils.getCheckSumOctalBytes(checkSum, outbuf, csOffset, CHKSUMLEN);
+        TarUtils.getCheckSumOctalBytes(chk, outbuf, csOffset, CHKSUMLEN);
     }
 
     /**

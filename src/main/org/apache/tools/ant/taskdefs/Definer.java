@@ -214,12 +214,12 @@ public abstract class Definer extends DefBase {
             while (urls.hasMoreElements()) {
                 URL url = (URL) urls.nextElement();
 
-                int format = this.format;
+                int fmt = this.format;
                 if (url.toString().toLowerCase(Locale.US).endsWith(".xml")) {
-                    format = Format.XML;
+                    fmt = Format.XML;
                 }
 
-                if (format == Format.PROPERTIES) {
+                if (fmt == Format.PROPERTIES) {
                     loadProperties(al, url);
                     break;
                 } else {

@@ -1257,8 +1257,6 @@ public class Javadoc extends Task {
     public class TagArgument extends FileSet {
         /** Name of the tag. */
         private String name = null;
-        /** Description of the tag to place in the JavaDocs. */
-        private String description = null;
         /** Whether or not the tag is enabled. */
         private boolean enabled = true;
         /**
@@ -1280,17 +1278,6 @@ public class Javadoc extends Task {
          */
         public void setName (String name) {
             this.name = name;
-        }
-
-        /**
-         * Sets the description of the tag. This is what appears in
-         * the JavaDoc.
-         *
-         * @param description The description of the tag.
-         *                    Must not be <code>null</code> or empty.
-         */
-        public void setDescription (String description) {
-            this.description = description;
         }
 
         /**
@@ -1389,9 +1376,9 @@ public class Javadoc extends Task {
             if (name == null || name.equals("")) {
                 throw new BuildException ("No name specified for custom tag.");
             }
-            if (description != null) {
+            if (getDescription() != null) {
                 return name + ":" + (enabled ? "" : "X")
-                    + scope + ":" + description;
+                    + scope + ":" + getDescription();
             } else {
                 return name;
             }

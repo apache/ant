@@ -17,6 +17,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitStatusException;
@@ -136,7 +137,7 @@ public class Exit extends Task {
                     }
                 }
             }
-            log("failing due to " + text, getProject().MSG_DEBUG);
+            log("failing due to " + text, Project.MSG_DEBUG);
             throw ((status == null) ? new BuildException(text)
              : new ExitStatusException(text, status.intValue()));
         }

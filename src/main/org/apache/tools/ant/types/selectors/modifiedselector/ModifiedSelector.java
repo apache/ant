@@ -359,12 +359,12 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
         //
         // -----  Set default values  -----
         //
-        Project project = getProject();
+        Project p = getProject();
         String filename = "cache.properties";
         File cachefile = null;
-        if (project != null) {
+        if (p != null) {
             // normal use inside Ant
-            cachefile = new File(project.getBaseDir(), filename);
+            cachefile = new File(p.getBaseDir(), filename);
 
             // set self as a BuildListener to delay cachefile saves
             getProject().addBuildListener(this);

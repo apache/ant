@@ -574,12 +574,12 @@ public class FixCRLF extends MatchingTask {
      */
     private void nextStateChange(OneLiner.BufferLine bufline)
         throws BuildException {
-        int eol = bufline.length();
+        int eofl = bufline.length();
         int ptr = bufline.getNext();
 
 
         //  Look for next single or double quote, double slash or slash star
-        while (ptr < eol) {
+        while (ptr < eofl) {
             switch (bufline.getChar(ptr++)) {
             case '\'':
                 bufline.setState(IN_CHAR_CONST);
@@ -590,7 +590,7 @@ public class FixCRLF extends MatchingTask {
                 bufline.setLookahead(--ptr);
                 return;
             case '/':
-                if (ptr < eol) {
+                if (ptr < eofl) {
                     if (bufline.getChar(ptr) == '*') {
                         bufline.setState(IN_MULTI_COMMENT);
                         bufline.setLookahead(--ptr);
@@ -604,7 +604,7 @@ public class FixCRLF extends MatchingTask {
                 break;
             } // end of switch (bufline.getChar(ptr++))
 
-        } // end of while (ptr < eol)
+        } // end of while (ptr < eofl)
         // Eol is the next token
         bufline.setLookahead(ptr);
     }
@@ -626,10 +626,10 @@ public class FixCRLF extends MatchingTask {
     private void endOfCharConst(OneLiner.BufferLine bufline, char terminator)
         throws BuildException {
         int ptr = bufline.getNext();
-        int eol = bufline.length();
+        int eofl = bufline.length();
         char c;
         ptr++;          // skip past initial quote
-        while (ptr < eol) {
+        while (ptr < eofl) {
             if ((c = bufline.getChar(ptr++)) == '\\') {
                 ptr++;
             } else {
@@ -638,7 +638,7 @@ public class FixCRLF extends MatchingTask {
                     return;
                 }
             }
-        } // end of while (ptr < eol)
+        } // end of while (ptr < eofl)
         // Must have fallen through to the end of the line
         throw new BuildException("endOfCharConst: unterminated char constant");
     }

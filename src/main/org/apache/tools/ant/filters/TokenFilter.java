@@ -21,7 +21,6 @@ import java.io.Reader;
 import java.util.Vector;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
@@ -645,7 +644,6 @@ public class TokenFilter extends BaseFilterReader
     public static class ContainsRegex extends ChainableReaderFilter {
         private String             from;
         private String             to;
-        private Project            project;
         private RegularExpression  regularExpression;
         private Substitution       substitution;
         private boolean            initialized = false;
@@ -685,7 +683,7 @@ public class TokenFilter extends BaseFilterReader
             }
             regularExpression = new RegularExpression();
             regularExpression.setPattern(from);
-            regexp = regularExpression.getRegexp(project);
+            regexp = regularExpression.getRegexp(getProject());
             if (to == null) {
                 return;
             }

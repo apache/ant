@@ -198,9 +198,9 @@ public class Mapper extends DataType implements Cloneable {
         try {
             FileNameMapper m
                 = (FileNameMapper)(getImplementationClass().newInstance());
-            final Project project = getProject();
-            if (project != null) {
-                project.setProjectReference(m);
+            final Project p = getProject();
+            if (p != null) {
+                p.setProjectReference(m);
             }
             m.setFrom(from);
             m.setTo(to);
@@ -219,16 +219,16 @@ public class Mapper extends DataType implements Cloneable {
      */
     protected Class getImplementationClass() throws ClassNotFoundException {
 
-        String classname = this.classname;
+        String cName = this.classname;
         if (type != null) {
-            classname = type.getImplementation();
+            cName = type.getImplementation();
         }
 
         ClassLoader loader = (classpath == null)
             ? getClass().getClassLoader()
             : getProject().createClassLoader(classpath);
 
-        return Class.forName(classname, true, loader);
+        return Class.forName(cName, true, loader);
     }
 
     /**

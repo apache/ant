@@ -75,9 +75,9 @@ public class PropertySet extends DataType {
         }
 
         public void setBuiltin(BuiltinPropertySetName b) {
-            String builtin = b.getValue();
+            String built_in = b.getValue();
             assertValid("builtin", builtin);
-            this.builtin = builtin;
+            this.builtin = built_in;
         }
 
         private void assertValid(String attr, String value) {
@@ -99,27 +99,27 @@ public class PropertySet extends DataType {
     } //end nested class
 
     public void appendName(String name) {
-        PropertyRef ref = new PropertyRef();
-        ref.setName(name);
-        addPropertyref(ref);
+        PropertyRef r = new PropertyRef();
+        r.setName(name);
+        addPropertyref(r);
     }
 
     public void appendRegex(String regex) {
-        PropertyRef ref = new PropertyRef();
-        ref.setRegex(regex);
-        addPropertyref(ref);
+        PropertyRef r = new PropertyRef();
+        r.setRegex(regex);
+        addPropertyref(r);
     }
 
     public void appendPrefix(String prefix) {
-        PropertyRef ref = new PropertyRef();
-        ref.setPrefix(prefix);
-        addPropertyref(ref);
+        PropertyRef r = new PropertyRef();
+        r.setPrefix(prefix);
+        addPropertyref(r);
     }
 
     public void appendBuiltin(BuiltinPropertySetName b) {
-        PropertyRef ref = new PropertyRef();
-        ref.setBuiltin(b);
-        addPropertyref(ref);
+        PropertyRef r = new PropertyRef();
+        r.setBuiltin(b);
+        addPropertyref(r);
     }
 
     /**
@@ -256,35 +256,35 @@ public class PropertySet extends DataType {
 
         // Add this PropertySet's property names.
         for (Enumeration e = ptyRefs.elements(); e.hasMoreElements();) {
-            PropertyRef ref = (PropertyRef) e.nextElement();
-            if (ref.name != null) {
-                if (prj != null && prj.getProperty(ref.name) != null) {
-                    names.add(ref.name);
+            PropertyRef r = (PropertyRef) e.nextElement();
+            if (r.name != null) {
+                if (prj != null && prj.getProperty(r.name) != null) {
+                    names.add(r.name);
                 }
-            } else if (ref.prefix != null) {
+            } else if (r.prefix != null) {
                 for (Enumeration p = properties.keys(); p.hasMoreElements();) {
                     String name = (String) p.nextElement();
-                    if (name.startsWith(ref.prefix)) {
+                    if (name.startsWith(r.prefix)) {
                         names.add(name);
                     }
                 }
-            } else if (ref.regex != null) {
+            } else if (r.regex != null) {
                 RegexpMatcherFactory matchMaker = new RegexpMatcherFactory();
                 RegexpMatcher matcher = matchMaker.newRegexpMatcher();
-                matcher.setPattern(ref.regex);
+                matcher.setPattern(r.regex);
                 for (Enumeration p = properties.keys(); p.hasMoreElements();) {
                     String name = (String) p.nextElement();
                     if (matcher.matches(name)) {
                         names.add(name);
                     }
                 }
-            } else if (ref.builtin != null) {
+            } else if (r.builtin != null) {
 
-                if (ref.builtin.equals(BuiltinPropertySetName.ALL)) {
+                if (r.builtin.equals(BuiltinPropertySetName.ALL)) {
                     names.addAll(properties.keySet());
-                } else if (ref.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
+                } else if (r.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
                     names.addAll(System.getProperties().keySet());
-                } else if (ref.builtin.equals(BuiltinPropertySetName
+                } else if (r.builtin.equals(BuiltinPropertySetName
                                               .COMMANDLINE)) {
                     names.addAll(getProject().getUserProperties().keySet());
                 } else {

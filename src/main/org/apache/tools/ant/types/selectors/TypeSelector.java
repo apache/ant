@@ -71,9 +71,9 @@ public class TypeSelector extends BaseExtendSelector {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
                 if (TYPE_KEY.equalsIgnoreCase(paramname)) {
-                    FileType type = new FileType();
-                    type.setValue(parameters[i].getValue());
-                    setType(type);
+                    FileType t = new FileType();
+                    t.setValue(parameters[i].getValue());
+                    setType(t);
                 } else {
                     setError("Invalid parameter " + paramname);
                 }

@@ -40,8 +40,8 @@ public class WLRmic extends DefaultRmicAdapter {
                                          + "set the environment variable "
                                          + "CLASSPATH.";
     public static final String ERROR_WLRMIC_FAILED = "Error starting WebLogic rmic: ";
-    public static final String RMI_STUB_SUFFIX = "_WLStub";
-    public static final String RMI_SKEL_SUFFIX = "_WLSkel";
+    public static final String WL_RMI_STUB_SUFFIX = "_WLStub";
+    public static final String WL_RMI_SKEL_SUFFIX = "_WLSkel";
 
     public boolean execute() throws BuildException {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
@@ -82,13 +82,13 @@ public class WLRmic extends DefaultRmicAdapter {
      * Get the suffix for the rmic stub classes
      */
     public String getStubClassSuffix() {
-        return RMI_STUB_SUFFIX;
+        return WL_RMI_STUB_SUFFIX;
     }
 
     /**
      * Get the suffix for the rmic skeleton classes
      */
     public String getSkelClassSuffix() {
-        return RMI_SKEL_SUFFIX;
+        return WL_RMI_SKEL_SUFFIX;
     }
 }

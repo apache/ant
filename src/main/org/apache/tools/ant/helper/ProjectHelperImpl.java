@@ -103,12 +103,12 @@ public class ProjectHelperImpl extends ProjectHelper {
             throw new BuildException("Only File source supported by "
                 + "default plugin");
         }
-        File buildFile = (File) source;
+        File bFile = (File) source;
         FileInputStream inputStream = null;
         InputSource inputSource = null;
 
         this.project = project;
-        this.buildFile = new File(buildFile.getAbsolutePath());
+        this.buildFile = new File(bFile.getAbsolutePath());
         buildFileParent = new File(this.buildFile.getParent());
 
         try {
@@ -119,11 +119,11 @@ public class ProjectHelperImpl extends ProjectHelper {
             }
 
 
-            String uri = fu.toURI(buildFile.getAbsolutePath());
-            inputStream = new FileInputStream(buildFile);
+            String uri = fu.toURI(bFile.getAbsolutePath());
+            inputStream = new FileInputStream(bFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
-            project.log("parsing buildfile " + buildFile + " with URI = "
+            project.log("parsing buildfile " + bFile + " with URI = "
                 + uri, Project.MSG_VERBOSE);
             HandlerBase hb = new RootHandler(this);
             parser.setDocumentHandler(hb);

@@ -94,9 +94,9 @@ public class Tar extends MatchingTask {
      * @return the tar fileset to be used as the nested element.
      */
     public TarFileSet createTarFileSet() {
-        TarFileSet fileset = new TarFileSet();
-        filesets.addElement(fileset);
-        return fileset;
+        TarFileSet fs = new TarFileSet();
+        filesets.addElement(fs);
+        return fs;
     }
 
 
@@ -750,11 +750,11 @@ public class Tar extends MatchingTask {
          */
         private OutputStream compress(final OutputStream ostream)
             throws IOException {
-            final String value = getValue();
-            if (GZIP.equals(value)) {
+            final String v = getValue();
+            if (GZIP.equals(v)) {
                 return new GZIPOutputStream(ostream);
             } else {
-                if (BZIP2.equals(value)) {
+                if (BZIP2.equals(v)) {
                     ostream.write('B');
                     ostream.write('Z');
                     return new CBZip2OutputStream(ostream);
