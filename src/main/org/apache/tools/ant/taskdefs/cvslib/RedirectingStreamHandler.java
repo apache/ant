@@ -58,7 +58,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.BuildException;
 
 /**
  * A dummy stream handler that just passes stuff to the parser.
@@ -67,110 +70,40 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
  * @version $Revision$ $Date$
  */
 class RedirectingStreamHandler
-    implements ExecuteStreamHandler, Runnable
+    extends PumpStreamHandler
 {
-    private final ChangeLogParser m_parser;
-    private BufferedReader m_reader;
-    private InputStreamReader m_error;
-    private final StringBuffer m_errors = new StringBuffer();
-
     RedirectingStreamHandler( final ChangeLogParser parser )
     {
-        m_parser = parser;
+        super( new RedirectingOutputStream( parser ),
+               new ByteArrayOutputStream() );
     }
 
     String getErrors()
     {
-        if( 0 == m_errors.length() )
+        try
+        {
+            final ByteArrayOutputStream error = (ByteArrayOutputStream)getErr();
+            return error.toString( "ASCII" );
+        }
+        catch( final Exception e )
         {
             return null;
         }
-        else
-        {
-            return m_errors.toString();
-        }
     }
 
-    /**
-     * Install a handler for the input stream of the subprocess.
-     *
-     * @param os output stream to write to the standard input stream of the
-     *           subprocess
-     */
-    public void setProcessInputStream( OutputStream os ) throws IOException
-    {
-        //ignore
-    }
 
-    /**
-     * Install a handler for the error stream of the subprocess.
-     *
-     * @param is input stream to read from the error stream from the subprocess
-     */
-    public void setProcessErrorStream( InputStream is ) throws IOException
+    public void stop() 
     {
-        m_error = new InputStreamReader( is );
-    }
-
-    /**
-     * Install a handler for the output stream of the subprocess.
-     *
-     * @param is input stream to read from the error stream from the subprocess
-     */
-    public void setProcessOutputStream( InputStream is ) throws IOException
-    {
-        m_reader = new BufferedReader( new InputStreamReader( is ) );
-    }
-
-    /**
-     * Start handling of the streams.
-     */
-    public void start() throws IOException
-    {
-        //Start up a separate thread to consume error
-        //stream. Hopefully to avoid blocking of task
-        final Thread thread = new Thread( this, "ErrorConsumer" );
-        thread.start();
-
-        String line = m_reader.readLine();
-        while( null != line )
-        {
-            m_parser.stdout( line );
-            line = m_reader.readLine();
-        }
-    }
-
-    /**
-     * Process the standard error in a different
-     * thread to avoid blocking in some situaitons.
-     */
-    public void run()
-    {
-        // Read the error stream so that it does not block !
-        // We cannot use a BufferedReader as the ready() method is bugged!
-        // (see Bug 4329985, which is supposed to be fixed in JDK1.4 :
-        //http://developer.java.sun.com/developer/bugParade/bugs/4329985.html)
+        super.stop();
         try
         {
-            while( m_error.ready() )
-            {
-                final int value = m_error.read();
-                if( -1 != value )
-                {
-                    m_errors.append( (char)value );
-                }
-            }
-        }
-        catch( final IOException ioe )
+            getErr().close();
+            getOut().close();
+        } 
+        catch( final IOException e )
         {
-            //ignore --> Means stderror has been shutdown
+            // plain impossible
+            throw new BuildException( e );
         }
-    }
-
-    /**
-     * Stop handling of the streams - will not be restarted.
-     */
-    public void stop()
-    {
     }
 }
