@@ -52,48 +52,20 @@ public class Property
         throws ConfigurationException
     {
         final String[] attributes = configuration.getAttributeNames();
-
         for( int i = 0; i < attributes.length; i++ )
         {
             final String name = attributes[ i ];
             final String value = configuration.getAttribute( name );
-
-            final Object object = resolve( value );
-
-            if( name.equals( "name" ) )
-            {
-                final String convertedValue = (String)convert( String.class, object );
-                setName( convertedValue );
-            }
-            else if( name.equals( "value" ) )
-            {
-                try { setValue( object ); }
-                catch( final TaskException te )
-                {
-                    throw new ConfigurationException( "Error setting value: " + value, te );
-                }
-            }
-            else if( name.equals( "local-scope" ) )
-            {
-                final Boolean localScope = (Boolean)convert( Boolean.class, object );
-                setLocalScope( Boolean.TRUE == localScope );
-            }
-            else
-            {
-                throw new ConfigurationException( "Unknown attribute " + name );
-            }
+            configure( this, name, value );
         }
 
         final Configuration[] children = configuration.getChildren();
-
         for( int i = 0; i < children.length; i++ )
         {
-            final Configuration child = children[ i ];
-
             try
             {
-                final DataType value = (DataType)m_factory.create( child.getName() );
-                configure( value, child );
+                final DataType value = (DataType)m_factory.create( children[ i ].getName() );
+                configure( value, children[ i ] );
                 setValue( value );
             }
             catch( final Exception e )
