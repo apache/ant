@@ -198,6 +198,9 @@ public class UnknownElement2 extends UnknownElement {
         if (realThing instanceof Task) {
             ((Task) realThing).execute();
         }
+        // the task will not be reused ( a new init() will be called )
+        // Let GC do its job
+        realThing=null;
     }
 
     /**
