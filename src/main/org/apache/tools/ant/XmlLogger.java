@@ -137,7 +137,7 @@ public class XmlLogger implements BuildListener {
                 new OutputStreamWriter(new FileOutputStream(outFilename),
                                        "UTF8");
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-            out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
+            out.write("<?xml-stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
             (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
             out.close();
