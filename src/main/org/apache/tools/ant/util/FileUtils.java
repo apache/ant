@@ -713,7 +713,7 @@ public class FileUtils {
      * @param filename the file name to be checked for being an absolute path.
      * @return true if the filename represents an absolute path.
      */
-    private static boolean isAbsolutePath(String filename) {
+    public static boolean isAbsolutePath(String filename) {
         if (filename.startsWith(File.separator)) {
             // common for all os
             return true;
@@ -1164,8 +1164,12 @@ public class FileUtils {
      */
     public boolean isSymbolicLink(File parent, String name)
         throws IOException {
-        File toTest = new File(((parent == null)
-            ? null : parent.getCanonicalPath()), name);
+        if (parent == null) {
+            File f = new File(name);
+            parent = f.getParentFile();
+            name = f.getName();
+        }
+        File toTest = new File(parent.getCanonicalPath(), name);
         return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
     }
 
