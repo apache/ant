@@ -15,18 +15,19 @@ compatibility.</i></p>
 <p>Executes a system command. When the <i>os</i> attribute is specified, then
 the command is only executed when Ant is run on one of the specified operating
 systems.</p>
-<p>The files and/or directories of a number of <a
-href="../CoreTypes/fileset.html">FileSet</a>s, <a
-href="../CoreTypes/dirset.html">DirSet</a>s (<em>since Ant 1.6</em>)
-or <a href="../CoreTypes/filelist.html">FileList</a>s (<em>since Ant
-1.6</em>) are passed as arguments to the system command.</p>
-<p>If you specify a nested <a
-href="../CoreTypes/mapper.html">mapper</a> and the <i>dest</i> attribute,
+<p>The files and/or directories of a number of
+ <a href="../CoreTypes/fileset.html">FileSet</a>s,
+ <a href="../CoreTypes/dirset.html">DirSet</a>s
+ (<em>since&nbsp;Ant&nbsp;1.6</em>) or
+ <a href="../CoreTypes/filelist.html">FileList</a>s
+ (<em>since&nbsp;Ant&nbsp;1.6</em>)
+ are passed as arguments to the system command.</p>
+<p>If you specify a nested <a href="../CoreTypes/mapper.html">mapper</a>,
 the timestamp of each source file is compared to the timestamp of a
 target file which is defined by the nested mapper element and searched
-for in the given dest.</p>
-<p>At least one fileset or filelist is required, and you must not specify more than
-one mapper.</p>
+for in the given <i>dest</i>, if specified.</p>
+<p>At least one fileset or filelist is required,
+and you must not specify more than one mapper.</p>
 
 <p>Note that you cannot interact with the forked program, the only way
 to send input to it is via the input and inputstring attributes.</p>
@@ -46,20 +47,20 @@ to send input to it is via the input and inputstring attributes.</p>
   </tr>
   <tr>
     <td valign="top">dest</td>
-    <td valign="top">the directory where the <code>&lt;apply&gt;</code> expects the target files will be placed by the 
-                     command, when it is executed. 
-    </td>
-    <td align="center" valign="top">Yes, if you specify a nested mapper</td>
+    <td valign="top">the directory where the command is expected to place
+    target files when it is executed. This attribute is valid only when used
+    in conjunction with a nested mapper; if omitted, the target filenames
+    returned by the mapper will be interpreted as absolute paths.</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">spawn</td>
-    <td valign="top">whether or not you want the commands to be spawned<br/>
-    Default is false.<br>
-    If you spawn a command, its output will not be logged by ant.<br/>
-    The input, output, error, and result property settings are not active when spawning a process.<br>
-    <em>since Ant 1.6</em>
+    <td valign="top">whether or not you want the commands to be spawned.<br />
+    If you spawn a command, its output will not be logged by ant.<br />
+    The input, output, error, and result property settings are not active when spawning a process.<br />
+    <em>since&nbsp;Ant&nbsp;1.6</em>
     </td>
-    <td align="center" valign="top">No</td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
 
   <tr>
@@ -70,9 +71,9 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">relative</td>
     <td valign="top">whether the filenames should be passed on the
-      command line as absolute or relative pathnames (relative to the
-      base directory of the corresponding fileset/list for source files or
-      the <i>dest</i> attribute for target files).</td>
+      command line as relative pathnames (relative to the base directory
+      of the corresponding fileset/list for source files or the
+      <i>dest</i> attribute for target files).</td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
@@ -99,7 +100,7 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">error</td>
     <td valign="top">The file to which the standard error of the
-    command should be redirected.  <em>since Ant 1.6</em></td>
+    command should be redirected.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -109,15 +110,15 @@ to send input to it is via the input and inputstring attributes.</p>
     file/property. The error output will not be included in the output
     file/property. If you redirect error with the &quot;error&quot; or
     &quot;errorProperty&quot; attributes, this will have no effect.
-    <em>since Ant 1.6</em></td>
+    <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">append</td>
     <td valign="top">whether output should be appended to or overwrite
-      an existing file.  Defaults to false.  If you set parallel to
-      false, you will probably want to set this one to true.</td>
-    <td align="center" valign="top">No</td>
+      an existing file.  If you set parallel to false, you will probably
+      want to set this one to true.</td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
@@ -130,21 +131,21 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">errorproperty</td>
     <td valign="top">The name of a property in which the standard error of the 
-      command should be stored.  <em>since Ant 1.6</em></td>
+      command should be stored.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">input</td>
     <td valign="top">A file from which the executed command's standard
     input is taken. This attribute is mutually exclusive with the
-    inputstring attribute.  <em>since Ant 1.6</em></td>
+    inputstring attribute.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">inputstring</td>
     <td valign="top">A string which serves as the input stream for the
     executed command. This attribute is mutually exclusive with the
-    input attribute.  <em>since Ant 1.6</em></td>
+    input attribute.  <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -184,16 +185,15 @@ to send input to it is via the input and inputstring attributes.</p>
   <tr>
     <td valign="top">parallel</td>
     <td valign="top">Run the command only once, appending all files as
-      arguments. If false, command will be executed once for every file. 
-      Defaults to false. </td>
-    <td align="center" valign="top">No</td>
+      arguments. If false, command will be executed once for every file.</td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">type</td>
     <td valign="top">One of <i>file</i>, <i>dir</i> or
       <i>both</i>. If set to <i>file</i>, only the names of plain
       files will be sent to the command. If set to <i>dir</i>, only
-      the names of directories are considered.<br>
+      the names of directories are considered.<br />
       <strong>Note:</strong> The type attribute does not apply to
       nested <i>dirset</i>s - <i>dirset</i>s always implicitly
       assume type to be <i>dir</i>.</td>
@@ -225,40 +225,39 @@ to send input to it is via the input and inputstring attributes.</p>
     executable if resolved firstly against the project basedir and if
     that does not exist, against the execution directory if
     specified. On Unix systems, if you only want to allow execution of
-    commands in the user's path, set this to false.  <em>since Ant
-    1.6</em></td>
+    commands in the user's path, set this to false.
+    <em>since&nbsp;Ant&nbsp;1.6</em></td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>                     
   <tr>
     <td valign="top">maxparallel</td>
     <td valign="top">Limit the amount of parallelism by passing at
       most this many sourcefiles at once.  Set it to &lt;= 0 for
-      unlimited.  Defaults to unlimited.  <em>Since Ant 1.6.</em></td>
-    <td align="center" valign="top">No</td>
+      unlimited. <em>Since&nbsp;Ant&nbsp;1.6.</em></td>
+    <td align="center" valign="top">No, unlimited by default</td>
   </tr>
   <tr>
     <td valign="top">addsourcefile</td>
     <td valign="top">Whether source file names should be added to the
-      command automatically.  Defaults to <code>true</code>.  
-      <em>Since Ant 1.6.</em></td>
-    <td align="center" valign="top">No</td>
+      command automatically. <em>Since&nbsp;Ant&nbsp;1.6.</em></td>
+    <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
     <td valign="top">verbose</td>
     <td valign="top">Whether to print a summary after execution or not.
-      Defaults to <code>false</code>.  <em>Since Ant 1.6.</em></td>
-    <td align="center" valign="top">No</td>
+      <em>Since&nbsp;Ant&nbsp;1.6.</em></td>
+    <td align="center" valign="top">No, default <i>false</i></td>
   </tr>
   <tr>
     <td valign="top">ignoremissing</td>
     <td valign="top">Whether to ignore nonexistent files specified
-      via filelists.  <em>Since Ant 1.6.2.</em></td>
+      via filelists.  <em>Since&nbsp;Ant&nbsp;1.6.2.</em></td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
   <tr>
     <td valign="top">force</td>
     <td valign="top">Whether to bypass timestamp comparisons
-      for target files.  <em>Since Ant 1.7.</em></td>
+      for target files.  <em>Since&nbsp;Ant&nbsp;1.6.3.</em></td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
 </table>
@@ -268,20 +267,21 @@ to send input to it is via the input and inputstring attributes.</p>
 elements to define the files for this task and refer to
 <code>&lt;fileset&gt;</code>s defined elsewhere.</p>
 <h4>filelist</h4>
-<p><em>Since Ant 1.6</em></p>
+<p><em>Since&nbsp;Ant&nbsp;1.6</em></p>
 <p>You can use any number of nested <code>&lt;filelist&gt;</code>
 elements to define the files for this task and refer to
 <code>&lt;filelist&gt;</code>s defined elsewhere.</p>
 <h4>dirset</h4>
-<p><em>Since Ant 1.6</em></p>
+<p><em>Since&nbsp;Ant&nbsp;1.6</em></p>
 <p>You can use any number of nested <code>&lt;dirset&gt;</code>
 elements to define the directories for this task and refer to
 <code>&lt;dirset&gt;</code>s defined elsewhere.</p>
 <h4>mapper</h4>
-<p>A single <code>&lt;mapper&gt;</code> specifies the target files
-relative to the <CODE>dest</CODE> attribute for dependency checking.
-At least one <code>&lt;fileset&gt;</code> or
-<code>&lt;filelist&gt;</code> is required.</p>
+<p>A single <code>&lt;mapper&gt;</code> specifies the target files relative
+to the <code>dest</code> attribute for dependency checking. If the
+<code>dest</code> attribute is specified it will be used as a base directory
+for resolving relative pathnames returned by the mapper. At least one
+<code>&lt;fileset&gt;</code> or <code>&lt;filelist&gt;</code> is required.</p>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
@@ -297,14 +297,13 @@ use a nested <code>&lt;srcfile&gt;</code> element between your
 <code>&lt;srcfile&gt;</code> and marks the position of the target
 filename on the command line. If omitted, the target filenames will
 not be added to the command line at all. This element can only be
-specified, if you also define a nested mapper and the <i>dest</i>
-attribute.</p>
+specified if you also define a nested mapper.</p>
 <h4>env</h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
 <h4>redirector</h4>
-<i><b>Since Ant 1.6.2</b></i>
+<i><b>Since&nbsp;Ant&nbsp;1.6.2</b></i>
 <p>A nested <a href="../CoreTypes/redirector.html">I/O Redirector</a>
 can be specified.  &lt;apply&gt;'s behavior is like that of
 <a href="exec.html#redirector">exec</a> with regard to
@@ -371,16 +370,16 @@ the <code>.o</code> and SOURCEFILE with the absolute name of the
 &lt;/apply&gt;
 </pre></blockquote>
 Applies the fictitious &quot;processfile&quot; executable to all
-files matching <code>*.file</code> in the <CODE>src</CODE> directory.
-The <CODE>out</CODE> <code>&lt;mapper&gt;</code> has been set up to map
-<CODE>*.file</CODE> to <CODE>*.out</CODE>, then this <code>&lt;mapper&gt;</code>
-is used to specify <CODE>targetfile</CODE>s for this &lt;apply&gt;
-task.  A reference to <CODE>out</CODE> is then used as an
+files matching <code>*.file</code> in the <code>src</code> directory.
+The <code>out</code> <code>&lt;mapper&gt;</code> has been set up to map
+<code>*.file</code> to <code>*.out</code>, then this <code>&lt;mapper&gt;</code>
+is used to specify <code>targetfile</code>s for this &lt;apply&gt;
+task.  A reference to <code>out</code> is then used as an
 <code>&lt;outputmapper&gt;</code> nested in a <code>&lt;redirector&gt;</code>, which in turn is
 nested beneath this <code>&lt;apply&gt;</code> instance.  This allows us to perform
 dependency checking against output files--the target files in this case.
 
-<hr><p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
