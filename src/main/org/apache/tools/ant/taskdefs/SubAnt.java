@@ -72,9 +72,6 @@ import org.apache.tools.ant.types.Reference;
 
 
 /**
- * <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
- * change till Ant1.6 ships; it may even be omitted from the product.
- * <p>
  * Calls a given target for all defined sub-builds. This is an extension
  * of ant for bulk project execution.
  * <p>

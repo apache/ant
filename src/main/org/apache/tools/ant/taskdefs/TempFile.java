@@ -104,6 +104,7 @@ public class TempFile extends Task {
      * Sets the property you wish to assign the temporary file to.
      *
      * @param  property  The property to set
+     * @ant.attribute group="required"
      */
     public void setProperty(String property) {
         this.property = property;
@@ -111,8 +112,8 @@ public class TempFile extends Task {
 
 
     /**
-     * Sets the destination directory. If null,
-     * the parent directory is used instead.
+     * Sets the destination directory. If not set,
+     * the basedir directory is used instead.
      *
      * @param  destDir  The new destDir value
      */
@@ -122,7 +123,7 @@ public class TempFile extends Task {
 
 
     /**
-     * Sets the optional prefix string.
+     * Sets the optional prefix string for the temp file.
      *
      * @param  prefix  string to prepend to generated string
      */
@@ -132,7 +133,7 @@ public class TempFile extends Task {
 
 
     /**
-     * Sets the suffix string for the temp file (optional)
+     * Sets the optional suffix string for the temp file.
      *
      * @param  suffix  suffix including any "." , e.g ".xml"
      */

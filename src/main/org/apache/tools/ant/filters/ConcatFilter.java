@@ -76,8 +76,8 @@ import org.apache.tools.ant.types.Parameter;
  * file.</p>
  *
  * @since 1.6
- * @version 2003-09-17
- * @author Jan Matèrne
+ * @version 2003-09-23
+ * @author Jan Mat\u00e8rne
  */
 public final class ConcatFilter extends BaseParamFilterReader
     implements ChainableReader {
@@ -89,10 +89,10 @@ public final class ConcatFilter extends BaseParamFilterReader
     private File append;
 
     /** Reader for prepend-file. */
-    private Reader prependReader = new EmptyReader();
+    private Reader prependReader = null;
 
     /** Reader for append-file. */
-    private Reader appendReader = new EmptyReader();
+    private Reader appendReader = null;
 
     /**
      * Constructor for "dummy" instances.
@@ -136,12 +136,28 @@ public final class ConcatFilter extends BaseParamFilterReader
 
         // The readers return -1 if they end. So simply read the "prepend"
         // after that the "content" and at the end the "append" file.
-        ch = prependReader.read();
+        if (prependReader != null) {
+            ch = prependReader.read();
+            if (ch == -1) {
+                // I am the only one so I have to close the reader
+                prependReader.close();
+                prependReader = null;
+            }
+        }
         if (ch == -1) {
             ch = super.read();
         }
         if (ch == -1) {
-            ch = appendReader.read();
+            // don´t call super.close() because that reader is used
+            // on other places ...
+            if (appendReader != null) {
+                ch = appendReader.read();
+                if (ch == -1) {
+                    // I am the only one so I have to close the reader
+                    appendReader.close();
+                    appendReader = null;
+                }
+            }
         }
 
         return ch;
@@ -233,14 +249,4 @@ public final class ConcatFilter extends BaseParamFilterReader
             appendReader = new BufferedReader(new FileReader(append));
         }
    }
-
-   /**
-    * Reader which is always at the end of file.
-    * Used for easier algorithm (polymorphism instead if-cascades).
-    */
-   private class EmptyReader extends Reader {
-       public int read(char[] ch, int i1, int i2) { return -1; }
-       public void close() { }
-   }
-
 }

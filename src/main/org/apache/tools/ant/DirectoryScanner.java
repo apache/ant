@@ -65,6 +65,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.selectors.FileSelector;
@@ -163,6 +164,8 @@ import org.apache.tools.ant.util.FileUtils;
 public class DirectoryScanner
        implements FileScanner, SelectorScanner, ResourceFactory {
 
+    /** Is OpenVMS the operating system we're running on? */
+    private static final boolean ON_VMS = Os.isFamily("openvms");
 
     /**
      * Patterns which should be excluded by default.
@@ -725,7 +728,7 @@ public class DirectoryScanner
                         File canonFile = myfile.getCanonicalFile();
                         String path = fileUtils.removeLeadingPath(canonBase,
                                                                   canonFile);
-                        if (!path.equals(currentelement)) {
+                        if (!path.equals(currentelement) || ON_VMS) {
                             myfile = findFile(basedir, currentelement);
                             if (myfile != null) {
                                 currentelement =

@@ -344,12 +344,12 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Handles an error output by logging it with the ERR priority.
+     * Handles an error output by logging it with the WARN priority.
      *
      * @param output The error output to log. Should not be <code>null</code>.
      */
     protected void handleErrorOutput(String output) {
-        log(output, Project.MSG_ERR);
+        log(output, Project.MSG_WARN);
     }
 
     /**
@@ -493,7 +493,7 @@ public abstract class Task extends ProjectComponent {
      *
      * @return the type of task
      */
-    protected String getTaskType() {
+    public String getTaskType() {
         return taskType;
     }
 

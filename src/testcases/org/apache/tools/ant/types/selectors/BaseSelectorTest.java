@@ -185,7 +185,7 @@ public abstract class BaseSelectorTest extends TestCase {
 
     /**
      * Does the selection test for a given selector and prints the
-     * filenames of the differing files (selected but shouldn´t,
+     * filenames of the differing files (selected but shouldn't,
      * not selected but should).
      * @param selector  The selector to test
      * @param expected  The expected result
@@ -198,7 +198,7 @@ public abstract class BaseSelectorTest extends TestCase {
     }
 
     /**
-     *  Checks which files are selected and shouldn´t be or which
+     *  Checks which files are selected and shouldn't be or which
      *  are not selected but should.
      *  @param expected    String containing 'F's and 'T's
      *  @param result      String containing 'F's and 'T's

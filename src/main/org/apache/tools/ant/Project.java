@@ -1101,15 +1101,15 @@ public class Project {
      * the message is logged directly.
      *
      * @param output Message to handle. Should not be <code>null</code>.
-     * @param isError Whether the text represents an error (<code>true</code>)
+     * @param isWarning Whether the text represents an warning (<code>true</code>)
      *        or information (<code>false</code>).
      */
-    public void demuxOutput(String output, boolean isError) {
+    public void demuxOutput(String output, boolean isWarning) {
         Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
-            log(output, isError ? MSG_ERR : MSG_INFO);
+            log(output, isWarning ? MSG_WARN : MSG_INFO);
         } else {
-            if (isError) {
+            if (isWarning) {
                 task.handleErrorOutput(output);
             } else {
                 task.handleOutput(output);
@@ -1747,17 +1747,7 @@ public class Project {
                 log("Overriding previous definition of reference to " + name,
                     MSG_WARN);
             }
-
-            String valueAsString = "";
-            try {
-                valueAsString = value.toString();
-            } catch (Throwable t) {
-                log("Caught exception (" + t.getClass().getName() + ")"
-                    + " while expanding " + name + ": " + t.getMessage(),
-                    MSG_WARN);
-            }
-            log("Adding reference: " + name + " -> " + valueAsString,
-                MSG_DEBUG);
+            log("Adding reference: " + name, MSG_DEBUG);
             references.put(name, value);
         }
     }

@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>AntCall Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -19,25 +20,29 @@ available in the new project.   Alternatively, you can
 set the <i>inheritAll</i> attribute to <code>false</code> and only
 &quot;user&quot; properties (i.e., those passed on the command-line)
 will be passed to the new project.  In either case, the set of
-properties passed to the new project will override the properties that 
+properties passed to the new project will override the properties that
 are set in the new project (See also the <a href="property.html">property task</a>).</p>
-<p>You can also set properties in the new project from the old project by
-using nested param tags. These properties are always passed regardless of the
-setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.</p>
+<p>You can also set properties in the new project from the old project
+by using nested param tags. These properties are always passed
+to the new project and any project created in that project
+regardless of the setting of <i>inheritAll</i>.  This allows you to
+parameterize your subprojects.  Properties defined on the command line
+can not be overridden by nested &lt;param&gt; elements.</p>
 
 <p>Nested <a href="#reference"><i>&lt;reference&gt;</i></a> elements can
 be used to copy references from the calling project to the new
 project, optionally under a different id.  References taken from
-nested elements will override existing references in the new
-project.</p>
+nested elements will override existing references that have been
+defined outside of targets in the new project - but not those defined
+inside of targets.</p>
 
 <p>
 When a target is invoked by antcall, all of its dependent targets will
 also be called within the context of any new parameters. For example. if
-the target &quot;doSomethingElse&quot; depended on the target &quot;init&quot;, then the 
-<i>antcall</i> of &quot;doSomethingElse&quot; will call &quot;init&quot; during the call. 
-Of course, any properties defined in the antcall task or inherited from the calling target 
-will be fixed and not overridable in the init task -or indeed in the &quot;doSomethingElse&quot; task.  
+the target &quot;doSomethingElse&quot; depended on the target &quot;init&quot;, then the
+<i>antcall</i> of &quot;doSomethingElse&quot; will call &quot;init&quot; during the call.
+Of course, any properties defined in the antcall task or inherited from the calling target
+will be fixed and not overridable in the init task -or indeed in the &quot;doSomethingElse&quot; task.
 </p>
 
 <p>If the build file changes after you've started the build, the
@@ -63,11 +68,11 @@ behavior of this task is undefined.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">inheritRefs</td> 
+    <td valign="top">inheritRefs</td>
     <td valign="top">If <code>true</code>, pass all references to the
       new Ant project.  Defaults to <code>false</code>.</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
 </table>
 
 <h3>Note on <code>inheritRefs</code></h3>
@@ -87,7 +92,7 @@ attribute).</p>
 href="property.html">property</a> for usage guidelines.</p>
 
 <h4><a name="reference">reference</a></h4>
-<p>Used to chose references that shall be copied into the new project,
+<p>Used to choose references that shall be copied into the new project,
 optionally changing their id.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -144,4 +149,3 @@ Reserved.</p>
 
 </body>
 </html>
-

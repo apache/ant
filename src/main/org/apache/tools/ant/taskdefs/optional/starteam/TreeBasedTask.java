@@ -723,6 +723,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
         } catch (Exception e) {
             throw new BuildException(e);
+        } finally {
+            disconnectFromServer();
         }
     }
 
@@ -735,7 +737,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
                 if (!stLabel.isRevisionLabel() && !stLabel.isViewLabel()) {
                     throw new BuildException("Unexpected label type.");
                 }
-                log("using label " + stLabel.getName(), Project.MSG_DEBUG);
+                log("using label " + stLabel.getName(), Project.MSG_VERBOSE);
                 this.labelInUse = stLabel;
                 return;
             }

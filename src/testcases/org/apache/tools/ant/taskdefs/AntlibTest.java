@@ -73,6 +73,15 @@ public class AntlibTest extends BuildFileTest {
     public void testAntlibFile() {
         expectLog("antlib.file", "MyTask called");
     }
+    
+    /**
+     * Confirms that all matching resources will be used, so that you
+     * can collect several antlibs in one Definer call.
+     * @see "http://issues.apache.org/bugzilla/show_bug.cgi?id=24024"
+     */
+    public void testAntlibResource() {
+        expectLog("antlib.resource", "MyTask called-and-then-MyTask2 called");
+    }
 
     public void testNsCurrent() {
         expectLog("ns.current", "Echo2 inside a macroHello from x:p");
@@ -81,6 +90,12 @@ public class AntlibTest extends BuildFileTest {
     public static class MyTask extends Task {
         public void execute() {
             log("MyTask called");
+        }
+    }
+
+    public static class MyTask2 extends Task {
+        public void execute() {
+            log("MyTask2 called");
         }
     }
 

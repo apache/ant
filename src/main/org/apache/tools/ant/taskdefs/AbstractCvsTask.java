@@ -571,6 +571,10 @@ public abstract class AbstractCvsTask extends Task {
     /**
      * The directory where the checked out files should be placed.
      *
+     * <p>Note that this is different from CVS's -d command line
+     * switch as Ant will never shorten pathnames to avoid empty
+     * directories.</p>
+     *
      * @param dest directory where the checked out files should be placed
      */
     public void setDest(File dest) {

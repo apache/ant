@@ -156,7 +156,6 @@ import org.xml.sax.XMLReader;
  * @author Erik Hatcher
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @author Jeff Turner
- * @version $Id$
  */
 public class XMLCatalog extends DataType
     implements Cloneable, EntityResolver, URIResolver {
@@ -208,7 +207,7 @@ public class XMLCatalog extends DataType
      * @return the elements of the catalog - ResourceLocation objects
      */
     private Vector getElements() {
-        return elements;
+        return getRef().elements;
     }
 
     /**
@@ -217,7 +216,7 @@ public class XMLCatalog extends DataType
      * @return the classpath
      */
     private Path getClasspath() {
-        return classpath;
+        return getRef().classpath;
     }
 
     /**
@@ -335,7 +334,7 @@ public class XMLCatalog extends DataType
      * @return the catalog path
      */
     public Path getCatalogPath() {
-        return this.catalogPath;
+        return getRef().catalogPath;
     }
 
 
@@ -421,17 +420,6 @@ public class XMLCatalog extends DataType
         if (!elements.isEmpty()) {
             throw tooManyAttributes();
         }
-        // change this to get the objects from the other reference
-        Object o = r.getReferencedObject(getProject());
-        // we only support references to other XMLCatalogs
-        if (o instanceof XMLCatalog) {
-            // set all elements from referenced catalog to this one
-            XMLCatalog catalog = (XMLCatalog) o;
-            setElements(catalog.getElements());
-        } else {
-            String msg = r.getRefId() + " does not refer to an XMLCatalog";
-            throw new BuildException(msg);
-        }
         super.setRefid(r);
     }
 
@@ -442,6 +430,10 @@ public class XMLCatalog extends DataType
      */
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException, IOException {
+
+        if (isReference()) {
+            return getRef().resolveEntity(publicId, systemId);
+        }
 
         if (!isChecked()) {
             // make sure we don't have a circular reference here
@@ -471,6 +463,10 @@ public class XMLCatalog extends DataType
      */
     public Source resolve(String href, String base)
         throws TransformerException {
+
+        if (isReference()) {
+            return getRef().resolve(href, base);
+        }
 
         if (!isChecked()) {
             // make sure we don't have a circular reference here
@@ -513,6 +509,16 @@ public class XMLCatalog extends DataType
 
         setEntityResolver(source);
         return source;
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    private XMLCatalog getRef() {
+        if (!isReference()) {
+            return this;
+        }
+        return (XMLCatalog) getCheckedRef(XMLCatalog.class, "xmlcatalog");
     }
 
     /**
@@ -576,9 +582,8 @@ public class XMLCatalog extends DataType
                     && getCatalogPath().list().length != 0) {
                         log("Warning: catalogpath listing external catalogs"
                             + " will be ignored", Project.MSG_WARN);
-                        log("Failed to load Apache resolver: "
-                            + ex, Project.MSG_DEBUG);
                     }
+                log("Failed to load Apache resolver: " + ex, Project.MSG_DEBUG);
             }
         }
         return catalogResolver;
@@ -672,6 +677,8 @@ public class XMLCatalog extends DataType
     private InputSource filesystemLookup(ResourceLocation matchingEntry) {
 
         String uri = matchingEntry.getLocation();
+        // the following line seems to be necessary on Windows under JDK 1.2
+        uri = uri.replace(File.separatorChar, '/');
         URL baseURL = null;
 
         //
@@ -691,11 +698,25 @@ public class XMLCatalog extends DataType
 
         InputSource source = null;
         URL url = null;
-
         try {
             url = new URL(baseURL, uri);
         } catch (MalformedURLException ex) {
-            // ignore
+            // this processing is useful under Windows when the location of the DTD has been given as an absolute path
+            // see Bugzilla Report 23913
+            File testFile = new File(uri);
+            if (testFile.exists() && testFile.canRead()) {
+                log("uri : '"
+                    + uri + "' matches a readable file", Project.MSG_DEBUG);
+                try {
+                    url = fileUtils.getFileURL(testFile);
+                } catch (MalformedURLException ex1) {
+                    throw new BuildException("could not find an URL for :" + testFile.getAbsolutePath());
+                }
+            } else {
+                log("uri : '"
+                    + uri + "' does not match a readable file", Project.MSG_DEBUG);
+
+            }
         }
 
         if (url != null) {

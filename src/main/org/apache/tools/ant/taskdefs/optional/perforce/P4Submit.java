@@ -98,7 +98,7 @@ public class P4Submit extends P4Base {
      */
     public void execute() throws BuildException {
         if (change != null) {
-            execP4Command("submit -c " + change, (P4HandlerAdapter) new P4SubmitAdapter());
+            execP4Command("submit -c " + change, (P4HandlerAdapter) new P4SubmitAdapter(this));
         } else {
             //here we'd parse the output from change -o into submit -i
             //in order to support default change.
@@ -109,13 +109,16 @@ public class P4Submit extends P4Base {
     /**
      * internal class used to process the output of p4 submit
      */
-    public class P4SubmitAdapter extends P4HandlerAdapter {
+    public class P4SubmitAdapter extends SimpleP4OutputHandler {
+        public P4SubmitAdapter(P4Base parent) {
+            super(parent);
+        }
         /**
          * process a line of stdout/stderr coming from Perforce
          * @param line line of stdout or stderr coming from Perforce
          */
         public void process(String line) {
-            log(line, Project.MSG_VERBOSE);
+            super.process(line);
             getProject().setProperty("p4.needsresolve", "0");
             // this type of output might happen
             // Change 18 renamed change 20 and submitted.

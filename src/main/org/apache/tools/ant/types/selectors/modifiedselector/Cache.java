@@ -66,7 +66,7 @@ import java.util.Iterator;
  * <i>order</i>.
  * The implementing class should implement a useful toString() method.
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

@@ -57,16 +57,28 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 
 /**
- * Wrapper to .NET's tlbimport; imports a tlb file to a NET assembly
+ * Import a COM type library into the .NET framework.
+ * <p>
+ *
+ * This task is a wrapper to .NET's tlbimport; it imports a tlb file to a NET assembly
  * by generating a binary assembly (.dll) that contains all the binding
- * metadata. Uses date timestamps to minimise rebuilds.
+ * metadata. It uses date timestamps to minimise rebuilds.
+ * <p>
+ * Example
+ * <pre>
+ *     &lt;importtypelib
+ *       srcfile="xerces.tlb"
+ *       destfile="xerces.dll"
+ *       namespace="Apache.Xerces"/&gt;
+ * </pre>
  * @since Ant 1.6
  * @author steve loughran
- * @ant.task    name="ImportTypelib" category="dotnet"
+ * @ant.task category="dotnet"
  */
 public class ImportTypelib extends Task {
 
@@ -162,7 +174,7 @@ public class ImportTypelib extends Task {
             throw new BuildException(
                     "destination file is a directory");
         }
-        if (srcFile != null || !srcFile.exists()) {
+        if (srcFile == null || !srcFile.exists()) {
             throw new BuildException(
                     "source file does not exist");
         }
@@ -176,6 +188,31 @@ public class ImportTypelib extends Task {
     }
 
     /**
+     * Test for disassembly being needed; use existence and granularity
+     * correct date stamps
+     * @return true iff a rebuild is required.
+     */
+    private boolean isExecuteNeeded() {
+        if (!destFile.exists()) {
+            log("Destination file does not exist: a build is required",
+                    Project.MSG_VERBOSE);
+            return true;
+        }
+        long sourceTime = srcFile.lastModified();
+        long destTime = destFile.lastModified();
+        if (sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity())) {
+            log("Source file is newer than the dest file: a rebuild is required",
+                    Project.MSG_VERBOSE);
+            return true;
+        } else {
+            log("The output file is up to date", Project.MSG_VERBOSE);
+            return false;
+        }
+
+    }
+
+
+    /**
      * Create a typelib command
      * @exception BuildException if something goes wrong with the build
      */
@@ -185,9 +222,7 @@ public class ImportTypelib extends Task {
             + " to assembly " + destFile
             + " in namespace " + namespace, Project.MSG_VERBOSE);
         //rebuild unless the dest file is newer than the source file
-        if (srcFile.exists() && destFile.exists()
-            && srcFile.lastModified() <= destFile.lastModified()) {
-            log("The typelib is up to date", Project.MSG_VERBOSE);
+        if(!isExecuteNeeded()) {
             return;
         }
 
@@ -205,5 +240,6 @@ public class ImportTypelib extends Task {
             command.addArgument("/unsafe");
         }
         command.addArgument(extraOptions);
+        command.runCommand();
     }
 }

@@ -17,7 +17,6 @@
  Assumptions:
 
  - the "java" executable/script is on the command path
- - ANT_HOME has been set
 """
 import os, os.path, string, sys
 
@@ -25,52 +24,62 @@ import os, os.path, string, sys
 debug = 0
 
 #######################################################################
-#
-# check to make sure environment is setup
-#
+
+# If ANT_HOME is not set default to script's parent directory
 if os.environ.has_key('ANT_HOME'):
     ANT_HOME = os.environ['ANT_HOME']
 else:
     ANT_HOME = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
 
-# Add jar files
+# set ANT_LIB location
 ANT_LIB = os.path.join(ANT_HOME, 'lib')
 
+# set JAVACMD (check variables JAVACMD and JAVA_HOME)
+JAVACMD = None
 if not os.environ.has_key('JAVACMD'):
-    JAVACMD = 'java'
+    if os.environ.has_key('JAVA_HOME'):
+        if not os.path.exists(os.environ['JAVA_HOME']):
+            print "Warning: JAVA_HOME is not defined correctly."
+        else:
+            JAVACMD = os.path.join(os.environ['JAVA_HOME'], 'bin', 'java')
+    else:
+        print "Warning: JAVA_HOME not set."
 else:
     JAVACMD = os.environ['JAVACMD']
-
-# Build up standard classpath
-localpath = ''
-if os.environ.has_key('CLASSPATH'):
-    localpath = os.environ['CLASSPATH']
-else:
-    if debug:
-        print 'Warning: no initial classpath\n'
+if not JAVACMD:
+    JAVACMD = 'java'
 
 launcher_jar = os.path.join(ANT_LIB, 'ant-launcher.jar')
 if not os.path.exists(launcher_jar):
     print 'Unable to locate ant-launcher.jar. Expected to find it in %s' % \
         ANT_LIB
-if localpath:
-    localpath = launcher_jar + os.pathsep + localpath
-else:
-    localpath = launcher_jar
 
-ANT_OPTS = []
+# Build up standard classpath (LOCALCLASSPATH)
+LOCALCLASSPATH = launcher_jar
+if os.environ.has_key('LOCALCLASSPATH'):
+    LOCALCLASSPATH += os.pathsep + os.environ['LOCALCLASSPATH']
+
+ANT_OPTS = ""
 if os.environ.has_key('ANT_OPTS'):
-    ANT_OPTS = string.split(os.environ['ANT_OPTS'])
+    ANT_OPTS = os.environ['ANT_OPTS']
 
-OPTS = []
+OPTS = ""
 if os.environ.has_key('JIKESPATH'):
-    OPTS.append('-Djikes.class.path=' + os.environ['JIKESPATH'])
+    OPTS = '-Djikes.class.path=\"%s\"' % os.environ['JIKESPATH']
+
+ANT_ARGS = ""
+if os.environ.has_key('ANT_ARGS'):
+    ANT_ARGS = os.environ['ANT_ARGS']
+
+CLASSPATH = ""
+if os.environ.has_key('CLASSPATH'):
+    CLASSPATH = os.environ['CLASSPATH']
 
 # Builds the commandline
-cmdline = ('%s %s -classpath %s -Dant.home=\"%s\" %s ' + \
-    'org.apache.tools.ant.launch.Launcher %s') \
-     % (JAVACMD, string.join(ANT_OPTS,' '), localpath, ANT_HOME, \
-        string.join(OPTS,' '), string.join(sys.argv[1:], ' '))
+cmdline = ('%s %s -classpath %s -Dant.home=%s %s ' + \
+    'org.apache.tools.ant.launch.Launcher %s -lib %s %s') \
+     % (JAVACMD, ANT_OPTS, LOCALCLASSPATH, ANT_HOME, OPTS, ANT_ARGS, \
+        CLASSPATH, string.join(sys.argv[1:], ' '))
 
 if debug:
     print '\n%s\n\n' % (cmdline)

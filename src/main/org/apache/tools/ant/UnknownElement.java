@@ -57,8 +57,8 @@ package org.apache.tools.ant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.io.IOException;
+import org.apache.tools.ant.taskdefs.PreSetDef;
 
 /**
  * Wrapper class that holds all the information necessary to create a task
@@ -95,6 +95,9 @@ public class UnknownElement extends Task {
      * List of child elements (UnknownElements).
      */
     private List/*<UnknownElement>*/ children = null;
+
+    /** Specifies if a predefined definition has been done */
+    private boolean presetDefed = false;
 
     /**
      * Creates an UnknownElement for the given element name.
@@ -333,13 +336,15 @@ public class UnknownElement extends Task {
      *
      * @exception BuildException if the children cannot be configured.
      */
-    protected void handleChildren(Object parent,
-                                  RuntimeConfigurable parentWrapper)
+    protected void handleChildren(
+        Object parent,
+        RuntimeConfigurable parentWrapper)
         throws BuildException {
         if (parent instanceof TypeAdapter) {
             parent = ((TypeAdapter) parent).getProxy();
         }
 
+        String parentUri = getNamespace();
         Class parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
 
@@ -349,8 +354,8 @@ public class UnknownElement extends Task {
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = (UnknownElement) it.next();
-                if (!handleChild(ih, parent, child,
-                                 childWrapper)) {
+                if (!handleChild(
+                        parentUri, ih, parent, child, childWrapper)) {
                     if (!(parent instanceof TaskContainer)) {
                         ih.throwNotSupported(getProject(), parent,
                                              child.getTag());
@@ -373,6 +378,31 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * This is used then the realobject of the UE is a PreSetDefinition.
+     * This is also used when a presetdef is used on a presetdef
+     * The attributes, elements and text are applied to this
+     * UE.
+     *
+     * @param u an UnknownElement containing the attributes, elements and text
+     */
+    public void applyPreSet(UnknownElement u) {
+        if (presetDefed) {
+            return;
+        }
+        // Do the runtime
+        getWrapper().applyPreSet(u.getWrapper());
+        if (u.children != null) {
+            List newChildren = new ArrayList();
+            newChildren.addAll(u.children);
+            if (children != null) {
+                newChildren.addAll(children);
+            }
+            children = newChildren;
+        }
+        presetDefed = true;
+    }
+
+    /**
      * Creates a named task or data type. If the real object is a task,
      * it is configured up to the init() stage.
      *
@@ -387,9 +417,22 @@ public class UnknownElement extends Task {
             getProject());
         String name = ue.getComponentName();
         Object o = helper.createComponent(ue, ue.getNamespace(), name);
+
         if (o == null) {
             throw getNotFoundException("task or type", name);
         }
+
+        if (o instanceof PreSetDef.PreSetDefinition) {
+            PreSetDef.PreSetDefinition def = (PreSetDef.PreSetDefinition) o;
+            o = def.createObject(ue.getProject());
+            ue.applyPreSet(def.getPreSets());
+            if (o instanceof Task) {
+                Task task = (Task) o;
+                task.setTaskType(ue.getTaskType());
+                task.setTaskName(ue.getTaskName());
+            }
+        }
+
         if (o instanceof Task) {
             Task task = (Task) o;
             task.setOwningTarget(getOwningTarget());
@@ -512,18 +555,25 @@ public class UnknownElement extends Task {
      *
      * @return whether the creation has been successful
      */
-    private boolean handleChild(IntrospectionHelper ih,
-                                Object parent, UnknownElement child,
-                                RuntimeConfigurable childWrapper) {
-        // backwards compatibility - element names of nested
-        // elements have been all lower-case in Ant, except for
-        // TaskContainers
-        String childName = child.getTag().toLowerCase(Locale.US);
-        if (ih.supportsNestedElement(childName)) {
+    private boolean handleChild(
+        String parentUri,
+        IntrospectionHelper ih,
+        Object parent, UnknownElement child,
+        RuntimeConfigurable childWrapper) {
+        String childName = ProjectHelper.genComponentName(
+            child.getNamespace(), child.getTag());
+        if (ih.supportsNestedElement(parentUri, childName)) {
             IntrospectionHelper.Creator creator =
-                ih.getElementCreator(getProject(), parent, childName);
+                ih.getElementCreator(
+                    getProject(), parentUri, parent, childName, child);
             creator.setPolyType(childWrapper.getPolyType());
             Object realChild = creator.create();
+            if (realChild instanceof PreSetDef.PreSetDefinition) {
+                PreSetDef.PreSetDefinition def =
+                    (PreSetDef.PreSetDefinition) realChild;
+                realChild = creator.getRealObject();
+                child.applyPreSet(def.getPreSets());
+            }
             childWrapper.setCreator(creator);
             childWrapper.setProxy(realChild);
             if (realChild instanceof Task) {
@@ -552,6 +602,7 @@ public class UnknownElement extends Task {
             return false;
         }
         UnknownElement other = (UnknownElement) obj;
+        // Are the names the same ?
         if (!equalsString(elementName, other.elementName)) {
             return false;
         }
@@ -561,12 +612,25 @@ public class UnknownElement extends Task {
         if (!qname.equals(other.qname)) {
             return false;
         }
+        // Are attributes the same ?
         if (!getWrapper().getAttributeMap().equals(
                 other.getWrapper().getAttributeMap())) {
             return false;
         }
-        if (children == null) {
-            return other.children == null;
+        // Is the text the same?
+        //   Need to use equals on the string and not
+        //   on the stringbuffer as equals on the string buffer
+        //   does not compare the contents.
+        if (!getWrapper().getText().toString().equals(
+                other.getWrapper().getText().toString())) {
+            return false;
+        }
+        // Are the sub elements the same ?
+        if (children == null || children.size() == 0) {
+            return other.children == null || other.children.size() == 0;
+        }
+        if (other.children == null) {
+            return false;
         }
         if (children.size() != other.children.size()) {
             return false;

@@ -3,16 +3,17 @@
 <HTML>
 <HEAD>
   <TITLE>FilterSet Type</TITLE>
+  <link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </HEAD>
 
 <BODY>
 <H2><A name="filterset">FilterSet</A></H2>
 
 <P>FilterSets are groups of filters. Filters can be defined as token-value
-pairs 
-or be read in from a file. FilterSets can appear inside tasks that support this 
+pairs
+or be read in from a file. FilterSets can appear inside tasks that support this
 feature or at the same level as <CODE>&lt;target&gt;</CODE> - i.e., as
-children of 
+children of
 <CODE>&lt;project&gt;</CODE>.</P>
 
 <p>FilterSets support the <code>id</code> and <code>refid</code>
@@ -23,13 +24,13 @@ filtersets into filtersets to get a set union of the contained
 filters.</p>
 
 <p>In addition, FilterSets can specify
-<code>begintoken</code> and/or 
+<code>begintoken</code> and/or
 <code>endtoken</code> attributes to define what to match.</p>
-<p>Filtersets are used for doing 
+<p>Filtersets are used for doing
 replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
 
 <p>
-<strong>Note: </strong>When a filterset is used in an operation, the files are 
+<strong>Note: </strong>When a filterset is used in an operation, the files are
 processed in text mode and the filters applied line by line. This means that
 the copy operations will typically corrupt binary files. When applying filters
 you should ensure that the set of files being filtered are all text files.
@@ -89,7 +90,7 @@ you should ensure that the set of files being filtered are all text files.
   </TR>
   <TR>
     <TD vAlign=top>file</TD>
-    <TD vAlign=top>A properties file of 
+    <TD vAlign=top>A properties file of
       name-value pairs from which to load the tokens.</TD>
     <TD vAlign=top align="center">Yes</TD>
   </TR>
@@ -98,7 +99,7 @@ you should ensure that the set of files being filtered are all text files.
 <H4>Examples</H4>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the <code>build</code> directory 
+directory from the <code>build</code> directory
 but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
 <BLOCKQUOTE><PRE>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
@@ -109,7 +110,7 @@ but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
 </PRE></BLOCKQUOTE>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
-directory from the build directory 
+directory from the build directory
 but wish to replace the token <code>%DATE*</code> with today's date.</p>
 <BLOCKQUOTE><PRE>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;

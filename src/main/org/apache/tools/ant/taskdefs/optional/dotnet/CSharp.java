@@ -70,86 +70,64 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 // ====================================================================
 
 /**
  *  Compiles C# source into executables or modules.
  *
- *  The task will only work on win2K until other platforms support
- *  csc.exe or an equivalent. CSC.exe must be on the execute path too. <p>
- *
- *  All parameters are optional: &lt;csc/&gt; should suffice to produce a debug
- *  build of all *.cs files. References to external files do require explicit
- *  enumeration, so are one of the first attributes to consider adding. <p>
- *
+ * csc.exe on Windows or mcs on other platforms must be on the execute path, unless another executable
+ * or the full path to that executable is specified in the <tt>executable</tt>
+ * parameter
+ * <p>
+ * All parameters are optional: &lt;csc/&gt; should suffice to produce a debug
+ * build of all *.cs files. However, naming an <tt>destFile</tt>stops the
+ * csc compiler from choosing an output name from random, and
+ * allows the dependency checker to determine if the file is out of date.
+ * <p>
  *  The task is a directory based task, so attributes like <b>includes="*.cs"
  *  </b> and <b>excludes="broken.cs"</b> can be used to control the files pulled
  *  in. By default, all *.cs files from the project folder down are included in
  *  the command. When this happens the output file -if not specified- is taken
  *  as the first file in the list, which may be somewhat hard to control.
- *  Specifying the output file with <b>'outfile'</b> seems prudent. <p>
+ *  Specifying the output file with <tt>destFile</tt> seems prudent. <p>
  *
- *  <p>
+ * <p>
+ * For more complex source trees, nested <tt>src</tt> elemements can be
+ * supplied. When such an element is present, the implicit fileset is ignored.
+ * This makes sense, when you think about it :)
+ * <p>
  *
- *  TODO
- *  <ol>
- *    <li> is incremental build still broken in beta-1?
- *    <li> is Win32Icon broken?
- *    <li> all the missing options
- *  </ol>
- *  <p>
+ * References to external files can be made through the references attribute,
+ * or (since Ant1.6), via nested &lt;reference&gt; filesets. With the latter,
+ * the timestamps of the references are also used in the dependency
+ * checking algorithm.
+ * <p>
  *
- *  History
- *  <Table>
+ * Example
  *
- *    <tr>
- *
- *      <td>
- *        0.3
- *      </td>
- *
- *      <td>
- *        Beta 1 edition
- *      </td>
- *
- *      <td>
- *        To avoid having to remember which assemblies to include, the task
- *        automatically refers to the main dotnet libraries in Beta1.
- *      </tr>
- *
- *      <tr>
- *
- *        <td>
- *          0.2
- *        </td>
- *
- *        <td>
- *          Slightly different
- *        </td>
- *
- *        <td>
- *          Split command execution to a separate class;
- *        </tr>
- *
- *        <tr>
- *
- *          <td>
- *            0.1
- *          </td>
- *
- *          <td>
- *            "I can't believe it's so rudimentary"
- *          </td>
- *
- *          <td>
- *            First pass; minimal builds only support;
- *          </tr>
- *
- *        </table>
+ * <pre>&lt;csc
+ * 	optimize=&quot;true&quot;
+ * 	debug=&quot;false&quot;
+ * 	docFile=&quot;documentation.xml&quot;
+ * 	warnLevel=&quot;4&quot;
+ * 	unsafe=&quot;false&quot;
+ * 	targetType=&quot;exe&quot;
+ * 	incremental=&quot;false&quot;
+ * 	mainClass = &quot;MainApp&quot;
+ * 	destFile=&quot;NetApp.exe&quot;
+ * 	&gt;
+ * 	     &lt;src dir="src" includes="*.cs" /&gt;
+ *       &lt;reference file="${testCSC.dll}" /&gt;
+ *       &lt;define name="RELEASE" /&gt;
+ *       &lt;define name="DEBUG" if="debug.property"/&gt;
+ *       &lt;define name="def3" unless="def3.property"/&gt;
+ *    &lt;/csc&gt;
+ * </pre>
  *
  *
- * @author      Steve Loughran steve_l@iseran.com
- * @version     0.5
+ * @author      Steve Loughran
  * @ant.task    name="csc" category="dotnet"
  * @since Ant 1.3
  */
@@ -214,7 +192,7 @@ public class CSharp extends DotnetCompile {
         unsafe = false;
         noconfig = false;
         definitions = null;
-        setExecutable("csc");
+        setExecutable(Os.isFamily("windows") ? "csc" : "mcs");
     }
 
 

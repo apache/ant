@@ -290,7 +290,9 @@ public class Main implements AntMain {
     }
 
     /**
-     * Process command line arguments
+     * Process command line arguments.
+     * When ant is started from Launcher, the -lib argument does not get
+     * passed through to this routine.
      *
      * @param args the command line arguments.
      *
@@ -807,6 +809,7 @@ public class Main implements AntMain {
         msg.append("  -verbose, -v           be extra verbose" + lSep);
         msg.append("  -debug, -d             print debugging information" + lSep);
         msg.append("  -emacs, -e             produce logging information without adornments" + lSep);
+        msg.append("  -lib <path>            specifies a path to search for jars and classes" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
         msg.append("    -l     <file>                ''" + lSep);
         msg.append("  -logger <classname>    the class which is to perform logging" + lSep);

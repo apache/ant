@@ -11,7 +11,7 @@
       <question>Where do I find the latest version of this
         document?</question>
       <answer>
-        <p>The latest version can always be found at Ant&apos;s homepage 
+        <p>The latest version can always be found at Ant&apos;s homepage
           <a href="http://ant.apache.org/faq.html">http://ant.apache.org/faq.html</a>.</p>
       </answer>
     </faq>
@@ -19,12 +19,12 @@
     <faq id="adding-faqs">
       <question>How can I contribute to this FAQ?</question>
       <answer>
-        <p>The page you are looking it is generated from 
+        <p>The page you are looking it is generated from
           <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/faq.xml">this</a>
           document.  If you want to add a new question, please submit
           a patch against this document to one of Ant&apos;s mailing lists;
           hopefully, the structure is self-explanatory.</p>
-        
+
         <p>If you don&apos;t know how to create a patch, see the patches
           section of <a href="http://jakarta.apache.org/site/source.html">this
           page</a>.</p>
@@ -36,7 +36,7 @@
         FAQ?</question>
 
       <answer>
-        <p>We use 
+        <p>We use
         <a href="http://jakarta.apache.org/velocity/anakia.html">Anakia</a>
         to render the HTML version from the original XML file.</p>
 
@@ -73,8 +73,8 @@
         <p>According to Ant&apos;s original author, James Duncan
         Davidson, the name is an acronym for &quot;Another Neat
         Tool&quot;.</p>
-        
-        <p>Later explanations go along the lines of &quot;ants 
+
+        <p>Later explanations go along the lines of &quot;ants
         do an extremely good job at building things&quot;, or
         &quot;ants are very small and can carry a weight dozens of times
         their own&quot; - describing what Ant is intended to
@@ -199,7 +199,7 @@
 
   <faqsection title="How do I ...">
     <faq id="adding-external-tasks">
-      <question>How do I add an external task that I've written to the
+      <question>How do I add an external task that I&apos;ve written to the
       page &quot;External Tools and Task&quot;?</question>
       <answer>
 
@@ -215,7 +215,7 @@
           <li>a URL: entry linking to the main page of the tool/task</li>
           <li>a Contact: entry containing the email address or the URL
           of a webpage for the person or list to contact for issues
-          related to the tool/task.  <strong>Note that we'll add a
+          related to the tool/task.  <strong>Note that we&apos;ll add a
           link on the page, so any email address added there is not
           obfuscated and can (and probably will) be abused by robots
           harvesting websites for addresses to spam.</strong></li>
@@ -320,7 +320,7 @@
         <source><![CDATA[
 shell-prompt> m4 foo.m4 > foo
 ]]></source>
-        
+
         <p>and try to translate it into</p>
 
         <source><![CDATA[
@@ -334,7 +334,7 @@ shell-prompt> m4 foo.m4 > foo
         <p>This will not do what you expect.  The output redirection is
         performed by your shell, not the command itself, so this
         should read:</p>
-        
+
         <source><![CDATA[
 <exec executable="/bin/sh">
   <arg value="-c" />
@@ -398,7 +398,7 @@ shell-prompt> m4 foo.m4 > foo
 
         <p>To see how this works, assume you have three properties:
         <code>prop1</code>, <code>prop2</code>, and <code>prop3</code>.
-        You want to test that <code>prop1</code> and <code>prop2</code> 
+        You want to test that <code>prop1</code> and <code>prop2</code>
         are set, and that <code>prop3</code> is not. If the condition
         holds true you want to echo &quot;yes&quot;.</p>
 
@@ -470,8 +470,8 @@ shell-prompt> m4 foo.m4 > foo
 
         <p>Because testing for a literal <code>${property}</code> string
         isn&apos;t all that readable or easy to understand,
-        post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element 
-	to the <code>&lt;condition&gt;</code> task.</p>
+        post-1.4.1 Ant introduces the <code>&lt;isset&gt;</code> element
+        to the <code>&lt;condition&gt;</code> task.</p>
 
         <p>Here is the previous example done using
         <code>&lt;isset&gt;</code>:</p>
@@ -501,7 +501,7 @@ shell-prompt> m4 foo.m4 > foo
         details.</p>
       </answer>
     </faq>
-    
+
     <faq id="encoding">
       <question>How can I include national characters like German
         umlauts in my build file?</question>
@@ -510,10 +510,10 @@ shell-prompt> m4 foo.m4 > foo
         <p>You need to tell the XML parser which character encoding
         your build file uses, this is done inside the <a
         href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-prolog-dtd">XML
-        declaration</a>.</p>  
+        declaration</a>.</p>
 
         <p>By default the parser assumes you are using the UTF-8
-        encoding instead of your platform's default.  For most Western
+        encoding instead of your platform&apos;s default.  For most Western
         European countries you should set the encoding to
         <code>ISO-8859-1</code>.  To do so, make the very first line
         of you build file read like</p>
@@ -521,6 +521,41 @@ shell-prompt> m4 foo.m4 > foo
         <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 ]]></source>
+      </answer>
+    </faq>
+
+    <faq id="use-zip-instead-of-jar">
+      <question>How do I use <code>jar</code>&apos;s <code>M</code> switch?
+      I don&apos;t want a MANIFEST.</question>
+
+      <answer>
+        <p>A JAR archive is a ZIP file, so if you don&apos;t want a
+        MANIFEST you can simply use <code>&lt;zip&gt;</code>.</p>
+
+        <p>If your file names contain national characters you should
+        know that Sun&apos;s <code>jar</code> utility like Ant&apos;s
+        <code>&lt;jar&gt;</code> uses UFT8 to encode their names while
+        <code>&lt;zip&gt;</code> uses your platforms default encoding.
+        Use the encoding attribute of <code>&lt;zip&gt;</code> if
+        necessary.</p>
+      </answer>
+    </faq>
+
+    <faq id="propertyvalue-as-name-for-property">
+      <question>How can I do something like <code>&lt;property name="prop"
+      value="${${anotherprop}}"/&gt;</code> (double expanding the property)?</question>
+
+      <answer>
+        <p>Without any external help you can not.</p>
+        <p>With &lt;script/&gt;, which needs external libraries, you can do</p>
+        <source><![CDATA[
+<script language="javascript">
+    propname = project.getProperty("anotherprop");
+    project.setNewProperty("prop", propname);
+</script>
+]]></source>
+         <p>With AntContrib (external task library) you can do <code>
+         &lt;propertycopy name="prop" from="${anotherprop}"/&gt;</code>.</p>
       </answer>
     </faq>
   </faqsection>
@@ -576,7 +611,7 @@ shell-prompt> m4 foo.m4 > foo
         <p>Here&apos;s what you probably did:</p>
 
 
-	<source><![CDATA[
+        <source><![CDATA[
 <delete>
   <fileset dir="${build.src}" includes="**/vssver.scc"/>
 </delete>
@@ -584,13 +619,13 @@ shell-prompt> m4 foo.m4 > foo
 
         <p>You need to switch off the default exclusions,
            and it will work:</p>
-	<source><![CDATA[
+        <source><![CDATA[
 <delete>
   <fileset dir="${build.src}" includes="**/vssver.scc"
            defaultexcludes="no"/>
 </delete>
 ]]></source>
-        
+
         <p>For a complete listing of the patterns that are excluded
         by default, see <a href="manual/dirtasks.html#defaultexcludes">the user
         manual</a>.</p>
@@ -600,34 +635,34 @@ shell-prompt> m4 foo.m4 > foo
 
     <faq id="stop-dependency">
       <question>I have a target I want to skip if a property is set,
-      so I have <code>unless=&quot;property&quot;</code> as an attribute 
-      of the target, but all the targets this target 
+      so I have <code>unless=&quot;property&quot;</code> as an attribute
+      of the target, but all the targets this target
       depends on are still executed. Why?</question>
 
       <answer>
         <p>The list of dependencies is generated by Ant before any of the
-        targets are run. This allows dependent targets, such as an 
-        <code>init</code> target, to set properties that can control the 
-       	execution of the targets higher in the dependency graph. This 
-      	is a good thing.</p>
+        targets are run. This allows dependent targets, such as an
+        <code>init</code> target, to set properties that can control the
+               execution of the targets higher in the dependency graph. This
+              is a good thing.</p>
 
         <p>However, when your dependencies break down the
         higher-level task
-        into several smaller steps, this behaviour becomes 
+        into several smaller steps, this behaviour becomes
         counter-intuitive. There are a couple of solutions available:
         </p>
 
         <ol>
           <li>Put the same condition on each of the dependent targets.</li>
-	  
+
           <li>Execute the steps using <code>&lt;antcall&gt;</code>,
           instead of specifying them inside the <code>depends</code>
           attribute.</li>
         </ol>
-	
+
       </answer>
     </faq>
-    
+
     <faq id="include-order">
       <question>In my <code>&lt;fileset&gt;</code>, I&apos;ve put in an
       <code>&lt;exclude&gt;</code> of all files followed by an
@@ -645,14 +680,14 @@ shell-prompt> m4 foo.m4 > foo
         elements only apply to the file list produced by the
         <code>&lt;include&gt;</code> elements.</p>
 
-	<p>To get the files you want, focus on just the
-	<code>&lt;include&gt;</code> patterns that would be necessary
-	to get them. If you find you need to trim the list that the
-	<code>&lt;include&gt;</code> elements produce, then use
-	<code>&lt;exclude&gt;</code> elements.</p>
+        <p>To get the files you want, focus on just the
+        <code>&lt;include&gt;</code> patterns that would be necessary
+        to get them. If you find you need to trim the list that the
+        <code>&lt;include&gt;</code> elements produce, then use
+        <code>&lt;exclude&gt;</code> elements.</p>
       </answer>
     </faq>
-    
+
     <faq id="properties-not-trimmed">
       <question><code>ant</code> failed to build my program via javac
       even when I put the needed jars in an external
@@ -662,12 +697,12 @@ shell-prompt> m4 foo.m4 > foo
       <answer>
 
         <p>When <code>ant</code> loads properties from an external
-        file it dosn't touch the value of properties, trailing blanks
+        file it dosn&apos;t touch the value of properties, trailing blanks
         will not be trimmed for example.</p>
 
         <p>If the value represents a file path, like a jar needed to
         compile, the task which requires the value, javac for example
-        would fail to compile since it can't find the file due to
+        would fail to compile since it can&apos;t find the file due to
         trailing spaces.</p>
       </answer>
     </faq>
@@ -678,12 +713,12 @@ shell-prompt> m4 foo.m4 > foo
         <code>meta-inf</code> directory.</question>
 
       <answer>
-        <p>No it doesn't.</p>
+        <p>No it doesn&apos;t.</p>
 
         <p>You may have seen these lower-case directory names in
         WinZIP, but WinZIP is trying to be helpful (and fails).  If
         WinZIP encounters a filename that is all upper-case, it
-        assumes it has come from an old DOS box andchanges the case to
+        assumes it has come from an old DOS box and changes the case to
         all lower-case for you.</p>
 
         <p>If you extract (or just check) the archive with jar, you
@@ -701,7 +736,7 @@ shell-prompt> m4 foo.m4 > foo
     <faq id="integration">
       <question>Is Ant supported by my IDE/Editor?</question>
       <answer>
-        <p>See the <a href="external.html#IDE and Editor Integration">section 
+        <p>See the <a href="external.html#IDE and Editor Integration">section
         on IDE integration</a> on our External Tools and Tasks page.</p>
       </answer>
     </faq>
@@ -723,10 +758,10 @@ shell-prompt> m4 foo.m4 > foo
 
         <source><![CDATA[
 # Detect (X)Emacs compile mode
-if [ "$EMACS" = "t" ] ; then 
-  ANT_ARGS="$ANT_ARGS -emacs" 
-  ANT_OPTS="$ANT_OPTS -Dbuild.compiler.emacs=true" 
-fi 
+if [ "$EMACS" = "t" ] ; then
+  ANT_ARGS="$ANT_ARGS -emacs"
+  ANT_OPTS="$ANT_OPTS -Dbuild.compiler.emacs=true"
+fi
 ]]></source>
 
         <p>Alternatively, you can add the following snippet to your
@@ -736,10 +771,10 @@ fi
         <source><![CDATA[
 (require 'compile)
 (setq compilation-error-regexp-alist
-  (append (list 
+  (append (list
      ;; works for jikes
      '("^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):\\([0-9]+\\):[0-9]+:[0-9]+:" 1 2 3)
-     ;; works for javac 
+     ;; works for javac
      '("^\\s-*\\[[^]]*\\]\\s-*\\(.+\\):\\([0-9]+\\):" 1 2))
   compilation-error-regexp-alist))
 ]]></source>
@@ -757,16 +792,16 @@ fi
 #
 $|=1;
 while(<STDIN>) {
-	if (s/^(\s+)\[(\w+)\]//) {
-		if ($2 ne $last) {
-			print "$1\[$2\]";
-			$s = ' ' x length($2);
-		} else {
-			print "$1 $s ";
-		};
-		$last = $2;
-	};
-	print;
+        if (s/^(\s+)\[(\w+)\]//) {
+                if ($2 ne $last) {
+                        print "$1\[$2\]";
+                        $s = ' ' x length($2);
+                } else {
+                        print "$1 $s ";
+                };
+                $last = $2;
+        };
+        print;
 };
 ]]></source>
 
@@ -788,7 +823,7 @@ while(<STDIN>) {
           <ul>
             <li>It doesn&apos;t know about required attributes.  Only
             manual tweaking of this file can help here.</li>
-          
+
             <li>It is not complete - if you add new tasks via
             <code>&lt;taskdef&gt;</code> it won&apos;t know about it.  See
             <a href="http://www.sdv.fr/pages/casa/html/ant-dtd.en.html">this
@@ -845,6 +880,31 @@ while(<STDIN>) {
    <!ENTITY include SYSTEM "file:./header.xml">
 ]>
 ]]></source>
+
+        <p>Starting with Ant 1.6, there is a new
+        <code>&lt;import&gt;</code> task that can (also) be used to
+        include build file fragments.  Unlike the snippets used with
+        entity includes, the referenced files have to be complete Ant
+        build files, though.</p>
+
+        <p>The example above would become:</p>
+        <source><![CDATA[
+<?xml version="1.0"?>
+<project name="test" default="test" basedir=".">
+
+  <target name="setup">
+    ...
+  </target>
+
+  <import file="../common.xml"/>
+
+  ...
+
+</project>
+]]></source>
+
+        <p>Unlike entity includes, <code>&lt;import&gt;</code> will
+        let you use Ant properties in the file name.</p>
       </answer>
     </faq>
 
@@ -869,7 +929,7 @@ while(<STDIN>) {
         BuildListener that sends out an email
         in the buildFinished() method.  Will Glozer
         &lt;will.glozer@jda.com&gt; has written such a listener based
-        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>. 
+        on <a href="http://java.sun.com/products/javamail/">JavaMail</a>.
         The source is:</p>
 
         <source><![CDATA[
@@ -912,13 +972,13 @@ public class BuildMonitor implements BuildListener {
     public void buildFinished(BuildEvent e) {
         Throwable th = e.getException();
         String status = (th != null) ? "failed" : "succeeded";
-        
+
         try {
             String key = "build." + status;
             if (props.getProperty(key + ".notify").equalsIgnoreCase("false")) {
                     return;
             }
-            
+
             Session session = Session.getDefaultInstance(props, null);
 
             MimeMessage message = new MimeMessage(session);
@@ -929,7 +989,7 @@ public class BuildMonitor implements BuildListener {
             BufferedReader br = new BufferedReader(new FileReader(
                 props.getProperty("build.log")));
             StringWriter sw = new StringWriter();
-            
+
             String line = br.readLine();
             while (line != null) {
                 sw.write(line);
@@ -937,10 +997,10 @@ public class BuildMonitor implements BuildListener {
                 line = br.readLine();
             }
             br.close();
-            
+
             message.setText(sw.toString(), "UTF-8");
             sw.close();
-            
+
             Transport transport = session.getTransport();
             transport.connect();
             transport.send(message);
@@ -976,14 +1036,14 @@ public class BuildMonitor implements BuildListener {
     public void targetFinished(BuildEvent e) {
     }
 
-    public void taskStarted(BuildEvent e) {        
+    public void taskStarted(BuildEvent e) {
     }
 
     public void taskFinished(BuildEvent e) {
     }
 }
 ]]></source>
-          
+
       <p>With a <code>monitor.properties</code> like this:</p>
 
         <source><![CDATA[
@@ -1007,13 +1067,13 @@ build.succeeded.email.subject=Nightly build succeeded!
         <p><code>monitor.properties</code> should be placed right next
         to your compiled <code>BuildMonitor.class</code>.  To use it,
         invoke Ant like:</p>
-        
+
         <source><![CDATA[
 ant -listener BuildMonitor -logfile build.log
 ]]></source>
 
         <p>Make sure that <code>mail.jar</code> from JavaMail and
-        <code>activation.jar</code> from the 
+        <code>activation.jar</code> from the
         <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
         Beans Activation Framework</a> are in your <code>CLASSPATH</code>.</p>
 
@@ -1042,7 +1102,7 @@ public void buildFinished(BuildEvent e) {
         results for properties that were specified on the Ant command line.</p>
       </answer>
     </faq>
-    
+
   </faqsection>
 
   <faqsection title="Known Problems">
@@ -1077,7 +1137,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
     <faq id="delegating-classloader">
       <question>&lt;style&gt; or &lt;junit&gt; ignores my
       &lt;classpath&gt;</question>
-      
+
       <answer>
         <p>These tasks don&apos;t ignore your classpath setting, you
         are facing a common problem with delegating classloaders.</p>
@@ -1089,6 +1149,11 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <code>CLASSPATH</code> environment variable or
         <code>ANT_HOME/lib</code>&quot; for the rest of this
         answer.</p>
+
+        <p>Technically the sentence above isn&apos;t true for Ant 1.6
+        and later anymore, but the result is the same.  For the sake
+        of this discussion, <code>CLASSPATH</code> and
+        <code>ANT_HOME/lib</code> are identical.</p>
 
         <p>This question collects a common type of problem: A task
         needs an external library and it has a nested classpath
@@ -1154,6 +1219,9 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           the <code>CLASSPATH</code>.</li>
         </ol>
 
+        <p><strong>Using The Second Option with Ant 1.5.4 and
+        Earlier:</strong></p>
+
         <p>The easiest way to do this is to remove
         <code>optional.jar</code> from <code>ANT_HOME/lib</code>.  If
         you do so, you will have to <code>&lt;taskdef&gt;</code> all
@@ -1183,8 +1251,22 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         the <code>*Liaison</code> classes in
         <code>org/apache/tools/ant/taskdefs/optional</code>.</p>
 
+        <p><strong>Using The Second Option with Ant 1.6 and
+        later:</strong></p>
+
+        <p>In Ant 1.6 <code>optional.jar</code> has been split into
+        multiple jars, each one containing classes with the same
+        dependencies on external libraries.  You can move the
+        "offending" jar out of ANT_HOME/lib.  For the
+        <code>&lt;junit&gt;</code> task it would be
+        <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
+        it would be <code>ant-trax.jar</code>,
+        <code>ant-xalan1.jar</code> or <code>ant-xslp.jar</code> -
+        depending on the processor you use.</p>
+
         <p>If you use the option to break up <code>optional.jar</code>
-        for <code>&lt;junit&gt;</code>, you still have to use a
+        for <code>&lt;junit&gt;</code> or remove
+        <code>ant-junit.jar</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
       </answer>

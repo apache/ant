@@ -116,8 +116,10 @@ class ProcessDestroyer implements Runnable {
             removeShutdownHookMethod =
                 Runtime.class.getMethod("removeShutdownHook", paramTypes);
             // wait to add shutdown hook as needed
-        } catch (Exception e) {
+        } catch (NoSuchMethodException e) {
             // it just won't be added as a shutdown hook... :(
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -133,9 +135,9 @@ class ProcessDestroyer implements Runnable {
                 addShutdownHookMethod.invoke(Runtime.getRuntime(), args);
                 added = true;
             } catch (IllegalAccessException e) {
-                // it just won't be added as a shutdown hook... :(
+                e.printStackTrace();
             } catch (InvocationTargetException e) {
-                // it just won't be added as a shutdown hook... :(
+                e.printStackTrace();
             }
         }
     }
@@ -157,6 +159,7 @@ class ProcessDestroyer implements Runnable {
                 }
                 // start the hook thread, a unstarted thread may not be
                 // eligible for garbage collection
+                // Cf.: http://developer.java.sun.com/developer/bugParade/bugs/4533087.html
                 destroyProcessThread.setShouldDestroy(false);
                 destroyProcessThread.start();
                 // this should return quickly, since Process.destroy()
@@ -169,7 +172,9 @@ class ProcessDestroyer implements Runnable {
                 destroyProcessThread = null;
                 added = false;
             } catch (IllegalAccessException e) {
+                e.printStackTrace();
             } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
         }
     }

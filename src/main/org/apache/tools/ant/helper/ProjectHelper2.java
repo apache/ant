@@ -157,6 +157,7 @@ public class ProjectHelper2 extends ProjectHelper {
             Target currentTarget = context.getCurrentTarget();
             try {
                 Target newCurrent = new Target();
+                newCurrent.setProject(project);
                 newCurrent.setName("");
                 context.setCurrentTarget(newCurrent);
                 parse(project, source, new RootHandler(context, mainHandler));
@@ -267,11 +268,13 @@ public class ProjectHelper2 extends ProjectHelper {
         } catch (FileNotFoundException exc) {
             throw new BuildException(exc);
         } catch (UnsupportedEncodingException exc) {
-              throw new BuildException("Encoding of project file is invalid.",
-                exc);
+              throw new BuildException("Encoding of project file "
+                                       + buildFileName + " is invalid.",
+                                       exc);
         } catch (IOException exc) {
-            throw new BuildException("Error reading project file: "
-                + exc.getMessage(), exc);
+            throw new BuildException("Error reading project file "
+                                     + buildFileName + ": " + exc.getMessage(),
+                                     exc);
         } finally {
             if (inputStream != null) {
                 try {
@@ -481,9 +484,6 @@ public class ProjectHelper2 extends ProjectHelper {
          */
         public void startElement(String uri, String tag, String qname, Attributes attrs)
             throws SAXParseException {
-            if (uri.equals(ANT_CORE_URI)) {
-                uri = "";
-            }
             AntHandler next
                 = currentHandler.onStartChild(uri, tag, qname, attrs, context);
             antHandlers.push(currentHandler);
@@ -516,9 +516,6 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          */
         public void endElement(String uri, String name, String qName) throws SAXException {
-            if (uri.equals(ANT_CORE_URI)) {
-                uri = "";
-            }
             currentHandler.onEndElement(uri, name, context);
             AntHandler prev = (AntHandler) antHandlers.pop();
             currentHandler = prev;
@@ -582,7 +579,8 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            if (name.equals("project") && uri.equals("")) {
+            if (name.equals("project")
+                && (uri.equals("") || uri.equals(ANT_CORE_URI))) {
                 return ProjectHelper2.projectHandler;
             } else {
 //                 if (context.importlevel > 0) {
@@ -642,6 +640,12 @@ public class ProjectHelper2 extends ProjectHelper {
              */
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String attrUri = attrs.getURI(i);
+                if (attrUri != null
+                    && !attrUri.equals("")
+                    && !attrUri.equals(uri)) {
+                    continue; // Ignore attributes from unknown uris
+                }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
@@ -747,7 +751,8 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            if (name.equals("target") && uri.equals("")) {
+            if (name.equals("target")
+                && (uri.equals("") || uri.equals(ANT_CORE_URI))) {
                 return ProjectHelper2.targetHandler;
             } else {
                 return ProjectHelper2.elementHandler;
@@ -790,9 +795,16 @@ public class ProjectHelper2 extends ProjectHelper {
 
             Project project = context.getProject();
             Target target = new Target();
+            target.setProject(project);
             context.addTarget(target);
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String attrUri = attrs.getURI(i);
+                if (attrUri != null
+                    && !attrUri.equals("")
+                    && !attrUri.equals(uri)) {
+                    continue; // Ignore attributes from unknown uris
+                }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
@@ -935,8 +947,9 @@ public class ProjectHelper2 extends ProjectHelper {
             UnknownElement task = new UnknownElement(tag);
             task.setProject(context.getProject());
             task.setNamespace(uri);
-            //XXX task.setTaskType(qname);
             task.setQName(qname);
+            task.setTaskType(
+                ProjectHelper.genComponentName(task.getNamespace(), tag));
             task.setTaskName(qname);
 
             Location location = new Location(context.getLocator().getSystemId(),
@@ -962,6 +975,12 @@ public class ProjectHelper2 extends ProjectHelper {
                 = new RuntimeConfigurable(task, task.getTaskName());
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String attrUri = attrs.getURI(i);
+                if (attrUri != null
+                    && !attrUri.equals("")
+                    && !attrUri.equals(uri)) {
+                    continue; // Ignore attributes from unknown uris
+                }
                 String name = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
                 // PR: Hack for ant-type value

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -140,10 +140,10 @@ public final class LoadProperties extends Task {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         Reader instream = null;
+        ByteArrayInputStream tis = null;
 
         try {
             final long len = srcFile.length();
-            final int size = (int) len;
 
             //open up the file
             fis = new FileInputStream(srcFile);
@@ -155,7 +155,6 @@ public final class LoadProperties extends Task {
             }
 
             ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setBufferSize(size);
             crh.setPrimaryReader(instream);
             crh.setFilterChains(filterChains);
             crh.setProject(getProject());
@@ -168,7 +167,6 @@ public final class LoadProperties extends Task {
                     text = text + "\n";
                 }
 
-                ByteArrayInputStream tis = null;
                 if (encoding == null) {
                     tis = new ByteArrayInputStream(text.getBytes());
                 } else {
@@ -176,16 +174,11 @@ public final class LoadProperties extends Task {
                 }
                 final Properties props = new Properties();
                 props.load(tis);
-                final Enumeration e = props.keys();
-                while (e.hasMoreElements()) {
-                    final String key = (String) e.nextElement();
-                    final String value = props.getProperty(key);
-                    if (key != null && value != null
-                            && value.trim().length() > 0) {
-                        getProject().setNewProperty(key, value);
-                    }
-                }
-                tis.close();
+
+                Property propertyTask = 
+                    (Property) getProject().createTask("property");
+                propertyTask.setTaskName(getTaskName());
+                propertyTask.addProperties(props);
             }
 
         } catch (final IOException ioe) {
@@ -197,6 +190,13 @@ public final class LoadProperties extends Task {
             try {
                 if (fis != null) {
                     fis.close();
+                }
+            } catch (IOException ioex) {
+                //ignore
+            }
+            try {
+                if (tis != null) {
+                    tis.close();
                 }
             } catch (IOException ioex) {
                 //ignore

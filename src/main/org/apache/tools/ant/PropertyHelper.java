@@ -381,7 +381,7 @@ public class PropertyHelper {
             return;
         }
 
-        boolean done = setPropertyHook(ns, name, value, false, true, false);
+        boolean done = setPropertyHook(ns, name, value, false, false, true);
         if (done) {
             return;
         }
@@ -407,7 +407,7 @@ public class PropertyHelper {
             + value, Project.MSG_DEBUG);
         userProperties.put(name, value);
 
-        boolean done = setPropertyHook(ns, name, value, false, false, true);
+        boolean done = setPropertyHook(ns, name, value, false, true, false);
         if (done) {
             return;
         }

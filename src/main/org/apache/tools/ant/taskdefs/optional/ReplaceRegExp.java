@@ -58,11 +58,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.Writer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -318,17 +321,20 @@ public class ReplaceRegExp extends Task {
     protected void doReplace(File f, int options)
          throws IOException {
         File temp = fileUtils.createTempFile("replace", ".txt", null);
+        temp.deleteOnExit();
 
         Reader r = null;
-        FileWriter w = null;
+        Writer w = null;
 
         try {
             if (encoding == null) {
                 r = new FileReader(f);
+                w = new FileWriter(temp);
             } else {
                 r = new InputStreamReader(new FileInputStream(f), encoding);
+                w = new OutputStreamWriter(new FileOutputStream(temp),
+                                           encoding);
             }
-            w = new FileWriter(temp);
 
             BufferedReader br = new BufferedReader(r);
             BufferedWriter bw = new BufferedWriter(w);

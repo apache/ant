@@ -58,14 +58,18 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Compile J# source down to a managed .NET application.
+ * <p>
  * J# is not Java. But it is the language closest to Java in the .NET framework.
- * This task compiles jsharp source (assumes a .jsl extension, incidentally), and
+ * This task compiles jsharp source (.java files), and
  * generates a .NET managed exe or dll.
- * See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp
- * for vjc command options in glory detail.
+ * <p>
+ *
+ * @see <A=ref="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp">
+ * Visual J++ online documentation</a>
+ *
  * @author Steve Loughran
  * @since ant1.6
- * @ant.task    name="jsharpc" category="dotnet"
+ * @ant.task category="dotnet" name="jsharpc"
  */
 public class JSharp extends DotnetCompile {
 
@@ -120,14 +124,12 @@ public class JSharp extends DotnetCompile {
         return ";";
     }
 
-
-
     /**
      * Get the extension of filenames to compile.
      * @return The string extension of files to compile.
      */
     public String getFileExtension() {
-        return ".jsl";
+        return ".java";
     }
 
     /**

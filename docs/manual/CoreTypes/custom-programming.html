@@ -1,9 +1,9 @@
 <html>
   <head>
     <meta http-equiv="Content-Language" content="en-us"></meta>
-    <title>Custom Components</title>
+<title>Custom Components</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
   </head>
-
   <body>
     <h2>Custom Components</h2>
     <h3>Overview</h3>
@@ -55,10 +55,10 @@ package com.mydomain;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 
-public class AllUpperCaseCondition extends Condition {
+public class AllUpperCaseCondition implements Condition {
     private String value;
 
-    // The setter for the &quot;value&quot; attribute
+    // The setter for the "value" attribute
     public void setValue(String value) {
         this.value = value;
     }
@@ -69,7 +69,7 @@ public class AllUpperCaseCondition extends Condition {
             throw new BuildException("value attribute is not set");
         }
         return value.toUpperCase().equals(value);
-   }        
+   }
 }
       </pre>
     </blockquote>
@@ -82,7 +82,7 @@ public class AllUpperCaseCondition extends Condition {
 &lt;typedef
     name="alluppercase"
     classname="com.mydomain.AllUpperCaseCondition"
-    classpath="${mydomain.classes"/&gt;
+    classpath="${mydomain.classes}"/&gt;
       </pre>
     </blockquote>
     <p>
@@ -132,7 +132,7 @@ public class JavaSelector implements FileSelector {
 &lt;typedef
     name="javaselector"
     classname="com.mydomain.JavaSelector"
-    classpath="${mydomain.classes"/&gt;
+    classpath="${mydomain.classes}"/&gt;
       </pre>
     </blockquote>
         <p>
@@ -148,7 +148,7 @@ public class JavaSelector implements FileSelector {
 &lt;/copy&gt;
       </pre>
     </blockquote>
-     
+
       <p>
         One may use
         <code>org.apache.tools.ant.types.selectors.BaseSelector</code>,
@@ -164,7 +164,7 @@ public class JavaSelector implements FileSelector {
         last chance to check your settings for consistency because it
         calls <code>verifySettings()</code>. Override this method and
         call <code>setError()</code> within it if you detect any
-        problems in how your selector is set up.</p>
+        problems in how your selector is set up.
     </p>
     <p>
       To write custom selector containers one should extend
@@ -229,7 +229,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     </p>
     <p>
       The custom selector was the pre ant 1.6 way of defining custom selectors.
-      This method is still supported for backward compatiblity.
+      This method is still supported for backward compatibility.
     </p>
     <p>You can write your own selectors and use them within the selector
       containers by specifying them within the &lt;custom&gt; tag.</p>
@@ -292,14 +292,14 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     </p>
 
     <blockquote><pre>
-&lt;fileset dir=&quot;${mydir}&quot; includes=&quot;**/*&quot;&gt;
-    &lt;custom classname=&quot;com.mydomain.MySelector&quot;&gt;
-        &lt;param name=&quot;myattribute&quot; value=&quot;myvalue&quot;/&gt;
+&lt;fileset dir="${mydir}" includes="**/*"&gt;
+    &lt;custom classname="com.mydomain.MySelector"&gt;
+        &lt;param name="myattribute" value="myvalue"/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
       </pre></blockquote>
 
-    
+
     <p>The core selectors that can also be used as custom selectors
       are</p>
 
@@ -325,9 +325,9 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     to use the selector through <code>&lt;custom&gt;</code>.</p>
 
     <blockquote><pre>
-&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
-    &lt;custom classname=&quot;org.apache.tools.ant.types.selectors.DepthSelector&quot;&gt;
-        &lt;param name=&quot;max&quot; value=&quot;1&quot;/&gt;
+&lt;fileset dir="${doc.path}" includes="**/*"&gt;
+    &lt;custom classname="org.apache.tools.ant.types.selectors.DepthSelector"&gt;
+        &lt;param name="max" value="1"/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
       </pre></blockquote>
@@ -364,7 +364,7 @@ public class RemoveOddCharacters implements ChainableReader {
                 count++;
                 if ((count % 2) == 1) {
                     return c;
-                }   
+                }
               }
           }
       }
@@ -391,8 +391,8 @@ public class AddLineNumber extends ChainableReaderFilter {
 }
       </pre>
     </blockquote>
-      
-      
+
+
     <hr></hr>
     <p align="center">Copyright &copy; 2003 Apache Software Foundation. All rights
       Reserved.</p>

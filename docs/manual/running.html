@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Running Apache Ant</title>
+<link rel="stylesheet" type="text/css" href="stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -78,19 +79,21 @@ those without a <code>description</code> are listed as
 <h3><a name="options">Command-line Options Summary</a></h3>
 <pre>ant [options] [target [target2 [target3] ...]]
 Options:
-  -help                  print this message
-  -projecthelp           print project help information
+  -help, -h              print this message
+  -projecthelp, -p       print project help information
   -version               print the version information and exit
   -diagnostics           print information that might be helpful to
                          diagnose or report problems.
   -quiet, -q             be extra quiet
   -verbose, -v           be extra verbose
-  -debug                 print debugging information
-  -emacs                 produce logging information without adornments
+  -debug, -d             print debugging information
+  -emacs, -e             produce logging information without adornments
+  -lib &lt;path&gt;            specifies a path to search for jars and classes
   -logfile &lt;file&gt;        use given file for log
     -l     &lt;file&gt;                ''
   -logger &lt;classname&gt;    the class which is to perform logging
   -listener &lt;classname&gt;  add an instance of class as a project listener
+  -noinput               do not allow interactive input
   -buildfile &lt;file&gt;      use given buildfile
     -file    &lt;file&gt;              ''
     -f       &lt;file&gt;              ''
@@ -100,14 +103,53 @@ Options:
   -propertyfile &lt;name&gt;   load all properties from file with -D
                          properties taking precedence
   -inputhandler &lt;class&gt;  the class which will handle input requests
-  -find &lt;file&gt;           search for buildfile towards the root of the
-                         filesystem and use it
+  -find &lt;file&gt;           (s)earch for buildfile towards the root of
+    -s  &lt;file&gt;           the filesystem and use it
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
 <a href="listeners.html">Loggers &amp; Listeners</a>.
 <p>For more information about <code>-inputhandler</code> see
 <a href="inputhandler.html">InputHandler</a>.
+
+<h3><a name="libs">Library Directories</a></h3>
+<p>
+Prior to Ant 1.6, all jars in the ANT_HOME/lib would be added to the CLASSPATH
+used to run Ant. This was done in the scripts that started Ant. From Ant 1.6,
+two directories are scanned by default and more can be added as required. The
+default directories scanned are ANT_HOME/lib and a user specific directory,
+${user.home}/.ant/lib. This arrangement allows the Ant installation to be
+shared by many users while still allowing each user to deploy additional jars.
+Such additional jars could be support jars for Ant's optional tasks or jars
+containing third-party tasks to be used in the build. It also allows the main Ant
+installation to be locked down which will please system adminstrators.
+</p>
+
+<p>
+Additional directories to be searched may be added by using the -lib option.
+The -lib option specifies a search path. Any jars or classes in the directories
+of the path will be added to Ant's classloader. The order in which jars are
+added to the classpath is as follows
+</p>
+
+<ul>
+  <li>-lib jars in the order specified by the -lib elements on the command line</li>
+  <li>jars from ${user.home}/.ant/lib</li>
+  <li>jars from ANT_HOME/lib</li>
+</ul>
+
+<p>
+Note that the CLASSPATH environment variable is passed to Ant using a -lib
+option. Ant itself is started with a very minimalistic classpath.
+</p>
+
+<p>
+The location of ${user.home}/.ant/lib is somewhat dependent on the JVM. On Unix
+systems ${user.home} maps to the user's home directory whilst on recent
+versions of Windows it will be somewhere such as
+C:\Documents&nbsp;and&nbsp;Settings\username\.ant\lib. You should consult your
+JVM documentation for more details.
+</p>
 
 <h3>Examples</h3>
 <blockquote>
@@ -131,6 +173,13 @@ the target called <code>dist</code>.</p>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the target called <code>dist</code>, setting the <code>build</code> property
 to the value <code>build/classes</code>.</p>
+
+<blockquote>
+  <pre>ant -lib /home/ant/extras</pre>
+</blockquote>
+<p>runs Ant picking up additional task and support jars from the
+/home/ant/extras location
+</p>
 
 <h3><a name="files">Files</a></h3>
 
@@ -161,6 +210,187 @@ set):</p>
   in <code>ANT_ARGS</code>, you should include the name of the build file
   to find, even if the file is called <code>build.xml</code>.
 </ul>
+
+<h3><a name="sysprops">Java System Properties</a></h3>
+<p>Some of Ants core classes ant tasks can be configured via system properties.</p>
+<p>So here the result of a search through the codebase. Because system properties are
+available via Project instance, I searched for them with a
+<pre>
+    grep -r -n "getPropert" * > ..\grep.txt
+</pre>
+command. After that I filtered out the often-used but not-so-important values (most of them
+read-only values): <i>path.separator, ant.home, basedir, user.dir, os.name, ant.file,
+line.separator, java.home, java.version, java.version, user.home, java.class.path</i><br>
+And I filtered out the <i>getPropertyHelper</i> access.</p>
+<table border="1">
+<tr>
+  <th>property name</th>
+  <th>valid values /default value</th>
+  <th>description</th>
+</tr>
+<tr>
+  <td><code>ant.input.properties</code></td>
+  <td>filename (required)</td>
+  <td>Name of the file holding the values for the
+      <a href="inputhandler.html">PropertyFileInputHandler</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.logger.defaults</code></td>
+  <!-- add the blank after the slash, so the browser can do a line break -->
+  <td>filename (optional, default '/org/ apache/ tools/ ant/ listener/ defaults.properties')</td>
+  <td>Name of the file holding the color mappings for the
+      <a href="listeners.html#AnsiColorLogger">AnsiColorLogger</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.netrexxc.*</code></td>
+  <td>several formats</td>
+  <td>Use specified values as defaults for <a href="OptionalTasks/netrexxc.html">netrexxc</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.PropertyHelper</code></td>
+  <td>ant-reference-name (optional)</td>
+  <td>Specify the PropertyHelper to use. The object must be of the type
+      org.apache.tools.ant.PropertyHelper. If not defined an object of
+      org.apache.tools.ant.PropertyHelper will be used as PropertyHelper.
+  </td>
+</tr>
+<tr>
+  <td><code>ant.regexp.regexpimpl</code></td>
+  <td>classname</td>
+  <td>classname for a RegExp implementation; if not set Ant tries to
+      find another (Jdk14, Oro...);
+      <a href="CoreTypes/mapper.html#regexp-mapper">RegExp-Mapper</a>
+      "Choice of regular expression implementation"
+  </td>
+</tr>
+<tr>
+  <td><code>ant.reuse.loader</code></td>
+  <td>boolean</td>
+  <td>allow to reuse classloaders
+      used in org.apache.tools.ant.util.ClasspathUtil
+  </td>
+</tr>
+<tr>
+  <td><code>ant.XmlLogger.stylesheet.uri</code></td>
+  <td>filename (default 'log.xsl')</td>
+  <td>Name for the stylesheet to include in the logfile by
+      <a href="listeners.html#XmlLogger">XmlLogger</a>.
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler</code></td>
+  <td>name</td>
+  <td>Specify the default compiler to use.
+      see <a href="CoreTasks/javac.html">javac</a>,
+      <a href="OptionalTasks/ejb.html#ejbjar_weblogic">EJB Tasks</a>
+      (compiler attribute),
+      <a href="OptionalTasks/icontract.html">IContract</a>,
+      <a href="OptionalTasks/javah.html">javah</a>
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.emacs</code></td>
+  <td>boolean (default false)</td>
+  <td>Enable emacs-compatible error messages.
+      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.fulldepend</code></td>
+  <td>boolean (default false)</td>
+  <td>Enable full dependency checking
+      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.jvc.extensions</code></td>
+  <td>boolean (default true)</td>
+  <td>enable Microsoft extensions of their java compiler
+      see <a href="CoreTasks/javac.html">javac</a> "Jvc Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.pedantic</code></td>
+  <td>boolean (default false)</td>
+  <td>Enable pedantic warnings.
+      see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes"
+  </td>
+</tr>
+<tr>
+  <td><code>build.compiler.warnings</code></td>
+  <td>Deprecated flag</td>
+  <td> see <a href="CoreTasks/javac.html">javac</a> "Jikes Notes" </td>
+</tr>
+<tr>
+  <td><code>build.rmic</code></td>
+  <td>name</td>
+  <td>control the <a href="CoreTasks/rmic.html">rmic</a> compiler </td>
+</tr>
+<tr>
+  <td><code>build.sysclasspath</code></td>
+  <td>"only", something else</td>
+  <td>only: current threads get the actual class loader
+      (AntClassLoader.setThreadContextLoader()).
+      else: use core loader as default (ComponentHelper.initTasks()). Disable
+      changing the classloader (oata.taskdefs.Classloader.execute() experimental
+      task).
+      <!-- somewhere documented in the manual?? -->
+  </td>
+</tr>
+<tr>
+  <td><code>file.encoding</code></td>
+  <td>name of a supported character set (e.g. UTF-8, ISO-8859-1, US-ASCII)</td>
+  <td>use as default character set of email messages; use as default for source-, dest- and bundleencoding
+      in <a href="OptionalTasks/translate.html">translate</a> <br>
+      see JavaDoc of <a target="_blank" href="http://java.sun.com/j2se/1.4.2/docs/api/java/nio/charset/Charset.html">java.nio.charset.Charset</a>
+      for more information about character sets (not used in Ant, but has nice docs).
+  </td>
+</tr>
+<tr>
+  <td><code>jikes.class.path</code></td>
+  <td>path</td>
+  <td>The specified path is added to the classpath if jikes is used as compiler.</td>
+</tr>
+<tr>
+  <td><code>MailLogger.properties.file, MailLogger.*</code></td>
+  <td>filename (optional, defaults derived from Project instance)</td>
+  <td>Name of the file holding properties for sending emails by the
+      <a href="listeners.html#MailLogger">MailLogger</a>. Override properties set
+      inside the buildfile or via command line.
+  </td>
+</tr>
+<tr>
+  <td><code>org.apache.tools.ant.ProjectHelper</code></td>
+  <!-- add the blank after the slash, so the browser can do a line break -->
+  <td>classname (optional, default 'org. apache. tools. ant. ProjectHelper')</td>
+  <td>specifies the classname to use as ProjectHelper. The class must extend
+      org.apache.tools.ant.ProjectHelper.
+  </td>
+</tr>
+<tr>
+  <td><code>p4.port, p4.client, p4.user</code></td>
+  <td>several formats</td>
+  <td>Specify defaults for port-, client- and user-setting of the
+      <a href="OptionalTasks/perforce.html">perforce</a> tasks.
+  </td>
+</tr>
+<tr>
+  <td><code>websphere.home
+  <td>path</td>
+  <td>Points to home directory of websphere.
+      see <a href="OptionalTasks/ejb.html#ejbjar_websphere">EJB Tasks</a>
+  </td>
+</tr>
+<tr>
+  <td><code>XmlLogger.file
+  <td>filename (default 'log.xml')</td>
+  <td>Name for the logfile for <a href="listeners.html#MailLogger">MailLogger</a>.
+  </td>
+</tr>
+</table>
 
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
@@ -207,19 +437,35 @@ have some documentation inside.</p>
 
 <h2><a name="viajava">Running Ant via Java</a></h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
-with:</p>
+with two entry points:</p>
 <blockquote>
   <pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
 </blockquote>
 
-<p>These instructions actually do exactly the same as the <code>ant</code>
-command. The options and target are the same as when running Ant with the <code>ant</code>
-command. This example assumes you have set your classpath to include:</p>
+<blockquote>
+  <pre>java -Dant.home=c:\ant org.apache.tools.ant.launch.Launcher [options] [target]</pre>
+</blockquote>
+
+<p>
+The first method runs Ant's traditional entry point. The second method uses
+the Ant Launcher introduced in Ant 1.6. The former method does not support
+the -lib option and all required classes are loaded from the CLASSPATH. You must
+ensure that all required jars are available. At a minimum the CLASSPATH should
+include:
+</p>
+
 <ul>
-<li><code>ant.jar</code></li>
+<li><code>ant.jar</code> and <code>ant-launcher.jar</code></li>
 <li>jars/classes for your XML parser</li>
 <li>the JDK's required jar/zip files</li>
 </ul>
+
+<p>
+The latter method supports the -lib option and will load jars from the
+specified ANT_HOME. You should start the latter with the most minimal
+classpath possible, generally just the ant-launcher.jar.
+</p>
+
 <br>
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
@@ -227,4 +473,3 @@ Reserved.</p>
 
 </body>
 </html>
-

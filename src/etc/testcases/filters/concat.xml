@@ -19,7 +19,7 @@
 
   <target name="testFilterReaderNoArgs" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderNoArgs.test">
+          tofile="result/concat.FilterReaderNoArgs.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter"/>
       </filterchain>
@@ -28,7 +28,7 @@
 
   <target name="testFilterReaderPrepend" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderPrepend.test">
+          tofile="result/concat.FilterReaderPrepend.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
           <param name="prepend" value="result/prepend.txt"/>
@@ -39,7 +39,7 @@
 
   <target name="testFilterReaderAppend" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderAppend.test">
+          tofile="result/concat.FilterReaderAppend.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
           <param name="append" value="result/append.txt"/>
@@ -50,7 +50,7 @@
 
   <target name="testFilterReaderPrependAppend" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderPrependAppend.test">
+          tofile="result/concat.FilterReaderPrependAppend.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
           <param name="prepend" value="result/prepend.txt"/>
@@ -63,7 +63,7 @@
   <target name="testConcatFilter" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilter.test">
+          tofile="result/concat.ConcatFilter.test">
       <filterchain>
         <concatfilter/>
       </filterchain>
@@ -73,7 +73,7 @@
   <target name="testConcatFilterPrepend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterPrepend.test">
+          tofile="result/concat.ConcatFilterPrepend.test">
       <filterchain>
         <concatfilter prepend="result/prepend.txt"/>
       </filterchain>
@@ -83,7 +83,7 @@
   <target name="testConcatFilterAppend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterAppend.test">
+          tofile="result/concat.ConcatFilterAppend.test">
       <filterchain>
         <concatfilter append="result/append.txt"/>
       </filterchain>
@@ -93,7 +93,7 @@
   <target name="testConcatFilterPrependAppend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterPrependAppend.test">
+          tofile="result/concat.ConcatFilterPrependAppend.test">
       <filterchain>
         <concatfilter prepend="result/prepend.txt" append="result/append.txt"/>
       </filterchain>

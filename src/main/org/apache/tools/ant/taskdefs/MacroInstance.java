@@ -66,10 +66,12 @@ import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.RuntimeConfigurable;
+import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
-import org.apache.tools.ant.RuntimeConfigurable;
 
 /**
  * The class to be placed in the ant type definition.
@@ -82,7 +84,8 @@ import org.apache.tools.ant.RuntimeConfigurable;
 public class MacroInstance extends Task implements DynamicConfigurator {
     private MacroDef macroDef;
     private Map      map = new HashMap();
-    private Map      elements = new HashMap();
+    private Map      nsElements = null;
+    private Map      presentElements = new HashMap();
     private Hashtable localProperties = new Hashtable();
 
     /**
@@ -90,7 +93,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
      *
      * @param macroDef a <code>MacroDef</code> value
      */
-    protected void setMacroDef(MacroDef macroDef) {
+    public void setMacroDef(MacroDef macroDef) {
         this.macroDef = macroDef;
     }
 
@@ -112,15 +115,28 @@ public class MacroInstance extends Task implements DynamicConfigurator {
      *                        has already been seen
      */
     public Object createDynamicElement(String name) throws BuildException {
-        if (macroDef.getElements().get(name) == null) {
+        if (getNsElements().get(name) == null) {
             throw new BuildException("unsupported element " + name);
         }
-        if (elements.get(name) != null) {
+        if (presentElements.get(name) != null) {
             throw new BuildException("Element " + name + " already present");
         }
         Element ret = new Element();
-        elements.put(name, ret);
+        presentElements.put(name, ret);
         return ret;
+    }
+
+    private Map getNsElements() {
+        if (nsElements == null) {
+            nsElements = new HashMap();
+            for (Iterator i = macroDef.getElements().entrySet().iterator();
+                 i.hasNext();) {
+                Map.Entry entry = (Map.Entry) i.next();
+                nsElements.put((String) entry.getKey(),
+                               entry.getValue());
+            }
+        }
+        return nsElements;
     }
 
     /**
@@ -146,90 +162,87 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
     }
 
-    private String macroSubsAnt(String s, Map macroMapping) {
+    private static final int STATE_NORMAL         = 0;
+    private static final int STATE_EXPECT_BRACKET = 1;
+    private static final int STATE_EXPECT_NAME    = 2;
+    private static final int STATE_EXPECT_EXCAPE  = 3;
+
+    private String macroSubs(String s, Map macroMapping) {
+        if (s == null) {
+            return null;
+        }
         StringBuffer ret = new StringBuffer();
-        StringBuffer macroName = new StringBuffer();
+        StringBuffer macroName = null;
         boolean inMacro = false;
+        int state = STATE_NORMAL;
         for (int i = 0; i < s.length(); ++i) {
-            if (s.charAt(i) == '$') {
-                inMacro = true;
-            } else {
-                if (inMacro) {
-                    if (s.charAt(i) == '{') {
-                        continue;
-                    } else if (s.charAt(i) == '}') {
+            char ch = s.charAt(i);
+            switch (state) {
+                case STATE_NORMAL:
+                    if (ch == '@') {
+                        state = STATE_EXPECT_BRACKET;
+                    } else {
+                        ret.append(ch);
+                    }
+                    break;
+                case STATE_EXPECT_BRACKET:
+                    if (ch == '{') {
+                        state = STATE_EXPECT_NAME;
+                        macroName = new StringBuffer();
+                    } else if (ch == '@') {
+                        state = STATE_EXPECT_EXCAPE;
+                    } else {
+                        state = STATE_NORMAL;
+                        ret.append('@');
+                        ret.append(ch);
+                    }
+                    break;
+                case STATE_EXPECT_NAME:
+                    if (ch == '}') {
+                        state = STATE_NORMAL;
                         String name = macroName.toString();
                         String value = (String) macroMapping.get(name);
                         if (value == null) {
-                            ret.append("${" + name + "}");
+                            ret.append("@{" + name + "}");
                         } else {
                             ret.append(value);
                         }
-                        macroName = new StringBuffer();
-                        inMacro = false;
+                        macroName = null;
                     } else {
-                        macroName.append(s.charAt(i));
+                        macroName.append(ch);
                     }
-                } else {
-                    ret.append(s.charAt(i));
-                }
+                    break;
+                case STATE_EXPECT_EXCAPE:
+                    state = STATE_NORMAL;
+                    if (ch == '{') {
+                        ret.append("@");
+                    } else {
+                        ret.append("@@");
+                    }
+                    ret.append(ch);
+                    break;
+                default:
+                    break;
             }
+        }
+        switch (state) {
+            case STATE_NORMAL:
+                break;
+            case STATE_EXPECT_BRACKET:
+                ret.append('@');
+                break;
+            case STATE_EXPECT_NAME:
+                ret.append("@{");
+                ret.append(macroName.toString());
+                break;
+            case STATE_EXPECT_EXCAPE:
+                ret.append("@@");
+                break;
+            default:
+                break;
         }
 
         return ret.toString();
-    }
-
-    private String macroSubsXPath(String s, Map macroMapping) {
-        StringBuffer ret = new StringBuffer();
-        StringBuffer macroName = new StringBuffer();
-        boolean inMacro = false;
-        for (int i = 0; i < s.length(); ++i) {
-            char c = s.charAt(i);
-            if (!inMacro) {
-                if (c == '@') {
-                    inMacro = true;
-                } else {
-                    ret.append(c);
-                }
-            } else {
-                if (MacroDef.isValidNameCharacter(c)) {
-                    macroName.append(c);
-                } else {
-                    inMacro = false;
-                    String name = macroName.toString();
-                    String value = (String) macroMapping.get(name);
-                    if (value == null) {
-                        ret.append("@" + name);
-                    } else {
-                        ret.append(value);
-                    }
-                    if (c == '@') {
-                        inMacro = true;
-                    } else {
-                        ret.append(c);
-                    }
-                    macroName = new StringBuffer();
-                }
-            }
-        }
-        if (inMacro) {
-            String name = macroName.toString();
-            String value = (String) macroMapping.get(name);
-            if (value == null) {
-                ret.append("@" + name);
-            } else {
-                ret.append(value);
-            }
-        }
-        return ret.toString();
-    }
-
-    private String macroSubs(String s, Map macroMapping) {
-        if (macroDef.getAttributeStyle() == MacroDef.AttributeStyle.ANT) {
-            return macroSubsAnt(s, macroMapping);
-        } else {
-            return macroSubsXPath(s, macroMapping);
-        }
     }
 
     private UnknownElement copy(UnknownElement ue) {
@@ -239,7 +252,13 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         ret.setQName(ue.getQName());
         ret.setTaskName(ue.getTaskName());
         ret.setLocation(ue.getLocation());
-        ret.setOwningTarget(getOwningTarget());
+        if (getOwningTarget() == null) {
+            Target t = new Target();
+            t.setProject(getProject());
+            ret.setOwningTarget(t);
+        } else {
+            ret.setOwningTarget(getOwningTarget());
+        }
         RuntimeConfigurable rc = new RuntimeConfigurable(
             ret, ue.getTaskName());
         rc.setPolyType(ue.getWrapper().getPolyType());
@@ -257,15 +276,15 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         while (e.hasMoreElements()) {
             RuntimeConfigurable r = (RuntimeConfigurable) e.nextElement();
             UnknownElement unknownElement = (UnknownElement) r.getProxy();
-            String tag = unknownElement.getTag();
+            String tag = unknownElement.getTaskType();
             MacroDef.TemplateElement templateElement =
-                (MacroDef.TemplateElement) macroDef.getElements().get(tag);
+                (MacroDef.TemplateElement) getNsElements().get(tag);
             if (templateElement == null) {
                 UnknownElement child = copy(unknownElement);
                 rc.addChild(child.getWrapper());
                 ret.addChild(child);
             } else {
-                Element element = (Element) elements.get(tag);
+                Element element = (Element) presentElements.get(tag);
                 if (element == null) {
                     if (!templateElement.isOptional()) {
                         throw new BuildException(
@@ -294,12 +313,12 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     public void execute() {
         localProperties = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
-        for (int i = 0; i < macroDef.getAttributes().size(); ++i) {
-            MacroDef.Attribute attribute =
-                (MacroDef.Attribute) macroDef.getAttributes().get(i);
+        for (Iterator i = macroDef.getAttributes().iterator(); i.hasNext();) {
+            MacroDef.Attribute attribute = (MacroDef.Attribute) i.next();
             String value = (String) map.get(attribute.getName());
             if (value == null) {
                 value = attribute.getDefault();
+                value = macroSubs(value, localProperties);
             }
             if (value == null) {
                 throw new BuildException(
@@ -307,6 +326,9 @@ public class MacroInstance extends Task implements DynamicConfigurator {
             }
             localProperties.put(attribute.getName(), value);
             copyKeys.remove(attribute.getName());
+        }
+        if (copyKeys.contains("id")) {
+            copyKeys.remove("id");
         }
         if (copyKeys.size() != 0) {
             throw new BuildException(
@@ -317,6 +339,11 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         // need to set the project on unknown element
         UnknownElement c = copy(macroDef.getNestedTask());
         c.init();
-        c.perform();
+        try {
+            c.perform();
+        } catch (BuildException ex) {
+            throw ProjectHelper.addLocationToBuildException(
+                ex, getLocation());
+        }
     }
 }

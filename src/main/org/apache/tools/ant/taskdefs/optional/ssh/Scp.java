@@ -262,7 +262,11 @@ public class Scp extends SSHBase {
         }
 
         setHost(uri.substring(indexOfAt + 1, indexOfPath));
-        return uri.substring(indexOfPath + 1);
+        String remotePath = uri.substring(indexOfPath + 1);
+        if (remotePath.equals("")) {
+            remotePath = ".";
+        }
+        return remotePath;
     }
 
     private boolean isRemoteUri(String uri) {

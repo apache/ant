@@ -320,7 +320,10 @@ public abstract class AbstractMetamataTask extends Task {
     }
 
     protected final File createTmpFile() {
-        return FileUtils.newFileUtils().createTempFile("metamata", ".tmp", getProject().getBaseDir());
+        File tmpFile = FileUtils.newFileUtils()
+            .createTempFile("metamata", ".tmp", getProject().getBaseDir());
+        tmpFile.deleteOnExit();
+        return tmpFile;
     }
 
     /**

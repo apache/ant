@@ -54,7 +54,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 
 /**
@@ -118,6 +120,28 @@ public class ImportTest extends BuildFileTest {
             "src/etc/testcases/taskdefs/import/subdir/importinsequential.xml");
         expectPropertySet("within-imported", "foo", "bar");
         assertNotNull(getProject().getReference("baz"));
+    }
+
+    public void testImportError() {
+        try {
+            configureProject(
+                "src/etc/testcases/taskdefs/import/import_bad_import.xml");
+        } catch (BuildException ex) {
+            Location lo = ex.getLocation();
+            assertTrue(
+                "expected location of build exception to be set",
+                (lo != null));
+            assertTrue(
+                "expected location to contain calling file",
+                lo.getFileName().indexOf("import_bad_import.xml") != -1);
+            assertTrue(
+                "expected message of ex to contain called file",
+                ex.getMessage().indexOf("bad.xml") != -1);
+            return;
+        }
+        assertTrue(
+            "Did not see build exception",
+            false);
     }
 }
 

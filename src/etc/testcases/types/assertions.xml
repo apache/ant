@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+
+<project name="assertions" basedir="." default="init">
+
+  <property name="build.dir" location="assertions/build"/>
+  <property name="src.dir" location="assertions"/>
+  <property name="classname" value="AssertionTest"/>
+  
+  <path id="assert.classpath">
+    <pathelement location="${build.dir}"/>
+  </path>
+  
+  <target name="setup" >
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="${src.dir}"
+      includes="*.java"
+      source="1.4"
+      debug="true"
+      destdir="${build.dir}"
+      />
+  </target>
+  
+  <target name="teardown" >
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <!-- if per-class assertions work, this run asserts -->
+  <target name="test-classname" depends="setup">
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enablesystemassertions="true">
+        <enable class="${classname}" />
+      </assertions>
+    </java>
+  </target>
+  
+  <!-- if package works, this run asserts -->
+  <target name="test-package" depends="setup">
+    <java fork="true"  failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enableSystemAssertions="false" >
+        <enable package="..." />
+      </assertions>
+    </java>
+  </target>
+
+  <!-- this test should run the app successfully -->
+  <target name="test-empty-assertions" depends="setup">
+    <java fork="true"  failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions/>
+    </java>
+  </target>  
+
+  <!-- this test should run the app successfully -->
+  <target name="test-disable" depends="setup">
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enableSystemAssertions="false" >
+        <enable package="..." />
+        <disable class="${classname}" />
+      </assertions>
+    </java>
+  </target>  
+
+  <!-- repeated settigns result in the last declaration winning
+    except that the rule 'classes win over packages takes priority
+    this run will assert -->
+  <target name="test-override" depends="setup">
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enableSystemAssertions="false" >
+        <enable package="..." />
+        <disable class="${classname}" />
+        <enable class="${classname}" />
+        <disable package="..." />
+      </assertions>
+    </java>
+  </target>  
+
+  <!-- repeated settigns result in the last declaration winning;
+    this run will not assert -->
+  <target name="test-override2" depends="setup">
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enableSystemAssertions="false" >
+        <enable package="..." />
+        <enable class="${classname}" />
+        <disable class="${classname}" />
+      </assertions>
+    </java>
+  </target>  
+  
+  <!-- if references work, this run asserts -->
+  <target name="test-references">
+  <assertions id="project.assertions" >
+    <enable package="org.apache.test" />
+    <disable package="org.apache.log4j"/>
+    <enable package="..."/>
+  </assertions>  
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions refid="project.assertions"/>
+    </java>
+  </target>
+  
+  <!-- when fork=false; we need to reject the construct -->
+  <target name="test-nofork" depends="setup">
+    <java fork="false" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enablesystemassertions="true">
+        <enable class="${classname}" />
+      </assertions>
+    </java>
+  </target>  
+
+  <!-- this throws a build error -->
+  <target name="test-multiple-assertions" depends="setup">
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions enablesystemassertions="true">
+        <enable class="${classname}" />
+      </assertions>
+      <assertions/>
+    </java>
+  </target>  
+  
+  <!-- should throw a build exception -->
+  <target name="test-reference-abuse" depends="setup">
+  <assertions id="project.assertions2" >
+    <enable package="org.apache.test" />
+    <disable package="org.apache.log4j"/>
+    <enable package="..."/>
+  </assertions>  
+    <java fork="true" failonerror="true"
+      classname="${classname}"
+      classpathref="assert.classpath">
+      <assertions refid="project.assertions2">
+        <disable class="${classname}" />
+      </assertions>      
+    </java>
+  </target>    
+  
+</project>
