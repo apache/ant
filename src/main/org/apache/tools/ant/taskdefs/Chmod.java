@@ -77,6 +77,7 @@ public class Chmod extends ExecuteOn {
     public Chmod() {
         super.setExecutable("chmod");
         super.setParallel(true);
+        super.setSkipEmptyFilesets(true);
     }
 
     public void setFile(File src) {
@@ -192,6 +193,10 @@ public class Chmod extends ExecuteOn {
 
     public void setCommand(String e) {
         throw new BuildException(taskType+" doesn\'t support the command attribute", location);
+    }
+
+    public void setSkipEmptyFilesets(boolean skip) {
+        throw new BuildException(taskType+" doesn\'t support the skipemptyfileset attribute", location);
     }
 
     protected boolean isValidOs() {

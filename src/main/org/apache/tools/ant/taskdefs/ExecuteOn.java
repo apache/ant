@@ -73,6 +73,7 @@ public class ExecuteOn extends ExecTask {
     private boolean parallel = false;
     protected String type = "file";
     protected Commandline.Marker srcFilePos = null;
+    private boolean skipEmpty = false;
 
     /**
      * Adds a set of files (nested fileset attribute).
@@ -93,6 +94,13 @@ public class ExecuteOn extends ExecTask {
      */
     public void setType(FileDirBoth type) {
         this.type = type.getValue();
+    }
+
+    /**
+     * Should empty filesets be ignored?
+     */
+    public void setSkipEmptyFilesets(boolean skip) {
+        skipEmpty = skip;
     }
 
     /**
@@ -136,6 +144,12 @@ public class ExecuteOn extends ExecTask {
                     for (int j=0; j<s.length; j++) {
                         v.addElement(s[j]);
                     }
+                }
+
+                if (v.size() == 0 && skipEmpty) {
+                    log("Skipping fileset for directory "
+                        + base + ". It is empty.", Project.MSG_INFO);
+                    continue;
                 }
 
                 String[] s = new String[v.size()];
