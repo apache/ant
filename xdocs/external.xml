@@ -392,6 +392,39 @@
         </table>
       </subsection>
 
+      <subsection name="Dependency Finder">
+        <p>Dependency Finder extracts dependencies and OO metrics from
+	Java class files produced by most Java compilers. It can compute
+	API differences between versions;  no sources needed. It includes
+	Ant tasks, web, Swing, and command-line interfaces, with XSL
+	stylesheets for formatting output.</p>
+
+	<p>You can use it to extract dependencies between packages, classes,
+	or even methods, or any combination thereof.  You can use Perl
+	regular expressions to filter the information and pinpoint only
+	what you need.  There is even a Web Application version (WAR file)
+	so a whole group of developers can share a common view.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with 1.5.3, should work with 1.4+.</td>
+         </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://depfind.sourceforge.net/">http://depfind.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jeantessier@users.sourceforge.net">Jean Tessier</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Doxygen task">
         <p>There are two Ant tasks for running the Doxygen
         documentation system.</p>
