@@ -8,9 +8,25 @@
   </properties>
 
 <body>
+  <section name="Ant 1.6.1beta1">
+    <p>Apache Ant 1.6.1beta1 is now available for <a
+      href="http://cvs.apache.org/dist/ant/v1.6.1beta1/">download</a>.</p>
+    <p>The ASF Board has approved the new Apache License 2.0.
+    For a copy of that license, please see
+    <a href="http://www.apache.org/licenses/">
+    http://www.apache.org/licenses/</a>.</p>
+    <p>The Ant 1.6.1 final release will probably be delivered with the
+    Apache License 2.0, pending the result of a vote.</p>
+    <p>Ant 1.6.1beta1 fixes several bugs, most notably the handling
+    of the default namespace for nested elements.</p>
+    <p>Ant 1.6.1beta1 also introduces initial support for compiling with
+    Java 1.5.</p>
+    <p>The manual of Ant 1.6.1beta1 is available on line
+    <a href="manual-1.6.1beta1/"> here</a>.</p>
+  </section>
 
  <section name="Ant 1.6.0">
-    <p>Apache Ant 1.6.0 is now available for <a
+    <p>Apache Ant 1.6.0 is available since December 18, 2003 for <a
     href="http://ant.apache.org/bindownload.cgi">download</a>.  As
     we've already said in the announcements of Ant 1.5.4, this release
     requires JDK 1.2 or later to run.</p>
