@@ -252,17 +252,17 @@ it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
 in the archive, adds the file <code>ChangeLog27.txt</code> in the
 current directory as <code>docs/ChangeLog.txt</code>, and includes all the html files in <code>examples.zip</code> 
 under <code>docs/examples</code>.  The archive might end up containing the files:</p>
-<pre><code>    docs/user-guide/html/index.html
+<pre>    docs/user-guide/html/index.html
     docs/ChangeLog.txt
     docs/examples/index.html
-</code></pre>
+</pre>
 <p>
 The code
 <pre>
   &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
     &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
     &lt;zipgroupfileset dir=&quot;.&quot; includes=&quot;examples*.zip&quot;/&gt;
-  &lt;/zip&gt;</pre>
+  &lt;/zip&gt;
 </pre>
 <p>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
