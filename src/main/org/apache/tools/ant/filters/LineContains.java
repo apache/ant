@@ -143,12 +143,11 @@ public final class LineContains
                 line = line.substring(1);
             }
         } else {
-            String goodLine = null;
             line = readLine();
             if (line == null) {
                 ch = -1;
             } else {
-                int containsSize = contains.size();
+                final int containsSize = contains.size();
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
                     if (line.indexOf(containsStr) == -1) {
@@ -156,6 +155,7 @@ public final class LineContains
                         break;
                     }
                 }
+
                 return read();
             }
         }
