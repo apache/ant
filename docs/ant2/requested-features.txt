@@ -330,3 +330,6 @@ V. Things we probably don't agree on.
 * Allow ant to farm out attributes and elements that are NOT in the ant 
   namespace to other components. ie hand doc: elements to the Documentation
   component or log: attributes to Log policy component etc
+
+* specify an onfail task or target that runs in case of a build
+  failure.
