@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,6 +96,11 @@ public class JUnitVersionHelperTest extends TestCase {
         assertEquals("unknown", JUnitVersionHelper.getTestCaseName(null));
     }
 
+    public void testTestCaseSubClass() {
+        assertEquals("overridden getName", 
+                     JUnitVersionHelper.getTestCaseName(new Foo5()));
+    }
+
     public static class Foo implements Test {
         public int countTestCases() {return 0;}
         public void run(TestResult result) {}
@@ -114,6 +119,10 @@ public class JUnitVersionHelperTest extends TestCase {
 
     public static class Foo4 extends Foo {
         public String name() {return "I'm a foo, too";}
+    }
+
+    public static class Foo5 extends TestCase {
+        public String getName() {return "overridden getName";}
     }
 
 }
