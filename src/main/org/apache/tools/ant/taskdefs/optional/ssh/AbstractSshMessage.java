@@ -67,7 +67,7 @@ import java.text.NumberFormat;
 public abstract class AbstractSshMessage {
 
     protected Session session;
-    protected LogListener listener = new LogListener() {;
+    protected LogListener listener = new LogListener() {
         public void log(String message) {
             // do nothing;
         }
