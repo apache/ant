@@ -36,4 +36,9 @@
       <checksum file="../asf-logo.gif" fileext=".md5" />
     </condition>
   </target>
+
+  <target name="verifyFromProperty">
+    <checksum property="checksum" file="checksum.xml"/>
+    <checksum property="checksum" file="checksum.xml" verifyproperty="verify"/>
+  </target>
 </project>

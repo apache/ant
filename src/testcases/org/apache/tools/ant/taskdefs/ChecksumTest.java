@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,6 +100,11 @@ public class ChecksumTest extends BuildFileTest {
     public void testVerifyAsCondition() {
         testVerify("verifyAsCondition");
         assertNull(project.getProperty("no.logo.md5"));
+    }
+
+    public void testVerifyFromProperty() {
+        assertNull(getProject().getProperty("verify"));
+        expectPropertySet("verifyFromProperty", "verify", "true");
     }
 
     private void testVerify(String target) {
