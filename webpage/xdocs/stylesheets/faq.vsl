@@ -42,7 +42,7 @@
 #macro (subtoc $faq)
   #set ($id = $faq.getAttributeValue("id"))
   <li><a href="$pound$id">
-  $xmlout.outputString($faq.getChild("question"))
+  $xmlout.outputString($faq.getChild("question"), true)
   </a></li>
 #end
 
@@ -59,7 +59,7 @@
     <tr><td bgcolor="$subbannerbg">
       <font color="$subbannerfg" face="arial,helvetica,sanserif">
         <strong>
-          $xmlout.outputString($faq.getChild("question"))
+          $xmlout.outputString($faq.getChild("question"), true)
         </strong>
       </font>
     </td></tr>
