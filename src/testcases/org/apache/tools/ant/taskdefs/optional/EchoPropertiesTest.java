@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -183,6 +183,14 @@ public class EchoPropertiesTest extends BuildFileTest {
         executeTarget( "testEchoPrefix" );
         Properties props=loadPropFile(PREFIX_OUTFILE);
 //        props.list(System.out);
+        assertEquals("prefix didn't include 'a.set' property","true",props.getProperty("a.set"));
+        assertNull("prefix failed to filter out property 'b.set'",
+                   props.getProperty("b.set"));
+    }
+
+    public void testEchoPrefixAsPropertyset() throws Exception {
+        executeTarget( "testEchoPrefixAsPropertyset" );
+        Properties props=loadPropFile(PREFIX_OUTFILE);
         assertEquals("prefix didn't include 'a.set' property","true",props.getProperty("a.set"));
         assertNull("prefix failed to filter out property 'b.set'",
                    props.getProperty("b.set"));

@@ -9,12 +9,14 @@
 
 <h2><a name="echoproperties">echoproperties</a></h2>
 <h3>Description</h3>
-<p>Displays all the current properties in the project.  The output can be
-sent to a file if desired. You can also specify a subset of properties
-to save by naming a prefix: only properties starting with this
-prefix will be saved. This task can be used as a somewhat contrived
-means of returning data from an <tt>&lt;ant&gt;</tt> invocation,
-but is really for debugging build files.</p>
+
+<p>Displays all the current properties (or a subset of them specified
+by a nested <code>&lt;propertyset&gt;</code>) in the project.  The
+output can be sent to a file if desired.  This task can be used as a
+somewhat contrived means of returning data from an
+<tt>&lt;ant&gt;</tt> invocation, but is really for debugging build
+files.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -59,6 +61,16 @@ but is really for debugging build files.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+
+<h3>Parameters specified as nested elements</h3>
+
+<h4>propertyset</h4>
+
+<p>You can specify subsets of properties to be echoed with <a
+href="../CoreTypes/propertyset.html">propertyset</a>s.</p>
+
+<p><em>since Ant 1.6</em>.</p>
+
 <h3>Examples</h3>
 <blockquote><pre>
   &lt;echoproperties/&gt;
@@ -77,6 +89,14 @@ log a message if the file could not be created or written to, but will still
 allow the build to continue.</p>
 <blockquote><pre>
   &lt;echoproperties prefix="java."/&gt;
+</pre></blockquote>
+<p>List all properties beginning with "java."</p>
+<blockquote><pre>
+  &lt;echoproperties&gt;
+    &lt;propertyset&gt;
+      &lt;propertyref prefix="java."/&gt;
+    &lt;/propertyset&gt;
+  &lt;/echoproperties&gt;
 </pre></blockquote>
 <p>List all properties beginning with "java."</p>
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,12 +65,14 @@ import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.w3c.dom.Document;
@@ -153,11 +155,7 @@ public class EchoProperties extends Task {
      */
     private boolean failonerror = true;
 
-    /**
-     *  Prefix string controls which properties to save.
-     */
-    private String prefix = null;
-
+    private Vector propertySets = new Vector();
 
     private String format = "text";
 
@@ -207,9 +205,20 @@ public class EchoProperties extends Task {
      *@param  prefix  The new prefix value
      */
     public void setPrefix(String prefix) {
-        this.prefix = prefix;
+        PropertySet ps = new PropertySet();
+        ps.setProject(getProject());
+        ps.appendPrefix(prefix);
+        addPropertyset(ps);
     }
 
+    /**
+     * A set of properties to write.
+     *
+     * @since Ant 1.6
+     */
+    public void addPropertyset(PropertySet ps) {
+        propertySets.addElement(ps);
+    }
 
     public void setFormat(FormatAttribute ea) {
         format = ea.getValue();
@@ -234,10 +243,10 @@ public class EchoProperties extends Task {
 
         /* load properties from file if specified, otherwise
         use Ant's properties */
-        if(inFile == null) {
+        if (inFile == null && propertySets.size() == 0) {
             // add ant properties
             CollectionUtils.putAll(allProps, getProject().getProperties());
-        } else {
+        } else if (inFile != null) {
             if (inFile.exists() && inFile.isDirectory()) {
                 String message = "srcfile is a directory!";
                 if (failonerror) {
@@ -291,6 +300,12 @@ public class EchoProperties extends Task {
             }
         }
 
+        Enumeration enum = propertySets.elements();
+        while (enum.hasMoreElements()) {
+            PropertySet ps = (PropertySet) enum.nextElement();
+            CollectionUtils.putAll(allProps, ps.getProperties());
+        }
+        
         OutputStream os = null;
         try {
             if (destfile == null) {
@@ -355,9 +370,7 @@ public class EchoProperties extends Task {
         while (enum.hasMoreElements()) {
             String name = enum.nextElement().toString();
             String value = allProps.get(name).toString();
-            if (prefix == null || name.indexOf(prefix) == 0) {
-                props.put(name, value);
-            }
+            props.put(name, value);
         }
 
         if ("text".equals(format)) {

@@ -306,8 +306,8 @@ Other changes:
   defaultexcludes task.  Bugzilla Report 12700.
 
 * There is a new data type <propertyset> that can be used to collect
-  properties.  It is supported by <ant>, <antcall>, <subant>, <java>
-  and <junit>.
+  properties.  It is supported by <ant>, <antcall>, <subant>, <java>,
+  <echoproperties> and <junit>.
 
 * <concat> can now control the encoding of the output as well and optionally
   add new-line characters at the end of files that get concatenated but
