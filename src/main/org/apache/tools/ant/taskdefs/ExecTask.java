@@ -174,7 +174,7 @@ public class ExecTask extends Task {
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
-        incompatibleWithSpawn = true;
+        incompatibleWithSpawn |= logError;
     }
 
     /**
@@ -220,7 +220,7 @@ public class ExecTask extends Task {
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
-        incompatibleWithSpawn = true;
+        incompatibleWithSpawn |= fail;
     }
 
     /**
@@ -292,8 +292,8 @@ public class ExecTask extends Task {
      * @param result value desired for the result property value
      */
     protected void maybeSetResultPropertyValue(int result) {
-        String res = Integer.toString(result);
         if (resultProperty != null) {
+            String res = Integer.toString(result);
             getProject().setNewProperty(resultProperty, res);
         }
     }

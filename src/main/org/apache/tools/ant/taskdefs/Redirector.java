@@ -98,7 +98,7 @@ public class Redirector {
     /** The stream for input */
     private InputStream inputStream = null;
 
-    /** Stream which are used for line oriented output */
+    /** Stream which is used for line oriented output */
     private PrintStream outPrintStream = null;
 
     /** Stream which is used for line oriented error output */
