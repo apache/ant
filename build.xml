@@ -399,16 +399,16 @@
          excludes="${dist.name}/lib/optional.jar"/>
     <tar longfile="gnu"
          tarfile="${dist.base}/${dist.name}-bin.tar">
-      <fileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+      <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
-      </fileset> 
-      <fileset dir="${dist.name}/.." username="ant" group="ant"> 
+      </tarfileset> 
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant"> 
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
         <exclude name="${dist.name}/lib/optional.jar"/>
-      </fileset> 
+      </tarfileset> 
     </tar>
     <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
           src="${dist.base}/${dist.name}-bin.tar"/>
@@ -425,15 +425,15 @@
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
          tarfile="${dist.base}/${dist.name}-src.tar" >
-      <fileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+      <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>
-      </fileset> 
-      <fileset dir="${dist.name}/.." username="ant" group="ant"> 
+      </tarfileset> 
+      <tarfileset dir="${dist.name}/.." username="ant" group="ant"> 
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bootstrap.sh"/>
         <exclude name="${dist.name}/build.sh"/>
-      </fileset>
+      </tarfileset>
     </tar> 
     <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>

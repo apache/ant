@@ -81,7 +81,7 @@ public class Tar extends MatchingTask {
     Vector filesets = new Vector();
     Vector fileSetFiles = new Vector();
 
-    public TarFileSet createFileSet() {
+    public TarFileSet createTarFileSet() {
         TarFileSet fileset = new TarFileSet();
         filesets.addElement(fileset);
         return fileset;
