@@ -8,7 +8,6 @@
 package org.apache.myrmidon.framework;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
@@ -45,35 +44,16 @@ public class Condition
     {
         boolean result = false;
 
-        try
+        final Object resolved = context.resolveValue( getCondition() );
+        if( null != resolved )
         {
-            final Object resolved = context.resolveValue( getCondition() );
-            if( null != resolved )
+            final Object object = context.getProperty( resolved.toString() );
+            if( object != null && !object.toString().equals( "false" ) )
             {
-                final Object object = context.get( resolved );
-                final String string = object.toString();
-                if( null == string || string.equals( "false" ) )
-                {
-                    result = false;
-                }
-                else
-                {
-                    result = true;
-                }
+                result = true;
             }
         }
-        catch( final ContextException ce )
-        {
-            // Unknown property
-            result = false;
-        }
-        /*
-                catch( final PropertyException pe )
-                {
-                    final String message = REZ.getString( "condition.no-resolve.error", m_condition );
-                    throw new ContextException( message, pe );
-                }
-        */
+
         if( !m_isIfCondition )
         {
             result = !result;
