@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+  
+  <properties>
+    <author email="jon@latchkey.com">Jon S. Stevens</author>
+    <title>Legal Stuff They Make Us Say</title>
+  </properties>
+  
+  <body>
+    
+    <section name="Legal Stuff They Make Us Say">
+
+      <p>All material on this website is Copyright &#169; 1999-2002,
+      The Apache Software Foundation.</p>
+
+      <p>Sun, Sun Microsystems, Solaris, Java, JavaServer Web
+      Development Kit, and JavaServer Pages are trademarks or
+      registered trademarks of Sun Microsystems, Inc. UNIX is a
+      registered trademark in the United States and other countries,
+      exclusively licensed through X/Open Company, Ltd.  Windows,
+      WindowsNT, and Win32 are registered trademarks of Microsoft
+      Corp. All other product names mentioned herein and throughout
+      the entire web site are trademarks of their respective
+      owners.</p>
+
+    </section>
+
+  </body>
+</document>
+

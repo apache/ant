@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <title>Apache Ant Mission</title>
+  </properties>
+
+<body>
+  <section name="Board Resolution">
+    
+    <p>Apache Ant is a project of the <a
+    href="http://www.apache.org/">Apache Software Foundation</a>.  It
+    started as a subproject of the <a
+    href="http://jakarta.apache.org/">Apache Jakarta Project</a>.</p>
+
+    <p>This is the resolution to the board that created the Apache Ant
+    project:</p>
+
+    <source>
+Resolution
+==================
+
+WHEREAS, the Board of Directors deems it to be in the best
+interests of the Foundation and consistent with the
+Foundation's purpose to establish a Project Management
+Committee charged with the creation and maintenance of
+open-source software related to the Apache Ant build tool.
+
+NOW, THEREFORE, BE IT RESOLVED, that a Project Management
+Committee (PMC), to be known as the "Apache Ant PMC", be
+and hereby is established pursuant to Bylaws of the Foundation;
+and be it further
+
+RESOLVED, that the Apache Ant PMC be and hereby is
+responsible for the creation and maintenance of the Ant build
+system and related software components; and be it further
+
+RESOLVED, that the office of "Vice President, Apache Ant"
+be and hereby is created, the person holding such office to
+serve at the direction of the Board of Directors as the chair
+of the Apache Ant PMC, and to have primary responsibility
+for management of the projects within the scope of
+responsibility of the Apache Ant PMC; and be it further
+
+RESOLVED, that the persons listed immediately below be and
+hereby are appointed to serve as the initial members of the
+Apache Ant PMC:
+
+Bruce Atherton
+Stefane Bailliez
+Stefan Bodewig
+James Duncan Davidson (Emeritus)
+Peter Donald
+Erik Hatcher
+Diane Holt
+Donald Leslie
+Steve Loughran
+Conor MacNeill
+Costin Manolache
+Sam Ruby
+Jon Skeet
+Magesh Umasankar
+Christoph Wilhelms
+
+NOW, THEREFORE, BE IT FURTHER RESOLVED, that Conor MacNeill be and
+hereby is appointed to the office of Vice President, Apache
+Ant, to serve in accordance with and subject to the
+direction of the Board of Directors and the Bylaws of the
+Foundation until death, resignation, retirement, removal or
+disqualification, or until a successor is appointed; and be it
+further
+
+RESOLVED, that the initial Apache Ant PMC be and hereby is
+tasked with the creation of a set of bylaws intended to
+encourage open development and increased participation in the
+Apache Ant Project.
+    </source>
+
+  </section>
+</body>
+</document>

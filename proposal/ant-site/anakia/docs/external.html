@@ -1,0 +1,3664 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!-- Content Stylesheet for Site -->
+
+        
+<!-- start the processing -->
+    <html>
+    <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  
+                      <meta name="author" value="Stefan Bodewig">
+  <meta name="email" value="bodewig@apache.org">
+        
+      <title>Apache Ant - External Tools and Tasks</title>
+    </head>
+  
+    <body bgcolor="#ffffff" text="#000000" link="#525D76">    
+      <table border="0" width="100%" cellspacing="0">
+        <!-- TOP IMAGE -->
+        <tr>
+            <td colspan="2">
+        <a href="http://ant.apache.org/"><img src="./images/ant_logo_large.gif" alt="Apache Ant" border="0"/></a>
+    </td>
+        </tr>
+      </table>
+      <table border="0" width="100%" cellspacing="4">
+        <tr><td colspan="2">
+          <hr noshade="" size="1"/>
+        </td></tr>
+        
+        <tr>
+          <!-- LEFT SIDE NAVIGATION -->
+          <td valign="top" nowrap="true">
+                <p><strong>Apache Ant</strong></p>
+    <ul>
+          <li>      <a href="./index.html">Front Page</a>
+  </li>
+          <li>      <a href="./LICENSE">License</a>
+  </li>
+          <li>      <a href="./antnews.html">News</a>
+  </li>
+        </ul>
+      <p><strong>Documentation</strong></p>
+    <ul>
+          <li>      <a href="./manual/index.html">Manual</a>
+  </li>
+          <li>      <a href="./projects.html">Related Projects</a>
+  </li>
+          <li>      <a href="./external.html">External Tools and Tasks</a>
+  </li>
+          <li>      <a href="./resources.html">Resources</a>
+  </li>
+          <li>      <a href="./faq.html">Ant FAQ</a>
+  </li>
+          <li>      <a href="./problems.html">Having Problems?</a>
+  </li>
+        </ul>
+      <p><strong>Get Involved</strong></p>
+    <ul>
+          <li>      <a href="./mail.html">Mailing Lists</a>
+  </li>
+          <li>      <a href="./cvs.html">CVS Repositories</a>
+  </li>
+          <li>      <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant">Bug Database</a>
+  </li>
+          <li>      <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&bug_severity=Enhancement">Enhancement Requests</a>
+  </li>
+        </ul>
+      <p><strong>Project Managment</strong></p>
+    <ul>
+          <li>      <a href="./contributors.html">Contributors</a>
+  </li>
+          <li>      <a href="./mission.html">Mission</a>
+  </li>
+          <li>      <a href="./guidelines.html">Guidelines Notes</a>
+  </li>
+          <li>      <a href="./legal.html">Legal</a>
+  </li>
+        </ul>
+            </td>
+          <td align="left" valign="top">
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="External Tools and Tasks"><strong>External Tools and Tasks</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>This page lists external resources for Apache Ant: tasks, IDE
+      integration tools, loggers, you name it. If you've written
+      something that should be included, please post all relevant
+      information to one of the mailing lists.</p>
+                                <p>Nothing listed here is directly supported by the Ant
+      developers, if you encounter any problems with them, please use
+      the contact information.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Tasks"><strong>Tasks</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                          <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="AJC"><strong>AJC</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p><a href="http://aspectj.org">AspectJ</a> is an
+          aspect-oriented extension to Java.  This task compiles a
+          source tree using the AspectJ compiler -- AJC.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://aspectj.org/dl">http://aspectj.org/dl</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:support@aspectj.org">support@aspectj.org</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Anakia"><strong>Anakia</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Actually, Anakia is more than just an Ant task, it is a an
+        XML transformation tool based on JDOM, Velocity and Ant.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jakarta.apache.org/velocity/anakia.html">http://jakarta.apache.org/velocity/anakia.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jakarta.apache.org/site/mail2.html">Velocity mailing lists</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Anteater"><strong>Anteater</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Anteater is a set of Ant tasks for the functional testing of websites
+          and web services (functional testing being; hit a URL and ensure the
+          response meets certain criteria). Can test HTTP params, response
+          codes, XPath, regexp and Relax NG expressions. Includes HTML reporting
+          (based on junitreport) and a hierarchical grouping system for quickly
+          configuring large test scripts.
+        </p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://aft.sourceforge.net">http://aft.sourceforge.net</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://lists.sourceforge.net/lists/listinfo/aft-devel">developer
+                mailing list</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Checkstyle"><strong>Checkstyle</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Checkstyle is a development tool to help programmers write
+        Java code that adheres to a coding standard. Its purpose is to
+        automate the process of checking Java code, and to spare
+        humans of this boring (but important) task.</p>
+                                <p>Checkstyle can be run via an Ant task or a command line
+        utility.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 to 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://checkstyle.sourceforge.net/">http://checkstyle.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:checkstyle@puppycrawl.com">Oliver Burn</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Starting with release 2.0 the license is the GNU
+            Lesser General Public License.  Prior releases were under
+            the GNU General Public License.
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="CleanImports"><strong>CleanImports</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Removes unneeded imports. Formats your import
+        sections. Flags ambiguous imports.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.euronet.nl/users/tomb/cleanImports/index.html">http://www.euronet.nl/users/tomb/cleanImports/index.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:tomb@euronet.nl">Tom Brus</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Clover"><strong>Clover</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Clover is an Ant-based Code Coverage tool. It can be used
+        seamlessly with Ant-based projects. It provides method,
+        statement, and branch coverage analysis, and has rich
+        reporting in XML, HTML or via a Swing GUI.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4.1 or greater
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.thecortex.net/clover">http://www.thecortex.net/clover</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:clover-support@cortexebusiness.com.au">clover-support@cortexebusiness.com.au</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial, free licenses available for open source
+            projects.
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Configure"><strong>Configure</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Recursive build support (call ant on every package level,
+        and only build files in that package or in that package and
+        everything below) with seperation of source and output.</p>
+                                <p>The task generates build files in any subdirectory (except
+        for CVS-directories) for you. Only place one build.xml file in
+        the top and call target 'setup' or
+        'rescan'.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 and 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.dsdelft.nl/~lemval/ant/">http://www.dsdelft.nl/~lemval/ant/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:lemval@dsdelft.nl">M.J.P. van Leeuwen</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License derived from Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="CVSGrab"><strong>CVSGrab</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A little CVS client that can be useful when people are
+        behind corporate firewall that blocks any cvs
+        communications. It uses the ViewCVS web interface to access
+        the CVS repository via standard http, and downloads all the
+        files present in it.</p>
+                                <p>It works from the command line or as an Ant task.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3 or higher
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://cvsgrab.sourceforge.net/">http://cvsgrab.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:cvsgrab-users@lists.sourceforge.net">CVSGrab
+            user mailing list</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          LGPL
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Doxygen task"><strong>Doxygen task</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>There are two Ant tasks for running the Doxygen
+        documentation system.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.1 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.bgw.org/projects/java/ant/">http://www.bgw.org/projects/java/ant/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:mortis@voicenet.com">Kyle R. Burton</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software Foundation License
+        </font>
+  </td>
+      </tr>
+        </table>
+                                <p>and</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://ant-doxygen.sourceforge.net">http://ant-doxygen.sourceforge.net</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:akkumar@users.sourceforge.net">Karthik A Kumar</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software Foundation License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="GenJar"><strong>GenJar</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Builds a JAR file based on class dependencies rather than simply the contents of a directory</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 alpha (built after 2001/08/04) and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://genjar.sourceforge.net/">http://genjar.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:jesse_dev@yahoo.com">Jesse Stockall</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software Foundation License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Greebo"><strong>Greebo</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Greebo is an Ant-task for downloading dependency files
+        (currently only jars) from a network to a specified directory,
+        much like Maven. It supports multiple local and remote
+        repositories with either flat or maven-like structures. It can
+        read the dependency list from a Maven project file, a
+        maven-like dependency file, or directly from the build.xml
+        file.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.discore.com/oz/new/index.htm">http://www.discore.com/oz/new/index.htm</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:ozbene@discore.com">Ozben Evren</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Importscrubber"><strong>Importscrubber</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Removes unnecessary import statements from a Java source code file.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://importscrubber.sourceforge.net/">http://importscrubber.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:tomcopeland@users.sourceforge.net">Tom Copeland</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          LGPL
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="IsDirValidator"><strong>IsDirValidator</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Checks whether a given directory structure conforms to
+        certain rules that are defined via nested elements of the
+        task.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://isvalidator.sourceforge.net/en/isDirValidator.htm">http://isvalidator.sourceforge.net/en/isDirValidator.htm</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:news@inigoserrano.com">Iñigo Serrano</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Jalopy"><strong>Jalopy</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>An Ant Plug-in for the Java Source Code Formatter
+        Jalopy.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 (or higher)
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jalopy.sourceforge.net">http://jalopy.sourceforge.net</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jalopy.sf.net/contact.html">http://jalopy.sf.net/contact.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Starting with release 1.0 Beta 6 the license is the
+            BSD License.  Prior releases were under the GNU General
+            Public License.
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Javamake"><strong>Javamake</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A task to compile Java sources and manage class file
+        dependencies. Functionality is equivalent to that of standard
+        Javac and Depend tasks combined, with improved dependency
+        checking.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.experimentalstuff.com/Technologies/JavaMake/index.html">http://www.experimentalstuff.com/Technologies/JavaMake/index.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:Mikhail.Dmitriev@eng.sun.com">Mikhail Dmitriev</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          BSD-like License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="J2ME Ant Tasks"><strong>J2ME Ant Tasks</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>There are three different sets of tasks to help build <a href="http://java.sun.com/j2me/">Java 2 Platform, Micro
+        Edition</a> (J2ME) applications.</p>
+                                <p>This set supports CLDC and the K Virtual Machine (KVM):</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.dribin.org/dave/j2me_ant/">http://www.dribin.org/dave/j2me_ant/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:drib@enteract.com">Dave Dribin</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                                <p>And this set works with the J2ME Wireless Toolkit and MIDP
+        for PalmOS:</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.stampysoft.com/ant/">http://www.stampysoft.com/ant/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:jeckels@stampysoft.com">Josh Eckels</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          MIT License
+        </font>
+  </td>
+      </tr>
+        </table>
+                                <p>With Antenna, you can compile, preverify, package, and
+        obfuscate your MIDP applications, as well as convert them to
+        PRC files designed to run on MIDP for PalmOS. The tasks are
+        mostly built around the Wireless Toolkit and the free
+        RetroGuard obfuscator, with some additional gimmicks like
+        automatic version numbering.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4.1 or later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://antenna.sourceforge.net/">http://antenna.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:joerg@pleumann.de">Jörg Pleumann</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU Lesser General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="javarec"><strong>javarec</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Ant tasks that generate record classes for VisualAge for
+        Java from Cobol copy books.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://glezen.org/javarec/">http://glezen.org/javarec/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:pglezen@us.ibm.com">Paul Glezen</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="JCSC"><strong>JCSC</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>JCSC is a Java Coding Standard Checker which also features
+        the generation of some code metrics. It is a command line tool
+        with an Ant task to scan whole package trees. The result can
+        viewed in an JavaDoc style web page.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant &gt;= 1.5
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jcsc.sourceforge.net/">http://jcsc.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:rjocham72@netscape.net">Ralph Jocham</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Jing Task"><strong>Jing Task</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p> Validates XML files against the RELAX NG alternative to XML Schema.
+        The Jing task for Ant allows you to efficiently validate 
+        multiple files against multiple RELAX NG patterns and integrate 
+        RELAX NG validation with other XML processing.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.thaiopensource.com/relaxng/jing-ant.html">
+            http://www.thaiopensource.com/relaxng/jing-ant.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          BSD-like
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="jMetra"><strong>jMetra</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>jMetra is a tool for collecting code metrics across a
+        project lifecycle and compiling the results into
+        JavaDoc-styled documentation to analyze project metrics over
+        time.  jMetra is best utilized by integrating it with your
+        project's scheduled build process.</p>
+                                <p>It works from the command line or using several provided
+        Ant tasks.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 and higher
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          
+              <a href="http://www.jmetra.com/">http://www.jmetra.com/</a>
+            
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          
+              <a href="mailto:tnewton@hypercisioninc.com">R Todd Newton
+              </a>
+            
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial, free licenses for open source projects and
+            evaluations.
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="JNI"><strong>JNI</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>
+        
+          JNI is a free toolkit that makes easy work of
+          integrating Java and C through the Java Native
+          Interface (JNI). It includes a code generator that
+          generates both Java "proxy" classes to access C
+          "peer" classes, and C "proxy" classes to access
+          Java "peer" classes or interfaces. It also
+          includes a core library with a simplified JVM
+          interface as well as "helper" classes to ease
+          working with the JNI data types. The code
+          generation is driven by an XML project file that
+          can be created with the assistance of the GUI
+          Project Manager. The code generation can be
+          invoked either from Ant or from the
+          GUI. Includes a comprehensive printable PDF User
+          Guide and plenty of examples.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jnipp.sf.net/">http://jnipp.sf.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:ptrewhella@users.sf.net">Phillip E. Trewhella</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU LGPL
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="JRun Ant Tasks"><strong>JRun Ant Tasks</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>JRun 4 SP1 ships with lib/jrun-ant-tasks.jar, which defines
+        three Ant tasks: jrun, jrunapp, and jrunjmx.  Documentation
+        for the tasks can be found in JRun under
+        docs/ant/jrun.html.</p>
+                                <p>Note that the service pack must be installed on top of an
+        existing JRun 4 installation.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 or higher
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://dynamic.macromedia.com/bin/MM/software/trial/hwswrec.jsp?product=jrun_sp">http://dynamic.macromedia.com/bin/MM/software/trial/hwswrec.jsp?product=jrun_sp</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:bdeitte@macromedia.com">Brian Deitte</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Macker"><strong>Macker</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A build-time architectural testing tool, designed
+        to maintain clean layering / tiering / modularity.
+        Macker works against compiled class files, checking
+        dependencies between classes against a set of
+        pattern-based access rules you specify for your
+        project in an XML rules file.  Macker doesn't presume
+        anything about your architecture -- you write the
+        rules, and Macker keeps you honest about them.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5 and higher (1.4 untested but may work)
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://innig.net/macker/">http://innig.net/macker/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://innig.net/macker/contact.html">Paul Cantrell</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU GPL 2.0
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="PMD"><strong>PMD</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>PMD checks Java source code for unused variables,
+        unnecessary object creation, etc</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 and higher
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://pmd.sf.net/">http://pmd.sf.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:tcopeland@apache.org">Tom Copeland</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software Foundation License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Purge"><strong>Purge</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Purge deletes all but the most recent few files from a fileset. 
+	For example: if you have generated files (logs, .ear, .war, .jar 
+	etc) accumulating in a directory, the purge task will allow you
+	to delete the older files, keeping just the most recent ones.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 or above
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.dallaway.com/ant/">http://www.dallaway.com/ant/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:purge@dallaway.com">Richard Dallaway</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          LGPL
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="SerialVer"><strong>SerialVer</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>SerialVer adds the Java serialver functionality to Apache
+	Ant.  This project adds Tasks and FilterReaders to get, to
+	insert and to modify the serialVersionUID in the source code
+	of a serializable class.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5.1 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://serialver.sourceforge.net/">http://serialver.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="https://lists.sourceforge.net/lists/listinfo/serialver-development">developer mailing list</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Styler"><strong>Styler</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>The styler task makes useful combinations of XSLT transformations
+        easy to specify in an Ant build file. Like the built-in Ant task
+        style, styler can apply a single transformation to a set of XML files.
+        But it can also:</p>
+                                <ul>
+          <li>handle multiple transformations, in parallel or pipelined.</li>
+          <li>enable transformations that split or merge files</li>
+          <li>process non-XML files, especially HTML (based on JTidy)</li>
+          <li>apply non-XSLT transformation, especially "regular
+          fragmentations"</li>
+          <li>use any custom XMLReader or XMLFilter class to handle new file
+          formats and transformation techniques.</li>
+        </ul>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.langdale.com.au/styler/">http://www.langdale.com.au/styler/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:adv@langdale.com.au">Arnold deVos</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          LGPL
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Tidy Imports (Tim)"><strong>Tidy Imports (Tim)</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Tim is a handy utility that can be executed on the command
+        line or via Ant that automatically formats your import
+        declarations. Tim is capable of removing unused imports,
+        expanding or collapsing imports and even organising them into
+        pre-determined groups.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.chive.com/tim.htm">http://www.chive.com/tim.htm</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:support@chive.com">support@chive.com</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="TiniAnt"><strong>TiniAnt</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>TiniAnt is an Ant task to support building applications for
+        the <a href="http://www.ibutton.com/TINI/">TINI</a>.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 to 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://tiniant.sourceforge.net/">http://tiniant.sourceforge.net/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:kelly@ad1440.net">Sean Kelly</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          BSD-like license
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Venus Application Publisher's (Vamp) Ant Task Suite"><strong>Venus Application Publisher's (Vamp) Ant Task Suite</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Venus Application Publisher's (Vamp) Ant Task Suite allows
+        you to sign and package your applications into relocatable Web
+        Archives that you can drop into your web server for
+        single-click launching using Java Web Start or into single
+        Java Archive installers that serve up their content through a
+        built-in, multi-threaded, ultra light-weight web server.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 and 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.geocities.com/vamp201/ant.html">http://www.geocities.com/vamp201/ant.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:vamp201@yahoo.com">Gerald Bauer</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="WOProject"><strong>WOProject</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>WOProject provides a set of tools to work with 
+        <a href="http://webobjects.com/">WebObjects 5.1</a> 
+        independent from platform and IDE. It significantly 
+        improves developer productivity
+        and makes complex project structures more flexible compared to
+        traditional Makefile-based approach.
+        </p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://objectstyle.org/woproject/">http://objectstyle.org/woproject/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:andrus@objectstyle.org">Andrus Adamchik</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache license
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="XDoclet"><strong>XDoclet</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>XDoclet is an extended Javadoc Doclet engine for use in Ant.
+           It lets you create custom Javadoc @tags and based on those tags 
+           generates source code or other files (such as xml-ish deployment 
+           descriptors). Templates and matching tasks are provided to generate
+           EJB and web application deployment descriptors.
+           </p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://sourceforge.net/projects/xdoclet/">http://sourceforge.net/projects/xdoclet/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          BSD license
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="XmlTask"><strong>XmlTask</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>XmlTask provides a simple means to modify XML documents
+        without having to learn XSLT. A simple path reference to an
+        XML node specifies the node you want to change, and how you
+        want to allow XML insertion and removal, or attribute
+        changes. The emphasis is on providing the simplest means to
+        perform common XML replacements</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.oopsconsultancy.com/software/xmltask.html">http://www.oopsconsultancy.com/software/xmltask.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:xmltask@oopsconsultancy.com">xmltask@oopsconsultancy.com</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="yGuard"><strong>yGuard</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>yGuard is a free Java(TM) Bytecode Obfuscator Task that
+        needs no external script or project files. It can completely
+        be configured and run through the Ant build script. The task
+        supports multiple Jar files at once and makes use of
+        patternsets and regular expressions to specify elements, which
+        should be left unobfuscated.  Additionally it can be used to
+        produce patches for obfuscated applications that have already
+        been deployed.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.yworks.com/products/yguard">http://www.yworks.com/products/yguard</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:yguard@yworks.com">yGuard@yWorks.com</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Library: LGPL, Task: Commercial
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Compiler Implementations"><strong>Compiler Implementations</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                          <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="miniRMI &lt;code&gt;&amp;lt;rmic&amp;gt;&lt;/code&gt; implementation"><strong>miniRMI <code>&lt;rmic&gt;</code> implementation</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>miniRMI is a freeware opensource library that serves as a
+        lightweight replacement for the original java.rmi packages and
+        is suitable especially for applets. Ant 1.4+
+        <code>&lt;rmic&gt;</code> adapter included.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://dione.zcu.cz/~toman40/miniRMI/">http://dione.zcu.cz/~toman40/miniRMI/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:Petr.Toman@pinknet.cz">Petr Toman</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Gnu Lesser Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="IDE and Editor Integration"><strong>IDE and Editor Integration</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                          <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="AntFarm"><strong>AntFarm</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A plugin that integrates Ant into the jEdit editor.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          bundles Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://plugins.jedit.org/plugins/AntFarm">http://plugins.jedit.org/plugins/AntFarm</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:jedit-devel@lists.sourceforge.net">jEdit developers mailinglist</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Apache Software License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="AntMan"><strong>AntMan</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>An AddIn that integrates Ant with the JDeveloper IDE</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.erudra.com/antman/index.html">http://www.erudra.com/antman/index.html</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:ashok@erudra.com">Ashok Sridhar</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="AntRunner"><strong>AntRunner</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>An OpenTool that integrates Ant into the JBuilder IDE.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 and 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.dieter-bogdoll.de/java/AntRunner/">http://www.dieter-bogdoll.de/java/AntRunner/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:bogdoll@users.sourceforge.net">Dieter Bogdoll</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="AntWork"><strong>AntWork</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A plugin that integrates Ant into the Jext editor.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 and 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip">ftp://jext.sourceforge.net/pub/jext/plugins/AntWork.zip</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:KHartlage@t-online.de">Klaus Hartlage</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Eclipse"><strong>Eclipse</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Eclipse is a universal tool platform with Ant integration.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.3 - 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.eclipse.org">http://www.eclipse.org</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="news://news.eclipse.org/eclipse.tools">news://news.eclipse.org/eclipse.tools</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Common Public License Version 1.0
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="HP RadPak"><strong>HP RadPak</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>
+        RadPak comes with the (free) HP Bluestone HPAS J2EE server, and is primarily 
+        a GUI tool for packaging and deploying java web and EJB applications
+        as WAR and EAR files. The tool is ant based, and can be used with
+        as a GUI for general ant development, providing form based entry 
+        of task attributes, and an animated display of task
+        execution. 
+        </p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          bundles Ant 1.3 and docs; adds a jar of extra tasks
+            to any existing ant installation under ANT_HOME
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.bluestone.com/products/hp-as/">http://www.bluestone.com/products/hp-as/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Proprietary but free to download
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="IntelliJ IDEA 2.0"><strong>IntelliJ IDEA 2.0</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Java IDE with refactoring support and Ant integration.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          bundles Ant 1.3
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www.intellij.com/idea/">http://www.intellij.com/idea/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:support@intellij.com">support@intellij.com</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="JDE(E) 2.2.8"><strong>JDE(E) 2.2.8</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>The Java Development Environment for Emacs (JDEE) supports
+        Apache Ant as one of three built-in ways to build your
+        applications.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.2 and later
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://jde.sunsite.dk/">http://jde.sunsite.dk/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:jde-subscribe@sunsite.auc.dk">JDEE Mailing list.</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          GNU General Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="NetBeans / Sun ONE Studio"><strong>NetBeans / Sun ONE Studio</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>A module that integrates Ant into the NetBeans or Sun ONE Studio (formerly Forte for Java) IDEs.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          bundles Ant 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://ant.netbeans.org/">http://ant.netbeans.org/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:nbdev@netbeans.org">nbdev@netbeans.org</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Sun Public License
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Oracle9i JDeveloper"><strong>Oracle9i JDeveloper</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Java IDE with support for Ant.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Ant 1.5.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          URL:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://otn.oracle.com/products/jdev/">http://otn.oracle.com/products/jdev/</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Contact:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="mailto:jdeveloperbeta_us@oracle.com">jdeveloperbeta_us@oracle.com</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="WebSphere Studio Application Developer"><strong>WebSphere Studio Application Developer</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>WSAD features Ant integrate by virtue of being built on the Eclipse tools platform.</p>
+                                  <table>
+              <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Compatibility:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          bundles Ant 1.4.1
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Article:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          <a href="http://www7b.software.ibm.com/wsdd/library/techarticles/0203_searle/searle1.html">Ant Integration Part1</a>
+        </font>
+  </td>
+      </tr>
+                  <tr>
+                  <td bgcolor="#039acc" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          License:
+        </font>
+  </td>
+                      <td bgcolor="#a0ddf0" colspan="" rowspan="" 
+      valign="top" align="left">
+    <font color="#000000" size="-1" face="arial,helvetica,sanserif">
+          Commercial
+        </font>
+  </td>
+      </tr>
+        </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+                    </blockquote>
+    </td></tr>
+  </table>
+              </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr><td colspan="2">
+          <hr noshade="" size="1"/>
+        </td></tr>
+        <tr><td colspan="2">
+          <div align="center"><font color="#525D76" size="-1"><em>
+          Copyright &#169; 2000-2002, Apache Software Foundation
+          </em></font></div>
+        </td></tr>
+      </table>
+    </body>
+  </html>
+<!-- end the processing -->
+
+
+
+

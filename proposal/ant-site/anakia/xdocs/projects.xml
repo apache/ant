@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="bodewig@apache.org">Stefan Bodewig</author>
+    <title>Related Projects</title>
+  </properties>
+
+  <body>
+    
+    <section name="Related Projects">
+
+      <p>Nothing listed here is directly supported by the Ant
+      developers, if you encounter any problems with them, please use
+      the contact information.</p>
+
+      <subsection name="AntContrib">
+
+        <p>The Ant-Contrib project is a collection of user supplied
+        task (like an <code>&lt;if&gt;</code> task) and a development
+        playground for experimental tasks like a C/C++ compilation
+        task for different compilers.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.4.1 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/ant-contrib/">http://sourcefoge.net/projects/ant-contrib/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href
+                   ="http://sourceforge.net/mail/?group_id=36177">project mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation license</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="AntDoc">
+
+        <p>AntDoc is a tool that generates HTML documentation from Ant
+        buildfiles; the generated HTML is inspired from what javadoc
+        yields. It also offers a simple Ant target launcher named
+        AntDoc GUI. Ant targets may be launched from the generated
+        AntDoc HTML pages.</p>
+
+        <p>AntDoc can be run via an Ant task, AntDoc GUI can be run
+        via an Ant task, or via a JVM launch.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://mapage.noos.fr/antdoc">http://mapage.noos.fr/antdoc</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:antdoc@noos.fr">Edouard Mercier</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>At the moment, no license is being attached to the tool.</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="AntHill">
+
+        <p>Anthill is a build tool that promotes a controlled build
+        process by ensuring that every build reflects the source
+        repository contents and tagging the repository with a unique
+        build number after every build. Anthill also encourages the
+        sharing of knowledge within an organization by automatically
+        updating a project intranet site with artifacts from the
+        latest build.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>bundles Ant 1.3, is compatible with Ant 1.3 to 1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.urbancode.com/projects/anthill/">http://www.urbancode.com/projects/anthill/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='mailto:mbz@urbancode.com'>Maciej Zawadzki</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Mozilla-like license</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="CruiseControl">
+
+        <p>CruiseControl is a tool for setting up a continuous build
+        process.  CruiseControl provides an Ant wrapper and a set of
+        tasks to automate the checkout/build/test cycle. CruiseControl
+        also comes bundled with a servlet for viewing the status of
+        the current build, as well as previous build results.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://cruisecontrol.sourceforge.net/">http://cruisecontrol.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='http://cruisecontrol.sourceforge.net/contact.html'>Project Mailing Lists and Administrators</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Release 1.0 has been licensed under the GNU General Public
+            License.  Starting with release 1.1 the license has been
+            changed to a BSD-like license.</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Krysalis Centipede">
+
+        <p>Krysalis Centipede is a template for a software module;
+        gives you build with Ant and Site+Documentation with Apache
+        Cocoon.</p>
+
+        <p>Centipede is a starter project, empty in many respects, but
+        has a decent and standardized Ant build file, and some xdocs
+        that render to HTML using Cocoon. A developer would take
+        Centipede and use it to start development. After starting, the
+        build file would evolve as the developer see fit and move away
+        from the Centipede starting point.  Subsequent releases of
+        Centipede will address the issues found using it, and evolve
+        on user requests-issues.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://krysalis.org/centipede/">http://krysalis.org/centipede/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="http://sourceforge.net/mail/?group_id=36516">mailing lists</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Krysalis Patchy Software License, based on and
+            fully compatible with the Apache Software Foundation
+            license</td>
+          </tr>
+        </table>
+      </subsection>
+      
+      <subsection name="NAnt">
+
+        <p>NAnt is a .NET based build tool. In theory it is kind of
+        like make without make's wrinkles. In practice it's a lot like
+        Ant.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>compatible in spirit.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://nant.sourceforge.net/">http://nant.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/mail/?group_id=31650">project mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Rant">
+
+        <p>Rant stands for Remote Ant. It is a distributed build
+        system that allows an Ant build file to launch builds on other
+        systems and receive exceptions should they occur.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/remoteant/">http://sourceforge.net/projects/remoteant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:cnelson@einnovation.com">Chris Nelson</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>MIT License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="XML Publication">
+
+        <p>XML Publication is a set of tools to generate Web pages
+        from desktop documents or other structured documents using
+        XSLT and Ant.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://XMLpublication.org/">http://XMLpublication.org/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="mailto:jmvanel@free.fr">Jean-Marc Vanel</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License.</td>
+          </tr>
+        </table>
+      </subsection>
+
+    </section>
+
+  </body>
+</document>

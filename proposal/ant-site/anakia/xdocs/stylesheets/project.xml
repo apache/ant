@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Apache Ant" href="http://ant.apache.org/">
+
+    <title>Apache Ant</title>
+    <logo href="images/ant_logo_large.gif">Apache Ant</logo>
+    
+    <body>
+    <menu name="Apache Ant">
+        <item name="Front Page"            href="/index.html"/>
+        <item name="License"               href="/LICENSE"/>
+        <item name="News"                  href="/antnews.html"/>
+    </menu>
+
+    <menu name="Documentation">
+        <item name="Manual"
+              href="/manual/index.html"/>
+        <item name="Related Projects"
+              href="/projects.html"/>
+        <item name="External Tools and Tasks"
+              href="/external.html"/>
+        <item name="Resources"
+              href="/resources.html"/>
+        <item name="Ant FAQ"
+              href="/faq.html"/>
+        <item name="Having Problems?"
+              href="/problems.html"/>
+    </menu>
+
+    <menu name="Get Involved">
+        <item name="Mailing Lists"         href="/mail.html"/>
+        <item name="CVS Repositories"      href="/cvs.html"/>
+        <item name="Bug Database"          href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
+        <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;bug_severity=Enhancement"/>
+    </menu>
+
+    <menu name="Project Managment">
+        <item name="Contributors"          href="/contributors.html"/>
+        <item name="Mission"               href="/mission.html"/>
+        <item name="Guidelines Notes"      href="/guidelines.html"/>
+        <item name="Legal"                 href="/legal.html"/>
+    </menu>
+
+    </body>
+</project>
