@@ -81,6 +81,7 @@
       <exclude name="**/WLRun.java" unless="ejb.wls.present" />
       <exclude name="**/WLStop.java" unless="ejb.wls.present" />
       <exclude name="**/EjbJar.java" unless="jdk1.2+" />
+      <exclude name="**/*DeploymentTool.java" unless="jdk1.2+" />
       <exclude name="**/junit/*" unless="junit.present" />
     </javac>
  
