@@ -108,7 +108,7 @@ public class AntStructure extends Task {
             Enumeration enum = project.getTaskDefinitions().keys();
             while (enum.hasMoreElements()) {
                 String taskName = (String) enum.nextElement();
-                tasks.add(taskName);
+                tasks.addElement(taskName);
             }
             printTargetDecl(out, tasks);
 
