@@ -62,8 +62,6 @@ import java.util.Hashtable;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 
 
 /**

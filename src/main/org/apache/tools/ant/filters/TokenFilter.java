@@ -55,14 +55,11 @@ package org.apache.tools.ant.filters;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
 import org.apache.tools.ant.util.FileUtils;
@@ -250,13 +247,13 @@ public class TokenFilter
     /**
      * add a tokenizer
      */
-    
+
     public void add(Tokenizer tokenizer) {
         if (this.tokenizer != null)
             throw new BuildException("Only one tokenizer allowed");
         this.tokenizer = tokenizer;
     }
-    
+
     // -----------------------------------------
     //  Predefined filters
     // -----------------------------------------
@@ -300,7 +297,7 @@ public class TokenFilter
         filters.addElement(filter);
     }
 
-        
+
     // --------------------------------------------
     //
     //      Tokenizer Classes
@@ -353,11 +350,11 @@ public class TokenFilter
          * the line ending with the line, or to return
          * it in the posttoken
          */
-        
+
         public void setIncludeDelims(boolean includeDelims) {
             this.includeDelims = includeDelims;
         }
-        
+
         public String getToken(Reader in)
             throws IOException
         {
@@ -451,7 +448,7 @@ public class TokenFilter
          * attribute delimsaretokens - treat delimiters as
          * separate tokens.
          */
-          
+
         public void setDelimsAreTokens(boolean delimsAreTokens) {
             this.delimsAreTokens = delimsAreTokens;
         }
@@ -462,7 +459,7 @@ public class TokenFilter
         public void setSuppressDelims(boolean suppressDelims) {
             this.suppressDelims = suppressDelims;
         }
-        
+
         /**
          * attribute includedelims - treat delimiters as part
          * of the token.

@@ -54,11 +54,11 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
-import org.apache.tools.ant.util.GlobPatternMapper;
+
 /**
  * Maps dotted package name matches to a directory name.
  * This is the inverse of the package mapper.
- * This is useful for matching XML formatter results against their JUnit test 
+ * This is useful for matching XML formatter results against their JUnit test
  * cases.
  * <pre>
  * &lt;mapper classname="org.apache.tools.ant.util.UnPackageNameMapper"

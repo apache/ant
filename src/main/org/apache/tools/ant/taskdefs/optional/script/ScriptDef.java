@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "Ant" and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -57,8 +57,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.RuntimeConfigurable;
-import org.apache.tools.ant.UnknownElement;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -67,7 +65,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Locale;
 
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
@@ -90,16 +87,16 @@ public class ScriptDef extends Task {
 
     /** Attributes definitions of this script */
     private List attributes = new ArrayList();
-    
+
     /** Nested Element definitions of this script */
     private List nestedElements = new ArrayList();
 
     /** The attribute names as a set */
     private Set attributeSet;
-    
+
     /** The nested element definitions indexed by their names */
     private Map nestedElementMap;
-    
+
     /**
      * set the name under which this script will be activated in a build
      * file
@@ -113,7 +110,7 @@ public class ScriptDef extends Task {
     public boolean isAttributeSupported(String attributeName) {
         return attributeSet.contains(attributeName);
     }
-    
+
     /**
      * Set the scripting language used by this script
      *
@@ -124,13 +121,13 @@ public class ScriptDef extends Task {
     }
 
     /**
-     * Class representing an attribute definition 
+     * Class representing an attribute definition
      */
     public static class Attribute {
         /** The attribute name */
-        private String name; 
-        
-        /** 
+        private String name;
+
+        /**
          * Set the attribute name
          *
          * @param name the attribute name
@@ -139,7 +136,7 @@ public class ScriptDef extends Task {
             this.name = name;
         }
     }
-    
+
     /**
      * Add an attribute definition to this script.
      *
@@ -154,14 +151,14 @@ public class ScriptDef extends Task {
      */
     public static class NestedElement {
         /** The name of the neseted element */
-        private String name; 
-        
+        private String name;
+
         /** The Ant type to which this nested element corresponds. */
         private String type;
-        
-        /** The class to be created for this nested element */ 
+
+        /** The class to be created for this nested element */
         private String className;
-        
+
         /**
          * set the tag name for this nested element
          *
@@ -170,32 +167,32 @@ public class ScriptDef extends Task {
         public void setName(String name) {
             this.name = name;
         }
-        
+
         /**
-         * Set the type of this element. This is the name of an 
+         * Set the type of this element. This is the name of an
          * Ant task or type which is to be used when this element is to be
          * created. This is an alternative to specifying the class name directly
          *
-         * @param type the name of an Ant type, or task, to use for this nested 
+         * @param type the name of an Ant type, or task, to use for this nested
          * element.
          */
         public void setType(String type) {
             this.type = type;
         }
-        
+
         /**
-         * Set the classname of the class to be used for the nested element. 
+         * Set the classname of the class to be used for the nested element.
          * This specifies the class directly and is an alternative to specifying
          * the Ant type name.
          *
-         * @param className the name of the class to use for this nested 
+         * @param className the name of the class to use for this nested
          * element.
          */
         public void setClassName(String className) {
             this.className = className;
         }
     }
-    
+
     /**
      * Add a nested element definition.
      *
@@ -206,88 +203,88 @@ public class ScriptDef extends Task {
     }
 
     /**
-     * Define the script. 
+     * Define the script.
      */
     public void execute() {
         if (name == null) {
-            throw new BuildException("scriptdef requires a name attribute to " 
+            throw new BuildException("scriptdef requires a name attribute to "
                 + "name the script");
         }
-        
+
         if (language == null) {
-            throw new BuildException("scriptdef requires a language attribute " 
+            throw new BuildException("scriptdef requires a language attribute "
                 + "to specify the script language");
         }
-        
+
         attributeSet = new HashSet();
         for (Iterator i = attributes.iterator(); i.hasNext();) {
             Attribute attribute = (Attribute) i.next();
             if (attribute.name == null) {
-                throw new BuildException("scriptdef <attribute> elements " 
+                throw new BuildException("scriptdef <attribute> elements "
                     + "must specify an attribute name");
             }
-            
+
             if (attributeSet.contains(attribute.name)) {
-                throw new BuildException("scriptdef <" + name + "> declares " 
+                throw new BuildException("scriptdef <" + name + "> declares "
                     + "the " + attribute.name + " attribute more than once");
             }
             attributeSet.add(attribute.name);
         }
-                
+
         nestedElementMap = new HashMap();
         for (Iterator i = nestedElements.iterator(); i.hasNext();) {
             NestedElement nestedElement = (NestedElement) i.next();
             if (nestedElement.name == null) {
-                throw new BuildException("scriptdef <element> elements " 
+                throw new BuildException("scriptdef <element> elements "
                     + "must specify an element name");
             }
             if (nestedElementMap.containsKey(nestedElement.name)) {
-                throw new BuildException("scriptdef <" + name + "> declares " 
-                    + "the " + nestedElement.name + " nested element more " 
+                throw new BuildException("scriptdef <" + name + "> declares "
+                    + "the " + nestedElement.name + " nested element more "
                     + "than once");
             }
-            
-            if (nestedElement.className == null 
+
+            if (nestedElement.className == null
                 && nestedElement.type == null) {
-                throw new BuildException("scriptdef <element> elements " 
+                throw new BuildException("scriptdef <element> elements "
                     + "must specify either a classname or type attribute");
             }
-            if (nestedElement.className != null 
+            if (nestedElement.className != null
                 && nestedElement.type != null) {
-                throw new BuildException("scriptdef <element> elements " 
-                    + "must specify only one of the classname and type " 
+                throw new BuildException("scriptdef <element> elements "
+                    + "must specify only one of the classname and type "
                     + "attributes");
             }
-            
-            
+
+
             nestedElementMap.put(nestedElement.name, nestedElement);
         }
-        
+
         // find the script repository - it is stored in the project
         Map scriptRepository = null;
         Project project = getProject();
         synchronized (project) {
-            scriptRepository = 
+            scriptRepository =
                 (Map) project.getReference(MagicNames.SCRIPT_REPOSITORY);
             if (scriptRepository == null) {
                 scriptRepository = new HashMap();
-                project.addReference(MagicNames.SCRIPT_REPOSITORY, 
+                project.addReference(MagicNames.SCRIPT_REPOSITORY,
                     scriptRepository);
             }
         }
-        
+
         scriptRepository.put(name, this);
         project.addTaskDefinition(name, ScriptDefBase.class);
     }
 
     public Object createNestedElement(String elementName) {
-        NestedElement definition 
+        NestedElement definition
             = (NestedElement) nestedElementMap.get(elementName);
-        if (definition == null) {                
-            throw new BuildException("<" + name + "> does not support " 
+        if (definition == null) {
+            throw new BuildException("<" + name + "> does not support "
                 + "the <" + elementName + "> nested element");
         }
-        
+
         Object instance = null;
         String classname = definition.className;
         if (classname == null) {
@@ -297,9 +294,9 @@ public class ScriptDef extends Task {
             }
         } else {
             // try the context classloader
-            ClassLoader loader 
+            ClassLoader loader
                 = Thread.currentThread().getContextClassLoader();
-            
+
             Class instanceClass = null;
             try {
                 instanceClass = Class.forName(classname, true, loader);
@@ -308,29 +305,29 @@ public class ScriptDef extends Task {
                 try {
                     instanceClass = Class.forName(classname);
                 } catch (Throwable e2) {
-                    throw new BuildException("scriptdef: Unable to load " 
-                        + "class " + classname + " for nested element <" 
+                    throw new BuildException("scriptdef: Unable to load "
+                        + "class " + classname + " for nested element <"
                         + elementName + ">", e2);
                 }
             }
-            
+
             try {
                 instance = instanceClass.newInstance();
             } catch (Throwable e) {
-                throw new BuildException("scriptdef: Unable to create " 
-                    + "element of class " + classname + " for nested " 
+                throw new BuildException("scriptdef: Unable to create "
+                    + "element of class " + classname + " for nested "
                     + "element <" + elementName + ">", e);
             }
             getProject().setProjectReference(instance);
         }
-        
+
         if (instance == null) {
-            throw new BuildException("<" + name + "> is unable to create " 
+            throw new BuildException("<" + name + "> is unable to create "
                 + "the <" + elementName + "> nested element");
         }
         return instance;
     }
-    
+
     /**
      * Execute the script.
      *
@@ -344,9 +341,9 @@ public class ScriptDef extends Task {
         try {
             BSFManager manager = new BSFManager();
             // execute the script
-            manager.declareBean("attributes", attributes, 
+            manager.declareBean("attributes", attributes,
                 attributes.getClass());
-            manager.declareBean("elements", elements, 
+            manager.declareBean("elements", elements,
                 elements.getClass());
             manager.declareBean("project", getProject(), Project.class);
             manager.exec(language, "scriptdef <" + name + ">", 0, 0, script);
@@ -363,7 +360,7 @@ public class ScriptDef extends Task {
             throw new BuildException(t);
         }
     }
-    
+
     /**
      * Ass the scipt text.
      *

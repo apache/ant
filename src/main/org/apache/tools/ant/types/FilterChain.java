@@ -54,9 +54,6 @@
 package org.apache.tools.ant.types;
 
 import java.util.Vector;
-import java.io.StringWriter;
-import java.io.Reader;
-import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.filters.ChainableReader;
@@ -74,8 +71,6 @@ import org.apache.tools.ant.filters.StripLineComments;
 import org.apache.tools.ant.filters.TabsToSpaces;
 import org.apache.tools.ant.filters.TailFilter;
 import org.apache.tools.ant.filters.TokenFilter;
-import org.apache.tools.ant.filters.BaseFilterReader;
-import org.apache.tools.ant.taskdefs.Concat;
 
 
 /**
@@ -179,7 +174,7 @@ public final class FilterChain extends DataType
     {
         filterReaders.addElement(filter);
     }
-    
+
     /**
      * replaceregex
      * @since Ant 1.6
@@ -188,7 +183,7 @@ public final class FilterChain extends DataType
     {
         filterReaders.addElement(filter);
     }
-    
+
     /**
      * trim
      * @since Ant 1.6
@@ -197,7 +192,7 @@ public final class FilterChain extends DataType
     {
         filterReaders.addElement(filter);
     }
-    
+
     /**
      * replacestring
      * @since Ant 1.6
@@ -218,9 +213,9 @@ public final class FilterChain extends DataType
         filterReaders.addElement(filter);
     }
 
-    
+
     /**
-     * Makes this instance in effect a reference to another FilterChain 
+     * Makes this instance in effect a reference to another FilterChain
      * instance.
      *
      * <p>You must not set another attribute or nest elements inside

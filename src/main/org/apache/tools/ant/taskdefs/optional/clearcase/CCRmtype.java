@@ -56,9 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
-
-import java.io.File;
 
 /**
  * Task to perform rmtype command to ClearCase.

@@ -54,19 +54,12 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.LazyHashtable;
 import org.apache.tools.ant.util.WeakishReference;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 
 import java.util.Vector;
 import java.io.InputStream;
@@ -104,7 +97,7 @@ public class ComponentHelper  {
     private Hashtable typeClassDefinitions = new Hashtable();
     /** flag to rebuild typeClassDefinitions */
     private boolean rebuildTypeClassDefinitions = true;
-    
+
     /**
      * Map from task names to vectors of created tasks
      * (String to Vector of Task). This is used to invalidate tasks if
@@ -157,17 +150,17 @@ public class ComponentHelper  {
             antTypeTable.put(def.getName(), def);
         }
     }
-    
+
     /** Factory method to create the components.
-     * 
+     *
      * This should be called by UnknownElement.
-     * 
+     *
      * @param ue The component helper has access via ue to the entire XML tree.
      * @param ns Namespace. Also available as ue.getNamespace()
      * @param taskName The element name. Also available as ue.getTag()
      * @return
      * @throws BuildException
-     */ 
+     */
     public Object createComponent( UnknownElement ue,
                                    String ns,
                                    String taskName )
@@ -187,7 +180,7 @@ public class ComponentHelper  {
 
         return component;
     }
-    
+
     /**
      * Create an object for a component.
      *
@@ -220,13 +213,13 @@ public class ComponentHelper  {
     public AntTypeDefinition getDefinition(String componentName) {
         return antTypeTable.getDefinition(componentName);
     }
-    
+
     /** Initialization code - implementing the original ant component
-     * loading from /org/apache/tools/ant/taskdefs/default.properties 
+     * loading from /org/apache/tools/ant/taskdefs/default.properties
      * and .../types/default.properties
-     * 
+     *
      * @throws BuildException
-     */ 
+     */
     public void initDefaultDefinitions() throws BuildException {
         initTasks();
         initTypes();
@@ -334,7 +327,7 @@ public class ComponentHelper  {
         }
         return taskClassDefinitions;
     }
-    
+
 
     /**
      * Returns the current type definition hashtable. The returned hashtable is
@@ -368,7 +361,7 @@ public class ComponentHelper  {
         }
         return typeClassDefinitions;
     }
-    
+
     /**
      * Adds a new datatype definition.
      * Attempting to override an existing definition with an
@@ -400,7 +393,7 @@ public class ComponentHelper  {
     public void addDataTypeDefinition(AntTypeDefinition def) {
         updateDataTypeDefinition(def);
     }
-    
+
     /**
      * Returns the current datatype definition hashtable. The returned
      * hashtable is "live" and so should not be modified.
@@ -438,7 +431,7 @@ public class ComponentHelper  {
                               org.apache.tools.ant.taskdefs.Property.class);
             task = createNewTask(taskType);
         }
-            
+
         if (task != null) {
             addCreatedTask(taskType, task);
         }
@@ -463,7 +456,7 @@ public class ComponentHelper  {
         if (c == null) {
             return null;
         }
-                           
+
         if (! Task.class.isAssignableFrom(c)) {
             return null;
         }
@@ -565,12 +558,12 @@ public class ComponentHelper  {
         for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
             if (elementClass == def.getExposedClass(project)) {
-                return "The <" + def.getName() + "> type"; 
+                return "The <" + def.getName() + "> type";
             }
         }
         return "Class " + elementClass.getName();
     }
-    
+
 
     /** return true if the two definitions are the same */
     private boolean sameDefinition(
@@ -703,7 +696,7 @@ public class ComponentHelper  {
             }
         }
     }
-            
+
     /**
      * map that contains the component definitions
      */
@@ -718,7 +711,7 @@ public class ComponentHelper  {
             AntTypeDefinition ret = (AntTypeDefinition) super.get(key);
             return ret;
         }
-        
+
         /** Equivalent to getTypeType */
         public Object get(Object key) {
             return getTypeClass((String) key);
@@ -731,7 +724,7 @@ public class ComponentHelper  {
             }
             return def.create(project);
         }
-            
+
         public Class getTypeClass(String name) {
             AntTypeDefinition def = getDefinition(name);
             if (def == null) {

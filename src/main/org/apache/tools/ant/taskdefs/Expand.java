@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -195,24 +194,24 @@ public class Expand extends Task {
                     // no include pattern implicitly means includes="**"
                     incls = new String[] {"**"};
                 }
-                    
+
                 for (int w = 0; w < incls.length; w++) {
                     String pattern = incls[w].replace('/', File.separatorChar)
                         .replace('\\', File.separatorChar);
                     if (pattern.endsWith(File.separator)) {
                         pattern += "**";
                     }
-                    
+
                     included = SelectorUtils.matchPath(pattern, name);
                     if (included) {
                         break;
                     }
                 }
-                
+
                 if (!included) {
                     break;
                 }
-                
+
 
                 String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {

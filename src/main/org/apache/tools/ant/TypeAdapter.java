@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,8 +54,6 @@
 
 package org.apache.tools.ant;
 
-import java.lang.reflect.Method;
-
 /**
  * Used to wrap types.
  *
@@ -73,21 +71,21 @@ public interface TypeAdapter  {
      * Gets the project
      */
     public Project getProject();
-    
+
     /**
      * Sets the proxy object, whose methods are going to be
      * invoked by ant.
      * A proxy object is normally the object defined by
      * a &lttypedef/&gt task that is adapted by the "adapter"
      * attribute.
-     * 
+     *
      * @param o The target object. Must not be <code>null</code>.
      */
     public void setProxy(Object o);
 
     /**
      * Returns the proxy object.
-     * 
+     *
      * @return the target proxy object
      */
     public Object getProxy();

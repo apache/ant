@@ -77,14 +77,11 @@ import java.net.URL;
  * @version $Id$
  * @since Ant 1.6
  */
-
-import java.net.URL;
-
 public class ResourceLocation {
 
     //-- Fields ----------------------------------------------------------------
 
-    /** 
+    /**
      * name of the catalog entry type, as per OASIS spec.
      */
     protected String name = null;
@@ -95,7 +92,7 @@ public class ResourceLocation {
     /** location of the dtd/entity - a file/resource/URL. */
     private String location = null;
 
-    /** 
+    /**
      * base URL of the dtd/entity, or null. If null, the Ant project
      * basedir is assumed.  If the location specifies a relative
      * URL/pathname, it is resolved using the base.  The default base

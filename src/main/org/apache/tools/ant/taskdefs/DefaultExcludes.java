@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+
 /**
  * Alters the default excludes for the <strong>entire</strong> build..
  *
@@ -69,14 +69,14 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @ant.task category="utility"
  */
 public class DefaultExcludes extends Task {
-    private String add = "";    
+    private String add = "";
     private String remove = "";
 
     private boolean echo = false;
-    
+
     // by default, messages are always displayed
-    private int logLevel = Project.MSG_WARN;   
-    
+    private int logLevel = Project.MSG_WARN;
+
     /**
      * Does the work.
      *
@@ -118,7 +118,7 @@ public class DefaultExcludes extends Task {
      /**
      * Pattern to remove from the default excludes.
      *
-     * @param msg Sets the value for the pattern that 
+     * @param msg Sets the value for the pattern that
      *            should nolonger be excluded.
      */
     public void setRemove(String remove) {

@@ -59,7 +59,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 
@@ -172,7 +171,7 @@ public class Move extends Copy {
                                                     getFilterChains(),
                                                     forceOverwrite,
                                                     getPreserveLastModified(),
-                                                    getEncoding(), 
+                                                    getEncoding(),
                                                     getOutputEncoding(),
                                                     getProject());
 

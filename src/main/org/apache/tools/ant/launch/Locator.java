@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "Ant" and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -118,7 +118,7 @@ public class Locator {
     public static File getToolsJar() {
         // firstly check if the tols jar is alreayd n the classpath
         boolean toolsJarAvailable = false;
-        
+
         try {
             // just check whether this throws an exception
             Class.forName("com.sun.tools.javac.Main");
@@ -131,11 +131,11 @@ public class Locator {
                 // ignore
             }
         }
-        
+
         if (toolsJarAvailable) {
             return null;
         }
-         
+
         // couldn't find compiler - try to find tools.jar
         // based on java.home setting
         String javaHome = System.getProperty("java.home");
@@ -150,7 +150,7 @@ public class Locator {
         }
         return toolsJar;
     }
-    
+
     /**
      * Get an array or URLs representing all of the jar files in the
      * given location. If the location is a file, it is returned as the only
@@ -161,7 +161,7 @@ public class Locator {
      *
      * @return an array of URLs for all jars in the given location.
      *
-     * @exception MalformedURLException if the URLs for the jars cannot be 
+     * @exception MalformedURLException if the URLs for the jars cannot be
      *            formed
      */
     public static URL[] getLocationURLs(File location)
@@ -170,20 +170,20 @@ public class Locator {
     }
 
     /**
-     * Get an array or URLs representing all of the files of a given set of 
-     * extensions in the given location. If the location is a file, it is 
-     * returned as the only element of the array. If the location is a 
+     * Get an array or URLs representing all of the files of a given set of
+     * extensions in the given location. If the location is a file, it is
+     * returned as the only element of the array. If the location is a
      * directory, it is scanned for matching files
      *
      * @param location the location to scan for files
-     * @param extensions an array of extension that are to match in the 
+     * @param extensions an array of extension that are to match in the
      *        directory search
      *
      * @return an array of URLs of matching files
-     * @exception MalformedURLException if the URLs for the files cannot be 
+     * @exception MalformedURLException if the URLs for the files cannot be
      *            formed
      */
-    public static URL[] getLocationURLs(File location, 
+    public static URL[] getLocationURLs(File location,
                                         final String[] extensions)
          throws MalformedURLException {
         URL[] urls = new URL[0];
@@ -215,7 +215,7 @@ public class Locator {
                     return false;
                 }
             });
-            
+
         urls = new URL[matches.length];
         for (int i = 0; i < matches.length; ++i) {
             urls[i] = matches[i].toURL();

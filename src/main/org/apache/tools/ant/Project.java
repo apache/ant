@@ -73,8 +73,6 @@ import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.util.WeakishReference;
-import org.apache.tools.ant.util.LazyHashtable;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -287,7 +285,7 @@ public class Project {
         setJavaVersionProperty();
 
         ComponentHelper.getComponentHelper(this).initDefaultDefinitions();
-       
+
         setSystemProperties();
     }
 
@@ -1839,8 +1837,8 @@ public class Project {
                     + (priority == MSG_ERR ? "System.err" : "System.out")
                     + " - infinite loop terminated");
             }
-            loggingMessage = true;  
-            int size = listeners.size();              
+            loggingMessage = true;
+            int size = listeners.size();
             for (int i = 0; i < size; i++) {
                 BuildListener listener = (BuildListener) listeners.elementAt(i);
                 listener.messageLogged(event);

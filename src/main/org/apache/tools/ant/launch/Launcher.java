@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "Ant" and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -70,7 +70,7 @@ public class Launcher {
 
     /** The location of a per-user library directory */
     public static final String USER_LIBDIR = ".ant/lib";
-    
+
     /** The startup class that is to be run */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
 
@@ -103,29 +103,29 @@ public class Launcher {
 
         URL launchJarURL = Locator.getClassLocationURL(getClass());
         File jarDir = new File(launchJarURL.getFile()).getParentFile();
-        
+
         if (antHomeProperty != null) {
             antHome = new File(antHomeProperty);
         }
-        
+
         if (antHome == null || !antHome.exists()) {
             URL antHomeURL = new URL(launchJarURL, "..");
             antHome = new File(antHomeURL.getFile());
             System.setProperty(ANTHOME_PROPERTY, antHome.getAbsolutePath());
         }
-        
+
         if (!antHome.exists()) {
-            throw new IllegalStateException("Ant home is set incorrectly or " 
+            throw new IllegalStateException("Ant home is set incorrectly or "
                 + "ant could not be located");
         }
-        
-        
+
+
         // Now try and find JAVA_HOME
         File toolsJar = Locator.getToolsJar();
-        
+
         URL[] systemJars = Locator.getLocationURLs(jarDir);
 
-        File userLibDir 
+        File userLibDir
             = new File(System.getProperty("user.home"), USER_LIBDIR);
         URL[] userJars = Locator.getLocationURLs(userLibDir);
 
@@ -136,23 +136,23 @@ public class Launcher {
         }
         URL[] jars = new URL[numJars];
         System.arraycopy(userJars, 0, jars, 0, userJars.length);
-        System.arraycopy(systemJars, 0, jars, userJars.length, 
+        System.arraycopy(systemJars, 0, jars, userJars.length,
             systemJars.length);
-            
+
         if (toolsJar != null) {
             jars[jars.length - 1] = toolsJar.toURL();
         }
 
-        
+
         // now update the class.path property
-        StringBuffer baseClassPath 
+        StringBuffer baseClassPath
             = new StringBuffer(System.getProperty("java.class.path"));
-        
+
         for (int i = 0; i < jars.length; ++i) {
             baseClassPath.append(File.pathSeparatorChar);
             baseClassPath.append(jars[i].getFile());
         }
-        
+
         System.setProperty("java.class.path", baseClassPath.toString());
 
         URLClassLoader loader = new URLClassLoader(jars);

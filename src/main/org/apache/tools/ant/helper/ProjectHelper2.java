@@ -61,7 +61,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Locale;
 
 import org.xml.sax.Locator;
 import org.xml.sax.InputSource;
@@ -779,7 +778,7 @@ public class ProjectHelper2 extends ProjectHelper {
             // container.addTask(task);
             // This is a nop in UE: task.init();
 
-            RuntimeConfigurable wrapper 
+            RuntimeConfigurable wrapper
                 = new RuntimeConfigurable(task, task.getTaskName());
 
             for (int i = 0; i < attrs.getLength(); i++) {

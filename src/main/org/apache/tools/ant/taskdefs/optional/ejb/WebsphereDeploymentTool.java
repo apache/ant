@@ -66,7 +66,6 @@ import java.util.jar.JarOutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
@@ -865,7 +864,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 }
 
                 try {
-                    FileUtils.newFileUtils().rename(newwasJarFile, 
+                    FileUtils.newFileUtils().rename(newwasJarFile,
                                                     websphereJarFile);
                 } catch (IOException renameException) {
                     log(renameException.getMessage(), Project.MSG_WARN);

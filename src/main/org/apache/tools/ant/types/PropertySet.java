@@ -54,8 +54,6 @@
 
 package org.apache.tools.ant.types;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -64,8 +62,6 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Property;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
@@ -202,7 +198,7 @@ public class PropertySet extends DataType {
         if (getDynamic() || cachedNames == null) {
             names = new Vector(); // :TODO: should be a Set!
             if (isReference()) {
-                getRef().addPropertyNames(names, prj.getProperties());    
+                getRef().addPropertyNames(names, prj.getProperties());
             } else {
                 addPropertyNames(names, prj.getProperties());
             }
@@ -303,7 +299,7 @@ public class PropertySet extends DataType {
 
     /**
      * Performs the check for circular references and returns the
-     * referenced FileList.  
+     * referenced FileList.
      */
     protected PropertySet getRef() {
         if (!isChecked()) {
@@ -314,7 +310,7 @@ public class PropertySet extends DataType {
 
         Object o = getRefid().getReferencedObject(getProject());
         if (!(o instanceof PropertySet)) {
-            String msg = getRefid().getRefId() 
+            String msg = getRefid().getRefId()
                 + " doesn\'t denote a propertyset";
             throw new BuildException(msg);
         } else {

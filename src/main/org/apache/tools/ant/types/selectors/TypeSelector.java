@@ -54,12 +54,8 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 
 /**

@@ -54,7 +54,6 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 
-import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;

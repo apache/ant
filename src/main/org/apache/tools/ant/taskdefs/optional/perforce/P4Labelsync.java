@@ -59,8 +59,6 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
