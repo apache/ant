@@ -49,7 +49,7 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
 
     static void setAptCommandlineSwitches(Apt apt, Commandline cmd) {
 
-        if (apt.isNoCompile()) {
+        if (!apt.isCompile()) {
             cmd.createArgument().setValue("-nocompile");
         }
 

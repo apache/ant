@@ -38,7 +38,7 @@ import java.io.File;
 
 public class Apt
         extends Javac {
-    private boolean noCompile;
+    private boolean compile=true;
     private String factory;
     private Path factoryPath;
     private Vector options;
@@ -101,12 +101,12 @@ public class Apt
         return super.getCompiler();
     }
 
-    public boolean isNoCompile() {
-        return noCompile;
+    public boolean isCompile() {
+        return compile;
     }
 
-    public void setNoCompile(boolean noCompile) {
-        this.noCompile = noCompile;
+    public void setCompile(boolean compile) {
+        this.compile = compile;
     }
 
     public String getFactory() {
