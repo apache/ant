@@ -48,7 +48,7 @@ public class TaskAdapter
     public void configure( final Configuration configuration )
         throws ConfigurationException
     {
-        getTask().setTaskName( configuration.getName() );
+        //getTask().setTaskName( configuration.getName() );
 
         //do configuration
         configure( getTask(), configuration );

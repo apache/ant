@@ -13,6 +13,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.Project;
 
@@ -54,7 +55,7 @@ public class Ant1Project
      * Initialise the project.
      */
     public void init()
-        throws BuildException
+        throws TaskException
     {
         setJavaVersionProperty();
     }
@@ -89,13 +90,13 @@ public class Ant1Project
     }
 
     public Task createTask( final String taskType )
-        throws BuildException
+        throws TaskException
     {
         throw new UnsupportedOperationException();
     }
 
     public Object createDataType( final String typeName )
-        throws BuildException
+        throws TaskException
     {
         throw new UnsupportedOperationException();
     }
