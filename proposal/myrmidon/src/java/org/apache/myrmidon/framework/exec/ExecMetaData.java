@@ -8,6 +8,7 @@
 package org.apache.myrmidon.framework.exec;
 
 import java.io.File;
+import java.util.Properties;
 
 /**
  * This class holds meta data that is used to launch a native executable.
@@ -40,7 +41,7 @@ public class ExecMetaData
      * process if <code>isEnvironmentAdditive=true</code> else it specifies
      * full environment.
      */
-    private String[] m_environment;
+    private Properties m_environment;
 
     /**
      * If this variable is true then then the environment specified is
@@ -57,7 +58,7 @@ public class ExecMetaData
      * a null environment and an additive environment.
      */
     public ExecMetaData( final String[] command,
-                         final String[] environment,
+                         final Properties environment,
                          final File workingDirectory,
                          final boolean environmentAdditive )
     {
@@ -92,7 +93,7 @@ public class ExecMetaData
         return m_command;
     }
 
-    public String[] getEnvironment()
+    public Properties getEnvironment()
     {
         return m_environment;
     }

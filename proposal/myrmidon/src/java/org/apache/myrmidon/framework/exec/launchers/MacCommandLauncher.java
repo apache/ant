@@ -36,8 +36,8 @@ public class MacCommandLauncher
         final File directory = metaData.getWorkingDirectory().getCanonicalFile();
         if( ExecUtil.isCwd( directory ) )
         {
-            return Runtime.getRuntime().
-                exec( metaData.getCommand(), metaData.getEnvironment() );
+            final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+            return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
 
         //WARNING: This is an ugly hack and not thread safe in the slightest way
@@ -46,8 +46,8 @@ public class MacCommandLauncher
         try
         {
             System.setProperty( "user.dir", directory.toString() );
-            return Runtime.getRuntime().
-                exec( metaData.getCommand(), metaData.getEnvironment() );
+            final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+            return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
         finally
         {

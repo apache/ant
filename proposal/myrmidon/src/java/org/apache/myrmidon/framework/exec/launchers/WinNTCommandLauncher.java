@@ -41,7 +41,7 @@ public class WinNTCommandLauncher
         prefix[ 5 ] = "&&";
 
         final ExecMetaData newMetaData = ExecUtil.prepend( metaData, prefix );
-        return Runtime.getRuntime().
-            exec( newMetaData.getCommand(), newMetaData.getEnvironment() );
+        final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+        return Runtime.getRuntime().exec( newMetaData.getCommand(), env );
     }
 }

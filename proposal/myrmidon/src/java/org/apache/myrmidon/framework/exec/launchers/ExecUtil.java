@@ -9,6 +9,9 @@ package org.apache.myrmidon.framework.exec.launchers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
+import org.apache.myrmidon.framework.exec.Environment;
+import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
 /**
@@ -72,6 +75,13 @@ class ExecUtil
         throws IOException
     {
         return file.getCanonicalFile().equals( getCwd() );
+    }
+
+    protected static String[] toNativeEnvironment( final Properties environment )
+        throws ExecException
+    {
+        if( null == environment ) return null;
+        else { return Environment.toNativeFormat( environment ); }
     }
 
     /**

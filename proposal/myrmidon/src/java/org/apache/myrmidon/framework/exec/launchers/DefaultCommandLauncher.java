@@ -64,8 +64,8 @@ public class DefaultCommandLauncher
     {
         if( ExecUtil.isCwd( metaData.getWorkingDirectory() ) )
         {
-            return Runtime.getRuntime().
-                exec( metaData.getCommand(), metaData.getEnvironment() );
+            final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+            return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
         else if( null == c_execWithCWD )
         {
@@ -87,9 +87,10 @@ public class DefaultCommandLauncher
     private Process execJava13( final ExecMetaData metaData )
         throws IOException, ExecException
     {
+        final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
         final Object[] args =
             {metaData.getCommand(),
-             metaData.getEnvironment(),
+             env,
              metaData.getWorkingDirectory()};
         try
         {

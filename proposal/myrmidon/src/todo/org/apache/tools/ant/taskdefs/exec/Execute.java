@@ -44,7 +44,7 @@ public class Execute
 
     private ExecMetaData m_metaData;
     private String[] m_command;
-    private Properties m_environment;
+    private Properties m_environment = new Properties();
     private File m_workingDirectory = new File( "." );
     private boolean m_newEnvironment;
 
@@ -214,6 +214,10 @@ public class Execute
 
     public void setEnvironment( final Properties environment )
     {
+        if( null == environment )
+        {
+            throw new NullPointerException( "environment" );
+        }
         m_environment = environment;
     }
 
@@ -274,8 +278,8 @@ public class Execute
         try
         {
             final ExecMetaData metaData =
-                new ExecMetaData( m_command, getNativeEnvironment(),
-                                  m_workingDirectory, false );
+                new ExecMetaData( m_command, m_environment,
+                                  m_workingDirectory, m_newEnvironment );
 
             final CommandLauncher launcher = getLauncher();
             final Process process = launcher.exec( metaData );
@@ -340,31 +344,5 @@ public class Execute
             launcher = c_shellLauncher;
         }
         return launcher;
-    }
-
-    /**
-     * Returns the environment used to create a subprocess.
-     *
-     * @return the environment used to create a subprocess
-     */
-    private String[] getNativeEnvironment()
-        throws ExecException
-    {
-        if( m_newEnvironment )
-        {
-            return Environment.toNativeFormat( m_environment );
-        }
-        else
-        {
-            try
-            {
-                Environment.addNativeEnvironment( m_environment );
-                return Environment.toNativeFormat( m_environment );
-            }
-            catch( final IOException ioe )
-            {
-                throw new ExecException( ioe.getMessage(), ioe );
-            }
-        }
     }
 }

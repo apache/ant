@@ -70,7 +70,7 @@ public class ScriptCommandLauncher
         prefix[ m_script.length ] = metaData.getWorkingDirectory().getCanonicalPath();
 
         final ExecMetaData newMetaData = ExecUtil.prepend( metaData, prefix );
-        return Runtime.getRuntime().
-            exec( newMetaData.getCommand(), newMetaData.getEnvironment() );
+        final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+        return Runtime.getRuntime().exec( newMetaData.getCommand(), env );
     }
 }
