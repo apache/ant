@@ -234,8 +234,8 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
-     * A 3 digit octal string, specify the user, group and 
-     * other modes in the standard Unix fashion; 
+     * A 3 digit octal string, specify the user, group and
+     * other modes in the standard Unix fashion;
      * optional, default=0644
      *
      * @since Ant 1.5.2
@@ -247,7 +247,7 @@ public class ZipFileSet extends FileSet {
         this.fileMode =
             UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
     }
-    
+
     /**
      * @since Ant 1.5.2
      */
@@ -257,10 +257,10 @@ public class ZipFileSet extends FileSet {
         }
         return fileMode;
     }
-    
+
     /**
-     * A 3 digit octal string, specify the user, group and 
-     * other modes in the standard Unix fashion; 
+     * A 3 digit octal string, specify the user, group and
+     * other modes in the standard Unix fashion;
      * optional, default=0755
      *
      * @since Ant 1.6
@@ -272,7 +272,7 @@ public class ZipFileSet extends FileSet {
         this.dirMode =
             UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
     }
-    
+
     /**
      * @since Ant 1.6
      */
@@ -284,7 +284,8 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
-     * A ZipFileset accepts only another ZipFileSet as reference
+     * A ZipFileset accepts another ZipFileSet or a FileSet as reference
+     * FileSets are often used by the war task for the lib attribute
      */
     protected AbstractFileSet getRef(Project p) {
         if (!isChecked()) {
@@ -294,8 +295,8 @@ public class ZipFileSet extends FileSet {
         }
 
         Object o = getRefid().getReferencedObject(p);
-        if (!(o instanceof ZipFileSet)) {
-            String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset";
+        if (!(o instanceof ZipFileSet) && !(o instanceof FileSet)) {
+            String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
             throw new BuildException(msg);
         } else {
             return (AbstractFileSet) o;
