@@ -199,6 +199,16 @@ public class RuntimeConfigurable {
         addText(new String(buf, start, count));
     }
 
+    /** Get the text content of this element. Various text chunks are
+     * concatenated, there is no way ( currently ) of keeping track of
+     * multiple fragments.
+     *
+     * @return the text content of this element.
+     */
+    public StringBuffer getText() {
+        return characters;
+    }
+
     /**
      * Returns the tag name of the wrapped element.
      *
