@@ -173,6 +173,8 @@
              unless="trax.present"/>
     <exclude name="${optional.package}/metamata/MMetrics*" 
              unless="trax.present"/>
+    <exclude name="${optional.package}/XsltTest.java" 
+             unless="trax.present"/>
   </patternset>
   <patternset id="needs.xalan1">
     <exclude name="${optional.package}/XalanLiaison*.java"
@@ -283,6 +285,9 @@
   </patternset>
   <patternset id="needs.swing">
     <exclude name="${optional.package}/splash/*.java" unless="swing.present" />
+  </patternset>
+  <patternset id="teststhatfail">
+    <exclude name="${optional.package}/XmlValidateTest.java" unless="run.failing.tests" />
   </patternset>
 
   <!--
@@ -1215,13 +1220,15 @@
           <patternset refid="needs.xslp" />
           <patternset refid="needs.jakarta.bcel" />
           <patternset refid="needs.trax" />
-
           <!-- fails under 1.1 -->
           <exclude name="${optional.package}/perforce/P4ChangeTest.java"
                    unless="jdk1.2+"/>
           
           <!-- tests excluded if the test is run in offline mode -->
-          <patternset refid="onlinetests"/> 
+          <patternset refid="onlinetests"/>
+          
+          <!-- failing tests excluded unless run.failing.tests is set -->
+          <patternset refid="teststhatfail" />
 
           <!-- runtime dependencies that are different from compile
                time dependencies -->
@@ -1256,9 +1263,12 @@
           <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+" />
 
+          <!-- misc oneoff tests --> 
           <exclude name="${optional.package}/JspcTest.java"
                    unless="jasper.present" />
-                   
+          <exclude name="${optional.package}/WsdlToDotnetTest.java"
+                   unless="dotnetapps.found" />                   
+           
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
@@ -1270,14 +1280,13 @@
                    unless="tests.and.ant.share.classloader" />
           <exclude name="${optional.package}/metamata/MAuditParserTest.java"
                    unless="tests.and.ant.share.classloader" />
-          <exclude name="${optional.package}/WsdlToDotnetTest.java"
-                   unless="dotnetapps.found" />                   
 
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs
           -->
           <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java" 
                    unless="have.cvs" />
+                   
         </fileset>
       </batchtest>
 
