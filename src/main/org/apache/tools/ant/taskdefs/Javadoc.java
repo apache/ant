@@ -765,7 +765,10 @@ public class Javadoc extends Task {
         log("Packages = " + packages, Project.MSG_VERBOSE);
 
         Vector addedPackages = new Vector();
+
         String[] list = sourcePath.list();
+        if (list == null) list = new String[0];
+
         for (int j=0; j<list.length; j++) {
             File source = project.resolveFile(list[j]);
             Vector foundPackages = findPackages(source);
@@ -860,6 +863,7 @@ public class Javadoc extends Task {
                 }
                 File d = new File(dir1, name);
                 if (d.isDirectory() 
+                    && !name.equals("CVS")	// hack to ignore CVS directories
                     && d.getName().indexOf("-") == -1) {
                         return true;
                     }
