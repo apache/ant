@@ -59,7 +59,18 @@ or a <a href="../CoreTypes/filelist.html">Filelist</a> (since Ant 1.6).</p>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<p><b>Since Ant 1.6.3,</b> a nested <a href="../CoreTypes/mapper.html">
+<h4>fileset</h4>
+<p>You can use any number of nested <code>&lt;fileset&gt;</code>
+elements to define the files for this task and refer to
+<code>&lt;fileset&gt;</code>s defined elsewhere.</p>
+<h4>filelist</h4>
+<p><em>Since Ant 1.6</em></p>
+<p>You can use any number of nested <code>&lt;filelist&gt;</code>
+elements to define the files for this task and refer to
+<code>&lt;filelist&gt;</code>s defined elsewhere.</p>
+
+<h4>mapper</h4>
+<p><em>Since Ant 1.6.3,</em> a nested <a href="../CoreTypes/mapper.html">
     mapper</a> can be specified.  Files specified via nested
     <code>fileset</code>s, <code>filelist</code>s, or the <code>file</code>
     attribute are mapped using the specified mapper.  For each file mapped,
@@ -91,7 +102,7 @@ time close to it otherwise.</p>
 <p>creates <code>bar</code> if it doesn't exist and changes the
 modification time to that of <code>foo</code>.</p>
 <hr>
-<p align="center">Copyright &copy; 2000-2001,2003-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2001,2003-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
