@@ -116,6 +116,7 @@ public class ExtensionAdapter
      */
     public void setExtensionName( final String extensionName )
     {
+        verifyNotAReference();
         m_extensionName = extensionName;
     }
 
@@ -126,6 +127,7 @@ public class ExtensionAdapter
      */
     public void setSpecificationVersion( final String specificationVersion )
     {
+        verifyNotAReference();
         m_specificationVersion = new DeweyDecimal( specificationVersion );
     }
 
@@ -136,6 +138,7 @@ public class ExtensionAdapter
      */
     public void setSpecificationVendor( final String specificationVendor )
     {
+        verifyNotAReference();
         m_specificationVendor = specificationVendor;
     }
 
@@ -146,6 +149,7 @@ public class ExtensionAdapter
      */
     public void setImplementationVendorId( final String implementationVendorID )
     {
+        verifyNotAReference();
         m_implementationVendorID = implementationVendorID;
     }
 
@@ -156,6 +160,7 @@ public class ExtensionAdapter
      */
     public void setImplementationVendor( final String implementationVendor )
     {
+        verifyNotAReference();
         m_implementationVendor = implementationVendor;
     }
 
@@ -166,6 +171,7 @@ public class ExtensionAdapter
      */
     public void setImplementationVersion( final String implementationVersion )
     {
+        verifyNotAReference();
         m_implementationVersion = new DeweyDecimal( implementationVersion );
     }
 
@@ -176,6 +182,7 @@ public class ExtensionAdapter
      */
     public void setImplementationUrl( final String implementationURL )
     {
+        verifyNotAReference();
         m_implementationURL = implementationURL;
     }
 
@@ -225,6 +232,15 @@ public class ExtensionAdapter
         super.setRefid( reference );
     }
 
+    private void verifyNotAReference()
+        throws BuildException
+    {
+        if( isReference() )
+        {
+            throw tooManyAttributes();
+        }
+    }
+
     /**
      * Convert this adpater object into an extension object.
      *
@@ -256,5 +272,10 @@ public class ExtensionAdapter
                               m_implementationVendorID,
                               m_implementationVendor,
                               m_implementationURL );
+    }
+
+    public String toString()
+    {
+        return toExtension().toString();
     }
 }
