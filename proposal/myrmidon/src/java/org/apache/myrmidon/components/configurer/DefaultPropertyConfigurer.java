@@ -39,9 +39,9 @@ class DefaultPropertyConfigurer
                                       final int maxCount )
     {
         m_propIndex = propIndex;
-        if ( type.isPrimitive() )
+        if( type.isPrimitive() )
         {
-            m_type = getComplexTypeFor(type);
+            m_type = getComplexTypeFor( type );
         }
         else
         {
@@ -63,7 +63,7 @@ class DefaultPropertyConfigurer
     /**
      * Creates a default value for this property.
      */
-    public Object createValue( ConfigurationState state )
+    public Object createValue( final ConfigurationState state )
         throws ConfigurationException
     {
         if( null == m_createMethod )
@@ -101,7 +101,7 @@ class DefaultPropertyConfigurer
     /**
      * Adds a value for this property, to an object.
      */
-    public void addValue( ConfigurationState state, Object value )
+    public void addValue( final ConfigurationState state, final Object value )
         throws ConfigurationException
     {
         final DefaultConfigurationState defState = (DefaultConfigurationState)state;
@@ -113,7 +113,7 @@ class DefaultPropertyConfigurer
         }
 
         // Make sure the creator method was called, if necessary
-        if( pending == null && m_createMethod != null  )
+        if( pending == null && m_createMethod != null )
         {
             final String message = REZ.getString( "must-be-element.error" );
             throw new ConfigurationException( message );
@@ -134,7 +134,7 @@ class DefaultPropertyConfigurer
             // Add the value
             if( null != m_addMethod )
             {
-                m_addMethod.invoke( defState.getObject(), new Object[]{ value } );
+                m_addMethod.invoke( defState.getObject(), new Object[]{value} );
             }
         }
         catch( final InvocationTargetException ite )
