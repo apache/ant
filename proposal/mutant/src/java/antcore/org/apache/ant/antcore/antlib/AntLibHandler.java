@@ -158,8 +158,7 @@ public class AntLibHandler extends ElementHandler {
                     qualifiedName);
                 String factoryClass = factoryHandler.getClassName();
                 antLibrarySpec.setFactory(factoryClass);
-            }
-            else {
+            } else {
                 super.startElement(uri, localName, qualifiedName, attributes);
             }
         } catch (ConfigException e) {

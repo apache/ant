@@ -92,8 +92,7 @@ public class FileConverter extends AbstractConverter {
             FileService fileService 
                 = (FileService)getContext().getCoreService(FileService.class);
             return fileService.resolveFile(value);
-        }
-        catch (AntException e) {
+        } catch (AntException e) {
             throw new ExecutionException("Unable to resolve file: " 
                 + value, e);
         }

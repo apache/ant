@@ -82,6 +82,9 @@ public class Builder {
     /** the filters root */
     private static final File FILTERS_ROOT
          = new File(PACKAGE_ROOT, "filters");
+    /** the util root */
+    private static final File UTIL_ROOT
+         = new File(PACKAGE_ROOT, "util");
          
          
     /** the root forthe depend task's support classes */
@@ -120,16 +123,16 @@ public class Builder {
         files.add(new File(TYPES_ROOT, "Parameter.java"));
         files.add(new File(TYPES_ROOT, "Parameterizable.java"));
         files.add(new File(TYPES_ROOT, "RegularExpression.java"));
-        files.add(new File(PACKAGE_ROOT, "util/FileNameMapper.java"));
-        files.add(new File(PACKAGE_ROOT, "util/FlatFileNameMapper.java"));
-        files.add(new File(PACKAGE_ROOT, "util/SourceFileScanner.java"));
-        files.add(new File(PACKAGE_ROOT, "util/IdentityMapper.java"));
-        files.add(new File(PACKAGE_ROOT, "util/MergingMapper.java"));
-        files.add(new File(PACKAGE_ROOT, "util/GlobPatternMapper.java"));
-        files.add(new File(PACKAGE_ROOT, "util/regexp/Regexp.java"));
-        files.add(new File(PACKAGE_ROOT, "util/regexp/RegexpMatcher.java"));
-        files.add(new File(PACKAGE_ROOT, "util/regexp/RegexpFactory.java"));
-        files.add(new File(PACKAGE_ROOT, "util/regexp/RegexpMatcherFactory.java"));
+        files.add(new File(UTIL_ROOT, "FileNameMapper.java"));
+        files.add(new File(UTIL_ROOT, "FlatFileNameMapper.java"));
+        files.add(new File(UTIL_ROOT, "SourceFileScanner.java"));
+        files.add(new File(UTIL_ROOT, "IdentityMapper.java"));
+        files.add(new File(UTIL_ROOT, "MergingMapper.java"));
+        files.add(new File(UTIL_ROOT, "GlobPatternMapper.java"));
+        files.add(new File(UTIL_ROOT, "regexp/Regexp.java"));
+        files.add(new File(UTIL_ROOT, "regexp/RegexpMatcher.java"));
+        files.add(new File(UTIL_ROOT, "regexp/RegexpFactory.java"));
+        files.add(new File(UTIL_ROOT, "regexp/RegexpMatcherFactory.java"));
         files.add(new File(TYPES_ROOT, "Commandline.java"));
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));
@@ -141,7 +144,7 @@ public class Builder {
         files.add(new File(PACKAGE_ROOT, "PathTokenizer.java"));
         files.add(new File(PACKAGE_ROOT, "TaskAdapter.java"));
         files.add(new File(PACKAGE_ROOT, "MatchingTask.java"));
-        files.add(new File(PACKAGE_ROOT, "util/FileUtils.java"));
+        files.add(new File(UTIL_ROOT, "FileUtils.java"));
         files.add(new File(PACKAGE_ROOT, "defaultManifest.mf"));
         files.add(new File(TASKDEFS_ROOT, "defaults.properties"));
         files.add(new File(TYPES_ROOT, "defaults.properties"));
