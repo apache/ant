@@ -11,10 +11,9 @@
 <h3>Description</h3>
 <p>Executes a Java class within the running (Ant) VM or forks another VM if
 specified.</p>
-<p>Be careful that the executed class doesn't call System.exit(), because it
-will terminate the VM and thus Ant. In case this happens, it's highly suggested
-that you set the fork attribute so that System.exit() stops the other VM and not
-the one that is currently running Ant.</p>
+<p>
+If odd things go wrong when you run this task, set fork="true" to use a new
+JVM.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -29,7 +28,8 @@ the one that is currently running Ant.</p>
   </tr>
   <tr>
     <td valign="top">jar</td>
-    <td valign="top">the location of the jar file to execute (must have a Main-Class entry in the manifest). Fork must be set to true if this option is selected.</td>
+    <td valign="top">the location of the jar file to execute (must have a 
+    Main-Class entry in the manifest). Fork must be set to true if this option is selected.</td>
     <td align="center" valign="top">Either jar or classname</td>
   </tr>
   <tr>
