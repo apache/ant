@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * Abstract base class to provide common services for the VAJ tool API servlets
@@ -72,7 +73,7 @@ public abstract class VAJToolsServlet extends HttpServlet
             {
                 if( !( e instanceof TaskException ) )
                 {
-                    String trace = StringUtils.getStackTrace( e );
+                    String trace = ExceptionUtil.printStackTrace( e );
                     util.log( "Program error in " + this.getClass().getName()
                               + ":\n" + trace, VAJUtil.MSG_ERR );
                 }

@@ -18,6 +18,7 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -296,7 +297,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
                 log( "The file " + files[ i ] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN );
-                log( StringUtils.getStackTrace( e ), Project.MSG_DEBUG );
+                log( ExceptionUtil.printStackTrace( e ), Project.MSG_DEBUG );
             }
             catch( IOException e )
             {

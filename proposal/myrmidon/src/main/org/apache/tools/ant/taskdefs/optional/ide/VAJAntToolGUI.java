@@ -43,6 +43,7 @@ import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * This is a simple grafical user interface to provide the information needed by
@@ -1403,7 +1404,7 @@ public class VAJAntToolGUI extends Frame
     private void handleException( Throwable exception )
     {
         // Write exceptions to the log-window
-        String trace = StringUtils.getStackTrace( exception );
+        String trace = ExceptionUtil.printStackTrace( exception );
 
         getMessageTextArea().append( lineSeparator + lineSeparator + trace );
         getMessageFrame().show();

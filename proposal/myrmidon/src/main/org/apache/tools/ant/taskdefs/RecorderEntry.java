@@ -22,6 +22,10 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class RecorderEntry implements BuildLogger
 {
+    /**
+     * the line separator for this OS
+     */
+    private final static String LINE_SEP = System.getProperty( "line.separator" );
 
     //////////////////////////////////////////////////////////////////////
     // ATTRIBUTES
@@ -128,11 +132,11 @@ public class RecorderEntry implements BuildLogger
         Throwable error = event.getException();
         if( error == null )
         {
-            out.println( StringUtils.LINE_SEP + "BUILD SUCCESSFUL" );
+            out.println( LINE_SEP + "BUILD SUCCESSFUL" );
         }
         else
         {
-            out.println( StringUtils.LINE_SEP + "BUILD FAILED" + StringUtils.LINE_SEP );
+            out.println( LINE_SEP + "BUILD FAILED" + LINE_SEP );
             error.printStackTrace( out );
         }
         out.flush();
@@ -177,7 +181,7 @@ public class RecorderEntry implements BuildLogger
     public void targetStarted( BuildEvent event )
     {
         log( ">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG );
-        log( StringUtils.LINE_SEP + event.getTarget().getName() + ":", Project.MSG_INFO );
+        log( LINE_SEP + event.getTarget().getName() + ":", Project.MSG_INFO );
         targetStartTime = System.currentTimeMillis();
     }
 

@@ -30,6 +30,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * Simple Testrunner for JUnit that runs all tests of a testsuite. <p>
@@ -225,7 +226,7 @@ public class JUnitTestRunner implements TestListener
      */
     public static String getFilteredTrace( Throwable t )
     {
-        String trace = StringUtils.getStackTrace( t );
+        final String trace = ExceptionUtil.printStackTrace( t );
         return JUnitTestRunner.filterStack( trace );
     }
 
