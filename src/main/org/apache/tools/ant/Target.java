@@ -65,7 +65,8 @@ import java.util.*;
 public class Target {
 
     private String name;
-    private String condition = "";
+    private String ifCondition = "";
+    private String unlessCondition = "";
     private Vector dependencies = new Vector(2);
     private Vector tasks = new Vector(5);
     private Project project;
@@ -108,8 +109,12 @@ public class Target {
         return dependencies.elements();
     }
 
-    public void setCondition(String property) {
-        this.condition = (property == null) ? "" : property;
+    public void setIf(String property) {
+        this.ifCondition = (property == null) ? "" : property;
+    }
+ 
+    public void setUnless(String property) {
+        this.unlessCondition = (property == null) ? "" : property;
     }
 
     public String toString() {
@@ -117,7 +122,7 @@ public class Target {
     }
 
     public void execute() throws BuildException {
-        if (("".equals(this.condition)) || (project.getProperty(this.condition) != null)) {
+        if (testIfCondition() && testUnlessCondition()) {
             Enumeration enum = tasks.elements();
             while (enum.hasMoreElements()) {
                 Task task = (Task) enum.nextElement();
@@ -135,8 +140,22 @@ public class Target {
                     throw exc;
                 }
             }
+        } else if (!testIfCondition()) {
+            project.log(this, "Skipped because property '" + this.ifCondition + "' not set.", 
+                        Project.MSG_VERBOSE);
         } else {
-            project.log(this, "Skipped because property '" + this.condition + "' not set.", Project.MSG_VERBOSE);
+            project.log(this, "Skipped because property '" + this.unlessCondition + "' set.",
+                        Project.MSG_VERBOSE);
         }
+    }
+
+    private boolean testIfCondition() {
+        return "".equals(ifCondition) 
+            || project.getProperty(ifCondition) != null;
+    }
+
+    private boolean testUnlessCondition() {
+        return "".equals(unlessCondition) 
+            || project.getProperty(unlessCondition) == null;
     }
 }

@@ -276,7 +276,8 @@ public class ProjectHelper {
         public void init(String tag, AttributeList attrs) throws SAXParseException {
             String name = null;
             String depends = "";
-            String cond = null;
+            String ifCond = null;
+            String unlessCond = null;
             String id = null;
 
             for (int i = 0; i < attrs.getLength(); i++) {
@@ -288,7 +289,9 @@ public class ProjectHelper {
                 } else if (key.equals("depends")) {
                     depends = value;
                 } else if (key.equals("if")) {
-                    cond = value;
+                    ifCond = value;
+                } else if (key.equals("unless")) {
+                    unlessCond = value;
                 } else if (key.equals("id")) {
                     id = value;
                 } else {
@@ -302,7 +305,8 @@ public class ProjectHelper {
 
             target = new Target();
             target.setName(name);
-            target.setCondition(cond);
+            target.setIf(ifCond);
+            target.setUnless(unlessCond);
             project.addTarget(name, target);
 
             if (id != null && !id.equals(""))

@@ -274,16 +274,20 @@ might think that first target C, then B and then A is executed. Wrong! C depends
 on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
 <p>A target gets executed only once. Even when more targets depend on it (see
 the previous example).</p>
-<p>A target has also the ability to perform its execution if a property has been
-set. This allows, for example, better control on the building process depending
-on the state of the system (java version, OS, command line properties, etc...).
-To make target <i>sense</i> this property you should add the <i>if</i> attribute
-with the name of the property that the target should react to, for example</p>
+<p>A target has also the ability to perform its execution if (or
+unless) a property has been set. This allows, for example, better
+control on the building process depending on the state of the system
+(java version, OS, command line properties, etc...).  To make target
+<i>sense</i> this property you should add the <i>if</i> (or
+<i>unless</i>) attribute with the name of the property that the target
+should react to, for example</p>
 <blockquote>
   <pre>&lt;target name=&quot;build-module-A&quot; if=&quot;module-A-present&quot;/&gt;</pre>
+  <pre>&lt;target name=&quot;build-own-fake-module-A&quot; unless=&quot;module-A-present&quot;/&gt;</pre>
 </blockquote>
-<p>If no <i>if</i> attribute is present, the target will always be executed.</p>
-<p>It is a good practice to place your <a href="#property">property</a> and <a
+<p>If no <i>if</i> and no <i>unless</i> attribute is present, the target will 
+always be executed.</p>
+<p>It is a good practice to place your <a
 href="#tstamp">tstamp</a> tasks in a so called initialization target, on which
 all other targets depend. Make sure that that target is always the first one in
 the depends list of the other targets. In this manual, most initialization targets
@@ -310,6 +314,12 @@ have the name "init".</p>
     <td valign="top">if</td>
     <td valign="top">the name of the property that must be set in order for this
       target to execute.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td>
+    <td valign="top">the name of the property that must not be set in order 
+      for this target to execute.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
