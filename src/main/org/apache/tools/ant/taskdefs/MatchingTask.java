@@ -70,9 +70,52 @@ import java.util.*;
 
 public abstract class MatchingTask extends Task {
 
-    protected String[] includes;
-    protected String[] excludes;
+    protected Vector includeList = new Vector();
+    protected Vector excludeList = new Vector();
     protected boolean useDefaultExcludes = true;
+
+    // inner class to hold a name on list
+    public class NameEntry {
+        private boolean valid = true;
+        private String name;
+
+        public String getName() { return valid ? name : null; }
+        public void setName(String name) { this.name = name; }
+
+        public void setIfClassFound(String name) {
+            try {
+              Class.forName(name);
+            } catch (ClassNotFoundException cnf) {
+              valid = false;
+            }
+        }
+
+        public void setUnlessClassFound(String name) {
+            try {
+              Class.forName(name);
+              valid = false;
+            } catch (ClassNotFoundException cnf) {
+            }
+        }
+    }
+
+    /**
+     * add a name entry on the include list
+     */
+    public NameEntry addInclude() {
+        NameEntry result = new NameEntry();
+        includeList.addElement(result);
+        return result;
+    }
+    
+    /**
+     * add a name entry on the exclude list
+     */
+    public NameEntry addExclude() {
+        NameEntry result = new NameEntry();
+        excludeList.addElement(result);
+        return result;
+    }
 
     /**
      * Sets the set of include patterns. Patterns may be separated by a comma
@@ -82,20 +125,7 @@ public abstract class MatchingTask extends Task {
      */
     public void setIncludes(String includes) {
         if (includes != null && includes.length() > 0) {
-            Vector tmpIncludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(includes, ", ", false);
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpIncludes.addElement(pattern);
-                }
-            }
-            this.includes = new String[tmpIncludes.size()];
-            for (int i = 0; i < tmpIncludes.size(); i++) {
-                this.includes[i] = (String)tmpIncludes.elementAt(i);
-            }
-        } else {
-            this.includes = null;
+            addInclude().setName(includes);
         }
     }
 
@@ -111,20 +141,14 @@ public abstract class MatchingTask extends Task {
                     "Please use the includes attribute.",
                     Project.MSG_WARN);
         if (itemString == null || itemString.equals("*")) {
-            includes = new String[1];
-            includes[0] = "**";
+            addInclude().setName("**");
         } else {
-            Vector tmpIncludes = new Vector();
             StringTokenizer tok = new StringTokenizer(itemString, ", ");
             while (tok.hasMoreTokens()) {
                 String pattern = tok.nextToken().trim();
                 if (pattern.length() > 0) {
-                    tmpIncludes.addElement(pattern+"/**");
+                    addInclude().setName(pattern+"/**");
                 }
-            }
-            this.includes = new String[tmpIncludes.size()];
-            for (int i = 0; i < tmpIncludes.size(); i++) {
-                this.includes[i] = (String)tmpIncludes.elementAt(i);
             }
         }
     }
@@ -137,20 +161,7 @@ public abstract class MatchingTask extends Task {
      */
     public void setExcludes(String excludes) {
         if (excludes != null && excludes.length() > 0) {
-            Vector tmpExcludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpExcludes.addElement(pattern);
-                }
-            }
-            this.excludes = new String[tmpExcludes.size()];
-            for (int i = 0; i < tmpExcludes.size(); i++) {
-                this.excludes[i] = (String)tmpExcludes.elementAt(i);
-            }
-        } else {
-            this.excludes = null;
+            addExclude().setName(excludes);
         }
     }
 
@@ -168,14 +179,8 @@ public abstract class MatchingTask extends Task {
             Vector tmpExcludes = new Vector();
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
             while (tok.hasMoreTokens()) {
-                tmpExcludes.addElement("**/"+tok.nextToken().trim()+"/**");
+                addExclude().setName("**/"+tok.nextToken().trim()+"/**");
             }
-            this.excludes = new String[tmpExcludes.size()];
-            for (int i = 0; i < tmpExcludes.size(); i++) {
-                this.excludes[i] = (String)tmpExcludes.elementAt(i);
-            }
-        } else {
-            this.excludes = null;
         }
     }
     
@@ -191,13 +196,40 @@ public abstract class MatchingTask extends Task {
     }
     
     /**
+     * Convert a vector of NameEntry elements into an array of Strings.
+     */
+    private String[] makeArray(Vector list) {
+        if (list.size() == 0) return null;
+
+        Vector tmpNames = new Vector();
+        for (Enumeration e = list.elements() ; e.hasMoreElements() ;) {
+            String includes = ((NameEntry)e.nextElement()).getName();
+            if (includes == null) continue;
+            StringTokenizer tok = new StringTokenizer(includes, ", ", false);
+            while (tok.hasMoreTokens()) {
+                String pattern = tok.nextToken().trim();
+                if (pattern.length() > 0) {
+                    tmpNames.addElement(pattern);
+                }
+            }
+        }
+
+        String result[] = new String[tmpNames.size()];
+        for (int i = 0; i < tmpNames.size(); i++) {
+            result[i] = (String)tmpNames.elementAt(i);
+        }
+
+        return result;
+    }
+        
+    /**
      * Returns the directory scanner needed to access the files to process.
      */
     protected DirectoryScanner getDirectoryScanner(File baseDir) {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(baseDir);
-        ds.setIncludes(includes);
-        ds.setExcludes(excludes);
+        ds.setIncludes(makeArray(includeList));
+        ds.setExcludes(makeArray(excludeList));
         if (useDefaultExcludes) ds.addDefaultExcludes();
         ds.scan();
         return ds;
