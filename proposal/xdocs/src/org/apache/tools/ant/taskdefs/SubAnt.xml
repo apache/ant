@@ -67,5 +67,63 @@
             this snippet will execute the compile target of /opt/project/build1.xml,
             setting the basedir to projects1, projects2, projects3
         </p>
+        <p>Now a little more complex - but useful - scenario. Assume that we have
+        a directory structure like this:</p>
+        <pre>
+        root
+          |  common.xml
+          |  build.xml
+          |
+          +-- modules
+                +-- modA
+                |     +-- src
+                +-- modB
+                      +-- src
+
+        <u><b>common.xml:</b></u><br/>
+        &lt;project&gt;
+            &lt;property name="src.dir"      value="src"/&gt;
+            &lt;property name="build.dir"    value="build"/&gt;
+            &lt;property name="classes.dir"  value="${build.dir}/classes"/&gt;
+
+            &lt;target name="compile"&gt;
+                &lt;mkdir dir="${classes.dir}"/&gt;
+                &lt;javac srcdir="${src.dir}" destdir="${classes.dir}"/&gt;
+            &lt;/target&gt;
+
+            &lt;!-- more targets --&gt;
+        &lt;/project&gt;
+
+        <u><b>build.xml:</b></u><br/>
+        &lt;project&gt;
+
+            &lt;macrodef name="iterate"&gt;
+                &lt;attribute name="target"/&gt;
+                &lt;sequential&gt;
+                    &lt;subant target="@{target}"&gt;
+                        &lt;fileset dir="modules" includes="*/build.xml"/&gt;
+                    &lt;/subant&gt;
+                &lt;/sequential&gt;
+            &lt;/macrodef&gt;
+
+
+            &lt;target name="compile"&gt;
+                &lt;iterate target="compile"/&gt;
+            &lt;/target&gt;
+
+            &lt;!-- more targets --&gt;
+        &lt;/project&gt;
+
+        <u><b>modules/modA/build.xml:</b></u><br/>
+        &lt;project name="modA"&gt;
+            &lt;import file="../../common.xml"/&gt;
+        &lt;/project&gt;
+        </pre>
+
+        <p>This results in very small buildfiles in the modules, maintainable
+        buildfile (common.xml) and a clear project structure. Additionally
+        the root buildfile is capable to run the whole build over all
+        modules.
+        </p>
     </section>
 </external>
