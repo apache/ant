@@ -240,32 +240,61 @@
         </table>
       </subsection>
 
-        <subsection name="Invicta">
+      <subsection name="Invicta">
 
-          <p>Invicta is a build management tool. Using simple project definition files,
-          it generates powerful build scripts (such as ANT) while hiding their
-          complexity. Invicta is a modular framework that allows developing additional
-          components and output types.</p>
+        <p>Invicta is a build management tool. Using simple project definition files,
+        it generates powerful build scripts (such as ANT) while hiding their
+        complexity. Invicta is a modular framework that allows developing additional
+        components and output types.</p>
 
-          <table>
-            <tr>
-              <th>Compatibility:</th>
-              <td>Ant 1.5 and higher</td>
-            </tr>
-            <tr>
-              <th>URL:</th>
-              <td><a href="http://invicta.sf.net/">http://invicta.sf.net/</a></td>
-            </tr>
-            <tr>
-              <th>Contact:</th>
-              <td><a href ='http://invicta.sf.net/contact.html'>Project Mailing Lists and Administrators</a></td>
-            </tr>
-            <tr>
-              <th>License:</th>
-              <td>LGPL.</td>
-            </tr>
-          </table>
-        </subsection>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://invicta.sf.net/">http://invicta.sf.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ="http://invicta.sf.net/contact.html">Project Mailing Lists and Administrators</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL.</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="JAM - JavaGen Ant Modules">
+
+        <p>JAM is a modular Ant toolkit for developing and testing Java/J2EE
+        applications. JAM supports EJB and Servlet/JSP development using XDoclet,
+        JUnit, Cactus, Maven, Castor and MDA/UML code generation on various J2EE
+        servers including JBoss.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.javagen.com/jam.jsp">http://www.javagen.com/jam.jsp</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.javagen.com/feedback.do">Feedback</a> <br/>
+                <a href="http://www.javagen.com/bugs.do">Bug Reports</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="Krysalis Centipede">
         <p>The Centipede admin told us, that that project

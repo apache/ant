@@ -18,6 +18,7 @@
 
   <properties>
     <title>License</title>
+    <author email="">The Apache Software Foundation</author>
   </properties>
 
 <body>
@@ -230,7 +231,7 @@
  *   limitations under the License.
  */
     </source>
-  <p>You can download the original license file <a href="./LICENSE" target="_new">here</a></p>.
+  <p>You can download the original license file <a href="./LICENSE" target="_new">here.</a></p>
 <p>The License is accompanied by a NOTICE</p>
 <source>
    =========================================================================

@@ -70,16 +70,16 @@
     <section name="WIKIs">
       <subsection name="Apache">
 
-        <p>The ASF provides a Wiki for several topics. </p>
+        <p>The ASF provides a Wiki farm for Apache projects.</p>
 
         <table class="externals">
           <tr>
             <th>Main page:</th>
-            <td><a href="http://nagoya.apache.org/wiki/apachewiki.cgi">http://nagoya.apache.org/wiki/apachewiki.cgi</a></td>
+            <td><a href="http://wiki.apache.org/general">Apache Wiki Farm</a></td>
           </tr>
           <tr>
-            <th>Ant main page:</th>
-            <td><a href="http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages">http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages</a></td>
+            <th>Ant Wiki:</th>
+            <td><a href="http://wiki.apache.org/ant/">Ant Wiki</a></td>
           </tr>
         </table>
       </subsection>
@@ -291,8 +291,26 @@
         </table>
       </subsection>
 
-      <subsection name="Ant in Anger: Using Ant in a Production Development
-      System">
+      <subsection name="Programmieren für Ant">
+        <p>This article describes the main topics of programming your own tasks.
+        Description is done on five examples.</p>
+        <p>This article is written in German and published in
+        <a href="http://www.sigs-datacom.de/sd/publications/js/index.htm">Java-Spektrum</a>
+        5/2004.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Bernd Matzke</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.sigs-datacom.de/sd/news/document?PID=216">http://www.sigs-datacom.de/sd/news/document?PID=216</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Ant in Anger: Using Ant in a Production Development System">
         <p>This document describes strategies and some basic examples of how to
         use Ant in larger team development projects.</p>
 
@@ -320,6 +338,22 @@
           <tr>
             <th>URL:</th>
             <td><a href="ant_task_guidelines.html">http://ant.apache.org/ant_task_guidelines.html</a></td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Build a Better Robot with Ant">
+        <p>This article describes the gory details of writing custom
+           Ant tasks.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Erik Hatcher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.fawcette.com/javapro/2003_02/magazine/features/ehatcher/">http://www.fawcette.com/javapro/2003_02/magazine/features/ehatcher/l</a></td>
           </tr>
         </table>
       </subsection>
@@ -524,21 +558,6 @@
     </section>
 
     <section name="Presentations">
-
-      <subsection name="Ant - presented to the Tucson Java Users Group">
-        <p>A PowerPoint technical overview presentation on Ant.  Comes complete with a straightforward example demonstrating code compilation, JAR'ing, JUnit testing, JUnit reporting, and Zipping a distribution.  A few advanced topics are touched upon like property immutabality and using &lt;antcall&gt; to get around it, build listeners, and writing custom tasks.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Author:</th>
-            <td><a href="mailto:ehatcher@apache.org">Erik Hatcher</a></td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://erik.hatcher.net/ant-jug.zip">http://erik.hatcher.net/ant-jug.zip</a></td>
-          </tr>
-        </table>
-      </subsection>
 
       <subsection name="Ant Build Tool">
         <p>A PowerPoint presentation on Ant 1.2.  It provides a basic overview
