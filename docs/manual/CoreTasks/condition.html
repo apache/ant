@@ -79,7 +79,10 @@ elements of that task are supported, the property and value attributes
 are redundant and will be ignored.</p>
 
 <h4>os</h4>
-<p>Test whether the current operating system is of a given type.</p>
+<p>Test whether the current operating system is of a given type.  Each
+defined attribute is tested and the result is true only if <i>all</i>
+the tests succeed.
+</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -188,12 +191,12 @@ operating system is MacOS, but not MacOS X - which Ant considers to be
 in the Unix family as well.</p>
 
 <pre>
-  &lt;condition property=&quot;isSparc&quot;&gt;
-    &lt;os arch=&quot;sparc&quot; />
+  &lt;condition property=&quot;isSunOSonSparc&quot;&gt;
+    &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot; />
   &lt;/condition&gt;
 </pre>
-<p>sets the property <code>isSparc</code> if the current
-operating system is running on a sparc architecture.</p>
+<p>sets the property <code>isSunOSonSparc</code> if the current
+operating system is SunOS and if it is running on a sparc architecture.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2001 Apache Software
