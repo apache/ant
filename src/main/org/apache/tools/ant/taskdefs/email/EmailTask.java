@@ -75,7 +75,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author steve_l@iseran.com steve loughran
  * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
- * @author roxspring@yahoo.com Rob Oxspring
+ * @author roxspring@imapmail.org Rob Oxspring
  * @since Ant 1.5
  * @ant.task name="mail" category="network"
  */
@@ -445,6 +445,7 @@ public class EmailTask
             // a valid message is required
             if (message == null) {
                 message = new Message();
+                message.setProject(getProject());
             }
 
             // an address to send from is required
