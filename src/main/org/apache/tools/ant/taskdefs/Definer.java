@@ -74,6 +74,8 @@ import java.io.IOException;
  *
  * @author Costin Manolache
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @since Ant 1.4
  */
 public abstract class Definer extends Task {
     private String name;
@@ -85,7 +87,8 @@ public abstract class Definer extends Task {
 
     public void setReverseLoader(boolean reverseLoader) {
         this.reverseLoader = reverseLoader;
-        log("The reverseloader attribute is DEPRECATED. It will be removed", Project.MSG_WARN);
+        log("The reverseloader attribute is DEPRECATED. It will be removed", 
+            Project.MSG_WARN);
     }
     
     public void setClasspath(Path classpath) {
@@ -123,6 +126,7 @@ public abstract class Definer extends Task {
 
         } else {
 
+            InputStream is=null;
             try {
                 if (name != null || value != null) {
                     String msg = "You must not specify name or value "
@@ -131,13 +135,13 @@ public abstract class Definer extends Task {
                 }
             
                 if (file != null && resource != null) {
-                    String msg = "You must not specify both, file and resource.";
+                    String msg = "You must not specify both, file and "
+                        + "resource.";
                     throw new BuildException(msg, location);
                 }
             
 
                 Properties props=new Properties();
-                InputStream is=null;
                 if( file != null ) {
                     log("Loading definitions from file " + file, 
                         Project.MSG_VERBOSE);
@@ -169,6 +173,12 @@ public abstract class Definer extends Task {
                 }
             } catch( IOException ex ) {
                 throw new BuildException(ex, location);
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {}
+                }
             }
         }
     }
@@ -196,7 +206,8 @@ public abstract class Definer extends Task {
         if (classpath != null) {
             al = new AntClassLoader(project, classpath, !reverseLoader);
         } else {
-            al = new AntClassLoader(project, Path.systemClasspath, !reverseLoader);
+            al = new AntClassLoader(project, Path.systemClasspath, 
+                                    !reverseLoader);
         }
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always
