@@ -41,7 +41,7 @@ if [ -d "bootstrap" ] ; then
   rm -r bootstrap
 fi
 
-CLASSPATH=lib/parser.jar:lib/jaxp.jar:${CLASSPATH}
+CLASSPATH=lib/parser.jar:lib/jaxp.jar:lib/optional/junit.jar:${CLASSPATH}
 
 TOOLS=src/main/org/apache/tools
 CLASSDIR=classes

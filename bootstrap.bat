@@ -21,7 +21,7 @@ echo ... Bootstrapping Ant Distribution
 if     "%OS%" == "Windows_NT" if exist bootstrap rmdir/s/q bootstrap
 if not "%OS%" == "Windows_NT" if exist bootstrap deltree/y bootstrap
 
-SET LOCALCLASSPATH=lib\parser.jar;lib\jaxp.jar
+SET LOCALCLASSPATH=lib\parser.jar;lib\jaxp.jar;lib\optional\junit.jar
 
 if exist %JAVA_HOME%\lib\tools.jar call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist %JAVA_HOME%\lib\classes.zip call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
