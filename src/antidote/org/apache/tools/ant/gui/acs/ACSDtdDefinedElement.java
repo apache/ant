@@ -173,6 +173,13 @@ implements ACSInfoProvider {
 
         // Find the DtdElement
         String name = getTagName();
+        
+        // Are we the project element?
+        boolean isProject = false;
+        if (name.equals("project")) {
+            isProject = true;
+        }
+        
         ACSDocumentType.DtdElement e =
             docType.findElement(name);
 
@@ -181,13 +188,28 @@ implements ACSInfoProvider {
             // sub-elements) to create the menu.
             String[] temp = e.getContentModel();
             int size = (temp.length > 5) ? 5 : temp.length;
-            menuString = new String[size+2];
+
+            // The project doesn't need a delete menu
+            if (isProject) {
+                menuString = new String[size+1];
+            } else {
+                menuString = new String[size+2];
+            }
             System.arraycopy(temp, 0, menuString, 0, size);
             
+        } else {
+            // This is for elements not in the DTD
+            menuString = new String[2];
+        }
+        
+        if (isProject) {
+            menuString[menuString.length-1] = "newElement";
+        } else {
             // Add the delete and generic create commands
             menuString[menuString.length-1] = "deleteElement";
             menuString[menuString.length-2] = "newElement";
         }
+        
         return menuString;
     }
     
