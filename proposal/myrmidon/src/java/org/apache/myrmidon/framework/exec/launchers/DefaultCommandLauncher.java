@@ -85,6 +85,12 @@ public class DefaultCommandLauncher
         }
     }
 
+    /**
+     * Get the native environment according to proper rules.
+     * Return null if no environment specified, return environment combined
+     * with native environment if environment data is additive else just return
+     * converted environment data.
+     */
     private String[] getEnvironmentSpec( final ExecMetaData metaData )
         throws ExecException, IOException
     {
@@ -98,8 +104,8 @@ public class DefaultCommandLauncher
             if( metaData.isEnvironmentAdditive() )
             {
                 final Properties newEnvironment = new Properties();
-                newEnvironment.putAll( environment );
                 newEnvironment.putAll( Environment.getNativeEnvironment() );
+                newEnvironment.putAll( environment );
                 return ExecUtil.toNativeEnvironment( newEnvironment );
             }
             else
