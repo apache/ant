@@ -319,6 +319,10 @@ public class Project {
         taskClassDefinitions.put(taskName, taskClass);
     }
 
+    public Hashtable getTaskDefinitions() {
+        return taskClassDefinitions;
+    }
+
     /**
      * This call expects to add a <em>new</em> Target.
      * @param target is the Target to be added to the current

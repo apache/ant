@@ -106,6 +106,14 @@ public class Ant extends Task {
 
         p1.init();
 
+        Hashtable taskdefs = project.getTaskDefinitions();
+        Enumeration et = taskdefs.keys();
+        while (et.hasMoreElements()) {
+            String taskName = (String) et.nextElement();
+            Class taskClass = (Class) taskdefs.get(taskName);
+            p1.addTaskDefinition(taskName, taskClass);
+        }
+
         // set user-define properties
         Hashtable prop1 = project.getProperties();
         Enumeration e = prop1.keys();
