@@ -23,7 +23,7 @@ import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.manifest.Manifest;
 import org.apache.aut.manifest.ManifestException;
-import org.apache.tools.ant.taskdefs.manifest.ManifestUtil;
+import org.apache.aut.manifest.ManifestUtil;
 import org.apache.tools.ant.types.FileScanner;
 
 /**

@@ -19,6 +19,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.manifest.Attribute;
 import org.apache.aut.manifest.ManifestException;
+import org.apache.aut.manifest.ManifestUtil;
 
 /**
  * Class to manage Manifest information

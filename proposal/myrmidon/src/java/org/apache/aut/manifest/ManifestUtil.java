@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.manifest;
+package org.apache.aut.manifest;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.BufferedReader;
 import java.util.jar.Attributes;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.manifest.Attribute;
-import org.apache.aut.manifest.ManifestException;
+import org.apache.tools.ant.taskdefs.manifest.Manifest;
+import org.apache.tools.ant.taskdefs.manifest.Section;
 
 /**
  * Utility methods for manifest stuff.

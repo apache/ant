@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.aut.manifest.Attribute;
 import org.apache.aut.manifest.ManifestException;
+import org.apache.aut.manifest.ManifestUtil;
 
 /**
  * Class to represent an individual section in the Manifest. A section
