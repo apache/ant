@@ -282,6 +282,9 @@ public class Jar extends Zip {
                     return false;
                 }
                 Manifest currentManifest = new Manifest(theZipFile.getInputStream(entry));
+                if (manifest == null) {
+                    manifest = getDefaultManifest();
+                }
                 if (!currentManifest.equals(manifest)) {
                     return false;
                 }
