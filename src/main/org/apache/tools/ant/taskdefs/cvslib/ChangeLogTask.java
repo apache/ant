@@ -68,8 +68,10 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * Change log task.
@@ -125,6 +127,13 @@ public class ChangeLogTask
      * The latest date at which to stop processing entrys.
      */
     private Date m_stop;
+
+    /**
+     * Filesets containting list of files against which the cvs log will be
+     * performed. If empty then all files will in the working directory will
+     * be checked.
+     */
+    private final Vector m_filesets = new Vector();
 
     /**
      * Set the base dir for cvs.
@@ -190,6 +199,16 @@ public class ChangeLogTask
     }
 
     /**
+     * Adds a set of files about which cvs logs will be generated.
+     *
+     * @param fileSet a set of files about which cvs logs will be generated.
+     */
+    public void addFileset( final FileSet fileSet )
+    {
+        m_filesets.addElement( fileSet );
+    }
+
+    /**
      * Execute task
      */
     public void execute() throws BuildException
@@ -219,6 +238,23 @@ public class ChangeLogTask
             // We want something of the form: -d ">=YYYY-MM-dd"
             final String dateRange = "-d >=" + outputDate.format( m_start );
             command.createArgument().setValue( dateRange );
+        }
+
+
+        // Check if list of files to check has been specified
+        if( !m_filesets.isEmpty() )
+        {
+            final Enumeration e = m_filesets.elements();
+            while( e.hasMoreElements() )
+            {
+                final FileSet fileSet = (FileSet)e.nextElement();
+                final DirectoryScanner scanner = fileSet.getDirectoryScanner( project );
+                final String[] files = scanner.getIncludedFiles();
+                for( int i = 0; i < files.length; i++ )
+                {
+                    command.createArgument().setValue( files[ i ] );
+                }
+            }
         }
 
         final ChangeLogParser parser = new ChangeLogParser( userList );
