@@ -89,13 +89,6 @@ public class Chmod extends ExecuteOn {
         defaultSet.setDir(src);
     }
 
-    public void XsetSrc(File src) {
-        log("The src attribute is deprecated. " +
-            "Please use the file attribute.",
-            Project.MSG_WARN);
-        setFile(src);
-    }
-
     public void setPerm(String perm) {
         createArg().setValue(perm);
         havePerm = true;
@@ -120,13 +113,6 @@ public class Chmod extends ExecuteOn {
      */
     public PatternSet createPatternSet() {
         return defaultSet.createPatternSet();
-    }
-
-    /**
-     * add a reference to a set of patterns
-     */
-    public Reference createPatternSetRef() {
-        return defaultSet.createPatternSetRef();
     }
 
     /**
@@ -166,7 +152,7 @@ public class Chmod extends ExecuteOn {
                                      location);
         }
         
-        if (defaultSet.getDir() != null) {
+        if (defaultSet.getDir(project) != null) {
             addFileset(defaultSet);
         }
         super.checkConfiguration();

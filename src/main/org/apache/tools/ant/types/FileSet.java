@@ -60,6 +60,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
 import java.io.File;
+import java.util.Stack;
 import java.util.Vector;
 
 /**
@@ -72,7 +73,7 @@ import java.util.Vector;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
-public class FileSet {
+public class FileSet extends DataType {
     
     private PatternSet defaultPatterns = new PatternSet();
     private Vector additionalPatterns = new Vector();
@@ -84,7 +85,28 @@ public class FileSet {
         super();
     }
 
+    /**
+     * Makes this instance in effect a reference to another PatternSet
+     * instance.
+     *
+     * <p>You must not set another attribute or nest elements inside
+     * this element if you make it a reference.</p> 
+     */
+    public void setRefid(Reference r) throws BuildException {
+        if (dir != null || defaultPatterns.countPatterns() > 0) {
+            throw tooManyAttributes();
+        }
+        if (!additionalPatterns.isEmpty()) {
+            throw noChildrenAllowed();
+        }
+        super.setRefid(r);
+    }
+
     public void setDir(File dir) throws BuildException {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+
         /*
          * XXX cannot check as long as tasks get configured at parse time.
          *
@@ -100,26 +122,29 @@ public class FileSet {
         this.dir = dir;
     }
 
-    public File getDir() {
+    public File getDir(Project p) {
+        if (isReference()) {
+            return getRef(p).getDir(p);
+        }
         return dir;
     }
 
     public PatternSet createPatternSet() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         PatternSet patterns = new PatternSet();
         additionalPatterns.addElement(patterns);
         return patterns;
-    }
-
-    public Reference createPatternSetRef() {
-        Reference r = new Reference();
-        additionalPatterns.addElement(r);
-        return r;
     }
 
     /**
      * add a name entry on the include list
      */
     public PatternSet.NameEntry createInclude() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         return defaultPatterns.createInclude();
     }
     
@@ -127,6 +152,9 @@ public class FileSet {
      * add a name entry on the exclude list
      */
     public PatternSet.NameEntry createExclude() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         return defaultPatterns.createExclude();
     }
 
@@ -137,6 +165,10 @@ public class FileSet {
      * @param includes the string containing the include patterns
      */
     public void setIncludes(String includes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+
         defaultPatterns.setIncludes(includes);
     }
 
@@ -147,6 +179,10 @@ public class FileSet {
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes(String excludes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+
         defaultPatterns.setExcludes(excludes);
     }
 
@@ -156,6 +192,10 @@ public class FileSet {
      * @param incl The file to fetch the include patterns from.  
      */
      public void setIncludesfile(File incl) throws BuildException {
+         if (isReference()) {
+             throw tooManyAttributes();
+         }
+
          defaultPatterns.setIncludesfile(incl);
      }
 
@@ -165,6 +205,10 @@ public class FileSet {
      * @param excl The file to fetch the exclude patterns from.  
      */
      public void setExcludesfile(File excl) throws BuildException {
+         if (isReference()) {
+             throw tooManyAttributes();
+         }
+
          defaultPatterns.setExcludesfile(excl);
      }
 
@@ -176,6 +220,10 @@ public class FileSet {
      *                           shouldn't be used.
      */
     public void setDefaultexcludes(boolean useDefaultExcludes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+
         this.useDefaultExcludes = useDefaultExcludes;
     }
 
@@ -183,6 +231,10 @@ public class FileSet {
      * Returns the directory scanner needed to access the files to process.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
+        if (isReference()) {
+            return getRef(p).getDirectoryScanner(p);
+        }
+
         if (dir == null) {
             throw new BuildException("No directory specified for fileset.");
         }
@@ -213,22 +265,32 @@ public class FileSet {
 
         for (int i=0; i<additionalPatterns.size(); i++) {
             Object o = additionalPatterns.elementAt(i);
-            if (o instanceof PatternSet) {
-                defaultPatterns.append((PatternSet) o);
-            } else {
-                Reference r = (Reference) o;
-                o = r.getReferencedObject(p);
-                if (o instanceof PatternSet) {
-                    defaultPatterns.append((PatternSet) o);
-                } else {
-                    String msg = r.getRefId()+" doesn\'t denote a patternset";
-                    throw new BuildException(msg);
-                }
-            }
+            defaultPatterns.append((PatternSet) o, p);
         }
         
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
         if (useDefaultExcludes) ds.addDefaultExcludes();
     }
+
+    /**
+     * Performs the check for circular references and returns the
+     * referenced FileSet.  
+     */
+    private FileSet getRef(Project p) {
+        if (!checked) {
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, p);
+        }
+        
+        Object o = ref.getReferencedObject(p);
+        if (!(o instanceof FileSet)) {
+            String msg = ref.getRefId()+" doesn\'t denote a fileset";
+            throw new BuildException(msg);
+        } else {
+            return (FileSet) o;
+        }
+    }
+
 }

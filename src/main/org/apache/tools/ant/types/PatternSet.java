@@ -59,6 +59,7 @@ import org.apache.tools.ant.BuildException;
 
 import java.io.*;
 import java.util.Enumeration;
+import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -74,7 +75,7 @@ import java.util.Vector;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class PatternSet {
+public class PatternSet extends DataType {
     private Vector includeList = new Vector();
     private Vector excludeList = new Vector();
     
@@ -123,9 +124,26 @@ public class PatternSet {
     }
 
     /**
+     * Makes this instance in effect a reference to another PatternSet
+     * instance.
+     *
+     * <p>You must not set another attribute or nest elements inside
+     * this element if you make it a reference.</p> 
+     */
+    public void setRefid(Reference r) throws BuildException {
+        if (!includeList.isEmpty() || !excludeList.isEmpty()) {
+            throw tooManyAttributes();
+        }
+        super.setRefid(r);
+    }
+
+    /**
      * add a name entry on the include list
      */
     public NameEntry createInclude() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         return addPatternToList(includeList);
     }
     
@@ -133,6 +151,9 @@ public class PatternSet {
      * add a name entry on the exclude list
      */
     public NameEntry createExclude() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
         return addPatternToList(excludeList);
     }
 
@@ -143,6 +164,9 @@ public class PatternSet {
      * @param includes the string containing the include patterns
      */
     public void setIncludes(String includes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
         if (includes != null && includes.length() > 0) {
             StringTokenizer tok = new StringTokenizer(includes, ", ", false);
             while (tok.hasMoreTokens()) {
@@ -158,6 +182,9 @@ public class PatternSet {
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes(String excludes) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
         if (excludes != null && excludes.length() > 0) {
             StringTokenizer tok = new StringTokenizer(excludes, ", ", false);
             while (tok.hasMoreTokens()) {
@@ -181,6 +208,9 @@ public class PatternSet {
      * @param incl The file to fetch the include patterns from.  
      */
      public void setIncludesfile(File incl) throws BuildException {
+         if (isReference()) {
+             throw tooManyAttributes();
+         }
          if (!incl.exists()) {
              throw new BuildException("Includesfile "+incl.getAbsolutePath()
                                       +" not found.");
@@ -195,6 +225,9 @@ public class PatternSet {
      * @param excl The file to fetch the exclude patterns from.  
      */
      public void setExcludesfile(File excl) throws BuildException {
+         if (isReference()) {
+             throw tooManyAttributes();
+         }
          if (!excl.exists()) {
              throw new BuildException("Excludesfile "+excl.getAbsolutePath()
                                       +" not found.");
@@ -234,12 +267,23 @@ public class PatternSet {
     /**
      * Adds the patterns of the other instance to this set.
      */
-    public void append(PatternSet other) {
-        for (int i=0; i<other.includeList.size(); i++) {
-            includeList.addElement(other.includeList.elementAt(i));
+    public void append(PatternSet other, Project p) {
+        if (isReference()) {
+            throw new BuildException("Cannot append to a reference");
         }
-        for (int i=0; i<other.excludeList.size(); i++) {
-            excludeList.addElement(other.excludeList.elementAt(i));
+
+        String[] incl = other.getIncludePatterns(p);
+        if (incl != null) {
+            for (int i=0; i<incl.length; i++) {
+                createInclude().setName(incl[i]);
+            }
+        }
+        
+        String[] excl = other.getExcludePatterns(p);
+        if (excl != null) {
+            for (int i=0; i<excl.length; i++) {
+                createExclude().setName(excl[i]);
+            }
         }
     }
 
@@ -247,14 +291,49 @@ public class PatternSet {
      * Returns the filtered include patterns.
      */
     public String[] getIncludePatterns(Project p) {
-        return makeArray(includeList, p);
+        if (isReference()) {
+            return getRef(p).getIncludePatterns(p);
+        } else {
+            return makeArray(includeList, p);
+        }
     }
 
     /**
      * Returns the filtered include patterns.
      */
     public String[] getExcludePatterns(Project p) {
-        return makeArray(excludeList, p);
+        if (isReference()) {
+            return getRef(p).getExcludePatterns(p);
+        } else {
+            return makeArray(excludeList, p);
+        }
+    }
+
+    /**
+     * helper for FileSet.
+     */
+    int countPatterns() {
+        return includeList.size() + excludeList.size();
+    }
+
+    /**
+     * Performs the check for circular references and returns the
+     * referenced PatternSet.  
+     */
+    private PatternSet getRef(Project p) {
+        if (!checked) {
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, p);
+        }
+        
+        Object o = ref.getReferencedObject(p);
+        if (!(o instanceof PatternSet)) {
+            String msg = ref.getRefId()+" doesn\'t denote a patternset";
+            throw new BuildException(msg);
+        } else {
+            return (PatternSet) o;
+        }
     }
 
     /**

@@ -87,10 +87,6 @@ public final class BatchTest {
         filesets.addElement(fs);
     }
 
-    public void addFileSetRef(Reference r) {
-        filesets.addElement(r);
-    }
-
     public void addFormatter(FormatterElement elem) {
         formatters.addElement(elem);
     }
@@ -122,20 +118,7 @@ public final class BatchTest {
         private FileList(){
             Vector v = new Vector();
             for (int j=0; j<filesets.size(); j++) {
-                Object o = filesets.elementAt(j);
-                FileSet fs = null;
-                if (o instanceof FileSet) {
-                    fs = (FileSet) o;
-                } else {
-                    Reference r = (Reference) o;
-                    o = r.getReferencedObject(project);
-                    if (o instanceof FileSet) {
-                        fs = (FileSet) o;
-                    } else {
-                        String msg = r.getRefId()+" doesn\'t denote a fileset";
-                        throw new BuildException(msg);
-                    }
-                }
+                FileSet fs = (FileSet) filesets.elementAt(j);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 ds.scan();
                 String[] f = ds.getIncludedFiles();

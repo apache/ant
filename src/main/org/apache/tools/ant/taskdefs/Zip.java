@@ -113,13 +113,6 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Adds a reference to a set of files (nested filesetref element).
-     */
-    public void addFilesetref(Reference ref) {
-        filesets.addElement(ref);
-    }
-
-    /**
      * Sets behavior of the task when no files match.
      * Possible values are: <code>fail</code> (throw an exception
      * and halt the build); <code>skip</code> (do not create
@@ -144,19 +137,7 @@ public class Zip extends MatchingTask {
         if (baseDir != null)
             dss.addElement(getDirectoryScanner(baseDir));
         for (int i=0; i<filesets.size(); i++) {
-            Object o = filesets.elementAt(i);
-            FileSet fs;
-            if (o instanceof FileSet) {
-                fs = (FileSet) o;
-            } else {
-                Reference r = (Reference) o;
-                o = r.getReferencedObject(project);
-                if (o instanceof FileSet) {
-                    fs = (FileSet) o;
-                } else {
-                    throw new BuildException(r.getRefId() + " does not denote a fileset", location);
-                }
-            }
+            FileSet fs = (FileSet) filesets.elementAt(i);
             dss.addElement (fs.getDirectoryScanner(project));
         }
         FileScanner[] scanners = new FileScanner[dss.size()];

@@ -63,9 +63,9 @@ import junit.framework.AssertionFailedError;
 import java.io.File;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.Path
+ * JUnit 3 testcases for org.apache.tools.ant.types.Path
  *
- * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 
 public class PathTest extends TestCase {
@@ -270,15 +270,6 @@ public class PathTest extends TestCase {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
-
-        try {
-            p.addFilesetRef(new Reference("dummy2"));
-            fail("Can add nested FileSetRef in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
-
     }
 
     public void testCircularReferenceCheck() {
@@ -289,7 +280,7 @@ public class PathTest extends TestCase {
             p.list();
             fail("Can make Path a Reference to itself.");
         } catch (BuildException be) {
-            assertEquals("This path contains a circular reference.",
+            assertEquals("This data type contains a circular reference.",
                          be.getMessage());
         }
 
@@ -305,7 +296,7 @@ public class PathTest extends TestCase {
             p1.list();
             fail("Can make circular reference.");
         } catch (BuildException be) {
-            assertEquals("This path contains a circular reference.",
+            assertEquals("This data type contains a circular reference.",
                          be.getMessage());
         }
 
@@ -318,7 +309,7 @@ public class PathTest extends TestCase {
         project.addReference("dummy3", p3);
         p3.setLocation(new File("/a"));
         String[] l = p1.list();
-        assertEquals("One element burried deep inside a nested path structure",
+        assertEquals("One element buried deep inside a nested path structure",
                      1, l.length);
         if (isUnixStyle) {
             assertEquals("/a", l[0]);

@@ -74,6 +74,8 @@ public class AllJUnitTests extends TestCase {
         suite.addTest(new TestSuite(CommandlineJavaTest.class));
         suite.addTest(new TestSuite(EnumeratedAttributeTest.class));
         suite.addTest(new TestSuite(PathTest.class));
+        suite.addTest(new TestSuite(PatternSetTest.class));
+        suite.addTest(new TestSuite(FileSetTest.class));
         return suite;
    }
 }

@@ -25,7 +25,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/08/10</p>
+<p>Version 1.2 - 2000/09/07</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -444,8 +444,7 @@ location attributes of its own, so</p>
     &lt;classpath path=&quot;${classpath}&quot; /&gt;
 </pre>
 <p>In addition, <a href="#fileset">FileSet</a>s can be specified via
-nested <code>&lt;fileset&gt;</code> and
-<code>&lt;filesetref&gt;</code> elements. The order in which the files
+nested <code>&lt;fileset&gt;</code> elements. The order in which the files
 building up FileSet are added to the PATH like structure is not
 defined.</p>
 <pre>
@@ -746,7 +745,7 @@ directory based task that constitutes an implicit FileSet. In addition
 <p>Builds a set of patterns, that matches all <code>.java</code> files
 that do not contain the text <code>Test</code> in their name. This set
 can be <a href="#references">referred</a> to via
-<code>&lt;patternsetref refid=&quot;non.test.sources&quot;
+<code>&lt;patternset refid=&quot;non.test.sources&quot;
 /&gt;</code> by tasks that support this feature or by FileSets.</p>
 <h3><a name="fileset">FileSets</a></h3>
 <p>FileSets are groups of files. These files can be found in a
@@ -756,7 +755,7 @@ href="#patternset">PatternSets</a>. FileSets can appear inside task
 that support this feature or at the same level as <code>target</code>
 - i.e. as children of <code>project</code>.</p>
 <p>PatternSets can be specified as nested
-<code>&lt;patternset&gt;</code> or <code>&lt;patternsetref&gt;</code>
+<code>&lt;patternset&gt;</code> 
 elements. In addition FileSet holds an implicit PatternSet and
 supports the nested <code>&lt;include&gt;</code> and
 <code>&lt;exclude&gt;</code> elements of PatternSet directly as well
@@ -817,7 +816,7 @@ source files and don't have the text <code>Test</code> in their
 name.</p>
 <blockquote><pre>
 &lt;fileset dir=&quot;${client.src}&quot; &gt;
-  &lt;patternsetref refid=&quot;non.test.sources&quot; /&gt;
+  &lt;patternset refid=&quot;non.test.sources&quot; /&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
 <p>Groups all files in directory <code>${client.src}</code> using the
@@ -998,8 +997,7 @@ write patterns.</p>
 <p>This task holds an implicit <a href="#fileset">FileSet</a> and
 supports all of FileSet's attributes and nested elements
 directly. More FileSets can be specified using nested
-<code>&lt;fileset&gt;</code> or <code>&lt;filesetref&gt;</code>
-elements.</p>
+<code>&lt;fileset&gt;</code> elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1088,7 +1086,7 @@ readable and executable for anyone on a UNIX system.</p>
   &lt;fileset dir=&quot;shared/sources1&quot; &gt;
     &lt;exclude name=&quot;**/trial/**&quot; /&gt;
   &lt;/fileset&gt;
-  &lt;filesetref refid=&quot;other.shared.sources&quot; /&gt;
+  &lt;fileset refid=&quot;other.shared.sources&quot; /&gt;
 &lt;/chmod&gt;
 </pre>
 </blockquote>
@@ -1113,9 +1111,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>src</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1326,9 +1323,8 @@ href="#directorybasedtasks">directory based tasks</a>, on how the
 inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code> as well as the
-nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1558,8 +1554,7 @@ the command is only executed when Ant is run on one of the specified operating
 systems.</p>
 <p>The files and/or directories of a number of <a
 href="#fileset">FileSet</a>s are passed as arguments to the system
-command. At least one nested <code>&lt;fileset&gt;</code> or
-<code>&lt;filesetref&gt;</code> is required.</p>
+command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1619,11 +1614,10 @@ command. At least one nested <code>&lt;fileset&gt;</code> or
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>fileset and filesetref</h4>
+<h4>fileset</h4>
 <p>You can use any number of nested <code>&lt;fileset&gt;</code>
 elements to define the files for this task and refer to
-<code>&lt;fileset&gt;</code>s defined elsewhere via
-<code>&lt;filesetref&gt;</code> elements.</p>
+<code>&lt;fileset&gt;</code>s defined elsewhere.</p>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
@@ -1644,7 +1638,7 @@ description in the section about <a href="#env">exec</a></p>
       &lt;exclude name=&quot;**/*.txt&quot; /&gt;
     &lt;/patternset&gt;
   &lt;/fileset&gt;
-  &lt;filesetref refid=&quot;other.files&quot; /&gt;
+  &lt;fileset refid=&quot;other.files&quot; /&gt;
 &lt;/execon&gt;
 </pre></blockquote>
 <p>invokes <code>ls -l</code>, adding the absolute filenames of all
@@ -1698,9 +1692,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>srcdir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -2075,9 +2068,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <p>You can also use nested file sets for more flexibility, and specify
 multiple ones to merge together different trees of files into one JAR.
 See the <a href="#zip">Zip</a> task for more details and examples.</p>
@@ -2424,9 +2416,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>srcdir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h4>src, classpath, bootclasspath and extdirs</h4>
 <p><code>Javac</code>'s <em>srcdir</em>, <em>classpath</em>,
 <em>bootclasspath</em> and <em>extdirs</em> attributes are <a
@@ -3161,9 +3152,8 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
 <h3>Parameters specified as nested elements</h3>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code> as well as the
-nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <p>If either the text you want to replace or the replacement text
 cross line boundaries, you can use nested elements to specify
 them.</p>
@@ -3206,9 +3196,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>base</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3399,9 +3388,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <p>Note that this task does not perform compression. You might want to use the <a href="#gzip">GZip</a>
 task to come up with a .tar.gz package.</p>
 <h3>Parameters</h3>
@@ -3576,9 +3564,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3734,16 +3721,14 @@ inclusion/exclusion of files works, and how to write patterns.
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <p>Or, you may place within it nested file sets, or references to file sets.
 In this case <code>basedir</code> is optional; the implicit file set is <em>only used</em>
 if <code>basedir</code> is set. You may use any mixture of the implicit file set
 (with <code>basedir</code> set, and optional attributes like <code>includes</code>
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
-<code>&lt;fileset&gt;</code> elements; and nested <code>&lt;filesetref&gt;</code>
-elements; so long as at least one fileset total is specified. The ZIP file will
+<code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
 only reflect the relative paths of files <em>within</em> each fileset.</p>
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
@@ -3864,9 +3849,8 @@ write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>basedir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -4193,9 +4177,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
 <p>This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>srcdir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -4443,9 +4426,8 @@ inclusion/exclusion of files works, and how to write patterns.
 This task forms an implicit <a href="#fileset">FileSet</a> and
 supports all attributes of <code>&lt;fileset&gt;</code>
 (<code>dir</code> becomes <code>srcDir</code>) as well as the nested
-<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
-<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
-elements.</p>
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+<code>&lt;patternset&gt;</code> elements.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

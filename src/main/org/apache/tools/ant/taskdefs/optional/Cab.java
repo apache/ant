@@ -134,13 +134,6 @@ public class Cab extends MatchingTask {
         filesets.addElement(set);
     }
 
-    /**
-     * Adds a reference to a set of files (nested filesetref element).
-     */
-    public void addFilesetref(Reference ref) {
-        filesets.addElement(ref);
-    }
-
     /*
      * I'm not fond of this pattern: "sub-method expected to throw
      * task-cancelling exceptions".  It feels too much like programming
@@ -290,35 +283,7 @@ public class Cab extends MatchingTask {
             // get files from filesets
             for (int i = 0; i < filesets.size(); i++)
             {
-                Object o = filesets.elementAt(i);
-                FileSet fs;
-                if (o instanceof FileSet)
-                {
-                    fs = (FileSet)o;
-                }
-                else if (o instanceof Reference)
-                {
-                    Reference r = (Reference)o;
-                    o = r.getReferencedObject(project);
-
-                    if (o instanceof FileSet)
-                    {
-                        fs = (FileSet)o;
-                    }
-                    else
-                    {
-                        throw new BuildException(
-                            r.getRefId() + " does not denote a fileset",
-                            location);
-                    }
-                }
-                else
-                {
-                    throw new BuildException(
-                        "nested element is not a FileSet or Reference",
-                        location);
-                }
-
+                FileSet fs = (FileSet) filesets.elementAt(i);
                 if (fs != null)
                 {
                     appendFiles(files, fs.getDirectoryScanner(project));

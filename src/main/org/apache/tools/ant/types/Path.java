@@ -95,15 +95,10 @@ import java.text.StringCharacterIterator;
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 
-public class Path implements Cloneable {
+public class Path extends DataType implements Cloneable {
 
     private Vector elements;
     private Project project;
-    private boolean isReference = false;
-    /**
-     * Are we sure we don't hold circular references?
-     */
-    private boolean checked = true;
 
     public static Path systemClasspath = 
         new Path(null, System.getProperty("java.class.path"));
@@ -148,7 +143,7 @@ public class Path implements Cloneable {
      * <code>null</code> nor empty.
      */
     public void setLocation(File location) throws BuildException {
-        if (isReference) {
+        if (isReference()) {
             throw tooManyAttributes();
         }
         createPathElement().setLocation(location);
@@ -160,32 +155,31 @@ public class Path implements Cloneable {
      * @param path the path definition.
      */
     public void setPath(String path) throws BuildException {
-        if (isReference) {
+        if (isReference()) {
             throw tooManyAttributes();
         }
         createPathElement().setPath(path);
     }
 
     /**
-     * Makes this instance in effect a reference too another Path instance.
+     * Makes this instance in effect a reference to another Path instance.
      *
      * <p>You must not set another attribute or nest elements inside
-     * this element if you make it a reference.  
+     * this element if you make it a reference.</p>
      */
     public void setRefid(Reference r) throws BuildException {
-        isReference = true;
         if (!elements.isEmpty()) {
             throw tooManyAttributes();
         }
         elements.addElement(r);
-        checked = false;
+        super.setRefid(r);
     }
 
     /**
      * Creates the nested <pathelement> element.
      */
     public PathElement createPathElement() throws BuildException {
-        if (isReference) {
+        if (isReference()) {
             throw noChildrenAllowed();
         }
         PathElement pe = new PathElement();
@@ -197,27 +191,18 @@ public class Path implements Cloneable {
      * Adds a nested <fileset> element.
      */
     public void addFileset(FileSet fs) throws BuildException {
-        if (isReference) {
+        if (isReference()) {
             throw noChildrenAllowed();
         }
         elements.addElement(fs);
-    }
-
-    /**
-     * Adds a nested <filesetref> element.
-     */
-    public void addFilesetRef(Reference r) throws BuildException {
-        if (isReference) {
-            throw noChildrenAllowed();
-        }
-        elements.addElement(r);
+        checked = false;
     }
 
     /**
      * Creates a nested <path> element.
      */
     public Path createPath() throws BuildException {
-        if (isReference) {
+        if (isReference()) {
             throw noChildrenAllowed();
         }
         Path p = new Path(project);
@@ -271,7 +256,7 @@ public class Path implements Cloneable {
             // make sure we don't have a circular reference here
             Stack stk = new Stack();
             stk.push(this);
-            bailOnCircularReference(stk);
+            dieOnCircularReference(stk, project);
         }
 
         Vector result = new Vector(2*elements.size());
@@ -280,9 +265,9 @@ public class Path implements Cloneable {
             if (o instanceof Reference) {
                 Reference r = (Reference) o;
                 o = r.getReferencedObject(project);
-                // we only support references to filesets and paths right now
-                if (!(o instanceof FileSet) && !(o instanceof Path)) {
-                    String msg = r.getRefId()+" doesn\'t denote a fileset or path";
+                // we only support references to paths right now
+                if (!(o instanceof Path)) {
+                    String msg = r.getRefId()+" doesn\'t denote a path";
                     throw new BuildException(msg);
                 }
             }
@@ -307,7 +292,7 @@ public class Path implements Cloneable {
                 FileSet fs = (FileSet) o;
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] s = ds.getIncludedFiles();
-                File dir = fs.getDir();
+                File dir = fs.getDir(project);
                 for (int j=0; j<s.length; j++) {
                     addUnlessPresent(result, 
                                      translateFile((new File(dir, s[j])).getAbsolutePath()));
@@ -378,6 +363,11 @@ public class Path implements Cloneable {
         return result.toString();
     }
 
+    /**
+     * Translates all occurrences of / or \ to correct separator of the
+     * current platform and returns whether it had to do any
+     * replacements.  
+     */
     protected static boolean translateFileSep(StringBuffer buffer, int pos) {
         if (buffer.charAt(pos) == '/' || buffer.charAt(pos) == '\\') {
             buffer.setCharAt(pos, File.separatorChar);
@@ -393,26 +383,39 @@ public class Path implements Cloneable {
         return list().length;
     }
 
+    /**
+     * Return a Path that holds the same elements as this instance.
+     */
     public Object clone() {
         Path p = new Path(project);
         p.append(this);
         return p;
     }
 
-    protected void bailOnCircularReference(Stack stk) throws BuildException {
+    /**
+     * Overrides the version of DataType to recurse on all DataType
+     * child elements that may have been added.  
+     */
+    protected void dieOnCircularReference(Stack stk, Project p) 
+        throws BuildException {
+
+        if (checked) {
+            return;
+        }
+
         Enumeration enum = elements.elements();
         while (enum.hasMoreElements()) {
             Object o = enum.nextElement();
             if (o instanceof Reference) {
-                o = ((Reference) o).getReferencedObject(project);
+                o = ((Reference) o).getReferencedObject(p);
             }
 
-            if (o instanceof Path) {
+            if (o instanceof DataType) {
                 if (stk.contains(o)) {
                     throw circularReference();
                 } else {
                     stk.push(o);
-                    ((Path) o).bailOnCircularReference(stk);
+                    ((DataType) o).dieOnCircularReference(stk, p);
                     stk.pop();
                 }
             }
@@ -420,6 +423,11 @@ public class Path implements Cloneable {
         checked = true;
     }
 
+    /**
+     * Resolve a filename with Project's help - if we know one that is.
+     *
+     * <p>Assume the filename is absolute if project is null.</p>
+     */
     private static String resolveFile(Project project, String relativeName) {
         if (project != null) {
             return project.resolveFile(relativeName).getAbsolutePath();
@@ -427,21 +435,13 @@ public class Path implements Cloneable {
         return relativeName;
     }
 
+    /**
+     * Adds a String to the Vector if it isn't already included.
+     */
     private static void addUnlessPresent(Vector v, String s) {
         if (v.indexOf(s) == -1) {
             v.addElement(s);
         }
     }
 
-    private BuildException tooManyAttributes() {
-        return new BuildException("You must not specify more than one attribute when using refid");
-    }
-
-    private BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested elements when using refid");
-    }
-
-    private BuildException circularReference() {
-        return new BuildException("This path contains a circular reference.");
-    }
 }
