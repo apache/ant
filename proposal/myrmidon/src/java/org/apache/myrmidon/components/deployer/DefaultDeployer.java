@@ -111,7 +111,7 @@ public class DefaultDeployer
             final ClassLoader classLoader = m_classLoaderManager.createClassLoader( file );
             return createDeployment( classLoader, file.toURL() );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
             final String message = REZ.getString( "deploy-from-file.error", file );
             throw new DeploymentException( message, e );
