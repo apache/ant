@@ -69,9 +69,9 @@ import javax.media.jai.PlanarImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * A MatchingTask which relies on <A HREF="http://java.sun.com/products/java-media/jai">JAI (Java Advanced Imaging)</A>
@@ -98,7 +98,7 @@ public class Image extends MatchingTask {
     protected File srcDir = null;
     protected File destDir = null;
 
-   /**
+    /**
      * Adds a set of files to be deleted.
      */
     public void addFileset(FileSet set) {
@@ -109,9 +109,9 @@ public class Image extends MatchingTask {
      * If false, note errors to the output but keep going.
      * @param failonerror true or false
      */
-     public void setFailOnError(boolean failonerror) {
-         this.failonerror = failonerror;
-     }
+    public void setFailOnError(boolean failonerror) {
+        this.failonerror = failonerror;
+    }
 
     /**
      * Set the source dir to find the image files.
@@ -131,14 +131,14 @@ public class Image extends MatchingTask {
      *  Sets whether or not to overwrite a file if there is a naming conflict.
      */
     public void setOverwrite(boolean overwrite) {
-            this.overwrite = overwrite;
+        this.overwrite = overwrite;
     }
 
     /**
      *  Enables Garbage Collection after each image processed.  Defaults to false.
      */
     public void setGc(boolean gc) {
-            garbage_collect = gc;
+        garbage_collect = gc;
     }
 
 
@@ -146,8 +146,8 @@ public class Image extends MatchingTask {
      * Sets the destination directory for manipulated images.
      * @param destination The destination directory
      */
-    public void setDestDir(String destination) {
-        destDir = new File(destination);
+    public void setDestDir(File destDir) {
+        this.destDir = destDir;
     }
 
     /**
@@ -213,8 +213,8 @@ public class Image extends MatchingTask {
                 str_encoding = "TIFF";
             }
 
-            if (destDir == null){
-              destDir = srcDir;
+            if (destDir == null) {
+                destDir = srcDir;
             }
 
             File new_file = new File(destDir.getAbsolutePath() + File.separator + file.getName());
@@ -231,19 +231,17 @@ public class Image extends MatchingTask {
 
 
         } catch (IOException err) {
-           if (!failonerror) {
-             log("Error processing file:  " + err);
-           } else {
-             throw new BuildException(err);
-           }
-        }
-
-        catch (java.lang.RuntimeException rerr) {
-           if (!failonerror) {
-             log("Error processing file:  " + rerr);
-           } else {
-             throw new BuildException(rerr);
-           }
+            if (!failonerror) {
+                log("Error processing file:  " + err);
+            } else {
+                throw new BuildException(err);
+            }
+        } catch (java.lang.RuntimeException rerr) {
+            if (!failonerror) {
+                log("Error processing file:  " + rerr);
+            } else {
+                throw new BuildException(rerr);
+            }
         }
 
     }
@@ -251,58 +249,58 @@ public class Image extends MatchingTask {
     /**
      * Executes the Task
      */
-    public void execute() {
+    public void execute() throws BuildException {
 
         validateAttributes();
 
         try {
             DirectoryScanner ds = null;
-            String [] files =null;
+            String[] files = null;
             ArrayList filesList = new ArrayList();
 
 
             // deal with specified srcDir
-            if (srcDir != null){
-              ds = super.getDirectoryScanner(srcDir);
+            if (srcDir != null) {
+                ds = super.getDirectoryScanner(srcDir);
 
-              files = ds.getIncludedFiles();
-              for (int i = 0; i < files.length; i++){
-                filesList.add(new File(srcDir.getAbsolutePath() + File.separator + files[i]));
-              }
+                files = ds.getIncludedFiles();
+                for (int i = 0; i < files.length; i++) {
+                    filesList.add(new File(srcDir.getAbsolutePath() + File.separator + files[i]));
+                }
             }
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 ds = fs.getDirectoryScanner(getProject());
-                files =ds.getIncludedFiles();
+                files = ds.getIncludedFiles();
                 File fromDir = fs.getDir(getProject());
-                for (int j = 0; j < files.length; j++){
-                  filesList.add(new File(fromDir.getAbsolutePath() + File.separator + files[j]));
+                for (int j = 0; j < files.length; j++) {
+                    filesList.add(new File(fromDir.getAbsolutePath() + File.separator + files[j]));
                 }
             }
 
-            if (!overwrite){
-             // remove any files that shouldn't be overwritten.
-             ArrayList filesToRemove = new ArrayList();
-             for(Iterator i = filesList.iterator();i.hasNext();){
-               File f = (File)i.next();
-               File new_file = new File(destDir.getAbsolutePath() + File.separator + f.getName());
-               if (new_file.exists()){
-                 filesToRemove.add(f);
-               }
-             }
-             filesList.removeAll(filesToRemove);
+            if (!overwrite) {
+                // remove any files that shouldn't be overwritten.
+                ArrayList filesToRemove = new ArrayList();
+                for (Iterator i = filesList.iterator(); i.hasNext();) {
+                    File f = (File) i.next();
+                    File new_file = new File(destDir.getAbsolutePath() + File.separator + f.getName());
+                    if (new_file.exists()) {
+                        filesToRemove.add(f);
+                    }
+                }
+                filesList.removeAll(filesToRemove);
             }
 
 
             // iterator through all the files and process them.
-            for (Iterator i = filesList.iterator();i.hasNext();){
-              File file = (File)i.next();
+            for (Iterator i = filesList.iterator(); i.hasNext();) {
+                File file = (File) i.next();
 
-              processFile(file);
-              if (garbage_collect) {
-                  System.gc();
-              }
+                processFile(file);
+                if (garbage_collect) {
+                    System.gc();
+                }
             }
 
 
@@ -321,7 +319,7 @@ public class Image extends MatchingTask {
     protected void validateAttributes() throws BuildException {
         if (srcDir == null && filesets.size() == 0) {
             throw new BuildException("Specify at least one source "
-                                     + "- a srcDir or a fileset.");
+                    + "- a srcDir or a fileset.");
         }
 
         if (srcDir == null && destDir == null) {
