@@ -92,6 +92,9 @@ public class Jar extends Zip {
     /** The index file name. */
     private static final String INDEX_NAME = "META-INF/INDEX.LIST";
 
+    /** The mainfest file name. */
+    private static final String MANIFEST_NAME = "META-INF/MANIFEST.MF";
+
     /** merged manifests added through addConfiguredManifest */
     private Manifest configuredManifest;
     /** shadow of the above if upToDate check alters the value */
@@ -163,35 +166,6 @@ public class Jar extends Zip {
      */
     public void setDestFile(File jarFile) {
         super.setDestFile(jarFile);
-        if (jarFile.exists()) {
-            ZipFile zf = null;
-            try {
-                zf = new ZipFile(jarFile);
-
-                // must not use getEntry as "well behaving" applications
-                // must accept the manifest in any capitalization
-                Enumeration enum = zf.entries();
-                while (enum.hasMoreElements()) {
-                    ZipEntry ze = (ZipEntry) enum.nextElement();
-                    if (ze.getName().equalsIgnoreCase("META-INF/MANIFEST.MF")) {
-                        originalManifest = 
-                            getManifest(new InputStreamReader(zf
-                                                              .getInputStream(ze)));
-                    }
-                }
-            } catch (Throwable t) {
-                log("error while reading original manifest: " + t.getMessage(),
-                    Project.MSG_WARN);
-            } finally {
-                if (zf != null) {
-                    try {
-                        zf.close();
-                    } catch (IOException e) {
-                        // XXX - log an error?  throw an exception?
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -258,6 +232,33 @@ public class Jar extends Zip {
         return newManifest;
     }
 
+    private Manifest getManifestFromJar(File jarFile) throws IOException {
+        ZipFile zf = null;
+        try {
+            zf = new ZipFile(jarFile);
+            
+            // must not use getEntry as "well behaving" applications
+            // must accept the manifest in any capitalization
+            Enumeration enum = zf.entries();
+            while (enum.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) enum.nextElement();
+                if (ze.getName().equalsIgnoreCase(MANIFEST_NAME)) {
+                    return getManifest(new InputStreamReader(zf
+                                                             .getInputStream(ze)));
+                }
+            }
+            return null;
+        } finally {
+            if (zf != null) {
+                try {
+                    zf.close();
+                } catch (IOException e) {
+                    // XXX - log an error?  throw an exception?
+                }
+            }
+        }
+    }
+
     private Manifest getManifest(Reader r) {
 
         Manifest newManifest = null;
@@ -321,10 +322,6 @@ public class Jar extends Zip {
     private Manifest createManifest()
         throws BuildException {
         try {
-            if (!isInUpdateMode()) {
-                originalManifest = null;
-            }
-
             Manifest finalManifest = Manifest.getDefaultManifest();
 
             if (manifest == null) {
@@ -343,7 +340,9 @@ public class Jar extends Zip {
              * merge with null argument is a no-op
              */
 
-            finalManifest.merge(originalManifest);
+            if (isInUpdateMode()) {
+                finalManifest.merge(originalManifest);
+            }
             finalManifest.merge(filesetManifest);
             finalManifest.merge(configuredManifest);
             finalManifest.merge(manifest, !mergeManifestsMain);
@@ -373,7 +372,7 @@ public class Jar extends Zip {
 
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
-        super.zipFile(bais, zOut, "META-INF/MANIFEST.MF",
+        super.zipFile(bais, zOut, MANIFEST_NAME,
                       System.currentTimeMillis(), null,
                       ZipFileSet.DEFAULT_FILE_MODE);
         super.initZipOutputStream(zOut);
@@ -448,7 +447,7 @@ public class Jar extends Zip {
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)
         throws IOException {
-        if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
+        if (MANIFEST_NAME.equalsIgnoreCase(vPath))  {
             if (! doubleFilePass || (doubleFilePass && skipWriting)) {
                 filesetManifest(fromArchive, is);
             }
@@ -536,45 +535,32 @@ public class Jar extends Zip {
         throws BuildException {
 
         // need to handle manifest as a special check
-        if (configuredManifest != null || manifestFile == null) {
-            java.util.zip.ZipFile theZipFile = null;
+        if (zipFile.exists()) {
+            // if it doesn't exist, it will get created anyway, don't
+            // bother with any up-to-date checks.
+
             try {
-                theZipFile = new java.util.zip.ZipFile(zipFile);
-                java.util.zip.ZipEntry entry =
-                    theZipFile.getEntry("META-INF/MANIFEST.MF");
-                if (entry == null) {
+                originalManifest = getManifestFromJar(zipFile);
+                if (originalManifest == null) {
                     log("Updating jar since the current jar has no manifest",
                         Project.MSG_VERBOSE);
                     needsUpdate = true;
                 } else {
-                    Manifest currentManifest =
-                        new Manifest(new InputStreamReader(theZipFile
-                                                           .getInputStream(entry)));
-                    Manifest newManifest = createManifest();
-                    if (!currentManifest.equals(newManifest)) {
-                        log("Updating jar since jar manifest has changed",
+                    Manifest mf = createManifest();
+                    if (!mf.equals(originalManifest)) {
+                        log("Updating jar since jar manifest has changed", 
                             Project.MSG_VERBOSE);
                         needsUpdate = true;
                     }
                 }
-            } catch (Exception e) {
-                // any problems and we will rebuild
-                log("Updating jar since cannot read current jar manifest: "
-                    + e.getClass().getName() + " - " + e.getMessage(),
-                    Project.MSG_VERBOSE);
+            } catch (Throwable t) {
+                log("error while reading original manifest: " + t.getMessage(),
+                    Project.MSG_WARN);
                 needsUpdate = true;
-            } finally {
-                if (theZipFile != null) {
-                    try {
-                        theZipFile.close();
-                    } catch (IOException e) {
-                        //ignore
-                    }
-                }
             }
-        } else if (manifestFile.lastModified() > zipFile.lastModified()) {
-            log("Updating jar since manifestFile is newer than the archive",
-                Project.MSG_VERBOSE);
+
+        } else {
+            // no existing archive
             needsUpdate = true;
         }
         

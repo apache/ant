@@ -79,6 +79,10 @@ public class JarTest extends BuildFileTest {
         executeTarget("cleanup");
     }
     
+//    public static junit.framework.Test suite() {
+//        return new JarTest("testNoRecreateWithoutUpdate");
+//    }
+
     public void test1() {
         expectBuildException("test1", "required argument not specified");
     }
