@@ -169,7 +169,7 @@ public abstract class Task extends ProjectComponent {
      * @param type The name the task has been invoked as.
      *             Should not be <code>null</code>.
      */
-    void setTaskType(String type) {
+    public void setTaskType(String type) {
         this.taskType = type;
     }
 
