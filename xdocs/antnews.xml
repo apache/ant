@@ -10,10 +10,14 @@
 <body>
   <section name="Ant has won!">
     <h3>Mar 26, 2002: Ant wins the JavaWorld Editors&apos; Choice
-    award</h3>
+    Award</h3>
 
-    <p>Ant has won the JavaWorld Editors&apos; Choice award for
-    &quot;Most Useful Java Community-Developed Technology&quot;.</p>
+    <p>Ant has won the JavaWorld Editors&apos; Choice Award for
+    <strong>Most Useful Java Community-Developed Technology</strong>.
+    Read the
+    <a href="http://www.javaworld.com/javaworld/jw-03-2002/jw-0326-awards.html
+"> full article</a> -- or jump directly to the bit about
+    <a href="http://www.javaworld.com/javaworld/jw-03-2002/jw-0326-awards-p3.html"> our award</a> <code>:)</code></p>
   </section>
   
   <section name="Java 1.4 Support">
