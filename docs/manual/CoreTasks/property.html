@@ -19,13 +19,14 @@ resource) in the project.  Properties are case sensitive.</p>
   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
   <li>By setting the <i>file</i> attribute with the filename of the property
     file to load. This property file has the format as defined by the file used
-    in the class java.util.Properties.</li>
+    in the class java.util.Properties, with the same rules about how
+    non-ISO8859-1 characters must be escaped.</li>
   <li>By setting the <i>url</i> attribute with the url from which to load the
     properties. This url must be directed to a file that has the format as defined
     by the file used in the class java.util.Properties.</li>
   <li>By setting the <i>resource</i> attribute with the resource name of the
-    property file to load. This property file has the format as defined by the
-    file used in the class java.util.Properties.</li>
+    property file to load. A resource is a property file on the current
+    classpath, or on the specified classpath.</li>
   <li>By setting the <i>environment</i> attribute with a prefix to use.
     Properties will be defined for every environment variable by
     prefixing the supplied name and a period to the name of the variable.</li>
@@ -163,6 +164,33 @@ predictable, as are other operating system/JVM combinations.</p>
 Note that this only works on <em>select</em> operating systems.
 Two of the values are shown being echoed.
 </p>
+
+<h3>Property Files</h3>
+
+As stated, this task will load in a properties file stored in the file
+system, or as a resource on a classpath. Here are some interesting facts
+about this feature
+<ol>
+<li>If the file is not there, nothing is printed except at -verbose log
+level. This lets you have optional configuration files for every
+project, that team members can customize.
+<li>The rules for this format are laid down
+<a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Properties.html#load(java.io.InputStream)">by Sun</a>.
+This makes it hard for Team Ant to field bug reports about it.
+<li>Trailing spaces are not stripped. It may have been what you wanted.
+<li>Want unusual characters? Escape them \u0456 or \" style.
+<li>Ant Properties are expanded in the file.
+</ol>
+In-file property expansion is very cool. Learn to use it.
+<p>
+Example:
+<pre>
+build.compiler=jikes
+deploy.server=lucky
+deploy.port=8080
+deploy.url=http://${deploy.server}:${deploy.port}/
+</pre>
+
 
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
