@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -40,7 +41,7 @@ public class Jikes
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using jikes compiler" );
+        getTaskContext().debug( "Using jikes compiler" );
 
         Path classpath = new Path();
 

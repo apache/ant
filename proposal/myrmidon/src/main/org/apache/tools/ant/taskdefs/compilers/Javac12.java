@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -29,7 +30,7 @@ public class Javac12 extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using classic compiler" );
+        getTaskContext().debug( "Using classic compiler" );
         Commandline cmd = setupJavacCommand( true );
 
         try

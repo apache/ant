@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -25,7 +26,7 @@ public class Kjc extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using kjc compiler" );
+        getTaskContext().debug( "Using kjc compiler" );
         Commandline cmd = setupKjcCommand();
 
         try

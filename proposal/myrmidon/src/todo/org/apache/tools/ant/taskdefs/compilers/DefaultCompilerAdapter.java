@@ -15,6 +15,8 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
@@ -33,7 +35,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
 public abstract class DefaultCompilerAdapter
-    extends AbstractLogEnabled
+//    extends AbstractLogEnabled
     implements CompilerAdapter
 {
     protected boolean m_debug;
@@ -62,6 +64,18 @@ public abstract class DefaultCompilerAdapter
      */
     protected Path src;
     protected String target;
+
+    private TaskContext m_taskContext;
+
+    public void setTaskContext( final TaskContext context )
+    {
+        m_taskContext = context;
+    }
+
+    protected final TaskContext getTaskContext()
+    {
+        return m_taskContext;
+    }
 
     public void setJavac( Javac attributes )
     {
@@ -130,7 +144,7 @@ public abstract class DefaultCompilerAdapter
             if( !m_attributes.isForkedJavac() )
             {
                 final String message = "Since fork is false, ignoring memoryInitialSize setting.";
-                getLogger().warn( message );
+                getTaskContext().warn( message );
             }
             else
             {
@@ -143,7 +157,7 @@ public abstract class DefaultCompilerAdapter
             if( !m_attributes.isForkedJavac() )
             {
                 final String message = "Since fork is false, ignoring memoryMaximumSize setting.";
-                getLogger().warn( message );
+                getTaskContext().warn( message );
             }
             else
             {
@@ -358,12 +372,12 @@ public abstract class DefaultCompilerAdapter
                 commandArray = args;
             }
 
-                final ExecManager execManager = (ExecManager)m_attributes.getService( ExecManager.class );
-                final Execute exe = new Execute( execManager );
-                exe.setWorkingDirectory( m_baseDir );
-                final String[] commandline = commandArray;
-                exe.setCommandline( new Commandline( commandline ) );
-                return exe.execute();
+            final ExecManager execManager = (ExecManager)m_attributes.getService( ExecManager.class );
+            final Execute exe = new Execute( execManager );
+            exe.setWorkingDirectory( m_baseDir );
+            final String[] commandline = commandArray;
+            exe.setCommandline( new Commandline( commandline ) );
+            return exe.execute();
         }
         finally
         {
@@ -382,7 +396,7 @@ public abstract class DefaultCompilerAdapter
      */
     protected void logAndAddFilesToCompile( Commandline cmd )
     {
-        getLogger().debug( "Compilation args: " + cmd.toString() );
+        getTaskContext().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( m_compileList.length != 1 )
@@ -400,7 +414,7 @@ public abstract class DefaultCompilerAdapter
             niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 
-        getLogger().debug( niceSourceList.toString() );
+        getTaskContext().debug( niceSourceList.toString() );
     }
 
     /**

@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -28,7 +29,7 @@ public class Jvc extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using jvc compiler" );
+        getTaskContext().debug( "Using jvc compiler" );
 
         Path classpath = new Path();
 

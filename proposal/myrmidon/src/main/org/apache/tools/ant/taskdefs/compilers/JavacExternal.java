@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -27,7 +28,7 @@ public class JavacExternal extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        getLogger().debug( "Using external javac compiler" );
+        getTaskContext().debug( "Using external javac compiler" );
 
         Commandline cmd = new Commandline();
         cmd.setExecutable( getJavac().getJavacExecutable() );
