@@ -621,12 +621,17 @@ public class Path extends DataType implements Cloneable {
                                  + File.separator + "lib"
                                  + File.separator + "rt.jar"));
 
-            // Sun's 1.4 has JCE and JSSE in separate jars.
+            // Sun's and Apple's 1.4 have JCE and JSSE in separate jars.
             String[] secJars = { "jce", "jsse" };
             for (int i = 0; i < secJars.length; i++) {
                 addExisting(new Path(null,
                                      System.getProperty("java.home")
                                      + File.separator + "lib"
+                                     + File.separator + secJars[i] + ".jar"));
+                addExisting(new Path(null,
+                                     System.getProperty("java.home")
+                                     + File.separator + ".."
+                                     + File.separator + "Classes"
                                      + File.separator + secJars[i] + ".jar"));
             }
 
