@@ -71,7 +71,9 @@ public class DefaultMasterConverter
      * @return the converted object
      * @exception Exception if an error occurs
      */
-    public Object convert( Class destination, final Object original, final Context context )
+    public Object convert( final Class destination,
+                           final Object original,
+                           final Context context )
         throws ConverterException
     {
         final Class originalClass = original.getClass();
@@ -90,18 +92,8 @@ public class DefaultMasterConverter
             getLogger().debug( message );
         }
 
-        //TODO: Start searching inheritance hierarchy for converter
-        final String name = m_registry.getConverterName( originalClass.getName(),
-                                                         destination.getName() );
-
-        if( null == name )
-        {
-            final String message =
-                REZ.getString( "no-converter.notice",
-                               originalClass.getName(),
-                               destination.getName() );
-            throw new ConverterException( message );
-        }
+        //Searching inheritance hierarchy for converter
+        final String name = getConverterName( originalClass, destination );
 
         try
         {
@@ -121,5 +113,33 @@ public class DefaultMasterConverter
             final String message = REZ.getString( "bad-typemanager.error" );
             throw new ConverterException( message, te );
         }
+    }
+
+    private String getConverterName( final Class originalClass,
+                                     final Class destination )
+        throws ConverterException
+    {
+        Class clazz = destination;
+
+        //TODO: Maybe we should search the source classes hierarchy aswell
+        final Class terminator = Object.class;
+        while( terminator != clazz )
+        {
+            final String name =
+                m_registry.getConverterName( originalClass.getName(),
+                                             clazz.getName() );
+            if( name != null )
+            {
+                return name;
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        final String message =
+            REZ.getString( "no-converter.notice",
+                           originalClass.getName(),
+                           destination.getName() );
+        throw new ConverterException( message );
     }
 }
