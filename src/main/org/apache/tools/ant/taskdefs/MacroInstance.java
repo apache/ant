@@ -282,6 +282,9 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         for (Iterator i = macroDef.getAttributes().iterator(); i.hasNext();) {
             MacroDef.Attribute attribute = (MacroDef.Attribute) i.next();
             String value = (String) map.get(attribute.getName());
+            if (value == null && "description".equals(attribute.getName())) {
+                value = getDescription();
+            }
             if (value == null) {
                 value = attribute.getDefault();
                 value = macroSubs(value, localProperties);

@@ -104,5 +104,10 @@ public class MacroDefTest extends BuildFileTest {
             "escape",
             "a@b or a@b is avalue@bvalue");
     }
+    public void testAttributeDescription() {
+        expectLog(
+            "attribute.description",
+            "description is hello world");
+    }
 }
 
