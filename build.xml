@@ -71,6 +71,7 @@
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
+  <property name="optional.jars.prefix" value="needs"/>
 
   <path id="classpath">
   </path>
@@ -766,122 +767,143 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-trax.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-trax.jar" 
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.trax"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-xalan1.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-xalan1.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.xalan1"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-xalan2.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-xalan2.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.xalan2"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-xslp.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-xslp.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.xslp"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-junit.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-junit.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.junit"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-jakarta-regexp.jar" 
+    <jar destfile="${build.lib}/${optional.jars.prefix}-jakarta-regexp.jar" 
          basedir="${build.classes}" manifest="${manifest.tmp}">
       <selector refid="needs.jakarta.regexp"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-oro.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-oro.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jakarta.oro"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-bcel.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-bcel.jar" 
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jakarta.bcel"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-log4j.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-log4j.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jakarta.log4j"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-commons-logging.jar" 
+    <jar destfile="${build.lib}/${optional.jars.prefix}-commons-logging.jar" 
          basedir="${build.classes}" manifest="${manifest.tmp}">
       <selector refid="needs.commons.logging"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-bsf.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-bsf.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.bsf"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-stylebook.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-stylebook.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.stylebook"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-javamail.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-javamail.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.javamail"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-icontract.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-icontract.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.icontract"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-netrexx.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-netrexx.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.netrexx"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-netcomp.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-netcomp.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.netcomponents"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-starteam.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-starteam.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.starteam"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-vaj.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-vaj.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.vaj"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-antlr.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-antlr.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.antlr"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-jmf.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-jmf.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jmf"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-jai.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-jai.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jai"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-swing.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-swing.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.swing"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-jdepend.jar" basedir="${build.classes}"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-jdepend.jar"
+         basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jdepend"/>
     </jar>
 
-    <jar destfile="${build.lib}/needs-weblogic.jar"
+    <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
          basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <or>
