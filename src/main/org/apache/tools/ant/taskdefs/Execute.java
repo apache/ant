@@ -200,8 +200,11 @@ public class Execute {
             // Mac
             // Determine if we are running under OS X
             try {
-                float version = Float.parseFloat(System.getProperty("os.version"));
-                if (version >= 10.0) {
+                String version = System.getProperty("os.version");
+                int majorVersion = 
+                    Integer.parseInt(version.substring(0, version.indexOf('.')));
+
+                if (majorVersion >= 10) {
                     // OS X - just line UNIX
                     String[] cmd = {"/usr/bin/env"};
                     return cmd;
