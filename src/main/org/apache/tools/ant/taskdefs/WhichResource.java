@@ -110,7 +110,7 @@ public class WhichResource extends Task {
 
     /**
      * execute it
-     * @throws BuildException
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         validate();
