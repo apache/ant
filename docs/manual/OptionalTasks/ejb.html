@@ -45,7 +45,7 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
   <li><a href="http://www.iplanet.com">iPlanet </a>
   Application Server 6.0</li>
   <li><a href="http://www.jboss.org/" target="_top">
-  jboss 2.1</a> and above EJB servers</li>
+  JBoss 2.1</a> and above EJB servers</li>
   <li><a href="http://www.bea.com" target="_top">Weblogic</a>
    4.5.1, 5.1, and 6.0 EJB servers</li>
   <li><a href="http://www.objectweb.org/jonas/" target="_top">JOnAS</a>
@@ -66,7 +66,7 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
  <tr><td rowspan="7"><a href="#ejbjar">ejbjar</a></td><td colspan="2" align="center"><b>Nested Elements</b></td></tr>
  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5</td></tr>
  <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
- <tr><td><a href="#ejbjar_jboss">jBoss</a></td><td>jBoss</td></tr>
+ <tr><td><a href="#ejbjar_jboss">jboss</a></td><td>JBoss</td></tr>
  <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4</td></tr>
  <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
  <tr><td><a href="#ejbjar_websphere">websphere</a></td><td>IBM WebSphere 4.0</td></tr>
@@ -529,7 +529,7 @@ include: </p>
 <ul>
   <li>Borland Application Server 4.5</li>
   <li>iPlanet Application Server 6.0</li>
-  <li>Jboss 2.1 and above</li>
+  <li>JBoss 2.1 and above</li>
   <li>Weblogic 5.1/6.0 session/entity beans using the weblogic.ejbc tool</li>
   <li>IBM WebSphere 4.0</li>
   <li>TOPLink for WebLogic 2.5.1-enabled entity beans</li>
@@ -790,9 +790,9 @@ deployment element are detailed here.
 
 <h3><a name="ejbjar_jboss">Jboss element</a></h3>
 
-<p>The jboss element searches for the jboss specific deployment descriptors and adds them
-to the final ejb jar file. Jboss has two deployment descriptors jboss.xml and jaws.xml
-(for container manager persistence only). The Jboss server uses hot deployment and does
+<p>The jboss element searches for the JBoss specific deployment descriptors and adds them
+to the final ejb jar file. JBoss has two deployment descriptors jboss.xml and jaws.xml
+(for container manager persistence only). The JBoss server uses hot deployment and does
 not require compilation of additional stubs and skeletons.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -822,7 +822,7 @@ not require compilation of additional stubs and skeletons.</p>
   <tr>
     <td valign="top">suffix</td>
     <td valign="top">String value appended to the basename of the deployment
-                     descriptor to create the filename of the WebLogic EJB
+                     descriptor to create the filename of the JBoss EJB
                      jar file.</td>
     <td valign="top" align="center">No, defaults to '.jar'.</td>
   </tr>
@@ -1008,7 +1008,7 @@ are useful when setting up class paths using reference Ids.</p>
 <h3>TOPLink for Weblogic element</h3>
 
 <p>The TopLink element is used to handle beans which use Toplink for the CMP operations. It
-is derived from the standard weblogic element so it supports the same set of attributes please these
+is derived from the standard weblogic element so it supports the same set of attributes plus these
 additional attributes</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
