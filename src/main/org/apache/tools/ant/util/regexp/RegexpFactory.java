@@ -27,11 +27,15 @@ import org.apache.tools.ant.Project;
  * @version $Revision$
  */
 public class RegexpFactory extends RegexpMatcherFactory {
+
+    /** Constructor for RegexpFactory */
     public RegexpFactory() {
     }
 
     /***
      * Create a new regular expression matcher instance.
+     * @return the matcher instance
+     * @throws BuildException on error
      */
     public Regexp newRegexp() throws BuildException {
         return (Regexp) newRegexp(null);
@@ -41,6 +45,8 @@ public class RegexpFactory extends RegexpMatcherFactory {
      * Create a new regular expression matcher instance.
      *
      * @param p Project whose ant.regexp.regexpimpl property will be used.
+     * @return the matcher instance
+     * @throws BuildException on error
      */
     public Regexp newRegexp(Project p) throws BuildException {
         String systemDefault = null;

@@ -41,6 +41,8 @@ public interface Regexp extends RegexpMatcher {
      * @param argument The string which defines the substitution
      * @param options The list of options for the match and replace. See the
      *                MATCH_ and REPLACE_ constants above.
+     * @return the result of the operation
+     * @throws BuildException on error
      */
     String substitute(String input, String argument, int options)
         throws BuildException;

@@ -32,11 +32,14 @@ import org.apache.tools.ant.Project;
  */
 public class RegexpMatcherFactory {
 
+    /** Constructor for RegexpMatcherFactory. */
     public RegexpMatcherFactory() {
     }
 
     /***
      * Create a new regular expression instance.
+     * @return the matcher
+     * @throws BuildException on error
      */
     public RegexpMatcher newRegexpMatcher() throws BuildException {
         return newRegexpMatcher(null);
@@ -46,6 +49,8 @@ public class RegexpMatcherFactory {
      * Create a new regular expression instance.
      *
      * @param p Project whose ant.regexp.regexpimpl property will be used.
+     * @return the matcher
+     * @throws BuildException on error
      */
     public RegexpMatcher newRegexpMatcher(Project p)
         throws BuildException {
@@ -86,6 +91,13 @@ public class RegexpMatcherFactory {
         throw new BuildException("No supported regular expression matcher found");
    }
 
+    /**
+     * Create an instance of a matcher from a classname.
+     *
+     * @param className a <code>String</code> value
+     * @return a <code>RegexpMatcher</code> value
+     * @exception BuildException if an error occurs
+     */
     protected RegexpMatcher createInstance(String className)
         throws BuildException {
         try {
@@ -96,6 +108,12 @@ public class RegexpMatcherFactory {
         }
     }
 
+    /**
+     * Test if a particular class is available to be used.
+     *
+     * @param className a <code>String</code> value
+     * @exception BuildException if an error occurs
+     */
     protected void testAvailability(String className) throws BuildException {
         try {
             Class.forName(className);
