@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,7 @@ public class CompilerAdapterFactory {
      * <ul><li>jikes = jikes compiler
      * <li>classic, javac1.1, javac1.2 = the standard compiler from JDK
      * 1.1/1.2
-     * <li>modern, javac1.3, javac1.4 = the compiler of JDK 1.3+
+     * <li>modern, javac1.3, javac1.4, javac1.5 = the compiler of JDK 1.3+
      * <li>jvc, microsoft = the command line compiler from Microsoft's SDK
      * for Java / Visual J++
      * <li>kjc = the kopi compiler</li>
@@ -100,7 +100,9 @@ public class CompilerAdapterFactory {
         throws BuildException {
             boolean isClassicCompilerSupported = true;
             //as new versions of java come out, add them to this test
-            if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+                && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+                && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
                 isClassicCompilerSupported = false;
             }
 
@@ -127,7 +129,8 @@ public class CompilerAdapterFactory {
             //but on java>=1.4 we just bail out early
             if (compilerType.equalsIgnoreCase("modern")
                 || compilerType.equalsIgnoreCase("javac1.3")
-                || compilerType.equalsIgnoreCase("javac1.4")) {
+                || compilerType.equalsIgnoreCase("javac1.4")
+                || compilerType.equalsIgnoreCase("javac1.5")) {
                 // does the modern compiler exist?
                 if (doesModernCompilerExist()) {
                     return new Javac13();
