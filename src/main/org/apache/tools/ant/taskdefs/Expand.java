@@ -142,6 +142,7 @@ public class Expand extends MatchingTask {
      * This method is to be overridden by extending unarchival tasks.
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
+        log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);        
         ZipInputStream zis = null;
         try {
             // code from WarExpand
