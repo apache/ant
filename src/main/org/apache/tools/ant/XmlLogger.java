@@ -62,7 +62,7 @@ import org.w3c.dom.*;
  *  Generates a "log.xml" file in the current directory with
  *  an XML description of what happened during a build.
  *
- *  @see Project#addBuildListener()
+ *  @see Project#addBuildListener(BuildListener)
  */
 public class XmlLogger implements BuildListener {
 

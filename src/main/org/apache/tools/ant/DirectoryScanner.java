@@ -808,7 +808,6 @@ strLoop:
     /**
      * Adds the array with default exclusions to the current exclusions set.
      *
-     * @see #DEFAULTEXCLUDES
      */
     public void addDefaultExcludes() {
         int excludesLength = excludes == null ? 0 : excludes.length;

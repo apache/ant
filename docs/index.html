@@ -13,6 +13,7 @@
 <ul>
   <li>Jacques Bergeron (<a href="mailto:jacques.bergeron@dogico.com">jacques.bergeron@dogico.com</a>)</li>
   <li>Stefan Bodewig (<a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>)</li>
+  <li>Patrick Chanezon (<a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>)</li>
   <li>James Duncan Davison (<a href="mailto:duncan@x180.com">duncan@x180.com</a>)</li>
   <li>Tom Dimock (<a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>)</li>
   <li>Bill Kelly (<a href="mailto:bill.kelly@softwired-inc.com">bill.kelly@softwired-inc.com</a>)</li>
@@ -1660,23 +1661,34 @@ The classpath used contains <code>xyz.jar</code>, and debug information is on.
 Only files under <code>mypackage/p1</code> and <code>mypackage/p2</code> are
 used. Files in the <code>mypackage/p1/testpackage</code> directory are excluded
 form compilation and copy.</p>
+
 <hr>
 <h2><a name="javadoc">Javadoc/Javadoc2</a></h2>
 <h3>Description</h3>
 <p>Generates code documentation using the javadoc tool.</p>
-<p>The source directory will be recursively scanned for Java source files to but
-only those matching the inclusion rules will be passed to the javadoc tool. This
+<p>The source directory will be recursively scanned for Java source files to process
+but only those matching the inclusion rules will be passed to the javadoc tool. This
 allows wildcards to be used to choose between package names, reducing verbosity
 and management costs over time. This task, however, has no notion of
-&quot;changed&quot; files, unlike the <a href="#javac">javac</a> task, but it's
-not used so frequently.</p>
+&quot;changed&quot; files, unlike the <a href="#javac">javac</a> task. This means
+all packages will be processed each time this task is run. In general, however,
+this task is used much less frequently.</p>
 <p>This task works seamlessly between different javadoc versions (1.1 and 1.2),
 with the obvious restriction that the 1.2 attributes will be ignored if run in a
 1.1 VM.</p>
-<p>NOTE: since javadoc calls System.exit(), we cannot run javadoc inside the
-same VM without breaking functionality. For this reason, this task always forks
-the VM. But this is not a performance penalty since javadoc is normally a heavy
-application and must be called just once.</p>
+<p>NOTE: since javadoc calls System.exit(), javadoc cannot be run inside the
+same VM as ant without breaking functionality. For this reason, this task 
+always forks the VM. This overhead is not significant since javadoc is normally a heavy
+application and will be called infrequently.</p>
+<p>NOTE: the packagelist attribute allows you to specify the list of packages to 
+document outside of the Ant file. It's a much better practice to include everything 
+inside the build.xml file. This option was added in order to make it easier to 
+migrate from regular makefiles, where you would use this option of javadoc. 
+The packages listed in packagelist are not checked, so the task performs even 
+if some packages are missing or broken. Use this option if you wish to convert from 
+an existing makefile. Once things are running you should then switch to the regular 
+notation. 
+
 <p>DEPRECATION: the javadoc2 task simply points to the javadoc task and it's
 there for back compatibility reasons. Since this task will be removed in future
 versions, you are strongly encouraged to use <a href="#javadoc">javadoc</a>
@@ -1702,6 +1714,12 @@ instead.</p>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
+    <td valign="top">maxmemory</td>
+    <td valign="top">Max amount of memory to allocate to the javadoc VM</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">sourcefiles</td>
     <td valign="top">Space separated list of source files</td>
     <td align="center" valign="top">all</td>
@@ -1714,7 +1732,13 @@ instead.</p>
     <td align="center" valign="top">all</td>
   </tr>
   <tr>
-    <td valign="top">Classpath</td>
+    <td valign="top">packageList</td>
+    <td valign="top">The name of a file containing the packages to process</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
     <td valign="top">Specify where to find user class files</td>
     <td align="center" valign="top">all</td>
     <td align="center" valign="top">No</td>
@@ -1929,14 +1953,81 @@ instead.</p>
   <tr>
     <td valign="top">doclet</td>
     <td valign="top">Specifies the class file that starts the doclet used in generating the documentation.</td>
+    <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">docletpath</td>
     <td valign="top">Specifies the path to the doclet class file that is specified with the -doclet option.</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">additionalparam</td>
+    <td valign="top">Lets you add additional parameters to the javadoc command line. Useful for doclets</td>
+    <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h3>Parameters specified as subelements</h3>
+Two parameters of the Javadoc task may be specified as nested elements of the
+Javadoc task element: link and group.
+When present, there can be any number of each of these elements.
+They perform the same role as the link, linkoffline and
+group attributes. You can use either syntax (or both at once), but with the  nested 
+elements you can easily specify multiple occurrences of the arguments.
+<h4>link</h4>
+Create link to javadoc output at the given URL
+<h4>Parameters</h4>
+
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">href</td>
+    <td valign="top">The URL for the external documentation you wish to link to</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">offline</td>
+    <td valign="top">True if this link is not available online at the time of 
+                     generating the documentation</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">packagelistLoc</td>
+    <td valign="top">The location to the directory containing the package-list file for
+                     the external documentation</td>
+    <td align="center" valign="top">Only if the offline attribute is true</td>
+  </tr>
+</table>
+  
+<h4>groups</h4>
+Separates packages on the overview page into whatever groups you specify,
+one group per table.
+
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">title</td>
+    <td valign="top">Title of the group</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">packages</td>
+    <td valign="top">List of packages to include in that group</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
 <h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
            sourcepath=&quot;src&quot;
@@ -1946,8 +2037,13 @@ instead.</p>
            use=&quot;true&quot;
            windowtitle=&quot;Test API&quot;
            doctitle=&quot;&lt;h1&gt;Test&lt;/h1&gt;&quot;
-           bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;
-  /&gt;</pre>
+           bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;&gt;
+    &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
+    &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*&quot;/&gt;
+    &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
+    &lt;link href=&quot;http://developer.java.sun.com/developer/products/xml/docs/api/&quot;/&gt;
+  &lt/javadoc&gt;</pre>
+  
 <hr>
 <h2><a name="keysubst">KeySubst</a></h2>
 <h3>Description</h3>

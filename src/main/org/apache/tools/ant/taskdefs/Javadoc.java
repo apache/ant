@@ -75,11 +75,14 @@ import java.util.*;
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Patrick Chanezon <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
  */
 
 public class Javadoc extends Exec {
 
+    private String maxmemory = null;
     private String sourcePath = null;
+    private String additionalParam = null;
     private File destDir = null;
     private File overviewFile = null;
     private String sourceFiles = null;
@@ -106,8 +109,8 @@ public class Javadoc extends Exec {
     private String header = null;
     private String footer = null;
     private String bottom = null;
-    private String link = null;
     private String linkoffline = null;
+    private String link = null;
     private String group = null;
     private boolean nodeprecated = false;
     private boolean nodeprecatedlist = false;
@@ -119,7 +122,18 @@ public class Javadoc extends Exec {
     private File helpfile = null;
     private String docencoding = null;
     private Vector compileList = new Vector(10);
+    private String packageList = null;
+    private Vector links = new Vector(2);
+    private Vector groups = new Vector(2);
 
+    public void setMaxmemory(String src){
+        maxmemory = src;
+    }
+
+    public void setadditionalParam(String src){
+        additionalParam = src;
+    }
+    
     public void setSourcepath(String src) {
         sourcePath = project.translatePath(src);
     }
@@ -201,14 +215,14 @@ public class Javadoc extends Exec {
     public void setBottom(String src) {
         bottom = src;
     }
-    public void setLink(String src) {
-        link = src;
-    }
     public void setLinkoffline(String src) {
         linkoffline = src;
     }
     public void setGroup(String src) {
         group = src;
+    }
+    public void setLink(String src) {
+        link = src;
     }
     public void setNodeprecated(String src) {
         nodeprecated = Project.toBoolean(src);
@@ -234,6 +248,78 @@ public class Javadoc extends Exec {
     public void setDocencoding(String src) {
         docencoding = src;
     }
+    public void setPackageList(String src) {
+        packageList = src;
+    }
+    
+    public LinkArgument createLink() {
+        LinkArgument la = new LinkArgument();
+        links.addElement(la);
+        return la;
+    }
+    
+    public class LinkArgument {
+        private String href;
+        private boolean offline = false;
+        private String packagelistLoc;
+        
+        public LinkArgument() {
+        }
+
+        public void setHref(String hr) {
+            href = hr;
+        }
+        
+        public String getHref() {
+            return href;
+        }
+        
+        public void setPackagelistLoc(String src) {
+            packagelistLoc = src;
+        }
+        
+        public String getPackagelistLoc() {
+            return packagelistLoc;
+        }
+        
+        public void setOffline(String offline) {
+            this.offline = Project.toBoolean(offline);
+        }
+        
+        public boolean isLinkOffline() {
+            return offline;
+        }
+    }
+    
+    public GroupArgument createGroup() {
+        GroupArgument ga = new GroupArgument();
+        groups.addElement(ga);
+        return ga;
+    }
+
+    public class GroupArgument {
+        private String title;
+        private String packages;
+
+        public GroupArgument() {
+        }
+
+        public void setTitle(String src) {
+            title = src;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setPackages(String src) {
+            packages = src;
+        }
+
+        public String getPackages() {
+            return packages;
+        }
+    }
 
     public void execute() throws BuildException {
         if (sourcePath == null && destDir == null ) {
@@ -250,6 +336,16 @@ public class Javadoc extends Exec {
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
             classpath = System.getProperty("java.class.path");
+
+
+        if(maxmemory != null){
+            if(javadoc1){
+                argList.addElement("-J-mx" + maxmemory);
+            }
+            else{
+                argList.addElement("-J-Xmx" + maxmemory);
+            }
+        }
 
         if ( (!javadoc1) || (sourcePath == null) ) {
             argList.addElement("-classpath");
@@ -358,15 +454,46 @@ public class Javadoc extends Exec {
                 argList.addElement("-bottom");
                 argList.addElement(bottom);
             }
+            
+            // add the single link arguments
             if (link != null) {
                 argList.addElement("-link");
                 argList.addElement(link);
             }
+            
+            // add the links arguments
+            if (links.size() != 0) {
+                for (Enumeration e = links.elements(); e.hasMoreElements(); ) {
+                    LinkArgument la = (LinkArgument)e.nextElement();
+                
+                    if (la.getHref() == null) {
+                        throw new BuildException("Links must provide the RUL to the external class documentation.");
+                    }
+                
+                    if (la.isLinkOffline()) {
+                        String packageListLocation = la.getPackagelistLoc();
+                        if (packageListLocation == null) {
+                            throw new BuildException("The package list location for link " + la.getHref() +
+                                                     " must be provided because the link is offline");
+                        }
+                        argList.addElement("-linkoffline");
+                        argList.addElement(la.getHref());
+                        argList.addElement(packageListLocation);
+                    }
+                    else {
+                        argList.addElement("-link");
+                        argList.addElement(la.getHref());
+                    }
+                }
+            }                                   
+                                                
+            // add the single linkoffline arguments
             if (linkoffline != null) {
                 argList.addElement("-linkoffline");
                 argList.addElement(linkoffline);
             }
-
+            
+            // add the single group arguments
             // Javadoc 1.2 rules:
             //   Multiple -group args allowed.
             //   Each arg includes 3 strings: -group [name] [packagelist].
@@ -391,6 +518,27 @@ public class Javadoc extends Exec {
                   }
                 }
             }
+            
+            // add the group arguments
+            if (groups.size() != 0) {
+                String title = null;
+                String packages = null;
+                GroupArgument ga = null;
+                for (int i = 0; i < groups.size(); i++) {
+                    ga = (GroupArgument)groups.get(i);
+                    if (ga != null) {
+                        title = ga.getTitle();
+                        packages = ga.getPackages();
+                    }
+                    if (title != null) {
+                        argList.addElement("-group");
+                        argList.addElement(title);
+                        if (packages != null) {
+                            argList.addElement(packages);
+                        }
+                    }
+                }
+            }
 
             if (stylesheetfile != null) {
                 argList.addElement("-stylesheetfile");
@@ -399,6 +547,9 @@ public class Javadoc extends Exec {
             if (helpfile != null) {
                 argList.addElement("-helpfile");
                 argList.addElement(helpfile.getAbsolutePath());
+            }
+            if (additionalParam != null) {
+                argList.addElement(additionalParam);
             }
         }
 
@@ -425,6 +576,9 @@ public class Javadoc extends Exec {
             }
         }
 
+         if (packageList != null) {
+            argList.addElement("@" + packageList);
+        }
         project.log("Javadoc args: " + argList.toString(), "javadoc", project.MSG_VERBOSE);
 
         project.log("Javadoc execution", project.MSG_INFO);
@@ -453,20 +607,29 @@ public class Javadoc extends Exec {
      * with the packages found in that path subdirs matching one of the given
      * patterns.
      */
-    private void evaluatePackages(String source, Vector packages, Vector argList) {
+    private void evaluatePackages(String sourcePath, Vector packages, Vector argList) {
         project.log("Parsing source files for packages", project.MSG_INFO);
-        project.log("Source dir = " + source, project.MSG_VERBOSE);
+        project.log("Source path = " + sourcePath, project.MSG_VERBOSE);
         project.log("Packages = " + packages, project.MSG_VERBOSE);
 
-        Hashtable map = mapClasses(new File(source));
+        Vector addedPackages = new Vector();
+        PathTokenizer tokenizer = new PathTokenizer(sourcePath);
+        while (tokenizer.hasMoreTokens()) {
+            File source = new File(project.translatePath(tokenizer.nextToken()));
+            
+            Hashtable map = mapClasses(source);
 
-        Enumeration e = map.keys();
-        while (e.hasMoreElements()) {
-            String pack = (String) e.nextElement();
-            for (int i = 0; i < packages.size(); i++) {
-                if (matches(pack, (String) packages.elementAt(i))) {
-                    argList.addElement(pack);
-                    break;
+            Enumeration e = map.keys();
+            while (e.hasMoreElements()) {
+                String pack = (String) e.nextElement();
+                for (int i = 0; i < packages.size(); i++) {
+                    if (matches(pack, (String) packages.elementAt(i))) {
+                        if (!addedPackages.contains(pack)) {
+                            argList.addElement(pack);
+                            addedPackages.addElement(pack);
+                        }
+                        break;
+                    }
                 }
             }
         }

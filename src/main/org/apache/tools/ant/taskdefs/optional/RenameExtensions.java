@@ -73,7 +73,6 @@ import org.apache.tools.ant.taskdefs.*;
 /**
  *
  * @author  dion
- * @version
  */
 public class RenameExtensions extends MatchingTask {
 

@@ -51,69 +51,74 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant;
 
-import java.util.EventListener;
+import java.util.*;
+import java.io.*;
 
 /**
- *  Classes that implement this interface will be notified when
- *  things happend during a build.
+ * A Path tokenizer takes a path and returns the components that make up
+ * that path.
  *
- *  @see BuildEvent
- *  @see Project#addBuildListener(BuildListener)
- */
-public interface BuildListener extends EventListener {
-
+ * The path can use path separators of either ':' or ';' and file separators
+ * of either '/' or '\'
+ *
+ * @author Conor MacNeill (conor@ieee.org)
+ *
+ */ 
+public class PathTokenizer {
     /**
-     *  Fired before any targets are started.
+     * A tokenizer to break the string up based on the ':' or ';' separators.
      */
-    public void buildStarted(BuildEvent event);
-
+    StringTokenizer tokenizer;
+    
     /**
-     *  Fired after the last target has finished. This event
-     *  will still be thrown if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
+     * A String which stores any path components which have been read ahead.
      */
-    public void buildFinished(BuildEvent event);
+    String lookahead = null;
 
-    /**
-     *  Fired when a target is started.
-     *
-     *  @see BuildEvent#getTarget()
-     */
-    public void targetStarted(BuildEvent event);
+    public PathTokenizer(String path) {
+       tokenizer = new StringTokenizer(path, ":;", false);
+    }
 
-    /**
-     *  Fired when a target has finished. This event will
-     *  still be thrown if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void targetFinished(BuildEvent event);
-
-    /**
-     *  Fired when a task is started.
-     *
-     *  @see BuildEvent#getTask()
-     */
-    public void taskStarted(BuildEvent event);
-
-    /**
-     *  Fired when a task has finished. This event will still
-     *  be throw if an error occured during the build.
-     *
-     *  @see BuildEvent#getException()
-     */
-    public void taskFinished(BuildEvent event);
-
-    /**
-     *  Fired whenever a message is logged.
-     *
-     *  @see BuildEvent#getMessage()
-     *  @see BuildEvent#getPriority()
-     */
-    public void messageLogged(BuildEvent event);
-
+    public boolean hasMoreTokens() {
+        if (lookahead != null) {
+            return true;
+        }
+        
+        return tokenizer.hasMoreTokens();
+    }
+    
+    public String nextToken() throws NoSuchElementException {
+        if (lookahead != null) {
+            String token = lookahead;
+            lookahead = null;
+            
+            return token;
+        }
+        else {
+            String token = tokenizer.nextToken().trim();
+            
+            
+            if (token.length() == 1 && Character.isLetter(token.charAt(0))
+                                    && File.pathSeparator.equals(";") 
+                                    && tokenizer.hasMoreTokens()) {
+                // we are on a dos style system so this path could be a drive
+                // spec. We look at the next token
+                String nextToken = tokenizer.nextToken().trim();
+                if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
+                    // we know we are on a DOS style platform and the next path starts with a
+                    // slash or backslash, so we know this is a drive spec
+                    token += ":" + nextToken;
+                }
+                else {
+                    // store the token just read for next time
+                    lookahead = nextToken;
+                }
+            }
+            
+            return token;
+        }
+    }
 }
+          
