@@ -47,7 +47,7 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
   <li><a href="http://www.jboss.org/" target="_top">
   JBoss 2.1</a> and above EJB servers</li>
   <li><a href="http://www.bea.com" target="_top">Weblogic</a>
-   4.5.1, 5.1, and 6.0 EJB servers</li>
+   4.5.1 through to 7.0 EJB servers</li>
   <li><a href="http://www.objectweb.org/jonas/" target="_top">JOnAS</a>
    2.4 Open Source EJB server</li>
   <li><a href="http://www.ibm.com/websphere">IBM WebSphere</a> 4.0</li>
@@ -68,10 +68,10 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
  <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
  <tr><td><a href="#ejbjar_jboss">jboss</a></td><td>JBoss</td></tr>
  <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4</td></tr>
- <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
+ <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 to 7.0</td></tr>
  <tr><td><a href="#ejbjar_websphere">websphere</a></td><td>IBM WebSphere 4.0</td></tr>
- <tr><td><a href="#wlrun">wlrun</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
- <tr><td><a href="#wlstop">wlstop</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
+ <tr><td><a href="#wlrun">wlrun</a></td><td colspan="2">Weblogic 4.5.1 to 7.0</td></tr>
+ <tr><td><a href="#wlstop">wlstop</a></td><td colspan="2">Weblogic 4.5.1 to 7.0</td></tr>
 
 </table>
 
@@ -636,34 +636,34 @@ beans in the jar.
 </ul>
 
 <a name="ejbjar_deps"><h3>Dependencies</h3></a>
-<p>In addition to the bean classes, ejbjar is able to ad additional classes to the generated 
+<p>In addition to the bean classes, ejbjar is able to ad additional classes to the generated
 ejbjar. These classes are typically the support classes which are used by the bean's classes or as
 parameters to the bean's methods.</p>
 
-<p>In versions of Ant prior to 1.5, ejbjar used reflection and attempted to add the super 
-classes and super interfaces of the bean classes. For this technique to work the bean 
+<p>In versions of Ant prior to 1.5, ejbjar used reflection and attempted to add the super
+classes and super interfaces of the bean classes. For this technique to work the bean
 classes had to be loaded into Ant's JVM. This was not always possible due to class dependencies.
 </p>
 
-<p>The ejbjar task in Ant 1.5 uses the jakarta-BCEL library to analyze the bean's class 
-files directly, rather than loading them into the JVM. This also allows ejbjar to add all 
+<p>The ejbjar task in Ant 1.5 uses the jakarta-BCEL library to analyze the bean's class
+files directly, rather than loading them into the JVM. This also allows ejbjar to add all
 of the required support classes for a bean and not just super classes.
 </p>
 
-<p>In Ant 1.5, a new attribute, <code>dependency</code> has been introduced to allow the 
-buildfile to control what additional classes are added to the generated jar. It takes three 
+<p>In Ant 1.5, a new attribute, <code>dependency</code> has been introduced to allow the
+buildfile to control what additional classes are added to the generated jar. It takes three
 possible values</p>
 <ul>
-<li><code>none</code> - only the bean classes and interfaces described in the bean's 
+<li><code>none</code> - only the bean classes and interfaces described in the bean's
 descriptor are added to the jar.</li>
-<li><code>super</code> - this is the default value and replicates the original ejbjar 
+<li><code>super</code> - this is the default value and replicates the original ejbjar
 behaviour where super classes and super interfaces are added to the jar</li>
 <li><code>full</code> - In this mode all classes used by the bean's classes and interfaces
 are added to the jar</li>
 </ul>
-<p>The <code>super</code> and <code>full</code> values require the jakarta-BCEL library 
+<p>The <code>super</code> and <code>full</code> values require the jakarta-BCEL library
 to be available. If it is not, ejbjar will drop back to the behaviour corresponding to
-the value <code>none</code>.</p>   
+the value <code>none</code>.</p>
 
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -759,7 +759,7 @@ the value <code>none</code>.</p>
   <tr>
     <td valign="top">dependency</td>
     <td valign="top">This attribute controls which additional classes and interfaces
-                     are added to the jar. Please refer to the description 
+                     are added to the jar. Please refer to the description
                      <a href="#ejbjar_deps">above</a></td>
     <td valign="top" align="center">No.</td>
   </tr>
@@ -1042,15 +1042,19 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
     <td valign="top">Specifies the classname of the ejbc compiler. Normally ejbjar determines
                      the appropriate class based on the DTD used for the EJB. The EJB 2.0 compiler
                      featured in weblogic 6 has, however, been deprecated in version 7. When
-                     using with version 7 this attribute should be set to 
+                     using with version 7 this attribute should be set to
                      &quot;weblogic.ejbc&quot; to avoid the deprecation warning.</td>
     <td valign="top" align="center">No.</td>
   </tr>
 </table>
 
-<p>The weblogic nested element itself supports two nested elements &lt;classpath&gt; and
-&lt;wlclasspath&gt; which are used to set the respective classpaths. These nested elements
-are useful when setting up class paths using reference Ids.</p>
+<p>The weblogic nested element supports three nested elements. The
+first two, &lt;classpath&gt; and &lt;wlclasspath&gt;, are used to set the
+respective classpaths. These nested elements are useful when setting up
+class paths using reference Ids. The last, &lt;sysproperty&gt;, allows
+Java system properties to be set during the compiler run. This turns out
+to be necessary for supporting CMP EJB compilation in all environments.
+</p>
 
 <h3>TOPLink for Weblogic element</h3>
 
@@ -1305,7 +1309,7 @@ in the descriptor dir:</p>
       &lt;websphere dbvendor="DB2UDBOS390_V6"
                  ejbdeploy="true"
                  oldCMP="false"
-		 tempdir="/tmp"
+         tempdir="/tmp"
                  destdir="${dist.server}"&gt;
         &lt;wasclasspath&gt;
           &lt;pathelement location="${was4.home}/deploytool/itp/plugins/org.eclipse.core.boot/boot.jar"/&gt;
