@@ -63,30 +63,13 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 
 
 
-import java.lang.reflect.Field;
 import java.net.URL;
-
-import org.apache.xalan.xslt.XSLTProcessorFactory;
-import org.apache.xalan.xslt.XSLTProcessor;
-import org.apache.xalan.xslt.XSLTInputSource;
-import org.apache.xalan.xslt.XSLTResultTarget;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Source;
-import javax.xml.transform.Result;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -241,109 +224,4 @@ public class AggregateTransformer {
         return url.toExternalForm();
     }
 
-}
-
-/**
- * Command class that encapsulate specific behavior for each
- * Xalan version. The right executor will be instantiated at
- * runtime via class lookup. For instance, it will check first
- * for Xalan2, then for Xalan1.
- */
-abstract class XalanExecutor {
-    /** the transformer caller */
-    protected AggregateTransformer caller;
-
-    /** set the caller for this object. */
-    private final void setCaller(AggregateTransformer caller){
-        this.caller = caller;
-    }
-
-    /** get the appropriate stream based on the format (frames/noframes) */
-    protected OutputStream getOutputStream() throws IOException {
-        if (caller.FRAMES.equals(caller.format)){
-            // dummy output for the framed report
-            // it's all done by extension...
-            return new ByteArrayOutputStream();
-        } else {
-            return new FileOutputStream(new File(caller.toDir, "junit-noframes.html"));
-        }
-    }
-
-    /** override to perform transformation */
-    abstract void execute() throws Exception;
-
-    /**
-     * Create a valid Xalan executor. It checks first if Xalan2 is
-     * present, if not it checks for xalan1. If none is available, it
-     * fails.
-     * @param caller object containing the transformation information.
-     * @throws BuildException thrown if it could not find a valid xalan
-     * executor.
-     */
-    static XalanExecutor newInstance(AggregateTransformer caller) throws BuildException {
-        Class procVersion = null;
-        XalanExecutor executor = null;
-        try {
-            procVersion = Class.forName("org.apache.xalan.processor.XSLProcessorVersion");
-            executor = new Xalan2Executor();
-        } catch (Exception xalan2missing){
-            try {
-                procVersion = Class.forName("org.apache.xalan.xslt.XSLProcessorVersion");
-                executor = new Xalan1Executor();
-            } catch (Exception xalan1missing){
-                throw new BuildException("Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j");
-            }
-        }
-        String version = getXalanVersion(procVersion);
-        caller.task.log("Using Xalan version: " + version);
-        executor.setCaller(caller);
-        return executor;
-    }
-
-    /** pretty useful data (Xalan version information) to display. */
-    private static String getXalanVersion(Class procVersion) {
-        try {
-            Field f = procVersion.getField("S_VERSION");
-            return f.get(null).toString();
-        } catch (Exception e){
-            return "?";
-        }
-    }
-}
-
-/**
- * Xalan executor via JAXP. Nothing special must exists in the classpath
- * besides of course, a parser, jaxp and xalan.
- */
-class Xalan2Executor extends XalanExecutor {
-    void execute() throws Exception {
-        TransformerFactory tfactory = TransformerFactory.newInstance();
-        String system_id = caller.getStylesheetSystemId();
-        Source xsl_src = new StreamSource(system_id);
-        Transformer tformer = tfactory.newTransformer(xsl_src);
-        Source xml_src = new DOMSource(caller.document);
-        OutputStream os = getOutputStream();
-        tformer.setParameter("output.dir", caller.toDir.getAbsolutePath());
-        Result result = new StreamResult(os);
-        tformer.transform(xml_src, result);
-    }
-}
-
-/**
- * Xalan 1 executor. It will need a lot of things in the classpath:
- * xerces for the serialization, xalan and bsf for the extension.
- * @todo do everything via reflection to avoid compile problems ?
- */
-class Xalan1Executor extends XalanExecutor {
-    void execute() throws Exception {
-        XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
-        // need to quote otherwise it breaks because of "extra illegal tokens"
-        processor.setStylesheetParam("output.dir", "'" + caller.toDir.getAbsolutePath() + "'");
-        XSLTInputSource xml_src = new XSLTInputSource(caller.document);
-        String system_id = caller.getStylesheetSystemId();
-        XSLTInputSource xsl_src = new XSLTInputSource(system_id);
-        OutputStream os = getOutputStream();
-        XSLTResultTarget target = new XSLTResultTarget(os);
-        processor.process( xml_src, xsl_src, target);
-    }
 }

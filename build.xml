@@ -278,8 +278,14 @@
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
                unless="trax.present" />
       <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-               unless="xalan.present" />
+               unless="xalan2.present" />
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/XalanExecutor.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/Xalan2Executor.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/Xalan1Executor.java"
                unless="xalan.present" />
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
       <exclude name="${optional.package}/sitraka/**" unless="some.regexp.support"/>
