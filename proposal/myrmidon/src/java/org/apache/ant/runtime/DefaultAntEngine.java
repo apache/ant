@@ -9,6 +9,7 @@ package org.apache.ant.runtime;
 
 import java.io.File;
 import java.util.Properties;
+import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configurer;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.project.ProjectBuilder;
