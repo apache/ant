@@ -30,6 +30,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -1340,8 +1343,9 @@ public class FileUtils {
         }
         long sourceTime=source.lastModified();
         long destTime=dest.lastModified();
-        return destTime>=sourceTime+granularity;
+        return isUpToDate(sourceTime, destTime, granularity);
     }
+
 
     /**
      * returns true if the source is older than the dest
@@ -1354,6 +1358,96 @@ public class FileUtils {
         return isUpToDate(source, dest, getFileTimestampGranularity());
     }
 
+    /**
+     * compare two timestamps for being up to date, use granularity too.,
+     *
+     * @param sourceTime timestamp of source file
+     * @param destTime timestamp of dest file
+     * @param granularity os/filesys granularity
+     * @return true if the dest file is considered up to date
+     */
+    public boolean isUpToDate(long sourceTime,long destTime, long granularity) {
+        if(destTime==-1) {
+            return false;
+        }
+        return destTime >= sourceTime + granularity;
+    }
+
+    /**
+     * compare two timestamps for being up to date, use the
+     * current granularity
+     *
+     * @param sourceTime  timestamp of source file
+     * @param destTime    timestamp of dest file
+     * @return true if the dest file is considered up to date
+     */
+    public boolean isUpToDate(long sourceTime, long destTime) {
+        return isUpToDate(sourceTime, destTime,getFileTimestampGranularity());
+    }
+
+
+    /**
+     * close a writer without throwing any exception if something went wrong.
+     * Do not attempt to close it if the file is null
+     * @param device output writer, can be null
+     */
+    public static void close(Writer device) {
+        if (device != null) {
+            try {
+                device.close();
+            } catch (IOException ioex) {
+                //ignore
+            }
+        }
+    }
+
+    /**
+     * close a stream without throwing any exception if something went wrong.
+     * Do not attempt to close it if the file is null
+     *
+     * @param device stream, can be null
+     */
+    public static void close(Reader device) {
+        if ( device != null ) {
+            try {
+                device.close();
+            } catch (IOException ioex) {
+                //ignore
+            }
+        }
+    }
+
+    /**
+     * close a stream without throwing any exception if something went wrong.
+     * Do not attempt to close it if the file is null
+     *
+     * @param device stream, can be null
+     */
+    public static void close(OutputStream device) {
+        if ( device != null ) {
+            try {
+                device.close();
+            } catch (IOException ioex) {
+                //ignore
+            }
+        }
+    }
+
+    /**
+     * close a stream without throwing any exception if something went wrong.
+     * Do not attempt to close it if the file is null
+     *
+     * @param device stream, can be null
+     */
+    public static void close(InputStream device) {
+        if ( device != null ) {
+            try {
+                device.close();
+            } catch (IOException ioex) {
+                //ignore
+            }
+        }
+    }
 
 }
 
