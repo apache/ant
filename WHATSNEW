@@ -70,6 +70,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* TarFileset takes in three new attributes - fullpath, prefix
+  and preserveLeadingSlashes.
+
 * <move> attempts to rename the directory, if everything inside it is
   included, before performing file-by-file moves.  This attempt will
   be done only if filtering is off and if mappers are not used.  This

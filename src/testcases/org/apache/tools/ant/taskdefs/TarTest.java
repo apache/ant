@@ -115,6 +115,15 @@ public class TarTest extends BuildFileTest {
         }
     }
 
+    public void test8() {
+        executeTarget("test8");
+        java.io.File f1
+            = new java.io.File("src/etc/testcases/taskdefs/test8.xml");
+        if (! f1.exists()) {
+            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
+        }
+    }
+
     public void tearDown() {
         executeTarget("cleanup");
     }

@@ -265,6 +265,10 @@ public class Tar extends MatchingTask {
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
                 TarFileSet fs = (TarFileSet)e.nextElement();
                 String[] files = fs.getFiles(project);
+                if (files.length > 1 && fs.getFullpath().length() > 0) {
+                    throw new BuildException("fullpath attribute may only be specified for " +
+                                             "filesets that specify a single file.");
+                }
                 for (int i = 0; i < files.length; i++) {
                     File f = new File(fs.getDir(project), files[i]);
                     String name = files[i].replace(File.separatorChar,'/');
@@ -291,13 +295,34 @@ public class Tar extends MatchingTask {
     {
         FileInputStream fIn = null;
 
-        // don't add "" to the archive
-        if (vPath.length() <= 0) {
-            return;
+        String fullpath = tarFileSet.getFullpath();
+        if (fullpath.length() > 0) {
+            vPath = fullpath;
+        } else {
+            // don't add "" to the archive
+            if (vPath.length() <= 0) {
+                return;
+            }
+        
+            if (file.isDirectory() && !vPath.endsWith("/")) {
+                vPath += "/";
+            }
+        
+            String prefix = tarFileSet.getPrefix();
+            // '/' is appended for compatibility with the zip task.
+            if (prefix.length() > 0 && !prefix.endsWith("/")) {
+                prefix = prefix + "/";
+            }
+            vPath = prefix + vPath;
         }
 
-        if (file.isDirectory() && !vPath.endsWith("/")) {
-            vPath += "/";
+        if (vPath.startsWith("/") && !tarFileSet.getPreserveLeadingSlashes()) {
+            int l = vPath.length();
+            if (l <= 1) {
+                // we would end up adding "" to the archive
+                return;
+            } 
+            vPath = vPath.substring(1, l);
         }
 
         try {
@@ -320,13 +345,7 @@ public class Tar extends MatchingTask {
                 }
             }
 
-            String prefix = tarFileSet.getPrefix();
-            // '/' is appended for compatibility with the zip task.
-            if(prefix.length() > 0 && !prefix.endsWith("/")) {
-                prefix = prefix + "/";
-            }
-
-            TarEntry te = new TarEntry(prefix + vPath);
+            TarEntry te = new TarEntry(vPath);
             te.setModTime(file.lastModified());
             if (!file.isDirectory()) {
                 te.setSize(file.length());
@@ -371,7 +390,9 @@ public class Tar extends MatchingTask {
         private String userName = "";
         private String groupName = "";
         private String prefix = "";
-
+        private String fullpath = "";
+        private boolean preserveLeadingSlashes = false;
+        
         public TarFileSet(FileSet fileset) {
             super(fileset);
         }
@@ -429,6 +450,22 @@ public class Tar extends MatchingTask {
 
         public String getPrefix() {
             return prefix;
+        }
+
+        public void setFullpath(String fullpath) {
+            this.fullpath = fullpath;
+        }
+
+        public String getFullpath() {
+            return fullpath;
+        }
+
+        public void setPreserveLeadingSlashes(boolean b) {
+            this.preserveLeadingSlashes = b;
+        }
+
+        public boolean getPreserveLeadingSlashes() {
+            return preserveLeadingSlashes;
         }
     }
 

@@ -44,6 +44,15 @@
     <untar src="test7.tar" dest="."/>
   </target>
 
+  <target name="test8">
+    <tar destfile="test8.tar">
+      <tarfileset dir="." fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </tarfileset>
+    </tar>
+    <untar src="test8.tar" dest="."/>
+  </target>
+
   <target name="cleanup"> 
     <delete file="test4.tar"/>
     <delete file="test5.tar"/>
@@ -52,6 +61,8 @@
     <delete dir="test7dir"/>
     <delete dir="test7-prefix"/>
     <delete file="test7.tar"/>
+    <delete file="test8.tar"/>
+    <delete file="test8.xml"/>
   </target>
 
   <target name="feather">
