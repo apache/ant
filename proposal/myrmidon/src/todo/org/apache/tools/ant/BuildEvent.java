@@ -9,7 +9,8 @@ package org.apache.tools.ant;
 
 import java.util.EventObject;
 
-public class BuildEvent extends EventObject
+public class BuildEvent
+    extends EventObject
 {
     private int priority = Project.MSG_VERBOSE;
     private Throwable exception;

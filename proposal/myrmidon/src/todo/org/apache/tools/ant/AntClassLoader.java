@@ -35,18 +35,19 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>
  * @author <a href="mailto:Jesse.Glick@netbeans.com">Jesse Glick</a>
  */
-public class AntClassLoader extends ClassLoader implements BuildListener
+public class AntClassLoader
+    extends ClassLoader
+    implements BuildListener
 {
-
     /**
      * The size of buffers to be used in this classloader.
      */
     private final static int BUFFER_SIZE = 8192;
 
-    private static Method getProtectionDomain = null;
-    private static Method defineClassProtectionDomain = null;
-    private static Method getContextClassLoader = null;
-    private static Method setContextClassLoader = null;
+    private static Method getProtectionDomain;
+    private static Method defineClassProtectionDomain;
+    private static Method getContextClassLoader;
+    private static Method setContextClassLoader;
 
     /**
      * The components of the classpath that the classloader searches for classes
