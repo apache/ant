@@ -367,7 +367,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
                 {
                     log("Found " + getProjectName() + delim + getViewName() + delim);
                 }
-                runType(s, p, v, s.typeForName((String)s.getTypeNames().FILE));
+                runType(s, p, v, s.typeForName(s.getTypeNames().FILE));
                 break;
             }
         }
