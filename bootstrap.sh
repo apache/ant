@@ -72,8 +72,8 @@ if [ -d "bootstrap" ] ; then
   rm -r bootstrap
 fi
 
-if [ -d "build/classes" ] ; then
-  rm -r build/classes
+if [ -d "build" ] ; then
+  rm -r build
 fi
 
 CLASSPATH=lib/crimson.jar:${CLASSPATH}

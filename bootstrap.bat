@@ -20,8 +20,8 @@ echo ... Bootstrapping Ant Distribution
 
 if     "%OS%" == "Windows_NT" if exist bootstrap\nul rmdir/s/q bootstrap
 if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
-if     "%OS%" == "Windows_NT" if exist build\classes\nul rmdir/s/q build\classes
-if not "%OS%" == "Windows_NT" if exist build\classes\nul deltree/y build\classes
+if     "%OS%" == "Windows_NT" if exist build\nul rmdir/s/q build
+if not "%OS%" == "Windows_NT" if exist build\nul deltree/y build
 
 SET LOCALCLASSPATH=lib\crimson.jar
 for %%i in (lib\optional\*.jar) do call src\script\lcp.bat %%i
