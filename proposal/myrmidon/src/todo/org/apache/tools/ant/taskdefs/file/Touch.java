@@ -126,7 +126,7 @@ public class Touch extends Task
      *
      * @exception TaskException Description of Exception
      */
-    protected void touch()
+    public void touch()
         throws TaskException
     {
         if( file != null )

@@ -17,6 +17,7 @@ import java.net.URLConnection;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.file.Touch;
 
 /**
  * Get a particular file from a URL source. Options include verbose reporting,

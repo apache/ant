@@ -29,7 +29,8 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Translate extends MatchingTask
+public class Translate
+    extends MatchingTask
 {
     /**
      * ArrayList to hold source file sets.
