@@ -734,7 +734,8 @@ public class Javadoc extends Task {
         }
 
         Commandline toExecute = (Commandline)cmd.clone();
-        toExecute.setExecutable("javadoc");
+        toExecute.setExecutable(System.getProperty("java.home") +
+            "/../bin/javadoc");
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
