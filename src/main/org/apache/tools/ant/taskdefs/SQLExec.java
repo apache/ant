@@ -493,6 +493,8 @@ public class SQLExec extends Task {
         try{
             while ((line=in.readLine()) != null){
                 line = line.trim();
+                line = ProjectHelper.replaceProperties(project, line,
+                                                       project.getProperties());
                 if (line.startsWith("//")) continue;
                 if (line.startsWith("--")) continue;
                 if (line.length() > 2 &&
