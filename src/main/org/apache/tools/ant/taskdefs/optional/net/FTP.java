@@ -1877,18 +1877,15 @@ public class FTP
 
     /**
      * Create the specified directory on the remote host.
-     * 
-     * @param ftp
-     *            The FTP client connection
-     * @param dir
-     *            The directory to create (format must be correct for host type)
-     * @throws IOException
-     *             in unknown circumstances
-     * @throws BuildException
-     *             if ignoreNoncriticalErrors has not been set to true and a
-     *             directory could not be created, for instance because it was
-     *             already existing. Precisely, the codes 521, 550 and 553 will
-     *             trigger a BuildException
+     *
+     * @param ftp The FTP client connection
+     * @param dir The directory to create (format must be correct for host
+     *      type)
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException if ignoreNoncriticalErrors has not been set to true
+     *         and a directory could not be created, for instance because it was
+     *         already existing. Precisely, the codes 521, 550 and 553 will trigger
+     *         a BuildException
      */
     protected void makeRemoteDir(FTPClient ftp, String dir)
          throws IOException, BuildException {
