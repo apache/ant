@@ -836,7 +836,7 @@ public class Project {
      * @exception BuildException if there is a cyclic dependency among the
      * Targets, or if a Target does not exist.
      */
-    private final Vector topoSort(String root, Hashtable targets)
+    public final Vector topoSort(String root, Hashtable targets)
         throws BuildException {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
