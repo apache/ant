@@ -314,10 +314,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (attributes.getSource() != null && !assumeJava13()) {
             cmd.createArgument().setValue("-source");
             String source = attributes.getSource();
-            if (assumeJava14()
-                && (source.equals("1.1") || source.equals("1.2"))) {
+            if (source.equals("1.1") || source.equals("1.2")) {
                 // support for -source 1.1 and -source 1.2 has been
-                // added with JDK 1.4.2
+                // added with JDK 1.4.2 - and isn't present in 1.5.0 either
                 cmd.createArgument().setValue("1.3");
             } else {
                 cmd.createArgument().setValue(source);
@@ -326,16 +325,24 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             String t = attributes.getTarget();
             if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
                 || t.equals("1.4")) {
+                String s = t;
+                if (t.equals("1.1") || t.equals("1.2")) {
+                    // 1.5.0 doesn't support -source 1.1 or -source 1.2
+                    s = "1.3";
+                }
+                attributes.log("", Project.MSG_WARN);
+                attributes.log("          WARNING", Project.MSG_WARN);
+                attributes.log("", Project.MSG_WARN);
                 attributes.log("The -source switch defaults to 1.5 in JDK 1.5.",
                                Project.MSG_WARN);
                 attributes.log("If you specify -target " + t
-                               + " you now must also specify -source " + t
+                               + " you now must also specify -source " + s
                                + ".", Project.MSG_WARN);
-                attributes.log("Ant will implicitly add -source " + t
+                attributes.log("Ant will implicitly add -source " + s
                                + " for you.  Please change your build file.",
                                Project.MSG_WARN);
                 cmd.createArgument().setValue("-source");
-                cmd.createArgument().setValue(t);
+                cmd.createArgument().setValue(s);
             }
         }
         return cmd;
