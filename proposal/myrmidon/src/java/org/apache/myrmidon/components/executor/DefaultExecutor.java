@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.components.executor;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -34,6 +36,9 @@ public class DefaultExecutor
     extends AbstractLoggable
     implements Executor, Composable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultExecutor.class );
+
     private Configurer           m_configurer;
 
     /**
@@ -51,28 +56,38 @@ public class DefaultExecutor
     public void execute( final Configuration taskModel, final ExecutionFrame frame )
         throws TaskException
     {
-        getLogger().debug( "Creating" );
+        debug( "creating.notice" );
         final Task task = createTask( taskModel.getName(), frame );
+
+        debug( "logger.notice" );
         doLoggable( task, taskModel, frame.getLogger() );
 
-        getLogger().debug( "Contextualizing" );
+        debug( "contextualizing.notice" );
         doContextualize( task, taskModel, frame.getContext() );
 
-        getLogger().debug( "Composing" );
+        debug( "composing.notice" );
         doCompose( task, taskModel, frame.getComponentManager() );
 
-        getLogger().debug( "Configuring" );
+        debug( "configuring.notice" );
         doConfigure( task, taskModel, frame.getContext() );
 
-        getLogger().debug( "Initializing" );
+        debug( "initializing.notice" );
         doInitialize( task, taskModel );
 
-        getLogger().debug( "Running" );
-
+        debug( "executing.notice" );
         task.execute();
 
-        getLogger().debug( "Disposing" );
+        debug( "disposing.notice" );
         doDispose( task, taskModel );
+    }
+
+    protected final void debug( final String key )
+    {
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = REZ.getString( key );
+            getLogger().debug( message );
+        }
     }
 
     protected final Task createTask( final String name, final ExecutionFrame frame )
@@ -85,7 +100,8 @@ public class DefaultExecutor
         }
         catch( final TypeException te )
         {
-            throw new TaskException( "Unable to create task " + name, te );
+            final String message = REZ.getString( "no-create.error", name );
+            throw new TaskException( message, te );
         }
     }
 
@@ -97,13 +113,16 @@ public class DefaultExecutor
         try { m_configurer.configure( task, taskModel, context ); }
         catch( final Throwable throwable )
         {
-            throw new TaskException( "Error configuring task " +  taskModel.getName() + " at " +
-                                     taskModel.getLocation() + "(Reason: " +
-                                     throwable.getMessage() + ")", throwable );
+            final String message =
+                REZ.getString( "config.error",
+                               taskModel.getName(),
+                               taskModel.getLocation(),
+                               throwable.getMessage() );
+            throw new TaskException( message, throwable );
         }
     }
 
-    protected final void doCompose( final Task task, 
+    protected final void doCompose( final Task task,
                                     final Configuration taskModel,
                                     final ComponentManager componentManager )
         throws TaskException
@@ -113,9 +132,12 @@ public class DefaultExecutor
             try { ((Composable)task).compose( componentManager ); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error composing task " +  taskModel.getName() + " at " +
-                                         taskModel.getLocation() + "(Reason: " +
-                                         throwable.getMessage() + ")", throwable );
+                final String message =
+                    REZ.getString( "compose.error",
+                                   taskModel.getName(),
+                                   taskModel.getLocation(),
+                                   throwable.getMessage() );
+                throw new TaskException( message, throwable );
             }
         }
     }
@@ -134,9 +156,12 @@ public class DefaultExecutor
         }
         catch( final Throwable throwable )
         {
-            throw new TaskException( "Error contextualizing task " +  taskModel.getName() + " at " +
-                                     taskModel.getLocation() + "(Reason: " +
-                                     throwable.getMessage() + ")", throwable );
+            final String message =
+                REZ.getString( "compose.error",
+                               taskModel.getName(),
+                               taskModel.getLocation(),
+                               throwable.getMessage() );
+            throw new TaskException( message, throwable );
         }
     }
 
@@ -148,15 +173,18 @@ public class DefaultExecutor
             try { ((Disposable)task).dispose(); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error disposing task " +  taskModel.getName() + " at " +
-                                         taskModel.getLocation() + "(Reason: " +
-                                         throwable.getMessage() + ")", throwable );
+                final String message =
+                    REZ.getString( "dispose.error",
+                                   taskModel.getName(),
+                                   taskModel.getLocation(),
+                                   throwable.getMessage() );
+                throw new TaskException( message, throwable );
             }
         }
     }
 
-    protected final void doLoggable( final Task task, 
-                                     final Configuration taskModel, 
+    protected final void doLoggable( final Task task,
+                                     final Configuration taskModel,
                                      final Logger logger )
         throws TaskException
     {
@@ -165,9 +193,12 @@ public class DefaultExecutor
             try { ((Loggable)task).setLogger( logger ); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error setting logger for task " +  taskModel.getName() + 
-                                         " at " + taskModel.getLocation() + "(Reason: " +
-                                         throwable.getMessage() + ")", throwable );
+                final String message =
+                    REZ.getString( "logger.error",
+                                   taskModel.getName(),
+                                   taskModel.getLocation(),
+                                   throwable.getMessage() );
+                throw new TaskException( message, throwable );
             }
         }
     }
@@ -180,9 +211,12 @@ public class DefaultExecutor
             try { ((Initializable)task).initialize(); }
             catch( final Throwable throwable )
             {
-                throw new TaskException( "Error initializing task " +  taskModel.getName() + " at " +
-                                         taskModel.getLocation() + "(Reason: " +
-                                         throwable.getMessage() + ")", throwable );
+                final String message =
+                    REZ.getString( "init.error",
+                                   taskModel.getName(),
+                                   taskModel.getLocation(),
+                                   throwable.getMessage() );
+                throw new TaskException( message, throwable );
             }
         }
     }

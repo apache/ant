@@ -12,21 +12,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Hierarchy;
 import org.apache.log.Logger;
-import org.apache.log.LogTarget;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -52,6 +53,9 @@ public class DefaultWorkspace
     extends AbstractLoggable
     implements Workspace, Composable, Parameterizable, Initializable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultWorkspace.class );
+
     private Executor                 m_executor;
     private ProjectListenerSupport   m_listenerSupport   = new ProjectListenerSupport();
     private ComponentManager         m_componentManager;
@@ -109,7 +113,7 @@ public class DefaultWorkspace
 
         m_hierarchy = new Hierarchy();
 
-        final LogTarget target = new LogTargetToListenerAdapter( m_listenerSupport );
+        final LogTargetToListenerAdapter target = new LogTargetToListenerAdapter( m_listenerSupport );
         m_hierarchy.setDefaultLogTarget( target );
     }
 
@@ -158,21 +162,22 @@ public class DefaultWorkspace
         throws TaskException
     {
         //TODO: In future this will be expanded to allow
-        //users to specify search path or automagically 
-        //add entries to lib path (like user specific or 
+        //users to specify search path or automagically
+        //add entries to lib path (like user specific or
         //workspace specific)
         final String name = libraryName.replace( '/', File.separatorChar ) + ".atl";
 
         final String home = System.getProperty( "myrmidon.home" );
         final File homeDir = new File( home + File.separatorChar + "ext" );
-        
+
         final File library = new File( homeDir, name );
 
         if( library.exists() )
         {
             if( !library.canRead() )
             {
-                throw new TaskException( "Unable to read library at " + library );
+                final String message = REZ.getString( "no-read.error", library );
+                throw new TaskException( message );
             }
             else
             {
@@ -180,7 +185,8 @@ public class DefaultWorkspace
             }
         }
 
-        throw new TaskException( "Unable to locate Type Library " + libraryName );
+        final String message = REZ.getString( "no-library.error", libraryName );
+        throw new TaskException( message );
     }
 
     private void deployTypeLib( final Deployer deployer, final Project project )
@@ -206,8 +212,8 @@ public class DefaultWorkspace
             }
             catch( final DeploymentException de )
             {
-                throw new TaskException( "Error deploying type library " +
-                                         typeLib + " at " + file, de );
+                final String message = REZ.getString( "no-deploy.error", typeLib, file );
+                throw new TaskException( message, de );
             }
         }
     }
@@ -235,7 +241,8 @@ public class DefaultWorkspace
         try { deployer.compose( componentManager ); }
         catch( final ComponentException ce )
         {
-            throw new TaskException( "Error configuring deployer", ce );
+            final String message = REZ.getString( "bad-deployer-config.error" );
+            throw new TaskException( message, ce );
         }
 
         //HACK: Didn't call initialize because Deployer contained in Embeddor
@@ -272,7 +279,8 @@ public class DefaultWorkspace
         }
         catch( final Exception e )
         {
-            throw new TaskException( "Error setting up ExecutionFrame", e );
+            final String message = REZ.getString( "bad-frame.error" );
+            throw new TaskException( message, e );
         }
 
         return frame;
@@ -301,7 +309,8 @@ public class DefaultWorkspace
         if( null == other )
         {
             //TODO: Fix this so location information included in description
-            throw new TaskException( "Project '" + name + "' not found." );
+            final String message = REZ.getString( "no-project.error", name );
+            throw new TaskException( message );
         }
 
         return other;
@@ -338,7 +347,8 @@ public class DefaultWorkspace
         final Target target = project.getTarget( targetName );
         if( null == target )
         {
-            throw new TaskException( "Unable to find target " + targetName );
+            final String message = REZ.getString( "no-target.error", targetName );
+            throw new TaskException( message );
         }
 
         //add target to list of targets executed
@@ -385,19 +395,20 @@ public class DefaultWorkspace
             {
                 if( false == condition.evaluate( frame.getContext() ) )
                 {
-                    getLogger().debug( "Skipping target " + name +
-                                       " as it does not satisfy condition" );
+                    final String message = REZ.getString( "skip-target.notice", name );
+                    getLogger().debug( message );
                     return;
                 }
             }
             catch( final ContextException ce )
             {
-                throw new TaskException( "Error evaluating Condition for target " + 
-                                         name, ce );
+                final String message = REZ.getString( "condition-eval.error", name );
+                throw new TaskException( message, ce );
             }
         }
 
-        getLogger().debug( "Executing target " + name );
+        final String message = REZ.getString( "exec-target.notice", name );
+        getLogger().debug( message );
 
         //frame.getContext().setProperty( Project.TARGET, target );
 
@@ -420,7 +431,9 @@ public class DefaultWorkspace
         throws TaskException
     {
         final String name = task.getName();
-        getLogger().debug( "Executing task " + name );
+
+        final String message = REZ.getString( "exec-task.notice", name );
+        getLogger().debug( message );
 
         //is setting name even necessary ???
         frame.getContext().setProperty( TaskContext.NAME, name );

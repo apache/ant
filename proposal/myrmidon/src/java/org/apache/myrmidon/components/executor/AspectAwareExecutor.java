@@ -7,13 +7,15 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
@@ -24,6 +26,9 @@ import org.apache.myrmidon.components.aspect.AspectManager;
 public class AspectAwareExecutor
     extends DefaultExecutor
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( AspectAwareExecutor.class );
+
     private final static Parameters       EMPTY_PARAMETERS;
     private final static Configuration[]  EMPTY_ELEMENTS       = new Configuration[ 0 ];
 
@@ -71,33 +76,33 @@ public class AspectAwareExecutor
         taskModel = getAspectManager().preCreate( taskModel );
         taskModel = prepareAspects( taskModel );
 
-        getLogger().debug( "Pre-Create" );
+        debug( "creating.notice" );
         final Task task = createTask( taskModel.getName(), frame );
         getAspectManager().postCreate( task );
 
-        getLogger().debug( "Pre-Loggable" );
+        debug( "logger.notice" );
         final Logger logger = frame.getLogger();
         getAspectManager().preLoggable( logger );
         doLoggable( task, taskModel, logger );
 
-        getLogger().debug( "Contextualizing" );
+        debug( "contextualizing.notice" );
         doContextualize( task, taskModel, frame.getContext() );
 
-        getLogger().debug( "Composing" );
+        debug( "composing.notice" );
         doCompose( task, taskModel, frame.getComponentManager() );
 
-        getLogger().debug( "Configuring" );
+        debug( "configuring.notice" );
         getAspectManager().preConfigure( taskModel );
         doConfigure( task, taskModel, frame.getContext() );
 
-        getLogger().debug( "Initializing" );
+        debug( "initializing.notice" );
         doInitialize( task, taskModel );
 
-        getLogger().debug( "Executing" );
+        debug( "executing.notice" );
         getAspectManager().preExecute();
         doExecute( taskModel, task );
 
-        getLogger().debug( "Disposing" );
+        debug( "disposing.notice" );
         getAspectManager().preDestroy();
         doDispose( task, taskModel );
     }
@@ -114,7 +119,7 @@ public class AspectAwareExecutor
     private final Configuration prepareAspects( final Configuration taskModel )
         throws TaskException
     {
-        final DefaultConfiguration newTaskModel = 
+        final DefaultConfiguration newTaskModel =
             new DefaultConfiguration( taskModel.getName(), taskModel.getLocation() );
         final HashMap parameterMap = new HashMap();
         final HashMap elementMap = new HashMap();
@@ -128,12 +133,12 @@ public class AspectAwareExecutor
         return newTaskModel;
     }
 
-    private final void dispatchAspectsSettings( final HashMap parameterMap, 
+    private final void dispatchAspectsSettings( final HashMap parameterMap,
                                                 final HashMap elementMap )
         throws TaskException
     {
         final String[] names = getAspectManager().getNames();
-        
+
         for( int i = 0; i < names.length; i++ )
         {
             final ArrayList elementList = (ArrayList)elementMap.remove( names[ i ] );
@@ -147,18 +152,18 @@ public class AspectAwareExecutor
             {
                 elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
             }
-            
+
             dispatch( names[ i ], parameters, elements );
         }
     }
 
-    private final void checkForUnusedSettings( final HashMap parameterMap, 
+    private final void checkForUnusedSettings( final HashMap parameterMap,
                                                final HashMap elementMap )
         throws TaskException
     {
         if( 0 != parameterMap.size() )
         {
-            final String[] namespaces = 
+            final String[] namespaces =
                 (String[])parameterMap.keySet().toArray( new String[ 0 ] );
 
             for( int i = 0; i < namespaces.length; i++ )
@@ -166,48 +171,51 @@ public class AspectAwareExecutor
                 final String namespace = namespaces[ i ];
                 final Parameters parameters = (Parameters)parameterMap.get( namespace );
                 final ArrayList elementList = (ArrayList)elementMap.remove( namespace );
-                
+
                 Configuration[] elements = null;
-                
+
                 if( null == elementList ) elements = EMPTY_ELEMENTS;
                 else
                 {
                     elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
                 }
-                
+
                 unusedSetting( namespace, parameters, elements );
             }
         }
 
         if( 0 != elementMap.size() )
         {
-            final String[] namespaces = 
+            final String[] namespaces =
                 (String[])elementMap.keySet().toArray( new String[ 0 ] );
-            
+
             for( int i = 0; i < namespaces.length; i++ )
             {
                 final String namespace = namespaces[ i ];
                 final ArrayList elementList = (ArrayList)elementMap.remove( namespace );
-                final Configuration[] elements = 
+                final Configuration[] elements =
                     (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
-                
+
                 unusedSetting( namespace, EMPTY_PARAMETERS, elements );
             }
         }
     }
 
-    private void unusedSetting( final String namespace, 
-                                final Parameters parameters, 
+    private void unusedSetting( final String namespace,
+                                final Parameters parameters,
                                 final Configuration[] elements )
         throws TaskException
     {
-        throw new TaskException( "Unused aspect settings for namespace " + namespace + 
-                                " (parameterCount=" + parameters.getNames().length + 
-                                 " elementCount=" + elements.length + ")" ); 
+        final String message =
+            REZ.getString( "unused-settings.error",
+                           namespace,
+                           Integer.toString( parameters.getNames().length ),
+                           Integer.toString( elements.length ) );
+        throw new TaskException( message );
     }
 
-    private void dispatch( final String namespace, 
-                           final Parameters parameters, 
+    private void dispatch( final String namespace,
+                           final Parameters parameters,
                            final Configuration[] elements )
         throws TaskException
     {
@@ -215,13 +223,16 @@ public class AspectAwareExecutor
 
         if( getLogger().isDebugEnabled() )
         {
-            getLogger().debug( "Dispatching Aspect Settings to: " + namespace + 
-                               " parameterCount=" + parameters.getNames().length + 
-                               " elementCount=" + elements.length ); 
+            final String message =
+                REZ.getString( "dispatch-settings.notice",
+                               namespace,
+                               Integer.toString( parameters.getNames().length ),
+                               Integer.toString( elements.length ) );
+            getLogger().debug( message );
         }
     }
 
-    private final void processElements( final Configuration taskModel, 
+    private final void processElements( final Configuration taskModel,
                                         final DefaultConfiguration newTaskModel,
                                         final HashMap map )
     {
@@ -230,8 +241,8 @@ public class AspectAwareExecutor
         {
             final String name = elements[ i ].getName();
             final int index = name.indexOf( ':' );
-            
-            if( -1 == index ) 
+
+            if( -1 == index )
             {
                 newTaskModel.addChild( elements[ i ] );
             }
@@ -245,7 +256,7 @@ public class AspectAwareExecutor
         }
     }
 
-    private final void processAttributes( final Configuration taskModel, 
+    private final void processAttributes( final Configuration taskModel,
                                           final DefaultConfiguration newTaskModel,
                                           final HashMap map )
     {
@@ -256,8 +267,8 @@ public class AspectAwareExecutor
             final String value = taskModel.getAttribute( name, null );
 
             final int index = name.indexOf( ':' );
-            
-            if( -1 == index ) 
+
+            if( -1 == index )
             {
                 newTaskModel.setAttribute( name, value );
             }

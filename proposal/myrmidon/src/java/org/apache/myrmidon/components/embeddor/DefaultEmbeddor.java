@@ -10,6 +10,8 @@ package org.apache.myrmidon.components.embeddor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Map;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
@@ -28,11 +30,11 @@ import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.workspace.Workspace;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.components.type.TypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.components.workspace.Workspace;
 
 /**
  * Default implementation of Embeddor.
@@ -44,6 +46,9 @@ public class DefaultEmbeddor
     extends AbstractLoggable
     implements Embeddor
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultEmbeddor.class );
+
     private Deployer                 m_deployer;
     private RoleManager              m_roleManager;
 
@@ -75,8 +80,8 @@ public class DefaultEmbeddor
         m_parameters = parameters;
     }
 
-    public Project createProject( final String location, 
-                                  String type, 
+    public Project createProject( final String location,
+                                  String type,
                                   final Parameters parameters )
         throws Exception
     {
@@ -94,7 +99,7 @@ public class DefaultEmbeddor
         return FileUtil.getExtension( location );
     }
 
-    private ProjectBuilder getProjectBuilder( final String type, 
+    private ProjectBuilder getProjectBuilder( final String type,
                                               final Parameters parameters )
         throws Exception
     {
@@ -112,12 +117,12 @@ public class DefaultEmbeddor
         if( builder instanceof Parameterizable )
         {
             ((Parameterizable)builder).parameterize( parameters );
-        }        
+        }
 
         if( builder instanceof Initializable )
         {
             ((Initializable)builder).initialize();
-        }        
+        }
 
         return builder;
     }
@@ -126,7 +131,7 @@ public class DefaultEmbeddor
         throws Exception
     {
         final String component = getParameter( Workspace.ROLE );
-        final Workspace workspace = 
+        final Workspace workspace =
             (Workspace)createComponent( component, Workspace.class );
 
         setupLogger( workspace );
@@ -140,12 +145,12 @@ public class DefaultEmbeddor
         if( workspace instanceof Parameterizable )
         {
             ((Parameterizable)workspace).parameterize( parameters );
-        }        
+        }
 
         if( workspace instanceof Initializable )
         {
             ((Initializable)workspace).initialize();
-        }        
+        }
 
         return workspace;
     }
@@ -416,11 +421,13 @@ public class DefaultEmbeddor
     {
         if( !file.exists() )
         {
-            throw new Exception( name + " (" + file + ") does not exist" );
+            final String message = REZ.getString( "file-no-exist.error", name, file );
+            throw new Exception( message );
         }
         else if( !file.isDirectory() )
         {
-            throw new Exception( name + " (" + file + ") is not a directory" );
+            final String message = REZ.getString( "file-not-dir.error", name, file );
+            throw new Exception( message );
         }
     }
 
@@ -464,27 +471,30 @@ public class DefaultEmbeddor
 
             if( !clazz.isInstance( object ) )
             {
-                throw new Exception( "Object " + component + " is not an instance of " +
-                                     clazz );
+                final String message = REZ.getString( "bad-type.error", component, clazz.getName() );
+                throw new Exception( message );
             }
 
             return object;
         }
         catch( final IllegalAccessException iae )
         {
-            throw new Exception( "Non-public constructor for " + clazz + " " + component );
+            final String message = REZ.getString( "bad-ctor.error", clazz.getName(), component );
+            throw new Exception( message );
         }
         catch( final InstantiationException ie )
         {
-            throw new Exception( "Error instantiating class for " + clazz + " " + component );
+            final String message =
+                REZ.getString( "no-instantiate.error", clazz.getName(), component );
+            throw new Exception( message );
         }
         catch( final ClassNotFoundException cnfe )
         {
-            throw new Exception( "Could not find the class for " + clazz +
-                                 " (" + component + ")" );
+            final String message =
+                REZ.getString( "no-class.error", clazz.getName(), component );
+            throw new Exception( message );
         }
     }
-
 
     private void deployFromDirectory( final Deployer deployer,
                                       final File directory,
@@ -522,8 +532,8 @@ public class DefaultEmbeddor
             }
             catch( final Exception e )
             {
-                throw new DeploymentException( "Unable to retrieve filename for file " +
-                                               files[ i ], e );
+                final String message = REZ.getString( "bad-filename.error", files[ i ] );
+                throw new DeploymentException( message, e );
             }
         }
     }

@@ -8,6 +8,8 @@
 package org.apache.myrmidon.components.type;
 
 import java.util.HashMap;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * This factory acts as a proxy to set of object factorys.
@@ -15,8 +17,11 @@ import java.util.HashMap;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class MultiSourceTypeFactory
-    implements TypeFactory               
+    implements TypeFactory
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( MultiSourceTypeFactory.class );
+
     ///Parent Selector
     private final MultiSourceTypeFactory  m_parent;
 
@@ -58,14 +63,15 @@ public class MultiSourceTypeFactory
     {
         TypeFactory factory = getTypeFactory( name );
 
-        if( null == factory && null != m_parent ) 
+        if( null == factory && null != m_parent )
         {
             factory = m_parent.getTypeFactory( name );
         }
 
-        if( null == factory ) 
+        if( null == factory )
         {
-            throw new TypeException( "Failed to locate factory for '" + name + "'" );
+            final String message = REZ.getString( "no-factory.error", name );
+            throw new TypeException( message );
         }
         else
         {
@@ -73,8 +79,8 @@ public class MultiSourceTypeFactory
 
             if( !m_type.isInstance( object ) )
             {
-                throw new TypeException( "Object '" + name + "' is not of " +
-                                         "correct Type (" + m_type.getName() + ")" );
+                final String message = REZ.getString( "no-factory.error", name, m_type.getName() );
+                throw new TypeException( message );
             }
 
             return object;

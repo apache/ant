@@ -12,6 +12,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -28,6 +30,9 @@ import org.xml.sax.XMLReader;
 public class DefaultRoleManager
     implements RoleManager, Initializable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultRoleManager.class );
+
     private final static String ROLE_DESCRIPTOR = "META-INF/ant-roles.xml";
 
     /** Parent <code>RoleManager</code> for nested resolution */
@@ -152,15 +157,15 @@ public class DefaultRoleManager
         final String oldRole = (String)m_names.get( name );
         if( null != oldRole && oldRole.equals( role ) )
         {
-            throw new IllegalArgumentException( "Name already mapped to another role (" +
-                                                oldRole + ")" );
+            final String message = REZ.getString( "duplicate-name.error", oldRole );
+            throw new IllegalArgumentException( message );
         }
 
         final String oldName = (String)m_roles.get( role );
         if( null != oldName && oldName.equals( name ) )
         {
-            throw new IllegalArgumentException( "Role already mapped to another name (" +
-                                                oldName + ")" );
+            final String message = REZ.getString( "duplicate-role.error", oldName );
+            throw new IllegalArgumentException( message );
         }
 
         m_names.put( name, role );

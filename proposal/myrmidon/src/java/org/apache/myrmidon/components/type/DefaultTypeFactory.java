@@ -10,6 +10,8 @@ package org.apache.myrmidon.components.type;
 import java.net.URL;
 import java.util.HashMap;
 import java.net.URLClassLoader;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Create a type instance based on name.
@@ -20,6 +22,9 @@ import java.net.URLClassLoader;
 public class DefaultTypeFactory
     implements TypeFactory
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultTypeFactory.class );
+
     ///A Map of shortnames to classnames
     private final HashMap        m_classNames = new HashMap();
 
@@ -77,7 +82,8 @@ public class DefaultTypeFactory
         }
         catch( final Exception e )
         {
-            throw new TypeException( "Unable to instantiate '" + name + "'", e );
+            final String message = REZ.getString( "no-instantiate.error", name );
+            throw new TypeException( message, e );
         }
     }
 
@@ -88,8 +94,8 @@ public class DefaultTypeFactory
 
         if( null == className )
         {
-            throw new TypeException( "Malconfigured factory, no clasname for '" + 
-                                     name + "'" );
+            final String message = REZ.getString( "no-mapping.error", name );
+            throw new TypeException( message );
         }
         
         return className;

@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Default project implementation.
@@ -20,6 +22,9 @@ import java.util.HashMap;
 public class DefaultProject
     implements Project
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultProject.class );
+
     ///The imports
     private final ArrayList m_imports         = new ArrayList();
 
@@ -167,8 +172,8 @@ public class DefaultProject
     {
         if( null != m_targets.get( name ) )
         {
-            throw new IllegalArgumentException( "Can not have two targets in a " +
-                                                "file with the name " + name );
+            final String message = REZ.getString( "duplicate-target.error", name );
+            throw new IllegalArgumentException( message );
         }
         else
         {
@@ -187,8 +192,8 @@ public class DefaultProject
     {
         if( null != m_projects.get( name ) )
         {
-            throw new IllegalArgumentException( "Can not have two projects referenced in a " +
-                                                "file with the name " + name );
+            final String message = REZ.getString( "duplicate-project.error", name );
+            throw new IllegalArgumentException( message );
         }
         else
         {

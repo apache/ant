@@ -8,6 +8,8 @@
 package org.apache.myrmidon.components.type;
 
 import java.util.HashMap;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * The interface that is used to manage types.
@@ -17,6 +19,9 @@ import java.util.HashMap;
 public class DefaultTypeManager
     implements TypeManager
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultTypeManager.class );
+
     ///Parent type manager to inherit values from.
     private final DefaultTypeManager  m_parent;
 
@@ -92,8 +97,8 @@ public class DefaultTypeManager
             }
             catch( final Exception e )
             {
-                throw new TypeException( "Role '" + role + "' does not specify " +
-                                         "accessible work interface" );
+                final String message = REZ.getString( "no-work-interface.error", role );
+                throw new TypeException( message );
             }
         }        
 
