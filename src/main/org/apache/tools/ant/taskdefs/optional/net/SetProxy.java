@@ -48,7 +48,7 @@ import org.apache.tools.ant.Task;
  * and <tt>proxyPassword</tt> attributes. On Java1.4 and above these can also be
  * used against SOCKS5 servers.
  * </p>
- * @see <a href="http://java.sun.com/j2se/1.4/docs/guide/net/properties.html">
+ * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html">
  *  java 1.4 network property list</a>
   *@since       Ant 1.5
  * @ant.task category="network"
