@@ -86,8 +86,19 @@ public class ParseContext {
          = new CircularDependencyChecker("parsing XML");
 
     /** The factory used to create SAX parsers. */
-    private SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+    private SAXParserFactory parserFactory;
 
+    public ParseContext() {
+        Thread thread = Thread.currentThread();
+        ClassLoader currentContextLoader = thread.getContextClassLoader();
+        try {
+            ClassLoader thisLoader = this.getClass().getClassLoader();
+            thread.setContextClassLoader(thisLoader);
+            parserFactory = SAXParserFactory.newInstance();
+        } finally {
+            thread.setContextClassLoader(currentContextLoader);
+        }
+    }
 
     /**
      * Parse a URL using the given root handler
@@ -119,7 +130,18 @@ public class ParseContext {
             checker.visitNode(source);
 
             // create a parser for this source
-            SAXParser saxParser = parserFactory.newSAXParser();
+            SAXParser saxParser = null;
+            
+            Thread thread = Thread.currentThread();
+            ClassLoader currentContextLoader = thread.getContextClassLoader();
+            try {
+                ClassLoader thisLoader = this.getClass().getClassLoader();
+                thread.setContextClassLoader(thisLoader);
+                saxParser = parserFactory.newSAXParser();
+            } finally {
+                thread.setContextClassLoader(currentContextLoader);
+            }
+            
             XMLReader xmlReader = saxParser.getXMLReader();
 
             // create a root handler for this

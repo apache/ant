@@ -341,10 +341,15 @@ public abstract class ElementHandler extends DefaultHandler {
             }
             String localName = attributes.getLocalName(i);
             String qName = attributes.getQName(i);
-            if (uri == null && qName.indexOf(":") != -1) {
-                // try to resolve through known namespaces
-                uri = context.resolveNamespace(qName);
-                localName = qName.substring(qName.indexOf(":") + 1);
+            
+            if (uri == null) {
+                if (qName.indexOf(":") != -1) {
+                    // try to resolve through known namespaces
+                    uri = context.resolveNamespace(qName);
+                    localName = qName.substring(qName.indexOf(":") + 1);
+                } else {
+                    localName = qName;
+                }
             }
 
             String attributeValue = attributes.getValue(i);
