@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ public class SplashTask extends Task {
     /**
      * A URL pointing to an image to display; optional, default antlogo.gif
      * from the classpath.
+     * @param imgurl the url string pointing to the image
      */
     public void setImageURL(String imgurl) {
         this.imgurl = imgurl;
@@ -58,6 +59,7 @@ public class SplashTask extends Task {
     /**
      * flag to enable proxy settings; optional, deprecated : consider
      * using &lt;setproxy&gt; instead
+     * @param useProxy if ture, enable proxy settings
      * @deprecated use org.apache.tools.ant.taskdefs.optional.SetProxy
      */
     public void setUseproxy(boolean useProxy) {
@@ -66,6 +68,7 @@ public class SplashTask extends Task {
 
     /**
      * name of proxy; optional.
+     * @param proxy the name of the proxy host
      */
     public void setProxy(String proxy) {
         this.proxy = proxy;
@@ -73,6 +76,7 @@ public class SplashTask extends Task {
 
     /**
      * Proxy port; optional, default 80.
+     * @param port the proxy port
      */
     public void setPort(String port) {
         this.port = port;
@@ -80,6 +84,7 @@ public class SplashTask extends Task {
 
     /**
      * Proxy user; optional, default =none.
+     * @param user the proxy user
      */
     public void setUser(String user) {
         this.user = user;
@@ -87,6 +92,7 @@ public class SplashTask extends Task {
 
     /**
      * Proxy password; required if <tt>user</tt> is set.
+     * @param password the proxy password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -95,12 +101,17 @@ public class SplashTask extends Task {
     /**
      * how long to show the splash screen in milliseconds,
      * optional; default 5000 ms.
+     * @param duration the spash duration in milliseconds
      */
     public void setShowduration(int duration) {
         this.showDuration = duration;
     }
 
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         if (splash != null) {
             splash.setVisible(false);
@@ -129,7 +140,8 @@ public class SplashTask extends Task {
                     conn = url.openConnection();
                     if (user != null && user.length() > 0) {
                         String encodedcreds =
-                            new sun.misc.BASE64Encoder().encode((new String(user + ":" + password)).getBytes());
+                            new sun.misc.BASE64Encoder().encode(
+                                (new String(user + ":" + password)).getBytes());
                         conn.setRequestProperty("Proxy-Authorization",
                                                 encodedcreds);
                     }
@@ -217,6 +229,7 @@ public class SplashTask extends Task {
             try {
                 Thread.sleep(showDuration);
             } catch (InterruptedException e) {
+                // Ignore Exception
             }
         }
     }
