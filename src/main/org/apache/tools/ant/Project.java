@@ -758,7 +758,12 @@ public class Project {
                 String value = null;
 
                 do {
-                    token = s.substring(index + TOKEN_START.length(), s.indexOf(TOKEN_END, index + TOKEN_START.length() + 1));
+                    int endIndex = s.indexOf(TOKEN_END, 
+                                             index + TOKEN_START.length() + 1);
+                    if (endIndex == -1) {
+                        break;
+                    }
+                    token = s.substring(index + TOKEN_START.length(), endIndex);
                     b.append(s.substring(i, index));
                     if (tokens.containsKey(token)) {
                         value = (String) tokens.get(token);
