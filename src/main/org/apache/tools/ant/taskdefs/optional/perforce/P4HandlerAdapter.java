@@ -90,7 +90,8 @@ public abstract class P4HandlerAdapter implements P4Handler {
             Thread error = new Thread(new Reader(es));
             output.start();
             error.start();
-
+            output.join();
+            error.join();
         } catch (Exception e) {
             throw new BuildException(e);
         }
@@ -114,7 +115,7 @@ public abstract class P4HandlerAdapter implements P4Handler {
 
     public void stop() {
     }
-    
+
     public class Reader implements Runnable {
         protected InputStream mystream;
         public Reader(InputStream is)
