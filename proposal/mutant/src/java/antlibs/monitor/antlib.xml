@@ -1,4 +1,0 @@
-<antlib libid="antopt.monitor"
-        home="http://jakarta.apache.org/ant">
-  <aspect classname="org.apache.ant.antlib.monitor.MonitorAspect"/>
-</antlib>

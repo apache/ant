@@ -1,6 +1,0 @@
-<antlib libid="antopt.script" 
-        home="http://jakarta.apache.org/ant">
-
-  <factory classname="org.apache.ant.antlib.script.ScriptFactory"/>
-  <taskdef name="scriptdef" classname="org.apache.ant.antlib.script.ScriptDef"/>
-</antlib>
