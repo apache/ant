@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -290,13 +290,14 @@ public class FileSet extends DataType implements Cloneable {
         
         ds.setBasedir(dir);
 
-        for (int i=0; i<additionalPatterns.size(); i++) {
+        final int count = additionalPatterns.size();
+        for (int i = 0; i < count; i++) {
             Object o = additionalPatterns.elementAt(i);
             defaultPatterns.append((PatternSet) o, p);
         }
 
         p.log( "FileSet: Setup file scanner in dir " + dir + 
-            " with " + defaultPatterns, p.MSG_DEBUG );
+            " with " + defaultPatterns, Project.MSG_DEBUG );
         
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));

@@ -93,7 +93,7 @@ public class CommandlineJava implements Cloneable {
         Properties sys = null;
 
         public String[] getVariables() throws BuildException {
-            String props[] = super.getVariables();
+            String[] props = super.getVariables();
       
             if (props == null) {
               return null;
