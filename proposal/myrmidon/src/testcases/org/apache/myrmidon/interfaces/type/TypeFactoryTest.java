@@ -10,15 +10,16 @@ package org.apache.myrmidon.interfaces.type;
 import java.io.File;
 import java.net.URL;
 import junit.framework.TestCase;
+import org.apache.myrmidon.AbstractMyrmidonTest;
 
 /**
- * These are unit tests that test the basic operation of TypeFactorys.
+ * These are unit tests that test the basic operation of TypeFactories.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public class TypeFactoryTest
-    extends TestCase
+    extends AbstractMyrmidonTest
 {
     private final static String TYPE_NAME1 = "my-type1";
     private final static String TYPE_NAME2 = "my-type2";
@@ -26,9 +27,6 @@ public class TypeFactoryTest
     private final static Class TYPE_CLASS2 = MyType2.class;
     private final static String TYPE_CLASSNAME1 = TYPE_CLASS1.getName();
     private final static String TYPE_CLASSNAME2 = TYPE_CLASS2.getName();
-
-    private final static String TYPE_JAR =
-        "src/testcases/org/apache/myrmidon/interfaces/type/types.jar".replace( '/', File.separatorChar );
 
     public TypeFactoryTest( final String name )
     {
@@ -64,11 +62,10 @@ public class TypeFactoryTest
     public void testReloadingTypeFactory()
         throws Exception
     {
-        final File file = new File( TYPE_JAR );
-        assertTrue( "Support Jar exists", file.exists() );
+        final File file = getTestResource( "types.jar" );
+        assertTrue( "Support Jar " + file + " exists", file.exists() );
 
         final URL[] classpath = new URL[]{file.toURL()};
-        final ClassLoader classLoader = getClass().getClassLoader();
         final ReloadingTypeFactory factory = new ReloadingTypeFactory( classpath, null );
         factory.addNameClassMapping( TYPE_NAME1, TYPE_CLASSNAME1 );
 

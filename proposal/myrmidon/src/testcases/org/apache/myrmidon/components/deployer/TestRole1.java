@@ -7,14 +7,12 @@
  */
 package org.apache.myrmidon.components.deployer;
 
-import org.apache.myrmidon.framework.DataType;
-
 /**
- * A test data-type.
+ * A test role interface.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class TestType1
-    implements DataType, TestRole1
+public interface TestRole1
 {
+    String ROLE = TestRole1.class.getName();
 }

@@ -50,27 +50,20 @@ class Deployment
         ResourceManager.getPackageResources( Deployment.class );
 
     private final static String DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";
-    private final static String ROLE_DESCRIPTOR = "META-INF/ant-roles.xml";
+    private final static String ROLE_DESCRIPTOR_NAME = "META-INF/ant-roles.xml";
 
     private ClassLoader m_classLoader;
-    private ConverterRegistry m_converterRegistry;
-    private TypeManager m_typeManager;
-    private RoleManager m_roleManager;
+    private DefaultDeployer m_deployer;
     private String[] m_descriptorUrls;
     private Configuration[] m_descriptors;
-    private DefaultTypeFactory m_converterFactory;
 
-    /** Map from role name -> DefaultTypeFactory for that role. */
+    /** Map from role Class -> DefaultTypeFactory for that role. */
     private Map m_factories = new HashMap();
 
-    public Deployment( final ClassLoader classLoader, ComponentManager manager )
-        throws ComponentException
+    public Deployment( final DefaultDeployer deployer, final ClassLoader classLoader )
     {
-        // Locate the various components needed
+        m_deployer = deployer;
         m_classLoader = classLoader;
-        m_converterRegistry = (ConverterRegistry)manager.lookup( ConverterRegistry.ROLE );
-        m_typeManager = (TypeManager)manager.lookup( TypeManager.ROLE );
-        m_roleManager = (RoleManager)manager.lookup( RoleManager.ROLE );
     }
 
     /**
@@ -94,7 +87,7 @@ class Deployment
         parser.setErrorHandler( handler );
 
         // Load the role descriptors, and deploy all roles
-        final List roleUrls = locateResources( ROLE_DESCRIPTOR, jarUrl );
+        final List roleUrls = locateResources( ROLE_DESCRIPTOR_NAME, jarUrl );
         for( Iterator iterator = roleUrls.iterator(); iterator.hasNext(); )
         {
             String url = (String)iterator.next();
@@ -143,7 +136,7 @@ class Deployment
         for( int i = 0; i < m_descriptors.length; i++ )
         {
             Configuration descriptor = m_descriptors[ i ];
-            deployFromDescriptor( descriptor, m_classLoader, m_descriptorUrls[ i ] );
+            deployFromDescriptor( descriptor, m_descriptorUrls[ i ] );
         }
     }
 
@@ -166,8 +159,8 @@ class Deployment
                     Configuration datatype = datatypes[ j ];
                     if( datatype.getAttribute( "name" ).equals( typeName ) )
                     {
-                        final String className = datatype.getAttribute( "classname" );
-                        handleType( roleShorthand, typeName, className );
+                        final TypeDefinition typeDef = m_deployer.createTypeDefinition( datatype );
+                        m_deployer.handleType( this, typeDef );
                     }
                 }
             }
@@ -187,53 +180,9 @@ class Deployment
     {
         final String typeName = typeDef.getName();
         final String roleShorthand = typeDef.getRole();
-
-        final String className = typeDef.getClassname();
-        if( null == className )
-        {
-            final String message = REZ.getString( "typedef.no-classname.error" );
-            throw new DeploymentException( message );
-        }
-
         try
         {
-            if( typeDef instanceof ConverterDefinition )
-            {
-                // Validate the definition
-                final ConverterDefinition converterDef = (ConverterDefinition)typeDef;
-                final String srcClass = converterDef.getSourceType();
-                final String destClass = converterDef.getDestinationType();
-                if( null == srcClass )
-                {
-                    final String message = REZ.getString( "converterdef.no-source.error" );
-                    throw new DeploymentException( message );
-                }
-                if( null == destClass )
-                {
-                    final String message = REZ.getString( "converterdef.no-destination.error" );
-                    throw new DeploymentException( message );
-                }
-
-                // Deploy the converter
-                handleConverter( className, srcClass, destClass );
-            }
-            else
-            {
-                // Validate the definition
-                if( null == roleShorthand )
-                {
-                    final String message = REZ.getString( "typedef.no-role.error" );
-                    throw new DeploymentException( message );
-                }
-                else if( null == typeName )
-                {
-                    final String message = REZ.getString( "typedef.no-name.error" );
-                    throw new DeploymentException( message );
-                }
-
-                // Deploy general-purpose type
-                handleType( roleShorthand, typeName, className );
-            }
+            m_deployer.handleType( this, typeDef );
         }
         catch( Exception e )
         {
@@ -284,13 +233,8 @@ class Deployment
         {
             final String name = types[ i ].getAttribute( "shorthand" );
             final String role = types[ i ].getAttribute( "name" );
-            m_roleManager.addNameRoleMapping( name, role );
-
-            if( getLogger().isDebugEnabled() )
-            {
-                final String debugMessage = REZ.getString( "register-role.notice", role, name );
-                getLogger().debug( debugMessage );
-            }
+            final RoleDefinition roleDef = new RoleDefinition( role, name );
+            m_deployer.handleRole( this, roleDef );
         }
     }
 
@@ -298,7 +242,6 @@ class Deployment
      * Deploys all types from a typelib descriptor.
      */
     private void deployFromDescriptor( final Configuration descriptor,
-                                       final ClassLoader classLoader,
                                        final String url )
         throws DeploymentException
     {
@@ -312,21 +255,8 @@ class Deployment
             for( int i = 0; i < typeEntries.length; i++ )
             {
                 final Configuration typeEntry = typeEntries[ i ];
-                final String roleShorthand = typeEntry.getName();
-                final String typeName = typeEntry.getAttribute( "name" );
-                final String className = typeEntry.getAttribute( "classname" );
-                handleType( roleShorthand, typeName, className );
-            }
-
-            // Deploy all the converters
-            final Configuration[] converterEntries = descriptor.getChild( "converters" ).getChildren();
-            for( int i = 0; i < converterEntries.length; i++ )
-            {
-                final Configuration converter = converterEntries[ i ];
-                final String className = converter.getAttribute( "classname" );
-                final String source = converter.getAttribute( "source" );
-                final String destination = converter.getAttribute( "destination" );
-                handleConverter( className, source, destination );
+                final TypeDefinition typeDef = m_deployer.createTypeDefinition( typeEntry );
+                m_deployer.handleType( this, typeDef );
             }
         }
         catch( final Exception e )
@@ -339,7 +269,7 @@ class Deployment
     /**
      * Returns the type factory for a role.
      */
-    private DefaultTypeFactory getFactory( final Class roleType )
+    public DefaultTypeFactory getFactory( final Class roleType )
     {
         DefaultTypeFactory factory = (DefaultTypeFactory)m_factories.get( roleType );
 
@@ -353,67 +283,10 @@ class Deployment
     }
 
     /**
-     * Handles a converter definition.
+     * Returns the classloader for this deployment.
      */
-    private void handleConverter( final String className,
-                                  final String source,
-                                  final String destination ) throws Exception
+    public ClassLoader getClassLoader()
     {
-        m_converterRegistry.registerConverter( className, source, destination );
-
-        if( m_converterFactory == null )
-        {
-            m_converterFactory = new DefaultTypeFactory( m_classLoader );
-        }
-        m_converterFactory.addNameClassMapping( className, className );
-        m_typeManager.registerType( Converter.class, className, m_converterFactory );
-
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message =
-                REZ.getString( "register-converter.notice", source, destination );
-            getLogger().debug( message );
-        }
+        return m_classLoader;
     }
-
-    /**
-     * Handles a type definition.
-     */
-    private void handleType( final String roleShorthand,
-                             final String typeName,
-                             final String className )
-        throws Exception
-    {
-        // TODO - detect duplicates
-        final String role = getRoleForName( roleShorthand );
-        final Class roleType = m_classLoader.loadClass( role );
-        final DefaultTypeFactory factory = getFactory( roleType );
-        factory.addNameClassMapping( typeName, className );
-        m_typeManager.registerType( roleType, typeName, factory );
-
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message =
-                REZ.getString( "register-type.notice", roleShorthand, typeName );
-            getLogger().debug( message );
-        }
-    }
-
-    /**
-     * Determines the role name from shorthand name.
-     */
-    private String getRoleForName( final String name )
-        throws DeploymentException
-    {
-        final String role = m_roleManager.getRoleForName( name );
-
-        if( null == role )
-        {
-            final String message = REZ.getString( "unknown-role4name.error", name );
-            throw new DeploymentException( message );
-        }
-
-        return role;
-    }
-
 }

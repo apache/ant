@@ -416,19 +416,34 @@ Legal:
       <classpath refid="project.class.path"/>
     </javac>
 
-    <property name="test.local.dir" location="${test.working.dir}/localfs"/>
-    <property name="test.zip.file" location="${test.working.dir}/zipfs/test.zip"/>
-
     <!-- Prepare test files -->
     <delete dir="${test.working.dir}"/>
-    <copy todir="${test.local.dir}/read-tests">
-        <fileset dir="etc/testcases/org/apache/aut/vfs/basedir"/>
+    <copy todir="${test.working.dir}">
+        <fileset dir="etc/testcases"/>
     </copy>
-    <mkdir dir="${test.local.dir}/read-tests/emptydir"/>
-    <mkdir dir="${test.working.dir}/zipfs"/>
-    <zip zipfile="${test.zip.file}">
-        <zipfileset dir="${test.local.dir}/read-tests" prefix="/basedir"/>
+
+    <!-- Prepare the VFS tests -->
+    <property name="test.vfs.dir" location="${test.working.dir}/org/apache/aut/vfs"/>
+    <mkdir dir="${test.vfs.dir}/basedir/emptydir"/>
+    <zip zipfile="${test.vfs.dir}/test.zip">
+        <fileset dir="${test.vfs.dir}" includes="basedir/**"/>
     </zip>
+
+    <!-- Prepare deployer tests -->
+    <property name="test.deployer.dir"
+              value="${test.working.dir}/org/apache/myrmidon/components/deployer"/>
+    <mkdir dir="${test.deployer.dir}"/>
+    <jar jarfile="${test.deployer.dir}/test.atl">
+        <zipfileset dir="etc/testcases/org/apache/myrmidon/components/deployer"
+                    prefix="META-INF"
+                    includes="*.xml"/>
+    </jar>
+
+    <!-- Prepare type factory tests -->
+    <mkdir dir="${test.working.dir}/org/apache/myrmidon/interfaces/type"/>
+    <jar jarfile="${test.working.dir}/org/apache/myrmidon/interfaces/type/types.jar">
+        <fileset dir="${test.classes}" includes="org/apache/myrmidon/interfaces/type/MyType1.class"/>
+    </jar>
 
     <junit printsummary="on"
            fork="true">
@@ -437,8 +452,7 @@ Legal:
       <classpath location="${test.classes}"/>
 
       <!-- Pass config to the tests -->
-      <sysproperty key="test.local.dir" value="${test.local.dir}"/>
-      <sysproperty key="test.zip.file" value="${test.zip.file}"/>
+      <sysproperty key="test.basedir" value="${test.working.dir}"/>
       <sysproperty key="test.smb.uri" value="smb://${vfs.user}:${vfs.password}@${vfs.host}/${vfs.user}/vfs"/>
       <sysproperty key="test.ftp.uri" value="ftp://${vfs.user}:${vfs.password}@${vfs.host}/home/${vfs.user}/vfs"/>
 

@@ -26,8 +26,7 @@ public class ZipFileSystemTest extends AbstractReadOnlyFileSystemTest
      */
     protected String getBaseFolderURI()
     {
-        String zipFileName = System.getProperty( "test.zip.file" );
-        String zipFile = new File( zipFileName ).getAbsolutePath();
+        File zipFile = getTestResource( "test.zip" );
         String uri = "zip:" + zipFile + "!basedir";
         return uri;
     }

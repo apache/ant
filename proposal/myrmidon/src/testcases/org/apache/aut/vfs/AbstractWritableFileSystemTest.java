@@ -27,7 +27,7 @@ public abstract class AbstractWritableFileSystemTest extends AbstractFileSystemT
     /**
      * Returns the URI for the area to do tests in.
      */
-    protected abstract String getWriteFolderURI();
+    protected abstract String getWriteFolderURI() throws Exception;
 
     /**
      * Sets up a scratch folder for the test to use.

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
+import org.apache.myrmidon.AbstractMyrmidonTest;
 
 /**
  * File system test cases, which verifies the structure and naming
@@ -28,7 +29,8 @@ import org.apache.aut.vfs.impl.DefaultFileSystemManager;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public abstract class AbstractFileSystemTest extends TestCase
+public abstract class AbstractFileSystemTest
+    extends AbstractMyrmidonTest
 {
     protected FileObject m_baseFolder;
     protected DefaultFileSystemManager m_manager;
@@ -63,7 +65,7 @@ public abstract class AbstractFileSystemTest extends TestCase
     /**
      * Returns the URI for the base folder.
      */
-    protected abstract String getBaseFolderURI();
+    protected abstract String getBaseFolderURI() throws Exception;
 
     /**
      * Sets up the test
@@ -160,7 +162,7 @@ public abstract class AbstractFileSystemTest extends TestCase
         // Try using a compound name to find a child
         try
         {
-            FileName name2 = name.resolveName( "a/b", NameScope.CHILD );
+            name.resolveName( "a/b", NameScope.CHILD );
             assertTrue( false );
         }
         catch( FileSystemException e )
@@ -170,7 +172,7 @@ public abstract class AbstractFileSystemTest extends TestCase
         // Try using a empty name to find a child
         try
         {
-            FileName name2 = name.resolveName( "", NameScope.CHILD );
+            name.resolveName( "", NameScope.CHILD );
             assertTrue( false );
         }
         catch( FileSystemException e )
@@ -180,7 +182,7 @@ public abstract class AbstractFileSystemTest extends TestCase
         // Try using '.' to find a child
         try
         {
-            FileName name2 = name.resolveName( ".", NameScope.CHILD );
+            name.resolveName( ".", NameScope.CHILD );
             assertTrue( false );
         }
         catch( FileSystemException e )
@@ -190,7 +192,7 @@ public abstract class AbstractFileSystemTest extends TestCase
         // Try using '..' to find a child
         try
         {
-            FileName name2 = name.resolveName( "..", NameScope.CHILD );
+            name.resolveName( "..", NameScope.CHILD );
             assertTrue( false );
         }
         catch( FileSystemException e )
@@ -278,14 +280,6 @@ public abstract class AbstractFileSystemTest extends TestCase
 
         // Test <elem>/<elem>/../../<elem> relative path
         assertSameName( childPath, baseName, "a/b/../../some-child" );
-    }
-
-    /**
-     * Tests relative name resolution, relative to the root file.
-     */
-    public void testNameResolutionRoot() throws Exception
-    {
-        FileName rootName = m_baseFolder.getRoot().getName();
     }
 
     /**

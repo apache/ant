@@ -18,10 +18,6 @@
       </XDtClass:ifHasClassTag>
     </XDtClass:forAllClasses>
 
-  </types>
-
-  <converters>
-
     <XDtClass:forAllClasses type="org.apache.myrmidon.converter.Converter">
       <XDtClass:ifHasClassTag tagName="ant:converter">
         <converter classname="<XDtClass:fullClassName/>"
@@ -30,6 +26,6 @@
       </XDtClass:ifHasClassTag>
     </XDtClass:forAllClasses>
 
-  </converters>
+  </types>
 
 </ant-lib>

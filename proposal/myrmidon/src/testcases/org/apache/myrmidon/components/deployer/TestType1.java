@@ -15,6 +15,6 @@ import org.apache.myrmidon.framework.DataType;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
 public class TestType1
-    implements DataType
+    implements DataType, TestRole1
 {
 }

@@ -16,33 +16,29 @@ import java.io.File;
  */
 public class LocalFileSystemTest extends AbstractWritableFileSystemTest
 {
-    private File m_baseDir;
-
     public LocalFileSystemTest( String name )
     {
         super( name );
-        String baseDir = System.getProperty( "test.local.dir" );
-        m_baseDir = new File( baseDir );
     }
 
     /**
      * Returns the URI for the base folder.
      */
     protected String getBaseFolderURI()
+        throws Exception
     {
-        String testDir = new File( m_baseDir, "read-tests" ).getAbsolutePath();
-        String uri = "file:/" + testDir;
-        return uri;
+        final File testDir = getTestResource( "basedir" );
+        return testDir.toURL().toString();
     }
 
     /**
      * Returns the URI for the area to do tests in.
      */
     protected String getWriteFolderURI()
+        throws Exception
     {
-        String testDir = new File( m_baseDir, "write-tests" ).getAbsolutePath();
-        String uri = "file:/" + testDir;
-        return uri;
+        final File testDir = getTestResource( "write-tests" );
+        return testDir.toURL().toString();
     }
 
     /**

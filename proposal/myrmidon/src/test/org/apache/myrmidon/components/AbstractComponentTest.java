@@ -28,6 +28,8 @@ import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 import org.apache.myrmidon.components.converter.DefaultConverterRegistry;
 import org.apache.myrmidon.components.converter.DefaultMasterConverter;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
+import org.apache.myrmidon.components.deployer.DefaultClassLoaderManager;
+import org.apache.myrmidon.components.deployer.ClassLoaderManager;
 import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
@@ -41,6 +43,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.AbstractMyrmidonTest;
 
 /**
  * A base class for tests for the default components.
@@ -48,7 +51,7 @@ import org.apache.myrmidon.converter.Converter;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
 public abstract class AbstractComponentTest
-    extends TestCase
+    extends AbstractMyrmidonTest
 {
     private DefaultComponentManager m_componentManager;
     private Logger m_logger;
@@ -117,6 +120,11 @@ public abstract class AbstractComponentTest
         m_componentManager.put( Deployer.ROLE, component );
         components.add( component );
 
+        final DefaultClassLoaderManager classLoaderMgr = new DefaultClassLoaderManager();
+        classLoaderMgr.setBaseClassLoader( getClass().getClassLoader() );
+        m_componentManager.put( ClassLoaderManager.ROLE, classLoaderMgr );
+        components.add( classLoaderMgr );
+
         component = new DefaultExtensionManager();
         m_componentManager.put( ExtensionManager.ROLE, component );
         components.add( component );
@@ -161,33 +169,5 @@ public abstract class AbstractComponentTest
         DefaultTypeFactory factory = new DefaultTypeFactory( getClass().getClassLoader() );
         factory.addNameClassMapping( converterClass.getName(), converterClass.getName() );
         getTypeManager().registerType( Converter.class, converterClass.getName(), factory );
-    }
-
-    /**
-     * Asserts that an exception contains the expected message.
-     *
-     * TODO - should take the expected exception, rather than the message,
-     * to check the entire cause chain.
-     */
-    protected void assertSameMessage( final String message, final Throwable throwable )
-    {
-        assertEquals( message, throwable.getMessage() );
-    }
-
-    /**
-     * Compares 2 objects for equality, nulls are equal.  Used by the test
-     * classes' equals() methods.
-     */
-    public static boolean equals( final Object o1, final Object o2 )
-    {
-        if( o1 == null && o2 == null )
-        {
-            return true;
-        }
-        if( o1 == null || o2 == null )
-        {
-            return false;
-        }
-        return o1.equals( o2 );
     }
 }

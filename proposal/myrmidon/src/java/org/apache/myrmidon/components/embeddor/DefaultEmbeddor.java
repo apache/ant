@@ -9,10 +9,14 @@ package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.Composable;
@@ -20,6 +24,7 @@ import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.myrmidon.components.deployer.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -52,37 +57,33 @@ public class DefaultEmbeddor
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
 
     private Deployer m_deployer;
-    private RoleManager m_roleManager;
-
-    private AspectManager m_aspectManager;
     private TypeManager m_typeManager;
-    private MasterConverter m_converter;
-    private ConverterRegistry m_converterRegistry;
-    private ExtensionManager m_extensionManager;
 
-    private Executor m_executor;
-    private Configurer m_configurer;
-
-    private DefaultComponentManager m_componentManager;
+    private List m_components = new ArrayList();
+    private DefaultComponentManager m_componentManager = new DefaultComponentManager();
     private Parameters m_parameters;
     private Parameters m_defaults;
 
     private File m_homeDir;
-    private File m_binDir;
-    private File m_libDir;
     private File m_taskLibDir;
+
+    /** Package containing the default component implementations. */
+    private static final String PREFIX = "org.apache.myrmidon.components.";
 
     /**
      * Setup basic properties of engine.
      * Called before init() and can be used to specify alternate components in system.
      *
-     * @param properties the properties
+     * @param parameters the parameters.
      */
     public void parameterize( final Parameters parameters )
     {
         m_parameters = parameters;
     }
 
+    /**
+     * Builds a project.
+     */
     public Project createProject( final String location,
                                   final String type,
                                   final Parameters parameters )
@@ -91,18 +92,16 @@ public class DefaultEmbeddor
         String projectType = type;
         if( null == projectType )
         {
-            projectType = guessTypeFor( location );
+            projectType = FileUtil.getExtension( location );
         }
 
         final ProjectBuilder builder = getProjectBuilder( projectType, parameters );
         return builder.build( location );
     }
 
-    private String guessTypeFor( final String location )
-    {
-        return FileUtil.getExtension( location );
-    }
-
+    /**
+     * Creates a project builder for a project type.
+     */
     private ProjectBuilder getProjectBuilder( final String type,
                                               final Parameters parameters )
         throws Exception
@@ -110,51 +109,20 @@ public class DefaultEmbeddor
 
         final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.class );
         final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
-
-        setupLogger( builder );
-
-        if( builder instanceof Composable )
-        {
-            ( (Composable)builder ).compose( m_componentManager );
-        }
-
-        if( builder instanceof Parameterizable )
-        {
-            ( (Parameterizable)builder ).parameterize( parameters );
-        }
-
-        if( builder instanceof Initializable )
-        {
-            ( (Initializable)builder ).initialize();
-        }
-
+        setupObject( builder, parameters );
         return builder;
     }
 
+    /**
+     * Creates a workspace.
+     */
     public Workspace createWorkspace( final Parameters parameters )
         throws Exception
     {
         final String component = getParameter( Workspace.ROLE );
         final Workspace workspace =
             (Workspace)createComponent( component, Workspace.class );
-
-        setupLogger( workspace );
-
-        if( workspace instanceof Composable )
-        {
-            ( (Composable)workspace ).compose( m_componentManager );
-        }
-
-        if( workspace instanceof Parameterizable )
-        {
-            ( (Parameterizable)workspace ).parameterize( parameters );
-        }
-
-        if( workspace instanceof Initializable )
-        {
-            ( (Initializable)workspace ).initialize();
-        }
-
+        setupObject( workspace, parameters );
         return workspace;
     }
 
@@ -172,10 +140,11 @@ public class DefaultEmbeddor
         //create all the components
         createComponents();
 
-        //setup the component manager
-        m_componentManager = createComponentManager();
-
+        //setup the components
         setupComponents();
+
+        m_deployer = (Deployer)m_componentManager.lookup( Deployer.ROLE );
+        m_typeManager = (TypeManager)m_componentManager.lookup( TypeManager.ROLE );
 
         setupFiles();
     }
@@ -193,32 +162,36 @@ public class DefaultEmbeddor
         deployFromDirectory( m_deployer, m_taskLibDir, filter );
     }
 
+    /**
+     * Stops the engine.
+     */
     public void stop()
     {
-        //Undeploy all the tasks by killing ExecutionFrame???
+        //TODO - Undeploy all the tasks by killing ExecutionFrame???
     }
 
     /**
      * Dispose engine.
-     *
-     * @exception Exception if an error occurs
      */
     public void dispose()
     {
-        m_extensionManager = null;
-        m_aspectManager = null;
-        m_roleManager = null;
-        m_converterRegistry = null;
-        m_converter = null;
-        m_executor = null;
+        // Dispose any disposable components
+        for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
+        {
+            Component component = (Component)iterator.next();
+            if( component instanceof Disposable )
+            {
+                ( (Disposable)component ).dispose();
+            }
+        }
+
+        // Ditch everything
+        m_components = null;
         m_deployer = null;
-        m_configurer = null;
         m_componentManager = null;
         m_parameters = null;
         m_defaults = null;
         m_homeDir = null;
-        m_binDir = null;
-        m_libDir = null;
         m_taskLibDir = null;
     }
 
@@ -236,93 +209,41 @@ public class DefaultEmbeddor
         defaults.setParameter( "myrmidon.bin.path", "bin" );
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
-        //create all the default properties for components
-        final String PREFIX = "org.apache.myrmidon.components.";
-        defaults.setParameter( AspectManager.ROLE, PREFIX + "aspect.DefaultAspectManager" );
-        defaults.setParameter( RoleManager.ROLE, PREFIX + "role.DefaultRoleManager" );
-        defaults.setParameter( MasterConverter.ROLE, PREFIX + "converter.DefaultMasterConverter" );
-        defaults.setParameter( ConverterRegistry.ROLE, PREFIX + "converter.DefaultConverterRegistry" );
-        defaults.setParameter( TypeManager.ROLE, PREFIX + "type.DefaultTypeManager" );
-        defaults.setParameter( Executor.ROLE,
-                               //"org.apache.myrmidon.components.executor.DefaultExecutor" );
-                               //"org.apache.myrmidon.components.executor.PrintingExecutor" );
-                               PREFIX + "executor.AspectAwareExecutor" );
+        // Default workspace implementation
         defaults.setParameter( Workspace.ROLE, PREFIX + "workspace.DefaultWorkspace" );
-        defaults.setParameter( Deployer.ROLE, PREFIX + "deployer.DefaultDeployer" );
-        defaults.setParameter( Configurer.ROLE, PREFIX + "configurer.DefaultConfigurer" );
-        defaults.setParameter( ExtensionManager.ROLE, PREFIX + "extensions.DefaultExtensionManager" );
 
         return defaults;
     }
 
     /**
-     * Create a ComponentManager containing all components in engine.
-     *
-     * @return the ComponentManager
-     */
-    private DefaultComponentManager createComponentManager()
-    {
-        final DefaultComponentManager componentManager = new DefaultComponentManager();
-
-        componentManager.put( MasterConverter.ROLE, m_converter );
-
-        //Following components required when Myrmidon is used as build tool
-        componentManager.put( Embeddor.ROLE, this );
-
-        //Following components required when Myrmidon allows user deployment of tasks etal.
-        componentManager.put( RoleManager.ROLE, m_roleManager );
-        componentManager.put( Deployer.ROLE, m_deployer );
-        componentManager.put( ExtensionManager.ROLE, m_extensionManager );
-
-        //Following components used when want to types (ie tasks/mappers etc)
-        componentManager.put( TypeManager.ROLE, m_typeManager );
-        componentManager.put( ConverterRegistry.ROLE, m_converterRegistry );
-
-        componentManager.put( AspectManager.ROLE, m_aspectManager );
-
-        //Following components required when allowing Container tasks
-        componentManager.put( Configurer.ROLE, m_configurer );
-        componentManager.put( Executor.ROLE, m_executor );
-
-        return componentManager;
-    }
-
-    /**
      * Create all required components.
-     *
-     * @exception Exception if an error occurs
      */
     private void createComponents()
         throws Exception
     {
-        String component = null;
+        createComponent( ConverterRegistry.class, PREFIX + "converter.DefaultConverterRegistry" );
+        createComponent( ExtensionManager.class, PREFIX + "extensions.DefaultExtensionManager" );
+        createComponent( MasterConverter.class, PREFIX + "converter.DefaultMasterConverter" );
+        createComponent( Configurer.class, PREFIX + "configurer.DefaultConfigurer" );
+        createComponent( TypeManager.class, PREFIX + "type.DefaultTypeManager" );
+        createComponent( RoleManager.class, PREFIX + "role.DefaultRoleManager" );
+        createComponent( AspectManager.class, PREFIX + "aspect.DefaultAspectManager" );
+        createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
+        createComponent( ClassLoaderManager.class, PREFIX + "deployer.DefaultClassLoaderManager" );
+        createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
+    }
 
-        component = getParameter( ConverterRegistry.ROLE );
-        m_converterRegistry = (ConverterRegistry)createComponent( component, ConverterRegistry.class );
-
-        component = getParameter( ExtensionManager.ROLE );
-        m_extensionManager = (ExtensionManager)createComponent( component, ExtensionManager.class );
-
-        component = getParameter( MasterConverter.ROLE );
-        m_converter = (MasterConverter)createComponent( component, MasterConverter.class );
-
-        component = getParameter( Configurer.ROLE );
-        m_configurer = (Configurer)createComponent( component, Configurer.class );
-
-        component = getParameter( TypeManager.ROLE );
-        m_typeManager = (TypeManager)createComponent( component, TypeManager.class );
-
-        component = getParameter( RoleManager.ROLE );
-        m_roleManager = (RoleManager)createComponent( component, RoleManager.class );
-
-        component = getParameter( AspectManager.ROLE );
-        m_aspectManager = (AspectManager)createComponent( component, AspectManager.class );
-
-        component = getParameter( Deployer.ROLE );
-        m_deployer = (Deployer)createComponent( component, Deployer.class );
-
-        component = getParameter( Executor.ROLE );
-        m_executor = (Executor)createComponent( component, Executor.class );
+    /**
+     * Creates a component.
+     */
+    private void createComponent( Class roleType, String defaultImpl )
+        throws Exception
+    {
+        final String role = roleType.getName();
+        final String className = m_parameters.getParameter( role, defaultImpl );
+        final Component component = createComponent( className, roleType );
+        m_componentManager.put( role, component );
+        m_components.add( component );
     }
 
     /**
@@ -333,40 +254,10 @@ public class DefaultEmbeddor
     private void setupComponents()
         throws Exception
     {
-        setupComponent( m_extensionManager );
-        setupComponent( m_roleManager );
-        setupComponent( m_aspectManager );
-        setupComponent( m_converterRegistry );
-        setupComponent( m_converter );
-        setupComponent( m_executor );
-        setupComponent( m_deployer );
-        setupComponent( m_configurer );
-    }
-
-    /**
-     * Setup an individual component.
-     *
-     * @param component the component
-     * @exception Exception if an error occurs
-     */
-    private void setupComponent( final Component component )
-        throws Exception
-    {
-        setupLogger( component );
-
-        if( component instanceof Composable )
+        for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
         {
-            ( (Composable)component ).compose( m_componentManager );
-        }
-
-        if( component instanceof Parameterizable )
-        {
-            ( (Parameterizable)component ).parameterize( m_parameters );
-        }
-
-        if( component instanceof Initializable )
-        {
-            ( (Initializable)component ).initialize();
+            final Component component = (Component)iterator.next();
+            setupObject( component, m_parameters );
         }
     }
 
@@ -381,9 +272,6 @@ public class DefaultEmbeddor
         filepath = getParameter( "myrmidon.home" );
         m_homeDir = ( new File( filepath ) ).getAbsoluteFile();
         checkDirectory( m_homeDir, "home" );
-
-        filepath = getParameter( "myrmidon.bin.path" );
-        m_binDir = resolveDirectory( filepath, "bin-dir" );
 
         filepath = getParameter( "myrmidon.lib.path" );
         m_taskLibDir = resolveDirectory( filepath, "task-lib-dir" );
@@ -453,7 +341,7 @@ public class DefaultEmbeddor
      * @return the created object
      * @exception Exception if an error occurs
      */
-    private Object createComponent( final String component, final Class clazz )
+    private Component createComponent( final String component, final Class clazz )
         throws Exception
     {
         try
@@ -465,8 +353,13 @@ public class DefaultEmbeddor
                 final String message = REZ.getString( "bad-type.error", component, clazz.getName() );
                 throw new Exception( message );
             }
+            if( !( object instanceof Component) )
+            {
+                final String message = REZ.getString( "bad-type.error", component, Component.class.getName() );
+                throw new Exception( message );
+            }
 
-            return object;
+            return (Component)object;
         }
         catch( final IllegalAccessException iae )
         {
@@ -484,6 +377,32 @@ public class DefaultEmbeddor
             final String message =
                 REZ.getString( "no-class.error", clazz.getName(), component );
             throw new Exception( message );
+        }
+    }
+
+    /**
+     * Sets-up an object by running it through the log-enable, compose,
+     * parameterise and initialise lifecycle stages.
+     */
+    private void setupObject( final Object object,
+                              final Parameters parameters )
+        throws Exception
+    {
+        setupLogger( object );
+
+        if( object instanceof Composable )
+        {
+            ( (Composable)object ).compose( m_componentManager );
+        }
+
+        if( object instanceof Parameterizable )
+        {
+            ( (Parameterizable)object ).parameterize( parameters );
+        }
+
+        if( object instanceof Initializable )
+        {
+            ( (Initializable)object ).initialize();
         }
     }
 
