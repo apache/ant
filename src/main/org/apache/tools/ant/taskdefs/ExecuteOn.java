@@ -71,6 +71,7 @@ public class ExecuteOn extends ExecTask {
 
     protected Vector filesets = new Vector();
     private boolean parallel = false;
+    protected String type = "file";
 
     /**
      * Adds a set of files (nested fileset attribute).
@@ -91,6 +92,13 @@ public class ExecuteOn extends ExecTask {
      */
     public void setParallel(boolean parallel) {
         this.parallel = parallel;
+    }
+
+    /**
+     * Shall the command work only on files, directories or both?
+     */
+    public void setType(FileDirBoth type) {
+        this.type = type.getValue();
     }
 
     protected void checkConfiguration() {
@@ -122,9 +130,18 @@ public class ExecuteOn extends ExecTask {
                 }
                 
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
-                String[] s = ds.getIncludedFiles();
-                for (int j=0; j<s.length; j++) {
-                    v.addElement(new File(fs.getDir(), s[j]).getAbsolutePath());
+                if (!"dir".equals(type)) {
+                    String[] s = ds.getIncludedFiles();
+                    for (int j=0; j<s.length; j++) {
+                        v.addElement(new File(fs.getDir(), s[j]).getAbsolutePath());
+                    }
+                }
+
+                if (!"file".equals(type)) {
+                    String[] s = ds.getIncludedDirectories();
+                    for (int j=0; j<s.length; j++) {
+                        v.addElement(new File(fs.getDir(), s[j]).getAbsolutePath());
+                    }
                 }
             }
 
@@ -170,6 +187,16 @@ public class ExecuteOn extends ExecTask {
         } finally {
             // close the output file if required
             logFlush();
+        }
+    }
+
+    /**
+     * Enumerated attribute with the values "file", "dir" and "both"
+     * for the type attribute.  
+     */
+    public static class FileDirBoth extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"file", "dir", "both"};
         }
     }
 
