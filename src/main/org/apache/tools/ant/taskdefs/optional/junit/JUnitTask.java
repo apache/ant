@@ -213,10 +213,7 @@ public class JUnitTask extends Task {
     public void addSysproperty(Environment.Variable sysp) {
         commandline.addSysproperty(sysp);
     }
-
-    /**
-     * create a classpath to use for forked jvm
-     */
+    
     public Path createClasspath() {
         return commandline.createClasspath(project).createPath();
     }
@@ -260,21 +257,17 @@ public class JUnitTask extends Task {
      */
     public void execute() throws BuildException {
         Enumeration list = getIndividualTests();
-        try {
-            while (list.hasMoreElements()) {
-                JUnitTest test = (JUnitTest)list.nextElement();
-                if ( test.shouldRun(project)) {
-                    execute(test);
-                }
+        while (list.hasMoreElements()) {
+            JUnitTest test = (JUnitTest)list.nextElement();
+            if ( test.shouldRun(project)) {
+                execute(test);
             }
-        } finally {
-            //@todo here we should run test aggregation (SBa)
         }
     }
 
     protected void execute(JUnitTest test) throws BuildException {
         // set the default values if not specified
-        //@todo should be moved to the test class (?) (SBa)
+        //@todo should be moved to the test class instead.
         if (test.getTodir() == null) {
             test.setTodir(project.resolveFile("."));
         }
@@ -288,7 +281,7 @@ public class JUnitTask extends Task {
         boolean wasKilled = false;
         if (!test.getFork()) {
             exitValue = executeInVM(test);
-        } else {                                
+        } else {
             ExecuteWatchdog watchdog = createWatchdog();
             exitValue = executeAsForked(test, watchdog);
             // null watchdog means no timeout, you'd better not check with null
@@ -459,10 +452,9 @@ public class JUnitTask extends Task {
 
     private FormatterElement[] mergeFormatters(JUnitTest test){
         Vector feVector = (Vector)formatters.clone();
-        FormatterElement[] fes = test.getFormatters();
-        FormatterElement[] feArray = new FormatterElement[feVector.size() + fes.length];
+        test.addFormattersTo(feVector);
+        FormatterElement[] feArray = new FormatterElement[feVector.size()];
         feVector.copyInto(feArray);
-        System.arraycopy(fes, 0, feArray, feVector.size(), fes.length);
         return feArray;
     }
 

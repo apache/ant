@@ -74,7 +74,7 @@ import junit.framework.TestCase;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public class XMLJUnitResultFormatter implements JUnitResultFormatter {
+public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstants {
 
     private static DocumentBuilder getDocumentBuilder() {
         try {
@@ -88,7 +88,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
     /**
      * Formatter for timings.
      */
-    private NumberFormat nf = NumberFormat.getInstance();
+    private NumberFormat nf = NumberFormat.getInstance(Locale.US);
+
     /**
      * The XML document.
      */
@@ -121,19 +122,19 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
      */
     public void startTestSuite(JUnitTest suite) {
         doc = getDocumentBuilder().newDocument();
-        rootElement = doc.createElement("testsuite");
-        rootElement.setAttribute("name", suite.getName());
+        rootElement = doc.createElement(TESTSUITE);
+        rootElement.setAttribute(ATTR_NAME, suite.getName());
     }
 
     /**
      * The whole testsuite ended.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
-        rootElement.setAttribute("tests", ""+suite.runCount());
-        rootElement.setAttribute("failures", ""+suite.failureCount());
-        rootElement.setAttribute("errors", ""+suite.errorCount());
-        rootElement.setAttribute("time", 
-                                 nf.format(suite.getRunTime()/1000.0)+" sec");
+        rootElement.setAttribute(ATTR_TESTS, ""+suite.runCount());
+        rootElement.setAttribute(ATTR_FAILURES, ""+suite.failureCount());
+        rootElement.setAttribute(ATTR_ERRORS, ""+suite.errorCount());
+        rootElement.setAttribute(ATTR_TIME,
+                                 nf.format(suite.getRunTime()/1000.0));
         if (out != null) {
             Writer wri = null;
             try {
@@ -162,8 +163,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
      */
     public void startTest(Test t) {
         lastTestStart = System.currentTimeMillis();
-        currentTest = doc.createElement("testcase");
-        currentTest.setAttribute("name", ((TestCase) t).name());
+        currentTest = doc.createElement(TESTCASE);
+        currentTest.setAttribute(ATTR_NAME, ((TestCase) t).name());
         rootElement.appendChild(currentTest);
     }
 
@@ -173,7 +174,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
      * <p>A Test is finished.
      */
     public void endTest(Test test) {
-        currentTest.setAttribute("time", 
+        currentTest.setAttribute(ATTR_TIME,
                                  nf.format((System.currentTimeMillis()-lastTestStart)
                                            / 1000.0));
     }
@@ -184,7 +185,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
      * <p>A Test failed.
      */
     public void addFailure(Test test, Throwable t) {
-        formatError("failure", test, t);
+        formatError(FAILURE, test, t);
     }
 
     /**
@@ -202,7 +203,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
      * <p>An error occured while running the test.
      */
     public void addError(Test test, Throwable t) {
-        formatError("error", test, t);
+        formatError(ERROR, test, t);
     }
 
     private void formatError(String type, Test test, Throwable t) {
@@ -219,9 +220,9 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter {
 
         String message = t.getMessage();
         if (message != null && message.length() > 0) {
-            nested.setAttribute("message", t.getMessage());
+            nested.setAttribute(ATTR_MESSAGE, t.getMessage());
         }
-        nested.setAttribute("type", t.getClass().getName());
+        nested.setAttribute(ATTR_TYPE, t.getClass().getName());
 
         StringWriter swr = new StringWriter();
         t.printStackTrace(new PrintWriter(swr, true));

@@ -73,7 +73,10 @@ public class JUnitTest extends BaseTest {
     
     /** the name of the result file */
     private String outfile = null;
-    
+
+    // @todo this is duplicating TestResult information. Only the time is not
+    // part of the result. So we'd better derive a new class from TestResult
+    // and deal with it. (SB)
     private long runs, failures, errors;
     private long runTime;
 
@@ -138,5 +141,15 @@ public class JUnitTest extends BaseTest {
         FormatterElement[] fes = new FormatterElement[formatters.size()];
         formatters.copyInto(fes);
         return fes;
+    }
+
+    /**
+     * Convenient method to add formatters to a vector
+     */
+    void addFormattersTo(Vector v){
+        final int count = formatters.size();
+        for (int i = 0; i < count; i++){
+            v.addElement( formatters.elementAt(i) );
+        }
     }
 }
