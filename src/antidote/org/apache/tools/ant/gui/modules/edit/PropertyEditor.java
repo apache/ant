@@ -161,9 +161,14 @@ public class PropertyEditor extends AntModule {
          * it should be cancelled.
          */
         public boolean  eventPosted(EventObject event) {
-            ElementSelectionEvent e = (ElementSelectionEvent) event;
-            ACSElement[] elements = e.getSelectedElements();
-            updateDisplay(elements);
+            if(event instanceof ProjectClosedEvent) {
+                updateDisplay(null);
+            }
+            else {
+                ElementSelectionEvent e = (ElementSelectionEvent) event;
+                ACSElement[] elements = e.getSelectedElements();
+                updateDisplay(elements);
+            }
             return true;
         }
 
@@ -177,7 +182,8 @@ public class PropertyEditor extends AntModule {
          * @return True if event should be given to BusMember, false otherwise.
          */
         public boolean accept(EventObject event) {
-            return event instanceof ElementSelectionEvent;
+            return event instanceof ElementSelectionEvent || 
+                event instanceof ProjectClosedEvent;
         }
     }
 
