@@ -283,7 +283,7 @@ public class ExecTask extends Task
      * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    protected ExecuteStreamHandler createHandler()
+    protected PumpStreamHandler createHandler()
         throws TaskException
     {
         if( m_outputFile != null )
