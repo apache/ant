@@ -77,6 +77,8 @@ import java.util.Vector;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
  *
+ * @since Ant 1.2
+ *
  * @version $Revision$
  */
 public class Execute {

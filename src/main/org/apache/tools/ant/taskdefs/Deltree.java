@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,10 @@ import java.io.IOException;
  *
  * @author duncan@x180.com
  *
- * @deprecated The deltree task is deprecated.  Use delete instead.
+ * @since Ant 1.1
+ *
+ * @deprecated The deltree task is deprecated since Ant 1.2.  Use
+ * delete instead.
  */
 
 public class Deltree extends Task {
@@ -76,7 +79,8 @@ public class Deltree extends Task {
     }
 
     public void execute() throws BuildException {
-        log("DEPRECATED - The deltree task is deprecated.  Use delete instead.");
+        log("DEPRECATED - The deltree task is deprecated.  "
+            + "Use delete instead.");
 
         if (dir == null) {
             throw new BuildException("dir attribute must be set!", location);
@@ -90,9 +94,6 @@ public class Deltree extends Task {
                                              location);
                 }
                 return;
-                // String msg = "Given dir: " + dir.getAbsolutePath() +
-                // " is not a dir";
-                // throw new BuildException(msg);
             }
 
             log("Deleting: " + dir.getAbsolutePath());
@@ -113,8 +114,8 @@ public class Deltree extends Task {
         // catches this
 
         //        if (dir.getCanonicalPath().equals(dir.getAbsolutePath())) {
-        // (costin) It will not work if /home/costin is symlink to /da0/home/costin ( taz
-        // for example )
+        // (costin) It will not work if /home/costin is symlink to
+        // /da0/home/costin ( taz for example )
         String[] list = dir.list();
         for (int i = 0; i < list.length; i++) {
             String s = list[i];
@@ -123,12 +124,14 @@ public class Deltree extends Task {
                 removeDir(f);
             } else {
                 if (!f.delete()) {
-                    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
+                    throw new BuildException("Unable to delete file " 
+                                             + f.getAbsolutePath());
                 }
             }
         }
         if (!dir.delete()) {
-            throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
+            throw new BuildException("Unable to delete directory " 
+                                     + dir.getAbsolutePath());
         }
     }
 }

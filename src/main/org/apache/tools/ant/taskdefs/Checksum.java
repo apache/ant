@@ -196,6 +196,7 @@ public class Checksum extends MatchingTask implements Condition {
      * Calculate the checksum(s).
      */
     public void execute() throws BuildException {
+        isCondition = false;
         boolean value = validateAndExecute();
         if (verifyProperty != null) {
             project.setNewProperty(verifyProperty,
