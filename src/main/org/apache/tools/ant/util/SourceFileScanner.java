@@ -40,7 +40,8 @@ public class SourceFileScanner implements ResourceFactory {
     private File destDir;     // base directory of the fileset
 
     /**
-     * @param task The task we should log messages through
+     * Construct a new SourceFileScanner.
+     * @param task The task we should log messages through.
      */
     public SourceFileScanner(Task task) {
         this.task = task;
@@ -70,7 +71,7 @@ public class SourceFileScanner implements ResourceFactory {
      *
      * @param files   the original set of files.
      * @param srcDir  all files are relative to this directory.
-     * @param destDir target files live here. if null file names
+     * @param destDir target files live here. If null file names
      *                returned by the mapper are assumed to be absolute.
      * @param mapper  knows how to construct a target file names from
      *                source file names.
@@ -111,7 +112,7 @@ public class SourceFileScanner implements ResourceFactory {
      * absolute).
      * @param files   the original set of files.
      * @param srcDir  all files are relative to this directory.
-     * @param destDir target files live here. if null file names
+     * @param destDir target files live here. If null file names
      *                returned by the mapper are assumed to be absolute.
      * @param mapper  knows how to construct a target file names from
      *                source file names.
@@ -124,13 +125,13 @@ public class SourceFileScanner implements ResourceFactory {
     }
 
     /**
-     * Convinience layer on top of restrict that returns the source
+     * Convenience layer on top of restrict that returns the source
      * files as File objects (containing absolute paths if srcDir is
      * absolute).
      *
      * @param files   the original set of files.
      * @param srcDir  all files are relative to this directory.
-     * @param destDir target files live here. if null file names
+     * @param destDir target files live here. If null file names
      *                returned by the mapper are assumed to be absolute.
      * @param mapper  knows how to construct a target file names from
      *                source file names.
