@@ -18,6 +18,8 @@ package org.apache.tools.ant.taskdefs.optional.net;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.Properties;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -229,6 +231,15 @@ public class SetProxy extends Task {
                 sysprops.remove("java.net.socks.password");
             }
         }
+
+        if (proxyUser != null) {
+            if (enablingProxy) {
+                Authenticator.setDefault(new ProxyAuth(proxyUser,
+                                                       proxyPassword));
+            } else if (settingsChanged) {
+                Authenticator.setDefault(new ProxyAuth("", ""));
+            }
+        }
     }
 
     /**
@@ -250,5 +261,19 @@ public class SetProxy extends Task {
         applyWebProxySettings();
     }
 
+    /**
+     * @since 1.6.3
+     */
+    private static final class ProxyAuth extends Authenticator {
+        private PasswordAuthentication auth;
+
+        private ProxyAuth(String user, String pass) {
+            auth = new PasswordAuthentication(user, pass.toCharArray());
+        }
+
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return auth;
+        }
+    }
 }
 

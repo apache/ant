@@ -218,6 +218,9 @@ Fixed bugs:
 * <scp> using <fileset> didn't work with OpenSSH 3.9 and later.
   Bugzilla report 31939
 
+* <setproxy> failed to set user/password on some JDKs.
+  Bugzilla report 32667
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
