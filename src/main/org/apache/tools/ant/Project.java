@@ -401,6 +401,11 @@ public class Project {
     }
 
     public void addTaskDefinition(String taskName, Class taskClass) {
+        if (null != taskClassDefinitions.get(taskName)) {
+            log("Trying to override old definition of task "+taskName, 
+                MSG_WARN);
+        }
+
         String msg = " +User task: " + taskName + "     " + taskClass.getName();
         log(msg, MSG_DEBUG);
         taskClassDefinitions.put(taskName, taskClass);
@@ -411,6 +416,11 @@ public class Project {
     }
 
     public void addDataTypeDefinition(String typeName, Class typeClass) {
+        if (null != dataClassDefinitions.get(typeName)) {
+            log("Trying to override old definition of datatype "+typeName, 
+                MSG_WARN);
+        }
+
         String msg = " +User datatype: " + typeName + "     " + typeClass.getName();
         log(msg, MSG_DEBUG);
         dataClassDefinitions.put(typeName, typeClass);
