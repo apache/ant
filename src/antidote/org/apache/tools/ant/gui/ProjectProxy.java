@@ -285,7 +285,7 @@ public class ProjectProxy {
     /** Forwards selection events to the event bus. */
     private class SelectionForwarder implements TreeSelectionListener {
         public void valueChanged(TreeSelectionEvent e) {
-            _context.getEventBus().postEvent(new ElementSelectionEvent(
+            _context.getEventBus().postEvent(ElementSelectionEvent.createEvent(
                 _context, _selections.getSelectedElements()));
         }
     }

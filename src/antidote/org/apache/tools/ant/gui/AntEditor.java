@@ -87,7 +87,7 @@ public abstract class AntEditor extends JPanel {
 	 * 
 	 * @return Application context.
 	 */
-    public AppContext getAppContext() {
+    public AppContext getContext() {
         return _context;
     }
 	/** 

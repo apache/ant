@@ -106,7 +106,7 @@ class SourceEditor extends AntEditor {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            ProjectProxy project = getAppContext().getProject();
+            ProjectProxy project = getContext().getProject();
 
             _text.setDocument(project == null ? new PlainDocument() :
                               project.getDocument());

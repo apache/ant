@@ -131,7 +131,7 @@ public class TargetMonitor extends AntEditor {
             ElementSelectionEvent e = (ElementSelectionEvent) event;
             String text = _defText;
 
-            ProjectProxy p =  getAppContext().getProject();
+            ProjectProxy p =  getContext().getProject();
             if(p != null) {
                 ElementSelectionModel selections = p.getTreeSelectionModel();
                 ACSTargetElement[] targets = selections.getSelectedTargets();
