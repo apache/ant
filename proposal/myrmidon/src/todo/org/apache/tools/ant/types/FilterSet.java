@@ -29,70 +29,20 @@ public class FilterSet
     extends ProjectComponent
     implements Cloneable
 {
-
     /**
      * The default token start string
      */
-    public final static String DEFAULT_TOKEN_START = "@";
+    private final static String DEFAULT_TOKEN_START = "@";
 
     /**
      * The default token end string
      */
-    public final static String DEFAULT_TOKEN_END = "@";
-
-    private String m_startOfToken = DEFAULT_TOKEN_START;
-    private String m_endOfToken = DEFAULT_TOKEN_END;
+    private final static String DEFAULT_TOKEN_END = "@";
 
     /**
      * List of ordered filters and filter files.
      */
     private ArrayList m_filters = new ArrayList();
-
-    public FilterSet()
-    {
-    }
-
-    /**
-     * Create a Filterset from another filterset
-     *
-     * @param filterset the filterset upon which this filterset will be based.
-     */
-    protected FilterSet( FilterSet filterset )
-        throws TaskException
-    {
-        super();
-        m_filters = (ArrayList)filterset.getFilters().clone();
-    }
-
-    /**
-     * The string used to id the beginning of a token.
-     *
-     * @param startOfToken The new Begintoken value
-     */
-    public void setBeginToken( String startOfToken )
-        throws TaskException
-    {
-        if( startOfToken == null || "".equals( startOfToken ) )
-        {
-            throw new TaskException( "beginToken must not be empty" );
-        }
-        m_startOfToken = startOfToken;
-    }
-
-    /**
-     * The string used to id the end of a token.
-     *
-     * @param endOfToken The new Endtoken value
-     */
-    public void setEndToken( String endOfToken )
-        throws TaskException
-    {
-        if( endOfToken == null || "".equals( endOfToken ) )
-        {
-            throw new TaskException( "endToken must not be empty" );
-        }
-        m_endOfToken = endOfToken;
-    }
 
     /**
      * set the file containing the filters for this filterset.
@@ -107,16 +57,6 @@ public class FilterSet
         readFiltersFromFile( filtersFile );
     }
 
-    public String getBeginToken()
-    {
-        return m_startOfToken;
-    }
-
-    public String getEndToken()
-    {
-        return m_endOfToken;
-    }
-
     /**
      * Gets the filter hash of the FilterSet.
      *
@@ -125,11 +65,12 @@ public class FilterSet
     public Hashtable getFilterHash()
         throws TaskException
     {
-        int filterSize = getFilters().size();
-        Hashtable filterHash = new Hashtable( filterSize );
-        for( Iterator e = getFilters().iterator(); e.hasNext(); )
+        final int filterSize = m_filters.size();
+        final Hashtable filterHash = new Hashtable( filterSize );
+        final Iterator e = m_filters.iterator();
+        while( e.hasNext() )
         {
-            Filter filter = (Filter)e.next();
+            final Filter filter = (Filter)e.next();
             filterHash.put( filter.getToken(), filter.getValue() );
         }
         return filterHash;
@@ -151,7 +92,7 @@ public class FilterSet
      * @param token The token for the new filter.
      * @param value The value for the new filter.
      */
-    public void addFilter( String token, String value )
+    public void addFilter( final String token, final String value )
     {
         m_filters.add( new Filter( token, value ) );
     }
@@ -161,9 +102,10 @@ public class FilterSet
      *
      * @param filterSet the filterset to be added to this filterset
      */
-    public void addFilterSet( FilterSet filterSet )
+    public void addFilterSet( final FilterSet filterSet )
     {
-        for( Iterator e = filterSet.getFilters().iterator(); e.hasNext(); )
+        final Iterator e = filterSet.m_filters.iterator();
+        while( e.hasNext() )
         {
             m_filters.add( (Filter)e.next() );
         }
@@ -187,7 +129,7 @@ public class FilterSet
     public boolean hasFilters()
         throws TaskException
     {
-        return getFilters().size() > 0;
+        return m_filters.size() > 0;
     }
 
     /**
@@ -211,7 +153,7 @@ public class FilterSet
                 props.load( in );
 
                 Enumeration enum = props.propertyNames();
-                ArrayList filters = getFilters();
+                ArrayList filters = m_filters;
                 while( enum.hasMoreElements() )
                 {
                     String strPropName = (String)enum.nextElement();
@@ -250,64 +192,54 @@ public class FilterSet
      * @param line The line to process the tokens in.
      * @return The string with the tokens replaced.
      */
-    public String replaceTokens( String line )
+    public String replaceTokens( final String line )
         throws TaskException
     {
-        String beginToken = getBeginToken();
-        String endToken = getEndToken();
-        int index = line.indexOf( beginToken );
-
-        if( index > -1 )
-        {
-            Hashtable tokens = getFilterHash();
-            try
-            {
-                StringBuffer b = new StringBuffer();
-                int i = 0;
-                String token = null;
-                String value = null;
-
-                do
-                {
-                    int endIndex = line.indexOf( endToken, index + beginToken.length() + 1 );
-                    if( endIndex == -1 )
-                    {
-                        break;
-                    }
-                    token = line.substring( index + beginToken.length(), endIndex );
-                    b.append( line.substring( i, index ) );
-                    if( tokens.containsKey( token ) )
-                    {
-                        value = (String)tokens.get( token );
-                        getLogger().debug( "Replacing: " + beginToken + token + endToken + " -> " + value );
-                        b.append( value );
-                        i = index + beginToken.length() + token.length() + endToken.length();
-                    }
-                    else
-                    {
-                        // just append beginToken and search further
-                        b.append( beginToken );
-                        i = index + beginToken.length();
-                    }
-                } while( ( index = line.indexOf( beginToken, i ) ) > -1 );
-
-                b.append( line.substring( i ) );
-                return b.toString();
-            }
-            catch( StringIndexOutOfBoundsException e )
-            {
-                return line;
-            }
-        }
-        else
+        int index = line.indexOf( DEFAULT_TOKEN_START );
+        if( -1 == index )
         {
             return line;
         }
-    }
 
-    protected ArrayList getFilters()
-    {
-        return m_filters;
+        Hashtable tokens = getFilterHash();
+        try
+        {
+            StringBuffer b = new StringBuffer();
+            int i = 0;
+            String token = null;
+            String value = null;
+
+            do
+            {
+                int endIndex = line.indexOf( DEFAULT_TOKEN_END, index + DEFAULT_TOKEN_START.length() + 1 );
+                if( endIndex == -1 )
+                {
+                    break;
+                }
+                token = line.substring( index + DEFAULT_TOKEN_START.length(), endIndex );
+                b.append( line.substring( i, index ) );
+                if( tokens.containsKey( token ) )
+                {
+                    value = (String)tokens.get( token );
+                    getLogger().debug( "Replacing: " + DEFAULT_TOKEN_START + token + DEFAULT_TOKEN_END + " -> " + value );
+                    b.append( value );
+                    i = index + DEFAULT_TOKEN_START.length() + token.length() + DEFAULT_TOKEN_END.length();
+                }
+                else
+                {
+                    // just append beginToken and search further
+                    b.append( DEFAULT_TOKEN_START );
+                    i = index + DEFAULT_TOKEN_START.length();
+                }
+            } while( ( index = line.indexOf( DEFAULT_TOKEN_START, i ) ) > -1 );
+
+            b.append( line.substring( i ) );
+            return b.toString();
+        }
+        catch( StringIndexOutOfBoundsException e )
+        {
+            return line;
+        }
     }
 
     /**
@@ -319,24 +251,16 @@ public class FilterSet
     public class FiltersFile
     {
         /**
-         * Constructor for the Filter object
-         */
-        public FiltersFile()
-        {
-        }
-
-        /**
          * Sets the file from which filters will be read.
          *
          * @param file the file from which filters will be read.
          */
-        public void setFile( File file )
+        public void setFile( final File file )
             throws TaskException
         {
             readFiltersFromFile( file );
         }
     }
-
 }
 
 
