@@ -508,13 +508,15 @@ public class Javac extends MatchingTask {
         log("Using modern compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJavacCommand();
 
-        // This won't build under JDK1.2.2 because the new compiler
-        // doesn't exist there.
-        //com.sun.tools.javac.Main compiler = new com.sun.tools.javac.Main();
-        //if (compiler.compile(args) != 0) {
+        PrintStream err = System.err;
+        PrintStream out = System.out;
 
         // Use reflection to be able to build on all JDKs >= 1.1:
         try {
+            PrintStream logstr = 
+                new PrintStream(new LogOutputStream(this, Project.MSG_WARN));
+            System.setErr(logstr);
+            System.setErr(logstr);
             Class c = Class.forName ("com.sun.tools.javac.Main");
             Object compiler = c.newInstance ();
             Method compile = c.getMethod ("compile",
@@ -530,6 +532,9 @@ public class Javac extends MatchingTask {
             } else {
                 throw new BuildException("Error starting modern compiler", ex, location);
             }
+        } finally {
+            System.setErr(err);
+            System.setErr(out);
         }
     }
 
