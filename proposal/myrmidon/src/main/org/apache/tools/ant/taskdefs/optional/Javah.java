@@ -290,8 +290,7 @@ public class Javah extends Task
     protected void logAndAddFilesToCompile( Commandline cmd )
     {
         int n = 0;
-        log( "Compilation args: " + cmd.toString(),
-             Project.MSG_VERBOSE );
+        getLogger().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceClassList = new StringBuffer();
         if( cls != null )
@@ -324,7 +323,7 @@ public class Javah extends Task
         prefix.append( " to be compiled:" );
         prefix.append( lSep );
 
-        log( prefix.toString() + niceClassList.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( prefix.toString() + niceClassList.toString() );
     }
 
     /**

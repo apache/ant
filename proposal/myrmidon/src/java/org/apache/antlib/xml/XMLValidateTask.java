@@ -252,7 +252,7 @@ public class XMLValidateTask
                 if( failOnError )
                     throw new TaskException( errorMsg );
                 else
-                    log( errorMsg, Project.MSG_ERR );
+                    getLogger().error( errorMsg );
             }
         }
 
@@ -301,19 +301,19 @@ public class XMLValidateTask
         }
         catch( SAXNotRecognizedException e )
         {
+            final String message = "Could not set feature '" + feature + "' because the parser doesn't recognize it";
             if( warn )
-                log( "Could not set feature '"
-                     + feature
-                     + "' because the parser doesn't recognize it",
-                     Project.MSG_WARN );
+            {
+                getLogger().warn( message );
+            }
         }
         catch( SAXNotSupportedException e )
         {
+            final String message = "Could not set feature '" + feature + "' because the parser doesn't support it";
             if( warn )
-                log( "Could not set feature '"
-                     + feature
-                     + "' because the parser doesn't support it",
-                     Project.MSG_WARN );
+            {
+                getLogger().warn( message );
+            }
         }
         return toReturn;
     }
@@ -326,7 +326,7 @@ public class XMLValidateTask
     {
         try
         {
-            log( "Validating " + afile.getName() + "... ", Project.MSG_VERBOSE );
+            getLogger().debug( "Validating " + afile.getName() + "... " );
             errorHandler.init( afile );
             InputSource is = new InputSource( new FileReader( afile ) );
             String uri = "file:" + afile.getAbsolutePath().replace( '\\', '/' );
@@ -353,7 +353,7 @@ public class XMLValidateTask
             if( failOnError )
                 throw new TaskException( afile + " is not a valid XML document." );
             else
-                log( afile + " is not a valid XML document", Project.MSG_ERR );
+                getLogger().error( afile + " is not a valid XML document" );
         }
     }
 
@@ -386,7 +386,7 @@ public class XMLValidateTask
             {
 
                 xmlReader = (XMLReader)readerClass.newInstance();
-                log( "Using SAX2 reader " + readerClassName, Project.MSG_VERBOSE );
+                getLogger().debug( "Using SAX2 reader " + readerClassName );
             }
             else
             {
@@ -396,7 +396,7 @@ public class XMLValidateTask
                 {
                     Parser parser = (Parser)readerClass.newInstance();
                     xmlReader = new ParserAdapter( parser );
-                    log( "Using SAX1 parser " + readerClassName, Project.MSG_VERBOSE );
+                    getLogger().debug( "Using SAX1 parser " + readerClassName );
                 }
                 else
                 {
@@ -541,7 +541,6 @@ public class XMLValidateTask
 
         private void doLog( SAXParseException e, int logLevel )
         {
-
             log( getMessage( e ), logLevel );
         }
     }
@@ -570,7 +569,7 @@ public class XMLValidateTask
                 if( publicId != null )
                 {
                     fileDTDs.put( publicId, fileDTD );
-                    log( "Mapped publicId " + publicId + " to file " + fileDTD, Project.MSG_VERBOSE );
+                    getLogger().debug( "Mapped publicId " + publicId + " to file " + fileDTD );
                 }
                 return;
             }
@@ -580,7 +579,7 @@ public class XMLValidateTask
                 if( publicId != null )
                 {
                     resourceDTDs.put( publicId, location );
-                    log( "Mapped publicId " + publicId + " to resource " + location, Project.MSG_VERBOSE );
+                    getLogger().debug( "Mapped publicId " + publicId + " to resource " + location );
                 }
             }
 
@@ -611,7 +610,7 @@ public class XMLValidateTask
             {
                 try
                 {
-                    log( "Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE );
+                    getLogger().debug( "Resolved " + publicId + " to local file " + dtdFile );
                     return new InputSource( new FileInputStream( dtdFile ) );
                 }
                 catch( FileNotFoundException ex )
@@ -626,7 +625,7 @@ public class XMLValidateTask
                 InputStream is = this.getClass().getResourceAsStream( dtdResourceName );
                 if( is != null )
                 {
-                    log( "Resolved " + publicId + " to local resource " + dtdResourceName, Project.MSG_VERBOSE );
+                    getLogger().debug( "Resolved " + publicId + " to local resource " + dtdResourceName );
                     return new InputSource( is );
                 }
             }
@@ -637,7 +636,7 @@ public class XMLValidateTask
                 try
                 {
                     InputStream is = dtdUrl.openStream();
-                    log( "Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE );
+                    getLogger().debug( "Resolved " + publicId + " to url " + dtdUrl );
                     return new InputSource( is );
                 }
                 catch( IOException ioe )
@@ -646,8 +645,7 @@ public class XMLValidateTask
                 }
             }
 
-            log( "Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity",
-                 Project.MSG_INFO );
+            getLogger().info( "Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity" );
 
             return null;
         }

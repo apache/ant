@@ -232,8 +232,7 @@ public class Copy
                 }
                 else
                 {
-                    log( m_file + " omitted as " + m_destFile + " is up to date.",
-                         Project.MSG_VERBOSE );
+                    getLogger().debug( m_file + " omitted as " + m_destFile + " is up to date." );
                 }
             }
             else
@@ -395,7 +394,7 @@ public class Copy
                 {
                     if( !d.mkdirs() )
                     {
-                        log( "Unable to create directory " + d.getAbsolutePath(), Project.MSG_ERR );
+                        getLogger().error( "Unable to create directory " + d.getAbsolutePath() );
                     }
                     else
                     {

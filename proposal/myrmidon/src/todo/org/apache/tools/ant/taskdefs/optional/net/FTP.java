@@ -25,7 +25,6 @@ import java.util.Locale;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -287,7 +286,7 @@ public class FTP
 
         try
         {
-            log( "Opening FTP connection to " + server, Project.MSG_VERBOSE );
+            getLogger().debug( "Opening FTP connection to " + server );
 
             ftp = new FTPClient();
 
@@ -297,15 +296,15 @@ public class FTP
                 throw new TaskException( "FTP connection failed: " + ftp.getReplyString() );
             }
 
-            log( "connected", Project.MSG_VERBOSE );
-            log( "logging in to FTP server", Project.MSG_VERBOSE );
+            getLogger().debug( "connected" );
+            getLogger().debug( "logging in to FTP server" );
 
             if( !ftp.login( userid, password ) )
             {
                 throw new TaskException( "Could not login to FTP server" );
             }
 
-            log( "login succeeded", Project.MSG_VERBOSE );
+            getLogger().debug( "login succeeded" );
 
             if( binary )
             {
@@ -320,7 +319,7 @@ public class FTP
 
             if( passive )
             {
-                log( "entering passive mode", Project.MSG_VERBOSE );
+                getLogger().debug( "entering passive mode" );
                 ftp.enterLocalPassiveMode();
                 if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                 {
@@ -343,7 +342,7 @@ public class FTP
             {
                 if( remotedir != null )
                 {
-                    log( "changing the remote directory", Project.MSG_VERBOSE );
+                    getLogger().debug( "changing the remote directory" );
                     ftp.changeWorkingDirectory( remotedir );
                     if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                     {
@@ -367,7 +366,7 @@ public class FTP
             {
                 try
                 {
-                    log( "disconnecting", Project.MSG_VERBOSE );
+                    getLogger().debug( "disconnecting" );
                     ftp.logout();
                     ftp.disconnect();
                 }
@@ -421,7 +420,7 @@ public class FTP
                 String s = "could not get file: " + ftp.getReplyString();
                 if( skipFailedTransfers == true )
                 {
-                    log( s, Project.MSG_WARN );
+                    getLogger().warn( s );
                     skipped++;
                 }
                 else
@@ -432,8 +431,7 @@ public class FTP
             }
             else
             {
-                log( "File " + file.getAbsolutePath() + " copied from " + server,
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "File " + file.getAbsolutePath() + " copied from " + server );
                 transferred++;
             }
         }
@@ -467,7 +465,7 @@ public class FTP
     protected boolean isUpToDate( FTPClient ftp, File localFile, String remoteFile )
         throws IOException, TaskException
     {
-        log( "checking date for " + remoteFile, Project.MSG_VERBOSE );
+        getLogger().debug( "checking date for " + remoteFile );
 
         FTPFile[] files = ftp.listFiles( remoteFile );
 
@@ -480,8 +478,7 @@ public class FTP
 
             if( action == SEND_FILES )
             {
-                log( "Could not date test remote file: " + remoteFile
-                     + "assuming out of date.", Project.MSG_VERBOSE );
+                getLogger().debug( "Could not date test remote file: " + remoteFile + "assuming out of date." );
                 return false;
             }
             else
@@ -562,8 +559,7 @@ public class FTP
             dir = (File)parents.get( i );
             if( !dirCache.contains( dir ) )
             {
-                log( "creating remote directory " + resolveFile( dir.getPath() ),
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "creating remote directory " + resolveFile( dir.getPath() ) );
                 ftp.makeDirectory( resolveFile( dir.getPath() ) );
                 // Both codes 550 and 553 can be produced by FTP Servers
                 //  to indicate that an attempt to create a directory has
@@ -603,7 +599,7 @@ public class FTP
             String s = "could not delete file: " + ftp.getReplyString();
             if( skipFailedTransfers == true )
             {
-                log( s, Project.MSG_WARN );
+                getLogger().warn( s );
                 skipped++;
             }
             else
@@ -613,7 +609,7 @@ public class FTP
         }
         else
         {
-            log( "File " + filename + " deleted from " + server, Project.MSG_VERBOSE );
+            getLogger().debug( "File " + filename + " deleted from " + server );
             transferred++;
         }
     }
@@ -747,7 +743,7 @@ public class FTP
                 String s = "could not put file: " + ftp.getReplyString();
                 if( skipFailedTransfers == true )
                 {
-                    log( s, Project.MSG_WARN );
+                    getLogger().warn( s );
                     skipped++;
                 }
                 else
@@ -759,9 +755,7 @@ public class FTP
             else
             {
 
-                log( "File " + file.getAbsolutePath() +
-                     " copied to " + server,
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "File " + file.getAbsolutePath() + " copied to " + server );
                 transferred++;
             }
         }

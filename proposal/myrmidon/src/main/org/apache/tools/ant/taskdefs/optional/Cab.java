@@ -17,7 +17,6 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.types.FileSet;
@@ -118,7 +117,7 @@ public class Cab extends MatchingTask
 
         if( !Os.isFamily( "windows" ) )
         {
-            log( "Using listcab/libcabinet", Project.MSG_VERBOSE );
+            getLogger().debug( "Using listcab/libcabinet" );
 
             StringBuffer sb = new StringBuffer();
 

@@ -27,9 +27,10 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class FileSet extends DataType implements Cloneable
+public class FileSet
+    extends DataType
+    implements Cloneable
 {
-
     private PatternSet defaultPatterns = new PatternSet();
     private ArrayList additionalPatterns = new ArrayList();
     private boolean useDefaultExcludes = true;
@@ -199,8 +200,7 @@ public class FileSet extends DataType implements Cloneable
             defaultPatterns.append( (PatternSet)o, p );
         }
 
-        p.log( "FileSet: Setup file scanner in dir " + dir +
-               " with " + defaultPatterns, p.MSG_DEBUG );
+        getLogger().debug( "FileSet: Setup file scanner in dir " + dir + " with " + defaultPatterns );
 
         ds.setIncludes( defaultPatterns.getIncludePatterns( p ) );
         ds.setExcludes( defaultPatterns.getExcludePatterns( p ) );

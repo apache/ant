@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
@@ -29,28 +30,30 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
-public abstract class DefaultCompilerAdapter implements CompilerAdapter
+public abstract class DefaultCompilerAdapter
+    extends AbstractLogEnabled
+    implements CompilerAdapter
 {
-    protected static String lSep = System.getProperty( "line.separator" );
-    protected boolean debug = false;
-    protected boolean optimize = false;
-    protected boolean deprecation = false;
-    protected boolean depend = false;
-    protected boolean verbose = false;
+    protected static String LINE_SEP = System.getProperty( "line.separator" );
+    protected boolean m_debug;
+    protected boolean m_optimize;
+    protected boolean m_deprecation;
+    protected boolean m_depend;
+    protected boolean m_verbose;
 
-    protected Javac attributes;
-    protected Path bootclasspath;
-    protected Path compileClasspath;
+    protected Javac m_attributes;
+    protected Path m_bootclasspath;
+    protected Path m_compileClasspath;
 
-    protected File[] compileList;
-    protected File destDir;
-    protected String encoding;
-    protected Path extdirs;
-    protected boolean includeAntRuntime;
-    protected boolean includeJavaRuntime;
-    protected String memoryInitialSize;
-    protected String memoryMaximumSize;
-    protected Project project;
+    protected File[] m_compileList;
+    protected File m_destDir;
+    protected String m_encoding;
+    protected Path m_extdirs;
+    protected boolean m_includeAntRuntime;
+    protected boolean m_includeJavaRuntime;
+    protected String m_memoryInitialSize;
+    protected String m_memoryMaximumSize;
+    protected Project m_project;
 
     /*
      * jdg - TODO - all these attributes are currently protected, but they
@@ -61,30 +64,30 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
 
     public void setJavac( Javac attributes )
     {
-        this.attributes = attributes;
+        this.m_attributes = attributes;
         src = attributes.getSrcdir();
-        destDir = attributes.getDestdir();
-        encoding = attributes.getEncoding();
-        debug = attributes.getDebug();
-        optimize = attributes.getOptimize();
-        deprecation = attributes.getDeprecation();
-        depend = attributes.getDepend();
-        verbose = attributes.getVerbose();
+        m_destDir = attributes.getDestdir();
+        m_encoding = attributes.getEncoding();
+        m_debug = attributes.getDebug();
+        m_optimize = attributes.getOptimize();
+        m_deprecation = attributes.getDeprecation();
+        m_depend = attributes.getDepend();
+        m_verbose = attributes.getVerbose();
         target = attributes.getTarget();
-        bootclasspath = attributes.getBootclasspath();
-        extdirs = attributes.getExtdirs();
-        compileList = attributes.getFileList();
-        compileClasspath = attributes.getClasspath();
-        project = attributes.getProject();
-        includeAntRuntime = attributes.getIncludeantruntime();
-        includeJavaRuntime = attributes.getIncludejavaruntime();
-        memoryInitialSize = attributes.getMemoryInitialSize();
-        memoryMaximumSize = attributes.getMemoryMaximumSize();
+        m_bootclasspath = attributes.getBootclasspath();
+        m_extdirs = attributes.getExtdirs();
+        m_compileList = attributes.getFileList();
+        m_compileClasspath = attributes.getClasspath();
+        m_project = attributes.getProject();
+        m_includeAntRuntime = attributes.getIncludeantruntime();
+        m_includeJavaRuntime = attributes.getIncludejavaruntime();
+        m_memoryInitialSize = attributes.getMemoryInitialSize();
+        m_memoryMaximumSize = attributes.getMemoryMaximumSize();
     }
 
     public Javac getJavac()
     {
-        return attributes;
+        return m_attributes;
     }
 
     protected Commandline setupJavacCommand()
@@ -128,46 +131,46 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
         // has its own parameter format
         boolean usingJava1_1 = Project.getJavaVersion().equals( Project.JAVA_1_1 );
         String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
-        if( memoryInitialSize != null )
+        if( m_memoryInitialSize != null )
         {
-            if( !attributes.isForkedJavac() )
+            if( !m_attributes.isForkedJavac() )
             {
-                attributes.log( "Since fork is false, ignoring memoryInitialSize setting.",
-                                Project.MSG_WARN );
+                final String message = "Since fork is false, ignoring memoryInitialSize setting.";
+                getLogger().warn( message );
             }
             else
             {
-                cmd.createArgument().setValue( memoryParameterPrefix + "ms" + memoryInitialSize );
+                cmd.createArgument().setValue( memoryParameterPrefix + "ms" + m_memoryInitialSize );
             }
         }
 
-        if( memoryMaximumSize != null )
+        if( m_memoryMaximumSize != null )
         {
-            if( !attributes.isForkedJavac() )
+            if( !m_attributes.isForkedJavac() )
             {
-                attributes.log( "Since fork is false, ignoring memoryMaximumSize setting.",
-                                Project.MSG_WARN );
+                final String message = "Since fork is false, ignoring memoryMaximumSize setting.";
+                getLogger().warn( message );
             }
             else
             {
-                cmd.createArgument().setValue( memoryParameterPrefix + "mx" + memoryMaximumSize );
+                cmd.createArgument().setValue( memoryParameterPrefix + "mx" + m_memoryMaximumSize );
             }
         }
 
-        if( attributes.getNowarn() )
+        if( m_attributes.getNowarn() )
         {
             cmd.createArgument().setValue( "-nowarn" );
         }
 
-        if( deprecation == true )
+        if( m_deprecation == true )
         {
             cmd.createArgument().setValue( "-deprecation" );
         }
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
             cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( destDir );
+            cmd.createArgument().setFile( m_destDir );
         }
 
         cmd.createArgument().setValue( "-classpath" );
@@ -176,17 +179,17 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
         // as well as "bootclasspath" and "extdirs"
         if( Project.getJavaVersion().startsWith( "1.1" ) )
         {
-            Path cp = new Path( project );
+            Path cp = new Path( m_project );
             /*
              * XXX - This doesn't mix very well with build.systemclasspath,
              */
-            if( bootclasspath != null )
+            if( m_bootclasspath != null )
             {
-                cp.append( bootclasspath );
+                cp.append( m_bootclasspath );
             }
-            if( extdirs != null )
+            if( m_extdirs != null )
             {
-                cp.addExtdirs( extdirs );
+                cp.addExtdirs( m_extdirs );
             }
             cp.append( classpath );
             cp.append( src );
@@ -202,31 +205,31 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                 cmd.createArgument().setValue( "-target" );
                 cmd.createArgument().setValue( target );
             }
-            if( bootclasspath != null )
+            if( m_bootclasspath != null )
             {
                 cmd.createArgument().setValue( "-bootclasspath" );
-                cmd.createArgument().setPath( bootclasspath );
+                cmd.createArgument().setPath( m_bootclasspath );
             }
-            if( extdirs != null )
+            if( m_extdirs != null )
             {
                 cmd.createArgument().setValue( "-extdirs" );
-                cmd.createArgument().setPath( extdirs );
+                cmd.createArgument().setPath( m_extdirs );
             }
         }
 
-        if( encoding != null )
+        if( m_encoding != null )
         {
             cmd.createArgument().setValue( "-encoding" );
-            cmd.createArgument().setValue( encoding );
+            cmd.createArgument().setValue( m_encoding );
         }
-        if( debug )
+        if( m_debug )
         {
             if( useDebugLevel
                 && Project.getJavaVersion() != Project.JAVA_1_0
                 && Project.getJavaVersion() != Project.JAVA_1_1 )
             {
 
-                String debugLevel = attributes.getDebugLevel();
+                String debugLevel = m_attributes.getDebugLevel();
                 if( debugLevel != null )
                 {
                     cmd.createArgument().setValue( "-g:" + debugLevel );
@@ -246,12 +249,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
         {
             cmd.createArgument().setValue( "-g:none" );
         }
-        if( optimize )
+        if( m_optimize )
         {
             cmd.createArgument().setValue( "-O" );
         }
 
-        if( depend )
+        if( m_depend )
         {
             if( Project.getJavaVersion().startsWith( "1.1" ) )
             {
@@ -263,12 +266,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             }
             else
             {
-                attributes.log( "depend attribute is not supported by the modern compiler",
-                                Project.MSG_WARN );
+                final String message = "depend attribute is not supported by the modern compiler";
+                getLogger().warn( message );
             }
         }
 
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArgument().setValue( "-verbose" );
         }
@@ -305,10 +308,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
         throws TaskException
     {
         setupJavacCommandlineSwitches( cmd, true );
-        if( attributes.getSource() != null )
+        if( m_attributes.getSource() != null )
         {
             cmd.createArgument().setValue( "-source" );
-            cmd.createArgument().setValue( attributes.getSource() );
+            cmd.createArgument().setValue( m_attributes.getSource() );
         }
         return cmd;
     }
@@ -321,39 +324,39 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
     protected Path getCompileClasspath()
         throws TaskException
     {
-        Path classpath = new Path( project );
+        Path classpath = new Path( m_project );
 
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
-            classpath.setLocation( destDir );
+            classpath.setLocation( m_destDir );
         }
 
         // Combine the build classpath with the system classpath, in an
         // order determined by the value of build.classpath
 
-        if( compileClasspath == null )
+        if( m_compileClasspath == null )
         {
-            if( includeAntRuntime )
+            if( m_includeAntRuntime )
             {
                 classpath.addExisting( Path.systemClasspath );
             }
         }
         else
         {
-            if( includeAntRuntime )
+            if( m_includeAntRuntime )
             {
-                classpath.addExisting( compileClasspath.concatSystemClasspath( "last" ) );
+                classpath.addExisting( m_compileClasspath.concatSystemClasspath( "last" ) );
             }
             else
             {
-                classpath.addExisting( compileClasspath.concatSystemClasspath( "ignore" ) );
+                classpath.addExisting( m_compileClasspath.concatSystemClasspath( "ignore" ) );
             }
         }
 
-        if( includeJavaRuntime )
+        if( m_includeJavaRuntime )
         {
             classpath.addJavaRuntime();
         }
@@ -435,9 +438,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             try
             {
                 final Execute exe = new Execute();
-                exe.setOutput( new LogOutputStream( attributes, Project.MSG_INFO ) );
-                exe.setError( new LogOutputStream( attributes, Project.MSG_WARN ) );
-                exe.setWorkingDirectory( project.getBaseDir() );
+                exe.setOutput( new LogOutputStream( m_attributes, Project.MSG_INFO ) );
+                exe.setError( new LogOutputStream( m_attributes, Project.MSG_WARN ) );
+                exe.setWorkingDirectory( m_project.getBaseDir() );
                 exe.setCommandline( commandArray );
                 return exe.execute();
             }
@@ -464,27 +467,25 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      */
     protected void logAndAddFilesToCompile( Commandline cmd )
     {
-        attributes.log( "Compilation args: " + cmd.toString(),
-                        Project.MSG_VERBOSE );
+        getLogger().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
-        if( compileList.length != 1 )
+        if( m_compileList.length != 1 )
         {
             niceSourceList.append( "s" );
         }
         niceSourceList.append( " to be compiled:" );
 
-        niceSourceList.append( lSep );
+        niceSourceList.append( LINE_SEP );
 
-        for( int i = 0; i < compileList.length; i++ )
+        for( int i = 0; i < m_compileList.length; i++ )
         {
-            String arg = compileList[ i ].getAbsolutePath();
+            String arg = m_compileList[ i ].getAbsolutePath();
             cmd.createArgument().setValue( arg );
-            niceSourceList.append( "    " + arg + lSep );
+            niceSourceList.append( "    " + arg + LINE_SEP );
         }
 
-        attributes.log( niceSourceList.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( niceSourceList.toString() );
     }
-
 }
 

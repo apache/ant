@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
@@ -233,7 +232,7 @@ public class WLJspc extends MatchingTask
             helperTask.setClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )
             {
-                log( files[ i ] + " failed to compile", Project.MSG_WARN );
+                getLogger().warn( files[ i ] + " failed to compile" );
             }
         }
     }
@@ -295,14 +294,14 @@ public class WLJspc extends MatchingTask
 
             if( srcFile.lastModified() > now )
             {
-                log( "Warning: file modified in the future: " +
-                     files[ i ], Project.MSG_WARN );
+                final String message = "Warning: file modified in the future: " + files[ i ];
+                getLogger().warn( message );
             }
             if( srcFile.lastModified() > classFile.lastModified() )
             {
                 //log("Files are" + srcFile.getAbsolutePath()+" " +classFile.getAbsolutePath());
                 filesToDo.add( files[ i ] );
-                log( "Recompiling File " + files[ i ], Project.MSG_VERBOSE );
+                getLogger().debug( "Recompiling File " + files[ i ] );
             }
         }
     }

@@ -296,7 +296,7 @@ public class Coverage extends Task
             // use the custom handler for stdin issues
             LogStreamHandler handler = new CoverageStreamHandler( this );
             Execute exec = new Execute( handler );
-            log( cmdl.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( cmdl.toString() );
             exec.setCommandline( cmdl.getCommandline() );
             int exitValue = exec.execute();
             if( exitValue != 0 )
@@ -459,7 +459,7 @@ public class Coverage extends Task
     {
         //@todo change this when switching to JDK 1.2 and use File.createTmpFile()
         File file = createTmpFile();
-        log( "Creating parameter file: " + file, Project.MSG_VERBOSE );
+        getLogger().debug( "Creating parameter file: " + file );
 
         // options need to be one per line in the parameter file
         // so write them all in a single string
@@ -471,7 +471,7 @@ public class Coverage extends Task
             pw.println( params[ i ] );
         }
         pw.flush();
-        log( "JProbe Coverage parameters:\n" + sw.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "JProbe Coverage parameters:\n" + sw.toString() );
 
         // now write them to the file
         FileWriter fw = null;

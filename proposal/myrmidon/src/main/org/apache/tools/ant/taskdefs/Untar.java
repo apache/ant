@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarInputStream;
 
@@ -30,7 +29,7 @@ public class Untar extends Expand
         TarInputStream tis = null;
         try
         {
-            log( "Expanding: " + srcF + " into " + dir, Project.MSG_INFO );
+            getLogger().info( "Expanding: " + srcF + " into " + dir );
 
             tis = new TarInputStream( new FileInputStream( srcF ) );
             TarEntry te = null;
@@ -41,7 +40,7 @@ public class Untar extends Expand
                              te.getName(),
                              te.getModTime(), te.isDirectory() );
             }
-            log( "expand complete", Project.MSG_VERBOSE );
+            getLogger().debug( "expand complete" );
 
         }
         catch( IOException ioe )

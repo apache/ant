@@ -226,7 +226,7 @@ public class Java extends Task
             }
             else
             {
-                log( "Java Result: " + err, Project.MSG_ERR );
+                getLogger().error( "Java Result: " + err );
             }
         }
     }
@@ -253,7 +253,7 @@ public class Java extends Task
 
         if( fork )
         {
-            log( "Forking " + cmdl.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( "Forking " + cmdl.toString() );
 
             return run( cmdl.getCommandline() );
         }
@@ -261,15 +261,14 @@ public class Java extends Task
         {
             if( cmdl.getVmCommand().size() > 1 )
             {
-                log( "JVM args ignored when same JVM is used.", Project.MSG_WARN );
+                getLogger().warn( "JVM args ignored when same JVM is used." );
             }
             if( dir != null )
             {
-                log( "Working directory ignored when same JVM is used.", Project.MSG_WARN );
+                getLogger().warn( "Working directory ignored when same JVM is used." );
             }
 
-            log( "Running in same VM " + cmdl.getJavaCommand().toString(),
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "Running in same VM " + cmdl.getJavaCommand().toString() );
             run( cmdl );
             return 0;
         }

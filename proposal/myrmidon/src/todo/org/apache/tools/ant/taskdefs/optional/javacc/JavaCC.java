@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Argument;
@@ -216,7 +215,7 @@ public class JavaCC extends Task
         final File javaFile = getOutputJavaFile( outputDirectory, target );
         if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
         {
-            log( "Target is already built - skipping (" + target + ")", Project.MSG_VERBOSE );
+            getLogger().debug( "Target is already built - skipping (" + target + ")" );
             return;
         }
         cmdl.createArgument().setValue( target.getAbsolutePath() );

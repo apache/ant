@@ -16,7 +16,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -236,7 +235,7 @@ public class EjbJar extends MatchingTask
      */
     public BorlandDeploymentTool createBorland()
     {
-        log( "Borland deployment tools", Project.MSG_VERBOSE );
+        getLogger().debug( "Borland deployment tools" );
 
         BorlandDeploymentTool tool = new BorlandDeploymentTool();
         tool.setTask( this );
@@ -283,7 +282,7 @@ public class EjbJar extends MatchingTask
      */
     public IPlanetDeploymentTool createIplanet()
     {
-        log( "iPlanet Application Server deployment tools", Project.MSG_VERBOSE );
+        getLogger().debug( "iPlanet Application Server deployment tools" );
 
         IPlanetDeploymentTool tool = new IPlanetDeploymentTool();
         tool.setTask( this );
@@ -403,8 +402,7 @@ public class EjbJar extends MatchingTask
             ds.scan();
             String[] files = ds.getIncludedFiles();
 
-            log( files.length + " deployment descriptors located.",
-                 Project.MSG_VERBOSE );
+            getLogger().debug( files.length + " deployment descriptors located." );
 
             // Loop through the files. Each file represents one deployment
             // descriptor, and hence one bean in our model.

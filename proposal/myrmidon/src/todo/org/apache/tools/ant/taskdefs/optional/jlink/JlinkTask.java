@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.optional.jlink;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 
@@ -158,18 +157,18 @@ public class JlinkTask extends MatchingTask
             throw new TaskException( "addfiles or mergefiles required! Please set." );
         }
         getLogger().info( "linking:     " + outfile.getPath() );
-        log( "compression: " + compress, Project.MSG_VERBOSE );
+        getLogger().debug( "compression: " + compress );
         jlink linker = new jlink();
         linker.setOutfile( outfile.getPath() );
         linker.setCompression( compress );
         if( haveMergeFiles() )
         {
-            log( "merge files: " + mergefiles.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( "merge files: " + mergefiles.toString() );
             linker.addMergeFiles( mergefiles.list() );
         }
         if( haveAddFiles() )
         {
-            log( "add files: " + addfiles.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( "add files: " + addfiles.toString() );
             linker.addAddFiles( addfiles.list() );
         }
         try

@@ -22,7 +22,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 import org.xml.sax.InputSource;
@@ -407,8 +406,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
 
         try
         {
-            log( "Checking if weblogic Jar needs to be rebuilt for jar " + weblogicJarFile.getName(),
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "Checking if weblogic Jar needs to be rebuilt for jar " + weblogicJarFile.getName() );
             // Only go forward if the generic and the weblogic file both exist
             if( genericJarFile.exists() && genericJarFile.isFile()
                 && weblogicJarFile.exists() && weblogicJarFile.isFile() )
@@ -458,7 +456,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                                 if( genclass.isInterface() )
                                 {
                                     //Interface changed   rebuild jar.
-                                    log( "Interface " + genclass.getName() + " has changed", Project.MSG_VERBOSE );
+                                    getLogger().debug( "Interface " + genclass.getName() + " has changed" );
                                     rebuild = true;
                                     break;
                                 }
@@ -474,7 +472,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                                 if( !genericEntry.getName().equals( "META-INF/MANIFEST.MF" ) )
                                 {
                                     //File other then class changed   rebuild
-                                    log( "Non class file " + genericEntry.getName() + " has changed", Project.MSG_VERBOSE );
+                                    getLogger().debug( "Non class file " + genericEntry.getName() + " has changed" );
                                     rebuild = true;
                                     break;
                                 }
@@ -484,7 +482,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                     else
                     {// a file doesnt exist rebuild
 
-                        log( "File " + filepath + " not present in weblogic jar", Project.MSG_VERBOSE );
+                        getLogger().debug( "File " + filepath + " not present in weblogic jar" );
                         rebuild = true;
                         break;
                     }
@@ -492,7 +490,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
 
                 if( !rebuild )
                 {
-                    log( "No rebuild needed - updating jar", Project.MSG_VERBOSE );
+                    getLogger().debug( "No rebuild needed - updating jar" );
                     newWLJarFile = new File( weblogicJarFile.getAbsolutePath() + ".temp" );
                     if( newWLJarFile.exists() )
                     {
@@ -522,7 +520,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                         // Update with changed Bean class
                         if( replaceEntries.containsKey( je.getName() ) )
                         {
-                            log( "Updating Bean class from generic Jar " + je.getName(), Project.MSG_VERBOSE );
+                            getLogger().debug( "Updating Bean class from generic Jar " + je.getName() );
                             // Use the entry from the generic jar
                             je = (JarEntry)replaceEntries.get( je.getName() );
                             is = genericJar.getInputStream( je );
@@ -543,7 +541,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                 }
                 else
                 {
-                    log( "Weblogic Jar rebuild needed due to changed interface or XML", Project.MSG_VERBOSE );
+                    getLogger().debug( "Weblogic Jar rebuild needed due to changed interface or XML" );
                 }
             }
             else
@@ -629,16 +627,16 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
         }
         else
         {
-            log( "Unable to locate weblogic deployment descriptor. It was expected to be in " +
-                 weblogicDD.getPath(), Project.MSG_WARN );
+            final String message = "Unable to locate weblogic deployment descriptor. It was expected to be in " +
+                weblogicDD.getPath();
+            getLogger().warn( message );
             return;
         }
 
         if( !newCMP )
         {
-            log( "The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE );
-            log( "Please adjust your weblogic descriptor and set newCMP=\"true\" " +
-                 "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE );
+            getLogger().debug( "The old method for locating CMP files has been DEPRECATED." );
+            getLogger().debug( "Please adjust your weblogic descriptor and set newCMP=\"true\" " + "to use the new CMP descriptor inclusion mechanism. " );
             // The the weblogic cmp deployment descriptor
             File weblogicCMPDD = new File( getConfig().descriptorDir, ddPrefix + WL_CMP_DD );
 
@@ -716,8 +714,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
         }
         if( !keepGeneric )
         {
-            log( "deleting generic jar " + genericJarFile.toString(),
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "deleting generic jar " + genericJarFile.toString() );
             genericJarFile.delete();
         }
     }
@@ -791,7 +788,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                 }
                 else
                 {
-                    log( "Unrecognized publicId " + publicId + " - using EJB 1.1 compiler", Project.MSG_WARN );
+                    getLogger().warn( "Unrecognized publicId " + publicId + " - using EJB 1.1 compiler" );
                     ejbcClassName = COMPILER_EJB11;
                 }
             }
@@ -836,8 +833,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
                 javaTask.setClasspath( classpath );
             }
 
-            log( "Calling " + ejbcClassName + " for " + sourceJar.toString(),
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "Calling " + ejbcClassName + " for " + sourceJar.toString() );
 
             if( javaTask.executeJava() != 0 )
             {

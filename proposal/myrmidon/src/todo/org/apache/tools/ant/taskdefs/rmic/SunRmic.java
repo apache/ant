@@ -27,7 +27,7 @@ public class SunRmic extends DefaultRmicAdapter
     public boolean execute()
         throws TaskException
     {
-        getRmic().log( "Using SUN rmic compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using SUN rmic compiler" );
         Commandline cmd = setupRmicCommand();
 
         // Create an instance of the rmic, redirecting output to

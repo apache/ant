@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
@@ -195,7 +194,7 @@ public class XMLReport
         }
         else
         {
-            task.log( message, Project.MSG_DEBUG );
+            task.getLogger().debug( message );
         }
     }
 

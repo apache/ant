@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Commandline;
@@ -412,8 +411,7 @@ public class ExecuteOn extends ExecTask
 
                 if( fileNames.size() == 0 && skipEmpty )
                 {
-                    log( "Skipping fileset for directory "
-                         + base + ". It is empty.", Project.MSG_INFO );
+                    getLogger().info( "Skipping fileset for directory " + base + ". It is empty." );
                     continue;
                 }
 
@@ -424,8 +422,7 @@ public class ExecuteOn extends ExecTask
                     for( int j = 0; j < s.length; j++ )
                     {
                         String[] command = getCommandline( s[ j ], base );
-                        log( "Executing " + Commandline.toString( command ),
-                             Project.MSG_VERBOSE );
+                        getLogger().debug( "Executing " + Commandline.toString( command ) );
                         exe.setCommandline( command );
                         runExecute( exe );
                     }
@@ -441,8 +438,7 @@ public class ExecuteOn extends ExecTask
                 File[] b = new File[ baseDirs.size() ];
                 b = (File[])baseDirs.toArray( b );
                 String[] command = getCommandline( s, b );
-                log( "Executing " + Commandline.toString( command ),
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Executing " + Commandline.toString( command ) );
                 exe.setCommandline( command );
                 runExecute( exe );
             }

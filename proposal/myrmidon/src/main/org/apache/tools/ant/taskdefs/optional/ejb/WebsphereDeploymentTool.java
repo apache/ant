@@ -18,7 +18,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -30,8 +29,8 @@ import org.apache.tools.ant.types.Path;
  *
  * @author <mailto:msahu@interkeel.com>Maneesh Sahu</mailto>
  */
-
-public class WebsphereDeploymentTool extends GenericDeploymentTool
+public class WebsphereDeploymentTool
+    extends GenericDeploymentTool
 {
 
     public final static String PUBLICID_EJB11
@@ -541,8 +540,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
         JarOutputStream newJarStream = null;
         try
         {
-            log( "Checking if websphere Jar needs to be rebuilt for jar " + websphereJarFile.getName(),
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "Checking if websphere Jar needs to be rebuilt for jar " + websphereJarFile.getName() );
 
             // Only go forward if the generic and the websphere file both exist
 
@@ -604,7 +602,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                                     //Interface changed   rebuild jar.
 
 
-                                    log( "Interface " + genclass.getName() + " has changed", Project.MSG_VERBOSE );
+                                    getLogger().debug( "Interface " + genclass.getName() + " has changed" );
                                     rebuild = true;
                                     break;
                                 }
@@ -623,7 +621,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                                     //File other then class changed   rebuild
 
 
-                                    log( "Non class file " + genericEntry.getName() + " has changed", Project.MSG_VERBOSE );
+                                    getLogger().debug( "Non class file " + genericEntry.getName() + " has changed" );
                                     rebuild = true;
                                 }
                                 break;
@@ -632,14 +630,14 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                     }
                     else
                     {// a file doesnt exist rebuild
-                        log( "File " + filepath + " not present in websphere jar", Project.MSG_VERBOSE );
+                        getLogger().debug( "File " + filepath + " not present in websphere jar" );
                         rebuild = true;
                         break;
                     }
                 }
                 if( !rebuild )
                 {
-                    log( "No rebuild needed - updating jar", Project.MSG_VERBOSE );
+                    getLogger().debug( "No rebuild needed - updating jar" );
                     newwasJarFile = new File( websphereJarFile.getAbsolutePath() + ".temp" );
                     if( newwasJarFile.exists() )
                     {
@@ -674,8 +672,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
                         if( replaceEntries.containsKey( je.getName() ) )
                         {
-                            log( "Updating Bean class from generic Jar " + je.getName(),
-                                 Project.MSG_VERBOSE );
+                            getLogger().debug( "Updating Bean class from generic Jar " + je.getName() );
 
                             // Use the entry from the generic jar
 
@@ -699,7 +696,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                 }
                 else
                 {
-                    log( "websphere Jar rebuild needed due to changed interface or XML", Project.MSG_VERBOSE );
+                    getLogger().debug( "websphere Jar rebuild needed due to changed interface or XML" );
                 }
             }
             else
@@ -789,8 +786,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
         }
         else
         {
-            log( "Unable to locate websphere extensions. It was expected to be in " +
-                 websphereEXT.getPath(), Project.MSG_VERBOSE );
+            getLogger().debug( "Unable to locate websphere extensions. It was expected to be in " + websphereEXT.getPath() );
         }
         File websphereBND = new File( getConfig().descriptorDir, ddPrefix + WAS_BND );
         if( websphereBND.exists() )
@@ -800,14 +796,12 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
         }
         else
         {
-            log( "Unable to locate websphere bindings. It was expected to be in " +
-                 websphereBND.getPath(), Project.MSG_VERBOSE );
+            getLogger().debug( "Unable to locate websphere bindings. It was expected to be in " + websphereBND.getPath() );
         }
         if( !newCMP )
         {
-            log( "The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE );
-            log( "Please adjust your websphere descriptor and set newCMP=\"true\" " +
-                 "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE );
+            getLogger().debug( "The old method for locating CMP files has been DEPRECATED." );
+            getLogger().debug( "Please adjust your websphere descriptor and set newCMP=\"true\" " + "to use the new CMP descriptor inclusion mechanism. " );
         }
         else
         {
@@ -828,8 +822,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                 }
                 else
                 {
-                    log( "Unable to locate the websphere Map: " +
-                         websphereMAP.getPath(), Project.MSG_VERBOSE );
+                    getLogger().debug( "Unable to locate the websphere Map: " + websphereMAP.getPath() );
                 }
                 File websphereSchema = new File( getConfig().descriptorDir,
                                                  ddPrefix + dbPrefix + WAS_CMP_SCHEMA );
@@ -840,8 +833,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                 }
                 else
                 {
-                    log( "Unable to locate the websphere Schema: " +
-                         websphereSchema.getPath(), Project.MSG_VERBOSE );
+                    getLogger().debug( "Unable to locate the websphere Schema: " + websphereSchema.getPath() );
                 }
 
                 // Theres nothing else to see here...keep moving sonny
@@ -884,8 +876,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
             }
             if( !keepGeneric )
             {
-                log( "deleting generic jar " + genericJarFile.toString(),
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "deleting generic jar " + genericJarFile.toString() );
                 genericJarFile.delete();
             }
         }
@@ -953,7 +944,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
                 // Why do my ""'s get stripped away???
 
-                log( "EJB Deploy Options: " + args, Project.MSG_VERBOSE );
+                getLogger().debug( "EJB Deploy Options: " + args );
                 Java javaTask = (Java)getTask().getProject().createTask( "java" );
 
                 // Set the JvmArgs
@@ -997,8 +988,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
                 {
                     javaTask.setFork( true );
                 }
-                log( "Calling websphere.ejbdeploy for " + sourceJar.toString(),
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Calling websphere.ejbdeploy for " + sourceJar.toString() );
                 javaTask.execute();
             }
         }

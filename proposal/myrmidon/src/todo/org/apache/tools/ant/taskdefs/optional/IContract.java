@@ -18,7 +18,6 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -976,8 +975,8 @@ public class IContract extends MatchingTask
 
                     if( srcFile.lastModified() > now )
                     {
-                        log( "Warning: file modified in the future: " +
-                             files[ i ], Project.MSG_WARN );
+                        final String message = "Warning: file modified in the future: " + files[ i ];
+                        getLogger().warn( message );
                     }
 
                     if( !classFile.exists() || srcFile.lastModified() > classFile.lastModified() )
@@ -1069,7 +1068,7 @@ public class IContract extends MatchingTask
             if( "jikes".equals( compiler ) )
             {
                 icCompiler = compiler;
-                includeJavaRuntime = true;
+                m_includeJavaRuntime = true;
                 path.append( getCompileClasspath() );
             }
         }

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -245,7 +244,7 @@ public class TelnetTask extends Task
             {
                 os.write( ( s + "\n" ).getBytes() );
                 if( echoString )
-                    log( s, Project.MSG_INFO );
+                    getLogger().info( s );
                 os.flush();
             }
             catch( Exception e )
@@ -304,7 +303,7 @@ public class TelnetTask extends Task
                         sb.append( (char)is.read() );
                     }
                 }
-                log( sb.toString(), Project.MSG_INFO );
+                getLogger().info( sb.toString() );
             }
             catch( TaskException be )
             {

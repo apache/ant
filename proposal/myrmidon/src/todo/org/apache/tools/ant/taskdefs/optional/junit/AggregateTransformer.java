@@ -17,7 +17,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
@@ -83,7 +82,7 @@ public class AggregateTransformer
      */
     public void setExtension( String ext )
     {
-        task.log( "extension is not used anymore", Project.MSG_WARN );
+        task.getLogger().warn( "extension is not used anymore" );
     }
 
     public void setFormat( Format format )

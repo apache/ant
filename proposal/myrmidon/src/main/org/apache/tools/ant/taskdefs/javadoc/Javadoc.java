@@ -920,7 +920,7 @@ public class Javadoc
             if( !Os.isFamily( "netware" ) )
             {
                 getLogger().debug( "Unable to locate " + jdocExecutable.getAbsolutePath() +
-                     ". Using \"javadoc\" instead." );
+                                   ". Using \"javadoc\" instead." );
             }
             return "javadoc";
         }

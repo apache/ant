@@ -76,13 +76,13 @@ public class ANTLR extends Task
 
     public void setOutputdirectory( File outputDirectory )
     {
-        log( "Setting output directory to: " + outputDirectory.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Setting output directory to: " + outputDirectory.toString() );
         this.outputDirectory = outputDirectory;
     }
 
     public void setTarget( File target )
     {
-        log( "Setting target to: " + target.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Setting target to: " + target.toString() );
         this.target = target;
     }
 
@@ -127,7 +127,7 @@ public class ANTLR extends Task
 
             if( fork )
             {
-                log( "Forking " + commandline.toString(), Project.MSG_VERBOSE );
+                getLogger().debug( "Forking " + commandline.toString() );
                 int err = run( commandline.getCommandline() );
                 if( err == 1 )
                 {
@@ -163,27 +163,24 @@ public class ANTLR extends Task
             {
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
-                log( "Implicitly adding " + jarName + " to classpath",
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Implicitly adding " + jarName + " to classpath" );
                 createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
-                log( "Implicitly adding " + dirName + " to classpath",
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Implicitly adding " + dirName + " to classpath" );
                 createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
             }
             else
             {
-                log( "Don\'t know how to handle resource URL " + u,
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Don\'t know how to handle resource URL " + u );
             }
         }
         else
         {
-            log( "Couldn\'t find " + resource, Project.MSG_DEBUG );
+            getLogger().debug( "Couldn\'t find " + resource );
         }
     }
 

@@ -200,7 +200,7 @@ public class MAudit extends AbstractMetamataTask
         }
         if( !unused && searchPath != null )
         {
-            log( "'searchpath' element ignored. 'unused' attribute is disabled.", Project.MSG_WARN );
+            getLogger().warn( "'searchpath' element ignored. 'unused' attribute is disabled." );
         }
     }
 

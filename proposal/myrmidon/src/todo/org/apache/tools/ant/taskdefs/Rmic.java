@@ -15,7 +15,6 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -474,19 +473,22 @@ public class Rmic extends MatchingTask
         }
         catch( ClassNotFoundException e )
         {
-            log( "Unable to verify class " + classname +
-                 ". It could not be found.", Project.MSG_WARN );
+            final String message = "Unable to verify class " + classname +
+                ". It could not be found.";
+            getLogger().warn( message );
         }
         catch( NoClassDefFoundError e )
         {
-            log( "Unable to verify class " + classname +
-                 ". It is not defined.", Project.MSG_WARN );
+            final String message = "Unable to verify class " + classname +
+                ". It is not defined.";
+            getLogger().warn( message );
         }
         catch( Throwable t )
         {
-            log( "Unable to verify class " + classname +
-                 ". Loading caused Exception: " +
-                 t.getMessage(), Project.MSG_WARN );
+            final String message = "Unable to verify class " + classname +
+                ". Loading caused Exception: " +
+                t.getMessage();
+            getLogger().warn( message );
         }
         // we only get here if an exception has been thrown
         return false;
@@ -536,7 +538,7 @@ public class Rmic extends MatchingTask
 
         if( verify )
         {
-            log( "Verify has been turned on.", Project.MSG_INFO );
+            getLogger().info( "Verify has been turned on." );
         }
 
         String compiler = getProject().getProperty( "build.rmic" );
@@ -567,9 +569,7 @@ public class Rmic extends MatchingTask
         int fileCount = compileList.size();
         if( fileCount > 0 )
         {
-            log( "RMI Compiling " + fileCount +
-                 " class" + ( fileCount > 1 ? "es" : "" ) + " to " + baseDir,
-                 Project.MSG_INFO );
+            getLogger().info( "RMI Compiling " + fileCount + " class" + ( fileCount > 1 ? "es" : "" ) + " to " + baseDir );
 
             // finally, lets execute the compiler!!
             if( !adapter.execute() )
@@ -587,9 +587,8 @@ public class Rmic extends MatchingTask
         {
             if( idl )
             {
-                log( "Cannot determine sourcefiles in idl mode, ",
-                     Project.MSG_WARN );
-                log( "sourcebase attribute will be ignored.", Project.MSG_WARN );
+                getLogger().warn( "Cannot determine sourcefiles in idl mode, " );
+                getLogger().warn( "sourcebase attribute will be ignored." );
             }
             else
             {
@@ -620,14 +619,12 @@ public class Rmic extends MatchingTask
         String[] newFiles = files;
         if( idl )
         {
-            log( "will leave uptodate test to rmic implementation in idl mode.",
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "will leave uptodate test to rmic implementation in idl mode." );
         }
         else if( iiop
             && iiopopts != null && iiopopts.indexOf( "-always" ) > -1 )
         {
-            log( "no uptodate test as -always option has been specified",
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "no uptodate test as -always option has been specified" );
         }
         else
         {

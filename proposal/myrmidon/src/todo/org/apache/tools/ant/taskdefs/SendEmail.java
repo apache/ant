@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.mail.MailMessage;
 
@@ -402,7 +401,7 @@ public class SendEmail extends Task
             }
             else
             {
-                log( err, Project.MSG_ERR );
+                getLogger().error( err );
             }
         }
     }

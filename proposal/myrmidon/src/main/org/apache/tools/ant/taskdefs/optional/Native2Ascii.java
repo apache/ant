@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Mapper;
@@ -225,7 +224,7 @@ public class Native2Ascii extends MatchingTask
             }
         }
 
-        log( "converting " + srcName, Project.MSG_VERBOSE );
+        getLogger().debug( "converting " + srcName );
         sun.tools.native2ascii.Main n2a
             = new sun.tools.native2ascii.Main();
         if( !n2a.convert( cmd.getArguments() ) )

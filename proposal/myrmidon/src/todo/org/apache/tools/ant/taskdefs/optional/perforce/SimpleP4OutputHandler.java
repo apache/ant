@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 public class SimpleP4OutputHandler
     extends P4HandlerAdapter
@@ -41,7 +40,7 @@ public class SimpleP4OutputHandler
             throw new TaskException( line );
         }
 
-        parent.log( parent.util.substitute( "s/^.*: //", line ), Project.MSG_INFO );
+        parent.getLogger().info( parent.util.substitute( "s/^.*: //", line ) );
 
     }
 }

@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.perl.Perl5Util;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Commandline;
 
@@ -160,7 +159,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
                 cmdl += cmdline[ i ] + " ";
             }
 
-            log( "Execing " + cmdl, Project.MSG_VERBOSE );
+            getLogger().debug( "Execing " + cmdl );
 
             if( handler == null )
                 handler = new SimpleP4OutputHandler( this );

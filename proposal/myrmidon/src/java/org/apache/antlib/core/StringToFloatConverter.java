@@ -32,7 +32,10 @@ public class StringToFloatConverter
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Float( (String)object ); }
+        try
+        {
+            return new Float( (String)object );
+        }
         catch( final NumberFormatException nfe )
         {
             final String message = REZ.getString( "convert.bad-float.error", object );

@@ -306,7 +306,7 @@ public class MParse extends Task
         }
 
         final Execute process = new Execute( handler );
-        log( cmdl.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( cmdl.toString() );
         process.setCommandline( cmdl.getCommandline() );
         try
         {

@@ -32,7 +32,10 @@ public class StringToByteConverter
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Byte( (String)object ); }
+        try
+        {
+            return new Byte( (String)object );
+        }
         catch( final NumberFormatException nfe )
         {
             final String message = REZ.getString( "convert.bad-byte.error", object );

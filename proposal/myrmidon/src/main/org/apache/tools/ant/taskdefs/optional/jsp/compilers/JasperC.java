@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
@@ -28,7 +27,7 @@ public class JasperC
     public boolean execute()
         throws TaskException
     {
-        getJspc().log( "Using jasper compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using jasper compiler" );
         Commandline cmd = setupJasperCommand();
 
         try

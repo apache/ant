@@ -32,7 +32,10 @@ public class StringToIntegerConverter
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Integer( (String)object ); }
+        try
+        {
+            return new Integer( (String)object );
+        }
         catch( final NumberFormatException nfe )
         {
             final String message = REZ.getString( "convert.bad-integer.error", object );

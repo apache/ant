@@ -21,7 +21,6 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
@@ -275,7 +274,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         {
             try
             {
-                log( "Parsing file: '" + files[ i ] + "'", Project.MSG_VERBOSE );
+                getLogger().debug( "Parsing file: '" + files[ i ] + "'" );
                 //XXX there seems to be a bug in xerces 1.3.0 that doesn't like file object
                 // will investigate later. It does not use the given directory but
                 // the vm dir instead ? Works fine with crimson.
@@ -289,19 +288,19 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 else
                 {
                     // issue a warning.
-                    log( "the file " + files[ i ] + " is not a valid testsuite XML document", Project.MSG_WARN );
+                    getLogger().warn( "the file " + files[ i ] + " is not a valid testsuite XML document" );
                 }
             }
             catch( SAXException e )
             {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
-                log( "The file " + files[ i ] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN );
-                log( ExceptionUtil.printStackTrace( e ), Project.MSG_DEBUG );
+                getLogger().warn( "The file " + files[ i ] + " is not a valid XML document. It is possibly corrupted." );
+                getLogger().debug( ExceptionUtil.printStackTrace( e ) );
             }
             catch( IOException e )
             {
-                log( "Error while accessing file " + files[ i ] + ": " + e.getMessage(), Project.MSG_ERR );
+                getLogger().error( "Error while accessing file " + files[ i ] + ": " + e.getMessage() );
             }
         }
         return rootElement;

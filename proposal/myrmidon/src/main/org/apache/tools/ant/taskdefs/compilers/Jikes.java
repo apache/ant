@@ -22,7 +22,8 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
-public class Jikes extends DefaultCompilerAdapter
+public class Jikes
+    extends DefaultCompilerAdapter
 {
 
     /**
@@ -39,25 +40,25 @@ public class Jikes extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        attributes.log( "Using jikes compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using jikes compiler" );
 
-        Path classpath = new Path( project );
+        Path classpath = new Path( m_project );
 
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if( bootclasspath != null )
+        if( m_bootclasspath != null )
         {
-            classpath.append( bootclasspath );
+            classpath.append( m_bootclasspath );
         }
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
-        classpath.addExtdirs( extdirs );
+        classpath.addExtdirs( m_extdirs );
 
-        if( ( bootclasspath == null ) || ( bootclasspath.size() == 0 ) )
+        if( ( m_bootclasspath == null ) || ( m_bootclasspath.size() == 0 ) )
         {
             // no bootclasspath, therefore, get one from the java runtime
-            includeJavaRuntime = true;
+            m_includeJavaRuntime = true;
         }
         else
         {
@@ -76,42 +77,42 @@ public class Jikes extends DefaultCompilerAdapter
         String jikesPath = System.getProperty( "jikes.class.path" );
         if( jikesPath != null )
         {
-            classpath.append( new Path( project, jikesPath ) );
+            classpath.append( new Path( m_project, jikesPath ) );
         }
 
         Commandline cmd = new Commandline();
         cmd.setExecutable( "jikes" );
 
-        if( deprecation == true )
+        if( m_deprecation == true )
             cmd.createArgument().setValue( "-deprecation" );
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
             cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( destDir );
+            cmd.createArgument().setFile( m_destDir );
         }
 
         cmd.createArgument().setValue( "-classpath" );
         cmd.createArgument().setPath( classpath );
 
-        if( encoding != null )
+        if( m_encoding != null )
         {
             cmd.createArgument().setValue( "-encoding" );
-            cmd.createArgument().setValue( encoding );
+            cmd.createArgument().setValue( m_encoding );
         }
-        if( debug )
+        if( m_debug )
         {
             cmd.createArgument().setValue( "-g" );
         }
-        if( optimize )
+        if( m_optimize )
         {
             cmd.createArgument().setValue( "-O" );
         }
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArgument().setValue( "-verbose" );
         }
-        if( depend )
+        if( m_depend )
         {
             cmd.createArgument().setValue( "-depend" );
         }
@@ -126,13 +127,13 @@ public class Jikes extends DefaultCompilerAdapter
          * by emacs, so that emacs can directly set the cursor to the place,
          * where the error occured.
          */
-        String emacsProperty = project.getProperty( "build.compiler.emacs" );
+        String emacsProperty = m_project.getProperty( "build.compiler.emacs" );
         if( emacsProperty != null && Project.toBoolean( emacsProperty ) )
         {
             cmd.createArgument().setValue( "+E" );
         }
 
-        if( attributes.getNowarn() )
+        if( m_attributes.getNowarn() )
         {
             /*
              * FIXME later
@@ -146,7 +147,7 @@ public class Jikes extends DefaultCompilerAdapter
         /**
          * Jikes can issue pedantic warnings.
          */
-        String pedanticProperty = project.getProperty( "build.compiler.pedantic" );
+        String pedanticProperty = m_project.getProperty( "build.compiler.pedantic" );
         if( pedanticProperty != null && Project.toBoolean( pedanticProperty ) )
         {
             cmd.createArgument().setValue( "+P" );
@@ -156,7 +157,7 @@ public class Jikes extends DefaultCompilerAdapter
          * Jikes supports something it calls "full dependency checking", see the
          * jikes documentation for differences between -depend and +F.
          */
-        String fullDependProperty = project.getProperty( "build.compiler.fulldepend" );
+        String fullDependProperty = m_project.getProperty( "build.compiler.fulldepend" );
         if( fullDependProperty != null && Project.toBoolean( fullDependProperty ) )
         {
             cmd.createArgument().setValue( "+F" );

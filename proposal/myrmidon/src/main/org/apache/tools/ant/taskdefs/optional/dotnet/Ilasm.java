@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 
 /**
  * Task to assemble .net 'Intermediate Language' files. The task will only work
@@ -188,7 +187,7 @@ public class Ilasm
 
     public void setOwner( String s )
     {
-        log( "This option is not supported by ILASM as of Beta-2, and will be ignored", Project.MSG_WARN );
+        getLogger().warn( "This option is not supported by ILASM as of Beta-2, and will be ignored" );
     }
 
     /**

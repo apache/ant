@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Hashtable;
-import org.apache.tools.ant.Project;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.tools.ant.Task;
 import org.xml.sax.AttributeList;
 import org.xml.sax.InputSource;
@@ -30,7 +31,9 @@ import org.xml.sax.SAXException;
  *
  * @author RT
  */
-public class DescriptorHandler extends org.xml.sax.HandlerBase
+public class DescriptorHandler
+    extends org.xml.sax.HandlerBase
+    implements LogEnabled
 {
     private final static int STATE_LOOKING_EJBJAR = 1;
     private final static int STATE_IN_EJBJAR = 2;
@@ -104,6 +107,23 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
      * for performing dependency file lookups.
      */
     private File srcDir;
+
+    private Logger m_logger;
+
+    /**
+     * Provide component with a logger.
+     *
+     * @param logger the logger
+     */
+    public void enableLogging( Logger logger )
+    {
+        m_logger = logger;
+    }
+
+    protected final Logger getLogger()
+    {
+        return m_logger;
+    }
 
     public DescriptorHandler( Task task, File srcDir )
     {
@@ -221,7 +241,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             if( publicId != null )
             {
                 fileDTDs.put( publicId, fileDTD );
-                owningTask.log( "Mapped publicId " + publicId + " to file " + fileDTD, Project.MSG_VERBOSE );
+                getLogger().debug( "Mapped publicId " + publicId + " to file " + fileDTD );
             }
             return;
         }
@@ -231,7 +251,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             if( publicId != null )
             {
                 resourceDTDs.put( publicId, location );
-                owningTask.log( "Mapped publicId " + publicId + " to resource " + location, Project.MSG_VERBOSE );
+                getLogger().debug( "Mapped publicId " + publicId + " to resource " + location );
             }
         }
 
@@ -260,7 +280,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
         {
             try
             {
-                owningTask.log( "Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE );
+                getLogger().debug( "Resolved " + publicId + " to local file " + dtdFile );
                 return new InputSource( new FileInputStream( dtdFile ) );
             }
             catch( FileNotFoundException ex )
@@ -275,7 +295,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             InputStream is = this.getClass().getResourceAsStream( dtdResourceName );
             if( is != null )
             {
-                owningTask.log( "Resolved " + publicId + " to local resource " + dtdResourceName, Project.MSG_VERBOSE );
+                getLogger().debug( "Resolved " + publicId + " to local resource " + dtdResourceName );
                 return new InputSource( is );
             }
         }
@@ -286,7 +306,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             try
             {
                 InputStream is = dtdUrl.openStream();
-                owningTask.log( "Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE );
+                getLogger().debug( "Resolved " + publicId + " to url " + dtdUrl );
                 return new InputSource( is );
             }
             catch( IOException ioe )
@@ -295,8 +315,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             }
         }
 
-        owningTask.log( "Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity",
-                        Project.MSG_INFO );
+        getLogger().info( "Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity" );
 
         return null;
     }

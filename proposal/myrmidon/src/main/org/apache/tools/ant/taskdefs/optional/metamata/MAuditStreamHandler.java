@@ -19,7 +19,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
@@ -157,7 +156,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
             String fullclassname = (String)filemapping.get( filepath );
             if( fullclassname == null )
             {
-                task.log( "Could not find class mapping for " + filepath, Project.MSG_WARN );
+                task.getLogger().warn( "Could not find class mapping for " + filepath );
                 continue;
             }
             int pos = fullclassname.lastIndexOf( '.' );
@@ -193,7 +192,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
             }
             catch( IOException exc )
             {
-                task.log( "Unable to write log file", Project.MSG_ERR );
+                task.getLogger().error( "Unable to write log file" );
             }
             finally
             {
@@ -265,7 +264,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
         {
             // this doesn't match..report it as info, it could be
             // either the copyright, summary or a multiline message (damn !)
-            task.log( line, Project.MSG_INFO );
+            task.getLogger().info( line );
         }
     }
 

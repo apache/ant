@@ -18,7 +18,6 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -214,7 +213,7 @@ public class Property extends Task
         if( !prefix.endsWith( "." ) )
             prefix += ".";
 
-        log( "Loading EnvironmentData " + prefix, Project.MSG_VERBOSE );
+        getLogger().debug( "Loading EnvironmentData " + prefix );
         try
         {
             final Properties environment = Environment.getNativeEnvironment();
@@ -225,7 +224,7 @@ public class Property extends Task
 
                 if( value.equals( "" ) )
                 {
-                    log( "Ignoring: " + key, Project.MSG_WARN );
+                    getLogger().warn( "Ignoring: " + key );
                 }
                 else
                 {
@@ -249,7 +248,7 @@ public class Property extends Task
         throws TaskException
     {
         Properties props = new Properties();
-        log( "Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE );
+        getLogger().debug( "Loading " + file.getAbsolutePath() );
         try
         {
             if( file.exists() )
@@ -270,8 +269,7 @@ public class Property extends Task
             }
             else
             {
-                log( "Unable to find property file: " + file.getAbsolutePath(),
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Unable to find property file: " + file.getAbsolutePath() );
             }
         }
         catch( IOException ex )
@@ -284,7 +282,7 @@ public class Property extends Task
         throws TaskException
     {
         Properties props = new Properties();
-        log( "Resource Loading " + name, Project.MSG_VERBOSE );
+        getLogger().debug( "Resource Loading " + name );
         try
         {
             ClassLoader cL = null;
@@ -315,7 +313,7 @@ public class Property extends Task
             }
             else
             {
-                log( "Unable to find resource " + name, Project.MSG_WARN );
+                getLogger().warn( "Unable to find resource " + name );
             }
         }
         catch( IOException ex )

@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.tools.ant.Project;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
 
@@ -20,6 +20,7 @@ import org.apache.tools.ant.types.Commandline;
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
 public abstract class DefaultCompilerAdapter
+    extends AbstractLogEnabled
     implements CompilerAdapter
 {
     /*
@@ -56,7 +57,7 @@ public abstract class DefaultCompilerAdapter
                                             ArrayList compileList,
                                             Commandline cmd )
     {
-        jspc.log( "Compilation args: " + cmd.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )
@@ -75,10 +76,7 @@ public abstract class DefaultCompilerAdapter
             niceSourceList.append( "    " + arg + lSep );
         }
 
-        jspc.log( niceSourceList.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( niceSourceList.toString() );
     }
-    /*
-     * ------------------------------------------------------------
-     */
 }
 

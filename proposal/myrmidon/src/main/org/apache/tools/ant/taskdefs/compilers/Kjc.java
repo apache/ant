@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -25,7 +24,7 @@ public class Kjc extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        attributes.log( "Using kjc compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using kjc compiler" );
         Commandline cmd = setupKjcCommand();
 
         try
@@ -71,31 +70,31 @@ public class Kjc extends DefaultCompilerAdapter
         // generate classpath, because kjc does't support sourcepath.
         Path classpath = getCompileClasspath();
 
-        if( deprecation == true )
+        if( m_deprecation == true )
         {
             cmd.createArgument().setValue( "-deprecation" );
         }
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
             cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( destDir );
+            cmd.createArgument().setFile( m_destDir );
         }
 
         // generate the clsspath
         cmd.createArgument().setValue( "-classpath" );
 
-        Path cp = new Path( project );
+        Path cp = new Path( m_project );
 
         // kjc don't have bootclasspath option.
-        if( bootclasspath != null )
+        if( m_bootclasspath != null )
         {
-            cp.append( bootclasspath );
+            cp.append( m_bootclasspath );
         }
 
-        if( extdirs != null )
+        if( m_extdirs != null )
         {
-            cp.addExtdirs( extdirs );
+            cp.addExtdirs( m_extdirs );
         }
 
         cp.append( classpath );
@@ -105,23 +104,23 @@ public class Kjc extends DefaultCompilerAdapter
 
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
-        if( encoding != null )
+        if( m_encoding != null )
         {
             cmd.createArgument().setValue( "-encoding" );
-            cmd.createArgument().setValue( encoding );
+            cmd.createArgument().setValue( m_encoding );
         }
 
-        if( debug )
+        if( m_debug )
         {
             cmd.createArgument().setValue( "-g" );
         }
 
-        if( optimize )
+        if( m_optimize )
         {
             cmd.createArgument().setValue( "-O2" );
         }
 
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArgument().setValue( "-verbose" );
         }

@@ -65,7 +65,7 @@ public class Execute
     {
         try
         {
-            task.log( Commandline.toString( cmdline ), Project.MSG_VERBOSE );
+            task.hackGetLogger().debug( Commandline.toString( cmdline ) );
             final Execute exe = new Execute();
             exe.setOutput( new LogOutputStream( task, Project.MSG_INFO ) );
             exe.setError( new LogOutputStream( task, Project.MSG_WARN ) );

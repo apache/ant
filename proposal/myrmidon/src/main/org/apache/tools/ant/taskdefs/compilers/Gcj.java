@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -32,7 +31,7 @@ public class Gcj extends DefaultCompilerAdapter
         throws TaskException
     {
         Commandline cmd;
-        attributes.log( "Using gcj compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using gcj compiler" );
         cmd = setupGCJCommand();
 
         int firstFileName = cmd.size();
@@ -45,23 +44,23 @@ public class Gcj extends DefaultCompilerAdapter
         throws TaskException
     {
         Commandline cmd = new Commandline();
-        Path classpath = new Path( project );
+        Path classpath = new Path( m_project );
 
         // gcj doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if( bootclasspath != null )
+        if( m_bootclasspath != null )
         {
-            classpath.append( bootclasspath );
+            classpath.append( m_bootclasspath );
         }
 
         // gcj doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
-        classpath.addExtdirs( extdirs );
+        classpath.addExtdirs( m_extdirs );
 
-        if( ( bootclasspath == null ) || ( bootclasspath.size() == 0 ) )
+        if( ( m_bootclasspath == null ) || ( m_bootclasspath.size() == 0 ) )
         {
             // no bootclasspath, therefore, get one from the java runtime
-            includeJavaRuntime = true;
+            m_includeJavaRuntime = true;
         }
         classpath.append( getCompileClasspath() );
 
@@ -71,12 +70,12 @@ public class Gcj extends DefaultCompilerAdapter
 
         cmd.setExecutable( "gcj" );
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
             cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( destDir );
+            cmd.createArgument().setFile( m_destDir );
 
-            if( destDir.mkdirs() )
+            if( m_destDir.mkdirs() )
             {
                 throw new TaskException( "Can't make output directories. Maybe permission is wrong. " );
             }
@@ -86,15 +85,15 @@ public class Gcj extends DefaultCompilerAdapter
         cmd.createArgument().setValue( "-classpath" );
         cmd.createArgument().setPath( classpath );
 
-        if( encoding != null )
+        if( m_encoding != null )
         {
-            cmd.createArgument().setValue( "--encoding=" + encoding );
+            cmd.createArgument().setValue( "--encoding=" + m_encoding );
         }
-        if( debug )
+        if( m_debug )
         {
             cmd.createArgument().setValue( "-g1" );
         }
-        if( optimize )
+        if( m_optimize )
         {
             cmd.createArgument().setValue( "-O" );
         }

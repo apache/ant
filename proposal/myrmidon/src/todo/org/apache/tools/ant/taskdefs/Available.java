@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -136,7 +135,7 @@ public class Available
 
         if( ( classname != null ) && !checkClass( classname ) )
         {
-            log( "Unable to load class " + classname + " to set property " + property, Project.MSG_VERBOSE );
+            getLogger().debug( "Unable to load class " + classname + " to set property " + property );
             return false;
         }
 
@@ -144,18 +143,18 @@ public class Available
         {
             if( type != null )
             {
-                log( "Unable to find " + type + " " + file + " to set property " + property, Project.MSG_VERBOSE );
+                getLogger().debug( "Unable to find " + type + " " + file + " to set property " + property );
             }
             else
             {
-                log( "Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE );
+                getLogger().debug( "Unable to find " + file + " to set property " + property );
             }
             return false;
         }
 
         if( ( resource != null ) && !checkResource( resource ) )
         {
-            log( "Unable to load resource " + resource + " to set property " + property, Project.MSG_VERBOSE );
+            getLogger().debug( "Unable to load resource " + resource + " to set property " + property );
             return false;
         }
 
@@ -232,7 +231,7 @@ public class Available
             String[] paths = filepath.list();
             for( int i = 0; i < paths.length; ++i )
             {
-                log( "Searching " + paths[ i ], Project.MSG_DEBUG );
+                getLogger().debug( "Searching " + paths[ i ] );
                 /*
                  * filepath can be a list of directory and/or
                  * file names (gen'd via <fileset>)
@@ -254,19 +253,19 @@ public class Available
                 {
                     if( type == null )
                     {
-                        log( "Found: " + path, Project.MSG_VERBOSE );
+                        getLogger().debug( "Found: " + path );
                         return true;
                     }
                     else if( type.isDir()
                         && path.isDirectory() )
                     {
-                        log( "Found directory: " + path, Project.MSG_VERBOSE );
+                        getLogger().debug( "Found directory: " + path );
                         return true;
                     }
                     else if( type.isFile()
                         && path.isFile() )
                     {
-                        log( "Found file: " + path, Project.MSG_VERBOSE );
+                        getLogger().debug( "Found file: " + path );
                         return true;
                     }
                     // not the requested type
@@ -280,12 +279,12 @@ public class Available
                 {
                     if( type == null )
                     {
-                        log( "Found: " + parent, Project.MSG_VERBOSE );
+                        getLogger().debug( "Found: " + parent );
                         return true;
                     }
                     else if( type.isDir() )
                     {
-                        log( "Found directory: " + parent, Project.MSG_VERBOSE );
+                        getLogger().debug( "Found directory: " + parent );
                         return true;
                     }
                     // not the requested type
@@ -338,7 +337,7 @@ public class Available
             {
                 if( f.isDirectory() )
                 {
-                    log( "Found directory: " + text, Project.MSG_VERBOSE );
+                    getLogger().debug( "Found directory: " + text );
                 }
                 return f.isDirectory();
             }
@@ -346,14 +345,14 @@ public class Available
             {
                 if( f.isFile() )
                 {
-                    log( "Found file: " + text, Project.MSG_VERBOSE );
+                    getLogger().debug( "Found file: " + text );
                 }
                 return f.isFile();
             }
         }
         if( f.exists() )
         {
-            log( "Found: " + text, Project.MSG_VERBOSE );
+            getLogger().debug( "Found: " + text );
         }
         return f.exists();
     }

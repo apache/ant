@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -69,7 +68,7 @@ public class Filter extends Task
     protected void readFilters()
         throws TaskException
     {
-        log( "Reading filters from " + filtersFile, Project.MSG_VERBOSE );
+        getLogger().debug( "Reading filters from " + filtersFile );
         getProject().getGlobalFilterSet().readFiltersFromFile( filtersFile );
     }
 }

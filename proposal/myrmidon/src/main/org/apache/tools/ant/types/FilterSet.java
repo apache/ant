@@ -16,7 +16,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * A set of filters to be applied to something. A filter set may have begintoken
@@ -266,7 +265,7 @@ public class FilterSet extends DataType implements Cloneable
 
         if( filtersFile.isFile() )
         {
-            log( "Reading filters from " + filtersFile, Project.MSG_VERBOSE );
+            getLogger().debug( "Reading filters from " + filtersFile );
             FileInputStream in = null;
             try
             {
@@ -343,7 +342,7 @@ public class FilterSet extends DataType implements Cloneable
                     if( tokens.containsKey( token ) )
                     {
                         value = (String)tokens.get( token );
-                        log( "Replacing: " + beginToken + token + endToken + " -> " + value, Project.MSG_VERBOSE );
+                        getLogger().debug( "Replacing: " + beginToken + token + endToken + " -> " + value );
                         b.append( value );
                         i = index + beginToken.length() + token.length() + endToken.length();
                     }

@@ -65,7 +65,7 @@ public abstract class VAJToolsServlet extends HttpServlet
         }
         catch( TaskException e )
         {
-            util.log( "Error occured: " + e.getMessage(), VAJUtil.MSG_ERR );
+            util.getLogger().error( "Error occured: " + e.getMessage() );
         }
         catch( Exception e )
         {

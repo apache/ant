@@ -22,7 +22,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
 
@@ -215,8 +214,7 @@ public class Checksum extends MatchingTask implements Condition
                     }
                     else
                     {
-                        log( file + " omitted as " + dest + " is up to date.",
-                             Project.MSG_VERBOSE );
+                        getLogger().debug( file + " omitted as " + dest + " is up to date." );
                     }
                 }
                 else

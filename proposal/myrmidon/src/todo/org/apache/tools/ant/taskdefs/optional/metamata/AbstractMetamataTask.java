@@ -229,7 +229,7 @@ public abstract class AbstractMetamataTask extends Task
 
         // retrieve all the files we want to scan
         includedFiles = scanFileSets();
-        log( includedFiles.size() + " files added for audit", Project.MSG_VERBOSE );
+        getLogger().debug( includedFiles.size() + " files added for audit" );
 
         // write all the options to a temp file and use it ro run the process
         ArrayList options = getOptions();
@@ -314,7 +314,7 @@ public abstract class AbstractMetamataTask extends Task
     {
         final Execute exe = new Execute();
         setupStreamHandler( exe );
-        log( cmdl.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( cmdl.toString() );
         exe.setCommandline( cmdl.getCommandline() );
         try
         {
@@ -376,7 +376,7 @@ public abstract class AbstractMetamataTask extends Task
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             ds.scan();
             String[] f = ds.getIncludedFiles();
-            log( i + ") Adding " + f.length + " files from directory " + ds.getBasedir(), Project.MSG_VERBOSE );
+            getLogger().debug( i + ") Adding " + f.length + " files from directory " + ds.getBasedir() );
             for( int j = 0; j < f.length; j++ )
             {
                 String pathname = f[ j ];

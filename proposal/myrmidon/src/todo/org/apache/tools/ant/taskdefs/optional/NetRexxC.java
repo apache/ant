@@ -20,7 +20,6 @@ import netrexx.lang.Rexx;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
@@ -596,8 +595,7 @@ public class NetRexxC extends MatchingTask
             }
             else
             {
-                log( "Dropping from classpath: " +
-                     f.getAbsolutePath(), Project.MSG_VERBOSE );
+                getLogger().debug( "Dropping from classpath: " + f.getAbsolutePath() );
             }
         }
 
@@ -640,7 +638,7 @@ public class NetRexxC extends MatchingTask
     private void doNetRexxCompile()
         throws TaskException
     {
-        log( "Using NetRexx compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using NetRexx compiler" );
         String classpath = getCompileClasspath();
         StringBuffer compileOptions = new StringBuffer();
         StringBuffer fileList = new StringBuffer();
@@ -674,7 +672,7 @@ public class NetRexxC extends MatchingTask
             compileOptions.append( compileOptionsArray[ i ] );
             compileOptions.append( " " );
         }
-        log( compileOptions.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( compileOptions.toString() );
 
         String eol = System.getProperty( "line.separator" );
         StringBuffer niceSourceList = new StringBuffer( "Files to be compiled:" + eol );
@@ -686,7 +684,7 @@ public class NetRexxC extends MatchingTask
             niceSourceList.append( eol );
         }
 
-        log( niceSourceList.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( niceSourceList.toString() );
 
         // need to set java.class.path property and restore it later
         // since the NetRexx compiler has no option for the classpath
@@ -702,17 +700,17 @@ public class NetRexxC extends MatchingTask
 
             if( rc > 1 )
             {// 1 is warnings from real NetRexxC
-                log( out.toString(), Project.MSG_ERR );
+                getLogger().error( out.toString() );
                 String msg = "Compile failed, messages should have been provided.";
                 throw new TaskException( msg );
             }
             else if( rc == 1 )
             {
-                log( out.toString(), Project.MSG_WARN );
+                getLogger().warn( out.toString() );
             }
             else
             {
-                log( out.toString(), Project.MSG_INFO );
+                getLogger().info( out.toString() );
             }
         }
         finally

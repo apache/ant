@@ -26,7 +26,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.xml.sax.Attributes;
@@ -323,7 +322,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
         {
             e.printStackTrace();
             // invalid lines are sent to the output as information, it might be anything,
-            task.log( line, Project.MSG_INFO );
+            task.getLogger().info( line );
         }
     }
 

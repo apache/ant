@@ -118,7 +118,7 @@ public class CovMerge extends Task
             final Execute exe = new Execute();
             exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
             exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
-            log( cmdl.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl.getCommandline() );
 
             // JProbe process always return 0 so  we will not be

@@ -14,7 +14,6 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 
@@ -166,8 +165,7 @@ public class DependSet extends MatchingTask
 
                 if( dest.lastModified() > now )
                 {
-                    log( "Warning: " + targetFiles[ i ] + " modified in the future.",
-                         Project.MSG_WARN );
+                    getLogger().warn( "Warning: " + targetFiles[ i ] + " modified in the future." );
                 }
             }
         }
@@ -189,7 +187,7 @@ public class DependSet extends MatchingTask
                 File dest = new File( targetFL.getDir( getProject() ), targetFiles[ i ] );
                 if( !dest.exists() )
                 {
-                    log( targetFiles[ i ] + " does not exist.", Project.MSG_VERBOSE );
+                    getLogger().debug( targetFiles[ i ] + " does not exist." );
                     upToDate = false;
                     continue;
                 }
@@ -199,8 +197,7 @@ public class DependSet extends MatchingTask
                 }
                 if( dest.lastModified() > now )
                 {
-                    log( "Warning: " + targetFiles[ i ] + " modified in the future.",
-                         Project.MSG_WARN );
+                    getLogger().warn( "Warning: " + targetFiles[ i ] + " modified in the future." );
                 }
             }
         }
@@ -224,8 +221,7 @@ public class DependSet extends MatchingTask
 
                     if( src.lastModified() > now )
                     {
-                        log( "Warning: " + sourceFiles[ i ] + " modified in the future.",
-                             Project.MSG_WARN );
+                        getLogger().warn( "Warning: " + sourceFiles[ i ] + " modified in the future." );
                     }
 
                     Iterator enumTargets = allTargets.iterator();
@@ -235,8 +231,7 @@ public class DependSet extends MatchingTask
                         File dest = (File)enumTargets.next();
                         if( src.lastModified() > dest.lastModified() )
                         {
-                            log( dest.getPath() + " is out of date with respect to " +
-                                 sourceFiles[ i ], Project.MSG_VERBOSE );
+                            getLogger().debug( dest.getPath() + " is out of date with respect to " + sourceFiles[ i ] );
                             upToDate = false;
 
                         }
@@ -264,13 +259,12 @@ public class DependSet extends MatchingTask
 
                     if( src.lastModified() > now )
                     {
-                        log( "Warning: " + sourceFiles[ i ] + " modified in the future.",
-                             Project.MSG_WARN );
+                        getLogger().warn( "Warning: " + sourceFiles[ i ] + " modified in the future." );
                     }
 
                     if( !src.exists() )
                     {
-                        log( sourceFiles[ i ] + " does not exist.", Project.MSG_VERBOSE );
+                        getLogger().debug( sourceFiles[ i ] + " does not exist." );
                         upToDate = false;
                         break;
                     }
@@ -283,8 +277,7 @@ public class DependSet extends MatchingTask
 
                         if( src.lastModified() > dest.lastModified() )
                         {
-                            log( dest.getPath() + " is out of date with respect to " +
-                                 sourceFiles[ i ], Project.MSG_VERBOSE );
+                            getLogger().debug( dest.getPath() + " is out of date with respect to " + sourceFiles[ i ] );
                             upToDate = false;
 
                         }
@@ -295,11 +288,11 @@ public class DependSet extends MatchingTask
 
         if( !upToDate )
         {
-            log( "Deleting all target files. ", Project.MSG_VERBOSE );
+            getLogger().debug( "Deleting all target files. " );
             for( Iterator e = allTargets.iterator(); e.hasNext(); )
             {
                 File fileToRemove = (File)e.next();
-                log( "Deleting file " + fileToRemove.getAbsolutePath(), Project.MSG_VERBOSE );
+                getLogger().debug( "Deleting file " + fileToRemove.getAbsolutePath() );
                 fileToRemove.delete();
             }
         }

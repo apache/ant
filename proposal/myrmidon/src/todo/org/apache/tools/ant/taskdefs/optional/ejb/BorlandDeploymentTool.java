@@ -153,7 +153,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         String s = reader.readLine();
         if( s != null )
         {
-            log( "[java2iiop] " + s, Project.MSG_DEBUG );
+            getLogger().debug( "[java2iiop] " + s );
         }// end of if ()
     }
 
@@ -175,13 +175,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             String javafile;
             while( ( javafile = reader.readLine() ) != null )
             {
-                log( "buffer:" + javafile, Project.MSG_DEBUG );
+                getLogger().debug( "buffer:" + javafile );
                 if( javafile.endsWith( ".java" ) )
                 {
                     String classfile = toClassFile( javafile );
                     String key = classfile.substring( getConfig().srcDir.getAbsolutePath().length() + 1 );
-                    log( " generated : " + classfile, Project.MSG_DEBUG );
-                    log( " key       : " + key, Project.MSG_DEBUG );
+                    getLogger().debug( " generated : " + classfile );
+                    getLogger().debug( " key       : " + key );
                     _genfiles.put( key, new File( classfile ) );
                 }// end of if ()
             }// end of while ()
@@ -278,7 +278,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         File borlandDD = new File( getConfig().descriptorDir, ddPrefix + BAS_DD );
         if( borlandDD.exists() )
         {
-            log( "Borland specific file found " + borlandDD, Project.MSG_VERBOSE );
+            getLogger().debug( "Borland specific file found " + borlandDD );
             ejbFiles.put( META_DIR + BAS_DD, borlandDD );
         }
         else
@@ -314,7 +314,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
                 //remove .class extension
                 String home = toClass( clazz );
                 homes.add( home );
-                log( " Home " + home, Project.MSG_VERBOSE );
+                getLogger().debug( " Home " + home );
             }// end of if ()
         }// end of while ()
 
@@ -391,8 +391,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
 
         try
         {
-            log( "Calling java2iiop", Project.MSG_VERBOSE );
-            log( commandline.toString(), Project.MSG_DEBUG );
+            getLogger().debug( "Calling java2iiop" );
+            getLogger().debug( commandline.toString() );
             execTask.setCommandline( commandline.getCommandline() );
             int result = execTask.execute();
             if( result != 0 )
@@ -403,7 +403,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         }
         catch( java.io.IOException e )
         {
-            log( "java2iiop exception :" + e.getMessage(), Project.MSG_ERR );
+            getLogger().error( "java2iiop exception :" + e.getMessage() );
             throw new TaskException( "Error", e );
         }
     }
@@ -421,7 +421,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         //org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
 
         org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
-        log( "generate client for " + sourceJar, Project.MSG_INFO );
+        getLogger().info( "generate client for " + sourceJar );
         try
         {
             String args = verifyArgs;
@@ -483,7 +483,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         throws TaskException
     {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
-        log( "verify " + sourceJar, Project.MSG_INFO );
+        getLogger().info( "verify " + sourceJar );
         try
         {
 
@@ -501,7 +501,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
                 javaTask.setFork( true );
             }
 
-            log( "Calling " + VERIFY + " for " + sourceJar.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( "Calling " + VERIFY + " for " + sourceJar.toString() );
             javaTask.execute();
         }
         catch( Exception e )

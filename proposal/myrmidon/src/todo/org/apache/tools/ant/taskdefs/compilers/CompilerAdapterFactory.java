@@ -7,9 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.compilers;
 
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 
 /**
  * Creates the necessary compiler adapter, given basic criteria.
@@ -51,7 +50,7 @@ public class CompilerAdapterFactory
      * @throws TaskException if the compiler type could not be resolved into a
      *      compiler adapter.
      */
-    public static CompilerAdapter getCompiler( String compilerType, Task task )
+    public static CompilerAdapter getCompiler( String compilerType, Logger logger )
         throws TaskException
     {
         /*
@@ -83,8 +82,9 @@ public class CompilerAdapterFactory
             }
             catch( ClassNotFoundException cnfe )
             {
-                task.log( "Modern compiler is not available - using "
-                          + "classic compiler", Project.MSG_WARN );
+                final String message = "Modern compiler is not available - using "
+                    + "classic compiler";
+                logger.warn( message );
                 return new Javac12();
             }
             return new Javac13();

@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -110,7 +109,7 @@ public class Input extends Task
                 accept.add( stok.nextToken() );
             }
         }
-        log( message, Project.MSG_WARN );
+        getLogger().warn( message );
         if( input == null )
         {
             try
@@ -121,7 +120,7 @@ public class Input extends Task
                 {
                     while( !accept.contains( input ) )
                     {
-                        log( message, Project.MSG_WARN );
+                        getLogger().warn( message );
                         input = in.readLine();
                     }
                 }
@@ -149,7 +148,7 @@ public class Input extends Task
             }
             else
             {
-                log( "Override ignored for " + addproperty, Project.MSG_VERBOSE );
+                getLogger().debug( "Override ignored for " + addproperty );
             }
         }
     }

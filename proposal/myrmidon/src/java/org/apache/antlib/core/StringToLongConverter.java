@@ -32,7 +32,10 @@ public class StringToLongConverter
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Long( (String)object ); }
+        try
+        {
+            return new Long( (String)object );
+        }
         catch( final NumberFormatException nfe )
         {
             final String message = REZ.getString( "convert.bad-long.error", object );

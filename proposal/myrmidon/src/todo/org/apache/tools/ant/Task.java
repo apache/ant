@@ -13,12 +13,12 @@ public abstract class Task
 {
     protected void handleErrorOutput( String line )
     {
-        log( line, Project.MSG_ERR );
+        getLogger().error( line );
     }
 
     protected void handleOutput( String line )
     {
-        log( line, Project.MSG_INFO );
+        getLogger().info( line );
     }
 }
 

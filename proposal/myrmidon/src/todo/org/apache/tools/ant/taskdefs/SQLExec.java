@@ -33,7 +33,6 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -456,15 +455,14 @@ public class SQLExec extends Task
             Class dc;
             if( classpath != null )
             {
-                log( "Loading " + driver + " using AntClassLoader with classpath " + classpath,
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
 
                 loader = new AntClassLoader( getProject(), classpath );
                 dc = loader.loadClass( driver );
             }
             else
             {
-                log( "Loading " + driver + " using system loader.", Project.MSG_VERBOSE );
+                getLogger().debug( "Loading " + driver + " using system loader." );
                 dc = Class.forName( driver );
             }
             driverInstance = (Driver)dc.newInstance();
@@ -484,7 +482,7 @@ public class SQLExec extends Task
 
         try
         {
-            log( "connecting to " + url, Project.MSG_VERBOSE );
+            getLogger().debug( "connecting to " + url );
             Properties info = new Properties();
             info.put( "user", userId );
             info.put( "password", password );
@@ -508,7 +506,7 @@ public class SQLExec extends Task
             {
                 if( output != null )
                 {
-                    log( "Opening PrintStream to output file " + output, Project.MSG_VERBOSE );
+                    getLogger().debug( "Opening PrintStream to output file " + output );
                     out = new PrintStream( new BufferedOutputStream( new FileOutputStream( output ) ) );
                 }
 
@@ -520,7 +518,7 @@ public class SQLExec extends Task
                     ( (Transaction)e.next() ).runTransaction( out );
                     if( !autocommit )
                     {
-                        log( "Commiting transaction", Project.MSG_VERBOSE );
+                        getLogger().debug( "Commiting transaction" );
                         conn.commit();
                     }
                 }
@@ -602,10 +600,10 @@ public class SQLExec extends Task
             {
                 String theVendor = dmd.getDatabaseProductName().toLowerCase();
 
-                log( "RDBMS = " + theVendor, Project.MSG_VERBOSE );
+                getLogger().debug( "RDBMS = " + theVendor );
                 if( theVendor == null || theVendor.indexOf( rdbms ) < 0 )
                 {
-                    log( "Not the required RDBMS: " + rdbms, Project.MSG_VERBOSE );
+                    getLogger().debug( "Not the required RDBMS: " + rdbms );
                     return false;
                 }
             }
@@ -614,12 +612,12 @@ public class SQLExec extends Task
             {
                 String theVersion = dmd.getDatabaseProductVersion().toLowerCase();
 
-                log( "Version = " + theVersion, Project.MSG_VERBOSE );
+                getLogger().debug( "Version = " + theVersion );
                 if( theVersion == null ||
                     !( theVersion.startsWith( version ) ||
                     theVersion.indexOf( " " + version ) >= 0 ) )
                 {
-                    log( "Not the required version: \"" + version + "\"", Project.MSG_VERBOSE );
+                    getLogger().debug( "Not the required version: \"" + version + "\"" );
                     return false;
                 }
             }
@@ -627,7 +625,7 @@ public class SQLExec extends Task
         catch( SQLException e )
         {
             // Could not get the required information
-            log( "Failed to obtain required RDBMS information", Project.MSG_ERR );
+            getLogger().error( "Failed to obtain required RDBMS information" );
             return false;
         }
 
@@ -653,8 +651,7 @@ public class SQLExec extends Task
             totalSql++;
             if( !statement.execute( sql ) )
             {
-                log( statement.getUpdateCount() + " rows affected",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( statement.getUpdateCount() + " rows affected" );
             }
             else
             {
@@ -667,7 +664,7 @@ public class SQLExec extends Task
             SQLWarning warning = conn.getWarnings();
             while( warning != null )
             {
-                log( warning + " sql warning", Project.MSG_VERBOSE );
+                getLogger().debug( warning + " sql warning" );
                 warning = warning.getNextWarning();
             }
             conn.clearWarnings();
@@ -675,10 +672,10 @@ public class SQLExec extends Task
         }
         catch( SQLException e )
         {
-            log( "Failed to execute: " + sql, Project.MSG_ERR );
+            getLogger().error( "Failed to execute: " + sql );
             if( !onError.equals( "continue" ) )
                 throw e;
-            log( e.toString(), Project.MSG_ERR );
+            getLogger().error( e.toString() );
         }
     }
 
@@ -697,7 +694,7 @@ public class SQLExec extends Task
             rs = statement.getResultSet();
             if( rs != null )
             {
-                log( "Processing new result set.", Project.MSG_VERBOSE );
+                getLogger().debug( "Processing new result set." );
                 ResultSetMetaData md = rs.getMetaData();
                 int columnCount = md.getColumnCount();
                 StringBuffer line = new StringBuffer();
@@ -781,7 +778,7 @@ public class SQLExec extends Task
                 if( delimiterType.equals( DelimiterType.NORMAL ) && sql.endsWith( delimiter ) ||
                     delimiterType.equals( DelimiterType.ROW ) && line.equals( delimiter ) )
                 {
-                    log( "SQL: " + sql, Project.MSG_VERBOSE );
+                    getLogger().debug( "SQL: " + sql );
                     execSQL( sql.substring( 0, sql.length() - delimiter.length() ), out );
                     sql = "";
                 }
@@ -852,14 +849,13 @@ public class SQLExec extends Task
         {
             if( tSqlCommand.length() != 0 )
             {
-                log( "Executing commands", Project.MSG_INFO );
+                getLogger().info( "Executing commands" );
                 runStatements( new StringReader( tSqlCommand ), out );
             }
 
             if( tSrcFile != null )
             {
-                log( "Executing file: " + tSrcFile.getAbsolutePath(),
-                     Project.MSG_INFO );
+                getLogger().info( "Executing file: " + tSrcFile.getAbsolutePath() );
                 Reader reader = ( encoding == null ) ? new FileReader( tSrcFile )
                     : new InputStreamReader( new FileInputStream( tSrcFile ), encoding );
                 runStatements( reader, out );

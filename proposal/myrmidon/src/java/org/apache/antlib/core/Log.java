@@ -18,8 +18,7 @@ import org.apache.myrmidon.api.TaskException;
 public class Log
     extends AbstractTask
 {
-    private String      m_message;
-
+    private String m_message;
 
     public void setMessage( final String message )
     {

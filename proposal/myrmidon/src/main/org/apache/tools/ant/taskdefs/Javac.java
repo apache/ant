@@ -772,11 +772,11 @@ public class Javac extends MatchingTask
         {
 
             CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
-                compiler, this );
-            getLogger().info( "Compiling " + compileList.length +
-                              " source file"
-                              + ( compileList.length == 1 ? "" : "s" )
-                              + ( destDir != null ? " to " + destDir : "" ) );
+                compiler, getLogger() );
+            final String message = "Compiling " + compileList.length + " source file" +
+                ( compileList.length == 1 ? "" : "s" ) +
+                ( destDir != null ? " to " + destDir : "" );
+            getLogger().info( message );
 
             // now we need to populate the compiler adapter
             adapter.setJavac( this );
@@ -790,7 +790,7 @@ public class Javac extends MatchingTask
                 }
                 else
                 {
-                    log( FAIL_MSG, Project.MSG_ERR );
+                    getLogger().error( FAIL_MSG );
                 }
             }
         }
@@ -877,13 +877,13 @@ public class Javac extends MatchingTask
             {
                 if( isJdkCompiler( compiler ) )
                 {
-                    log( "Since fork is true, ignoring build.compiler setting.",
-                         Project.MSG_WARN );
+                    final String message = "Since fork is true, ignoring build.compiler setting.";
+                    getLogger().warn( message );
                     compiler = "extJavac";
                 }
                 else
                 {
-                    log( "Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN );
+                    getLogger().warn( "Since build.compiler setting isn't classic or modern, ignoring fork setting." );
                 }
             }
             else

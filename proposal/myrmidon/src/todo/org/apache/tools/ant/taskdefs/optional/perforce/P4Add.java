@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -147,7 +146,7 @@ public class P4Add extends P4Base
             }
             else
             {
-                log( "No files specified to add!", Project.MSG_WARN );
+                getLogger().warn( "No files specified to add!" );
             }
         }
 
@@ -155,7 +154,7 @@ public class P4Add extends P4Base
 
     private void execP4Add( StringBuffer list )
     {
-        log( "Execing add " + P4CmdOpts + " " + addCmd + list, Project.MSG_INFO );
+        getLogger().info( "Execing add " + P4CmdOpts + " " + addCmd + list );
 
         execP4Command( "-s add " + P4CmdOpts + " " + addCmd + list, new SimpleP4OutputHandler( this ) );
     }

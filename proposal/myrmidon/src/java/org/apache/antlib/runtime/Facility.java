@@ -7,9 +7,6 @@
  */
 package org.apache.antlib.runtime;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
@@ -18,14 +15,13 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
+import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.framework.AbstractContainerTask;
 
 /**
  * Task that definesMethod to register a single converter.
@@ -39,11 +35,11 @@ public class Facility
     private static final Resources REZ =
         ResourceManager.getPackageResources( Facility.class );
 
-    private String              m_namespace;
-    private AspectHandler       m_aspectHandler;
+    private String m_namespace;
+    private AspectHandler m_aspectHandler;
 
-    private AspectManager       m_aspectManager;
-    private TypeFactory         m_factory;
+    private AspectManager m_aspectManager;
+    private TypeFactory m_factory;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -53,7 +49,10 @@ public class Facility
         m_aspectManager = (AspectManager)componentManager.lookup( AspectManager.ROLE );
 
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        try { m_factory = typeManager.getFactory( AspectHandler.ROLE ); }
+        try
+        {
+            m_factory = typeManager.getFactory( AspectHandler.ROLE );
+        }
         catch( final TypeException te )
         {
             final String message = REZ.getString( "facility.no-factory.error" );

@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.rmic;
 
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -43,7 +42,7 @@ public class WLRmic extends DefaultRmicAdapter
     public boolean execute()
         throws TaskException
     {
-        getRmic().log( "Using WebLogic rmic", Project.MSG_VERBOSE );
+        getLogger().debug( "Using WebLogic rmic" );
         Commandline cmd = setupRmicCommand( new String[]{"-noexit"} );
 
         try

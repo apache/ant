@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;// imports
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -29,8 +30,8 @@ import org.apache.tools.ant.types.Commandline;
  */
 
 public class NetCommand
+    extends AbstractLogEnabled
 {
-
     /**
      * trace flag
      */
@@ -162,7 +163,7 @@ public class NetCommand
                 }
                 else
                 {
-                    _owner.log( _title + "  Result: " + err, Project.MSG_ERR );
+                    getLogger().error( _title + "  Result: " + err );
                 }
             }
         }
@@ -179,7 +180,7 @@ public class NetCommand
      */
     protected void logError( String msg )
     {
-        _owner.log( msg, Project.MSG_ERR );
+        getLogger().error( msg );
     }
 
     /**
@@ -189,7 +190,7 @@ public class NetCommand
      */
     protected void logVerbose( String msg )
     {
-        _owner.log( msg, Project.MSG_VERBOSE );
+        getLogger().debug( msg );
     }
 
     /**

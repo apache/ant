@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
@@ -381,7 +380,7 @@ public class JspC extends MatchingTask
         {
             compiler = "jasper";
         }
-        log( "compiling " + compileList.size() + " files", Project.MSG_VERBOSE );
+        getLogger().debug( "compiling " + compileList.size() + " files" );
 
         if( compileList.size() > 0 )
         {
@@ -405,7 +404,7 @@ public class JspC extends MatchingTask
                 }
                 else
                 {
-                    log( FAIL_MSG, Project.MSG_ERR );
+                    getLogger().error( FAIL_MSG );
                 }
             }
         }
@@ -413,11 +412,11 @@ public class JspC extends MatchingTask
         {
             if( filecount == 0 )
             {
-                log( "there were no files to compile", Project.MSG_INFO );
+                getLogger().info( "there were no files to compile" );
             }
             else
             {
-                log( "all files are up to date", Project.MSG_VERBOSE );
+                getLogger().debug( "all files are up to date" );
             }
         }
     }
@@ -462,8 +461,9 @@ public class JspC extends MatchingTask
 
                 if( srcFile.lastModified() > now )
                 {
-                    log( "Warning: file modified in the future: " +
-                         files[ i ], Project.MSG_WARN );
+                    final String message =
+                        "Warning: file modified in the future: " + files[ i ];
+                    getLogger().warn( message );
                 }
 
                 if( !javaFile.exists() ||
@@ -471,16 +471,11 @@ public class JspC extends MatchingTask
                 {
                     if( !javaFile.exists() )
                     {
-                        log( "Compiling " + srcFile.getPath() +
-                             " because java file "
-                             + javaFile.getPath() + " does not exist",
-                             Project.MSG_DEBUG );
+                        getLogger().debug( "Compiling " + srcFile.getPath() + " because java file " + javaFile.getPath() + " does not exist" );
                     }
                     else
                     {
-                        log( "Compiling " + srcFile.getPath() +
-                             " because it is out of date with respect to "
-                             + javaFile.getPath(), Project.MSG_DEBUG );
+                        getLogger().debug( "Compiling " + srcFile.getPath() + " because it is out of date with respect to " + javaFile.getPath() );
                     }
                     compileList.add( srcFile.getAbsolutePath() );
                 }

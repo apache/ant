@@ -8,7 +8,6 @@
 package org.apache.antlib.runtime;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -17,10 +16,10 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.converter.Converter;
 
 /**
  * Task to define a converter.
@@ -34,12 +33,12 @@ public class ConverterDef
     private static final Resources REZ =
         ResourceManager.getPackageResources( ConverterDef.class );
 
-    private String              m_sourceType;
-    private String              m_destinationType;
-    private File                m_lib;
-    private String              m_classname;
-    private ConverterRegistry   m_converterRegistry;
-    private TypeManager         m_typeManager;
+    private String m_sourceType;
+    private String m_destinationType;
+    private File m_lib;
+    private String m_classname;
+    private ConverterRegistry m_converterRegistry;
+    private TypeManager m_typeManager;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -97,7 +96,7 @@ public class ConverterDef
             m_converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
 
             final URL url = m_lib.toURL();
-            final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
+            final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[]{url} );
             factory.addNameClassMapping( m_classname, m_classname );
 
             m_typeManager.registerType( Converter.ROLE, m_classname, factory );

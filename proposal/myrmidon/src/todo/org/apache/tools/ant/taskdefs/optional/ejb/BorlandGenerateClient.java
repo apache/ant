@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.exec.ExecTask;
@@ -121,7 +120,7 @@ public class BorlandGenerateClient extends Task
         if( clientjarfile == null ||
             clientjarfile.isDirectory() )
         {
-            log( "invalid or missing client jar file.", Project.MSG_VERBOSE );
+            getLogger().debug( "invalid or missing client jar file." );
             String ejbjarname = ejbjarfile.getAbsolutePath();
             //clientname = ejbjarfile+client.jar
             String clientname = ejbjarname.substring( 0, ejbjarname.lastIndexOf( "." ) );
@@ -181,7 +180,7 @@ public class BorlandGenerateClient extends Task
             execTask.createArg().setValue( "-clientjarfile" );
             execTask.createArg().setValue( clientjarfile.getAbsolutePath() );
 
-            log( "Calling java2iiop", Project.MSG_VERBOSE );
+            getLogger().debug( "Calling java2iiop" );
             execTask.execute();
         }
         catch( Exception e )
@@ -232,7 +231,7 @@ public class BorlandGenerateClient extends Task
             execTask.createArg().setValue( "-clientjarfile" );
             execTask.createArg().setValue( clientjarfile.getAbsolutePath() );
 
-            log( "Calling EJBUtilities", Project.MSG_VERBOSE );
+            getLogger().debug( "Calling EJBUtilities" );
             execTask.execute();
 
         }

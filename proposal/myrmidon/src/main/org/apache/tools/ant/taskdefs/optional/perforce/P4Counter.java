@@ -83,7 +83,7 @@ public class P4Counter extends P4Base
                 {
                     public void process( String line )
                     {
-                        log( "P4Counter retrieved line \"" + line + "\"", Project.MSG_VERBOSE );
+                        getLogger().debug( "P4Counter retrieved line \"" + line + "\"" );
                         try
                         {
                             value = Integer.parseInt( line );

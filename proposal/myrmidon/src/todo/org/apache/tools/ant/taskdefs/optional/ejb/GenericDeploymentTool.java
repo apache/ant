@@ -23,6 +23,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import javax.xml.parsers.SAXParser;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
 import org.apache.myrmidon.api.TaskException;
@@ -46,7 +47,9 @@ import org.xml.sax.SAXException;
  *
  * @author RT
  */
-public class GenericDeploymentTool implements EJBDeploymentTool
+public class GenericDeploymentTool
+    extends AbstractLogEnabled
+    implements EJBDeploymentTool
 {
     /**
      * Private constants that are used when constructing the standard jarfile
@@ -250,12 +253,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool
             if( needToRebuild( ejbFiles, jarFile ) )
             {
                 // Log that we are going to build...
-                log( "building "
-                     + jarFile.getName()
-                     + " with "
-                     + String.valueOf( ejbFiles.size() )
-                     + " files",
-                     Project.MSG_INFO );
+                final String message =
+                    "building " + jarFile.getName() + " with " + String.valueOf( ejbFiles.size() ) + " files";
+                getLogger().info( message );
 
                 // Use helper method to write the jarfile
                 String publicId = getPublicId();
@@ -265,8 +265,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
             else
             {
                 // Log that the file is up to date...
-                log( jarFile.toString() + " is up to date.",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( jarFile.toString() + " is up to date." );
             }
 
         }
@@ -525,9 +524,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool
         }
         catch( IOException ioe )
         {
-            log( "WARNING: IOException while adding entry " +
-                 logicalFilename + " to jarfile from " + inputFile.getPath() + " " +
-                 ioe.getClass().getName() + "-" + ioe.getMessage(), Project.MSG_WARN );
+            final String message = "WARNING: IOException while adding entry " +
+                logicalFilename + " to jarfile from " + inputFile.getPath() + " " +
+                ioe.getClass().getName() + "-" + ioe.getMessage();
+            getLogger().warn( message );
         }
         finally
         {
@@ -619,7 +619,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                 }
                 catch( IOException e )
                 {
-                    log( "exception: " + e.getMessage(), Project.MSG_INFO );
+                    getLogger().info( "exception: " + e.getMessage() );
                 }
             }
             newSet.clear();
@@ -644,7 +644,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
         {
             String next = ( (String)i.next() ).replace( '/', File.separatorChar );
             checkEntries.put( next + ".class", new File( base + next + ".class" ) );
-            log( "dependent class: " + next + ".class" + " - " + base + next + ".class", Project.MSG_VERBOSE );
+            getLogger().debug( "dependent class: " + next + ".class" + " - " + base + next + ".class" );
         }
     }
 
@@ -701,8 +701,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
             if( config.manifest != null && config.manifest.exists() &&
                 config.manifest.lastModified() > lastBuild )
             {
-                log( "Build needed because manifest " + config.manifest + " is out of date",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Build needed because manifest " + config.manifest + " is out of date" );
                 return true;
             }
 
@@ -715,8 +714,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                 File currentFile = (File)fileIter.next();
                 if( lastBuild < currentFile.lastModified() )
                 {
-                    log( "Build needed because " + currentFile.getPath() + " is out of date",
-                         Project.MSG_VERBOSE );
+                    getLogger().debug( "Build needed because " + currentFile.getPath() + " is out of date" );
                     return true;
                 }
             }
@@ -887,8 +885,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                 String entryName = (String)entryIterator.next();
                 File entryFile = (File)files.get( entryName );
 
-                log( "adding file '" + entryName + "'",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "adding file '" + entryName + "'" );
 
                 addFileToJar( jarStream, entryFile, entryName );
 
@@ -912,8 +909,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                     // link the file
                     entryFile = new File( config.srcDir, entryName );
 
-                    log( "adding innerclass file '" + entryName + "'",
-                         Project.MSG_VERBOSE );
+                    getLogger().debug( "adding innerclass file '" + entryName + "'" );
 
                     addFileToJar( jarStream, entryFile, entryName );
 

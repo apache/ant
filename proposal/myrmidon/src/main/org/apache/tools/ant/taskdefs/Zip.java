@@ -23,7 +23,6 @@ import java.util.zip.ZipInputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ZipFileSet;
@@ -384,8 +383,9 @@ public class Zip extends MatchingTask
         {
             if( !renamedFile.delete() )
             {
-                log( "Warning: unable to delete temporary file " +
-                     renamedFile.getName(), Project.MSG_WARN );
+                final String message = "Warning: unable to delete temporary file " +
+                    renamedFile.getName();
+                getLogger().warn( message );
             }
         }
     }
@@ -420,8 +420,9 @@ public class Zip extends MatchingTask
         {
             if( emptyBehavior.equals( "skip" ) )
             {
-                log( "Warning: skipping " + archiveType + " archive " + zipFile +
-                     " because no files were included.", Project.MSG_WARN );
+                final String message = "Warning: skipping " + archiveType + " archive " + zipFile +
+                    " because no files were included.";
+                getLogger().warn( message );
                 return true;
             }
             else if( emptyBehavior.equals( "fail" ) )
@@ -708,7 +709,7 @@ public class Zip extends MatchingTask
         // In this case using java.util.zip will not work
         // because it does not permit a zero-entry archive.
         // Must create it manually.
-        log( "Note: creating empty " + archiveType + " archive " + zipFile, Project.MSG_INFO );
+        getLogger().info( "Note: creating empty " + archiveType + " archive " + zipFile );
         try
         {
             OutputStream os = new FileOutputStream( zipFile );

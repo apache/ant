@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -28,6 +30,7 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * @author duncan@x180.com
  */
 public class Project
+    extends AbstractLogEnabled
 {
     public final static int MSG_ERR = 0;
     public final static int MSG_WARN = 1;
@@ -104,6 +107,11 @@ public class Project
             // swallow as we've hit the max class version that
             // we have
         }
+    }
+
+    public Logger hackGetLogger()
+    {
+        return super.getLogger();
     }
 
     /**
@@ -183,9 +191,9 @@ public class Project
             throw new TaskException( "Ant cannot work on Java 1.0" );
         }
 
-        log( "Detected Java version: " + javaVersion + " in: " + System.getProperty( "java.home" ), MSG_VERBOSE );
+        getLogger().debug( "Detected Java version: " + javaVersion + " in: " + System.getProperty( "java.home" ) );
 
-        log( "Detected OS: " + System.getProperty( "os.name" ), MSG_VERBOSE );
+        getLogger().debug( "Detected OS: " + System.getProperty( "os.name" ) );
     }
 
     /**
@@ -373,7 +381,7 @@ public class Project
                 String propertyName = (String)j.next();
                 if( !keys.containsKey( propertyName ) )
                 {
-                    project.log( "Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE );
+                    project.getLogger().debug( "Property ${" + propertyName + "} has not been set" );
                 }
                 fragment = ( keys.containsKey( propertyName ) ) ? (String)keys.get( propertyName )
                     : "${" + propertyName + "}";

@@ -21,7 +21,6 @@ import java.util.Locale;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
 
@@ -484,12 +483,12 @@ public class Translate extends MatchingTask
             ins = new FileInputStream( bundleFile );
             loaded = true;
             bundleLastModified[ i ] = new File( bundleFile ).lastModified();
-            log( "Using " + bundleFile, Project.MSG_DEBUG );
+            getLogger().debug( "Using " + bundleFile );
             loadResourceMap( ins );
         }
         catch( IOException ioe )
         {
-            log( bundleFile + " not found.", Project.MSG_DEBUG );
+            getLogger().debug( bundleFile + " not found." );
             //if all resource files associated with this bundle
             //have been scanned for and still not able to
             //find a single resrouce file, throw exception
@@ -536,9 +535,7 @@ public class Translate extends MatchingTask
                     }
                     catch( Exception e )
                     {
-                        log( "Exception occured while trying to check/create "
-                             + " parent directory.  " + e.getMessage(),
-                             Project.MSG_DEBUG );
+                        getLogger().debug( "Exception occured while trying to check/create " + " parent directory.  " + e.getMessage() );
                     }
                     destLastModified = dest.lastModified();
                     srcLastModified = new File( srcFiles[ i ] ).lastModified();
@@ -553,8 +550,7 @@ public class Translate extends MatchingTask
                         || destLastModified < bundleLastModified[ 5 ]
                         || destLastModified < bundleLastModified[ 6 ] )
                     {
-                        log( "Processing " + srcFiles[ j ],
-                             Project.MSG_DEBUG );
+                        getLogger().debug( "Processing " + srcFiles[ j ] );
                         FileOutputStream fos = new FileOutputStream( dest );
                         BufferedWriter out = new BufferedWriter(
                             new OutputStreamWriter( fos,
@@ -604,9 +600,7 @@ public class Translate extends MatchingTask
                                 //use the key itself as the value also.
                                 if( replace == null )
                                 {
-                                    log( "Warning: The key: " + matches
-                                         + " hasn't been defined.",
-                                         Project.MSG_DEBUG );
+                                    getLogger().debug( "Warning: The key: " + matches + " hasn't been defined." );
                                     replace = matches;
                                 }
                                 line = line.substring( 0, startIndex )
@@ -632,9 +626,7 @@ public class Translate extends MatchingTask
                     }
                     else
                     {
-                        log( "Skipping " + srcFiles[ j ] +
-                             " as destination file is up to date",
-                             Project.MSG_VERBOSE );
+                        getLogger().debug( "Skipping " + srcFiles[ j ] + " as destination file is up to date" );
                     }
                 }
                 catch( IOException ioe )

@@ -10,9 +10,9 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -26,6 +26,7 @@ import org.apache.tools.ant.Task;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class SourceFileScanner
+    extends AbstractLogEnabled
 {
     private Task m_task;
 
@@ -77,8 +78,7 @@ public class SourceFileScanner
             String[] targets = mapper.mapFileName( files[ i ] );
             if( targets == null || targets.length == 0 )
             {
-                m_task.log( files[ i ] + " skipped - don\'t know how to handle it",
-                            Project.MSG_VERBOSE );
+                getLogger().debug( files[ i ] + " skipped - don\'t know how to handle it" );
                 continue;
             }
 
@@ -86,8 +86,8 @@ public class SourceFileScanner
 
             if( src.lastModified() > now )
             {
-                m_task.log( "Warning: " + files[ i ] + " modified in the future.",
-                            Project.MSG_WARN );
+                final String message = "Warning: " + files[ i ] + " modified in the future.";
+                getLogger().warn( message );
             }
 
             boolean added = false;
@@ -98,15 +98,13 @@ public class SourceFileScanner
 
                 if( !dest.exists() )
                 {
-                    m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
-                                Project.MSG_VERBOSE );
+                    getLogger().debug( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist." );
                     v.add( files[ i ] );
                     added = true;
                 }
                 else if( src.lastModified() > dest.lastModified() )
                 {
-                    m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.",
-                                Project.MSG_VERBOSE );
+                    getLogger().debug( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated." );
                     v.add( files[ i ] );
                     added = true;
                 }
@@ -122,9 +120,7 @@ public class SourceFileScanner
 
             if( !added )
             {
-                m_task.log( files[ i ] + " omitted as " + targetList.toString()
-                            + ( targets.length == 1 ? " is" : " are " )
-                            + " up to date.", Project.MSG_VERBOSE );
+                getLogger().debug( files[ i ] + " omitted as " + targetList.toString() + ( targets.length == 1 ? " is" : " are " ) + " up to date." );
             }
 
         }

@@ -364,7 +364,7 @@ public class Pvcs extends org.apache.tools.ant.Task
             Random rand = new Random( System.currentTimeMillis() );
             tmp = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
             tmp2 = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
-            log( "Executing " + commandLine.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( "Executing " + commandLine.toString() );
             result = runCmd( commandLine, new FileOutputStream( tmp ), new LogOutputStream( this, Project.MSG_WARN ) );
             if( result != 0 && !ignorerc )
             {
@@ -376,7 +376,7 @@ public class Pvcs extends org.apache.tools.ant.Task
                 throw new TaskException( "Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"" );
 
             // Create folders in workspace
-            log( "Creating folders", Project.MSG_INFO );
+            getLogger().info( "Creating folders" );
             createFolders( tmp );
 
             // Massage PCLI lvf output transforming '\' to '/' so get command works appropriately
@@ -405,8 +405,8 @@ public class Pvcs extends org.apache.tools.ant.Task
             }
 
             commandLine.createArgument().setValue( "@" + tmp2.getAbsolutePath() );
-            log( "Getting files", Project.MSG_INFO );
-            log( "Executing " + commandLine.toString(), Project.MSG_VERBOSE );
+            getLogger().info( "Getting files" );
+            getLogger().debug( "Executing " + commandLine.toString() );
             final LogOutputStream output = new LogOutputStream( this, Project.MSG_INFO );
             final LogOutputStream error = new LogOutputStream( this, Project.MSG_WARN );
             result = runCmd( commandLine, output, error );
@@ -491,7 +491,7 @@ public class Pvcs extends org.apache.tools.ant.Task
         String line = in.readLine();
         while( line != null )
         {
-            log( "Considering \"" + line + "\"", Project.MSG_VERBOSE );
+            getLogger().debug( "Considering \"" + line + "\"" );
             if( line.startsWith( "\"\\" ) ||
                 line.startsWith( "\"/" ) ||
                 line.startsWith( getLineStart() ) )
@@ -505,30 +505,30 @@ public class Pvcs extends org.apache.tools.ant.Task
                     File dir = new File( f.substring( 0, index ) );
                     if( !dir.exists() )
                     {
-                        log( "Creating " + dir.getAbsolutePath(), Project.MSG_VERBOSE );
+                        getLogger().debug( "Creating " + dir.getAbsolutePath() );
                         if( dir.mkdirs() )
                         {
-                            log( "Created " + dir.getAbsolutePath(), Project.MSG_INFO );
+                            getLogger().info( "Created " + dir.getAbsolutePath() );
                         }
                         else
                         {
-                            log( "Failed to create " + dir.getAbsolutePath(), Project.MSG_INFO );
+                            getLogger().info( "Failed to create " + dir.getAbsolutePath() );
                         }
                     }
                     else
                     {
-                        log( dir.getAbsolutePath() + " exists. Skipping", Project.MSG_VERBOSE );
+                        getLogger().debug( dir.getAbsolutePath() + " exists. Skipping" );
                     }
                 }
                 else
                 {
-                    log( "File separator problem with " + line,
-                         Project.MSG_WARN );
+                    final String message = "File separator problem with " + line;
+                    getLogger().warn( message );
                 }
             }
             else
             {
-                log( "Skipped \"" + line + "\"", Project.MSG_VERBOSE );
+                getLogger().debug( "Skipped \"" + line + "\"" );
             }
             line = in.readLine();
         }

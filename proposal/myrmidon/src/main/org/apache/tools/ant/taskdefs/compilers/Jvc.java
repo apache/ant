@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -28,25 +27,25 @@ public class Jvc extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        attributes.log( "Using jvc compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using jvc compiler" );
 
-        Path classpath = new Path( project );
+        Path classpath = new Path( m_project );
 
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if( bootclasspath != null )
+        if( m_bootclasspath != null )
         {
-            classpath.append( bootclasspath );
+            classpath.append( m_bootclasspath );
         }
 
         // jvc doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
-        classpath.addExtdirs( extdirs );
+        classpath.addExtdirs( m_extdirs );
 
-        if( ( bootclasspath == null ) || ( bootclasspath.size() == 0 ) )
+        if( ( m_bootclasspath == null ) || ( m_bootclasspath.size() == 0 ) )
         {
             // no bootclasspath, therefore, get one from the java runtime
-            includeJavaRuntime = true;
+            m_includeJavaRuntime = true;
         }
         else
         {
@@ -64,10 +63,10 @@ public class Jvc extends DefaultCompilerAdapter
         Commandline cmd = new Commandline();
         cmd.setExecutable( "jvc" );
 
-        if( destDir != null )
+        if( m_destDir != null )
         {
             cmd.createArgument().setValue( "/d" );
-            cmd.createArgument().setFile( destDir );
+            cmd.createArgument().setFile( m_destDir );
         }
 
         // Add the Classpath before the "internal" one.
@@ -81,15 +80,15 @@ public class Jvc extends DefaultCompilerAdapter
         // Do not display Logo
         cmd.createArgument().setValue( "/nologo" );
 
-        if( debug )
+        if( m_debug )
         {
             cmd.createArgument().setValue( "/g" );
         }
-        if( optimize )
+        if( m_optimize )
         {
             cmd.createArgument().setValue( "/O" );
         }
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArgument().setValue( "/verbose" );
         }

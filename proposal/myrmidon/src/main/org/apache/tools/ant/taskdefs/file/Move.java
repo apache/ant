@@ -13,7 +13,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -195,7 +194,7 @@ public class Move extends Copy
                 {
                     if( !d.mkdirs() )
                     {
-                        log( "Unable to create directory " + d.getAbsolutePath(), Project.MSG_ERR );
+                        getLogger().error( "Unable to create directory " + d.getAbsolutePath() );
                     }
                     else
                     {

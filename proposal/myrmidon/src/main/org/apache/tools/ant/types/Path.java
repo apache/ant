@@ -118,7 +118,7 @@ public class Path
      * @param source Description of Parameter
      * @return Description of the Returned Value
      */
-    public static String[] translatePath( Project project, String source )
+    public String[] translatePath( Project project, String source )
     {
         final ArrayList result = new ArrayList();
         if( source == null )
@@ -136,8 +136,7 @@ public class Path
             }
             catch( TaskException e )
             {
-                project.log( "Dropping path element " + pathElement + " as it is not valid relative to the project",
-                             Project.MSG_VERBOSE );
+                getLogger().debug( "Dropping path element " + pathElement + " as it is not valid relative to the project" );
             }
             for( int i = 0; i < element.length(); i++ )
             {
@@ -498,8 +497,8 @@ public class Path
             // last: don't trust the developer
             if( !order.equals( "last" ) )
             {
-                log( "invalid value for build.sysclasspath: " + order,
-                     Project.MSG_WARN );
+                final String message = "invalid value for build.sysclasspath: " + order;
+                getLogger().warn( message );
             }
 
             result.addExisting( this );
@@ -728,7 +727,7 @@ public class Path
 
         public void setPath( String path )
         {
-            parts = Path.translatePath( getProject(), path );
+            parts = translatePath( getProject(), path );
         }
 
         public String[] getParts()

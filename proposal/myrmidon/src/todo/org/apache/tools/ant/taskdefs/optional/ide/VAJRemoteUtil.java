@@ -208,7 +208,7 @@ class VAJRemoteUtil implements VAJUtil
         boolean requestFailed = false;
         try
         {
-            log( "Request: " + request, MSG_DEBUG );
+            getLogger().debug( "Request: " + request );
 
             //must be HTTP connection
             URL requestUrl = new URL( request );
@@ -230,7 +230,7 @@ class VAJRemoteUtil implements VAJUtil
             }
             if( is == null )
             {
-                log( "Can't get " + request, MSG_ERR );
+                getLogger().error( "Can't get " + request );
                 throw new TaskException( "Couldn't execute " + request );
             }
 
@@ -251,7 +251,7 @@ class VAJRemoteUtil implements VAJUtil
                 }
                 catch( Exception e )
                 {
-                    log( "Response line doesn't contain log level!", MSG_ERR );
+                    getLogger().error( "Response line doesn't contain log level!" );
                 }
                 log( line.substring( 2 ), level );
                 line = br.readLine();
@@ -260,7 +260,7 @@ class VAJRemoteUtil implements VAJUtil
         }
         catch( IOException ex )
         {
-            log( "Error sending tool request to VAJ" + ex, MSG_ERR );
+            getLogger().error( "Error sending tool request to VAJ" + ex );
             throw new TaskException( "Couldn't execute " + request );
         }
         if( requestFailed )

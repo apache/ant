@@ -465,27 +465,24 @@ public class JUnitTask extends Task
             {
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
-                log( "Implicitly adding " + jarName + " to classpath",
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Implicitly adding " + jarName + " to classpath" );
                 createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
-                log( "Implicitly adding " + dirName + " to classpath",
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Implicitly adding " + dirName + " to classpath" );
                 createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
             }
             else
             {
-                log( "Don\'t know how to handle resource URL " + u,
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Don\'t know how to handle resource URL " + u );
             }
         }
         else
         {
-            log( "Couldn\'t find " + resource, Project.MSG_DEBUG );
+            getLogger().debug( "Couldn\'t find " + resource );
         }
     }
 
@@ -542,8 +539,9 @@ public class JUnitTask extends Task
             }
             else
             {
-                log( "TEST " + test.getName() + " FAILED"
-                     + ( wasKilled ? " (timeout)" : "" ), Project.MSG_ERR );
+                final String message = "TEST " + test.getName() + " FAILED" +
+                    ( wasKilled ? " (timeout)" : "" );
+                getLogger().error( message );
                 if( errorOccurredHere && test.getErrorProperty() != null )
                 {
                     setProperty( test.getErrorProperty(), "true" );
@@ -609,7 +607,7 @@ public class JUnitTask extends Task
         cmd.createArgument().setValue( "haltOnFailure=" + test.getHaltonfailure() );
         if( summary )
         {
-            log( "Running " + test.getName(), Project.MSG_INFO );
+            getLogger().info( "Running " + test.getName() );
             cmd.createArgument().setValue( "formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter" );
         }
 
@@ -661,7 +659,7 @@ public class JUnitTask extends Task
             exe.setWorkingDirectory( dir );
         }
 
-        log( "Executing: " + cmd.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Executing: " + cmd.toString() );
         int retVal;
         try
         {
@@ -693,7 +691,7 @@ public class JUnitTask extends Task
         test.setProperties( getProject().getProperties() );
         if( dir != null )
         {
-            log( "dir attribute ignored if running in the same VM", Project.MSG_WARN );
+            getLogger().warn( "dir attribute ignored if running in the same VM" );
         }
 
         CommandlineJava.SysProperties sysProperties = commandline.getSystemProperties();
@@ -703,12 +701,12 @@ public class JUnitTask extends Task
         }
         try
         {
-            log( "Using System properties " + System.getProperties(), Project.MSG_VERBOSE );
+            getLogger().debug( "Using System properties " + System.getProperties() );
             AntClassLoader cl = null;
             Path classpath = commandline.getClasspath();
             if( classpath != null )
             {
-                log( "Using CLASSPATH " + classpath, Project.MSG_VERBOSE );
+                getLogger().debug( "Using CLASSPATH " + classpath );
 
                 cl = new AntClassLoader( null, getProject(), classpath, false );
                 // make sure the test will be accepted as a TestCase
@@ -719,7 +717,7 @@ public class JUnitTask extends Task
             runner = new JUnitTestRunner( test, test.getHaltonerror(), test.getFiltertrace(), test.getHaltonfailure(), cl );
             if( summary )
             {
-                log( "Running " + test.getName(), Project.MSG_INFO );
+                getLogger().info( "Running " + test.getName() );
 
                 SummaryJUnitResultFormatter f =
                     new SummaryJUnitResultFormatter();

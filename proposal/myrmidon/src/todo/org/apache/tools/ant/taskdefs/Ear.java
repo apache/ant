@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -52,7 +51,7 @@ public class Ear extends Jar
     {
         // We just set the prefix for this fileset, and pass it up.
         // Do we need to do this? LH
-        log( "addArchives called", Project.MSG_DEBUG );
+        getLogger().debug( "addArchives called" );
         fs.setPrefix( "/" );
         super.addFileset( fs );
     }
@@ -90,8 +89,10 @@ public class Ear extends Jar
         {
             if( deploymentDescriptor == null || !deploymentDescriptor.equals( file ) || descriptorAdded )
             {
-                log( "Warning: selected " + archiveType + " files include a META-INF/application.xml which will be ignored " +
-                     "(please use appxml attribute to " + archiveType + " task)", Project.MSG_WARN );
+                final String message = "Warning: selected " + archiveType +
+                    " files include a META-INF/application.xml which will be ignored " +
+                    "(please use appxml attribute to " + archiveType + " task)";
+                getLogger().warn( message );
             }
             else
             {

@@ -188,7 +188,7 @@ public class JJTree extends Task
         exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
         exe.setError( new LogOutputStream( this, Project.MSG_INFO ) );
 
-        log( cmdl.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( cmdl.toString() );
         exe.setCommandline( cmdl.getCommandline() );
 
         try

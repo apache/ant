@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Path;
 
@@ -38,7 +40,7 @@ import org.apache.tools.ant.types.Path;
  */
 public class AntClassLoader
     extends ClassLoader
-    implements BuildListener
+    implements BuildListener, LogEnabled
 {
     /**
      * The size of buffers to be used in this classloader.
@@ -49,6 +51,23 @@ public class AntClassLoader
     private static Method defineClassProtectionDomain;
     private static Method getContextClassLoader;
     private static Method setContextClassLoader;
+
+    private Logger m_logger;
+
+    /**
+     * Provide component with a logger.
+     *
+     * @param logger the logger
+     */
+    public void enableLogging( Logger logger )
+    {
+        m_logger = logger;
+    }
+
+    protected final Logger getLogger()
+    {
+        return m_logger;
+    }
 
     /**
      * The components of the classpath that the classloader searches for classes
@@ -336,7 +355,7 @@ public class AntClassLoader
 
         if( url == null )
         {
-            log( "Couldn't load Resource " + name, Project.MSG_DEBUG );
+            getLogger().debug( "Couldn't load Resource " + name );
         }
 
         return url;
@@ -477,7 +496,7 @@ public class AntClassLoader
     public Class findClass( String name )
         throws ClassNotFoundException
     {
-        log( "Finding class " + name, Project.MSG_DEBUG );
+        getLogger().debug( "Finding class " + name );
 
         return findClassInComponents( name );
     }
@@ -495,7 +514,7 @@ public class AntClassLoader
     public Class forceLoadClass( String classname )
         throws ClassNotFoundException
     {
-        log( "force loading " + classname, Project.MSG_DEBUG );
+        getLogger().debug( "force loading " + classname );
 
         Class theClass = findLoadedClass( classname );
 
@@ -521,7 +540,7 @@ public class AntClassLoader
     public Class forceLoadSystemClass( String classname )
         throws ClassNotFoundException
     {
-        log( "force system loading " + classname, Project.MSG_DEBUG );
+        getLogger().debug( "force system loading " + classname );
 
         Class theClass = findLoadedClass( classname );
 
@@ -622,12 +641,12 @@ public class AntClassLoader
             try
             {
                 theClass = findBaseClass( classname );
-                log( "Class " + classname + " loaded from parent loader", Project.MSG_DEBUG );
+                getLogger().debug( "Class " + classname + " loaded from parent loader" );
             }
             catch( ClassNotFoundException cnfe )
             {
                 theClass = findClass( classname );
-                log( "Class " + classname + " loaded from ant loader", Project.MSG_DEBUG );
+                getLogger().debug( "Class " + classname + " loaded from ant loader" );
             }
         }
         else
@@ -635,7 +654,7 @@ public class AntClassLoader
             try
             {
                 theClass = findClass( classname );
-                log( "Class " + classname + " loaded from ant loader", Project.MSG_DEBUG );
+                getLogger().debug( "Class " + classname + " loaded from ant loader" );
             }
             catch( ClassNotFoundException cnfe )
             {
@@ -644,7 +663,7 @@ public class AntClassLoader
                     throw cnfe;
                 }
                 theClass = findBaseClass( classname );
-                log( "Class " + classname + " loaded from parent loader", Project.MSG_DEBUG );
+                getLogger().debug( "Class " + classname + " loaded from parent loader" );
             }
         }
 
@@ -793,8 +812,7 @@ public class AntClassLoader
         }
         catch( Exception e )
         {
-            log( "Ignoring Exception " + e.getClass().getName() + ": " + e.getMessage() +
-                 " reading resource " + resourceName + " from " + file, Project.MSG_VERBOSE );
+            getLogger().debug( "Ignoring Exception " + e.getClass().getName() + ": " + e.getMessage() + " reading resource " + resourceName + " from " + file );
         }
 
         return null;
@@ -948,7 +966,7 @@ public class AntClassLoader
                 catch( IOException ioe )
                 {
                     // ioe.printStackTrace();
-                    log( "Exception reading component " + pathComponent, Project.MSG_VERBOSE );
+                    getLogger().debug( "Exception reading component " + pathComponent );
                 }
             }
 

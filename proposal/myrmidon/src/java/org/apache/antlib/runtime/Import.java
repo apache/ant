@@ -7,11 +7,9 @@
  */
 package org.apache.antlib.runtime;
 
+import java.io.File;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -32,8 +30,8 @@ public class Import
     private static final Resources REZ =
         ResourceManager.getPackageResources( Import.class );
 
-    private File        m_lib;
-    private Deployer    m_deployer;
+    private File m_lib;
+    private Deployer m_deployer;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException

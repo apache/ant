@@ -22,7 +22,6 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -226,33 +225,32 @@ public class Depend extends MatchingTask
 
             if( dump )
             {
-                log( "Reverse Dependency Dump for " + affectedClassMap.size() +
-                     " classes:", Project.MSG_DEBUG );
+                getLogger().debug( "Reverse Dependency Dump for " + affectedClassMap.size() + " classes:" );
                 for( Enumeration e = affectedClassMap.keys(); e.hasMoreElements(); )
                 {
                     String className = (String)e.nextElement();
-                    log( " Class " + className + " affects:", Project.MSG_DEBUG );
+                    getLogger().debug( " Class " + className + " affects:" );
                     Hashtable affectedClasses = (Hashtable)affectedClassMap.get( className );
                     for( Enumeration e2 = affectedClasses.keys(); e2.hasMoreElements(); )
                     {
                         String affectedClass = (String)e2.nextElement();
                         ClassFileInfo info = (ClassFileInfo)affectedClasses.get( affectedClass );
-                        log( "    " + affectedClass + " in " + info.absoluteFile.getPath(), Project.MSG_DEBUG );
+                        getLogger().debug( "    " + affectedClass + " in " + info.absoluteFile.getPath() );
                     }
                 }
 
                 if( classpathDependencies != null )
                 {
-                    log( "Classpath file dependencies (Forward):", Project.MSG_DEBUG );
+                    getLogger().debug( "Classpath file dependencies (Forward):" );
                     for( Enumeration e = classpathDependencies.keys(); e.hasMoreElements(); )
                     {
                         String className = (String)e.nextElement();
-                        log( " Class " + className + " depends on:", Project.MSG_DEBUG );
+                        getLogger().debug( " Class " + className + " depends on:" );
                         Hashtable dependencies = (Hashtable)classpathDependencies.get( className );
                         for( Enumeration e2 = dependencies.elements(); e2.hasMoreElements(); )
                         {
                             File classpathFile = (File)e2.nextElement();
-                            log( "    " + classpathFile.getPath(), Project.MSG_DEBUG );
+                            getLogger().debug( "    " + classpathFile.getPath() );
                         }
                     }
                 }
@@ -293,8 +291,7 @@ public class Depend extends MatchingTask
                                 File classpathFile = (File)e2.nextElement();
                                 if( classpathFile.lastModified() > info.absoluteFile.lastModified() )
                                 {
-                                    log( "Class " + className +
-                                         " is out of date with respect to " + classpathFile, Project.MSG_DEBUG );
+                                    getLogger().debug( "Class " + className + " is out of date with respect to " + classpathFile );
                                     outOfDateClasses.put( className, className );
                                     break;
                                 }
@@ -431,8 +428,7 @@ public class Depend extends MatchingTask
                 ClassFileInfo affectedClassInfo = (ClassFileInfo)affectedClasses.get( affectedClassName );
                 if( affectedClassInfo.absoluteFile.exists() )
                 {
-                    log( "Deleting file " + affectedClassInfo.absoluteFile.getPath() + " since " +
-                         className + " out of date", Project.MSG_VERBOSE );
+                    getLogger().debug( "Deleting file " + affectedClassInfo.absoluteFile.getPath() + " since " + className + " out of date" );
                     affectedClassInfo.absoluteFile.delete();
                     count++;
                     if( closure )
@@ -449,14 +445,13 @@ public class Depend extends MatchingTask
                             // need to delete the main class
                             String topLevelClassName
                                 = affectedClassName.substring( 0, affectedClassName.indexOf( "$" ) );
-                            log( "Top level class = " + topLevelClassName, Project.MSG_VERBOSE );
+                            getLogger().debug( "Top level class = " + topLevelClassName );
                             ClassFileInfo topLevelClassInfo
                                 = (ClassFileInfo)classFileInfoMap.get( topLevelClassName );
                             if( topLevelClassInfo != null &&
                                 topLevelClassInfo.absoluteFile.exists() )
                             {
-                                log( "Deleting file " + topLevelClassInfo.absoluteFile.getPath() + " since " +
-                                     "one of its inner classes was removed", Project.MSG_VERBOSE );
+                                getLogger().debug( "Deleting file " + topLevelClassInfo.absoluteFile.getPath() + " since " + "one of its inner classes was removed" );
                                 topLevelClassInfo.absoluteFile.delete();
                                 count++;
                                 if( closure )
@@ -519,7 +514,7 @@ public class Depend extends MatchingTask
         for( Iterator e = getClassFiles( destPath ).iterator(); e.hasNext(); )
         {
             ClassFileInfo info = (ClassFileInfo)e.next();
-            log( "Adding class info for " + info.className, Project.MSG_DEBUG );
+            getLogger().debug( "Adding class info for " + info.className );
             classFileInfoMap.put( info.className, info );
 
             ArrayList dependencyList = null;
@@ -622,9 +617,7 @@ public class Depend extends MatchingTask
                                     String classFilePath = classURL.getFile();
                                     classpathFileObject = new File( classFilePath );
                                 }
-                                log( "Class " + className +
-                                     " depends on " + classpathFileObject +
-                                     " due to " + dependency, Project.MSG_DEBUG );
+                                getLogger().debug( "Class " + className + " depends on " + classpathFileObject + " due to " + dependency );
                             }
                         }
                         classpathFileCache.put( dependency, classpathFileObject );

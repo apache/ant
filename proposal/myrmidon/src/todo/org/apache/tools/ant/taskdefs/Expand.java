@@ -20,7 +20,6 @@ import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 
@@ -166,7 +165,7 @@ public class Expand extends MatchingTask
                              ze.isDirectory() );
             }
 
-            log( "expand complete", Project.MSG_VERBOSE );
+            getLogger().debug( "expand complete" );
         }
         catch( IOException ioe )
         {
@@ -241,13 +240,11 @@ public class Expand extends MatchingTask
             if( !overwrite && f.exists()
                 && f.lastModified() >= entryDate.getTime() )
             {
-                log( "Skipping " + f + " as it is up-to-date",
-                     Project.MSG_DEBUG );
+                getLogger().debug( "Skipping " + f + " as it is up-to-date" );
                 return;
             }
 
-            log( "expanding " + entryName + " to " + f,
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "expanding " + entryName + " to " + f );
             // create intermediary directories - sometimes zip don't add them
             File dirF = f.getParentFile();
             dirF.mkdirs();
@@ -293,7 +290,7 @@ public class Expand extends MatchingTask
         }
         catch( FileNotFoundException ex )
         {
-            log( "Unable to expand to file " + f.getPath(), Project.MSG_WARN );
+            getLogger().warn( "Unable to expand to file " + f.getPath() );
         }
 
     }

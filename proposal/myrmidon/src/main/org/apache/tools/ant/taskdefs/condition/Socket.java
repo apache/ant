@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
@@ -46,7 +45,7 @@ public class Socket
         {
             throw new TaskException( "No port specified in Socket task" );
         }
-        log( "Checking for listener at " + server + ":" + port, Project.MSG_VERBOSE );
+        getLogger().debug( "Checking for listener at " + server + ":" + port );
         try
         {
             java.net.Socket socket = new java.net.Socket( server, port );

@@ -48,7 +48,7 @@ public class P4Change extends P4Base
                                    if( util.match( "/error/", line ) )
                                    {
 
-                                       log( "Client Error", Project.MSG_VERBOSE );
+                                       getLogger().debug( "Client Error" );
                                        throw new TaskException( "Perforce Error, check client settings and/or server" );
                                    }
                                    else if( util.match( "/<enter description here>/", line ) )
@@ -95,7 +95,7 @@ public class P4Change extends P4Base
                         line = util.substitute( "s/[^0-9]//g", line );
 
                         int changenumber = Integer.parseInt( line );
-                        log( "Change Number is " + changenumber, Project.MSG_INFO );
+                        getLogger().info( "Change Number is " + changenumber );
                         setProperty( "p4.change", "" + changenumber );
 
                     }

@@ -61,8 +61,8 @@ public class TaskAdapter extends Task
         }
         catch( Exception ex )
         {
-            log( "Error setting project in " + proxy.getClass(),
-                 Project.MSG_ERR );
+            final String message = "Error setting project in " + proxy.getClass();
+            getLogger().error( message, ex );
             throw new TaskException( "Error", ex );
         }
 
@@ -73,7 +73,7 @@ public class TaskAdapter extends Task
             executeM = c.getMethod( "execute", new Class[ 0 ] );
             if( executeM == null )
             {
-                log( "No public execute() in " + proxy.getClass(), Project.MSG_ERR );
+                getLogger().error( "No public execute() in " + proxy.getClass() );
                 throw new TaskException( "No public execute() in " + proxy.getClass() );
             }
             executeM.invoke( proxy, null );
@@ -81,7 +81,7 @@ public class TaskAdapter extends Task
         }
         catch( Exception ex )
         {
-            log( "Error in " + proxy.getClass(), Project.MSG_ERR );
+            getLogger().error( "Error in " + proxy.getClass() );
             throw new TaskException( "Error", ex );
         }
 

@@ -7,7 +7,6 @@
  */
 package org.apache.antlib.runtime;
 
-import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.framework.AbstractTypeDef;
 
 /**
@@ -18,7 +17,7 @@ import org.apache.myrmidon.framework.AbstractTypeDef;
 public class TypeDef
     extends AbstractTypeDef
 {
-    private String     m_type;
+    private String m_type;
 
     public void setType( final String type )
     {

@@ -25,7 +25,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 
@@ -259,7 +258,7 @@ public class MimeMail extends Task
         MimeMessage msg = new MimeMessage( sesh );
 
         //set the sender
-        log( "message sender: " + from, Project.MSG_VERBOSE );
+        getLogger().debug( "message sender: " + from );
         msg.setFrom( new InternetAddress( from ) );
 
         // add recipient lists
@@ -269,7 +268,7 @@ public class MimeMail extends Task
 
         if( subject != null )
         {
-            log( "subject: " + subject, Project.MSG_VERBOSE );
+            getLogger().debug( "subject: " + subject );
             msg.setSubject( subject );
         }
 
@@ -322,8 +321,7 @@ public class MimeMail extends Task
                         throw new TaskException( "File \"" + file.getAbsolutePath()
                                                  + "\" does not exist or is not readable." );
                     }
-                    log( "Attaching " + file.toString() + " - " + file.length() + " bytes",
-                         Project.MSG_VERBOSE );
+                    getLogger().debug( "Attaching " + file.toString() + " - " + file.length() + " bytes" );
                     FileDataSource fileData = new FileDataSource( file );
                     DataHandler fileDataHandler = new DataHandler( fileData );
                     body.setDataHandler( fileDataHandler );
@@ -361,7 +359,7 @@ public class MimeMail extends Task
             else
             {
                 String text = e.toString();
-                log( text, Project.MSG_ERR );
+                getLogger().error( text );
             }
         }
     }

@@ -245,15 +245,15 @@ public class CovReport extends Task
             final Execute exe = new Execute();
             exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
             exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
-            log( cmdl.toString(), Project.MSG_VERBOSE );
+            getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl.getCommandline() );
             int exitValue = exe.execute();
             if( exitValue != 0 )
             {
                 throw new TaskException( "JProbe Coverage Report failed (" + exitValue + ")" );
             }
-            log( "coveragePath: " + coveragePath, Project.MSG_VERBOSE );
-            log( "format: " + format, Project.MSG_VERBOSE );
+            getLogger().debug( "coveragePath: " + coveragePath );
+            getLogger().debug( "format: " + format );
             if( reference != null && "xml".equals( format ) )
             {
                 reference.createEnhancedXMLReport();
@@ -397,13 +397,13 @@ public class CovReport extends Task
             if( filters == null || filters.size() == 0 )
             {
                 createFilters();
-                log( "Adding default include filter to *.*()", Project.MSG_VERBOSE );
+                getLogger().debug( "Adding default include filter to *.*()" );
                 ReportFilters.Include include = new ReportFilters.Include();
                 filters.addInclude( include );
             }
             try
             {
-                log( "Creating enhanced XML report", Project.MSG_VERBOSE );
+                getLogger().debug( "Creating enhanced XML report" );
                 XMLReport report = new XMLReport( CovReport.this, tofile );
                 report.setReportFilters( filters );
                 report.setJProbehome( new File( home.getParent() ) );

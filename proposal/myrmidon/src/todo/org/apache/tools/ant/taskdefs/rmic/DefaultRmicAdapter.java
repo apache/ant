@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
@@ -28,7 +29,9 @@ import org.apache.tools.ant.util.FileNameMapper;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author Takashi Okamoto <tokamoto@rd.nttdata.co.jp>
  */
-public abstract class DefaultRmicAdapter implements RmicAdapter
+public abstract class DefaultRmicAdapter
+    extends AbstractLogEnabled
+    implements RmicAdapter
 {
 
     private final static Random rand = new Random();
@@ -145,12 +148,11 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
 
         if( attributes.getIiop() )
         {
-            attributes.log( "IIOP has been turned on.", Project.MSG_INFO );
+            getLogger().info( "IIOP has been turned on." );
             cmd.createArgument().setValue( "-iiop" );
             if( attributes.getIiopopts() != null )
             {
-                attributes.log( "IIOP Options: " + attributes.getIiopopts(),
-                                Project.MSG_INFO );
+                getLogger().info( "IIOP Options: " + attributes.getIiopopts() );
                 cmd.createArgument().setValue( attributes.getIiopopts() );
             }
         }
@@ -158,12 +160,11 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
         if( attributes.getIdl() )
         {
             cmd.createArgument().setValue( "-idl" );
-            attributes.log( "IDL has been turned on.", Project.MSG_INFO );
+            getLogger().info( "IDL has been turned on." );
             if( attributes.getIdlopts() != null )
             {
                 cmd.createArgument().setValue( attributes.getIdlopts() );
-                attributes.log( "IDL Options: " + attributes.getIdlopts(),
-                                Project.MSG_INFO );
+                getLogger().info( "IDL Options: " + attributes.getIdlopts() );
             }
         }
 
@@ -243,8 +244,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
     {
         ArrayList compileList = attributes.getCompileList();
 
-        attributes.log( "Compilation args: " + cmd.toString(),
-                        Project.MSG_VERBOSE );
+        getLogger().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )
@@ -260,7 +260,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
             niceSourceList.append( "    " + arg );
         }
 
-        attributes.log( niceSourceList.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( niceSourceList.toString() );
     }
 
     /**
@@ -407,20 +407,22 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
                 }
                 catch( ClassNotFoundException e )
                 {
-                    attributes.log( "Unable to verify class " + classname
-                                    + ". It could not be found.",
-                                    Project.MSG_WARN );
+                    final String message = "Unable to verify class " + classname
+                        + ". It could not be found.";
+                    getLogger().warn( message );
                 }
                 catch( NoClassDefFoundError e )
                 {
-                    attributes.log( "Unable to verify class " + classname
-                                    + ". It is not defined.", Project.MSG_WARN );
+                    final String message = "Unable to verify class " + classname
+                        + ". It is not defined.";
+                    getLogger().warn( message );
                 }
                 catch( Throwable t )
                 {
-                    attributes.log( "Unable to verify class " + classname
-                                    + ". Loading caused Exception: "
-                                    + t.getMessage(), Project.MSG_WARN );
+                    final String message = "Unable to verify class " + classname
+                        + ". Loading caused Exception: "
+                        + t.getMessage();
+                    getLogger().warn( message );
                 }
             }
             return target;

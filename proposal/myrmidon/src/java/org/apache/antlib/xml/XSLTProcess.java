@@ -13,7 +13,6 @@ import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -218,7 +217,7 @@ public class XSLTProcess
         // check if liaison wants to log errors using us as logger
         setupLogger( m_liaison );
 
-        log( "Using " + m_liaison.getClass().toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Using " + m_liaison.getClass().toString() );
         File stylesheet = resolveFile( m_xslFile );
 
         // if we have an in file and out then process them
@@ -239,7 +238,7 @@ public class XSLTProcess
             throw new TaskException( msg );
         }
         scanner = getDirectoryScanner( m_baseDir );
-        log( "Transforming into " + m_destDir, Project.MSG_INFO );
+        getLogger().info( "Transforming into " + m_destDir );
 
         // Process all the files marked for styling
         list = scanner.getIncludedFiles();

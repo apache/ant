@@ -280,8 +280,7 @@ public class Delete
             }
             else
             {
-                log( "Could not find file " + file.getAbsolutePath() + " to delete.",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Could not find file " + file.getAbsolutePath() + " to delete." );
             }
         }
 

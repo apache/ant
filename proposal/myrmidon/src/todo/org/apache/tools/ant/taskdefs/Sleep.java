@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -128,8 +127,7 @@ public class Sleep extends Task
         {
             validate();
             long sleepTime = getSleepTime();
-            log( "sleeping for " + sleepTime + " milliseconds",
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "sleeping for " + sleepTime + " milliseconds" );
             doSleep( sleepTime );
         }
         catch( Exception e )
@@ -141,7 +139,7 @@ public class Sleep extends Task
             else
             {
                 String text = e.toString();
-                log( text, Project.MSG_ERR );
+                getLogger().error( text );
             }
         }
     }

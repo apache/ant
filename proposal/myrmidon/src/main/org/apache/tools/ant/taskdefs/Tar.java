@@ -163,12 +163,11 @@ public class Tar
 
         if( upToDate )
         {
-            log( "Nothing to do: " + tarFile.getAbsolutePath() + " is up to date.",
-                 Project.MSG_INFO );
+            getLogger().info( "Nothing to do: " + tarFile.getAbsolutePath() + " is up to date." );
             return;
         }
 
-        log( "Building tar: " + tarFile.getAbsolutePath(), Project.MSG_INFO );
+        getLogger().info( "Building tar: " + tarFile.getAbsolutePath() );
 
         TarOutputStream tOut = null;
         try
@@ -256,17 +255,19 @@ public class Tar
             {
                 if( longFileMode.isOmitMode() )
                 {
-                    log( "Omitting: " + vPath, Project.MSG_INFO );
+                    getLogger().info( "Omitting: " + vPath );
                     return;
                 }
                 else if( longFileMode.isWarnMode() )
                 {
-                    log( "Entry: " + vPath + " longer than " +
-                         TarConstants.NAMELEN + " characters.", Project.MSG_WARN );
+                    final String message = "Entry: " + vPath + " longer than " +
+                        TarConstants.NAMELEN + " characters.";
+                    getLogger().warn( message );
                     if( !longWarningGiven )
                     {
-                        log( "Resulting tar file can only be processed successfully"
-                             + " by GNU compatible tar commands", Project.MSG_WARN );
+                        final String message2 = "Resulting tar file can only be processed successfully"
+                            + " by GNU compatible tar commands";
+                        getLogger().warn( message2 );
                         longWarningGiven = true;
                     }
                 }

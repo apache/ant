@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * P4Submit - submit a numbered changelist to Perforce. <B>Note:</B> P4Submit
@@ -40,7 +39,7 @@ public class P4Submit extends P4Base
                            {
                                public void process( String line )
                                {
-                                   log( line, Project.MSG_VERBOSE );
+                                   getLogger().debug( line );
                                }
                            }
             );

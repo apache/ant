@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -33,7 +32,7 @@ public class Javac13 extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        attributes.log( "Using modern compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using modern compiler" );
         Commandline cmd = setupModernJavacCommand();
 
         // Use reflection to be able to build on all JDKs >= 1.1:

@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -30,12 +29,12 @@ public class Sj extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        attributes.log( "Using symantec java compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using symantec java compiler" );
 
         Commandline cmd = setupJavacCommand();
         cmd.setExecutable( "sj" );
 
-        int firstFileName = cmd.size() - compileList.length;
+        int firstFileName = cmd.size() - m_compileList.length;
 
         return executeExternalCompile( cmd.getCommandline(), firstFileName ) == 0;
     }

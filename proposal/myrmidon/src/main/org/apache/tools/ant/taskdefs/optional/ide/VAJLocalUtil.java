@@ -162,7 +162,7 @@ abstract class VAJLocalUtil implements VAJUtil
                      + dest, MSG_INFO );
                 for( int i = 0; i < packages.length; i++ )
                 {
-                    log( "    " + packages[ i ].getName(), MSG_VERBOSE );
+                    getLogger().debug( "    " + packages[ i ].getName() );
                 }
 
                 ExportCodeSpec exportSpec = new ExportCodeSpec();
@@ -246,7 +246,7 @@ abstract class VAJLocalUtil implements VAJUtil
         summaryLog.append( importProject );
         summaryLog.append( "'." );
 
-        log( summaryLog.toString(), MSG_INFO );
+        getLogger().info( summaryLog.toString() );
 
         try
         {
@@ -257,7 +257,7 @@ abstract class VAJLocalUtil implements VAJUtil
             }
             else
             {
-                log( importedTypes.length + " types imported", MSG_DEBUG );
+                getLogger().debug( importedTypes.length + " types imported" );
                 for( int i = 0; i < importedTypes.length; i++ )
                 {
                     log( importedTypes[ i ].getPackage().getName()
@@ -294,7 +294,7 @@ abstract class VAJLocalUtil implements VAJUtil
             VAJProjectDescription d = (VAJProjectDescription)e.next();
             if( !d.projectFound() )
             {
-                log( "No Projects match the name " + d.getName(), MSG_WARN );
+                getLogger().warn( "No Projects match the name " + d.getName() );
             }
         }
 
@@ -483,10 +483,10 @@ abstract class VAJLocalUtil implements VAJUtil
      */
     private void logFiles( ArrayList fileNames, String fileType )
     {
-        log( fileType + " files found for import:", MSG_VERBOSE );
+        getLogger().debug( fileType + " files found for import:" );
         for( Iterator e = fileNames.iterator(); e.hasNext(); )
         {
-            log( "    " + e.next(), MSG_VERBOSE );
+            getLogger().debug( "    " + e.next() );
         }
     }
 

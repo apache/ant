@@ -32,7 +32,10 @@ public class StringToShortConverter
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Short( (String)object ); }
+        try
+        {
+            return new Short( (String)object );
+        }
         catch( final NumberFormatException nfe )
         {
             final String message = REZ.getString( "convert.bad-short.error", object );

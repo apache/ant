@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
@@ -150,13 +149,11 @@ public class UpToDate extends MatchingTask implements Condition
             setProperty( _property, this.getValue() );
             if( mapperElement == null )
             {
-                log( "File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "File \"" + _targetFile.getAbsolutePath() + "\" is up to date." );
             }
             else
             {
-                log( "All target files have been up to date.",
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "All target files have been up to date." );
             }
         }
     }

@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * P4Label - create a Perforce Label. P4Label inserts a label into perforce
@@ -46,23 +45,23 @@ public class P4Label extends P4Base
     public void execute()
         throws TaskException
     {
-        log( "P4Label exec:", Project.MSG_INFO );
+        getLogger().info( "P4Label exec:" );
 
         if( P4View == null || P4View.length() < 1 )
         {
-            log( "View not set, assuming //depot/...", Project.MSG_WARN );
+            getLogger().warn( "View not set, assuming //depot/..." );
             P4View = "//depot/...";
         }
 
         if( desc == null || desc.length() < 1 )
         {
-            log( "Label Description not set, assuming 'AntLabel'", Project.MSG_WARN );
+            getLogger().warn( "Label Description not set, assuming 'AntLabel'" );
             desc = "AntLabel";
         }
 
         if( lock != null && !lock.equalsIgnoreCase( "locked" ) )
         {
-            log( "lock attribute invalid - ignoring", Project.MSG_WARN );
+            getLogger().warn( "lock attribute invalid - ignoring" );
         }
 
         if( name == null || name.length() < 1 )
@@ -70,7 +69,7 @@ public class P4Label extends P4Base
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy.MM.dd-hh:mm" );
             Date now = new Date();
             name = "AntLabel-" + formatter.format( now );
-            log( "name not set, assuming '" + name + "'", Project.MSG_WARN );
+            getLogger().warn( "name not set, assuming '" + name + "'" );
         }
 
         //We have to create a unlocked label first
@@ -85,7 +84,7 @@ public class P4Label extends P4Base
             {
                 public void process( String line )
                 {
-                    log( line, Project.MSG_VERBOSE );
+                    getLogger().debug( line );
                 }
             };
 
@@ -98,17 +97,17 @@ public class P4Label extends P4Base
                        {
                            public void process( String line )
                            {
-                               log( line, Project.MSG_VERBOSE );
+                               getLogger().debug( line );
                            }
                        } );
 
-        log( "Created Label " + name + " (" + desc + ")", Project.MSG_INFO );
+        getLogger().info( "Created Label " + name + " (" + desc + ")" );
 
         //Now lock if required
         if( lock != null && lock.equalsIgnoreCase( "locked" ) )
         {
 
-            log( "Modifying lock status to 'locked'", Project.MSG_INFO );
+            getLogger().info( "Modifying lock status to 'locked'" );
 
             final StringBuffer labelSpec = new StringBuffer();
 
@@ -121,7 +120,7 @@ public class P4Label extends P4Base
                 {
                     public void process( String line )
                     {
-                        log( line, Project.MSG_VERBOSE );
+                        getLogger().debug( line );
 
                         if( util.match( "/^Options:/", line ) )
                         {
@@ -133,15 +132,15 @@ public class P4Label extends P4Base
                 };
 
             execP4Command( "label -o " + name, handler );
-            log( labelSpec.toString(), Project.MSG_DEBUG );
+            getLogger().debug( labelSpec.toString() );
 
-            log( "Now locking label...", Project.MSG_VERBOSE );
+            getLogger().debug( "Now locking label..." );
             handler =
                 new P4HandlerAdapter()
                 {
                     public void process( String line )
                     {
-                        log( line, Project.MSG_VERBOSE );
+                        getLogger().debug( line );
                     }
                 };
 

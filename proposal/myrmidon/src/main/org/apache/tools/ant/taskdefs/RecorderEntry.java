@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.PrintStream;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.Project;
@@ -19,7 +20,9 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @version 0.5
  */
-public class RecorderEntry implements BuildLogger
+public class RecorderEntry
+    extends AbstractLogEnabled
+    implements BuildLogger
 {
     /**
      * the line separator for this OS
@@ -126,7 +129,7 @@ public class RecorderEntry implements BuildLogger
 
     public void buildFinished( BuildEvent event )
     {
-        log( "< BUILD FINISHED", Project.MSG_DEBUG );
+        getLogger().debug( "< BUILD FINISHED" );
 
         Throwable error = event.getException();
         if( error == null )
@@ -144,12 +147,12 @@ public class RecorderEntry implements BuildLogger
 
     public void buildStarted( BuildEvent event )
     {
-        log( "> BUILD STARTED", Project.MSG_DEBUG );
+        getLogger().debug( "> BUILD STARTED" );
     }
 
     public void messageLogged( BuildEvent event )
     {
-        log( "--- MESSAGE LOGGED", Project.MSG_DEBUG );
+        getLogger().debug( "--- MESSAGE LOGGED" );
 
         StringBuffer buf = new StringBuffer();
         if( event.getTask() != null )
@@ -171,28 +174,28 @@ public class RecorderEntry implements BuildLogger
 
     public void targetFinished( BuildEvent event )
     {
-        log( "<< TARGET FINISHED -- " + event.getTarget(), Project.MSG_DEBUG );
+        getLogger().debug( "<< TARGET FINISHED -- " + event.getTarget() );
         String time = formatTime( System.currentTimeMillis() - targetStartTime );
-        log( event.getTarget() + ":  duration " + time, Project.MSG_VERBOSE );
+        getLogger().debug( event.getTarget() + ":  duration " + time );
         out.flush();
     }
 
     public void targetStarted( BuildEvent event )
     {
-        log( ">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG );
-        log( LINE_SEP + event.getTarget().getName() + ":", Project.MSG_INFO );
+        getLogger().debug( ">> TARGET STARTED -- " + event.getTarget() );
+        getLogger().info( LINE_SEP + event.getTarget().getName() + ":" );
         targetStartTime = System.currentTimeMillis();
     }
 
     public void taskFinished( BuildEvent event )
     {
-        log( "<<< TASK FINISHED -- " + event.getTask(), Project.MSG_DEBUG );
+        getLogger().debug( "<<< TASK FINISHED -- " + event.getTask() );
         out.flush();
     }
 
     public void taskStarted( BuildEvent event )
     {
-        log( ">>> TASK STARTED -- " + event.getTask(), Project.MSG_DEBUG );
+        getLogger().debug( ">>> TASK STARTED -- " + event.getTask() );
     }
 
     /**

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 
 /**
  * Replaces all occurrences of one or more string tokens with given values in
@@ -225,7 +224,7 @@ public class Replace extends MatchingTask
 
         if( summary )
         {
-            log( "Replaced " + replaceCount + " occurrences in " + fileCount + " files.", Project.MSG_INFO );
+            getLogger().info( "Replaced " + replaceCount + " occurrences in " + fileCount + " files." );
         }
     }
 
@@ -350,7 +349,7 @@ public class Replace extends MatchingTask
                 String tok = stringReplace( token.getText(), "\n", linesep );
 
                 // for each found token, replace with value
-                log( "Replacing in " + src.getPath() + ": " + token.getText() + " --> " + value.getText(), Project.MSG_VERBOSE );
+                getLogger().debug( "Replacing in " + src.getPath() + ": " + token.getText() + " --> " + value.getText() );
                 newString = stringReplace( newString, tok, val );
             }
 
@@ -426,7 +425,7 @@ public class Replace extends MatchingTask
             Replacefilter filter = (Replacefilter)replacefilters.get( i );
 
             //for each found token, replace with value
-            log( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE );
+            getLogger().debug( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue() );
             newString = stringReplace( newString, filter.getToken(), filter.getReplaceValue() );
         }
 

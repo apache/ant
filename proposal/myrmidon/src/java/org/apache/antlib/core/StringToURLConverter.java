@@ -34,7 +34,10 @@ public class StringToURLConverter
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new URL( (String)object ); }
+        try
+        {
+            return new URL( (String)object );
+        }
         catch( final MalformedURLException mue )
         {
             final String message = REZ.getString( "convert.bad-url.error", object );

@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RegularExpression;
@@ -191,14 +190,15 @@ public class ReplaceRegExp extends Task
             }
             catch( IOException e )
             {
-                log( "An error occurred processing file: '" + file.getAbsolutePath() + "': " + e.toString(),
-                     Project.MSG_ERR );
+                final String message = "An error occurred processing file: '" +
+                    file.getAbsolutePath() + "': " + e.toString();
+                getLogger().error( message, e );
             }
         }
         else if( file != null )
         {
-            log( "The following file is missing: '" + file.getAbsolutePath() + "'",
-                 Project.MSG_ERR );
+            final String message = "The following file is missing: '" + file.getAbsolutePath() + "'";
+            getLogger().error( message );
         }
 
         int sz = filesets.size();
@@ -219,14 +219,15 @@ public class ReplaceRegExp extends Task
                     }
                     catch( Exception e )
                     {
-                        log( "An error occurred processing file: '" + f.getAbsolutePath() + "': " + e.toString(),
-                             Project.MSG_ERR );
+                        final String message = "An error occurred processing file: '" + f.getAbsolutePath() +
+                            "': " + e.toString();
+                        getLogger().error( message );
                     }
                 }
                 else
                 {
-                    log( "The following file is missing: '" + file.getAbsolutePath() + "'",
-                         Project.MSG_ERR );
+                    final String message = "The following file is missing: '" + file.getAbsolutePath() + "'";
+                    getLogger().error( message );
                 }
             }
         }
@@ -276,12 +277,13 @@ public class ReplaceRegExp extends Task
 
             boolean changes = false;
 
-            log( "Replacing pattern '" + regex.getPattern( getProject() ) + "' with '" + subs.getExpression( getProject() ) +
-                 "' in '" + f.getPath() + "'" +
-                 ( byline ? " by line" : "" ) +
-                 ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +
-                 ".",
-                 Project.MSG_WARN );
+            final String message = "Replacing pattern '" + regex.getPattern( getProject() ) +
+                "' with '" + subs.getExpression( getProject() ) +
+                "' in '" + f.getPath() + "'" +
+                ( byline ? " by line" : "" ) +
+                ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +
+                ".";
+            getLogger().warn( message );
 
             if( byline )
             {

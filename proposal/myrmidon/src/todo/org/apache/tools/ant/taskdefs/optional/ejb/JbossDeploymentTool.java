@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 import java.util.Hashtable;
-import org.apache.tools.ant.Project;
 
 /**
  * The deployment tool to add the jboss specific deployment descriptor to the
@@ -45,7 +44,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool
         }
         else
         {
-            log( "Unable to locate jboss deployment descriptor. It was expected to be in " + jbossDD.getPath(), Project.MSG_WARN );
+            getLogger().warn( "Unable to locate jboss deployment descriptor. It was expected to be in " + jbossDD.getPath() );
             return;
         }
 

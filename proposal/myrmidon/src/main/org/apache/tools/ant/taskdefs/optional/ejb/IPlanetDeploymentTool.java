@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 import javax.xml.parsers.SAXParser;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.xml.sax.SAXException;
 
 /**
@@ -120,10 +119,10 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
      */
     public void setGenericJarSuffix( String inString )
     {
-        log( "Since a generic JAR file is not created during processing, the "
-             + "iPlanet Deployment Tool does not support the "
-             + "\"genericjarsuffix\" attribute.  It will be ignored.",
-             Project.MSG_WARN );
+        final String message = "Since a generic JAR file is not created during processing, the "
+            + "iPlanet Deployment Tool does not support the "
+            + "\"genericjarsuffix\" attribute.  It will be ignored.";
+        getLogger().warn( message );
     }
 
     /**
@@ -166,8 +165,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
     {
         this.descriptorName = descriptorName;
 
-        log( "iPlanet Deployment Tool processing: " + descriptorName + " (and "
-             + getIasDescriptorName() + ")", Project.MSG_VERBOSE );
+        getLogger().debug( "iPlanet Deployment Tool processing: " + descriptorName + " (and " + getIasDescriptorName() + ")" );
 
         super.processDescriptor( descriptorName, saxParser );
     }
@@ -334,7 +332,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
     File getVendorOutputJarFile( String baseName )
     {
         File jarFile = new File( getDestDir(), baseName + jarSuffix );
-        log( "JAR file name: " + jarFile.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "JAR file name: " + jarFile.toString() );
         return jarFile;
     }
 

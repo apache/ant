@@ -275,7 +275,7 @@ public class JDependTask extends Task
             if( getHaltonerror() )
                 throw new TaskException( "JDepend failed" );
             else
-                log( "JDepend FAILED", Project.MSG_ERR );
+                getLogger().error( "JDepend FAILED" );
         }
     }
 
@@ -339,7 +339,7 @@ public class JDependTask extends Task
 
         if( getOutputFile() != null )
             getLogger().info( "Output to be stored in " + getOutputFile().getPath() );
-        log( "Executing: " + commandline.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( "Executing: " + commandline.toString() );
         try
         {
             return exe.execute();

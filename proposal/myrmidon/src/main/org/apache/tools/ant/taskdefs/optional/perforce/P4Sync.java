@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * P4Sync - synchronise client space to a perforce depot view. The API allows
@@ -121,7 +120,7 @@ public class P4Sync extends P4Base
             syncCmd = syncCmd + "@" + label;
         }
 
-        log( "Execing sync " + P4CmdOpts + " " + syncCmd, Project.MSG_VERBOSE );
+        getLogger().debug( "Execing sync " + P4CmdOpts + " " + syncCmd );
 
         execP4Command( "-s sync " + P4CmdOpts + " " + syncCmd, new SimpleP4OutputHandler( this ) );
     }

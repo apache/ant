@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -321,14 +320,13 @@ public class FixCRLF extends MatchingTask
         }
 
         // log options used
-        log( "options:" +
-             " eol=" +
-             ( eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf" ) +
-             " tab=" + ( tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove" ) +
-             " eof=" + ( ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove" ) +
-             " tablength=" + tablength +
-             " encoding=" + ( encoding == null ? "default" : encoding ),
-             Project.MSG_VERBOSE );
+        getLogger().debug( "options:" +
+                           " eol=" +
+                           ( eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf" ) +
+                           " tab=" + ( tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove" ) +
+                           " eof=" + ( ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove" ) +
+                           " tablength=" + tablength +
+                           " encoding=" + ( encoding == null ? "default" : encoding ) );
 
         DirectoryScanner ds = super.getDirectoryScanner( srcDir );
         String[] files = ds.getIncludedFiles();
@@ -758,10 +756,10 @@ public class FixCRLF extends MatchingTask
             if( destFile.exists() )
             {
                 // Compare the destination with the temp file
-                log( "destFile exists", Project.MSG_DEBUG );
+                getLogger().debug( "destFile exists" );
                 if( !FileUtils.contentEquals( destFile, tmpFile ) )
                 {
-                    log( destFile + " is being written", Project.MSG_DEBUG );
+                    getLogger().debug( destFile + " is being written" );
                     if( !destFile.delete() )
                     {
                         throw new TaskException( "Unable to delete "
@@ -779,9 +777,7 @@ public class FixCRLF extends MatchingTask
                 }
                 else
                 {// destination is equal to temp file
-                    log( destFile +
-                         " is not written, as the contents are identical",
-                         Project.MSG_DEBUG );
+                    getLogger().debug( destFile + " is not written, as the contents are identical" );
                     if( !tmpFile.delete() )
                     {
                         throw new TaskException( "Unable to delete "
@@ -791,7 +787,8 @@ public class FixCRLF extends MatchingTask
             }
             else
             {// destFile does not exist - write the temp file
-                log( "destFile does not exist", Project.MSG_DEBUG );
+                ///XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                getLogger().debug( "destFile does not exist" );
                 if( !tmpFile.renameTo( destFile ) )
                 {
                     throw new TaskException(
@@ -820,7 +817,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException io )
             {
-                log( "Error closing " + srcFile, Project.MSG_ERR );
+                getLogger().error( "Error closing " + srcFile );
             }// end of catch
 
             if( tmpFile != null )

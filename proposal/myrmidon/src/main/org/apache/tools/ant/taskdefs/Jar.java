@@ -21,7 +21,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -96,7 +95,7 @@ public class Jar extends Zip
         }
         catch( ManifestException e )
         {
-            log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
+            getLogger().error( "Manifest is invalid: " + e.getMessage() );
             throw new TaskException( "Invalid Manifest: " + manifestFile, e );
         }
         catch( IOException e )
@@ -121,8 +120,8 @@ public class Jar extends Zip
 
     public void setWhenempty( WhenEmpty we )
     {
-        log( "JARs are never empty, they contain at least a manifest file",
-             Project.MSG_WARN );
+        final String message = "JARs are never empty, they contain at least a manifest file";
+        getLogger().warn( message );
     }
 
     public void addConfiguredManifest( Manifest newManifest )
@@ -165,7 +164,7 @@ public class Jar extends Zip
                 java.util.zip.ZipEntry entry = theZipFile.getEntry( "META-INF/MANIFEST.MF" );
                 if( entry == null )
                 {
-                    log( "Updating jar since the current jar has no manifest", Project.MSG_VERBOSE );
+                    getLogger().debug( "Updating jar since the current jar has no manifest" );
                     return false;
                 }
                 Manifest currentManifest = new Manifest( new InputStreamReader( theZipFile.getInputStream( entry ) ) );
@@ -175,15 +174,14 @@ public class Jar extends Zip
                 }
                 if( !currentManifest.equals( manifest ) )
                 {
-                    log( "Updating jar since jar manifest has changed", Project.MSG_VERBOSE );
+                    getLogger().debug( "Updating jar since jar manifest has changed" );
                     return false;
                 }
             }
             catch( Exception e )
             {
                 // any problems and we will rebuild
-                log( "Updating jar since cannot read current jar manifest: " + e.getClass().getName() + e.getMessage(),
-                     Project.MSG_VERBOSE );
+                getLogger().debug( "Updating jar since cannot read current jar manifest: " + e.getClass().getName() + e.getMessage() );
                 return false;
             }
             finally
@@ -245,7 +243,7 @@ public class Jar extends Zip
             }
             for( Iterator e = execManifest.getWarnings(); e.hasNext(); )
             {
-                log( "Manifest warning: " + (String)e.next(), Project.MSG_WARN );
+                getLogger().warn( "Manifest warning: " + (String)e.next() );
             }
 
             zipDir( null, zOut, "META-INF/" );
@@ -261,7 +259,7 @@ public class Jar extends Zip
         }
         catch( ManifestException e )
         {
-            log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
+            getLogger().error( "Manifest is invalid: " + e.getMessage() );
             throw new TaskException( "Invalid Manifest", e );
         }
     }
@@ -275,8 +273,10 @@ public class Jar extends Zip
         // a <fileset> element.
         if( vPath.equalsIgnoreCase( "META-INF/MANIFEST.MF" ) )
         {
-            log( "Warning: selected " + archiveType + " files include a META-INF/MANIFEST.MF which will be ignored " +
-                 "(please use manifest attribute to " + archiveType + " task)", Project.MSG_WARN );
+            final String message = "Warning: selected " + archiveType +
+                " files include a META-INF/MANIFEST.MF which will be ignored " +
+                "(please use manifest attribute to " + archiveType + " task)";
+            getLogger().warn( message );
         }
         else
         {
@@ -388,7 +388,7 @@ public class Jar extends Zip
         }
         catch( ManifestException e )
         {
-            log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
+            getLogger().error( "Manifest is invalid: " + e.getMessage() );
             throw new TaskException( "Invalid Manifest", e );
         }
     }

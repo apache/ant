@@ -33,7 +33,10 @@ public class StringToClassConverter
         throws ConverterException
     {
         //TODO: Should we use ContextClassLoader here???
-        try { return Class.forName( (String)object ); }
+        try
+        {
+            return Class.forName( (String)object );
+        }
         catch( final Exception e )
         {
             final String message = REZ.getString( "convert.bad-class.error", object );

@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -57,7 +56,7 @@ public class SoundTask extends Task
 
         if( success == null )
         {
-            log( "No nested success element found.", Project.MSG_WARN );
+            getLogger().warn( "No nested success element found." );
         }
         else
         {
@@ -67,7 +66,7 @@ public class SoundTask extends Task
 
         if( fail == null )
         {
-            log( "No nested failure element found.", Project.MSG_WARN );
+            getLogger().warn( "No nested failure element found." );
         }
         else
         {
@@ -177,7 +176,7 @@ public class SoundTask extends Task
             }
             else
             {
-                log( source + ": invalid path.", Project.MSG_WARN );
+                getLogger().warn( source + ": invalid path." );
                 this.source = nofile;
             }
             return this.source;

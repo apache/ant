@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool
 {
@@ -98,8 +97,9 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool
         }
         else
         {
-            log( "Unable to locate toplink deployment descriptor. It was expected to be in " +
-                 toplinkDD.getPath(), Project.MSG_WARN );
+            final String message = "Unable to locate toplink deployment descriptor. It was expected to be in " +
+                toplinkDD.getPath();
+            getLogger().warn( message );
         }
     }
 }

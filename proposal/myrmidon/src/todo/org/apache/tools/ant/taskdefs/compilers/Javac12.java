@@ -32,10 +32,10 @@ public class Javac12 extends DefaultCompilerAdapter
     public boolean execute()
         throws TaskException
     {
-        attributes.log( "Using classic compiler", Project.MSG_VERBOSE );
+        getLogger().debug( "Using classic compiler" );
         Commandline cmd = setupJavacCommand( true );
 
-        OutputStream logstr = new LogOutputStream( attributes, Project.MSG_WARN );
+        OutputStream logstr = new LogOutputStream( m_attributes, Project.MSG_WARN );
         try
         {
             // Create an instance of the compiler, redirecting output to
