@@ -327,7 +327,9 @@ public class TelnetTask extends Task {
                             Thread.sleep(250);
                         }
                         if (is.available() == 0) {
-                            throw new BuildException("Response Timed-Out", getLocation());
+                            throw new BuildException(
+                                "Response timed-out waiting for \""+s+'\"', 
+                                getLocation());
                         }
                         sb.append((char) is.read());
                     }
