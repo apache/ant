@@ -177,7 +177,7 @@ Fixed bugs:
 * forked <javac> won't pass -source to a JDK 1.1 or 1.2 javac anymore.
   Bugzilla report 32948
   
-* filenames with semicolon on second position are not handled correctly by ant.
+* filenames with colon on second position are not handled correctly by ant.
   Bugzilla report 32979
 
 * oata.types.Description.getDescription(Project) would throw a
