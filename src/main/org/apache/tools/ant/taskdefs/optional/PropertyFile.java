@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,70 +50,75 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
  */
 
-/*
-**PropertyFile task uses java.util.Properties to modify integer, String and
-**Date settings in a property file.
-**
-**
-**The following is an example of its usage:
-**    <target name="setState">
-**    <property 
-**        name="header" 
-**        value="##Generated file - do not modify!"/>
-**      <propertyfile file="${state.file}" comment="${header}">
-**        <entry key="product.version.major" type="int"  value="5"/>
-**        <entry key="product.version.minor" type="int"  value="0"/>
-**        <entry key="product.build.major"   type="int"  value="0" />
-**        <entry key="product.build.minor"   type="int"  operation="+" />
-**        <entry key="product.build.date"    type="date" operation="now" />
-**        <entry key="intInc" type="int" operation="=" value="681"/>
-**        <entry key="intDec" type="int" operation="-"/>
-**        <entry key="NeverDate" type="date" operation="never"/>
-**        <entry key="StringEquals" type="string" value="testValue"/>
-**        <entry key="NowDate" type="date" operation="now"/>
-**     </propertyfile>
-**   </target>
-**
-**The <propertyfile> task must have:
-**    key, type, file
-**Other parameters are:
-**    operation, value, message
-**
-**Parameter values:
-**    operation: 
-**        "=" (set -- default)
-**        "-" (dec)
-**        "+" (inc)
-**        "now" (date and time)
-**        "never" (empty string)
-**
-**    type:
-**        "int"
-**        "date"
-**        "string"
-**
-**String property types can only use the "=" operation.
-**Date property types can only use the "never" or "now" operations.
-**Int property types can only use the "=", "-" or "+" operations.
-**
-**The message property is used for the property file header, with "\\" being
-**a newline delimiter charater. (This should be '\n' but I couldn't quite get
-**it right).
-**
-*/
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- *    <code>PropertyFile</code> provides a mechanism for updating a
- *    java.util.Properties object via Ant.
+ *PropertyFile task uses java.util.Properties to modify integer, String and
+ *Date settings in a property file.<p>
+ *
+ *
+ *The following is an example of its usage:
+ *    <ul>&lt;target name="setState"&gt;<br>
+ *    <ul>&lt;property<br>
+ *        <ul>name="header"<br> 
+ *        value="##Generated file - do not modify!"/&gt;<br>
+ *      &lt;propertyfile file="apropfile.properties" comment="${header}"&gt;<br>
+ *        &lt;entry key="product.version.major" type="int"  value="5"/&gt;<br>
+ *        &lt;entry key="product.version.minor" type="int"  value="0"/&gt;<br>
+ *        &lt;entry key="product.build.major"   type="int"  value="0" /&gt;<br>
+ *        &lt;entry key="product.build.minor"   type="int"  operation="+" /&gt;<br>
+ *        &lt;entry key="product.build.date"    type="date" operation="now" /&gt;<br>
+ *        &lt;entry key="intInc" type="int" operation="=" value="681"/&gt;<br>
+ *        &lt;entry key="intDec" type="int" operation="-"/&gt;<br>
+ *        &lt;entry key="NeverDate" type="date" operation="never"/&gt;<br>
+ *        &lt;entry key="StringEquals" type="string" value="testValue"/&gt;<br>
+ *        &lt;entry key="NowDate" type="date" operation="now"/&gt;<br></ul>
+ *     &lt;/propertyfile&gt;<br></ul>
+ *   &lt;/target&gt;</ul><p>
+ *
+ *The &lt;propertyfile&gt; task must have:<br>
+ *    <ul><li>file</li></ul>
+ *Other parameters are:<br>
+ *    <ul><li>comment, key, operation, type and value (the final four being eliminated shortly)</li></ul>
+ *
+ *The &lt;entry&gt; task must have:<br>
+ *    <ul><li>key</li></ul>
+ *Other parameters are:<br>
+ *    <ul><li>key, operation, type</li></ul>
+ *
+ *If type is unspecified, it defaults to string
+ *
+ *Parameter values:<br>
+ *    <ul><li>operation:</li>
+ *        <ul><li>"=" (set -- default)</li>
+ *        <li>"-" (dec)</li>
+ *        <li>"+" (inc)</li>
+ *        <li>"now" (date and time)</li>
+ *        <li>"never" (empty string)</li></ul>
+ *
+ *    <li>type:</li>
+ *        <ul><li>"int"</li>
+ *        <li>"date"</li>
+ *        <li>"string"</li></ul></ul>
+ *
+ *String property types can only use the "=" operation.
+ *Date property types can only use the "never" or "now" operations.
+ *Int property types can only use the "=", "-" or "+" operations.<p>
+ *
+ *The message property is used for the property file header, with "\\" being
+ *a newline delimiter charater.
+ *
  *    @author     Jeremy Mawson <jem@loftinspace.com.au>
- */
+*/
 public class PropertyFile extends Task 
 {
 
@@ -239,10 +244,6 @@ public class PropertyFile extends Task
         m_comment = hdr;
     }
 
-    /*
-    * Writes the properties to a file. Writes the file manually, rather than
-    * using Properties.store method, so that special characters are not escaped.
-    */
     private void writeFile() throws BuildException 
     {
         BufferedOutputStream bos = null;
@@ -250,35 +251,52 @@ public class PropertyFile extends Task
         {
             bos = new BufferedOutputStream(new FileOutputStream(m_propertyfile));
 
-            // Write the message if we have one.
-            if (m_comment != null) 
-            {
-                // FIXME: would like to use \n as the newline rather than \\.
-                StringTokenizer tok = new StringTokenizer(m_comment, "\\");
-                while (tok.hasMoreTokens()) 
-                {
-                    bos.write("# ".getBytes());
-                    bos.write(((String)tok.nextToken()).getBytes());
-                    bos.write(NEWLINE.getBytes());
-                }
-                bos.write(NEWLINE.getBytes());
-                bos.flush();
-            }
+// Write the message if we have one.
+//            if (m_comment != null) 
+//            {
+//                // FIXME: would like to use \n as the newline rather than \\.
+//                StringTokenizer tok = new StringTokenizer(m_comment, "\\");
+//                  while (tok.hasMoreTokens()) 
+//                  {
+//                      bos.write("# ".getBytes());
+//                      bos.write(((String)tok.nextToken()).getBytes());
+//                      bos.write(NEWLINE.getBytes());
+//                  }
+//                  bos.write(NEWLINE.getBytes());
+//                  bos.flush();
+//            }
+//            Enumeration enumValues = m_properties.elements();
+//            Enumeration enumKeys = m_properties.keys();
+//            while (enumKeys.hasMoreElements()) 
+//            {
+//                bos.write(((String)enumKeys.nextElement()).getBytes());
+//                bos.write("=".getBytes());
+//                bos.write(((String)enumValues.nextElement()).getBytes());
+//                bos.write(NEWLINE.getBytes());
+//                bos.flush();
+//            }
 
-            Enumeration enumValues = m_properties.elements();
-            Enumeration enumKeys = m_properties.keys();
-            while (enumKeys.hasMoreElements()) 
-            {
-                bos.write(((String)enumKeys.nextElement()).getBytes());
-                bos.write("=".getBytes());
-                bos.write(((String)enumValues.nextElement()).getBytes());
-                bos.write(NEWLINE.getBytes());
-                bos.flush();
-            }
+            // Properties.store is not available in JDK 1.1
+            Method m = 
+                Properties.class.getMethod("store", 
+                                           new Class[] {
+                                               OutputStream.class,
+                                               String.class}
+                                           );
+            m.invoke(m_properties, new Object[] {bos, m_comment});
+
+        } catch (NoSuchMethodException nsme) {
+            m_properties.save(bos, m_comment);
+        } catch (InvocationTargetException ite) {
+            Throwable t = ite.getTargetException();
+            throw new BuildException(t, location);
+        } catch (IllegalAccessException iae) {
+            // impossible
+            throw new BuildException(iae, location);
         }
         catch (IOException ioe) 
         {
-            throw new BuildException(ioe.toString());
+            throw new BuildException(ioe, location);
         }
         finally {
             if (bos != null) {
@@ -308,7 +326,7 @@ public class PropertyFile extends Task
         private static final String INTEGER_TYPE =          "int";
         private static final String DATE_TYPE =             "date";
         private static final String STRING_TYPE =           "string";
-
+        
         // Property type operations
         private static final String INCREMENT_OPER =        "+";
         private static final String DECREMENT_OPER =        "-";
@@ -350,6 +368,9 @@ public class PropertyFile extends Task
         protected void executeOn(Properties props) throws BuildException 
         {
             // Fork off process per the operation type requested
+
+            // m_type may be null because it wasn't set
+            try {
             if (m_type.equals(INTEGER_TYPE)) 
             {
                 executeInteger((String)props.get(m_key));
@@ -366,8 +387,13 @@ public class PropertyFile extends Task
                 throw new BuildException("Unknown operation type: "+m_type+"");
             }
             
+            } catch (NullPointerException npe) {
+                // Default to string type
+                // which means do nothing
+            }
+            // Insert as a string by default
             props.put(m_key, m_value);
-            
+
         }
         /*
         * Continue execution for Date values
