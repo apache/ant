@@ -3110,7 +3110,7 @@
         </table>
       </subsection>
 
-      <subsection name="JDE(E) 2.2.8">
+      <subsection name="JDEE">
 
         <p>The Java Development Environment for Emacs (JDEE) supports
         Apache Ant as one of three built-in ways to build your
@@ -3123,7 +3123,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://jde.sunsite.dk/">http://jde.sunsite.dk/</a></td>
+            <td><a href="http://jdee.sunsite.dk/">http://jdee.sunsite.dk/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
