@@ -128,7 +128,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     public CommandlineJava() {
-        setVm("java");
+        setVm(getJavaExecutableName());
         setVmversion(org.apache.tools.ant.Project.getJavaVersion());
     }
 
@@ -254,4 +254,27 @@ public class CommandlineJava implements Cloneable {
         javaCommand.clearArgs();
     }
 
+    private String getJavaExecutableName() {
+	// This is the most common extension case - exe for windows and OS/2, 
+        // nothing for *nix.
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean dosBased = 
+            os.indexOf("windows") >= 0 || os.indexOf("os/2") >= 0;
+	String extension =  dosBased? ".exe" : "";
+
+	// Look for java in the java.home/../bin directory.  Unfortunately
+	// on Windows java.home doesn't always refer to the correct location, 
+	// so we need to fall back to assuming java is somewhere on the
+	// PATH.
+	java.io.File jExecutable = 
+            new java.io.File(System.getProperty("java.home") +
+                             "/../bin/java" + extension );
+
+	if (jExecutable.exists()) {
+	    return jExecutable.getAbsolutePath();
+	} else {
+	    return "java";
+	}
+    }
+    
 }

@@ -1145,10 +1145,12 @@ public class Javadoc extends Task {
 
     private String getJavadocExecutableName()
     {
-	// This is the most common extension case - exe for windows, nothing
-	// for *nix.
-	String extension = (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) ?
-	    ".exe" : "";
+	// This is the most common extension case - exe for windows and OS/2, 
+        // nothing for *nix.
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean dosBased = 
+            os.indexOf("windows") >= 0 || os.indexOf("os/2") >= 0;
+	String extension =  dosBased? ".exe" : "";
 
 	// Look for javadoc in the java.home/../bin directory.  Unfortunately
 	// on Windows java.home doesn't always refer to the correct location, 
