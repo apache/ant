@@ -117,8 +117,7 @@ public class SubAnt
     /**
      * Runs the various sub-builds.
      */
-    public void execute()
-                throws BuildException {
+    public void execute() {
         if (buildpath == null) {
             throw new BuildException("No buildpath specified");
         }
@@ -135,15 +134,14 @@ public class SubAnt
             target = getOwningTarget().getName();
         }
 */
-        for (int i=0; i<count; ++i) {
-            File directory=null;
+        for (int i = 0; i < count; ++i) {
+            File directory = null;
             File file = new File(filenames[i]);
             if (file.isDirectory()) {
                 if (genericantfile != null) {
                     directory = file;
                     file = genericantfile;
-                }
-                else {
+                } else {
                     file = new File(file, antfile);
                 }
             }
@@ -164,7 +162,7 @@ public class SubAnt
     private void execute(File file, File directory)
                 throws BuildException {
         if (!file.exists() || file.isDirectory() || !file.canRead()) {
-            String msg = "Invalid file: "+file;
+            String msg = "Invalid file: " + file;
             if (failOnError) {
                 throw new BuildException(msg);
             }
@@ -187,9 +185,9 @@ public class SubAnt
             if (failOnError) {
                 throw e;
             }
-            log("Failure for target '"+target
-               +"' of: "+antfilename+"\n"
-               +e.getMessage(), Project.MSG_WARN);
+            log("Failure for target '" + target
+               + "' of: " +  antfilename + "\n"
+               + e.getMessage(), Project.MSG_WARN);
         }
     }
 
@@ -206,13 +204,15 @@ public class SubAnt
 
     /**
      * Build file path, to use in conjunction with directories.<br/>
-     * Use <code>genericantfile</code>, in order to run the same build file with different basedirs.<br/>
+     * Use <code>genericantfile</code>, in order to run the same build file
+     * with different basedirs.<br/>
      * If this attribute is set, <code>antfile</code> is ignored.
      *
-     * @param afile (path of the generic ant file, absolute or relative to project base directory)
+     * @param afile (path of the generic ant file, absolute or relative to
+     *               project base directory)
      * */
     public void setGenericAntfile(File afile) {
-        this.genericantfile=afile;
+        this.genericantfile = afile;
     }
 
     /**
@@ -227,6 +227,7 @@ public class SubAnt
     /**
      * The target to call on the different sub-builds. Set to "" to execute
      * the default target.
+     * @param target the target
      * <p>
      */
     //     REVISIT: Defaults to the target name that contains this task if not specified.
@@ -287,6 +288,7 @@ public class SubAnt
     /**
      * Corresponds to <code>&lt;ant&gt;</code>'s
      * nested <code>&lt;propertyset&gt;</code> element.
+     * @param ps the propertset
      */
     public void addPropertyset(PropertySet ps) {
         propertySets.addElement(ps);
@@ -354,8 +356,7 @@ public class SubAnt
      *
      * @return the newly created nested build path element.
      */
-    public Path.PathElement createBuildpathElement()
-                            throws BuildException {
+    public Path.PathElement createBuildpathElement() {
         return getBuildpath().createPathElement();
     }
 
@@ -392,7 +393,7 @@ public class SubAnt
         Ant ant = (Ant) getProject().createTask("ant");
         ant.setOwningTarget(getOwningTarget());
         ant.init();
-        if(target != null && target.length()>0) {
+        if (target != null && target.length() > 0) {
             ant.setTarget(target);
         }
 
