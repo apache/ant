@@ -137,9 +137,10 @@ public class SSHExec extends SSHBase {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         TeeOutputStream tee = new TeeOutputStream(out, System.out);
 
+        Session session = null;
         try {
             // execute the command
-            Session session = openSession();
+            session = openSession();
             session.setTimeout((int) maxwait);
             final ChannelExec channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
@@ -218,6 +219,10 @@ public class SSHExec extends SSHBase {
                 throw new BuildException(e);
             } else {
                 log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
+            }
+        } finally {
+            if (session != null && session.isConnected()) {
+                session.disconnect();
             }
         }
     }
