@@ -73,6 +73,7 @@ public class FormatterElement {
     private String extension;
     private OutputStream out = System.out;
     private File outFile;
+    private boolean useFile = true;
 
     public void setType(TypeAttribute type) {
         if ("xml".equals(type.getValue())) {
@@ -108,6 +109,14 @@ public class FormatterElement {
         this.out = out;
     }
 
+    public void setUseFile(boolean useFile) {
+        this.useFile = useFile;
+    }
+
+    boolean getUseFile() {
+        return useFile;
+    }
+
     JUnitResultFormatter createFormatter() throws BuildException {
         if (classname == null) {
             throw new BuildException("you must specify type or classname");
@@ -135,7 +144,7 @@ public class FormatterElement {
 
         JUnitResultFormatter r = (JUnitResultFormatter) o;
 
-        if (outFile != null) {
+        if (useFile && outFile != null) {
             try {
                 out = new FileOutputStream(outFile);
             } catch (java.io.IOException e) {

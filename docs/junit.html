@@ -91,9 +91,10 @@ href="index.html#arg">Command line arguments</a>.</p>
 <h4>formatter</h4>
 
 <p>The results of the tests can be printed in different
-formats. Output will always be sent to a file, the name of the file is
-determined by the name of the test and can be set by the
-<code>outfile</code> attribute of <code>&lt;test&gt;</code>.
+formats. Output will always be sent to a file unless you set the
+usefile attribute to false, the name of the file is determined by the
+name of the test and can be set by the <code>outfile</code> attribute
+of <code>&lt;test&gt;</code>.
 
 <p>There are two predefined formatters, one prints the test results in
 XML format, the other emits plain text. Custom formatters that need to
@@ -120,6 +121,12 @@ can be specified.</p>
     <td valign="top">extension</td> 
     <td valign="top">Extension to append to the output filename.</td>
     <td align="center">Yes, if classname has been used.</td>
+  </tr>
+  <tr>
+    <td valign="top">usefile</td> 
+    <td valign="top">Boolean that determines whether output should be
+      sent to a file.</td>
+    <td align="center">No, default true.</td>
   </tr>
 </table>
 

@@ -193,6 +193,9 @@ public class JUnitTask extends Task {
             }
 
             int exitValue = JUnitTestRunner.ERRORS;
+            
+            System.err.println(test.getFork());
+
             if (!test.getFork()) {
                 JUnitTestRunner runner = 
                     new JUnitTestRunner(test, test.getHaltonerror(),
@@ -208,14 +211,22 @@ public class JUnitTask extends Task {
 
                 for (int i=0; i<formatters.size(); i++) {
                     FormatterElement fe = (FormatterElement) formatters.elementAt(i);
-                    fe.setOutfile(project.resolveFile(test.getOutfile()
-                                                      +fe.getExtension()));
+                    if (fe.getUseFile()) {
+                        fe.setOutfile(project.resolveFile(test.getOutfile()
+                                                          +fe.getExtension()));
+                    } else {
+                        fe.setOutput(new LogOutputStream(this, Project.MSG_INFO));
+                    }
                     runner.addFormatter(fe.createFormatter());
                 }
                 FormatterElement[] add = test.getFormatters();
                 for (int i=0; i<add.length; i++) {
-                    add[i].setOutfile(project.resolveFile(test.getOutfile()
-                                                          +add[i].getExtension()));
+                    if (add[i].getUseFile()) {
+                        add[i].setOutfile(project.resolveFile(test.getOutfile()
+                                                              +add[i].getExtension()));
+                    } else {
+                        add[i].setOutput(new LogOutputStream(this, Project.MSG_INFO));
+                    }
                     runner.addFormatter(add[i].createFormatter());
                 }
 
@@ -237,24 +248,38 @@ public class JUnitTask extends Task {
                     cmd.createArgument().setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
                 }
 
+                StringBuffer formatterArg = new StringBuffer();
                 for (int i=0; i<formatters.size(); i++) {
                     FormatterElement fe = (FormatterElement) formatters.elementAt(i);
-                    cmd.createArgument().setValue("formatter=" +
-                                                  fe.getClassname() + ","
-                                                  + project.resolveFile(test.getOutfile()
-                                                                               +fe.getExtension()).getAbsolutePath());
+                    formatterArg.append("formatter=");
+                    formatterArg.append(fe.getClassname());
+                    if (fe.getUseFile()) {
+                        formatterArg.append(",");
+                        formatterArg.append(project.resolveFile(test.getOutfile()
+                                                                +fe.getExtension())
+                                            .getAbsolutePath());
+                    }
+                    cmd.createArgument().setValue(formatterArg.toString());
+                    formatterArg.setLength(0);
                 }
                 
                 FormatterElement[] add = test.getFormatters();
                 for (int i=0; i<add.length; i++) {
-                    cmd.createArgument().setValue("formatter=" +
-                                                  add[i].getClassname() + ","
-                                                  + project.resolveFile(test.getOutfile()
-                                                                               +add[i].getExtension()).getAbsolutePath());
+                    formatterArg.append("formatter=");
+                    formatterArg.append(add[i].getClassname());
+                    if (add[i].getUseFile()) {
+                        formatterArg.append(",");
+                        formatterArg.append(project.resolveFile(test.getOutfile()
+                                                                +add[i].getExtension())
+                                            .getAbsolutePath());
+                    }
+                    cmd.createArgument().setValue(formatterArg.toString());
+                    formatterArg.setLength(0);
                 }
 
                 Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), createWatchdog());
                 execute.setCommandline(cmd.getCommandline());
+                log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
                 try {
                     exitValue = execute.execute();
                 } catch (IOException e) {
