@@ -175,6 +175,11 @@ take the following attributes:
 <table>
     <tr><th>Attribute</th><th>Description</th><th>Default Value</th></tr>
     <tr>
+        <td>name</td>
+        <td>The project name.</td>
+        <td>The name of the project file, with the extension removed.</td>
+    </tr>
+    <tr>
         <td>basedir</td>
         <td>The base directory for the project.</td>
         <td>The directory containing the project file.</td>

@@ -14,9 +14,6 @@ import org.apache.avalon.framework.component.Component;
  * Abstraction used to interact with projects.
  * Implementations may choose to structure it anyway they choose.
  *
- * TODO: Determine if projects should carry their own name. Breaks IOC but
- * Can be useful as project files embed own name (or should that be description).
- *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
@@ -35,6 +32,14 @@ public interface Project
     //String TARGET           = "myrmidon.target.name";
 
     /**
+     * Returns the project name.
+     *
+     * TODO: Determine if projects should carry their own name. Breaks IOC but
+     * Can be useful as project files embed own name (or should that be description).
+     */
+    String getProjectName();
+
+    /**
      * Get the imports for project.
      *
      * @return the imports
@@ -42,14 +47,14 @@ public interface Project
     TypeLib[] getTypeLibs();
 
     /**
-     * Get names of projects referred to by this project.
+     * Get names of projects referenced by this project.
      *
      * @return the names
      */
     String[] getProjectNames();
 
     /**
-     * Retrieve project reffered to by this project.
+     * Retrieve project referenced by this project.
      *
      * @param name the project name
      * @return the Project or null if none by that name

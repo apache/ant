@@ -128,6 +128,8 @@ public class DefaultProjectBuilder
         }
 
         //get project-level attributes
+        final String projectName = configuration.getAttribute( "name",
+                                                               FileUtil.removeExtension(file.getName()) );
         final String baseDirectoryName = configuration.getAttribute( "basedir", null );
         final String defaultTarget = configuration.getAttribute( "default", "main" );
         final Version version = getVersion( configuration );
@@ -156,6 +158,7 @@ public class DefaultProjectBuilder
 
         //create project and ...
         final DefaultProject project = new DefaultProject();
+        project.setProjectName( projectName );
         project.setDefaultTargetName( defaultTarget );
         project.setBaseDirectory( baseDirectory );
 

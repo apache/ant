@@ -46,6 +46,25 @@ public class DefaultProject
     ///The base directory of project
     private File m_baseDirectory;
 
+    ///The project name
+    private String m_name;
+
+    /**
+     * Returns the project name.
+     */
+    public String getProjectName()
+    {
+        return m_name;
+    }
+
+    /**
+     * Sets the project name.
+     */
+    public void setProjectName( String name )
+    {
+        m_name = name;
+    }
+
     /**
      * Get the imports for project.
      *
@@ -111,7 +130,7 @@ public class DefaultProject
     /**
      * Retrieve a target by name.
      *
-     * @param name the name of target
+     * @param targetName the name of target
      * @return the Target or null if no target exists with name
      */
     public final Target getTarget( final String targetName )
@@ -151,14 +170,15 @@ public class DefaultProject
 
     /**
      * Retrieve base directory of project.
-     *
-     * @return the projects base directory
      */
     public final void setBaseDirectory( final File baseDirectory )
     {
         m_baseDirectory = baseDirectory;
     }
 
+    /**
+     * Adds a type library import to the project.
+     */
     public final void addTypeLib( final TypeLib typeLib )
     {
         m_imports.add( typeLib );
