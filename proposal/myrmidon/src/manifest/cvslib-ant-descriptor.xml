@@ -1,8 +1,0 @@
-<ant-lib>
-
-  <types>
-    <task name="cvs-pass" classname="org.apache.antlib.cvslib.CVSPass" />
-    <task name="cvs" classname="org.apache.antlib.cvslib.Cvs" />
-  </types>
-
-</ant-lib>
