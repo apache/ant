@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
+import java.net.URL;
 import java.rmi.Remote;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -20,6 +21,7 @@ import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Task to compile RMI stubs and skeletons. This task can take the following
@@ -484,7 +486,8 @@ public class Rmic extends MatchingTask
         adapter.setRmic( this );
 
         Path classpath = adapter.getClasspath();
-        loader = new URLClassLoader( classpath.toURLs() );
+        final URL[] urls = PathUtil.toURLs( classpath );
+        loader = new URLClassLoader( urls );
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given

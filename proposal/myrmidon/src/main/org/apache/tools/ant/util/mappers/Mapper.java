@@ -12,6 +12,7 @@ import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Element to define a FileNameMapper.
@@ -113,7 +114,7 @@ public class Mapper
             }
             else
             {
-                final URL[] urls = m_classpath.toURLs();
+                final URL[] urls = PathUtil.toURLs( m_classpath );
                 final URLClassLoader classLoader = new URLClassLoader( urls );
                 c = classLoader.loadClass( m_classname );
             }

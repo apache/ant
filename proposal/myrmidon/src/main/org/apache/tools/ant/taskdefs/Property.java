@@ -17,6 +17,7 @@ import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Will set a Project property. Used to be a hack in ProjectHelper Will not
@@ -128,7 +129,7 @@ public class Property
 
             if( m_classpath != null )
             {
-                final URL[] urls = m_classpath.toURLs();
+                final URL[] urls = PathUtil.toURLs( m_classpath );
                 classLoader = new URLClassLoader( urls );
             }
             else

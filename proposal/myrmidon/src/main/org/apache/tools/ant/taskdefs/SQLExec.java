@@ -19,6 +19,7 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URLClassLoader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -37,6 +38,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Reads in a text file containing SQL statements seperated with semicolons and
@@ -428,7 +430,8 @@ public class SQLExec
             {
                 getLogger().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
 
-                final ClassLoader classLoader = new URLClassLoader( classpath.toURLs() );
+                final URL[] urls = PathUtil.toURLs( classpath );
+                final ClassLoader classLoader = new URLClassLoader( urls );
                 dc = classLoader.loadClass( driver );
             }
             else

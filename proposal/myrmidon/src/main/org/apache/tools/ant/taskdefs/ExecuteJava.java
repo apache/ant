@@ -15,6 +15,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SysProperties;
+import org.apache.tools.ant.types.PathUtil;
 
 /*
  * @author thomas.haas@softwired-inc.com
@@ -63,7 +64,7 @@ public class ExecuteJava
             }
             else
             {
-                final URL[] urls = m_classpath.toURLs();
+                final URL[] urls = PathUtil.toURLs( m_classpath );
                 final URLClassLoader classLoader = new URLClassLoader( urls );
                 target = classLoader.loadClass( classname );
             }
