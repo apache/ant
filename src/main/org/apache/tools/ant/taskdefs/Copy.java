@@ -318,6 +318,9 @@ public class Copy extends Task {
         if (destFile != null) {
             destDir = null;
         }
+        fileCopyMap.clear();
+        dirCopyMap.clear();
+        completeDirMap.clear();
     }
 
 //************************************************************************
