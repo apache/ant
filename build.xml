@@ -44,6 +44,7 @@
     <include name="**/ant" />
     <include name="**/antRun" />
     <include name="**/bootstrap.sh" />
+    <include name="**/build.sh" />
   </patternset>
 
   <!-- =================================================================== -->
@@ -387,7 +388,7 @@
        </fileset>
      </copy>
 
-     <fixcrlf srcdir="${ant.srcdist.dir}" includes="ant,antRun,bootstrap.sh" cr="remove"/>
+     <fixcrlf srcdir="${ant.srcdist.dir}" includes="ant,antRun,bootstrap.sh,build.sh" cr="remove"/>
      <fixcrlf srcdir="${ant.srcdist.dir}" includes="*.bat" cr="add"/>
      <chmod perm="+x">
        <fileset dir="${ant.srcdist.dir}">
