@@ -70,9 +70,8 @@ import java.io.PrintWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
-
 import java.util.Vector;
-import java.text.DecimalFormat;
+
 
 /**
  * Create a CAB archive.
