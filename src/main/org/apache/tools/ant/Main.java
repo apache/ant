@@ -161,13 +161,14 @@ public class Main {
 
         try {
             m = new Main(args);
-        } catch(Throwable exc) {
+        } catch (Throwable exc) {
             printMessage(exc);
             System.exit(1);
         }
 
         if (additionalUserProperties != null) {
-            for (Enumeration e = additionalUserProperties.keys(); e.hasMoreElements(); ) {
+            for (Enumeration e = additionalUserProperties.keys(); 
+                    e.hasMoreElements(); ) {
                 String key = (String) e.nextElement();
                 String property = additionalUserProperties.getProperty(key);
                 m.definedProps.put(key, property);
@@ -182,7 +183,7 @@ public class Main {
                 printMessage(be);
             }
             System.exit(1);
-        } catch(Throwable exc) {
+        } catch (Throwable exc) {
             exc.printStackTrace();
             printMessage(exc);
             System.exit(1);
@@ -238,15 +239,16 @@ public class Main {
                 msgOutputLevel = Project.MSG_DEBUG;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
-                    File logFile = new File(args[i+1]);
+                    File logFile = new File(args[i + 1]);
                     i++;
                     out = new PrintStream(new FileOutputStream(logFile));
                     err = out;
                     System.setOut(out);
                     System.setErr(out);
                 } catch (IOException ioe) {
-                    String msg = "Cannot write on the specified log file. " +
-                        "Make sure the path exists and you have write permissions.";
+                    String msg = "Cannot write on the specified log file. " 
+                        + "Make sure the path exists and you have write " 
+                        + "permissions.";
                     System.out.println(msg);
                     return;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
@@ -255,9 +257,10 @@ public class Main {
                     System.out.println(msg);
                     return;
                 }
-            } else if (arg.equals("-buildfile") || arg.equals("-file") || arg.equals("-f")) {
+            } else if (arg.equals("-buildfile") || arg.equals("-file") 
+                       || arg.equals("-f")) {
                 try {
-                    buildFile = new File(args[i+1]);
+                    buildFile = new File(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a buildfile when " +
@@ -267,7 +270,7 @@ public class Main {
                 }
             } else if (arg.equals("-listener")) {
                 try {
-                    listeners.addElement(args[i+1]);
+                    listeners.addElement(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a classname when " +
@@ -292,16 +295,17 @@ public class Main {
                 String value = null;
                 int posEq = name.indexOf("=");
                 if (posEq > 0) {
-                    value = name.substring(posEq+1);
+                    value = name.substring(posEq + 1);
                     name = name.substring(0, posEq);
-                } else if (i < args.length-1) {
+                } else if (i < args.length - 1) {
                     value = args[++i];
                        }
 
                 definedProps.put(name, value);
             } else if (arg.equals("-logger")) {
                 if (loggerClassname != null) {
-                    System.out.println("Only one logger class may be specified.");
+                    System.out.println("Only one logger class may " 
+                        + " be specified.");
                     return;
                 }
                 try {
@@ -319,14 +323,14 @@ public class Main {
                 projectHelp = true;
             } else if (arg.equals("-find")) {
                 // eat up next arg if present, default to build.xml
-                if (i < args.length-1) {
+                if (i < args.length - 1) {
                     searchForThis = args[++i];
                 } else {
                     searchForThis = DEFAULT_BUILD_FILENAME;
                 }
             } else if (arg.startsWith("-propertyfile")) {
                 try {
-                    propertyFiles.addElement(args[i+1]);
+                    propertyFiles.addElement(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a property filename when " +
@@ -372,10 +376,11 @@ public class Main {
         }
 
         // Load the property files specified by -propertyfile
-        for (int propertyFileIndex=0;
+        for (int propertyFileIndex = 0;
              propertyFileIndex < propertyFiles.size();
              propertyFileIndex++) {
-            String filename = (String) propertyFiles.elementAt(propertyFileIndex);
+            String filename 
+                = (String) propertyFiles.elementAt(propertyFileIndex);
             Properties props = new Properties();
             FileInputStream fis = null;
             try {
@@ -421,7 +426,7 @@ public class Main {
         filename = file.getParent();
 
         if (filename != null && msgOutputLevel >= Project.MSG_VERBOSE) {
-            System.out.println("Searching in "+filename);
+            System.out.println("Searching in " + filename);
         }
 
         return (filename == null) ? null : new File(filename);
@@ -444,7 +449,8 @@ public class Main {
      *
      * @exception BuildException if no build file is found
      */
-    private File findBuildFile(String start, String suffix) throws BuildException {
+    private File findBuildFile(String start, String suffix) 
+         throws BuildException {
         if (msgOutputLevel >= Project.MSG_INFO) {
             System.out.println("Searching for " + suffix + " ...");
         }
@@ -534,12 +540,14 @@ public class Main {
                     project.setUserProperty(arg, value);
                 }
                 
-                project.setUserProperty("ant.file" , buildFile.getAbsolutePath() );
+                project.setUserProperty("ant.file", 
+                    buildFile.getAbsolutePath() );
                 
                 // first use the ProjectHelper to create the project object
                 // from the given build file.
-                String noParserMessage = 
-                    "No JAXP compliant XML parser found. Please visit http://xml.apache.org for a suitable parser";
+                String noParserMessage = "No JAXP compliant XML parser found. "
+                    + "Please visit http://xml.apache.org " 
+                    + "for a suitable parser";
                 try {
                     Class.forName("javax.xml.parsers.SAXParserFactory");
                     ProjectHelper.configureProject(project, buildFile);
@@ -575,11 +583,11 @@ public class Main {
                 System.setErr(err);
             }
         }
-        catch(RuntimeException exc) {
+        catch (RuntimeException exc) {
             error = exc;
             throw exc;
         }
-        catch(Error err) {
+        catch (Error err) {
             error = err;
             throw err;
         }
@@ -609,18 +617,22 @@ public class Main {
                     (BuildListener) Class.forName(className).newInstance();
                 project.addBuildListener(listener);
             }
-            catch(Throwable exc) {
-                throw new BuildException("Unable to instantiate listener " + className, exc);
+            catch (Throwable exc) {
+                throw new BuildException("Unable to instantiate listener " 
+                    + className, exc);
             }
         }
     }
 
     // XXX: (Jon Skeet) Any reason for writing a message and then using a bare 
     // RuntimeException rather than just using a BuildException here? Is it
-    // in case the message could end up being written to no loggers (as the loggers
-    // could have failed to be created due to this failure)?
+    // in case the message could end up being written to no loggers (as the 
+    // loggers could have failed to be created due to this failure)?
     /**
-     *  Creates the default build logger for sending build events to the ant log.
+     * Creates the default build logger for sending build events to the ant 
+     * log.
+     *
+     * @return the logger instance for this build.
      */
     private BuildLogger createLogger() {
         BuildLogger logger = null;
@@ -629,13 +641,14 @@ public class Main {
                 logger = (BuildLogger)(Class.forName(loggerClassname).newInstance());
             }
             catch (ClassCastException e) {
-                System.err.println("The specified logger class " + loggerClassname +
-                                         " does not implement the BuildLogger interface");
+                System.err.println("The specified logger class " 
+                    + loggerClassname 
+                    + " does not implement the BuildLogger interface");
                 throw new RuntimeException();
             }
             catch (Exception e) {
-                System.err.println("Unable to instantiate specified logger class " +
-                                           loggerClassname + " : " + e.getClass().getName());
+                System.err.println("Unable to instantiate specified logger " 
+                    + "class " + loggerClassname + " : " + e.getClass().getName());
                 throw new RuntimeException();
             }
         }
@@ -783,13 +796,14 @@ public class Main {
 
         printTargets(topNames, topDescriptions, "Main targets:", maxLength);
         
-        if( printSubTargets ) {
+        if (printSubTargets) {
             printTargets(subNames, null, "Subtargets:", 0);
         }
 
         String defaultTarget = project.getDefaultTarget();
-        if (defaultTarget != null && !"".equals(defaultTarget)) { // shouldn't need to check but...
-            System.out.println( "Default target: " + defaultTarget );
+        if (defaultTarget != null && !"".equals(defaultTarget)) { 
+            // shouldn't need to check but...
+            System.out.println( "Default target: " + defaultTarget);
         }
     }
 
@@ -805,7 +819,7 @@ public class Main {
      */
     private static int findTargetPosition(Vector names, String name) {
         int res = names.size();
-        for (int i=0; i<names.size() && res == names.size(); i++) {
+        for (int i = 0; i < names.size() && res == names.size(); i++) {
             if (name.compareTo((String)names.elementAt(i)) < 0) {
                 res = i;
             }
@@ -816,18 +830,24 @@ public class Main {
     /**
      * Writes a formatted list of target names to <code>System.out</code>
      * with an optional description
+     *
+     * @param names the names to be printed.
+     * @param descriptions the associated target descriptions.
+     * @param heading the heading for the print.
+     * @param maxlen the maximum length of the names of the targets.
      */
-    private static void printTargets(Vector names, Vector descriptions, String heading, int maxlen) {
+    private static void printTargets(Vector names, Vector descriptions, 
+                                     String heading, int maxlen) {
         // now, start printing the targets and their descriptions
         String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
         String spaces = "    ";
-        while (spaces.length()<maxlen) {
+        while (spaces.length() < maxlen) {
             spaces += spaces;
         }
         StringBuffer msg = new StringBuffer();
         msg.append(heading + lSep + lSep);
-        for (int i=0; i<names.size(); i++) {
+        for (int i = 0; i < names.size(); i++) {
             msg.append(" ");
             msg.append(names.elementAt(i));
             if (descriptions != null) {
