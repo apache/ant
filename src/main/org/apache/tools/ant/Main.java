@@ -140,7 +140,7 @@ public class Main {
     private boolean projectHelp = false;
 
     /**
-     * Is a logfile being used?  This is used to
+     * Whether or not a logfile is being used. This is used to
      * check if the output streams must be closed.
      */
     private static boolean isLogFileUsed = false;
@@ -922,7 +922,7 @@ public class Main {
         String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
         String spaces = "    ";
-        while (spaces.length() < maxlen) {
+        while (spaces.length() <= maxlen) {
             spaces += spaces;
         }
         StringBuffer msg = new StringBuffer();
