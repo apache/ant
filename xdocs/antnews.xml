@@ -8,6 +8,15 @@
   </properties>
 
 <body>
+  <section name="Ant 1.5.1Beta1">
+    <h3>August 19, 2002 - Ant 1.5.1 Beta1 Available !</h3>
+    <p>The first beta version of Ant 1.5.1 is now available for 
+     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5.1beta1/">
+     download</a>. If you have any feedback on the beta feel free to join the 
+     discussion on the ant-dev and ant-user mailing lists.
+     </p>
+  </section>
+
   <section name="Ant 1.5">
     <h3>July 15, 2002 - Fix for Cygwin problem in wrapper script available</h3>
       <p>The wrapper script of Ant 1.5 needs to be replaced with a new
