@@ -102,7 +102,7 @@ build Ant from the source code.</p>
   To build and use ant you must have a JAXP compliant XML parser installed and available on your classpath.
   <p>
   If you do not have a JAXP compliant XML parse installed, you may use the reference implementation 
-  available from Sun. It is available from <a href="http://java.sun.com/xml">http://java.sun.com/xml</a>.
+  available from Sun. It is available from <a href="http://java.sun.com/xml/">http://java.sun.com/xml/</a>.
   Once installed make sure the &quot;jaxp.jar&quot; and &quot;parser.jar&quot; files are in your classpath.
   <p>
   You will also need the JDK installed on your system, version 1.1 or later. 
@@ -1869,6 +1869,17 @@ When specifying a set of files, empty directories are <em>not</em> removed.</p>
     <td valign="top">verbose</td>
     <td valign="top">Show name of each deleted file (&quot;true&quot;/&quot;false&quot;).
 	 Default is &quot;false&quot; when omitted.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">quiet</td>
+    <td valign="top">If the file does not exist, do not display a diagnostic 
+     message or modify the exit status to reflect an error.
+     This means that if a file or directory cannot be deleted,
+     then no error is reported. This setting emulates the 
+     -f option to the Unix &quot;rm&quot; command.
+    (&quot;true&quot;/&quot;false&quot;).
+	 Default is &quot;false&quot; meaning things are &quot;noisy&quot;.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
