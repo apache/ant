@@ -1011,6 +1011,7 @@
     <copy todir="${dist.dir}">
       <fileset dir=".">
         <include name="README"/>
+        <include name="INSTALL"/>
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
@@ -1104,6 +1105,7 @@
     <copy todir="${src.dist.dir}">
       <fileset dir=".">
         <include name="README"/>
+        <include name="INSTALL"/>
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
         <include name="LICENSE.dom"/>
