@@ -13,6 +13,7 @@
 </center>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
+  <li>Stephane Bailliez (<a href="mailto:sbailliez@imediation.com">sbailliez@imediation.com</a>)</li>
   <li>Jacques Bergeron (<a href="mailto:jacques.bergeron@dogico.com">jacques.bergeron@dogico.com</a>)</li>
   <li>Stefan Bodewig (<a href="mailto:stefan.bodewig@epost.de">stefan.bodewig@epost.de</a>)</li>
   <li>Patrick Chanezon (<a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>)</li>
@@ -653,6 +654,16 @@ structure via nested <code>&lt;path&gt;</code> elements:</p>
       &lt;path refid=&quot;base.path&quot;/&gt;
       &lt;pathelement location=&quot;testclasses&quot;/&gt;
     &lt;/path&gt;
+</pre>
+ The shortcuts previously mentioned for <code>&lt;classpath&gt;</code> are also valid for <code>&lt;path&gt;</code>.For example:
+<pre>
+    &lt;path id=&quot;base.path&quot;&gt;
+      &lt;pathelement path=&quot;${classpath}&quot;/&gt;
+    &lt;/path&gt;
+</pre>
+can be written as:
+<pre>
+    &lt;path id=&quot;base.path&quot; path=&quot;${classpath}&quot;/&gt;
 </pre>
 
 <h3><a name="arg">Command-line Arguments</a></h3>
@@ -1580,6 +1591,12 @@ execution depending on system parameters.</p>
       use when looking up <code>classname</code>.</td> <td
     align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+	<td valign="top">the classpath to use, given as <a href="#references">reference</a> to a path defined elsewhere.</td>
+    <td align="center" valign="top">No</td>    
+  </tr>
+  
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
@@ -1589,7 +1606,23 @@ href="#path">path-like structure</a> and can also be set via a nested
 <h3>Examples</h3>
 <pre>  &lt;available classname=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot;/&gt;</pre>
 <p>sets the property <code><i>Myclass.present</i></code> to the value &quot;true&quot;
-if the <i>org.whatever.Myclass</i> is found in Ant's classpath.</p>
+if the class <i>org.whatever.Myclass</i> is found in Ant's classpath.</p>
+<pre>
+&lt;property name=&quot;jaxp.jar&quot; value=&quot;./lib/jaxp11/jaxp.jar&quot;/&gt;
+&lt;available file=&quot;${jaxp.jar}&quot; property=&quot;jaxp.jar.present&quot;/&gt;
+</pre>
+<p>sets the property <code><i>jaxp.jar.present</i></code> to the value &quot;true&quot;
+if the file <i>./lib/jaxp11/jaxp.jar</i> is found.</p>
+<pre>
+...in project ...
+&lt;property name=&quot;jaxp.jar&quot; value=&quot;./lib/jaxp11/jaxp.jar&quot;/&gt;
+&lt;path id=&quot;jaxp&quot; location=&quot;${jaxp.jar}&quot;/&gt;
+...in target ...
+&lt;available classname=&quot;javax.xml.transform.Transformer&quot; classpathref="jaxp" property=&quot;jaxp11.present&quot;/&gt;
+</pre>
+<p>sets the property <code><i>jaxp11.present</i></code> to the value &quot;true&quot;
+if the class <i>javax.xml.transform.Transformer</i> is found in the classpath referenced by <code>jaxp</code> (in this case, it is <code>./lib/jaxp11/jaxp.jar</code>).
+</p>
 <hr>
 <h2><a name="chmod">Chmod</a></h2>
 <h3>Description</h3>
@@ -3296,7 +3329,7 @@ classname in the &quot;build.compiler&quot; property.
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">includeJavaRuntim</td> 
+    <td valign="top">includeJavaRuntime</td> 
     <td valign="top">whether or not to include the default runtime
       libraries from the executing virtual machine. Default is no.</td>
     <td align="center" valign="top">No</td>
