@@ -127,7 +127,7 @@ public abstract class CovBase extends Task {
     }
 
     protected String getParamFileArgument() {
-        return (!isJProbe4 ? "-jp_" : "") + "paramfile=";
+        return "-" + (!isJProbe4 ? "jp_" : "") + "paramfile=";
     }
 
     /**
