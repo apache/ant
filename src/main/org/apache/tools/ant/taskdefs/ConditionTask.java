@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,7 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  */
 public class ConditionTask extends ConditionBase {
 
-    private String property;
+    private String property = null;
     private String value = "true";
 
     /**
@@ -102,6 +102,10 @@ public class ConditionTask extends ConditionBase {
         if (countConditions() < 1) {
             throw new BuildException("You must nest a condition into <condition>");
         }
+        if (property == null) {
+            throw new BuildException("The property attribute is required.");
+        }
+        
         Condition c = (Condition) getConditions().nextElement();
         if (c.eval()) {
             getProject().setNewProperty(property, value);

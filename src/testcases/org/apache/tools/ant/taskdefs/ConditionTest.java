@@ -93,24 +93,16 @@ public class ConditionTest extends BuildFileTest {
        expectPropertySet("basic","basic"); 
     }
 
-    /**
-     * @todo have this reject the current error
-     */
     public void testConditionIncomplete() {
-        try {
-           executeTarget("condition-incomplete"); 
-        } catch(Exception e) {
-        }
+        expectSpecificBuildException("condition-incomplete", 
+                                     "property attribute has been omitted",
+                                     "The property attribute is required."); 
     }
     
-    /**
-     * @todo have this reject the current error
-     */
     public void testConditionEmpty() {
-        try {
-           executeTarget("condition-empty"); 
-        } catch(Exception e) {
-        }
+        expectSpecificBuildException("condition-empty", 
+                                     "no conditions",
+                                     "You must nest a condition into <condition>"); 
     }    
 
     public void testShortcut() {
@@ -133,14 +125,10 @@ public class ConditionTest extends BuildFileTest {
         expectPropertyUnset("negationfalse","negationfalse"); 
     }
     
-    /**
-     * @todo have this reject the current error
-     */
     public void testNegationIncomplete() {
-        try {
-            executeTarget("negationincomplete");
-        } catch(Exception e) {
-        }
+        expectSpecificBuildException("negationincomplete", 
+                                     "no conditions in <not>",
+                                     "You must nest a condition into <not>"); 
     }
     
     public void testAnd() {
@@ -180,33 +168,20 @@ public class ConditionTest extends BuildFileTest {
     }       
     
     
-    /**
-     * @todo have this reject the current error
-     */
     public void testFilesmatchIncomplete() {
-        try {
-           executeTarget("filesmatch-incomplete"); 
-        } catch(Exception e) {
-        }
-    }    
+        expectSpecificBuildException("filesmatch-incomplete", 
+                                     "Missing file2 attribute",
+                                     "both file1 and file2 are required in filesmatch"); 
+    }
     
     public void testFilesmatchOddsizes() {
         expectPropertyUnset("filesmatch-oddsizes","filesmatch-oddsizes"); 
     }    
     
-    /**
-     * @todo have this reject the current error
-     */
     public void testFilesmatchExistence() {
-        try {
-           executeTarget("filesmatch-existence"); 
-        } catch(Exception e) {
-        }
+        expectPropertyUnset("filesmatch-existence", "filesmatch-existence"); 
     } 
 
-    /**
-     * @todo have this reject the current error
-     */
     public void testFilesmatchDifferent() {
         expectPropertyUnset("filesmatch-different","filesmatch-different"); 
     } 

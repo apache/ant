@@ -110,7 +110,7 @@ public class FilesMatch implements Condition {
 
         //validate
         if (file1 == null || file2 == null) {
-            throw new BuildException("both file1 and file2 are required in fileequals");
+            throw new BuildException("both file1 and file2 are required in filesmatch");
         }
 
         //#now match the files
