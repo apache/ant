@@ -434,3 +434,5 @@ V. Things we probably don't agree on.
 
 * targets should be like methods including a return value
 
+* define task contexts that define various common aspects (logging,
+  failure handling ...) and assign them to tasks.
