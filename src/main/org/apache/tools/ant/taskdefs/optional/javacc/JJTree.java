@@ -171,18 +171,22 @@ public class JJTree extends Task {
             cmdl.createArgument().setValue("-"+name+":"+value.toString());
         }
 
-        // load command line with required attributes
-        if (outputDirectory != null) {
-            if (!outputDirectory.isDirectory()) {
-                throw new BuildException("Outputdir not a directory.");
-            }
-            cmdl.createArgument().setValue(
-                "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath());
-        }
-
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
+        
+        // use the directory containing the target as the output directory
+        if (outputDirectory == null) {
+            outputDirectory = new File(target.getParent());
+        }        
+        if (!outputDirectory.isDirectory() ) {
+            throw new BuildException("'outputdirectory' " + outputDirectory + " is not a directory.");
+        }
+        // convert backslashes to slashes, otherwise jjtree will put this as
+        // comments and this seems to confuse javacc
+        cmdl.createArgument().setValue(
+            "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath().replace('\\', '/'));
+        
         final File javaFile = new File(
             target.toString().substring(0, target.toString().indexOf(".jjt")) + ".jj");
         if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
