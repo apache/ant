@@ -112,6 +112,9 @@ Other changes:
 
 * added vssver.scc to the default excludes
 
+* <available> has a new filepath attribute/nested element that allows
+  you top search for a file in a given path.
+
 Fixed bugs:
 -----------
 

@@ -70,6 +70,7 @@ public class Available extends Task {
     private String property;
     private String classname;
     private File file;
+    private Path filepath;
     private String resource;
     private String type;
     private Path classpath;
@@ -77,11 +78,7 @@ public class Available extends Task {
     private String value = "true";
 
     public void setClasspath(Path classpath) {
-        if (this.classpath == null) {
-            this.classpath = classpath;
-        } else {
-            this.classpath.append(classpath);
-        }
+        createClasspath().append(classpath);
     }
 
     public Path createClasspath() {
@@ -93,6 +90,17 @@ public class Available extends Task {
 
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
+    }
+
+    public void setFilepath(Path filepath) {
+        createFilepath().append(filepath);
+    }
+    
+    public Path createFilepath() {
+        if (this.filepath == null) {
+            this.filepath = new Path(project);
+        }
+        return this.filepath.createPath();
     }
 
     public void setProperty(String property) {
@@ -145,7 +153,7 @@ public class Available extends Task {
             return;
         }
         
-        if ((file != null) && !checkFile(file)) {
+        if ((file != null) && !checkFile()) {
             log("Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE);
             return;
         }
@@ -158,11 +166,26 @@ public class Available extends Task {
         this.project.setProperty(property, value);
     }
 
+    private boolean checkFile() {
+        if (filepath == null) {
+            return checkFile(file);
+        } else {
+            String[] paths = filepath.list();
+            for(int i = 0; i < paths.length; ++i) {
+                log("Searching " + paths[i], Project.MSG_VERBOSE);
+                if(new File(paths[i], file.getName()).isFile()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean checkFile(File file) {
         if (type != null) {
-            if (type.equalsIgnoreCase("dir")){
+            if (type.equalsIgnoreCase("dir")) {
                 return file.isDirectory();
-            } else if (type.equalsIgnoreCase("file")){
+            } else if (type.equalsIgnoreCase("file")) {
                 return file.isFile();
             }
         }
