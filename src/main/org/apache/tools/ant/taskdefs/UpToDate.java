@@ -74,6 +74,7 @@ import java.util.Vector;
 public class UpToDate extends MatchingTask {
 
     private String _property;
+    private String _value;
     private File _targetFile;
     private Vector sourceFileSets = new Vector();
 
@@ -88,6 +89,23 @@ public class UpToDate extends MatchingTask {
     public void setProperty(String property) {
         _property = property;
     }
+
+    /**
+     * The value to set the named property to if the target file is more up to
+     * date than each of the source files. Defaults to 'true'.
+     *
+     * @param value the value to set the property to if Target is up to date
+     */
+    public void setValue(String value) {
+        _value = value;
+    }
+
+    /**
+     * Returns the value, or "true" if a specific value wasn't provided.
+     */
+    private String getValue() {
+        return ( _value != null ) ? _value : "true";
+    } 
 
     /**
      * The file which must be more up to date than each of the source files
@@ -145,7 +163,7 @@ public class UpToDate extends MatchingTask {
         }
 
         if (upToDate) {
-            this.project.setProperty(_property, "true");
+            this.project.setProperty(_property, this.getValue());
             if (mapperElement == null) {
                 log("File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",
                     Project.MSG_VERBOSE);

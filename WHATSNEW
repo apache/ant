@@ -12,6 +12,8 @@ Changes that could break older environments:
 
 * <touch> can now work on <fileset>s
 
+* <uptodate> now supports a value attribute
+
 Other changes:
 --------------
 
