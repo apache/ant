@@ -241,7 +241,12 @@ public class StarTeamCheckout extends TreeBasedTask {
      * and viewRootLocalFolder are defined
      */
     protected void testPreconditions() throws BuildException {
-        //intentionally do nothing
+        if (this.isUsingRevisionLabel() && this.createDirs) {
+            log("Ignoring createworkingdirs while using a revision label." +
+                "  Folders will be created only as needed.",
+                Project.MSG_WARN);
+            this.createDirs=false;
+        }
     }
 
     /**
@@ -288,9 +293,9 @@ public class StarTeamCheckout extends TreeBasedTask {
         if (this.deleteUncontrolled) {
             log("  Local items not found in the repository will be deleted.");
         }
-        log("  Working directories will "+
-            (this.createDirs ? "be created as needed." 
-                             : "not be created."));
+        log("  Directories will be created"+
+            (this.createDirs ? " wherever they exist in the repository, even if empty." 
+                             : " only where needed to check out files."));
         
     }
     /**
@@ -313,9 +318,45 @@ public class StarTeamCheckout extends TreeBasedTask {
                     targetFolder.getAbsolutePath());
             }
             
+            if (!targetFolder.exists()) {
+                if (!this.isUsingRevisionLabel()) {
+                    if (this.createDirs) {
+                        if (targetFolder.mkdirs()) {
+                            log("Creating folder: " + targetFolder);
+                        } else {
+                            throw new BuildException(
+                                "Failed to create local folder " + targetFolder);
+                        }
+                    }
+                }
+            }
+            
             
             Folder[] foldersList = starteamFolder.getSubFolders();
             Item[] filesList = starteamFolder.getItems(getTypeNames().FILE);
+
+            if (this.isUsingRevisionLabel()) {
+
+                // prune away any files not belonging to the revision label
+                // this is one ugly API from Starteam SDK
+                
+                Hashtable labelItems = new Hashtable(filesList.length);
+                int s = filesList.length;
+                int[] ids = new int[s];
+                for (int i=0; i < s; i++) {
+                    ids[i]=filesList[i].getItemID();
+                    labelItems.put(new Integer(ids[i]), new Integer(i));
+                }
+                int[] foundIds = getLabelInUse().getLabeledItemIDs(ids);
+                s = foundIds.length;
+                Item[] labeledFiles = new Item[s];
+                for (int i=0; i < s; i++) {
+                    Integer ID = new Integer(foundIds[i]);
+                    labeledFiles[i] = 
+                        filesList[((Integer) labelItems.get(ID)).intValue()];
+                }
+                filesList = labeledFiles;
+            }
             
             
             // note, it's important to scan the items BEFORE we make the
@@ -338,17 +379,9 @@ public class StarTeamCheckout extends TreeBasedTask {
                  ufm.removeControlledItem(subfolder);
 
                  if (isRecursive()) {
-                     if (!subfolder.exists()) {
-                         if (this.createDirs) {
-                             log("Creating folder: " + subfolder);
-                             subfolder.mkdirs();
-                         }
-                     }
-                     if (subfolder.exists()) {
                          visit(stFolder, subfolder);
                      }
                  }
-            }
 
             for (int i = 0; i < filesList.length; i++) {
                 com.starbase.starteam.File stFile = 
@@ -413,6 +446,14 @@ public class StarTeamCheckout extends TreeBasedTask {
         }
 
         if (this.isUsingRevisionLabel()) {
+            if (!targetFolder.exists()) {
+                if (targetFolder.mkdirs()) {
+                    log("Creating folder: " + targetFolder);
+                } else {
+                    throw new BuildException(
+                        "Failed to create local folder " + targetFolder);
+                }
+            }
             boolean success = eachFile.checkoutByLabelID(
                 localFile,
                 getIDofLabelInUse(),
@@ -472,6 +513,14 @@ public class StarTeamCheckout extends TreeBasedTask {
             }
 
             if (checkout) {
+                if (!targetFolder.exists()) {
+                    if (targetFolder.mkdirs()) {
+                        log("Creating folder: " + targetFolder);
+                    } else {
+                        throw new BuildException(
+                            "Failed to create local folder " + targetFolder);
+                    }
+                }
                 eachFile.checkout(this.lockStatus, 
                                  !this.useRepositoryTimeStamp, true, true);
             }

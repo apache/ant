@@ -381,6 +381,15 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
+     * returns the label being used
+     * 
+     * @return 
+     */
+    protected Label getLabelInUse() {
+        return this.labelInUse;
+    }
+
+    /**
      * show the label in the log and its type.
      */
     protected void logLabel() {
@@ -532,7 +541,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     public final void execute() throws BuildException {
         try {
-            testPreconditions();
 
             Folder starteamrootfolder = configureRootStarteamFolder();
 
@@ -540,6 +548,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
             java.io.File localrootfolder = 
                 getLocalRootMapping(starteamrootfolder);
 
+            testPreconditions();
+            
             // Tell user what he is doing
             logOperationDescription(starteamrootfolder, localrootfolder);
             
