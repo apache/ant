@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -56,56 +56,57 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 
-/**
- * Define a new task - name and class
- *
- * @author costin@dnt.ro
- */
-public class Taskdef extends Task {
-    private String name;
-    private String value;
+import java.util.*;
 
-    //
-    // REVISIT: Is this the right thing to do?
-    //          I moved the body of execute() into init().
-    //                               - akv
-    //
-    public void init() throws BuildException {
-	try {
-	    if (name==null || value==null ) {
-		String msg = "name or class attributes of taskdef element "
-		    + "are undefined";
-		throw new BuildException(msg);
-	    }
-	    try {
-		Class taskClass = Class.forName(value);
-			project.addTaskDefinition(name, taskClass);
-	    } catch (ClassNotFoundException cnfe) {
-		String msg = "taskdef class " + value +
-		    " cannot be found";
-		throw new BuildException(msg);
-	    }
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
+/**
+ * This task will compile and load a new taskdef all in one step.
+ * At times, this is useful for eliminating ordering dependencies
+ * which otherwise would require multiple executions of Ant.
+ *
+ * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
+ */
+
+public class CompileTask extends Javac {
+
+    protected Vector taskList = new Vector();
+
+    /**
+     * add a new task entry on the task list
+     */
+    public Taskdef createTaskdef() {
+        Taskdef task = new Taskdef();
+        taskList.addElement(task);
+        return task;
     }
     
-    public void setName( String name) {
-	this.name = name;
+    /**
+     * do all the real work in init
+     */
+    public void init() {
+
+        // create all the include entries from the task defs
+        for (Enumeration e=taskList.elements(); e.hasMoreElements(); ) {
+            Taskdef task = (Taskdef)e.nextElement();
+            String source = task.getClassname().replace('.','/') + ".java";
+            MatchingTask.NameEntry include = super.createInclude();
+            include.setName("**/" + source);
+        }
+
+        // execute Javac
+        super.init();        
+        super.execute();        
+
+        // now define all the new tasks
+        for (Enumeration e=taskList.elements(); e.hasMoreElements(); ) {
+            Taskdef task = (Taskdef)e.nextElement();
+            task.init();
+        }
+
     }
 
-    public void setClass(String v) {
-        project.log("The class attribute is deprecated. " +
-                    "Please use the classname attribute.",
-                    Project.MSG_WARN);
-        value = v;
-    }
-
-    public String getClassname() {
-	return value;
-    }
-
-    public void setClassname(String v) {
-	value = v;
+    /**
+     * have execute do nothing
+     */
+    public void execute() {
     }
 }
