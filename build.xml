@@ -961,7 +961,7 @@
       <fileset dir="${script.dir}/"/>
     </copy>
 
-    <fixcrlf srcdir="${dist.bin}" eol="dos" includes="*.bat"/>
+    <fixcrlf srcdir="${dist.bin}" eol="dos" includes="*.bat,*.cmd"/>
     <fixcrlf srcdir="${dist.bin}" eol="unix">
       <include name="ant"/>
       <include name="antRun"/>
@@ -1138,7 +1138,7 @@
       </fileset>
     </copy>
 
-    <fixcrlf srcdir="${src.dist.dir}" eol="dos" includes="*.bat"/>
+    <fixcrlf srcdir="${src.dist.dir}" eol="dos" includes="*.bat,*.cmd"/>
     <fixcrlf srcdir="${src.dist.dir}" eol="unix">
       <include name="**/*.sh"/>
       <include name="**/*.pl"/>

@@ -161,16 +161,47 @@ set):</p>
 </ul>
 
 <h2><a name="cygwin">Cygwin Users</a></h2>
-<p>The Unix launch script that come with Ant works correctly with Cygwin. You 
-should not have any problems launching Ant form the Cygwin shell. It is important 
+<p>The Unix launch script that come with Ant works correctly with Cygwin. You
+should not have any problems launching Ant form the Cygwin shell. It is important
 to note however, that once Ant is runing it is part of the JDK which operates as
-a native Windows application. The JDK is not a Cygwin executable, and it therefore 
+a native Windows application. The JDK is not a Cygwin executable, and it therefore
 has no knowledge of the Cygwin paths, etc. In particular when using the &lt;exec&gt;
-task, executable names such as &quot;/bin/sh&quot; will not work, even though these 
-work from the Cygwin shell from which Ant was launched. You can use an executable 
+task, executable names such as &quot;/bin/sh&quot; will not work, even though these
+work from the Cygwin shell from which Ant was launched. You can use an executable
 name such as &quot;sh&quot; and rely on that command being available in the Windows
 path.
 </p>
+
+<h2><a name="os2">OS/2 Users</a></h2>
+<p>The OS/2 lanuch script was developed so as it can perform complex task. It has two parts:
+<code>ant.cmd</code> which calls Ant and <code>antenv.cmd</code> which sets environment for Ant.
+Most often you will just call <code>ant.cmd</code> using the same command line options as described
+above. The behaviour can be modified by a number of ways explained below.</p>
+
+<p>Script <code>ant.cmd</code> first verifies whether the Ant environment is set correctly. The
+requirements are:</p>
+<ol>
+<li>Environment variable <code>JAVA_HOME</code> is set.</li>
+<li>Environment variable <code>ANT_HOME</code> is set.</li>
+<li>environment variable <code>CLASSPATH</code> is set and contains at least one element from
+<code>JAVA_HOME</code> and at least one element from <code>ANT_HOME</code>.</li>
+</ol>
+
+<p>If any of these conditions is violated, script <code>antenv.cmd</code> is called. This script
+first invokes configuration scripts if there exist: the system-wide configuration
+<code>antconf.cmd</code> from the <code>%ETC%</code> directory and then the user comfiguration
+<code>antrc.cmd</code> from the <code>%HOME%</code> directory. At this moment both
+<code>JAVA_HOME</code> and <code>ANT_HOME</code> must be defined because <code>antenv.cmd</code>
+now adds <code>classes.zip</code> or <code>tools.jar</code> (depending on version of JVM) and
+everything from <code>%ANT_HOME%\lib</code> except <code>ant-*.jar</code> to
+<code>CLASSPATH</code>. Finally <code>ant.cmd</code> calls per-directory configuration
+<code>antrc.cmd</code>. All settings made by <code>ant.cmd</code> are local and are undone when the
+script ends. The settings made by <code>antenv.cmd</code> are persistent during the lifetime of the
+shell (of course unless called automaticaly from <code>ant.cmd</code>). It is thus possible to call
+<code>antenv.cmd</code> manually and modify some settings before calling <code>ant.cmd</code>.</p>
+
+<p>Scripts <code>envset.cmd</code> and <code>runrc.cmd</code> perform auxilliary tasks. All scripts
+have some documentation inside.</p>
 
 <h2><a name="viajava">Running Ant via Java</a></h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started

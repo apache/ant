@@ -18,9 +18,9 @@ href="http://cvs.apache.org/builds/ant/nightly/">http://cvs.apache.org/builds/an
 
 <p>If you prefer the source edition, you can download the source for the latest Ant release from <a href="http://ant.apache.org/srcdownload.cgi">http://ant.apache.org/srcdownload.cgi</a>.
 
-Again, if you prefer the edge, you can access 
-the code as it is being developed via CVS. The Jakarta website has details on 
-<a href="http://jakarta.apache.org/site/cvsindex.html" target="_top">accessing CVS</a>. Please checkout the 
+Again, if you prefer the edge, you can access
+the code as it is being developed via CVS. The Jakarta website has details on
+<a href="http://jakarta.apache.org/site/cvsindex.html" target="_top">accessing CVS</a>. Please checkout the
 ant module.
 
 See the section <a href="#buildingant">Building Ant</a> on how to
@@ -33,7 +33,7 @@ Ant CVS repository</a> on-line. </p>
 <h2><a name="sysrequirements">System Requirements</a></h2>
 Ant has been used successfully on many platforms, including Linux,
 commercial flavours of Unix such as Solaris and HP-UX,
-Windows 9x and NT, Novell Netware 6 and MacOS X.
+Windows 9x and NT, OS/2 Warp, Novell Netware 6 and MacOS X.
 <p>
 To build and use Ant, you must have a JAXP-compliant XML parser installed and
 available on your classpath.</p>
@@ -95,17 +95,17 @@ file there. This directory will be known as ANT_HOME.
 <table width="80%">
 <tr>
   <td colspan="2">
-    <b>Windows 95, Windows 98 &amp; Windows ME Note:</b> 
+    <b>Windows 95, Windows 98 &amp; Windows ME Note:</b>
   </td>
 </tr>
 <tr>
   <td width="5%">&nbsp;</td>
   <td><i>
-On these systems, the script used to launch Ant will have 
+On these systems, the script used to launch Ant will have
 problems if ANT_HOME is a long filename (i.e. a filename which is not
-of the format known as &quot;8.3&quot;). This is due to 
-limitations in the OS's handling of the <code>&quot;for&quot;</code> 
-batch-file statement. It is recommended, therefore, that Ant be 
+of the format known as &quot;8.3&quot;). This is due to
+limitations in the OS's handling of the <code>&quot;for&quot;</code>
+batch-file statement. It is recommended, therefore, that Ant be
 installed in a <b>short</b>, 8.3 path, such as C:\Ant. </i>
   </td>
 </tr>
@@ -114,7 +114,7 @@ installed in a <b>short</b>, 8.3 path, such as C:\Ant. </i>
   <td>
     <p>On these systems you will also need to configure more environment
        space to cater for the environment variables used in the Ant lauch script.
-       To do this, you will need to add or update the following line in 
+       To do this, you will need to add or update the following line in
        the <code>config.sys</code> file
     </p>
     <p><code>shell=c:\command.com c:\ /p /e:32768</code></p>
@@ -152,7 +152,7 @@ libraries may either be placed in Ant's lib directory, where they will be picked
 automatically, or made available on the system CLASSPATH environment variable.
 </p>
 
-<h3>Windows</h3>
+<h3>Windows and OS/2</h3>
 <p>Assume Ant is installed in <code>c:\ant\</code>. The following sets up the
 environment:</p>
 <pre>set ANT_HOME=c:\ant

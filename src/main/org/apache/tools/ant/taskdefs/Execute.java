@@ -109,7 +109,9 @@ public class Execute {
     static {
         // Try using a JDK 1.3 launcher
         try {
-            vmLauncher = new Java13CommandLauncher();
+            if (!Os.isFamily("os/2")) {
+                vmLauncher = new Java13CommandLauncher();
+            }
         } catch (NoSuchMethodException exc) {
             // Ignore and keep trying
         }
