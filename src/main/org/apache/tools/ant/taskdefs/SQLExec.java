@@ -74,6 +74,8 @@ import java.sql.*;
  */
 public class SQLExec extends Task {
     
+    private int goodSql = 0, totalSql = 0;
+
     private Path classpath;
 
     private AntClassLoader loader;
@@ -124,6 +126,11 @@ public class SQLExec extends Task {
     private String sqlCommand = "";
 
     /**
+     * SQL transactions to perform
+     */
+    private Vector transactions = new Vector();
+
+    /**
      * Print SQL results.
      */
     private boolean print = false;
@@ -137,6 +144,21 @@ public class SQLExec extends Task {
      * Results Output file.
      */
     private File output = null;
+
+    /**
+     * RDBMS Product needed for this SQL.
+     **/
+    private String rdbms = null;
+
+    /**
+     * RDBMS Version needed for this SQL.
+     **/
+    private String version = null;
+
+    /**
+     * Action to perform if an error is found
+     **/
+    private String onError = "abort";
 
     /**
      * Set the classpath for loading the driver.
@@ -174,10 +196,19 @@ public class SQLExec extends Task {
     }
     
     /**
-     * Set the name of the sql file to be run.
+     * Set the sql command to execute
      */
     public void addText(String sql) {
         this.sqlCommand += sql;
+    }
+    
+    /**
+     * Set the sql command to execute
+     */
+    public Transaction createTransaction() {
+      Transaction t = new Transaction();
+      transactions.addElement(t);
+      return t;
     }
     
     /**
@@ -237,14 +268,43 @@ public class SQLExec extends Task {
     }
 
     /**
+     * Set the rdbms required
+     */
+    public void setRdbms(String vendor) {
+        this.rdbms = vendor.toLowerCase();
+    }
+
+    /**
+     * Set the version required
+     */
+    public void setVersion(String version) {
+        this.version = version.toLowerCase();
+    }
+
+    /**
+     * Set the action to perform onerror
+     */
+    public void setOnerror(OnError action) {
+        this.onError = action.getValue();
+    }
+
+    /**
      * Load the sql file and then execute it
      */
     public void execute() throws BuildException {
         sqlCommand = sqlCommand.trim();
 
-        if (srcFile == null && sqlCommand.length() == 0) {
-            throw new BuildException("Source file or sql statement must be set!", location);
+        if (srcFile == null && sqlCommand.length() == 0) { 
+            if (transactions.size() == 0) {
+                throw new BuildException("Source file, transactions or sql statement must be set!", location);
+            }
+        } else {
+            // Make a transaction group for the outer command
+            Transaction t = createTransaction();
+            t.setSrc(srcFile);
+            t.addText(sqlCommand);
         }
+
         if (driver == null) {
             throw new BuildException("Driver attribute must be set!", location);
         }
@@ -294,31 +354,31 @@ public class SQLExec extends Task {
                 throw new SQLException("No suitable Driver for "+url);
             }
 
+            if (!isValidRdbms(conn)) return;
+
             conn.setAutoCommit(autocommit);
 
             statement = conn.createStatement();
 
-            if (sqlCommand.length() != 0) {
-                runStatements(new StringReader(sqlCommand));
-            }
-            
-            if (srcFile != null) {
-                runStatements(new FileReader(srcFile));
-            }
-
-            if (!autocommit) {
-                conn.commit();
+            // Process all transactions
+            for (Enumeration e = transactions.elements(); 
+                 e.hasMoreElements();) {
+                ((Transaction) e.nextElement()).runTransaction();
+                if (!autocommit) {
+                    log("Commiting transaction", Project.MSG_VERBOSE);
+                    conn.commit();
+                }
             }
             
         } catch(IOException e){
-            if (!autocommit && conn != null) {
+            if (!autocommit && conn != null && onError.equals("abort")) {
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {}
             }
             throw new BuildException(e, location);
         } catch(SQLException e){
-            if (!autocommit && conn != null) {
+            if (!autocommit && conn != null && onError.equals("abort")) {
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {}
@@ -337,7 +397,8 @@ public class SQLExec extends Task {
             catch (SQLException e) {}
         }
           
-        log("SQL statements executed successfully", Project.MSG_VERBOSE);
+        log(goodSql + " of " + totalSql + 
+            " SQL statements executed successfully");
     }
 
     protected void runStatements(Reader reader) throws SQLException, IOException {
@@ -350,9 +411,15 @@ public class SQLExec extends Task {
             while ((line=in.readLine()) != null){
                 if (line.trim().startsWith("//")) continue;
                 if (line.trim().startsWith("--")) continue;
-      
+
                 sql += " " + line;
                 sql = sql.trim();
+
+                // SQL defines "--" as a comment to EOL
+                // and in Oracle it may contain a hint
+                // so we cannot just remove it, instead we must end it
+                if (line.indexOf("--") >= 0) sql += "\n";
+
                 if (sql.endsWith(";")){
                     log("SQL: " + sql, Project.MSG_VERBOSE);
                     execSQL(sql.substring(0, sql.length()-1));
@@ -365,34 +432,82 @@ public class SQLExec extends Task {
                 execSQL(sql);
             }
         }catch(SQLException e){
-            log("Failed to execute: " + sql, Project.MSG_ERR);
             throw e;
         }
 
     }
  
-
+    /**
+     * Verify if connected to the correct RDBMS
+     **/
+    protected boolean isValidRdbms(Connection conn) {
+        if (rdbms == null && version == null)
+            return true;
+        
+        try {
+            DatabaseMetaData dmd = conn.getMetaData();
+            
+            if (rdbms != null) {
+                String theVendor = dmd.getDatabaseProductName().toLowerCase();
+                
+                log("RDBMS = " + theVendor, Project.MSG_VERBOSE);
+                if (theVendor == null || theVendor.indexOf(rdbms) < 0) {
+                    log("Not the required RDBMS: "+rdbms, Project.MSG_VERBOSE);
+                    return false;
+                }
+            }
+            
+            if (version != null) {
+                String theVersion = dmd.getDatabaseProductVersion().toLowerCase();
+                
+                log("Version = " + theVersion, Project.MSG_VERBOSE);
+                if (theVersion == null || 
+                    !(theVersion.startsWith(version) || 
+                      theVersion.indexOf(" " + version) >= 0)) {
+                    log("Not the required version: \""+ version +"\"", Project.MSG_VERBOSE);
+                    return false;
+                }
+            }
+        }
+        catch (SQLException e) {
+            // Could not get the required information
+            log("Failed to obtain required RDBMS information", Project.MSG_ERR);
+            return false;
+        }
+        
+        return true;
+    }
+    
     /**
      * Exec the sql statement.
      */
     protected void execSQL(String sql) throws SQLException {
-        if (!statement.execute(sql)) {
-            log(statement.getUpdateCount()+" rows affected", 
-                Project.MSG_VERBOSE);
+        try {  
+            totalSql++;
+            if (!statement.execute(sql)) {
+                log(statement.getUpdateCount()+" rows affected", 
+                    Project.MSG_VERBOSE);
+            }
+            
+            if (print) {
+                printResults();
+            }
+            
+            SQLWarning warning = conn.getWarnings();
+            while(warning!=null){
+                log(warning + " sql warning", Project.MSG_VERBOSE);
+                warning=warning.getNextWarning();
+            }
+            conn.clearWarnings();
+            goodSql++;
         }
-
-        if (print) {
-            printResults();
+        catch (SQLException e) {
+            log("Failed to execute: " + sql, Project.MSG_ERR);
+            if (!onError.equals("continue")) throw e;
+            log(e.toString(), Project.MSG_ERR);
         }
-
-        SQLWarning warning = conn.getWarnings();
-        while(warning!=null){
-            log(warning + " sql warning", Project.MSG_VERBOSE);
-            warning=warning.getNextWarning();
-        }
-        conn.clearWarnings();
     }
-
+    
     /**
      * print any results in the statement.
      */
@@ -439,4 +554,47 @@ public class SQLExec extends Task {
             }
         }
     }
+
+    /**
+     * Enumerated attribute with the values "continue", "stop" and "abort"
+     * for the onerror attribute.  
+     */
+    public static class OnError extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"continue", "stop", "abort"};
+        }
+    }
+
+    /**
+     * Contains the definition of a new transaction element.
+     * Transactions allow several files or blocks of statements
+     * to be executed using the same JDBC connection and commit
+     * operation in between.
+     */
+    public class Transaction {
+        private File tSrcFile = null;
+        private String tSqlCommand = "";
+
+        public void setSrc(File src) {
+            this.tSrcFile = src;
+        }
+
+        public void addText(String sql) {
+            this.tSqlCommand += sql;
+        }
+
+        private void runTransaction() throws IOException, SQLException {
+            if (tSqlCommand.length() != 0) {
+                log("Executing commands", Project.MSG_VERBOSE);
+                runStatements(new StringReader(tSqlCommand));
+            }
+      
+            if (tSrcFile != null) {
+                log("Executing file: " + tSrcFile.getAbsolutePath(), 
+                    Project.MSG_VERBOSE);
+                runStatements(new FileReader(tSrcFile));
+            }
+        }
+    }
+
 }

@@ -168,7 +168,7 @@ public class AntClassLoader  extends ClassLoader {
      * this loader's classpath.
      */
     public Class forceLoadClass(String classname) throws ClassNotFoundException {
-        project.log("force loading " + classname, Project.MSG_VERBOSE);
+        project.log("force loading " + classname, Project.MSG_DEBUG);
         Class theClass = findLoadedClass(classname);
 
         if (theClass == null) {
@@ -192,7 +192,7 @@ public class AntClassLoader  extends ClassLoader {
      * this loader's classpath.
      */
     public Class forceLoadSystemClass(String classname) throws ClassNotFoundException {
-        project.log("force system loading " + classname, Project.MSG_VERBOSE);
+        project.log("force system loading " + classname, Project.MSG_DEBUG);
         Class theClass = findLoadedClass(classname);
 
         if (theClass == null) {
@@ -324,21 +324,21 @@ public class AntClassLoader  extends ClassLoader {
             if (useSystemFirst) {
                 try {
                     theClass = findSystemClass(classname);
-                    project.log("Class " + classname + " loaded from system loader", Project.MSG_VERBOSE);
+                    project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
                 }
                 catch (ClassNotFoundException cnfe) {
                     theClass = findClass(classname);
-                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_VERBOSE);
+                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
                 }
             }
             else {
                 try {
                     theClass = findClass(classname);
-                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_VERBOSE);
+                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
                 }
                 catch (ClassNotFoundException cnfe) {
                     theClass = findSystemClass(classname);
-                    project.log("Class " + classname + " loaded from system loader", Project.MSG_VERBOSE);
+                    project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
                 }
             }
         }
@@ -400,7 +400,7 @@ public class AntClassLoader  extends ClassLoader {
      * this loader's classpath.
      */
     public Class findClass(String name) throws ClassNotFoundException {
-        project.log("Finding class " + name, Project.MSG_VERBOSE);
+        project.log("Finding class " + name, Project.MSG_DEBUG);
 
         try {
             return findClass(name, classpath);
