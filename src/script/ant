@@ -27,11 +27,11 @@ for arg in "$@" ; do
     use_jikes_default=true
   elif [ "$arg" = "--execdebug" ] ; then
     ant_exec_debug=true
-  elif [ "$arg" = "--h" -o "$arg" = "--help" ] ; then
+  elif [ my"$arg" = my"--h"  -o my"$arg" = my"--help"  ] ; then
     show_help=true
     ant_exec_args="$ant_exec_args -h"
   else
-    if [ "$arg" = "-h" -o "$arg" = "-help" ] ; then
+    if [  my"$arg" = my"-h"  -o  my"$arg" = my"-help" ] ; then
       show_help=true
     fi
     ant_exec_args="$ant_exec_args \"$arg\""
@@ -243,7 +243,29 @@ if $show_help ; then
   echo '                         launch script'
   echo '  '
 fi
-
+# add a second backslash to variables terminated by a backslash under cygwin
+if $cygwin; then
+  case "$CYGHOME" in
+    *\\ )
+    CYGHOME="$CYGHOME\\"
+    ;;
+  esac
+  case "$JIKESPATH" in
+    *\\ )
+    JIKESPATH="$JIKESPATH\\"
+    ;;
+  esac
+  case "$LOCALCLASSPATH" in
+    *\\ )
+    LOCALCLASSPATH="LOCALCLASSPATH\\"
+    ;;
+  esac
+  case "$CLASSPATH" in
+    *\\ )
+    CLASSPATH="$CLASSPATH\\"
+    ;;
+  esac
+fi
 # Execute ant using eval/exec to preserve spaces in paths,
 # java options, and ant args
 ant_sys_opts=
