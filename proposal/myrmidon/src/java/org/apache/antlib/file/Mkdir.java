@@ -5,20 +5,28 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.file;
+package org.apache.antlib.file;
 
 import java.io.File;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 
 /**
- * Creates a given directory.
+ * Creates specified directory.
  *
+ * @ant:task name="mkdir"
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author duncan@x180.com
+ * @version $Revision$ $Date$
  */
 public class Mkdir
     extends AbstractTask
 {
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( Mkdir.class );
+
     private File m_dir;
 
     public void setDir( final File dir )
@@ -29,16 +37,16 @@ public class Mkdir
     public void execute()
         throws TaskException
     {
-        if( m_dir == null )
+        if( null == m_dir )
         {
-            final String message = "dir attribute is required";
+            final String message = REZ.getString( "mkdir.missing-dir.error" );
             throw new TaskException( message );
         }
 
         if( m_dir.isFile() )
         {
-            final String message = "Unable to create directory as a file " +
-                "already exists with that name: " + m_dir.getAbsolutePath();
+            final String message =
+                REZ.getString( "mkdir.file-exists.error", m_dir.getAbsolutePath() );
             throw new TaskException( message );
         }
 
@@ -47,11 +55,12 @@ public class Mkdir
             final boolean result = m_dir.mkdirs();
             if( !result )
             {
-                final String message = "Directory " + m_dir.getAbsolutePath() + " creation was not " +
-                    "successful for an unknown reason";
+                final String message =
+                    REZ.getString( "mkdir.nocreate.error", m_dir.getAbsolutePath() );
                 throw new TaskException( message );
             }
-            final String message = "Created dir: " + m_dir.getAbsolutePath();
+            final String message =
+                REZ.getString( "mkdir.create.notice", m_dir.getAbsolutePath() );
             getLogger().info( message );
         }
     }

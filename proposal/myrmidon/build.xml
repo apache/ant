@@ -359,6 +359,10 @@ Legal:
     </ant>
 
     <ant antfile="antlib.xml">
+      <property name="antlib.name" value="file"/>
+    </ant>
+
+    <ant antfile="antlib.xml">
       <property name="antlib.name" value="archive"/>
     </ant>
 

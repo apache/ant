@@ -195,4 +195,10 @@ Legal:
     <log message="Ungzipped file!"/>
   </target>
 
+  <target name="file-test">
+    <mkdir dir="/tmp/deleteme"/>
+    <touch file="/tmp/deleteme/touch-test"/>
+    <delete dir="/tmp/deleteme"/>
+  </target>
+
 </project>

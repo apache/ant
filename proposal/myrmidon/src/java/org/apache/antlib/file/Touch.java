@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.file;
+package org.apache.antlib.file;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,6 +14,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -21,30 +23,34 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 
 /**
- * Touch a file and/or fileset(s) -- corresponds to the Unix touch command. <p>
+ * Touch a file and/or fileset(s) -- corresponds to the Unix touch command.
  *
- * If the file to touch doesn't exist, an empty one is created. </p> <p>
+ * If the file to touch doesn't exist, an empty one is created. </p>
  *
- * Note: Setting the modification time of files is not supported in JDK 1.1.</p>
- *
+ * @ant:task name="touch"
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
  * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
+ * @version $Revision$ $Date$
  */
 public class Touch
     extends AbstractTask
 {
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( Touch.class );
+
     private long m_millis = -1;
-    private String m_dateTime;
+    private String m_datetime;
     private ArrayList m_filesets = new ArrayList();
     private File m_file;
 
     /**
      * Date in the format MM/DD/YYYY HH:MM AM_PM.
      */
-    public void setDatetime( String dateTime )
+    public void setDatetime( final String datetime )
     {
-        m_dateTime = dateTime;
+        m_datetime = datetime;
     }
 
     /**
@@ -82,7 +88,7 @@ public class Touch
     {
         validate();
 
-        if( m_dateTime != null )
+        if( m_datetime != null )
         {
             final DateFormat format =
                 DateFormat.getDateTimeInstance( DateFormat.SHORT,
@@ -90,11 +96,10 @@ public class Touch
                                                 Locale.US );
             try
             {
-                final long millis = format.parse( m_dateTime ).getTime();
+                final long millis = format.parse( m_datetime ).getTime();
                 if( 0 > millis )
                 {
-                    final String message = "Date of " + m_dateTime + " results in negative " +
-                        "milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT).";
+                    final String message = REZ.getString( "touch.neg-time.error", m_datetime );
                     throw new TaskException( message );
                 }
                 setMillis( millis );
@@ -113,13 +118,13 @@ public class Touch
     {
         if( null == m_file && 0 == m_filesets.size() )
         {
-            final String message = "Specify at least one source - a file or a fileset.";
+            final String message = REZ.getString( "touch.no-files.error" );
             throw new TaskException( message );
         }
 
         if( null != m_file && m_file.exists() && m_file.isDirectory() )
         {
-            final String message = "Use a fileset to touch directories.";
+            final String message = REZ.getString( "touch.use-fileset.error" );
             throw new TaskException( message );
         }
     }
@@ -132,11 +137,16 @@ public class Touch
             m_millis = System.currentTimeMillis();
         }
 
-        if( m_file != null )
+        if( null != m_file )
         {
             if( !m_file.exists() )
             {
-                getLogger().info( "Creating " + m_file );
+                if( getLogger().isInfoEnabled() )
+                {
+                    final String message = REZ.getString( "touch.create.notice", m_file );
+                    getLogger().info( message );
+                }
+
                 try
                 {
                     FileOutputStream fos = new FileOutputStream( m_file );
@@ -145,7 +155,7 @@ public class Touch
                 }
                 catch( final IOException ioe )
                 {
-                    final String message = "Could not create " + m_file;
+                    final String message = REZ.getString( "touch.no-touch.error", m_file, ioe );
                     throw new TaskException( message, ioe );
                 }
             }
@@ -157,21 +167,23 @@ public class Touch
         final int size = m_filesets.size();
         for( int i = 0; i < size; i++ )
         {
-            final FileSet fs = (FileSet)m_filesets.get( i );
-            final DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
-            final File fromDir = fs.getDir();
+            final FileSet fileSet = (FileSet)m_filesets.get( i );
+            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
+            final File fromDir = fileSet.getDir();
 
-            final String[] srcFiles = ds.getIncludedFiles();
-            final String[] srcDirs = ds.getIncludedDirectories();
+            final String[] srcFiles = scanner.getIncludedFiles();
+            final String[] srcDirs = scanner.getIncludedDirectories();
 
             for( int j = 0; j < srcFiles.length; j++ )
             {
-                touch( new File( fromDir, srcFiles[ j ] ) );
+                final File file = new File( fromDir, srcFiles[ j ] );
+                touch( file );
             }
 
             for( int j = 0; j < srcDirs.length; j++ )
             {
-                touch( new File( fromDir, srcDirs[ j ] ) );
+                final File file = new File( fromDir, srcDirs[ j ] );
+                touch( file );
             }
         }
     }
@@ -181,7 +193,8 @@ public class Touch
     {
         if( !file.canWrite() )
         {
-            throw new TaskException( "Can not change modification date of read-only file " + file );
+            final String message = REZ.getString( "touch.readonly-file.error", file );
+            throw new TaskException( message );
         }
 
         final long time = ( m_millis < 0 ) ? System.currentTimeMillis() : m_millis;
