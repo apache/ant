@@ -210,7 +210,6 @@ public abstract class BaseFilterReader
             return null;
             
         StringBuffer line = new StringBuffer();
-        line.append ((char)ch);
                 
         while (ch != -1) {
             line.append ((char)ch);
