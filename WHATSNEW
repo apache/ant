@@ -4,6 +4,10 @@ Changes from Ant 1.4.1 to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* Shipped XML parser is now Xerces 2.0.1 along with the XML Parser APIs.
+  XML Parser APIs is a separate jar that contains the necessary
+  JAXP/DOM/SAX classes.
+
 * Important: Single $ signs are no longer silently stripped! 
   Before you panic that we have broken all your build files, we have kept
   the old "$$" -> "$" behaviour. So only build files which accidentally had

@@ -586,7 +586,7 @@
     <copy todir="${build.dir}">
       <fileset dir=".">
         <include name="LICENSE" />
-        <include name="LICENSE.crimson" />
+        <include name="LICENSE.xerces" />
       </fileset>
       <mapper type="glob" from="*" to="*.txt" />
     </copy>
@@ -757,7 +757,7 @@
       <fileset dir=".">
         <include name="README"/>
         <include name="LICENSE"/>
-        <include name="LICENSE.crimson"/>
+        <include name="LICENSE.xerces"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
@@ -841,7 +841,7 @@
       <fileset dir=".">
         <include name="README"/>
         <include name="LICENSE"/>
-        <include name="LICENSE.crimson"/>
+        <include name="LICENSE.xerces"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
@@ -1331,4 +1331,8 @@
           description="--> creates a minimum distribution in ./dist"
           depends="dist-lite" />
 
+  <target name="javacc">
+    <javacc javacchome="e:\download\thirdparty\javacc2.0"
+      target="E:\download\thirdparty\javacc2.0\examples\MailProcessing\Digest.jj"/>
+  </target>
 </project>
