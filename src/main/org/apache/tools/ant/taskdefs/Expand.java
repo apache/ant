@@ -63,9 +63,14 @@ import java.util.zip.*;
  * @author costin@dnt.ro
  */
 public class Expand extends Task {
-    String dest; // req
-    String source; // req
+    private String dest; // req
+    private String source; // req
     
+    /**
+     * Do the work.
+     *
+     * @exception BuildException Thrown in unrecoverable error.
+     */
     // XXX move it to util or tools
     public void execute() throws BuildException {
 	try {
@@ -108,10 +113,21 @@ public class Expand extends Task {
 	}
     }
 
+    /**
+     * Set the destination directory. File will be unzipped into the
+     * destination directory.
+     *
+     * @param d Path to the directory.
+     */
     public void setDest(String d) {
 	this.dest=d;
     }
 
+    /**
+     * Set the path to zip-file.
+     *
+     * @param s Path to zip-file.
+     */
     public void setSrc(String s) {
 	this.source = s;
     }

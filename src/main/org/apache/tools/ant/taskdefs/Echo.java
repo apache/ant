@@ -63,13 +63,23 @@ import java.net.*;
  * @author costin@dnt.ro
  */
 public class Echo extends Task {
-    String message; // required
+    private String message; // required
     
+    /**
+     * Does the work.
+     *
+     * @exception BuildException if someting goes wrong with the build
+     */
     public void execute() throws BuildException {
 	System.out.println(message);
     }
 
-    public void setMessage(String d) {
-	this.message=d;
+    /**
+     * Sets the message variable.
+     *
+     * @param msg Sets the value for the message variable.
+     */
+    public void setMessage(String msg) {
+	this.message = msg;
     }
 }

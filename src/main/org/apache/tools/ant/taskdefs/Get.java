@@ -63,24 +63,36 @@ import java.net.*;
  * @author costin@dnt.ro
  */
 public class Get extends Task {
-    String source; // required
-    String dest; // required
-    String verbose;
+    private String source; // required
+    private String dest; // required
+    private String verbose = "";
     
+    /**
+     * Does the work.
+     *
+     * @exception BuildException Thrown in unrecovrable error.
+     */
     public void execute() throws BuildException {
 	try {
-	    URL url=new URL( source );
+            URL url = null;
+            try {
+                url = new URL(source);
+            } catch (MalformedURLException e) {
+                throw new BuildException(e.toString());
+            }
+
 	    project.log("Getting: " + source);
+
 	    File destF=new File(dest);
 	    FileOutputStream fos = new FileOutputStream(destF);
 
-	    InputStream is=url.openStream();
+	    InputStream is = url.openStream();
 	    byte[] buffer = new byte[100 * 1024];
 	    int length;
 	    
 	    while ((length = is.read(buffer)) >= 0) {
 		fos.write(buffer, 0, length);
-		if( "true".equals(verbose)) System.out.print(".");
+		if ("true".equals(verbose)) System.out.print(".");
 	    }
 	    if( "true".equals(verbose)) System.out.println();
 	    fos.close();
@@ -91,15 +103,30 @@ public class Get extends Task {
 	}
     }
 
+    /**
+     * Set the URL.
+     *
+     * @param d URL for the file.
+     */
     public void setSrc(String d) {
 	this.source=d;
     }
 
+    /**
+     * Where to copy the source file.
+     *
+     * @param dest Path to file.
+     */
     public void setDest(String dest) {
 	this.dest = dest;
     }
 
+    /**
+     * Be verbose, if set to "<CODE>true</CODE>".
+     *
+     * @param v if "true" then be verbose
+     */
     public void setVerbose(String v) {
-	verbose=v;
+	verbose = v;
     }
 }

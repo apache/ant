@@ -63,18 +63,23 @@ import java.util.*;
  * @author costin@dnt.ro
  */
 public class Property extends Task {
-    String name;
-    String value;
-    String file;
-    String resource;
+    private String name;
+    private String value;
+    private String file;
+    private String resource;
 
-    // needs to be set at XML-reading time,
-    // no runtime action
+    /**
+     * Needs to be set at XML-reading time,
+     * no runtime action.
+     *
+     * @exception BuildException Thrown in unrecoverable error.
+     */
     public void execute() throws BuildException {
     }
 
     // XXX ugly - needs to be fixed
-    /** Called after each setter, will set the property at read-time
+    /**
+     * Called after each setter, will set the property at read-time
      */
     private void initTimeSetProperty()  {
 	try {

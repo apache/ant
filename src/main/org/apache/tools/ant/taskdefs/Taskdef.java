@@ -55,16 +55,15 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
-import java.io.*;
-import java.util.*;
+
 /**
  * Define a new task - name and class
  *
  * @author costin@dnt.ro
  */
 public class Taskdef extends Task {
-    String name;
-    String value;
+    private String name;
+    private String value;
     
     public void execute() throws BuildException {
 	try {
@@ -87,10 +86,10 @@ public class Taskdef extends Task {
     }
 
     public void setName( String name) {
-	this.name=name;
+	this.name = name;
     }
 
     public void setClass(String v) {
-	value=v;
+	value = v;
     }
 }
