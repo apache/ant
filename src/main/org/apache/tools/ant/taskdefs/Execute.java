@@ -419,10 +419,24 @@ public class Execute {
         exitValue = value;
     }
 
+    /**
+     * query the exit value of the process.
+     * @return the exit value, 1 if the process was killed,
+     * or Project.INVALID if no exit value has been received
+     */
     public int getExitValue() {
         return exitValue;
     }
 
+    /**
+     * test for an untimely death of the process
+     * @return true iff a watchdog had to kill the process
+     * @since 1.5
+     */
+    public boolean killedProcess() {
+        return watchdog!=null && watchdog.killedProcess();    
+    }
+    
     /**
      * Patch the current environment with the new values from the user.
      * @return the patched environment
