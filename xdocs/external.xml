@@ -210,6 +210,31 @@
         </table>
       </subsection>
 
+      <subsection name="AntForm">
+
+        <p>Provides a java/swing form-based input scheme for
+        configuring ant properties and launching ant targets.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.2.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antforms.sourceforge.net/">http://antforms.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:rene_ghosh@yahoo.com">Ren&#233; Ghosh</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Antmerge">
 
         <p>Provides simple inheritance between ant files</p>
