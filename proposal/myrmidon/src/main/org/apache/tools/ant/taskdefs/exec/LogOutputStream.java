@@ -10,6 +10,8 @@ package org.apache.tools.ant.taskdefs.exec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
@@ -23,22 +25,21 @@ import org.apache.tools.ant.Task;
 public class LogOutputStream
     extends OutputStream
 {
-    private final int m_level;
-    private final Task m_task;
+    private final boolean m_isError;
+    private final Logger m_logger;
 
     private ByteArrayOutputStream m_buffer = new ByteArrayOutputStream();
     private boolean m_skip;
 
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param task the task for whom to log
-     * @param level loglevel used to log data written to this stream.
-     */
-    public LogOutputStream( final Task task, final int level )
+    public LogOutputStream( final Logger logger, final boolean isError )
     {
-        m_task = task;
-        m_level = level;
+        m_logger = logger;
+        m_isError = isError;
+    }
+
+    protected final Logger getLogger()
+    {
+        return m_logger;
     }
 
     /**
@@ -86,7 +87,7 @@ public class LogOutputStream
      */
     private void processBuffer()
     {
-        processLine( m_buffer.toString(), m_level );
+        processLine( m_buffer.toString() );
         m_buffer.reset();
     }
 
@@ -96,8 +97,20 @@ public class LogOutputStream
      * @param line the line to log.
      * @param level Description of Parameter
      */
-    protected void processLine( String line, int level )
+    protected void processLine( final String line )
     {
-        m_task.log( line, level );
+        if( m_isError )
+        {
+            getLogger().warn( line );
+        }
+        else
+        {
+            getLogger().info( line );
+        }
+    }
+
+    public boolean isError()
+    {
+        return m_isError;
     }
 }
