@@ -21,6 +21,7 @@ import java.util.zip.*;
 public class Bootstrap {
    
     private static String base = "../";
+    private static String crimsonSources = "../../../xml-crimson/src"; // relative to base
     private static String[] modules = new String[]{"copy", "echo", "jar", "javac"};
 
     /**
@@ -45,6 +46,7 @@ public class Bootstrap {
         // ------------------------------------------------------------
 
         mkdir(base + "bootstrap/temp");
+        mkdir(base + "bootstrap/temp/crimson");
         mkdir(base + "bootstrap/temp/main");
         mkdir(base + "bootstrap/temp/tasks");
         mkdir(base + "bootstrap/temp/taskjars");
@@ -52,13 +54,21 @@ public class Bootstrap {
         for (int i = 0; i < modules.length; i++) {
             mkdir(base + "bootstrap/temp/tasks/" + modules[i]);
         }
+      
+        // ------------------------------------------------------------
+        // build crimson
+        // ------------------------------------------------------------       
+        
+        System.out.println("CRIMSON: " + base + crimsonSources);
+        Vector v1 = getSources(base + crimsonSources);
+        doCompile(base + "bootstrap/temp/crimson", v1);
         
         // ------------------------------------------------------------
         // build the main thing
         // ------------------------------------------------------------        
         
-        Vector v = getSources(base + "source/main");
-        doCompile(base + "bootstrap/temp/main", v);
+        Vector v2 = getSources(base + "source/main");
+        doCompile(base + "bootstrap/temp/main", v2);
         
         // ------------------------------------------------------------
         // now build each of the needed peices into their
@@ -83,8 +93,8 @@ public class Bootstrap {
         String[] cmdarray = new String[9];
         cmdarray[0] = "java";
         cmdarray[1] = "-cp";
-        cmdarray[2] = base + "bootstrap/temp/main:" + base + "lib/jaxp.jar:" +
-                      base + "lib/crimson.jar";
+        cmdarray[2] = base + "bootstrap/temp/main:" +
+                      base + "bootstrap/temp/crimson";
         cmdarray[3] = "org.apache.ant.cli.Main";
         cmdarray[4] = "-taskpath";
         cmdarray[5] = base + "bootstrap/temp/taskjars";
@@ -255,8 +265,8 @@ public class Bootstrap {
                                                                  "javac");        
         String[] args = new String[sources.size() + 4];
         args[0] = "-classpath";
-        args[1] = base + "bootstrap/temp/main:" + base + "lib/jaxp.jar:" + 
-                  base + "lib/crimson.jar";
+        args[1] = base + "bootstrap/temp/main:" + 
+                  base + "bootstrap/temp/crimson";
         args[2] = "-d";
         args[3] = dest;
         for (int i = 0; i < sources.size(); i++) {
