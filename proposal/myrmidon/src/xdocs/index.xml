@@ -1,96 +1,111 @@
 <document>
 
-<properties>
-<author email="adammurdoch@apache.org">Adam Murdoch</author>
-<title>Introduction</title>
-</properties>
+    <properties>
+        <author email="adammurdoch@apache.org">Adam Murdoch</author>
+        <title>Introduction</title>
+    </properties>
 
-<body>
+    <body>
 
-<section name="What is Myrmidon?">
+        <section name="What is Myrmidon?">
 
-<p>
-Myrmidon is one of the Ant 2 proposals currently in development.  You can
-read more about the goals of Ant 2
-<a href="http://jakarta.apache.org/ant/ant2/">here</a>.
-</p>
+            <p>
+            Myrmidon is one of the Ant 2 proposals currently in development.  You can
+            read more about the goals of Ant 2
 
-<p>
-Myrmidon is a general-purpose <i>task engine</i>.  It contains the basic
-building blocks for assembling any sort of task-based tool.  Ant 2
-is an example of such a tool, which could be assembled using the Myrmidon task
-engine, and a library of build related tasks.
-</p>
+                <a href="http://jakarta.apache.org/ant/ant2/">here</a>.
 
-<p>
-Currently, Myrmidon is a prototype of what a task engine might look.  It
-includes a small set of tasks and data types.  We are currently porting
-many of the Ant 1.x tasks to the Myrmidon task engine.
-</p>
+            </p>
 
-<p>
-</p>
+            <p>
+            Myrmidon is a general-purpose
+                <i>task engine</i>.  It contains the basic
+            building blocks for assembling any sort of task-based tool.  Ant 2
+            is an example of such a tool, which could be assembled using the Myrmidon task
+            engine, and a library of build related tasks.
 
-</section>
+            </p>
 
-<section name="Differences to Ant 1.x">
+            <p>
+            Currently, Myrmidon is a prototype of what a task engine might look.  It
+            includes a small set of tasks and data types.  We are currently porting
+            many of the Ant 1.x tasks to the Myrmidon task engine.
+            </p>
 
-<p>Some of the differences between Ant 1.x and Myrmidon:</p>
+            <p>
+            </p>
 
-<ul>
+        </section>
 
-<li>
-Groups of tasks can be assembled into self-describing <i>antlib</i> task
-libraries.  This makes it very easy to distribute and install tasks and data-types.
-</li>
+        <section name="Differences to Ant 1.x">
 
-<li>
-A project can import other projects, and reference their targets.
-</li>
+            <p>Some of the differences between Ant 1.x and Myrmidon:</p>
 
-<li>
-Changes to the property model:
-<ul>
-    <li>Properties and data type references now share the same namespace.</li>
-    <li>Properties are mutable.</li>
-    <li>Properties are scoped into global, local, and parent contexts.</li>
-    <li><code>if</code> and <code>unless</code> checks now test the property
-    value against <code>false</code>, in addition to testing set/not-set.</li>
-</ul>
-</li>
+            <ul>
 
-<li>
-Changes to task and data-type API:
-<ul>
-    <li>An interface based API, through which a task interacts with the
-    task engine, and the services it provides.</li>
-    <li>A well-defined object lifecycle.</li>
-    <li>Polymorphic types are supported when objects are configured.</li>
-    <li>Reference handling is handled automatically when objects are configured.</li>
-    <li>Aspects can be used to decorate tasks, to add facilities like logging,
-    error handling, or user preferences.</li>
-</ul>
-</li>
+                <li>
+                Groups of tasks can be assembled into self-describing
+                    <i>antlib</i> task
+                libraries.  This makes it very easy to distribute and install tasks and data-types.
 
-<li>
-A set of well-defined services and APIs have been introduced, to allow
-tasks to do their work without depending on other tasks:
-<ul>
-    <li>Execute external commands.</li>
-    <li>Execute other tasks.</li>
-    <li>Manage ClassLoaders and Class-paths.</li>
-    <li>Virtual file system (in progress).</li>
-    <li>Execute Java applications (in progress).</li>
-    <li>...</li>
-</ul>
-</li>
+                </li>
 
-</ul>
+                <li>
+                A project can import other projects, and reference their targets.
+                </li>
 
-<p>There are plenty more features planned.  You can read about them <a href="todo.html">here</a>.</p>
+                <li>
+                Changes to the property model:
 
-</section>
+                    <ul>
+                        <li>Properties and data type references now share the same namespace.</li>
+                        <li>Properties are mutable.</li>
+                        <li>Properties are scoped into global, local, and parent contexts.</li>
+                        <li>
+                            <code>if</code> and
+                            <code>unless</code> checks now test the property
+                        value against
+                            <code>false</code>, in addition to testing set/not-set.
+                        </li>
+                    </ul>
+                </li>
 
-</body>
+                <li>
+                Changes to task and data-type API:
+
+                    <ul>
+                        <li>An interface based API, through which a task interacts with the
+                        task engine, and the services it provides.</li>
+                        <li>A well-defined object lifecycle.</li>
+                        <li>Polymorphic types are supported when objects are configured.</li>
+                        <li>Reference handling is handled automatically when objects are configured.</li>
+                        <li>Aspects can be used to decorate tasks, to add facilities like logging,
+                        error handling, or user preferences.</li>
+                    </ul>
+                </li>
+
+                <li>
+                A set of well-defined services and APIs have been introduced, to allow
+                tasks to do their work without depending on other tasks:
+
+                    <ul>
+                        <li>Execute external commands.</li>
+                        <li>Execute other tasks.</li>
+                        <li>Manage ClassLoaders and Class-paths.</li>
+                        <li>Virtual file system (in progress).</li>
+                        <li>Execute Java applications (in progress).</li>
+                        <li>...</li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <p>There are plenty more features planned.  You can read about them
+                <a href="todo.html">here</a>.
+            </p>
+
+        </section>
+
+    </body>
 
 </document>
