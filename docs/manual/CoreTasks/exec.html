@@ -107,9 +107,6 @@ href="../using.html#arg">Command line arguments</a>.</p>
 <h4><a name="env">env</a></h4>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements.</p>
-<p>Please note that the environment of the current Ant process is
-<b>not</b> passed to the system command if you specify variables using
-<code>&lt;env&gt;</code>.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -166,7 +163,7 @@ sub process is killed and a message printed to the log. The return
 value of the execution will be "-1", which will halt the build if
 <tt>failonerror=true</tt>, but be ignored otherwise.
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

@@ -152,9 +152,6 @@ attribute.</p>
 <p>It is possible to specify environment variables to pass to the
 system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
-<p>Please note that the environment of the current Ant process is
-<b>not</b> passed to the system command if you specify variables using
-<code>&lt;env&gt;</code>.</p>
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;apply executable=&quot;ls&quot; &gt;
@@ -199,7 +196,7 @@ of all files separated by spaces.</p>
 <code>.o</code>, replacing TARGETFILE with the absolute filename of
 the <code>.o</code> and SOURCEFILE with the absolute name of the
 <code>.c</code> file.</p>
-<hr><p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
