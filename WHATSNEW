@@ -81,7 +81,10 @@ Other changes:
 * New task <getlibraries> can retrieve library files from a maven repository.
 
 * unzip/unwar/unjar/untar now supports a nested mapper, which lets you unzip
-  in useful ways. 
+  in useful ways.
+
+* Junit task -- display suite first.
+  Bugzilla report 31962.
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================

@@ -94,19 +94,27 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * The whole testsuite started.
+     * @param suite the test suite
      */
-    public void startTestSuite(JUnitTest suite) throws BuildException {
-    }
-
-    /**
-     * The whole testsuite ended.
-     */
-    public void endTestSuite(JUnitTest suite) throws BuildException {
+    public void startTestSuite(JUnitTest suite) {
+        if (output == null) {
+            return; // Quick return - no output do nothing.
+        }
         String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Testsuite: ");
         sb.append(suite.getName());
         sb.append(newLine);
-        sb.append("Tests run: ");
+        output.write(sb.toString());
+        output.flush();
+    }
+
+    /**
+     * The whole testsuite ended.
+     * @param suite the test suite
+     */
+    public void endTestSuite(JUnitTest suite) {
+        String newLine = System.getProperty("line.separator");
+        StringBuffer sb = new StringBuffer("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());

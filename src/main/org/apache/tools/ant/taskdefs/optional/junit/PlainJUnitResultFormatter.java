@@ -81,20 +81,34 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     }
 
     /**
-     * Empty.
+     * The whole testsuite started.
+     * @param suite the test suite
+     * @throws BuildException if unable to write the output
      */
-    public void startTestSuite(JUnitTest suite) {
-    }
-
-    /**
-     * The whole testsuite ended.
-     */
-    public void endTestSuite(JUnitTest suite) throws BuildException {
+    public void startTestSuite(JUnitTest suite) throws BuildException {
+        if (out == null) {
+            return; // Quick return - no output do nothing.
+        }
         String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Testsuite: ");
         sb.append(suite.getName());
         sb.append(newLine);
-        sb.append("Tests run: ");
+        try {
+            out.write(sb.toString().getBytes());
+            out.flush();
+        } catch (IOException ex) {
+            throw new BuildException("Unable to write output", ex);
+        }
+    }
+
+    /**
+     * The whole testsuite ended.
+     * @param suite the test suite
+     * @throws BuildException if unable to write the output
+     */
+    public void endTestSuite(JUnitTest suite) throws BuildException {
+        String newLine = System.getProperty("line.separator");
+        StringBuffer sb = new StringBuffer("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());
