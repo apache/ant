@@ -13,11 +13,11 @@ set CLASSPATH=%LOCALCLASSPATH%;%CLASSPATH%
 set LOCALCLASSPATH=
 
 if not "%REAL_ANT_HOME%" == "" goto install_ant
-call bootstrap\bin\ant.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
+call bootstrap\bin\ant.bat -emacs %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :install_ant
-call bootstrap\bin\ant.bat -Dant.install="%REAL_ANT_HOME%" %1 %2 %3 %4 %5 %6 %7 %8 %9
+call bootstrap\bin\ant.bat -emacs -Dant.install="%REAL_ANT_HOME%" %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem clean up
 :cleanup

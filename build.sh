@@ -26,5 +26,5 @@ if [ "$REALANTHOME" != "" ] ; then
   ANT_INSTALL="-Dant.install=$REALANTHOME"
 fi
 
-bootstrap/bin/ant $ANT_INSTALL $*
+bootstrap/bin/ant -emacs $ANT_INSTALL $*
 

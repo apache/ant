@@ -77,8 +77,7 @@ echo ... Building Ant Distribution
 
 cp -r ${CLASSDIR} build
 
-${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
-                      -buildfile build.xml bootstrap
+${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main -emacs bootstrap
 
 echo ... Cleaning Up Build Directories
 

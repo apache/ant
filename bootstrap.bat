@@ -59,7 +59,7 @@ echo ... Building Ant Distribution
 
 xcopy /s/q %CLASSDIR% build\classes
 
-%JAVA% %ANT_OPTS% org.apache.tools.ant.Main bootstrap
+%JAVA% %ANT_OPTS% org.apache.tools.ant.Main -emacs bootstrap
 
 echo.
 echo ... Cleaning Up Build Directories
