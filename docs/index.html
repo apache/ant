@@ -3562,7 +3562,8 @@ This problem may occur with all JDKs &lt; 1.2.</p>
 <h3>Description</h3>
 <p>Generates code documentation using the javadoc tool.</p>
 <p>The source directory will be recursively scanned for Java source files to process
-but only those matching the inclusion rules will be passed to the javadoc tool. This
+but only those matching the inclusion rules, and not matching the exclusions rules
+ will be passed to the javadoc tool. This
 allows wildcards to be used to choose between package names, reducing verbosity
 and management costs over time. This task, however, has no notion of
 &quot;changed&quot; files, unlike the <a href="#javac">javac</a> task. This means
@@ -3632,6 +3633,13 @@ instead.</p>
     <td valign="top">Comma separated list of package files (with terminating
       wildcard)</td>
     <td align="center" valign="top">all</td>
+  </tr>
+  <tr>
+    <td valign="top">excludepackagenames</td>
+    <td valign="top">Comma separated list of package files to exlclude (with
+      optional terminating wildcard)</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">packageList</td>
