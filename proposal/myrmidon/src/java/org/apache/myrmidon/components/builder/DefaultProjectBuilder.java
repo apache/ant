@@ -17,13 +17,11 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.CascadingException;
-
 import org.apache.avalon.framework.Version;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.components.model.DefaultProject;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.model.Project;
@@ -263,9 +261,11 @@ public class DefaultProjectBuilder
                 }
             }
 
-            if( name.equals( "target" ) ) {
+            if( name.equals( "target" ) )
+            {
                 buildTarget( project, element );
-            } else
+            }
+            else
             {
                 final String message =
                     REZ.getString( "ant.unknown-toplevel-element.error", name, element.getLocation() );
@@ -456,9 +456,12 @@ public class DefaultProjectBuilder
 
     protected boolean validName( final String name )
     {
-        if( -1 != name.indexOf( "->" ) ) {
+        if( -1 != name.indexOf( "->" ) )
+        {
             return false;
-        } else {
+        }
+        else
+        {
             return true;
         }
     }

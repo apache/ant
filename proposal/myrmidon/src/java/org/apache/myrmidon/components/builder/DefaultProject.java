@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.model;
+package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.util.ArrayList;
