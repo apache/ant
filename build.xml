@@ -574,7 +574,7 @@
       <manifest>
         <section name="${ant.package}">
           <attribute name="Extension-name"
-                     value="org.apache.tools.ant" />
+                     value="${ant.package}" />
           <attribute name="Specification-Title"
                      value="Apache Ant" />
           <attribute name="Specification-Version"
