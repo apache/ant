@@ -4,7 +4,7 @@
   =======================================================================
    Apache Ant own build file
 
-   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+   Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
    reserved.
 
   =======================================================================
@@ -173,8 +173,6 @@
              unless="sunuue.present"/>
   </patternset>
   <patternset id="needs.sun.b64">
-    <exclude name="${ant.package}/taskdefs/Get.java"
-             unless="base64.present"/>
     <exclude name="${optional.package}/splash/SplashTask.java"
              unless="base64.present"/>
   </patternset>
@@ -670,7 +668,6 @@
       <exclude name="${ant.package}/listener/CommonsLoggingListener.class"/>
       <exclude name="${ant.package}/taskdefs/email/UUMailer.class"/>
       <exclude name="${ant.package}/taskdefs/email/MimeMailer.class"/>
-      <exclude name="${ant.package}/taskdefs/Get.class"/>
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
@@ -710,7 +707,6 @@
       <include name="${ant.package}/listener/CommonsLoggingListener.class"/>
       <include name="${ant.package}/taskdefs/email/UUMailer.class"/>
       <include name="${ant.package}/taskdefs/email/MimeMailer.class"/>
-      <include name="${ant.package}/taskdefs/Get.class"/>
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
