@@ -14,7 +14,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.TaskException;
@@ -110,11 +109,13 @@ public class EmbeddedAnt
 
     /**
      * Sets a task engine property.  These are used to configure the task engine.
+     *
+     * @todo Make this method actually work with objects...
      */
     public void setEmbeddorProperty( final String name, final Object value )
     {
         // TODO - Make properties Objects, not Strings
-        m_embeddorParameters.setParameter( name, (String)value );
+        m_embeddorParameters.setParameter( name, value.toString() );
     }
 
     /**
