@@ -430,6 +430,11 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             if (msg == null) {
                 msg = getDisplayableMessage(ite);
             }
+            if (nested != null) {
+                nested.printStackTrace();
+            } else {
+                ite.printStackTrace();
+            }
             throw new RuntimeException("InvocationTargetException setting the "
                                        + "compressed size of " + ze + ": "
                                        + msg);
