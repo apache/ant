@@ -36,7 +36,7 @@ public class Watchdog implements Runnable {
 
     public Watchdog(long timeout) {
         if (timeout < 1) {
-            throw new IllegalArgumentException("timeout lesser than 1.");
+            throw new IllegalArgumentException("timeout less than 1.");
         }
         this.timeout = timeout;
     }
