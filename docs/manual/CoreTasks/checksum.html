@@ -132,48 +132,48 @@ built-in into your JDK.</p>
 
 <h3>Examples</h3>
 <p><b>Example 1</b></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot;/&gt;</pre>
+<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot;/&gt;</pre></blockquote>
 Generates a MD5 checksum for foo.bar and stores the checksum in the destination file
 foo.bar.MD5.  foo.bar.MD5 is overwritten only if foo.bar is newer than itself.
 
 <p><b>Example 2</b></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; forceOverwrite=&quot;yes&quot;/&gt;</pre>
+<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot; forceOverwrite=&quot;yes&quot;/&gt;</pre></blockquote>
 Generates a MD5 checksum for foo.bar and stores the checksum in foo.bar.MD5.
 If foo.bar.MD5 already exists, it is overwritten.
 
 <p><b>Example 3</b></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; property=&quot;foobarMD5&quot;/&gt;</pre>
+<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot; property=&quot;foobarMD5&quot;/&gt;</pre></blockquote>
 Generates a MD5 checksum for foo.bar and stores it in the Project Property foobarMD5.
 
 <p><b>Example 4</b></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; verifyProperty=&quot;isMD5ok&quot;/&gt;</pre>
+<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot; verifyProperty=&quot;isMD5ok&quot;/&gt;</pre></blockquote>
 Generates a MD5 checksum for foo.bar, compares it against foo.bar.MD5 and sets
 isMD5ok to either true or false, depending upon the result.
 
 <p><b>Example 5</b></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; algorithm=&quot;SHA&quot; fileext=&quot;asc&quot;/&gt;</pre>
+<blockquote><pre>&lt;checksum file=&quot;foo.bar&quot; algorithm=&quot;SHA&quot; fileext=&quot;asc&quot;/&gt;</pre></blockquote>
 Generates a SHA checksum for foo.bar and stores the checksum in the destination file
 foo.bar.asc.  foo.bar.asc is overwritten only if foo.bar is newer than itself.
 
 <p><b>Example 6</b></p>
-<pre>
+<blockquote><pre>
 &lt;checksum file=&quot;foo.bar&quot; property=&quot;${md5}&quot; verifyProperty=&quot;isEqual&quot;/&gt;
-</pre>
+</pre></blockquote>
 Generates a MD5 checksum for foo.bar, compares it against the value of the property
 md5, and sets isEqual to either true or false, depending upon the result.
 
 <p><b>Example 7</b></p>
-<pre>
+<blockquote><pre>
 &lt;checksum&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
     &lt;include name=&quot;foo*&quot;/&gt;
   &lt;/fileset&gt;
 &lt;/checksum&gt;
-</pre>
+</pre></blockquote>
 Works just like Example 1, but generates a .MD5 file for every file that begins with the name foo.
 
 <p><b>Example 8</b></p>
-<pre>
+<blockquote><pre>
 &lt;condition property=&quot;isChecksumEqual&quot;&gt;
   &lt;checksum&gt;
     &lt;fileset dir=&quot;.&quot;&gt;
@@ -181,7 +181,7 @@ Works just like Example 1, but generates a .MD5 file for every file that begins 
     &lt;/fileset&gt;
   &lt;/checksum&gt;
 &lt;/condition&gt;
-</pre>
+</pre></blockquote>
 Works like Example 4, but only sets isChecksumEqual to true, if the
 checksum matches - it will never be set to false.  This example
 demonstrates use with the Condition task.
