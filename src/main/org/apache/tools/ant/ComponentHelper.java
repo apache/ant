@@ -583,7 +583,8 @@ public class ComponentHelper  {
     private boolean sameDefinition(
         AntTypeDefinition def, AntTypeDefinition old) {
         boolean defValid = validDefinition(def);
-        boolean sameValidity = defValid ^ !validDefinition(old);
+        boolean sameValidity = (defValid == validDefinition(old));
+        //must have same validity; then if they are valid they must also be the same:
         return sameValidity && (!defValid || def.sameDefinition(old, project));
     }
 
