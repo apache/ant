@@ -52,4 +52,14 @@
       <include name="**/C.class"/>
     </classfileset>
   </target>
+  
+  <target name="testbyreference" depends="compile">
+    <classfileset id="classSet" dir="${classes.dir}" rootclass="A">
+      <include name="**/C.class"/>
+    </classfileset>
+    <jar destfile="${tempsrc.dir}/test.jar">
+      <fileset refid="classSet"/>
+    </jar>
+  </target>
+  
 </project>
