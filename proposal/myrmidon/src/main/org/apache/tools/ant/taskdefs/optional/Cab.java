@@ -317,8 +317,7 @@ public class Cab extends MatchingTask
         throws TaskException
     {
         ExecTask exec = (ExecTask)project.createTask( "exec" );
-        exec.setOwningTarget( this.getOwningTarget() );
-        exec.setDescription( this.getDescription() );
+        exec.setDescription( getDescription() );
 
         return exec;
     }

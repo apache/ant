@@ -53,7 +53,6 @@ public class BuildEvent extends EventObject
     {
         super( task );
         this.project = task.getProject();
-        this.target = task.getOwningTarget();
         this.task = task;
     }
 

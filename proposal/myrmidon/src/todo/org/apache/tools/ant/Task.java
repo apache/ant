@@ -13,7 +13,6 @@ public abstract class Task
     extends ProjectComponent
     implements org.apache.myrmidon.api.Task
 {
-    protected Target target;
     protected String description;
     protected String taskType;
 
@@ -28,30 +27,11 @@ public abstract class Task
         description = desc;
     }
 
-    /**
-     * Sets the target object of this task.
-     *
-     * @param target Target in whose scope this task belongs.
-     */
-    public void setOwningTarget( Target target )
-    {
-        this.target = target;
-    }
-
     public String getDescription()
     {
         return description;
     }
 
-    /**
-     * Get the Target to which this task belongs
-     *
-     * @return the task's target.
-     */
-    public Target getOwningTarget()
-    {
-        return target;
-    }
     /**
      * Perform this task
      */

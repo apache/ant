@@ -303,7 +303,6 @@ public class Get extends Task
         if( project.getJavaVersion() != Project.JAVA_1_1 )
         {
             Touch touch = (Touch)project.createTask( "touch" );
-            touch.setOwningTarget( target );
             touch.setFile( file );
             touch.setMillis( timemillis );
             touch.touch();
