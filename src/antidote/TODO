@@ -1,4 +1,7 @@
 TODO List:
+    * Rewrite ACSFactory to use it's own parser rather than the implementation
+      specific com.sun.xml.tree.SimpleElementFactory class (only available
+      in JAXP from Sun).
 
     * Add editors for defining file sets, and other "sets".
 
@@ -44,9 +47,6 @@ TODO List:
     * Figure out an approach to gracefully stopping a running build.
 
     * Add error handler for SAX parser to better report loading errors.
-
-    * Add support to ActionManager to handle toggle actions in tool bar. Also
-      need a better way of detecting the selected state of the action button.
 
     * Project properties viewer, including the ability to view
       dependencies (local and cascading).
