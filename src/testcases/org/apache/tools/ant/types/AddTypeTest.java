@@ -123,6 +123,11 @@ public class AddTypeTest extends BuildFileTest {
         expectLogContaining(
             "myaddconfigured", "value is Value Setexecute: value is Value Set");
     }
+
+    public void testNamespace() {
+        executeTarget("namespacetest");
+    }
+    
     // The following will be used as types and tasks
     
     public static interface A {}
