@@ -112,6 +112,8 @@ Other changes:
 
 * New attribute "negate" on <propertyset> to invert selection criteria.
 
+* New "pattern" attribute for <date> selector.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 

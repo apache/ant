@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -39,6 +40,7 @@ public class DateSelector extends BaseExtendSelector {
     private boolean includeDirs = false;
     private int granularity = 0;
     private int cmp = 2;
+    private String pattern;
     /** Key to used for parameterized custom selector */
     public static final String MILLIS_KEY = "millis";
     /** Key to used for parameterized custom selector */
@@ -49,6 +51,8 @@ public class DateSelector extends BaseExtendSelector {
     public static final String GRANULARITY_KEY = "granularity";
     /** Key to used for parameterized custom selector */
     public static final String WHEN_KEY = "when";
+    /** Key to used for parameterized custom selector */
+    public static final String PATTERN_KEY = "pattern";
 
     /**
      * Creates a new <code>DateSelector</code> instance.
@@ -76,6 +80,9 @@ public class DateSelector extends BaseExtendSelector {
         }
         buf.append(" granularity: ");
         buf.append(granularity);
+        if (pattern != null) {
+            buf.append(" pattern: ").append(pattern);
+        }
         buf.append("}");
         return buf.toString();
     }
@@ -95,6 +102,9 @@ public class DateSelector extends BaseExtendSelector {
      * @return the millisecond value
      */
     public long getMillis() {
+        if (dateTime != null) {
+            validate();
+        }
         return millis;
     }
 
@@ -106,24 +116,6 @@ public class DateSelector extends BaseExtendSelector {
      */
     public void setDatetime(String dateTime) {
         this.dateTime = dateTime;
-        if (dateTime != null) {
-            DateFormat df = DateFormat.getDateTimeInstance(
-                    DateFormat.SHORT,
-                    DateFormat.SHORT,
-                    Locale.US);
-            try {
-                setMillis(df.parse(dateTime).getTime());
-                if (millis < 0) {
-                    setError("Date of " + dateTime
-                            + " results in negative milliseconds value relative"
-                            + " to epoch (January 1, 1970, 00:00:00 GMT).");
-                }
-            } catch (ParseException pe) {
-                setError("Date of " + dateTime
-                        + " Cannot be parsed correctly. It should be in"
-                        + " MM/DD/YYYY HH:MM AM_PM format.");
-            }
-        }
     }
 
     /**
@@ -152,6 +144,15 @@ public class DateSelector extends BaseExtendSelector {
      */
     public void setWhen(TimeComparisons cmp) {
         this.cmp = cmp.getIndex();
+    }
+
+    /**
+     * Sets the pattern to be used for the SimpleDateFormat
+     *
+     * @param pattern the pattern that defines the date format
+     */
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 
     /**
@@ -189,6 +190,8 @@ public class DateSelector extends BaseExtendSelector {
                     TimeComparisons cmp = new TimeComparisons();
                     cmp.setValue(parameters[i].getValue());
                     setWhen(cmp);
+                } else if (PATTERN_KEY.equalsIgnoreCase(paramname)) {
+                    setPattern(parameters[i].getValue());
                 } else {
                     setError("Invalid parameter " + paramname);
                 }
@@ -204,10 +207,26 @@ public class DateSelector extends BaseExtendSelector {
         if (dateTime == null && millis < 0) {
             setError("You must provide a datetime or the number of "
                     + "milliseconds.");
-        } else if (millis < 0) {
-            setError("Date of " + dateTime
-                    + " results in negative milliseconds value"
-                    + " relative to epoch (January 1, 1970, 00:00:00 GMT).");
+        } else if (millis < 0 && dateTime != null) {
+            // check millis and only set it once.
+            DateFormat df = ((pattern == null)
+                ? DateFormat.getDateTimeInstance(
+                    DateFormat.SHORT, DateFormat.SHORT, Locale.US)
+                : new SimpleDateFormat(pattern));
+
+            try {
+                setMillis(df.parse(dateTime).getTime());
+                if (millis < 0) {
+                    setError("Date of " + dateTime
+                        + " results in negative milliseconds value"
+                        + " relative to epoch (January 1, 1970, 00:00:00 GMT).");
+                }
+            } catch (ParseException pe) {
+                setError("Date of " + dateTime
+                        + " Cannot be parsed correctly. It should be in"
+                        + ((pattern == null)
+                        ? " MM/DD/YYYY HH:MM AM_PM" : pattern) + " format.");
+            }
         }
     }
 
@@ -221,7 +240,9 @@ public class DateSelector extends BaseExtendSelector {
      * @return whether the file should be selected or not
      */
     public boolean isSelected(File basedir, String filename, File file) {
+
         validate();
+
         if (file.isDirectory() && (!includeDirs)) {
             return true;
         }
