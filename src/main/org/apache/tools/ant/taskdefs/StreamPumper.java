@@ -62,6 +62,7 @@ import java.io.OutputStream;
  * Copies all data from an input stream to an output stream.
  *
  * @author thomas.haas@softwired-inc.com
+ * @since Ant 1.2
  */
 public class StreamPumper implements Runnable {
 

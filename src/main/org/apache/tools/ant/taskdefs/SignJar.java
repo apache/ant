@@ -71,7 +71,7 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
  * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
- *
+ * @since Ant 1.1
  * @ant.task category="java"
  */
 public class SignJar extends Task {
@@ -160,6 +160,7 @@ public class SignJar extends Task {
 
     /**
      * Adds a set of files (nested fileset attribute).
+     * @since Ant 1.4
      */
     public void addFileset(final FileSet set) {
         filesets.addElement(set);
@@ -168,7 +169,8 @@ public class SignJar extends Task {
 
     public void execute() throws BuildException {
         if (null == jar && null == filesets) {
-            throw new BuildException("jar must be set through jar attribute or nested filesets");
+            throw new BuildException("jar must be set through jar attribute "
+                                     + "or nested filesets");
         }
         if( null != jar ) {
             doOneJar(jar, signedjar);
@@ -182,15 +184,18 @@ public class SignJar extends Task {
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] jarFiles = ds.getIncludedFiles();
                 for(int j=0; j<jarFiles.length; j++) {
-                    doOneJar( new File( fs.getDir(project), jarFiles[j] ), null);
+                    doOneJar( new File( fs.getDir(project), jarFiles[j] ), 
+                              null);
                 }
             }
         }
     }
 
-    private void doOneJar(File jarSource, File jarTarget) throws BuildException {
+    private void doOneJar(File jarSource, File jarTarget) 
+        throws BuildException {
         if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
-            throw new BuildException("The signjar task is only available on JDK versions 1.2 or greater");
+            throw new BuildException("The signjar task is only available on "
+                                     + "JDK versions 1.2 or greater");
         }
 
         if (null == alias) {

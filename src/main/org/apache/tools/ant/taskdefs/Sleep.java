@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
  * A task to sleep for a period of time
  *
  * @author steve_l@iseran.com steve loughran
- *
+ * @since Ant 1.4
  * @ant.task category="utility"
  */
 
@@ -169,7 +169,8 @@ public class Sleep extends Task {
      */
 
     private long getSleepTime() {
-        return ((((long) hours * 60) + minutes) * 60 + seconds) * 1000 + milliseconds;
+        return ((((long) hours * 60) + minutes) * 60 + seconds) * 1000 
+            + milliseconds;
     }
 
 
@@ -181,7 +182,8 @@ public class Sleep extends Task {
     public void validate() 
         throws BuildException {
         if (getSleepTime() < 0) {
-            throw new BuildException("Negative sleep periods are not supported");
+            throw new BuildException("Negative sleep periods are not "
+                                     + "supported");
         }
     }
 
