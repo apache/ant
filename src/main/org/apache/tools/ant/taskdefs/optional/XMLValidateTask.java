@@ -262,8 +262,8 @@ public class XMLValidateTask extends Task {
             //Class readerImpl = null;
             //Class parserImpl = null;
             if (classpath != null) {
-                AntClassLoader loader = new AntClassLoader(project, classpath, false);
-                loader.addSystemPackageRoot("org.xml"); // needed to avoid conflict
+                AntClassLoader loader = new AntClassLoader(project, classpath);
+//                loader.addSystemPackageRoot("org.xml"); // needed to avoid conflict
                 readerClass = loader.loadClass(readerClassName);
                 AntClassLoader.initializeClass(readerClass);
             } else 

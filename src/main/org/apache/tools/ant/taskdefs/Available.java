@@ -137,7 +137,7 @@ public class Available extends Task {
         }
 
         if (classpath != null) {
-            this.loader = new AntClassLoader(project, classpath, false);
+            this.loader = new AntClassLoader(project, classpath);
         }
 
         if ((classname != null) && !checkClass(classname)) {

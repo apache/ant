@@ -214,7 +214,7 @@ public class Property extends Task {
             InputStream is = null;
 
             if (classpath != null) { 
-                cL = new AntClassLoader(project, classpath, false); 
+                cL = new AntClassLoader(project, classpath); 
             } else { 
                 cL = this.getClass().getClassLoader(); 
             } 

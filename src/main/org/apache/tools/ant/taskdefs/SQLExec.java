@@ -366,7 +366,7 @@ public class SQLExec extends Task {
                 log( "Loading " + driver + " using AntClassLoader with classpath " + classpath, 
                      Project.MSG_VERBOSE );
 
-                loader = new AntClassLoader(project, classpath, false);
+                loader = new AntClassLoader(project, classpath);
                 dc = loader.loadClass(driver);
             }
             else {
