@@ -37,8 +37,8 @@ The Tstamp task supports a <code>&lt;format&gt;</code> nested element that
 allows a property to be set to the current date and time in a given format.
 The date/time patterns are as defined in the Java 
 <a href=http://java.sun.com/products/jdk/1.2/docs/api/java/text/SimpleDateFormat.html>SimpleDateFormat</a> class. 
-
-
+The format element also allows offsets to be applied to the time to generate different time values.
+<br><br>
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
@@ -56,6 +56,28 @@ The date/time patterns are as defined in the Java
     <td valign="top">pattern</td>
     <td valign="top">The date/time pattern to be used. The values are as defined by the Java SimpleDateFormat class.</td>
     <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">offset</td>
+    <td valign="top">The numeric offset to the current time</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unit</td>
+    <td valign="top">The unit of the offset to be applied to the current time.
+                     Valid Values are
+                     <ul>
+                        <li>millisecond</li>
+                        <li>second</li>
+                        <li>minute</li>
+                        <li>hour</li>
+                        <li>day</li>
+                        <li>week</li>
+                        <li>month</li>
+                        <li>year</li>
+                     </ul>
+    </td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 
@@ -77,6 +99,16 @@ and <code>TODAY</code> properties according to the default formats.</p>
 sets the standard properties as well as the property
 <code>TODAY_UK</code> with the date/time pattern &quot;d-MMMM-yyyy&quot;
 (eg., 21-May-2001).
+
+<pre>
+  &lt;tstamp&gt;
+      &lt;format property=&quot;touch.time&quot; pattern=&quot;MM/dd/yyyy hh:mm aa&quot; 
+              offset=&quot;-5&quot; unit=&quot;hour&quot;/&gt;
+  &lt;/tstamp&gt; 
+</pre>    
+<p>
+Creates a timestamp, in the property touch.time, 5 hours before the current time. The format in this example
+is suitable for use with the &lt;touch&gt; task</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights Reserved.</p>
