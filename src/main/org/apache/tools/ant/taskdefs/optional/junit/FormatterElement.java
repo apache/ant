@@ -54,128 +54,104 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.io.File;
-import java.util.Vector;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 /**
+ * Serves as a wrapper the implementations of JUnitResultFormatter,
+ * for example as a nested <formatter> element in <junit>.
  *
- * @author Thomas Haas
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class JUnitTest {
-    private boolean haltOnError = false;
-    private boolean haltOnFail = false;
-    private String name = null;
-    private File outfile = null;
-    private boolean fork = false;
+public class FormatterElement {
 
-    private long runs, failures, errors;
-    private long runTime;
+    private String classname;
+    private String extension;
+    private OutputStream out = System.out;
+    private File outFile;
 
-    private Vector formatters = new Vector();
-
-    public JUnitTest() {
-    }
-
-    public JUnitTest(String name) {
-        this.name  = name;
-    }
-
-    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure) {
-        this.name  = name;
-        this.haltOnError = haltOnError;
-        this.haltOnFail = haltOnFail;
-    }
-
-    public void setFork(boolean value) {
-        fork = value;
-    }
-
-    public boolean getFork() {
-        return fork;
-    }
-
-    public void setHaltonerror(boolean value) {
-        haltOnError = value;
-    }
-
-    public void setHaltonfailure(boolean value) {
-        haltOnFail = value;
-    }
-
-    public void setName(String value) {
-        name = value;
-    }
-
-    public void setOutfile(File value) {
-        outfile = value;
-    }
-
-    public boolean getHaltonerror() {
-        return haltOnError;
-    }
-
-    public boolean getHaltonfailure() {
-        return haltOnFail;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getOutfile() {
-        if (outfile != null) {
-            return outfile.getAbsolutePath();
+    public void setType(TypeAttribute type) {
+        if ("xml".equals(type.getValue())) {
+            setClassname("org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter");
+            setExtension(".xml");
+        } else { // must be plain, ensured by TypeAttribute
+            setClassname("org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter");
+            setExtension(".txt");
         }
-        return null;
     }
 
-    public void setCounts(long runs, long failures, long errors) {
-        this.runs = runs;
-        this.failures = failures;
-        this.errors = errors;
+    public void setClassname(String classname) {
+        this.classname = classname;
     }
 
-    public void setRunTime(long runTime) {
-        this.runTime = runTime;
+    public String getClassname() {
+        return classname;
     }
 
-    public long runCount() {return runs;}
-    public long failureCount() {return failures;}
-    public long errorCount() {return errors;}
-    public long getRunTime() {return runTime;}
-
-    private String ifProperty = null;
-    private String unlessProperty = null;
-
-    public void setIf(String propertyName) {
-        ifProperty = propertyName;
+    public void setExtension(String ext) {
+        this.extension = ext;
     }
 
-    public void setUnless(String propertyName) {
-        unlessProperty = propertyName;
+    public String getExtension() {
+        return extension;
     }
 
-    public boolean shouldRun(Project p) {
-        if (ifProperty != null && p.getProperty(ifProperty) == null) {
-            return false;
-        } else if (unlessProperty != null && 
-                   p.getProperty(unlessProperty) != null) {
-            return false;
+    void setOutfile(File out) {
+        this.outFile = out;
+    }
+
+    public void setOutput(OutputStream out) {
+        this.out = out;
+    }
+
+    JUnitResultFormatter createFormatter() throws BuildException {
+        if (classname == null) {
+            throw new BuildException("you must specify type or classname");
         }
-        return true;
+        
+        Class f = null;
+        try {
+            f = Class.forName(classname);
+        } catch (ClassNotFoundException e) {
+            throw new BuildException(e);
+        }
+
+        Object o = null;
+        try {
+            o = f.newInstance();
+        } catch (InstantiationException e) {
+            throw new BuildException(e);
+        } catch (IllegalAccessException e) {
+            throw new BuildException(e);
+        }
+
+        if (!(o instanceof JUnitResultFormatter)) {
+            throw new BuildException(classname+" is not a JUnitResultFormatter");
+        }
+
+        JUnitResultFormatter r = (JUnitResultFormatter) o;
+
+        if (outFile != null) {
+            try {
+                out = new FileOutputStream(outFile);
+            } catch (java.io.IOException e) {
+                throw new BuildException(e);
+            }
+        }
+        r.setOutput(out);
+        return r;
     }
 
-    public void addFormatter(FormatterElement elem) {
-        formatters.addElement(elem);
-    }
-
-    public FormatterElement[] getFormatters() {
-        FormatterElement[] fes = new FormatterElement[formatters.size()];
-        formatters.copyInto(fes);
-        return fes;
+    /**
+     * Enumerated attribute with the values "plain" and "xml".
+     */
+    public static class TypeAttribute extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"plain", "xml"};
+        }
     }
 }

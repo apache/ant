@@ -82,49 +82,38 @@ import java.util.Vector;
  * unless <code>fork</code> has been disabled.
  *
  * @author Thomas Haas 
+ * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 public class JUnitTask extends Task {
 
-    // <XXX> private final static int HALT_NOT = 1;
-    // <XXX> private final static int HALT_IMMEDIATELY = 2;
-    // <XXX> private final static int HALT_AT_END = 3;
-
     private CommandlineJava commandline = new CommandlineJava();
     private Vector tests = new Vector();
+    private Vector batchTests = new Vector();
+    private Vector formatters = new Vector();
 
     private JUnitTest defaults = new JUnitTest();
-    private boolean defaultOutfile = true;
     private Integer timeout = null;
+    private boolean summary = false;
 
-    // <XXX> private int haltOnError = HALT_AT_END;
-    // <XXX> private int haltOnFailure = HALT_AT_END;
-
-    /**
-     * Set the path to junit classes.
-     * @param junit path to junit classes.
-     */
-    public void setJunit(File junit) {
-        commandline.createClasspath(project).createPathElement().setLocation(junit);
-    }
-
-    public void setDefaulthaltonerror(boolean value) {
+    public void setHaltonerror(boolean value) {
         defaults.setHaltonerror(value);
     }
 
-    public void setDefaulthaltonfailure(boolean value) {
+    public void setHaltonfailure(boolean value) {
         defaults.setHaltonfailure(value);
     }
 
-    public void setDefaultprintsummary(boolean value) {
-        defaults.setPrintsummary(value);
+    public void setPrintsummary(boolean value) {
+        summary = value;
     }
 
-    public void setDefaultprintxml(boolean value) {
-        defaults.setPrintxml(value);
-    }
-
-    public void setDefaultOutFile(boolean value) {
-        defaultOutfile = value;
+    public void setMaxmemory(String max) {
+        if (Project.getJavaVersion().startsWith("1.1")) {
+            createJvmarg().setValue("-mx"+max);
+        } else {
+            createJvmarg().setValue("-Xmx"+max);
+        }
+        
     }
 
     public void setTimeout(Integer value) {
@@ -136,42 +125,36 @@ public class JUnitTask extends Task {
     }
 
     public void setJvm(String value) {
-        defaults.setName(value);
 	commandline.setVm(value);
     }
 
-    public void setJvmargs(String value) {
-	commandline.createVmArgument().setLine(value);
+    public Commandline.Argument createJvmarg() {
+	return commandline.createVmArgument();
     }
-
-
-    /**
-     * Set the classpath to be used by the testcase.
-     * @param classpath the classpath used to run the testcase.
-     */
-    /*public void setClasspath(String classpath) {
-        this.classpath = classpath;
-    }*/
-
 
     public Path createClasspath() {
         return commandline.createClasspath(project);
     }
 
-    public JUnitTest createTest() {
-        final JUnitTest result;
-        result = new JUnitTest(
-            defaults.getFork(),
-            defaults.getHaltonerror(),
-            defaults.getHaltonfailure(),
-            defaults.getPrintsummary(),
-            defaults.getPrintxml(),
-            null, null);
-
-        tests.addElement(result);
-        return result;
+    public void addTest(JUnitTest test) {
+        test.setHaltonerror(defaults.getHaltonerror());
+        test.setHaltonfailure(defaults.getHaltonfailure());
+        test.setFork(defaults.getFork());
+        tests.addElement(test);
     }
 
+    public BatchTest createBatchTest() {
+        BatchTest test = new BatchTest(project);
+        test.setHaltonerror(defaults.getHaltonerror());
+        test.setHaltonfailure(defaults.getHaltonfailure());
+        test.setFork(defaults.getFork());
+        batchTests.addElement(test);
+        return test;
+    }
+
+    public void addFormatter(FormatterElement fe) {
+        formatters.addElement(fe);
+    }
 
     /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
@@ -187,94 +170,108 @@ public class JUnitTask extends Task {
         boolean errorOccurred = false;
         boolean failureOccurred = false;
 
-        final String oldclasspath = System.getProperty("java.class.path");
-
-        commandline.createClasspath(project).createPathElement().setPath(oldclasspath);
-        /*
-         * This doesn't work on JDK 1.1, should use a Classloader of our own 
-         * anyway --SB
-         *
-         * System.setProperty("java.class.path", commandline.createClasspath().toString());
-         */
-
-        Enumeration list = tests.elements();
+        Enumeration list = batchTests.elements();
         while (list.hasMoreElements()) {
-            final JUnitTest test = (JUnitTest)list.nextElement();
+            BatchTest test = (BatchTest)list.nextElement();
+            Enumeration list2 = test.elements();
+            while (list2.hasMoreElements()) {
+                tests.addElement(list2.nextElement());
+            }
+        }
 
-            final String filename = "TEST-" + test.getName() + ".xml";
-// removed --SB
-//            if (new File(filename).exists()) {
-//                project.log("Skipping " + test.getName());
-//                continue;
-//            }
-            project.log("Running " + test.getName());
+        list = tests.elements();
+        while (list.hasMoreElements()) {
+            JUnitTest test = (JUnitTest)list.nextElement();
 
-            if (defaultOutfile && (test.getOutfile() == null ||
-                test.getOutfile().length() == 0)) {
-
-// removed --SB
-//                test.setOutfile("RUNNING-" + filename);
-                test.setOutfile(filename);
+            if (!test.shouldRun(project)) {
+                continue;
             }
 
-            int exitValue = 2;
+            if (test.getOutfile() == null) {
+                test.setOutfile(project.resolveFile("TEST-" + test.getName()));
+            }
 
-            if (test.getFork()) {
-                try {
-		    // Create a watchdog based on the timeout attribute
-                    final Execute execute = new Execute(new PumpStreamHandler(), createWatchdog());
-                    final Commandline cmdl = new Commandline();
-                    cmdl.addArguments(commandline.getCommandline());
-                    cmdl.addArguments(test.getCommandline());
-                    execute.setCommandline(cmdl.getCommandline());
-                    log("Execute JUnit: " + cmdl, Project.MSG_VERBOSE);
-                    exitValue = execute.execute();
+            int exitValue = JUnitTestRunner.ERRORS;
+            if (!test.getFork()) {
+                JUnitTestRunner runner = 
+                    new JUnitTestRunner(test, test.getHaltonerror(),
+                                        test.getHaltonfailure());
+                if (summary) {
+                    log("Running " + test.getName(), Project.MSG_INFO);
+                    
+                    SummaryJUnitResultFormatter f = 
+                        new SummaryJUnitResultFormatter();
+                    f.setOutput(new LogOutputStream(this, Project.MSG_INFO));
+                    runner.addFormatter(f);
                 }
-                catch (IOException e) {
+
+                for (int i=0; i<formatters.size(); i++) {
+                    FormatterElement fe = (FormatterElement) formatters.elementAt(i);
+                    fe.setOutfile(project.resolveFile(test.getOutfile()
+                                                      +fe.getExtension()));
+                    runner.addFormatter(fe.createFormatter());
+                }
+                FormatterElement[] add = test.getFormatters();
+                for (int i=0; i<add.length; i++) {
+                    add[i].setOutfile(project.resolveFile(test.getOutfile()
+                                                          +add[i].getExtension()));
+                    runner.addFormatter(add[i].createFormatter());
+                }
+
+                runner.run();
+                exitValue = runner.getRetCode();
+
+            } else {
+                CommandlineJava cmd = (CommandlineJava) commandline.clone();
+                
+                cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
+                cmd.createArgument().setValue(test.getName());
+                cmd.createArgument().setValue("haltOnError=" 
+                                              + test.getHaltonerror());
+                cmd.createArgument().setValue("haltOnFailure="
+                                              + test.getHaltonfailure());
+                if (summary) {
+                    log("Running " + test.getName(), Project.MSG_INFO);
+                    
+                    cmd.createArgument().setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
+                }
+
+                for (int i=0; i<formatters.size(); i++) {
+                    FormatterElement fe = (FormatterElement) formatters.elementAt(i);
+                    cmd.createArgument().setValue("formatter=" +
+                                                  fe.getClassname() + ","
+                                                  + project.resolveFile(test.getOutfile()
+                                                                               +fe.getExtension()).getAbsolutePath());
+                }
+                
+                FormatterElement[] add = test.getFormatters();
+                for (int i=0; i<add.length; i++) {
+                    cmd.createArgument().setValue("formatter=" +
+                                                  add[i].getClassname() + ","
+                                                  + project.resolveFile(test.getOutfile()
+                                                                               +add[i].getExtension()).getAbsolutePath());
+                }
+
+                Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), createWatchdog());
+                execute.setCommandline(cmd.getCommandline());
+                try {
+                    exitValue = execute.execute();
+                } catch (IOException e) {
                     throw new BuildException("Process fork failed.", e, 
                                              location);
                 }
-            } else {
-                final Object[] arg = { test };
-                final Class[] argType = { arg[0].getClass() };
-                try {
-                    final Class target = Class.forName("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
-                    final Method main = target.getMethod("runTest", argType);
-                    project.log("Load JUnit: " + test, Project.MSG_VERBOSE);
-                    exitValue = ((Integer)main.invoke(null, arg)).intValue();
-                } catch (InvocationTargetException e) {
-                    Throwable t = e.getTargetException();
-                    String msg = "Running test failed: " + t.getMessage();
-                    throw new BuildException(msg, t, location);
-                } catch (Exception e) {
-                    String msg = "Running test failed: " + e.getMessage();
-                    throw new BuildException(msg, e, location);
-                }
             }
 
-            boolean errorOccurredHere = exitValue == 2;
-            boolean failureOccurredHere = exitValue == 1;
-// removed --SB
-//            if (exitValue != 0) {
-//                rename("RUNNING-" + filename, "ERROR-" + filename);
-//            } else {
-//                rename("RUNNING-" + filename, filename);
-//            }
-	    // <XXX> later distinguish HALT_AT_END case
+            boolean errorOccurredHere = exitValue == JUnitTestRunner.ERRORS;
+            boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
             if (errorOccurredHere && test.getHaltonerror()
                 || failureOccurredHere && test.getHaltonfailure()) {
-                throw new BuildException("JUNIT FAILED", location);
-	    } else if (errorOccurredHere || failureOccurredHere) {
-                log("JUNIT FAILED", Project.MSG_ERR);
+                throw new BuildException("Test "+test.getName()+" failed", 
+                                         location);
+            } else if (errorOccurredHere || failureOccurredHere) {
+                log("TEST "+test.getName()+" FAILED", Project.MSG_ERR);
             }
-
-	    // Update overall test status
-            errorOccurred = errorOccurred || errorOccurredHere ;
-            failureOccurred = failureOccurred || failureOccurredHere ;
         }
-
-	// <XXX> later add HALT_AT_END option
-        // Then test errorOccurred and failureOccurred here.
     }
 
     protected ExecuteWatchdog createWatchdog() throws BuildException {

@@ -54,64 +54,70 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.text.NumberFormat;
-import java.io.IOException;
-import java.io.OutputStream;
-import junit.framework.Test;
-
 import org.apache.tools.ant.BuildException;
 
+import java.io.*;
+import java.text.NumberFormat;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
+
 /**
- * Prints short summary output of the test to Ant's logging system.
+ * Prints plain text output of the test to a specified Writer.
  *
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
  */
- 
-public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
+
+public class PlainJUnitResultFormatter implements JUnitResultFormatter {
 
     /**
      * Formatter for timings.
      */
     private NumberFormat nf = NumberFormat.getInstance();
     /**
-     * OutputStream to write to.
+     * Timing helper.
+     */
+    private long lastTestStart = 0;
+    /**
+     * Where to write the log to.
      */
     private OutputStream out;
+    /**
+     * Helper to store intermediate output.
+     */
+    private StringWriter inner;
+    /**
+     * Convenience layer on top of {@link #inner inner}.
+     */
+    private PrintWriter wri;
+    /**
+     * Suppress endTest if testcase failed.
+     */
+    private boolean failed = true;
 
-    /**
-     * Empty
-     */
-    public SummaryJUnitResultFormatter() {}
-    /**
-     * Empty
-     */
-    public void startTestSuite(JUnitTest suite) {}
-    /**
-     * Empty
-     */
-    public void startTest(Test t) {}
-    /**
-     * Empty
-     */
-    public void endTest(Test test) {}
-    /**
-     * Empty
-     */
-    public void addFailure(Test test, Throwable t) {}
-    /**
-     * Empty
-     */
-    public void addError(Test test, Throwable t) {}
-    
+    public PlainJUnitResultFormatter() {
+        inner = new StringWriter();
+        wri = new PrintWriter(inner);
+    }
+
     public void setOutput(OutputStream out) {
         this.out = out;
+    }
+
+    /**
+     * Empty.
+     */
+    public void startTestSuite(JUnitTest suite) {
     }
 
     /**
      * The whole testsuite ended.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
-        StringBuffer sb = new StringBuffer("Tests run: ");
+        StringBuffer sb = new StringBuffer("Testsuite: ");
+        sb.append(suite.getName());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
         sb.append(suite.failureCount());
@@ -121,15 +127,75 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(nf.format(suite.getRunTime()/1000.0));
         sb.append(" sec");
         sb.append(System.getProperty("line.separator"));
-        try {
-            out.write(sb.toString().getBytes());
-            out.flush();
-        } catch (IOException ioex) {
-            throw new BuildException("Unable to write summary output", ioex);
-        } finally {
+        sb.append(System.getProperty("line.separator"));
+
+        if (out != null) {
             try {
-                out.close();
-            } catch (IOException e) {}
+                out.write(sb.toString().getBytes());
+                wri.close();
+                out.write(inner.toString().getBytes());
+                out.flush();
+            } catch (IOException ioex) {
+                throw new BuildException("Unable to write output", ioex);
+            } finally {
+                try {
+                    out.close();
+                } catch (IOException e) {}
+            }
         }
     }
-}
+
+    /**
+     * Interface TestListener.
+     *
+     * <p>A new Test is started.
+     */
+    public void startTest(Test t) {
+        lastTestStart = System.currentTimeMillis();
+        wri.print("Testcase: " + ((TestCase) t).name());
+        failed = false;
+    }
+
+    /**
+     * Interface TestListener.
+     *
+     * <p>A Test is finished.
+     */
+    public void endTest(Test test) {
+        if (failed) return;
+        wri.println(" took " 
+                    + nf.format((System.currentTimeMillis()-lastTestStart)
+                                / 1000.0)
+                    + " sec");
+    }
+
+    /**
+     * Interface TestListener.
+     *
+     * <p>A Test failed.
+     */
+    public void addFailure(Test test, Throwable t) {
+        formatError("\tFAILED", test, t);
+    }
+
+    /**
+     * Interface TestListener.
+     *
+     * <p>An error occured while running the test.
+     */
+    public void addError(Test test, Throwable t) {
+        formatError("\tCaused an ERROR", test, t);
+    }
+
+    private void formatError(String type, Test test, Throwable t) {
+        if (test != null) {
+            endTest(test);
+        }
+        failed = true;
+
+        wri.println(type);
+        wri.println(t.getMessage());
+        t.printStackTrace(wri);
+        wri.println("");
+    }
+} // PlainJUnitResultFormatter

@@ -295,7 +295,7 @@
     This would make the buildprocess fail if using an Ant version
     without the junit task
 
-    <junit defaultprintxml="false" defaultprintsummary="true" fork="on">
+    <junit printsummary="yes" fork="yes" haltonfailure="yes">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
@@ -303,11 +303,12 @@
         <pathelement path="${java.class.path}" />
       </classpath>
 
-      <test name="org.apache.tools.ant.IntrospectionHelperTest" />
-      <test name="org.apache.tools.ant.types.CommandlineTest" />
-      <test name="org.apache.tools.ant.types.CommandlineJavaTest" />
-      <test name="org.apache.tools.ant.types.EnumeratedAttributeTest" />
-      <test name="org.apache.tools.ant.types.PathTest" />
+      <batchtest>
+        <fileset dir="${src.tests.dir}">
+          <include name="**/*Test*" />
+          <exclude name="**/All*" />
+        </fileset>
+      </batchtest>
     </junit>
 -->
 

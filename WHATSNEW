@@ -20,9 +20,9 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 Other changes:
 --------------
 
-* New tasks: sql, genkey, cab, ftp.
+* New tasks: sql, genkey, cab, ftp, junit.
 
-* New tasks junit, mparse, execon. All pending documentation, most of
+* New tasks mparse, execon. All pending documentation, most of
 them pending review.
 
 * <java> uses ClassLoader of its own in no-fork mode if a classpath is

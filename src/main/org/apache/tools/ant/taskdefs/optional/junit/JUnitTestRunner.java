@@ -54,11 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import junit.framework.*;
 import java.lang.reflect.*;
 import java.io.*;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
@@ -79,6 +81,21 @@ import java.util.Vector;
 public class JUnitTestRunner implements TestListener {
 
     /**
+     * No problems with this test.
+     */
+    public static final int SUCCESS = 0;
+
+    /**
+     * Some tests failed.
+     */
+    public static final int FAILURES = 1;
+
+    /**
+     * An error occured.
+     */
+    public static final int ERRORS = 2;
+
+    /**
      * Holds the registered formatters.
      */
     private Vector formatters = new Vector();
@@ -89,14 +106,14 @@ public class JUnitTestRunner implements TestListener {
     private TestResult res;
 
     /**
-     * Flag for endTest.
+     * Do we stop on errors.
      */
-    private boolean failed = true;
+    private boolean haltOnError = false;
 
     /**
-     * The test I'm going to run.
+     * Do we stop on test failures.
      */
-    private JUnitTest junitTest;
+    private boolean haltOnFailure = false;
 
     /**
      * The corresponding testsuite.
@@ -104,38 +121,29 @@ public class JUnitTestRunner implements TestListener {
     private Test suite = null;
 
     /**
+     * Exception caught in constructor.
+     */
+    private Exception exception;
+
+    /**
      * Returncode
      */
-    private int retCode = 0;
+    private int retCode = SUCCESS;
 
-    public JUnitTestRunner(JUnitTest test) {
-        junitTest = test;
+    /**
+     * The TestSuite we are currently running.
+     */
+    private JUnitTest junitTest;
+
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+                           boolean haltOnFailure) {
+        this.junitTest = test;
+        this.haltOnError = haltOnError;
+        this.haltOnFailure = haltOnFailure;
+
         try {
-            if (junitTest.getPrintxml()) {
-                if (test.getOutfile() != null
-                    && test.getOutfile().length() > 0) {
-
-                    addFormatter(new XMLJUnitResultFormatter(
-                                     new PrintWriter(
-                                         new FileWriter(test.getOutfile(), false)
-                                             )
-                                         )
-                        );
-                } else {
-                    addFormatter(new XMLJUnitResultFormatter(
-                                     new PrintWriter(
-                                         new OutputStreamWriter(System.out), true)
-                                         )
-                        );
-                }
-            }
-
-            if (junitTest.getPrintsummary()) {
-                addFormatter(new SummaryJUnitResultFormatter());
-            }
-
-            Class testClass = Class.forName(junitTest.getName());
-
+            Class testClass = Class.forName(test.getName());
+            
             try {
                 Method suiteMethod= testClass.getMethod("suite", new Class[0]);
                 suite = (Test)suiteMethod.invoke(null, new Class[0]);
@@ -143,50 +151,48 @@ public class JUnitTestRunner implements TestListener {
             } catch(InvocationTargetException e) {
             } catch(IllegalAccessException e) {
             }
-
+            
             if (suite == null) {
                 // try to extract a test suite automatically
                 // this will generate warnings if the class is no suitable Test
                 suite= new TestSuite(testClass);
             }
-
-            res = new TestResult();
-            res.addListener(this);
-            for (int i=0; i < formatters.size(); i++) {
-                res.addListener((TestListener)formatters.elementAt(i));
-            }
-
+            
         } catch(Exception e) {
-            retCode = 2;
-
-            fireStartTestSuite();
-            for (int i=0; i < formatters.size(); i++) {
-                ((TestListener)formatters.elementAt(i)).addError(null, e);
-            }
-            junitTest.setCounts(1, 0, 1);
-            junitTest.setRunTime(0);
-            fireEndTestSuite();
+            retCode = ERRORS;
+            exception = e;
         }
     }
 
     public void run() {
-        long start = System.currentTimeMillis();
-
-        if (retCode != 0) { // had an exception in the constructor
-            return;
+        res = new TestResult();
+        res.addListener(this);
+        for (int i=0; i < formatters.size(); i++) {
+            res.addListener((TestListener)formatters.elementAt(i));
         }
 
+        long start = System.currentTimeMillis();
+
         fireStartTestSuite();
-        suite.run(res);
-        junitTest.setRunTime(System.currentTimeMillis()-start);
-        junitTest.setCounts(res.runCount(), res.failureCount(),
-                            res.errorCount());
+        if (exception != null) { // had an exception in the constructor
+            for (int i=0; i < formatters.size(); i++) {
+                ((TestListener)formatters.elementAt(i)).addError(null, 
+                                                                 exception);
+            }
+            junitTest.setCounts(1, 0, 1);
+            junitTest.setRunTime(0);
+        } else {
+            suite.run(res);
+            junitTest.setCounts(res.runCount(), res.failureCount(), 
+                                res.errorCount());
+            junitTest.setRunTime(System.currentTimeMillis() - start);
+        }
         fireEndTestSuite();
 
-        if (res.errorCount() != 0) {
-            retCode = 2;
+        if (retCode != SUCCESS || res.errorCount() != 0) {
+            retCode = ERRORS;
         } else if (res.failureCount() != 0) {
-            retCode = 1;
+            retCode = FAILURES;
         }
     }
 
@@ -204,17 +210,14 @@ public class JUnitTestRunner implements TestListener {
      *
      * <p>A new Test is started.
      */
-    public void startTest(Test t) {
-        failed = false;
-    }
+    public void startTest(Test t) {}
 
     /**
      * Interface TestListener.
      *
      * <p>A Test is finished.
      */
-    public void endTest(Test test) {
-    }
+    public void endTest(Test test) {}
 
     /**
      * Interface TestListener.
@@ -222,9 +225,7 @@ public class JUnitTestRunner implements TestListener {
      * <p>A Test failed.
      */
     public void addFailure(Test test, Throwable t) {
-        failed = true;
-
-        if (junitTest.getHaltonfailure()) {
+        if (haltOnFailure) {
             res.stop();
         }
     }
@@ -235,9 +236,7 @@ public class JUnitTestRunner implements TestListener {
      * <p>An error occured while running the test.
      */
     public void addError(Test test, Throwable t) {
-        failed = true;
-
-        if (junitTest.getHaltonerror()) {
+        if (haltOnError) {
             res.stop();
         }
     }
@@ -261,14 +260,11 @@ public class JUnitTestRunner implements TestListener {
     /**
      * Entry point for standalone (forked) mode.
      *
-     * Parameters: testcaseclassname plus (up to) 6 parameters in the
-     * format key=value.
+     * Parameters: testcaseclassname plus parameters in the format
+     * key=value, none of which is required.
      *
-     * <table cols="3" border="1">
+     * <table cols="4" border="1">
      * <tr><th>key</th><th>description</th><th>default value</th></tr>
-     *
-     * <tr><td>exit</td><td>exit with System.exit after testcase is
-     * complete?</td><td>true</td></tr>
      *
      * <tr><td>haltOnError</td><td>halt test on
      * errors?</td><td>false</td></tr>
@@ -276,50 +272,62 @@ public class JUnitTestRunner implements TestListener {
      * <tr><td>haltOnFailure</td><td>halt test on
      * failures?</td><td>false</td></tr>
      *
-     * <tr><td>printSummary</td><td>print summary to System.out?</td>
-     * <td>true</td></tr>
+     * <tr><td>formatter</td><td>A JUnitResultFormatter given as
+     * classname,filename. If filename is ommitted, System.out is
+     * assumed.</td><td>none</td></tr>
      *
-     * <tr><td>printXML</td><td>generate XML report?</td>
-     * <td>false</td></tr>
-     *
-     * <tr><td>outfile</td><td>where to print the XML report - a
-     * filename</td> <td>System.out</td></tr>
-     *
-     * </table>
+     * </table> 
      */
     public static void main(String[] args) throws IOException {
         boolean exitAtEnd = true;
         boolean haltError = false;
         boolean haltFail = false;
-        boolean printSummary = true;
-        boolean printXml = false;
-        PrintWriter out = null;
 
         if (args.length == 0) {
             System.err.println("required argument TestClassName missing");
-            if (exitAtEnd) {
-                System.exit(2);
-            }
-        } else {
+            System.exit(ERRORS);
+        }
 
-            JUnitTest test = new JUnitTest();
-            test.setName(args[0]);
-            args[0] = null;
-            test.setCommandline(args);
-            JUnitTestRunner runner = new JUnitTestRunner(test);
-            runner.run();
-
-            if (exitAtEnd) {
-                System.exit(runner.getRetCode());
+        for (int i=1; i<args.length; i++) {
+            if (args[i].startsWith("haltOnError=")) {
+                haltError = Project.toBoolean(args[i].substring(12));
+            } else if (args[i].startsWith("haltOnFailure=")) {
+                haltFail = Project.toBoolean(args[i].substring(14));
+            } else if (args[i].startsWith("formatter=")) {
+                try {
+                    createAndStoreFormatter(args[i].substring(10));
+                } catch (BuildException be) {
+                    System.err.println(be.getMessage());
+                    System.exit(ERRORS);
+                }
             }
+        }
+        
+        JUnitTest t = new JUnitTest(args[0]);
+        JUnitTestRunner runner = new JUnitTestRunner(t, haltError, haltFail);
+        transferFormatters(runner);
+        runner.run();
+        System.exit(runner.getRetCode());
+    }
+
+    private static Vector fromCmdLine = new Vector();
+
+    private static void transferFormatters(JUnitTestRunner runner) {
+        for (int i=0; i<fromCmdLine.size(); i++) {
+            runner.addFormatter((JUnitResultFormatter) fromCmdLine.elementAt(i));
         }
     }
 
+    private static void createAndStoreFormatter(String line) 
+        throws BuildException {
 
-    public static int runTest(JUnitTest test) {
-        final JUnitTestRunner runner = new JUnitTestRunner(test);
-        runner.run();
-        return runner.getRetCode();
+        FormatterElement fe = new FormatterElement();
+        StringTokenizer tok = new StringTokenizer(line, ",");
+        fe.setClassname(tok.nextToken());
+        if (tok.hasMoreTokens()) {
+            fe.setOutfile(new java.io.File(tok.nextToken()));
+        }
+        fromCmdLine.addElement(fe.createFormatter());
     }
 
 } // JUnitTestRunner
