@@ -490,11 +490,13 @@
     <tstamp>
       <format property="year" pattern="yyyy" />
     </tstamp>
-    <filterset id="ant.filters">
-      <filter token="VERSION" value="${version}" />
-      <filter token="DATE" value="${TODAY}" />
-      <filter token="TIME" value="${TSTAMP}" />
-    </filterset>
+    <filterchain id="ant.filters">
+      <replacetokens>
+        <token key="VERSION" value="${version}" />
+        <token key="DATE" value="${TODAY}" />
+        <token key="TIME" value="${TSTAMP}" />
+      </replacetokens>
+    </filterchain>
   </target>
 
   <!--
@@ -562,7 +564,7 @@
         <include name="**/version.txt" />
         <include name="**/defaultManifest.mf" />
       </fileset>
-      <filterset refid="ant.filters"/>
+      <filterchain refid="ant.filters"/>
     </copy>
 
     <copy todir="${build.classes}/${optional.package}/junit/xsl">
@@ -744,7 +746,7 @@
       <fileset dir="${docs.dir}">
         <exclude name="**/images/**"/>
       </fileset>
-      <filterset refid="ant.filters"/>
+      <filterchain refid="ant.filters"/>
     </copy>
 
     <copy todir="${dist.docs}" filtering="false">
@@ -983,19 +985,23 @@
 
     <property name="disttar" location="${dist.base}/bin/${dist.name}-bin.tar.gz"/>
     <copy file="src/etc/ant.spec" tofile="build/rpm/SPECS/ant.spec">
-      <filterset refid="ant.filters"/>
-      <filterset>
-        <filter token="RPM_RELEASE" value="${rpm.release}"/>
-        <filter token="RPM_SOURCE" value="${rpm.source}"/>
-        <filter token="DIST_TAR" value="${disttar}"/>
-      </filterset>
+      <filterchain refid="ant.filters"/>
+      <filterchain>
+        <replacetokens>
+          <token key="RPM_RELEASE" value="${rpm.release}"/>
+          <token key="RPM_SOURCE" value="${rpm.source}"/>
+          <token key="DIST_TAR" value="${disttar}"/>
+        </replacetokens>
+      </filterchain>
     </copy>
     <copy file="src/etc/antsrc.spec" tofile="build/rpm/SPECS/antsrc.spec">
-      <filterset refid="ant.filters"/>
-      <filterset>
-        <filter token="RPM_RELEASE" value="${rpm.release}"/>
-        <filter token="RPM_SOURCE" value="${rpm.source}"/>
-      </filterset>
+      <filterchain refid="ant.filters"/>
+      <filterchain>
+        <replacetokens>
+          <token key="RPM_RELEASE" value="${rpm.release}"/>
+          <token key="RPM_SOURCE" value="${rpm.source}"/>
+        </replacetokens>
+      </filterchain>
     </copy>
     <rpm topDir="build/rpm"
          specfile="ant.spec"
