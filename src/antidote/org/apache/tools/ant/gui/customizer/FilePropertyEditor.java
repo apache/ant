@@ -83,7 +83,6 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
      */
     public FilePropertyEditor() {
         _container = new JPanel(new BorderLayout());
-        
 
         _widget = new JTextField();
 
@@ -192,12 +191,10 @@ public class FilePropertyEditor extends AbstractPropertyEditor {
     private class ActionHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JFileChooser chooser = null;
-            if(_widget.getText().length() > 0) {
-                chooser = new JFileChooser(_widget.getText());
-            }
-            else {
-                chooser = new JFileChooser();
-            }
+            chooser = new JFileChooser();
+            chooser.setSelectedFile((File) getValue());
+
+
             _filter = (_filter == null ? 
                        chooser.getAcceptAllFileFilter() : _filter);
             chooser.setFileFilter(_filter);
