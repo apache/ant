@@ -276,8 +276,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else {
                 cmd.createArgument().setValue("-g");
             }
-        } else if (!assumeJava11()) {
-            cmd.createArgument().setValue("-g:none");
+        } else if (getNoDebugArgument() != null) {
+            cmd.createArgument().setValue(getNoDebugArgument());
         }
         if (optimize) {
             cmd.createArgument().setValue("-O");
@@ -607,6 +607,20 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             bp.append(bootclasspath);
         }
         return bp.concatSystemBootClasspath("ignore");
+    }
+
+    /**
+     * The argument the compiler wants to see if the debug attribute
+     * has been set to false.
+     *
+     * <p>A return value of <code>null</code> means no argument at all.</p>
+     *
+     * @return "-g:none" unless we expect to invoke a JDK 1.1 compiler.
+     *
+     * @since Ant 1.6.3
+     */
+    protected String getNoDebugArgument() {
+        return assumeJava11() ? null : "-g:none";
     }
 }
 

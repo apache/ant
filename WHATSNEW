@@ -337,6 +337,9 @@ Fixed bugs:
 * NPE when when <presetdef> tries to configure a task that
   cannot be instantiated. Bugzilla Report 33689.
 
+* <javac debug="false"> created an invalid command line when running
+  the Symantec Java compiler.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
