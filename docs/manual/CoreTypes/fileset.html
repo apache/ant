@@ -9,13 +9,11 @@
 <body>
 
 <h2><a name="fileset">FileSet</a></h2>
-<p>FileSets are groups of files. These files can be found in a
+<p>A FileSet is a group of files. These files can be found in a
 directory tree starting in a base directory and are matched by
 patterns taken from a number of <a
 href="patternset.html">PatternSets</a> and
-<a href="selectors.html">Selectors</a>. FileSets can appear inside tasks
-that support this feature or at the same level as <code>target</code>
-- i.e., as children of <code>project</code>.</p>
+<a href="selectors.html">Selectors</a>.
 <p>PatternSets can be specified as nested
 <code>&lt;patternset&gt;</code> elements. In addition, FileSet holds
 an implicit PatternSet and supports the nested
@@ -23,9 +21,9 @@ an implicit PatternSet and supports the nested
 <code>&lt;exclude&gt;</code> and <code>&lt;excludesfile&gt;</code>
 elements of PatternSet directly, as well as PatternSet's
 attributes.</p>
-<p>Selectors are available as nested elements.within the FileSet.
+<p>Selectors are available as nested elements within the FileSet.
 If any of the selectors within the FileSet do not select the file, the
-file is not considered part of the FileSet. This makes FileSets
+file is not considered part of the FileSet. This makes a FileSet
 equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -40,7 +38,7 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">shortcut for specifying a single file fileset</td>
+    <td valign="top">shortcut for specifying a single-file fileset</td>
   </tr>
   <tr>
     <td valign="top">defaultexcludes</td>
@@ -89,7 +87,7 @@ equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 <p><a name="symlink"><b>Note</b></a>: All files/directories for which
 the canonical path is different from its path are considered symbolic
 links.  On Unix systems this usually means the file really is a
-symbolic links but it may lead to false results on other
+symbolic link but it may lead to false results on other
 platforms.</p>
 
 <h4>Examples</h4>
