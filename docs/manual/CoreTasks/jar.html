@@ -165,7 +165,7 @@ end up in the <code>META-INF</code> directory of the jar file. If this
 fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
 
-<h4>Manifest</h4>
+<h4>manifest</h4>
 <p>The manifest nested element allows the manifest for the Jar file to
 be provided inline in the build file rather than in an external
 file. This element is identical to the
@@ -183,7 +183,7 @@ the resulting Jar.
 </p>
 
 <h3>Examples</h3>
-<pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
+<pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory.</p>
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
