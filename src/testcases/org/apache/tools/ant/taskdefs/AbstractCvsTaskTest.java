@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,14 +85,14 @@ public class AbstractCvsTaskTest extends BuildFileTest {
     }
 
     public void testPackageAttribute() {
-        File f = getProject().resolveFile("tmpdir/jakarta-ant/build.xml");
+        File f = getProject().resolveFile("tmpdir/ant/build.xml");
         assertTrue("starting empty", !f.exists());
-        expectLogContaining("package-attribute", "U jakarta-ant/build.xml");
+        expectLogContaining("package-attribute", "U ant/build.xml");
         assertTrue("now it is there", f.exists());
     }
 
     public void testTagAttribute() {
-        File f = getProject().resolveFile("tmpdir/jakarta-ant/build.xml");
+        File f = getProject().resolveFile("tmpdir/ant/build.xml");
         assertTrue("starting empty", !f.exists());
         expectLogContaining("tag-attribute", "ANT_141 (revision: 1.175.2.13)");
         assertTrue("now it is there", f.exists());
