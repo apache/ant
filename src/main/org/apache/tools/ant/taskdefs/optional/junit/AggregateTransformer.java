@@ -178,8 +178,8 @@ public class AggregateTransformer {
     public void transform() throws BuildException {
         checkOptions();
         final long t0 = System.currentTimeMillis();
+        XalanExecutor executor = XalanExecutor.newInstance(this);
         try {
-            XalanExecutor executor = XalanExecutor.newInstance(this);
             executor.execute();
         } catch (Exception e){
             throw new BuildException("Errors while applying transformations: "
