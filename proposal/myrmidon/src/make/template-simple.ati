@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 
+<?xsl-params location="template-simple.properties"?>
+<?xsl-param name="bar" value="baz"?>
+<?xsl-stylesheet href="template-simple.xsl"?>
+
 <project default="main" basedir=".">
 
   <target name="main">
