@@ -56,8 +56,6 @@ package org.apache.tools.ant;
 
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.PreferredAttribute;
-import org.apache.tools.ant.types.ValidatedFileAttribute;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
@@ -73,7 +71,6 @@ import java.util.Locale;
  * elements.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class IntrospectionHelper implements BuildListener {
 
@@ -168,25 +165,17 @@ public class IntrospectionHelper implements BuildListener {
 
                 String propName = getPropertyName(name, "set");
                 if (attributeSetters.get(propName) != null) {
-                    if (java.lang.String.class.equals(args[0])
+                    if (java.lang.String.class.equals(args[0])) {
                         /*
                             Ignore method m, as there is an overloaded
                             form of this method that takes in a
                             non-string argument, which gains higher
                             priority.
-                         */
-                        || PreferredAttribute.class.
-                            isAssignableFrom((Class)attributeTypes.get(propName))
-                        /*
-                            Ignore method m because there is an overloaded form of
-                            this method that takes in a PreferredAttribute argument,
-                            which gains higher priority.
-                         */
-                       ) {
+                        */
                         continue;
                     }
                     /*
-                        If the above conditions are not true, and if there
+                        If the argument is not a String, and if there
                         is an overloaded form of this method already defined,
                         we just override that with the new one.
                         This mechanism does not guarantee any specific order
@@ -194,7 +183,7 @@ public class IntrospectionHelper implements BuildListener {
                         that depends on the order in which "set" methods have
                         been defined, is not guaranteed to be selected in any
                         particular order.
-                     */
+                    */
                 }
                 AttributeSetter as = createAttributeSetter(m, args[0]);
                 if (as != null) {
@@ -594,24 +583,6 @@ public class IntrospectionHelper implements BuildListener {
                             org.apache.tools.ant.types.EnumeratedAttribute ea = (org.apache.tools.ant.types.EnumeratedAttribute)arg.newInstance();
                             ea.setValue(value);
                             m.invoke(parent, new EnumeratedAttribute[] {ea});
-                        } catch (InstantiationException ie) {
-                            throw new BuildException(ie);
-                        }
-                    }
-                };
-
-        // ValidatedFileAttributes have their own helper class
-        } else if (ValidatedFileAttribute.class.isAssignableFrom(arg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException, BuildException {
-                        try {
-                            ValidatedFileAttribute[] vfa = {
-                                (ValidatedFileAttribute) arg.newInstance()
-                            };
-                            File f = p.resolveFile(value);
-                            vfa[0].setFile(f);
-                            m.invoke(parent, vfa);
                         } catch (InstantiationException ie) {
                             throw new BuildException(ie);
                         }

@@ -28,16 +28,6 @@ Changes that could break older environments:
   a check is made to see if there is another overloaded method that takes in
   some other type of argument.  If there is one such method, then the method 
   that takes in String as an argument is not selected by the Introspector.
-  
-  In addition, if there is an overloaded setter method that takes in a
-  PreferredAttribute, it gains preference over other setters that do not
-  take in a PreferredAttribute as argument.  For example, if the methods 
-  setFoo(File) and setFoo(SrcFile) is present, setFoo(SrcFile) will be the
-  one which gets invoked because SrcFile is a PreferredAttribute.  If there
-  are methods like setFoo(SrcFile) as well as setFoo(DestDir), where
-  SrcFile and DestDir are PreferredAttributes, the setFoo method that
-  gets selected first by the Java runtime will be the one that gets
-  invoked.
 
 Fixed bugs:
 -----------
