@@ -116,11 +116,66 @@ public class NewElementDlg extends javax.swing.JDialog {
      * Enable or disable buttons
      */
     private void enableButtons() {
-        if (_elementText.getText().length() > 0) {
+        if (isInputValid()) {
             _buttonOK.setEnabled(true);
         } else {
             _buttonOK.setEnabled(false);
         }
+    }
+    
+    /**
+     * Returns true if the user input is valid.
+     */
+    private boolean isInputValid() {
+        return ( isXMLName( _elementText.getText() ) );
+    }
+    
+    /**
+     * Returns true if the value is a legal XML name.
+     *
+     * @param value the string being tested
+     */
+    public boolean isXMLName (String value)
+    {
+	if (value == null || value.length() == 0)
+	    return false;
+
+	char c = value.charAt (0);
+	if (!isLetter (c) && c != '_' && c != ':')
+	    return false;
+	for (int i = 1; i < value.length (); i++)
+	    if (!isNameChar (value.charAt (i)))
+		return false;
+	return true;
+    }
+    
+    /**
+     * Returns true if the character is allowed to be a non-initial
+     * character in an XML name.
+     */
+    public boolean isNameChar (char c)
+    {
+	if (isLetter (c))
+	    return true;
+	else if (c == '>')
+	    return false;
+	else if (c == '.' || c == '-' || c == '_' || c == ':')
+	    return true;
+	else
+	    return false;
+    }
+    
+    /**
+     * Returns true if the character is a letter.
+     */
+    public boolean isLetter (char c)
+    {
+	if (c >= 'a' && c <= 'z')
+	    return true;
+	if (c >= 'A' && c <= 'Z')
+	    return true;
+
+        return false;
     }
     
     /**
@@ -210,6 +265,12 @@ public class NewElementDlg extends javax.swing.JDialog {
             }
         }
         );
+        _elementList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemMouseClicked(evt);
+            }
+        }
+        );
         _listScrollPane.setViewportView(_elementList);
         
         _selectPanel.add(_listScrollPane, java.awt.BorderLayout.CENTER);
@@ -224,22 +285,49 @@ public class NewElementDlg extends javax.swing.JDialog {
 
     /** Called when an item is selected from the list */
     private void itemSelected(javax.swing.event.ListSelectionEvent evt) {
+        // Update the text field
         _elementText.setText((String) _elementList.getSelectedValue());
         enableButtons();
     }
 
+    /** Called when the list is clicked */
+    private void itemMouseClicked(java.awt.event.MouseEvent evt) {
+        
+        int count = evt.getClickCount();
+        Object obj = _elementList.getSelectedValue();
+        
+        // Double click on an item?
+        if (count == 2 && obj != null) {
+            
+            // Update the text field
+            _elementText.setText((String) _elementList.getSelectedValue());
+            
+            // Process like OK was pressed
+            if (isInputValid()) {
+                clickOK(null);
+            }
+        }
+    }
+    
     /** Called when the Cancel button is pressed */
     private void clickCancel(java.awt.event.ActionEvent evt) {
-        // Add your handling code here:
+        
+        // Make us invisible
         setVisible(false);
         dispose();
+        
+        // Set the cancel flag
         _cancel = true;
     }
 
     /** Called when the OK button is pressed */
     private void clickOK(java.awt.event.ActionEvent evt) {
+        
+        // Make us invisible
         setVisible(false);
         dispose();
+
+        // Return selected item.
         _cancel = false;
         _elementName = _elementText.getText();
     }
