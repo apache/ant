@@ -176,12 +176,13 @@ public class MSVSSLABEL extends MSVSS {
     }
 
     /**
-     * Set the label to apply in SourceSafe.
+     * Set the label to apply; required.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
      * happens if a ant variable is used e.g. label="${label_server}" when label_server
      * has not been defined to ant!
+     * @todo correct. 
      */
     public void setLabel(String label) {
         if (label.equals("") || label.equals("null")) {
@@ -212,12 +213,14 @@ public class MSVSSLABEL extends MSVSS {
     }
 
     /**
-     * Set the stored version string.
+     * Name an existing file or project version to label; optional.
+     * By default the current version is labelled.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
      * happens if a ant variable is used e.g. version="${ver_server}" when ver_server
      * has not been defined to ant!
+     * @todo fix
      */
     public void setVersion(String version) {
         if (version.equals("") || version.equals("null")) {
@@ -236,10 +239,12 @@ public class MSVSSLABEL extends MSVSS {
     }
 
     /**
-     * Set the comment to apply in SourceSafe.
+     * The comment to use for this label; optional.
+     * Empty or '-' for no comment.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.
+      *@todo correct
      */
     public void setComment(String comment) {
         if (comment.equals("") || comment.equals("null")) {
@@ -256,6 +261,11 @@ public class MSVSSLABEL extends MSVSS {
     public String getComment() {
         return m_Comment;
     }
+    
+    /**
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
+     */
     
     public void setAutoresponse(String response){
         if (response.equals("") || response.equals("null")) {

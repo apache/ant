@@ -62,7 +62,8 @@ import java.io.File;
 
 /**
  * Task to perform CheckOut commands to Microsoft Visual Source Safe.
- *
+ * <p>If you specify two or more attributes from version, date and 
+ * label only one will be used in the order version, date, label.</p>
  * @author Martin Poeschl
  *
  * @ant.task name="vsscheckout" category="scm"
@@ -153,7 +154,8 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
      */
     public void setRecursive(boolean recursive) {
         m_Recursive = recursive;
@@ -171,12 +173,9 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the stored version string.
-     * <p>
-     * Note we assume that if the supplied string has the value "null" that something
-     * went wrong and that the string value got populated from a null object. This
-     * happens if a ant variable is used e.g. version="${ver_server}" when ver_server
-     * has not been defined to ant!
+     * Set the version to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
      */
     public void setVersion(String version) {
         if (version.equals("") || version.equals("null")) {
@@ -187,12 +186,9 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the stored date string.
-     * <p>
-     * Note we assume that if the supplied string has the value "null" that something
-     * went wrong and that the string value got populated from a null object. This
-     * happens if a ant variable is used e.g. date="${date}" when date
-     * has not been defined to ant!
+     * Set the date to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
      */
     public void setDate(String date) {
         if (date.equals("") || date.equals("null")) {
@@ -203,12 +199,9 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the labeled version to operate on in SourceSafe.
-     * <p>
-     * Note we assume that if the supplied string has the value "null" that something
-     * went wrong and that the string value got populated from a null object. This
-     * happens if a ant variable is used e.g. label="${label_server}" when label_server
-     * has not been defined to ant!
+     * Set the label to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
      */
     public void setLabel(String label) {
         if (label.equals("") || label.equals("null")) {
@@ -233,6 +226,10 @@ public class MSVSSCHECKOUT extends MSVSS {
         }
     }
 
+    /**
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
+     */    
     public void setAutoresponse(String response){
         if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;

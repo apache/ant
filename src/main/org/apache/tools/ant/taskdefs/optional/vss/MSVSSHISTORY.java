@@ -156,7 +156,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the Start Date for the Comparison of two versions in SourceSafe History
+     * Set the Start Date for the Comparison of two versions; optional.
      */
     public void setFromDate(String fromDate) {
         if (fromDate.equals("") || fromDate == null) {
@@ -167,7 +167,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the Start Label 
+     * Set the Start Label; optional
      */
     public void setFromLabel(String fromLabel) {
         if (fromLabel.equals("") || fromLabel == null) {
@@ -178,7 +178,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the End Label 
+     * Set the End Label ; optional
      */
     public void setToLabel(String toLabel) {
         if (toLabel.equals("") || toLabel == null) {
@@ -189,7 +189,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the End Date for the Comparison of two versions in SourceSafe History
+     * Set the End Date for the Comparison of two versions; optional.
      */
     public void setToDate(String toDate) {
         if (toDate.equals("") || toDate == null) {
@@ -200,16 +200,17 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the number of days to go back for Comparison.
+     * Set the number of days for comparison; 
+     * optional.
      * <p>
-     * The default value is 2 days. 
+     * The default value is 2 days. (maybe)
      */
     public void setNumdays(int numd) {
         m_NumDays = numd;
     }
     
     /**
-     * Set the output file name for SourceSafe output.
+     * Set the output file name for the history; optional.
      */
     public void setOutput(File outfile) {
         if (outfile == null) {
@@ -220,7 +221,11 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the Start Date for the Comparison of two versions in SourceSafe History.
+     * Format of dates in fromDate and toDate; optional.
+     * Used when calculating dates with 
+     * the numdays attribute. 
+     * This string uses the formatting rules of SimpleDateFormat. 
+     *  Defaults to DateFormat.SHORT.
      */
     public void setDateFormat(String dateFormat) {
         if (!(dateFormat.equals("") || dateFormat == null)) {
@@ -323,14 +328,16 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
      */
+
     public void setRecursive(boolean recursive) {
         m_Recursive = recursive;
     }
 
     /**
-     * Set the Username of the user whose changes we would like to see.
+     * Name the user whose changes we would like to see; optional
      */
     public void setUser(String user) {
         m_User = user;
@@ -348,7 +355,7 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Specify the detail of output.
+     * Specify the output style; optional.
      *
      * @param option valid values:
      * <ul>
