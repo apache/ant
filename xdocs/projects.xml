@@ -73,6 +73,38 @@
         </table>
       </subsection>
 
+      <subsection name="Antelope">
+
+        <p>A GUI for running Ant and editing build files, can run as
+        stand-alone or as a plugin to jEdit. In addition to running
+        targets, Antelope can generate performance statistics and can
+        trace/display a target's execution path without actually
+        executing the target.</p>
+
+        <p>Includes several additional tasks: Assert, If/Else,
+        Try/Catch/Finally, Switch, Variable, Stopwatch, Limit, Math,
+        Post, SSH, SCP, AntFetch, AntCallBack.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested extensively with Ant 1.5.x.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antelope.sourceforge.net/">http://antelope.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:daleanson@users.sourceforge.net">Dale Anson</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="AntHill">
 
         <p>Anthill is a build tool that promotes a controlled build
