@@ -51,36 +51,104 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+
 import java.io.*;
 
 /**
- * Deletes a single file.
+ * Deletes a single file or a set of files defined by a pattern.
  *
  * @author stefano@apache.org
+ * @author Tom Dimock <a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>
  */
+public class Delete extends MatchingTask {
 
-public class Delete extends Task {
+  private File delDir = null;
+  private int verbosity = project.MSG_VERBOSE;
+  private File f = null;
 
-    private File f;
+  /**
+   * Set the name of a single file to be removed.
+   *
+   * @param file the file to be deleted
+   */
+  public void setFile(String file) {
+    f = project.resolveFile(file);
+  }
 
-    public void setFile(String File) {
-        f = project.resolveFile(File);
+  /**
+   * Set the directory from which files are to be deleted
+   *
+   * @param dir the directory path.
+   */
+  public void setDir(String dir) {
+    delDir = project.resolveFile(dir);
+  }
+
+  /**
+   * Used to force listing of all names of deleted files.
+   *
+   * @param verbose "true" or "on"
+   */
+  public void setVerbose(String verbose) {
+
+    if ("true".equalsIgnoreCase(verbose.trim()) || "on".equalsIgnoreCase(verbose.trim())) {
+      this.verbosity = project.MSG_INFO;
+    }
+    else {
+      this.verbosity = project.MSG_VERBOSE;
+    }
+  }
+
+  /**
+   * Make it so.  Delete the file(s).
+   *
+   * @throws BuildException
+   */
+  public void execute() throws BuildException {
+
+    if (f == null && delDir == null) {
+      throw new BuildException("<file> or <dir> attribute must be set!");
     }
 
-    public void execute() throws BuildException {
-        if (f.exists()) {
-            if (f.isDirectory()) { 
-                project.log("Directory: " + f.getAbsolutePath() + 
-                    " cannot be removed with delete.  Use Deltree instead.");
-            } else {
-                project.log("Deleting: " + f.getAbsolutePath());
-                f.delete();
-            }
+    // old <delete> functionality must still work
+    if (f != null) {
+      if (f.exists()) {
+        if (f.isDirectory()) {
+          project
+            .log("Directory: " + f.getAbsolutePath()
+                 + " cannot be removed with delete.  Use Deltree instead.");
         }
+        else {
+          project.log("Deleting: " + f.getAbsolutePath());
+          f.delete();
+        }
+      }
     }
+
+    // now we'll do the fancy pattern-driven deletes
+    if (delDir == null) {
+      return;
+    }
+    if (!delDir.exists()) {
+      throw new BuildException("dir does not exist!");
+    }
+    DirectoryScanner ds    = super.getDirectoryScanner(delDir);
+    String[]         files = ds.getIncludedFiles();
+
+    if (files.length > 0) {
+      project.log("Deleting " + files.length + " files from " + delDir.getAbsolutePath());
+      for (int i = 0; i < files.length; i++) {
+        File f = new File(delDir, files[i]);
+
+        if (f.exists()) {
+          project.log("Deleting: " + f.getAbsolutePath(), verbosity);
+          f.delete();
+        }
+      }
+    }
+  }
 }
 
