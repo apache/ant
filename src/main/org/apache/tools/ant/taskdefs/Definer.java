@@ -73,7 +73,13 @@ public abstract class Definer extends Task {
     private Path classpath;
     private File file;
     private String resource;
+    private boolean reverseLoader = false;
 
+    public void setReverseLoader(boolean reverseLoader) {
+        this.reverseLoader = reverseLoader;
+        log("The reverseloader attribute is DEPRECATED. It will be removed", Project.MSG_WARN);
+    }
+    
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
             this.classpath = classpath;
@@ -179,9 +185,9 @@ public abstract class Definer extends Task {
     private AntClassLoader createLoader() {
         AntClassLoader al = null;
         if (classpath != null) {
-            al = new AntClassLoader(project, classpath);
+            al = new AntClassLoader(project, classpath, !reverseLoader);
         } else {
-            al = new AntClassLoader(project, Path.systemClasspath);
+            al = new AntClassLoader(project, Path.systemClasspath, !reverseLoader);
         }
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always
