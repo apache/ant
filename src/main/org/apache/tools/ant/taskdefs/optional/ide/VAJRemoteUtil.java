@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -71,6 +72,7 @@ import org.apache.tools.ant.Task;
  * wraps IvjExceptions into BuildExceptions
  *
  * @author Wolf Siberski, TUI Infotec GmbH
+ * @author Martin Landers, Beck et al. projects
  */
 class VAJRemoteUtil implements VAJUtil{
     // calling task
@@ -139,7 +141,7 @@ class VAJRemoteUtil implements VAJUtil{
                                               boolean includeSources, boolean useDefaultExcludes) {
         String result =
             VAJToolsServlet.DIR_PARAM + "="
-            + dir.getAbsolutePath().replace('\\', '/') + "&"
+            + URLEncoder.encode(dir.getAbsolutePath()) + "&"
             + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
             + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
             + VAJToolsServlet.SOURCES_PARAM + "=" + includeSources + "&"
@@ -148,13 +150,13 @@ class VAJRemoteUtil implements VAJUtil{
         if (includePatterns != null) {
             for (int i = 0; i < includePatterns.length; i++){
                 result = result + "&" + VAJExportServlet.INCLUDE_PARAM + "="
-                    + includePatterns[i].replace(' ', '+').replace('\\', '/');
+                    + URLEncoder.encode(includePatterns[i]);
             }
         }
         if (excludePatterns != null) {
             for (int i = 0; i < excludePatterns.length; i++){
                 result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "="
-                    + excludePatterns[i].replace(' ', '+').replace('\\', '/');
+                    + URLEncoder.encode(excludePatterns[i]);
             }
         }
 

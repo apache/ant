@@ -249,9 +249,6 @@
   <selector id="needs.antlr">
     <filename name="${optional.package}/ANTLR*"/>
   </selector>
-  <selector id="needs.servletapi">
-    <filename name="${optional.package}/ide/VAJ*Servlet*"/>
-  </selector>
   <selector id="needs.jmf">
     <filename name="${optional.package}/sound/*"/>
   </selector>
@@ -401,10 +398,6 @@
                classpathref="classpath"/>
     <available property="which.present"
                classname="org.apache.env.Which"
-               classpathref="classpath"/>
-
-    <available property="servlet.present"
-               classname="javax.servlet.Servlet"
                classpathref="classpath"/>
 
     <available property="xerces.present"
@@ -587,7 +580,6 @@
             <selector refid="needs.starteam" unless="starteam.present"/>
             <selector refid="needs.vaj" unless="vaj.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
-            <selector refid="needs.servletapi" unless="servlet.present"/>
             <selector refid="needs.jmf" unless="jmf.present"/>
             <selector refid="needs.jai" unless="jai.present"/>
             <selector refid="needs.jdepend" unless="jdepend.present"/>
@@ -755,7 +747,6 @@
             <selector refid="needs.starteam"/>
             <selector refid="needs.vaj"/>
             <selector refid="needs.antlr"/>
-            <selector refid="needs.servletapi"/>
             <selector refid="needs.jmf"/>
             <selector refid="needs.jai"/>
             <selector refid="needs.jdepend"/>

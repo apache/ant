@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,23 +68,77 @@ import org.apache.tools.ant.types.PatternSet;
  * their respective package 'dir's.
  * Example:
  * <blockquote>
- * &lt;vajexport destdir="C:/builddir/source">
- * &nbsp;&lt;include name="/MyVAProject/org/foo/subsystem1/**" />
- * &nbsp;&lt;exclude name="/MyVAProject/org/foo/subsystem1/test/**"/>
- * &lt;/vajexport>
+ * &lt;vajexport destdir=&quot;C:/builddir/source&quot;&gt;
+ * &nbsp;&lt;include name=&quot;/MyVAProject/org/foo/subsystem1/**&quot; /&gt;
+ * &nbsp;&lt;exclude name=&quot;/MyVAProject/org/foo/subsystem1/test/**&quot;/&gt;
+ * &lt;/vajexport&gt;
  * </blockquote>
  * exports all packages in the project MyVAProject which start with
  * 'org.foo.subsystem1' except of these starting with
  * 'org.foo.subsystem1.test'.
  *
- * There are flags to choose which items to export:
- * exportSources:   export Java sources
- * exportResources: export project resources
- * exportClasses:   export class files
- * exportDebugInfo: export class files with debug info (use with exportClasses)
- * default is exporting Java files and resources.
+ * <p>Parameters:
+ * <table border="1" cellpadding="2" cellspacing="0">
+ * <tr>
+ *   <td valign="top"><b>Attribute</b></td>
+ *   <td valign="top"><b>Description</b></td>
+ *   <td align="center" valign="top"><b>Required</b></td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">destdir</td>
+ *   <td valign="top">location to store the exported files</td>
+ *   <td align="center" valign="top">Yes</td>
+ * <tr>
+ *   <td valign="top">exportSources</td>
+ *   <td valign="top">export Java sources, defaults to "yes"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">exportResources</td>
+ *   <td valign="top">export resource files, defaults to "yes"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">exportClasses</td>
+ *   <td valign="top">export class files, defaults to "no"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">exportDebugInfo</td>
+ *   <td valign="top">include debug info in exported class files,
+ *                    defaults to "no"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">defaultexcludes</td>
+ *   <td valign="top">use default excludes when exporting,
+ *                    defaults to "yes".
+ *                    Default excludes are: IBM&#x2f;**,
+ *                    Java class libraries&#x2f;**, Sun class libraries&#x2f;**,
+ *                    JSP Page Compile Generated Code&#x2f;**, Visual Age*&#x2f;**</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">overwrite</td>
+ *   <td valign="top">overwrite existing files, defaults to "yes"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">remote</td>
+ *   <td valign="top">remote tool server to run this command against
+ *                    (format: &lt;servername&gt; : &lt;port no&gt;)</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * <tr>
+ *   <td valign="top">haltonerror</td>
+ *   <td valign="top">stop the build process if an error occurs,
+ *                    defaults to "yes"</td>
+ *   <td align="center" valign="top">No</td>
+ * </tr>
+ * </table>
  *
  * @author Wolf Siberski, TUI Infotec GmbH
+ * @author Martin Landers, Beck et al. projects
  */
 
 public class VAJExport extends VAJTask {
@@ -123,12 +177,20 @@ public class VAJExport extends VAJTask {
         }
 
         // delegate the export to the VAJUtil object.
-        getUtil().exportPackages(destDir,
-            patternSet.getIncludePatterns(getProject()),
-            patternSet.getExcludePatterns(getProject()),
-            exportClasses, exportDebugInfo,
-            exportResources, exportSources,
-            useDefaultExcludes, overwrite);
+        try {
+            getUtil().exportPackages(destDir,
+                patternSet.getIncludePatterns(getProject()),
+                patternSet.getExcludePatterns(getProject()),
+                exportClasses, exportDebugInfo,
+                exportResources, exportSources,
+                useDefaultExcludes, overwrite);
+        } catch (BuildException ex) {
+            if (haltOnError) {
+                throw ex;
+            } else {
+                log(ex.toString());
+            }
+        }
     }
 
     /**

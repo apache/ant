@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,6 +64,7 @@ import com.ibm.ivj.util.base.ToolEnv;
 import com.ibm.ivj.util.base.Type;
 import com.ibm.ivj.util.base.Workspace;
 import java.io.File;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -75,6 +76,7 @@ import org.apache.tools.ant.DirectoryScanner;
  * wraps IvjExceptions into BuildExceptions
  *
  * @author Wolf Siberski, TUI Infotec GmbH
+ * @author Martin Landers, Beck et al. projects
  */
 abstract class VAJLocalUtil implements VAJUtil{
     // singleton containing the VAJ workspace
@@ -194,10 +196,17 @@ abstract class VAJLocalUtil implements VAJUtil{
              e.hasMoreElements();) {
             VAJProjectDescription d = (VAJProjectDescription) e.nextElement();
 
-            ProjectEdition pe = findProjectEdition(d.getName(), d.getVersion());
+            ProjectEdition pe;
+            if (d.getVersion().equals("*"))
+                pe = findLatestProjectEdition(d.getName(), false);
+            else if (d.getVersion().equals("**"))
+                pe = findLatestProjectEdition(d.getName(), true);
+            else
+                pe = findProjectEdition(d.getName(), d.getVersion());
             try {
-                log("Loading '" + d.getName() + "', Version '" + d.getVersion()
-                    + "', into Workspace", MSG_VERBOSE);
+                log("Loading '" + pe.getName() + "', Version '" +
+                    ((pe.getVersionName() != null)?pe.getVersionName():"("+pe.getVersionStamp()+ ")")+
+                    "' into Workspace", MSG_VERBOSE);
                 pe.loadIntoWorkspace();
             } catch (IvjException ex) {
                 throw createBuildException("Project '" + d.getName()
@@ -264,6 +273,47 @@ abstract class VAJLocalUtil implements VAJUtil{
             }
             return pe;
 
+        } catch (IvjException e) {
+            throw createBuildException("VA Exception occured: ", e);
+        }
+
+    }
+
+    /**
+     * Finds the latest project edition in the repository.
+     *
+     * @param name project name
+     * @param includeOpenEditions include open/scratch editions in the search?
+     * @return com.ibm.ivj.util.base.ProjectEdition the specified edition
+     */
+    private ProjectEdition findLatestProjectEdition(
+                                              String name,
+                                              boolean includeOpenEditions) {
+        try {
+            ProjectEdition[] editions = null;
+            editions = getWorkspace().getRepository().getProjectEditions(name);
+            if (editions == null) {
+                throw new BuildException("Project " + name + " doesn't exist");
+            }
+
+            // find latest (versioned) project edition by date
+            ProjectEdition pe = null;
+            Date latestStamp = new Date(0); // Let's hope there are no projects older than the epoch ;-)
+            for (int i = 0; i < editions.length; i++) {
+                if (!includeOpenEditions && !editions[i].isVersion())
+                    continue;
+                if (latestStamp.before(editions[i].getVersionStamp())) {
+                    latestStamp = editions[i].getVersionStamp();
+                    pe = editions[i];
+                }
+            }
+
+            if (pe == null) {
+                throw new BuildException("Can't determine latest edition for project " + name);
+            }
+            log("Using version " + ((pe.getVersionName() != null)?pe.getVersionName():"("+pe.getVersionStamp()+ ")") +
+                " of " + pe.getName(), MSG_INFO);
+            return pe;
         } catch (IvjException e) {
             throw createBuildException("VA Exception occured: ", e);
         }
