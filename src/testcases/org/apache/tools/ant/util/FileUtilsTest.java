@@ -429,20 +429,14 @@ public class FileUtilsTest extends TestCase {
     public void testToURI() {
         String dosRoot = null;
         if (Os.isFamily("dos")) {
-            dosRoot = "C:/";
+            dosRoot = System.getProperty("user.dir").charAt(0) + ":/";
         }
         else
         {
             dosRoot = "";
         }
         if (Os.isFamily("dos")) {
-            assertEquals("file:///"+ dosRoot + "foo", fu.toURI("c:\\foo"));
-        }
-        if (Os.isFamily("dos")) {
-            // this amounts to : are we under cygwin ?
-            if (Character.isLowerCase(System.getProperty("user.dir").charAt(0))) {
-                dosRoot = "c:/";
-            }
+            assertEquals("file:///C:/foo", fu.toURI("c:\\foo"));
         }
         assertEquals("file:///" + dosRoot + "foo", fu.toURI("/foo"));
         assertEquals("file:./foo",  fu.toURI("./foo"));
