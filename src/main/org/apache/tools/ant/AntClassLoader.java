@@ -1172,7 +1172,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                     throw se;
                 } catch (IOException ioe) {
                     // ioe.printStackTrace();
-                    log("Exception reading component " + pathComponent ,
+                    log("Exception reading component " + pathComponent
+                        + "(reason: " + ioe.getMessage() + ")",
                         Project.MSG_VERBOSE);
                 }
             }
