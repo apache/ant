@@ -56,6 +56,7 @@ package org.apache.tools.ant.input;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
@@ -76,6 +77,31 @@ public class DefaultInputHandler implements InputHandler {
     }
 
     public void handleInput(InputRequest request) throws BuildException {
+        String prompt = getPrompt(request);
+        BufferedReader in = 
+            new BufferedReader(new InputStreamReader(getInputStream()));
+        do {
+            System.out.println(prompt);
+            try {
+                String input = in.readLine();
+                request.setInput(input);
+            } catch (IOException e) {
+                throw new BuildException("Failed to read input from Console.",
+                                         e);
+            }
+        } while (!request.isInputValid());
+    }
+
+    /**
+     * Constructs user prompt from a request.
+     *
+     * <p>This implemenation adds (choice1,choice2,choice3,...) to the
+     * prompt for <code>MultipleChoiceInputRequest</code>s.</p>
+     *
+     * @param request the request to construct the prompt for.
+     *                Must not be <code>null</code>.
+     */
+    protected String getPrompt(InputRequest request) {
         String prompt = request.getPrompt();
         if (request instanceof MultipleChoiceInputRequest) {
             StringBuffer sb = new StringBuffer(prompt);
@@ -94,17 +120,14 @@ public class DefaultInputHandler implements InputHandler {
             sb.append(")");
             prompt = sb.toString();
         }
-            
-        do {
-            System.out.println(prompt);
-            try {
-                BufferedReader in = 
-                    new BufferedReader(new InputStreamReader(System.in));
-                String input = in.readLine();
-                request.setInput(input);
-            } catch (IOException e) {
-                throw  new BuildException("Failed to read input from Console.", e);
-            }
-        } while (!request.isInputValid());
+        return prompt;
     }
+
+    /**
+     * Returns the input stream from which the user input should be read.
+     */
+    protected InputStream getInputStream() {
+        return System.in;
+    }
+
 }
