@@ -129,7 +129,7 @@ public class PropertyTest extends BuildFileTest {
     }
 
     public void testThisIsNotACircularReference() {
-        expectLog("thisIsNotACircularReference", "b is A/A");
+        expectLog("thisIsNotACircularReference", "b is A/A/A");
     }
 
 }
