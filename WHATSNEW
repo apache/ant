@@ -38,8 +38,6 @@ Other changes:
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
-* proposal/xdocs updated with xdoclet-1.2 final
-
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
 
