@@ -12,7 +12,7 @@ import org.apache.avalon.framework.component.Component;
 /**
  * The interface that is used to manage types.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface TypeManager
     extends Component

@@ -14,7 +14,7 @@ import org.apache.avalon.framework.CascadingException;
  * It is cascading so that further embedded information can be contained.
  * ie TaskException was caused by IOException etc.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class TaskException
     extends CascadingException

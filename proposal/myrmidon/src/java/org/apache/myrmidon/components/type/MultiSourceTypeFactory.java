@@ -16,7 +16,7 @@ import org.apache.myrmidon.interfaces.type.TypeException;
 /**
  * This factory acts as a proxy to set of object factorys.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class MultiSourceTypeFactory
     implements TypeFactory

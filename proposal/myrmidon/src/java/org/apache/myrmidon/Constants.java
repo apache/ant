@@ -10,7 +10,7 @@ package org.apache.myrmidon;
 /**
  * Abstract interface to hold constants.
  * 
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface Constants
 {

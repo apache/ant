@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * Class representing a condition.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Condition
     implements Component

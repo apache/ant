@@ -17,7 +17,7 @@ import org.apache.myrmidon.api.TaskException;
  * AspectHandler is the interface through which aspects are handled.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public abstract class AbstractAspectHandler
     implements AspectHandler

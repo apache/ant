@@ -21,7 +21,7 @@ package org.apache.myrmidon.api;
  *
  * The Components passed in via ComponentManager are determined by container.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface Task
 {

@@ -13,7 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * This is to test whether content is added.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ContentTest
     extends AbstractTask

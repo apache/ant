@@ -16,7 +16,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 /**
  * This is the abstraction through which Projects are managed and executed.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface Workspace
     extends Component

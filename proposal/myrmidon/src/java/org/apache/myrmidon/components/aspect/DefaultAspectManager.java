@@ -23,7 +23,7 @@ import org.apache.myrmidon.interfaces.aspect.AspectManager;
 /**
  * Manage and propogate Aspects.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultAspectManager
     implements AspectManager, Initializable

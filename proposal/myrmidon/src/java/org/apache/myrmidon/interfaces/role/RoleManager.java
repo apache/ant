@@ -15,7 +15,7 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:ricardo@apache,org">Ricardo Rocha</a>
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
  */
 public interface RoleManager

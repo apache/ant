@@ -12,7 +12,7 @@ import org.apache.avalon.framework.CascadingException;
 /**
  * ConverterException thrown when a problem occurs during convertion etc.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ConverterException
     extends CascadingException

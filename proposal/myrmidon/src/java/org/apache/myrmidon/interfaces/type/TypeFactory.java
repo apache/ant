@@ -10,7 +10,7 @@ package org.apache.myrmidon.interfaces.type;
 /**
  * Create an instance on name.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
  */
 public interface TypeFactory

@@ -18,7 +18,7 @@ import org.apache.avalon.framework.context.Context;
  * Unlike other APIs the Logging is provided through another interface (Loggable)
  * as is access to Peer components (via Composable).
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface TaskContext
     extends Context

@@ -17,7 +17,7 @@ import org.apache.avalon.framework.component.Component;
  * TODO: Determine if projects should carry their own name. Breaks IOC but
  * Can be useful as project files embed own name (or should that be description).
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface Project
     extends Component

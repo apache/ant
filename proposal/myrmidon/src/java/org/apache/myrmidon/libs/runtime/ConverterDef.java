@@ -25,7 +25,7 @@ import org.apache.myrmidon.converter.Converter;
 /**
  * Task to define a converter.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ConverterDef
     extends AbstractTask

@@ -24,7 +24,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 /**
  * Method to register a tasklib.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Ant1Tasklib
     extends AbstractTask

@@ -17,7 +17,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
 /**
  * This is to test self interpretation of configuration.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ConfigurationTest
     extends AbstractContainerTask

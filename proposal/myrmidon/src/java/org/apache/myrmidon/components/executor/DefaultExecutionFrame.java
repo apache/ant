@@ -30,7 +30,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 /**
  * Frames in which tasks are executed.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultExecutionFrame
     implements ExecutionFrame, Loggable, Contextualizable, Composable

@@ -19,7 +19,7 @@ import org.apache.myrmidon.converter.ConverterException;
 /**
  * String to file converter
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class StringToFileConverter
     extends AbstractConverter

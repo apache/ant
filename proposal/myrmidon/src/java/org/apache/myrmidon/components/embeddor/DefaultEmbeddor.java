@@ -41,7 +41,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
  * Default implementation of Embeddor.
  * Instantiate this to embed inside other applications.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultEmbeddor
     extends AbstractLoggable

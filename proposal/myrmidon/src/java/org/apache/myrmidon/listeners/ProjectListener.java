@@ -11,7 +11,7 @@ package org.apache.myrmidon.listeners;
  * The interface to implement if you want to receive
  * notification of project status.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface ProjectListener
 {

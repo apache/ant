@@ -14,7 +14,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * Basic data type for holding patterns.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Pattern
     implements DataType

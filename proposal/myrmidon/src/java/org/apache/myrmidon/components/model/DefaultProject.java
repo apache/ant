@@ -20,7 +20,7 @@ import org.apache.myrmidon.interfaces.model.TypeLib;
 /**
  * Default project implementation.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultProject
     implements Project

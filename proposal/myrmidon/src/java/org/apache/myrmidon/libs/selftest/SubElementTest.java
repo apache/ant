@@ -13,7 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * Test sub-elements addition.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class SubElementTest
     extends AbstractTask

@@ -25,7 +25,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class TypeInstanceTask
     extends AbstractContainerTask

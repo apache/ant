@@ -25,7 +25,7 @@ import org.apache.myrmidon.converter.ConverterException;
 /**
  * Converter engine to handle converting between types.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultMasterConverter
     extends AbstractLoggable

@@ -14,7 +14,7 @@ import org.apache.avalon.framework.context.Context;
 /**
  * Instances of this interface are used to convert between different types.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public abstract class AbstractConverter
     implements Converter

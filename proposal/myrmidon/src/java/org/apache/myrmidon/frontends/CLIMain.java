@@ -51,7 +51,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * Starts myrmidon, loads ProjectBuilder, builds project then uses ProjectManager
  * to run project.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class CLIMain
     extends AbstractLoggable

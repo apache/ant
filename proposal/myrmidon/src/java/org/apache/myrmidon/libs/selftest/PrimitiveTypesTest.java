@@ -13,7 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * Test conversion of all the primitive types.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class PrimitiveTypesTest
     extends AbstractTask

@@ -12,7 +12,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 /**
  * Support for the project listener event dispatching.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ProjectListenerSupport
     implements ProjectListener

@@ -14,7 +14,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 /**
  * Adapter between Avalon LogKit and Project listener interfaces.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class LogTargetToListenerAdapter
     implements LogTarget

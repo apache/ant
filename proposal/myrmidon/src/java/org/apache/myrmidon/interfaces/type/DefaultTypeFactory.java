@@ -18,7 +18,7 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
 /**
  * Create a type instance based on name.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
  */
 public class DefaultTypeFactory

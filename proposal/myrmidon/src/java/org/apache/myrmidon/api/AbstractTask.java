@@ -16,7 +16,7 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 /**
  * This is the class that Task writers should extend to provide custom tasks.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public abstract class AbstractTask
     extends AbstractLoggable

@@ -18,7 +18,7 @@ import org.apache.myrmidon.converter.ConverterException;
 /**
  * String to url converter
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class StringToURLConverter
     extends AbstractConverter

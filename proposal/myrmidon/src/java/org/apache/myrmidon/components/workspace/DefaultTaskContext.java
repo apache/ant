@@ -23,7 +23,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * Default implementation of TaskContext.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultTaskContext
     extends DefaultContext

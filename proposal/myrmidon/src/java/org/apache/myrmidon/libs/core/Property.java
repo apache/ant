@@ -28,7 +28,7 @@ import org.apache.myrmidon.framework.DataType;
  *
  * TODO: Determine final format of property task.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Property
     extends AbstractContainerTask

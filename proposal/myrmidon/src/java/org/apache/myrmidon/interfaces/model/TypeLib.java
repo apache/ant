@@ -10,7 +10,7 @@ package org.apache.myrmidon.interfaces.model;
 /**
  * Imports in a build file.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class TypeLib
 {

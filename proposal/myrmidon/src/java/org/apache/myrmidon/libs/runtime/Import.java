@@ -23,7 +23,7 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 /**
  * Task to import a tasklib.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Import
     extends AbstractTask

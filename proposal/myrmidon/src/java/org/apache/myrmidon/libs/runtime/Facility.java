@@ -30,7 +30,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
 /**
  * Task that definesMethod to register a single converter.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Facility
     extends AbstractContainerTask

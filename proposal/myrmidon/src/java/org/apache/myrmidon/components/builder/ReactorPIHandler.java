@@ -17,7 +17,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Have to do it this way as there doesn't seem to be a *safe* way
  * of redirecting content handlers at runtime while using transformers.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class ReactorPIHandler
     extends DefaultHandler

@@ -11,7 +11,7 @@ package org.apache.myrmidon.framework;
  * Base class for those classes that can appear inside the build file
  * as stand alone data types.  
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public interface DataType
 {

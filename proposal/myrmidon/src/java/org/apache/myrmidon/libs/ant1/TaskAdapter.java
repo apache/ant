@@ -21,7 +21,7 @@ import org.apache.tools.ant.Task;
 /**
  * Adapter of Ant1 tasks to myrmidon.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class TaskAdapter
     extends AbstractContainerTask

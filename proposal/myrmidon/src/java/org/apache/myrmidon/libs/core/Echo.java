@@ -13,7 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * This is the echo task to display a message.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class Echo
     extends AbstractTask
