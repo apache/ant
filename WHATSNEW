@@ -10,12 +10,21 @@ Other changes:
 
 * Added nested prefixedfileset element to <war>
 
+* Changed <sql> so that printing is at the task level rather than 
+  the statement level.
+  
+* javadoc task will pass -d flag to any doclet if the destDir attribute is
+  given. If the doclet does not accept the -d flag then omit the destdir
+  attribute.
+
 Fixed bugs:
 -----------
 
 * <signjar> doesn't use deprectated methods anymore.
 
 * javadoc's failonerror attribute works again
+
+* Changed <sql> task so that printing result sets works on Oracle
 
 Changes from Ant 1.1 to Ant 1.2
 ===============================
