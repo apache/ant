@@ -33,18 +33,16 @@ import org.apache.tools.ant.Project;
  * @author Nick Pellow
  * @version $Revision$, $Date$
  */
-
 public class AntSoundPlayer
     implements LineListener, BuildListener
 {
+    private File m_fileSuccess;
+    private int m_loopsSuccess;
+    private Long m_durationSuccess;
 
-    private File fileSuccess = null;
-    private int loopsSuccess = 0;
-    private Long durationSuccess = null;
-
-    private File fileFail = null;
-    private int loopsFail = 0;
-    private Long durationFail = null;
+    private File m_fileFail;
+    private int m_loopsFail;
+    private Long m_durationFail;
 
     public AntSoundPlayer()
     {
@@ -59,9 +57,9 @@ public class AntSoundPlayer
      */
     public void addBuildFailedSound( File fileFail, int loopsFail, Long durationFail )
     {
-        this.fileFail = fileFail;
-        this.loopsFail = loopsFail;
-        this.durationFail = durationFail;
+        m_fileFail = fileFail;
+        m_loopsFail = loopsFail;
+        m_durationFail = durationFail;
     }
 
     /**
@@ -73,9 +71,9 @@ public class AntSoundPlayer
      */
     public void addBuildSuccessfulSound( File file, int loops, Long duration )
     {
-        this.fileSuccess = file;
-        this.loopsSuccess = loops;
-        this.durationSuccess = duration;
+        m_fileSuccess = file;
+        m_loopsSuccess = loops;
+        m_durationSuccess = duration;
     }
 
     /**
@@ -87,14 +85,14 @@ public class AntSoundPlayer
      */
     public void buildFinished( BuildEvent event )
     {
-        if( event.getException() == null && fileSuccess != null )
+        if( event.getException() == null && m_fileSuccess != null )
         {
             // build successfull!
-            play( event.getProject(), fileSuccess, loopsSuccess, durationSuccess );
+            play( event.getProject(), m_fileSuccess, m_loopsSuccess, m_durationSuccess );
         }
-        else if( event.getException() != null && fileFail != null )
+        else if( event.getException() != null && m_fileFail != null )
         {
-            play( event.getProject(), fileFail, loopsFail, durationFail );
+            play( event.getProject(), m_fileFail, m_loopsFail, m_durationFail );
         }
     }
 
