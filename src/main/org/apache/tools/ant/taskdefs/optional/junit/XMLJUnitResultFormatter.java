@@ -276,8 +276,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     private void formatOutput(String type, String output) {
         Element nested = doc.createElement(type);
         rootElement.appendChild(nested);
-        Text content = doc.createTextNode(output);
-        nested.appendChild(content);
+        nested.appendChild(doc.createCDATASection(output));
     }
 
 } // XMLJUnitResultFormatter
