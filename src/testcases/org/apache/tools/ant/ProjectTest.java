@@ -58,6 +58,7 @@ import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 
@@ -199,7 +200,7 @@ public class ProjectTest extends TestCase {
              * java full version "Linux_JDK_1.1.8_v3_green_threads"
              * from time to time
              */
-            assertSame(Project.JAVA_1_1, p.getJavaVersion());
+            assertTrue(JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1));
             assertTaskDefFails(DummyTaskProtected.class, 
                                "No public no-arg constructor in " 
                                + DummyTaskProtected.class);

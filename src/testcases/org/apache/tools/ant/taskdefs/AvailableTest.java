@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * @author Nico Seessle <nico@seessle.de>
@@ -200,7 +201,7 @@ public class AvailableTest extends BuildFileTest {
 
     // Core class that exists in system classpath is ignored, but found in specified classpath
     public void test21() {
-        if (project.getJavaVersion() == Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             // java.* classes are not found in JDK 1.1 even if specified in classpath attribute; test24 shows correct operation
             return;
         }

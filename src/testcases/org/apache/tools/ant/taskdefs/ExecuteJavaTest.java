@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.io.File;
 
@@ -135,7 +136,7 @@ public class ExecuteJavaTest extends TestCase {
         }
 
         // JDK 1.1 needs classes.zip in -classpath argument
-        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             classpath +=   File.pathSeparator
                 + System.getProperty("java.home")
                 + File.separator + "lib"

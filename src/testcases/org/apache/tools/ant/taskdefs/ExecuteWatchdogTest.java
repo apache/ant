@@ -54,7 +54,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import java.net.*;
 import junit.framework.*;
@@ -96,7 +96,7 @@ public class ExecuteWatchdogTest extends TestCase {
         }
 
         // JDK 1.1 needs classes.zip in -classpath argument
-        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             classpath +=   File.pathSeparator
                 + System.getProperty("java.home")
                 + File.separator + "lib"

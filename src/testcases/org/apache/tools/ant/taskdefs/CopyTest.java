@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import java.io.File;
 import java.io.IOException;
 
@@ -118,7 +119,7 @@ public class CopyTest extends BuildFileTest {
         }
 
         //file time checks for java1.2+
-        if (Project.getJavaVersion() != Project.JAVA_1_1) {
+        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             assertTrue(file3a.lastModified()==file3.lastModified());
             assertTrue(file3c.lastModified()<file3a.lastModified());
         }
