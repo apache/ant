@@ -27,6 +27,7 @@ import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
+import org.apache.myrmidon.components.workspace.DefaultPropertyResolver;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
@@ -36,6 +37,7 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
 
 /**
  * A base class for tests for the default components.
@@ -118,6 +120,10 @@ public abstract class AbstractComponentTest
 
         component = new DefaultRoleManager();
         m_serviceManager.put( RoleManager.ROLE, component );
+        components.add( component );
+
+        component = new DefaultPropertyResolver();
+        m_serviceManager.put( PropertyResolver.ROLE, component );
         components.add( component );
 
         // Log enable the components

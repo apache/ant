@@ -13,11 +13,14 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
 
 /**
  * Default implementation of TaskContext.
@@ -26,7 +29,7 @@ import org.apache.myrmidon.api.TaskException;
  * @version $Revision$ $Date$
  */
 public class DefaultTaskContext
-    implements TaskContext
+    implements TaskContext, Context
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
@@ -35,6 +38,7 @@ public class DefaultTaskContext
     private final TaskContext m_parent;
     private ServiceManager m_serviceManager;
     private Logger m_logger;
+    private PropertyResolver m_propertyResolver;
 
     /**
      * Constructor that takes both parent context and a service directory.
@@ -55,7 +59,7 @@ public class DefaultTaskContext
      */
     public String getName()
     {
-        return (String)m_contextData.get( NAME );
+        return (String)getProperty( NAME );
     }
 
     /**
@@ -65,7 +69,7 @@ public class DefaultTaskContext
      */
     public File getBaseDirectory()
     {
-        return (File)m_contextData.get( BASE_DIRECTORY );
+        return (File)getProperty( BASE_DIRECTORY );
     }
 
     /**
@@ -133,10 +137,17 @@ public class DefaultTaskContext
     public Object resolveValue( final String value )
         throws TaskException
     {
+
         try
         {
+            // Lazy lookup of the PropertyResolver
+            if( m_propertyResolver == null )
+            {
+                m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
+            }
+
             final Object object =
-                PropertyUtil.resolveProperty( value, this, false );
+                m_propertyResolver.resolveProperties( value, this );
 
             if( null == object )
             {
@@ -161,7 +172,12 @@ public class DefaultTaskContext
      */
     public Object getProperty( final String name )
     {
-        return m_contextData.get( name );
+        Object value = m_contextData.get( name );
+        if( value == null && m_parent != null )
+        {
+            value = m_parent.getProperty( name );
+        }
+        return value;
     }
 
     /**
@@ -330,6 +346,20 @@ public class DefaultTaskContext
         context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
 
         return context;
+    }
+
+    /**
+     * Returns a property.
+     */
+    public Object get( final Object key ) throws ContextException
+    {
+        final Object value = getProperty( (String)key );
+        if( value == null )
+        {
+            final String message = REZ.getString( "unknown-property.error", key );
+            throw new ContextException( message );
+        }
+        return value;
     }
 
     /**

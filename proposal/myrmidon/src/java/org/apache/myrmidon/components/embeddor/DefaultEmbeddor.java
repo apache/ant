@@ -41,6 +41,7 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
 
@@ -254,6 +255,7 @@ public class DefaultEmbeddor
         createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
         createComponent( ClassLoaderManager.class, PREFIX + "deployer.DefaultClassLoaderManager" );
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
+        createComponent( PropertyResolver.class, PREFIX + "workspace.DefaultPropertyResolver" );
 
         // Setup the components
         for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
