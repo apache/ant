@@ -26,8 +26,8 @@ class RCSFile
     }
 
     RCSFile( final String name,
-                     final String revision,
-                     final String previousRevision )
+             final String revision,
+             final String previousRevision )
     {
         m_name = name;
         m_revision = revision;
