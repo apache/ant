@@ -73,8 +73,8 @@ import java.util.Enumeration;
  * Sets a property by name, or set of properties (from file or
  * resource) in the project.  </p>
  * Properties are immutable: whoever sets a property first freezes it for the
- * of the build; they are most definately not variable. 
-  * <p>There are five ways to set properties:</p>
+ * rest of the build; they are most definately not variable. 
+ * <p>There are five ways to set properties:</p>
  * <ul>
  *   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
  *   <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
