@@ -1083,7 +1083,105 @@ public class Project
     public String replaceProperties( String value )
         throws TaskException
     {
-        return ProjectHelper.replaceProperties( this, value );
+        return replaceProperties( this, value, getProperties() );
+    }
+
+    /**
+     * Replace ${} style constructions in the given value with the string value
+     * of the corresponding data types.
+     *
+     * @param value the string to be scanned for property references.
+     * @param project Description of Parameter
+     * @param keys Description of Parameter
+     * @return Description of the Returned Value
+     * @exception TaskException Description of Exception
+     */
+    private String replaceProperties( Project project, String value, Hashtable keys )
+        throws TaskException
+    {
+        if( value == null )
+        {
+            return null;
+        }
+
+        Vector fragments = new Vector();
+        Vector propertyRefs = new Vector();
+        parsePropertyString( value, fragments, propertyRefs );
+
+        StringBuffer sb = new StringBuffer();
+        Enumeration i = fragments.elements();
+        Enumeration j = propertyRefs.elements();
+        while( i.hasMoreElements() )
+        {
+            String fragment = (String)i.nextElement();
+            if( fragment == null )
+            {
+                String propertyName = (String)j.nextElement();
+                if( !keys.containsKey( propertyName ) )
+                {
+                    project.log( "Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE );
+                }
+                fragment = ( keys.containsKey( propertyName ) ) ? (String)keys.get( propertyName )
+                    : "${" + propertyName + "}";
+            }
+            sb.append( fragment );
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * This method will parse a string containing ${value} style property values
+     * into two lists. The first list is a collection of text fragments, while
+     * the other is a set of string property names null entries in the first
+     * list indicate a property reference from the second list.
+     *
+     * @param value Description of Parameter
+     * @param fragments Description of Parameter
+     * @param propertyRefs Description of Parameter
+     * @exception TaskException Description of Exception
+     */
+    private void parsePropertyString( String value, Vector fragments, Vector propertyRefs )
+        throws TaskException
+    {
+        int prev = 0;
+        int pos;
+        while( ( pos = value.indexOf( "$", prev ) ) >= 0 )
+        {
+            if( pos > 0 )
+            {
+                fragments.addElement( value.substring( prev, pos ) );
+            }
+
+            if( pos == ( value.length() - 1 ) )
+            {
+                fragments.addElement( "$" );
+                prev = pos + 1;
+            }
+            else if( value.charAt( pos + 1 ) != '{' )
+            {
+                fragments.addElement( value.substring( pos + 1, pos + 2 ) );
+                prev = pos + 2;
+            }
+            else
+            {
+                int endName = value.indexOf( '}', pos );
+                if( endName < 0 )
+                {
+                    throw new TaskException( "Syntax error in property: "
+                                             + value );
+                }
+                String propertyName = value.substring( pos + 2, endName );
+                fragments.addElement( null );
+                propertyRefs.addElement( propertyName );
+                prev = endName + 1;
+            }
+        }
+
+        if( prev < value.length() )
+        {
+            fragments.addElement( value.substring( prev ) );
+        }
     }
 
     /**
