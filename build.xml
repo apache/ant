@@ -868,8 +868,9 @@
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
 
+      <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
-
+    
       <formatter type="brief" usefile="false" />
 
       <batchtest>
@@ -941,6 +942,7 @@
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"
            filtertrace="${junit.filtertrace}">
 <!--      <jvmarg value="-classic"/> -->
+      <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
       <classpath location="${java.home}/lib/classes.zip" />
       <classpath refid="tests-classpath"/>
