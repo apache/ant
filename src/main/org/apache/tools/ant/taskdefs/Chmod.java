@@ -89,7 +89,7 @@ public class Chmod extends ExecuteOn {
         defaultSet.setDir(src);
     }
 
-    public void setSrc(File src) {
+    public void XsetSrc(File src) {
         log("The src attribute is deprecated. " +
             "Please use the file attribute.",
             Project.MSG_WARN);

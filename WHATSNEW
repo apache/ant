@@ -17,13 +17,15 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 
 * the class attribute of <java> has been removed.
 
+* the src attribute of <chmod> has been removed.
+
 * <patch> and <javadoc> have lost some of their attributes.
 
 * <java> and <cvs> have lost some undocumented attributes.
 
 * the Unix antRun script would search for command.sh in the directory
 it changed to and invoke this instead of command if present. This
-beahvior has been dropped.
+behavior has been dropped.
 
 Other changes:
 --------------
