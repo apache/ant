@@ -58,6 +58,7 @@ import org.apache.tools.ant.gui.acs.ElementTreeSelectionModel;
 import org.apache.tools.ant.gui.acs.ElementTreeModel;
 import org.apache.tools.ant.gui.acs.ACSProjectElement;
 import javax.swing.*;
+import javax.swing.tree.*;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import java.awt.GridLayout;
@@ -65,6 +66,7 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Module for navigating build file elemenets.
@@ -132,27 +134,37 @@ public class ElementNavigator extends AntModule {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            ACSProjectElement project = null;
-            if(event instanceof ProjectSelectedEvent) {
-                ProjectSelectedEvent e = (ProjectSelectedEvent) event;
-                project = e.getSelectedProject();
-            }
-
-            if(project == null) {
-                // The project has been closed.
-                // XXX this needs to be tested against 
-                // different version of Swing...
-                _tree.setModel(null);
-                _tree.setSelectionModel(null);
-                // Send an empty selection event to notify others that
-                // nothing is selected.
-                ElementSelectionEvent.createEvent(getContext(), null);
+            if(event instanceof PropertyChangeEvent) {
+                // The project node has changed.
+// XXX This won't work until ACSTreeNodeElement.getParent() is fixed
+//                ElementTreeModel model = (ElementTreeModel)_tree.getModel();
+//                model.nodeChanged((TreeNode)model.getRoot());
+                
             }
             else {
-                _tree.setModel(new ElementTreeModel(project));
-                _selections = new ElementTreeSelectionModel();
-                _selections.addTreeSelectionListener(new SelectionForwarder());
-                _tree.setSelectionModel(_selections);
+                ACSProjectElement project = null;
+                if(event instanceof ProjectSelectedEvent) {
+                    ProjectSelectedEvent e = (ProjectSelectedEvent) event;
+                    project = e.getSelectedProject();
+                }
+                
+                if(project == null) {
+                    // The project has been closed.
+                    // XXX this needs to be tested against 
+                    // different version of Swing...
+                    _tree.setModel(null);
+                    _tree.setSelectionModel(null);
+                    // Send an empty selection event to notify others that
+                    // nothing is selected.
+                    ElementSelectionEvent.createEvent(getContext(), null);
+                }
+                else {
+                    _tree.setModel(new ElementTreeModel(project));
+                    _selections = new ElementTreeSelectionModel();
+                    _selections.addTreeSelectionListener(
+                        new SelectionForwarder());
+                    _tree.setSelectionModel(_selections);
+                }
             }
             return true;
         }
@@ -177,7 +189,8 @@ public class ElementNavigator extends AntModule {
          */
         public boolean accept(EventObject event) {
             return event instanceof ProjectSelectedEvent ||
-                event instanceof ProjectClosedEvent;
+                event instanceof ProjectClosedEvent ||
+                event instanceof PropertyChangeEvent;
         }
     }
 

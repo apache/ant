@@ -80,6 +80,8 @@ public class PropertyEditor extends AntModule {
     private JPanel _container = null;
     /** Scroll area containing contents. */
     private JScrollPane _scroller = null;
+    /** Property change forwarder. */
+    private PropertyChangeForwarder _forwarder = new PropertyChangeForwarder();
 
     /** 
      * Default ctor.
@@ -108,6 +110,7 @@ public class PropertyEditor extends AntModule {
      */
     private void updateDisplay(ACSElement[] items) {
         if(_customizer != null) {
+            _customizer.removePropertyChangeListener(_forwarder);
             _container.remove((Component)_customizer);
             _customizer = null;
         }
@@ -123,6 +126,7 @@ public class PropertyEditor extends AntModule {
                     getCustomizerClass().newInstance();
                 _customizer.setObject(item);
                 _container.add(BorderLayout.CENTER, (Component) _customizer);
+                _customizer.addPropertyChangeListener(_forwarder);
             }
             catch(Exception ex) {
                 // XXX log me.
@@ -176,4 +180,12 @@ public class PropertyEditor extends AntModule {
             return event instanceof ElementSelectionEvent;
         }
     }
+
+    /** Class for forwarding property change events to the event bus. */
+    private class PropertyChangeForwarder implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent e) {
+            getContext().getEventBus().postEvent(e);
+        }
+    }
+
 }
