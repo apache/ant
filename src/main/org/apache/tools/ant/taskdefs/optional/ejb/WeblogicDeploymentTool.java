@@ -260,9 +260,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         }
 
         if (oldCMP) {
-            log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_INFO);
+            log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
             log("Please adjust your weblogic descriptor and set oldCMP=\"false\" " +
-                "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_INFO);
+                "to use the new CMP descriptor inclusion mechanism. ", Project.MSG_VERBOSE);
             // The the weblogic cmp deployment descriptor
             File weblogicCMPDD = new File(getDescriptorDir(), ddPrefix + WL_CMP_DD);
                 
