@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import junit.framework.TestResult;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -41,7 +44,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
-import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Assertions;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -52,9 +54,7 @@ import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
-import junit.framework.AssertionFailedError;
-import junit.framework.Test;
-import junit.framework.TestResult;
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 
 /**
  * Runs JUnit tests.
@@ -149,6 +149,11 @@ public class JUnitTask extends Task {
     private ForkMode forkMode = new ForkMode("perTest");
 
     private static final int STRING_BUFFER_SIZE = 128;
+    /**
+     * @since Ant 1.7
+     */
+    public static final String TESTLISTENER_PREFIX = 
+        "junit.framework.TestListener: ";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -829,6 +834,7 @@ public class JUnitTask extends Task {
 
         cmd.createArgument().setValue("showoutput="
                                       + String.valueOf(showOutput));
+        cmd.createArgument().setValue("logtestlistenerevents=true"); // #31885
 
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
@@ -871,9 +877,9 @@ public class JUnitTask extends Task {
                                      + "file.", e, getLocation());
         }
 
-        Execute execute = new Execute(new LogStreamHandler(this,
-                                                           Project.MSG_INFO,
-                                                           Project.MSG_WARN),
+        Execute execute = new Execute(new JUnitLogStreamHandler(this,
+                                                                Project.MSG_INFO,
+                                                                Project.MSG_WARN),
                                       watchdog);
         execute.setCommandline(cmd.getCommandline());
         execute.setAntRun(getProject());
@@ -941,7 +947,9 @@ public class JUnitTask extends Task {
      * @since Ant 1.5
      */
     protected void handleOutput(String output) {
-        if (runner != null) {
+        if (output.startsWith(TESTLISTENER_PREFIX))
+            log(output, Project.MSG_VERBOSE);
+        else if (runner != null) {
             runner.handleOutput(output);
             if (showOutput) {
                 super.handleOutput(output);
@@ -1063,7 +1071,8 @@ public class JUnitTask extends Task {
             }
             runner = new JUnitTestRunner(test, test.getHaltonerror(),
                                          test.getFiltertrace(),
-                                         test.getHaltonfailure(), classLoader);
+                                         test.getHaltonfailure(), false,
+                                         true, classLoader);
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);
 
@@ -1548,5 +1557,34 @@ public class JUnitTask extends Task {
         public int exitCode = JUnitTestRunner.ERRORS;
         public boolean timedOut = false;
         public boolean crashed = false;
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    protected static class JUnitLogOutputStream extends LogOutputStream {
+        private Task task; // local copy since LogOutputStream.task is private
+        
+        public JUnitLogOutputStream(Task task, int level) {
+            super(task, level);
+            this.task = task;
+        }
+        
+        protected void processLine(String line, int level) {
+            if (line.startsWith(TESTLISTENER_PREFIX))
+                task.log(line, Project.MSG_VERBOSE);
+            else
+                super.processLine(line, level);
+        }
+    }
+
+    /**
+     * @since Ant 1.7
+     */
+    protected static class JUnitLogStreamHandler extends PumpStreamHandler {
+        public JUnitLogStreamHandler(Task task, int outlevel, int errlevel) {
+            super(new JUnitLogOutputStream(task, outlevel),
+                  new LogOutputStream(task, errlevel));
+        }
     }
 }

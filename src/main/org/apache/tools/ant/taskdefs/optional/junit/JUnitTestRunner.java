@@ -161,6 +161,9 @@ public class JUnitTestRunner implements TestListener {
 
     /** ClassLoader passed in in non-forked mode. */
     private ClassLoader loader;
+    
+    /** Do we print TestListener events? */
+    private boolean logTestListenerEvents = false;
 
     /**
      * Constructor for fork=true or when the user hasn't specified a
@@ -178,7 +181,19 @@ public class JUnitTestRunner implements TestListener {
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput) {
-        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, null);
+        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, false);
+    }
+
+    /**
+     * Constructor for fork=true or when the user hasn't specified a
+     * classpath.
+     * @since Ant 1.7
+     */
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+                           boolean filtertrace, boolean haltOnFailure,
+                           boolean showOutput, boolean logTestListenerEvents) {
+        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, 
+             logTestListenerEvents, null);
     }
 
     /**
@@ -196,14 +211,29 @@ public class JUnitTestRunner implements TestListener {
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, ClassLoader loader) {
+        this(test, haltOnError, filtertrace, haltOnFailure, showOutput, 
+             false, loader);
+    }
+
+    /**
+     * Constructor to use when the user has specified a classpath.
+     * @since Ant 1.7
+     */
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+                           boolean filtertrace, boolean haltOnFailure,
+                           boolean showOutput, boolean logTestListenerEvents,
+                           ClassLoader loader) {
         JUnitTestRunner.filtertrace = filtertrace;
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
         this.showOutput = showOutput;
+        this.logTestListenerEvents = logTestListenerEvents;
         this.loader = loader;
     }
 
+    private PrintStream savedOut = null;
+    
     public void run() {
         res = new TestResult();
         res.addListener(this);
@@ -217,7 +247,6 @@ public class JUnitTestRunner implements TestListener {
         ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
         systemOut = new PrintStream(outStrm);
 
-        PrintStream savedOut = null;
         PrintStream savedErr = null;
 
         if (forked) {
@@ -295,6 +324,7 @@ public class JUnitTestRunner implements TestListener {
                 junitTest.setRunTime(0);
             } else {
                 try {
+                    logTestListenerEvent("tests to run: " + suite.countTestCases());
                     suite.run(res);
                 } finally {
                     junitTest.setCounts(res.runCount(), res.failureCount(),
@@ -344,6 +374,8 @@ public class JUnitTestRunner implements TestListener {
      * <p>A new Test is started.
      */
     public void startTest(Test t) {
+        String testName = JUnitVersionHelper.getTestCaseName(t);
+        logTestListenerEvent("startTest(" + testName + ")");
     }
 
     /**
@@ -352,6 +384,17 @@ public class JUnitTestRunner implements TestListener {
      * <p>A Test is finished.
      */
     public void endTest(Test test) {
+        String testName = JUnitVersionHelper.getTestCaseName(test);
+        logTestListenerEvent("endTest(" + testName + ")");
+    }
+    
+    private void logTestListenerEvent(String msg) {
+        PrintStream out = forked ? savedOut : System.out;
+        if (logTestListenerEvents) {
+            out.flush();
+            out.println(JUnitTask.TESTLISTENER_PREFIX + msg);
+            out.flush();
+        }
     }
 
     /**
@@ -360,6 +403,8 @@ public class JUnitTestRunner implements TestListener {
      * <p>A Test failed.
      */
     public void addFailure(Test test, Throwable t) {
+        String testName = JUnitVersionHelper.getTestCaseName(test);
+        logTestListenerEvent("addFailure(" + testName + ", " + t.getMessage() + ")");
         if (haltOnFailure) {
             res.stop();
         }
@@ -380,6 +425,8 @@ public class JUnitTestRunner implements TestListener {
      * <p>An error occurred while running the test.
      */
     public void addError(Test test, Throwable t) {
+        String testName = JUnitVersionHelper.getTestCaseName(test);
+        logTestListenerEvent("addError(" + testName + ", " + t.getMessage() + ")");
         if (haltOnError) {
             res.stop();
         }
@@ -395,7 +442,9 @@ public class JUnitTestRunner implements TestListener {
     }
 
     protected void handleOutput(String output) {
-        if (systemOut != null) {
+        if (!logTestListenerEvents && output.startsWith(JUnitTask.TESTLISTENER_PREFIX))
+            ; // ignore
+        else if (systemOut != null) {
             systemOut.print(output);
         }
     }
@@ -478,6 +527,9 @@ public class JUnitTestRunner implements TestListener {
      * <tr><td>showoutput</td><td>send output to System.err/.out as
      * well as to the formatters?</td><td>false</td></tr>
      *
+     * <tr><td>logtestlistenerevents</td><td>log TestListener events to
+     * System.out.</td><td>false</td></tr>
+     *
      * </table>
      */
     public static void main(String[] args) throws IOException {
@@ -486,6 +538,7 @@ public class JUnitTestRunner implements TestListener {
         boolean stackfilter = true;
         Properties props = new Properties();
         boolean showOut = false;
+        boolean logTestListenerEvents = false;
         String noCrashFile = null;
 
         if (args.length == 0) {
@@ -521,6 +574,8 @@ public class JUnitTestRunner implements TestListener {
                 in.close();
             } else if (args[i].startsWith("showoutput=")) {
                 showOut = Project.toBoolean(args[i].substring(11));
+            } else if (args[i].startsWith("logtestlistenerevents=")) {
+                logTestListenerEvents = Project.toBoolean(args[i].substring(22));
             }
         }
 
@@ -548,7 +603,7 @@ public class JUnitTestRunner implements TestListener {
                     t.setTodir(new File(st.nextToken()));
                     t.setOutfile(st.nextToken());
                     code = launch(t, haltError, stackfilter, haltFail,
-                                  showOut, props);
+                                  showOut, logTestListenerEvents, props);
                     errorOccured = (code == ERRORS);
                     failureOccured = (code != SUCCESS);
                     if (errorOccured || failureOccured) {
@@ -570,7 +625,8 @@ public class JUnitTestRunner implements TestListener {
             }
         } else {
             returnCode = launch(new JUnitTest(args[0]), haltError,
-                                stackfilter, haltFail, showOut, props);
+                                stackfilter, haltFail, showOut, 
+                                logTestListenerEvents, props);
         }
 
         registerNonCrash(noCrashFile);
@@ -668,10 +724,12 @@ public class JUnitTestRunner implements TestListener {
      */
     private static int launch(JUnitTest t, boolean haltError,
                               boolean stackfilter, boolean haltFail,
-                              boolean showOut, Properties props) {
+                              boolean showOut, boolean logTestListenerEvents,
+                              Properties props) {
         t.setProperties(props);
         JUnitTestRunner runner =
-            new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut);
+            new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut,
+                                logTestListenerEvents);
         runner.forked = true;
         transferFormatters(runner, t);
 
