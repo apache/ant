@@ -102,22 +102,14 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName, String descriptorFileName) {
-        super.addVendorFiles(ejbFiles, baseName, descriptorFileName);
+    protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
+        super.addVendorFiles(ejbFiles, ddPrefix);
         // Then the toplink deployment descriptor
 
         // Setup a naming standard here?.
 
 
-        File toplinkDD = null;
-        if (usingBaseJarName()) {
-            toplinkDD = new File(getConfig().descriptorDir, toplinkDescriptor);
-        }
-        else {
-            String ddPrefix = baseName + getConfig().baseNameTerminator;
-            File actualDir = (new File(getConfig().descriptorDir, ddPrefix)).getParentFile();
-            toplinkDD = new File(actualDir, toplinkDescriptor);
-        }
+        File toplinkDD = new File(getConfig().descriptorDir, ddPrefix + toplinkDescriptor);
         
         if (toplinkDD.exists()) {
             ejbFiles.put(META_DIR + toplinkDescriptor,

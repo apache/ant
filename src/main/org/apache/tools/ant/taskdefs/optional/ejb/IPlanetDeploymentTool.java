@@ -334,7 +334,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
      * @param baseName String name of the EJB JAR file to be written (without
      *                 a filename extension).
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName, String descriptorFileName) {
+    protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
         ejbFiles.put(META_DIR + IAS_DD, new File(getConfig().descriptorDir,
                      getIasDescriptorName()));
     }

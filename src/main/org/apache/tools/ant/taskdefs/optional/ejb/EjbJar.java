@@ -161,7 +161,24 @@ public class EjbJar extends MatchingTask {
          * The list of configured DTD locations
          */
         public ArrayList dtdLocations = new ArrayList();
+        
+        /**
+         * The naming scheme used to determine the generated jar name
+         * from the descriptor information
+         */
+        public NamingScheme namingScheme;
     };
+
+
+    public static class NamingScheme extends EnumeratedAttribute {
+        static public final String EJB_NAME = "ejb-name";
+        static public final String DIRECTORY = "directory";
+        static public final String DESCRIPTOR = "descriptor";
+        static public final String BASEJARNAME = "basejarname";
+        public String[] getValues() {
+            return new String[] {EJB_NAME, DIRECTORY, DESCRIPTOR, BASEJARNAME};
+        }
+    }
 
     private Config config = new Config();
 
@@ -321,7 +338,31 @@ public class EjbJar extends MatchingTask {
      */
     public void setBasejarname(String inValue) {
         config.baseJarName = inValue;
+        if (config.namingScheme == null) {
+            config.namingScheme = new NamingScheme();
+            config.namingScheme.setValue(NamingScheme.BASEJARNAME);
+        }
+        else if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)) {
+            throw new BuildException("The basejarname attribute is not compatible with the " + 
+                                     config.namingScheme.getValue() + " naming scheme");
+        }                                     
     }
+
+    /**
+     * Set the naming scheme used to determine the name of the generated jars
+     * from the deployment descriptor
+     *
+     * @param NamingScheme the namign scheme to be used
+     */
+    public void setNaming(NamingScheme namingScheme) {
+        config.namingScheme = namingScheme;
+        if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
+            config.baseJarName != null) {
+            throw new BuildException("The basejarname attribute is not compatible with the " + 
+                                     config.namingScheme.getValue() + " naming scheme");
+        }                                     
+    }
+    
 
     /**
      * Set the destination directory.
@@ -399,6 +440,16 @@ public class EjbJar extends MatchingTask {
         if (config.descriptorDir == null) {
             config.descriptorDir = config.srcDir;
         }
+
+        if (config.namingScheme == null) {
+            config.namingScheme = new NamingScheme();
+            config.namingScheme.setValue(NamingScheme.DESCRIPTOR);
+        }
+        else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
+                 config.baseJarName == null) {
+            throw new BuildException("The basejarname attribute must be specified " + 
+                                     "with the basejarname naming scheme");
+        }
     }        
 
     /**
@@ -469,13 +520,6 @@ public class EjbJar extends MatchingTask {
             throw new BuildException(msg, pce);
         }
     } // end of execute()
-
-    public static class NamignScheme extends EnumeratedAttribute {
-        public String[] getValues() {
-            return new String[] {"ejb-name", "directory", "descriptor"};
-        }
-    }
-
 }
 
 

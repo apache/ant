@@ -72,6 +72,12 @@ import org.apache.tools.ant.*;
  * list can then be accessed through the getFiles() method.
  */
 public class DescriptorHandler extends org.xml.sax.HandlerBase {
+    static private final int STATE_LOOKING_EJBJAR = 1;
+    static private final int STATE_IN_EJBJAR = 2;
+    static private final int STATE_IN_BEANS = 3;
+    static private final int STATE_IN_SESSION = 4;
+    static private final int STATE_IN_ENTITY = 5;
+    
     private Task owningTask;
     
     private String publicId = null;
@@ -80,11 +86,20 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
      */
-    private static final String EJB_REF   = "ejb-ref";
     private static final String HOME_INTERFACE   = "home";
     private static final String REMOTE_INTERFACE = "remote";
     private static final String BEAN_CLASS       = "ejb-class";
     private static final String PK_CLASS         = "prim-key-class";
+    private static final String EJB_NAME         = "ejb-name";
+    private static final String EJB_JAR          = "ejb-jar";
+    private static final String ENTERPRISE_BEANS = "enterprise-beans";
+    private static final String ENTITY_BEAN      = "entity";
+    private static final String SESSION_BEAN     = "session";
+
+    /**
+     * The state of the parsing
+     */
+    private int parseState = STATE_LOOKING_EJBJAR;
 
     /**
      * Instance variable used to store the name of the current element being
@@ -105,11 +120,14 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      */
     protected Hashtable ejbFiles = null;
 
+    /**
+     * Instance variable that stores the value found in the <ejb-name> element
+     */
+    protected String ejbName = null;
+
     private Hashtable fileDTDs = new Hashtable();
     
     private Hashtable resourceDTDs = new Hashtable();
-
-    private boolean inEJBRef = false;
 
     /**
      * The directory containing the bean classes and interfaces. This is 
@@ -188,6 +206,13 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         return publicId;
     }
     
+     /**
+     * Getter method that returns the value of the <ejb-name> element.
+     */
+    public String getEjbName() {
+        return ejbName;
+    }
+
     /**
      * SAX parser call-back method that is used to initialize the values of some
      * instance variables to ensure safe operation.
@@ -195,7 +220,6 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     public void startDocument() throws SAXException {
         this.ejbFiles = new Hashtable(10, 1);
         this.currentElement = null;
-        inEJBRef = false;
     }
 
 
@@ -210,8 +234,17 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         throws SAXException {
         this.currentElement = name;
         currentText = "";
-        if (name.equals(EJB_REF)) {
-            inEJBRef = true;
+        if (parseState == STATE_LOOKING_EJBJAR && name.equals(EJB_JAR)) {
+            parseState = STATE_IN_EJBJAR;
+        }
+        else if (parseState == STATE_IN_EJBJAR && name.equals(ENTERPRISE_BEANS)) {
+            parseState = STATE_IN_BEANS;
+        }
+        else if (parseState == STATE_IN_BEANS && name.equals(SESSION_BEAN)) {
+            parseState = STATE_IN_SESSION;
+        }
+        else if (parseState == STATE_IN_BEANS && name.equals(ENTITY_BEAN )) {
+            parseState = STATE_IN_ENTITY;
         }
     }
 
@@ -229,8 +262,17 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         processElement();
         currentText = "";
         this.currentElement = "";
-        if (name.equals(EJB_REF)) {
-            inEJBRef = false;
+        if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN )) {
+            parseState = STATE_IN_BEANS;
+        }
+        else if (parseState == STATE_IN_SESSION && name.equals(SESSION_BEAN)) {
+            parseState = STATE_IN_BEANS;
+        }
+        else if (parseState == STATE_IN_BEANS && name.equals(ENTERPRISE_BEANS)) {
+            parseState = STATE_IN_EJBJAR;
+        }
+        else if (parseState == STATE_IN_EJBJAR && name.equals(EJB_JAR)) {
+            parseState = STATE_LOOKING_EJBJAR;
         }
     }
 
@@ -257,7 +299,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     
     
     protected void processElement() {
-        if (inEJBRef) {
+        if (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION) {
             return;
         }
         
@@ -279,6 +321,13 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
                 className += ".class";
                 classFile = new File(srcDir, className);
                 ejbFiles.put(className, classFile);
+            }
+        }
+
+	// Get the value of the <ejb-name> tag.  Only the first occurence.
+        if (currentElement.equals(EJB_NAME)) {
+            if ( ejbName == null ) {
+                ejbName = currentText.trim();
             }
         }
     }

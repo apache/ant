@@ -306,6 +306,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         checkConfiguration(descriptorFileName, saxParser);
                     
         try {
+            handler = getDescriptorHandler(config.srcDir);
+
             // Retrive the files to be added to JAR from EJB descriptor
             Hashtable ejbFiles = parseEjbFiles(descriptorFileName, saxParser);
 
@@ -315,12 +317,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // Determine the JAR filename (without filename extension)
             String baseName = getJarBaseName(descriptorFileName);
 
+            String ddPrefix = getVendorDDPrefix(baseName, descriptorFileName);
+
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
                          new File(config.descriptorDir, descriptorFileName));
             
             // now the vendor specific files, if any             
-            addVendorFiles(ejbFiles, baseName, descriptorFileName);
+            addVendorFiles(ejbFiles, ddPrefix);
 
             // add any inherited files
             checkAndAddInherited(ejbFiles);
@@ -423,7 +427,6 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         Hashtable ejbFiles = null;
 
         try {
-            handler = getDescriptorHandler(config.srcDir);
 
             /* Parse the ejb deployment descriptor.  While it may not
              * look like much, we use a SAXParser and an inner class to
@@ -484,14 +487,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         String baseName = "";
 
         // Work out what the base name is
-        if (config.baseJarName != null) {
+        if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.BASEJARNAME)) {
             String canonicalDescriptor = descriptorFileName.replace('\\', '/');
             int index = canonicalDescriptor.lastIndexOf('/');
             if (index != -1) {
                 baseName = descriptorFileName.substring(0, index + 1);
             }
             baseName += config.baseJarName;
-        } else {
+        } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)) {
             int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
             int endBaseName = -1;
             if (lastSeparatorIndex != -1) {
@@ -505,17 +508,52 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 baseName = descriptorFileName.substring(0, endBaseName);
             }
             baseName = descriptorFileName.substring(0, endBaseName);
+        } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
+            int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
+            String dirName = descriptorFileName.substring(0, lastSeparatorIndex);
+            int dirSeparatorIndex = dirName.lastIndexOf(File.separator);
+            if (dirSeparatorIndex != -1) {
+                dirName = dirName.substring(dirSeparatorIndex + 1);
+            }
+            
+            baseName = dirName;
+        } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.EJB_NAME)) {
+            baseName = handler.getEjbName();
         }
-
         return baseName;
     }
 
+    /**
+     * Get the prefix for vendor deployment descriptors.
+     *
+     * This will contain the path and the start of the descriptor name, 
+     * depending on the naming scheme
+     */
+    public String getVendorDDPrefix(String baseName, String descriptorFileName) {
+        String ddPrefix = null;
+
+        if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)) {
+            ddPrefix = baseName + config.baseNameTerminator;
+        } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.BASEJARNAME) ||
+                   config.namingScheme.getValue().equals(EjbJar.NamingScheme.EJB_NAME) ||
+                   config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
+            String canonicalDescriptor = descriptorFileName.replace('\\', '/');
+            int index = canonicalDescriptor.lastIndexOf('/');
+            if (index == -1) {
+                ddPrefix = "";
+            }
+            else {
+                ddPrefix = descriptorFileName.substring(0, index + 1);
+            }
+        }
+        return ddPrefix;
+    }
 
     /**
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, String baseName, String descriptorFileName) {
+    protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
         // nothing to add for generic tool.
     }
 
