@@ -75,8 +75,9 @@ The Task has the following attributes:<p>
   </tr>
   <tr>
     <td valign="top">compiler</td>
-    <td valign="top">class name of a JSP compiler adapter</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top">class name of a JSP compiler adapter,
+    such as "jasper" or "jasper41"</td>
+    <td valign="top" align="center">No -defaults to "jasper"</td>
   </tr>
   <tr>
     <td valign="top">ieplugin</td>
@@ -220,6 +221,7 @@ When used, the task hands off all dependency checking to the compiler.
 &lt;jspc srcdir="${basedir}/src/war"
       destdir="${basedir}/gensrc"
       package="com.i3sp.jsp"
+      compiler="jasper41"
       verbose="9"&gt;
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
@@ -232,6 +234,7 @@ package heirarchy beginning with com.i3sp.jsp.
       destdir="interim"
       verbose="1"
       srcdir="src"
+      compiler="jasper41"
       package="com.i3sp.jsp"&gt;
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
@@ -255,8 +258,10 @@ java files if class dependencies indicate it is needed.
 Using the <code>package</code> attribute it is possible to identify the resulting
 java files and thus do full dependency checking - this task should only rebuild
 java files if their jsp file has been modified. However, this only works
-with some versions of jasper (specifically tomcat version 4.0.x), as
-the naming scheme changed after that. Even when it does work, changes in
+with some versions of jasper. By default the checking supports tomcat 4.0.x
+with the "jasper" compiler, set the compiler to "jasper41" for the tomcat4.1.x
+dependency checking.
+Even when it does work, changes in
 .TLD imports or in compile time includes do not get picked up.
 
 <p>
