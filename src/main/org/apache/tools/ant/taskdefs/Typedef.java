@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
  * Define a new data type.
  *
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
- *
+ * @since Ant 1.4
  * @ant.task category="internal"
  */
 public class Typedef extends Definer {

@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
  * Define a new task.
  *
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
- *
+ * @since Ant 1.1
  * @ant.task category="internal"
  */
 public class Taskdef extends Definer {

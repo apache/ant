@@ -78,6 +78,8 @@ import org.apache.tools.tar.TarEntry;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="packaging"
  */
 
@@ -140,11 +142,11 @@ public class Tar extends MatchingTask {
 
     /**
      * Sets the destfile attribute.
-     * @since 1.22 ant 1.5
+     * @since Ant 1.5
      * @param destFile The output of the tar
      */
     public void setDestFile(File destFile) {
-       this.tarFile = destFile;
+        this.tarFile = destFile;
     }
 
     /**
@@ -205,89 +207,101 @@ public class Tar extends MatchingTask {
                                      location);
         }
 
-        if (baseDir != null) {
-            if (!baseDir.exists()) {
-                throw new BuildException("basedir does not exist!", location);
-            }
-
-            // add the main fileset to the list of filesets to process.
-            TarFileSet mainFileSet = new TarFileSet(fileset);
-            mainFileSet.setDir(baseDir);
-            filesets.addElement(mainFileSet);
-        }
-
-        if (filesets.size() == 0) {
-            throw new BuildException("You must supply either a basdir attribute or some nested filesets.",
-                                     location);
-        }
-
-        // check if tr is out of date with respect to each
-        // fileset
-        boolean upToDate = true;
-        for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
-            TarFileSet fs = (TarFileSet)e.nextElement();
-            String[] files = fs.getFiles(project);
-
-            if (!archiveIsUpToDate(files)) {
-                upToDate = false;
-            }
-
-            for (int i = 0; i < files.length; ++i) {
-                if (tarFile.equals(new File(fs.getDir(project), files[i]))) {
-                    throw new BuildException("A tar file cannot include itself", location);
-                }
-            }
-        }
-
-        if (upToDate) {
-            log("Nothing to do: "+tarFile.getAbsolutePath()+" is up to date.",
-                Project.MSG_INFO);
-            return;
-        }
-
-        log("Building tar: "+ tarFile.getAbsolutePath(), Project.MSG_INFO);
-
-        TarOutputStream tOut = null;
+        Vector savedFileSets = (Vector) filesets.clone();
         try {
-            tOut = new TarOutputStream(new FileOutputStream(tarFile));
-            tOut.setDebug(true);
-            if (longFileMode.isTruncateMode()) {
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
-            }
-            else if (longFileMode.isFailMode() ||
-                     longFileMode.isOmitMode()) {
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
-            }
-            else {
-                // warn or GNU
-                tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
+            if (baseDir != null) {
+                if (!baseDir.exists()) {
+                    throw new BuildException("basedir does not exist!", 
+                                             location);
+                }
+
+                // add the main fileset to the list of filesets to process.
+                TarFileSet mainFileSet = new TarFileSet(fileset);
+                mainFileSet.setDir(baseDir);
+                filesets.addElement(mainFileSet);
             }
 
-            longWarningGiven = false;
+            if (filesets.size() == 0) {
+                throw new BuildException("You must supply either a basedir "
+                                         + "attribute or some nested filesets.",
+                                         location);
+            }
+            
+            // check if tar is out of date with respect to each
+            // fileset
+            boolean upToDate = true;
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
                 TarFileSet fs = (TarFileSet)e.nextElement();
                 String[] files = fs.getFiles(project);
-                if (files.length > 1 && fs.getFullpath().length() > 0) {
-                    throw new BuildException("fullpath attribute may only be specified for " +
-                                             "filesets that specify a single file.");
+
+                if (!archiveIsUpToDate(files)) {
+                    upToDate = false;
                 }
-                for (int i = 0; i < files.length; i++) {
-                    File f = new File(fs.getDir(project), files[i]);
-                    String name = files[i].replace(File.separatorChar,'/');
-                    tarFile(f, tOut, name, fs);
+
+                for (int i = 0; i < files.length; ++i) {
+                    if (tarFile.equals(new File(fs.getDir(project), 
+                                                files[i]))) {
+                        throw new BuildException("A tar file cannot include "
+                                                 + "itself", location);
+                    }
                 }
             }
-        } catch (IOException ioe) {
-            String msg = "Problem creating TAR: " + ioe.getMessage();
-            throw new BuildException(msg, ioe, location);
+
+            if (upToDate) {
+                log("Nothing to do: "+tarFile.getAbsolutePath()
+                    +" is up to date.", Project.MSG_INFO);
+                return;
+            }
+
+            log("Building tar: "+ tarFile.getAbsolutePath(), Project.MSG_INFO);
+
+            TarOutputStream tOut = null;
+            try {
+                tOut = new TarOutputStream(new FileOutputStream(tarFile));
+                tOut.setDebug(true);
+                if (longFileMode.isTruncateMode()) {
+                    tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
+                }
+                else if (longFileMode.isFailMode() ||
+                         longFileMode.isOmitMode()) {
+                    tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
+                }
+                else {
+                    // warn or GNU
+                    tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
+                }
+
+                longWarningGiven = false;
+                for (Enumeration e = filesets.elements(); 
+                     e.hasMoreElements();) {
+                    TarFileSet fs = (TarFileSet)e.nextElement();
+                    String[] files = fs.getFiles(project);
+                    if (files.length > 1 && fs.getFullpath().length() > 0) {
+                        throw new BuildException("fullpath attribute may only "
+                                                 + "be specified for " 
+                                                 + "filesets that specify a "
+                                                 + "single file.");
+                    }
+                    for (int i = 0; i < files.length; i++) {
+                        File f = new File(fs.getDir(project), files[i]);
+                        String name = files[i].replace(File.separatorChar,'/');
+                        tarFile(f, tOut, name, fs);
+                    }
+                }
+            } catch (IOException ioe) {
+                String msg = "Problem creating TAR: " + ioe.getMessage();
+                throw new BuildException(msg, ioe, location);
+            } finally {
+                if (tOut != null) {
+                    try {
+                        // close up
+                        tOut.close();
+                    }
+                    catch (IOException e) {}
+                }
+            }
         } finally {
-            if (tOut != null) {
-                try {
-                    // close up
-                    tOut.close();
-                }
-                catch (IOException e) {}
-            }
+            filesets = savedFileSets;
         }
     }
 
@@ -334,10 +348,12 @@ public class Tar extends MatchingTask {
                     return;
                 } else if (longFileMode.isWarnMode()) {
                     log("Entry: "+ vPath + " longer than " +
-                        TarConstants.NAMELEN + " characters.", Project.MSG_WARN);
+                        TarConstants.NAMELEN + " characters.", 
+                        Project.MSG_WARN);
                     if (!longWarningGiven) {
-                        log("Resulting tar file can only be processed successfully"
-                            + " by GNU compatible tar commands", Project.MSG_WARN);
+                        log("Resulting tar file can only be processed "
+                            + "successfully by GNU compatible tar commands", 
+                            Project.MSG_WARN);
                         longWarningGiven = true;
                     }
                 } else if (longFileMode.isFailMode()) {
