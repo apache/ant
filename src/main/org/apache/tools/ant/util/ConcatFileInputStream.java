@@ -99,8 +99,13 @@ public class ConcatFileInputStream extends InputStream {
         closeCurrent();
         if (file != null && index < file.length) {
             log("Opening " + file[index], Project.MSG_VERBOSE);
-            currentStream = new BufferedInputStream(
-                new FileInputStream(file[index]));
+            try {
+                currentStream = new BufferedInputStream(
+                    new FileInputStream(file[index]));
+            } catch (IOException eyeOhEx) {
+                log("Failed to open " + file[index], Project.MSG_ERR);
+                throw eyeOhEx;
+            }
         } else {
             eof = true;
         }
