@@ -517,7 +517,7 @@ public class Zip extends MatchingTask {
             prefix = zfs.getPrefix();
             fullpath = zfs.getFullpath();
             dirMode = zfs.getDirMode();
-            fileMode = zfs.getDirMode();
+            fileMode = zfs.getFileMode();
         }
 
         if (prefix.length() > 0 && fullpath.length() > 0) {
