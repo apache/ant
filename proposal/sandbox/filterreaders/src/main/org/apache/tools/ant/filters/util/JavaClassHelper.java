@@ -51,105 +51,53 @@
  *  information on the Apache Software Foundation, please see
  *  <http://www.apache.org/>.
  */
-package org.apache.tools.ant.filters;
+package org.apache.tools.ant.filters.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.Reader;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.filters.util.JavaClassHelper;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ConstantValue;
+import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.JavaClass;
 
 /**
- * Assemble the constants declared in a Java class in
- * key1=value1(line separator)key2=value2
- * format
- *
- * Notes:
- * =====
- * 1. This filter uses the BCEL external toolkit.
- * 2. This assembles only those constants that are not created
- *    using the syntax new whatever().
- * 3. This assembles constants declared using the basic datatypes
- *    and String only.
- * 4. The access modifiers of the declared constants do not matter.
- *
- * Example:
- * =======
- *
- * &lt;classconstants/&gt;
- *
- * Or:
- *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;
+ * Helper class that filters constants from a Java Class
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class ClassConstants
-    extends BaseFilterReader
-    implements ChainableReader
-{
-    /** Data that must be read from, if not null. */
-    private String queuedData = null;
+public final class JavaClassHelper {
+
+    /** System specific line separator. */
+    private static final String LS = System.getProperty("line.separator");
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Get the constants declared in a file as name=value
      */
-    public ClassConstants() {
-        super();
-    }
-
-    /**
-     * Create a new filtered reader.
-     *
-     * @param in  a Reader object providing the underlying stream.
-     */
-    public ClassConstants(final Reader in) {
-        super(in);
-    }
-
-    /**
-     * Read and assemble the constants declared in a class file.
-     */
-    public final int read() throws IOException {
-
-        int ch = -1;
-
-        if (queuedData != null && queuedData.length() == 0) {
-            queuedData = null;
-        }
-
-        if (queuedData != null) {
-            ch = queuedData.charAt(0);
-            queuedData = queuedData.substring(1);
-            if (queuedData.length() == 0) {
-                queuedData = null;
-            }
-        } else {
-            final String clazz = readFully();
-            if (clazz == null) {
-                ch = -1;
-            } else {
-                final byte[] bytes = clazz.getBytes();
-                final StringBuffer sb = JavaClassHelper.getConstants(bytes);
-                if (sb.length() > 0) {
-                    queuedData = sb.toString();
-                    return read();
+    public static final StringBuffer getConstants(byte[] bytes)
+        throws IOException {
+        final StringBuffer sb = new StringBuffer();
+        final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        final ClassParser parser = new ClassParser(bis, "");
+        final JavaClass javaClass = parser.parse();
+        final Field[] fields = javaClass.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            final Field field = fields[i];
+            if (field != null) {
+                final ConstantValue cv = field.getConstantValue();
+                if (cv != null) {
+                    String cvs = cv.toString();
+                    //Remove start and end quotes if field is a String
+                    if (cvs.startsWith("\"") && cvs.endsWith("\"")) {
+                        cvs = cvs.substring(1, cvs.length() - 1);
+                    }
+                    sb.append(field.getName());
+                    sb.append('=');
+                    sb.append(cvs);
+                    sb.append(LS);
                 }
             }
         }
-        return ch;
-    }
-
-    /**
-     * Create a new ClassConstants using the passed in
-     * Reader for instantiation.
-     */
-    public final Reader chain(final Reader rdr) {
-        ClassConstants newFilter = new ClassConstants(rdr);
-        return newFilter;
+        return sb;
     }
 }
