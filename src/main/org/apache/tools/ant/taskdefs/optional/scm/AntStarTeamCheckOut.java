@@ -55,10 +55,20 @@
 package org.apache.tools.ant.taskdefs.optional.scm; 
  
 
+import java.util.StringTokenizer;
+
+import com.starbase.starteam.Folder;
+import com.starbase.starteam.Item;
+import com.starbase.starteam.Property;
+import com.starbase.starteam.Server;
+import com.starbase.starteam.StarTeamFinder;
+import com.starbase.starteam.Type;
+import com.starbase.starteam.View;
 import com.starbase.util.Platform;
 
-import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 
 /**
  * Checks out files from a specific StarTeam server, project, view, and
@@ -104,46 +114,6 @@ import org.apache.tools.ant.BuildException;
  */
 public class AntStarTeamCheckOut extends org.apache.tools.ant.Task 
 {
-    /**
-     * By default, <CODE>force</CODE> is set to "false" through this field.
-     * If you set <CODE>force</CODE> to "true," AntStarTeamCheckOut will
-     * overwrite files in the target directory. If the target directory does
-     * not exist, the <CODE>force</CODE> setting does nothing. Note that
-     * <CODE>DEFAULT_FORCESETTING</CODE> and <CODE>force</CODE> are strings,
-     * not boolean values. See the links below for more information.
-     * 
-     * @see #getForce()
-     * @see #getForceAsBoolean()
-     * @see #setForce(String force)
-     */
-    public final static String DEFAULT_FORCESETTING = "false";
-
-    /**
-     * This field is used in setting <CODE>verbose</CODE> to "false", the
-     * default. If <CODE>verbose</CODE> is true, AntStarTeamCheckOut will
-     * display file and directory names as it checks files out. The default
-     * setting displays only a total. Note that
-     * <CODE>DEFAULT_VERBOSESETTING</CODE> and <CODE>verbose</CODE> are
-     * strings, not boolean values. See the links below for more
-     * information.
-     * 
-     * @see #getVerbose()
-     * @see #getVerboseAsBoolean()
-     * @see #setVerbose(String verbose)
-     */
-    public final static String DEFAULT_VERBOSESETTING = "false";
-
-    /**
-     * <CODE>DEFAULT_RECURSIONSETTING</CODE> contains the normal setting --
-     * true -- for recursion.  Thus, if you do not
-     * <CODE>setRecursion("false")</CODE> somewhere in your program,
-     * AntStarTeamCheckOut will check files out from all subfolders as well
-     * as from the given folder.
-     * 
-     * @see #getRecursion()
-     * @see #setRecursion(String recursion)
-     */
-    public final static String DEFAULT_RECURSIONSETTING = "true";
 
     /**
      * This constant sets the filter to include all files. This default has
@@ -183,7 +153,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * This field keeps count of the number of files checked out.
      */
-    private int checkedOut;
+    private int checkedOut = 0;
 
     // Change these through their GET and SET methods.
     
@@ -195,7 +165,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * The port on the server used for StarTeam.
      */
-    private String serverPort = null;
+    private int serverPort = -1;
 
     /**
      * The name of your project.
@@ -233,19 +203,19 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * If force set to true, AntStarTeamCheckOut will overwrite files in the
      * target directory.
      */
-    private String force = DEFAULT_FORCESETTING;
+    private boolean force = false;
 
     /**
      * When verbose is true, the program will display all files and
      * directories as they are checked out.
      */
-    private String verbose = DEFAULT_VERBOSESETTING;
+    private boolean verbose = false;
 
     /**
      * Set recursion to false to check out files in only the given folder
      * and not in its subfolders.
      */
-    private String recursion = DEFAULT_RECURSIONSETTING;
+    private boolean recursion = true;
 
     // These fields deal with includes and excludes
 
@@ -263,7 +233,49 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * The file delimitor on the user's system.
      */
     private String delim = Platform.getFilePathDelim();
-    
+
+    /**
+     * whether or not to use the Starteam "default folder" when calculating
+     * the target paths to which files are checked out.
+     */
+    private boolean usesDefaultFolder = false;
+
+
+    /** convenient method to check for conditions */
+    private static void assertTrue(boolean value, String msg) throws BuildException {
+        if ( !value ) {
+            throw new BuildException(msg);
+        }
+    }
+
+    protected void checkParameters() throws BuildException {
+        // Check all of the properties that are required.
+        assertTrue( getServerName() != null, "ServerName must be set.");
+        assertTrue( getServerPort() != -1, "ServerPort must be set.");
+        assertTrue( getProjectName() != null, "ProjectName must be set.");
+        assertTrue( getViewName() != null, "ViewName must be set.");
+        assertTrue( getUsername() != null, "Username must be set.");
+        assertTrue( getPassword() != null, "Password must be set.");
+        assertTrue( getTargetFolder() != null, "TargetFolder must be set.");
+
+        // Because of the way I create the full target path, there
+        // must be NO slash at the end of targetFolder and folderName
+        // However, if the slash or backslash is the only character, leave it alone
+        if ((getTargetFolder().endsWith("/") ||
+             getTargetFolder().endsWith("\\")) && getTargetFolder().length() > 1)
+        {
+            setTargetFolder(getTargetFolder().substring(0, getTargetFolder().length() - 1));
+        }
+
+        // Check to see if the target directory exists.
+        java.io.File dirExist = new java.io.File(getTargetFolder());
+        if (dirExist.isDirectory() && !getForce())
+        {
+            throw new BuildException( "Target directory exists. Set \"force\" to \"true\" " +
+                         "to continue anyway." );
+        }
+    }
+
     /**
      * Do the execution.
      * 
@@ -271,95 +283,22 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      */
     public void execute() throws BuildException
     {
-        // Check all of the properties that are required.
-        if ( getServerName() == null )
-        {
-            project.log("ServerName must not be null.");
-            return;
-        }
-        if ( getServerPort() == null )
-        {
-            project.log("ServerPort must not be null.");
-            return;
-        }
-        if ( getProjectName() == null )
-        {
-            project.log("ProjectName must not be null.");
-            return;
-        }
-        if ( getViewName() == null )
-        {
-            project.log("ViewName must not be null.");
-            return;
-        }
-        if ( getUsername() == null )
-        {
-            project.log("Username must not be null.");
-            return;
-        }
-        if ( getPassword() == null )
-        {
-            project.log("Password must not be null.");
-            return;
-        }
-        if ( getTargetFolder() == null )
-        {
-            project.log("TargetFolder must not be null.");
-            return;
-        }
+        // Connect to the StarTeam server, and log on.
+        Server s = getServer();
 
-        // Because of the way I create the full target path, there
-        // must be NO slash at the end of targetFolder and folderName
-        // However, if the slash or backslash is the only character, leave it alone
-        if (null != getTargetFolder())
-        {
-            if ((getTargetFolder().endsWith("/") || 
-                 getTargetFolder().endsWith("\\")) && getTargetFolder().length() > 1)
-            {
-                setTargetFolder(getTargetFolder().substring(0, getTargetFolder().length() - 1));
-            }
-        }
-
-        if ( null != getFolderName() )
-        {
-            if ((getFolderName().endsWith("/") || 
-                 getFolderName().endsWith("\\")) && getFolderName().length() > 1)
-            {
-                setFolderName(getFolderName().substring(0, getFolderName().length() - 1));
-            }
-        }
-
-        // Check to see if the target directory exists.
-        java.io.File dirExist = new java.io.File(getTargetFolder());
-        if (dirExist.isDirectory() && !getForceAsBoolean())
-        {
-            project.log( "Target directory exists. Set \"force\" to \"true\" " +
-                         "to continue anyway." );
-            return;
-        }
-
-        try
-        {
-            // Connect to the StarTeam server, and log on.
-            Server s = getServer();
-
+        try {
             // Search the items on this server.
             runServer(s);
-
+        } finally {
             // Disconnect from the server.
             s.disconnect();
-
-            // after you are all of the properties are ok, do your thing
-            // with StarTeam.  If there are any kind of exceptions then
-            // send the message to the project log.
-
-            // Tell how many files were checked out.
-            project.log(checkedOut + " files checked out.");
         }
-        catch (Throwable e)
-        {
-            project.log("    " + e.getMessage());
-        }
+        // after you are all of the properties are ok, do your thing
+        // with StarTeam.  If there are any kind of exceptions then
+        // send the message to the project log.
+
+        // Tell how many files were checked out.
+        log(checkedOut + " files checked out.");
     }
 
     /**
@@ -370,7 +309,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     protected Server getServer()
     {
         // Simplest constructor, uses default encryption algorithm and compression level.
-        Server s = new Server(getServerName(), getServerPortAsInt());
+        Server s = new Server(getServerName(), getServerPort());
 
         // Optional; logOn() connects if necessary.
         s.connect();
@@ -395,9 +334,9 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             
             if (p.getName().equals(getProjectName()))
             {
-                if (getVerboseAsBoolean())
+                if (getVerbose())
                 {
-                    project.log("Found " + getProjectName() + delim);
+                    log("Found " + getProjectName() + delim);
                 }
                 runProject(s, p);
                 break;
@@ -419,9 +358,9 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             View v = views[i];
             if (v.getName().equals(getViewName()))
             {
-                if (getVerboseAsBoolean())
+                if (getVerbose())
                 {
-                    project.log("Found " + getProjectName() + delim + getViewName() + delim);
+                    log("Found " + getProjectName() + delim + getViewName() + delim);
                 }
                 runType(s, p, v, s.typeForName((String)s.getTypeNames().FILE));
                 break;
@@ -441,7 +380,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     {
         // This is ugly; checking for the root folder.
         Folder f = v.getRootFolder();
-        if (!(getFolderName()==null))
+        if ( getFolderName() != null )
         {
             if (getFolderName().equals("\\") || getFolderName().equals("/"))
             {
@@ -453,9 +392,16 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             }
         }
 
-        if (getVerboseAsBoolean() && !(getFolderName()==null))
+        if (null==f) {
+            throw new BuildException("ERROR: " + getProjectName() + delim + getViewName() + delim + 
+                                                 v.getRootFolder() + delim + getFolderName() + delim + 
+                                                " does not exist.");
+        }
+
+
+        if ( getVerbose() && getFolderName() != null )
         {
-            project.log( "Found " + getProjectName() + delim + getViewName() + 
+            log( "Found " + getProjectName() + delim + getViewName() +
                          delim + getFolderName() + delim + "\n" );
         }
 
@@ -490,7 +436,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         f.populateNow(t.getName(), strNames, -1);
 
         // Now, search for items in the selected folder.
-        runFolder(s, p, v, t, f);
+        runFolder(s, p, v, t, f, getTargetFolder());
 
         // Free up the memory used by the cached items.
         f.discardItems(t.getName(), -1);
@@ -505,27 +451,29 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @param v      A view name from the specified project.
      * @param t      An item type which is currently always "file".
      * @param f      The folder to search.
+     * @param tgt    Name of target folder on local machine
      */
     protected void runFolder( Server s, 
                               com.starbase.starteam.Project p, 
                               View v, 
                               Type t, 
-                              Folder f )
+                              Folder f,
+                              String tgt )
     {
         // Process all items in this folder.
         Item[] items = f.getItems(t.getName());
         for (int i = 0; i < items.length; i++)
         {
-            runItem(s, p, v, t, f, items[i]);
+            runItem(s, p, v, t, f, items[i], tgt);
         }
 
         // Process all subfolders recursively if recursion is on.
-        if (getRecursionAsBoolean())
+        if (getRecursion())
         {
             Folder[] subfolders = f.getSubFolders();
             for (int i = 0; i < subfolders.length; i++)
             {
-                runFolder(s, p, v, t, subfolders[i]);
+                runFolder(s, p, v, t, subfolders[i], tgt + delim + subfolders[i].getName());
             }
         }
     }
@@ -540,63 +488,31 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @param t      An item type which is currently always "file".
      * @param f      The folder the file is localed in.
      * @param item   The file to check out.
+     * @param tgt    Name of target folder on local machine
      */
     protected void runItem( Server s, 
                             com.starbase.starteam.Project p, 
                             View v, 
                             Type t, 
                             Folder f, 
-                            Item item )
+                            Item item,
+                            String tgt )
     {
         // Get descriptors for this item type.
         Property p1 = getPrimaryDescriptor(t);
         Property p2 = getSecondaryDescriptor(t);
 
-        // Time to filter...
         String pName = (String)item.get(p1.getName());
-        boolean includeIt = false;
-        boolean excludeIt = false;
-
-        // See if it fits any includes.
-        if (getIncludes()!=null)
-        {
-            StringTokenizer inStr = new StringTokenizer(getIncludes(), " ");
-            while (inStr.hasMoreTokens())
-            {
-                if (match(inStr.nextToken(), pName))
-                {
-                    includeIt = true;
-                }
-            }
-        }
-
-        // See if it fits any excludes.
-        if (getExcludes()!=null)
-        {
-            StringTokenizer exStr = new StringTokenizer(getExcludes(), " ");
-            while (exStr.hasMoreTokens())
-            {
-                if (match(exStr.nextToken(), pName))
-                {
-                    excludeIt = true;
-                }
-            }
-        }
-
-        // Don't check it out if
-        // (a) It fits no include filters
-        // (b) It fits an exclude filter
-        if (!includeIt | excludeIt)
-        {
+        if ( !shouldCheckout(pName) ) {
             return;
         }
 
         // VERBOSE MODE ONLY
-        if (getVerboseAsBoolean())
+        if (getVerbose())
         {
             // Show folder only if changed.
-            boolean bShowHeader = true;
-            if (f != prevFolder)
+            boolean bShowHeader = (f != prevFolder);
+            if (bShowHeader)
             {
                 // We want to display the folder the same way you would
                 // enter it on the command line ... so we remove the 
@@ -608,51 +524,47 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
                 {
                     strFolder = strFolder.substring(i+1);
                 }
-                System.out.println("            Folder: \"" + strFolder + "\"");
+                log("            Folder: \"" + strFolder + "\"");
                 prevFolder = f;
-            }
-            else
-                bShowHeader        = false;
 
-            // If we displayed the project, view, item type, or folder,
-            // then show the list of relevant item properties.
-            if (bShowHeader)
-            {
-                System.out.print("                Item");
-                System.out.print(",\t" + p1.getDisplayName());
+                // If we displayed the project, view, item type, or folder,
+                // then show the list of relevant item properties.
+                StringBuffer header = new StringBuffer("                Item");
+                header.append(",\t").append(p1.getDisplayName());
                 if (p2 != null)
                 {
-                    System.out.print(",\t" + p2.getDisplayName());
+                    header.append(",\t").append(p2.getDisplayName());
                 }
-                System.out.println("");
+                log(header.toString());
             }
 
             // Finally, show the Item properties ...
-
             // Always show the ItemID.
-            System.out.print("                " + item.getItemID());
+            StringBuffer itemLine = new StringBuffer("                ");
+            itemLine.append(item.getItemID());
 
             // Show the primary descriptor.
             // There should always be one.
-            System.out.print(",\t" + formatForDisplay(p1, item.get(p1.getName())));
+            itemLine.append(",\t").append(formatForDisplay(p1, item.get(p1.getName())));
 
             // Show the secondary descriptor, if there is one.
             // Some item types have one, some don't.
             if (p2 != null)
             {
-                System.out.print(",\t" + formatForDisplay(p2, item.get(p2.getName())));
+                itemLine.append(",\t").append(formatForDisplay(p2, item.get(p2.getName())));
             }
 
             // Show if the file is locked.
             int locker = item.getLocker();
             if (locker>-1)
             {
-                System.out.println(",\tLocked by " + locker);
+                itemLine.append(",\tLocked by ").append(locker);
             }
             else
             {
-                System.out.println(",\tNot locked");
+                itemLine.append(",\tNot locked");
             }
+            log(itemLine.toString());
         }
         // END VERBOSE ONLY
 
@@ -661,6 +573,86 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         // Change the item to be checked out to a StarTeam File.
         com.starbase.starteam.File remote = (com.starbase.starteam.File)item;
 
+        // Create a reference to the local target file using either the "default path" calculation or the calculation based
+        // solely on targetFolder.
+        java.io.File local = (getUsesDefaultFolder()
+                              ? getLocalFileUsingDefault(v,item.getParentFolder().getFolderHierarchy(),(String)item.get(p1.getName()))
+                              : getLocalFile(tgt,(String)item.get(p1.getName())));
+        try
+        {
+            remote.checkoutTo(local, Item.LockType.UNCHANGED, false, true, true);
+            checkedOut++;
+        }
+        catch (Exception e)
+        {
+            log("Failed to checkout '" + local + "': " + e.getMessage(), Project.MSG_WARN);
+            // probably not a good idea to swallow the stacktrace
+        }
+    }
+
+    /**
+     * Look if the file should be checkouted. Don't check it out
+     * if It fits no include filters and It fits an exclude filter.
+     * @param pName the item name to look for being included.
+     * @return whether the file should be checkouted or not.
+     */
+    protected boolean shouldCheckout(String pName){
+        boolean includeIt = matchPatterns(getIncludes(), pName);
+        boolean excludeIt = matchPatterns(getExcludes(), pName);
+        return (includeIt && !excludeIt);
+    }
+
+    /**
+     * Convenient method to see if a string match a one pattern
+     * in given set of space-separated patterns.
+     * @param patterns the space-separated list of patterns.
+     * @param pName the name to look for matching.
+     * @return whether the name match at least one pattern.
+     */
+    protected boolean matchPatterns(String patterns, String pName){
+        if (patterns == null){
+            return false;
+        }
+        StringTokenizer exStr = new StringTokenizer(patterns, " ");
+        while (exStr.hasMoreTokens())
+        {
+            if (DirectoryScanner.match(exStr.nextToken(), pName))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * returns a file object that defines the local file as it will be
+     * checked out onto the target using the new "targetFolder only" method.
+     * Will only be called when getUsesDefaultFolder() returns false.
+     * 
+     * @param tgt    string representing the target folder plus any subfolder, as created
+     *               by recursive calls to runTarget()
+     * @param item   item to be checked out.
+     * @return an object referencing the local file
+     * @see getUsesDefaultFolderAsBoolean
+     * @see runFolder
+     */
+    private java.io.File getLocalFile(String tgt, String itemname) {
+        java.io.File tgtFolder = new java.io.File(tgt);
+        return new java.io.File(tgtFolder,itemname);
+    }
+    
+    /**
+     * returns a file object that defines the local file as it will be 
+     * checked out onto the target using the old "default folder" method.  
+     * Will only be called when getUsesDefaultFolder() returns true.
+     * 
+     * @param v      view from which the file is checked out, supplies the "default folder"
+     * @param item   item to be checked out.
+     * @return an object referencing the local file
+     */
+    private java.io.File getLocalFileUsingDefault(View v, String folderHierarchy, String itemname)
+    {
         // Create a variable dirName that contains the name of 
         //the StarTeam folder that is the root folder in this view.
         // Get the default path to the current view.
@@ -677,12 +669,10 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         }
         dirName = 
             dirName.substring(dirName.lastIndexOf("/", dirName.length() - 2) + 1, endDirIndex);
-                
         // Replace the projectName in the file's absolute path to the viewName.
         // This eventually makes the target of a checkout operation equal to:
         // targetFolder + dirName + [subfolders] + itemName
-        StringTokenizer pathTokenizer = 
-            new StringTokenizer(item.getParentFolder().getFolderHierarchy(), delim);
+        StringTokenizer pathTokenizer = new StringTokenizer(folderHierarchy, delim);
         String localName = delim;
         String currentToken = null;
         while (pathTokenizer.hasMoreTokens())
@@ -694,18 +684,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             }
             localName += currentToken + delim;
         }
-        // Create a reference to the local target file using the format listed above.
-        java.io.File local = new java.io.File( getTargetFolder() + localName + 
-                                               item.get(p1.getName()) );
-        try
-        {
-            remote.checkoutTo(local, Item.LockType.UNCHANGED, false, true, true);
-        }
-        catch (Throwable e)
-        {
-            project.log("    " + e.getMessage());
-        }
-        checkedOut++;
+        return new java.io.File( getTargetFolder() + localName + itemname );
     }
 
     /**
@@ -784,175 +763,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         }
     }
 
-    // TORN STRAIGHT FROM ANT.DIRECTORYSCANNER
-
-    /**
-     * <B>TORN STRAIGHT FROM ANT.DIRECTORYSCANNER</B>
-     * 
-     * Matches a string against a pattern. The pattern contains two special
-     * characters:<BR>
-     * '*' which means zero or more characters,<BR>
-     * '?' which means one and only one character.
-     * 
-     * @param pattern the (non-null) pattern to match against
-     * @param str     the (non-null) string that must be matched against the
-     *                pattern
-     * @return <code>true</code> when the string matches against the
-     *         pattern, <code>false</code> otherwise.
-     */
-    private static boolean match(String pattern, String str)
-    {
-        char[] patArr = pattern.toCharArray();
-        char[] strArr = str.toCharArray();
-        int patIdxStart = 0;
-        int patIdxEnd   = patArr.length-1;
-        int strIdxStart = 0;
-        int strIdxEnd   = strArr.length-1;
-        char ch;
-
-        boolean containsStar = false;
-        for (int i = 0; i < patArr.length; i++)
-        {
-            if (patArr[i] == '*')
-            {
-                containsStar = true;
-                break;
-            }
-        }
-
-        if (!containsStar)
-        {
-            // No '*'s, so we make a shortcut
-            if (patIdxEnd != strIdxEnd)
-            {
-                return false;        // Pattern and string do not have the same size
-            }
-            for (int i = 0; i <= patIdxEnd; i++)
-            {
-                ch = patArr[i];
-                if (ch != '?' && ch != strArr[i])
-                {
-                    return false;        // Character mismatch
-                }
-            }
-            return true; // String matches against pattern
-        }
-
-        if (patIdxEnd == 0)
-        {
-            return true; // Pattern contains only '*', which matches anything
-        }
-
-        // Process characters before first star
-        while ((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd)
-        {
-            if (ch != '?' && ch != strArr[strIdxStart])
-            {
-                return false;
-            }
-            patIdxStart++;
-            strIdxStart++;
-        }
-        if (strIdxStart > strIdxEnd)
-        {
-            // All characters in the string are used. Check if only '*'s are
-            // left in the pattern. If so, we succeeded. Otherwise failure.
-            for (int i = patIdxStart; i <= patIdxEnd; i++)
-            {
-                if (patArr[i] != '*')
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // Process characters after last star
-        while ((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd)
-        {
-            if (ch != '?' && ch != strArr[strIdxEnd])
-            {
-                return false;
-            }
-            patIdxEnd--;
-            strIdxEnd--;
-        }
-        if (strIdxStart > strIdxEnd)
-        {
-            // All characters in the string are used. Check if only '*'s are
-            // left in the pattern. If so, we succeeded. Otherwise failure.
-            for (int i = patIdxStart; i <= patIdxEnd; i++)
-            {
-                if (patArr[i] != '*')
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // process pattern between stars. padIdxStart and patIdxEnd point
-        // always to a '*'.
-        while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd)
-        {
-            int patIdxTmp = -1;
-            for (int i = patIdxStart+1; i <= patIdxEnd; i++)
-            {
-                if (patArr[i] == '*')
-                {
-                    patIdxTmp = i;
-                    break;
-                }
-            }
-            if (patIdxTmp == patIdxStart+1)
-            {
-                                // Two stars next to each other, skip the first one.
-                patIdxStart++;
-                continue;
-            }
-            // Find the pattern between padIdxStart & padIdxTmp in str between
-            // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp-patIdxStart-1);
-            int strLength = (strIdxEnd-strIdxStart+1);
-            int foundIdx  = -1;
-        strLoop:
-            for (int i = 0; i <= strLength - patLength; i++)
-            {
-                for (int j = 0; j < patLength; j++)
-                {
-                    ch = patArr[patIdxStart+j+1];
-                    if (ch != '?' && ch != strArr[strIdxStart+i+j])
-                    {
-                        continue strLoop;
-                    }
-                }
-
-                foundIdx = strIdxStart+i;
-                break;
-            }
-
-            if (foundIdx == -1)
-            {
-                return false;
-            }
-
-            patIdxStart = patIdxTmp;
-            strIdxStart = foundIdx+patLength;
-        }
-
-        // All characters in the string are used. Check if only '*'s are left
-        // in the pattern. If so, we succeeded. Otherwise failure.
-        for (int i = patIdxStart; i <= patIdxEnd; i++)
-        {
-            if (patArr[i] != '*')
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Begin SET and GET methods        
+    // Begin SET and GET methods
 
     /**
      * Sets the <CODE>serverName</CODE> attribute to the given value.
@@ -984,7 +795,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      *                   to use.
      * @see #getServerPort()
      */
-    public void setServerPort(String serverPort)
+    public void setServerPort(int serverPort)
     {
         this.serverPort = serverPort;
     }
@@ -993,24 +804,11 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * Gets the <CODE>serverPort</CODE> attribute.
      * 
      * @return A string containing the port on the StarTeam server to use.
-     * @see #getServerPortAsInt()
-     * @see #setServerPort(String serverPort)
+     * @see #setServerPort(int)
      */
-    public String getServerPort()
+    public int getServerPort()
     {
         return serverPort;
-    }
-
-    /**
-     * Gets the <CODE>serverPort</CODE> attribute as an integer.
-     * 
-     * @return An integer value for the port on the StarTeam server to use.
-     * @see #getServerPort()
-     * @see #setServerPort(String serverPort)
-     */
-    public int getServerPortAsInt()
-    {
-        return Integer.parseInt(serverPort);
     }
 
     /**
@@ -1153,18 +951,13 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Sets the <CODE>force</CODE> attribute to the given value.
      * 
-     * @param force  A string containing "true" or "false" that tells the
-     *               application whether to continue if the target directory
-     *               exists.  If <CODE>force</CODE> is true,
-     *               AntStarTeamCheckOut will overwrite files in the target
+     * @param force  if true, it overwrites files in the target
      *               directory.  By default it set to false as a safeguard.
      *               Note that if the target directory does not exist, this
      *               setting has no effect.
-     * @see #DEFAULT_FORCESETTING
      * @see #getForce()
-     * @see #getForceAsBoolean()
      */
-    public void setForce(String force)
+    public void setForce(boolean force)
     {
         this.force = force;
     }
@@ -1172,48 +965,23 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Gets the <CODE>force</CODE> attribute.
      * 
-     * @return A string containing "true" or "false" telling the application
-     *         whether to continue if the target directory exists.  If
-     *         <CODE>force</CODE> is true, AntStarTeamCheckOut will
-     *         overwrite files in the target directory. If it is false and
-     *         the target directory exists, AntStarTeamCheckOut will exit
-     *         with a warning.  If the target directory does not exist, this
-     *         setting has no effect. The default setting is false.
-     * @see #DEFAULT_FORCESETTING
-     * @see #getForceAsBoolean()
-     * @see #setForce(String force)
+     * @return whether to continue if the target directory exists.
+     * @see #setForce(boolean)
      */
-    public String getForce()
+    public boolean getForce()
     {
         return force;
     }
 
     /**
-     * Gets the <CODE>force</CODE> attribute as a boolean value.
-     * 
-     * @return A boolean value telling whether to continue if the target
-     *         directory exists.
-     * @see #DEFAULT_FORCESETTING
-     * @see #getForce()
-     * @see #setForce(String force)
-     */
-    public boolean getForceAsBoolean()
-    {
-        return project.toBoolean(force);
-    }
-
-    /**
      * Turns recursion on or off.
      *
-     * @param verbose A string containing "true" or "false."  If it is true,
-     *                the default, subfolders are searched recursively for
-     *                files to check out.  Otherwise, only files specified
-     *                by <CODE>folderName</CODE> are scanned.
-     * @see #DEFAULT_RECURSIONSETTING
+     * @param verbose If it is true, the default, subfolders are searched
+     *                recursively for files to check out.  Otherwise, only
+     *                files specified by <CODE>folderName</CODE> are scanned.
      * @see #getRecursion()
-     * @see #getRecursionAsBoolean()
      */
-    public void setRecursion(String recursion)
+    public void setRecursion(boolean recursion)
     {
         this.recursion = recursion;
     }
@@ -1223,46 +991,25 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * AntStarTeamCheckOut whether to search subfolders when checking out
      * files.
      *
-     * @return A string telling whether <CODE>recursion</CODE> is "true" or
-     * "false."
+     * @return whether to search subfolders when checking out files.
      *
-     * @see #DEFAULT_RECURSIONSETTING
-     * @see #getRecursionAsBoolean()
-     * @see #setRecursion(String recursion)
+     * @see #setRecursion(boolean)
      */
-    public String getRecursion()
+    public boolean getRecursion()
     {
         return recursion;
     }
 
     /**
-     * Gets the <CODE>recursion</CODE> attribute as a boolean value.
-     *
-     * @return A boolean value telling whether subfolders of
-     * <CODE>folderName</CODE> will be scanned for files to check out.
-     *
-     * @see #DEFAULT_RECURSIONSETTING
-     * @see #getRecursion()
-     * @see #setRecursion(String recursion)
-     */
-    public boolean getRecursionAsBoolean()
-    {
-        return project.toBoolean(recursion);
-    }
-
-    /**
      * Sets the <CODE>verbose</CODE> attribute to the given value.
      * 
-     * @param verbose A string containing "true" or "false" to tell
-     *                AntStarTeamCheckOut whether to display files as they
-     *                are checked out.  By default it is false, so the
+     * @param verbose whether to display all files as it checks them out.
+     *                By default it is false, so the
      *                program only displays the total number of files unless
      *                you override this default.
-     * @see #DEFAULT_FORCESETTING
      * @see #getForce()
-     * @see #getForceAsBoolean()
      */
-    public void setVerbose(String verbose)
+    public void setVerbose(boolean verbose)
     {
         this.verbose = verbose;
     }
@@ -1270,31 +1017,12 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Gets the <CODE>verbose</CODE> attribute.
      * 
-     * @return A string containing "true" or "false" telling the application
-     *         to display all files as it checks them out.  By default it is
-     *         false, so the program only displays the total number of
-     *         files.
-     * @see #DEFAULT_VERBOSESETTING
-     * @see #getVerboseAsBoolean()
+     * @return whether to display all files as it checks them out.
      * @see #setVerbose(String verbose)
      */
-    public String getVerbose()
+    public boolean getVerbose()
     {
         return verbose;
-    }
-
-    /**
-     * Gets the <CODE>verbose</CODE> attribute as a boolean value.
-     * 
-     * @return A boolean value telling whether to display all files as they
-     *         are checked out.
-     * @see #DEFAULT_VERBOSESETTING
-     * @see #getVerbose()
-     * @see #setVerbose(String verbose)
-     */
-    public boolean getVerboseAsBoolean()
-    {
-        return project.toBoolean(verbose);
     }
 
     // Begin filter getters and setters
@@ -1309,10 +1037,6 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * characters:
      * <BR>'*' which means zero or more characters,
      * <BR>'?' which means one and only one character.
-     * <BR><BR>
-     * I would have used the Ant method directly from its class, but
-     * <CODE>match</CODE> is a private member, so I cannot access it from
-     * this program.
      * <BR><BR>
      * Separate multiple inlcude filters by <I>spaces</I>, not commas as Ant
      * uses. For example, if you want to check out all .java and .class\
@@ -1371,10 +1095,6 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * <BR>'*' which means zero or more characters,
      * <BR>'?' which means one and only one character.
      * <BR><BR>
-     * I would have used the Ant method directly from its class, but
-     * <CODE>match</CODE> is a private member, so I cannot access it from
-     * this program.
-     * <BR><BR>
      * Separate multiple exlcude filters by <I>spaces</I>, not commas as Ant
      * uses. For example, if you want to check out all files except .XML and
      * .HTML files, you would put the following line in your program:
@@ -1416,5 +1136,32 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     public String getExcludes()
     {
         return excludes;
+    }
+
+
+    /**
+     * returns whether or not the StarTeam default path is factored into
+     * calculated target path locations.
+     * 
+     * @return returns true if the StarTeam default path is factored into the
+     *         calculation of the location on the target of an item, false if it is
+     *         not used.
+     * @see #setUsesDefaultFolder(boolean)
+     */
+    public boolean getUsesDefaultFolder()
+    {
+        return this.usesDefaultFolder;
+    }
+    /**
+     * sets the property that indicates whether or not the Star Team
+     * "default folder" is to be used when calculation paths for items on
+     * the target.
+     * 
+     * @param usesDefaultFolder <tt>true</tt> if the "default folder" is to be used.
+     *               <tt>false</tt> (the default) if the default folder is not to be used.
+     * @see #getUsesDefaultFolder()
+     */
+    public void setUsesDefaultFolder(boolean usesDefaultFolder) {
+        this.usesDefaultFolder = usesDefaultFolder;
     }
 }
