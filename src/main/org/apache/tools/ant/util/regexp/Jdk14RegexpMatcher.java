@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,7 +144,12 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
         Vector v = new Vector();
         int cnt = matcher.groupCount();
         for (int i = 0; i <= cnt; i++) {
-            v.addElement(matcher.group(i));
+            String match = matcher.group(i);
+            // treat non-matching groups as empty matches
+            if (match == null) {
+                match = "";
+            }
+            v.addElement(match);
         }
         return v;
     }

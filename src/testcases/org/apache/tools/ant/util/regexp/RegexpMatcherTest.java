@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -131,6 +131,16 @@ public abstract class RegexpMatcherTest extends TestCase {
         assertEquals("aabb", (String) v.elementAt(0));
         assertEquals("aa", (String) v.elementAt(1));
         assertEquals("b", (String) v.elementAt(2));
+    }
+
+    public void testBugzillaReport14619() {
+        reg.setPattern("^(.*)/src/((.*/)*)([a-zA-Z0-9_\\.]+)\\.java$");
+        Vector v = reg.getGroups("de/tom/src/Google.java");
+        assertEquals(5, v.size());
+        assertEquals("de/tom", v.elementAt(1));
+        assertEquals("", v.elementAt(2));
+        assertEquals("", v.elementAt(3));
+        assertEquals("Google", v.elementAt(4));
     }
 
     public void testCaseInsensitiveMatch() {

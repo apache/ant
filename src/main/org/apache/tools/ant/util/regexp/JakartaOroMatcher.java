@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,7 +144,12 @@ public class JakartaOroMatcher implements RegexpMatcher {
         MatchResult mr = matcher.getMatch();
         int cnt = mr.groups();
         for (int i = 0; i < cnt; i++) {
-            v.addElement(mr.group(i));
+            String match = mr.group(i);
+            // treat non-matching groups as empty matches
+            if (match == null) {
+                match = "";
+            }
+            v.addElement(match);
         }
         return v;
     }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -133,7 +133,12 @@ public class JakartaRegexpMatcher implements RegexpMatcher {
         Vector v = new Vector();
         int cnt = reg.getParenCount();
         for (int i = 0; i < cnt; i++) {
-            v.addElement(reg.getParen(i));
+            String match = reg.getParen(i);
+            // treat non-matching groups as empty matches
+            if (match == null) {
+                match = "";
+            }
+            v.addElement(match);
         }
         return v;
     }
