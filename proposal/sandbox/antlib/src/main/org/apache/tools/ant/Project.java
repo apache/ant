@@ -434,6 +434,7 @@ public class Project {
             // Top project, need to load the core definitions
             loadDefinitions();
         }
+        /*
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
 
         try {
@@ -468,7 +469,7 @@ public class Project {
         } catch (IOException ioe) {
             throw new BuildException("Can't load default datatype list");
         }
-
+        */
     }
 
 
