@@ -51,11 +51,15 @@ import java.net.MalformedURLException;
 
 public class SchemaValidate extends XMLValidateTask {
 
+    /** map of all declared schemas; we catch and complain about redefinitions */
     private HashMap schemaLocations= new HashMap();
 
     /** full checking of a schema */
     private boolean fullChecking=true;
 
+    /**
+     * flag to disable DTD support. Best left enabled.
+     */
     private boolean disableDTD=false;
 
     /**
@@ -84,6 +88,10 @@ public class SchemaValidate extends XMLValidateTask {
         setLenient(false);
     }
 
+    /**
+     * turn on XSD support in Xerces
+     * @return
+     */
     public boolean enableXercesSchemaValidation() {
         try {
             setFeature(XmlConstants.FEATURE_XSD,true);
@@ -97,6 +105,10 @@ public class SchemaValidate extends XMLValidateTask {
         return true;
     }
 
+    /**
+     * set nonamespace handling up for xerces or other parsers
+     * @param property name of the property to set
+     */
     private void setNoNamespaceSchemaProperty(String property) {
         String anonSchema = getNoNamespaceSchemaURL();
         if (anonSchema != null) {
@@ -106,7 +118,7 @@ public class SchemaValidate extends XMLValidateTask {
     }
 
     /**
-     * JAXP12 schema attributes
+     * set schema attributes in a JAXP12 engine
      * @see <A href="http://java.sun.com/xml/jaxp/change-requests-11.html">
      * JAXP 1.2 Approved CHANGES</A>
      * @return
@@ -291,6 +303,15 @@ public class SchemaValidate extends XMLValidateTask {
         } catch (SAXNotSupportedException e) {
             log("Not supported: " + feature, Project.MSG_VERBOSE);
         }
+    }
+
+    /**
+     * handler called on successful file validation.
+     *
+     * @param fileProcessed number of files processed.
+     */
+    protected void onSuccessfulValidation(int fileProcessed) {
+        log(fileProcessed + MESSAGE_FILES_VALIDATED,Project.MSG_VERBOSE);
     }
 
     /**

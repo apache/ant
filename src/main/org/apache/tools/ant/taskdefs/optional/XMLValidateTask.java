@@ -96,6 +96,7 @@ public class XMLValidateTask extends Task {
     private final Vector propertyList = new Vector();
 
     private XMLCatalog xmlCatalog = new XMLCatalog();
+    public static final String MESSAGE_FILES_VALIDATED = " file(s) have been successfully validated.";
 
     /**
      * Specify how parser error are to be handled.
@@ -312,7 +313,15 @@ public class XMLValidateTask extends Task {
                 fileProcessed++;
             }
         }
-        log(fileProcessed + " file(s) have been successfully validated.");
+        onSuccessfulValidation(fileProcessed);
+    }
+
+    /**
+     * handler called on successful file validation.
+     * @param fileProcessed number of files processed. 
+     */
+    protected void onSuccessfulValidation(int fileProcessed) {
+        log(fileProcessed + MESSAGE_FILES_VALIDATED);
     }
 
     /**
