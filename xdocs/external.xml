@@ -370,6 +370,32 @@
         </table>
       </subsection>
 
+      <subsection name="Interactive"> 
+
+        <p>Task allowing to run a dialog within a build used to setup
+        some properties.  This way you can fill a property with the
+        input of a user.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.kasisoft.de/build/ant/interactive/">http://www.kasisoft.de/build/ant/interactive/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@kasisoft.de">Daniel Kasmeroglu</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="IsDirValidator">
 
         <p>Checks whether a given directory structure conforms to
