@@ -10,21 +10,25 @@
 
   <structure>
 
-    <XDtAnt:forAllAttributes>
-      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
-        <description><![CDATA[
-          <XDtMethod:methodComment no-comment-signs="true"/>
-        ]]></description>
-      </attribute>
-    </XDtAnt:forAllAttributes>
+    <attributes>
+      <XDtAnt:forAllAttributes>
+        <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+          <description><![CDATA[
+            <XDtMethod:methodComment no-comment-signs="true"/>
+          ]]></description>
+        </attribute>
+      </XDtAnt:forAllAttributes>
+    </attributes>
 
-    <XDtAnt:forAllElements>
-      <element name="<XDtAnt:elementName/>">
-        <description><![CDATA[
-          <XDtMethod:methodComment no-comment-signs="true"/>
-        ]]></description>
-      </element>
-    </XDtAnt:forAllElements>
+    <elements>
+      <XDtAnt:forAllElements>
+        <element name="<XDtAnt:elementName/>">
+          <description><![CDATA[
+            <XDtMethod:methodComment no-comment-signs="true"/>
+          ]]></description>
+        </element>
+      </XDtAnt:forAllElements>
+    </elements>
 
     <!-- @todo: wrap setCurrentMethod inside AntTagsHandler -->
     <XDtMethod:setCurrentMethod name="addText" parameters="java.lang.String">

@@ -76,5 +76,9 @@
     </document> -->
 
   </target>
+  
+  <target name="docs" depends="gen">
+    <ant dir="dvsl"/>
+  </target>
 </project>
 

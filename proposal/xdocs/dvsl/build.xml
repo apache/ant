@@ -1,0 +1,36 @@
+<project name="AntManual" default="taskdocs" basedir=".">
+
+  <property file="${basedir}/build.properties"/>
+
+  <property name="lib.dir" value="${basedir}/lib" />
+  <property name="build.dir" value="${basedir}/../build" />
+  <property name="docs.src" value="${basedir}/../../../xdocs" />
+  <property name="taskdocs.src" value="${build.dir}/gen" />
+
+  <!-- The docs destination directory  -->
+  <property name="docs.dest" value="${build.dir}/docs"/>
+  <property name="manual.dest" value="${docs.dest}/manual" />
+
+  <!-- Construct compile classpath -->
+  <path id="classpath">
+    <fileset dir="${lib.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="init">
+    <taskdef name="dvsl" classname="org.apache.tools.dvsl.DVSLTask">
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </taskdef>
+  </target>
+
+  <target name="taskdocs" depends="init"
+          description="Generate Task Documentation">
+    <dvsl basedir="${taskdocs.src}" destdir="${manual.dest}"
+          style="task.dvsl" extension=".html" 
+          includes="**/*.xml" />
+  </target>
+
+</project>
