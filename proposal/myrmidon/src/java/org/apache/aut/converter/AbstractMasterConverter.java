@@ -10,11 +10,8 @@ package org.apache.aut.converter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.aut.converter.Converter;
-import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.components.converter.DefaultMasterConverter;
 
 /**
  * This is an abstract implementation of a <code>MasterConverter</code>.
@@ -39,7 +36,7 @@ public abstract class AbstractMasterConverter
     implements Converter
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( DefaultMasterConverter.class );
+        ResourceManager.getPackageResources( AbstractMasterConverter.class );
 
     /**
      * Map from converter classname to instance of converter.
