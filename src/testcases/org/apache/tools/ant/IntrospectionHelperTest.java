@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -593,17 +594,26 @@ public class IntrospectionHelperTest extends TestCase {
 
     public void testGetExtensionPoints() {
         List extensions = ih.getExtensionPoints();
-        assertEquals("extension count", 3, extensions.size());
+        final int adders = 2;
+        assertEquals("extension count", adders, extensions.size());
 
-        assertExtMethod(extensions.get(0), "add", Number.class,
-                        new Integer(2), new Integer(3));
+        // this original test assumed something about the order of
+        // add(Number) and addConfigured(Map) returned by reflection.
+        // Unfortunately the assumption doesn't hold for all VMs
+        // (failed on MacOS X using JDK 1.4.2_05) and the possible
+        // combinatorics are too hard to check.  We really only want
+        // to ensure that the more derived Hashtable can be found
+        // before Map.
+//        assertExtMethod(extensions.get(0), "add", Number.class,
+//                        new Integer(2), new Integer(3));
 
         // addConfigured(Hashtable) should come before addConfigured(Map)
-        assertExtMethod(extensions.get(1), "addConfigured", Hashtable.class,
+        assertExtMethod(extensions.get(adders - 2),
+                        "addConfigured", Hashtable.class,
                         makeTable("key", "value"), makeTable("1", "2"));
 
-        assertExtMethod(extensions.get(2), "addConfigured", Map.class,
-                        Collections.EMPTY_MAP, makeTable("1", "2"));
+        assertExtMethod(extensions.get(adders - 1), "addConfigured", Map.class,
+                        new HashMap(), makeTable("1", "2"));
     }
 
     private void assertExtMethod(Object mo, String methodName, Class methodArg,
@@ -643,10 +653,11 @@ public class IntrospectionHelperTest extends TestCase {
         return null;
     }
 
-    public void add(Number n) {
-        // Valid extension point
-        assertEquals(2, n.intValue());
-    }
+    // see comments in testGetExtensionPoints
+//    public void add(Number n) {
+//        // Valid extension point
+//        assertEquals(2, n.intValue());
+//    }
 
     public void add(List l, int i) {
         // INVALID extension point
@@ -654,7 +665,7 @@ public class IntrospectionHelperTest extends TestCase {
 
     public void addConfigured(Map m) {
         // Valid extension point
-        assertTrue(Collections.EMPTY_MAP == m);
+        assertTrue(m.size() == 0);
     }
 
     public void addConfigured(Hashtable h) {
