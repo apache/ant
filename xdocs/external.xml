@@ -73,6 +73,36 @@
         </table>
       </subsection>
 
+      <subsection name="Anteater">
+
+        <p>Anteater is a set of Ant tasks for the functional testing of websites
+          and web services (functional testing being; hit a URL and ensure the
+          response meets certain criteria). Can test HTTP params, response
+          codes, XPath, regexp and Relax NG expressions. Includes HTML reporting
+          (based on junitreport) and a hierarchical grouping system for quickly
+          configuring large test scripts.
+        </p>
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://aft.sourceforge.net">http://aft.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://lists.sourceforge.net/lists/listinfo/aft-devel">developer
+                mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Checkstyle">
 
         <p>Checkstyle is a development tool to help programmers write
