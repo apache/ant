@@ -28,6 +28,20 @@ PRODUCT_BUILD=6.5 (BLD_65036)
     <concat><path path="copy.filter.out"/></concat>
   </target>
 
+  <target name="infinitetest">
+    <delete quiet="yes" file="copy.filter.out"/>
+    <delete quiet="yes" file="copy.filter.inp"/>
+    <concat destfile="copy.filter.inp">
+a=b=
+    </concat>
+    <copy file="copy.filter.inp" tofile="copy.filter.out">
+      <filterset begintoken="=" endtoken="=">
+        <filter token="b" value="=b="/>
+      </filterset>
+    </copy>
+    <concat><path path="copy.filter.out"/></concat>
+  </target>
+
   <target name="test3">
     <!-- create an empty file -->
     <touch file="copytest3.tmp"/>
