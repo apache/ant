@@ -10,6 +10,9 @@ Fixed bugs:
 
 * <whichresource> failed to load classes correctly.
 
+* Ant could fail to start with a NullPointerException if
+  ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
+
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================
 
