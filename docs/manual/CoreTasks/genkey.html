@@ -2,14 +2,14 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>GenKey</title>
 </head>
 
 <body>
 
 <h2><a name="genkey">GenKey</a></h2>
 <h3>Description</h3>
-<p>Generates a key in keystore.</p>
+<p>Generates a key in keystore. This task needs Java1.2 or later</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -25,7 +25,8 @@
   </tr>
   <tr>
     <td valign="top">storepass</td>
-    <td valign="top">password for keystore integrity.</td>
+    <td valign="top">password for keystore integrity. Must
+	be at least 6 characters long</td>
     <td valign="top" align="center">Yes.</td>
   </tr>
   <tr>
