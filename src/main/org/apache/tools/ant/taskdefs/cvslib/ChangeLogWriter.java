@@ -76,6 +76,7 @@ class ChangeLogWriter
     public void printChangeLog( final PrintWriter output,
                                 final CVSEntry[] entries )
     {
+        output.println( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
         output.println( "<changelog>" );
         for( int i = 0; i < entries.length; i++ )
         {
