@@ -24,6 +24,7 @@ import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 
 /**
  * The basic executor that just executes the tasks.
@@ -97,11 +98,12 @@ public class DefaultExecutor
 
     protected final void doConfigure( final Task task,
                                       final Configuration taskModel,
-                                      final TaskContext context )
+                                      final TaskContext taskContext )
         throws TaskException
     {
         try
         {
+            final TaskContextAdapter context = new TaskContextAdapter( taskContext );
             m_configurer.configure( task, taskModel, context );
         }
         catch( final Throwable throwable )
