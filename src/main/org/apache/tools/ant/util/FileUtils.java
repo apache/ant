@@ -781,6 +781,10 @@ public class FileUtils {
      * Read from reader till EOF
      */
     public static final String readFully(Reader rdr, int bufferSize) throws IOException {
+        if (bufferSize <= 0) {
+            throw new IllegalArgumentException("Buffer size must be greater " 
+                + "than 0");
+        }
         final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
         String text = null;

@@ -182,14 +182,17 @@ public final class LoadFile extends Task {
                 instream = new InputStreamReader(bis, encoding);
             }
 
-            ChainReaderHelper crh = new ChainReaderHelper();
-            crh.setBufferSize(size);
-            crh.setPrimaryReader(instream);
-            crh.setFilterChains(filterChains);
-            crh.setProject(project);
-            instream = crh.getAssembledReader();
-
-            String text = crh.readFully(instream);
+            String text = "";
+            if (size != 0) {
+                ChainReaderHelper crh = new ChainReaderHelper();
+                crh.setBufferSize(size);
+                crh.setPrimaryReader(instream);
+                crh.setFilterChains(filterChains);
+                crh.setProject(project);
+                instream = crh.getAssembledReader();
+    
+                text = crh.readFully(instream);
+            }
 
             if (text != null) {
                 project.setNewProperty(property, text);
