@@ -71,7 +71,7 @@ public class DotnetDefine {
     /**
      * the name of a property which must be defined for
      * the definition to be set. Optional.
-     * @param condition
+     * @param condition the name of the property
      */
     public void setIf(String condition) {
         this.ifCond = condition;
@@ -80,7 +80,7 @@ public class DotnetDefine {
     /**
      * the name of a property which must be undefined for
      * the definition to be set. Optional.
-     * @param condition
+     * @param condition the name of the property
      */
     public void setUnless(String condition) {
         this.unlessCond = condition;

@@ -101,6 +101,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Peter Reilly
  */
 public class Concat extends Task {
+    
+    // The size of buffers to be used
+    private static final int BUFFER_SIZE = 8192;
 
     // Attributes.
 
@@ -442,7 +445,7 @@ public class Concat extends Task {
     private void cat() {
         OutputStream os = null;
         Reader       reader = null;
-        char[]       buffer = new char[8192];
+        char[]       buffer = new char[BUFFER_SIZE];
 
         try {
 
@@ -535,7 +538,7 @@ public class Concat extends Task {
         throws IOException {
         if (filterChains != null) {
             ChainReaderHelper helper = new ChainReaderHelper();
-            helper.setBufferSize(8192);
+            helper.setBufferSize(BUFFER_SIZE);
             helper.setPrimaryReader(in);
             helper.setFilterChains(filterChains);
             helper.setProject(getProject());

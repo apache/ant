@@ -100,6 +100,7 @@ import org.apache.tools.ant.types.selectors.FileSelector;
  * @ant.task category="filesystem"
  */
 public class Delete extends MatchingTask {
+    private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
     protected File file = null;
     protected File dir = null;
     protected Vector filesets = new Vector();
@@ -170,20 +171,24 @@ public class Delete extends MatchingTask {
 
     /**
      * If true, delete empty directories.
+     * @param includeEmpty if true delete empty directories (only
+     *                     for filesets). Default is false.
      */
     public void setIncludeEmptyDirs(boolean includeEmpty) {
         this.includeEmpty = includeEmpty;
     }
 
    /**
-     * Adds a set of files to be deleted.
-     */
+    * Adds a set of files to be deleted.
+    * @param set the set of files to be deleted
+    */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
      * add a name entry on the include list
+     * @return a NameEntry object to be configured
      */
     public PatternSet.NameEntry createInclude() {
         usedMatchingTask = true;
@@ -192,6 +197,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the include files list
+     * @return an NameEntry object to be configured
      */
     public PatternSet.NameEntry createIncludesFile() {
         usedMatchingTask = true;
@@ -200,6 +206,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the exclude list
+     * @return an NameEntry object to be configured
      */
     public PatternSet.NameEntry createExclude() {
         usedMatchingTask = true;
@@ -208,6 +215,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the include files list
+     * @return an NameEntry object to be configured
      */
     public PatternSet.NameEntry createExcludesFile() {
         usedMatchingTask = true;
@@ -216,6 +224,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a set of patterns
+     * @return PatternSet object to be configured
      */
     public PatternSet createPatternSet() {
         usedMatchingTask = true;
@@ -301,6 +310,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a "Select" selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addSelector(SelectSelector selector) {
         usedMatchingTask = true;
@@ -309,6 +319,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an "And" selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addAnd(AndSelector selector) {
         usedMatchingTask = true;
@@ -317,6 +328,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an "Or" selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addOr(OrSelector selector) {
         usedMatchingTask = true;
@@ -325,6 +337,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a "Not" selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addNot(NotSelector selector) {
         usedMatchingTask = true;
@@ -333,6 +346,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a "None" selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addNone(NoneSelector selector) {
         usedMatchingTask = true;
@@ -341,6 +355,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a majority selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addMajority(MajoritySelector selector) {
         usedMatchingTask = true;
@@ -349,6 +364,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a selector date entry on the selector list
+     * @param selector the selector to be added
      */
     public void addDate(DateSelector selector) {
         usedMatchingTask = true;
@@ -357,6 +373,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a selector size entry on the selector list
+     * @param selector the selector to be added
      */
     public void addSize(SizeSelector selector) {
         usedMatchingTask = true;
@@ -365,6 +382,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a selector filename entry on the selector list
+     * @param selector the selector to be added
      */
     public void addFilename(FilenameSelector selector) {
         usedMatchingTask = true;
@@ -373,6 +391,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an extended selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addCustom(ExtendSelector selector) {
         usedMatchingTask = true;
@@ -381,6 +400,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a contains selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addContains(ContainsSelector selector) {
         usedMatchingTask = true;
@@ -389,6 +409,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a present selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addPresent(PresentSelector selector) {
         usedMatchingTask = true;
@@ -397,6 +418,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a depth selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addDepth(DepthSelector selector) {
         usedMatchingTask = true;
@@ -405,6 +427,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a depends selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addDepend(DependSelector selector) {
         usedMatchingTask = true;
@@ -413,6 +436,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a regular expression selector entry on the selector list
+     * @param selector the selector to be added
      */
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         usedMatchingTask = true;
@@ -421,6 +445,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add an arbitary selector
+     * @param selector the selector to be added
      * @since Ant 1.6
      */
     public void add(FileSelector selector) {
@@ -430,6 +455,7 @@ public class Delete extends MatchingTask {
 
     /**
      * Delete the file(s).
+     * @exception BuildException if an error occurs
      */
     public void execute() throws BuildException {
         if (usedMatchingTask) {
@@ -542,7 +568,7 @@ public class Delete extends MatchingTask {
     private boolean delete(File f) {
         if (!f.delete()) {
             try {
-                Thread.sleep(10);
+                Thread.sleep(DELETE_RETRY_SLEEP_MILLIS);
                 return f.delete();
             } catch (InterruptedException ex) {
                 return f.delete();
@@ -551,6 +577,11 @@ public class Delete extends MatchingTask {
         return true;
     }
 
+    /**
+     * Delete a directory
+     *
+     * @param d the directory to delete
+     */
     protected void removeDir(File d) {
         String[] list = d.list();
         if (list == null) {

@@ -111,6 +111,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a name entry on the include list
+     * @return a NameEntry object to be configured
      */
     public PatternSet.NameEntry createInclude() {
         return fileset.createInclude();
@@ -118,6 +119,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a name entry on the include files list
+     * @return an NameEntry object to be configured
      */
     public PatternSet.NameEntry createIncludesFile() {
         return fileset.createIncludesFile();
@@ -125,6 +127,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a name entry on the exclude list
+     * @return an NameEntry object to be configured
      */
     public PatternSet.NameEntry createExclude() {
         return fileset.createExclude();
@@ -132,6 +135,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a name entry on the include files list
+     * @return an NameEntry object to be configured
      */
     public PatternSet.NameEntry createExcludesFile() {
         return fileset.createExcludesFile();
@@ -139,6 +143,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a set of patterns
+     * @return PatternSet object to be configured
      */
     public PatternSet createPatternSet() {
         return fileset.createPatternSet();

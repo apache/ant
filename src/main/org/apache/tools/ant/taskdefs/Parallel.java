@@ -250,7 +250,7 @@ public class Parallel extends Task
                 public synchronized void run() {
                     try {
                         wait(timeout);
-                        synchronized(semaphore) {
+                        synchronized (semaphore) {
                             stillRunning = false;
                             timedOut = true;
                             semaphore.notifyAll();
@@ -290,7 +290,7 @@ public class Parallel extends Task
             }
         }
 
-        synchronized(semaphore) {
+        synchronized (semaphore) {
             // are all threads finished
             outer2:
             while (stillRunning) {
@@ -318,7 +318,7 @@ public class Parallel extends Task
         StringBuffer exceptionMessage = new StringBuffer();
         int numExceptions = 0;
         Throwable firstException = null;
-        Location firstLocation = Location.UNKNOWN_LOCATION;;
+        Location firstLocation = Location.UNKNOWN_LOCATION;
         for (int i = 0; i < numTasks; ++i) {
             Throwable t = runnables[i].getException();
             if (t != null) {

@@ -65,7 +65,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Target;
 import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.UnknownElement;
 
@@ -104,13 +103,13 @@ public class Antlib extends Task implements TaskContainer {
         // Should be safe to parse
         try {
             ProjectHelper2 parser = new ProjectHelper2();
-            UnknownElement ue = 
+            UnknownElement ue =
                 parser.parseUnknownElement(project, antlibUrl);
             // Check name is "antlib"
             if (!(ue.getTag().equals(TAG))) {
                 throw new BuildException(
-                    "Unexpected tag " + ue.getTag() + " expecting " +
-                    TAG, ue.getLocation());
+                    "Unexpected tag " + ue.getTag() + " expecting "
+                    + TAG, ue.getLocation());
             }
             Antlib antlib = new Antlib();
             antlib.setProject(project);

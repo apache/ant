@@ -119,10 +119,18 @@ public class Replace extends MatchingTask {
 
         private StringBuffer buf = new StringBuffer();
 
+        /**
+         * the text of the element
+         *
+         * @param val the string to add
+         */
         public void addText(String val) {
             buf.append(val);
         }
 
+        /**
+         * @return the text
+         */
         public String getText() {
             return buf.substring(0);
         }
@@ -183,6 +191,7 @@ public class Replace extends MatchingTask {
 
         /**
          * Get the replacement value for this filter token.
+         * @return the replacement value
          */
         public String getReplaceValue() {
             if (property != null) {
@@ -352,7 +361,7 @@ public class Replace extends MatchingTask {
     /**
      * helper method to load a properties file and throw a build exception
      * if it cannot be loaded
-     * @param propertyFile
+     * @param propertyFile the file to load the properties from
      * @return loaded properties collection
      * @throws BuildException if the file could not be found or read
      */
@@ -600,6 +609,7 @@ public class Replace extends MatchingTask {
 
     /**
      * Add a nested &lt;replacefilter&gt; element.
+     * @return a nested ReplaceFilter object to be configured
      */
     public Replacefilter createReplacefilter() {
         Replacefilter filter = new Replacefilter();

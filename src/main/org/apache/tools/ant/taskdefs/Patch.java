@@ -80,6 +80,7 @@ public class Patch extends Task {
     /**
      * The file to patch; optional if it can be inferred from
      * the diff file
+     * @param file the file to patch
      */
     public void setOriginalfile(File file) {
         originalFile = file;
@@ -88,7 +89,7 @@ public class Patch extends Task {
     /**
      * The name of a file to send the output to, instead of patching
      * the file(s) in place; optional.
-     *
+     * @param file the file to send the output to
      * @since Ant 1.6
      */
     public void setDestfile(File file) {
@@ -100,6 +101,7 @@ public class Patch extends Task {
 
     /**
      * The file containing the diff output; required.
+     * @param file the file containing the diff output
      */
     public void setPatchfile(File file) {
         if (!file.exists()) {
@@ -113,6 +115,7 @@ public class Patch extends Task {
 
     /**
      * flag to create backups; optional, default=false
+     * @param backups if true create backups
      */
     public void setBackups(boolean backups) {
         if (backups) {
@@ -122,6 +125,7 @@ public class Patch extends Task {
 
     /**
      * flag to ignore whitespace differences; default=false
+     * @param ignore if true ignore whitespace differences
      */
     public void setIgnorewhitespace(boolean ignore) {
         if (ignore) {
@@ -135,6 +139,7 @@ public class Patch extends Task {
      *
      * <p>patch's <i>-p</i> option.
      * @param num number of lines to strip
+     * @exception BuildException if num is < 0, or other errors
      */
     public void setStrip(int num) throws BuildException {
         if (num < 0) {
@@ -145,6 +150,7 @@ public class Patch extends Task {
 
     /**
      * Work silently unless an error occurs; optional, default=false
+     * @param q if true supress set the -s option on the patch command
      */
     public void setQuiet(boolean q) {
         if (q) {
@@ -155,6 +161,7 @@ public class Patch extends Task {
     /**
      * Assume patch was created with old and new files swapped; optional,
      * default=false
+     * @param r if true set the -R option on the patch command
      */
     public void setReverse(boolean r) {
         if (r) {
@@ -165,10 +172,10 @@ public class Patch extends Task {
     /**
      * The directory to run the patch command in, defaults to the
      * project's base directory.
-     *
+     * @param directory the directory to run the patch command in
      * @since Ant 1.5
      */
-    public void setDir(File directory) throws BuildException {
+    public void setDir(File directory) {
         this.directory = directory;
     }
 
