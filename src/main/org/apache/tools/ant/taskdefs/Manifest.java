@@ -548,7 +548,7 @@ public class Manifest extends Task {
             }
         }
         catch (ManifestException e) {
-            throw new BuildException("Default manifest is invalid !!");
+            throw new BuildException("Default manifest is invalid !!", e);
         }
         catch (IOException e) {
             throw new BuildException("Unable to read default manifest", e);
