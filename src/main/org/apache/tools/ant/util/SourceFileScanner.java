@@ -77,7 +77,7 @@ public class SourceFileScanner implements ResourceFactory {
      * @param granularity The number of milliseconds leeway to give
      *                    before deciding a target is out of date.
      *
-     * @since Ant 1.6
+     * @since Ant 1.6.2
      */
     public String[] restrict(String[] files, File srcDir, File destDir,
                              FileNameMapper mapper, long granularity) {
@@ -120,7 +120,7 @@ public class SourceFileScanner implements ResourceFactory {
      * files as File objects (containing absolute paths if srcDir is
      * absolute).
      *
-     * @since Ant 1.6
+     * @since Ant 1.6.2
      */
     public File[] restrictAsFiles(String[] files, File srcDir, File destDir,
                                   FileNameMapper mapper, long granularity) {

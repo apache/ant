@@ -71,7 +71,7 @@ public class ResourceUtils {
      * @return array containing the source files which need to be
      * copied or processed, because the targets are out of date or do
      * not exist
-     * @since Ant 1.6
+     * @since Ant 1.6.2
      */
     public static Resource[] selectOutOfDateSources(ProjectComponent logTo,
                                                     Resource[] source,
