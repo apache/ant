@@ -203,6 +203,32 @@
         </table>
       </subsection>
 
+      <subsection name="IsDirValidator">
+
+        <p>Checks whether a given directory structure conforms to
+        certain rules that are defined via nested elements of the
+        task.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://isvalidator.sourceforge.net/en/isDirValidator.htm">http://isvalidator.sourceforge.net/en/isDirValidator.htm</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:news@inigoserrano.com">I&#xF1;igo Serrano</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Javamake">
 
         <p>A task to compile Java sources and manage class file
