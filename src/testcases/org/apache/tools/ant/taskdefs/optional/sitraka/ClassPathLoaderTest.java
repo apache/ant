@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,7 @@ import java.util.Hashtable;
 import java.io.File;
 
 import junit.framework.TestCase;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
 
 /**
@@ -71,9 +72,10 @@ public class ClassPathLoaderTest extends TestCase {
 
     public void testgetClasses() throws Exception {
         // good performance test...load all classes in rt.jar
-        String path = System.getProperty("java.home") + File.separator + "lib/rt.jar";
-        ClassPathLoader cl = new ClassPathLoader(path);
-		Hashtable map = cl.getClasses();
+        Path p = new Path(null);
+        p.addJavaRuntime();
+        ClassPathLoader cl = new ClassPathLoader(p.toString());
+        Hashtable map = cl.getClasses();
         assertTrue(map.size() > 0);
     }
 
