@@ -175,7 +175,7 @@ Other changes:
 
 * Shipped XML parser is now Xerces 2.3.0
 
-* <style> has a new attribute reuseloadedstylesheet to work around a
+* <style> has a new attribute reloadstylesheet to work around a
   bug in widespread Xalan versions.
 
 * <tarfileset> has a new dirmode attribute to specify the permissions

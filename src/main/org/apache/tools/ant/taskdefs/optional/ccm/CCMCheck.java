@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,10 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
+
 import java.io.File;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.FileSet;
+
 
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);
@@ -69,6 +74,8 @@ public class CCMCheck extends Continuus {
     private File file = null;
     private String comment = null;
     private String task = null;
+ 
+    protected Vector filesets = new Vector();
 
     public CCMCheck() {
         super();
@@ -87,6 +94,7 @@ public class CCMCheck extends Continuus {
      * @param v  Value to assign to file.
      */
     public void setFile(File v) {
+        log("working file "+v, Project.MSG_VERBOSE);
         this.file = v;
     }
 
@@ -126,6 +134,14 @@ public class CCMCheck extends Continuus {
 
 
     /**
+     * Adds a set of files to copy.
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
+
+
+    /**
      * Executes the task.
      * <p>
      * Builds a command line to execute ccm and then calls Exec's run method
@@ -133,18 +149,55 @@ public class CCMCheck extends Continuus {
      * </p>
      */
     public void execute() throws BuildException {
+
+        if (file == null && filesets.size() == 0) {
+            throw new BuildException(
+                "Specify at least one source - a file or a fileset.");
+        }
+
+        if (file != null && file.exists() && file.isDirectory()) {
+            throw new BuildException("CCMCheck cannot be generated for directories");
+        }
+        
+        if (file != null  && filesets.size() > 0) {
+            throw new BuildException("Choose between file and fileset !");
+        }
+
+        if ( getFile() !=null ) {
+            doit();
+            return ;
+        }
+                        
+        int sizeofFileSet = filesets.size();
+        for (int i = 0; i < sizeofFileSet; i++) {
+            FileSet fs = (FileSet) filesets.elementAt(i);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            String[] srcFiles = ds.getIncludedFiles();
+            for (int j = 0; j < srcFiles.length; j++) {
+                File src = new File(fs.getDir(project), srcFiles[j]);
+                setFile(src);
+                doit();
+            }
+        }
+    }
+    
+    /**
+     * check the file given by getFile().
+     */
+    private void doit()
+    {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
         // build the command line from what we got the format is
         // ccm co /t .. files
-        // as specified in the CLEARTOOL.EXE help
+        // as specified in the CCM.EXE help
+
         commandLine.setExecutable(getCcmCommand());
         commandLine.createArgument().setValue(getCcmAction());
-
+        
         checkOptions(commandLine);
-
-        result = run(commandLine);
+        
+        int result = run(commandLine);
         if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
@@ -164,11 +217,11 @@ public class CCMCheck extends Continuus {
         if (getTask() != null) {
             cmd.createArgument().setValue(FLAG_TASK);
             cmd.createArgument().setValue(getTask());
-        } // end of if ()
+        } 
 
         if (getFile() != null) {
             cmd.createArgument().setValue(file.getAbsolutePath());
-        } // end of if ()
+        } 
     }
 
     /**
