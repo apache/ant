@@ -30,44 +30,43 @@ that are not possible with entity includes:
   <li>special properties</li>
 </ul>
   </p>
-<b>Target overriding<br>
-<br>
-</b>If a target in the main file is also present in at least one of the
-imported files, it takes precedence.<br>
-<br>
+<b>Target overriding</b><br />
+<br />
+If a target in the main file is also present in at least one of the
+imported files, it takes precedence.<br />
+<br />
 So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
-that contains a "<b>docs</b>" target, I can redefine it in my main
-buildfile and that is the one that will be called. It makes it easy to
-keep the same target name, that has the same dependencies (so it is
-still called by the other targets), but use a different implementation.<br>
-<br>
-The original target is still available though, and is called <b>"builddocs</b><b>.docs"</b>.
-This means that in my new implementation, I can still call the old
-target, making it possible to <i>enhance </i>it with tasks called
-before or after it.<br>
-<b></b><b><br>
-Special Properties<br>
-<br>
-</b>Imported files are treated as they are present in the main
+that contains a &quot;<b>docs</b>&quot; target, I can redefine it in my main
+buildfile and that is the one that will be called. This makes it easy to
+keep the same target name, so that the overriding target is still called
+by any other targets--in either the main or imported buildfile(s)--for which
+it is a dependency, with a different implementation. The original target is
+made available by the name &quot;<b>builddocs</b><b>.docs</b>&quot;.
+This enables the new implementation to call the old target, thus
+<i>enhancing</i> it with tasks called before or after it.<br />
+<br />
+<b>Special Properties</b><br />
+<br />
+Imported files are treated as they are present in the main
 buildfile. This makes it easy to understand, but it makes it impossible
 for them to reference files and resources relative to their path.
 Because of this, for every imported file, Ant adds a property that
 contains the path to the imported buildfile. With this path, the
 imported buildfile can keep resources and be able to reference them
-relative to its position.<br>
-<br>
+relative to its position.<br />
+<br />
 So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
 I can get its path as <b>ant.file.builddocs</b>, similarly to the <b>ant.file</b>
-property of the main buildfile.<br>
-Note that "builddocs" is not the filename, but the name attribute
-present in the imported project tag.<br>
-<br>
+property of the main buildfile.<br />
+Note that &quot;builddocs&quot; is not the filename, but the name attribute
+present in the imported project tag.<br />
+<br />
 <b>Important</b>: We have not finalized how relative file references
 will be resolved in deep/complex build hierarchies -such as what
 happens when an imported file imports another file. Use absolute
 references for enhanced build file stability, especially in the
-imported files.<br>
-&nbsp;<br>
+imported files.<br />
+&nbsp;<br />
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
@@ -77,36 +76,36 @@ imported files.<br>
       <td align="center" valign="top"><b>Required</b></td>
     </tr>
     <tr>
-      <td valign="top">file<br>
+      <td valign="top">file<br />
       </td>
-      <td valign="top">The file to import.<br>
+      <td valign="top">The file to import.<br />
       </td>
       <td valign="top" align="center">Yes</td>
     </tr>
     <tr>
-      <td valign="top">optional<br>
+      <td valign="top">optional<br />
       </td>
       <td valign="top">
         if true, do not issue stop the build if the file does not exist,
-        default is false.<br>
+        default is false.<br />
       </td>
       <td valign="top" align="center">No</td>
     </tr>
   </tbody>
 </table>
-<h3><br>
+<h3><br />
 </h3>
 <h3>Examples</h3>
-<pre>&nbsp; &lt;import file="../common-targets.xml" /&gt;<br></pre>
-<br>
+<pre>&nbsp; &lt;import file=&quot;../common-targets.xml&quot; /&gt;<br /></pre>
+<br />
 Imports targets from the common-targets.xml file that is in a parent
-directory.<br>
-<br>
-<pre>&nbsp; &lt;import file="${deploy-platform}.xml" /&gt;<br></pre>
-<br>
-Imports the project defined by the property deploy-platform<br>
-<br>
-<br>
+directory.<br />
+<br />
+<pre>&nbsp; &lt;import file=&quot;${deploy-platform}.xml&quot; /&gt;<br /></pre>
+<br />
+Imports the project defined by the property deploy-platform<br />
+<br />
+<br />
 <hr>
 <p align="center">Copyright &copy; 2003-2004 Apache Software
 Foundation. All rights
