@@ -484,9 +484,14 @@ public class Path extends DataType implements Cloneable {
 
         Path result = new Path(project);
 
-        String order = project.getProperty("build.sysclasspath");
-        if (order == null) order=defValue;
-
+        String order = defValue;
+        if (project != null) {
+            String o = project.getProperty("build.sysclasspath");
+            if (o != null) {
+                order = o;
+            }
+        }
+        
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
             result.addExisting(Path.systemClasspath);

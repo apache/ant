@@ -97,25 +97,20 @@ public abstract class Definer extends Task {
         }
         try {
             ClassLoader loader = null;
+            AntClassLoader al = null;
             if (classpath != null) {
-                AntClassLoader al = new AntClassLoader(project, classpath,
-                                                       false);
-                // need to load Task via system classloader or the new
-                // task we want to define will never be a Task but always
-                // be wrapped into a TaskAdapter.
-                al.addSystemPackageRoot("org.apache.tools.ant");
-                loader = al;
+                al = new AntClassLoader(project, classpath, false);
             } else {
-                loader = this.getClass().getClassLoader();
+                al = new AntClassLoader(project, Path.systemClasspath, false);
             }
+            // need to load Task via system classloader or the new
+            // task we want to define will never be a Task but always
+            // be wrapped into a TaskAdapter.
+            al.addSystemPackageRoot("org.apache.tools.ant");
+            loader = al;
 
-            Class c = null;
-            if (loader != null) {
-                c = loader.loadClass(value);
-                AntClassLoader.initializeClass(c);
-            } else {
-                c = Class.forName(value);
-            }
+            Class c = loader.loadClass(value);
+            AntClassLoader.initializeClass(c);
             addDefinition(name, c);
         } catch (ClassNotFoundException cnfe) {
             String msg = getTaskName()+" class " + value +
