@@ -58,7 +58,9 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
 import org.xml.sax.AttributeList;
+import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributeListImpl;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Wrapper class that holds the attributes of an element, its children, and
@@ -75,8 +77,11 @@ public class RuntimeConfigurable {
     private Vector children = new Vector();
     /** The element to configure. */
     private Object wrappedObject = null;
-    /** XML attributes for the element. */
+    /** @@deprecated
+     * XML attributes for the element. */
     private AttributeList attributes;
+    /** XML attributes for the element. */
+    private Attributes attributes2;
     /** Text appearing within the element. */
     private StringBuffer characters = new StringBuffer();
     /** Indicates if the wrapped object has been configured */
@@ -93,6 +98,8 @@ public class RuntimeConfigurable {
         wrappedObject = proxy;
         this.elementTag = elementTag;
         proxyConfigured = false;
+        if( proxy instanceof Task )
+            ((Task)proxy).setRuntimeConfigurableWrapper( this );
     }
 
     /**
@@ -106,6 +113,10 @@ public class RuntimeConfigurable {
         proxyConfigured = false;
     }
 
+    public Object getProxy() {
+        return wrappedObject;
+    }
+
     /**
      * Sets the attributes for the wrapped element.
      *
@@ -114,6 +125,14 @@ public class RuntimeConfigurable {
      */
     public void setAttributes(AttributeList attributes) {
         this.attributes = new AttributeListImpl(attributes);
+    }
+
+    public void setAttributes2(Attributes attributes) {
+        this.attributes2=new AttributesImpl( attributes );
+    }
+
+    public Attributes getAttributes2() {
+        return attributes2;
     }
 
     /**
@@ -231,24 +250,37 @@ public class RuntimeConfigurable {
      *            an element which doesn't accept it.
      */
     public void maybeConfigure(Project p, boolean configureChildren) 
-        throws BuildException {
+        throws BuildException
+    {
         String id = null;
 
         if (proxyConfigured) {
             return;
         }
 
+        //PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
+
+        if (attributes2 != null) {
+            ProjectHelper.configure(wrappedObject, attributes2, p);
+            //ph.configure(wrappedObject, attributes2, p);
+            id = attributes2.getValue("id");
+            // No way - this will be used on future calls ( if the task is used
+            // multiple times: attributes = null;
+        }
         if (attributes != null) {
             ProjectHelper.configure(wrappedObject, attributes, p);
+            //ph.configure(wrappedObject, attributes, p);
             id = attributes.getValue("id");
         }
+
         if (characters.length() != 0) {
             ProjectHelper.addText(p, wrappedObject, characters.toString());
         }
+
         Enumeration enum = children.elements();
         while (enum.hasMoreElements()) {
             RuntimeConfigurable child
-                = (RuntimeConfigurable) enum.nextElement();
+                    = (RuntimeConfigurable) enum.nextElement();
             if (child.wrappedObject instanceof Task) {
                 Task childTask = (Task) child.wrappedObject;
                 childTask.setRuntimeConfigurableWrapper(child);
@@ -262,14 +294,14 @@ public class RuntimeConfigurable {
                     child.maybeConfigure(p);
                 }
                 ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject,
-                                         child.getElementTag()
-                                         .toLowerCase(Locale.US));
+                        child.getElementTag()
+                        .toLowerCase(Locale.US));
             }
         }
+
         if (id != null) {
             p.addReference(id, wrappedObject);
         }
         proxyConfigured = true;
     }
-
 }
