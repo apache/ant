@@ -449,6 +449,7 @@ public class Coverage extends CovBase {
     protected File createParamFile() throws BuildException {
         //@todo change this when switching to JDK 1.2 and use File.createTmpFile()
         File file = createTempFile("jpcov");
+        file.deleteOnExit();
         log("Creating parameter file: " + file, Project.MSG_VERBOSE);
 
         // options need to be one per line in the parameter file

@@ -192,6 +192,7 @@ public class Cab extends MatchingTask {
     protected File createListFile(Vector files)
         throws IOException {
         File listFile = fileUtils.createTempFile("ant", "", null);
+        listFile.deleteOnExit();
 
         PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
 
@@ -322,6 +323,7 @@ public class Cab extends MatchingTask {
 
                 if (!doVerbose) {
                     outFile = fileUtils.createTempFile("ant", "", null);
+                    outFile.deleteOnExit();
                     exec.setOutput(outFile);
                 }
 

@@ -1576,6 +1576,7 @@ public class FTP
                 throw new BuildException(ioe, getLocation());
             }
             if (!found) {
+                localFile.deleteOnExit();
                 return localFile;
             }
         }
