@@ -130,7 +130,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
             // Since task log category includes target, we don't really
             // need this message
             realLog(log, "Start: " + event.getTarget().getName(),
-                    Project.MSG_DEBUG, null);
+                    Project.MSG_VERBOSE, null);
         }
     }
 
