@@ -60,7 +60,7 @@ import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * This is the interface to be used by all dynamic selectors, those that are
- * called through the <extendselect> tag. It is the amalgamation of two
+ * called through the &lt;custom&gt; tag. It is the amalgamation of two
  * interfaces, the FileSelector and the Paramterizable interface. Note that
  * you will almost certainly want the default behaviour for handling
  * Parameters, so you probably want to use the BaseExtendSelector class

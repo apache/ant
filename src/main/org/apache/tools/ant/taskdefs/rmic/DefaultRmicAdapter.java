@@ -116,7 +116,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      *   <li>for JRMP it will return *_getStubClassSuffix (and
      *   *_getSkelClassSuffix if JDK 1.1 is used)</li>
      *
-     *   <li>for IDL it will return a random name, causing <rmic> to
+     *   <li>for IDL it will return a random name, causing &lt;rmic&gt; to
      *     always recompile.</li>
      *
      *   <li>for IIOP it will return _*_getStubClassSuffix for

@@ -94,7 +94,7 @@ public abstract class BaseExtendSelector extends BaseSelector implements
 
     /**
      * Allows access to the parameters gathered and set within the
-     * <extendselect> tag.
+     * &lt;custom&gt; tag.
      *
      * @return the set of parameters defined for this selector
      */

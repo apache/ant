@@ -123,9 +123,9 @@ public class FilenameSelector extends BaseExtendSelector {
 
     /**
      * You can optionally reverse the selection of this selector,
-     * thereby emulating an <exclude> tag, by setting the attribute
+     * thereby emulating an &lt;exclude&gt; tag, by setting the attribute
      * negate to true. This is identical to surrounding the selector
-     * with <not></not>.
+     * with &lt;not&gt;&lt;/not&gt;.
      *
      * @param negated whether to negate this selection
      */
