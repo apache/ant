@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,10 @@ import org.apache.tools.ant.BuildException;
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
 public interface P4OutputHandler {
-
-    public void process(String line) throws BuildException;
+    /**
+     * implementations will be able to process lines of output from Perforce
+     * @param line a line of stdout or stderr coming from Perforce
+     * @throws BuildException implementations are allowed to throw BuildException
+     */
+    void process(String line) throws BuildException;
 }

@@ -75,7 +75,7 @@ import org.apache.tools.ant.types.Commandline;
  * @see P4Edit
  * @see P4Submit
  * @see P4Label
- * @see org.apache.tools.ant.taskdefs.Exec
+ * @see org.apache.tools.ant.taskdefs.Execute
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
 public abstract class P4Base extends org.apache.tools.ant.Task {
@@ -112,6 +112,8 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /**
      * The p4d server and port to connect to;
      * optional, default "perforce:1666"
+     *
+     * @param P4Port the port one wants to set such as localhost:1666
      */
     public void setPort(String P4Port) {
         this.P4Port = "-p" + P4Port;
@@ -120,6 +122,8 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /**
      * The p4 client spec to use;
      * optional, defaults to the current user
+     *
+     * @param P4Client the name of the Perforce client spec
      */
     public void setClient(String P4Client) {
         this.P4Client = "-c" + P4Client;
@@ -128,22 +132,34 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /**
      * The p4 username;
      * optional, defaults to the current user
+     *
+     * @param P4User the user name
      */
     public void setUser(String P4User) {
         this.P4User = "-u" + P4User;
     }
-    
     /**
      * Set global P4 options; Used on all
      * of the Perforce tasks.
-     */ 
+     *
+     * @param P4Opts global options, to use a specific P4Config file for instance
+     */
     public void setGlobalopts(String P4Opts) {
         this.P4Opts = P4Opts;
     }
-
     /**
      * The client, branch or label view to operate upon;
-     * optional default "//..."
+     * optional default "//...".
+     *
+     * the view is required for the following tasks :
+     * <ul>
+     * <li>p4delete</li>
+     * <li>p4edit</li>
+     * <li>p4reopen</li>
+     * <li>p4resolve</li>
+     * </ul>
+     *
+     * @param P4View the view one wants to use
      */
     public void setView(String P4View) {
         this.P4View = P4View;
@@ -152,6 +168,9 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /**
      * Set extra command options; only used on some
      * of the Perforce tasks.
+     *
+     * @param P4CmdOpts  command line options going after the particular
+     * Perforce command
      */
     public void setCmdopts(String P4CmdOpts) {
         this.P4CmdOpts = P4CmdOpts;
@@ -160,11 +179,24 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /**
      * whether to stop the build (true, default)
      * or keep going if an error is returned from the p4 command
+     * @param fail indicates whether one wants to fail the build if an error comes from the
+     * Perforce command
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
     }
-
+    /**
+     *  sets attributes Port, Client, User from properties
+     *  if these properties are defined.
+     *  Called automatically by UnknownElement
+     *  @see org.apache.tools.ant.UnknownElement
+     *  <table>
+     *  <tr><th>Property</th><th>Attribute</th></tr>
+     *  <tr><td>p4.port</td><td>Port</td></tr>
+     *  <tr><td>p4.client</td><td>Client</td></tr>
+     *  <tr><td>p4.user</td><td>User</td></tr>
+     *  </table>
+     */
     public void init() {
 
         util = new Perl5Util();
@@ -182,14 +214,23 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             setUser(tmpprop);
         }
     }
-
+    /**
+    *  no usages found for this method
+    *  runs a Perforce command without a handler
+    * @param command the command that one wants to execute
+    * @throws BuildException if failonerror is set and the command fails
+    */
     protected void execP4Command(String command) throws BuildException {
         execP4Command(command, null);
     }
 
-    /** Execute P4 command assembled by subclasses.
-     @param command The command to run
-     @param handler A P4Handler to process any input and output
+    /**
+     * Execute P4 command assembled by subclasses.
+     *
+     * @param command The command to run
+     * @param handler A P4Handler to process any input and output
+     *
+     * @throws BuildException if failonerror has been set to true
      */
     protected void execP4Command(String command, P4Handler handler) throws BuildException {
         try {
@@ -232,6 +273,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
                 try {
                     handler.stop();
                 } catch (Exception e) {
+                    log(e.toString(), Project.MSG_ERR);
                 }
             }
 

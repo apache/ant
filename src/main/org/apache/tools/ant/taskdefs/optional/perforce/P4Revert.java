@@ -75,6 +75,8 @@ public class P4Revert extends P4Base {
 
     /**
      * The changelist to revert; optional.
+     * @param revertChange : the change list to revert
+     * @throws BuildException if the change list is null or empty string
      */
     public void setChange(String revertChange) throws BuildException {
         if (revertChange == null && !revertChange.equals("")) {
@@ -87,11 +89,17 @@ public class P4Revert extends P4Base {
 
     /**
      * flag to revert only unchanged files (p4 revert -a); optional, default false.
+     * @param onlyUnchanged if set to true revert only unchanged files
      */
     public void setRevertOnlyUnchanged(boolean onlyUnchanged) {
         this.onlyUnchanged = onlyUnchanged;
     }
 
+    /**
+     * do the work
+     * @throws BuildException if an error occurs during the execution of the Perforce command
+     * and failonError is set to true
+     */
     public void execute() throws BuildException {
 
         /* Here we can either revert any unchanged files in a changelist

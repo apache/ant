@@ -72,9 +72,16 @@ import org.apache.tools.ant.types.FileSet;
  * <b>Example Usage:</b>
  * <table border="1">
  * <th>Function</th><th>Command</th>
- * <tr><td>Add files using P4USER, P4PORT and P4CLIENT settings specified</td><td>&lt;P4add <br>P4view="//projects/foo/main/source/..." <br>P4User="fbloggs" <br>P4Port="km01:1666" <br>P4Client="fbloggsclient"&gt;<br>&lt;fileset basedir="dir" includes="**&#47;*.java"&gt;<br>&lt;/p4add&gt;</td></tr>
- * <tr><td>Add files using P4USER, P4PORT and P4CLIENT settings defined in environment</td><td>&lt;P4add P4view="//projects/foo/main/source/..." /&gt;<br>&lt;fileset basedir="dir" includes="**&#47;*.java"&gt;<br>&lt;/p4add&gt;</td></tr>
- * <tr><td>Specify the length of command line arguments to pass to each invocation of p4</td><td>&lt;p4add Commandlength="450"&gt;</td></tr>
+ * <tr><td>Add files using P4USER, P4PORT and P4CLIENT settings specified</td>
+ * <td>&lt;P4add <br>P4view="//projects/foo/main/source/..." <br>P4User="fbloggs"
+ * <br>P4Port="km01:1666"
+ * <br>P4Client="fbloggsclient"&gt;<br>&lt;fileset basedir="dir" includes="**&#47;*.java"&gt;<br>
+ * &lt;/p4add&gt;</td></tr>
+ * <tr><td>Add files using P4USER, P4PORT and P4CLIENT settings defined in environment</td><td>
+ * &lt;P4add P4view="//projects/foo/main/source/..." /&gt;<br>&lt;fileset basedir="dir"
+ * includes="**&#47;*.java"&gt;<br>&lt;/p4add&gt;</td></tr>
+ * <tr><td>Specify the length of command line arguments to pass to each invocation of p4</td>
+ * <td>&lt;p4add Commandlength="450"&gt;</td></tr>
  * </table>
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
@@ -83,17 +90,19 @@ import org.apache.tools.ant.types.FileSet;
  * @ant.task category="scm"
  */
 public class P4Add extends P4Base {
-
+    private static final int DEFAULT_CMD_LENGTH = 450;
     private int changelist;
     private String addCmd = "";
     private Vector filesets = new Vector();
-    private int cmdLength = 450;
+    private int cmdLength = DEFAULT_CMD_LENGTH;
 
     /**
      *   positive integer specifying the maximum length
      *   of the commandline when calling Perforce to add the files.
      *   Defaults to 450, higher values mean faster execution,
      *   but also possible failures.
+     *   @param len maximum length of command line default is 450.
+     *   @throws BuildException if trying to set the command line length to 0 or less.
      */
 
     public void setCommandlength(int len) throws BuildException {
@@ -107,6 +116,10 @@ public class P4Add extends P4Base {
      * If specified the open files are associated with the
      * specified pending changelist number; otherwise the open files are
      * associated with the default changelist.
+     *
+     * @param changelist the change list number
+     *
+     * @throws BuildException if trying to set a change list number &lt;=0.
      */
     public void setChangelist(int changelist) throws BuildException {
         if (changelist <= 0) {
@@ -118,11 +131,18 @@ public class P4Add extends P4Base {
 
     /**
      * files to add
+     *
+     * @param set the FileSet that one wants to add to Perforce Source Control
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
+    /**
+     * run the task.
+     *
+     * @throws BuildException if the execution of the Perforce command fails.
+     */
     public void execute() throws BuildException {
 
         if (P4View != null) {

@@ -78,16 +78,24 @@ import org.apache.tools.ant.BuildException;
 
 public class P4Edit extends P4Base {
 
+    /**
+     * number of the change list to work on
+     */
     public String change = null;
 
     /**
      * An existing changelist number to assign files to; optional
      * but strongly recommended.
+     * @param change the change list number
      */
     public void setChange(String change) {
         this.change = change;
     }
 
+    /**
+     * Run the p4 edit command
+     * @throws BuildException if there is no view specified
+     */
     public void execute() throws BuildException {
         if (change != null) {
             P4CmdOpts = "-c " + change;

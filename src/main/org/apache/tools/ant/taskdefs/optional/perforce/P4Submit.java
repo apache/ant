@@ -79,15 +79,23 @@ import java.util.Vector;
 public class P4Submit extends P4Base {
 
     //ToDo: If dealing with default cl need to parse out <enter description here>
+    /**
+     * change list number
+     */
     public String change;
 
     /**
+     * set the change list number to submit
      * @param change The changelist number to submit; required.
      */
     public void setChange(String change) {
         this.change = change;
     }
 
+    /**
+     * do the work
+     * @throws BuildException if no change list specified
+     */
     public void execute() throws BuildException {
         if (change != null) {
             execP4Command("submit -c " + change, (P4HandlerAdapter) new P4SubmitAdapter());
@@ -98,10 +106,17 @@ public class P4Submit extends P4Base {
         }
     }
 
+    /**
+     * internal class used to process the output of p4 submit
+     */
     public class P4SubmitAdapter extends P4HandlerAdapter {
+        /**
+         * process a line of stdout/stderr coming from Perforce
+         * @param line line of stdout or stderr coming from Perforce
+         */
         public void process(String line) {
             log(line, Project.MSG_VERBOSE);
-            getProject().setProperty("p4.needsresolve","0");
+            getProject().setProperty("p4.needsresolve", "0");
             // this type of output might happen
             // Change 18 renamed change 20 and submitted.
             if (util.match("/renamed/", line)) {
@@ -111,12 +126,13 @@ public class P4Submit extends P4Base {
                     boolean found = false;
                     for (int counter = 0; counter < myarray.size(); counter++) {
                         if (found == true) {
-                            int changenumber = Integer.parseInt((String) myarray.elementAt(counter + 1));
+                            String chnum = (String) myarray.elementAt(counter + 1);
+                            int changenumber = Integer.parseInt(chnum);
                             log("Perforce change renamed " + changenumber, Project.MSG_INFO);
                             getProject().setProperty("p4.change", "" + changenumber);
                             found = false;
                         }
-                        if (((String) (myarray.elementAt(counter))).equals("renamed")) {
+                        if (((myarray.elementAt(counter))).equals("renamed")) {
                             found = true;
                         }
                     }
@@ -128,8 +144,8 @@ public class P4Submit extends P4Base {
                     throw new BuildException(msg, e, getLocation());
                 }
             }
-            if (util.match("/p4 submit -c/",line)) {
-                getProject().setProperty("p4.needsresolve","1");
+            if (util.match("/p4 submit -c/", line)) {
+                getProject().setProperty("p4.needsresolve", "1");
             }
 
         }

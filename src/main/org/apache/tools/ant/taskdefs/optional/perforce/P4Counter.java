@@ -86,14 +86,30 @@ import org.apache.tools.ant.Project;
  */
 
 public class P4Counter extends P4Base {
+    /**
+     * name of the counter
+     */
     public String counter = null;
+    /**
+     * name of an optional property
+     */
     public String property = null;
+    /**
+     * flag telling whether the value of the counter should be set
+     */
     public boolean shouldSetValue = false;
+    /**
+     * flag telling whether a property should be set
+     */
     public boolean shouldSetProperty = false;
+    /**
+     * new value for the counter
+     */
     public int value = 0;
 
     /**
      * The name of the counter; required
+     * @param counter name of the counter
      */
     public void setName(String counter) {
         this.counter = counter;
@@ -101,6 +117,7 @@ public class P4Counter extends P4Base {
 
     /**
      * The new value for the counter; optional.
+     * @param value new value for the counter
      */
     public void setValue(int value) {
         this.value = value;
@@ -109,6 +126,8 @@ public class P4Counter extends P4Base {
 
     /**
      * A property to be set with the value of the counter
+     * @param property the name of a property to set with the value
+     * of the counter
      */
     public void setProperty(String property) {
         this.property = property;
@@ -117,6 +136,7 @@ public class P4Counter extends P4Base {
 
     /**
      * again, properties are mutable in this tsk
+     * @throws BuildException if the required parameters are not supplied.
      */
     public void execute() throws BuildException {
 
@@ -125,7 +145,8 @@ public class P4Counter extends P4Base {
         }
 
         if (shouldSetValue && shouldSetProperty) {
-            throw new BuildException("Cannot both set the value of the property and retrieve the value of the property.");
+            throw new BuildException("Cannot both set the value of the property and retrieve the "
+                + "value of the property.");
         }
 
         String command = "counter " + P4CmdOpts + " " + counter;
@@ -150,7 +171,8 @@ public class P4Counter extends P4Base {
                         value = Integer.parseInt(line);
                         myProj.setProperty(property, "" + value);
                     } catch (NumberFormatException nfe) {
-                        throw new BuildException("Perforce error. Could not retrieve counter value.");
+                        throw new BuildException("Perforce error. "
+                        + "Could not retrieve counter value.");
                     }
                 }
             };

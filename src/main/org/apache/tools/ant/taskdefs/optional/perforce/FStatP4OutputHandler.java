@@ -58,9 +58,9 @@ import org.apache.oro.text.perl.Perl5Util;
 
 import java.util.ArrayList;
 
-/** 
+/**
  * FStatP4OutputHandler  - spezialied Perforce output handler
- * able to sort files recognized as managed by Perforce and files not 
+ * able to sort files recognized as managed by Perforce and files not
  * managed by Perforce in the output
  *
  * @author <A HREF="mailto:miha@softhome.net">Miha</A>
@@ -83,7 +83,7 @@ class FStatP4OutputHandler extends P4HandlerAdapter {
             String f = util.group(1);
             nonExisting.add(f);
         }
-        parent.log(parent.util.substitute("s/^.*: //", line), 
+        parent.log(parent.util.substitute("s/^.*: //", line),
                    Project.MSG_VERBOSE);
     }
 

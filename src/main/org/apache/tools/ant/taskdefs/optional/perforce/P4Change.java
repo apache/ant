@@ -81,7 +81,9 @@ public class P4Change extends P4Base {
     protected String description = "AutoSubmit By Ant";
 
     /**
-     * throw all immutability rules to the wind
+     * creates a new Perforce change list
+     * sets the p4.change property to the number of the new change list
+     * @throws BuildException if the word error appears in the output coming from Perforce
      */
     public void execute() throws BuildException {
 
@@ -113,7 +115,12 @@ public class P4Change extends P4Base {
         execP4Command("change -i", handler);
     }
 
-
+    /**
+     * returns the text of an empty change list
+     * @return  the text of an empty change list
+     * @throws BuildException  if the text error is displayed
+     * in the Perforce output outside of a comment line
+     */
     public String getEmptyChangeList() throws BuildException {
         final StringBuffer stringbuf = new StringBuffer();
 
@@ -121,28 +128,23 @@ public class P4Change extends P4Base {
             public void process(String line) {
                 if (!util.match("/^#/", line)) {
                     if (util.match("/error/", line)) {
-
                         log("Client Error", Project.MSG_VERBOSE);
-                        throw new BuildException("Perforce Error, check client settings and/or server");
-
+                        throw new BuildException("Perforce Error, "
+                        + "check client settings and/or server");
                     } else if (util.match("/<enter description here>/", line)) {
-
                         // we need to escape the description in case there are /
                         description = backslash(description);
-                        line = util.substitute("s/<enter description here>/" + description + "/", line);
-
+                        line = util.substitute("s/<enter description here>/"
+                            + description + "/", line);
                     } else if (util.match("/\\/\\//", line)) {
                         //Match "//" for begining of depot filespec
                         return;
                     }
-
                     stringbuf.append(line);
                     stringbuf.append("\n");
-
                 }
             }
         });
-
         return stringbuf.toString();
     }
 
@@ -152,7 +154,8 @@ public class P4Change extends P4Base {
      * always backslashes in a string unless they escape the delimiter.
      * @param value the string to backslash for slashes
      * @return the backslashed string
-     * @see < a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/perl/Perl5Util.html#substitute(java.lang.String,%20java.lang.String)">Oro</a>
+     * @see <a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/perl/Perl5Util.html
+     * #substitute(java.lang.String,%20java.lang.String)">Oro</a>
      */
     public static final String backslash(String value) {
         final StringBuffer buf = new StringBuffer(value.length());
@@ -170,6 +173,7 @@ public class P4Change extends P4Base {
     /**
      * Description for ChangeList;optional.
      * If none is specified, it will default to "AutoSubmit By Ant"
+     * @param desc description for the change list
      */
     public void setDescription(String desc) {
         this.description = desc;

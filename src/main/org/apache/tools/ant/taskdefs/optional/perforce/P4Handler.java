@@ -64,15 +64,17 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
  */
 public interface P4Handler extends ExecuteStreamHandler {
 
-  /**
-   * processing of one line of stdout or of stderr
-   * @param line
-   */
-    public void process(String line) throws BuildException;
+    /**
+     * processing of one line of stdout or of stderr
+     * @param line a line of stdout or stderr that the implementation will process
+     * @throws BuildException at the discretion of the implementation.
+     */
+    void process(String line) throws BuildException;
 
-  /**
-   *  set any data to be written to P4's stdin
-   *  @param line the text to write to P4's stdin
-   */
-    public void setOutput(String line) throws BuildException;
+    /**
+     * set any data to be written to P4's stdin
+     * @param line the text to write to P4's stdin
+     * @throws BuildException if the line cannot be processed.
+     */
+    void setOutput(String line) throws BuildException;
 }

@@ -74,7 +74,8 @@ import org.apache.tools.ant.types.FileSet;
  *
  * <br><b>Example Usage:</b><br>
  * <pre>
- * &lt;project name=&quot;p4fstat&quot; default=&quot;p4fstat&quot; basedir=&quot;C:\dev\gnu&quot;&gt;
+ * &lt;project name=&quot;p4fstat&quot; default=&quot;p4fstat&quot;
+ * basedir=&quot;C:\dev\gnu&quot;&gt;
  *     &lt;target name=&quot;p4fstat&quot; &gt;
  *         &lt;p4fstat showfilter=&quot;all&quot;&gt;
  *             &lt;fileset dir=&quot;depot&quot; includes=&quot;**\/*&quot;/&gt;
@@ -94,7 +95,8 @@ public class P4Fstat extends P4Base {
     private int changelist;
     private String addCmd = "";
     private Vector filesets = new Vector();
-    private int cmdLength = 300;
+    private static final int DEFAULT_CMD_LENGTH = 300;
+    private int cmdLength = DEFAULT_CMD_LENGTH;
     private static final int SHOW_ALL = 0;
     private static final int SHOW_EXISTING = 1;
     private static final int SHOW_NON_EXISTING = 2;
@@ -110,7 +112,16 @@ public class P4Fstat extends P4Base {
     private static final String NONEXISTING_HEADER
         = "Following files do not exist in perforce";
 
-
+    /**
+     * sets the filter that one wants applied
+     * <table>
+     * <tr><th>Option</th><th>Meaning</th></tr>
+     * <tr><td>all</td><td>all files under Perforce control or not</td></tr>
+     * <tr><td>existing</td><td>only files under Perforce control</td></tr>
+     * <tr><td>non-existing</td><td>only files not under Perforce control or not</td></tr>
+     * </table>
+     * @param filter should be one of all|existing|non-existing
+     */
     public void setShowFilter(String filter) {
         if (filter.equalsIgnoreCase("all")) {
             show = SHOW_ALL;
@@ -124,7 +135,11 @@ public class P4Fstat extends P4Base {
         }
     }
 
-
+    /**
+     * sets optionally a change list number
+     * @param changelist change list that one wants information about
+     * @throws BuildException if the change list number is negative
+     */
     public void setChangelist(int changelist) throws BuildException {
         if (changelist <= 0) {
             throw new BuildException("P4FStat: Changelist# should be a "
@@ -134,10 +149,18 @@ public class P4Fstat extends P4Base {
         this.changelist = changelist;
     }
 
+    /**
+     * adds a fileset to be examined by p4fstat
+     * @param set the fileset to add
+     */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
+    /**
+     * executes the p4fstat task
+     * @throws BuildException if no files are specified
+     */
     public void execute() throws BuildException {
 
         handler = new FStatP4OutputHandler(this);
@@ -172,7 +195,7 @@ public class P4Fstat extends P4Base {
                     execP4Fstat(filelist);
                 }
             } else {
-                log("No files specified to add!", Project.MSG_WARN);
+                log("No files specified to query status on!", Project.MSG_WARN);
             }
         }
 
@@ -186,7 +209,10 @@ public class P4Fstat extends P4Base {
 
     }
 
-
+    /**
+     * return the number of files seen
+     * @return the number of files seen
+     */
     public int getLengthOfTask() {
         return fileNum;
     }

@@ -67,7 +67,8 @@ import org.apache.tools.ant.BuildException;
  * although P4Integrate can open files to the default change,
  * P4Submit cannot yet submit to it.
  * Example Usage:<br>
- * &lt;p4integrate change="${p4.change}" fromfile="//depot/project/dev/foo.txt" tofile="//depot/project/main/foo.txt" /&gt;
+ * &lt;p4integrate change="${p4.change}"
+ * fromfile="//depot/project/dev/foo.txt" tofile="//depot/project/main/foo.txt" /&gt;
  *
  * @author <A HREF="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</A>
  *
@@ -279,15 +280,18 @@ public class P4Integrate extends P4Base {
     /**
      *   sets flag indicating if one wants to propagate the source file type
      *
-     *   @param propagatesourcefiletype set it to true if you want to change the type of existing target files according to type of source file.
+     *   @param propagatesourcefiletype
+     *   set it to true if you want to change the type of existing target files
+     *   according to type of source file.
      */
     public void setPropagatesourcefiletype(boolean propagatesourcefiletype) {
         this.propagatesourcefiletype = propagatesourcefiletype;
     }
     /**
-     *   returns flag indicating if one wants to suppress the copying on the local hard disk of new target files
+     *   indicates intention to suppress the copying on the local hard disk of new target files.
      *
-     *   @return flag indicating if one wants to suppress the copying on the local hard disk of new target files
+     *   @return indicates intention to suppress the copying
+     *   on the local hard disk of new target files.
      */
     public boolean isNocopynewtargetfiles() {
         return nocopynewtargetfiles;
@@ -296,7 +300,8 @@ public class P4Integrate extends P4Base {
     /**
      *   sets nocopynewtargetfiles flag
      *
-     *   @param nocopynewtargetfiles set it to true to gain speed in integration by not copying on the local Perforce client new target files
+     *   @param nocopynewtargetfiles set it to true to gain speed in integration by not copying on
+     *   the local Perforce client new target files
      */
     public void setNocopynewtargetfiles(boolean nocopynewtargetfiles) {
         this.nocopynewtargetfiles = nocopynewtargetfiles;
@@ -304,6 +309,7 @@ public class P4Integrate extends P4Base {
 
     /**
      *  execute the p4 integrate
+     *  @throws BuildException if there are missing parameters
      */
     public void execute() throws BuildException {
         if (change != null) {
@@ -315,39 +321,34 @@ public class P4Integrate extends P4Base {
         if (this.restoredeletedrevisions) {
                 P4CmdOpts = P4CmdOpts + " -d";
             }
-        if ( this.leavetargetrevision) {
+        if (this.leavetargetrevision) {
             P4CmdOpts = P4CmdOpts + " -h";
         }
-        if ( this.enablebaselessmerges ) {
+        if (this.enablebaselessmerges) {
             P4CmdOpts = P4CmdOpts + " -i";
         }
-        if (this.simulationmode ) {
+        if (this.simulationmode) {
             P4CmdOpts = P4CmdOpts + " -n";
         }
-        if ( this.reversebranchmappings ) {
+        if (this.reversebranchmappings) {
             P4CmdOpts = P4CmdOpts + " -r";
         }
-        if ( this.propagatesourcefiletype ) {
+        if (this.propagatesourcefiletype) {
             P4CmdOpts = P4CmdOpts + " -t";
         }
-        if ( this.nocopynewtargetfiles ) {
+        if (this.nocopynewtargetfiles) {
             P4CmdOpts = P4CmdOpts + "-v";
         }
         String command;
         if (branch == null && fromfile != null && tofile != null) {
            command = P4CmdOpts + " " + fromfile + " " + tofile;
-
-        }
-        else if ( branch != null && fromfile == null && tofile != null )
-            {
+        } else if (branch != null && fromfile == null && tofile != null) {
             command = P4CmdOpts + " -b " + branch + " " + tofile;
-        }
-        else if ( branch != null && fromfile != null )
-            {
-            command = P4CmdOpts + " -b " + branch + " -s "+ fromfile + " " + tofile;
-        }
-        else {
-            throw new BuildException("you need to specify fromfile and tofile, or branch and tofile, or branch and fromfile, or branch and fromfile and tofile ");
+        } else if (branch != null && fromfile != null) {
+            command = P4CmdOpts + " -b " + branch + " -s " + fromfile + " " + tofile;
+        } else {
+            throw new BuildException("you need to specify fromfile and tofile, "
+            + "or branch and tofile, or branch and fromfile, or branch and fromfile and tofile ");
         }
         execP4Command("-s integrate " + command, new SimpleP4OutputHandler(this));
     }

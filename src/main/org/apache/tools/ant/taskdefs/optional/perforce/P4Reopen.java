@@ -74,6 +74,8 @@ public class P4Reopen extends P4Base {
 
     /**
      * The changelist to move files to; required.
+     * @param toChange new change list number
+     * @throws BuildException if the change parameter is null or empty
      */
     public void setToChange(String toChange) throws BuildException {
         if (toChange == null && !toChange.equals("")) {
@@ -83,6 +85,10 @@ public class P4Reopen extends P4Base {
         this.toChange = toChange;
     }
 
+    /**
+     * do the work
+     * @throws BuildException if P4View is null
+     */
     public void execute() throws BuildException {
         if (P4View == null) {
             throw new BuildException("No view specified to reopen");

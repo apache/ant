@@ -88,6 +88,7 @@ public class P4Label extends P4Base {
 
     /**
      * The name of the label; optional, default "AntLabel"
+     * @param name the name of the label
      */
     public void setName(String name) {
         this.name = name;
@@ -95,6 +96,7 @@ public class P4Label extends P4Base {
 
     /**
      *Label Description; optional
+     * @param desc description of the label
      */
     public void setDesc(String desc) {
         this.desc = desc;
@@ -102,13 +104,15 @@ public class P4Label extends P4Base {
 
     /**
      * when set to "locked", Perforce will lock the label once created; optional.
+     * @param lock only admissible value "locked"
      */
     public void setLock(String lock) {
         this.lock = lock;
     }
 
     /**
-     *  do the work
+     * do the work
+     * @throws BuildException if failonerror has been set to true and Perforce fails
      */
     public void execute() throws BuildException {
         log("P4Label exec:", Project.MSG_INFO);
@@ -142,10 +146,10 @@ public class P4Label extends P4Base {
 
         //We have to create a unlocked label first
         String newLabel =
-                "Label: " + name +
-                "\nDescription: " + desc +
-                "\nOptions: unlocked" +
-                "\nView: \n\t" + P4View;
+                "Label: " + name
+                + "\nDescription: " + desc
+                + "\nOptions: unlocked"
+                + "\nView: \n\t" + P4View;
 
         P4Handler handler = new P4HandlerAdapter() {
             public void process(String line) {

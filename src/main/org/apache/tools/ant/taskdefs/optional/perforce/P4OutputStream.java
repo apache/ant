@@ -70,7 +70,7 @@ public class P4OutputStream extends OutputStream {
 
     /**
      * creates a new P4OutputStream for a P4Handler
-     * @param handler
+     * @param handler   the handler which will process the streams
      */
     public P4OutputStream(P4Handler handler) {
         this.handler = handler;
@@ -81,6 +81,9 @@ public class P4OutputStream extends OutputStream {
      * separator is detected.
      *
      * @param cc data to log (byte).
+     * @throws IOException IOException  if an I/O error occurs. In particular,
+     *             an <code>IOException</code> may be thrown if the
+     *             output stream has been closed.
      */
     public void write(int cc) throws IOException {
         final byte c = (byte) cc;
@@ -105,6 +108,7 @@ public class P4OutputStream extends OutputStream {
 
     /**
      * Writes all remaining
+     * @throws IOException if an I/O error occurs.
      */
     public void close() throws IOException {
         if (buffer.size() > 0) {
