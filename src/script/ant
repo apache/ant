@@ -18,7 +18,7 @@ fi
 
 # load user ant configuration
 if [ -f "$HOME/.antrc" ] ; then 
-  . $HOME/.antrc
+  . "$HOME/.antrc"
 fi
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -117,9 +117,8 @@ if $rpm_mode; then
     fi
   done
 
-# in rpm mode ant/lib is in /usr/share/java/ant
-ANT_LIB="${JAVALIBDIR}/ant"
-
+  # in rpm mode ant/lib is in /usr/share/java/ant
+  ANT_LIB="${JAVALIBDIR}/ant"
 fi
 
 # add in the dependency .jar files in non-RPM mode (the default)
