@@ -5,7 +5,7 @@
     version='1.0'>
 
 <!--
-    Copyright  2002,2004 The Apache Software Foundation
+    Copyright  2002,2004-2005 The Apache Software Foundation
    
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@
         <h1>
           <a name="top"><xsl:value-of select="$title"/></a>
         </h1>
-        <p style="text-align: right">Designed for use with <a href="http://jakarta.apache.org/ant/">Ant</a>.</p>
+        <p style="text-align: right">Designed for use with <a href="http://ant.apache.org/ant/">Apache Ant</a>.</p>
         <hr/>
         <table border="0" width="100%" cellspacing="1">
           
