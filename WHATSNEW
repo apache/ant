@@ -161,6 +161,8 @@ Other changes:
   command over SSH.  They require jsch, a BSD licensed SSH library that
   can be found at http://www.jcraft.com/jsch/index.html
 
+* New filterreader <escapeunicode/>.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
