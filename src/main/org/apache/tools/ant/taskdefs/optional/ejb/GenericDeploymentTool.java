@@ -264,7 +264,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             if (!addedfiles.contains(logicalFilename)) {
                 iStream = new FileInputStream(inputFile);
                 // Create the zip entry and add it to the jar file
-                ZipEntry zipEntry = new ZipEntry(logicalFilename);
+                ZipEntry zipEntry = new ZipEntry(logicalFilename.replace('\\','/'));
                 jStream.putNextEntry(zipEntry);
                    
                 // Create the file input stream, and buffer everything over
@@ -301,7 +301,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         return new DescriptorHandler(srcDir);
     }
     
-    public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
+    public void processDescriptor(String descriptorFileName, SAXParser saxParser,
+                                  FileSet supportFileSet) {
         FileInputStream descriptorStream = null;
 
         try {
@@ -315,7 +316,20 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             saxParser.parse(new InputSource(descriptorStream), handler);
                             
             Hashtable ejbFiles = handler.getFiles();
-            
+                    
+            // add in support classes if any
+            if (supportFileSet != null) {
+                Project project = task.getProject();
+                File supportBaseDir = supportFileSet.getDir(project);
+                
+                DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
+                supportScanner.scan();
+                String[] supportFiles = supportScanner.getIncludedFiles();
+                for (int i = 0; i < supportFiles.length; ++i) {
+                    ejbFiles.put(supportFiles[i], new File(supportBaseDir, supportFiles[i]));
+                }
+            }            
+
             String baseName = "";
             
             // Work out what the base name is

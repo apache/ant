@@ -138,6 +138,11 @@ public class EjbJar extends MatchingTask {
     private ArrayList deploymentTools = new ArrayList();
 
     /**
+     * A Fileset of support classes
+     */
+    private FileSet supportClasses = null;
+
+    /**
      * Create a weblogic nested element used to configure a
      * deployment tool for Weblogic server.
      *
@@ -177,6 +182,16 @@ public class EjbJar extends MatchingTask {
         }
         return classpath.createPath();
     }
+
+    public Object createElement(String elementName) {
+        if (elementName.equals("support-classes")) {
+            supportClasses = new FileSet();
+            return supportClasses;
+        }
+        
+        return null;
+    }
+    
 
     /**
      * Set the srcdir attribute. The source directory is the directory that contains
@@ -301,7 +316,7 @@ public class EjbJar extends MatchingTask {
         if (srcDir == null) {
             throw new BuildException("The srcDir attribute must be specified");
         }
-        
+
         if (deploymentTools.size() == 0) {
             GenericDeploymentTool genericTool = new GenericDeploymentTool();
             genericTool.setDestdir(destDir);
@@ -335,14 +350,13 @@ public class EjbJar extends MatchingTask {
             log(files.length + " deployment descriptors located.",
                 Project.MSG_VERBOSE);
             
-                            
             // Loop through the files. Each file represents one deployment
             // descriptor, and hence one bean in our model.
             for (int index = 0; index < files.length; ++index) {
                 // process the deployment descriptor in each tool
                 for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
                     EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
-                    tool.processDescriptor(files[index], saxParser);
+                    tool.processDescriptor(files[index], saxParser, supportClasses);
                 }
             }    
         }
