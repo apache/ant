@@ -29,7 +29,9 @@ import org.apache.tools.ant.types.Commandline;
  * @since Ant 1.4
  */
 public class KaffeRmic extends DefaultRmicAdapter {
-    public static final String RMIC_CLASSNAME = "kaffe.rmi.rmic.RMIC";
+    public static final String RMIC_CLASSNAME = "gnu.java.rmi.rmic.RMIC";
+    private static final String OLD_RMIC_CLASSNAME = "kaffe.rmi.rmic.RMIC";
+
     /**
      * the name of this adapter for users to select
      */
@@ -40,28 +42,34 @@ public class KaffeRmic extends DefaultRmicAdapter {
         getRmic().log("Using Kaffe rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand();
 
-        try {
+        Class c = getRmicClass();
+        if (c == null) {
+            throw new BuildException("Cannot use Kaffe rmic, as it is not "
+                                     + "available.  Neither "
+                                     + RMIC_CLASSNAME
+                                     + " nor "
+                                     + OLD_RMIC_CLASSNAME
+                                     + " have been found.  "
+                                     + "A common solution is to "
+                                     + "set the environment variable "
+                                     + "JAVA_HOME or CLASSPATH.",
+                                     getRmic().getLocation());
+        }
 
-            Class c = Class.forName(RMIC_CLASSNAME);
+        try {
             Constructor cons = c.getConstructor(new Class[] {String[].class});
             Object rmic = cons.newInstance(new Object[] {cmd.getArguments()});
             Method doRmic = c.getMethod("run", (Class[]) null);
             Boolean ok = (Boolean) doRmic.invoke(rmic, (Object[]) null);
 
             return ok.booleanValue();
-        } catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use Kaffe rmic, as it is not "
-                                     + "available.  A common solution is to "
-                                     + "set the environment variable "
-                                     + "JAVA_HOME or CLASSPATH.",
-                                     getRmic().getLocation());
         } catch (BuildException ex) {
             //rethrow
             throw ex;
         } catch (Exception ex) {
             //wrap
            throw new BuildException("Error starting Kaffe rmic: ",
-                                         ex, getRmic().getLocation());
+                                    ex, getRmic().getLocation());
         }
     }
 
@@ -70,11 +78,24 @@ public class KaffeRmic extends DefaultRmicAdapter {
      * @return true if kaffe is on the current classpath
      */
     public static boolean isAvailable() {
+        return getRmicClass() != null;
+    }
+
+    /**
+     * tries to load Kaffe RMIC and falls back to the older class name
+     * if necessary.
+     *
+     * @return null if neither class can get loaded.
+     */
+    private static Class getRmicClass() {
         try {
-            Class.forName(RMIC_CLASSNAME);
-            return true;
+            return Class.forName(RMIC_CLASSNAME);
         } catch (ClassNotFoundException cnfe) {
-            return false;
+            try {
+                return Class.forName(OLD_RMIC_CLASSNAME);
+            } catch (ClassNotFoundException cnfe2) {
+            }
         }
+        return null;
     }
 }
