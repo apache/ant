@@ -42,6 +42,6 @@ public class Native2AsciiTest extends BuildFileTest {
         executeTarget("testIso8859-1");
         File in = getProject().resolveFile("expected/iso8859-1.test");
         File out = getProject().resolveFile("output/iso8859-1.test");
-        assertTrue(FileUtils.getFileUtils().contentEquals(in, out, false));
+        assertTrue(FileUtils.getFileUtils().contentEquals(in, out, true));
     }
 }
