@@ -53,6 +53,8 @@
  */
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.io.File;
@@ -80,6 +82,18 @@ public class PathTokenizer {
     private String lookahead = null;
 
     /**
+     * A boolean that determines if we are running on Novell NetWare, which
+     * exhibits slightly different path name characteristics (multi-character
+     * volume / drive names)
+     */
+    private boolean onNetWare = Os.isFamily("netware");
+
+    /**
+     * This will be used for String comparisons of the path Separator later
+     */
+    private String pathSeparatorStr = String.valueOf(File.pathSeparatorChar);
+
+    /**
      * Flag to indicate whether or not we are running on a platform with a
      * DOS style filesystem
      */
@@ -91,8 +105,17 @@ public class PathTokenizer {
      * @param path The path to tokenize. Must not be <code>null</code>.
      */
     public PathTokenizer(String path) {
-       tokenizer = new StringTokenizer(path, ":;", false);
-       dosStyleFilesystem = File.pathSeparatorChar == ';'; 
+        if (onNetWare) {
+            // For NetWare, use the boolean=true mode, so we can use delimiter 
+            // information to make a better decision later.
+            tokenizer = new StringTokenizer(path, ":;", true);
+        }
+        else {
+            // on Windows and Unix, we can ignore delimiters and still have
+            // enough information to tokenize correctly.
+            tokenizer = new StringTokenizer(path, ":;", false);
+        }
+        dosStyleFilesystem = File.pathSeparatorChar == ';'; 
     }
 
     /**
@@ -129,23 +152,60 @@ public class PathTokenizer {
             token = tokenizer.nextToken().trim();
         }            
             
-        if (token.length() == 1 && Character.isLetter(token.charAt(0))
-                                && dosStyleFilesystem
-                                && tokenizer.hasMoreTokens()) {
-            // we are on a dos style system so this path could be a drive
-            // spec. We look at the next token
-            String nextToken = tokenizer.nextToken().trim();
-            if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
-                // we know we are on a DOS style platform and the next path starts with a
-                // slash or backslash, so we know this is a drive spec
-                token += ":" + nextToken;
-            }
-            else {
-                // store the token just read for next time
-                lookahead = nextToken;
+        if (!onNetWare) {
+            if (token.length() == 1 && Character.isLetter(token.charAt(0))
+                                    && dosStyleFilesystem
+                                    && tokenizer.hasMoreTokens()) {
+                // we are on a dos style system so this path could be a drive
+                // spec. We look at the next token
+                String nextToken = tokenizer.nextToken().trim();
+                if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
+                    // we know we are on a DOS style platform and the next path
+                    // starts with a slash or backslash, so we know this is a 
+                    // drive spec
+                    token += ":" + nextToken;
+                }
+                else {
+                    // store the token just read for next time
+                    lookahead = nextToken;
+                }
             }
         }
-           
+        else {
+            // we are on NetWare, tokenizing is handled a little differently,
+            // due to the fact that NetWare has multiple-character volume names.
+            if (token.equals(pathSeparatorStr)) {
+                // ignore ";" and get the next token
+                token = tokenizer.nextToken().trim();
+            }
+            
+            if (tokenizer.hasMoreTokens()) {
+                // this path could be a drive spec, so look at the next token
+                String nextToken = tokenizer.nextToken().trim();
+                
+                // make sure we aren't going to get the path separator next
+                if (!nextToken.equals(pathSeparatorStr)) {
+                    if (nextToken.equals(":")) {
+                        if (!token.startsWith("/") && !token.startsWith("\\")){ 
+                            // it indeed is a drive spec, get the next bit
+                            String oneMore = tokenizer.nextToken().trim();
+                            if (!oneMore.equals(pathSeparatorStr)) {
+                                token += ":" + oneMore;
+                            }
+                            else {
+                                token += ":";
+                            }
+                        }
+                        // implicit else: ignore the ':' since we have either a
+                        // UNIX or a relative path
+                    }
+                    else {
+                        // store the token just read for next time
+                        lookahead = nextToken;
+                    }
+                }
+            }
+        }
         return token;
     }
 }
