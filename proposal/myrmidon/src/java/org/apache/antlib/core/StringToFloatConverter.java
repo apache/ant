@@ -7,11 +7,10 @@
  */
 package org.apache.antlib.core;
 
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * String to float converter
