@@ -13,14 +13,10 @@ import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.configurer.PropertyException;
-import org.apache.myrmidon.components.configurer.PropertyUtil;
-import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 
 /**
  * Default implementation of TaskContext.
@@ -73,14 +69,9 @@ public class DefaultTaskContext
     }
 
     /**
-     * Retrieve an item from the Context.
-     *
-     * @param key the key of item
-     * @return the item stored in context
-     * @exception ContextException if item not present
+     * Retrieve a property.
      */
-    public Object get( final Object key )
-        throws ContextException
+    private Object get( final String key )
     {
         final Object data = m_contextData.get( key );
         if( null != data )
@@ -96,10 +87,10 @@ public class DefaultTaskContext
         if( null == m_parent )
         {
             // There was no parent, and no data
-            throw new ContextException( "Unable to locate " + key );
+            return null;
         }
 
-        return m_parent.getProperty( key.toString() );
+        return m_parent.getProperty( key );
     }
 
     /**
@@ -109,15 +100,7 @@ public class DefaultTaskContext
      */
     public String getName()
     {
-        try
-        {
-            return (String)get( NAME );
-        }
-        catch( final ContextException ce )
-        {
-            final String message = REZ.getString( "no-name.error" );
-            throw new IllegalStateException( message );
-        }
+        return (String)get( NAME );
     }
 
     /**
@@ -127,15 +110,7 @@ public class DefaultTaskContext
      */
     public File getBaseDirectory()
     {
-        try
-        {
-            return (File)get( BASE_DIRECTORY );
-        }
-        catch( final ContextException ce )
-        {
-            final String message = REZ.getString( "no-dir.error" );
-            throw new IllegalStateException( message );
-        }
+        return (File)get( BASE_DIRECTORY );
     }
 
     /**
@@ -205,10 +180,8 @@ public class DefaultTaskContext
     {
         try
         {
-            final TaskContextAdapter context = new TaskContextAdapter( this );
-
             final Object object =
-                PropertyUtil.resolveProperty( value, context, false );
+                PropertyUtil.resolveProperty( value, this, false );
 
             if( null == object )
             {
@@ -218,10 +191,10 @@ public class DefaultTaskContext
 
             return object;
         }
-        catch( final PropertyException pe )
+        catch( final TaskException te )
         {
             final String message = REZ.getString( "bad-resolve.error", value );
-            throw new TaskException( message, pe );
+            throw new TaskException( message, te );
         }
     }
 
@@ -233,14 +206,7 @@ public class DefaultTaskContext
      */
     public Object getProperty( final String name )
     {
-        try
-        {
-            return get( name );
-        }
-        catch( final ContextException ce )
-        {
-            return null;
-        }
+        return get( name );
     }
 
     /**
@@ -248,7 +214,7 @@ public class DefaultTaskContext
      *
      * @return the map of all property names to values
      */
-    public Map getPropertys()
+    public Map getProperties()
     {
         return null;
     }

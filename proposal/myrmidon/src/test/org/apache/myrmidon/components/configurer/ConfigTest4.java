@@ -7,8 +7,7 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-import java.util.ArrayList;
-import junit.framework.AssertionFailedError;
+
 
 /**
  * Simple class to test typed adder.

@@ -12,6 +12,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.aut.converter.Converter;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
@@ -29,7 +30,6 @@ import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
@@ -246,7 +246,7 @@ public class DefaultEmbeddor
         // Create the components
         createComponent( ConverterRegistry.class, PREFIX + "converter.DefaultConverterRegistry" );
         createComponent( ExtensionManager.class, PREFIX + "extensions.DefaultExtensionManager" );
-        createComponent( MasterConverter.class, PREFIX + "converter.DefaultMasterConverter" );
+        createComponent( Converter.class, PREFIX + "converter.DefaultMasterConverter" );
         createComponent( Configurer.class, PREFIX + "configurer.DefaultConfigurer" );
         createComponent( TypeManager.class, PREFIX + "type.DefaultTypeManager" );
         createComponent( RoleManager.class, PREFIX + "role.DefaultRoleManager" );

@@ -13,9 +13,9 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -24,7 +24,6 @@ import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
-import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 
 /**
  * The basic executor that just executes the tasks.
@@ -103,8 +102,7 @@ public class DefaultExecutor
     {
         try
         {
-            final TaskContextAdapter context = new TaskContextAdapter( taskContext );
-            m_configurer.configure( task, taskModel, context );
+            m_configurer.configure( task, taskModel, taskContext );
         }
         catch( final Throwable throwable )
         {

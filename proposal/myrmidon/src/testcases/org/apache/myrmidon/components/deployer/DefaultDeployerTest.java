@@ -7,21 +7,19 @@
  */
 package org.apache.myrmidon.components.deployer;
 
+import java.io.File;
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.framework.DataType;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
-import org.apache.myrmidon.interfaces.type.TypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
-import org.apache.aut.converter.ConverterException;
-import org.apache.aut.converter.Converter;
-import java.io.File;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
 
 /**
  * Test cases for the default deployer.
@@ -37,7 +35,7 @@ public class DefaultDeployerTest
 
     private Deployer m_deployer;
     private RoleManager m_roleManager;
-    private MasterConverter m_converter;
+    private Converter m_converter;
 
     public DefaultDeployerTest( final String name )
     {
@@ -52,7 +50,7 @@ public class DefaultDeployerTest
     {
         super.setUp();
         m_deployer = (Deployer)getServiceManager().lookup( Deployer.ROLE );
-        m_converter = (MasterConverter)getServiceManager().lookup( MasterConverter.ROLE );
+        m_converter = (Converter)getServiceManager().lookup( Converter.ROLE );
 
         // Add some core roles
         m_roleManager = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );

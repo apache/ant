@@ -15,14 +15,14 @@ import java.util.List;
  *
  * @author Adam Murdoch
  */
-public class ConfigTest2
+public class ConfigTestObjectProps
 {
-    ConfigTest1 m_prop;
+    ConfigTestStringProps m_prop;
     List m_propList = new ArrayList();
 
     public boolean equals( Object obj )
     {
-        ConfigTest2 test = (ConfigTest2)obj;
+        ConfigTestObjectProps test = (ConfigTestObjectProps)obj;
         if( !DefaultConfigurerTest.equals( m_prop, test.m_prop ) )
         {
             return false;
@@ -34,12 +34,12 @@ public class ConfigTest2
         return true;
     }
 
-    public void setProp( final ConfigTest1 test )
+    public void setProp( final ConfigTestStringProps test )
     {
         m_prop = test;
     }
 
-    public void addAnotherProp( final ConfigTest1 test )
+    public void addAnotherProp( final ConfigTestStringProps test )
     {
         m_propList.add( test );
     }

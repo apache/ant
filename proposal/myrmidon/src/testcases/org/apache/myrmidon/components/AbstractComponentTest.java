@@ -29,9 +29,9 @@ import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeException;
@@ -83,7 +83,7 @@ public abstract class AbstractComponentTest
         List components = new ArrayList();
 
         Object component = new DefaultMasterConverter();
-        m_serviceManager.put( MasterConverter.ROLE, component );
+        m_serviceManager.put( Converter.ROLE, component );
         components.add( component );
 
         component = new DefaultConverterRegistry();
@@ -138,6 +138,29 @@ public abstract class AbstractComponentTest
         }
     }
 
+    /**
+     * Utility method to register a role.
+     */
+    protected void registerRole( final RoleInfo roleInfo )
+        throws Exception
+    {
+        RoleManager roleMgr = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
+        roleMgr.addRole( roleInfo );
+    }
+
+    /**
+     * Utility method to register a type.
+     */
+    protected void registerType( final Class roleType,
+                                 final String typeName,
+                                 final Class type )
+        throws Exception
+    {
+        final ClassLoader loader = getClass().getClassLoader();
+        final DefaultTypeFactory factory = new DefaultTypeFactory( loader );
+        factory.addNameClassMapping( typeName, type.getName() );
+        getTypeManager().registerType( roleType, typeName, factory );
+    }
 
     /**
      * Utility method to register a Converter.

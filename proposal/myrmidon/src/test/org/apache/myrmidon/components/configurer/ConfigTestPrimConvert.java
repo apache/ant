@@ -14,24 +14,24 @@ import org.apache.myrmidon.components.AbstractComponentTest;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class ConfigTest10
+public class ConfigTestPrimConvert
 {
     private int m_intProp;
     private Integer m_integerProp;
 
-    public void setIntProp( int intProp )
+    public void setIntProp( final int intProp )
     {
         m_intProp = intProp;
     }
 
-    public void setIntegerProp( Integer integerProp )
+    public void setIntegerProp( final Integer integerProp )
     {
         m_integerProp = integerProp;
     }
 
     public boolean equals( Object obj )
     {
-        ConfigTest10 test = (ConfigTest10)obj;
+        ConfigTestPrimConvert test = (ConfigTestPrimConvert)obj;
         if( m_intProp != test.m_intProp )
         {
             return false;

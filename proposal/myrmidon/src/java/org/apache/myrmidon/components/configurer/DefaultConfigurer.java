@@ -9,22 +9,21 @@ package org.apache.myrmidon.components.configurer;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Resolvable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.myrmidon.api.Context;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
@@ -44,7 +43,7 @@ public class DefaultConfigurer
         ResourceManager.getPackageResources( DefaultConfigurer.class );
 
     ///Converter to use for converting between values
-    private MasterConverter m_converter;
+    private Converter m_converter;
 
     //TypeManager to use to create types in typed adders
     private TypeManager m_typeManager;
@@ -59,7 +58,7 @@ public class DefaultConfigurer
     public void service( final ServiceManager serviceManager )
         throws ServiceException
     {
-        m_converter = (MasterConverter)serviceManager.lookup( MasterConverter.ROLE );
+        m_converter = (Converter)serviceManager.lookup( Converter.ROLE );
         m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
         m_roleManager = (RoleManager)serviceManager.lookup( RoleManager.ROLE );
     }
@@ -140,7 +139,7 @@ public class DefaultConfigurer
                 {
                     final String message =
                         REZ.getString( "no-such-attribute.error", elemName, name );
-                    throw new ReportableConfigurationException( message, nspe );
+                    throw new ReportableConfigurationException( message );
                 }
                 catch( final Exception ce )
                 {
@@ -187,7 +186,7 @@ public class DefaultConfigurer
                 {
                     final String message =
                         REZ.getString( "no-such-element.error", elemName, name );
-                    throw new ReportableConfigurationException( message, nspe );
+                    throw new ReportableConfigurationException( message );
                 }
                 catch( final ReportableConfigurationException ce )
                 {
@@ -349,26 +348,29 @@ public class DefaultConfigurer
             = getConfigurerFromName( state.getConfigurer(), name, false );
 
         // Resolve any props in the id
-        Object id = PropertyUtil.resolveProperty( unresolvedId, context, false );
+        String id = context.resolveValue( unresolvedId ).toString();
 
         // Locate the referenced object
-        Object ref = null;
-        try
-        {
-            ref = context.get( id );
-        }
-        catch( final ContextException e )
+        Object ref = context.getProperty( id );
+        if( ref == null )
         {
             final String message = REZ.getString( "unknown-reference.error", id );
-            throw new ConfigurationException( message, e );
+            throw new ConfigurationException( message );
         }
 
-        // Check the types
+        // Convert the object, if necessary
         final Class type = childConfigurer.getType();
         if( !type.isInstance( ref ) )
         {
-            final String message = REZ.getString( "mismatch-ref-types.error", id, type.getName(), ref.getClass().getName() );
-            throw new ConfigurationException( message );
+            try
+            {
+                ref = m_converter.convert( type, ref, context );
+            }
+            catch( ConverterException e )
+            {
+                final String message = REZ.getString( "mismatch-ref-types.error", id, name );
+                throw new ConfigurationException( message, e );
+            }
         }
 
         // Set the child element
@@ -408,17 +410,14 @@ public class DefaultConfigurer
         throws Exception
     {
         // Resolve property references in the attribute value
-        Object objValue = PropertyUtil.resolveProperty( value, context, false );
+        Object objValue = context.resolveValue( value );
 
         // Convert the value to the appropriate type
-
-        Object converterContext = context;
-        if( context instanceof Resolvable )
+        final Class type = setter.getType();
+        if( ! type.isInstance( objValue ) )
         {
-            converterContext = ( (Resolvable)context ).resolve( context );
+            objValue = m_converter.convert( type, objValue, context );
         }
-        final Class clazz = setter.getType();
-        objValue = m_converter.convert( clazz, objValue, converterContext );
 
         // Set the value
         setter.addValue( state, objValue );
@@ -451,27 +450,38 @@ public class DefaultConfigurer
     {
         final String name = element.getName();
         final Class type = childConfigurer.getType();
-        Object child = childConfigurer.createValue( state );
 
-        if( null == child && Configuration.class == type )
+        if( Configuration.class == type )
         {
             //special case where you have add...(Configuration)
             return element;
         }
-        else if( null == child )
+
+        // Create an instance
+        Object child = childConfigurer.createValue( state );
+        if( null == child )
         {
-            // Create an instance
-            if( type.isInterface() )
+            if( childConfigurer == state.getConfigurer().getTypedProperty() )
             {
-                child = createdTypedObject( name, type );
+                // Typed property
+                child = createTypedObject( name, type );
             }
             else
             {
-                child = createObject( type );
+                // Named property
+                child = createNamedObject( type );
             }
         }
 
+        // Configure the object
         configureObject( child, element, context );
+
+        // Convert the object, if necessary
+        if( ! type.isInstance( child ) )
+        {
+            child = m_converter.convert( type, child, context );
+        }
+
         return child;
     }
 
@@ -521,38 +531,61 @@ public class DefaultConfigurer
     }
 
     /**
-     * Utility method to create an instance of the
-     * specified type that satisfies supplied interface.
+     * Creates an instance for a named property.
      */
-    private Object createdTypedObject( final String name,
-                                       final Class type )
+    private Object createNamedObject( final Class type )
         throws Exception
     {
-        // Attempt to create the object
-        final Object obj;
-        try
-        {
-            final TypeFactory factory = m_typeManager.getFactory( DataType.class );
-            obj = factory.create( name );
-        }
-        catch( final Exception e )
-        {
-            final String message =
-                REZ.getString( "create-typed-object.error",
-                               name,
-                               type.getName() );
-            throw new ConfigurationException( message, e );
+        // Map the expected type to a role.  If found, instantiate the default
+        // type for that role
+        final RoleInfo roleInfo = m_roleManager.getRoleByType( type );
+        if( roleInfo != null ) {
+            final String typeName = roleInfo.getDefaultType();
+            if( typeName != null )
+            {
+                // Create the instance
+                final TypeFactory factory = m_typeManager.getFactory( roleInfo.getType() );
+                return factory.create( typeName );
+            }
         }
 
-        // Check the types
-        if( !type.isInstance( obj ) )
+        if( type.isInterface() )
         {
-            final String message =
-                REZ.getString( "mismatched-typed-object.error", name, type.getName() );
+            // An interface - don't know how to instantiate it
+            final String message = REZ.getString( "instantiate-interface.error", type.getName() );
             throw new ConfigurationException( message );
         }
 
-        return obj;
+        // Use the no-args constructor
+        return createObject( type );
+    }
+
+    /**
+     * Creates an instance of the typed property.
+     */
+    private Object createTypedObject( final String name,
+                                      final Class type )
+        throws Exception
+    {
+        // Map the expected type to a role.  If found, attempt to create
+        // an instance
+        final RoleInfo roleInfo = m_roleManager.getRoleByType( type );
+        if( roleInfo != null )
+        {
+            final TypeFactory factory = m_typeManager.getFactory( roleInfo.getType() );
+            if( factory.canCreate( name ) )
+            {
+                return factory.create( name );
+            }
+        }
+
+        // Use the generic 'data-type' role.
+        final TypeFactory factory = m_typeManager.getFactory( DataType.class );
+        if( ! factory.canCreate( name ) )
+        {
+            throw new NoSuchPropertyException();
+        }
+        return factory.create( name );
     }
 
     /**

@@ -88,7 +88,7 @@ public class Script extends AbstractTask
     {
         try
         {
-            addBeans( getContext().getPropertys() );
+            addBeans( getContext().getProperties() );
             //In Ant2 there is no difference between properties and references
             //addBeans( getProject().getReferences() );
 

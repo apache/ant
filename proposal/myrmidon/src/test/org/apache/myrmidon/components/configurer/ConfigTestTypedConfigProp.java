@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.configurer;
 
 import java.util.ArrayList;
-import junit.framework.AssertionFailedError;
 import org.apache.avalon.framework.configuration.Configuration;
 
 /**
@@ -17,7 +16,7 @@ import org.apache.avalon.framework.configuration.Configuration;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ConfigTest7
+public class ConfigTestTypedConfigProp
 {
     private ArrayList m_configurations = new ArrayList();
 
@@ -28,7 +27,7 @@ public class ConfigTest7
 
     public boolean equals( final Object object )
     {
-        final ConfigTest7 other = (ConfigTest7)object;
+        final ConfigTestTypedConfigProp other = (ConfigTestTypedConfigProp)object;
         return m_configurations.equals( other.m_configurations );
     }
 }

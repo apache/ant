@@ -5,15 +5,15 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.configurer;
+package org.apache.myrmidon.components.workspace;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
+import org.apache.myrmidon.api.Context;
+import org.apache.myrmidon.api.TaskException;
 
 /**
- * Utility class to evaluate propertys.
+ * Utility class to evaluate properties.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
@@ -33,14 +33,14 @@ public final class PropertyUtil
      *
      * @param property the property to resolve
      * @param context the context in which to resolve property
-     * @param ignoreUndefined if false will throw an PropertyException if property is not found
+     * @param ignoreUndefined if false will throw an TaskException if property is not found
      * @return the reolved property
-     * @exception PropertyException if an error occurs
+     * @exception TaskException if an error occurs
      */
     public static Object resolveProperty( final String property,
                                           final Context context,
                                           final boolean ignoreUndefined )
-        throws PropertyException
+        throws TaskException
     {
         int start = findBeginning( property, 0 );
         if( -1 == start )
@@ -94,14 +94,14 @@ public final class PropertyUtil
      *
      * @param property the property to resolve
      * @param context the context in which to resolve property
-     * @param ignoreUndefined if false will throw an PropertyException if property is not found
+     * @param ignoreUndefined if false will throw an TaskException if property is not found
      * @return the reolved property
-     * @exception PropertyException if an error occurs
+     * @exception TaskException if an error occurs
      */
     public static Object recursiveResolveProperty( final String property,
                                                    final Context context,
                                                    final boolean ignoreUndefined )
-        throws PropertyException
+        throws TaskException
     {
         int start = findBeginning( property, 0 );
         if( -1 == start )
@@ -156,21 +156,21 @@ public final class PropertyUtil
     }
 
     private static int findEnding( final String property, final int currentPosition )
-        throws PropertyException
+        throws TaskException
     {
         //TODO: Check if it is commented out
         final int index = property.indexOf( '}', currentPosition );
         if( -1 == index )
         {
             final String message = REZ.getString( "prop.mismatched-braces.error" );
-            throw new PropertyException( message );
+            throw new TaskException( message );
         }
 
         return index;
     }
 
     private static int findNestedEnding( final String property, final int currentPosition )
-        throws PropertyException
+        throws TaskException
     {
         final int length = property.length();
         final int start = currentPosition + 2;
@@ -204,42 +204,36 @@ public final class PropertyUtil
         }
 
         final String message = REZ.getString( "prop.mismatched-braces.error" );
-        throw new PropertyException( message );
+        throw new TaskException( message );
     }
 
     /**
      * Retrieve a value from the specified context using the specified key.
      * If there is no such value and ignoreUndefined is not false then a
-     * PropertyException is generated.
+     * TaskException is generated.
      *
      * @param key the key of value in context
      * @param context the Context
      * @param ignoreUndefined true if undefined variables are ignored
      * @return the object retrieved from context
-     * @exception PropertyException if an error occurs
+     * @exception TaskException if an error occurs
      */
     private static Object resolveValue( final String key,
                                         final Context context,
                                         final boolean ignoreUndefined )
-        throws PropertyException
+        throws TaskException
     {
-        try
+        final Object value = context.getProperty( key );
+        if( value != null )
         {
-            return context.get( key );
+            return value;
         }
-        catch( final ContextException ce )
+        if( ignoreUndefined )
         {
-            if( ignoreUndefined )
-            {
-                return "";
-            }
-            else
-            {
-                final String message =
-                    REZ.getString( "prop.missing-value.error", key );
-                throw new PropertyException( message );
-            }
+            return "";
         }
+        final String message = REZ.getString( "prop.missing-value.error", key );
+        throw new TaskException( message );
     }
 }
 

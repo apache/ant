@@ -261,7 +261,7 @@ public class DefaultDeployer
         final String name = roleDef.getShortHand();
         final String role = roleDef.getRoleName();
         final Class type = deployment.getClassLoader().loadClass( role );
-        final RoleInfo roleInfo = new RoleInfo( role, name, type );
+        final RoleInfo roleInfo = new RoleInfo( role, name, type, null );
         m_roleManager.addRole( roleInfo );
 
         if( getLogger().isDebugEnabled() )

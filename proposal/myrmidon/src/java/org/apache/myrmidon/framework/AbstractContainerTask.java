@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.framework;
 
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -14,15 +16,11 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.converter.Converter;
-import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -37,7 +35,7 @@ public abstract class AbstractContainerTask
         ResourceManager.getPackageResources( AbstractContainerTask.class );
 
     ///For converting own attributes
-    private MasterConverter m_converter;
+    private Converter m_converter;
 
     ///For configuring own sub-elements
     private Configurer m_configurer;
@@ -55,7 +53,7 @@ public abstract class AbstractContainerTask
     {
         super.contextualize( context );
         m_configurer = (Configurer)getService( Configurer.class );
-        m_converter = (MasterConverter)getService( MasterConverter.class );
+        m_converter = (Converter)getService( Converter.class );
         m_executor = (Executor)getService( Executor.class );
     }
 
@@ -91,8 +89,7 @@ public abstract class AbstractContainerTask
     protected final void configure( final Object object, final Configuration element )
         throws ConfigurationException
     {
-        final TaskContextAdapter context = new TaskContextAdapter( getContext() );
-        getConfigurer().configure( object, element, context );
+        getConfigurer().configure( object, element, getContext() );
     }
 
     /**
@@ -106,8 +103,7 @@ public abstract class AbstractContainerTask
     protected final void configure( final Object object, final String name, final String value )
         throws ConfigurationException
     {
-        final TaskContextAdapter context = new TaskContextAdapter( getContext() );
-        getConfigurer().configure( object, name, value, context );
+        getConfigurer().configure( object, name, value, getContext() );
     }
 
     /**

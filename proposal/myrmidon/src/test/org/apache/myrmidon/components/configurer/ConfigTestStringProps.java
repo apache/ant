@@ -9,13 +9,15 @@ package org.apache.myrmidon.components.configurer;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.myrmidon.framework.DataType;
 
 /**
- * A simple test class.
+ * A simple test class with string properties.
  *
  * @author Adam Murdoch
  */
-public class ConfigTest1
+public class ConfigTestStringProps
+    implements DataType
 {
     private String m_someProp;
     private List m_propList = new ArrayList();
@@ -23,7 +25,7 @@ public class ConfigTest1
 
     public boolean equals( final Object obj )
     {
-        final ConfigTest1 test = (ConfigTest1)obj;
+        final ConfigTestStringProps test = (ConfigTestStringProps)obj;
         if( !DefaultConfigurerTest.equals( m_someProp, test.m_someProp ) )
         {
             return false;

@@ -1,6 +1,6 @@
 <services version="1.0">
-    <exec-manager factory="org.apache.myrmidon.framework.factorys.ExecManagerFactory"/>
-    <file-system-manager factory="org.apache.myrmidon.framework.factorys.VfsManagerFactory">
+    <exec-manager factory="org.apache.myrmidon.framework.factories.ExecManagerFactory"/>
+    <file-system-manager factory="org.apache.myrmidon.framework.factories.VfsManagerFactory">
         <provider scheme="zip" classname="org.apache.aut.vfs.provider.zip.ZipFileSystemProvider"/>
         <provider scheme="jar" classname="org.apache.aut.vfs.provider.zip.ZipFileSystemProvider"/>
         <provider scheme="smb" classname="org.apache.aut.vfs.provider.smb.SmbFileSystemProvider"/>

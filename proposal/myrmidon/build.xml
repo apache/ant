@@ -455,11 +455,11 @@ Legal:
     </jar>
 
     <junit printsummary="on"
-           fork="true">
+           fork="false">
       <formatter type="brief" usefile="false"/>
       <classpath>
           <fileset dir="${test.working.dir}/dist/bin/lib" includes="**/*.jar"/>
-          <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl"/>
+          <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl" excludes="crimson.jar"/>
       </classpath>
       <classpath location="${test.classes}"/>
 

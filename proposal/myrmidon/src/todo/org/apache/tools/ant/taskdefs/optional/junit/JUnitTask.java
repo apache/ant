@@ -617,7 +617,7 @@ public class JUnitTask extends AbstractTask
         // Create a temporary file to pass the Ant properties to the forked test
         File propsFile = new File( "junit" + ( new Random( System.currentTimeMillis() ) ).nextLong() + ".properties" );
         cmd.addArgument( "propsfile=" + propsFile.getAbsolutePath() );
-        Map p = getContext().getPropertys();
+        Map p = getContext().getProperties();
         Properties props = new Properties();
         for( Iterator enum = p.keySet().iterator(); enum.hasNext(); )
         {
@@ -663,7 +663,7 @@ public class JUnitTask extends AbstractTask
     private int executeInVM( JUnitTest test )
         throws TaskException
     {
-        test.setProperties( getContext().getPropertys() );
+        test.setProperties( getContext().getProperties() );
         if( dir != null )
         {
             getLogger().warn( "dir attribute ignored if running in the same VM" );

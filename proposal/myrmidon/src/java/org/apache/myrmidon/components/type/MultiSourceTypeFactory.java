@@ -14,7 +14,7 @@ import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 
 /**
- * This factory acts as a proxy to set of object factorys.
+ * This factory acts as a proxy to set of object factories.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
@@ -29,9 +29,9 @@ public class MultiSourceTypeFactory
     private final MultiSourceTypeFactory m_parent;
 
     ///Map of name->factory list
-    private final HashMap m_factorys = new HashMap();
+    private final HashMap m_factories = new HashMap();
 
-    ///Type expected to be created from factorys
+    ///Type expected to be created from factories
     private final Class m_type;
 
     public MultiSourceTypeFactory( final Class type )
@@ -51,7 +51,7 @@ public class MultiSourceTypeFactory
      */
     public void register( final String name, final TypeFactory factory )
     {
-        m_factorys.put( name, factory );
+        m_factories.put( name, factory );
     }
 
     /**
@@ -118,6 +118,6 @@ public class MultiSourceTypeFactory
 
     protected final TypeFactory getTypeFactory( final String name )
     {
-        return (TypeFactory)m_factorys.get( name );
+        return (TypeFactory)m_factories.get( name );
     }
 }

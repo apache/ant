@@ -8,7 +8,6 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import java.util.Map;
 import org.apache.avalon.framework.Enum;
 
 /**
@@ -21,6 +20,7 @@ import org.apache.avalon.framework.Enum;
  * @version $Revision$ $Date$
  */
 public interface TaskContext
+    extends Context
 {
     //these values are used when setting properties to indicate the scope at
     //which properties are set
@@ -71,33 +71,6 @@ public interface TaskContext
      */
     File resolveFile( String filename )
         throws TaskException;
-
-    /**
-     * Resolve a value according to the context.
-     * This involves evaluating the string and thus removing
-     * ${} sequences according to the rules specified at
-     * ............
-     *
-     * @param value the value to resolve
-     * @return the resolved value
-     */
-    Object resolveValue( String value )
-        throws TaskException;
-
-    /**
-     * Retrieve property for name.
-     *
-     * @param name the name of property
-     * @return the value of property
-     */
-    Object getProperty( String name );
-
-    /**
-     * Retrieve a copy of all the properties accessible via context.
-     *
-     * @return the map of all property names to values
-     */
-    Map getPropertys();
 
     /**
      * Set property value in current context.

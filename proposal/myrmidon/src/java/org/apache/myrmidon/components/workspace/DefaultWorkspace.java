@@ -59,7 +59,7 @@ public class DefaultWorkspace
     private ServiceManager m_serviceManager;
     private Parameters m_parameters;
     private TaskContext m_baseContext;
-    private HashMap m_entrys = new HashMap();
+    private HashMap m_entries = new HashMap();
     private TypeManager m_typeManager;
     private Deployer m_deployer;
     private Hierarchy m_hierarchy;
@@ -279,7 +279,7 @@ public class DefaultWorkspace
     private ProjectEntry getProjectEntry( final Project project )
         throws TaskException
     {
-        ProjectEntry entry = (ProjectEntry)m_entrys.get( project );
+        ProjectEntry entry = (ProjectEntry)m_entries.get( project );
 
         if( null == entry )
         {
@@ -287,7 +287,7 @@ public class DefaultWorkspace
             {
                 final ExecutionFrame frame = createExecutionFrame( project );
                 entry = new ProjectEntry( project, frame );
-                m_entrys.put( project, entry );
+                m_entries.put( project, entry );
             }
             catch( Exception e )
             {

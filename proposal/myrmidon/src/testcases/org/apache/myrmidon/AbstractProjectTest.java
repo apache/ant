@@ -50,6 +50,9 @@ public class AbstractProjectTest
     {
         if( m_embeddor == null )
         {
+            // Need to set the context classloader - The default embeddor uses it
+            Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
+
             final Logger logger = createLogger();
             m_embeddor = new DefaultEmbeddor();
             m_embeddor.enableLogging( logger );

@@ -8,10 +8,7 @@
 package org.apache.myrmidon.components.configurer;
 
 import java.util.ArrayList;
-import junit.framework.AssertionFailedError;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
  * Simple class to test adder for Configurations.
@@ -19,20 +16,18 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ConfigTest9
-    implements Configurable
+public class ConfigTestConfigProps
 {
-    private Configuration m_configuration;
+    private ArrayList m_configurations = new ArrayList();
 
-    public void configure( Configuration configuration )
-        throws ConfigurationException
+    public void addConfig( final Configuration configuration )
     {
-        m_configuration = configuration;
+        m_configurations.add( configuration );
     }
 
     public boolean equals( final Object object )
     {
-        final ConfigTest9 other = (ConfigTest9)object;
-        return m_configuration == other.m_configuration;
+        final ConfigTestConfigProps other = (ConfigTestConfigProps)object;
+        return m_configurations.equals( other.m_configurations );
     }
 }

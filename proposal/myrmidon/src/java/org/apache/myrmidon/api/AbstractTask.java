@@ -37,8 +37,7 @@ public abstract class AbstractTask
     /**
      * Execute task.
      * This method is called to perform actual work associated with task.
-     * It is called after Task has been Configured and Initialized and before
-     * beig Disposed (If task implements appropriate interfaces).
+     * It is called after Task has been configured.
      *
      * @exception TaskException if an error occurs
      */

@@ -8,8 +8,6 @@
 package org.apache.myrmidon.components.configurer;
 
 import java.util.ArrayList;
-import junit.framework.AssertionFailedError;
-import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  * Simple class to test typed adder.
@@ -17,7 +15,7 @@ import org.apache.avalon.framework.configuration.Configuration;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ConfigTest6
+public class ConfigTestTypedProp
 {
     private ArrayList m_roles = new ArrayList();
 
@@ -28,7 +26,7 @@ public class ConfigTest6
 
     public boolean equals( final Object object )
     {
-        final ConfigTest6 other = (ConfigTest6)object;
+        final ConfigTestTypedProp other = (ConfigTestTypedProp)object;
         return m_roles.equals( other.m_roles );
     }
 }

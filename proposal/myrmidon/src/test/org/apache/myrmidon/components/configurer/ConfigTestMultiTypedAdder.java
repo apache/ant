@@ -7,17 +7,15 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-import java.util.ArrayList;
-import junit.framework.AssertionFailedError;
-import org.apache.avalon.framework.configuration.Configuration;
+
 
 /**
- * Simple class to test typed adder.
+ * Simple class with more than one typed adder method.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ConfigTest5
+public class ConfigTestMultiTypedAdder
 {
     public void add( final MyRole1 role1 )
     {

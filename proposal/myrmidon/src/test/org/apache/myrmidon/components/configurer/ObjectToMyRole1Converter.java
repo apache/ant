@@ -9,24 +9,24 @@ package org.apache.myrmidon.components.configurer;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
-import org.apache.avalon.framework.context.Context;
 
 /**
- * Converts from a string to a {@link MyRole1} implementation.
+ * Converts from Object to MyRole1.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
-public class StringToMyRole1Converter
+public class ObjectToMyRole1Converter
     extends AbstractConverter
 {
-    public StringToMyRole1Converter()
+    public ObjectToMyRole1Converter()
     {
-        super( String.class, MyRole1.class );
+        super( Object.class, MyRole1.class );
     }
 
     protected Object convert( Object original, Object context )
         throws ConverterException
     {
-        return new MyType1();
+        return new MyRole1Adaptor( original );
     }
 }

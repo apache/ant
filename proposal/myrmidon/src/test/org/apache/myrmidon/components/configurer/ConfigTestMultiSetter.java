@@ -15,15 +15,15 @@ import junit.framework.AssertionFailedError;
  *
  * @author Adam Murdoch
  */
-public class ConfigTest3
+public class ConfigTestMultiSetter
 {
-    private ConfigTest1 m_prop1;
-    private ConfigTest1 m_prop2;
+    private ConfigTestStringProps m_prop1;
+    private ConfigTestStringProps m_prop2;
     private ArrayList m_prop3 = new ArrayList();
 
     public boolean equals( Object obj )
     {
-        ConfigTest3 test = (ConfigTest3)obj;
+        ConfigTestMultiSetter test = (ConfigTestMultiSetter)obj;
         if( !DefaultConfigurerTest.equals( m_prop1, test.m_prop1 ) )
         {
             return false;
@@ -48,7 +48,7 @@ public class ConfigTest3
         throw new AssertionFailedError();
     }
 
-    public void setProp1( final ConfigTest1 value )
+    public void setProp1( final ConfigTestStringProps value )
     {
         m_prop1 = value;
     }
@@ -62,7 +62,7 @@ public class ConfigTest3
         throw new AssertionFailedError();
     }
 
-    public void setProp2( final ConfigTest1 value )
+    public void setProp2( final ConfigTestStringProps value )
     {
         m_prop2 = value;
     }
@@ -76,7 +76,7 @@ public class ConfigTest3
         throw new AssertionFailedError();
     }
 
-    public void addProp3( final ConfigTest1 value )
+    public void addProp3( final ConfigTestStringProps value )
     {
         m_prop3.add( value );
     }

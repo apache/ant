@@ -20,6 +20,7 @@ public final class RoleInfo
     private final String m_name;
     private final String m_shorthand;
     private final Class m_type;
+    private final String m_defaultType;
 
     /**
      * Creates a role definition.
@@ -28,9 +29,7 @@ public final class RoleInfo
      */
     public RoleInfo( final String name )
     {
-        m_name = name;
-        m_shorthand = null;
-        m_type = null;
+        this( name, null, null, null );
     }
 
     /**
@@ -41,9 +40,7 @@ public final class RoleInfo
      */
     public RoleInfo( final String name, final String shorthand )
     {
-        m_name = name;
-        m_shorthand = shorthand;
-        m_type = null;
+        this( name, shorthand, null, null );
     }
 
     /**
@@ -55,9 +52,7 @@ public final class RoleInfo
      */
     public RoleInfo( final String name, final String shorthand, final Class type )
     {
-        m_name = name;
-        m_shorthand = shorthand;
-        m_type = type;
+        this( name, shorthand, type, null );
     }
 
     /**
@@ -66,9 +61,21 @@ public final class RoleInfo
      */
     public RoleInfo( final String shorthand, final Class type )
     {
-        m_name = type.getName();
+        this( type.getName(), shorthand, type, null );
+    }
+
+    /**
+     * Creates a role definition.
+     */
+    public RoleInfo( final String name,
+                     final String shorthand,
+                     final Class type,
+                     final String defaultType )
+    {
+        m_name = name;
         m_shorthand = shorthand;
         m_type = type;
+        m_defaultType = defaultType;
     }
 
     /**
@@ -126,5 +133,15 @@ public final class RoleInfo
     public Class getType()
     {
         return m_type;
+    }
+
+    /**
+     * Returns the name of the default implementation of this role.
+     *
+     * @return The default type name, or null if this role has no default type.
+     */
+    public String getDefaultType()
+    {
+        return m_defaultType;
     }
 }

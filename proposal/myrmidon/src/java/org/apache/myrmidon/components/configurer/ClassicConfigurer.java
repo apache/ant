@@ -10,20 +10,21 @@ package org.apache.myrmidon.components.configurer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.aut.converter.ConverterException;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.myrmidon.api.Context;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.converter.MasterConverter;
 
 /**
  * Class used to configure tasks.
@@ -41,12 +42,12 @@ public class ClassicConfigurer
     private static final boolean DEBUG = false;
 
     ///Converter to use for converting between values
-    private MasterConverter m_converter;
+    private Converter m_converter;
 
     public void service( final ServiceManager serviceManager )
         throws ServiceException
     {
-        m_converter = (MasterConverter)serviceManager.lookup( MasterConverter.ROLE );
+        m_converter = (Converter)serviceManager.lookup( Converter.ROLE );
     }
 
     /**
@@ -216,16 +217,14 @@ public class ClassicConfigurer
     {
         try
         {
-            final Object objectValue =
-                PropertyUtil.resolveProperty( value, context, false );
-
+            final Object objectValue = context.resolveValue( value );
             setValue( object, objectValue, methods, context );
         }
-        catch( final PropertyException pe )
+        catch( final TaskException te )
         {
             final String message =
                 REZ.getString( "bad-property-resolve.error", value );
-            throw new ConfigurationException( message, pe );
+            throw new ConfigurationException( message, te );
         }
     }
 
