@@ -1439,6 +1439,12 @@ public class Javadoc extends Task {
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
 
+        if (packageList != null && sourcePath == null) {
+            String msg = "sourcePath attribute must be set when "
+                + "specifying packagelist.";
+            throw new BuildException(msg);
+        }
+
         if (sourcePath != null) {
             sourceDirs.addExisting(sourcePath);
         }
@@ -1454,7 +1460,8 @@ public class Javadoc extends Task {
         Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
         addFileSets(sourceFilesToDoc);
 
-        if (packagesToDoc.size() == 0 && sourceFilesToDoc.size() == 0) {
+        if (packageList == null && packagesToDoc.size() == 0 
+            && sourceFilesToDoc.size() == 0) {
             throw new BuildException("No source files and no packages have "
                                      + "been specified.");
         }

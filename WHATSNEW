@@ -39,6 +39,8 @@ Fixed bugs:
 * <javac>'s sourcepath setting has been ignored by some compiler 
   implementations.
 
+* <javadoc>'s packagelist attribute didn't work.
+
 Other changes:
 --------------
 
