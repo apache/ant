@@ -167,7 +167,6 @@ public class PropertyHelper {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -190,13 +189,8 @@ public class PropertyHelper {
         if (name.startsWith("toString:")) {
             name = name.substring("toString:".length());
             Object v = project.getReference(name);
-            if (v == null) {
-                return null;
-            }
-            return v.toString();
+            return (v == null) ? null : v.toString();
         }
-
-
         return null;
     }
 
@@ -249,13 +243,11 @@ public class PropertyHelper {
      * @return the original string with the properties replaced, or
      *         <code>null</code> if the original string is <code>null</code>.
      */
-    public String replaceProperties(String ns, String value,
-                                    Hashtable keys)
+    public String replaceProperties(String ns, String value, Hashtable keys)
             throws BuildException {
         if (value == null) {
             return null;
         }
-
         Vector fragments = new Vector();
         Vector propertyRefs = new Vector();
         parsePropertyString(value, fragments, propertyRefs);
@@ -280,8 +272,8 @@ public class PropertyHelper {
                 }
 
                 if (replacement == null) {
-                    project.log("Property ${" + propertyName
-                            + "} has not been set", Project.MSG_VERBOSE);
+                    project.log("Property \"" + propertyName
+                            + "\" has not been set", Project.MSG_VERBOSE);
                 }
                 fragment = (replacement != null)
                         ? replacement.toString()
@@ -289,7 +281,6 @@ public class PropertyHelper {
             }
             sb.append(fragment);
         }
-
         return sb.toString();
     }
 
@@ -312,8 +303,8 @@ public class PropertyHelper {
         // user (CLI) properties take precedence
         if (null != userProperties.get(name)) {
             if (verbose) {
-                project.log("Override ignored for user property " + name,
-                        Project.MSG_VERBOSE);
+                project.log("Override ignored for user property \"" + name
+                    + "\"", Project.MSG_VERBOSE);
             }
             return false;
         }
@@ -324,8 +315,8 @@ public class PropertyHelper {
         }
 
         if (null != properties.get(name) && verbose) {
-            project.log("Overriding previous definition of property " + name,
-                    Project.MSG_VERBOSE);
+            project.log("Overriding previous definition of property \"" + name
+                + "\"", Project.MSG_VERBOSE);
         }
 
         if (verbose) {
@@ -351,8 +342,8 @@ public class PropertyHelper {
     public synchronized void setNewProperty(String ns, String name,
                                             Object value) {
         if (null != properties.get(name)) {
-            project.log("Override ignored for property " + name,
-                    Project.MSG_VERBOSE);
+            project.log("Override ignored for property \"" + name
+                + "\"", Project.MSG_VERBOSE);
             return;
         }
 
