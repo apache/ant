@@ -401,7 +401,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             else {
                 // Log that the file is up to date...
                 log(jarFile.toString() + " is up to date.",
-                              Project.MSG_INFO);
+                              Project.MSG_VERBOSE);
             }
 
         }
