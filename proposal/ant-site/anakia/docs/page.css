@@ -19,6 +19,7 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 .dida { font-size: 60%; }
 
 .pre { white-space: pre;}
+.nowrap { white-space: nowrap;}
 
 .content { padding: 5px 5px 5px 10px;  font : small;  font-size : 90%; }
 .content .ForrestTable { width: 100%; background-color: #7099C5; color: #ffffff; font-size : 90%;}
