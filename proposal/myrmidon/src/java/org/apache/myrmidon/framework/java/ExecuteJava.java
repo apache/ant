@@ -231,7 +231,7 @@ public class ExecuteJava
         }
 
         // Locate the class
-        final Class target;
+        Class target;
         try
         {
             final ClassLoader classLoader = PathUtil.createClassLoader( m_classPath, context );
