@@ -84,8 +84,7 @@ public class DefaultMasterConverter
             Converter converter = (Converter)m_converters.get( name );
             if( converter == null )
             {
-                final TypeFactory factory = m_typeManager.getFactory( Converter.ROLE );
-                converter = (Converter)factory.create( name );
+                converter = createConverter( name );
                 m_converters.put( name, converter );
             }
 
@@ -109,6 +108,20 @@ public class DefaultMasterConverter
                                                   destination.getName() );
             throw new ConverterException( message, e );
         }
+    }
+
+    /**
+     * Create an instance of converter with specified name.
+     *
+     * @param name the name of converter
+     * @return the created converter instance
+     * @throws Exception if converter can not be created.
+     */
+    private Converter createConverter( final String name )
+        throws Exception
+    {
+        final TypeFactory factory = m_typeManager.getFactory( Converter.ROLE );
+        return (Converter)factory.create( name );
     }
 
     /**
