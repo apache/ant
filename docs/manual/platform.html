@@ -15,9 +15,10 @@
 if you have downloaded this as a tar file.
 </li>
 <li> Ant does not preserve file permissions when a file is copied, moved or 
-archived. Use <tt>&lt;chmod&gt;</tt> to set permissions, and when creating a 
+archived, because Java does not let it read or write the permissions.
+ Use <tt>&lt;chmod&gt;</tt> to set permissions, and when creating a 
 tar archive, use the <tt>mode</tt> attribute of <tt>&lt;tarfileset&gt;</tt>
-to set the permissions in the tar file.
+to set the permissions in the tar file, or &lt;apply&gt; the real tar program.
 </li>
 <li> Ant is not symbolic link aware in moves, deletes and when recursing down a tree
 of directories to build up a list of files. Unexpected things can happen.
@@ -39,6 +40,31 @@ confusing patternsets.
 Ant can often not delete a directory which is open in an Explorer window. 
 There is nothing we can do about this short of spawning a program to kill
 the shell before deleting directories.  
+
+<h2>Cygwin</h2>
+
+Cygwin is not really an operating system; rather it is an application suite 
+running under Windows and providing some UNIX like functionality. AFAIK, Sun did 
+not create any specific Java Development Kit or Java Runtime Environment for 
+cygwin. See this link : 
+<a href="http://www.inonit.com/cygwin/faq/">http://www.inonit.com/cygwin/faq/</a> . 
+Only Windows path 
+names are supported by JDK and JRE tools under Windows or cygwin. Relative path 
+names such as "src/org/apache/tools" are supported, but Java tools do not 
+understand /cygdrive/c to mean c:\.
+<p>
+The utility cygpath (used industrially in the ant script to support cygwin) can 
+convert cygwin path names to Windows.
+You can use the <exec/> task in ant to convert cygwin paths to Windows path, for 
+instance like that :
+<pre>
+&lt;property name=&quot;some.cygwin.path&quot; value=&quot;/cygdrive/h/somepath&quot;/&gt;
+&lt;exec executable=&quot;cygpath&quot; outputproperty=&quot;windows.pathname&quot;&gt;
+   &lt;arg value=&quot;--windows&quot;/&gt;
+   &lt;arg value=&quot;${some.cygwin.path}&quot;/&gt;
+&lt;/exec&gt;
+&lt;echo message=&quot;${windows.pathname}&quot;/&gt;
+</pre>
 
 <h2>Apple MacOS X</h2>
 
