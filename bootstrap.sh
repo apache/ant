@@ -4,6 +4,11 @@ if [ -f $HOME/.antrc ] ; then
   . $HOME/.antrc
 fi
 
+if [ "$ANT_HOME" = "" ] ; then
+  ANT_HOME=`pwd`
+  export ANT_HOME
+fi
+
 SRCDIR=src/main/org/apache/tools
 CLASSDIR=classes
 

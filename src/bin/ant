@@ -43,10 +43,7 @@ if [ ! "$JAVA_HOME" = "" ] ; then
    CLASSPATH=${JAVA_HOME}/lib/classes.zip:$CLASSPATH
 fi
 
-
-CLASSPATH=${ANT_HOME}/lib/xml.jar:$CLASSPATH
 CLASSPATH=${ANT_HOME}/lib/ant.jar:$CLASSPATH
-CLASSPATH=${ANT_HOME}/lib/moo.jar:$CLASSPATH
 export CLASSPATH
 
 $JAVACMD -Dant.home=${ANT_HOME} org.apache.tools.ant.Main $@
