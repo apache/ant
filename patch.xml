@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!--
+  =======================================================================
+    Apache Ant own build file
+
+   Copyright (c) 2003 The Apache Software Foundation.  All rights
+   reserved.
+
+  =======================================================================
+-->
+<project name="create-patch" default="patchpackage" basedir=".">
+    <property environment="env"/>
+    <property name="patch.package" value="patch.tar.gz"/>
+    <property name="patch.file" value="patch.txt"/>
+
+    <condition property="cvs.found">
+      <or>
+        <available file="cvs"     filepath="${env.PATH}"/>
+        <available file="cvs.exe" filepath="${env.PATH}"/>
+        <available file="cvs.exe" filepath="${env.Path}"/>
+      </or>
+    </condition>
+
+    <target name="createpatch" if="cvs.found">
+        <cvs command="-q diff -u" output="${patch.file}"/>
+    </target>
+
+    <target name="newfiles" depends="createpatch">
+        <delete file="${patch.package}"/>
+        <cvs command="-q diff -N" output="${patch.file}.tmp"/>
+        <replace file="${patch.file}.tmp" token="? " value=""/>
+    </target>
+
+    <target name="patchpackage" depends="newfiles">
+        <tar basedir="${basedir}"
+            tarfile="${patch.package}"
+            compression="gzip"
+            includesfile="${patch.file}.tmp"
+            excludes="${patch.file}.tmp"/>
+        <delete file="${patch.file}.tmp"/>
+    </target>
+</project>

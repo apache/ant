@@ -355,12 +355,34 @@ The basic mechanism is to mail it to the dev mailing list.
 It helps to be on this list, as you will see other submissions, and
 any debate about your own submission.
 <p>
-
+You may create your patch file using either of the following approaches.
+The committers recommend you to take the first approach.
+<p>
+<ul>
+<li> <h3>Approach 1 - The Ant Way</h3>
+<p>
+Use Ant to generate a patch file to Ant:
+<pre class="code">
+ant -f patch.xml
+</pre>
+This will create a file named patch.tar.gz that will contain a unified
+diff of files that have been modified and also include files that have
+been added.  Review the file for completeness and correctness.  This approach
+is recommended because it standardizes the way in which patch files are
+constructed.  It also eliminates the chance of you missing to submit new files
+that constitute part of the patch.
+<p>
+<li><h3>Approach 2 - The Manual Way</h3>
+<p>
 Patches to existing files should be generated with
 <code>cvs diff -u filename</code>
  and save the output to a file. If you want to get
 the changes made to multiple files in a directory , just use <code>cvs
-diff -u</code>. The patches should be sent as an attachment to a message titled [PATCH]
+diff -u</code>.  Then, Tar and GZip the patch file as well as any new files
+that you have added.
+</ul>
+<p>
+The patches should be sent as an attachment to a message titled [PATCH]
 and distinctive one-line summary in the subject of the patch. The
 filename/task and the change usually suffices. It's important to include
 the changes as an attachment, as too many mailers reformat the text
