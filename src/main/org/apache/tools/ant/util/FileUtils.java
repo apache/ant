@@ -111,6 +111,11 @@ public class FileUtils {
     private static char[] escapedChar1 = new char[256];
     private static char[] escapedChar2 = new char[256];
 
+    /**
+     * the granularity of timestamps under FAT
+     */
+    public static final long FAT_FILE_TIMESTAMP_GRANULARITY=2000;
+
 
     // stolen from FilePathToURI of the Xerces-J team
     static {
@@ -1328,5 +1333,12 @@ public class FileUtils {
         }
     }
 
+    public long getFileTimestampGranularity() {
+        if(Os.isFamily("dos")) {
+            return FAT_FILE_TIMESTAMP_GRANULARITY;
+        } else {
+            return 0;
+        }
+    }
 }
 
