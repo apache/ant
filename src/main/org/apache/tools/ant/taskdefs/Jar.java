@@ -223,11 +223,6 @@ public class Jar extends Zip {
 
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
-        super.initZipOutputStream(zOut);
-    }
-
-    protected void finalizeZipOutputStream(ZipOutputStream zOut)
-            throws IOException, BuildException {
         String ls = System.getProperty("line.separator");
 
         try {
@@ -278,13 +273,17 @@ public class Jar extends Zip {
                 new ByteArrayInputStream(baos.toByteArray());
             super.zipFile(bais, zOut, "META-INF/MANIFEST.MF",
                           System.currentTimeMillis(), null);
-            super.finalizeZipOutputStream(zOut);
+            super.initZipOutputStream(zOut);
         } catch (ManifestException e) {
             log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
             throw new BuildException("Invalid Manifest", e, getLocation());
         } finally {
             System.getProperties().put("line.separator", ls);
         }
+    }
+
+    protected void finalizeZipOutputStream(ZipOutputStream zOut)
+            throws IOException, BuildException {
         if (index) {
             createIndexList(zOut);
         }
