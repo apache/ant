@@ -222,20 +222,10 @@ public class Os implements Condition {
                         && (!isFamily("mac") || osName.endsWith("x"));
                 } else if (family.equals("win9x")) {
                     isFamily = isFamily("windows") &&
-                        /*
-                         * FIXME
-                         *
-                         * Need a better way to know which one runs CMD.EXE
-                         * and wich COMMAND.COM.
-                         *
-                         * If we use a fixed list of names, we should rather
-                         * use one for all win9x flavors as it is supposed to
-                         * be a final list.
-                         */
-                        !(osName.indexOf("nt") >= 0 ||
-                          osName.indexOf("2000") >= 0 ||
-                          osName.indexOf("2003") >= 0 ||
-                          osName.indexOf("xp") >= 0);
+                        (osName.indexOf("95") >= 0 ||
+                         osName.indexOf("98") >= 0 ||
+                         osName.indexOf("me") >= 0 ||
+                         osName.indexOf("ce") >= 0);
                 } else if (family.equals("z/os")) {
                     isFamily = osName.indexOf("z/os") > -1
                         || osName.indexOf("os/390") > -1;
