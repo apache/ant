@@ -681,6 +681,33 @@
         </table>
       </subsection>
 
+      <subsection name="Hammurapi">
+
+        <p>Java code review tool. Performs automated code
+        review. Contains 111 inspectors which check different aspects
+        of code quality including coding standards, EJB, threading,
+        ...</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5 and 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.hammurapi.org">http://www.hammurapi.org</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.hammurapi.org/content/menu.show@id=Hammurapi.4.html">Project's Contact Page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="IDLDepend">
         <p>idldepend is a task that (re)generates Java sources to be
         created from CORBA/IDL files.</p>
@@ -1219,31 +1246,6 @@
         </table>
       </subsection>
 
-      <subsection name="Jegustator">
-
-        <p>Jegustator is an Ant task which preforms source code and
-        bytecode reviews and also documents source and bytecode.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Tested with Ant 1.5.2</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.jegustator.html">http://www.pavelvlasov.com/pv/content/menu.show@id=products.jegustator.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GNU General Public License (GPL)</td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="JFlex">
 
         <p>JFlex is a lexical analyzer generator (also known as
@@ -1664,35 +1666,6 @@
           <tr>
             <th>License:</th>
             <td>GNU Lesser General Public License</td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="Pamda">
-        <p><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.pamda.html">Pamda</a>
-        is an MDA tool (UML2Code generator) implemented as Ant task. Pamda supports
-        Aspect-Oriented Modeling (AOM) and comes with AOM UML Profile and sample project.
-        The tool uses XMI as its input and Velocity as template engine. All elements in
-        the metamodel have navigate(XPath expression) and iterate(XPath expression)
-        (powered by JXPath) which make templates easy to write.<br/>
-        Tested with XMI produced by Enterprise Architect.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.5.2</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.pamda.html">http://www.pavelvlasov.com/pv/content/menu.show@id=products.pamda.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GPL</td>
           </tr>
         </table>
       </subsection>
@@ -2187,6 +2160,30 @@
           <tr>
             <th>License:</th>
             <td>BSD-like license</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Transformica">
+        <p>Code generator. Generates code from UML models, Java
+        metamodel or custom models.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5 and 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show@id=products.transformica.html">http://www.pavelvlasov.com/pv/content/menu.show@id=products.transformica.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Pavel Vlasov</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
           </tr>
         </table>
       </subsection>
