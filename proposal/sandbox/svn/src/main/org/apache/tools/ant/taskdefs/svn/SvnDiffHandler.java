@@ -30,6 +30,11 @@ import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.DOMUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Parses the output of a svn diff command and/or writes an XML report
@@ -57,6 +62,9 @@ final class SvnDiffHandler {
      * Token that starts diff line of old revision.
      */
     private static final String DASHES = "--- ";
+
+    /** stateless helper for writing the XML document */
+    private static final DOMElementWriter DOM_WRITER = new DOMElementWriter();
 
     /**
      * Parse the tmpFile and return and array of entries to be written
@@ -150,23 +158,24 @@ final class SvnDiffHandler {
             PrintWriter writer = new PrintWriter(
                                      new OutputStreamWriter(output, "UTF-8"));
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            writer.print("<" + rootElementName + " ");
+            Document doc = DOMUtils.newDocument();
+            Element root = doc.createElement(rootElementName);
             if (tag1Name != null && tag1Value != null) {
-                writer.print(tag1Name + "=\"" + tag1Value + "\" ");
+                root.setAttribute(tag1Name, tag1Value);
             }
             if (tag2Name != null && tag2Value != null) {
-                writer.print(tag2Name + "=\"" + tag2Value + "\" ");
+                root.setAttribute(tag2Name, tag2Value);
             }
 
             if (svnURL != null) {
-                writer.print("svnurl=\"" + svnURL + "\" ");
+                root.setAttribute("svnurl", svnURL);
             }
-
-            writer.println(">");
+            DOM_WRITER.openElement(root, writer, 0, "\t");
+            writer.println();
             for (int i = 0, c = entries.length; i < c; i++) {
-                writeRevisionEntry(writer, entries[i]);
+                writeRevisionEntry(doc, writer, entries[i]);
             }
-            writer.println("</" + rootElementName + ">");
+            DOM_WRITER.closeElement(root, writer, 0, "\t", true);
             writer.flush();
             writer.close();
         } catch (UnsupportedEncodingException uee) {
@@ -181,16 +190,18 @@ final class SvnDiffHandler {
     /**
      * Write a single entry to the given writer.
      *
+     * @param doc Document used to create elements.
      * @param writer a <code>PrintWriter</code> value
      * @param entry a <code>SvnRevisionEntry</code> value
      */
-    private static void writeRevisionEntry(PrintWriter writer,
-                                           SvnEntry.Path entry) {
-        writer.println("\t<path>");
-        writer.println("\t\t<name><![CDATA[" + entry.getName() + "]]></name>");
-        writer.println("\t\t<action>" + entry.getActionDescription() 
-                       + "</action>");
-        writer.println("\t</path>");
+    private static void writeRevisionEntry(Document doc,
+                                           PrintWriter writer,
+                                           SvnEntry.Path entry)
+        throws IOException {
+        Element e = doc.createElement("path");
+        DOMUtils.appendCDATAElement(e, "name", entry.getName());
+        DOMUtils.appendTextElement(e, "action", entry.getActionDescription());
+        DOM_WRITER.write(e, writer, 1, "\t");
     }
 
 }
