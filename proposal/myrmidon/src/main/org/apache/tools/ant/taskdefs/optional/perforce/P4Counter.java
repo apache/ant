@@ -8,6 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * P4Counter - Obtain or set the value of a counter. P4Counter can be used to
@@ -73,7 +75,7 @@ public class P4Counter
         }
         else
         {
-            getLogger().debug( "P4Counter retrieved line \"" + line + "\"" );
+            getContext().debug( "P4Counter retrieved line \"" + line + "\"" );
             try
             {
                 m_value = Integer.parseInt( line );

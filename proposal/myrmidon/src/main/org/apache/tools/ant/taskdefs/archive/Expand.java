@@ -18,6 +18,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.PatternSet;
 import org.apache.myrmidon.framework.PatternUtil;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -162,10 +163,10 @@ public abstract class Expand
     protected void expandFile( final File src, final File dir )
         throws TaskException
     {
-        if( getLogger().isInfoEnabled() )
+        if( getContext().isInfoEnabled() )
         {
             final String message = "Expanding: " + src + " into " + dir;
-            getLogger().info( message );
+            getContext().info( message );
         }
 
         try
@@ -178,10 +179,10 @@ public abstract class Expand
             throw new TaskException( message, ioe );
         }
 
-        if( getLogger().isDebugEnabled() )
+        if( getContext().isDebugEnabled() )
         {
             final String message = "expand complete";
-            getLogger().debug( message );
+            getContext().debug( message );
         }
     }
 
@@ -247,11 +248,11 @@ public abstract class Expand
                 file.lastModified() >= date.getTime() )
             {
                 final String message = "Skipping " + file + " as it is up-to-date";
-                getLogger().debug( message );
+                getContext().debug( message );
                 return;
             }
 
-            getLogger().debug( "expanding " + entryName + " to " + file );
+            getContext().debug( "expanding " + entryName + " to " + file );
 
             // create intermediary directories - sometimes zip don't add them
             final File parent = file.getParentFile();
@@ -280,7 +281,7 @@ public abstract class Expand
         catch( final FileNotFoundException fnfe )
         {
             final String message = "Unable to expand to file " + file.getPath();
-            getLogger().warn( message );
+            getContext().warn( message );
         }
     }
 }

@@ -10,6 +10,8 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -151,7 +153,7 @@ public class P4Add extends P4Base
             }
             else
             {
-                getLogger().warn( "No files specified to add!" );
+                getContext().warn( "No files specified to add!" );
             }
         }
 
@@ -160,10 +162,10 @@ public class P4Add extends P4Base
     private void execP4Add( final StringBuffer list )
         throws TaskException
     {
-        if( getLogger().isInfoEnabled() )
+        if( getContext().isInfoEnabled() )
         {
             final String message = "Execing add " + m_p4CmdOpts + " " + addCmd + list;
-            getLogger().info( message );
+            getContext().info( message );
         }
 
         final String command = "-s add " + m_p4CmdOpts + " " + addCmd + list;

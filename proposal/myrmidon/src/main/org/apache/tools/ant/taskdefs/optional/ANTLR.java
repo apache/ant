@@ -15,6 +15,7 @@ import java.net.URL;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.types.Argument;
@@ -76,13 +77,13 @@ public class ANTLR extends AbstractTask
 
     public void setOutputdirectory( File outputDirectory )
     {
-        getLogger().debug( "Setting output directory to: " + outputDirectory.toString() );
+        getContext().debug( "Setting output directory to: " + outputDirectory.toString() );
         this.outputDirectory = outputDirectory;
     }
 
     public void setTarget( File target )
     {
-        getLogger().debug( "Setting target to: " + target.toString() );
+        getContext().debug( "Setting target to: " + target.toString() );
         this.target = target;
     }
 
@@ -130,7 +131,7 @@ public class ANTLR extends AbstractTask
 
             if( fork )
             {
-                getLogger().debug( "Forking " + commandline.toString() );
+                getContext().debug( "Forking " + commandline.toString() );
                 int err = run( commandline );
                 if( err == 1 )
                 {
@@ -166,24 +167,24 @@ public class ANTLR extends AbstractTask
             {
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
-                getLogger().debug( "Implicitly adding " + jarName + " to classpath" );
+                getContext().debug( "Implicitly adding " + jarName + " to classpath" );
                 createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
-                getLogger().debug( "Implicitly adding " + dirName + " to classpath" );
+                getContext().debug( "Implicitly adding " + dirName + " to classpath" );
                 createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
             }
             else
             {
-                getLogger().debug( "Don\'t know how to handle resource URL " + u );
+                getContext().debug( "Don\'t know how to handle resource URL " + u );
             }
         }
         else
         {
-            getLogger().debug( "Couldn\'t find " + resource );
+            getContext().debug( "Couldn\'t find " + resource );
         }
     }
 

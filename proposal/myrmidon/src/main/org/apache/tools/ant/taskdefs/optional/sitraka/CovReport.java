@@ -20,6 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -250,15 +251,15 @@ public class CovReport
             // use the custom handler for stdin issues
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute exe = new Execute( execManager );
-            getLogger().debug( cmdl.toString() );
+            getContext().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
             int exitValue = exe.execute();
             if( exitValue != 0 )
             {
                 throw new TaskException( "JProbe Coverage Report failed (" + exitValue + ")" );
             }
-            getLogger().debug( "coveragePath: " + coveragePath );
-            getLogger().debug( "format: " + format );
+            getContext().debug( "coveragePath: " + coveragePath );
+            getContext().debug( "format: " + format );
             if( reference != null && "xml".equals( format ) )
             {
                 reference.createEnhancedXMLReport();
@@ -340,7 +341,7 @@ public class CovReport
         }
         if( reference != null && !"xml".equals( format ) )
         {
-            getLogger().info( "Ignored reference. It cannot be used in non XML report." );
+            getContext().info( "Ignored reference. It cannot be used in non XML report." );
             reference = null;// nullify it so that there is no ambiguity
         }
 
@@ -406,13 +407,13 @@ public class CovReport
             if( filters == null || filters.size() == 0 )
             {
                 createFilters();
-                getLogger().debug( "Adding default include filter to *.*()" );
+                getContext().debug( "Adding default include filter to *.*()" );
                 Include include = new Include();
                 filters.addInclude( include );
             }
             try
             {
-                getLogger().debug( "Creating enhanced XML report" );
+                getContext().debug( "Creating enhanced XML report" );
                 XMLReport report = new XMLReport( CovReport.this, tofile );
                 report.setReportFilters( filters );
                 report.setJProbehome( new File( home.getParent() ) );

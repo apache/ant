@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Class to provide automated telnet protocol support for the Ant build tool
@@ -226,7 +227,7 @@ public class TelnetTask
             output.write( ( string + "\n" ).getBytes() );
             if( echoString )
             {
-                getLogger().info( string );
+                getContext().info( string );
             }
             output.flush();
         }
@@ -269,7 +270,7 @@ public class TelnetTask
                     sb.append( (char)input.read() );
                 }
             }
-            getLogger().info( sb.toString() );
+            getContext().info( sb.toString() );
         }
         catch( final TaskException te )
         {

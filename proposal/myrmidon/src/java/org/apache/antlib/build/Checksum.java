@@ -21,6 +21,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -195,7 +197,7 @@ public class Checksum
                     {
                         final String message = file + " omitted as " + dest +
                             " is up to date.";
-                        getLogger().debug( message );
+                        getContext().debug( message );
                     }
                 }
                 else
@@ -207,7 +209,7 @@ public class Checksum
             {
                 final String message = "Could not find file " + file.getAbsolutePath() +
                     " to generate checksum for.";
-                getLogger().info( message );
+                getContext().info( message );
                 throw new TaskException( message );
             }
         }
@@ -225,7 +227,7 @@ public class Checksum
         {
             final File src = (File)includes.nextElement();
             final String message = "Calculating " + m_algorithm + " checksum for " + src;
-            getLogger().info( message );
+            getContext().info( message );
 
             checksumMatches = z( src, checksumMatches );
         }

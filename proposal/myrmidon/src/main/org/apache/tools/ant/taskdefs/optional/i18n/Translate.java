@@ -20,6 +20,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -480,12 +482,12 @@ public class Translate
             ins = new FileInputStream( bundleFile );
             loaded = true;
             bundleLastModified[ i ] = new File( bundleFile ).lastModified();
-            getLogger().debug( "Using " + bundleFile );
+            getContext().debug( "Using " + bundleFile );
             loadResourceMap( ins );
         }
         catch( IOException ioe )
         {
-            getLogger().debug( bundleFile + " not found." );
+            getContext().debug( bundleFile + " not found." );
             //if all resource files associated with this bundle
             //have been scanned for and still not able to
             //find a single resrouce file, throw exception
@@ -532,7 +534,7 @@ public class Translate
                     }
                     catch( Exception e )
                     {
-                        getLogger().debug( "Exception occured while trying to check/create " + " parent directory.  " + e.getMessage() );
+                        getContext().debug( "Exception occured while trying to check/create " + " parent directory.  " + e.getMessage() );
                     }
                     destLastModified = dest.lastModified();
                     srcLastModified = new File( srcFiles[ i ] ).lastModified();
@@ -547,7 +549,7 @@ public class Translate
                         || destLastModified < bundleLastModified[ 5 ]
                         || destLastModified < bundleLastModified[ 6 ] )
                     {
-                        getLogger().debug( "Processing " + srcFiles[ j ] );
+                        getContext().debug( "Processing " + srcFiles[ j ] );
                         FileOutputStream fos = new FileOutputStream( dest );
                         BufferedWriter out = new BufferedWriter(
                             new OutputStreamWriter( fos,
@@ -596,7 +598,7 @@ public class Translate
                                 //use the key itself as the value also.
                                 if( replace == null )
                                 {
-                                    getLogger().debug( "Warning: The key: " + matches + " hasn't been defined." );
+                                    getContext().debug( "Warning: The key: " + matches + " hasn't been defined." );
                                     replace = matches;
                                 }
                                 line = line.substring( 0, startIndex )
@@ -622,7 +624,7 @@ public class Translate
                     }
                     else
                     {
-                        getLogger().debug( "Skipping " + srcFiles[ j ] + " as destination file is up to date" );
+                        getContext().debug( "Skipping " + srcFiles[ j ] + " as destination file is up to date" );
                     }
                 }
                 catch( IOException ioe )

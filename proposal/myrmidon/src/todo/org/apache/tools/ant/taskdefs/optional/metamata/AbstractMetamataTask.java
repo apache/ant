@@ -18,6 +18,7 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -207,7 +208,7 @@ public abstract class AbstractMetamataTask
 
         // retrieve all the files we want to scan
         m_includedFiles = scanFileSets();
-        getLogger().debug( m_includedFiles.size() + " files added for audit" );
+        getContext().debug( m_includedFiles.size() + " files added for audit" );
 
         // write all the options to a temp file and use it ro run the process
         ArrayList options = getOptions();
@@ -281,7 +282,7 @@ public abstract class AbstractMetamataTask
     {
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
-        getLogger().debug( m_cmdl.toString() );
+        getContext().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
         exe.setReturnCode( 0 );
@@ -336,7 +337,7 @@ public abstract class AbstractMetamataTask
             DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
             ds.scan();
             String[] f = ds.getIncludedFiles();
-            getLogger().debug( i + ") Adding " + f.length + " files from directory " + ds.getBasedir() );
+            getContext().debug( i + ") Adding " + f.length + " files from directory " + ds.getBasedir() );
             for( int j = 0; j < f.length; j++ )
             {
                 String pathname = f[ j ];

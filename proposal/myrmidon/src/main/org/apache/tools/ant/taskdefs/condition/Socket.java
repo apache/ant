@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.IOException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.Condition;
@@ -22,7 +21,6 @@ import org.apache.myrmidon.framework.conditions.Condition;
  * @ant:type type="condition" name="socket"
  */
 public class Socket
-    extends AbstractLogEnabled
     implements Condition
 {
     String server = null;
@@ -52,7 +50,7 @@ public class Socket
         {
             throw new TaskException( "No port specified in Socket task" );
         }
-        getLogger().debug( "Checking for listener at " + server + ":" + port );
+        context.debug( "Checking for listener at " + server + ":" + port );
         try
         {
             java.net.Socket socket = new java.net.Socket( server, port );

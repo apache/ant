@@ -9,6 +9,7 @@ package org.apache.antlib.selftest;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Test conversion of all the primitive types.
@@ -21,67 +22,67 @@ public class PrimitiveTypesTest
 {
     public void setInteger( final Integer value )
     {
-        getLogger().warn( "setInteger( " + value + " );" );
+        getContext().warn( "setInteger( " + value + " );" );
     }
 
     public void setInteger2( final int value )
     {
-        getLogger().warn( "setInteger2( " + value + " );" );
+        getContext().warn( "setInteger2( " + value + " );" );
     }
 
     public void setShort( final Short value )
     {
-        getLogger().warn( "setShort( " + value + " );" );
+        getContext().warn( "setShort( " + value + " );" );
     }
 
     public void setShort2( final short value )
     {
-        getLogger().warn( "setShort2( " + value + " );" );
+        getContext().warn( "setShort2( " + value + " );" );
     }
 
     public void setByte( final Byte value )
     {
-        getLogger().warn( "setByte( " + value + " );" );
+        getContext().warn( "setByte( " + value + " );" );
     }
 
     public void setByte2( final byte value )
     {
-        getLogger().warn( "setByte2( " + value + " );" );
+        getContext().warn( "setByte2( " + value + " );" );
     }
 
     public void setLong( final Long value )
     {
-        getLogger().warn( "setLong( " + value + " );" );
+        getContext().warn( "setLong( " + value + " );" );
     }
 
     public void setLong2( final long value )
     {
-        getLogger().warn( "setLong2( " + value + " );" );
+        getContext().warn( "setLong2( " + value + " );" );
     }
 
     public void setFloat( final Float value )
     {
-        getLogger().warn( "setFloat( " + value + " );" );
+        getContext().warn( "setFloat( " + value + " );" );
     }
 
     public void setFloat2( final float value )
     {
-        getLogger().warn( "setFloat2( " + value + " );" );
+        getContext().warn( "setFloat2( " + value + " );" );
     }
 
     public void setDouble( final Double value )
     {
-        getLogger().warn( "setDouble( " + value + " );" );
+        getContext().warn( "setDouble( " + value + " );" );
     }
 
     public void setDouble2( final double value )
     {
-        getLogger().warn( "setDouble2( " + value + " );" );
+        getContext().warn( "setDouble2( " + value + " );" );
     }
 
     public void setString( final String value )
     {
-        getLogger().warn( "setString( " + value + " );" );
+        getContext().warn( "setString( " + value + " );" );
     }
 
     public void execute()

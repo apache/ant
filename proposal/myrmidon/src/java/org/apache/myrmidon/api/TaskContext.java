@@ -101,6 +101,23 @@ public interface TaskContext
         throws TaskException;
 
     /**
+     * Log a message.
+     *
+     * @param level the level to write the log message at.
+     * @param message the message to write.
+     */
+    void log( LogLevel level, String message );
+
+    /**
+     * Log a message.
+     *
+     * @param level the level to write the log message at.
+     * @param message the message to write.
+     * @param throwable the throwable
+     */
+    void log( LogLevel level, String message, Throwable throwable );
+
+    /**
      * Log a debug message.
      *
      * @param message the message

@@ -12,6 +12,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Creates specified directory.
@@ -61,7 +62,7 @@ public class Mkdir
             }
             final String message =
                 REZ.getString( "mkdir.create.notice", m_dir.getAbsolutePath() );
-            getLogger().info( message );
+            getContext().info( message );
         }
     }
 }

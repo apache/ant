@@ -18,6 +18,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -131,7 +132,7 @@ public class CopyTask
             {
                 final String message =
                     REZ.getString( "copy.omit-uptodate.notice", m_file, m_destFile );
-                getLogger().debug( message );
+                getContext().debug( message );
             }
         }
 
@@ -287,7 +288,6 @@ public class CopyTask
         else
         {
             final SourceFileScanner scanner = new SourceFileScanner();
-            setupLogger( scanner );
             return scanner.restrict( names, fromDir, toDir, mapper, getContext() );
         }
     }
@@ -329,7 +329,7 @@ public class CopyTask
             {
                 final String message =
                     REZ.getString( "copy.selfcopy-ignored.notice", source );
-                getLogger().info( message );
+                getContext().info( message );
                 continue;
             }
 
@@ -337,7 +337,7 @@ public class CopyTask
             {
                 final String message =
                     REZ.getString( "copy.filecopy.notice", source, destination );
-                getLogger().info( message );
+                getContext().info( message );
 
                 doOperation( source, destination );
             }
@@ -367,7 +367,7 @@ public class CopyTask
                 {
                     final String message =
                         REZ.getString( "copy.dircopy.error", dir.getAbsolutePath() );
-                    getLogger().error( message );
+                    getContext().error( message );
                 }
                 else
                 {
@@ -431,7 +431,7 @@ public class CopyTask
             REZ.getString( "copy.dir-count.notice",
                            new Integer( count ),
                            m_destDir.getAbsolutePath() );
-        getLogger().info( message );
+        getContext().info( message );
     }
 
     /**
@@ -439,13 +439,13 @@ public class CopyTask
      */
     private void displayFilecountNotice( final int count )
     {
-        if( getLogger().isInfoEnabled() )
+        if( getContext().isInfoEnabled() )
         {
             final String message =
                 REZ.getString( "copy.file-count.notice",
                                new Integer( count ),
                                m_destDir.getAbsolutePath() );
-            getLogger().info( message );
+            getContext().info( message );
         }
     }
 }

@@ -15,18 +15,23 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.apache.myrmidon.api.TaskContext;
 
 class LocalResolver
-    extends AbstractLogEnabled
     implements EntityResolver
 {
-    private Hashtable m_fileDTDs = new Hashtable();
-    private Hashtable m_resourceDTDs = new Hashtable();
-    private Hashtable m_urlDTDs = new Hashtable();
+    private final Hashtable m_fileDTDs = new Hashtable();
+    private final Hashtable m_resourceDTDs = new Hashtable();
+    private final Hashtable m_urlDTDs = new Hashtable();
+    private final TaskContext m_context;
+
+    public LocalResolver( final TaskContext context )
+    {
+        m_context = context;
+    }
 
     public void registerDTD( String publicId, String location )
     {
@@ -42,19 +47,19 @@ class LocalResolver
             {
                 m_fileDTDs.put( publicId, fileDTD );
                 final String message = "Mapped publicId " + publicId + " to file " + fileDTD;
-                getLogger().debug( message );
+                m_context.debug( message );
             }
             return;
         }
 
-        if( LocalResolver.this.getClass().getResource( location ) != null )
+        if( getClass().getResource( location ) != null )
         {
             if( publicId != null )
             {
                 m_resourceDTDs.put( publicId, location );
                 final String message = "Mapped publicId " + publicId +
                     " to resource " + location;
-                getLogger().debug( message );
+                m_context.debug( message );
             }
         }
 
@@ -86,7 +91,7 @@ class LocalResolver
             try
             {
                 final String message = "Resolved " + publicId + " to local file " + dtdFile;
-                getLogger().debug( message );
+                m_context.debug( message );
                 return new InputSource( new FileInputStream( dtdFile ) );
             }
             catch( FileNotFoundException ex )
@@ -101,7 +106,7 @@ class LocalResolver
             InputStream is = getClass().getResourceAsStream( dtdResourceName );
             if( is != null )
             {
-                getLogger().debug( "Resolved " + publicId + " to local resource " + dtdResourceName );
+                m_context.debug( "Resolved " + publicId + " to local resource " + dtdResourceName );
                 return new InputSource( is );
             }
         }
@@ -113,7 +118,7 @@ class LocalResolver
             {
                 InputStream is = dtdUrl.openStream();
                 final String message = "Resolved " + publicId + " to url " + dtdUrl;
-                getLogger().debug( message );
+                m_context.debug( message );
                 return new InputSource( is );
             }
             catch( IOException ioe )
@@ -124,7 +129,7 @@ class LocalResolver
 
         final String message = "Could not resolve ( publicId: " + publicId +
             ", systemId: " + systemId + ") to a local entity";
-        getLogger().info( message );
+        m_context.info( message );
 
         return null;
     }

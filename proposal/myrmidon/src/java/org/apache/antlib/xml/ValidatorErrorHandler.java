@@ -9,9 +9,9 @@ package org.apache.antlib.xml;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
+import org.apache.myrmidon.api.TaskContext;
 
 /*
  * ValidatorErrorHandler role :
@@ -21,27 +21,28 @@ import org.xml.sax.SAXParseException;
  * </ul>
  */
 final class ValidatorErrorHandler
-    extends AbstractLogEnabled
     implements ErrorHandler
 {
     private final boolean m_warn;
+    private final TaskContext m_context;
     private boolean m_failed;
 
-    protected ValidatorErrorHandler( final boolean warn )
+    protected ValidatorErrorHandler( final boolean warn, final TaskContext context )
     {
         m_warn = warn;
+        m_context = context;
     }
 
     public void error( final SAXParseException spe )
     {
         m_failed = true;
-        getLogger().error( getMessage( spe ), spe );
+        m_context.error( getMessage( spe ), spe );
     }
 
     public void fatalError( final SAXParseException spe )
     {
         m_failed = true;
-        getLogger().error( getMessage( spe ), spe );
+        m_context.error( getMessage( spe ), spe );
     }
 
     public void warning( final SAXParseException spe )
@@ -50,7 +51,7 @@ final class ValidatorErrorHandler
         // only output then if user explicitely asked for it
         if( m_warn )
         {
-            getLogger().warn( getMessage( spe ), spe );
+            m_context.warn( getMessage( spe ), spe );
         }
     }
 

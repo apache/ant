@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -216,14 +217,14 @@ public class ReplaceRegExp
             {
                 final String message = "An error occurred processing file: '" +
                     file.getAbsolutePath() + "': " + e.toString();
-                getLogger().error( message, e );
+                getContext().error( message, e );
             }
         }
         else if( file != null )
         {
             final String message =
                 "The following file is missing: '" + file.getAbsolutePath() + "'";
-            getLogger().error( message );
+            getContext().error( message );
         }
 
         int sz = filesets.size();
@@ -246,13 +247,13 @@ public class ReplaceRegExp
                     {
                         final String message = "An error occurred processing file: '" + f.getAbsolutePath() +
                             "': " + e.toString();
-                        getLogger().error( message );
+                        getContext().error( message );
                     }
                 }
                 else
                 {
                     final String message = "The following file is missing: '" + file.getAbsolutePath() + "'";
-                    getLogger().error( message );
+                    getContext().error( message );
                 }
             }
         }
@@ -308,7 +309,7 @@ public class ReplaceRegExp
                 ( byline ? " by line" : "" ) +
                 ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +
                 ".";
-            getLogger().warn( message );
+            getContext().warn( message );
 
             if( byline )
             {

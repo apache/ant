@@ -25,6 +25,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -263,7 +264,7 @@ public class MimeMail extends AbstractTask
         MimeMessage msg = new MimeMessage( sesh );
 
         //set the sender
-        getLogger().debug( "message sender: " + from );
+        getContext().debug( "message sender: " + from );
         msg.setFrom( new InternetAddress( from ) );
 
         // add recipient lists
@@ -273,7 +274,7 @@ public class MimeMail extends AbstractTask
 
         if( subject != null )
         {
-            getLogger().debug( "subject: " + subject );
+            getContext().debug( "subject: " + subject );
             msg.setSubject( subject );
         }
 
@@ -326,7 +327,7 @@ public class MimeMail extends AbstractTask
                         throw new TaskException( "File \"" + file.getAbsolutePath()
                                                  + "\" does not exist or is not readable." );
                     }
-                    getLogger().debug( "Attaching " + file.toString() + " - " + file.length() + " bytes" );
+                    getContext().debug( "Attaching " + file.toString() + " - " + file.length() + " bytes" );
                     FileDataSource fileData = new FileDataSource( file );
                     DataHandler fileDataHandler = new DataHandler( fileData );
                     body.setDataHandler( fileDataHandler );
@@ -337,7 +338,7 @@ public class MimeMail extends AbstractTask
         }// for i
 
         msg.setContent( attachments );
-        getLogger().info( "sending email " );
+        getContext().info( "sending email " );
         Transport.send( msg );
     }
 
@@ -364,7 +365,7 @@ public class MimeMail extends AbstractTask
             else
             {
                 String text = e.toString();
-                getLogger().error( text );
+                getContext().error( text );
             }
         }
     }

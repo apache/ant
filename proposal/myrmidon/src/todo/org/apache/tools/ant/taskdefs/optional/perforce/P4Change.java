@@ -8,6 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * P4Change - grab a new changelist from Perforce. P4Change creates a new
@@ -105,7 +107,7 @@ public class P4Change
         {
             if( util.match( "/error/", line ) )
             {
-                getLogger().debug( "Client Error" );
+                getContext().debug( "Client Error" );
                 registerError( new TaskException( "Perforce Error, check client settings and/or server" ) );
             }
             else if( util.match( "/<enter description here>/", line ) )
@@ -135,7 +137,7 @@ public class P4Change
             line = util.substitute( "s/[^0-9]//g", line );
 
             final int changenumber = Integer.parseInt( line );
-            getLogger().info( "Change Number is " + changenumber );
+            getContext().info( "Change Number is " + changenumber );
             try
             {
                 getContext().setProperty( "p4.change", "" + changenumber );

@@ -15,6 +15,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * This task is responsible for loading that OS-specific environment
@@ -52,13 +53,13 @@ public class LoadEnvironment
             m_prefix += ".";
         }
 
-        if( getLogger().isDebugEnabled() )
+        if( getContext().isDebugEnabled() )
         {
             final String displayPrefix =
                 m_prefix.substring( 0, m_prefix.length() - 1 );
             final String message =
                 REZ.getString( "loadenv.prefix.notice", displayPrefix );
-            getLogger().debug( message );
+            getContext().debug( message );
         }
 
         final Properties environment = loadNativeEnvironment();
@@ -71,7 +72,7 @@ public class LoadEnvironment
             if( value.equals( "" ) )
             {
                 final String message = REZ.getString( "loadenv.ignoring-empty.warn", key );
-                getLogger().warn( message );
+                getContext().warn( message );
             }
             else
             {

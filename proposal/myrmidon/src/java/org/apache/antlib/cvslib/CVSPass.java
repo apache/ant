@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * CVSLogin Adds an new entry to a CVS password file
@@ -112,9 +113,9 @@ public class CVSPass
             throw new TaskException( "password is required" );
         }
 
-        getLogger().debug( "cvsRoot: " + m_cvsRoot );
-        getLogger().debug( "password: " + m_password );
-        getLogger().debug( "passFile: " + m_passwordFile );
+        getContext().debug( "cvsRoot: " + m_cvsRoot );
+        getContext().debug( "password: " + m_password );
+        getContext().debug( "passFile: " + m_passwordFile );
 
         //FIXME: Should not be writing the whole file - Just append to the file
         //Also should have EOL configurable
@@ -142,7 +143,7 @@ public class CVSPass
             final String pwdfile =
                 sb.toString() + m_cvsRoot + " A" + mangle( m_password );
 
-            getLogger().debug( "Writing -> " + pwdfile );
+            getContext().debug( "Writing -> " + pwdfile );
 
             final PrintWriter writer =
                 new PrintWriter( new FileWriter( m_passwordFile ) );

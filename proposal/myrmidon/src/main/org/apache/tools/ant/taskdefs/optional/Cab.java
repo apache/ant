@@ -17,6 +17,8 @@ import java.util.Iterator;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
@@ -101,11 +103,11 @@ public class Cab
             return;
         }
 
-        getLogger().info( "Building cab: " + m_cabFile.getAbsolutePath() );
+        getContext().info( "Building cab: " + m_cabFile.getAbsolutePath() );
 
         if( !Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
         {
-            getLogger().debug( "Using listcab/libcabinet" );
+            getContext().debug( "Using listcab/libcabinet" );
 
             final StringBuffer sb = new StringBuffer();
 

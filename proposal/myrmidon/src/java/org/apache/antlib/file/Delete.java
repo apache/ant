@@ -13,6 +13,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -86,7 +87,7 @@ public class Delete
         {
             final String message =
                 REZ.getString( "delete.delete-dir.notice", m_dir.getAbsolutePath() );
-            getLogger().info( message );
+            getContext().info( message );
             deleteDir( m_dir );
         }
 
@@ -123,7 +124,7 @@ public class Delete
         {
             final String message =
                 REZ.getString( "delete.missing-file.error", m_file.getAbsolutePath() );
-            getLogger().debug( message );
+            getContext().debug( message );
         }
     }
 
@@ -136,11 +137,11 @@ public class Delete
             deleteFiles( list );
         }
 
-        if( getLogger().isDebugEnabled() )
+        if( getContext().isDebugEnabled() )
         {
             final String message =
                 REZ.getString( "delete.delete-dir.notice", m_dir.getAbsolutePath() );
-            getLogger().debug( message );
+            getContext().debug( message );
         }
 
         if( !baseDir.delete() )
@@ -171,11 +172,11 @@ public class Delete
     private void deleteFile( final File file )
         throws TaskException
     {
-        if( getLogger().isDebugEnabled() )
+        if( getContext().isDebugEnabled() )
         {
             final String message =
                 REZ.getString( "delete.delete-file.notice", file.getAbsolutePath() );
-            getLogger().debug( message );
+            getContext().debug( message );
         }
 
         if( !file.delete() )
@@ -205,7 +206,7 @@ public class Delete
                 REZ.getString( "delete.delete-file.error",
                                new Integer( files.length ),
                                baseDir.getAbsolutePath() );
-            getLogger().info( message );
+            getContext().info( message );
             for( int i = 0; i < files.length; i++ )
             {
                 final File file = new File( baseDir, files[ i ] );
@@ -233,7 +234,7 @@ public class Delete
                     REZ.getString( "delete.summary.notice",
                                    new Integer( dirCount ),
                                    baseDir.getAbsolutePath() );
-                getLogger().info( message );
+                getContext().info( message );
             }
         }
     }

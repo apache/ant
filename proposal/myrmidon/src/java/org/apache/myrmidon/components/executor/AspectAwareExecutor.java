@@ -88,7 +88,6 @@ public class AspectAwareExecutor
             debug( "logger.notice", taskName );
             final Logger logger = frame.getLogger();
             getAspectManager().preLogEnabled( logger );
-            doLogEnabled( task, taskModel, logger );
 
             debug( "contextualizing.notice", taskName );
             doContextualize( task, taskModel, frame.getContext() );

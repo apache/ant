@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -390,7 +391,7 @@ public class MSVSSGET extends MSVSS
                         "successful for an unknown reason";
                     throw new TaskException( msg );
                 }
-                getLogger().info( "Created dir: " + dir.getAbsolutePath() );
+                getContext().info( "Created dir: " + dir.getAbsolutePath() );
             }
 
             cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );

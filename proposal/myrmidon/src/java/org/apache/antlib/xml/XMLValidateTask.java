@@ -229,13 +229,12 @@ public class XMLValidateTask
             }
         }
         final String message = fileProcessed + " file(s) have been successfully validated.";
-        getLogger().info( message );
+        getContext().info( message );
     }
 
     private EntityResolver buildEntityResolver()
     {
-        final LocalResolver resolver = new LocalResolver();
-        setupLogger( resolver );
+        final LocalResolver resolver = new LocalResolver( getContext() );
 
         final int size = m_dtdLocations.size();
         for( int i = 0; i < size; i++ )
@@ -266,7 +265,7 @@ public class XMLValidateTask
             final String message = "Could not set feature '" + feature + "' because the parser doesn't recognize it";
             if( warn )
             {
-                getLogger().warn( message );
+                getContext().warn( message );
             }
         }
         catch( SAXNotSupportedException e )
@@ -274,7 +273,7 @@ public class XMLValidateTask
             final String message = "Could not set feature '" + feature + "' because the parser doesn't support it";
             if( warn )
             {
-                getLogger().warn( message );
+                getContext().warn( message );
             }
         }
         return toReturn;
@@ -288,7 +287,7 @@ public class XMLValidateTask
     {
         try
         {
-            getLogger().debug( "Validating " + afile.getName() + "... " );
+            getContext().debug( "Validating " + afile.getName() + "... " );
             m_errorHandler.reset();
             InputSource is = new InputSource( new FileReader( afile ) );
             String uri = "file:" + afile.getAbsolutePath().replace( '\\', '/' );
@@ -345,7 +344,7 @@ public class XMLValidateTask
             {
 
                 m_xmlReader = (XMLReader)readerClass.newInstance();
-                getLogger().debug( "Using SAX2 reader " + m_readerClassName );
+                getContext().debug( "Using SAX2 reader " + m_readerClassName );
             }
             else
             {
@@ -355,7 +354,7 @@ public class XMLValidateTask
                 {
                     Parser parser = (Parser)readerClass.newInstance();
                     m_xmlReader = new ParserAdapter( parser );
-                    getLogger().debug( "Using SAX1 parser " + m_readerClassName );
+                    getContext().debug( "Using SAX1 parser " + m_readerClassName );
                 }
                 else
                 {
@@ -380,8 +379,7 @@ public class XMLValidateTask
 
         m_xmlReader.setEntityResolver( buildEntityResolver() );
 
-        m_errorHandler = new ValidatorErrorHandler( m_warn );
-        setupLogger( m_errorHandler );
+        m_errorHandler = new ValidatorErrorHandler( m_warn, getContext() );
         m_xmlReader.setErrorHandler( m_errorHandler );
 
         if( !( m_xmlReader instanceof ParserAdapter ) )

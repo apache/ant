@@ -21,6 +21,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 
@@ -503,7 +504,7 @@ public class NetRexxC extends MatchingTask
         // compile the source files
         if( compileList.size() > 0 )
         {
-            getLogger().info( "Compiling " + compileList.size() + " source file"
+            getContext().info( "Compiling " + compileList.size() + " source file"
                               + ( compileList.size() == 1 ? "" : "s" )
                               + " to " + destDir );
             doNetRexxCompile();
@@ -599,7 +600,7 @@ public class NetRexxC extends MatchingTask
             }
             else
             {
-                getLogger().debug( "Dropping from classpath: " + f.getAbsolutePath() );
+                getContext().debug( "Dropping from classpath: " + f.getAbsolutePath() );
             }
         }
 
@@ -613,7 +614,7 @@ public class NetRexxC extends MatchingTask
         //FIXME: This should be zapped no ?
         if( filecopyList.size() > 0 )
         {
-            getLogger().info( "Copying " + filecopyList.size() + " file"
+            getContext().info( "Copying " + filecopyList.size() + " file"
                               + ( filecopyList.size() == 1 ? "" : "s" )
                               + " to " + destDir.getAbsolutePath() );
             Iterator enum = filecopyList.keySet().iterator();
@@ -643,7 +644,7 @@ public class NetRexxC extends MatchingTask
     private void doNetRexxCompile()
         throws TaskException
     {
-        getLogger().debug( "Using NetRexx compiler" );
+        getContext().debug( "Using NetRexx compiler" );
         String classpath = getCompileClasspath();
         StringBuffer compileOptions = new StringBuffer();
         StringBuffer fileList = new StringBuffer();
@@ -677,7 +678,7 @@ public class NetRexxC extends MatchingTask
             compileOptions.append( compileOptionsArray[ i ] );
             compileOptions.append( " " );
         }
-        getLogger().debug( compileOptions.toString() );
+        getContext().debug( compileOptions.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "Files to be compiled:" + StringUtil.LINE_SEPARATOR );
 
@@ -688,7 +689,7 @@ public class NetRexxC extends MatchingTask
             niceSourceList.append( StringUtil.LINE_SEPARATOR );
         }
 
-        getLogger().debug( niceSourceList.toString() );
+        getContext().debug( niceSourceList.toString() );
 
         // need to set java.class.path property and restore it later
         // since the NetRexx compiler has no option for the classpath
@@ -704,17 +705,17 @@ public class NetRexxC extends MatchingTask
 
             if( rc > 1 )
             {// 1 is warnings from real NetRexxC
-                getLogger().error( out.toString() );
+                getContext().error( out.toString() );
                 String msg = "Compile failed, messages should have been provided.";
                 throw new TaskException( msg );
             }
             else if( rc == 1 )
             {
-                getLogger().warn( out.toString() );
+                getContext().warn( out.toString() );
             }
             else
             {
-                getLogger().info( out.toString() );
+                getContext().info( out.toString() );
             }
         }
         finally

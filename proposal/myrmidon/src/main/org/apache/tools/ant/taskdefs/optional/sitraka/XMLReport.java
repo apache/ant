@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
@@ -194,7 +195,7 @@ public class XMLReport
         }
         else
         {
-            task.getLogger().debug( message );
+            task.getContext().debug( message );
         }
     }
 

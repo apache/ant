@@ -26,7 +26,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -43,7 +42,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class MMetricsStreamHandler
-    extends AbstractLogEnabled
     implements ExecuteStreamHandler
 {
     /**
@@ -162,7 +160,6 @@ public class MMetricsStreamHandler
         }
         catch( Exception e )
         {
-            e.printStackTrace();
             throw new IOException( e.getMessage() );
         }
     }
@@ -278,7 +275,7 @@ public class MMetricsStreamHandler
      * @exception SAXException Description of Exception
      */
     protected void parseOutput()
-        throws IOException, SAXException
+        throws IOException, SAXException, ParseException
     {
         BufferedReader br = new BufferedReader( new InputStreamReader( metricsOutput ) );
         String line = null;
@@ -296,23 +293,14 @@ public class MMetricsStreamHandler
      * @exception SAXException Description of Exception
      */
     protected void processLine( String line )
-        throws SAXException
+        throws SAXException, ParseException
     {
         if( line.startsWith( "Construct\tV(G)\tLOC\tDIT\tNOA\tNRM\tNLM\tWMC\tRFC\tDAC\tFANOUT\tCBO\tLCOM\tNOCL" ) )
         {
             return;
         }
-        try
-        {
-            MetricsElement elem = MetricsElement.parse( line );
-            startElement( elem );
-        }
-        catch( ParseException e )
-        {
-            e.printStackTrace();
-            // invalid lines are sent to the output as information, it might be anything,
-            getLogger().info( line );
-        }
+        MetricsElement elem = MetricsElement.parse( line );
+        startElement( elem );
     }
 
     /**

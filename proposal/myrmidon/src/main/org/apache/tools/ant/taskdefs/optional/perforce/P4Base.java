@@ -11,6 +11,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.types.Commandline;
@@ -158,7 +159,7 @@ public abstract class P4Base
                 cmdl += cmdline[ i ] + " ";
             }
 
-            getLogger().debug( "Execing " + cmdl );
+            getContext().debug( "Execing " + cmdl );
             if( handler == null )
             {
                 handler = this;
@@ -217,7 +218,7 @@ public abstract class P4Base
             registerError( new TaskException( line ) );
         }
 
-        getLogger().info( util.substitute( "s/^.*: //", line ) );
+        getContext().info( util.substitute( "s/^.*: //", line ) );
     }
 
     public void stderr( final String line )

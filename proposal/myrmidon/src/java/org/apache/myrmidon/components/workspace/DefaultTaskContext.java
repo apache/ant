@@ -22,6 +22,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
 import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
+import org.apache.myrmidon.api.LogLevel;
 
 /**
  * Default implementation of TaskContext.
@@ -209,6 +210,67 @@ public class DefaultTaskContext
         checkPropertyName( name );
         checkPropertyValid( name, value );
         m_contextData.put( name, value );
+    }
+
+    /**
+     * Log a message.
+     *
+     * @param level the level to write the log message at.
+     * @param message the message to write.
+     */
+    public void log( LogLevel level, String message )
+    {
+        if( LogLevel.FATAL_ERROR == level )
+        {
+            m_logger.fatalError( message );
+        }
+        else if( LogLevel.ERROR == level )
+        {
+            m_logger.error( message );
+        }
+        else if( LogLevel.WARN == level )
+        {
+            m_logger.warn( message );
+        }
+        else if( LogLevel.INFO == level )
+        {
+            m_logger.info( message );
+        }
+        else
+        {
+            m_logger.debug( message );
+        }
+    }
+
+    /**
+     * Log a message.
+     *
+     * @param level the level to write the log message at.
+     * @param message the message to write.
+     * @param throwable the throwable.
+     */
+    public void log( LogLevel level, String message, Throwable throwable )
+    {
+        if( LogLevel.FATAL_ERROR == level )
+        {
+            m_logger.fatalError( message, throwable );
+        }
+        else if( LogLevel.ERROR == level )
+        {
+            m_logger.error( message, throwable );
+        }
+        else if( LogLevel.WARN == level )
+        {
+            m_logger.warn( message, throwable );
+        }
+        else if( LogLevel.INFO == level )
+        {
+            m_logger.info( message, throwable );
+        }
+        else
+        {
+            m_logger.debug( message, throwable );
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -217,7 +218,7 @@ public class JavaCC
         final File javaFile = getOutputJavaFile( outputDirectory, target );
         if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
         {
-            getLogger().debug( "Target is already built - skipping (" + target + ")" );
+            getContext().debug( "Target is already built - skipping (" + target + ")" );
             return;
         }
         cmdl.addArgument( target.getAbsolutePath() );
@@ -239,7 +240,7 @@ public class JavaCC
     private void runCommand( final CommandlineJava cmdline )
         throws TaskException
     {
-        getLogger().debug( cmdline.toString() );
+        getContext().debug( cmdline.toString() );
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
         final String[] commandline = cmdline.getCommandline();

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
@@ -28,7 +27,6 @@ import org.apache.myrmidon.framework.FileNameMapper;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class SourceFileScanner
-    extends AbstractLogEnabled
 {
     /**
      * Restrict the given set of files to those that are newer than their
@@ -72,7 +70,7 @@ public class SourceFileScanner
             if( targets == null || targets.length == 0 )
             {
                 final String message = files[ i ] + " skipped - don\'t know how to handle it";
-                getLogger().debug( message );
+                context.debug( message );
                 continue;
             }
 
@@ -80,7 +78,7 @@ public class SourceFileScanner
             if( src.lastModified() > now )
             {
                 final String message = "Warning: " + files[ i ] + " modified in the future.";
-                getLogger().warn( message );
+                context.warn( message );
             }
 
             boolean added = false;
@@ -93,7 +91,7 @@ public class SourceFileScanner
                 {
                     final String message =
                         files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.";
-                    getLogger().debug( message );
+                    context.debug( message );
                     v.add( files[ i ] );
                     added = true;
                 }
@@ -101,7 +99,7 @@ public class SourceFileScanner
                 {
                     final String message =
                         files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.";
-                    getLogger().debug( message );
+                    context.debug( message );
                     v.add( files[ i ] );
                     added = true;
                 }
@@ -119,7 +117,7 @@ public class SourceFileScanner
             {
                 final String message = files[ i ] + " omitted as " + targetList.toString() +
                     ( targets.length == 1 ? " is" : " are " ) + " up to date.";
-                getLogger().debug( message );
+                context.debug( message );
             }
 
         }

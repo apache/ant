@@ -9,6 +9,8 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -146,7 +148,7 @@ public class CCMCreateTask
         cmd.addArgument( COMMAND_DEFAULT_TASK );
         cmd.addArgument( m_task );
 
-        getLogger().debug( commandLine.toString() );
+        getContext().debug( commandLine.toString() );
 
         final int result2 = run( cmd, null );
         if( result2 != 0 )
@@ -219,11 +221,11 @@ public class CCMCreateTask
      */
     public void stdout( final String line )
     {
-        getLogger().debug( "buffer:" + line );
+        getContext().debug( "buffer:" + line );
         final String task = getTask( line );
 
         setTask( task );
-        getLogger().debug( "task is " + m_task );
+        getContext().debug( "task is " + m_task );
     }
 
     private String getTask( final String line )
@@ -236,7 +238,7 @@ public class CCMCreateTask
         catch( final Exception e )
         {
             final String message = "error procession stream " + e.getMessage();
-            getLogger().error( message, e );
+            getContext().error( message, e );
         }
 
         return null;
@@ -248,7 +250,7 @@ public class CCMCreateTask
      */
     public void stderr( final String line )
     {
-        getLogger().debug( "err " + line );
+        getContext().debug( "err " + line );
     }
 }
 

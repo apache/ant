@@ -142,7 +142,6 @@ public class FilteredCopyTask
             for( int i = 0; i < size; i++ )
             {
                 final FilterSet filterSet = (FilterSet)m_filterSets.get( i );
-                setupLogger( filterSet );
                 m_filterSetCollection.addFilterSet( filterSet );
             }
         }

@@ -10,6 +10,8 @@ package org.apache.antlib.dotnet;
 import java.io.File;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
@@ -537,7 +539,7 @@ public class CSharp
         final String[] dependencies = scanner.getIncludedFiles();
         final String message = "compiling " + dependencies.length + " file" +
             ( ( dependencies.length == 1 ) ? "" : "s" );
-        getLogger().info( message );
+        getContext().info( message );
         final String baseDir = scanner.getBasedir().toString();
         //add to the command
         for( int i = 0; i < dependencies.length; i++ )

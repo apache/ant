@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -252,9 +253,9 @@ public class JDependTask
 
         if( m_outputFile != null )
         {
-            getLogger().info( "Output to be stored in " + m_outputFile.getPath() );
+            getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
-        getLogger().debug( "Executing: " + commandline.toString() );
+        getContext().debug( "Executing: " + commandline.toString() );
         return exe.execute();
     }
 
@@ -295,11 +296,11 @@ public class JDependTask
             catch( IOException e )
             {
                 String msg = "JDepend Failed when creating the output file: " + e.getMessage();
-                getLogger().info( msg );
+                getContext().info( msg );
                 throw new TaskException( msg );
             }
             jdepend.setWriter( new PrintWriter( fw ) );
-            getLogger().info( "Output to be stored in " + m_outputFile.getPath() );
+            getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
         final String[] elements = FileUtils.parsePath( m_sourcesPath.toString() );
@@ -311,7 +312,7 @@ public class JDependTask
             if( !f.exists() || !f.isDirectory() )
             {
                 String msg = "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail.";
-                getLogger().info( msg );
+                getContext().info( msg );
                 throw new TaskException( msg );
             }
             try
@@ -321,7 +322,7 @@ public class JDependTask
             catch( IOException e )
             {
                 String msg = "JDepend Failed when adding a source directory: " + e.getMessage();
-                getLogger().info( msg );
+                getContext().info( msg );
                 throw new TaskException( msg );
             }
         }

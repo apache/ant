@@ -11,6 +11,7 @@ import java.io.File;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 
@@ -101,7 +102,7 @@ public class Rpm
         exe.setReturnCode( 0 );
 
         final String message = "Building the RPM based on the " + m_specFile + " file";
-        getLogger().info( message );
+        getContext().info( message );
         exe.execute();
     }
 

@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -164,7 +165,7 @@ public class JJTree
                                         targetName.substring( 0, targetName.indexOf( ".jjt" ) ) + ".jj" );
         if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
         {
-            getLogger().info( "Target is already built - skipping (" + target + ")" );
+            getContext().info( "Target is already built - skipping (" + target + ")" );
             return;
         }
         cmdl.addArgument( target.getAbsolutePath() );
@@ -182,7 +183,7 @@ public class JJTree
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
-        getLogger().debug( cmdl.toString() );
+        getContext().debug( cmdl.toString() );
         exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
         exe.setReturnCode( 0 );
         exe.execute();

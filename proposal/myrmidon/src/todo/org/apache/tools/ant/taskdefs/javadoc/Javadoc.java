@@ -20,6 +20,7 @@ import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.types.Commandline;
@@ -536,7 +537,7 @@ public class Javadoc
             throw new TaskException( msg );
         }
 
-        getLogger().info( "Generating Javadoc" );
+        getContext().info( "Generating Javadoc" );
 
         if( m_doctitle != null )
         {
@@ -662,7 +663,7 @@ public class Javadoc
                         }
                         else
                         {
-                            getLogger().debug( "Warning: No package list was found at " + packageListLocation );
+                            getContext().debug( "Warning: No package list was found at " + packageListLocation );
                         }
                     }
                     else
@@ -810,9 +811,9 @@ public class Javadoc
         {
             cmd.addArgument( "@" + m_packageList );
         }
-        getLogger().debug( "Javadoc args: " + cmd );
+        getContext().debug( "Javadoc args: " + cmd );
 
-        getLogger().info( "Javadoc execution" );
+        getContext().info( "Javadoc execution" );
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
@@ -873,7 +874,7 @@ public class Javadoc
         }
         else
         {
-            getLogger().warn( "Warning: Leaving out empty argument '" + key + "'" );
+            getContext().warn( "Warning: Leaving out empty argument '" + key + "'" );
         }
     }
 
@@ -899,7 +900,7 @@ public class Javadoc
                                    ArrayList packages, ArrayList excludePackages )
         throws TaskException
     {
-        getLogger().debug( "Source path = " + sourcePath.toString() );
+        getContext().debug( "Source path = " + sourcePath.toString() );
         StringBuffer msg = new StringBuffer( "Packages = " );
         for( int i = 0; i < packages.size(); i++ )
         {
@@ -909,7 +910,7 @@ public class Javadoc
             }
             msg.append( packages.get( i ) );
         }
-        getLogger().debug( msg.toString() );
+        getContext().debug( msg.toString() );
 
         msg.setLength( 0 );
         msg.append( "Exclude Packages = " );
@@ -921,7 +922,7 @@ public class Javadoc
             }
             msg.append( excludePackages.get( i ) );
         }
-        getLogger().debug( msg.toString() );
+        getContext().debug( msg.toString() );
 
         ArrayList addedPackages = new ArrayList();
 
@@ -1036,11 +1037,11 @@ public class Javadoc
     {
         if( line.startsWith( "Generating " ) || line.startsWith( "Building " ) )
         {
-            getLogger().debug( line );
+            getContext().debug( line );
         }
         else
         {
-            getLogger().info( line );
+            getContext().info( line );
         }
     }
 
@@ -1050,6 +1051,6 @@ public class Javadoc
      */
     public void stderr( final String line )
     {
-        getLogger().warn( line );
+        getContext().warn( line );
     }
 }

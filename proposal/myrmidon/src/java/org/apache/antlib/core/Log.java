@@ -9,7 +9,8 @@ package org.apache.antlib.core;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.LogLevel;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.LogLevel;
 
 /**
  * This is a task used to log messages in the build file.
@@ -33,7 +34,7 @@ public class Log
     /**
      * Set the level at which the message will be logged.
      *
-     * @param the level at which message will be logged
+     * @param level the level at which message will be logged
      */
     public void setLevel( final LogLevel level )
     {
@@ -64,7 +65,7 @@ public class Log
     public void execute()
         throws TaskException
     {
-        LogLevel.log( getLogger(), m_message, m_level );
+        getContext().log( m_level, m_message );
     }
 
     /**

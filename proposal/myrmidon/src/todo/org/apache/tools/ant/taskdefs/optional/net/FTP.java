@@ -288,7 +288,7 @@ public class FTP
 
         try
         {
-            getLogger().debug( "Opening FTP connection to " + m_server );
+            getContext().debug( "Opening FTP connection to " + m_server );
 
             ftp = new FTPClient();
 
@@ -298,15 +298,15 @@ public class FTP
                 throw new TaskException( "FTP connection failed: " + ftp.getReplyString() );
             }
 
-            getLogger().debug( "connected" );
-            getLogger().debug( "logging in to FTP server" );
+            getContext().debug( "connected" );
+            getContext().debug( "logging in to FTP server" );
 
             if( !ftp.login( m_userid, m_password ) )
             {
                 throw new TaskException( "Could not login to FTP server" );
             }
 
-            getLogger().debug( "login succeeded" );
+            getContext().debug( "login succeeded" );
 
             if( m_binary )
             {
@@ -321,7 +321,7 @@ public class FTP
 
             if( m_passive )
             {
-                getLogger().debug( "entering passive mode" );
+                getContext().debug( "entering passive mode" );
                 ftp.enterLocalPassiveMode();
                 if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                 {
@@ -344,7 +344,7 @@ public class FTP
             {
                 if( m_remotedir != null )
                 {
-                    getLogger().debug( "changing the remote directory" );
+                    getContext().debug( "changing the remote directory" );
                     ftp.changeWorkingDirectory( m_remotedir );
                     if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                     {
@@ -353,7 +353,7 @@ public class FTP
                             ftp.getReplyString() );
                     }
                 }
-                getLogger().info( ACTION_STRS[ m_action ] + " files" );
+                getContext().info( ACTION_STRS[ m_action ] + " files" );
                 transferFiles( ftp );
             }
 
@@ -368,7 +368,7 @@ public class FTP
             {
                 try
                 {
-                    getLogger().debug( "disconnecting" );
+                    getContext().debug( "disconnecting" );
                     ftp.logout();
                     ftp.disconnect();
                 }
@@ -411,7 +411,7 @@ public class FTP
 
             if( m_verbose )
             {
-                getLogger().info( "transferring " + filename + " to " + file.getAbsolutePath() );
+                getContext().info( "transferring " + filename + " to " + file.getAbsolutePath() );
             }
 
             final File parent = file.getParentFile();
@@ -427,7 +427,7 @@ public class FTP
                 String s = "could not get file: " + ftp.getReplyString();
                 if( m_skipFailedTransfers == true )
                 {
-                    getLogger().warn( s );
+                    getContext().warn( s );
                     m_skipped++;
                 }
                 else
@@ -438,7 +438,7 @@ public class FTP
             }
             else
             {
-                getLogger().debug( "File " + file.getAbsolutePath() + " copied from " + m_server );
+                getContext().debug( "File " + file.getAbsolutePath() + " copied from " + m_server );
                 m_transferred++;
             }
         }
@@ -465,7 +465,7 @@ public class FTP
     protected boolean isUpToDate( FTPClient ftp, File localFile, String remoteFile )
         throws IOException, TaskException
     {
-        getLogger().debug( "checking date for " + remoteFile );
+        getContext().debug( "checking date for " + remoteFile );
 
         FTPFile[] files = ftp.listFiles( remoteFile );
 
@@ -478,7 +478,7 @@ public class FTP
 
             if( m_action == SEND_FILES )
             {
-                getLogger().debug( "Could not date test remote file: " + remoteFile + "assuming out of date." );
+                getContext().debug( "Could not date test remote file: " + remoteFile + "assuming out of date." );
                 return false;
             }
             else
@@ -554,7 +554,7 @@ public class FTP
             dir = (File)parents.get( i );
             if( !m_dirCache.contains( dir ) )
             {
-                getLogger().debug( "creating remote directory " + remoteResolveFile( dir.getPath() ) );
+                getContext().debug( "creating remote directory " + remoteResolveFile( dir.getPath() ) );
                 ftp.makeDirectory( remoteResolveFile( dir.getPath() ) );
                 // Both codes 550 and 553 can be produced by FTP Servers
                 //  to indicate that an attempt to create a directory has
@@ -581,7 +581,7 @@ public class FTP
     {
         if( m_verbose )
         {
-            getLogger().info( "deleting " + filename );
+            getContext().info( "deleting " + filename );
         }
 
         if( !ftp.deleteFile( remoteResolveFile( filename ) ) )
@@ -589,7 +589,7 @@ public class FTP
             String s = "could not delete file: " + ftp.getReplyString();
             if( m_skipFailedTransfers == true )
             {
-                getLogger().warn( s );
+                getContext().warn( s );
                 m_skipped++;
             }
             else
@@ -599,7 +599,7 @@ public class FTP
         }
         else
         {
-            getLogger().debug( "File " + filename + " deleted from " + m_server );
+            getContext().debug( "File " + filename + " deleted from " + m_server );
             m_transferred++;
         }
     }
@@ -616,7 +616,7 @@ public class FTP
     {
         if( m_verbose )
         {
-            getLogger().info( "listing " + filename );
+            getContext().info( "listing " + filename );
         }
 
         FTPFile ftpfile = ftp.listFiles( remoteResolveFile( filename ) )[ 0 ];
@@ -639,7 +639,7 @@ public class FTP
     {
         if( m_verbose )
         {
-            getLogger().info( "creating directory: " + dir );
+            getContext().info( "creating directory: " + dir );
         }
 
         if( !ftp.makeDirectory( dir ) )
@@ -657,14 +657,14 @@ public class FTP
 
             if( m_verbose )
             {
-                getLogger().info( "directory already exists" );
+                getContext().info( "directory already exists" );
             }
         }
         else
         {
             if( m_verbose )
             {
-                getLogger().info( "directory created OK" );
+                getContext().info( "directory created OK" );
             }
         }
     }
@@ -715,7 +715,7 @@ public class FTP
 
             if( m_verbose )
             {
-                getLogger().info( "transferring " + file.getAbsolutePath() );
+                getContext().info( "transferring " + file.getAbsolutePath() );
             }
 
             instream = new BufferedInputStream( new FileInputStream( file ) );
@@ -729,7 +729,7 @@ public class FTP
                 String s = "could not put file: " + ftp.getReplyString();
                 if( m_skipFailedTransfers == true )
                 {
-                    getLogger().warn( s );
+                    getContext().warn( s );
                     m_skipped++;
                 }
                 else
@@ -741,7 +741,7 @@ public class FTP
             else
             {
 
-                getLogger().debug( "File " + file.getAbsolutePath() + " copied to " + m_server );
+                getContext().debug( "File " + file.getAbsolutePath() + " copied to " + m_server );
                 m_transferred++;
             }
         }
@@ -889,10 +889,10 @@ public class FTP
             }
         }
 
-        getLogger().info( m_transferred + " files " + COMPLETED_ACTION_STRS[ m_action ] );
+        getContext().info( m_transferred + " files " + COMPLETED_ACTION_STRS[ m_action ] );
         if( m_skipped != 0 )
         {
-            getLogger().info( m_skipped + " files were not successfully " + COMPLETED_ACTION_STRS[ m_action ] );
+            getContext().info( m_skipped + " files were not successfully " + COMPLETED_ACTION_STRS[ m_action ] );
         }
     }
 }

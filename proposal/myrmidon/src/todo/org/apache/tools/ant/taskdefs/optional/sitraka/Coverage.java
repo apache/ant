@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -251,7 +252,7 @@ public class Coverage
             // use the custom handler for stdin issues
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute exe = new Execute( execManager );
-            getLogger().debug( cmdl.toString() );
+            getContext().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
             int exitValue = exe.execute();
             if( exitValue != 0 )
@@ -412,7 +413,7 @@ public class Coverage
     {
         //@todo change this when switching to JDK 1.2 and use File.createTmpFile()
         File file = File.createTempFile( "jpcoverage", "tmp" );
-        getLogger().debug( "Creating parameter file: " + file );
+        getContext().debug( "Creating parameter file: " + file );
 
         // options need to be one per line in the parameter file
         // so write them all in a single string
@@ -424,7 +425,7 @@ public class Coverage
             pw.println( params[ i ] );
         }
         pw.flush();
-        getLogger().debug( "JProbe Coverage parameters:\n" + sw.toString() );
+        getContext().debug( "JProbe Coverage parameters:\n" + sw.toString() );
 
         // now write them to the file
         FileWriter fw = null;

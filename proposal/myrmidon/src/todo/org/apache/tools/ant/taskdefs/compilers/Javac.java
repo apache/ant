@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.JavaVersion;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -639,7 +641,7 @@ public class Javac
             final String message = "Compiling " + m_compileList.length + " source file" +
                 ( m_compileList.length == 1 ? "" : "s" ) +
                 ( m_destDir != null ? " to " + m_destDir : "" );
-            getLogger().info( message );
+            getContext().info( message );
 
             // now we need to populate the compiler adapter
             adapter.setJavac( this );
@@ -709,7 +711,6 @@ public class Javac
         m.setFrom( "*.java" );
         m.setTo( "*.class" );
         SourceFileScanner sfs = new SourceFileScanner();
-        setupLogger( sfs );
         File[] newFiles = sfs.restrictAsFiles( files, srcDir, destDir, m, getContext() );
 
         if( newFiles.length > 0 )
@@ -732,12 +733,12 @@ public class Javac
             if( isJdkCompiler( compiler.toString() ) )
             {
                 final String message = "Since fork is true, ignoring build.compiler setting.";
-                getLogger().warn( message );
+                getContext().warn( message );
                 compiler = "extJavac";
             }
             else
             {
-                getLogger().warn( "Since build.compiler setting isn't classic or modern, ignoring fork setting." );
+                getContext().warn( "Since build.compiler setting isn't classic or modern, ignoring fork setting." );
             }
         }
         else

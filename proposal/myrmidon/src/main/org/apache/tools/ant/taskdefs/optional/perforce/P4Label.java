@@ -10,6 +10,8 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * P4Label - create a Perforce Label. P4Label inserts a label into perforce
@@ -46,7 +48,7 @@ public class P4Label
 
     public void stdout( String line )
     {
-        getLogger().debug( line );
+        getContext().debug( line );
 
         if( null != m_labelSpec )
         {
@@ -62,7 +64,7 @@ public class P4Label
     public void execute()
         throws TaskException
     {
-        getLogger().info( "P4Label exec:" );
+        getContext().info( "P4Label exec:" );
 
         validate();
 
@@ -77,13 +79,13 @@ public class P4Label
         execP4Command( "label -i", null );
         execP4Command( "labelsync -l " + m_name, null );
 
-        getLogger().info( "Created Label " + m_name + " (" + m_description + ")" );
+        getContext().info( "Created Label " + m_name + " (" + m_description + ")" );
 
         //Now lock if required
         if( m_lock != null && m_lock.equalsIgnoreCase( "locked" ) )
         {
 
-            getLogger().info( "Modifying lock status to 'locked'" );
+            getContext().info( "Modifying lock status to 'locked'" );
 
             //Read back the label spec from perforce,
             //Replace Options
@@ -92,12 +94,12 @@ public class P4Label
             m_labelSpec = new StringBuffer();
             execP4Command( "label -o " + m_name, null );
             final String labelSpec = m_labelSpec.toString();
-            getLogger().debug( labelSpec );
+            getContext().debug( labelSpec );
 
             //reset labelSpec to null so output is not written to it anymore
             m_labelSpec = null;
 
-            getLogger().debug( "Now locking label..." );
+            getContext().debug( "Now locking label..." );
             //handler.setOutput( labelSpec );
             execP4Command( "label -i", null );
         }
@@ -107,19 +109,19 @@ public class P4Label
     {
         if( m_p4View == null || m_p4View.length() < 1 )
         {
-            getLogger().warn( "View not set, assuming //depot/..." );
+            getContext().warn( "View not set, assuming //depot/..." );
             m_p4View = "//depot/...";
         }
 
         if( m_description == null || m_description.length() < 1 )
         {
-            getLogger().warn( "Label Description not set, assuming 'AntLabel'" );
+            getContext().warn( "Label Description not set, assuming 'AntLabel'" );
             m_description = "AntLabel";
         }
 
         if( m_lock != null && !m_lock.equalsIgnoreCase( "locked" ) )
         {
-            getLogger().warn( "lock attribute invalid - ignoring" );
+            getContext().warn( "lock attribute invalid - ignoring" );
         }
 
         if( m_name == null || m_name.length() < 1 )
@@ -127,7 +129,7 @@ public class P4Label
             SimpleDateFormat formatter = new SimpleDateFormat( "yyyy.MM.dd-hh:mm" );
             Date now = new Date();
             m_name = "AntLabel-" + formatter.format( now );
-            getLogger().warn( "name not set, assuming '" + m_name + "'" );
+            getContext().warn( "name not set, assuming '" + m_name + "'" );
         }
     }
 }

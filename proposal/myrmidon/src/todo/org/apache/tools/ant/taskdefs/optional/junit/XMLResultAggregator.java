@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -273,7 +274,7 @@ public class XMLResultAggregator
         {
             try
             {
-                getLogger().debug( "Parsing file: '" + files[ i ] + "'" );
+                getContext().debug( "Parsing file: '" + files[ i ] + "'" );
                 //XXX there seems to be a bug in xerces 1.3.0 that doesn't like file object
                 // will investigate later. It does not use the given directory but
                 // the vm dir instead ? Works fine with crimson.
@@ -287,19 +288,19 @@ public class XMLResultAggregator
                 else
                 {
                     // issue a warning.
-                    getLogger().warn( "the file " + files[ i ] + " is not a valid testsuite XML document" );
+                    getContext().warn( "the file " + files[ i ] + " is not a valid testsuite XML document" );
                 }
             }
             catch( SAXException e )
             {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
-                getLogger().warn( "The file " + files[ i ] + " is not a valid XML document. It is possibly corrupted." );
-                getLogger().debug( ExceptionUtil.printStackTrace( e ) );
+                getContext().warn( "The file " + files[ i ] + " is not a valid XML document. It is possibly corrupted." );
+                getContext().debug( ExceptionUtil.printStackTrace( e ) );
             }
             catch( IOException e )
             {
-                getLogger().error( "Error while accessing file " + files[ i ] + ": " + e.getMessage() );
+                getContext().error( "Error while accessing file " + files[ i ] + ": " + e.getMessage() );
             }
         }
         return rootElement;

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -157,7 +158,7 @@ public class PathConvert extends AbstractTask
         // Place the result into the specified property
         final String value = rslt.toString();
 
-        getLogger().debug( "Set property " + m_property + " = " + value );
+        getContext().debug( "Set property " + m_property + " = " + value );
 
         final String name = m_property;
         getContext().setProperty( name, value );

@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Creates a WAR archive.
@@ -93,7 +95,7 @@ public class War
                 final String message = "Warning: selected " + m_archiveType +
                     " files include a WEB-INF/web.xml which will be ignored " +
                     "(please use webxml attribute to " + m_archiveType + " task)";
-                getLogger().warn( message );
+                getContext().warn( message );
             }
             else
             {

@@ -21,6 +21,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -169,7 +171,7 @@ public class XSLTProcess
         }
 
         final String message = "Transforming into " + m_destdir;
-        getLogger().info( message );
+        getContext().info( message );
 
         // Process all the files marked for styling
         processFiles( scanner );
@@ -244,14 +246,14 @@ public class XSLTProcess
 
         try
         {
-            getLogger().info( "Loading stylesheet " + m_stylesheet );
+            getContext().info( "Loading stylesheet " + m_stylesheet );
             specifyStylesheet();
             specifyParams();
         }
         catch( final Exception e )
         {
             final String message = "Failed to read stylesheet " + m_stylesheet;
-            getLogger().info( message );
+            getContext().info( message );
             throw new TaskException( e.getMessage(), e );
         }
     }
@@ -325,7 +327,7 @@ public class XSLTProcess
                 ensureDirectoryFor( out );
 
                 final String notice = "Processing " + in + " to " + out;
-                getLogger().info( notice );
+                getContext().info( notice );
                 transform( in, out );
             }
         }
@@ -334,7 +336,7 @@ public class XSLTProcess
             // If failed to process document, must delete target document,
             // or it will not attempt to process it the second time
             final String message = "Failed to process " + in;
-            getLogger().info( message );
+            getContext().info( message );
             if( out != null )
             {
                 out.delete();
@@ -348,9 +350,9 @@ public class XSLTProcess
         throws TaskException
     {
         final long styleSheetLastModified = m_stylesheet.lastModified();
-        getLogger().debug( "In file " + in + " time: " + in.lastModified() );
-        getLogger().debug( "Out file " + out + " time: " + out.lastModified() );
-        getLogger().debug( "Style file " + m_stylesheet + " time: " + styleSheetLastModified );
+        getContext().debug( "In file " + in + " time: " + in.lastModified() );
+        getContext().debug( "Out file " + out + " time: " + out.lastModified() );
+        getContext().debug( "Style file " + m_stylesheet + " time: " + styleSheetLastModified );
 
         processFile( in, out );
     }

@@ -16,6 +16,7 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -117,7 +118,7 @@ public class CovMerge
 
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute exe = new Execute( execManager );
-            getLogger().debug( cmdl.toString() );
+            getContext().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
 
             // JProbe process always return 0 so  we will not be

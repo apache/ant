@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
@@ -378,13 +379,13 @@ public class JspC extends MatchingTask
         {
             compiler = "jasper";
         }
-        getLogger().debug( "compiling " + compileList.size() + " files" );
+        getContext().debug( "compiling " + compileList.size() + " files" );
 
         if( compileList.size() > 0 )
         {
             CompilerAdapter adapter =
                 CompilerAdapterFactory.getCompiler( compiler.toString(), getContext() );
-            getLogger().info( "Compiling " + compileList.size() +
+            getContext().info( "Compiling " + compileList.size() +
                               " source file"
                               + ( compileList.size() == 1 ? "" : "s" )
                               + ( destDir != null ? " to " + destDir : "" ) );
@@ -401,7 +402,7 @@ public class JspC extends MatchingTask
                 }
                 else
                 {
-                    getLogger().error( FAIL_MSG );
+                    getContext().error( FAIL_MSG );
                 }
             }
         }
@@ -409,11 +410,11 @@ public class JspC extends MatchingTask
         {
             if( filecount == 0 )
             {
-                getLogger().info( "there were no files to compile" );
+                getContext().info( "there were no files to compile" );
             }
             else
             {
-                getLogger().debug( "all files are up to date" );
+                getContext().debug( "all files are up to date" );
             }
         }
     }
@@ -460,7 +461,7 @@ public class JspC extends MatchingTask
                 {
                     final String message =
                         "Warning: file modified in the future: " + files[ i ];
-                    getLogger().warn( message );
+                    getContext().warn( message );
                 }
 
                 if( !javaFile.exists() ||
@@ -468,11 +469,11 @@ public class JspC extends MatchingTask
                 {
                     if( !javaFile.exists() )
                     {
-                        getLogger().debug( "Compiling " + srcFile.getPath() + " because java file " + javaFile.getPath() + " does not exist" );
+                        getContext().debug( "Compiling " + srcFile.getPath() + " because java file " + javaFile.getPath() + " does not exist" );
                     }
                     else
                     {
-                        getLogger().debug( "Compiling " + srcFile.getPath() + " because it is out of date with respect to " + javaFile.getPath() );
+                        getContext().debug( "Compiling " + srcFile.getPath() + " because it is out of date with respect to " + javaFile.getPath() );
                     }
                     compileList.add( srcFile.getAbsolutePath() );
                 }

@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Abstract Base class for unpack tasks.
@@ -52,7 +53,7 @@ public abstract class Unpack
         {
             final String message = "Expanding " + src.getAbsolutePath() +
                 " to " + dest.getAbsolutePath();
-            getLogger().info( message );
+            getContext().info( message );
 
             extract();
         }

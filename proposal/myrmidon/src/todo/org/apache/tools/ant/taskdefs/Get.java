@@ -17,6 +17,7 @@ import java.net.URLConnection;
 import java.util.Date;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Get a particular file from a URL source. Options include verbose reporting,
@@ -147,7 +148,7 @@ public class Get extends AbstractTask
 
         try
         {
-            getLogger().info( "Getting: " + source );
+            getContext().info( "Getting: " + source );
 
             //set the timestamp to the file date.
             long timestamp = 0;
@@ -159,7 +160,7 @@ public class Get extends AbstractTask
                 if( verbose )
                 {
                     Date t = new Date( timestamp );
-                    getLogger().info( "local file date : " + t.toString() );
+                    getContext().info( "local file date : " + t.toString() );
                 }
 
                 hasTimestamp = true;
@@ -205,13 +206,13 @@ public class Get extends AbstractTask
                     //not modified so no file download. just return instead
                     //and trace out something so the user doesn't think that the
                     //download happened when it didnt
-                    getLogger().info( "Not modified - so not downloaded" );
+                    getContext().info( "Not modified - so not downloaded" );
                     return;
                 }
                 // test for 401 result (HTTP only)
                 if( httpConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED )
                 {
-                    getLogger().info( "Not authorized - check " + dest + " for details" );
+                    getContext().info( "Not authorized - check " + dest + " for details" );
                     return;
                 }
 
@@ -233,12 +234,12 @@ public class Get extends AbstractTask
                 }
                 catch( IOException ex )
                 {
-                    getLogger().info( "Error opening connection " + ex );
+                    getContext().info( "Error opening connection " + ex );
                 }
             }
             if( is == null )
             {
-                getLogger().info( "Can't get " + source + " to " + dest );
+                getContext().info( "Can't get " + source + " to " + dest );
                 if( ignoreErrors )
                 {
                     return;
@@ -272,7 +273,7 @@ public class Get extends AbstractTask
                 if( verbose )
                 {
                     Date t = new Date( remoteTimestamp );
-                    getLogger().info( "last modified = " + t.toString()
+                    getContext().info( "last modified = " + t.toString()
                                       + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
                 }
 
@@ -284,7 +285,7 @@ public class Get extends AbstractTask
         }
         catch( IOException ioe )
         {
-            getLogger().info( "Error getting " + source + " to " + dest );
+            getContext().info( "Error getting " + source + " to " + dest );
             if( ignoreErrors )
             {
                 return;

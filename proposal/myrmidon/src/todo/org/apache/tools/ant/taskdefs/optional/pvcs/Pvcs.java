@@ -24,6 +24,7 @@ import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 
@@ -187,8 +188,8 @@ public class Pvcs
         final File filelist = getFileList();
 
         final Commandline cmd = buildGetCommand( filelist );
-        getLogger().info( "Getting files" );
-        getLogger().debug( "Executing " + cmd.toString() );
+        getContext().info( "Getting files" );
+        getContext().debug( "Executing " + cmd.toString() );
         try
         {
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
@@ -258,7 +259,7 @@ public class Pvcs
         // Capture output
         // build the command line from what we got the format is
         final Commandline cmd = buildPCLICommand();
-        getLogger().debug( "Executing " + cmd.toString() );
+        getContext().debug( "Executing " + cmd.toString() );
 
         File tmp = null;
 
@@ -284,7 +285,7 @@ public class Pvcs
             }
 
             // Create folders in workspace
-            getLogger().info( "Creating folders" );
+            getContext().info( "Creating folders" );
             createFolders( tmp );
 
             // Massage PCLI lvf output transforming '\' to '/' so get command works appropriately
@@ -326,7 +327,7 @@ public class Pvcs
         catch( final IOException ioe )
         {
             final String message = "Failed to write to output stream";
-            getLogger().error( message );
+            getContext().error( message );
         }
     }
 
@@ -336,7 +337,7 @@ public class Pvcs
      */
     public void stderr( final String line )
     {
-        getLogger().warn( line );
+        getContext().warn( line );
     }
 
     private Commandline buildPCLICommand()
@@ -420,7 +421,7 @@ public class Pvcs
         String line = in.readLine();
         while( line != null )
         {
-            getLogger().debug( "Considering \"" + line + "\"" );
+            getContext().debug( "Considering \"" + line + "\"" );
             if( line.startsWith( "\"\\" ) ||
                 line.startsWith( "\"/" ) ||
                 line.startsWith( m_lineStart ) )
@@ -434,30 +435,30 @@ public class Pvcs
                     File dir = new File( f.substring( 0, index ) );
                     if( !dir.exists() )
                     {
-                        getLogger().debug( "Creating " + dir.getAbsolutePath() );
+                        getContext().debug( "Creating " + dir.getAbsolutePath() );
                         if( dir.mkdirs() )
                         {
-                            getLogger().info( "Created " + dir.getAbsolutePath() );
+                            getContext().info( "Created " + dir.getAbsolutePath() );
                         }
                         else
                         {
-                            getLogger().info( "Failed to create " + dir.getAbsolutePath() );
+                            getContext().info( "Failed to create " + dir.getAbsolutePath() );
                         }
                     }
                     else
                     {
-                        getLogger().debug( dir.getAbsolutePath() + " exists. Skipping" );
+                        getContext().debug( dir.getAbsolutePath() + " exists. Skipping" );
                     }
                 }
                 else
                 {
                     final String message = "File separator problem with " + line;
-                    getLogger().warn( message );
+                    getContext().warn( message );
                 }
             }
             else
             {
-                getLogger().debug( "Skipped \"" + line + "\"" );
+                getContext().debug( "Skipped \"" + line + "\"" );
             }
             line = in.readLine();
         }

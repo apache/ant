@@ -25,6 +25,8 @@ import java.util.Properties;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 
@@ -227,7 +229,7 @@ public class Replace
 
         if( m_summary )
         {
-            getLogger().info( "Replaced " + m_replaceCount + " occurrences in " + m_fileCount + " files." );
+            getContext().info( "Replaced " + m_replaceCount + " occurrences in " + m_fileCount + " files." );
         }
     }
 
@@ -351,7 +353,7 @@ public class Replace
                 final String tok = stringReplace( m_token.getText(), "\n", StringUtil.LINE_SEPARATOR );
 
                 // for each found token, replace with value
-                getLogger().debug( "Replacing in " + src.getPath() + ": " + m_token.getText() + " --> " + m_value.getText() );
+                getContext().debug( "Replacing in " + src.getPath() + ": " + m_token.getText() + " --> " + m_value.getText() );
                 newString = stringReplace( newString, tok, val );
             }
 
@@ -409,7 +411,7 @@ public class Replace
             Replacefilter filter = (Replacefilter)m_replacefilters.get( i );
 
             //for each found token, replace with value
-            getLogger().debug( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue() );
+            getContext().debug( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue() );
             newString = stringReplace( newString, filter.getToken(), filter.getReplaceValue() );
         }
 

@@ -17,6 +17,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -283,13 +284,13 @@ public class MParse
         File javaFile = new File( pathname );
         if( javaFile.exists() && m_target.lastModified() < javaFile.lastModified() )
         {
-            getLogger().info( "Target is already build - skipping (" + m_target + ")" );
+            getContext().info( "Target is already build - skipping (" + m_target + ")" );
             return;
         }
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
-        getLogger().debug( m_cmdl.toString() );
+        getContext().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
         exe.setReturnCode( 0 );
@@ -347,7 +348,7 @@ public class MParse
             final File sunjj = new File( m_target.getParent(), name );
             if( sunjj.exists() )
             {
-                getLogger().info( "Removing stale file: " + sunjj.getName() );
+                getContext().info( "Removing stale file: " + sunjj.getName() );
                 sunjj.delete();
             }
         }

@@ -34,6 +34,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -429,7 +430,7 @@ public class SQLExec
             Class dc;
             if( classpath != null )
             {
-                getLogger().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
+                getContext().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
 
                 final URL[] urls = PathUtil.toURLs( classpath );
                 final ClassLoader classLoader = new URLClassLoader( urls );
@@ -437,7 +438,7 @@ public class SQLExec
             }
             else
             {
-                getLogger().debug( "Loading " + driver + " using system loader." );
+                getContext().debug( "Loading " + driver + " using system loader." );
                 dc = Class.forName( driver );
             }
             driverInstance = (Driver)dc.newInstance();
@@ -457,7 +458,7 @@ public class SQLExec
 
         try
         {
-            getLogger().debug( "connecting to " + url );
+            getContext().debug( "connecting to " + url );
             Properties info = new Properties();
             info.put( "user", userId );
             info.put( "password", password );
@@ -483,7 +484,7 @@ public class SQLExec
             {
                 if( output != null )
                 {
-                    getLogger().debug( "Opening PrintStream to output file " + output );
+                    getContext().debug( "Opening PrintStream to output file " + output );
                     out = new PrintStream( new BufferedOutputStream( new FileOutputStream( output ) ) );
                 }
 
@@ -495,7 +496,7 @@ public class SQLExec
                     ( (Transaction)e.next() ).runTransaction( out );
                     if( !autocommit )
                     {
-                        getLogger().debug( "Commiting transaction" );
+                        getContext().debug( "Commiting transaction" );
                         conn.commit();
                     }
                 }
@@ -554,7 +555,7 @@ public class SQLExec
             }
         }
 
-        getLogger().info( goodSql + " of " + totalSql +
+        getContext().info( goodSql + " of " + totalSql +
                           " SQL statements executed successfully" );
     }
 
@@ -579,10 +580,10 @@ public class SQLExec
             {
                 String theVendor = dmd.getDatabaseProductName().toLowerCase();
 
-                getLogger().debug( "RDBMS = " + theVendor );
+                getContext().debug( "RDBMS = " + theVendor );
                 if( theVendor == null || theVendor.indexOf( rdbms ) < 0 )
                 {
-                    getLogger().debug( "Not the required RDBMS: " + rdbms );
+                    getContext().debug( "Not the required RDBMS: " + rdbms );
                     return false;
                 }
             }
@@ -591,12 +592,12 @@ public class SQLExec
             {
                 String theVersion = dmd.getDatabaseProductVersion().toLowerCase();
 
-                getLogger().debug( "Version = " + theVersion );
+                getContext().debug( "Version = " + theVersion );
                 if( theVersion == null ||
                     !( theVersion.startsWith( version ) ||
                     theVersion.indexOf( " " + version ) >= 0 ) )
                 {
-                    getLogger().debug( "Not the required version: \"" + version + "\"" );
+                    getContext().debug( "Not the required version: \"" + version + "\"" );
                     return false;
                 }
             }
@@ -604,7 +605,7 @@ public class SQLExec
         catch( SQLException e )
         {
             // Could not get the required information
-            getLogger().error( "Failed to obtain required RDBMS information" );
+            getContext().error( "Failed to obtain required RDBMS information" );
             return false;
         }
 
@@ -632,7 +633,7 @@ public class SQLExec
             totalSql++;
             if( !statement.execute( sql ) )
             {
-                getLogger().debug( statement.getUpdateCount() + " rows affected" );
+                getContext().debug( statement.getUpdateCount() + " rows affected" );
             }
             else
             {
@@ -645,7 +646,7 @@ public class SQLExec
             SQLWarning warning = conn.getWarnings();
             while( warning != null )
             {
-                getLogger().debug( warning + " sql warning" );
+                getContext().debug( warning + " sql warning" );
                 warning = warning.getNextWarning();
             }
             conn.clearWarnings();
@@ -653,12 +654,12 @@ public class SQLExec
         }
         catch( SQLException e )
         {
-            getLogger().error( "Failed to execute: " + sql );
+            getContext().error( "Failed to execute: " + sql );
             if( !onError.equals( "continue" ) )
             {
                 throw e;
             }
-            getLogger().error( e.toString() );
+            getContext().error( e.toString() );
         }
     }
 
@@ -677,7 +678,7 @@ public class SQLExec
             rs = statement.getResultSet();
             if( rs != null )
             {
-                getLogger().debug( "Processing new result set." );
+                getContext().debug( "Processing new result set." );
                 ResultSetMetaData md = rs.getMetaData();
                 int columnCount = md.getColumnCount();
                 StringBuffer line = new StringBuffer();
@@ -768,7 +769,7 @@ public class SQLExec
                 if( delimiterType.equals( DelimiterType.NORMAL ) && sql.endsWith( delimiter ) ||
                     delimiterType.equals( DelimiterType.ROW ) && line.equals( delimiter ) )
                 {
-                    getLogger().debug( "SQL: " + sql );
+                    getContext().debug( "SQL: " + sql );
                     execSQL( sql.substring( 0, sql.length() - delimiter.length() ), out );
                     sql = "";
                 }
@@ -839,13 +840,13 @@ public class SQLExec
         {
             if( tSqlCommand.length() != 0 )
             {
-                getLogger().info( "Executing commands" );
+                getContext().info( "Executing commands" );
                 runStatements( new StringReader( tSqlCommand ), out );
             }
 
             if( tSrcFile != null )
             {
-                getLogger().info( "Executing file: " + tSrcFile.getAbsolutePath() );
+                getContext().info( "Executing file: " + tSrcFile.getAbsolutePath() );
                 Reader reader = ( encoding == null ) ? new FileReader( tSrcFile )
                     : new InputStreamReader( new FileInputStream( tSrcFile ), encoding );
                 runStatements( reader, out );

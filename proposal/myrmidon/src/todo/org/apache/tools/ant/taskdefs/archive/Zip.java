@@ -24,6 +24,8 @@ import org.apache.aut.zip.ZipEntry;
 import org.apache.aut.zip.ZipOutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileScanner;
@@ -280,7 +282,7 @@ public class Zip
 
         String action = m_update ? "Updating " : "Building ";
 
-        getLogger().info( action + m_archiveType + ": " + m_file.getAbsolutePath() );
+        getContext().info( action + m_archiveType + ": " + m_file.getAbsolutePath() );
 
         boolean success = false;
         try
@@ -385,7 +387,7 @@ public class Zip
             {
                 final String message = "Warning: unable to delete temporary file " +
                     renamedFile.getName();
-                getLogger().warn( message );
+                getContext().warn( message );
             }
         }
     }
@@ -447,7 +449,7 @@ public class Zip
             {
                 final String message = "Warning: skipping " + m_archiveType + " archive " + zipFile +
                     " because no files were included.";
-                getLogger().warn( message );
+                getContext().warn( message );
                 return true;
             }
             else if( m_emptyBehavior.equals( "fail" ) )
@@ -477,7 +479,6 @@ public class Zip
             }
 
             final SourceFileScanner scanner = new SourceFileScanner();
-            setupLogger( scanner );
             MergingMapper mm = new MergingMapper();
             mm.setTo( zipFile.getAbsolutePath() );
             for( int i = 0; i < scanners.length; i++ )
@@ -739,7 +740,7 @@ public class Zip
         // In this case using java.util.zip will not work
         // because it does not permit a zero-entry archive.
         // Must create it manually.
-        getLogger().info( "Note: creating empty " + m_archiveType + " archive " + zipFile );
+        getContext().info( "Note: creating empty " + m_archiveType + " archive " + zipFile );
         try
         {
             OutputStream os = new FileOutputStream( zipFile );

@@ -24,6 +24,8 @@ import java.util.NoSuchElementException;
 import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 
@@ -318,7 +320,7 @@ public class FixCRLF
         }
 
         // log options used
-        getLogger().debug( "options:" +
+        getContext().debug( "options:" +
                            " eol=" +
                            ( eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf" ) +
                            " tab=" + ( tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove" ) +
@@ -752,11 +754,11 @@ public class FixCRLF
             if( destFile.exists() )
             {
                 // Compare the destination with the temp file
-                getLogger().debug( "destFile exists" );
+                getContext().debug( "destFile exists" );
                 boolean result = FileUtil.contentEquals( destFile, tmpFile );
                 if( !result )
                 {
-                    getLogger().debug( destFile + " is being written" );
+                    getContext().debug( destFile + " is being written" );
                     if( !destFile.delete() )
                     {
                         throw new TaskException( "Unable to delete "
@@ -774,7 +776,7 @@ public class FixCRLF
                 }
                 else
                 {// destination is equal to temp file
-                    getLogger().debug( destFile + " is not written, as the contents are identical" );
+                    getContext().debug( destFile + " is not written, as the contents are identical" );
                     if( !tmpFile.delete() )
                     {
                         throw new TaskException( "Unable to delete "
@@ -785,7 +787,7 @@ public class FixCRLF
             else
             {// destFile does not exist - write the temp file
                 ///XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                getLogger().debug( "destFile does not exist" );
+                getContext().debug( "destFile does not exist" );
                 if( !tmpFile.renameTo( destFile ) )
                 {
                     throw new TaskException(
@@ -814,7 +816,7 @@ public class FixCRLF
             }
             catch( IOException io )
             {
-                getLogger().error( "Error closing " + srcFile );
+                getContext().error( "Error closing " + srcFile );
             }// end of catch
 
             if( tmpFile != null )

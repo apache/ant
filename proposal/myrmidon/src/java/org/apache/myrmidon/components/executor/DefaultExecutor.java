@@ -12,8 +12,6 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -64,9 +62,6 @@ public class DefaultExecutor
         {
             debug( "creating.notice", taskName );
             final Task task = doCreateTask( taskName, frame );
-
-            debug( "logger.notice", taskName );
-            doLogEnabled( task, taskModel, frame.getLogger() );
 
             debug( "contextualizing.notice", taskName );
             doContextualize( task, taskModel, frame.getContext() );
@@ -140,29 +135,6 @@ public class DefaultExecutor
             final String message =
                 REZ.getString( "contextualize.error", taskModel.getName() );
             throw new TaskException( message, throwable );
-        }
-    }
-
-    /**
-     * Sets the logger for a task.
-     */
-    protected final void doLogEnabled( final Task task,
-                                       final Configuration taskModel,
-                                       final Logger logger )
-        throws TaskException
-    {
-        if( task instanceof LogEnabled )
-        {
-            try
-            {
-                ( (LogEnabled)task ).enableLogging( logger );
-            }
-            catch( final Throwable throwable )
-            {
-                final String message =
-                    REZ.getString( "logger.error", taskModel.getName() );
-                throw new TaskException( message, throwable );
-            }
         }
     }
 }

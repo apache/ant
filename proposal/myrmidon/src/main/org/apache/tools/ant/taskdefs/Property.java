@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 
@@ -126,7 +127,7 @@ public class Property
         throws TaskException
     {
         Properties props = new Properties();
-        getLogger().debug( "Resource Loading " + name );
+        getContext().debug( "Resource Loading " + name );
         try
         {
             ClassLoader classLoader = null;
@@ -149,7 +150,7 @@ public class Property
             }
             else
             {
-                getLogger().warn( "Unable to find resource " + name );
+                getContext().warn( "Unable to find resource " + name );
             }
         }
         catch( IOException ex )

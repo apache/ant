@@ -18,6 +18,7 @@ import com.starbase.util.Platform;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.ScannerUtil;
 
 /**
@@ -622,7 +623,7 @@ public class AntStarTeamCheckOut
         // send the message to the project log.
 
         // Tell how many files were checked out.
-        getLogger().info( checkedOut + " files checked out." );
+        getContext().info( checkedOut + " files checked out." );
     }
 
     /**
@@ -857,7 +858,7 @@ public class AntStarTeamCheckOut
                 {
                     strFolder = strFolder.substring( i + 1 );
                 }
-                getLogger().info( "            Folder: \"" + strFolder + "\"" );
+                getContext().info( "            Folder: \"" + strFolder + "\"" );
                 prevFolder = f;
 
                 // If we displayed the project, view, item type, or folder,
@@ -868,7 +869,7 @@ public class AntStarTeamCheckOut
                 {
                     header.append( ",\t" ).append( p2.getDisplayName() );
                 }
-                getLogger().info( header.toString() );
+                getContext().info( header.toString() );
             }
 
             // Finally, show the Item properties ...
@@ -897,7 +898,7 @@ public class AntStarTeamCheckOut
             {
                 itemLine.append( ",\tNot locked" );
             }
-            getLogger().info( itemLine.toString() );
+            getContext().info( itemLine.toString() );
         }
         // END VERBOSE ONLY
 
@@ -937,7 +938,7 @@ public class AntStarTeamCheckOut
             {
                 if( getVerbose() )
                 {
-                    getLogger().info( "Found " + getProjectName() + delim + getViewName() + delim );
+                    getContext().info( "Found " + getProjectName() + delim + getViewName() + delim );
                 }
                 runType( s, p, v, s.typeForName( (String)s.getTypeNames().FILE ) );
                 break;
@@ -961,7 +962,7 @@ public class AntStarTeamCheckOut
             {
                 if( getVerbose() )
                 {
-                    getLogger().info( "Found " + getProjectName() + delim );
+                    getContext().info( "Found " + getProjectName() + delim );
                 }
                 runProject( s, p );
                 break;
@@ -998,7 +999,7 @@ public class AntStarTeamCheckOut
 
         if( getVerbose() && getFolderName() != null )
         {
-            getLogger().info( "Found " + getProjectName() + delim + getViewName() +
+            getContext().info( "Found " + getProjectName() + delim + getViewName() +
                               delim + getFolderName() + delim + "\n" );
         }
 

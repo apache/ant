@@ -8,7 +8,6 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -17,7 +16,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractTask
-    extends AbstractLogEnabled
     implements Task
 {
     ///Variable to hold context for use by sub-classes

@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -158,7 +159,6 @@ public class Javah
     public ClassArgument createClass()
     {
         final ClassArgument ga = new ClassArgument();
-        setupLogger( ga );
         m_classes.add( ga );
         return ga;
     }
@@ -210,7 +210,7 @@ public class Javah
     private void logAndAddFilesToCompile( final Commandline cmd )
     {
         int n = 0;
-        getLogger().debug( "Compilation args: " + cmd.toString() );
+        getContext().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceClassList = new StringBuffer();
         if( m_cls != null )
@@ -243,7 +243,7 @@ public class Javah
         prefix.append( " to be compiled:" );
         prefix.append( StringUtil.LINE_SEPARATOR );
 
-        getLogger().debug( prefix.toString() + niceClassList.toString() );
+        getContext().debug( prefix.toString() + niceClassList.toString() );
     }
 
     /**

@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.Condition;
@@ -25,7 +24,6 @@ import org.apache.myrmidon.framework.conditions.Condition;
  * @ant:type type="condition" name="http"
  */
 public class Http
-    extends AbstractLogEnabled
     implements Condition
 {
     String spec = null;
@@ -45,7 +43,7 @@ public class Http
         {
             throw new TaskException( "No url specified in HTTP task" );
         }
-        getLogger().debug( "Checking for " + spec );
+        context.debug( "Checking for " + spec );
         try
         {
             URL url = new URL( spec );
@@ -56,7 +54,7 @@ public class Http
                 {
                     HttpURLConnection http = (HttpURLConnection)conn;
                     int code = http.getResponseCode();
-                    getLogger().debug( "Result code for " + spec + " was " + code );
+                    context.debug( "Result code for " + spec + " was " + code );
                     if( code > 0 && code < 500 )
                     {
                         return true;

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Argument;
@@ -199,7 +201,7 @@ public class WLJspc extends MatchingTask
         args[ j++ ] = compileClasspath.toString();
 
         this.scanDir( files );
-        getLogger().info( "Compiling " + filesToDo.size() + " JSP files" );
+        getContext().info( "Compiling " + filesToDo.size() + " JSP files" );
 
         for( int i = 0; i < filesToDo.size(); i++ )
         {
@@ -235,7 +237,7 @@ public class WLJspc extends MatchingTask
             helperTask.addClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )
             {
-                getLogger().warn( files[ i ] + " failed to compile" );
+                getContext().warn( files[ i ] + " failed to compile" );
             }
         }
     }
@@ -298,13 +300,13 @@ public class WLJspc extends MatchingTask
             if( srcFile.lastModified() > now )
             {
                 final String message = "Warning: file modified in the future: " + files[ i ];
-                getLogger().warn( message );
+                getContext().warn( message );
             }
             if( srcFile.lastModified() > classFile.lastModified() )
             {
                 //log("Files are" + srcFile.getAbsolutePath()+" " +classFile.getAbsolutePath());
                 filesToDo.add( files[ i ] );
-                getLogger().debug( "Recompiling File " + files[ i ] );
+                getContext().debug( "Recompiling File " + files[ i ] );
             }
         }
     }

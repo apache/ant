@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Creates a EAR archive. Based on WAR task
@@ -48,7 +50,7 @@ public class Ear
     {
         // We just set the prefix for this fileset, and pass it up.
         // Do we need to do this? LH
-        getLogger().debug( "addArchives called" );
+        getContext().debug( "addArchives called" );
         fs.setPrefix( "/" );
         super.addFileset( fs );
     }
@@ -81,7 +83,7 @@ public class Ear
                 final String message = "Warning: selected " + m_archiveType +
                     " files include a META-INF/application.xml which will be ignored " +
                     "(please use appxml attribute to " + m_archiveType + " task)";
-                getLogger().warn( message );
+                getContext().warn( message );
             }
             else
             {

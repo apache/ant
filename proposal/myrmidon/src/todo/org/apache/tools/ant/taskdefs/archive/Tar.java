@@ -17,6 +17,8 @@ import org.apache.aut.tar.TarEntry;
 import org.apache.aut.tar.TarOutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
@@ -160,11 +162,11 @@ public class Tar
 
         if( upToDate )
         {
-            getLogger().info( "Nothing to do: " + tarFile.getAbsolutePath() + " is up to date." );
+            getContext().info( "Nothing to do: " + tarFile.getAbsolutePath() + " is up to date." );
             return;
         }
 
-        getLogger().info( "Building tar: " + tarFile.getAbsolutePath() );
+        getContext().info( "Building tar: " + tarFile.getAbsolutePath() );
 
         TarOutputStream tOut = null;
         try
@@ -224,7 +226,6 @@ public class Tar
         throws TaskException
     {
         final SourceFileScanner scanner = new SourceFileScanner();
-        setupLogger( scanner );
         final MergingMapper mapper = new MergingMapper();
         mapper.setTo( tarFile.getAbsolutePath() );
         return scanner.restrict( files, baseDir, null, mapper, getContext() ).length == 0;
@@ -253,19 +254,19 @@ public class Tar
             if( longFileMode.isOmitMode() )
             {
                 final String message = "Omitting: " + storedPath;
-                getLogger().info( message );
+                getContext().info( message );
                 return;
             }
             else if( longFileMode.isWarnMode() )
             {
                 final String message = "Entry: " + storedPath + " longer than " +
                     TarEntry.NAMELEN + " characters.";
-                getLogger().warn( message );
+                getContext().warn( message );
                 if( !longWarningGiven )
                 {
                     final String message2 = "Resulting tar file can only be processed successfully"
                         + " by GNU compatible tar commands";
-                    getLogger().warn( message2 );
+                    getContext().warn( message2 );
                     longWarningGiven = true;
                 }
             }

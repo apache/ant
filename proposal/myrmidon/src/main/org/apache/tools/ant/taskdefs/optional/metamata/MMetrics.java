@@ -247,7 +247,6 @@ public class MMetrics extends AbstractMetamataTask
         {
             xmlStream = new FileOutputStream( outFile );
             ExecuteStreamHandler xmlHandler = new MMetricsStreamHandler( xmlStream );
-            setupLogger( xmlHandler );
             xmlHandler.setProcessOutputStream( tmpStream );
             xmlHandler.start();
             xmlHandler.stop();

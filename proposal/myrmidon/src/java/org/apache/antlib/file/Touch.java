@@ -18,6 +18,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -141,10 +142,10 @@ public class Touch
         {
             if( !m_file.exists() )
             {
-                if( getLogger().isInfoEnabled() )
+                if( getContext().isInfoEnabled() )
                 {
                     final String message = REZ.getString( "touch.create.notice", m_file );
-                    getLogger().info( message );
+                    getContext().info( message );
                 }
 
                 try

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -148,11 +149,11 @@ public class UpToDate
             getContext().setProperty( name, value );
             if( m_mapper == null )
             {
-                getLogger().debug( "File \"" + m_targetFile.getAbsolutePath() + "\" is up to date." );
+                getContext().debug( "File \"" + m_targetFile.getAbsolutePath() + "\" is up to date." );
             }
             else
             {
-                getLogger().debug( "All target files have been up to date." );
+                getContext().debug( "All target files have been up to date." );
             }
         }
     }
@@ -161,7 +162,6 @@ public class UpToDate
         throws TaskException
     {
         SourceFileScanner scanner = new SourceFileScanner();
-        setupLogger( scanner );
         FileNameMapper mapper = null;
         File dir = srcDir;
         if( m_mapper == null )

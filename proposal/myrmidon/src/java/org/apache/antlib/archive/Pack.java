@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Abstract Base class for pack tasks.
@@ -43,7 +44,7 @@ public abstract class Pack
     {
         validate();
         final String message = "Building: " + m_zipFile.getAbsolutePath();
-        getLogger().info( message );
+        getContext().info( message );
         pack();
     }
 

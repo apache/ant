@@ -454,24 +454,24 @@ public class JUnitTask extends AbstractTask
             {
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
-                getLogger().debug( "Implicitly adding " + jarName + " to classpath" );
+                getContext().debug( "Implicitly adding " + jarName + " to classpath" );
                 createClasspath().addLocation( new File( jarName ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
-                getLogger().debug( "Implicitly adding " + dirName + " to classpath" );
+                getContext().debug( "Implicitly adding " + dirName + " to classpath" );
                 createClasspath().addLocation( new File( dirName ) );
             }
             else
             {
-                getLogger().debug( "Don\'t know how to handle resource URL " + u );
+                getContext().debug( "Don\'t know how to handle resource URL " + u );
             }
         }
         else
         {
-            getLogger().debug( "Couldn\'t find " + resource );
+            getContext().debug( "Couldn\'t find " + resource );
         }
     }
 
@@ -530,7 +530,7 @@ public class JUnitTask extends AbstractTask
             {
                 final String message = "TEST " + test.getName() + " FAILED" +
                     ( wasKilled ? " (timeout)" : "" );
-                getLogger().error( message );
+                getContext().error( message );
                 if( errorOccurredHere && test.getErrorProperty() != null )
                 {
                     final String name = test.getErrorProperty();
@@ -593,7 +593,7 @@ public class JUnitTask extends AbstractTask
         cmd.addArgument( "haltOnFailure=" + test.getHaltonfailure() );
         if( summary )
         {
-            getLogger().info( "Running " + test.getName() );
+            getContext().info( "Running " + test.getName() );
             cmd.addArgument( "formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter" );
         }
 
@@ -643,7 +643,7 @@ public class JUnitTask extends AbstractTask
             exe.setWorkingDirectory( dir );
         }
 
-        getLogger().debug( "Executing: " + cmd.toString() );
+        getContext().debug( "Executing: " + cmd.toString() );
         try
         {
             return exe.execute();
@@ -666,7 +666,7 @@ public class JUnitTask extends AbstractTask
         test.setProperties( getContext().getProperties() );
         if( dir != null )
         {
-            getLogger().warn( "dir attribute ignored if running in the same VM" );
+            getContext().warn( "dir attribute ignored if running in the same VM" );
         }
 
         SysProperties sysProperties = commandline.getSystemProperties();
@@ -676,12 +676,12 @@ public class JUnitTask extends AbstractTask
         }
         try
         {
-            getLogger().debug( "Using System properties " + System.getProperties() );
+            getContext().debug( "Using System properties " + System.getProperties() );
             ClassLoader classLoader = null;
             Path classpath = commandline.getClasspath();
             if( classpath != null )
             {
-                getLogger().debug( "Using CLASSPATH " + classpath );
+                getContext().debug( "Using CLASSPATH " + classpath );
                 final URL[] urls = PathUtil.toURLs( classpath );
                 classLoader = new URLClassLoader( urls );
             }
@@ -692,7 +692,7 @@ public class JUnitTask extends AbstractTask
                                           classLoader );
             if( summary )
             {
-                getLogger().info( "Running " + test.getName() );
+                getContext().info( "Running " + test.getName() );
 
                 SummaryJUnitResultFormatter f =
                     new SummaryJUnitResultFormatter();

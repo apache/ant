@@ -9,6 +9,8 @@ package org.apache.tools.ant.taskdefs.text;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
@@ -96,7 +98,6 @@ public class Native2Ascii
         String[] files = scanner.getIncludedFiles();
 
         final SourceFileScanner sfs = new SourceFileScanner();
-        setupLogger( sfs );
         final FileNameMapper mapper = buildMapper();
         files = sfs.restrict( files, m_srcDir, m_destDir, mapper, getContext() );
         int count = files.length;
@@ -108,7 +109,7 @@ public class Native2Ascii
         final String message = "Converting " + count + " file" +
             ( count != 1 ? "s" : "" ) + " from " + m_srcDir + " to " +
             m_destDir;
-        getLogger().info( message );
+        getContext().info( message );
 
         for( int i = 0; i < files.length; i++ )
         {
@@ -192,7 +193,7 @@ public class Native2Ascii
             }
         }
 
-        getLogger().debug( "converting " + srcName );
+        getContext().debug( "converting " + srcName );
         sun.tools.native2ascii.Main n2a = new sun.tools.native2ascii.Main();
         if( !n2a.convert( cmd.getArguments() ) )
         {

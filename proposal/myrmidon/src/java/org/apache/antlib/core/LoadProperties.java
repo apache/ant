@@ -16,6 +16,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * This task loads properties from a property file and places them in the context.
@@ -73,18 +74,18 @@ public class LoadProperties
     private void loadFile( final File file )
         throws TaskException
     {
-        if( getLogger().isDebugEnabled() )
+        if( getContext().isDebugEnabled() )
         {
             final String message =
                 REZ.getString( "loadprop.file.notice", file.getAbsolutePath() );
-            getLogger().debug( message );
+            getContext().debug( message );
         }
 
         if( !file.exists() )
         {
             final String message =
                 REZ.getString( "loadprop.missing-file.notice", file.getAbsolutePath() );
-            getLogger().debug( message );
+            getContext().debug( message );
         }
         else
         {
@@ -120,7 +121,7 @@ public class LoadProperties
         catch( final TaskException te )
         {
             final String message = REZ.getString( "loadprop.bad-resolve.error", name, value );
-            getLogger().info( message, te );
+            getContext().info( message, te );
         }
     }
 }

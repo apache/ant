@@ -14,6 +14,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 
 /**
@@ -57,7 +58,7 @@ public class SoundTask
         if( null == m_success )
         {
             final String message = REZ.getString( "sound.missing-success.error" );
-            getLogger().warn( message );
+            getContext().warn( message );
         }
         else
         {
@@ -70,7 +71,7 @@ public class SoundTask
         if( null == m_fail )
         {
             final String message = REZ.getString( "sound.missing-failure.error" );
-            getLogger().warn( message );
+            getContext().warn( message );
         }
         else
         {
@@ -127,7 +128,7 @@ public class SoundTask
         else
         {
             final String message = REZ.getString( "sound.invalid-path.error", source );
-            getLogger().warn( message );
+            getContext().warn( message );
             return null;
         }
     }

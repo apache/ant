@@ -10,6 +10,7 @@ package org.apache.antlib.vfile;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * A debug task, which prints out the files in a file list.
@@ -41,7 +42,7 @@ public class ListFilesTask
         for( int i = 0; i < files.length; i++ )
         {
             FileObject file = files[ i ];
-            getLogger().info( file.toString() );
+            getContext().info( file.toString() );
         }
     }
 }

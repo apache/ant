@@ -7,17 +7,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
 public class ClassArgument
-    extends AbstractLogEnabled
 {
     private String m_name;
 
     public void setName( String name )
     {
         m_name = name;
-        getLogger().info( "ClassArgument.name=" + name );
     }
 
     public String getName()

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -157,7 +158,7 @@ public class Java
 
         if( m_fork )
         {
-            getLogger().debug( "Forking " + m_cmdl.toString() );
+            getContext().debug( "Forking " + m_cmdl.toString() );
 
             return run( new Commandline( m_cmdl.getCommandline() ) );
         }
@@ -165,14 +166,14 @@ public class Java
         {
             if( m_cmdl.getVmCommand().size() > 1 )
             {
-                getLogger().warn( "JVM args ignored when same JVM is used." );
+                getContext().warn( "JVM args ignored when same JVM is used." );
             }
             if( m_dir != null )
             {
-                getLogger().warn( "Working directory ignored when same JVM is used." );
+                getContext().warn( "Working directory ignored when same JVM is used." );
             }
 
-            getLogger().debug( "Running in same VM " + m_cmdl.getJavaCommand().toString() );
+            getContext().debug( "Running in same VM " + m_cmdl.getJavaCommand().toString() );
             run( m_cmdl );
             return 0;
         }

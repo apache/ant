@@ -15,6 +15,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -170,8 +171,8 @@ public class Exec
     private void logExecDetails( final Properties environment )
     {
         // show the command
-        getLogger().debug( m_command.toString() );
+        getContext().debug( m_command.toString() );
         final String message = REZ.getString( "exec.env-vars.notice", environment );
-        getLogger().debug( message );
+        getContext().debug( message );
     }
 }

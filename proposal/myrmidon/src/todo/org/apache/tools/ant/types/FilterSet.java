@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Filter;
 
@@ -26,7 +25,7 @@ import org.apache.myrmidon.framework.Filter;
  * @author <A href="mailto:gholam@xtra.co.nz"> Michael McCallum </A>
  */
 public class FilterSet
-    extends AbstractLogEnabled
+    //extends AbstractLogEnabled
     implements Cloneable
 {
     /**
@@ -133,7 +132,6 @@ public class FilterSet
     {
         if( filtersFile.isFile() )
         {
-            getLogger().debug( "Reading filters from " + filtersFile );
             FileInputStream in = null;
             try
             {
@@ -142,12 +140,11 @@ public class FilterSet
                 props.load( in );
 
                 Enumeration enum = props.propertyNames();
-                ArrayList filters = m_filters;
                 while( enum.hasMoreElements() )
                 {
                     String strPropName = (String)enum.nextElement();
                     String strValue = props.getProperty( strPropName );
-                    filters.add( new Filter( strPropName, strValue ) );
+                    m_filters.add( new Filter( strPropName, strValue ) );
                 }
             }
             catch( Exception e )
@@ -210,7 +207,6 @@ public class FilterSet
                 if( tokens.containsKey( token ) )
                 {
                     value = (String)tokens.get( token );
-                    getLogger().debug( "Replacing: " + DEFAULT_TOKEN_START + token + DEFAULT_TOKEN_END + " -> " + value );
                     b.append( value );
                     i = index + DEFAULT_TOKEN_START.length() + token.length() + DEFAULT_TOKEN_END.length();
                 }
@@ -228,26 +224,6 @@ public class FilterSet
         catch( StringIndexOutOfBoundsException e )
         {
             return line;
-        }
-    }
-
-    /**
-     * The filtersfile nested element.
-     *
-     * @author Michael McCallum
-     * @created Thursday, April 19, 2001
-     */
-    public class FiltersFile
-    {
-        /**
-         * Sets the file from which filters will be read.
-         *
-         * @param file the file from which filters will be read.
-         */
-        public void setFile( final File file )
-            throws TaskException
-        {
-            readFiltersFromFile( file );
         }
     }
 }
