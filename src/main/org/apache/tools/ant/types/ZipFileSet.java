@@ -149,7 +149,7 @@ public class ZipFileSet extends FileSet {
     /**
      * Set the full pathname of the single entry in this fileset.
      *
-     * @param prefix The prefix to prepend to entries in the zip file.
+     * @param fullpath the full pathname of the single entry in this fileset.
      */
     public void setFullpath(String fullpath) {
         this.fullpath = fullpath;
@@ -193,7 +193,7 @@ public class ZipFileSet extends FileSet {
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
-        
+
         Object o = ref.getReferencedObject(p);
         if (!(o instanceof FileSet)) {
             String msg = ref.getRefId() + " doesn\'t denote a fileset";
