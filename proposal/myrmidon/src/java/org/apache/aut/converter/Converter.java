@@ -32,6 +32,6 @@ public interface Converter
      * @return the converted object
      * @exception ConverterException if an error occurs
      */
-    Object convert( Class destination, Object original, Map context )
+    Object convert( Class destination, Object original, ConverterContext context )
         throws ConverterException;
 }

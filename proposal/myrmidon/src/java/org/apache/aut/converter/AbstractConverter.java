@@ -7,7 +7,6 @@
  */
 package org.apache.aut.converter;
 
-import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
@@ -49,7 +48,7 @@ public abstract class AbstractConverter
      */
     public Object convert( final Class destination,
                            final Object original,
-                           final Map context )
+                           final ConverterContext context )
         throws ConverterException
     {
         if( m_destination != destination )
@@ -77,7 +76,7 @@ public abstract class AbstractConverter
      * @return the converted object
      * @exception ConverterException if an error occurs
      */
-    protected abstract Object convert( Object original, Map context )
+    protected abstract Object convert( Object original, ConverterContext context )
         throws ConverterException;
 }
 
