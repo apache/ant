@@ -58,9 +58,6 @@
  * <li>srcDir: </li>
  * <li>replace: </li>
  * </ul>
- *
- * @author dIon Gillard <a href="mailto:dion@multitask.com.au">dion@multitask.com.au</a>
- * @version 1.2
  */
 
 package org.apache.tools.ant.taskdefs.optional;
@@ -69,10 +66,13 @@ import java.io.*;
 import java.util.*;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.types.Mapper;
 
 /**
  *
- * @author  dion
+ * @author dIon Gillard <a href="mailto:dion@multitask.com.au">dion@multitask.com.au</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @version 1.2
  */
 public class RenameExtensions extends MatchingTask {
 
@@ -81,10 +81,14 @@ public class RenameExtensions extends MatchingTask {
     private boolean replace = false;
     private File srcDir;
 
+    private Mapper.MapperType globType;
+
 
     /** Creates new RenameExtensions */
     public RenameExtensions() {
         super();
+        globType = new Mapper.MapperType();
+        globType.setValue("glob");
     }
 
     /** store fromExtension **/
@@ -108,8 +112,8 @@ public class RenameExtensions extends MatchingTask {
     /**
      * Set the source dir to find the files to be renamed.
      */
-    public void setSrcDir(String srcDirName) {
-        srcDir = project.resolveFile(srcDirName);
+    public void setSrcDir(File srcDir) {
+        this.srcDir = srcDir;
     }
 
     /**
@@ -123,50 +127,35 @@ public class RenameExtensions extends MatchingTask {
                                       "attributes must be set!" );
         }
 
-        // scan source and dest dirs to build up rename list
-        DirectoryScanner ds = getDirectoryScanner(srcDir);
+        log("DEPRECATED - The renameext task is deprecated.  Use move instead.",
+            Project.MSG_WARN);
+        log("Replace this with:", Project.MSG_INFO);
+        log("<move todir=\""+srcDir+"\" overwrite=\""+replace+"\">", 
+            Project.MSG_INFO);
+        log("  <fileset dir=\""+srcDir+"\" />", Project.MSG_INFO);
+        log("  <mapper type=\"glob\"", Project.MSG_INFO);
+        log("          from=\"*"+fromExtension+"\"", Project.MSG_INFO);
+        log("          to=\"*"+toExtension+"\" />", Project.MSG_INFO);
+        log("</move>", Project.MSG_INFO);
+        log("using the same patterns on <fileset> as you\'ve used here", 
+            Project.MSG_INFO);
 
-        String[] files = ds.getIncludedFiles();
+        Move move = (Move)project.createTask("move");
+        move.setOwningTarget(target);
+        move.setTaskName(getTaskName());
+        move.setLocation(getLocation());
+        move.setTodir(srcDir);
+        move.setOverwrite(replace);
 
-        Hashtable renameList = scanDir(srcDir, files);
+        fileset.setDir(srcDir);
+        move.addFileset(fileset);
 
-        Enumeration e = renameList.keys();
-        File fromFile = null;
-        File toFile = null;
-        while (e.hasMoreElements()) {
-            fromFile = (File)e.nextElement();
-            toFile = (File)renameList.get(fromFile);
-            if (toFile.exists() && replace) toFile.delete();
-            if (!fromFile.renameTo(toFile)) {
-                throw new BuildException( "Rename from: '" + fromFile + "' to '" + 
-                                          toFile + "' failed." );
-            }
-        }
+        Mapper me = move.createMapper();
+        me.setType(globType);
+        me.setFrom("*"+fromExtension);
+        me.setTo("*"+toExtension);
 
+        move.execute();
     }
-    private Hashtable scanDir(File srcDir, String[] files) {
-        Hashtable list = new Hashtable();
-        for (int i = 0; i < files.length; i++) {
-            File srcFile = new File(srcDir, files[i]);
-            String filename = files[i];
-            // if it's a file that ends in the fromExtension, copy to the rename list
-            if (filename.toLowerCase().endsWith(fromExtension)) {
-                File destFile = 
-                    new File( srcDir, 
-                              filename.substring(0, filename.lastIndexOf(fromExtension)) + 
-                              toExtension );
 
-                if (replace || !destFile.exists()) {
-                    list.put(srcFile, destFile);
-                } else {
-                    log( "Rejecting file: '" + srcFile + "' for rename as " + 
-                         "replace is false and file exists", Project.MSG_VERBOSE );
-                }
-            } else {
-                log( "File '"+ filename + "' doesn't match fromExtension: '" + 
-                     fromExtension + "'", Project.MSG_VERBOSE );
-            }
-        }
-        return list;
-    }
 }
