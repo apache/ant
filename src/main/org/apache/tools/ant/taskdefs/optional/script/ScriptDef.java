@@ -330,7 +330,7 @@ public class ScriptDef extends DefBase {
         runner.addBean("attributes", attributes);
         runner.addBean("elements", elements);
         runner.addBean("project", getProject());
-        runner.addBean("self", self);
+        runner.addBean("self", instance);
         runner.executeScript("scriptdef_" + name);
     }
 
