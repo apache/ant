@@ -35,6 +35,20 @@
   
   </target>
 
+  <target name="xmldom" depends="init">
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
+             name="jxpath" />
+    <typedef classname="org.apache.tools.ant.taskdefs.XMLDOM"
+             name="xmlDom" />
+
+    <xmlDom id="module.xml" file="/ws/jakarta-gump/project/jakarta-ant.xml"/>
+    <!-- Enable Jxpath support -->
+    <jxpath/>
+    <echo>Name: ${jxpath:/references/module.xml/root/module/project[1]/@name}</echo>
+
+  </target>
+
+
   <target name="discovery" depends="init">
     <echo message="${commons-discovery.jar}"/>
 
