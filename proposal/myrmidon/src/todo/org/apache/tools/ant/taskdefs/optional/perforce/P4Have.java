@@ -15,12 +15,13 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
-public class P4Have extends P4Base
+public class P4Have
+    extends P4Base
 {
-
     public void execute()
         throws TaskException
     {
-        execP4Command( "have " + P4CmdOpts + " " + P4View, new SimpleP4OutputHandler( this ) );
+        final String command = "have " + m_p4CmdOpts + " " + m_p4View;
+        execP4Command( command, null );
     }
 }

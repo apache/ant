@@ -84,44 +84,47 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class P4Sync extends P4Base
 {
-    private String syncCmd = "";
+    private String m_syncCmd = "";
+    private String m_label;
 
-    String label;
-
-    public void setForce( String force )
+    public void setForce( final String force )
         throws TaskException
     {
-        if( force == null && !label.equals( "" ) )
+        if( force == null && !m_label.equals( "" ) )
+        {
             throw new TaskException( "P4Sync: If you want to force, set force to non-null string!" );
-        P4CmdOpts = "-f";
+        }
+        m_p4CmdOpts = "-f";
     }
 
     public void setLabel( String label )
         throws TaskException
     {
         if( label == null && !label.equals( "" ) )
+        {
             throw new TaskException( "P4Sync: Labels cannot be Null or Empty" );
+        }
 
-        this.label = label;
-
+        m_label = label;
     }
 
     public void execute()
         throws TaskException
     {
-
-        if( P4View != null )
+        if( m_p4View != null )
         {
-            syncCmd = P4View;
+            m_syncCmd = m_p4View;
         }
 
-        if( label != null && !label.equals( "" ) )
+        if( m_label != null && !m_label.equals( "" ) )
         {
-            syncCmd = syncCmd + "@" + label;
+            m_syncCmd = m_syncCmd + "@" + m_label;
         }
 
-        getLogger().debug( "Execing sync " + P4CmdOpts + " " + syncCmd );
+        final String message = "Execing sync " + m_p4CmdOpts + " " + m_syncCmd;
+        getLogger().debug( message );
 
-        execP4Command( "-s sync " + P4CmdOpts + " " + syncCmd, new SimpleP4OutputHandler( this ) );
+        final String command = "-s sync " + m_p4CmdOpts + " " + m_syncCmd;
+        execP4Command( command, null );
     }
 }

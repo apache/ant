@@ -18,32 +18,32 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
-public class P4Submit extends P4Base
+public class P4Submit
+    extends P4Base
 {
-
     //ToDo: If dealing with default cl need to parse out <enter description here>
-    public String change;
+    private String m_change;
 
-    public void setChange( String change )
+    public void setChange( final String change )
     {
-        this.change = change;
+        m_change = change;
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard output.
+     */
+    public void stdout( final String line )
+    {
+        getLogger().debug( line );
     }
 
     public void execute()
         throws TaskException
     {
-        if( change != null )
+        if( m_change != null )
         {
-            execP4Command( "submit -c " + change,
-                           new P4HandlerAdapter()
-                           {
-                               public void process( String line )
-                               {
-                                   getLogger().debug( line );
-                               }
-                           }
-            );
-
+            execP4Command( "submit -c " + m_change, this );
         }
         else
         {
@@ -52,5 +52,4 @@ public class P4Submit extends P4Base
             throw new TaskException( "No change specified (no support for default change yet...." );
         }
     }
-
 }

@@ -9,8 +9,9 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.exec.ExecOutputHandler;
 import org.apache.oro.text.perl.Perl5Util;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -26,31 +27,32 @@ import org.apache.tools.ant.types.Commandline;
  * @see P4Label
  * @see org.apache.tools.ant.taskdefs.Exec
  */
-public abstract class P4Base extends org.apache.tools.ant.Task
+public abstract class P4Base
+    extends org.apache.tools.ant.Task
+    implements ExecOutputHandler
 {
-
     /**
      * Perl5 regexp in Java - cool eh?
      */
-    protected Perl5Util util = null;
+    protected Perl5Util util;
 
     //P4 runtime directives
     /**
      * Perforce Server Port (eg KM01:1666)
      */
-    protected String P4Port = "";
+    protected String m_p4Port = "";
     /**
      * Perforce Client (eg myclientspec)
      */
-    protected String P4Client = "";
+    protected String m_p4Client = "";
     /**
      * Perforce User (eg fbloggs)
      */
-    protected String P4User = "";
+    protected String m_p4User = "";
     /**
      * Perforce view for commands (eg //projects/foobar/main/source/... )
      */
-    protected String P4View = "";
+    protected String m_p4View = "";
 
     //P4 g-opts and cmd opts (rtfm)
     /**
@@ -60,36 +62,38 @@ public abstract class P4Base extends org.apache.tools.ant.Task
     /**
      * Perforce command opts. Forms half of low level API
      */
-    protected String P4CmdOpts = "";
+    protected String m_p4CmdOpts = "";
     /**
      * The OS shell to use (cmd.exe or /bin/sh)
      */
     protected String shell;
 
+    private TaskException m_error;
+
     public void setClient( String P4Client )
     {
-        this.P4Client = "-c" + P4Client;
+        this.m_p4Client = "-c" + P4Client;
     }
 
     public void setCmdopts( String P4CmdOpts )
     {
-        this.P4CmdOpts = P4CmdOpts;
+        this.m_p4CmdOpts = P4CmdOpts;
     }
 
     //Setters called by Ant
     public void setPort( String P4Port )
     {
-        this.P4Port = "-p" + P4Port;
+        this.m_p4Port = "-p" + P4Port;
     }
 
     public void setUser( String P4User )
     {
-        this.P4User = "-u" + P4User;
+        this.m_p4User = "-u" + P4User;
     }
 
     public void setView( String P4View )
     {
-        this.P4View = P4View;
+        this.m_p4View = P4View;
     }
 
     private void prepare()
@@ -98,19 +102,19 @@ public abstract class P4Base extends org.apache.tools.ant.Task
 
         //Get default P4 settings from environment - Mark would have done something cool with
         //introspection here.....:-)
-        String tmpprop;
-        if( ( tmpprop = getProject().getProperty( "p4.port" ) ) != null )
-            setPort( tmpprop );
-        if( ( tmpprop = getProject().getProperty( "p4.client" ) ) != null )
-            setClient( tmpprop );
-        if( ( tmpprop = getProject().getProperty( "p4.user" ) ) != null )
-            setUser( tmpprop );
-    }
-
-    protected void execP4Command( String command )
-        throws TaskException
-    {
-        execP4Command( command, null );
+        Object tmpprop;
+        if( ( tmpprop = getProperty( "p4.port" ) ) != null )
+        {
+            setPort( tmpprop.toString() );
+        }
+        if( ( tmpprop = getProperty( "p4.client" ) ) != null )
+        {
+            setClient( tmpprop.toString() );
+        }
+        if( ( tmpprop = getProperty( "p4.user" ) ) != null )
+        {
+            setUser( tmpprop.toString() );
+        }
     }
 
     public void execute()
@@ -123,36 +127,32 @@ public abstract class P4Base extends org.apache.tools.ant.Task
 
     /**
      * Execute P4 command assembled by subclasses.
-     *
-     * @param command The command to run
-     * @param handler A P4Handler to process any input and output
-     * @exception TaskException Description of Exception
      */
-    protected void execP4Command( String command, P4Handler handler )
+    protected void execP4Command( final String command,
+                                  ExecOutputHandler handler )
         throws TaskException
     {
         try
         {
-
-            Commandline commandline = new Commandline();
-            commandline.setExecutable( "p4" );
+            final Commandline cmd = new Commandline();
+            cmd.setExecutable( "p4" );
 
             //Check API for these - it's how CVS does it...
-            if( P4Port != null && P4Port.length() != 0 )
+            if( m_p4Port != null && m_p4Port.length() != 0 )
             {
-                commandline.createArgument().setValue( P4Port );
+                cmd.createArgument().setValue( m_p4Port );
             }
-            if( P4User != null && P4User.length() != 0 )
+            if( m_p4User != null && m_p4User.length() != 0 )
             {
-                commandline.createArgument().setValue( P4User );
+                cmd.createArgument().setValue( m_p4User );
             }
-            if( P4Client != null && P4Client.length() != 0 )
+            if( m_p4Client != null && m_p4Client.length() != 0 )
             {
-                commandline.createArgument().setValue( P4Client );
+                cmd.createArgument().setValue( m_p4Client );
             }
-            commandline.createArgument().setLine( command );
+            cmd.createArgument().setLine( command );
 
-            String[] cmdline = commandline.getCommandline();
+            String[] cmdline = cmd.getCommandline();
             String cmdl = "";
             for( int i = 0; i < cmdline.length; i++ )
             {
@@ -160,12 +160,14 @@ public abstract class P4Base extends org.apache.tools.ant.Task
             }
 
             getLogger().debug( "Execing " + cmdl );
-
             if( handler == null )
-                handler = new SimpleP4OutputHandler( this );
+            {
+                handler = this;
+            }
 
-            final Execute exe = new Execute( handler );
-            exe.setCommandline( commandline.getCommandline() );
+            final Execute2 exe = new Execute2();
+            exe.setExecOutputHandler( handler );
+            exe.setCommandline( cmd.getCommandline() );
 
             try
             {
@@ -175,21 +177,57 @@ public abstract class P4Base extends org.apache.tools.ant.Task
             {
                 throw new TaskException( "Error", e );
             }
-            finally
+            if( null != m_error )
             {
-                try
-                {
-                    handler.stop();
-                }
-                catch( Exception e )
-                {
-                }
+                throw m_error;
             }
-
+        }
+        catch( TaskException te )
+        {
+            throw te;
         }
         catch( Exception e )
         {
             throw new TaskException( "Problem exec'ing P4 command: " + e.getMessage() );
         }
+    }
+
+    protected final void registerError( final TaskException error )
+    {
+        m_error = error;
+        m_error.fillInStackTrace();
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard output.
+     */
+    public void stdout( final String line )
+    {
+        if( util.match( "/^exit/", line ) )
+        {
+            return;
+        }
+
+        //Throw exception on errors (except up-to-date)
+        //p4 -s is unpredicatable. For example a server down
+        //does not return error: markup
+        //
+        //Some forms producing commands (p4 -s change -o) do tag the output
+        //others don't.....
+        //Others mark errors as info, for example edit a file
+        //which is already open for edit.....
+        //Just look for error: - catches most things....
+
+        if( util.match( "/error:/", line ) && !util.match( "/up-to-date/", line ) )
+        {
+            registerError( new TaskException( line ) );
+        }
+
+        getLogger().info( util.substitute( "s/^.*: //", line ) );
+    }
+
+    public void stderr( final String line )
+    {
     }
 }

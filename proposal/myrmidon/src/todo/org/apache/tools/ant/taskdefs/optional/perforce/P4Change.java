@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * P4Change - grab a new changelist from Perforce. P4Change creates a new
@@ -19,97 +18,59 @@ import org.apache.tools.ant.Project;
  * @see P4Edit
  * @see P4Submit
  */
-public class P4Change extends P4Base
+public class P4Change
+    extends P4Base
 {
-
-    protected String emptyChangeList = null;
-    protected String description = "AutoSubmit By Ant";
+    private String m_emptyChangeList;
+    private String m_description = "AutoSubmit By Ant";
+    private final StringBuffer m_changelistData = new StringBuffer();
+    private boolean m_changelist;
 
     /*
      * Set Description Variable.
      */
-    public void setDescription( String desc )
+    public void setDescription( final String description )
     {
-        this.description = desc;
+        m_description = description;
     }
 
-    public String getEmptyChangeList()
+    private String getEmptyChangeList()
         throws TaskException
     {
-        final StringBuffer stringbuf = new StringBuffer();
+        m_changelist = true;
+        execP4Command( "change -o", null );
+        m_changelist = false;
 
-        execP4Command( "change -o",
-                       new P4HandlerAdapter()
-                       {
-                           public void process( String line )
-                           {
-                               if( !util.match( "/^#/", line ) )
-                               {
-                                   if( util.match( "/error/", line ) )
-                                   {
+        return m_changelistData.toString();
+    }
 
-                                       getLogger().debug( "Client Error" );
-                                       throw new TaskException( "Perforce Error, check client settings and/or server" );
-                                   }
-                                   else if( util.match( "/<enter description here>/", line ) )
-                                   {
-
-                                       // we need to escape the description in case there are /
-                                       description = backslash( description );
-                                       line = util.substitute( "s/<enter description here>/" + description + "/", line );
-
-                                   }
-                                   else if( util.match( "/\\/\\//", line ) )
-                                   {
-                                       //Match "//" for begining of depot filespec
-                                       return;
-                                   }
-
-                                   stringbuf.append( line );
-                                   stringbuf.append( "\n" );
-
-                               }
-                           }
-                       } );
-
-        return stringbuf.toString();
+    /**
+     * Receive notification about the process writing
+     * to standard output.
+     */
+    public void stdout( final String line )
+    {
+        if( m_changelist )
+        {
+            changelist_stdout( line );
+        }
+        else
+        {
+            change_stdout( line );
+        }
     }
 
     public void execute()
         throws TaskException
     {
+        if( m_emptyChangeList == null )
+        {
+            m_emptyChangeList = getEmptyChangeList();
+        }
 
-        if( emptyChangeList == null )
-            emptyChangeList = getEmptyChangeList();
-        final Project myProj = getProject();
+        //handler.setOutput( m_emptyChangeList );
 
-        P4Handler handler =
-            new P4HandlerAdapter()
-            {
-                public void process( String line )
-                {
-                    if( util.match( "/Change/", line ) )
-                    {
-
-                        //Remove any non-numerical chars - should leave the change number
-                        line = util.substitute( "s/[^0-9]//g", line );
-
-                        int changenumber = Integer.parseInt( line );
-                        getLogger().info( "Change Number is " + changenumber );
-                        setProperty( "p4.change", "" + changenumber );
-
-                    }
-                    else if( util.match( "/error/", line ) )
-                    {
-                        throw new TaskException( "Perforce Error, check client settings and/or server" );
-                    }
-
-                }
-            };
-
-        handler.setOutput( emptyChangeList );
-
-        execP4Command( "change -i", handler );
+        execP4Command( "change -i", null );
     }
 
     /**
@@ -122,7 +83,7 @@ public class P4Change extends P4Base
      * @see < a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/perl/Perl5Util.html#substitute(java.lang.String,%20java.lang.String)">
      *      Oro</a>
      */
-    protected String backslash( String value )
+    private String backslash( String value )
     {
         final StringBuffer buf = new StringBuffer( value.length() );
         final int len = value.length();
@@ -138,4 +99,56 @@ public class P4Change extends P4Base
         return buf.toString();
     }
 
-}//EoF
+    private void changelist_stdout( String line )
+    {
+        if( !util.match( "/^#/", line ) )
+        {
+            if( util.match( "/error/", line ) )
+            {
+                getLogger().debug( "Client Error" );
+                registerError( new TaskException( "Perforce Error, check client settings and/or server" ) );
+            }
+            else if( util.match( "/<enter description here>/", line ) )
+            {
+
+                // we need to escape the description in case there are /
+                m_description = backslash( m_description );
+                line = util.substitute( "s/<enter description here>/" + m_description + "/", line );
+
+            }
+            else if( util.match( "/\\/\\//", line ) )
+            {
+                //Match "//" for begining of depot filespec
+                return;
+            }
+
+            m_changelistData.append( line );
+            m_changelistData.append( "\n" );
+        }
+    }
+
+    private void change_stdout( String line )
+    {
+        if( util.match( "/Change/", line ) )
+        {
+            //Remove any non-numerical chars - should leave the change number
+            line = util.substitute( "s/[^0-9]//g", line );
+
+            final int changenumber = Integer.parseInt( line );
+            getLogger().info( "Change Number is " + changenumber );
+            try
+            {
+                setProperty( "p4.change", "" + changenumber );
+            }
+            catch( final TaskException te )
+            {
+                registerError( te );
+            }
+        }
+        else if( util.match( "/error/", line ) )
+        {
+            final String message = "Perforce Error, check client settings and/or server";
+            registerError( new TaskException( message ) );
+        }
+    }
+}

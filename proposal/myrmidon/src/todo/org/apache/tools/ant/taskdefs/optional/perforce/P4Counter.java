@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * P4Counter - Obtain or set the value of a counter. P4Counter can be used to
@@ -20,48 +19,37 @@ import org.apache.tools.ant.Project;
  *
  * @author <a href="mailto:kirk@radik.com">Kirk Wylie</a>
  */
-
-public class P4Counter extends P4Base
+public class P4Counter
+    extends P4Base
 {
-    public String counter = null;
-    public String property = null;
-    public boolean shouldSetValue = false;
-    public boolean shouldSetProperty = false;
-    public int value = 0;
+    private String m_counter;
+    private String m_property;
+    private boolean m_shouldSetValue;
+    private int m_value;
 
-    public void setName( String counter )
+    public void setName( final String counter )
     {
-        this.counter = counter;
+        m_counter = counter;
     }
 
-    public void setProperty( String property )
+    public void setProperty( final String property )
     {
-        this.property = property;
-        shouldSetProperty = true;
+        m_property = property;
     }
 
-    public void setValue( int value )
+    public void setValue( final int value )
     {
-        this.value = value;
-        shouldSetValue = true;
+        m_value = value;
+        m_shouldSetValue = true;
     }
 
     public void execute()
         throws TaskException
     {
+        validate();
 
-        if( ( counter == null ) || counter.length() == 0 )
-        {
-            throw new TaskException( "No counter specified to retrieve" );
-        }
-
-        if( shouldSetValue && shouldSetProperty )
-        {
-            throw new TaskException( "Cannot both set the value of the property and retrieve the value of the property." );
-        }
-
-        String command = "counter " + P4CmdOpts + " " + counter;
-        if( !shouldSetProperty )
+        String command = "counter " + m_p4CmdOpts + " " + m_counter;
+        if( !shouldSetProperty() )
         {
             // NOTE kirk@radik.com 04-April-2001 -- If you put in the -s, you
             // have to start running through regular expressions here. Much easier
@@ -69,38 +57,56 @@ public class P4Counter extends P4Base
             // and strip it later.
             command = "-s " + command;
         }
-        if( shouldSetValue )
+        if( m_shouldSetValue )
         {
-            command += " " + value;
+            command += " " + m_value;
         }
 
-        if( shouldSetProperty )
+        execP4Command( command, null );
+    }
+
+    public void stdout( final String line )
+    {
+        if( shouldSetProperty() )
         {
-            final Project myProj = getProject();
-
-            P4Handler handler =
-                new P4HandlerAdapter()
-                {
-                    public void process( String line )
-                    {
-                        getLogger().debug( "P4Counter retrieved line \"" + line + "\"" );
-                        try
-                        {
-                            value = Integer.parseInt( line );
-                            setProperty( property, "" + value );
-                        }
-                        catch( NumberFormatException nfe )
-                        {
-                            throw new TaskException( "Perforce error. Could not retrieve counter value." );
-                        }
-                    }
-                };
-
-            execP4Command( command, handler );
+            super.stdout( line );
         }
         else
         {
-            execP4Command( command, new SimpleP4OutputHandler( this ) );
+            getLogger().debug( "P4Counter retrieved line \"" + line + "\"" );
+            try
+            {
+                m_value = Integer.parseInt( line );
+                setProperty( m_property, "" + m_value );
+            }
+            catch( final TaskException te )
+            {
+                registerError( te );
+            }
+            catch( NumberFormatException nfe )
+            {
+                final String message = "Perforce error. Could not retrieve counter value.";
+                registerError( new TaskException( message ) );
+            }
         }
+    }
+
+    private void validate()
+        throws TaskException
+    {
+        if( ( m_counter == null ) || m_counter.length() == 0 )
+        {
+            throw new TaskException( "No counter specified to retrieve" );
+        }
+
+        if( m_shouldSetValue && shouldSetProperty() )
+        {
+            throw new TaskException( "Cannot both set the value of the property and retrieve the value of the property." );
+        }
+    }
+
+    private boolean shouldSetProperty()
+    {
+        return ( null == m_property );
     }
 }

@@ -20,26 +20,43 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
-public class P4Label extends P4Base
+public class P4Label
+    extends P4Base
 {
-    protected String desc;
-    protected String lock;
+    private String m_description;
+    private String m_lock;
+    private String m_name;
+    private boolean m_getLabelSpec;
+    private StringBuffer m_labelSpec;
 
-    protected String name;
-
-    public void setDesc( String desc )
+    public void setDesc( final String description )
     {
-        this.desc = desc;
+        m_description = description;
     }
 
-    public void setLock( String lock )
+    public void setLock( final String lock )
     {
-        this.lock = lock;
+        m_lock = lock;
     }
 
-    public void setName( String name )
+    public void setName( final String name )
     {
-        this.name = name;
+        m_name = name;
+    }
+
+    public void stdout( String line )
+    {
+        getLogger().debug( line );
+
+        if( null != m_labelSpec )
+        {
+            if( util.match( "/^Options:/", line ) )
+            {
+                line = "Options: " + m_lock;
+            }
+
+            m_labelSpec.append( line + "\n" );
+        }
     }
 
     public void execute()
@@ -47,107 +64,70 @@ public class P4Label extends P4Base
     {
         getLogger().info( "P4Label exec:" );
 
-        if( P4View == null || P4View.length() < 1 )
-        {
-            getLogger().warn( "View not set, assuming //depot/..." );
-            P4View = "//depot/...";
-        }
-
-        if( desc == null || desc.length() < 1 )
-        {
-            getLogger().warn( "Label Description not set, assuming 'AntLabel'" );
-            desc = "AntLabel";
-        }
-
-        if( lock != null && !lock.equalsIgnoreCase( "locked" ) )
-        {
-            getLogger().warn( "lock attribute invalid - ignoring" );
-        }
-
-        if( name == null || name.length() < 1 )
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy.MM.dd-hh:mm" );
-            Date now = new Date();
-            name = "AntLabel-" + formatter.format( now );
-            getLogger().warn( "name not set, assuming '" + name + "'" );
-        }
+        validate();
 
         //We have to create a unlocked label first
         String newLabel =
-            "Label: " + name + "\n" +
-            "Description: " + desc + "\n" +
+            "Label: " + m_name + "\n" +
+            "Description: " + m_description + "\n" +
             "Options: unlocked\n" +
-            "View: " + P4View + "\n";
+            "View: " + m_p4View + "\n";
 
-        P4Handler handler =
-            new P4HandlerAdapter()
-            {
-                public void process( String line )
-                {
-                    getLogger().debug( line );
-                }
-            };
+        //handler.setOutput( newLabel );
+        execP4Command( "label -i", null );
+        execP4Command( "labelsync -l " + m_name, null );
 
-        handler.setOutput( newLabel );
-
-        execP4Command( "label -i", handler );
-
-        execP4Command( "labelsync -l " + name,
-                       new P4HandlerAdapter()
-                       {
-                           public void process( String line )
-                           {
-                               getLogger().debug( line );
-                           }
-                       } );
-
-        getLogger().info( "Created Label " + name + " (" + desc + ")" );
+        getLogger().info( "Created Label " + m_name + " (" + m_description + ")" );
 
         //Now lock if required
-        if( lock != null && lock.equalsIgnoreCase( "locked" ) )
+        if( m_lock != null && m_lock.equalsIgnoreCase( "locked" ) )
         {
 
             getLogger().info( "Modifying lock status to 'locked'" );
-
-            final StringBuffer labelSpec = new StringBuffer();
 
             //Read back the label spec from perforce,
             //Replace Options
             //Submit back to Perforce
 
-            handler =
-                new P4HandlerAdapter()
-                {
-                    public void process( String line )
-                    {
-                        getLogger().debug( line );
+            m_labelSpec = new StringBuffer();
+            execP4Command( "label -o " + m_name, null );
+            final String labelSpec = m_labelSpec.toString();
+            getLogger().debug( labelSpec );
 
-                        if( util.match( "/^Options:/", line ) )
-                        {
-                            line = "Options: " + lock;
-                        }
-
-                        labelSpec.append( line + "\n" );
-                    }
-                };
-
-            execP4Command( "label -o " + name, handler );
-            getLogger().debug( labelSpec.toString() );
+            //reset labelSpec to null so output is not written to it anymore
+            m_labelSpec = null;
 
             getLogger().debug( "Now locking label..." );
-            handler =
-                new P4HandlerAdapter()
-                {
-                    public void process( String line )
-                    {
-                        getLogger().debug( line );
-                    }
-                };
-
-            handler.setOutput( labelSpec.toString() );
-            execP4Command( "label -i", handler );
+            //handler.setOutput( labelSpec );
+            execP4Command( "label -i", null );
         }
-
     }
 
+    private void validate()
+    {
+        if( m_p4View == null || m_p4View.length() < 1 )
+        {
+            getLogger().warn( "View not set, assuming //depot/..." );
+            m_p4View = "//depot/...";
+        }
+
+        if( m_description == null || m_description.length() < 1 )
+        {
+            getLogger().warn( "Label Description not set, assuming 'AntLabel'" );
+            m_description = "AntLabel";
+        }
+
+        if( m_lock != null && !m_lock.equalsIgnoreCase( "locked" ) )
+        {
+            getLogger().warn( "lock attribute invalid - ignoring" );
+        }
+
+        if( m_name == null || m_name.length() < 1 )
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat( "yyyy.MM.dd-hh:mm" );
+            Date now = new Date();
+            m_name = "AntLabel-" + formatter.format( now );
+            getLogger().warn( "name not set, assuming '" + m_name + "'" );
+        }
+    }
 }

@@ -111,12 +111,12 @@ public class P4Add extends P4Base
         throws TaskException
     {
 
-        if( P4View != null )
+        if( m_p4View != null )
         {
-            addCmd = P4View;
+            addCmd = m_p4View;
         }
 
-        P4CmdOpts = ( m_changelist > 0 ) ? ( "-c " + m_changelist ) : "";
+        m_p4CmdOpts = ( m_changelist > 0 ) ? ( "-c " + m_changelist ) : "";
 
         StringBuffer filelist = new StringBuffer();
 
@@ -152,10 +152,16 @@ public class P4Add extends P4Base
 
     }
 
-    private void execP4Add( StringBuffer list )
+    private void execP4Add( final StringBuffer list )
+        throws TaskException
     {
-        getLogger().info( "Execing add " + P4CmdOpts + " " + addCmd + list );
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = "Execing add " + m_p4CmdOpts + " " + addCmd + list;
+            getLogger().info( message );
+        }
 
-        execP4Command( "-s add " + P4CmdOpts + " " + addCmd + list, new SimpleP4OutputHandler( this ) );
+        final String command = "-s add " + m_p4CmdOpts + " " + addCmd + list;
+        execP4Command( command, null );
     }
 }

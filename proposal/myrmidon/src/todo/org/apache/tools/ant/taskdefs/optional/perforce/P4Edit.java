@@ -31,9 +31,15 @@ public class P4Edit extends P4Base
         throws TaskException
     {
         if( change != null )
-            P4CmdOpts = "-c " + change;
-        if( P4View == null )
+        {
+            m_p4CmdOpts = "-c " + change;
+        }
+        if( m_p4View == null )
+        {
             throw new TaskException( "No view specified to edit" );
-        execP4Command( "-s edit " + P4CmdOpts + " " + P4View, new SimpleP4OutputHandler( this ) );
+        }
+
+        final String command = "-s edit " + m_p4CmdOpts + " " + m_p4View;
+        execP4Command( command, null );
     }
 }

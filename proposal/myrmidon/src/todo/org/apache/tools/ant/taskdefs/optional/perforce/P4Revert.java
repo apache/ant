@@ -14,32 +14,31 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
-
-public class P4Revert extends P4Base
+public class P4Revert
+    extends P4Base
 {
+    private String m_revertChange;
+    private boolean m_onlyUnchanged;
 
-    private String revertChange = null;
-    private boolean onlyUnchanged = false;
-
-    public void setChange( String revertChange )
+    public void setChange( final String revertChange )
         throws TaskException
     {
         if( revertChange == null && !revertChange.equals( "" ) )
+        {
             throw new TaskException( "P4Revert: change cannot be null or empty" );
+        }
 
-        this.revertChange = revertChange;
-
+        m_revertChange = revertChange;
     }
 
     public void setRevertOnlyUnchanged( boolean onlyUnchanged )
     {
-        this.onlyUnchanged = onlyUnchanged;
+        this.m_onlyUnchanged = onlyUnchanged;
     }
 
     public void execute()
         throws TaskException
     {
-
         /*
          * Here we can either revert any unchanged files in a changelist
          * or
@@ -49,12 +48,17 @@ public class P4Revert extends P4Base
          * The whole process also accepts a p4 filespec
          */
         String p4cmd = "-s revert";
-        if( onlyUnchanged )
+        if( m_onlyUnchanged )
+        {
             p4cmd += " -a";
+        }
 
-        if( revertChange != null )
-            p4cmd += " -c " + revertChange;
+        if( m_revertChange != null )
+        {
+            p4cmd += " -c " + m_revertChange;
+        }
 
-        execP4Command( p4cmd + " " + P4View, new SimpleP4OutputHandler( this ) );
+        final String command = p4cmd + " " + m_p4View;
+        execP4Command( command, null );
     }
 }

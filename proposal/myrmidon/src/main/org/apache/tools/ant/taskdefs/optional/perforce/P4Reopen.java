@@ -14,27 +14,30 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
-
-public class P4Reopen extends P4Base
+public class P4Reopen
+    extends P4Base
 {
+    private String m_toChange = "";
 
-    private String toChange = "";
-
-    public void setToChange( String toChange )
+    public void setToChange( final String toChange )
         throws TaskException
     {
         if( toChange == null && !toChange.equals( "" ) )
+        {
             throw new TaskException( "P4Reopen: tochange cannot be null or empty" );
+        }
 
-        this.toChange = toChange;
+        m_toChange = toChange;
     }
 
     public void execute()
         throws TaskException
     {
-        if( P4View == null )
-            if( P4View == null )
-                throw new TaskException( "No view specified to reopen" );
-        execP4Command( "-s reopen -c " + toChange + " " + P4View, new SimpleP4OutputHandler( this ) );
+        if( m_p4View == null )
+        {
+            throw new TaskException( "No view specified to reopen" );
+        }
+        final String message = "-s reopen -c " + m_toChange + " " + m_p4View;
+        execP4Command( message, null );
     }
 }
