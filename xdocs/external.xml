@@ -369,6 +369,34 @@
         </table>
       </subsection>
 
+      <subsection name="Tidy Imports (Tim)">
+
+        <p>Tim is a handy utility that can be executed on the command
+        line or via Ant that automatically formats your import
+        declarations. Tim is capable of removing unused imports,
+        expanding or collapsing imports and even organising them into
+        pre-determined groups.</p>
+        
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.chive.com/tim.htm">http://www.chive.com/tim.htm</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@chive.com">support@chive.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="TiniAnt">
 
         <p>TiniAnt is an Ant task to support building applications for
