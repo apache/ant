@@ -120,4 +120,18 @@ public class CommandlineJavaTest extends TestCase {
                      "org.apache.tools.ant.CommandlineJavaTest", s[5]);
     }
 
+    public void testJarOption() throws Exception {
+        CommandlineJava c = new CommandlineJava();
+        c.createArgument().setValue("arg1");
+        c.setJar("myfile.jar");
+        c.createVmArgument().setValue("-classic");
+        c.createVmArgument().setValue("-Dx=y");
+        String[] s = c.getCommandline();
+        assertEquals("-classic", s[1]);
+        assertEquals("-Dx=y", s[2]);
+        assertEquals("-jar", s[3]);
+        assertEquals("myfile.jar", s[4]);
+        assertEquals("arg1", s[5]);
+    }
+
 }

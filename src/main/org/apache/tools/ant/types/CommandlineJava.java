@@ -69,7 +69,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * a java command line.
  *
  * @author thomas.haas@softwired-inc.com
- * @author <a href="sbailliez@apache.org">Stephane Bailliez</a>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CommandlineJava implements Cloneable {
 
@@ -234,10 +234,6 @@ public class CommandlineJava implements Cloneable {
         // first argument is the java.exe path...
         result[pos++] = vmArgs[0];
         
-        // -jar must be the first option in the command line.
-        if (executeJar){
-            result[pos++] = "-jar";
-        }
         // next follows the vm options
         System.arraycopy(vmArgs, 1, result, pos, vmArgs.length - 1);
         pos += vmArgs.length - 1;
@@ -253,10 +249,20 @@ public class CommandlineJava implements Cloneable {
             result[pos++] = "-classpath";
             result[pos++] = fullClasspath.toString();
         }
+
+        // JDK usage command line says that -jar must be the first option, as there is
+        // a bug in JDK < 1.4 that forces the jvm type to be specified as the first
+        // option, it is appended here as specified in the docs even though there is
+        // in fact no order.
+        if (executeJar){
+            result[pos++] = "-jar";
+        }
+
         // this is the classname to run as well as its arguments.
         // in case of 'executeJar', the executable is a jar file.
         System.arraycopy(javaCommand.getCommandline(), 0, 
                          result, pos, javaCommand.size());
+
         return result;
     }
 
