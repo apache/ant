@@ -18,6 +18,14 @@
       </XDtClass:ifHasClassTag>
     </XDtClass:forAllClasses>
 
+    <XDtClass:forAllClasses>
+      <XDtClass:forAllClassTags tagName="ant:type">
+        <<XDtClass:classTagValue tagName="ant:type" paramName="type"/>
+          name="<XDtClass:classTagValue tagName="ant:type" paramName="name"/>"
+          classname="<XDtClass:fullClassName/>" />
+      </XDtClass:forAllClassTags>
+    </XDtClass:forAllClasses>
+
     <XDtClass:forAllClasses type="org.apache.aut.converter.Converter">
       <XDtClass:ifHasClassTag tagName="ant:converter">
         <converter classname="<XDtClass:fullClassName/>"
