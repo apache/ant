@@ -72,6 +72,7 @@ import java.util.*;
  * copyfile/copydir tasks.</p>
  *
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Copy extends Task {
     protected File file = null;     // the source file 
@@ -87,6 +88,8 @@ public class Copy extends Task {
 
     protected Hashtable fileCopyMap = new Hashtable();
     protected Hashtable dirCopyMap = new Hashtable();
+
+    protected Mapper mapperElement = null;
 
     /**
      * Sets a single source file to copy.
@@ -157,6 +160,18 @@ public class Copy extends Task {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * Defines the FileNameMapper to use (nested mapper element).
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapperElement != null) {
+            throw new BuildException("Cannot define more than one mapper",
+                                     location);
+        }
+        mapperElement = new Mapper(project);
+        return mapperElement;
     }
 
     /**
@@ -246,7 +261,9 @@ public class Copy extends Task {
      */
     protected void scan(File fromDir, File toDir, String[] files, String[] dirs) {
         FileNameMapper mapper = null;
-        if (flatten) {
+        if (mapperElement != null) {
+            mapper = mapperElement.getImplementation();
+        } else if (flatten) {
             mapper = new FlatFileNameMapper();
         } else {
             mapper = new IdentityMapper();
