@@ -73,7 +73,8 @@ interpretation of exit codes.</p>
     <td valign="top">whether or not you want the command to be spawned<br/>
     Default is false.<br>
     If you spawn a command, its output will not be logged by ant.<br/>
-    The input, output, error, and result property settings are not active when spawning a process.
+    The input, output, error, and result property settings are not active when spawning a process.<br>
+    <em>since Ant 1.6</em>
     </td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -85,8 +86,8 @@ interpretation of exit codes.</p>
   </tr>
   <tr>
     <td valign="top">error</td>
-    <td valign="top">The file to which the standard error of the command should be
-      redirected. </td>
+    <td valign="top">The file to which the standard error of the
+    command should be redirected.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -95,7 +96,7 @@ interpretation of exit codes.</p>
                      log and you are redirecting output to a file/property. The error 
                      output will not be included in the output file/property. If you 
                      redirect error with the &quot;error&quot; or &quot;errorProperty&quot;
-                     attributes, this will have no effect.</td>
+                     attributes, this will have no effect.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -114,21 +115,21 @@ interpretation of exit codes.</p>
   <tr>
     <td valign="top">errorproperty</td>
     <td valign="top">The name of a property in which the standard error of the 
-      command should be stored.</td>
+      command should be stored.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">input</td>
     <td valign="top">A file from which the executed command's standard input
                      is taken. This attribute is mutually exclusive with the
-                     inputstring attribute</td>
+                     inputstring attribute.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">inputstring</td>
     <td valign="top">A string which serves as the input stream for the 
                      executed command. This attribute is mutually exclusive with the
-                     input attribute.</td>
+                     input attribute.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -181,7 +182,8 @@ interpretation of exit codes.</p>
                      if that does not exist, against the execution
                      directory if specified. On Unix systems, if you only 
                      want to allow execution of commands in the user's path, 
-                     set this to false.</td>
+                     set this to false.  <em>since Ant 1.6</em></td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>                     
 </table>
 <h3>Examples</h3>

@@ -47,6 +47,17 @@ one mapper.</p>
     <td align="center" valign="top">Yes, if you specify a nested mapper</td>
   </tr>
   <tr>
+    <td valign="top">spawn</td>
+    <td valign="top">whether or not you want the commands to be spawned<br/>
+    Default is false.<br>
+    If you spawn a command, its output will not be logged by ant.<br/>
+    The input, output, error, and result property settings are not active when spawning a process.<br>
+    <em>since Ant 1.6</em>
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+
+  <tr>
     <td valign="top">dir</td>
     <td valign="top">the directory in which the command should be executed.</td>
     <td align="center" valign="top">No</td>
@@ -75,8 +86,25 @@ one mapper.</p>
   </tr>
   <tr>
     <td valign="top">output</td>
-    <td valign="top">the file to which the output of the command should be
-      redirected.</td>
+    <td valign="top">the file to which the output of the command
+    should be redirected.  If the error stream is not also redirected
+    to a file or property, it will appear in this output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">error</td>
+    <td valign="top">The file to which the standard error of the
+    command should be redirected.  <em>since Ant 1.6</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">logError</td>
+    <td valign="top">This attribute is used when you wish to see error
+    output in Ant's log and you are redirecting output to a
+    file/property. The error output will not be included in the output
+    file/property. If you redirect error with the &quot;error&quot; or
+    &quot;errorProperty&quot; attributes, this will have no effect.
+    <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -88,8 +116,30 @@ one mapper.</p>
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
-    <td valign="top">the name of a property in which the output of the 
-      command should be stored.</td>
+    <td valign="top">the name of a property in which the output of the
+    command should be stored.  Unless the error stream is redirected
+    to a separate file or stream, this property will include the error
+    output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">errorproperty</td>
+    <td valign="top">The name of a property in which the standard error of the 
+      command should be stored.  <em>since Ant 1.6</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">input</td>
+    <td valign="top">A file from which the executed command's standard
+    input is taken. This attribute is mutually exclusive with the
+    inputstring attribute.  <em>since Ant 1.6</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">inputstring</td>
+    <td valign="top">A string which serves as the input stream for the
+    executed command. This attribute is mutually exclusive with the
+    input attribute.  <em>since Ant 1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -164,6 +214,16 @@ one mapper.</p>
         false as well.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
+  <tr>
+    <td valign="top">resolveExecutable</td>
+    <td valign="top">When this attribute is true, the name of the
+    executable if resolved firstly against the project basedir and if
+    that does not exist, against the execution directory if
+    specified. On Unix systems, if you only want to allow execution of
+    commands in the user's path, set this to false.  <em>since Ant
+    1.6</em></td>
+    <td align="center" valign="top">No, default is <i>false</i></td>
+  </tr>                     
   <tr>
     <td valign="top">maxparallel</td>
     <td valign="top">Limit the amount of parallelism by passing at
