@@ -184,6 +184,24 @@ public class FixCrLfTest extends BuildFileTest {
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf"));
     }
     
+    public void testCrCrLfSequenceUnix() throws IOException {
+        executeTarget("testCrCrLfSequence-unix");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.unix"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+    }
+
+    public void testCrCrLfSequenceDos() throws IOException {
+        executeTarget("testCrCrLfSequence-dos");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.dos"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+    }
+
+    public void testCrCrLfSequenceMac() throws IOException {
+        executeTarget("testCrCrLfSequence-mac");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.mac"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+    }
+
     public void assertEqualContent(File expect, File result) 
         throws AssertionFailedError, IOException {
         if (!result.exists()) {

@@ -121,4 +121,25 @@
              />
   </target>
 
+  <target name="testCrCrLfSequence-unix" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="crcrlf"
+             eol="lf"
+             />
+  </target>
+
+  <target name="testCrCrLfSequence-dos" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="crcrlf"
+             eol="crlf"
+             />
+  </target>
+
+  <target name="testCrCrLfSequence-mac" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="crcrlf"
+             eol="cr"
+             />
+  </target>
+
 </project>
