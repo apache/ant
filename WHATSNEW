@@ -61,10 +61,15 @@ Fixed bugs:
 * Ant failed to locate tools.jar if the jre directory name wasn't all
   lowercase.  Bugzilla Report 25798.
 
- * Redirector exhibited inconsistent behavior with regard to split
+* Redirector exhibited inconsistent behavior with regard to split
    output.  When sent to file only, files would be created in all
    cases; when split file-property, files were only created if
    writes were performed.
+
+* fixed case handling of scriptdef attributes and elements.
+
+* UNC pathnames did not work for ANT_HOME or -lib locations on Windows.
+  Bugzilla report 27922.
 
 Other changes:
 --------------
@@ -148,8 +153,6 @@ Fixed bugs:
 * wrong compare used in ProjectComponent for logging. Bugzilla Report 28070.
 
 * failOnAny attribute for <parallel> was broken. Bugzilla Report 28122.
-
-* fixed case handling of scriptdef attributes and elements.
 
 Other changes:
 --------------
