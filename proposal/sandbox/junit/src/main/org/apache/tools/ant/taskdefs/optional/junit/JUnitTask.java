@@ -53,12 +53,24 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Properties;
 import java.util.Vector;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
-import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunner;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  *
@@ -81,10 +93,70 @@ public class JUnitTask extends Task {
     /** stop the test run if an error occurs */
     private boolean haltOnError = false;
 
+    /** the command line to launch the TestRunner */
+    private CommandlineJava cmd = new CommandlineJava();
+
 // task implementation
 
     public void execute() throws BuildException {
+        File tmp = configureTestRunner();
+        Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
+        execute.setCommandline(cmd.getCommandline());
+        execute.setAntRun(project);
 
+        log("Executing: " + cmd.toString(), Project.MSG_VERBOSE);
+        int retVal;
+        try {
+            retVal = execute.execute();
+        } catch (IOException e) {
+            throw new BuildException("Process fork failed.", e, location);
+        } finally {
+            tmp.delete();
+        }
+
+    }
+
+    /**
+     * Configure the runner with the appropriate configuration file.
+     * @return the reference to the temporary configuration file
+     * to be deleted once the TestRunner has ended.
+     */
+    public File configureTestRunner() {
+        Properties props = new Properties();
+        props.setProperty("debug", "true");
+        props.setProperty("host", "127.0.0.1");
+        props.setProperty("port", String.valueOf(port));
+        StringBuffer classnames = new StringBuffer();
+        //@fixme get all test classes to run...
+        final int testcount = 0;
+        for (int i = 0; i < testcount; i++) {
+            classnames.append("<classname>").append("\n");
+        }
+        props.setProperty("classnames", classnames.toString());
+
+        // dump the properties to a temporary file.
+        FileUtils futils = FileUtils.newFileUtils();
+        File f = futils.createTempFile("junit-antrunner", "tmp", new File("."));
+        OutputStream os = null;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(f));
+            props.store(os, "JUnit Ant Runner configuration file");
+        } catch (IOException e) {
+            throw new BuildException(e);
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+
+        // configure the runner
+        cmd.createArgument().setValue("-file");
+        cmd.createArgument().setValue(f.getAbsolutePath());
+
+        return f;
     }
 
 // Ant bean accessors
@@ -106,8 +178,67 @@ public class JUnitTask extends Task {
     }
 
     /** add a new formatter element */
-    public void addFormatter(FormatterElement fe){
+    public void addFormatter(FormatterElement fe) {
         Formatter f = fe.createFormatter();
         this.formatters.addElement(f);
+    }
+
+    /**
+     * Set the maximum memory to be used by the TestRunner
+     * @param   max     the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
+     *                  in the java command line options.
+     */
+    public void setMaxmemory(String max) {
+        if (Project.getJavaVersion().startsWith("1.1")) {
+            createJvmarg().setValue("-mx" + max);
+        } else {
+            createJvmarg().setValue("-Xmx" + max);
+        }
+    }
+
+    /**
+     * Create a new JVM argument. Ignored if no JVM is forked.
+     * @return  create a new JVM argument so that any argument can be passed to the JVM.
+     * @see #setFork(boolean)
+     */
+    public Commandline.Argument createJvmarg() {
+        return cmd.createVmArgument();
+    }
+
+    /**
+     * <tt>&lt;classpath&gt;</tt> allows classpath to be set for tests.
+     */
+    public Path createClasspath() {
+        return cmd.createClasspath(project).createPath();
+    }
+
+    /**
+     * Creates a new JUnitRunner and enables fork of a new Java VM.
+     */
+    public JUnitTask() throws Exception {
+        cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunner");
+    }
+
+    /**
+     * Adds the jars or directories containing Ant, this task and
+     * JUnit to the classpath - this should make the forked JVM work
+     * without having to specify them directly.
+     */
+    public void init() {
+        addClasspathEntry("/junit/framework/TestCase.class");
+        addClasspathEntry("/org/apache/tools/ant/Task.class");
+        addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
+    }
+
+    /**
+     * Add the directory or archive containing the resource to
+     * the command line classpath.
+     * @param the resource to look for.
+     */
+    protected void addClasspathEntry(String resource) {
+        File f = JUnitHelper.getResourceEntry(resource);
+        if (f != null) {
+            createClasspath().setLocation(f);
+        }
     }
 }

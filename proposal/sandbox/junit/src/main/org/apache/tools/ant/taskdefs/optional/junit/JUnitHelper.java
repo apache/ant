@@ -54,9 +54,14 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.lang.reflect.Method;
+import java.io.File;
+import java.net.URL;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
 
 /**
  * A set of helpers functions to deal with JUnit.
@@ -124,4 +129,51 @@ public final class JUnitHelper {
         }
         return null;
     }
+
+    /**
+     * Search for the given resource and return the directory or archive
+     * that contains it.
+     *
+     * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
+     * getResource doesn't contain the name of the archive.</p>
+     *
+     * @param resource the resource to look for in the JVM classpath.
+     * @return the file or directory containing the resource or
+     * <tt>null</tt> if it does not know how to handle it.
+     */
+    public static File getResourceEntry(String resource){
+        URL url = JUnitHelper.class.getResource(resource);
+        if (url != null) {
+            // can't find the resource...
+            return null;
+        }
+        String u = url.toString();
+        if (u.startsWith("jar:file:")) {
+            int pling = u.indexOf("!");
+            String jarName = u.substring(9, pling);
+            return new File((new File(jarName)).getAbsolutePath());
+        } else if (u.startsWith("file:")) {
+            int tail = u.indexOf(resource);
+            String dirName = u.substring(5, tail);
+            return new File((new File(dirName)).getAbsolutePath());
+        }
+        // don't know how to handle it...
+        return null;
+    }
+
+    /**
+     * Add the entry corresponding to a specific resource to the
+     * specified path instance. The entry can either be a directory
+     * or an archive.
+     * @param path the path to add the resource entry to.
+     * @param resource the resource to look for.
+     * @see #getResourceEntry(String)
+     */
+    public static void addClasspathEntry(Path path, String resource){
+        File f = getResourceEntry(resource);
+        if (f != null) {
+            path.createPathElement().setLocation(f);
+        }
+    }
+
 }

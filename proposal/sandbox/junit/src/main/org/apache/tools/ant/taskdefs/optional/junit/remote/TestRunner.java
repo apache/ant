@@ -192,24 +192,24 @@ public class TestRunner implements TestListener {
             if ("-file".equalsIgnoreCase(args[i])) {
                 // @fixme if you mix file and other options it will be a mess,
                 // not important right now.
-                FileInputStream fis = new FileInputStream(args[i + 1]);
+                FileInputStream fis = new FileInputStream(args[++i]);
                 Properties props = new Properties();
                 props.load(fis);
                 fis.close();
                 init(props);
             }
             if ("-classnames".equalsIgnoreCase(args[i])) {
-                for (int j = i + 1; j < args.length; j++) {
+                for (int j = ++i; j < args.length; j++) {
                     if (args[j].startsWith("-"))
                         break;
                     addTestClassName(args[j]);
                 }
             }
             if ("-port".equalsIgnoreCase(args[i])) {
-                setPort(Integer.parseInt(args[i + 1]));
+                setPort(Integer.parseInt(args[++i]));
             }
             if ("-host".equalsIgnoreCase(args[i])) {
-                setHost(args[i + 1]);
+                setHost(args[++i]);
             }
             if ("-debug".equalsIgnoreCase(args[i])) {
                 setDebug(true);
