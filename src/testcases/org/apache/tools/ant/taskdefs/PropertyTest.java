@@ -54,8 +54,12 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import java.net.URL;
+import java.io.File;
+
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * @author Conor MacNeill
@@ -96,6 +100,15 @@ public class PropertyTest extends BuildFileTest {
     }
 
     public void test5() {
+        String baseDir = getProject().getProperty("basedir");
+        try {
+            String uri = FileUtils.newFileUtils().toURI(
+                baseDir + "/property3.properties");
+            getProject().setNewProperty(
+                "test5.url", uri);
+        } catch (Exception ex) {
+            throw new BuildException(ex);
+        }
         expectLog("test5", "http.url is http://localhost:999");
     }
 

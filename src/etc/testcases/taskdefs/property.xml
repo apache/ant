@@ -24,7 +24,7 @@
 
   <target name="test5">
     <property name="http.port" value="999" />
-    <property url="file://${basedir}/property3.properties"/>
+    <property url="${test5.url}"/>
     <echo message="http.url is ${http.url}"/>
   </target>
 
