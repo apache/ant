@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -623,6 +623,25 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      */
     public void addDepend(DependSelector selector) {
         appendSelector(selector);
+    }
+
+    /**
+     * Returns included files as a list of semicolon-separated filenames
+     *
+     * @return String object with included filenames
+     */
+    public String toString() {
+        DirectoryScanner ds = getDirectoryScanner(getProject());
+        String[] files = ds.getIncludedFiles();
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < files.length; i++) {
+            if (i>0) {
+                sb.append(';');
+            }
+            sb.append(files[i]);
+        }
+        return sb.toString();
     }
 
 }
