@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
@@ -108,5 +109,35 @@ class ExecUtil
     protected static File getCwd()
     {
         return c_cwd;
+    }
+
+    /**
+     * Get the native environment according to proper rules.
+     * Return null if no environment specified, return environment combined
+     * with native environment if environment data is additive else just return
+     * converted environment data.
+     */
+    protected static String[] getEnvironmentSpec( final ExecMetaData metaData )
+        throws ExecException, IOException
+    {
+        final Properties environment = metaData.getEnvironment();
+        if( 0 == environment.size() )
+        {
+            return null;
+        }
+        else
+        {
+            if( metaData.isEnvironmentAdditive() )
+            {
+                final Properties newEnvironment = new Properties();
+                newEnvironment.putAll( Environment.getNativeEnvironment() );
+                newEnvironment.putAll( environment );
+                return toNativeEnvironment( newEnvironment );
+            }
+            else
+            {
+                return toNativeEnvironment( environment );
+            }
+        }
     }
 }

@@ -71,7 +71,7 @@ public class DefaultCommandLauncher
     {
         if( ExecUtil.isCwd( metaData.getWorkingDirectory() ) )
         {
-            final String[] env = getEnvironmentSpec( metaData );
+            final String[] env = ExecUtil.getEnvironmentSpec( metaData );
             return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
         else if( null == c_execWithCWD )
@@ -86,36 +86,6 @@ public class DefaultCommandLauncher
     }
 
     /**
-     * Get the native environment according to proper rules.
-     * Return null if no environment specified, return environment combined
-     * with native environment if environment data is additive else just return
-     * converted environment data.
-     */
-    private String[] getEnvironmentSpec( final ExecMetaData metaData )
-        throws ExecException, IOException
-    {
-        final Properties environment = metaData.getEnvironment();
-        if( 0 == environment.size() )
-        {
-            return null;
-        }
-        else
-        {
-            if( metaData.isEnvironmentAdditive() )
-            {
-                final Properties newEnvironment = new Properties();
-                newEnvironment.putAll( Environment.getNativeEnvironment() );
-                newEnvironment.putAll( environment );
-                return ExecUtil.toNativeEnvironment( newEnvironment );
-            }
-            else
-            {
-                return ExecUtil.toNativeEnvironment( environment );
-            }
-        }
-    }
-
-    /**
      * Execute the Java1.3 Runtime.exec() 3 parame method that sets working
      * directory. This needs to be done via reflection so that it can compile
      * under 1.2.
@@ -123,7 +93,7 @@ public class DefaultCommandLauncher
     private Process execJava13( final ExecMetaData metaData )
         throws IOException, ExecException
     {
-        final String[] env = getEnvironmentSpec( metaData );
+        final String[] env = ExecUtil.getEnvironmentSpec( metaData );
         final Object[] args =
             {metaData.getCommand(),
              env,
