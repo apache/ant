@@ -20,10 +20,10 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
-import org.apache.tools.ant.types.Argument;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -36,36 +36,35 @@ import org.apache.tools.ant.types.Argument;
  */
 public class ExecTask extends Task
 {
-    private static String lSep = System.getProperty( "line.separator" );
-    protected boolean failOnError = false;
-    protected boolean newEnvironment = false;
-    private Integer timeout = null;
-    private EnvironmentData env = new EnvironmentData();
-    protected Commandline cmdl = new Commandline();
-    private FileOutputStream fos = null;
-    private ByteArrayOutputStream baos = null;
-    private boolean failIfExecFails = true;
+    private static String LINE_SEP = System.getProperty( "line.separator" );
+
+    private boolean m_newEnvironment;
+    private Integer m_timeout;
+    private EnvironmentData m_env = new EnvironmentData();
+    private Commandline m_command = new Commandline();
+    private FileOutputStream m_ouput;
+    private ByteArrayOutputStream m_byteArrayOutput;
 
     /**
      * Controls whether the VM (1.3 and above) is used to execute the command
      */
-    private boolean vmLauncher = true;
-    private File dir;
+    private boolean m_useVMLauncher = true;
+    private File m_workingDirectory;
 
-    private String os;
-    private File out;
-    private String outputprop;
-    private String resultProperty;
+    private String m_os;
+    private File m_outputFile;
+    private String m_outputProperty;
+    private String m_resultProperty;
 
     /**
      * The working directory of the process
      *
      * @param d The new Dir value
      */
-    public void setDir( File d )
+    public void setDir( final File dir )
         throws TaskException
     {
-        this.dir = d;
+        m_workingDirectory = dir;
     }
 
     /**
@@ -73,30 +72,10 @@ public class ExecTask extends Task
      *
      * @param value The new Executable value
      */
-    public void setExecutable( String value )
+    public void setExecutable( final String value )
         throws TaskException
     {
-        cmdl.setExecutable( value );
-    }
-
-    /**
-     * ant attribute
-     *
-     * @param flag The new FailIfExecutionFails value
-     */
-    public void setFailIfExecutionFails( boolean flag )
-    {
-        failIfExecFails = flag;
-    }
-
-    /**
-     * Throw a TaskException if process returns non 0.
-     *
-     * @param fail The new Failonerror value
-     */
-    public void setFailonerror( boolean fail )
-    {
-        failOnError = fail;
+        m_command.setExecutable( value );
     }
 
     /**
@@ -104,9 +83,9 @@ public class ExecTask extends Task
      *
      * @param newenv The new Newenvironment value
      */
-    public void setNewenvironment( boolean newenv )
+    public void setNewenvironment( final boolean newEnvironment )
     {
-        newEnvironment = newenv;
+        m_newEnvironment = newEnvironment;
     }
 
     /**
@@ -115,9 +94,9 @@ public class ExecTask extends Task
      *
      * @param os The new Os value
      */
-    public void setOs( String os )
+    public void setOs( final String os )
     {
-        this.os = os;
+        m_os = os;
     }
 
     /**
@@ -125,9 +104,9 @@ public class ExecTask extends Task
      *
      * @param out The new Output value
      */
-    public void setOutput( File out )
+    public void setOutput( final File outputFile )
     {
-        this.out = out;
+        m_outputFile = outputFile;
     }
 
     /**
@@ -135,9 +114,9 @@ public class ExecTask extends Task
      *
      * @param outputprop The new Outputproperty value
      */
-    public void setOutputproperty( String outputprop )
+    public void setOutputproperty( final String outputprop )
     {
-        this.outputprop = outputprop;
+        m_outputProperty = outputprop;
     }
 
     /**
@@ -147,9 +126,9 @@ public class ExecTask extends Task
      * @param resultProperty The new ResultProperty value
      * @since 1.5
      */
-    public void setResultProperty( String resultProperty )
+    public void setResultProperty( final String resultProperty )
     {
-        this.resultProperty = resultProperty;
+        m_resultProperty = resultProperty;
     }
 
     /**
@@ -157,9 +136,9 @@ public class ExecTask extends Task
      *
      * @param value The new Timeout value
      */
-    public void setTimeout( Integer value )
+    public void setTimeout( final Integer timeout )
     {
-        timeout = value;
+        m_timeout = timeout;
     }
 
     /**
@@ -168,9 +147,9 @@ public class ExecTask extends Task
      *
      * @param vmLauncher The new VMLauncher value
      */
-    public void setVMLauncher( boolean vmLauncher )
+    public void setVMLauncher( final boolean vmLauncher )
     {
-        this.vmLauncher = vmLauncher;
+        m_useVMLauncher = vmLauncher;
     }
 
     /**
@@ -178,9 +157,9 @@ public class ExecTask extends Task
      *
      * @param var The feature to be added to the Env attribute
      */
-    public void addEnv( EnvironmentVariable var )
+    public void addEnv( final EnvironmentVariable var )
     {
-        env.addVariable( var );
+        m_env.addVariable( var );
     }
 
     /**
@@ -190,7 +169,7 @@ public class ExecTask extends Task
      */
     public Argument createArg()
     {
-        return cmdl.createArgument();
+        return m_command.createArgument();
     }
 
     /**
@@ -216,12 +195,13 @@ public class ExecTask extends Task
     protected boolean isValidOs()
     {
         // test if os match
-        String myos = System.getProperty( "os.name" );
-        log( "Current OS is " + myos, Project.MSG_VERBOSE );
-        if( ( os != null ) && ( os.indexOf( myos ) < 0 ) )
+        final String os = System.getProperty( "os.name" );
+
+        getLogger().debug( "Current OS is " + os );
+        if( ( m_os != null ) && ( m_os.indexOf( os ) < 0 ) )
         {
             // this command will be executed only on the specified OS
-            log( "This OS, " + myos + " was not found in the specified list of valid OSes: " + os, Project.MSG_VERBOSE );
+            getLogger().debug( "This OS, " + os + " was not found in the specified list of valid OSes: " + m_os );
             return false;
         }
         return true;
@@ -234,45 +214,43 @@ public class ExecTask extends Task
      * @param exe Description of Parameter
      * @exception IOException Description of Exception
      */
-    protected final void runExecute( Execute exe )
+    protected final void runExecute( final Execute exe )
         throws IOException, TaskException
     {
-        int err = -1;// assume the worst
+        final int err = exe.execute();
 
-        err = exe.execute();
         //test for and handle a forced process death
         if( exe.killedProcess() )
         {
-            log( "Timeout: killed the sub-process", Project.MSG_WARN );
+            getLogger().warn( "Timeout: killed the sub-process" );
         }
         maybeSetResultPropertyValue( err );
-        if( err != 0 )
+        if( 0 != err )
         {
-            if( failOnError )
-            {
-                throw new TaskException( getName() + " returned: " + err );
-            }
-            else
-            {
-                log( "Result: " + err, Project.MSG_ERR );
-            }
+            throw new TaskException( getName() + " returned: " + err );
         }
-        if( baos != null )
+
+        if( null != m_byteArrayOutput )
         {
-            BufferedReader in =
-                new BufferedReader( new StringReader( baos.toString() ) );
-            String line = null;
-            StringBuffer val = new StringBuffer();
-            while( ( line = in.readLine() ) != null )
-            {
-                if( val.length() != 0 )
-                {
-                    val.append( lSep );
-                }
-                val.append( line );
-            }
-            setProperty( outputprop, val.toString() );
+            writeResultToProperty();
         }
+    }
+
+    private void writeResultToProperty() throws IOException, TaskException
+    {
+        final BufferedReader input =
+            new BufferedReader( new StringReader( m_byteArrayOutput.toString() ) );
+        String line = null;
+        StringBuffer val = new StringBuffer();
+        while( ( line = input.readLine() ) != null )
+        {
+            if( val.length() != 0 )
+            {
+                val.append( LINE_SEP );
+            }
+            val.append( line );
+        }
+        setProperty( m_outputProperty, val.toString() );
     }
 
     /**
@@ -283,15 +261,17 @@ public class ExecTask extends Task
     protected void checkConfiguration()
         throws TaskException
     {
-        if( cmdl.getExecutable() == null )
+        if( m_command.getExecutable() == null )
         {
             throw new TaskException( "no executable specified" );
         }
-        if( dir != null && !dir.exists() )
+
+        if( m_workingDirectory != null && !m_workingDirectory.exists() )
         {
             throw new TaskException( "The directory you specified does not exist" );
         }
-        if( dir != null && !dir.isDirectory() )
+
+        if( m_workingDirectory != null && !m_workingDirectory.isDirectory() )
         {
             throw new TaskException( "The directory you specified is not a directory" );
         }
@@ -306,28 +286,28 @@ public class ExecTask extends Task
     protected ExecuteStreamHandler createHandler()
         throws TaskException
     {
-        if( out != null )
+        if( m_outputFile != null )
         {
             try
             {
-                fos = new FileOutputStream( out );
-                log( "Output redirected to " + out, Project.MSG_VERBOSE );
-                return new PumpStreamHandler( fos );
+                m_ouput = new FileOutputStream( m_outputFile );
+                getLogger().debug( "Output redirected to " + m_outputFile );
+                return new PumpStreamHandler( m_ouput );
             }
             catch( FileNotFoundException fne )
             {
-                throw new TaskException( "Cannot write to " + out, fne );
+                throw new TaskException( "Cannot write to " + m_outputFile, fne );
             }
             catch( IOException ioe )
             {
-                throw new TaskException( "Cannot write to " + out, ioe );
+                throw new TaskException( "Cannot write to " + m_outputFile, ioe );
             }
         }
-        else if( outputprop != null )
+        else if( m_outputProperty != null )
         {
-            baos = new ByteArrayOutputStream();
-            log( "Output redirected to ByteArray", Project.MSG_VERBOSE );
-            return new PumpStreamHandler( baos );
+            m_byteArrayOutput = new ByteArrayOutputStream();
+            getLogger().debug( "Output redirected to ByteArray" );
+            return new PumpStreamHandler( m_byteArrayOutput );
         }
         else
         {
@@ -345,9 +325,9 @@ public class ExecTask extends Task
     protected ExecuteWatchdog createWatchdog()
         throws TaskException
     {
-        if( timeout == null )
+        if( m_timeout == null )
             return null;
-        return new ExecuteWatchdog( timeout.intValue() );
+        return new ExecuteWatchdog( m_timeout.intValue() );
     }
 
     /**
@@ -357,10 +337,10 @@ public class ExecTask extends Task
     {
         try
         {
-            if( fos != null )
-                fos.close();
-            if( baos != null )
-                baos.close();
+            if( m_ouput != null )
+                m_ouput.close();
+            if( m_byteArrayOutput != null )
+                m_byteArrayOutput.close();
         }
         catch( IOException io )
         {
@@ -370,46 +350,40 @@ public class ExecTask extends Task
     /**
      * helper method to set result property to the passed in value if
      * appropriate
-     *
-     * @param result Description of Parameter
      */
     protected void maybeSetResultPropertyValue( int result )
         throws TaskException
     {
         String res = Integer.toString( result );
-        if( resultProperty != null )
+        if( m_resultProperty != null )
         {
-            setProperty( resultProperty, res );
+            setProperty( m_resultProperty, res );
         }
     }
 
     /**
      * Create an Execute instance with the correct working directory set.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     protected Execute prepareExec()
         throws TaskException
     {
         // default directory to the project's base directory
-        if( dir == null ) dir = getBaseDirectory();
+        if( m_workingDirectory == null ) m_workingDirectory = getBaseDirectory();
         // show the command
-        log( cmdl.toString(), Project.MSG_VERBOSE );
+        getLogger().debug( m_command.toString() );
 
         final Execute exe = new Execute( createHandler(), createWatchdog() );
-        exe.setWorkingDirectory( dir );
-        exe.setVMLauncher( vmLauncher );
-        exe.setNewenvironment( newEnvironment );
+        exe.setWorkingDirectory( m_workingDirectory );
+        exe.setVMLauncher( m_useVMLauncher );
+        exe.setNewenvironment( m_newEnvironment );
 
-        final Properties environment = env.getVariables();
+        final Properties environment = m_env.getVariables();
         final Iterator keys = environment.keySet().iterator();
         while( keys.hasNext() )
         {
             final String key = (String)keys.next();
             final String value = environment.getProperty( key );
-            log( "Setting environment variable: " + key + "=" + value,
-                 Project.MSG_VERBOSE );
+            getLogger().debug( "Setting environment variable: " + key + "=" + value );
         }
         exe.setEnvironment( environment );
         return exe;
@@ -422,30 +396,28 @@ public class ExecTask extends Task
      * @param exe Description of Parameter
      * @exception TaskException Description of Exception
      */
-    protected void runExec( Execute exe )
+    protected void runExec( final Execute exe )
         throws TaskException
     {
-        exe.setCommandline( cmdl.getCommandline() );
+        exe.setCommandline( m_command.getCommandline() );
         try
         {
             runExecute( exe );
         }
         catch( IOException e )
         {
-            if( failIfExecFails )
-            {
-                throw new TaskException( "Execute failed: " + e.toString(), e );
-            }
-            else
-            {
-                log( "Execute failed: " + e.toString(), Project.MSG_ERR );
-            }
+            throw new TaskException( "Execute failed: " + e.toString(), e );
         }
         finally
         {
             // close the output file if required
             logFlush();
         }
+    }
+
+    protected final Commandline getCommand()
+    {
+        return m_command;
     }
 
 }
