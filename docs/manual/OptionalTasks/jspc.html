@@ -14,8 +14,8 @@
 <p>
 
 It can be used to precompile JSP pages for fast initial invocation
-of JSP pages, deployment on a server without the full JDK installed, 
-or simply to syntax check the pages without deploying them. 
+of JSP pages, deployment on a server without the full JDK installed,
+or simply to syntax check the pages without deploying them.
 In most cases, a javac task is usually the next stage in the build process.
 The task does basic dependency checking to prevent unnecessary recompilation -this
 checking compares source and destination timestamps, and does not factor
@@ -79,7 +79,7 @@ The Task has the following attributes:<p>
     <td valign="top">classpath</td>
     <td valign="top">The classpath to use to run the jsp compiler.
     This can also be specified
-    by the nested element <code>classpath</code> 
+    by the nested element <code>classpath</code>
     <a href="../using.html#path">Path</a>).</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -93,14 +93,14 @@ The Task has the following attributes:<p>
     <td valign="top">failonerror</td>
     <td valign="top">flag to control action on compile failures: default=yes</td>
     <td valign="top" align="center">No</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">uribase</td>
     <td valign="top">
-    The uri context of relative URI 
-    references in the JSP pages. If it does not 
+    The uri context of relative URI
+    references in the JSP pages. If it does not
     exist then it is derived from the location of the file
-    relative to the declared or derived value of <tt>uriroot.</tt> 
+    relative to the declared or derived value of <tt>uriroot.</tt>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -113,11 +113,11 @@ The Task has the following attributes:<p>
     <td valign="top" align="center">No</td>
   </tr>  
   </table>
-  
+
 <P>The <tt>mapped</tt> option will, if set to true, split the JSP text content into a
 one line per call format.  There are comments above and below the mapped
 write calls to localize where in the JSP file each line of text comes
-from.  This can lead to a minor performance degradation (but it is bound 
+from.  This can lead to a minor performance degradation (but it is bound
 by a linear complexity).  Without this options all adjacent writes are
 concatenated into a single write.</P>
 
@@ -125,43 +125,43 @@ concatenated into a single write.</P>
 If the Java Plug-in COM Class-ID you want to use changes then it can be
 specified here.  This should not need to be altered.</P>
 
-<P><tt>uriroot</tt> specifies the root of the web 
-application.  This is where all absolute uris will be resolved from.  
-If it is not specified then the first JSP page will be used to derive 
-it.  To derive it each parent directory of the first JSP page is 
-searched for a <tt>WEB-INF</tt> directory, and the directory closest to 
-the JSP page that has one will be used.  If none can be found then the 
-directory Jasperc was called from will be used.  This only affects pages 
+<P><tt>uriroot</tt> specifies the root of the web
+application.  This is where all absolute uris will be resolved from.
+If it is not specified then the first JSP page will be used to derive
+it.  To derive it each parent directory of the first JSP page is
+searched for a <tt>WEB-INF</tt> directory, and the directory closest to
+the JSP page that has one will be used.  If none can be found then the
+directory Jasperc was called from will be used.  This only affects pages
 translated from an explicitly declared JSP file -including references
 to taglibs</P>
 
 <P><tt>uribase</tt> is used to establish the uri context of
 relative URI references in the JSP pages.  If it does not exist then it
-is derived from the location of the file relative to the declared or 
-derived value of <tt>uriroot</tt>. This only affects pages 
+is derived from the location of the file relative to the declared or
+derived value of <tt>uriroot</tt>. This only affects pages
 translated from an explicitly declared JSP file.</P>
 
 <h3>Parameters specified as nested elements</h3>
 
 This task is a <a href="../dirtasks.html">directory based task</a>, like
 <strong>javac</strong>, so the jsp files to be compiled are located as java
-files are by <strong>javac</strong>. That is, elements such as <tt>includes</tt> and 
-<tt>excludes</tt> can be used directly inside the task declaration. 
+files are by <strong>javac</strong>. That is, elements such as <tt>includes</tt> and
+<tt>excludes</tt> can be used directly inside the task declaration.
 
 <p>
 
-Elements specific to the jspc task are:- 
+Elements specific to the jspc task are:-
 
 <h4>classpath</h4>
 
 The classpath used to compile the JSP pages, specified as for any other
-classpath. 
+classpath.
 
 <h4>classpathref</h4>
 a reference to an existing classpath
 
 <h4>webapp</h4>
-Instructions to jasper to build an entire web application. 
+Instructions to jasper to build an entire web application.
 The base directory must have a WEB-INF subdirectory beneath it.
 When used, the task hands off all dependency checking to the compiler.
 <table border="1" cellpadding="2" cellspacing="0">
@@ -185,18 +185,18 @@ When used, the task hands off all dependency checking to the compiler.
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
 </pre>
-Build all jsp pages under src/war into the destination /gensrc, in a 
+Build all jsp pages under src/war into the destination /gensrc, in a
 package heirarchy beginning with com.i3sp.jsp.
 <pre>
 
-&lt;jspc 
+&lt;jspc
       destdir="interim"
       verbose="1"
       srcdir="src"
       package="com.i3sp.jsp"&gt;
   &lt;include name="**/*.jsp" /&gt;
 &lt;/jspc&gt;
-&lt;depends 
+&lt;depend
          srcdir="interim"
          destdir="build"
          cache="build/dependencies"
@@ -209,19 +209,19 @@ package heirarchy beginning with com.i3sp.jsp.
 </pre>
 Generate jsp pages then javac them down to
 bytecodes. Include lib/taglib jar in the java compilation.
- Dependency checking is used to scrub the 
-java files if class dependencies indicate it is needed. 
+ Dependency checking is used to scrub the
+java files if class dependencies indicate it is needed.
 
 <p><h4>Notes</h4>
 Using the <code>package</code> attribute it is possible to identify the resulting
 java files and thus do full dependency checking - this task only rebuilds
 java files if their jsp file has been modified.
 <p>
-Jasper generates JSP pages against the JSP1.3 specification -an implementation of
-version 2.2 of the servlet specification is needed to compile or run the java code.
+Jasper generates JSP pages against the JSP1.2 specification -an implementation of
+version 2.3 of the servlet specification is needed to compile or run the java code.
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
