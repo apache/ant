@@ -222,4 +222,16 @@ public class AvailableTest extends BuildFileTest {
         executeTarget("test24");
         assertEquals("true",project.getProperty("test"));
     }
+
+    // File is not found in specified filepath
+    public void testSearchInPathNotThere() {
+        executeTarget("searchInPathNotThere");
+        assertNull(project.getProperty("test"));
+    }
+
+    // File is not found in specified filepath
+    public void testSearchInPathIsThere() {
+        executeTarget("searchInPathIsThere");
+        assertEquals("true",project.getProperty("test"));
+    }
 }

@@ -185,8 +185,9 @@ public class Available extends Task implements Condition {
      *
      * @param file the name of the file which is required.
      */
-    public void setFile(String file) {
-        this.file = file;
+    public void setFile(File f) {
+        this.file = FileUtils.newFileUtils()
+            .removeLeadingPath(getProject().getBaseDir(), f);
     }
 
     /**

@@ -854,5 +854,29 @@ public class FileUtils {
         return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
     }
 
+    /**
+     * Removes a leading path from a second path.
+     *
+     * @param leading The leading path, must not be null, must be absolute.
+     * @param path The path to remove from, must not be null, must be absolute.
+     *
+     * @return path's normalized absolute if it doesn't start with
+     * leading, path's path with leading's path removed otherwise.
+     *
+     * @since Ant 1.5
+     */
+    public String removeLeadingPath(File leading, File path) {
+        String l = normalize(leading.getAbsolutePath()).getAbsolutePath();
+        String p = normalize(path.getAbsolutePath()).getAbsolutePath();
+        if (p.startsWith(l)) {
+            String result = p.substring(l.length());
+            if (result.startsWith(File.separator)) {
+                result = result.substring(File.separator.length());
+            }
+            return result;
+        } else {
+            return p;
+        }
+    }
 }
 

@@ -141,4 +141,14 @@
     <delete dir="${user.dir}/test"/>
     <delete file="${user.dir}/test.jar"/>
   </target>
+
+  <target name="searchInPathNotThere">
+    <available file="not_there" filepath="..:optional"
+               property="test" />
+  </target>
+
+  <target name="searchInPathIsThere">
+    <available file="pvcs.xml" filepath="..:optional"
+               property="test" />
+  </target>
 </project>

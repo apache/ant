@@ -128,6 +128,8 @@ public abstract class Definer extends Task {
      * This allow multiple taskdef/typedef to use the same class loader,
      * so they can be used togheter. It eliminate the need to
      * put them in the CLASSPATH.
+     *
+     * @since Ant 1.5
      */
     public void setLoaderRef(Reference r) {
         loaderId = r.getRefId();
@@ -240,7 +242,7 @@ public abstract class Definer extends Task {
         if (loaderId != null) {
             Object reusedLoader = project.getReference(loaderId);
             if (reusedLoader != null) {
-                if(reusedLoader instanceof AntClassLoader) {
+                if (reusedLoader instanceof AntClassLoader) {
                     return (AntClassLoader)reusedLoader;
                 }
                 // In future the reference object may be the <loader> type
