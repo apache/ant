@@ -56,79 +56,58 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
-
 import java.io.*;
 import java.util.*;
 
-import org.apache.commons.jxpath.*;
-
-// Experimental: need to add code to select the 'root', etc.
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.Template;
 
 /**
- *  Enable JXPath dynamic properties
+ *  Enable Velocity dynamic properties
  *  
  *
  * @author Costin Manolache
  */
-public class JXPath extends Task implements PropertyInterceptor {
-
-    public static String PREFIX="jxpath:";
-    JXPathContext jxpathCtx;
+public class VelocityProperties extends Task implements PropertyInterceptor {
+    VelocityEngine engine;
+    VelocityContext context;
+    public static final String PREFIX="vm:";
     
-    public JXPath() {
+    public VelocityProperties() {
     }
     
     public Object getProperty( Project p, String ns, String name ) {
         if( ! name.startsWith(PREFIX) )
             return null;
-        name=name.substring( PREFIX.length() );
-        Object o=jxpathCtx.getValue( name );
-        if( o==null ) return "null";
-        return o;
+        try {
+            name=name.substring( PREFIX.length() );
+            StringWriter sw=new StringWriter();
+            
+            engine.evaluate( context, sw, "antVM", name );
+            
+            System.out.println("VM: getProperty " + ns + " " + name + "=" + sw.toString());
+            return sw.toString();
+        } catch( Exception ex ) {
+            ex.printStackTrace();
+            return null;
+        }
     }
     
     
     public void execute() {
-        JXPathIntrospector.registerDynamicClass(Hashtable.class, JXPathHashtableHandler.class);
-
-        PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
-        phelper.addPropertyInterceptor( this );
-        
-        jxpathCtx=JXPathContext.newContext( project );
-    }
-
-    public static class JXPathHashtableHandler implements DynamicPropertyHandler {
-
-        private static final String[] STRING_ARRAY = new String[0];
-        
-        /**
-         * Returns string representations of all keys in the map.
-         */
-        public String[] getPropertyNames(Object object){
-            // System.out.println("getPropertyNames " + object );
-            Hashtable map = (Hashtable) object;
-            String names[] = new String[map.size()];
-            Enumeration it = map.keys();
-            for (int i = 0; i < names.length; i++){
-                names[i] = String.valueOf(it.nextElement());
-            }
-            return names;
+        try {
+            PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+            phelper.addPropertyInterceptor( this );
+            
+            engine=new VelocityEngine();
+            engine.init();
+            
+            context=new VelocityContext();
+            context.put( "ant", project );
+        } catch( Exception ex ) {
+            ex.printStackTrace();
         }
-        
-        /**
-         * Returns the value for the specified key.
-         */
-        public Object getProperty(Object object, String propertyName) {
-            //  System.out.println("getProperty " + object + " " + propertyName);
-            return ((Hashtable) object).get(propertyName);
-        }
-        
-        /**
-         * Sets the specified key value.
-         */
-        public void setProperty(Object object, String propertyName, Object value){
-            ((Hashtable)object).put(propertyName, value);
-        }
-    }
-    
+
+    }    
 }

@@ -56,79 +56,50 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
-
 import java.io.*;
 import java.util.*;
 
-import org.apache.commons.jxpath.*;
-
-// Experimental: need to add code to select the 'root', etc.
+import org.apache.commons.jexl.*;
 
 /**
- *  Enable JXPath dynamic properties
+ *  Enable JEXL dynamic properties
  *  
  *
  * @author Costin Manolache
  */
-public class JXPath extends Task implements PropertyInterceptor {
-
-    public static String PREFIX="jxpath:";
-    JXPathContext jxpathCtx;
+public class JexlProperties extends Task implements PropertyInterceptor {
+    JexlContext jc;
+    public static String PREFIX="jexl:";
     
-    public JXPath() {
+    public JexlProperties() {
     }
     
     public Object getProperty( Project p, String ns, String name ) {
         if( ! name.startsWith(PREFIX) )
             return null;
-        name=name.substring( PREFIX.length() );
-        Object o=jxpathCtx.getValue( name );
-        if( o==null ) return "null";
-        return o;
+        try {
+            name=name.substring( PREFIX.length() );
+            Expression e = ExpressionFactory.createExpression(name);
+            Object o = e.evaluate(jc);
+
+            return o;
+        } catch( Exception ex ) {
+            ex.printStackTrace();
+            return null;
+        }
     }
     
     
     public void execute() {
-        JXPathIntrospector.registerDynamicClass(Hashtable.class, JXPathHashtableHandler.class);
-
         PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
         phelper.addPropertyInterceptor( this );
-        
-        jxpathCtx=JXPathContext.newContext( project );
-    }
 
-    public static class JXPathHashtableHandler implements DynamicPropertyHandler {
+        /*
+         *  First make a jexlContext and put stuff in it
+         */
+        jc = JexlHelper.createContext();
 
-        private static final String[] STRING_ARRAY = new String[0];
-        
-        /**
-         * Returns string representations of all keys in the map.
-         */
-        public String[] getPropertyNames(Object object){
-            // System.out.println("getPropertyNames " + object );
-            Hashtable map = (Hashtable) object;
-            String names[] = new String[map.size()];
-            Enumeration it = map.keys();
-            for (int i = 0; i < names.length; i++){
-                names[i] = String.valueOf(it.nextElement());
-            }
-            return names;
-        }
-        
-        /**
-         * Returns the value for the specified key.
-         */
-        public Object getProperty(Object object, String propertyName) {
-            //  System.out.println("getProperty " + object + " " + propertyName);
-            return ((Hashtable) object).get(propertyName);
-        }
-        
-        /**
-         * Sets the specified key value.
-         */
-        public void setProperty(Object object, String propertyName, Object value){
-            ((Hashtable)object).put(propertyName, value);
-        }
-    }
-    
+        jc.getVars().put("ant", project);
+
+    }    
 }
