@@ -149,6 +149,11 @@ Fixed bugs:
 * <cvstagdiff> had a problem with "dd-MM-yy hh:mm:ss" formats
   Bugzilla Report 15995.
 
+* <cvstagdiff> cvsroot and package attributes added to the root
+  element tagdiff of the xml output
+  Bugzilla Report 16081.
+
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -351,6 +351,10 @@ public class CvsTagDiff extends AbstractCvsTask {
             } else {
                 writer.print("endDate=\"" + m_endDate + "\" ");
             }
+
+            writer.print("cvsroot=\"" + getCvsRoot() + "\" ");
+            writer.print("package=\"" + m_package + "\" ");
+
             writer.println(">");
             for (int i = 0, c = entries.length; i < c; i++) {
                 writeTagEntry(writer, entries[i]);

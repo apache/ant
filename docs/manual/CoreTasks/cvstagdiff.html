@@ -161,9 +161,13 @@ how to generate a HTML report from the XML report.</p>
 </pre>
 
 <h4>Sample Output</h4>
+<p>
+The cvsroot and package attributes of the tagdiff element are new in ant 1.6.
+</p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;tagdiff startTag=&quot;ANT_14&quot; endTag=&quot;ANT_141&quot;&gt;
+&lt;tagdiff startTag=&quot;ANT_14&quot; endTag=&quot;ANT_141&quot; 
+cvsroot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot; package=&quot;ant&quot;&gt;
   &lt;entry&gt;
     &lt;file&gt;
       &lt;name&gt;src/main/org/apache/tools/ant/DirectoryScanner.java&lt;/name&gt;
