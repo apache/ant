@@ -44,12 +44,14 @@ Example:
 =======
 
 <loadfile srcFile="foo" property="bar">
-    <filterreaderset classname="org.apache.tools.ant.filters.StripLineComments">
-        <param name="cpp.comment" value="//"/>
-        <param name="oracle.comment" value="REM"/>
-        <param name="dbms.comment" value="--"/>
+    <filterreaderset>
+        <filterreader classname="org.apache.tools.ant.filters.StripLineComments">
+            <param name="cpp.comment" value="//"/>
+            <param name="oracle.comment" value="REM"/>
+            <param name="dbms.comment" value="--"/>
+        </filterreader>
+        <filterreader classname="org.apache.tools.ant.filters.StripLineBreaks"/>
     </filterreaderset>
-    <filterreaderset classname="org.apache.tools.ant.filters.StripLineBreaks"/>
 </loadfile>
 
 The above example loads the contents of the file foo,
