@@ -276,7 +276,6 @@ Legal:
         <property name="ant.package" value="org/apache/tools/todo"/>
         <property name="taskdef.package" value="${ant.package}/taskdefs"/>
         <property name="antlib.package" value="org/apache/antlib"/>
-        <property name="optional.package" value="org/apache/tools/ant/taskdefs/optional"/>
         <property name="optional.type.package" value="${ant.package}/types/optional"/>
         <property name="util.package" value="${ant.package}/util"/>
         <property name="regexp.package" value="${util.package}/regexp"/>
@@ -294,19 +293,19 @@ Legal:
             <exclude name="${ant.package}/listener/Log4jListener.java"
                      unless="log4j.present" />
 
-            <exclude name="${optional.package}/IContract.java"
+            <exclude name="${taskdefs.package}/IContract.java"
                      unless="icontract.present" />
-            <exclude name="${optional.package}/Script.java"
+            <exclude name="${taskdefs.package}/Script.java"
                      unless="bsf.present" />
-            <exclude name="${optional.package}/StyleBook.java"
+            <exclude name="${taskdefs.package}/stylebook/StyleBook.java"
                      unless="stylebook.present" />
-            <exclude name="${optional.package}/NetRexxC.java"
+            <exclude name="${taskdefs.package}/NetRexxC.java"
                      unless="netrexx.present" />
             <exclude name="${antlib.package}/xml/TraXLiaison.java"
                      unless="trax.present" />
             <exclude name="${antlib.package}/xml/XalanLiaison.java"
                      unless="xalan.present" />
-            <exclude name="${optional.package}/Javah.java"
+            <exclude name="${taskdefs.package}/Javah.java"
                      unless="jdk1.2+" />
             <exclude name="${taskdef.package}/junit/*"
                      unless="junit.present" />
@@ -316,7 +315,7 @@ Legal:
                      unless="javamail.complete" />
             <exclude name="${taskdef.package}/scm/AntStarTeam*.java"
                      unless="starteam.present" />
-            <exclude name="${optional.package}/ANTLR.java"
+            <exclude name="${taskdefs.package}/ANTLR.java"
                      unless="antlr.present" />
             <exclude name="${taskdef.package}/perforce/*.java"
                      unless="jakarta.oro.present" />

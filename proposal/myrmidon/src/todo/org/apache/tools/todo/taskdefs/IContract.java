@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -672,7 +672,7 @@ public class IContract extends MatchingTask
     /**
      * Executes the task
      *
-     * @exception TaskException if the instrumentation fails
+     * @exception org.apache.myrmidon.api.TaskException if the instrumentation fails
      */
     public void execute()
         throws TaskException
@@ -875,7 +875,7 @@ public class IContract extends MatchingTask
     /**
      * Checks that the required attributes are set.
      *
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void preconditions()
         throws TaskException
@@ -914,7 +914,7 @@ public class IContract extends MatchingTask
      * Also creates a temporary file with a list of the source files, that will
      * be deleted upon exit.
      *
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void scan()
         throws TaskException

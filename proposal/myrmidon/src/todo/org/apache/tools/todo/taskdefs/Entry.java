@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -120,7 +120,7 @@ public class Entry
     /**
      * Check if parameter combinations can be supported
      *
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void checkParameters()
         throws TaskException
@@ -151,7 +151,7 @@ public class Entry
      * @param oldValue the current value read from the property file or
      *      <code>null</code> if the <code>key</code> was not contained in
      *      the property file.
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void executeDate( String oldValue )
         throws TaskException
@@ -282,7 +282,7 @@ public class Entry
      * @param oldValue the current value read from the property file or
      *      <code>null</code> if the <code>key</code> was not contained in
      *      the property file.
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void executeInteger( String oldValue )
         throws TaskException
@@ -372,7 +372,7 @@ public class Entry
      * @param oldValue the current value read from the property file or
      *      <code>null</code> if the <code>key</code> was not contained in
      *      the property file.
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void executeString( String oldValue )
         throws TaskException

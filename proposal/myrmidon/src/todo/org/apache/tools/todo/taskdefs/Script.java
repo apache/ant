@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import com.ibm.bsf.BSFException;
 import com.ibm.bsf.BSFManager;
@@ -81,7 +81,7 @@ public class Script extends AbstractTask
     /**
      * Do the work.
      *
-     * @exception TaskException if someting goes wrong with the build
+     * @exception org.apache.myrmidon.api.TaskException if someting goes wrong with the build
      */
     public void execute()
         throws TaskException

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -280,7 +280,7 @@ public class Cab
      *
      * @param files Description of Parameter
      * @return Description of the Returned Value
-     * @exception IOException Description of Exception
+     * @exception java.io.IOException Description of Exception
      */
     protected File createListFile( ArrayList files )
         throws IOException

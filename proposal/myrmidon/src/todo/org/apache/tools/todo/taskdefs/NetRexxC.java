@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
@@ -477,7 +477,7 @@ public class NetRexxC extends MatchingTask
     /**
      * Executes the task, i.e. does the actual compiler call
      *
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     public void execute()
         throws TaskException
@@ -639,7 +639,7 @@ public class NetRexxC extends MatchingTask
     /**
      * Peforms a copmile using the NetRexx 1.1.x compiler
      *
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private void doNetRexxCompile()
         throws TaskException

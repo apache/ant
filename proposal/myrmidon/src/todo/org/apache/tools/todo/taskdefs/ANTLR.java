@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -223,7 +223,7 @@ public class ANTLR extends AbstractTask
      *
      * @param command Description of Parameter
      * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
     private int run( final Commandline command )
         throws TaskException

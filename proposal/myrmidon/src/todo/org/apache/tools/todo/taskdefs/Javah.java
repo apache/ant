@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.todo.taskdefs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.util.FileUtils;
+import org.apache.tools.todo.taskdefs.ClassArgument;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -308,7 +309,7 @@ public class Javah
      * Peforms a compile using the classic compiler that shipped with JDK 1.1
      * and 1.2.
      *
-     * @exception TaskException Description of Exception
+     * @exception org.apache.myrmidon.api.TaskException Description of Exception
      */
 
     private void doClassicCompile()
