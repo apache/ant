@@ -11,8 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.taskdefs.jsp.compilers.CompilerAdapter;
 import org.apache.tools.todo.taskdefs.jsp.compilers.CompilerAdapterFactory;
@@ -325,7 +323,7 @@ public class JspC extends MatchingTask
         {
             throw new TaskException( "srcdir attribute must be set!" );
         }
-        String[] list = src.list();
+        String[] list = src.listFiles( getContext() );
         if( list.length == 0 )
         {
             throw new TaskException( "srcdir attribute must be set!" );

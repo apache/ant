@@ -570,7 +570,7 @@ public class Javadoc
             classpath.addPath( m_classpath );
         }
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath, getContext() ) );
 
         if( m_version && m_doclet == null )
         {
@@ -607,7 +607,7 @@ public class Javadoc
                 if( m_doclet.getPath() != null )
                 {
                     cmd.addArgument( "-docletpath" );
-                    cmd.addArgument( PathUtil.formatPath( m_doclet.getPath() ) );
+                    cmd.addArgument( PathUtil.formatPath( m_doclet.getPath(), getContext() ) );
                 }
                 for( Iterator e = m_doclet.getParams(); e.hasNext(); )
                 {
@@ -628,7 +628,7 @@ public class Javadoc
             if( m_bootclasspath != null )
             {
                 cmd.addArgument( "-bootclasspath" );
-                cmd.addArgument( PathUtil.formatPath( m_bootclasspath ) );
+                cmd.addArgument( PathUtil.formatPath( m_bootclasspath, getContext() ) );
             }
 
             // add the links arguments
@@ -888,7 +888,7 @@ public class Javadoc
                                    ArrayList packages, ArrayList excludePackages )
         throws TaskException
     {
-        getContext().debug( "Source path = " + PathUtil.formatPath( sourcePath ) );
+        getContext().debug( "Source path = " + PathUtil.formatPath( sourcePath, getContext() ) );
         StringBuffer msg = new StringBuffer( "Packages = " );
         for( int i = 0; i < packages.size(); i++ )
         {
@@ -914,7 +914,7 @@ public class Javadoc
 
         ArrayList addedPackages = new ArrayList();
 
-        String[] list = sourcePath.list();
+        String[] list = sourcePath.listFiles( getContext() );
         if( list == null )
         {
             list = new String[ 0 ];

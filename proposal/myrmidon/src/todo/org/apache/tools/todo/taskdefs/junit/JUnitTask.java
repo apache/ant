@@ -21,13 +21,13 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
+import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
+import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.EnvironmentVariable;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SysProperties;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.EnvironmentData;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -642,7 +642,7 @@ public class JUnitTask extends AbstractTask
         {
             getContext().debug( "Using System properties " + System.getProperties() );
             ClassLoader classLoader = null;
-            final URL[] urls = PathUtil.toURLs( classPath );
+            final URL[] urls = PathUtil.toURLs( classPath, getContext() );
             if( urls.length > 0 )
             {
                 classLoader = new URLClassLoader( urls );

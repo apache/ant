@@ -773,7 +773,8 @@ public class IContract extends MatchingTask
                 }
                 iControlProps.setProperty( "sourceRoot", srcDir.getAbsolutePath() );
                 iControlProps.setProperty( "classRoot", classDir.getAbsolutePath() );
-                iControlProps.setProperty( "classpath", PathUtil.formatPath( afterInstrumentationClasspath ) );
+                final String classpath = PathUtil.formatPath( afterInstrumentationClasspath, getContext() );
+                iControlProps.setProperty( "classpath", classpath );
                 iControlProps.setProperty( "controlFile", controlFile.getAbsolutePath() );
                 iControlProps.setProperty( "targetsFile", targets.getAbsolutePath() );
 

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Path;
 
 /**
@@ -135,7 +134,7 @@ public class PathConvert extends AbstractTask
         StringBuffer rslt = new StringBuffer( 100 );
 
         // Get the list of path components in canonical form
-        String[] elems = m_path.list();
+        String[] elems = m_path.listFiles( getContext() );
 
         for( int i = 0; i < elems.length; i++ )
         {

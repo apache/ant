@@ -7,67 +7,23 @@
  */
 package org.apache.tools.todo.types;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**
- * FileList represents an explicitly named list of files. FileLists are useful
- * when you want to capture a list of files regardless of whether they currently
- * exist. By contrast, FileSet operates as a filter, only returning the name of
- * a matched file if it currently exists in the file system.
+ * A list of files.
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public class FileList
+public interface FileList
 {
-    private final ArrayList m_filenames = new ArrayList();
-    private File m_dir;
-
-    public FileList()
-    {
-    }
-
-    public void setDir( File dir )
-    {
-        m_dir = dir;
-    }
-
-    public void setFiles( String filenames )
-    {
-        if( filenames != null && filenames.length() > 0 )
-        {
-            StringTokenizer tok = new StringTokenizer( filenames, ", \t\n\r\f", false );
-            while( tok.hasMoreTokens() )
-            {
-                m_filenames.add( tok.nextToken() );
-            }
-        }
-    }
-
-    public File getDir()
-    {
-        return m_dir;
-    }
-
     /**
-     * Returns the list of files represented by this FileList.
+     * Returns the files in this list.
+     *
+     * @param context the context to use to evaluate the list.
+     * @return The names of the files in this list.  All names are absolute paths.
      */
-    public String[] getFiles()
-        throws TaskException
-    {
-        if( m_dir == null )
-        {
-            throw new TaskException( "No directory specified for filelist." );
-        }
-
-        if( m_filenames.size() == 0 )
-        {
-            throw new TaskException( "No files specified for filelist." );
-        }
-
-        return (String[])m_filenames.toArray( new String[ m_filenames.size() ] );
-    }
+    public String[] listFiles( TaskContext context )
+        throws TaskException;
 }

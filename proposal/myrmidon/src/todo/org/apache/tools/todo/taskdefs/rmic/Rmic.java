@@ -15,8 +15,6 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.DirectoryScanner;
@@ -487,7 +485,7 @@ public class Rmic extends MatchingTask
         adapter.setRmic( this );
 
         Path classpath = adapter.getClasspath();
-        final URL[] urls = PathUtil.toURLs( classpath );
+        final URL[] urls = PathUtil.toURLs( classpath, getContext() );
         loader = new URLClassLoader( urls );
 
         // scan base dirs to build up compile lists only if a

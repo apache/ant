@@ -235,15 +235,17 @@ public class MParse
         {
             options.add( "-dp" );
         }
-        if( ! m_classpath.isEmpty() )
+        final String[] classpath = m_classpath.listFiles( getContext() );
+        if( classpath.length > 0 )
         {
             options.add( "-classpath" );
-            options.add( PathUtil.formatPath( m_classpath ) );
+            options.add( PathUtil.formatPath( classpath ) );
         }
-        if( ! m_sourcepath.isEmpty() )
+        final String[] sourcepath = m_sourcepath.listFiles( getContext() );
+        if( sourcepath.length > 0 )
         {
             options.add( "-sourcepath" );
-            options.add( PathUtil.formatPath( m_sourcepath ) );
+            options.add( PathUtil.formatPath( sourcepath ) );
         }
         options.add( m_target.getAbsolutePath() );
 

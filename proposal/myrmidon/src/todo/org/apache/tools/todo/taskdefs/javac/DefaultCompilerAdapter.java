@@ -176,10 +176,10 @@ public abstract class DefaultCompilerAdapter
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
 
         cmd.addArgument( "-sourcepath" );
-        cmd.addArgument( PathUtil.formatPath( src ) );
+        cmd.addArgument( PathUtil.formatPath( src, getTaskContext() ) );
 
         if( target != null )
         {
@@ -187,16 +187,17 @@ public abstract class DefaultCompilerAdapter
             cmd.addArgument( target );
         }
 
-        if( m_bootclasspath != null )
+        final String[] bootclasspath = m_bootclasspath.listFiles( getTaskContext() );
+        if( bootclasspath.length > 0 )
         {
             cmd.addArgument( "-bootclasspath" );
-            cmd.addArgument( PathUtil.formatPath( m_bootclasspath ) );
+            cmd.addArgument( PathUtil.formatPath( bootclasspath ) );
         }
 
         if( m_extdirs != null )
         {
             cmd.addArgument( "-extdirs" );
-            cmd.addArgument( PathUtil.formatPath( m_extdirs ) );
+            cmd.addArgument( PathUtil.formatPath( m_extdirs, getTaskContext() ) );
         }
 
         if( m_encoding != null )
@@ -425,7 +426,7 @@ public abstract class DefaultCompilerAdapter
             }
         }
 
-        PathUtil.addExtdirs( path, m_extdirs );
+        PathUtil.addExtdirs( path, m_extdirs, getTaskContext() );
     }
 }
 

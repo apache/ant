@@ -129,7 +129,7 @@ public class MAudit
         // don't forget to modify the pattern if you change the options reporting
         classpath.addPath( getClassPath() );
 
-        final String formattedClasspath = PathUtil.formatPath( classpath );
+        final String formattedClasspath = PathUtil.formatPath( classpath, getContext() );
         if( formattedClasspath.length() > 0 )
         {
             options.add( "-classpath" );
@@ -162,7 +162,7 @@ public class MAudit
         if( m_unused )
         {
             options.add( "-unused" );
-            options.add( PathUtil.formatPath( m_searchPath ) );
+            options.add( PathUtil.formatPath( m_searchPath, getContext() ) );
         }
         addAllArrayList( options, getIncludedFiles().keySet().iterator() );
         return options;

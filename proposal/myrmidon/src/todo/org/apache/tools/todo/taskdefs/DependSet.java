@@ -13,12 +13,10 @@ import java.util.Date;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.FileList;
 import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.ScannerUtil;
+import org.apache.tools.todo.types.SimpleFileList;
 
 /**
  * A Task to record explicit dependencies. If any of the target files are out of
@@ -84,7 +82,7 @@ public class DependSet extends MatchingTask
      *
      * @param fl The feature to be added to the Srcfilelist attribute
      */
-    public void addSrcfilelist( FileList fl )
+    public void addSrcfilelist( SimpleFileList fl )
     {
         sourceFileLists.add( fl );
     }//-- DependSet
@@ -104,7 +102,7 @@ public class DependSet extends MatchingTask
      *
      * @param fl The feature to be added to the Targetfilelist attribute
      */
-    public void addTargetfilelist( FileList fl )
+    public void addTargetfilelist( SimpleFileList fl )
     {
         targetFileLists.add( fl );
     }
@@ -181,7 +179,7 @@ public class DependSet extends MatchingTask
         while( enumTargetLists.hasNext() )
         {
 
-            FileList targetFL = (FileList)enumTargetLists.next();
+            SimpleFileList targetFL = (SimpleFileList)enumTargetLists.next();
             String[] targetFiles = targetFL.getFiles();
 
             for( int i = 0; i < targetFiles.length; i++ )
@@ -252,7 +250,7 @@ public class DependSet extends MatchingTask
             while( upToDate && enumSourceLists.hasNext() )
             {
 
-                FileList sourceFL = (FileList)enumSourceLists.next();
+                SimpleFileList sourceFL = (SimpleFileList)enumSourceLists.next();
                 String[] sourceFiles = sourceFL.getFiles();
 
                 int i = 0;

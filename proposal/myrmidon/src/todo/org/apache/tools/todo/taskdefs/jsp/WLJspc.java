@@ -175,7 +175,6 @@ public class WLJspc extends MatchingTask
 
         File jspFile = null;
         String parents = "";
-        String arg = "";
         int j = 0;
         //XXX  this array stuff is a remnant of prev trials.. gotta remove.
         args[ j++ ] = "-d";
@@ -191,7 +190,7 @@ public class WLJspc extends MatchingTask
         // Does not take the classpath from the env....
         // Am i missing something about the Java task??
         args[ j++ ] = "-classpath";
-        args[ j++ ] = PathUtil.formatPath( compileClasspath );
+        args[ j++ ] = PathUtil.formatPath( compileClasspath, getContext() );
 
         this.scanDir( files );
         getContext().info( "Compiling " + filesToDo.size() + " JSP files" );

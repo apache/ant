@@ -27,7 +27,8 @@ public class EnvironmentVariable
 
     public void setPath( final Path path ) throws TaskException
     {
-        m_value = PathUtil.formatPath( path );
+        throw new TaskException( "Using a path not implemented." );
+        //m_value = PathUtil.formatPath( path );
     }
 
     public void setValue( final String value )

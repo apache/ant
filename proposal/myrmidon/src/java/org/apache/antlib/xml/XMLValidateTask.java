@@ -330,7 +330,7 @@ public class XMLValidateTask
             Class readerClass = null;
             if( m_classpath != null )
             {
-                final URL[] urls = PathUtil.toURLs( m_classpath );
+                final URL[] urls = PathUtil.toURLs( m_classpath, getContext() );
                 final ClassLoader classLoader = new URLClassLoader( urls );
                 readerClass = classLoader.loadClass( m_readerClassName );
             }

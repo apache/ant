@@ -47,7 +47,7 @@ public class ClassAvailableCondition
         }
 
         // Build the classloader to use to check resources
-        final ClassLoader classLoader = buildClassLoader();
+        final ClassLoader classLoader = buildClassLoader( context );
 
         // Do the check
         try

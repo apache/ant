@@ -11,9 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.FileSet;
-import org.apache.tools.todo.types.Path;
 
 /**
  * Utilities for operating on Path objects.
@@ -26,37 +25,44 @@ public class PathUtil
     /**
      * Formats a Path into its native representation.
      */
-    public static String formatPath( final Path path )
-        throws TaskException
+    public static String formatPath( final String[] path )
     {
-        final String[] list = path.list();
-
         // empty path return empty string
-        if( list.length == 0 )
+        if( path.length == 0 )
         {
             return "";
         }
 
         // path containing one or more elements
-        final StringBuffer result = new StringBuffer( list[ 0 ].toString() );
-        for( int i = 1; i < list.length; i++ )
+        final StringBuffer result = new StringBuffer( path[ 0 ].toString() );
+        for( int i = 1; i < path.length; i++ )
         {
             result.append( File.pathSeparatorChar );
-            result.append( list[ i ] );
+            result.append( path[ i ] );
         }
 
         return result.toString();
     }
 
     /**
+     * Formats a Path into its native representation.
+     */
+    public static String formatPath( final Path path, final TaskContext context )
+        throws TaskException
+    {
+        final String[] list = path.listFiles( context );
+        return formatPath( list );
+    }
+
+    /**
      * Returns an array of URLs - useful for building a ClassLoader.
      */
-    public static URL[] toURLs( final Path path )
+    public static URL[] toURLs( final Path path, final TaskContext context )
         throws TaskException
     {
         try
         {
-            final String[] list = path.list();
+            final String[] list = path.listFiles( context );
 
             final URL[] result = new URL[ list.length ];
 
@@ -126,10 +132,10 @@ public class PathUtil
     /**
      * Adds the contents of a set of directories to a path.
      */
-    public static void addExtdirs( final Path toPath, final Path extDirs )
+    public static void addExtdirs( final Path toPath, final Path extDirs, TaskContext context )
         throws TaskException
     {
-        final String[] dirs = extDirs.list();
+        final String[] dirs = extDirs.listFiles( context );
         for( int i = 0; i < dirs.length; i++ )
         {
             final File dir = new File( dirs[ i ] );

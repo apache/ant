@@ -7,12 +7,13 @@
  */
 package org.apache.antlib.core;
 
-import org.apache.myrmidon.framework.conditions.Condition;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Path;
-import org.apache.tools.todo.types.PathUtil;
 import java.net.URL;
 import java.net.URLClassLoader;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.conditions.Condition;
+import org.apache.tools.todo.types.Path;
+import org.apache.tools.todo.types.PathUtil;
 
 /**
  * An abstract condition which checks for the availability of a particular
@@ -38,9 +39,9 @@ public abstract class AbstractAvailableCondition
     /**
      * Builds the ClassLoader to use to check resources.
      */
-    protected ClassLoader buildClassLoader() throws TaskException
+    protected ClassLoader buildClassLoader( final TaskContext context ) throws TaskException
     {
-        final URL[] urls = PathUtil.toURLs( m_classpath );
+        final URL[] urls = PathUtil.toURLs( m_classpath, context );
         final ClassLoader classLoader;
         if( urls.length > 0 )
         {

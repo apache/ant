@@ -8,18 +8,16 @@
 package org.apache.tools.todo.taskdefs.javac;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
 /**
  * The implementation of the gcj compiler. This is primarily a cut-and-paste
  * from the jikes.
  *
  * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a>
+ * @author tora@debian.org
  */
 public class Gcj extends DefaultCompilerAdapter
 {
@@ -29,7 +27,6 @@ public class Gcj extends DefaultCompilerAdapter
      *
      * @return Description of the Returned Value
      * @exception org.apache.myrmidon.api.TaskException Description of Exception
-     * @author tora@debian.org
      */
     public boolean execute()
         throws TaskException
@@ -52,20 +49,19 @@ public class Gcj extends DefaultCompilerAdapter
 
         // gcj doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if( m_bootclasspath != null )
-        {
-            classpath.addPath( m_bootclasspath );
-        }
+        final String[] bootclasspath = m_bootclasspath.listFiles( getTaskContext() );
+        classpath.addPath( bootclasspath );
 
         // gcj doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirs( classpath );
 
-        if( ( m_bootclasspath == null ) || m_bootclasspath.isEmpty() )
+        if( bootclasspath.length == 0 )
         {
             // no bootclasspath, therefore, get one from the java runtime
             m_includeJavaRuntime = true;
         }
+
         addCompileClasspath( classpath );
 
         // Gcj has no option for source-path so we
@@ -87,7 +83,7 @@ public class Gcj extends DefaultCompilerAdapter
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
 
         if( m_encoding != null )
         {

@@ -8,12 +8,9 @@
 package org.apache.tools.todo.taskdefs.javac;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
 /**
  * The implementation of the jikes compiler. This is primarily a cut-and-paste
@@ -24,6 +21,7 @@ import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
  *      </a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ * @author skanthak@muehlheim.de
  */
 public class Jikes
     extends DefaultCompilerAdapter
@@ -38,7 +36,6 @@ public class Jikes
      *
      * @return Description of the Returned Value
      * @exception org.apache.myrmidon.api.TaskException Description of Exception
-     * @author skanthak@muehlheim.de
      */
     public boolean execute()
         throws TaskException
@@ -49,27 +46,23 @@ public class Jikes
 
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if( m_bootclasspath != null )
-        {
-            classpath.addPath( m_bootclasspath );
-        }
+        final String[] bootclasspath = m_bootclasspath.listFiles( getTaskContext() );
+        classpath.addPath( bootclasspath );
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirs( classpath );
 
-        if( ( m_bootclasspath == null ) || m_bootclasspath.isEmpty() )
+        if( bootclasspath.length == 0 )
         {
             // no bootclasspath, therefore, get one from the java runtime
             m_includeJavaRuntime = true;
         }
-        else
-        {
-            // there is a bootclasspath stated.  By default, the
-            // includeJavaRuntime is false.  If the user has stated a
-            // bootclasspath and said to include the java runtime, it's on
-            // their head!
-        }
+        // Else, there is a bootclasspath stated.  By default, the
+        // includeJavaRuntime is false.  If the user has stated a
+        // bootclasspath and said to include the java runtime, it's on
+        // their head!
+
         addCompileClasspath( classpath );
 
         // Jikes has no option for source-path so we
@@ -98,7 +91,7 @@ public class Jikes
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
 
         if( m_encoding != null )
         {

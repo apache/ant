@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
 
@@ -134,7 +133,7 @@ public class Property
 
             if( m_classpath != null )
             {
-                final URL[] urls = PathUtil.toURLs( m_classpath );
+                final URL[] urls = PathUtil.toURLs( m_classpath, getContext() );
                 classLoader = new URLClassLoader( urls );
             }
             else

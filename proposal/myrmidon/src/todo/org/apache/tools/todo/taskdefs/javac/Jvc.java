@@ -8,12 +8,9 @@
 package org.apache.tools.todo.taskdefs.javac;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 
 /**
  * The implementation of the jvc compiler from microsoft. This is primarily a
@@ -37,27 +34,23 @@ public class Jvc extends DefaultCompilerAdapter
 
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
-        if( m_bootclasspath != null )
-        {
-            classpath.addPath( m_bootclasspath );
-        }
+        final String[] bootclasspath = m_bootclasspath.listFiles( getTaskContext() );
+        classpath.addPath( bootclasspath );
 
         // jvc doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirs( classpath );
 
-        if( ( m_bootclasspath == null ) || m_bootclasspath.isEmpty() )
+        if( bootclasspath.length == 0 )
         {
             // no bootclasspath, therefore, get one from the java runtime
             m_includeJavaRuntime = true;
         }
-        else
-        {
-            // there is a bootclasspath stated.  By default, the
-            // includeJavaRuntime is false.  If the user has stated a
-            // bootclasspath and said to include the java runtime, it's on
-            // their head!
-        }
+        // Else, there is a bootclasspath stated.  By default, the
+        // includeJavaRuntime is false.  If the user has stated a
+        // bootclasspath and said to include the java runtime, it's on
+        // their head!
+
         addCompileClasspath( classpath );
 
         // jvc has no option for source-path so we
@@ -75,7 +68,7 @@ public class Jvc extends DefaultCompilerAdapter
 
         // Add the Classpath before the "internal" one.
         cmd.addArgument( "/cp:p" );
-        cmd.addArgument( PathUtil.formatPath( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
 
         // Enable MS-Extensions and ...
         cmd.addArgument( "/x-" );

@@ -4,9 +4,12 @@
         <task name="java" classname="org.apache.tools.todo.taskdefs.Java" />
         <data-type name="path" classname="org.apache.tools.todo.types.Path" />
         <task name="path" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
-        <converter classname="org.apache.tools.ant.types.converters.StringToPathConverter"
+        <converter classname="org.apache.tools.todo.types.converters.StringToPathConverter"
                    source="java.lang.String"
-                   destination="org.apache.tools.ant.types.Path" />
+                   destination="org.apache.tools.todo.types.Path" />
+        <converter classname="org.apache.tools.todo.types.converters.FileListToStringConverter"
+                   source="org.apache.tools.todo.types.FileList"
+                   destination="java.lang.String" />
     </types>
 
 </ant-lib>

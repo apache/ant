@@ -180,7 +180,7 @@ public class JDependTask
             getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
-        final String[] elements = m_sourcesPath.list();
+        final String[] elements = m_sourcesPath.listFiles( getContext() );
         for( int i = 0; i < elements.length; i++ )
         {
             File f = new File( elements[ i ] );
@@ -236,7 +236,7 @@ public class JDependTask
             getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
-        final String[] elements = m_sourcesPath.list();
+        final String[] elements = m_sourcesPath.listFiles( getContext() );
         for( int i = 0; i < elements.length; i++ )
         {
             File f = new File( elements[ i ] );

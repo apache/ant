@@ -62,7 +62,8 @@ public class Argument
      */
     public void setPath( final Path value ) throws TaskException
     {
-        m_parts = new String[]{ PathUtil.formatPath( value ) };
+        throw new TaskException( "Using a path not implemented." );
+        //m_parts = new String[]{ PathUtil.formatPath( value ) };
     }
 
     /**

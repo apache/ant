@@ -14,12 +14,9 @@ import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.taskdefs.ClassArgument;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -271,7 +268,7 @@ public class Javah
         if( m_classpath != null )
         {
             cmd.addArgument( "-classpath" );
-            cmd.addArgument( PathUtil.formatPath( m_classpath ) );
+            cmd.addArgument( PathUtil.formatPath( m_classpath, getContext() ) );
         }
 
         if( m_verbose )
@@ -299,7 +296,7 @@ public class Javah
         if( m_bootclasspath != null )
         {
             cmd.addArgument( "-bootclasspath" );
-            cmd.addArgument( PathUtil.formatPath( m_bootclasspath ) );
+            cmd.addArgument( PathUtil.formatPath( m_bootclasspath, getContext() ) );
         }
 
         logAndAddFilesToCompile( cmd );

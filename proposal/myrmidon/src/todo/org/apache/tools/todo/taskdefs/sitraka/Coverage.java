@@ -304,10 +304,11 @@ public class Coverage
         params.addArguments( m_vmArgs );
 
         // classpath
-        if( ! m_classpath.isEmpty() )
+        final String[] classpath = m_classpath.listFiles();
+        if( classpath.length > 0 )
         {
             params.addArgument( "-classpath" );
-            params.addArgument( PathUtil.formatPath( m_classpath ) );
+            params.addArgument( PathUtil.formatPath( classpath ) );
         }
         // classname (runner or standalone)
         if( m_className != null )

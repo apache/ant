@@ -12,16 +12,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
-import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.SysProperties;
 import org.apache.tools.todo.util.FileUtils;
-import org.apache.aut.nativelib.Os;
 
 /**
  * A utility class that executes a Java app, either in this JVM, or a forked
@@ -160,7 +160,7 @@ public class ExecuteJava
         final Class target;
         try
         {
-            final URL[] urls = PathUtil.toURLs( m_classPath );
+            final URL[] urls = PathUtil.toURLs( m_classPath, context );
             if( urls.length == 0 )
             {
                 target = Class.forName( m_className );
@@ -241,10 +241,11 @@ public class ExecuteJava
         command.addArguments( props );
 
         // Classpath
-        if( ! m_classPath.isEmpty() )
+        final String[] classpath = m_classPath.listFiles( context );
+        if( classpath.length > 0 )
         {
             command.addArgument( "-classpath" );
-            command.addArgument( PathUtil.formatPath( m_classPath ) );
+            command.addArgument( PathUtil.formatPath( classpath ) );
         }
 
         // What to execute

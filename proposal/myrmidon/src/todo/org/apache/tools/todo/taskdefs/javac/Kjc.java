@@ -89,10 +89,7 @@ public class Kjc extends DefaultCompilerAdapter
         Path cp = new Path();
 
         // kjc don't have bootclasspath option.
-        if( m_bootclasspath != null )
-        {
-            cp.addPath( m_bootclasspath );
-        }
+        cp.addPath( m_bootclasspath );
 
         if( m_extdirs != null )
         {
@@ -102,7 +99,7 @@ public class Kjc extends DefaultCompilerAdapter
         cp.addPath( classpath );
         cp.addPath( src );
 
-        cmd.addArgument( PathUtil.formatPath( cp ) );
+        cmd.addArgument( PathUtil.formatPath( cp, getTaskContext() ) );
 
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.

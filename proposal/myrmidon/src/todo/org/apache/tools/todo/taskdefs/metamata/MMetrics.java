@@ -132,7 +132,7 @@ public class MMetrics extends AbstractMetamataTask
         // don't forget to modify the pattern if you change the options reporting
         classpath.addPath( getClassPath() );
 
-        final String formattedClasspath = PathUtil.formatPath( classpath );
+        final String formattedClasspath = PathUtil.formatPath( classpath, getContext() );
         if( formattedClasspath.length() > 0 )
         {
             options.add( "-classpath" );
@@ -157,7 +157,7 @@ public class MMetrics extends AbstractMetamataTask
         options.add( "/" );
 
         // directories
-        final String[] dirs = path.list();
+        final String[] dirs = path.listFiles( getContext() );
         for( int i = 0; i < dirs.length; i++ )
         {
             options.add( dirs[ i ] );

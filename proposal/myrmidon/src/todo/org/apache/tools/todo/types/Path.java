@@ -9,11 +9,10 @@ package org.apache.tools.todo.types;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.FileSet;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -45,12 +44,13 @@ import org.apache.tools.todo.types.FileSet;
  *
  * @author Thomas.Haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:data-type name="path"
  */
 public class Path
-    implements DataType
+    implements DataType, FileList
 {
     private final ArrayList m_elements = new ArrayList();
-    private File m_baseDirectory;
 
     public Path( final String path )
     {
@@ -73,14 +73,6 @@ public class Path
     }
 
     /**
-     * Sets the base directory for this path.
-     */
-    public void setBaseDirectory( final File baseDir )
-    {
-        m_baseDirectory = baseDir;
-    }
-
-    /**
      * Adds an element to the path.
      */
     public void setLocation( final File location )
@@ -96,9 +88,8 @@ public class Path
      */
     public void addLocation( final File location )
     {
-        final PathElement pathElement = new PathElement();
+        final FileList pathElement = new ArrayFileList( location.getAbsolutePath() );
         m_elements.add( pathElement );
-        pathElement.setLocation( location );
     }
 
     /**
@@ -122,9 +113,17 @@ public class Path
      */
     public void addPath( final String path )
     {
-        final PathElement pathElement = new PathElement();
+        final FileList pathElement = new ParsedPathElement( path );
         m_elements.add( pathElement );
-        pathElement.setPath( path );
+    }
+
+    /**
+     * Adds a path.
+     */
+    public void addPath( final String[] path )
+    {
+        final FileList pathElement = new ArrayFileList( path );
+        m_elements.add( pathElement );
     }
 
     /**
@@ -139,35 +138,17 @@ public class Path
      * Returns all path elements defined by this and nested path objects.
      * The paths returned by this method are absolute.
      */
-    public String[] list()
+    public String[] listFiles( final TaskContext context )
         throws TaskException
     {
         ArrayList result = new ArrayList( 2 * m_elements.size() );
         for( int i = 0; i < m_elements.size(); i++ )
         {
             Object o = m_elements.get( i );
-            if( o instanceof String )
+            if( o instanceof FileList )
             {
-                // obtained via append
-                addUnlessPresent( result, (String)o );
-            }
-            else if( o instanceof PathElement )
-            {
-                final PathElement element = (PathElement)o;
-                final String[] parts = element.getParts( m_baseDirectory );
-                if( parts == null )
-                {
-                    throw new NullPointerException( "You must either set location or path on <pathelement>" );
-                }
-                for( int j = 0; j < parts.length; j++ )
-                {
-                    addUnlessPresent( result, parts[ j ] );
-                }
-            }
-            else if( o instanceof Path )
-            {
-                Path p = (Path)o;
-                String[] parts = p.list();
+                final FileList element = (FileList)o;
+                final String[] parts = element.listFiles( context );
                 for( int j = 0; j < parts.length; j++ )
                 {
                     addUnlessPresent( result, parts[ j ] );
@@ -188,14 +169,5 @@ public class Path
             }
         }
         return (String[])result.toArray( new String[ result.size() ] );
-    }
-
-    /**
-     * Determines if this path is empty.
-     */
-    public boolean isEmpty()
-        throws TaskException
-    {
-        return ( list().length == 0 );
     }
 }

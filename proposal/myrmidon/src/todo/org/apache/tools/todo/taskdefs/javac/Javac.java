@@ -12,13 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.JavaVersion;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.taskdefs.javac.CompilerAdapter;
-import org.apache.tools.todo.taskdefs.javac.CompilerAdapterFactory;
-import org.apache.tools.todo.taskdefs.javac.ImplementationSpecificArgument;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.SourceFileScanner;
@@ -76,7 +71,7 @@ public class Javac
     private ArrayList m_implementationSpecificArgs = new ArrayList();
 
     protected File[] m_compileList = new File[ 0 ];
-    private Path m_bootclasspath;
+    private Path m_bootclasspath = new Path();
     private Path m_compileClasspath;
     private String m_debugLevel;
     private File m_destDir;
@@ -92,16 +87,9 @@ public class Javac
      * Adds an element to the bootclasspath that will be used to compile the
      * classes against.
      */
-    public void addBootclasspath( Path bootclasspath )
+    public void addBootclasspath( final Path bootclasspath )
     {
-        if( m_bootclasspath == null )
-        {
-            m_bootclasspath = bootclasspath;
-        }
-        else
-        {
-            m_bootclasspath.addPath( bootclasspath );
-        }
+        m_bootclasspath.addPath( bootclasspath );
     }
 
     /**
@@ -602,7 +590,7 @@ public class Javac
         {
             throw new TaskException( "srcdir attribute must be set!" );
         }
-        String[] list = m_src.list();
+        String[] list = m_src.listFiles( getContext() );
         if( list.length == 0 )
         {
             throw new TaskException( "srcdir attribute must be set!" );

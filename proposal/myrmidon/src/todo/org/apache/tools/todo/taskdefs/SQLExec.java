@@ -34,7 +34,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.FileSet;
@@ -432,7 +431,7 @@ public class SQLExec
             {
                 getContext().debug( "Loading " + driver + " using AntClassLoader with classpath " + classpath );
 
-                final URL[] urls = PathUtil.toURLs( classpath );
+                final URL[] urls = PathUtil.toURLs( classpath, getContext() );
                 final ClassLoader classLoader = new URLClassLoader( urls );
                 dc = classLoader.loadClass( driver );
             }

@@ -120,11 +120,11 @@ public abstract class DefaultRmicAdapter
         if( attributes.getExtdirs() != null )
         {
             cmd.addArgument( "-extdirs" );
-            cmd.addArgument( PathUtil.formatPath( attributes.getExtdirs() ) );
+            cmd.addArgument( PathUtil.formatPath( attributes.getExtdirs(), getTaskContext() ) );
         }
 
         cmd.addArgument( "-classpath" );
-        cmd.addArgument( PathUtil.formatPath( classpath ) );
+        cmd.addArgument( PathUtil.formatPath( classpath, getTaskContext() ) );
 
         String stubVersion = attributes.getStubVersion();
         if( null != stubVersion )

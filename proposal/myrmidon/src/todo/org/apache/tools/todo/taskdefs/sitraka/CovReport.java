@@ -17,10 +17,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
@@ -392,7 +390,7 @@ public class CovReport
                 throw new TaskException( "Need a 'classpath' element." );
             }
             // and a valid one...
-            String[] paths = classPath.list();
+            String[] paths = classPath.listFiles();
             if( paths.length == 0 )
             {
                 throw new TaskException( "Coverage path is invalid. It does not contain any existing path." );

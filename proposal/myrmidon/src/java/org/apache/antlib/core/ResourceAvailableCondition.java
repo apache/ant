@@ -49,7 +49,7 @@ public class ResourceAvailableCondition
         }
 
         // Check whether the resource is available
-        final ClassLoader classLoader = buildClassLoader();
+        final ClassLoader classLoader = buildClassLoader( context );
         final InputStream instr = classLoader.getResourceAsStream( m_resource );
         if( instr != null )
         {
