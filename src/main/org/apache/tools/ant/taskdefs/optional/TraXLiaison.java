@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,6 +75,7 @@ import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.TransformerConfigurationException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
@@ -114,6 +115,15 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     /** transformer to use for processing files */
     private Transformer transformer;
 
+    /** The In memory version of the stylesheet */
+    private Templates templates;
+    
+    /** 
+     * The modification time of the stylesheet from which the templates 
+     * are read 
+     */
+    private long templatesModTime;
+        
     /** possible resolver for URIs */
     private URIResolver uriResolver;
 
@@ -130,12 +140,22 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     }
 
     public void setStylesheet(File stylesheet) throws Exception {
+        if (this.stylesheet != null) {
+            // resetting the stylesheet - reset transformer
+            transformer = null;
+            
+            // do we need to reset templates as well
+            if (!this.stylesheet.equals(stylesheet)
+                || (stylesheet.lastModified() != templatesModTime)) { 
+                templates = null;
+            }
+        }
         this.stylesheet = stylesheet;
     }
 
     public void transform(File infile, File outfile) throws Exception {
         if (transformer == null) {
-            transformer = newTransformer();
+            createTransformer();
         }
 
         InputStream fis = null;
@@ -157,12 +177,14 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
                     fis.close();
                 }
             } catch (IOException ignored) {
+                // ignore
             }
             try {
                 if (fos != null) {
                     fos.close();
                 }
             } catch (IOException ignored) {
+                // ignore
             }
         }
     }
@@ -198,14 +220,10 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     }
 
     /**
-     * Create a new transformer based on the liaison settings
-     * @return the newly created and configured transformer.
-     * @throws Exception thrown if there is an error during creation.
-     * @see #setStylesheet(java.io.File)
-     * @see #addParam(java.lang.String, java.lang.String)
-     * @see #setOutputProperty(java.lang.String, java.lang.String)
+     * Read in templates from the stylsheet
      */
-    private Transformer newTransformer() throws Exception {
+    private void readTemplates() 
+        throws IOException, TransformerConfigurationException {
         // WARN: Don't use the StreamSource(File) ctor. It won't work with
         // xalan prior to 2.2 because of systemid bugs.
 
@@ -213,35 +231,50 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         // and avoid keeping the handle until the object is garbaged.
         // (always keep control), otherwise you won't be able to delete
         // the file quickly on windows.
-        InputStream xslStream = new BufferedInputStream(
-                new FileInputStream(stylesheet));
+        InputStream xslStream = null;
         try {
+            xslStream 
+                = new BufferedInputStream(new FileInputStream(stylesheet));
+            templatesModTime = stylesheet.lastModified();
             StreamSource src = new StreamSource(xslStream);
             // Always set the systemid to the source for imports, includes...
             // in xsl and xml...
             src.setSystemId(JAXPUtils.getSystemId(stylesheet));
-            Templates templates = getFactory().newTemplates(src);
-            Transformer transformer = templates.newTransformer();
-
-            // configure the transformer...
-            transformer.setErrorListener(this);
-            if (uriResolver != null) {
-                transformer.setURIResolver(uriResolver);
-            }
-            for (int i = 0; i < params.size(); i++) {
-                final String[] pair = (String[]) params.elementAt(i);
-                transformer.setParameter(pair[0], pair[1]);
-            }
-            for (int i = 0; i < outputProperties.size(); i++) {
-                final String[] pair = (String[]) outputProperties.elementAt(i);
-                transformer.setOutputProperty(pair[0], pair[1]);
-            }
-            return transformer;
+            templates = getFactory().newTemplates(src);
         } finally {
-            try {
+            if (xslStream != null) {
                 xslStream.close();
-            } catch (IOException ignored) {
             }
+        }
+    }
+    
+    /**
+     * Create a new transformer based on the liaison settings
+     * @return the newly created and configured transformer.
+     * @throws Exception thrown if there is an error during creation.
+     * @see #setStylesheet(java.io.File)
+     * @see #addParam(java.lang.String, java.lang.String)
+     * @see #setOutputProperty(java.lang.String, java.lang.String)
+     */
+    private void createTransformer() throws Exception {
+        if (templates == null) {
+            readTemplates();
+        }
+
+        transformer = templates.newTransformer();
+
+        // configure the transformer...
+        transformer.setErrorListener(this);
+        if (uriResolver != null) {
+            transformer.setURIResolver(uriResolver);
+        }
+        for (int i = 0; i < params.size(); i++) {
+            final String[] pair = (String[]) params.elementAt(i);
+            transformer.setParameter(pair[0], pair[1]);
+        }
+        for (int i = 0; i < outputProperties.size(); i++) {
+            final String[] pair = (String[]) outputProperties.elementAt(i);
+            transformer.setOutputProperty(pair[0], pair[1]);
         }
     }
 

@@ -182,16 +182,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
-     * Whether to reuse the transformer instance when transforming
-     * multiple files.
+     * Controls whether the stylesheet is reloaded for every transform
      *
-     * <p>Setting this to false may get around a bug in certain
-     * Xalan-J version, default is true.</p>
+     * <p>Setting this to true may get around a bug in certain
+     * Xalan-J versions, default is false.</p>
      *
      * @since Ant 1.6
      */
-    public void setReuseLoadedStylesheet(boolean b) {
-        reuseLoadedStylesheet = b;
+    public void setReloadStylesheet(boolean b) {
+        reuseLoadedStylesheet = !b;
     }
 
     /**
