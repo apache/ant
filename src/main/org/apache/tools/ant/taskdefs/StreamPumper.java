@@ -66,7 +66,7 @@ public class StreamPumper implements Runnable {
     /**
      * Set whether data should be flushed through to the output stream.
      * @param autoflush if true, push through data; if false, let it be buffered
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     /*public*/ void setAutoflush(boolean autoflush) {
         this.autoflush = autoflush;
@@ -134,7 +134,7 @@ public class StreamPumper implements Runnable {
      * Note that it may continue to block on the input stream
      * but it will really stop the thread as soon as it gets EOF
      * or any byte, and it will be marked as finished.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     /*public*/ synchronized void stop() {
         finished = true;

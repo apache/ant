@@ -36,10 +36,6 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* Programs run with <java fork="true"> can now accept standard input
-  from the Ant console.  (Programs run with <java fork="false"> could
-  already do so.)  Bugzilla Report 24918.
-
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
@@ -282,6 +278,10 @@ Other changes:
 
 Fixed bugs:
 -----------
+
+* Programs run with <java fork="true"> can now accept standard input
+  from the Ant console.  (Programs run with <java fork="false"> could
+  already do so.)  Bugzilla 24918.
 
 * AbstractCvsTask prematurely closed its outputStream and errorStream.
   Bugzilla 30097.

@@ -231,7 +231,7 @@ public class Redirector {
      * Set a stream to use as input.
      *
      * @param inputStream the stream from which input will be read
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     /*public*/ void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;

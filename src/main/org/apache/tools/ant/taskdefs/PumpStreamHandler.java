@@ -219,7 +219,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     /**
      * Creates a stream pumper to copy the given input stream to the
      * given output stream. Used for standard input.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     /*protected*/ StreamPumper createInputPump(InputStream is, OutputStream os,
                                 boolean closeWhenExhausted) {
