@@ -41,12 +41,15 @@ public class SignedSelector extends DataType implements FileSelector {
      * The heart of the matter. This is where the selector gets to decide
      * on the inclusion of a file in a particular fileset.
      *
-     * @param basedir the base directory the scan is being done from
-     * @param filename is the name of the file to check
-     * @param file is a java.io.File object the selector can use
+     * @param basedir not used by this selector
+     * @param filename not used by this selector
+     * @param file     path to file to be selected
      * @return whether the file should be selected or not
      */
     public boolean isSelected(File basedir, String filename, File file) {
+        if (file.isDirectory()) {
+            return false; // Quick return: directories cannot be signed
+        }
         isSigned.setProject(getProject());
         isSigned.setFile(file);
         return isSigned.eval();
