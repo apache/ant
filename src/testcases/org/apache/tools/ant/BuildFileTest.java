@@ -82,41 +82,52 @@ public abstract class BuildFileTest extends TestCase {
         super(name);
     }
     
+    protected void expectBuildException(String target, String cause) { 
+        expectSpecificBuildException(target, cause, null);
+    }
+
+    /**
+     * Assert that the given message has been logged with a priority
+     * &gt;= INFO when running the given target.
+     */
+    protected void expectLog(String target, String log) { 
+        executeTarget(target);
+        String realLog = getLog();
+        assertEquals(log, realLog);
+    }
+
     protected String getLog() { 
         return logBuffer.toString();
+    }
+
+    /**
+     * Assert that the given message has been logged with a priority
+     * &gt;= DEBUG when running the given target.
+     */
+    protected void expectDebuglog(String target, String log) { 
+        executeTarget(target);
+        String realLog = getFullLog();
+        assertEquals(log, realLog);
     }
 
     protected String getFullLog() { 
         return fullLogBuffer.toString();
     }
 
-    
-
-    protected void expectBuildException(String taskname, String cause) { 
-        expectSpecificBuildException(taskname, cause, null);
-    }
-
-    protected void expectOutput(String taskname, String output) { 
-        executeTarget(taskname);
+    protected void expectOutput(String target, String output) { 
+        executeTarget(target);
         String realOutput = getOutput();
         assertEquals(output, realOutput);
     }
 
-    protected void expectOutputAndError(String taskname, String output, String error) { 
-        executeTarget(taskname);
+    protected void expectOutputAndError(String target, String output, String error) { 
+        executeTarget(target);
         String realOutput = getOutput();
         assertEquals(output, realOutput);
         String realError = getError();
         assertEquals(error, realError);
     }
 
-    protected void expectLog(String taskname, String log) { 
-        executeTarget(taskname);
-        String realLog = getLog();
-        assertEquals(log, realLog);
-    }
-
-    
     protected String getOutput() {
         return cleanBuffer(outBuffer);
     }
@@ -185,9 +196,9 @@ public abstract class BuildFileTest extends TestCase {
         return project.getBaseDir();
     }
 
-    protected void expectSpecificBuildException(String taskname, String cause, String msg) { 
+    protected void expectSpecificBuildException(String target, String cause, String msg) { 
         try {
-            executeTarget(taskname);
+            executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
             if ((null != msg) && (ex.getMessage() != msg)) {
                 fail("Should throw BuildException because '" + cause + "' with message '" + msg + "' (received message '" + ex.getMessage() + "' instead)");
