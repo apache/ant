@@ -288,13 +288,12 @@ public class MParse
             return;
         }
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         getContext().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
         exe.setReturnCode( 0 );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     /**

@@ -341,15 +341,7 @@ public class CCUpdate extends ClearCase
         // Check the command line options
         checkOptions( commandLine );
 
-        // For debugging
-        System.out.println( commandLine.toString() );
-
-        final int result = run( commandLine );
-        if( result != 0 )
-        {
-            final String message = "Failed executing: " + commandLine.toString();
-            throw new TaskException( message );
-        }
+        run( commandLine );
     }
 
     /**

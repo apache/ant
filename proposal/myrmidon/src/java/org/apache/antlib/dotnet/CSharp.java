@@ -506,8 +506,7 @@ public class CSharp
             m_srcDir = getBaseDirectory();
         }
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setReturnCode( 0 );
 
         final Commandline cmd = exe.getCommandline();
@@ -549,7 +548,7 @@ public class CSharp
         }
 
         //now run the command of exe + settings + files
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private void addArgument( final Commandline cmd, final String argument )

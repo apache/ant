@@ -185,16 +185,40 @@ public class FileUtils
     }
 
     /**
+     * Builds a command-line from an array of individual arguments, quoting
+     * the arguments as necessary.
+     *
+     * @todo Move to {@link org.apache.aut.nativelib.Os}, and get rid of the
+     * exception.
+     */
+    public static String buildCommandLine( final String[] arguments )
+        throws TaskException
+    {
+        final StringBuffer cmd = new StringBuffer();
+        for( int i = 0; i < arguments.length; i++ )
+        {
+            String arg = arguments[ i ];
+            if( i > 0 )
+            {
+                cmd.append( ' ' );
+            }
+            cmd.append( quoteArgument( arg ) );
+        }
+
+        return cmd.toString();
+    }
+
+    /**
      * Put quotes around the given String if necessary. <p>
      *
      * If the argument doesn't include spaces or quotes, return it as is. If it
      * contains double quotes, use single quotes - else surround the argument by
      * double quotes.</p>
      *
-     * @param argument Description of Parameter
-     * @return Description of the Returned Value
+     * @todo Move to {@link org.apache.aut.nativelib.Os}, and get rid of the
+     * exception.
      */
-    public static String quoteArgument( String argument )
+    public static String quoteArgument( final String argument )
         throws TaskException
     {
         if( argument.indexOf( "\"" ) > -1 )

@@ -165,12 +165,11 @@ public abstract class P4Base
                 handler = this;
             }
 
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
+            final Execute exe = new Execute();
             exe.setExecOutputHandler( handler );
             exe.setCommandline( cmd );
 
-            exe.execute();
+            exe.execute( getContext() );
             if( null != m_error )
             {
                 throw m_error;

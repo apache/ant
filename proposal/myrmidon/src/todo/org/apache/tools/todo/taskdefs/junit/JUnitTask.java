@@ -632,8 +632,7 @@ public class JUnitTask extends AbstractTask
             throw new TaskException( "Error creating temporary properties file.", ioe );
         }
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setCommandline( new Commandline( cmd.getCommandline() ) );
         if( dir != null )
         {
@@ -643,7 +642,7 @@ public class JUnitTask extends AbstractTask
         getContext().debug( "Executing: " + cmd.toString() );
         try
         {
-            return exe.execute();
+            return exe.execute( getContext() );
         }
         finally
         {

@@ -249,15 +249,10 @@ public class CovReport
             }
 
             // use the custom handler for stdin issues
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
-            getContext().debug( cmdl.toString() );
+            final Execute exe = new Execute();
             exe.setCommandline( cmdl );
-            int exitValue = exe.execute();
-            if( exitValue != 0 )
-            {
-                throw new TaskException( "JProbe Coverage Report failed (" + exitValue + ")" );
-            }
+            exe.setReturnCode( 0 );
+            exe.execute( getContext() );
             getContext().debug( "coveragePath: " + coveragePath );
             getContext().debug( "format: " + format );
             if( reference != null && "xml".equals( format ) )

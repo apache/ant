@@ -147,15 +147,7 @@ public class CCMCreateTask
         cmd.setExecutable( getCcmCommand() );
         cmd.addArgument( COMMAND_DEFAULT_TASK );
         cmd.addArgument( m_task );
-
-        getContext().debug( commandLine.toString() );
-
-        final int result2 = run( cmd, null );
-        if( result2 != 0 )
-        {
-            final String message = "Failed executing: " + cmd.toString();
-            throw new TaskException( message );
-        }
+        run( cmd, null );
     }
 
     private Commandline determineTask()
@@ -170,12 +162,7 @@ public class CCMCreateTask
 
         checkOptions( commandLine );
 
-        final int result = run( commandLine, this );
-        if( result != 0 )
-        {
-            final String message = "Failed executing: " + commandLine.toString();
-            throw new TaskException( message );
-        }
+        run( commandLine, this );
         return commandLine;
     }
 

@@ -121,11 +121,10 @@ public class GenerateKey
         getContext().info( message );
 
         final Commandline cmd = createCommand();
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private Commandline createCommand()

@@ -9,8 +9,6 @@ package org.apache.tools.todo.taskdefs.vss;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 
@@ -250,12 +248,7 @@ public class MSVSSCHECKOUT
         // -Y
         getLoginCommand( commandLine );
 
-        final int result = run( commandLine );
-        if( result != 0 )
-        {
-            final String message = "Failed executing: " + commandLine.toString();
-            throw new TaskException( message );
-        }
+        run( commandLine );
     }
 }
 

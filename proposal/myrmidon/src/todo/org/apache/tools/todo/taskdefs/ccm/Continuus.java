@@ -106,17 +106,17 @@ public abstract class Continuus
         return toReturn;
     }
 
-    protected int run( final Commandline cmd, final ExecOutputHandler handler )
+    protected void run( final Commandline cmd, final ExecOutputHandler handler )
         throws TaskException
     {
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         if( null != handler )
         {
             exe.setExecOutputHandler( handler );
         }
         exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
-        return exe.execute();
+        exe.setReturnCode( 0 );
+        exe.execute( getContext() );
     }
 }

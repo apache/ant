@@ -137,12 +137,11 @@ public class Cab
             try
             {
                 File listFile = createListFile( files );
-                final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-                Execute exe = new Execute( execManager );
+                Execute exe = new Execute();
                 exe.setWorkingDirectory( m_baseDir );
                 final Commandline cmd = createCommand( listFile );
                 exe.setCommandline( cmd );
-                exe.execute();
+                exe.execute( getContext() );
 
                 listFile.delete();
             }

@@ -85,12 +85,7 @@ public class CCMReconfigure
 
         checkOptions( cmd );
 
-        final int result = run( cmd, null );
-        if( result != 0 )
-        {
-            final String message = "Failed executing: " + cmd.toString();
-            throw new TaskException( message );
-        }
+        run( cmd, null );
     }
 
     /**

@@ -8,14 +8,17 @@
 package org.apache.myrmidon.framework;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.util.FileUtils;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * This is a utility class designed to make executing native
@@ -27,19 +30,16 @@ import org.apache.tools.todo.types.Commandline;
  */
 public class Execute
 {
+    private final static Resources REZ
+        = ResourceManager.getPackageResources( Execute.class );
+
     private Commandline m_command;
     private Properties m_environment = new Properties();
     private File m_workingDirectory = new File( "." );
     private boolean m_newEnvironment;
     private ExecOutputHandler m_handler;
     private long m_timeout;
-    private ExecManager m_execManager;
     private Integer m_returnCode;
-
-    public Execute( final ExecManager execManager )
-    {
-        m_execManager = execManager;
-    }
 
     public void setTimeout( final long timeout )
     {
@@ -108,14 +108,88 @@ public class Execute
     /**
      * Runs a process defined by the command line and returns its exit status.
      *
-     * @return the exit status of the subprocess or <code>INVALID</code>
+     * @return the exit status of the subprocess.
      */
-    public int execute()
+    public int execute( final TaskContext context )
         throws TaskException
     {
-        final int returnCode = executeNativeProcess();
-        checkReturnCode( returnCode );
-        return returnCode;
+        validate();
+
+        try
+        {
+            // Build an output handler
+            final ExecOutputHandler handler = buildOutputHandler( context );
+
+            // Build the command meta-info
+            final ExecManager execManager = (ExecManager)context.getService( ExecManager.class );
+            final ExecMetaData metaData = buildExecMetaData( execManager );
+
+            logExecDetails( metaData, context );
+
+            // Execute the command and check return code
+            final int returnCode = execManager.execute( metaData, handler, m_timeout );
+            checkReturnCode( returnCode );
+            return returnCode;
+        }
+        catch( final Exception e )
+        {
+            final String message = REZ.getString( "execute.failed.error", m_command.getExecutable() );
+            throw new TaskException( message, e );
+        }
+    }
+
+    /**
+     * Logs the details of the command.
+     */
+    private void logExecDetails( final ExecMetaData metaData,
+                                 final TaskContext context )
+        throws TaskException
+    {
+        if( ! context.isDebugEnabled() )
+        {
+            return;
+        }
+
+        String cmdline = FileUtils.buildCommandLine( metaData.getCommand() );
+        String message = REZ.getString( "execute.command.notice", cmdline );
+        context.debug( message );
+        message = REZ.getString( "execute.env-vars.notice", metaData.getEnvironment() );
+        context.debug( message );
+    }
+
+    /**
+     * Vaidates the arguments.
+     */
+    private void validate() throws TaskException
+    {
+        if( null == m_command.getExecutable() )
+        {
+            final String message = REZ.getString( "execute.no-executable.error" );
+            throw new TaskException( message );
+        }
+        if( !m_workingDirectory.exists() )
+        {
+            final String message = REZ.getString( "execute.dir-noexist.error", m_workingDirectory );
+            throw new TaskException( message );
+        }
+        else if( !m_workingDirectory.isDirectory() )
+        {
+            final String message = REZ.getString( "execute.dir-notdir.error", m_workingDirectory );
+            throw new TaskException( message );
+        }
+    }
+
+    /**
+     * Creates an output handler to use when executing the commmand.
+     */
+    private ExecOutputHandler buildOutputHandler( final TaskContext context )
+    {
+        ExecOutputHandler handler = m_handler;
+        if( handler == null )
+        {
+            handler = new LoggingExecOutputHandler( context );
+        }
+        return handler;
     }
 
     /**
@@ -128,39 +202,10 @@ public class Execute
         if( null != m_returnCode &&
             returnCode != m_returnCode.intValue() )
         {
-            throw new TaskException( "Unexpected return code " + returnCode );
-        }
-    }
-
-    /**
-     * Actually execute the native process.
-     */
-    private int executeNativeProcess()
-        throws TaskException
-    {
-        try
-        {
-            final ExecMetaData metaData = buildExecMetaData();
-            if( null != m_handler )
-            {
-                return m_execManager.execute( metaData, m_handler, m_timeout );
-            }
-            else
-            {
-                return m_execManager.execute( metaData,
-                                              null,
-                                              System.out,
-                                              System.err,
-                                              m_timeout );
-            }
-        }
-        catch( final ExecException ee )
-        {
-            throw new TaskException( ee.getMessage(), ee );
-        }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( ioe.getMessage(), ioe );
+            final String message = REZ.getString( "execute.bad-resultcode.error",
+                                                  m_command.getExecutable(),
+                                                  new Integer(returnCode) );
+            throw new TaskException( message );
         }
     }
 
@@ -168,7 +213,7 @@ public class Execute
      * Utility method to create an ExecMetaData object
      * to pass to the ExecManager service.
      */
-    private ExecMetaData buildExecMetaData()
+    private ExecMetaData buildExecMetaData( final ExecManager execManager )
         throws ExecException
     {
         final String[] command = m_command.getCommandline();
@@ -176,7 +221,7 @@ public class Execute
         final Properties newEnvironment = new Properties();
         if( !m_newEnvironment )
         {
-            newEnvironment.putAll( m_execManager.getNativeEnvironment() );
+            newEnvironment.putAll( execManager.getNativeEnvironment() );
         }
         newEnvironment.putAll( m_environment );
 

@@ -215,8 +215,7 @@ public class Java
     private int run( final Commandline command )
         throws TaskException
     {
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
 
         if( m_dir == null )
         {
@@ -230,6 +229,6 @@ public class Java
 
         exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command );
-        return exe.execute();
+        return exe.execute( getContext() );
     }
 }

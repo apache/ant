@@ -241,12 +241,11 @@ public class JavaCC
         throws TaskException
     {
         getContext().debug( cmdline.toString() );
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         final String[] commandline = cmdline.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
         exe.setReturnCode( 0 );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     /**

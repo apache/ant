@@ -181,11 +181,10 @@ public class JJTree
         cmdl.addVmArgument( "-mx140M" );
         cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         getContext().debug( cmdl.toString() );
         exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
         exe.setReturnCode( 0 );
-        exe.execute();
+        exe.execute( getContext() );
     }
 }

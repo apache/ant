@@ -116,22 +116,13 @@ public class CovMerge
             }
             cmdl.addArgument( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
-            getContext().debug( cmdl.toString() );
+            final Execute exe = new Execute();
             exe.setCommandline( cmdl );
+            exe.setReturnCode( 0 );
 
             // JProbe process always return 0 so  we will not be
             // able to check for failure ! :-(
-            int exitValue = exe.execute();
-            if( exitValue != 0 )
-            {
-                throw new TaskException( "JProbe Coverage Merging failed (" + exitValue + ")" );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Failed to run JProbe Coverage Merge: " + e );
+            exe.execute( getContext() );
         }
         finally
         {

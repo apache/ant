@@ -241,8 +241,7 @@ public class JDependTask
             commandline.addArgument( f.getPath() );
         }
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
 
         final String[] commandline1 = commandline.getCommandline();
         exe.setCommandline( new Commandline( commandline1 ) );
@@ -256,7 +255,7 @@ public class JDependTask
             getContext().info( "Output to be stored in " + m_outputFile.getPath() );
         }
         getContext().debug( "Executing: " + commandline.toString() );
-        return exe.execute();
+        return exe.execute( getContext() );
     }
 
 

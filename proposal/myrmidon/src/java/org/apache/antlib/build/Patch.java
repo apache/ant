@@ -106,10 +106,9 @@ public class Patch
     {
         validate();
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         buildCommand( exe.getCommandline() );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private void validate()

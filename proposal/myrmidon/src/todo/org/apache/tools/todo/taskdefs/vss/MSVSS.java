@@ -199,11 +199,10 @@ public abstract class MSVSS
         return m_vssPath;
     }
 
-    protected int run( Commandline cmd )
+    protected void run( final Commandline cmd )
         throws TaskException
     {
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
 
         // If location of ss.ini is specified we need to set the
         // environment-variable SSDIR to this value
@@ -216,7 +215,8 @@ public abstract class MSVSS
 
         exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
-        return exe.execute();
+        exe.setReturnCode( 0 );
+        exe.execute( getContext() );
     }
 }
 

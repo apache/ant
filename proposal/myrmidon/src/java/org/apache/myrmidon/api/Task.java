@@ -10,14 +10,10 @@ package org.apache.myrmidon.api;
 /**
  * This is the interface that tasks implement to be executed in Myrmidon runtime.
  *
- * Instances can also implement the Avalon LogEnabled method to receive a logger.
- *
  * Tasks can also choose to implement Avalon Configurable if they wish to directly
  * receive the Configuration data representing the task. If this interface is
  * not implemented then the container will be responsble for mapping configuration
  * onto the task object.
- *
- * The Components passed in via ComponentManager are determined by container.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$

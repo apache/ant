@@ -273,20 +273,16 @@ public abstract class AbstractMetamataTask
 
     /**
      * execute the process with a specific handler
-     *
-     * @param handler Description of Parameter
-     * @exception TaskException Description of Exception
      */
     protected void execute0()
         throws TaskException
     {
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         getContext().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
         exe.setReturnCode( 0 );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     protected void generateOptionsFile( File tofile, ArrayList options )

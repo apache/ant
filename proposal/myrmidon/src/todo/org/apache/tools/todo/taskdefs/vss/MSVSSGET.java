@@ -9,8 +9,6 @@ package org.apache.tools.todo.taskdefs.vss;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.Path;
 
@@ -471,7 +469,6 @@ public class MSVSSGET extends MSVSS
         throws TaskException
     {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
         // first off, make sure that we've got a command and a vssdir ...
         if( getVsspath() == null )
@@ -505,12 +502,7 @@ public class MSVSSGET extends MSVSS
         // -Y
         getLoginCommand( commandLine );
 
-        result = run( commandLine );
-        if( result != 0 )
-        {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
-        }
+        run( commandLine );
     }
 
 }

@@ -90,8 +90,7 @@ public class Rpm
         throws TaskException
     {
         final Commandline cmd = createCommand();
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
 
         if( m_topDir == null )
         {
@@ -103,7 +102,7 @@ public class Rpm
 
         final String message = "Building the RPM based on the " + m_specFile + " file";
         getContext().info( message );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private Commandline createCommand()

@@ -296,10 +296,9 @@ public class SignJar
         getContext().info( message );
 
         final Commandline cmd = buildCommand( jarTarget, jarSource );
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setCommandline( cmd );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private Commandline buildCommand( final File jarTarget, final File jarSource )

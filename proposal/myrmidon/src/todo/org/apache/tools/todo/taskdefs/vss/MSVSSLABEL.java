@@ -323,7 +323,6 @@ public class MSVSSLABEL extends MSVSS
         throws TaskException
     {
         Commandline commandLine = new Commandline();
-        int result = 0;
 
         // first off, make sure that we've got a command and a vssdir and a label ...
         if( getVsspath() == null )
@@ -365,12 +364,6 @@ public class MSVSSLABEL extends MSVSS
         // -Y
         getLoginCommand( commandLine );
 
-        result = run( commandLine );
-        if( result != 0 )
-        {
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new TaskException( msg );
-        }
-
+        run( commandLine );
     }
 }

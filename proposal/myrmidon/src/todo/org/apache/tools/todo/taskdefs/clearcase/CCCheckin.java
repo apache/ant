@@ -339,12 +339,7 @@ public class CCCheckin extends ClearCase
 
         checkOptions( commandLine );
 
-        final int result = run( commandLine );
-        if( result != 0 )
-        {
-            final String message = "Failed executing: " + commandLine.toString();
-            throw new TaskException( message );
-        }
+        run( commandLine );
     }
 
     /**

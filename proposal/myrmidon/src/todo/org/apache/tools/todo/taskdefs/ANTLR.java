@@ -228,8 +228,7 @@ public class ANTLR extends AbstractTask
     private int run( final Commandline command )
         throws TaskException
     {
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         if( workingdir != null )
         {
             exe.setWorkingDirectory( workingdir );
@@ -237,7 +236,7 @@ public class ANTLR extends AbstractTask
         exe.setCommandline( command );
         try
         {
-            return exe.execute();
+            return exe.execute( getContext() );
         }
         catch( IOException e )
         {

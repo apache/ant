@@ -250,8 +250,7 @@ public class Ilasm
     public void executeOneFile( final String targetFile )
         throws TaskException
     {
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setReturnCode( 0 );
 
         final Commandline cmd = exe.getCommandline();
@@ -265,7 +264,7 @@ public class Ilasm
         addArgument( cmd, getKeyfileParameter() );
         addArgument( cmd, getExtraOptionsParameter() );
         addArgument( cmd, targetFile );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private void addArgument( final Commandline cmd, final String argument )

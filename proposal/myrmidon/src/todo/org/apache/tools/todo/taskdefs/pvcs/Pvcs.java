@@ -189,14 +189,12 @@ public class Pvcs
 
         final Commandline cmd = buildGetCommand( filelist );
         getContext().info( "Getting files" );
-        getContext().debug( "Executing " + cmd.toString() );
         try
         {
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
+            final Execute exe = new Execute();
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
-            result = exe.execute();
+            result = exe.execute( getContext() );
             checkResultCode( result, cmd );
         }
         finally
@@ -268,13 +266,12 @@ public class Pvcs
             tmp = File.createTempFile( "pvcs_ant_", ".log" );
             final File fileList = File.createTempFile( "pvcs_ant_", ".log" );
 
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
+            final Execute exe = new Execute();
             exe.setExecOutputHandler( this );
             m_output = new FileOutputStream( tmp );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
-            final int result = exe.execute();
+            final int result = exe.execute( getContext() );
             checkResultCode( result, cmd );
 
             if( !tmp.exists() )

@@ -147,8 +147,7 @@ public class Cvs
         final Commandline command = buildCommandline();
         final Properties env = buildEnvironment();
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         if( m_dest == null )
         {
             m_dest = getBaseDirectory();
@@ -158,7 +157,7 @@ public class Cvs
         exe.setCommandline( command );
         exe.setEnvironment( env );
         exe.setReturnCode( 0 );
-        exe.execute();
+        exe.execute( getContext() );
     }
 
     private Properties buildEnvironment()

@@ -820,8 +820,7 @@ public class Javadoc
 
         getContext().info( "Javadoc execution" );
 
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setExecOutputHandler( this );
 
         /*
@@ -835,7 +834,7 @@ public class Javadoc
         exe.setReturnCode( 0 );
         try
         {
-            exe.execute();
+            exe.execute( getContext() );
         }
         finally
         {

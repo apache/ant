@@ -16,7 +16,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class ProjectListenerSupport
+class ProjectListenerSupport
     implements LogEvent
 {
     private ProjectListener[] m_listeners = new ProjectListener[ 0 ];

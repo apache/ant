@@ -9,13 +9,9 @@ package org.apache.antlib.nativelib;
 
 import java.io.File;
 import java.util.Properties;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.Os;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
@@ -36,9 +32,6 @@ import org.apache.tools.todo.types.EnvironmentVariable;
 public class Exec
     extends AbstractTask
 {
-    private final static Resources REZ =
-        ResourceManager.getPackageResources( Exec.class );
-
     private long m_timeout;
     private EnvironmentData m_env = new EnvironmentData();
     private Commandline m_command = new Commandline();
@@ -107,28 +100,9 @@ public class Exec
     public void execute()
         throws TaskException
     {
-        validate();
-        if( null == m_os || Os.isFamily( m_os ) )
+        if( null != m_os && Os.isFamily( m_os ) )
         {
-            final Execute exe = createExecute();
-            doExecute( exe );
-        }
-    }
-
-    private void doExecute( final Execute exe )
-        throws TaskException
-    {
-        exe.setReturnCode( 0 );
-        exe.execute();
-    }
-
-    private void validate()
-        throws TaskException
-    {
-        if( null == m_command.getExecutable() )
-        {
-            final String message = REZ.getString( "exec.no-executable.error" );
-            throw new TaskException( message );
+            return;
         }
 
         // default directory to the project's base directory
@@ -136,19 +110,11 @@ public class Exec
         {
             m_dir = getBaseDirectory();
         }
-        else
-        {
-            if( !m_dir.exists() )
-            {
-                final String message = REZ.getString( "exec.dir-noexist.error", m_dir );
-                throw new TaskException( message );
-            }
-            else if( !m_dir.isDirectory() )
-            {
-                final String message = REZ.getString( "exec.dir-notdir.error", m_dir );
-                throw new TaskException( message );
-            }
-        }
+
+        // execute the command
+        final Execute exe = createExecute();
+        exe.setReturnCode( 0 );
+        exe.execute( getContext() );
     }
 
     private Execute createExecute()
@@ -156,23 +122,12 @@ public class Exec
     {
         final Properties environment = m_env.getVariables();
 
-        logExecDetails( environment );
-
-        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-        final Execute exe = new Execute( execManager );
+        final Execute exe = new Execute();
         exe.setTimeout( m_timeout );
         exe.setWorkingDirectory( m_dir );
         exe.setNewenvironment( m_newEnvironment );
         exe.setEnvironment( environment );
         exe.setCommandline( m_command );
         return exe;
-    }
-
-    private void logExecDetails( final Properties environment )
-    {
-        // show the command
-        getContext().debug( m_command.toString() );
-        final String message = REZ.getString( "exec.env-vars.notice", environment );
-        getContext().debug( message );
     }
 }

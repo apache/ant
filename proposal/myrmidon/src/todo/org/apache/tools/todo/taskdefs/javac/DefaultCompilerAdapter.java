@@ -370,12 +370,11 @@ public abstract class DefaultCompilerAdapter
                 commandArray = args;
             }
 
-            final ExecManager execManager = (ExecManager)m_attributes.getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
+            final Execute exe = new Execute();
             exe.setWorkingDirectory( m_baseDir );
             final String[] commandline = commandArray;
             exe.setCommandline( new Commandline( commandline ) );
-            return exe.execute();
+            return exe.execute( getTaskContext() );
         }
         finally
         {
