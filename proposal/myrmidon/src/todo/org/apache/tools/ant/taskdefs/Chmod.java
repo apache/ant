@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.taskdefs.exec.Execute;
 
 /**
  * Chmod equivalent for unix-like environments.

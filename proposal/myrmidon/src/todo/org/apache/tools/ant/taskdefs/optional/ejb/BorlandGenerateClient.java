@@ -11,7 +11,7 @@ import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -160,7 +160,7 @@ public class BorlandGenerateClient extends Task
         {
             getLogger().info( "mode : fork" );
 
-            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
+            org.apache.tools.ant.taskdefs.exec.ExecTask execTask = null;
             execTask = (ExecTask)getProject().createTask( "exec" );
 
             execTask.setDir( new File( "." ) );

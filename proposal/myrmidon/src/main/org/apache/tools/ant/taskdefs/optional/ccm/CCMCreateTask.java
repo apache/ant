@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
 /**

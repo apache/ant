@@ -8,7 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 
 /**
  * Interface for p4 job output stream handler. Classes implementing this

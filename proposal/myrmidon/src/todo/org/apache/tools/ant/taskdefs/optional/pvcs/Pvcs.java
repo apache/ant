@@ -22,11 +22,11 @@ import java.util.Random;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Execute;
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
-import org.apache.tools.ant.taskdefs.LogOutputStream;
-import org.apache.tools.ant.taskdefs.LogStreamHandler;
-import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.PumpStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
 /**

@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**

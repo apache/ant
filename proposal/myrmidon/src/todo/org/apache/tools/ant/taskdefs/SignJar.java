@@ -17,6 +17,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.types.FileSet;
 
 /**

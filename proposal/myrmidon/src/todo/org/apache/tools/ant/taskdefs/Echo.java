@@ -16,7 +16,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
- * Echo
+ * Log
  *
  * @author costin@dnt.ro
  */
