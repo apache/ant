@@ -113,6 +113,7 @@
       srcDir="${src.dir}"
       destFile="${out.app}"
       targetType="${out.type}"
+      references="System.Web.Services.dll"
       />
     <available property="app.created" file="${out.app}"/>
     <fail unless="app.created">No app created</fail>
@@ -128,6 +129,7 @@
       destFile="${out.app}"
       targetType="${out.type}" 
       fileAlign="512"
+      references="System.Web.Services.dll"
       />
     <available property="app.created" file="${out.app}"/>
     <fail unless="app.created">No app created</fail>
