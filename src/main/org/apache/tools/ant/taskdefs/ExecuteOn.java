@@ -63,6 +63,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -81,6 +82,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 public class ExecuteOn extends ExecTask {
 
     protected Vector filesets = new Vector();
+    private Vector filelists = new Vector();
     private boolean relative = false;
     private boolean parallel = false;
     private boolean forwardSlash = false;
@@ -91,6 +93,9 @@ public class ExecuteOn extends ExecTask {
     protected Mapper mapperElement = null;
     protected FileNameMapper mapper = null;
     protected File destDir = null;
+    private int maxParallel = -1;
+    private boolean addSourceFile = true;
+    private boolean verbose = false;
 
     /**
      * Has &lt;srcfile&gt; been specified before &lt;targetfile&gt;
@@ -102,6 +107,13 @@ public class ExecuteOn extends ExecTask {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * Source files to operate upon.
+     */
+    public void addFilelist(FileList list) {
+        filelists.addElement(list);
     }
 
     /**
@@ -154,6 +166,38 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
+     * Limit the command line length by passing at maximum this many
+     * sourcefiles at once to the command.
+     *
+     * <p>Set to &lt;= 0 for unlimited - this is the default.</p>
+     *
+     * @since Ant 1.6
+     */
+    public void setMaxParallel(int max) {
+        maxParallel = max;
+    }
+
+    /**
+     * Whether to send the source file name on the command line.
+     *
+     * <p>Defaults to <code>true</code>.
+     *
+     * @since Ant 1.6
+     */
+    public void setAddsourcefile(boolean b) {
+        addSourceFile = b;
+    }
+
+    /**
+     * Whether to print a verbose summary after execution.
+     *
+     * @since Ant 1.6
+     */
+    public void setVerbose(boolean b) {
+        verbose = b;
+    }
+
+    /**
      * Marker that indicates where the name of the source file should
      * be put on the command line.
      */
@@ -202,8 +246,9 @@ public class ExecuteOn extends ExecTask {
         }
         
         super.checkConfiguration();
-        if (filesets.size() == 0) {
-            throw new BuildException("no filesets specified", getLocation());
+        if (filesets.size() == 0 && filelists.size() == 0) {
+            throw new BuildException("no filesets and no filelists specified",
+                                     getLocation());
         }
 
         if (targetFilePos != null || mapperElement != null 
@@ -221,6 +266,9 @@ public class ExecuteOn extends ExecTask {
     }
 
     protected void runExec(Execute exe) throws BuildException {
+        int totalFiles = 0;
+        int totalDirs = 0;
+        boolean haveExecuted = false;
         try {
 
             Vector fileNames = new Vector();
@@ -233,6 +281,7 @@ public class ExecuteOn extends ExecTask {
                 if (!"dir".equals(type)) {
                     String[] s = getFiles(base, ds);
                     for (int j = 0; j < s.length; j++) {
+                        totalFiles++;
                         fileNames.addElement(s[j]);
                         baseDirs.addElement(base);
                     }
@@ -241,6 +290,7 @@ public class ExecuteOn extends ExecTask {
                 if (!"file".equals(type)) {
                     String[] s = getDirs(base, ds);;
                     for (int j = 0; j < s.length; j++) {
+                        totalDirs++;
                         fileNames.addElement(s[j]);
                         baseDirs.addElement(base);
                     }
@@ -261,6 +311,50 @@ public class ExecuteOn extends ExecTask {
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
                         runExecute(exe);
+                        haveExecuted = true;
+                    }
+                    fileNames.removeAllElements();
+                    baseDirs.removeAllElements();
+                }
+            }
+
+            for (int i = 0; i < filelists.size(); i++) {
+                FileList list = (FileList) filelists.elementAt(i);
+                File base = list.getDir(getProject());
+                String[] names = list.getFiles(getProject());
+
+                for (int j = 0; j < names.length; j++) {
+                    File f = new File(base, names[j]);
+                    if ((f.isFile() && !"dir".equals(type))
+                        || (f.isDirectory() && !"file".equals(type))) {
+
+                        if (f.isFile()) {
+                            totalFiles++;
+                        } else {
+                            totalDirs++;
+                        }
+
+                        fileNames.addElement(names[j]);
+                        baseDirs.addElement(base);
+                    }
+                }
+
+                if (fileNames.size() == 0 && skipEmpty) {
+                    log("Skipping filelist for directory "
+                        + base + ". It is empty.", Project.MSG_INFO);
+                    continue;
+                }
+
+                if (!parallel) {
+                    String[] s = new String[fileNames.size()];
+                    fileNames.copyInto(s);
+                    for (int j = 0; j < s.length; j++) {
+                        String[] command = getCommandline(s[j], base);
+                        log(Commandline.describeCommand(command), 
+                            Project.MSG_VERBOSE);
+                        exe.setCommandline(command);
+                        runExecute(exe);
+                        haveExecuted = true;
                     }
                     fileNames.removeAllElements();
                     baseDirs.removeAllElements();
@@ -268,14 +362,17 @@ public class ExecuteOn extends ExecTask {
             }
 
             if (parallel && (fileNames.size() > 0 || !skipEmpty)) {
-                String[] s = new String[fileNames.size()];
-                fileNames.copyInto(s);
-                File[] b = new File[baseDirs.size()];
-                baseDirs.copyInto(b);
-                String[] command = getCommandline(s, b);
-                log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
-                exe.setCommandline(command);
-                runExecute(exe);
+                runParallel(exe, fileNames, baseDirs);
+                haveExecuted = true;
+            }
+
+            if (haveExecuted) {
+                log("Applied " + cmdl.getExecutable() + " to "
+                    + totalFiles + " file"
+                    + (totalFiles != 1 ? "s" : "") + " and "
+                    + totalDirs + " director"
+                    + (totalDirs != 1 ? "ies" : "y") + ".",
+                    verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
             }
 
         } catch (IOException e) {
@@ -321,6 +418,10 @@ public class ExecuteOn extends ExecTask {
         String[] targetFiles = new String[targets.size()];
         targets.copyInto(targetFiles);
         
+        if (!addSourceFile) {
+            srcFiles = new String[0];
+        }
+
         String[] orig = cmdl.getCommandline();
         String[] result 
             = new String[orig.length + srcFiles.length + targetFiles.length];
@@ -436,6 +537,46 @@ public class ExecuteOn extends ExecTask {
                                 mapper);
         } else {
             return ds.getIncludedDirectories();
+        }
+    }
+
+    /**
+     * Runs the command in "parallel" mode, making sure that at most
+     * maxParallel sourcefiles get passed on the command line.
+     *
+     * @since Ant 1.6
+     */
+    protected void runParallel(Execute exe, Vector fileNames, 
+                               Vector baseDirs)
+        throws IOException, BuildException {
+        String[] s = new String[fileNames.size()];
+        fileNames.copyInto(s);
+        File[] b = new File[baseDirs.size()];
+        baseDirs.copyInto(b);
+
+        if (maxParallel <= 0 
+            || s.length == 0 /* this is skipEmpty == false */) {
+            String[] command = getCommandline(s, b);
+            log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
+            exe.setCommandline(command);
+            runExecute(exe);
+        } else {
+            int stillToDo = fileNames.size();
+            int currentOffset = 0;
+            while (stillToDo > 0) {
+                int currentAmount = Math.min(stillToDo, maxParallel);
+                String[] cs = new String[currentAmount];
+                System.arraycopy(s, currentOffset, cs, 0, currentAmount);
+                File[] cb = new File[currentAmount];
+                System.arraycopy(b, currentOffset, cb, 0, currentAmount);
+                String[] command = getCommandline(cs, cb);
+                log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
+                exe.setCommandline(command);
+                runExecute(exe);
+
+                stillToDo -= currentAmount;
+                currentOffset += currentAmount;
+            }
         }
     }
 

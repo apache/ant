@@ -254,6 +254,14 @@ public class Chmod extends ExecuteOn {
             + " doesn\'t support the skipemptyfileset attribute", getLocation());
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
+    public void setAddsourcefile(boolean b) {
+        throw new BuildException(getTaskType()
+            + " doesn\'t support the addsourcefile attribute", getLocation());
+    }
+
     protected boolean isValidOs() {
         return (Os.isFamily("unix") || Os.isFamily("tandem")) 
             && super.isValidOs();

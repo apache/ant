@@ -346,6 +346,18 @@ Other changes:
   that can be used to turn of Microsoft extensions while using the jvc
   compiler.  Bugzilla Report 19826.
 
+* You can now limit the parallelism of <apply> and <chmod> by using the new
+  maxparallel attribute.
+
+* With the new addsourcefile attribute, you can make <apply> ommit the
+  source file names from the command line.  Bugzilla Report 13654.
+
+* <apply> and <chmod> now support nested <filelist>s as well.
+  Bugzilla Report 15929.
+
+* <apply> and <chmod> will display a summary if you set the new
+  verbose attribute to true.  Bugzilla Report 19883.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

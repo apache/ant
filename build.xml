@@ -26,6 +26,7 @@
 
   <property name="debug" value="true"/>
   <property name="chmod.fail" value="true"/>
+  <property name="chmod.maxparallel" value="250"/>
   <property name="deprecation" value="false"/>
   <property name="optimize" value="true"/>
   <property name="javac.target" value="1.1"/>
@@ -963,7 +964,7 @@
     <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**"
            failonerror="${chmod.fail}"/>
     <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**"
-           failonerror="${chmod.fail}"/>
+           failonerror="${chmod.fail}" maxparallel="${chmod.maxparallel}"/>
     <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
        <fileset dir="${dist.bin}">
          <include name="**/ant"/>
@@ -1037,7 +1038,7 @@
     <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**"
            failonerror="${chmod.fail}"/>
     <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**"
-           failonerror="${chmod.fail}"/>
+           failonerror="${chmod.fail}" maxparallel="${chmod.maxparallel}"/>
     <chmod perm="ugo+x" type="file" failonerror="${chmod.fail}">
        <fileset dir="${dist.bin}">
          <include name="**/ant"/>

@@ -15,14 +15,15 @@ compatibility.</i></p>
 the command is only executed when Ant is run on one of the specified operating
 systems.</p>
 <p>The files and/or directories of a number of <a
-href="../CoreTypes/fileset.html">FileSet</a>s are passed as arguments
+href="../CoreTypes/fileset.html">FileSet</a>s or <a
+href="../CoreTypes/filelist.html">FileList</a>s are passed as arguments
 to the system command.</p>
 <p>If you specify a nested <a
 href="../CoreTypes/mapper.html">mapper</a> and the <i>dest</i> attribute,
 the timestamp of each source file is compared to the timestamp of a
 target file which is defined by the nested mapper element and searched
 for in the given dest.</p>
-<p>At least one fileset is required, and you must not specify more than
+<p>At least one fileset or filelist is required, and you must not specify more than
 one mapper.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -53,7 +54,7 @@ one mapper.</p>
     <td valign="top">relative</td>
     <td valign="top">whether the filenames should be passed on the
       command line as absolute or relative pathnames (relative to the
-      base directory of the corresponding fileset for source files or
+      base directory of the corresponding fileset/list for source files or
       the <i>dest</i> attribute for target files).</td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
@@ -120,7 +121,8 @@ one mapper.</p>
     <td valign="top">skipemptyfilesets</td>
     <td valign="top">Don't run the command, if no source files have
       been found or are newer than their corresponding target
-      files.</td>
+      files.  Despite its name, this attribute applies to filelists as
+      well.</td>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
@@ -158,19 +160,45 @@ one mapper.</p>
         false as well.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
+  <tr>
+    <td valign="top">maxparallel</td>
+    <td valign="top">Limit the amount of parallelism by passing at
+      most this many sourcefiles at once.  Set it to &lt;= 0 for
+      unlimited.  Defaults to unlimited.  <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">addsourcefile</td>
+    <td valign="top">Whether source file names should be added to the
+      command automatically.  Defaults to <code>true</code>.  
+      <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">Whether to print a summary after execution or not.
+      Defaults to <code>false</code>.  <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>fileset</h4>
 <p>You can use any number of nested <code>&lt;fileset&gt;</code>
 elements to define the files for this task and refer to
 <code>&lt;fileset&gt;</code>s defined elsewhere.</p>
+<h4>filelist</h4>
+<p><em>Since Ant 1.6</em></p>
+<p>You can use any number of nested <code>&lt;filelist&gt;</code>
+elements to define the files for this task and refer to
+<code>&lt;filelist&gt;</code>s defined elsewhere.</p>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
 href="../using.html#arg">Command line arguments</a>.</p>
 <h4>srcfile</h4>
 <p>By default the file names of the source files will be added to the
-end of the command line. If you need to place it somewhere different,
+end of the command line (unless you set addsourcefile to
+<code>false</code>). If you need to place it somewhere different,
 use a nested <code>&lt;srcfile&gt;</code> element between your
 <code>&lt;arg&gt;</code> elements to mark the insertion point.</p>
 <h4>targetfile</h4>

@@ -19,6 +19,10 @@ write patterns.</p>
 supports all of FileSet's attributes and nested elements
 directly. More FileSets can be specified using nested
 <code>&lt;fileset&gt;</code> elements.</p>
+
+<p>Starting with Ant 1.6, this task also supports nested <a
+href="../CoreTypes/filelist.html">filelist</a>s.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -73,6 +77,19 @@ directly. More FileSets can be specified using nested
       plain files are going to be changed. If set to <i>dir</i>, only
       the directories are considered.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
+  </tr>
+  <tr>
+    <td valign="top">maxparallel</td>
+    <td valign="top">Limit the amount of parallelism by passing at
+      most this many sourcefiles at once.  Set it to &lt;= 0 for
+      unlimited.  Defaults to unlimited.  <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">Whether to print a summary after execution or not.
+      Defaults to <code>false</code>.  <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
