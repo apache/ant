@@ -202,6 +202,12 @@ Other changes:
 * <junit> has a new attribute tempdir that controls the placement of
   temporary files.  Bugzilla Report 15454.
 
+* <jdepend> now supports a new nested element <classespath> which is
+  the same as <sourcespath> but point to compiled classes (the
+  prefered mode of operation for JDepend > 2.5).  Additionally, nested
+  <exclude> elements can be used to exclude certain packages from
+  being parsed.  Bugzilla Report 17134.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

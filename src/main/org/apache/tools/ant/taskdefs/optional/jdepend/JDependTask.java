@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
@@ -69,6 +70,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.Reference;
 
 /**
@@ -87,7 +89,8 @@ public class JDependTask extends Task {
     //private CommandlineJava commandline = new CommandlineJava();
 
     // required attributes
-    private Path _sourcesPath;
+    private Path _sourcesPath; // Deprecated!
+    private Path _classesPath; // Use this going forward
 
     // optional attributes
     private File _outputFile;
@@ -99,6 +102,7 @@ public class JDependTask extends Task {
 
     private String _jvm = null;
     private String format = "text";
+    private PatternSet defaultPatterns = new PatternSet();
 
     public JDependTask() {
 
@@ -165,6 +169,7 @@ public class JDependTask extends Task {
 
     /**
      * Adds a path to source code to analyze.
+     * @deprecated
      */
     public Path createSourcespath() {
         if (_sourcesPath == null) {
@@ -173,9 +178,32 @@ public class JDependTask extends Task {
         return _sourcesPath.createPath();
     }
 
-    /** Gets the sourcepath. */
+    /**
+     * Gets the sourcepath.
+     * 
+     * @deprecated
+     * 
+     */
     public Path getSourcespath() {
         return _sourcesPath;
+    }
+
+    /**
+     * Adds a path to class code to analyze.
+     */
+    public Path createClassespath() {
+        if (_classesPath == null) {
+            _classesPath = new Path(getProject());
+        }
+        return _classesPath.createPath();
+    }
+
+    /**
+     * Gets the classespath.
+     * 
+     */
+    public Path getClassespath() {
+        return _classesPath;
     }
 
     /**
@@ -233,6 +261,16 @@ public class JDependTask extends Task {
         createClasspath().setRefid(r);
     }
 
+    /**
+     * add a name entry on the exclude list
+     */
+    public PatternSet.NameEntry createExclude() {
+        return defaultPatterns.createExclude();
+    }
+
+    public PatternSet getExcludes() {
+        return defaultPatterns;
+    }
 
     /**
      * The format to write the output in, "xml" or "text".
@@ -250,7 +288,6 @@ public class JDependTask extends Task {
             return formats;
         }
     }
-
 
     /**
      * No problems with this test.
@@ -275,13 +312,18 @@ public class JDependTask extends Task {
         if (_jvm != null) {
             commandline.setVm(_jvm);
         }
-
-        if (getSourcespath() == null) {
-            throw new BuildException("Missing Sourcepath required argument");
+        if (getSourcespath() == null && getClassespath() == null) {
+            throw new BuildException("Missing classespath required argument");
+        } else if (getClassespath() == null) {
+            String msg =
+                "sourcespath is deprecated in JDepend >= 2.5 "
+                + "- please convert to classespath";
+            log(msg);
         }
 
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
+        //boolean wasKilled = false;
         if (!getFork()) {
             exitValue = executeInVM(commandline);
         } else {
@@ -307,8 +349,6 @@ public class JDependTask extends Task {
             }
         }
     }
-
-
 
     // this comment extract from JUnit Task may also apply here
     // "in VM is not very nice since it could probably hang the
@@ -341,27 +381,75 @@ public class JDependTask extends Task {
             log("Output to be stored in " + getOutputFile().getPath());
         }
 
-        PathTokenizer sourcesPath 
-            = new PathTokenizer(getSourcespath().toString());
-        while (sourcesPath.hasMoreTokens()) {
-            File f = new File(sourcesPath.nextToken());
-
-            // not necessary as JDepend would fail, but why loose some time?
-            if (!f.exists() || !f.isDirectory()) {
-                String msg = "\"" + f.getPath() + "\" does not represent a valid" 
-                    + " directory. JDepend would fail.";
-                log(msg);
-                throw new BuildException(msg);
+        if (getClassespath() != null) {
+            // This is the new, better way - use classespath instead
+            // of sourcespath.  The code is currently the same - you
+            // need class files in a directory to use this - jar files
+            // coming soon....
+            String[] classesPath = getClassespath().list();
+            for (int i = 0; i < classesPath.length; i++) {
+                File f = new File(classesPath[i]);
+                // not necessary as JDepend would fail, but why loose
+                // some time?
+                if (!f.exists() || !f.isDirectory()) {
+                    String msg = "\""
+                        + f.getPath()
+                        + "\" does not represent a valid"
+                        + " directory. JDepend would fail.";
+                    log(msg);
+                    throw new BuildException(msg);
+                }
+                try {
+                    jdepend.addDirectory(f.getPath());
+                } catch (IOException e) {
+                    String msg =
+                        "JDepend Failed when adding a class directory: "
+                        + e.getMessage();
+                    log(msg);
+                    throw new BuildException(msg);
+                }
             }
-            try {
-                jdepend.addDirectory(f.getPath());
-            } catch (IOException e) {
-                String msg = "JDepend Failed when adding a source directory: " 
-                    + e.getMessage();
-                log(msg);
-                throw new BuildException(msg);
+
+        } else if (getSourcespath() != null) {
+
+            // This is the old way and is deprecated - classespath is
+            // the right way to do this and is above
+            String[] sourcesPath = getSourcespath().list();
+            for (int i = 0; i < sourcesPath.length; i++) {
+                File f = new File(sourcesPath[i]);
+
+                // not necessary as JDepend would fail, but why loose
+                // some time?
+                if (!f.exists() || !f.isDirectory()) {
+                    String msg = "\""
+                        + f.getPath()
+                        + "\" does not represent a valid"
+                        + " directory. JDepend would fail.";
+                    log(msg);
+                    throw new BuildException(msg);
+                }
+                try {
+                    jdepend.addDirectory(f.getPath());
+                } catch (IOException e) {
+                    String msg =
+                        "JDepend Failed when adding a source directory: "
+                        + e.getMessage();
+                    log(msg);
+                    throw new BuildException(msg);
+                }
             }
         }
+
+        // This bit turns <exclude> child tags into patters to ignore
+        String[] patterns = defaultPatterns.getExcludePatterns(getProject());
+        if (patterns != null && patterns.length > 0) {
+            Vector v = new Vector();
+            for (int i = 0; i < patterns.length; i++) {
+                v.addElement(patterns[i]);
+            }
+            jdepend.setFilter(new jdepend.framework.PackageFilter(v));
+        }
+
         jdepend.analyze();
         return SUCCESS;
     }
@@ -397,15 +485,27 @@ public class JDependTask extends Task {
             // we have to find a cleaner way to put this output
         }
 
-        PathTokenizer sourcesPath 
-            = new PathTokenizer(getSourcespath().toString());
-        while (sourcesPath.hasMoreTokens()) {
-            File f = new File(sourcesPath.nextToken());
+        // This is deprecated - use classespath in the future
+        String[] sourcesPath = getSourcespath().list();
+        for (int i = 0; i < sourcesPath.length; i++) {
+            File f = new File(sourcesPath[i]);
 
             // not necessary as JDepend would fail, but why loose some time?
             if (!f.exists() || !f.isDirectory()) {
                 throw new BuildException("\"" + f.getPath() + "\" does not " 
                     + "represent a valid directory. JDepend would fail.");
+            }
+            commandline.createArgument().setValue(f.getPath());
+        }
+
+        // This is the new way - use classespath - code is the same for now
+        String[] classesPath = getClassespath().list();
+        for (int i = 0; i < classesPath.length; i++) {
+            File f = new File(classesPath[i]);
+            // not necessary as JDepend would fail, but why loose some time?
+            if (!f.exists() || !f.isDirectory()) {
+                throw new BuildException("\"" + f.getPath() + "\" does not "
+                        + "represent a valid directory. JDepend would fail.");
             }
             commandline.createArgument().setValue(f.getPath());
         }

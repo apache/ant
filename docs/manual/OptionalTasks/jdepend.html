@@ -19,13 +19,14 @@
 It allows to &quot;automatically measure the quality of a design in terms of its extensibility, reusability, and maintainability to
 effectively manage and control package dependencies.&quot;</P>
 
-<p>Source file directories are defined by nested <code>&lt;sourcespath&gt;</code>, see <a href="#nested">nested elements</a>.</p>
+<p>Source file directories are defined by nested
+<code>&lt;sourcespath&gt;</code>; Class file directories are defined
+by nested <code>&lt;classesespath&gt;</code>, see <a
+href="#nested">nested elements</a>.</p>
 
 <p>Optionally, you can also set the <code>outputfile</code> name where the output is stored. By default the task writes its report to the standard output.</P>
 
 <p> The task requires at least the JDepend 1.2 version. </p>
-
-<P>Note: whereas the JDepend tool can be customized to exclude some packages, the current jdepend And Task does not have parameters to allow these exclusions. Read JDepend specific documentation for that purpose.</P>
 
 <h3>Parameters</h3>
 
@@ -79,26 +80,37 @@ effectively manage and control package dependencies.&quot;</P>
 
 <h3><a name="nested">Nested Elements</a></h3>
 
-<p><code>jdepend</code> supports two nested elements <code>&lt;classpath&gt;</code> and <code>&lt;sourcespath&gt;</code>,
-that represent <a href="../using.html#path">PATH like structures</a>.</p>
+<p><code>jdepend</code> supports four nested elements:
+<code>&lt;classpath&gt;, &lt;classespath&gt; </code> and
+<code>&lt;sourcespath&gt;</code>, that represent <a
+href="../using.html#path">PATH like structures</a>, and
+<code>&lt;exclude&gt;</code>.</p>
 
-<p><code>&lt;sourcespath&gt;</code> is used to define the paths of the source code to analyze.</p>
+<p><code>&lt;sourcespath&gt;</code> is used to define the paths of the
+source code to analyze, but it is deprecated. With version 2.5 of
+JDepend, only class files are analyzed. The nested element
+&lt;classespath&gt; replaces &lt;sourcespath&gt; and is used to define
+the paths of compiled class code to analyze; the &lt;sourcespath&gt;
+variable is still available in case you are using an earlier version
+of JDepend.  The &lt;exclude&gt; element can be used to set packages
+to ignore.</p>
 
 <h3>Examples</h3>
 
 <blockquote>
 <pre>
 &lt;jdepend classpathref="base.path"&gt;
-&nbsp;&nbsp;&nbsp; &lt;sourcespath&gt;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="src"/&gt;
-&nbsp;&nbsp;&nbsp; &lt;/sourcespath&gt;
+&nbsp;&nbsp;&nbsp; &lt;classespath&gt;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="build"/&gt;
+&nbsp;&nbsp;&nbsp; &lt;/classespath&gt;
 &lt;/jdepend&gt;
 
 </pre>
 </blockquote>
 
-This invokes JDepend on the <code>src</code> directory, writing the output on the standard output.
-The classpath is defined using a classpath reference.
+<p>This invokes JDepend on the <code>build</code> directory, writing
+the output on the standard output. The classpath is defined using a
+classpath reference.</p>
 
 <blockquote>
 <pre>
@@ -111,15 +123,32 @@ The classpath is defined using a classpath reference.
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="lib/jdepend.jar"/&gt;
 &nbsp;&nbsp;&nbsp; &lt;/classpath&gt;
 &lt;/jdepend&gt;
-
 </pre>
 </blockquote>
 
-This invokes JDepend in a separate VM on the <code>src</code> and <code>testsrc</code> directories, writing the output to the <code>&lt;docs/jdepend.xml&gt;</code> file in xml format.
-The classpath is defined using nested elements.
+<p>This invokes JDepend in a separate VM on the <code>src</code> and
+<code>testsrc</code> directories, writing the output to the
+<code>&lt;docs/jdepend.xml&gt;</code> file in xml format. The
+classpath is defined using nested elements. </p>
+
+<blockquote>
+<pre>
+&lt;jdepend classpathref="base.path"&gt;
+&nbsp;&nbsp;&nbsp; &lt;exclude name="java.*&gt;
+&nbsp;&nbsp;&nbsp; &lt;exclude name="javax.*&gt;
+&nbsp;&nbsp;&nbsp; &lt;classespath&gt;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;pathelement location="build"/&gt;
+&nbsp;&nbsp;&nbsp; &lt;/classespath&gt;
+&lt;/jdepend&gt;
+</pre>
+</blockquote>
+
+<p>This invokes JDepend with the build directory as the base for class
+files to analyze, and will ignore all classes in the java.* and
+javax.* packages.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>
