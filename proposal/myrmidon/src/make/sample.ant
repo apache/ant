@@ -283,4 +283,10 @@ Legal:
         <log message="Give me a property ... ${meep.meep}"/>
     </target>
 
+    <target name="changelog-test">
+        <changelog basedir="." destfile="../../changelog.txt">
+            <user displayname="Peter Donald" userid="donaldp"/>
+        </changelog>
+    </target>
+
 </project>
