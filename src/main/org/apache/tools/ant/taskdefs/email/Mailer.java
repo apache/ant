@@ -69,6 +69,7 @@ public abstract class Mailer {
     protected int port = -1;
     protected String user = null;
     protected String password = null;
+    protected boolean SSL = false;
     protected Message message;
     protected EmailAddress from;
     protected Vector replyToList = null;
@@ -103,6 +104,7 @@ public abstract class Mailer {
      * Sets the user for smtp auth
      *
      * @param user
+     * @since ant 1.6
      */
     public void setUser(String user) {
         this.user = user;
@@ -112,9 +114,20 @@ public abstract class Mailer {
      * Sets the password for smtp auth
      *
      * @param password
+     * @since ant 1.6
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Sets whether the user wants to send the mail through SSL
+     *
+     * @param SSL
+     * @since ant 1.6
+     */
+    public void setSSL(boolean SSL) {
+        this.SSL = SSL;
     }
 
     /**

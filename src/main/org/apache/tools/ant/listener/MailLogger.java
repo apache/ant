@@ -157,16 +157,18 @@ public class MailLogger extends DefaultLogger {
             int port = Integer.parseInt(getValue(properties,"port",String.valueOf(MailMessage.DEFAULT_PORT)));
             String user = getValue(properties, "user", "");
             String password = getValue(properties, "password", "");
+            boolean ssl = Project.toBoolean(getValue(properties,
+                     "ssl", "off"));
             String from = getValue(properties, "from", null);
             String replytoList = getValue(properties,"replyto","");
             String toList = getValue(properties, prefix + ".to", null);
             String subject = getValue(properties, prefix + ".subject",
                     (success) ? "Build Success" : "Build Failure");
-            if (user.equals("") && password.equals("")) {
+            if (user.equals("") && password.equals("") && !ssl) {
                 sendMail(mailhost, port,  from, replytoList, toList, subject, buffer.substring(0));
             }
             else {
-                sendMimeMail(event.getProject(), mailhost, port, user, password, from, replytoList, toList, subject, buffer.substring(0));
+                sendMimeMail(event.getProject(), mailhost, port, user, password, ssl, from, replytoList, toList, subject, buffer.substring(0));
             }
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
@@ -256,15 +258,16 @@ public class MailLogger extends DefaultLogger {
      * @param  port             mail server port number
      * @param  user             user name for SMTP auth
      * @param  password         password for SMTP auth
+     * @param  ssl              if true send message over SSL
      * @param  from             from address
      * @param  replyToString    comma-separated replyto list
      * @param  toString         comma-separated recipient list
      * @param  subject          mail subject
      * @param  message          mail body
-     * @exception  IOException  thrown if sending message fails
      */
-    private void sendMimeMail(Project project, String host, int port, String user, String password, String from, String replyToString, String toString,
-                          String subject, String message) throws IOException {
+    private void sendMimeMail(Project project, String host, int port, String user, String password, boolean ssl,
+                              String from, String replyToString, String toString,
+                          String subject, String message)  {
         // convert the replyTo string into a vector of emailaddresses
         Mailer mailer = null;
             try {
@@ -280,6 +283,7 @@ public class MailLogger extends DefaultLogger {
         mailer.setPort(port);
         mailer.setUser(user);
         mailer.setPassword(password);
+        mailer.setSSL(ssl);
         Message mymessage = new Message(message);
         mymessage.setProject(project);
         mailer.setMessage(mymessage);

@@ -52,9 +52,8 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.email;
 
-import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -62,19 +61,22 @@ import org.apache.tools.ant.BuildFileTest;
  * to simulate sending mail and to catch the output in text files or streams
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
-public class EmailTaskTest extends BuildFileTest { 
+public class EmailTaskTest extends BuildFileTest {
     
-    public EmailTaskTest(String name) { 
+    public EmailTaskTest(String name) {
         super(name);
     }    
     
     public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/mail.xml");
+        configureProject("src/etc/testcases/taskdefs/email/mail.xml");
     }
 
     public void test1() { 
         expectBuildException("test1", "SMTP auth only possible with MIME mail");
     }
 
+    public void test2() {
+        expectBuildException("test2", "SSL only possible with MIME mail");
+    }
 
 }

@@ -66,6 +66,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.security.Security;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -157,6 +158,19 @@ public class MimeMailer extends Mailer {
             // alcohol :-)
             Session sesh;
             Authenticator auth;
+            if (SSL) {
+                try {
+                    java.security.Provider p=(java.security.Provider)Class.forName( "com.sun.net.ssl.internal.ssl.Provider").newInstance();
+                    Security.addProvider(p);
+                }
+                catch (Exception e) {
+                    throw new BuildException("could not instantiate ssl security provider, check that you have JSSE in your classpath");
+                }
+                final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+                // SMTP provider
+                props.put( "mail.smtp.socketFactory.class", SSL_FACTORY);
+                props.put( "mail.smtp.socketFactory.fallback", "false");
+            }
             if (user==null && password == null) {
                 sesh = Session.getDefaultInstance(props, null);
             }
@@ -165,7 +179,6 @@ public class MimeMailer extends Mailer {
                 auth = new SimpleAuthenticator(user,password);
                 sesh = Session.getInstance(props,auth);
             }
-
             //create the message
             MimeMessage msg = new MimeMessage(sesh);
             MimeMultipart attachments = new MimeMultipart();

@@ -108,7 +108,6 @@ public class EmailTask
         }
     }
 
-
     private String encoding = AUTO;
     /** host running SMTP  */
     private String host = "localhost";
@@ -146,6 +145,8 @@ public class EmailTask
     private String user=null;
     /** Password for SMTP auth */
     private String password=null;
+    /** indicate if the user wishes SSL-TLS */
+    private boolean SSL = false;
 
     /**
      * sets the user for SMTP auth; this requires JavaMail
@@ -163,6 +164,15 @@ public class EmailTask
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * tells if the user needs to send his data over SSL
+     * @param SSL
+     * @since ant 1.6
+     */
+    public void setSSL(boolean SSL) {
+        this.SSL = SSL;
     }
 
     /**
@@ -466,9 +476,14 @@ public class EmailTask
                 }
             }
             // SMTP auth only allowed with MIME mail
-            if (autoFound==false && ((user !=null) || (password != null)) && (encoding.equals(UU) || encoding.equals(PLAIN))) {
+            if (autoFound==false && ((user !=null) || (password != null) ) && (encoding.equals(UU) || encoding.equals(PLAIN))) {
                 throw new BuildException("SMTP auth only possible with MIME mail");
             }
+            // SSL only allowed with MIME mail
+            if (autoFound==false && (SSL) && (encoding.equals(UU) || encoding.equals(PLAIN))) {
+                throw new BuildException("SSL only possible with MIME mail");
+            }
+
 
             // try UU format
             if (encoding.equals(UU)
@@ -564,6 +579,7 @@ public class EmailTask
             mailer.setPort(port);
             mailer.setUser(user);
             mailer.setPassword(password);
+            mailer.setSSL(SSL);
             mailer.setMessage(message);
             mailer.setFrom(from);
             mailer.setReplyToList(replyToList);

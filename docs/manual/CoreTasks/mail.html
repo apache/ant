@@ -13,7 +13,7 @@
 This task can send mail using either plain
 text, UU encoding, or MIME format mail, depending on what is available.<br/>
 <br/>
-If you need SMTP auth, you have to use MIME (and therefore to install JavaMail).<br/><br/>
+SMTP auth and SSL/TLS require JavaMail and are only available in MIME format.<br/><br/>
 Attachments may be sent using nested
 <a href="../CoreTypes/fileset.html">fileset</a> elements.</p>
 <p><strong>Note:</strong> This task may depend on external libraries
@@ -112,6 +112,12 @@ Library Dependencies</a> for more information.
     <td valign="top">password for SMTP auth</td>
     <td valign="center">Yes, if SMTP auth is required on your SMTP server<br/>
     the email message will be then sent using Mime and requires JavaMail</td>
+  </tr>
+  <tr>
+    <td valign="top">ssl</td>
+    <td valign="top">"true", "on" or "yes" accepted here<br/>
+    indicates whether you need TLS/SSL</td>
+    <td valign="center">No</td>
   </tr>
   <tr>
     <td valign="top">encoding</td>
