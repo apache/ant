@@ -54,8 +54,10 @@
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import java.io.OutputStream;
+import java.util.Properties;
 
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
+import org.apache.tools.ant.BuildException;
 
 /**
  * A formatter recorder that serves the same purpose as
@@ -67,13 +69,6 @@ import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
  */
 public class FormatterRecorder extends TestRunRecorder
         implements Formatter {
-
-    public void setOutput(OutputStream out) {
-    }
-
-    public void setSystemOutput(String out) {
-    }
-
-    public void setSystemError(String err) {
+    public void init(Properties props) throws BuildException {
     }
 }

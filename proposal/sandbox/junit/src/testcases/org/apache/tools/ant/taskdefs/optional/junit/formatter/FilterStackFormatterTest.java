@@ -60,6 +60,8 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * Not exactly rocket science test.. dooh !
  *
@@ -117,19 +119,13 @@ public class FilterStackFormatterTest extends TestCase
 // --- formatter implementation
     protected String filteredTrace;
 
-    public void setOutput(OutputStream out) {
-    }
-
     public void onTestStarted(String testname) {
-    }
-
-    public void setSystemOutput(String out) {
     }
 
     public void onTestEnded(String testname) {
     }
 
-    public void setSystemError(String err) {
+    public void init(Properties props) throws BuildException {
     }
 
     public void onTestFailed(int status, String testname, String trace) {
