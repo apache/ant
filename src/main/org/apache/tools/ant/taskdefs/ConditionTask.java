@@ -41,6 +41,7 @@ public class ConditionTask extends ConditionBase {
 
     private String property = null;
     private String value = "true";
+    private String alternative = null;
 
     /**
      * The name of the property to set. Required.
@@ -62,6 +63,16 @@ public class ConditionTask extends ConditionBase {
     }
 
     /**
+     * The value for the property to set, if condition evaluates to false.
+     * If this attribute is not specified, the property will not be set.
+     * @param e the alternate value of the property.
+     * @since Ant 1.6.3
+     */
+    public void setElse(String e) {
+        alternative = e;
+    }
+
+    /**
      * See whether our nested condition holds and set the property.
      *
      * @since Ant 1.4
@@ -79,12 +90,15 @@ public class ConditionTask extends ConditionBase {
         if (property == null) {
             throw new BuildException("The property attribute is required.");
         }
-
         Condition c = (Condition) getConditions().nextElement();
         if (c.eval()) {
             log("Condition true; setting " + property + " to " + value,
                 Project.MSG_DEBUG);
             getProject().setNewProperty(property, value);
+        } else if (alternative != null) {
+            log("Condition false; setting " + property + " to " + alternative,
+                Project.MSG_DEBUG);
+            getProject().setNewProperty(property, alternative);
         } else {
             log("Condition false; not setting " + property,
                 Project.MSG_DEBUG);
