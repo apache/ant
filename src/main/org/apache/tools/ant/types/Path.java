@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -487,11 +487,8 @@ public class Path extends DataType implements Cloneable {
      * <p>Assume the filename is absolute if project is null.</p>
      */
     private static String resolveFile(Project project, String relativeName) {
-        if (project != null) {
-            File f = project.resolveFile(relativeName);
-            return f.getAbsolutePath();
-        }
-        return relativeName;
+        return (project == null) ? relativeName
+            : project.resolveFile(relativeName).getAbsolutePath();
     }
 
     /**
