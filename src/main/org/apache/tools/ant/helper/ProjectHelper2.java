@@ -100,6 +100,7 @@ public class ProjectHelper2 extends ProjectHelper {
             throws BuildException
     {
         this.getImportStack().addElement(source);
+        //System.out.println("Adding " + source);
         AntXmlContext context=null;
         context=(AntXmlContext)project.getReference("ant.parsing.context");
 //        System.out.println("Parsing " + getImportStack().size() + " " +
@@ -578,10 +579,21 @@ public class ProjectHelper2 extends ProjectHelper {
 
             Project project=context.getProject();
 
+            /** XXX I really don't like this - the XML processor is still
+             * too 'involved' in the processing. A better solution (IMO)
+             * would be to create UE for Project and Target too, and
+             * then process the tree and have Project/Target deal with
+             * its attributes ( similar with Description ).
+             *
+             * If we eventually switch to ( or add support for ) DOM,
+             * things will work smoothly - UE can be avoided almost completely
+             * ( it could still be created on demand, for backward compat )
+             */
+
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getQName(i);
                 String value = attrs.getValue(i);
-                
+
                 if (key.equals("default")) {
                     if ( value != null && !value.equals("")) {
                         if( !context.ignoreProjectTag )
@@ -594,7 +606,7 @@ public class ProjectHelper2 extends ProjectHelper {
                         if( !context.ignoreProjectTag ) {
                             project.setName(value);
                             project.addReference(value, project);
-                        } 
+                        }
                     }
                 } else if (key.equals("id")) {
                     if (value != null) {
@@ -610,6 +622,21 @@ public class ProjectHelper2 extends ProjectHelper {
                     // XXX ignore attributes in a different NS ( maybe store them ? )
                     throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i) + "\"", context.locator);
                 }
+            }
+
+            // XXX Move to Project ( so it is shared by all helpers )
+            String antFileProp="ant.file." + context.currentProjectName;
+            String dup=project.getProperty(antFileProp);
+            if( dup!=null ) {
+                project.log("Duplicated project name in import. Project "+
+                        context.currentProjectName + " defined first in " +
+                        dup + " and again in " + context.buildFile,
+                        Project.MSG_WARN);
+            }
+
+            if( context.buildFile != null ) {
+                project.setUserProperty("ant.file."+context.currentProjectName,
+                        context.buildFile.toString());
             }
 
             if( context.ignoreProjectTag ) {
@@ -633,7 +660,7 @@ public class ProjectHelper2 extends ProjectHelper {
                     }
                 }
             }
-            
+
             project.addTarget("", context.implicitTarget);
             context.currentTarget=context.implicitTarget;
         }
