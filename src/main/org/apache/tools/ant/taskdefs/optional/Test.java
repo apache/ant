@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,8 +58,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
 
 /**
- * This is a primitive task to execute a unit test in the org.apache.testlet framework.
+ * This is a primitive task to execute a unit test in the
+ * org.apache.testlet framework.
  * 
+ * @deprecated testlet has been abandoned in favor of JUnit by the
+ * Avalon community
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @ant.task ignore="true"
  */
