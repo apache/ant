@@ -101,7 +101,7 @@ build Ant from the source code.</p>
   <p>
   If you do not have a JAXP compliant XML parse installed, you may use the reference implementation 
   available from Sun. It is available from <a href="http://java.sun.com/xml">http://java.sun.com/xml</a>.
-  Once installed make sure the "jaxp.jar" and "parser.jar" files are in your classpath.
+  Once installed make sure the &quot;jaxp.jar&quot; and &quot;parser.jar&quot; files are in your classpath.
   <p>
   You will also need the JDK installed on your system, version 1.1 or later. 
 
@@ -155,12 +155,13 @@ least the following:</p>
 needed for your chosen JAXP compliant XML parser.</p>
 <p>When you need JDK functionality (like a <a href="#javac">javac</a> task, or a
 <a href="#rmic">rmic</a> task), then for JDK 1.1, the <code>classes.zip</code>
-file of the JDK must be added to the classpath; for JDK 1.2, <code>tools.jar</code>
+file of the JDK must be added to the classpath; for JDK 1.2 or JDK 1.3, <code>tools.jar</code>
 must be added. The scripts supplied with ant, in the bin directory, will add 
 <code>tools.jar</code> automatically if the JAVA_HOME environment variable is set.</p>
 <p>When you are executing platform specific applications (like the <a
 href="#exec">exec</a> task, or the <a href="#cvs">cvs</a> task), the property <code>ant.home</code>
-must be set to the directory containing a bin directory, which contains the <code>antRun</code> shell script necessary to run execs on Unix.</p>
+must be set to the directory containing a bin directory, which contains the <code>antRun</code> 
+shell script necessary to run execs on Unix.</p>
 <hr>
 <h2><a name="running">Running Ant</a></h2>
 <p>Running Ant is simple, when you installed it as described in the previous
@@ -173,7 +174,10 @@ where <i>&lt;file&gt;</i> is the buildfile you want to use.</p>
 buildfile (see the <a href="#property">property task</a>). 
 This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
 option, where <i>&lt;property&gt;</i> is the name of the property and <i>&lt;value&gt;</i>
-the value.</p>
+the value. This can also be used (and is the only way since Java can not access them) 
+to have access to your environment variables, just pass -DMYVAR=%MYVAR% (Windows) or
+-DMYVAR=$MYVAR (Unix) do Ant, you can access these variables inside your build-file
+as ${MYVAR}.</p>
 <p>Two more options are <i>-quiet</i> which instructs Ant to print less
 information on the console when running. The option <i>-verbose</i> on the other
 hand makes Ant print more information on the console.</p>
@@ -303,7 +307,7 @@ always be executed.</p>
 href="#tstamp">tstamp</a> tasks in a so called initialization target, on which
 all other targets depend. Make sure that target is always the first one in
 the depends list of the other targets. In this manual, most initialization targets
-have the name "init".</p>
+have the name &quot;init&quot;.</p>
 <p>The optional <i>description</i> attribute can be used to provide a one line description of this target that is printed by the <i>-projecthelp</i> commandline option.</p>
 <p>A target has the following attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -314,7 +318,7 @@ have the name "init".</p>
   </tr>
   <tr>
     <td valign="top">name</td>
-    <td valign="top">the name of the project.</td>
+    <td valign="top">the name of the target.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
@@ -415,7 +419,7 @@ be of the form<i> @token@</i> where <i>token</i> is the token name that is set
 in the filter task. This token syntax matches the syntax of other build systems
 that perform such filtering and remains sufficiently orthogonal to most
 programming and scripting languages, as well with documentation systems.</p>
-<p>Note: in case a token with the format @token@ if found in a file but no
+<p>Note: in case a token with the format @token@ is found in a file but no
 filter is associated with that token, no changes take place. So, no escaping
 method is present, but as long as you choose appropriate names for your tokens,
 this should not cause problems.</p>
@@ -885,7 +889,7 @@ in the supplied directory (<i>dir</i> attribute) is used.</p>
 used.</p>
 <p>The properties of the current project will be available in the new project.
 These properties will override the properties that are set in the new project.
-(See also the <a href="#property">properties task</a>).  You can set properties
+(See also the <a href="#property">properties task</a>). You can set properties
 in the new project from the old project by using nested property tags. This
 allows you to parameterize your subprojects.</p>
 <h3>Parameters:</h3>
@@ -897,13 +901,13 @@ allows you to parameterize your subprojects.</p>
   </tr>
   <tr>
     <td valign="top">antfile</td>
-    <td valign="top">the buildfile to use.</td>
+    <td valign="top">the buildfile to use. Defaults to &quot;build.xml&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">the directory to use as a basedir for the new Ant project
-      Defaults to the current directory.</td>
+ 	<td valign="top">the directory to use as a basedir for the new Ant project. 
+					 Defaults to the current directory.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -982,7 +986,7 @@ execution depending on system parameters.</p>
   </tr>
   <tr>
     <td valign="top">value</td>
-    <td valign="top">the value to set the property to. Defaults to "true".</td>
+    <td valign="top">the value to set the property to. Defaults to &quot;true&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1092,7 +1096,7 @@ directly. More FileSets can be specified using nested
 UNIX system.</p>
 <blockquote>
 <pre>
-    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes="**/*.sh" /&gt;
+    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes=&quot;**/*.sh&quot; /&gt;
 </pre>
 </blockquote>
 <p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
@@ -1391,7 +1395,8 @@ nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
   </tr>
   <tr>
     <td valign="top">verbose</td>
-    <td valign="top">Show name of each deleted file (&quot;true&quot;/&quot;false&quot;). Default is "false" when omitted.</td>
+    <td valign="top">Show name of each deleted file (&quot;true&quot;/&quot;false&quot;).
+	 Default is &quot;false&quot; when omitted.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -1479,7 +1484,7 @@ systems.</p>
   <tr>
     <td valign="top">executable</td>
     <td valign="top">the command to execute without any command line
-      arguments.</b></td>
+      arguments.</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
@@ -1516,7 +1521,6 @@ systems.</p>
   <p><code>&lt;exec dir=&quot;${src}&quot; executable=&quot;dir&quot; os=&quot;windows&quot;
   output=&quot;dir.txt&quot; /&gt;</code></p>
 </blockquote>
-
 <h3>Parameters specified as nested elements</h3>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
@@ -1558,7 +1562,7 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 </table>
 <h5>Examples</h5>
 <blockquote><pre>
-&lt;exec executable="emacs" &gt;
+&lt;exec executable=&quot;emacs&quot; &gt;
   &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot; /&gt;
 &lt;/exec&gt;
 </pre></blockquote>
@@ -1570,6 +1574,14 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 </pre></blockquote>
 <p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
 system command.</p>
+<p><b>Note:</b> Although it may work for you to specify arguments using 
+a simple arg-element and seperate them by spaces it may fail if you switch to
+a newer version of the JDK. JDK &lt; 1.2 will pass these as separate arguments
+to the program you are calling, JDK &gt;= 1.2 will pass them as a single 
+argument and cause most calls to fail.</p>
+<p><b>Note2:</b> If you are using Ant on Windows and a new DOS-Window pops up
+for every command which is excuted this may be a problem of the JDK you are using.
+This problem may occur with all JDK's &lt; 1.2.</p>
 <hr>
 <h2><a name="execon">ExecOn</a></h2>
 <h3>Description</h3>
@@ -1589,7 +1601,7 @@ command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
   <tr>
     <td valign="top">executable</td>
     <td valign="top">the command to execute without any command line
-      arguments.</b></td>
+      arguments.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
@@ -1710,7 +1722,6 @@ build.xml:4: Something wrong here.
 <p>Sets a token filter for this project. Token filters are used by all tasks
 that perform file copying operations through the Project commodity methods.</p>
 <p>Note: the token string must not contain the separators chars (@).</p>
-<hr>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1815,7 +1826,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
       For Unix platforms, the default is remove.  For DOS based systems
       (including Windows), the default is add.
       <p>
-      Note: Unless this property is specified as "asis", extra CR characters
+      Note: Unless this property is specified as &quot;asis&quot;, extra CR characters
       which do not precede a LF will be removed.
       </td>
     <td valign="top" align="center">No</td>
@@ -1829,9 +1840,9 @@ supports all attributes of <code>&lt;fileset&gt;</code>
       <li>asis: leave tab and space characters alone
       <li>remove: convert tabs to spaces
       </ul>
-      Default for this parameter is "asis".
+      Default for this parameter is &quot;asis&quot;.
       <p>
-      Note: Unless this property is specified as "asis", extra spaces and
+      Note: Unless this property is specified as &quot;asis&quot;, extra spaces and
       tabs after the last non-whitespace character on the line will be removed.
       </td>
     <td valign="top" align="center">No</td>
@@ -2467,7 +2478,8 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   </tr>
   <tr>
     <td valign="top">target</td>
-    <td valign="top">Generate class files for specific VM version, e.g. "1.1" or "1.2".</td>
+    <td valign="top">Generate class files for specific VM version, e.g.
+	 &quot;1.1&quot; or &quot;1.2&quot;.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -2527,6 +2539,10 @@ the propery <code>src2</code>. This can also be represented using nested element
     &lt;include name=&quot;mypackage/p1/**,mypackage/p2/**&quot; /&gt;
     &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot; /&gt;
   &lt;/javac&gt;</pre>
+
+<p><b>Note:</b> If you are using Ant on Windows and a new DOS-Window pops up
+for every use of an external compiler this may be a problem of the JDK you are using.
+This problem may occur with all JDK's &lt; 1.2.</p>
 
 <hr>
 <h2><a name="javadoc">Javadoc/Javadoc2</a></h2>
@@ -3031,7 +3047,7 @@ necessary.</p>
 <pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; /&gt;</pre>
 <p>applies the diff included in <i>module.1.0-1.1.patch</i> to the
 files in base directory guessing the filename(s) from the diff output.
-<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; strip="1" /&gt;</pre>
+<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; strip=&quot;1&quot; /&gt;</pre>
 <p>like above but one leading directory part will be removed. i.e. if
 the diff output looked like
 <pre>
@@ -3155,7 +3171,7 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">file for which the token should be replaced.</td>
-    <td align="center" rowspan=2">Exactly one of the two.</td>
+    <td align="center" rowspan="2">Exactly one of the two.</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
@@ -3282,14 +3298,14 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   </tr>
   <tr>
     <td valign="top">sourcebase</td>
-    <td valign="top">Pass the "-keepgenerated" flag to rmic and
+    <td valign="top">Pass the &quot;-keepgenerated&quot; flag to rmic and
  move the generated source file to the base directory.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">stubversion</td>
     <td valign="top">Specify the JDK version for the generated stub code.
- Specify "1.1" to pass the "-v1.1" option to rmic.</td>
+ Specify &quot;1.1&quot; to pass the &quot;-v1.1&quot; option to rmic.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -3471,7 +3487,7 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   <tr>
     <td valign="top">extension</td>
     <td valign="top">desired file extension to be used for the targets.
-        If not specified, the default is "html".</td>
+        If not specified, the default is &quot;html&quot;.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -3482,8 +3498,8 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   <tr>
     <td valign="top">processor</td>
     <td valign="top">name of the XSLT processor to use.  Permissible
-values are "xslp" for the XSL:P processor, "xalan" for the Apache XML Xalan
-processor, or the name of an arbitrary XSLTLiaison class.
+values are &quot;xslp&quot; for the XSL:P processor, &quot;xalan&quot; 
+for the Apache XML Xalan processor, or the name of an arbitrary XSLTLiaison class.
 Defaults to xslp or xalan (in that order), if one is found in your
 class path</td>
     <td align="center" valign="top">No</td>
@@ -3705,9 +3721,9 @@ initialization target.</p>
 <h2><a name="unzip">Unjar/Unwar/Unzip</a></h2>
 <h3>Description</h3>
 <p>Unzips a zip-, war- or jarfile.</p>
-<p>For JDK 1.1 "last modified time" field is set to current time instead of being 
+<p>For JDK 1.1 &quot;last modified time&quot; field is set to current time instead of being 
 carried from zipfile.</p>
-<p>File permissions will not be restored on extracted files.</a>
+<p>File permissions will not be restored on extracted files.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3735,8 +3751,8 @@ carried from zipfile.</p>
 <h2><a name="untar">Untar</a></h2>
 <h3>Description</h3>
 <p>Untars a tarfile.</p>
-<p>File permissions will not be restored on extracted files.</a>
-<p>For JDK 1.1 "last modified time" field is set to current time instead of being 
+<p>File permissions will not be restored on extracted files.</p>
+<p>For JDK 1.1 &quot;last modified time&quot; field is set to current time instead of being 
 carried from tarfile.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -4054,14 +4070,14 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   </tr>
   <tr>
     <td valign="top">verbose</td>
-    <td valign="top">set to "yes" if you want to see the output from
-      the cabarc tool.  defaults to "no".</td>
+    <td valign="top">set to &quot;yes&quot; if you want to see the output from
+      the cabarc tool.  defaults to &quot;no&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">compress</td>
-    <td valign="top">set to "no" to store files without compressing.
-      defaults to "yes".</td>
+    <td valign="top">set to &quot;no&quot; to store files without compressing.
+      defaults to &quot;yes&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -4098,33 +4114,33 @@ supports all attributes of <code>&lt;fileset&gt;</code>
   <tr>
     <td valign="top">defaultexcludes</td>
     <td valign="top">indicates whether default excludes should be used
-      or not ("yes"/"no"). Default excludes are used when omitted.</td>
+      or not (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;cab cabfile="${dist}/manual.cab"
-     basedir="htdocs/manual" 
+&lt;cab cabfile=&quot;${dist}/manual.cab&quot;
+     basedir=&quot;htdocs/manual&quot; 
   /&gt;
 </pre></blockquote>
 <p>cabs all files in the htdocs/manual directory in a file called
 manual.cab in the ${dist} directory.</p>
 <blockquote><pre>
-&lt;cab cabfile="${dist}/manual.cab"
-     basedir="htdocs/manual"
-     excludes="mydocs/**, **/todo.html"
+&lt;cab cabfile=&quot;${dist}/manual.cab&quot;
+     basedir=&quot;htdocs/manual&quot;
+     excludes=&quot;mydocs/**, **/todo.html&quot;
   /&gt;
 </pre></blockquote>
 <p>cabs all files in the htdocs/manual directory in a file called
 manual.cab in the ${dist} directory. Files in the directory mydocs,
 or files with the name todo.html are excluded.</p>
 <blockquote><pre>
-&lt;cab cabfile="${dist}/manual.cab"
-     basedir="htdocs/manual"
-     includes="api/**/*.html"
-     excludes="**/todo.html"
-     verbose="yes"
+&lt;cab cabfile=&quot;${dist}/manual.cab&quot;
+     basedir=&quot;htdocs/manual&quot;
+     includes=&quot;api/**/*.html&quot;
+     excludes=&quot;**/todo.html&quot;
+     verbose=&quot;yes&quot;
   /&gt;
 </pre></blockquote>
 <p>cab all files in the htdocs/manual directory in a file called
@@ -4289,7 +4305,7 @@ use the remotedir attribute as the base directory for the files on the
 FTP server, and the dir attribute as the local directory to put the files
 into.  The file structure from the FTP site is preserved on the local machine.</p>
 <pre>
-  &lt;ftp action="get"
+  &lt;ftp action=&quot;get&quot;
        server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot;&gt;
@@ -4307,7 +4323,7 @@ select the files to delete from the remote FTP server.  Again, the
 filesets are relative to the remote directory, not a local directory.  In
 fact, the dir attribute of the fileset is ignored completely.
 <pre>
-  &lt;ftp action="del"
+  &lt;ftp action=&quot;del&quot;
        server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot; &gt;
@@ -4795,8 +4811,8 @@ BUILD SUCCESSFUL
 <h2><a name="vssget">VssGet</a></h2>
 <h3><b>Description:</b></h3>
 Task to perform GET commands to Microsoft Visual Source Safe.
-<p>
-The following attributes are interpretted:
+<p>If you specify two or more attributes from version, date and 
+label only one will be used in the order version, date, label.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -4854,7 +4870,18 @@ The following attributes are interpretted:
 <p>Note that only one of version, date or label should be specified</p>
 <h3>Examples</h3>
 <blockquote>
-  <p>None yet available</p>
+<pre>
+&lt;vssget localPath=&quot;C:\mysrc\myproject&quot;
+        recursive=&quot;true&quot; 
+        label=&quot;Release1&quot;
+        login=&quot;me,mypassword&quot;
+        vsspath=&quot;/source/aProject&quot;
+        writable=&quot;true&quot;/&gt;
+</pre>
+Does a get on the VSS-Project <i>$/source/aproject</i> using the username
+<i>me</i> and the password <i>mypassword</i>. It will recursively get the files 
+which are labeled <i>Release1</i> and write them to the local directory
+<i>C:\mysrc\myproject</i>. The local files will be writable.
 </blockquote>
 <hr>
 <h2><a name="buildevents">Build Events</a></h2>
@@ -4895,10 +4922,13 @@ output.
     name of the method must begin with &quot;set&quot;, followed by the
     attribute name, with the first character in uppercase, and the rest in
     lowercase. The type of the attribute can be <code>String</code>, any 
-    primitive type, <code>Class</code>, <code>File</code> (in which case the 
-    value of the attribute is interpreted relative to the project's basedir) 
-    or any other type that has a constructor with a single <code>String</code>
-    argument</li>
+    primitive type (they are converted for you from their String-representation
+	in the build-file. If you specify a boolean your method will be passed the value 
+	<i>true</i> if the value specified in the build-file is one of &quot;true&quot;,
+	&quot;yes&quot; or &quot;on&quot;), <code>Class</code>, <code>File</code>
+	(in which case the value of the attribute is interpreted relative to the 
+	project's basedir) or any other type that has a constructor with a single 
+	<code>String</code> argument</li>
   <li>If your task has enumerated attributes, you should consider using
     a subclass of org.apache.tools.ant.types.EnumeratedAttribute as argument
     to your setter method. See org.apache.tools.ant.taskdefs.FixCRLF for
@@ -5007,8 +5037,8 @@ package. Then you can use it as if it were a built in task.</p>
 href="http://jakarta.apache.org/jyve-faq/Turbine/screen/DisplayTopics/action/SetAll/project_id/2/faq_id/16">jakarta.apache.org</a>. This
 FAQ is interactive, which means you can ask and answer questions
 online.</p>
-<p>One of the questions poping up quite often is "Is there a DTD for
-buildfiles?". Please refer to the FAQ for an answer.</p>
+<p>One of the questions poping up quite often is &quot;Is there a DTD for
+buildfiles?&quot;. Please refer to the FAQ for an answer.</p>
 <hr>
 <h2><a name="feedback">Feedback</a></h2>
 <p>To provide feedback on this software, please subscribe to the Ant User

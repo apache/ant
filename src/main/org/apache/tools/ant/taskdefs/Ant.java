@@ -102,9 +102,11 @@ public class Ant extends Task {
             newP.setName(p.getName());
             if (p.getValue() != null) {
                 newP.setValue(p.getValue());
-            } else if (p.getFile() != null) {
+            }
+            if (p.getFile() != null) {
                 newP.setFile(p.getFile());
-            } else if (p.getResource() != null) {
+            } 
+            if (p.getResource() != null) {
                 newP.setResource(p.getResource());
             }
             properties.setElementAt(newP, i);

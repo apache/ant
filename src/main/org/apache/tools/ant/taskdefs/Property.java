@@ -124,7 +124,7 @@ public class Property extends Task {
 
     private void loadFile (File file) throws BuildException {
         Properties props = new Properties();
-        log("Loading " + name, Project.MSG_VERBOSE);
+        log("Loading " + file.getAbsolutePath(), Project.MSG_VERBOSE);
         try {
             if (file.exists()) {
                 props.load(new FileInputStream(file));

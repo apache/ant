@@ -307,7 +307,7 @@ public class Project {
         try {
             setBaseDir(new File(new File(baseD).getCanonicalPath()));
         } catch (IOException ioe) {
-            String msg = "Can't set basedir " + baseDir + " due to " +
+            String msg = "Can't set basedir " + baseD + " due to " +
                 ioe.getMessage();
             throw new BuildException(msg);
         }

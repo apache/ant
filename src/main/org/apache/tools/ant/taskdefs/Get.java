@@ -80,11 +80,29 @@ public class Get extends Task {
      * @exception BuildException Thrown in unrecoverable error.
      */
     public void execute() throws BuildException {
-	try {
+        if (source == null) {
+            throw new BuildException("src attribute is required", location);
+        }
+
+        if (dest == null) {
+            throw new BuildException("dest attribute is required", location);
+        }
+
+        if (dest.exists() && dest.isDirectory()) { 
+            throw new BuildException("The specified destination is a directory",
+                                     location);
+        }
+
+        if (dest.exists() && !dest.canWrite()) { 
+            throw new BuildException("Can't write to " + dest.getAbsolutePath(),
+                                     location);
+        }
+
+        try {
 
 	    log("Getting: " + source);
 
-	    	//set the timestamp to the file date.
+	    //set the timestamp to the file date.
 	    long timestamp=0;
 
             boolean hasTimestamp=false;

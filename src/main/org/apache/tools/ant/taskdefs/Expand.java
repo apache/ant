@@ -87,6 +87,9 @@ public class Expand extends MatchingTask {
         if (source == null) {
             throw new BuildException("Source attribute must be specified");
         }
+        if (dest == null) {
+            throw new BuildException("Dest attribute must be specified");
+        }
 
         if (source.isDirectory()) {
             // get all the files in the descriptor directory

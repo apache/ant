@@ -102,6 +102,14 @@ public class Rename extends Task {
      * thrown, if the rename operation fails.
      */
     public void execute() throws BuildException {
+        if (dest == null) {
+            throw new BuildException("dest attribute is required", location);
+        }
+
+        if (src == null) {
+            throw new BuildException("src attribute is required", location);
+        }
+
         if (replace && dest.exists()) {
             if (!dest.delete()) {
                 throw new BuildException("Unable to remove existing file " +

@@ -96,7 +96,7 @@ public class Copydir extends MatchingTask {
 
     public void execute() throws BuildException {
         if (srcDir == null) {
-            throw new BuildException("srcdir attribute must be set!", 
+            throw new BuildException("src attribute must be set!", 
                                      location);
         }
 
@@ -107,6 +107,10 @@ public class Copydir extends MatchingTask {
 
         if (destDir == null) {
             throw new BuildException("The dest attribute must be set.", location);
+        }
+
+        if (srcDir.equals(destDir)) {
+            log("Warning: src == dest");
         }
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);

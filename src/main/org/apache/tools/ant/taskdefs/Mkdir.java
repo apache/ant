@@ -66,22 +66,29 @@ import java.io.File;
 
 public class Mkdir extends Task {
 
-    private String dirName;
+    private File dir;
     
     public void execute() throws BuildException {
-	File dir = project.resolveFile(dirName);
-	if (!dir.exists()) {
+        if (dir == null) {
+            throw new BuildException("dir attribute is required", location);
+        }
+
+        if (dir.isFile()) {
+            log("Warning: Specified directory is a file: " + dir.getAbsolutePath());
+        }
+	
+        if (!dir.exists()) {
 	    boolean result = dir.mkdirs();
 	    if (result == false) {
-		String msg = "Directory " + dirName + " creation was not " +
+		String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
 		    "succesful for an unknown reason";
-		throw new BuildException(msg);
+		throw new BuildException(msg, location);
 	    }
 	    log("Created dir: " + dir.getAbsolutePath());
 	}
     }
 
-    public void setDir(String dirName) {
-	this.dirName = dirName;
+    public void setDir(File dir) {
+	this.dir = dir;
     }
 }

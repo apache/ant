@@ -101,7 +101,11 @@ public class Copyfile extends Task {
         if (destFile == null) {
             throw new BuildException("The dest attribute must be present.", location);
         }
-        
+
+        if (srcFile.equals(destFile)) {
+            log("Warning: src == dest");
+        }
+
         if (forceOverwrite || srcFile.lastModified() > destFile.lastModified()) {
             try {
                 project.copyFile(srcFile, destFile, filtering, forceOverwrite);

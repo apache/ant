@@ -95,6 +95,10 @@ public class Replace extends MatchingTask {
             throw new BuildException("replace token must not be null", location);
         }
 
+        if (token.getText().equals("")) {
+            throw new BuildException("replace token must not be empty", location);
+        }
+
         if (src == null && dir == null) {
             throw new BuildException("Either the file or the dir attribute must be specified", location);
         }
@@ -124,6 +128,10 @@ public class Replace extends MatchingTask {
      * @param src the source file
      */
     private void processFile(File src) throws BuildException {
+        if (!src.exists()) { 
+            throw new BuildException("Replace: source file " + src.getPath() + " doesn't exist", location);
+        }
+
         File temp = new File(src.getPath() + ".temp");
 
         if (temp.exists()) {

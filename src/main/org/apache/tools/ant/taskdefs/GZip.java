@@ -81,6 +81,14 @@ public class GZip extends Task {
     }
 
     public void execute() throws BuildException {
+        if (zipFile == null) {
+            throw new BuildException("zipfile attribute is required", location);
+        }
+
+        if (source == null) {
+            throw new BuildException("src attribute is required", location);
+        }
+
         log("Building gzip: " + zipFile.getAbsolutePath());
     
         GZIPOutputStream zOut = null;

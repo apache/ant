@@ -67,28 +67,35 @@ public class Deltree extends Task {
 
     private File dir;
 
-    public void setDir(String dirName) {
-	dir = project.resolveFile(dirName);
+    public void setDir(File dir) {
+	this.dir = dir;
     }
     
     public void execute() throws BuildException {
-	log("Deleting: " + dir.getAbsolutePath());
+        if (dir == null) {
+            throw new BuildException("dir attribute must be set!", location);
+        } 
 
 	if (dir.exists()) {
 	    if (!dir.isDirectory()) {
 		if (!dir.delete()) {
-        	    throw new BuildException("Unable to delete file " + dir.getAbsolutePath());
+        	    throw new BuildException("Unable to delete directory " 
+                                             + dir.getAbsolutePath(),
+                                             location);
 	        }
 		return;
 		// String msg = "Given dir: " + dir.getAbsolutePath() +
 		// " is not a dir";
 		// throw new BuildException(msg);
 	    }
+
+            log("Deleting: " + dir.getAbsolutePath());
+
             try {
                 removeDir(dir);
             } catch (IOException ioe) {
                 String msg = "Unable to delete " + dir.getAbsolutePath();
-                throw new BuildException(msg);
+                throw new BuildException(msg, location);
             }
         }
     }

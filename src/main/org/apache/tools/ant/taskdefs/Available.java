@@ -115,6 +115,14 @@ public class Available extends Task {
     }
 
     public void execute() throws BuildException {
+        if (property == null) {
+            throw new BuildException("property attribute is required", location);
+        }
+        
+        if (classname == null && file == null && resource == null) {
+            throw new BuildException("At least one of (classname|file|resource) is required", location);
+        }
+
         if (classpath != null) {
             this.loader = new AntClassLoader(project, classpath, false);
         }

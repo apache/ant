@@ -84,7 +84,10 @@ public class Tar extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        log("Building tar: "+ tarFile.getAbsolutePath());
+        if (tarFile == null) {
+            throw new BuildException("tarfile attribute must be set!", 
+                                     location);
+        }
 
         if (baseDir == null) {
             throw new BuildException("basedir attribute must be set!", 
@@ -93,6 +96,8 @@ public class Tar extends MatchingTask {
         if (!baseDir.exists()) {
             throw new BuildException("basedir does not exist!", location);
         }
+
+        log("Building tar: "+ tarFile.getAbsolutePath());
 
         DirectoryScanner ds = super.getDirectoryScanner(baseDir);
 
