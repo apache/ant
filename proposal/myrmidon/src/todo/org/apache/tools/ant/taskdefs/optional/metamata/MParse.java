@@ -301,7 +301,7 @@ public class MParse extends Task
         File javaFile = new File( pathname );
         if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
         {
-            project.log( "Target is already build - skipping (" + target + ")" );
+            log( "Target is already build - skipping (" + target + ")" );
             return;
         }
 
@@ -372,7 +372,7 @@ public class MParse extends Task
             final File sunjj = new File( target.getParent(), name );
             if( sunjj.exists() )
             {
-                project.log( "Removing stale file: " + sunjj.getName() );
+                log( "Removing stale file: " + sunjj.getName() );
                 sunjj.delete();
             }
         }

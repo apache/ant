@@ -154,7 +154,7 @@ public class MSVSSCHECKIN extends MSVSS
                         "succesful for an unknown reason";
                     throw new TaskException( msg );
                 }
-                project.log( "Created dir: " + dir.getAbsolutePath() );
+                log( "Created dir: " + dir.getAbsolutePath() );
             }
 
             cmd.createArgument().setValue( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );

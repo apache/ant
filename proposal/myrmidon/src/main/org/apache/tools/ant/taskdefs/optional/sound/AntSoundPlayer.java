@@ -34,7 +34,8 @@ import org.apache.tools.ant.Project;
  * @version $Revision$, $Date$
  */
 
-public class AntSoundPlayer implements LineListener, BuildListener
+public class AntSoundPlayer
+    implements LineListener, BuildListener
 {
 
     private File fileSuccess = null;
