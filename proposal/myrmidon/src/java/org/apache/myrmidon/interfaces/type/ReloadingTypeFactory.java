@@ -49,7 +49,6 @@ public class ReloadingTypeFactory
 
     protected ClassLoader getClassLoader()
     {
-        System.out.println( "ReloadingTypeFactory.getClassLoader" );
         return new URLClassLoader( m_urls, m_parent );
     }
 }
