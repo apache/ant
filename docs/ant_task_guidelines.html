@@ -6,27 +6,26 @@ Apache Ant Task Design Guidelines
 
 <h1>Apache Ant Task Design Guidelines</h1>
 
-This document covers how to write ant tasks to a standard required to be
+This document covers how to write Ant tasks to a standard required to be
 incorporated into the Ant distribution. You may find it useful when
 writing tasks for personal use as the issues it addresses are still
 there in such a case.
 
-
 <h2>Don't break existing builds</h2>
 
-Even if you find some really hideous problem with ant, one that is easy
-to fix, if your fix breaks an existing build file then we have problems.
-Making sure that every build file out there still works, is one of the
-goals of all changes. As an example of this, Ant1.5 passes the single
-dollar sign "$" through in strings; Ant1.4 and before would strip it. To
-get this fix in we first had to write the test suite to expose current
-behaviour, then change something so that singe $ was passed through, but
-double "$$" got mapped to "$" for backwards compatibility.
+Even if you find some really hideous problem with Ant, one that is easy to fix,
+if your fix breaks an existing build file then we have problems. Making sure
+that every build file out there still works is one of the goals of all changes.
+As an example of this, Ant 1.5 passes the single dollar sign &quot;$&quot;
+through in strings; Ant 1.4 and before would strip it. To get this fix in we
+first had to write the test suite to expose current behaviour, then change
+something so that single &quot;$&quot; was passed through, but double
+&quot;$$&quot; got mapped to &quot;$&quot; for backwards compatibility.
 
 <h2>Don't break the Java API</h2>
 
-Ant's tasks can be used by third party programs, and by third party tasks.
-We cannot make changes that break the API. This includes
+Ant's tasks can be used by third party programs and tasks.
+We cannot make changes that break the API. This includes:
 <ol>
 <li>Moving classes without leaving a backwards-compatible facade.
 <li>Deleting classes.
@@ -41,33 +40,27 @@ implicit changes of semantics, after all.
 
 <h2>Use built in helper classes</h2>
 
-Ant includes helper tasks to simplify much of your work. Be warned that
-these helper classes will look very different in ant2.0 from these 1.x
-versions. However it is still better to use them than roll your own, for
-development, maintenance and code size reasons.
+Ant includes helper tasks to simplify much of your work. It is much better to
+use them than roll your own, for development, maintenance and code size reasons.
 
 <h4>Execute</h4>
 
 Execute will spawn off separate programs under all the platforms which
-ant supports, dealing with Java version issues as well as platform
-issues. Always use this task to invoke other programs.
+Ant supports, dealing with Java version issues as well as platform
+issues. Always use this class to invoke other programs.
 
 <h4>Java, ExecuteJava</h4>
 
 These classes can be used to spawn Java programs in a separate VM (they
-use execute) or in the same VM -with or without a different classloader.
+use execute) or in the same VM--with or without a different classloader.
 When deriving tasks from this, it often benefits users to permit the
 classpath to be specified, and for forking to be an optional attribute.
 
-
 <h4>Project and related classes</h4>
 
-Project, FileUtils, JavaEnvUtils all have helper functions
-to do things like touch a file, to
-copy a file and the like. Use these instead of trying to code them
-yourself -or trying to use tasks which may be less stable and fiddlier
-to use.
-
+Project, FileUtils, JavaEnvUtils all have helper functions to do things like
+touch a file, copy a file and the like. Use these instead of coding them
+yourself or trying to use tasks which may be less stable and fiddlier to use.
 
 <h2>Obey the Sun/Java style guidelines</h2>
 
@@ -94,27 +87,27 @@ which may be important.
 
 One important rule is 'no tabs'. Use four spaces instead. Not two,
 not eight, four. Even if your editor is configured to have a tab of four
-spaces, lots of others aren't -spaces have more consistency across
+spaces, lots of others aren't. Spaces have more consistency across
 editors and platforms. Some IDEs (JEdit) can highlight tabs, to stop you
-accidentally inserting them
+accidentally inserting them.
 <p>
-There is an ant build file check.xml in the main ant directory with runs 
+There is an Ant build file check.xml in the main ant directory with runs 
   <a href="http://checkstyle.sourceforge.net">checkstyle</a> over
-  ant's source code.
+  Ant's source code.
 
 <h2>Attributes and elements</h2>
-Use the Ant introspection based mapping of attributes into Java datatypes,
+Use the Ant introspection-based mapping of attributes into Java datatypes,
 rather than implementing all your attributes as setFoo(String) and doing
-the mapping to Int, bool or file yourself. This saves work on your part,
+the mapping to int, boolean or File yourself. This saves work on your part,
 lets Java callers use you in a typesafe manner, and will let the Xdocs
 documentation generator work out what the parameters are.
 
 <p>
-The ant1.x tasks are very inconsistent regarding naming of attributes
--some tasks use <tt>source</tt>, others <tt>src</tt>.
-Here is a list of preferred attribute names.
-
-<table>
+The Ant 1.x tasks are very inconsistent regarding naming of attributes--some
+tasks use <tt>source</tt>, others <tt>src</tt>.
+Here is a list of preferred attribute names:
+<p>
+<table cellpadding="5">
 <tr>
 <td>
     failonerror
@@ -123,7 +116,7 @@ Here is a list of preferred attribute names.
     boolean to control whether failure to execute should throw a
     <tt>BuildException</tt> or just print an error.
     Parameter validation failures should always throw an error, regardless
-    of this flag
+    of this flag.
 </td>
 </tr>
 <tr>
@@ -158,6 +151,7 @@ Here is a list of preferred attribute names.
 </td>
 </tr>
 </table>
+<p>
 Yes, this is a very short list. Try and be vaguely consistent with the core
 tasks, at the very least.
 
@@ -165,27 +159,33 @@ tasks, at the very least.
 
 Try and make it possible for people to supply a classpath to your task,
 if you need external libraries, rather than make them add everything to
-the ANT_HOME\lib directory. This lets people keep the external libraries
-in their ant-based project, rather than force all users to make changes
-to their ant system configuration.
+the ANT_HOME/lib directory. This lets people keep the external libraries
+in their Ant-based project, rather than force all users to make changes
+to their Ant system configuration.
 
 <h2>Design for controlled re-use</h2>
 
-Keep member variables private. If read access by subclasses is required.
+Keep member variables private. If read access by subclasses is required,
 add accessor methods rather than change the accessiblity of the member.
-This enables subclasses to access the contents, yet
-still be decoupled from the actual implementation.
+This enables subclasses to access the contents, yet still be decoupled from the actual implementation.
 <p>
 
-The other common re-use mechanism in ant is for one task to create and
-configure another. This is fairly simple.
+The other common re-use mechanism in Ant is for one task to create and
+configure another. This is fairly simple. There are facilities available in
+Ant's API to have the tasks instantiated by their familiar names
+(&quot;java&quot;, &quot;exec&quot;, etc.). It is recommended that you
+<b>not</b> use this approach because of the entirely real possibility that a
+user has overridden the name to point to a different class entirely. Use direct
+constructor calls (or reflection) to instantiate your subtask. Since Ant 1.6.3,
+you can call <code>org.apache.tools.ant.Task#bindToOwner()</code>
+to &quot;mask&quot; a helper task as its parent.
 
 <h2>Do your own Dependency Checking</h2>
 
-Make has the edge over Ant in its integrated dependency checking: the
-command line apps make invokes dont need to do their own work. Ant tasks
+Make has the edge over Ant in its integrated dependency checking; the
+command line apps make invokes don't need to do their own work. Ant tasks
 do have to do their own dependency work, but if this can be done then
-it can be done well. A good dependency aware task can work out the dependencies
+it can be done well. A good dependency-aware task can work out the dependencies
 without explicit dependency information in the build file, and be smart
 enough to work out the real dependencies, perhaps through a bit of file parsing.
 The <tt>depends</tt> task is the best example of this. Some of the zip/jar
@@ -197,31 +197,29 @@ and deploy process.
 
 <h2>Support Java 1.2 through Java 1.5+</h2>
 
-Ant1.5 and lower was designed to support Java1.1. Ant1.6 and higher
-is designed to support Java1.2: to build on it, to run on it. Sometimes
-functionality of tasks have to degrade in that environment
-- this is usually due to library limitations;
-such behaviour change must always be noted in the documentation.
+Ant 1.5 and lower was designed to support Java 1.1. Ant 1.6 and higher
+is designed to support Java 1.2: to build on it, to run on it. Sometimes
+functionality of tasks have to degrade in that environment--usually due to
+library limitations; such behaviour change must always be noted in the
+documentation.
 <p>
-What is problematic is code which is dependent on Java1.3 features
--java.lang.reflect.Proxy, or Java1.4 features - java.io.nio for example.
-Be also aware of extra
-methods in older classes - like StringBuffer#append(StringBuffer).
-These can not be used directly by any code and still be able to compile
-and run on a Java 1.2 system.
-If a new method in an existing class
-is to be used, it must be used via reflection and the
-<tt>NoSuchMethodException</tt> handled somehow.
+What is problematic is code which is dependent on Java 1.3 features;
+e.g. java.lang.reflect.Proxy, or Java 1.4 features; e.g. java.io.nio.
+Be also aware of extra methods in older classes;
+e.g. StringBuffer#append(StringBuffer). These cannot be used directly
+by any code and still be able to compile and run on a Java 1.2 system.
+If a new method in an existing class is to be used, it must be used via
+reflection and the <tt>NoSuchMethodException</tt> handled somehow.
 <p>
-What if code simply does not work on Java1.2? It can happen. It will
+What if code simply does not work on Java 1.2? It can happen. It will
 probably be OK to have the task as an optional task, with compilation
-restricted to Java1.3 or later through build.xml modifications.
+restricted to Java 1.3 or later through build.xml modifications.
 Better still, use reflection to link to the classes at run time.
 <p>
 Java 1.4 adds a new optional change to the language itself, the
 <tt>assert</tt> keyword, which is only enabled if the compiler is told
 to compile 1.4 version source. Clearly with the 1.2 compatibility requirement,
-Ant tasks can not use this keyword. They also need to move away from
+Ant tasks cannot use this keyword. They also need to move away from
 using the JUnit <tt>assert()</tt> method and call <tt>assertTrue()</tt>
 instead.
 <p>
@@ -233,26 +231,25 @@ For historical reasons, <tt>addText(String text)</tt> is called to
 set the task's nested text, without any property expansion taking place.
 Call <tt>Project.replaceProperties()</tt> to do this manually.
  
-
 <h2>Refactor</h2>
 
 If the changes made to a task are making it too unwieldy, split it up
 into a cleaner design, refactor the code and submit not just feature
 creep but cleaner tasks. A common design pattern which tends to occur in
-the ant process is the adoption of the adapter pattern, in which a base
-class (say Javac or Rmi) starts off simple, then gets convoluted with
-support for multiple back ends -javac, jikes, jvc. A refactoring to
+the Ant process is the adoption of the adapter pattern, in which a base
+class (say Javac or Rmic) starts off simply, then gets convoluted with
+support for multiple back ends:  javac, jikes, jvc. A refactoring to
 split the programmable front end from the classes which provide the back
 end cleans up the design and makes it much easier to add new back ends.
 But to carry this off one needs to keep the interface and behaviour of
 the front end identical, and to be sure that no subclasses have been
-accessing data members directly -because these data members may not
-exist in the refactored design. Which is why having private data members
+accessing data members directly, because these data members may not
+exist in the refactored design. This is why having private data members
 is so important.
 
 <p>
 
-One thing we can not do is move existing tasks around or delete them.
+One thing we must not do is move existing tasks around or delete them.
 Remember that Ant has a Java API as well as an XML language. We don't want
 to break that API, or anything that subclasses existing Ant tasks. When
 refactoring, you need to leave facades where the original classes were. so
@@ -261,9 +258,9 @@ existing code does not break.
 <h2>Test</h2>
 
 Look in <tt>ant/src/testcases</tt> and you will find JUnit tests for the
-shipping ant tasks, to see how it is done and what is expected of a new
+shipping Ant tasks, to see how it is done and what is expected of a new
 task. Most of them are rudimentary, and no doubt you could do better for
-your task -feel free to do so!
+your task--feel free to do so!
 
 <p>
 
@@ -281,7 +278,6 @@ To test a single task, use the one shot <code>ant run-single-test
 -Dtestcase=${testname}</code> where <code>${testname}</code>
 is the name of your test class.
 
-
 <p>
 
 The test cases are also used by the committers to verify that changes
@@ -293,18 +289,18 @@ utterly essential to many users.
 
 <p>
 
-Remember also that Ant 1.x is designed to compile and run on Java1.2, so
+Remember also that Ant 1.x is designed to compile and run on Java 1.2, so
 you should test on Java 1.2 as well as any later version which you use.
 You ought to be able to download an old SDK from Sun for this purpose.
 <p>
 Finally, run a full <code>build test</code> before and after you start
-developing your project, to make sure you havent broken anything else by
+developing your project, to make sure you haven't broken anything else by
 accident.
 
 <h2>Document</h2>
 
 Without documentation, the task can't be used. So remember to provide a
-succint and clear html (soon, xml) page describing the task in a similar
+succinct and clear html (soon, xml) page describing the task in a similar
 style to that of existing tasks. It should include a list of attributes
 and elements, and at least one working example of the task. Many users
 cut and paste the examples into their build files as a starting point,
@@ -328,19 +324,18 @@ This is important.
 <p>
 
 The fairly laissez-faire license of Apache is not currently considered
-compabitible with
-either the GPL or the Lesser GPL of the Free Software Foundation -the
-Gnu project. These licenses have stricter terms, "copyleft", which are
-not in the Apache Software Foundation license.
+compatible with
+either the GPL or the Lesser GPL of the Free Software Foundation--the
+Gnu project. These licenses have stricter terms, &quot;copyleft&quot;,
+which are not in the Apache Software Foundation license.
 This permits people and organisations to build
-commercial and closed source applications atop the Apache libraries and
-source.
+commercial and closed source applications atop the Apache libraries and source.
 
 <p>
 
 Because the Gnu GPL license immediately extends to cover any larger
-application (or library, in the case of GLPL) into which it is
-incorporated, the Ant team can not incorporate any task based upon GPL
+application (or library, in the case of LGPL) into which it is
+incorporated, the Ant team cannot incorporate any task based upon GPL
 or LGPL source into the Ant codebase. You are free to submit it, but it
 will be politely and firmly rejected.
 
@@ -353,44 +348,39 @@ programs, as you are just executing them at this point, not linking to
 them.
 <p>
 Even if we cannot include your task into the Apache codebase, we can
-still point to where you host it -just submit a diff to
+still point to where you host it; just submit a diff to
 xdocs/external.html pointing to your task.
 <p>
-If your task links directly to proprietary code, we have a differnt
+If your task links directly to proprietary code, we have a different
 problem: it is really hard to build the tasks. Please use reflection.
-
 
 <h3>Don't re-invent the wheel</h3>
 
 We've all done it: written and submitted a task only to discover it
 was already implemented in a small corner of another task, or it has
 been submitted by someone else and not committed. You can avoid this
-by being aware of what is in the latest CVS tree -keep getting the daily
+by being aware of what is in the latest CVS tree; keep getting the daily
 source updates, look at manual changes and subscribe to the dev
 mailing list.
 
 <p>
 
 If you are thinking of writing a task, posting a note on your thoughts
-to the list can be informative -you well get other peoples insight and
-maybe some half written task to do the basics, all without writing a
+to the list can be informative--you will get other peoples' insights and
+maybe some half-written task to do the basics, all without writing a
 line of code.
-
 
 <h2>Submitting to Ant</h2>
 
-The process for submitting an Ant task is documented on the
-<a href="http://jakarta.apache.org/site/guidelines.html">
-jakarta web site</a>.
-The basic mechanism is to mail it to the dev mailing list.
-It helps to be on this list, as you will see other submissions, and
-any debate about your own submission.
+The basic mechanism for submitting an Ant task is to mail it to the
+dev mailing list. It helps to be on this list, as you will see other
+submissions, and any debate about your own submission.
 <p>
-You may create your patch file using either of the following approaches.
-The committers recommend you to take the first approach.
+You may create your patch file using either of the following approaches
+(the committers recommend the first):
 <p>
 <ul>
-<li> <h3>Approach 1 - The Ant Way</h3>
+<li><h3>Approach 1 - The Ant Way</h3>
 <p>
 Use Ant to generate a patch file to Ant:
 <pre class="code">
@@ -432,8 +422,7 @@ into separate tasks.
 <p>
 
 We also like submissions to be added to
-<a href="http://issues.apache.org/bugzilla/">bugzilla</a>, so that they
-dont get lost. Please submit them by first filing the report with a
+<a href="http://issues.apache.org/bugzilla/">bugzilla</a>, so that they dont get lost. Please submit them by first filing the report with a
 meaningful name, then adding files as attachments. Use CVS diff files
 please!
 <p>
@@ -447,18 +436,18 @@ to be neglected.
 <h2>Checklists</h2>
 
 These are the things you should verify before submitting patches and new
-tasks. Things don't have to be perfect, it may take a couple of
+tasks. Things don't have to be perfect; it may take a couple of
 iterations before a patch or submission is committed, and these items
 can be addressed in the process. But by the time the code is committed,
 everything including the documentation and some test cases will have
-been done, so by getting them out the way up front can save time.
+been done, so getting them out the way up front can save time.
 The committers look more favourably on patches and submissions with test
 cases, while documentation helps sell the reason for a task.
 
 <h3>Checklist before submitting a patch</h3>
 <ul>
 <li>Added code complies with style guidelines
-<li>Code compiles and runs on Java1.2
+<li>Code compiles and runs on Java 1.2
 <li>New member variables are private, and provide public accessor methods
 	if access is actually needed.
 <li>Existing test cases succeed.
@@ -477,7 +466,7 @@ subject.
 <li>Java file begins with Apache copyright and license statement.
 <li>Task does not depend on GPL or LGPL code.
 <li>Source code complies with style guidelines
-<li>Code compiles and runs on Java1.2
+<li>Code compiles and runs on Java 1.2
 <li>Member variables are private, and provide public accessor methods
 	if access is actually needed.
 <li><i>Maybe</i> Task has failonerror attribute to control failure behaviour
@@ -495,8 +484,7 @@ optionaltasklist.html to link to the new task page
 test and patches zipped up to escape the HTML filter.
 </ul>
 <hr>
-<p align="center">Copyright &copy; 2001-2003,2005 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2003, 2005 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body></html>
-
