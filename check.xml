@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 <project default="checkstyle" name="CheckAnt">
 
+  <description>
+    Check Ants codebase against certain code styleguid rules using
+    checkstyle and simian.
+
+    Checkstyle uses an abstract syntax tree (AST) for doing checks
+    against java sources. It is available at http://checkstyle.sourceforge.net/
+    under GPL 2.1 license.
+
+    "Simian (Similarity Analyser) identifies duplication in Java, C#, C,
+    CPP, COBOL, JSP, HTML source code and even plain text files."
+    It is available at http://www.redhillconsulting.com.au/products/simian/
+    and is for free use in open source projects.
+
+    See external task page and homepages for more information.
+  </description>
+
   <import file="build.xml"/>
   <property name="config.dir" value="${etc.dir}/checkstyle"/>
 
@@ -17,10 +33,10 @@
   <property name="javadoc.scope" value="public"/>
 
   <taskdef resource="simiantask.properties"/>
+  <taskdef resource="checkstyletask.properties"/>
 
-  <target name="checkstyle">
+  <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/chestyle-config">
     <mkdir dir="${checkstyle.reportdir}"/>
-    <taskdef resource="checkstyletask.properties"/>
     <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
       <formatter type="xml" toFile="${checkstyle.raw}"/>
       <fileset dir="${java.dir}">
@@ -31,7 +47,7 @@
     </checkstyle>
   </target>
 
-  <target name="htmlreport">
+  <target name="htmlreport" description="--> generates a html checkstyle report">
     <mkdir dir="${checkstyle.reportdir}"/>
     <style in="${checkstyle.raw}" style="${stylesheet.html}"
            out="${checkstyle.reportdir}/html/output.txt">
@@ -39,30 +55,29 @@
     </style>
   </target>
 
-  <target name="textreport">
+  <target name="textreport" description="--> generates a text checkstyle report">
     <style in="${checkstyle.raw}" style="${stylesheet.text}"
            out="${checkstyle.reportdir}/report.txt">
     </style>
   </target>
 
-  <target name="xdocreport">
+  <target name="xdocreport" description="--> generates a xdoc checkstyle report">
     <style in="${checkstyle.raw}" style="${stylesheet.xdoc}"
            out="${checkstyle.reportdir}/xdocs/index.xml">
       <param name="basedir" expression="${checkstyle.basedir}"/>
     </style>
   </target>
 
-  <target name="dumptext" depends="checkstyle, textreport">
+  <target name="dumptext" depends="checkstyle, textreport" description="--> runs the checkstyle and displays result as text">
     <concat>
       <filelist dir="${checkstyle.reportdir}" files="report.txt"/>
     </concat>
   </target>
 
-  <target name="simiancheck">
+  <target name="simiancheck" description="--> runs the check for duplicates">
     <simian>
         <fileset dir="${java.dir}" />
     </simian>
   </target>
 
 </project>
-
