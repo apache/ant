@@ -18,10 +18,12 @@
 package org.apache.tools.ant.taskdefs.optional.javacc;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.zip.ZipFile;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -307,13 +309,13 @@ public class JavaCC extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        cmdl.setClassname(JavaCC.getMainClass(javaccHome,
-                                              JavaCC.TASKDEF_TYPE_JAVACC));
-
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
         classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
         classpath.addJavaRuntime();
+
+        cmdl.setClassname(JavaCC.getMainClass(classpath,
+                                              JavaCC.TASKDEF_TYPE_JAVACC));
 
         final Commandline.Argument arg = cmdl.createVmArgument();
         arg.setValue("-mx140M");
@@ -347,15 +349,33 @@ public class JavaCC extends Task {
     protected static String getMainClass(File home, int type)
         throws BuildException {
 
-        int majorVersion = getMajorVersionNumber(home);
+        Path p = new Path(null);
+        p.createPathElement().setLocation(getArchiveFile(home));
+        p.addJavaRuntime();
+        return getMainClass(p, type);
+    }
+
+    /**
+     * Helper method to retrieve main class which is different from versions.
+     * @param path classpath to search in.
+     * @param type the taskdef.
+     * @throws BuildException thrown if the home directory is invalid
+     * or if the archive could not be found despite attempts to do so.
+     * @return the main class for the taskdef.
+     * @since Ant 1.7
+     */
+    protected static String getMainClass(Path path, int type)
+        throws BuildException {
         String packagePrefix = null;
         String mainClass = null;
 
-        switch (majorVersion) {
-        case 1:
-        case 2:
+        AntClassLoader l = new AntClassLoader();
+        l.setClassPath(path.concatSystemClasspath("ignore"));
+        String javaccClass = COM_PACKAGE + COM_JAVACC_CLASS;
+        InputStream is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                               + ".class");
+        if (is != null) {
             packagePrefix = COM_PACKAGE;
-
             switch (type) {
             case TASKDEF_TYPE_JAVACC:
                 mainClass = COM_JAVACC_CLASS;
@@ -372,58 +392,47 @@ public class JavaCC extends Task {
 
                 break;
             }
-
-            break;
-
-        case 3:
-            /*
-             * This is where the fun starts, JavaCC 3.0 uses
-             * org.netbeans.javacc, 3.1 uses org.javacc - I wonder
-             * which version is going to use net.java.javacc.
-             *
-             * Look into to the archive to pick up the best
-             * package.
-             */
-            ZipFile zf = null;
-            try {
-                zf = new ZipFile(getArchiveFile(home));
-                if (zf.getEntry(ORG_PACKAGE_3_0.replace('.', '/')) != null) {
+        } else {
+            javaccClass = ORG_PACKAGE_3_1 + ORG_JAVACC_CLASS;
+            is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                       + ".class");
+            if (is != null) {
+                packagePrefix = ORG_PACKAGE_3_1;
+            } else {
+                javaccClass = ORG_PACKAGE_3_0 + ORG_JAVACC_CLASS;
+                is = l.getResourceAsStream(javaccClass.replace('.', '/')
+                                           + ".class");
+                if (is != null) {
                     packagePrefix = ORG_PACKAGE_3_0;
-                } else {
-                    packagePrefix = ORG_PACKAGE_3_1;
-                }
-            } catch (IOException e) {
-                throw new BuildException("Error reading javacc.jar", e);
-            } finally {
-                if (zf != null) {
-                    try {
-                        zf.close();
-                    } catch (IOException e) {
-                        throw new BuildException(e);
-                    }
                 }
             }
 
-            switch (type) {
-            case TASKDEF_TYPE_JAVACC:
-                mainClass = ORG_JAVACC_CLASS;
-
+            if (is != null) {
+                switch (type) {
+                case TASKDEF_TYPE_JAVACC:
+                    mainClass = ORG_JAVACC_CLASS;
+                    
                 break;
+                
+                case TASKDEF_TYPE_JJTREE:
+                    mainClass = ORG_JJTREE_CLASS;
+                    
+                    break;
 
-            case TASKDEF_TYPE_JJTREE:
-                mainClass = ORG_JJTREE_CLASS;
-
-                break;
-
-            case TASKDEF_TYPE_JJDOC:
-                mainClass = ORG_JJDOC_CLASS;
-
-                break;
+                case TASKDEF_TYPE_JJDOC:
+                    mainClass = ORG_JJDOC_CLASS;
+                    
+                    break;
+                }
             }
-
-            break;
         }
 
+        if (packagePrefix == null) {
+            throw new BuildException("failed to load JavaCC");
+        }
+        if (mainClass == null) {
+            throw new BuildException("unknown task type " + type);
+        }
         return packagePrefix + mainClass;
     }
 

@@ -235,13 +235,13 @@ public class JJTree extends Task {
 
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        cmdl.setClassname(JavaCC.getMainClass(javaccHome,
-                                              JavaCC.TASKDEF_TYPE_JJTREE));
-
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
         classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
         classpath.addJavaRuntime();
+
+        cmdl.setClassname(JavaCC.getMainClass(classpath,
+                                              JavaCC.TASKDEF_TYPE_JJTREE));
 
         final Commandline.Argument arg = cmdl.createVmArgument();
         arg.setValue("-mx140M");
