@@ -17,7 +17,7 @@ import org.apache.avalon.framework.component.Component;
 public interface ConverterRegistry
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.converter.ConverterRegistry";
+    String ROLE = ConverterRegistry.class.getName();
 
     /**
      * Retrieve name of ConverterInfo that describes converter that converts

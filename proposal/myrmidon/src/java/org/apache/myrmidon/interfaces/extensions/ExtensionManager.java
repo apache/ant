@@ -19,5 +19,5 @@ import org.apache.avalon.framework.component.Component;
 public interface ExtensionManager
     extends PackageRepository, Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.extensions.ExtensionManager";
+    String ROLE = ExtensionManager.class.getName();
 }

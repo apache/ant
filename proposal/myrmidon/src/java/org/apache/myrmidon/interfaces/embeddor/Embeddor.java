@@ -24,7 +24,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
 public interface Embeddor
     extends Component, Parameterizable, Initializable, Startable, Disposable
 {
-    String ROLE = "org.apache.myrmidon.interfaces.embeddor.Embeddor";
+    String ROLE = Embeddor.class.getName();
 
     /**
      * Create a project.

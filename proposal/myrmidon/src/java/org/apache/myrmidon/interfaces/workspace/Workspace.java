@@ -20,7 +20,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public interface Workspace
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.workspace.Workspace";
+    String ROLE = Workspace.class.getName();
 
     /**
      * Add a listener to project events.

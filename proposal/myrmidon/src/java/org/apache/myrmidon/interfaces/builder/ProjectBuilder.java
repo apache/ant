@@ -19,7 +19,7 @@ import org.apache.myrmidon.interfaces.model.Project;
 public interface ProjectBuilder
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.builder.ProjectBuilder";
+    String ROLE = ProjectBuilder.class.getName();
 
     /**
      * build a project from source.

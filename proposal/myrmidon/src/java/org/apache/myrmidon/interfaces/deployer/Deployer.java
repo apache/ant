@@ -20,7 +20,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 public interface Deployer
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.deployer.Deployer";
+    String ROLE = Deployer.class.getName();
 
     /**
      * Returns the deployer for the type libraries contained in a ClassLoader,

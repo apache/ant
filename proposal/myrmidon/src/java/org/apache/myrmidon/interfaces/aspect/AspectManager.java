@@ -21,7 +21,7 @@ import org.apache.myrmidon.aspects.AspectHandler;
 public interface AspectManager
     extends Component, AspectHandler
 {
-    String ROLE = "org.apache.myrmidon.interfaces.aspect.AspectManager";
+    String ROLE = AspectManager.class.getName();
 
     String[] getNames();
 

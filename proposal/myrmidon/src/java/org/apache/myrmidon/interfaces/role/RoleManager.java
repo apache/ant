@@ -21,7 +21,7 @@ import org.apache.avalon.framework.component.Component;
 public interface RoleManager
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.role.RoleManager";
+    String ROLE = RoleManager.class.getName();
 
     /**
      * Find Role name based on shorthand name.

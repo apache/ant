@@ -18,5 +18,5 @@ import org.apache.myrmidon.converter.Converter;
 public interface MasterConverter
     extends Component, Converter
 {
-    String ROLE = "org.apache.myrmidon.interfaces.converter.MasterConverter";
+    String ROLE = MasterConverter.class.getName();
 }

@@ -17,7 +17,7 @@ import org.apache.avalon.framework.component.Component;
 public interface TypeManager
     extends Component
 {
-    String ROLE = "org.apache.myrmidon.interfaces.type.TypeManager";
+    String ROLE = TypeManager.class.getName();
 
     /**
      * Registers a new type.
