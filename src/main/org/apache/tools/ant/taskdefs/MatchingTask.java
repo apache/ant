@@ -180,6 +180,8 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * Returns the directory scanner needed to access the files to process.
+     * @param baseDir the base directory to use with the fileset
+     * @return a directory scanner
      */
     protected DirectoryScanner getDirectoryScanner(File baseDir) {
         fileset.setDir(baseDir);
@@ -430,7 +432,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * Accessor for the implicit fileset.
-     *
+     * @return the implicit fileset
      * @since Ant 1.5.2
      */
     protected final FileSet getImplicitFileSet() {

@@ -79,6 +79,7 @@ public class Manifest {
 
     /** The End-Of-Line marker in manifests */
     public static final String EOL = "\r\n";
+    /** Error for attributes */
     public static final String ERROR_FROM_FORBIDDEN = "Manifest attributes should not start "
                         + "with \"" + ATTRIBUTE_FROM + "\" in \"";
 
