@@ -142,10 +142,15 @@ public class PropertyHelper {
      * If all helpers return false, the property will be saved in
      * the default properties table by setProperty.
      *
+     * @param ns   The namespace that the property is in (currently
+     *             not used.
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
+     * @param inherited True if this property is inherited (an [sub]ant[call] property).
+     * @param user      True if this property is a user property.
+     * @param isNew     True is this is a new property.
      * @return true if this helper has stored the property, false if it
      *    couldn't. Each helper should delegate to the next one (unless it
      *    has a good reason not to).
@@ -169,8 +174,9 @@ public class PropertyHelper {
     /** Get a property. If all hooks return null, the default
      * tables will be used.
      *
-     * @param ns namespace of the sought property
-     * @param name name of the sought property
+     * @param ns namespace of the sought property.
+     * @param name name of the sought property.
+     * @param user True if this is a user property.
      * @return The property, if returned by a hook, or null if none.
      */
     public Object getPropertyHook(String ns, String name, boolean user) {
@@ -229,6 +235,7 @@ public class PropertyHelper {
      * Replaces <code>${xxx}</code> style constructions in the given value
      * with the string value of the corresponding data types.
      *
+     * @param ns    The namespace for the property.
      * @param value The string to be scanned for property references.
      *              May be <code>null</code>, in which case this
      *              method returns immediately with no effect.
@@ -294,6 +301,11 @@ public class PropertyHelper {
     /** Default implementation of setProperty. Will be called from Project.
      *  This is the original 1.5 implementation, with calls to the hook
      *  added.
+     *  @param ns      The namespace for the property (currently not used).
+     *  @param name    The name of the property.
+     *  @param value   The value to set the property to.
+     *  @param verbose If this is true output extra log messages.
+     *  @return true if the property is set.
      */
     public synchronized boolean setProperty(String ns, String name,
                                             Object value, boolean verbose) {
@@ -329,6 +341,7 @@ public class PropertyHelper {
      * exists already, a message is logged and the method returns with
      * no other effect.
      *
+     * @param ns   The namespace for the property (currently not used).
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
@@ -358,6 +371,7 @@ public class PropertyHelper {
     /**
      * Sets a user property, which cannot be overwritten by
      * set/unset property calls. Any previous value is overwritten.
+     * @param ns   The namespace for the property (currently not used).
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
@@ -377,11 +391,12 @@ public class PropertyHelper {
     }
 
     /**
-     * Sets a user property, which cannot be overwritten by set/unset
+     * Sets an inherited user property, which cannot be overwritten by set/unset
      * property calls. Any previous value is overwritten. Also marks
      * these properties as properties that have not come from the
      * command line.
      *
+     * @param ns   The namespace for the property (currently not used).
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
@@ -408,6 +423,7 @@ public class PropertyHelper {
      * Returns the value of a property, if it is set.  You can override
      * this method in order to plug your own storage.
      *
+     * @param ns   The namespace for the property (currently not used).
      * @param name The name of the property.
      *             May be <code>null</code>, in which case
      *             the return value is also <code>null</code>.
@@ -429,6 +445,7 @@ public class PropertyHelper {
     /**
      * Returns the value of a user property, if it is set.
      *
+     * @param ns   The namespace for the property (currently not used).
      * @param name The name of the property.
      *             May be <code>null</code>, in which case
      *             the return value is also <code>null</code>.
