@@ -130,19 +130,18 @@
         </table>
       </subsection>
 
-      <subsection name="Forte module for Ant">
+      <subsection name="NetBeans / Forte for Java">
 
-        <p>A module that integrates Ant into the Forte IDE.</p>
+        <p>A module that integrates Ant into the NetBeans or Forte for Java IDEs.</p>
 
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>any version of Ant prior to
-          and including Ant 1.3</td>
+            <td>bundles Ant 1.3</td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://ant.netbeans.org">http://ant.netbeans.org</a></td>
+            <td><a href="http://ant.netbeans.org/">http://ant.netbeans.org/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
