@@ -62,7 +62,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * JUnit Testcases for ConcatReader
- * @author Jan Matèrne
+ * @author Jan Matï¿½rne
  */
 public class ConcatFilterTest extends BuildFileTest {
 
@@ -117,7 +117,7 @@ public class ConcatFilterTest extends BuildFileTest {
     public void testFilterReaderNoArgs() throws IOException {
         executeTarget("testFilterReaderNoArgs");
         File expected = getProject().resolveFile("input/concatfilter.test");
-        File result = getProject().resolveFile("result/concat.filterReaderNoArgs.test");
+        File result = getProject().resolveFile("result/concat.FilterReaderNoArgs.test");
         assertTrue("testFilterReaderNoArgs: Result not like expected", fu.contentEquals(expected, result));
     }
 
