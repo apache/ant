@@ -69,6 +69,7 @@ public class Delete extends MatchingTask {
     private int verbosity = Project.MSG_VERBOSE;
     private boolean quiet = false;
     private boolean failonerror = true;
+    private boolean deleteOnExit = false;
 
     /**
      * Set the name of a single file to be removed.
@@ -124,6 +125,16 @@ public class Delete extends MatchingTask {
      */
      public void setFailOnError(boolean failonerror) {
          this.failonerror = failonerror;
+     }
+
+    /**
+     * If true, on failure to delete, note the error and set
+     * the deleteonexit flag, and continue
+     *
+     * @param deleteOnExit true or false
+     */
+     public void setDeleteOnExit(boolean deleteOnExit) {
+         this.deleteOnExit = deleteOnExit;
      }
 
 
@@ -540,9 +551,17 @@ public class Delete extends MatchingTask {
             }
             try {
                 Thread.sleep(DELETE_RETRY_SLEEP_MILLIS);
-                return f.delete();
             } catch (InterruptedException ex) {
-                return f.delete();
+                // Ignore Exception
+            }
+            if (!f.delete()) {
+                if (deleteOnExit) {
+                    int level = quiet ? Project.MSG_VERBOSE : Project.MSG_INFO;
+                    log("Failed to delete " + f + ", calling deleteOnExit" + f, level);
+                    f.deleteOnExit();
+                    return true;
+                }
+                return false;
             }
         }
         return true;
