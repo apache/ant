@@ -8,15 +8,15 @@
 package org.apache.myrmidon.framework.exec.launchers;
 
 import java.io.IOException;
-import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.avalon.excalibur.io.FileUtil;
 
 /**
  * A command launcher that uses an auxiliary script to launch commands in
- * directories other than the current working directory.
+ * directories other than the current working directory. The script specified
+ * in the constructor is invoked with the directory passed as second argument
+ * and the actual command as subsequent arguments.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
@@ -25,11 +25,33 @@ import org.apache.avalon.excalibur.io.FileUtil;
 public class ScriptCommandLauncher
     implements CommandLauncher
 {
-    private String m_script;
+    private String[] m_script;
 
+    /**
+     * Create a command launcher whos script is a single
+     * command. An example would be "bin/antRun.bat".
+     */
     public ScriptCommandLauncher( final String script )
     {
+        this( new String[]{script} );
+    }
+
+    /**
+     * Create a command launcher whos script takes multiple
+     * commands. Examples would be "perl bin/antRun.pl",
+     * "python bin/antRun.py", ""tcl8 bin/antRun.tcl" etc
+     */
+    public ScriptCommandLauncher( final String[] script )
+    {
         m_script = script;
+        if( null == m_script )
+        {
+            throw new NullPointerException( "script" );
+        }
+        if( 0 == m_script.length )
+        {
+            throw new IllegalArgumentException( "script" );
+        }
     }
 
     /**
@@ -39,13 +61,13 @@ public class ScriptCommandLauncher
     public Process exec( final ExecMetaData metaData )
         throws IOException, TaskException
     {
-        final File homeDir = ExecUtil.getAntHomeDirectory();
-        final String script = FileUtil.resolveFile( homeDir, m_script ).toString();
-
         // Build the command
-        final String[] prefix = new String[ 2 ];
-        prefix[ 0 ] = script;
-        prefix[ 1 ] = metaData.getWorkingDirectory().getCanonicalPath();
+        final String[] prefix = new String[ m_script.length + 1 ];
+        for( int i = 0; i < m_script.length; i++ )
+        {
+            prefix[ i ] = m_script[ i ];
+        }
+        prefix[ m_script.length ] = metaData.getWorkingDirectory().getCanonicalPath();
 
         final ExecMetaData newMetaData = ExecUtil.prepend( metaData, prefix );
         return Runtime.getRuntime().
