@@ -675,7 +675,7 @@ public class Javadoc extends Task {
             exe.setCommandline(cmd.getCommandline());
             exe.execute();
         } catch (IOException e) {
-            throw new BuildException("Execute failed: " + e, e, location);
+            throw new BuildException("Javadoc failed: " + e, e, location);
         } finally {
             out.logFlush();
             err.logFlush();

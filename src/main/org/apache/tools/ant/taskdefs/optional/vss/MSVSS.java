@@ -55,7 +55,9 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.Exec;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.Commandline;
 
 import java.io.File;
 
@@ -74,7 +76,7 @@ import java.io.File;
  * @author Craig Cottingham
  * @author Andrew Everitt
  */
-public abstract class MSVSS extends Exec {
+public abstract class MSVSS extends Task {
 
     private String m_SSDir = "";
     private String m_vssLogin = null;
@@ -116,11 +118,11 @@ public abstract class MSVSS extends Exec {
     /**
      * @return the appropriate login command if the 'login' attribute was specified, otherwise an empty string
      */
-    public String getLoginCommand() {
+    public void getLoginCommand(Commandline cmd) {
         if ( m_vssLogin == null ) {
-            return "";
+            return;
         } else {
-            return new String(" " + FLAG_LOGIN + m_vssLogin);
+            cmd.createArgument().setValue(FLAG_LOGIN + m_vssLogin);
         }
     }
 
@@ -144,9 +146,23 @@ public abstract class MSVSS extends Exec {
      * @return m_vssPath
      */
     public String getVsspath() {
-        return new String(" " + m_vssPath);
+        return new String(m_vssPath);
     }
 
+
+    protected int run(Commandline cmd) {
+        try {
+            Execute exe = new Execute(new LogStreamHandler(this, 
+                                                           Project.MSG_INFO,
+                                                           Project.MSG_WARN));
+            exe.setAntRun(project);
+            exe.setWorkingDirectory(project.getBaseDir());
+            exe.setCommandline(cmd.getCommandline());
+            return exe.execute();
+        } catch (java.io.IOException e) {
+            throw new BuildException(e, location);
+        }
+    }
 
     /**
      * Constant for the thing to execute

@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
 
 import java.io.File;
 
@@ -130,13 +132,13 @@ public class MSVSSGET extends MSVSS {
      * to execute the command line.
      */
     public void execute() throws BuildException {
-        StringBuffer commandLine = new StringBuffer();
+        Commandline commandLine = new Commandline();
         int result = 0;
 
         // first off, make sure that we've got a command and a vssdir ...
         if (getVsspath() == null) {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException(msg);
+            throw new BuildException(msg, location);
         }
 
         // now look for illegal combinations of things ...
@@ -144,35 +146,36 @@ public class MSVSSGET extends MSVSS {
         // build the command line from what we got the format is
         // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
         // as specified in the SS.EXE help
-        commandLine.append(getSSCommand()).append(' ').append(COMMAND_GET);
+        commandLine.setExecutable(getSSCommand());
+        commandLine.createArgument().setValue(COMMAND_GET);
 
         // VSS items
-        commandLine.append(getVsspath());
+        commandLine.createArgument().setValue(getVsspath());
         // -GL
-        commandLine.append(getLocalpathCommand());
+        getLocalpathCommand(commandLine);
         // -I-
-        commandLine.append(" -I-");  // ignore all errors
+        commandLine.createArgument().setValue("-I-");  // ignore all errors
         // -R
-        commandLine.append(getRecursiveCommand());
+        getRecursiveCommand(commandLine);
         // -V
-        commandLine.append(getVersionCommand());
+        getVersionCommand(commandLine);
         // -W
-        commandLine.append(getWritableCommand());
+        getWritableCommand(commandLine);
         // -Y
-        commandLine.append(getLoginCommand());
+        getLoginCommand(commandLine);
 
-        result = run(commandLine.toString());
+        result = run(commandLine);
         if ( result != 0 ) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg);
+            throw new BuildException(msg, location);
         }
     }
 
     /**
      * Set the local path.
      */
-    public void setLocalpath(String localPath) {
-        m_LocalPath = project.translatePath(localPath);
+    public void setLocalpath(Path localPath) {
+        m_LocalPath = localPath.toString();
     }
 
     /**
@@ -180,9 +183,9 @@ public class MSVSSGET extends MSVSS {
      * <p>
      * The localpath is created if it didn't exist
      */
-    public String getLocalpathCommand() {
+    public void getLocalpathCommand(Commandline cmd) {
         if (m_LocalPath == null) {
-            return "";
+            return;
         } else {
             // make sure m_LocalDir exists, create it if it doesn't
             File dir = project.resolveFile(m_LocalPath);
@@ -191,82 +194,82 @@ public class MSVSSGET extends MSVSS {
                 if (done == false) {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
                         "succesful for an unknown reason";
-                    throw new BuildException(msg);
+                    throw new BuildException(msg, location);
                 }
                 project.log("Created dir: " + dir.getAbsolutePath());
             }
 
-            return new String(" " + FLAG_OVERRIDE_WORKING_DIR + m_LocalPath);
+            cmd.createArgument().setValue(FLAG_OVERRIDE_WORKING_DIR + m_LocalPath);
         }
     }
 
     /**
      * Set behaviour recursive or non-recursive
      */
-    public void setRecursive(String recursive) {
-        m_Recursive = Project.toBoolean(recursive);
+    public void setRecursive(boolean recursive) {
+        m_Recursive = recursive;
     }
 
     /**
      * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
      */
-    public String getRecursiveCommand() {
+    public void getRecursiveCommand(Commandline cmd) {
         if ( !m_Recursive ) {
-            return "";
+            return;
         } else {
-            return new String(" " + FLAG_RECURSION);
+            cmd.createArgument().setValue(FLAG_RECURSION);
         }
     }
 
-	/**
+    /**
      * Set behaviour, used in get command to make files that are 'got' writable
-	 */
-    public final void setWritable(String argWritable) {
-        m_Writable = Project.toBoolean(argWritable);
-	}
+     */
+    public final void setWritable(boolean argWritable) {
+        m_Writable = argWritable;
+    }
 
     /**
      * @return the 'make writable' command if the attribute was 'true', otherwise an empty string
      */
-    public String getWritableCommand() {
+    public void getWritableCommand(Commandline cmd) {
         if ( !m_Writable ) {
-            return "";
+            return;
         } else {
-            return new String(" " + FLAG_WRITABLE);
+            cmd.createArgument().setValue(FLAG_WRITABLE);
         }
     }
 
-	/**
+    /**
      * Set the stored version string
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
      * happens if a ant variable is used e.g. version="${ver_server}" when ver_server
      * has not been defined to ant!
-	 */
+     */
     public void setVersion(String version) {
         if (version.equals("") || version.equals("null") ) {
             m_Version = null;
         } else {
             m_Version = version;
-		}
-	}
+        }
+    }
 
-	/**
+    /**
      * Set the stored date string
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
      * happens if a ant variable is used e.g. date="${date}" when date
      * has not been defined to ant!
-	 */
+     */
     public void setDate(String date) {
         if (date.equals("") || date.equals("null") ) {
             m_Date = null;
         } else {
             m_Date = date;
-		}
-	}
+        }
+    }
 
     /**
      * Set the labeled version to operate on in SourceSafe
@@ -288,21 +291,15 @@ public class MSVSSGET extends MSVSS {
      * Simple order of priority. Returns the first specified of version, date, label
      * If none of these was specified returns ""
      */
-    public String getVersionCommand() {
+    public void getVersionCommand(Commandline cmd) {
 
         if ( m_Version != null) {
-            return new String(" " + FLAG_VERSION + m_Version);
+            cmd.createArgument().setValue(FLAG_VERSION + m_Version);
+        } else if ( m_Date != null) {
+            cmd.createArgument().setValue(FLAG_VERSION_DATE + m_Date);
+        } else if (m_Label != null) {
+            cmd.createArgument().setValue(FLAG_VERSION_LABEL + m_Label);
         }
-
-        if ( m_Date != null) {
-            return new String(" " + FLAG_VERSION_DATE + m_Date);
-        }
-
-        if (m_Label != null) {
-            return new String(" " + FLAG_VERSION_LABEL + m_Label);
-        }
-
-        return "";
     }
 
 }
