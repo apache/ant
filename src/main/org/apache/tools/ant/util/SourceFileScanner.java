@@ -60,6 +60,27 @@ public class SourceFileScanner implements ResourceFactory {
      */
     public String[] restrict(String[] files, File srcDir, File destDir,
                              FileNameMapper mapper) {
+        return restrict(files, srcDir, destDir, mapper,
+                        fileUtils.getFileTimestampGranularity());
+    }
+
+    /**
+     * Restrict the given set of files to those that are newer than
+     * their corresponding target files.
+     *
+     * @param files   the original set of files
+     * @param srcDir  all files are relative to this directory
+     * @param destDir target files live here. if null file names
+     *                returned by the mapper are assumed to be absolute.
+     * @param mapper  knows how to construct a target file names from
+     *                source file names.
+     * @param granularity The number of milliseconds leeway to give
+     *                    before deciding a target is out of date.
+     *
+     * @since Ant 1.6.2
+     */
+    public String[] restrict(String[] files, File srcDir, File destDir,
+                             FileNameMapper mapper, long granularity) {
         // record destdir for later use in getResource
         this.destDir = destDir;
         Vector v = new Vector();
@@ -75,7 +96,7 @@ public class SourceFileScanner implements ResourceFactory {
         // respect to the target
         Resource[] outofdate =
             ResourceUtils.selectOutOfDateSources(task, sourceresources,
-                                                 mapper, this);
+                                                 mapper, this, granularity);
         String[] result = new String[outofdate.length];
         for (int counter = 0; counter < outofdate.length; counter++) {
             result[counter] = outofdate[counter].getName();
@@ -90,7 +111,20 @@ public class SourceFileScanner implements ResourceFactory {
      */
     public File[] restrictAsFiles(String[] files, File srcDir, File destDir,
                                   FileNameMapper mapper) {
-        String[] res = restrict(files, srcDir, destDir, mapper);
+        return restrictAsFiles(files, srcDir, destDir, mapper,
+                               fileUtils.getFileTimestampGranularity());
+    }
+
+    /**
+     * Convinience layer on top of restrict that returns the source
+     * files as File objects (containing absolute paths if srcDir is
+     * absolute).
+     *
+     * @since Ant 1.6.2
+     */
+    public File[] restrictAsFiles(String[] files, File srcDir, File destDir,
+                                  FileNameMapper mapper, long granularity) {
+        String[] res = restrict(files, srcDir, destDir, mapper, granularity);
         File[] result = new File[res.length];
         for (int i = 0; i < res.length; i++) {
             result[i] = new File(srcDir, res[i]);
