@@ -682,7 +682,7 @@ public class JUnitTask extends Task {
         } catch (IOException e) {
             throw new BuildException("Process fork failed.", e, getLocation());
         } finally {
-            if (watchdog.killedProcess()) {
+            if (watchdog != null && watchdog.killedProcess()) {
                 logTimeout(feArray, test);
             }
 
