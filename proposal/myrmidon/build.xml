@@ -200,7 +200,7 @@ Legal:
             <classpath location="${custom-tasks-dir}"/>
         </taskdef>
 
-        <taskdef name="antlib-descriptor" 
+        <taskdef name="antlib-descriptor"
                  classname="org.apache.myrmidon.build.AntlibDescriptorTask">
             <classpath>
                 <pathelement location="${custom-tasks-dir}"/>
@@ -567,7 +567,7 @@ Legal:
             tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
 
         <!-- Run all the tests -->
-        <junit printsummary="on" fork="false">
+        <junit printsummary="on" fork="true">
             <formatter type="brief" usefile="false"/>
             <classpath location="${build.classes}"/>
             <classpath>
