@@ -79,6 +79,9 @@ public class TaskAdapter extends Task {
             if(setProjectM != null) {
                 setProjectM.invoke(proxy, new Object[] {project});
             }
+        } catch (NoSuchMethodException e) {
+            // ignore this if the class being used as a task does not have
+            // a set project method.
         } catch( Exception ex ) {
             log("Error setting project in " + proxy.getClass(), 
                 Project.MSG_ERR);
