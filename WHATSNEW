@@ -19,6 +19,9 @@ Other changes:
   given. If the doclet does not accept the -d flag then omit the destdir
   attribute.
 
+* <cab> can work on non-Windows platforms with the help of libcabinet. 
+  See http://trill.cis.fordham.edu/~barbacha/cabinet_library/.
+
 Fixed bugs:
 -----------
 
