@@ -693,11 +693,16 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 InnerClassFilenameFilter flt = new InnerClassFilenameFilter(entryFile.getName());
                 File entryDir = entryFile.getParentFile();
                 String[] innerfiles = entryDir.list(flt);
-                for (int i=0, n=innerfiles.length; i < n; i++) {
+                for (int i = 0, n = innerfiles.length; i < n; i++) {
             
                     //get and clean up innerclass name
-                    entryName = entryName.substring(0, entryName.lastIndexOf(entryFile.getName())-1) + File.separatorChar + innerfiles[i];
-        
+                    int entryIndex = entryName.lastIndexOf(entryFile.getName()) -1;
+                    if ( entryIndex < 0) {
+                        entryName = innerfiles[i];
+                    }
+                    else {
+                        entryName = entryName.substring(0, entryIndex) + File.separatorChar + innerfiles[i];
+                    }
                     // link the file
                     entryFile = new File(config.srcDir, entryName);
         
