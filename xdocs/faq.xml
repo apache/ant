@@ -798,7 +798,7 @@ build.succeeded.email.subject=Nightly build succeeded!
         invoke Ant like</p>
         
         <source><![CDATA[
-ant -listener BuildMonitor
+ant -listener BuildMonitor -logfile build.log
 ]]></source>
 
         <p>Make sure that <code>mail.jar</code> from JavaMail and
