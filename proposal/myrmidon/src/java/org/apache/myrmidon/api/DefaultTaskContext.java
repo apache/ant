@@ -8,6 +8,7 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
+import java.util.Map;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
@@ -28,7 +29,7 @@ public class DefaultTaskContext
      */
     public DefaultTaskContext( final Map contextData )
     {
-        this( contextData );
+        super( contextData );
     }
 
     /**
@@ -36,7 +37,7 @@ public class DefaultTaskContext
      */
     public DefaultTaskContext()
     {
-        this( null );
+        this( (TaskContext)null );
     }
 
     /**
