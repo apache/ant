@@ -11,6 +11,9 @@
 <h3>Description</h3>
 <p>Generates an XML-formatted report file of the change logs recorded in a
 <a href="http://www.cvshome.org/" target="_top">CVS</a> repository. </p>
+<p><b>Important:</b> This task needs "cvs" on the path. If it isn't, you will get
+an error (such as error 2 on windows). If &lt;cvs&gt; doesn't work, try to execute cvs.exe
+from the command line in the target directory in which you are working.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -125,7 +128,7 @@ after February 20, 2002 under the <code>dve/network</code> directory.
 It writes these changes into the file <code>changelog.xml</code>.</p>
 
 <pre>  &lt;cvschangelog dir=&quot;dve/network&quot;
-                destfile=&quot;changelog.xml&quot;/&gt;
+                destfile=&quot;changelog.xml&quot;&gt;
        &lt;user displayname=&quot;Peter Donald&quot; userid=&quot;donaldp&quot;/&gt;
   &lt;/cvschangelog&gt;</pre>
 
