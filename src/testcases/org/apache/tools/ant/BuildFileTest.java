@@ -189,6 +189,10 @@ public abstract class BuildFileTest extends TestCase {
         return cleanBuffer(errBuffer);
     }
         
+    protected BuildException getBuildException() {
+        return buildException;
+    }
+
     private String cleanBuffer(StringBuffer buffer) {
         StringBuffer cleanedBuffer = new StringBuffer();
         boolean cr = false;
@@ -284,6 +288,7 @@ public abstract class BuildFileTest extends TestCase {
         try {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
+            buildException = ex;
             if ((null != msg) && (!ex.getMessage().equals(msg))) {
                 fail("Should throw BuildException because '" + cause
                         + "' with message '" + msg
@@ -307,6 +312,7 @@ public abstract class BuildFileTest extends TestCase {
         try {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
+            buildException = ex;
             if ((null != contains) && (ex.getMessage().indexOf(contains) == -1)) {
                 fail("Should throw BuildException because '" + cause + "' with message containing '" + contains + "' (actual message '" + ex.getMessage() + "' instead)");
             }
