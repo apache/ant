@@ -159,7 +159,9 @@
          Build the code           
        =================================================================== 
   -->
-  <target name="build" depends="prepare, check_for_optional_packages">
+  <target name="build" 
+          depends="prepare, check_for_optional_packages"
+          description="--> compiles the source code">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.lib}"/>
@@ -230,10 +232,12 @@
   
   <!-- 
        =================================================================== 
-         Create the ant jars: ant.jar and optional.jar                                                 
+         Create the ant jars: ant.jar and optional.jar
        =================================================================== 
   -->
-  <target name="jars" depends="build">
+  <target name="jars" 
+          depends="build" 
+          description="--> creates the ant jars">
 
     <jar jarfile="${build.lib}/${name}.jar" 
          basedir="${build.classes}" 
@@ -257,7 +261,9 @@
          Create the essential distribution that can run ant
        ===================================================================
   -->
-  <target name="dist-lite" depends="jars, setup-distproperties">
+  <target name="dist-lite" 
+          depends="jars, setup-distproperties"
+          description="--> creates a minimum distribution to run ant">
 
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.bin}"/>
@@ -295,7 +301,7 @@
          Create the complete distribution
        ===================================================================
   -->
-  <target name="dist">
+  <target name="dist" description="--> creates a complete distribution">
     <antcall target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
@@ -350,7 +356,7 @@
          Target to create bootstrap build
        ===================================================================
   -->
-  <target name="bootstrap">
+  <target name="bootstrap" description="--> creates a bootstrap build">
     <antcall target="dist-lite">
       <param name="dist.dir" value="${bootstrap.dir}" />
     </antcall>
@@ -362,7 +368,9 @@
          Create the source distribution
        ===================================================================
   -->
-  <target name="src-dist" depends="setup-distproperties">
+  <target name="src-dist" 
+          depends="setup-distproperties"
+          description="--> creates a source distribution">
 
     <mkdir dir="${src.dist.dir}" />
  
@@ -425,7 +433,8 @@
          Create the binary distribution
        ===================================================================
   -->
-  <target name="distribution">
+  <target name="distribution" 
+          description="--> creates a binary distribution">
     <mkdir dir="${dist.base}"/>
 
     <antcall target="internal_dist">
@@ -484,7 +493,8 @@
          Cleans up build and distribution directories
        ===================================================================
   -->
-  <target name="clean">
+  <target name="clean"
+          description="--> cleans up build and dist directories">
     <delete dir="${build.dir}" />
     <delete dir="${dist.base}" />
     <delete dir="${defaultdist.dir}" />
@@ -498,7 +508,9 @@
          Cleans everything
        ===================================================================
   -->
-  <target name="allclean" depends="clean">
+  <target name="allclean" 
+          depends="clean"
+          description="--> cleans up everything">
     <delete file="${bootstrap.dir}/bin/antRun" />
     <delete file="${bootstrap.dir}/bin/antRun.bat" />
   </target> 
@@ -527,14 +539,15 @@
   -->
   
   <target name="javadoc_check">
-    <uptodate property="javadoc.notrequired" targetfile="${build.javadocs}/packages.html" >
+    <uptodate property="javadoc.notrequired" 
+              targetfile="${build.javadocs}/packages.html" >
         <srcfiles dir= "${java.dir}" includes="**/*.java"/>
     </uptodate>
   </target>
 
   <target name="javadocs" depends="prepare, javadoc_check" 
           unless="javadoc.notrequired"
-          description="Creates the API documentation">
+          description="--> creates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="org.apache.*"
              sourcepath="${java.dir}"
@@ -652,10 +665,11 @@
 
   <!-- 
        =================================================================== 
-         Main target - runs dist-lite by default                                               
+         Main target - runs dist-lite by default
        =================================================================== 
   -->
-  <target name="main">
+  <target name="main" 
+          description="--> creates a minimum distribution in ./dist">
     <antcall target="dist-lite"/>
   </target>
   
