@@ -156,11 +156,20 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     
     
     /**
-     * Setter used to store the location of the weblogic DTD. This can be a file on the system 
+     * Setter used to store the location of the ejb-jar DTD. This can be a file on the system 
      * or a resource on the classpath. 
      * @param inString the string to use as the DTD location.
      */
     public void setWeblogicdtd(String inString) {
+        this.ejbDTD = inString;
+    }
+
+    /**
+     * Setter used to store the location of the weblogic DTD. This can be a file on the system 
+     * or a resource on the classpath. 
+     * @param inString the string to use as the DTD location.
+     */
+    public void setWLdtd(String inString) {
         this.weblogicDTD = inString;
     }
 
