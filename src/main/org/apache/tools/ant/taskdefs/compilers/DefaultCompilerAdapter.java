@@ -173,11 +173,16 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         return classpath;
     }
 
+    protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
+        return setupJavacCommandlineSwitches(cmd, false);
+    }
+
     /**
      * Does the command line argument processing common to classic and
      * modern.  Doesn't add the files to compile.
      */
-    protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
+    protected Commandline setupJavacCommandlineSwitches(Commandline cmd,
+                                                        boolean useDebugLevel) {
         Path classpath = getCompileClasspath();
 
         // we cannot be using Java 1.0 when forking, so we only have to
@@ -257,7 +262,16 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             cmd.createArgument().setValue(encoding);
         }
         if (debug) {
-            cmd.createArgument().setValue("-g");
+            if (useDebugLevel) {
+                String debugLevel = attributes.getDebugLevel();
+                if (debugLevel != null) {
+                    cmd.createArgument().setValue("-g:" + debugLevel);
+                } else {
+                    cmd.createArgument().setValue("-g");
+                }
+            } else {
+                cmd.createArgument().setValue("-g");
+            }
         } else if (Project.getJavaVersion() != Project.JAVA_1_0 &&
                    Project.getJavaVersion() != Project.JAVA_1_1) {
             cmd.createArgument().setValue("-g:none");
@@ -291,7 +305,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * add the files to compile.
      */
     protected Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
-        setupJavacCommandlineSwitches(cmd);
+        setupJavacCommandlineSwitches(cmd, true);
         if (attributes.getSource() != null) {
             cmd.createArgument().setValue("-source");
             cmd.createArgument().setValue(attributes.getSource());

@@ -41,6 +41,10 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Javac task allows debug levels to be spcified.  Debug levels
+  will have an effect only when the modern compiler is used.
+
+* Mail task allows specification of port number.
 
 * Added support for specifying CVS_RSH in the <cvs/> task
 

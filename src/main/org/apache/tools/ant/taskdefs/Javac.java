@@ -133,7 +133,24 @@ public class Javac extends MatchingTask {
     protected File[] compileList = new File[0];
 
     private String source;
+    private String debugLevel;
     
+    /**
+     * Get the value of debugLevel.
+     * @return value of debugLevel.
+     */
+    public String getDebugLevel() {
+        return debugLevel;
+    }
+
+    /**
+     * Set the value of debugLevel.
+     * @param v  Value to assign to debugLevel.
+     */
+    public void setDebugLevel(String  v) {
+        this.debugLevel = v;
+    }
+
     /**
      * Get the value of source.
      * @return value of source.

@@ -178,40 +178,40 @@ files/directories from the CLASSPATH it passes to the compiler.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">includeAntRuntime</td> 
+    <td valign="top">includeAntRuntime</td>
     <td valign="top">whether to include the Ant run-time libraries;
       defaults to <code>yes</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">includeJavaRuntime</td> 
+    <td valign="top">includeJavaRuntime</td>
     <td valign="top">whether to include the default run-time
       libraries from the executing VM; defaults to <code>no</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">fork</td> 
+    <td valign="top">fork</td>
     <td valign="top">whether to execute Javac using the JDK compiler
       externally; defaults to <code>no</code>.  You can also give a
       complete path to the javac executable to use instead of
       <code>yes</code>, which would run the compiler of the Java
       vesrion that is currently running Ant.</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
   <tr>
-    <td valign="top">memoryInitialSize</td> 
+    <td valign="top">memoryInitialSize</td>
     <td valign="top">the initial size of the memory for the underlying VM, if javac is run
     externally, ignored otherwise; defaults to the standard VM memory setting.
     (examples: <code>83886080</code>, <code>81920k</code>, or <code>80m</code>)</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
   <tr>
-    <td valign="top">memoryMaximumSize</td> 
+    <td valign="top">memoryMaximumSize</td>
     <td valign="top">the maximum size of the memory for the underlying VM, if javac is run
     externally, ignored otherwise; defaults to the standard VM memory setting.
     (examples: <code>83886080</code>, <code>81920k</code>, or <code>80m</code>)</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">failonerror</td> <td valign="top">
         indicates whether the build will continue even if there are compilation errors; defaults to <code>true</code>.
@@ -219,14 +219,25 @@ files/directories from the CLASSPATH it passes to the compiler.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">source</td> 
+    <td valign="top">source</td>
     <td valign="top">Value of the <code>-source</code> command line
     switch, will be ignored by all implementations except
     <code>modern</code>, legal values are &quot;1.3&quot; and
     &quot;1.4&quot; - by default, no <code>-source</code> argument
     will be used at all.</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
+  <tr>
+    <td valign="top">debuglevel</td>
+    <td valign="top">Keyword list to be appended to the <code>-g</code> command line
+    switch.  This will be ignored by all implementations except
+    <code>modern</code>, legal values are &quot;none&quot; or a comma separated list of
+    the following keywords.  Valid keywords are &quot;lines&quot;, &quot;vars&quot; and
+    &quot;source&quot; - if debuglevel is not specified, by default, nothing will be
+    appended to <code>-g</code>
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
@@ -259,21 +270,21 @@ used.</p>
   <td width="10%" valign="top"><b>Required</b></td>
 </tr>
   <tr>
-    <td valign="top">value</td> 
+    <td valign="top">value</td>
     <td align="center" rowspan="4">See <a href="../using.html#arg">here</a></td>
     <td align="center" rowspan="4">Exactly one of these.</td>
   </tr>
   <tr>
-    <td valign="top">line</td> 
+    <td valign="top">line</td>
   </tr>
   <tr>
-    <td valign="top">file</td> 
+    <td valign="top">file</td>
   </tr>
   <tr>
-    <td valign="top">path</td> 
+    <td valign="top">path</td>
   </tr>
   <tr>
-    <td valign="top">implementation</td> 
+    <td valign="top">implementation</td>
     <td align="center">Only use this argument if the chosen
       implementation matches this attribute.  Possible choices are the
       same as those of the build.compiler property.</td>
@@ -355,7 +366,7 @@ This problem may occur with all JDKs &lt; 1.2.</p>
 
 <p><b>Note:</b> If you wish to compile only source-files located in some packages below a
 common root you should not include these packages in the srcdir-attribute. Use include/exclude-attributes
-or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute 
+or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute
 (or nested src-elements) Ant will start to recompile your sources every time you call it.</p>
 
 <h3>Jikes Notes</h3>
@@ -371,7 +382,7 @@ build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quo
   <tr>
     <td valign="top">
 	build.compiler.emacs
-	</td> 
+	</td>
 	<td valign="top">
 	Enable emacs compatible error messages
     </td>
@@ -381,7 +392,7 @@ build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quo
 	build.compiler.warnings<br>
         <b>This property has been deprecated, use the nowarn attribute
           instead</b>
-	</td> 
+	</td>
 	<td valign="top">
 	don't disable warning messages
     </td>
@@ -389,7 +400,7 @@ build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quo
   <tr>
     <td valign="top">
 	build.compiler.pedantic
-	</td> 
+	</td>
 	<td valign="top">
 	enable pedantic warnings
     </td>
@@ -397,9 +408,9 @@ build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quo
   <tr>
     <td valign="top">
 	build.compiler.fulldepend
-	</td> 
+	</td>
 	<td valign="top">
-	enable full dependency checking,<br> 
+	enable full dependency checking,<br>
 	&quot;+F&quot; in the jikes manual.
     </td>
   </tr>
