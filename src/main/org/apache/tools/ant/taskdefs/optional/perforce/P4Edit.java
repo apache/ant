@@ -69,7 +69,7 @@ import org.apache.tools.ant.BuildException;
  * ToDo: Should call reopen if file is already open in one of our changelists perhaps?
  */
 
- public class P4Edit extends P4Base {
+public class P4Edit extends P4Base {
 
     public String change = null;
 
@@ -78,12 +78,12 @@ import org.apache.tools.ant.BuildException;
     }
 
     public void execute() throws BuildException {
-        if(change != null ) {
-          P4CmdOpts = "-c "+change;
+        if (change != null) {
+            P4CmdOpts = "-c " + change;
         }
-        if(P4View == null) {
-          throw new BuildException("No view specified to edit");
+        if (P4View == null) {
+            throw new BuildException("No view specified to edit");
         }
-        execP4Command("-s edit "+P4CmdOpts+" "+P4View, new SimpleP4OutputHandler(this));
+        execP4Command("-s edit " + P4CmdOpts + " " + P4View, new SimpleP4OutputHandler(this));
     }
 }

@@ -79,27 +79,28 @@ public class P4Change extends P4Base {
 
     public void execute() throws BuildException {
 
-        if(emptyChangeList == null) {
-          emptyChangeList = getEmptyChangeList();
+        if (emptyChangeList == null) {
+            emptyChangeList = getEmptyChangeList();
         }
         final Project myProj = project;
 
         P4Handler handler = new P4HandlerAdapter() {
-                public void process(String line) {
-                    if (util.match("/Change/", line)) {
-                    
-                        //Remove any non-numerical chars - should leave the change number
-                        line = util.substitute("s/[^0-9]//g", line);
-                                
-                        int changenumber = Integer.parseInt(line);
-                        log("Change Number is "+changenumber, Project.MSG_INFO);
-                        myProj.setProperty("p4.change", ""+changenumber);
+            public void process(String line) {
+                if (util.match("/Change/", line)) {
 
-                    } else if(util.match("/error/", line)) {
-                        throw new BuildException("Perforce Error, check client settings and/or server");
-                    }
-                                
-                }};
+                    //Remove any non-numerical chars - should leave the change number
+                    line = util.substitute("s/[^0-9]//g", line);
+
+                    int changenumber = Integer.parseInt(line);
+                    log("Change Number is " + changenumber, Project.MSG_INFO);
+                    myProj.setProperty("p4.change", "" + changenumber);
+
+                } else if (util.match("/error/", line)) {
+                    throw new BuildException("Perforce Error, check client settings and/or server");
+                }
+
+            }
+        };
 
         handler.setOutput(emptyChangeList);
 
@@ -109,32 +110,33 @@ public class P4Change extends P4Base {
 
     public String getEmptyChangeList() throws BuildException {
         final StringBuffer stringbuf = new StringBuffer();
-        
-        execP4Command("change -o", new P4HandlerAdapter() {
-                public void process(String line) {
-                    if(!util.match("/^#/",line)){
-                        if(util.match("/error/", line)) {
-                                
-                            log("Client Error", Project.MSG_VERBOSE);
-                            throw new BuildException("Perforce Error, check client settings and/or server");
-                                    
-                        } else if(util.match("/<enter description here>/",line)) {
 
-                            // we need to escape the description in case there are /
-                            description = backslash(description);
-                            line = util.substitute("s/<enter description here>/" + description + "/", line);
-                                        
-                        } else if(util.match("/\\/\\//", line)) {
-                            //Match "//" for begining of depot filespec
-                            return;
-                        }
-                                    
-                        stringbuf.append(line);
-                        stringbuf.append("\n");
-                                
+        execP4Command("change -o", new P4HandlerAdapter() {
+            public void process(String line) {
+                if (!util.match("/^#/", line)) {
+                    if (util.match("/error/", line)) {
+
+                        log("Client Error", Project.MSG_VERBOSE);
+                        throw new BuildException("Perforce Error, check client settings and/or server");
+
+                    } else if (util.match("/<enter description here>/", line)) {
+
+                        // we need to escape the description in case there are /
+                        description = backslash(description);
+                        line = util.substitute("s/<enter description here>/" + description + "/", line);
+
+                    } else if (util.match("/\\/\\//", line)) {
+                        //Match "//" for begining of depot filespec
+                        return;
                     }
-                }});
-                
+
+                    stringbuf.append(line);
+                    stringbuf.append("\n");
+
+                }
+            }
+        });
+
         return stringbuf.toString();
     }
 
@@ -146,12 +148,12 @@ public class P4Change extends P4Base {
      * @return the backslashed string
      * @see < a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/perl/Perl5Util.html#substitute(java.lang.String,%20java.lang.String)">Oro</a>
      */
-    public static final String backslash(String value){
+    public static final String backslash(String value) {
         final StringBuffer buf = new StringBuffer(value.length());
         final int len = value.length();
-        for (int i = 0; i < len; i++){
+        for (int i = 0; i < len; i++) {
             char c = value.charAt(i);
-            if (c == '/'){
+            if (c == '/') {
                 buf.append('\\');
             }
             buf.append(c);
@@ -160,7 +162,7 @@ public class P4Change extends P4Base {
     }
 
     /* Set Description Variable. */
-    public void setDescription(String desc){
+    public void setDescription(String desc) {
         this.description = desc;
     }
 

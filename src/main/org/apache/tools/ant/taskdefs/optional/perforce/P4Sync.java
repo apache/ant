@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /** P4Sync  - synchronise client space to a perforce depot view.
- *  The API allows additional functionality of the "p4 sync" command 
+ *  The API allows additional functionality of the "p4 sync" command
  * (such as "p4 sync -f //...#have" or other exotic invocations).</P>
  *
  * <b>Example Usage:</b>
@@ -83,9 +83,9 @@ public class P4Sync extends P4Base {
     String label;
     private String syncCmd = "";
 
-    public void setLabel(String label) throws BuildException { 
-        if(label == null && !label.equals("")) {
-                throw new BuildException("P4Sync: Labels cannot be Null or Empty");
+    public void setLabel(String label) throws BuildException {
+        if (label == null && !label.equals("")) {
+            throw new BuildException("P4Sync: Labels cannot be Null or Empty");
         }
 
         this.label = label;
@@ -94,27 +94,27 @@ public class P4Sync extends P4Base {
 
 
     public void setForce(String force) throws BuildException {
-        if(force == null && !label.equals("")) {
-                throw new BuildException("P4Sync: If you want to force, set force to non-null string!");
+        if (force == null && !label.equals("")) {
+            throw new BuildException("P4Sync: If you want to force, set force to non-null string!");
         }
-            P4CmdOpts = "-f";
-        }
-        
+        P4CmdOpts = "-f";
+    }
+
     public void execute() throws BuildException {
 
 
         if (P4View != null) {
-                syncCmd = P4View;
+            syncCmd = P4View;
         }
 
-        
-        if(label != null && !label.equals("")) {
-                syncCmd = syncCmd + "@" + label;
-        } 
 
-        
-        log("Execing sync "+P4CmdOpts+" "+syncCmd, Project.MSG_VERBOSE);
+        if (label != null && !label.equals("")) {
+            syncCmd = syncCmd + "@" + label;
+        }
 
-        execP4Command("-s sync "+P4CmdOpts+" "+syncCmd, new SimpleP4OutputHandler(this));
+
+        log("Execing sync " + P4CmdOpts + " " + syncCmd, Project.MSG_VERBOSE);
+
+        execP4Command("-s sync " + P4CmdOpts + " " + syncCmd, new SimpleP4OutputHandler(this));
     }
 }

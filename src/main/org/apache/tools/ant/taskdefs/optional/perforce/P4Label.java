@@ -58,11 +58,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-
-import java.util.Date;
-import java.text.SimpleDateFormat;
 
 
 /** P4Label - create a Perforce Label.
@@ -93,41 +93,41 @@ public class P4Label extends P4Base {
         this.desc = desc;
     }
 
-     public void setLock(String lock)  {
+    public void setLock(String lock) {
         this.lock = lock;
-     }
+    }
 
     public void execute() throws BuildException {
-        log("P4Label exec:",Project.MSG_INFO);
+        log("P4Label exec:", Project.MSG_INFO);
 
-        if(P4View == null || P4View.length() < 1) {
+        if (P4View == null || P4View.length() < 1) {
             log("View not set, assuming //depot/...", Project.MSG_WARN);
             P4View = "//depot/...";
         }
 
-        if(desc == null || desc.length() < 1) {
+        if (desc == null || desc.length() < 1) {
             log("Label Description not set, assuming 'AntLabel'", Project.MSG_WARN);
             desc = "AntLabel";
         }
 
-        if(lock != null && !lock.equalsIgnoreCase("locked")) {
-            log("lock attribute invalid - ignoring",Project.MSG_WARN);
+        if (lock != null && !lock.equalsIgnoreCase("locked")) {
+            log("lock attribute invalid - ignoring", Project.MSG_WARN);
         }
 
-        if(name == null || name.length() < 1) {
-            SimpleDateFormat formatter = new SimpleDateFormat ("yyyy.MM.dd-hh:mm");
+        if (name == null || name.length() < 1) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd-hh:mm");
             Date now = new Date();
-            name = "AntLabel-"+formatter.format(now);
-            log("name not set, assuming '"+name+"'", Project.MSG_WARN);
+            name = "AntLabel-" + formatter.format(now);
+            log("name not set, assuming '" + name + "'", Project.MSG_WARN);
         }
 
 
         //We have to create a unlocked label first
         String newLabel =
-            "Label: "+name+"\n"+
-            "Description: "+desc+"\n"+
-            "Options: unlocked\n"+
-            "View: "+P4View+"\n";
+                "Label: " + name + "\n" +
+                "Description: " + desc + "\n" +
+                "Options: unlocked\n" +
+                "View: " + P4View + "\n";
 
         P4Handler handler = new P4HandlerAdapter() {
             public void process(String line) {
@@ -139,19 +139,19 @@ public class P4Label extends P4Base {
 
         execP4Command("label -i", handler);
 
-        execP4Command("labelsync -l "+name, new P4HandlerAdapter() {
+        execP4Command("labelsync -l " + name, new P4HandlerAdapter() {
             public void process(String line) {
                 log(line, Project.MSG_VERBOSE);
             }
         });
 
 
-        log("Created Label "+name+" ("+desc+")", Project.MSG_INFO);
+        log("Created Label " + name + " (" + desc + ")", Project.MSG_INFO);
 
         //Now lock if required
-        if (lock != null && lock.equalsIgnoreCase("locked"))  {
+        if (lock != null && lock.equalsIgnoreCase("locked")) {
 
-            log("Modifying lock status to 'locked'",Project.MSG_INFO);
+            log("Modifying lock status to 'locked'", Project.MSG_INFO);
 
             final StringBuffer labelSpec = new StringBuffer();
 
@@ -159,24 +159,23 @@ public class P4Label extends P4Base {
             //Replace Options
             //Submit back to Perforce
 
-            handler = new P4HandlerAdapter()  {
-                public void process(String line)  {
+            handler = new P4HandlerAdapter() {
+                public void process(String line) {
                     log(line, Project.MSG_VERBOSE);
 
-                    if(util.match("/^Options:/",line)) {
-                        line = "Options: "+lock;
+                    if (util.match("/^Options:/", line)) {
+                        line = "Options: " + lock;
                     }
 
-                    labelSpec.append(line+"\n");
+                    labelSpec.append(line + "\n");
                 }
             };
 
 
+            execP4Command("label -o " + name, handler);
+            log(labelSpec.toString(), Project.MSG_DEBUG);
 
-            execP4Command("label -o "+name, handler);
-            log(labelSpec.toString(),Project.MSG_DEBUG);
-
-            log("Now locking label...",Project.MSG_VERBOSE);
+            log("Now locking label...", Project.MSG_VERBOSE);
             handler = new P4HandlerAdapter() {
                 public void process(String line) {
                     log(line, Project.MSG_VERBOSE);

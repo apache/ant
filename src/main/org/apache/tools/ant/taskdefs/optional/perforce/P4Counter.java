@@ -66,13 +66,13 @@ import org.apache.tools.ant.Project;
  * to the output stream for the project (by setting the "name"
  * attribute only), to set a property based on the value of
  * a counter (by setting the "property" attribute) or to set the counter
- * on the perforce server (by setting the "value" attribute). 
+ * on the perforce server (by setting the "value" attribute).
  *
  * Example Usage:<br>
  * &lt;p4counter name="${p4.counter}" property=${p4.change}"/&gt;
  * @author <a href="mailto:kirk@radik.com">Kirk Wylie</a>
  */
- 
+
 public class P4Counter extends P4Base {
     public String counter = null;
     public String property = null;
@@ -96,35 +96,35 @@ public class P4Counter extends P4Base {
 
     public void execute() throws BuildException {
 
-        if((counter == null) || counter.length() == 0) {
+        if ((counter == null) || counter.length() == 0) {
             throw new BuildException("No counter specified to retrieve");
         }
 
-        if(shouldSetValue && shouldSetProperty) {
+        if (shouldSetValue && shouldSetProperty) {
             throw new BuildException("Cannot both set the value of the property and retrieve the value of the property.");
         }
 
         String command = "counter " + P4CmdOpts + " " + counter;
-        if(!shouldSetProperty) {
+        if (!shouldSetProperty) {
             // NOTE kirk@radik.com 04-April-2001 -- If you put in the -s, you
             // have to start running through regular expressions here. Much easier
             // to just not include the scripting information than to try to add it
             // and strip it later.
             command = "-s " + command;
         }
-        if(shouldSetValue) {
+        if (shouldSetValue) {
             command += " " + value;
         }
 
-        if(shouldSetProperty) {
+        if (shouldSetProperty) {
             final Project myProj = project;
 
             P4Handler handler = new P4HandlerAdapter() {
                 public void process(String line) {
-                    log("P4Counter retrieved line \""+ line + "\"", Project.MSG_VERBOSE);
+                    log("P4Counter retrieved line \"" + line + "\"", Project.MSG_VERBOSE);
                     try {
                         value = Integer.parseInt(line);
-                        myProj.setProperty(property, ""+value);
+                        myProj.setProperty(property, "" + value);
                     } catch (NumberFormatException nfe) {
                         throw new BuildException("Perforce error. Could not retrieve counter value.");
                     }

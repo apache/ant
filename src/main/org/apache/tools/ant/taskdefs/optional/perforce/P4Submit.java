@@ -81,14 +81,15 @@ public class P4Submit extends P4Base {
     public void setChange(String change) {
         this.change = change;
     }
+
     public void execute() throws BuildException {
-        if(change != null) {
-            execP4Command("submit -c "+change,
-                new P4HandlerAdapter() {
-                    public void process(String line) {
-                        log(line, Project.MSG_VERBOSE);
+        if (change != null) {
+            execP4Command("submit -c " + change,
+                    new P4HandlerAdapter() {
+                        public void process(String line) {
+                            log(line, Project.MSG_VERBOSE);
+                        }
                     }
-                }
             );
 
         } else {

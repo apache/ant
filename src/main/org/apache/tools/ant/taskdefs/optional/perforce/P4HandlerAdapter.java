@@ -54,12 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.InputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.SequenceInputStream;
+
 import org.apache.tools.ant.BuildException;
 
 public abstract class P4HandlerAdapter implements P4Handler {
@@ -77,29 +78,29 @@ public abstract class P4HandlerAdapter implements P4Handler {
 
     public void start() throws BuildException {
 
-    try{
-        //First write any output to P4
-        if(p4input != null && p4input.length() >0 && os != null) {
-                    os.write(p4input.getBytes());
-                    os.flush();
-                    os.close();
+        try {
+            //First write any output to P4
+            if (p4input != null && p4input.length() > 0 && os != null) {
+                os.write(p4input.getBytes());
+                os.flush();
+                os.close();
             }
 
-        //Now read any input and process
+            //Now read any input and process
 
-        BufferedReader input = new BufferedReader(
-                                     new InputStreamReader(
-                                       new SequenceInputStream(is,es)));
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(
+                            new SequenceInputStream(is, es)));
 
             String line;
-            while((line = input.readLine()) != null) {
-               process(line);
+            while ((line = input.readLine()) != null) {
+                process(line);
             }
 
             input.close();
 
 
-        }catch(Exception e) {
+        } catch (Exception e) {
             throw new BuildException(e);
         }
     }
@@ -120,5 +121,6 @@ public abstract class P4HandlerAdapter implements P4Handler {
         this.is = is;
     }
 
-    public void stop(){}
+    public void stop() {
+    }
 }

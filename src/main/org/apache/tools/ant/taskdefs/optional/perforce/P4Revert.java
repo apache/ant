@@ -64,13 +64,14 @@ import org.apache.tools.ant.BuildException;
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
+
 public class P4Revert extends P4Base {
 
     private String revertChange = null;
     private boolean onlyUnchanged = false;
 
     public void setChange(String revertChange) throws BuildException {
-        if(revertChange == null && !revertChange.equals("")) {
+        if (revertChange == null && !revertChange.equals("")) {
             throw new BuildException("P4Revert: change cannot be null or empty");
         }
 
@@ -78,7 +79,7 @@ public class P4Revert extends P4Base {
 
     }
 
-    public void setRevertOnlyUnchanged(boolean onlyUnchanged)  {
+    public void setRevertOnlyUnchanged(boolean onlyUnchanged) {
         this.onlyUnchanged = onlyUnchanged;
     }
 
@@ -92,14 +93,14 @@ public class P4Revert extends P4Base {
          * The whole process also accepts a p4 filespec
          */
         String p4cmd = "-s revert";
-        if(onlyUnchanged) {
-          p4cmd+=" -a";
+        if (onlyUnchanged) {
+            p4cmd += " -a";
         }
 
         if (revertChange != null) {
-          p4cmd += " -c "+revertChange;
+            p4cmd += " -c " + revertChange;
         }
 
-        execP4Command(p4cmd+" "+P4View, new SimpleP4OutputHandler(this));
+        execP4Command(p4cmd + " " + P4View, new SimpleP4OutputHandler(this));
     }
 }

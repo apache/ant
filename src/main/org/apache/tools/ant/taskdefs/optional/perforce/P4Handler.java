@@ -65,5 +65,6 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 public interface P4Handler extends ExecuteStreamHandler {
 
     public void process(String line) throws BuildException;
+
     public void setOutput(String line) throws BuildException;
 }

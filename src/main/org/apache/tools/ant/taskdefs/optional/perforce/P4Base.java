@@ -59,11 +59,12 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.IOException;
+
+import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.oro.text.perl.Perl5Util;
 
 
 /** Base class for Perforce (P4) ANT tasks. See individual task for example usage.
@@ -86,58 +87,72 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
     //P4 runtime directives
     /** Perforce Server Port (eg KM01:1666) */
-    protected String P4Port     = "";
+    protected String P4Port = "";
     /** Perforce Client (eg myclientspec) */
-    protected String P4Client   = "";
+    protected String P4Client = "";
     /** Perforce User (eg fbloggs) */
-    protected String P4User     = "";
+    protected String P4User = "";
     /** Perforce view for commands (eg //projects/foobar/main/source/... )*/
-    protected String P4View     = "";
+    protected String P4View = "";
 
     //P4 g-opts and cmd opts (rtfm)
     /** Perforce 'global' opts.
-      * Forms half of low level API */
-    protected String P4Opts     = "";
+     * Forms half of low level API */
+    protected String P4Opts = "";
     /** Perforce command opts.
-      * Forms half of low level API */
-    protected String P4CmdOpts  = "";
+     * Forms half of low level API */
+    protected String P4CmdOpts = "";
 
     //Setters called by Ant
-    public void setPort(String P4Port)        { this.P4Port       =   "-p"+P4Port;    }
-    public void setClient(String P4Client)    { this.P4Client     =   "-c"+P4Client;  }
-    public void setUser(String P4User)        { this.P4User       =   "-u"+P4User;    }
-    public void setView(String P4View)        { this.P4View       =   P4View;         }
-    public void setCmdopts(String P4CmdOpts)  { this.P4CmdOpts    =   P4CmdOpts;      }
+    public void setPort(String P4Port) {
+        this.P4Port = "-p" + P4Port;
+    }
+
+    public void setClient(String P4Client) {
+        this.P4Client = "-c" + P4Client;
+    }
+
+    public void setUser(String P4User) {
+        this.P4User = "-u" + P4User;
+    }
+
+    public void setView(String P4View) {
+        this.P4View = P4View;
+    }
+
+    public void setCmdopts(String P4CmdOpts) {
+        this.P4CmdOpts = P4CmdOpts;
+    }
 
     public void init() {
 
         util = new Perl5Util();
 
         //Get default P4 settings from environment - Mark would have done something cool with
-            //introspection here.....:-)
-            String tmpprop;
-        if((tmpprop = project.getProperty("p4.port")) != null) {
-          setPort(tmpprop);
+        //introspection here.....:-)
+        String tmpprop;
+        if ((tmpprop = project.getProperty("p4.port")) != null) {
+            setPort(tmpprop);
         }
-        if((tmpprop = project.getProperty("p4.client")) != null) {
-          setClient(tmpprop);
+        if ((tmpprop = project.getProperty("p4.client")) != null) {
+            setClient(tmpprop);
         }
-        if((tmpprop = project.getProperty("p4.user")) != null) {
-          setUser(tmpprop);
-        }        
+        if ((tmpprop = project.getProperty("p4.user")) != null) {
+            setUser(tmpprop);
+        }
     }
 
     protected void execP4Command(String command) throws BuildException {
         execP4Command(command, null);
     }
-    
+
     /** Execute P4 command assembled by subclasses.
-        @param command The command to run
-        @param p4input Input to be fed to command on stdin
-        @param handler A P4Handler to process any input and output
-    */
+     @param command The command to run
+     @param p4input Input to be fed to command on stdin
+     @param handler A P4Handler to process any input and output
+     */
     protected void execP4Command(String command, P4Handler handler) throws BuildException {
-        try{
+        try {
 
             Commandline commandline = new Commandline();
             commandline.setExecutable("p4");
@@ -155,38 +170,38 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             commandline.createArgument().setLine(command);
 
 
-            String[] cmdline = commandline.getCommandline() ;
+            String[] cmdline = commandline.getCommandline();
             String cmdl = "";
-            for (int i=0 ; i < cmdline.length ; i++) {
+            for (int i = 0; i < cmdline.length; i++) {
                 cmdl += cmdline[i] + " ";
             }
-    
-            log("Execing "+cmdl, Project.MSG_VERBOSE);
 
-            if(handler == null ) {
-              handler = new SimpleP4OutputHandler(this);
+            log("Execing " + cmdl, Project.MSG_VERBOSE);
+
+            if (handler == null) {
+                handler = new SimpleP4OutputHandler(this);
             }
 
             Execute exe = new Execute(handler, null);
 
             exe.setAntRun(project);
-            
+
             exe.setCommandline(commandline.getCommandline());
 
-            try{
-             exe.execute();
-            }catch(IOException e) {
+            try {
+                exe.execute();
+            } catch (IOException e) {
                 throw new BuildException(e);
             } finally {
-                try{
+                try {
                     handler.stop();
-                }catch(Exception e) {}
+                } catch (Exception e) {
+                }
             }
 
-            
-                
-            }catch(Exception e) {
-                throw new BuildException("Problem exec'ing P4 command: "+e.getMessage());
-            }
+
+        } catch (Exception e) {
+            throw new BuildException("Problem exec'ing P4 command: " + e.getMessage());
+        }
     }
 }
