@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -64,16 +64,16 @@ import java.io.IOException;
 
 /**
  * Creates a EAR archive. Based on WAR task
- * 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
- * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a> 
+ *
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a>
  *
  * @ant.task category="packaging"
  */
 public class Ear extends Jar {
 
     private File deploymentDescriptor;
-    private boolean descriptorAdded;    
+    private boolean descriptorAdded;
 
     public Ear() {
         super();
@@ -83,17 +83,16 @@ public class Ear extends Jar {
 
     /**
      * @deprecated Use setDestFile(destfile) instead
-     */ 
+     */
     public void setEarfile(File earFile) {
-        log("DEPRECATED - The earfile attribute is deprecated. Use destfile attribute instead.");
         setDestFile(earFile);
     }
-    
+
     /**
      * set the application XML file
      */
     public void setAppxml(File descr) {
-        deploymentDescriptor = descr; 
+        deploymentDescriptor = descr;
         if (!deploymentDescriptor.exists()) {
             throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
         }
@@ -123,7 +122,7 @@ public class Ear extends Jar {
         if (deploymentDescriptor == null && !isInUpdateMode()) {
             throw new BuildException("appxml attribute is required", location);
         }
-        
+
         super.initZipOutputStream(zOut);
     }
 
@@ -131,7 +130,7 @@ public class Ear extends Jar {
         throws IOException
     {
         // If the file being added is META-INF/application.xml, we warn if it's not the
-        // one specified in the "appxml" attribute - or if it's being added twice, 
+        // one specified in the "appxml" attribute - or if it's being added twice,
         // meaning the same file is specified by the "appxml" attribute and in
         // a <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {

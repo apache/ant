@@ -123,10 +123,9 @@ public class Zip extends MatchingTask {
      * This is the name/location of where to
      * create the .zip file.
      *
-     * @deprecated Use setDestFile(File) instead
+     * @deprecated Use setDestFile(File) instead.
      */
     public void setZipfile(File zipFile) {
-        log("DEPRECATED - The zipfile attribute is deprecated. Use destfile attribute instead.");
         setDestFile(zipFile);
     }
 
@@ -137,8 +136,6 @@ public class Zip extends MatchingTask {
      * @deprecated Use setDestFile(File) instead
      */
     public void setFile(File file) {
-        log("DEPRECATED - The file attribute has been renamed destfile.",
-            Project.MSG_ERR);
         setDestFile(file);
     }
 
