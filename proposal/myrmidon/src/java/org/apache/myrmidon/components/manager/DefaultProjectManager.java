@@ -8,19 +8,26 @@
 package org.apache.myrmidon.components.manager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.executor.DefaultExecutionFrame;
+import org.apache.myrmidon.components.executor.ExecutionFrame;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.model.Condition;
 import org.apache.myrmidon.components.model.Project;
@@ -34,11 +41,15 @@ import org.apache.myrmidon.listeners.ProjectListener;
  */
 public class DefaultProjectManager
     extends AbstractLoggable
-    implements ProjectManager, Composable
+    implements ProjectManager, Composable, Parameterizable, Initializable
 {
     private Executor                 m_executor;
-    private ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
+    private ProjectListenerSupport   m_listenerSupport   = new ProjectListenerSupport();
     private DefaultComponentManager  m_componentManager;
+    private Parameters               m_parameters;
+    private Project                  m_project;
+    private TaskContext              m_baseContext;
+    private HashMap                  m_entrys            = new HashMap();
 
     /**
      * Add a listener to project events.
@@ -69,8 +80,22 @@ public class DefaultProjectManager
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_componentManager = (DefaultComponentManager)componentManager;
+        m_componentManager = new DefaultComponentManager( componentManager );
+
         m_executor = (Executor)componentManager.lookup( Executor.ROLE );
+        m_project = (Project)componentManager.lookup( Project.ROLE );
+    }
+
+    public void parameterize( final Parameters parameters )
+        throws ParameterException
+    {
+        m_parameters = parameters;
+    }
+
+    public void initialize()
+        throws Exception
+    {
+        m_baseContext = createBaseContext();
     }
 
     /**
@@ -81,33 +106,94 @@ public class DefaultProjectManager
      * @param target the name of the target
      * @exception TaskException if an error occurs
      */
-    public void executeTarget( final Project project, final String target, final TaskContext context )
+    public void executeProject( final Project project, final String target )
         throws TaskException
     {
-        //HACK: should do this a better way !!!!!!
-        m_componentManager.put( Project.ROLE, project );
+        final ProjectEntry entry = getProjectEntry( project );
 
         m_listenerSupport.projectStarted();
 
-        executeTargetWork( "<init>", project.getImplicitTarget(), context );
+        executeTarget( "<init>", project.getImplicitTarget(), entry.getFrame() );
 
-        execute( project, target, context );
+        execute( project, target, entry );
 
         m_listenerSupport.projectFinished();
     }
 
-    /**
-     * Execute a target in a particular project, in a particular context.
-     *
-     * @param project the Project
-     * @param target the name of the target
-     * @param context the context
-     * @exception TaskException if an error occurs
-     */
-    public void execute( Project project, String target, TaskContext context )
+
+    private TaskContext createBaseContext()
         throws TaskException
     {
-        execute( project, target, context, new ArrayList() );
+        final TaskContext context = new DefaultTaskContext();
+
+        final String[] names = m_parameters.getNames();
+        for( int i = 0; i < names.length; i++ )
+        {
+            final String value = m_parameters.getParameter( names[ i ], null );
+            context.setProperty( names[ i ], value );
+        }
+
+        //Add system properties so that they overide user-defined properties
+        addToContext( context, System.getProperties() );
+
+        return context;
+    }
+
+    private ExecutionFrame createExecutionFrame( final Project project )
+        throws TaskException
+    {
+        final TaskContext context = new DefaultTaskContext( m_baseContext );
+        context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
+
+        //Create per frame ComponentManager
+        final DefaultComponentManager componentManager = 
+            new DefaultComponentManager( m_componentManager );
+
+        //We need to place projects and ProjectManager
+        //in ComponentManager so as to support project-local antcall
+        componentManager.put( ProjectManager.ROLE, this );
+        componentManager.put( Project.ROLE, project );
+
+        final String[] names = project.getProjectNames();
+        for( int i = 0; i < names.length; i++ )
+        {
+            final String name = names[ i ];
+            final Project other = project.getProject( name );
+            componentManager.put( Project.ROLE + "/" + name, other );
+        }
+
+        //Per frame TypeManager here...
+
+        final DefaultExecutionFrame frame = new DefaultExecutionFrame();
+               
+        try
+        {
+
+            frame.setLogger( getLogger() );
+            frame.contextualize( context );
+            frame.compose( componentManager );
+        }
+        catch( final Exception e )
+        {
+            throw new TaskException( "Error setting up ExecutionFrame", e );
+        }
+
+        return frame;
+    }
+
+    private ProjectEntry getProjectEntry( final Project project )
+        throws TaskException
+    {
+        ProjectEntry entry = (ProjectEntry)m_entrys.get( project );
+        
+        if( null == entry )
+        {
+            final ExecutionFrame frame = createExecutionFrame( project );
+            entry = new ProjectEntry( project, frame );
+            m_entrys.put( project, entry );
+        }
+
+        return entry;
     }
 
     /**
@@ -121,31 +207,35 @@ public class DefaultProjectManager
      */
     private void execute( final Project project,
                           final String targetName,
-                          final TaskContext context,
-                          final ArrayList done )
+                          final ProjectEntry entry )
         throws TaskException
     {
         final Target target = project.getTarget( targetName );
-
         if( null == target )
         {
             throw new TaskException( "Unable to find target " + targetName );
         }
 
         //add target to list of targets executed
-        done.add( targetName );
+        entry.completeTarget( targetName );
 
         //execute all dependencies
         final String[] dependencies = target.getDependencies();
         for( int i = 0; i < dependencies.length; i++ )
         {
-            if( !done.contains( dependencies[ i ] ) )
+            if( !entry.isTargetCompleted( dependencies[ i ] ) )
             {
-                execute( project, dependencies[ i ], context, done );
+                execute( project, dependencies[ i ], entry );
             }
         }
 
-        executeTarget( targetName, target, context );
+        //notify listeners
+        m_listenerSupport.targetStarted( targetName );
+
+        executeTarget( targetName, target, entry.getFrame() );
+
+        //notify listeners
+        m_listenerSupport.targetFinished();
     }
 
     /**
@@ -156,40 +246,9 @@ public class DefaultProjectManager
      * @param context the context in which to execute
      * @exception TaskException if an error occurs
      */
-    private void executeTarget( final String targetName,
+    private void executeTarget( final String name,
                                 final Target target,
-                                final TaskContext context )
-        throws TaskException
-    {
-        //is this necessary ? I think not but ....
-        // NO it isn't because you set target name and project has already been provided
-        //m_componentManager.put( "org.apache.ant.project.Target", target );
-
-        //create project context and set target name
-        final TaskContext targetContext = new DefaultTaskContext( context );
-        targetContext.setProperty( Project.TARGET, targetName );
-
-        //notify listeners
-        m_listenerSupport.targetStarted( targetName );
-
-        //actually do the execution work
-        executeTargetWork( targetName, target, targetContext );
-
-        //notify listeners
-        m_listenerSupport.targetFinished();
-    }
-
-    /**
-     * Do the work associated with target.
-     * ie execute all tasks
-     *
-     * @param name the name of target
-     * @param target the target
-     * @param context the context
-     */
-    private void executeTargetWork( final String name,
-                                    final Target target,
-                                    final TaskContext context )
+                                final ExecutionFrame frame )
         throws TaskException
     {
         //check the condition associated with target.
@@ -197,7 +256,7 @@ public class DefaultProjectManager
         final Condition condition = target.getCondition();
         if( null != condition )
         {
-            if( false == condition.evaluate( context ) )
+            if( false == condition.evaluate( frame.getContext() ) )
             {
                 getLogger().debug( "Skipping target " + name +
                                    " as it does not satisfy condition" );
@@ -207,11 +266,13 @@ public class DefaultProjectManager
 
         getLogger().debug( "Executing target " + name );
 
+        //frame.getContext().setProperty( Project.TARGET, target );
+
         //execute all tasks assciated with target
         final Configuration[] tasks = target.getTasks();
         for( int i = 0; i < tasks.length; i++ )
         {
-            executeTask( tasks[ i ], context );
+            executeTask( tasks[ i ], frame );
         }
     }
 
@@ -222,26 +283,41 @@ public class DefaultProjectManager
      * @param context the context
      * @exception TaskException if an error occurs
      */
-    private void executeTask( final Configuration task, final TaskContext context )
+    private void executeTask( final Configuration task, final ExecutionFrame frame )
         throws TaskException
     {
         final String name = task.getName();
         getLogger().debug( "Executing task " + name );
 
-        //Set up context for task...
-        //is Only necessary if we are multi-threaded
-        //final TaskletContext targetContext = new DefaultTaskletContext( context );
-
         //is setting name even necessary ???
-        context.setProperty( TaskContext.NAME, name );
+        frame.getContext().setProperty( TaskContext.NAME, name );
 
         //notify listeners
         m_listenerSupport.taskStarted( name );
 
         //run task
-        m_executor.execute( task, context );
+        m_executor.execute( task, frame );
 
         //notify listeners task has ended
         m_listenerSupport.taskFinished();
+    }
+
+    /**
+     * Helper method to add values to a context
+     *
+     * @param context the context
+     * @param map the map of names->values
+     */
+    private void addToContext( final TaskContext context, final Map map )
+        throws TaskException
+    {
+        final Iterator keys = map.keySet().iterator();
+
+        while( keys.hasNext() )
+        {
+            final String key = (String)keys.next();
+            final Object value = map.get( key );
+            context.setProperty( key, value );
+        }
     }
 }
