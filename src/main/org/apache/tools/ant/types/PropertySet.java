@@ -47,6 +47,10 @@ public class PropertySet extends DataType {
     private Vector setRefs = new Vector();
     private Mapper _mapper;
 
+    /**
+     * this is a nested class containing a reference to some properties
+     * and optionally a source of properties.
+     */
     public static class PropertyRef {
 
         private int count;
@@ -92,7 +96,7 @@ public class PropertySet extends DataType {
                 + ", builtin=" + builtin;
         }
 
-    }
+    } //end nested class
 
     public void appendName(String name) {
         PropertyRef ref = new PropertyRef();
@@ -118,6 +122,12 @@ public class PropertySet extends DataType {
         addPropertyref(ref);
     }
 
+    /**
+     * set a mapper to change property names
+     * @param type mapper type
+     * @param from source pattern
+     * @param to output pattern
+     */
     public void setMapper(String type, String from, String to) {
         Mapper mapper = createMapper();
         Mapper.MapperType mapperType = new Mapper.MapperType();
@@ -163,6 +173,10 @@ public class PropertySet extends DataType {
         return isReference() ? getRef()._mapper : _mapper;
     }
 
+    /**
+     * this is the operation to get the existing or recalculated properties.
+     * @return
+     */
     public Properties getProperties() {
         Set names = null;
         Project prj = getProject();
@@ -200,10 +214,12 @@ public class PropertySet extends DataType {
             mapper = myMapper.getImplementation();
         }
         Properties properties = new Properties();
+        //iterate through the names, get the matching values
         for (Iterator iter = names.iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             String value = (String) props.get(name);
             if (mapper != null) {
+                //map the names
                 String[] newname = mapper.mapFileName(name);
                 if (newname != null) {
                     name = newname[0];
@@ -317,6 +333,11 @@ public class PropertySet extends DataType {
         }
         noAttributeSet = false;
     }
+
+    /**
+     * flag which tracks whether any attribute has been set; used by
+     * {@link #assertNotReference()} and {@link #setRefid(Reference)}
+     */
     private boolean noAttributeSet = true;
 
     /**
