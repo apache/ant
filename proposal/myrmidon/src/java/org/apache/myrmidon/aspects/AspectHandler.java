@@ -8,6 +8,7 @@
 package org.apache.myrmidon.aspects;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
@@ -20,7 +21,10 @@ import org.apache.myrmidon.api.TaskException;
  */
 public interface AspectHandler
 {
-    Configuration preCreate( Configuration configuration )
+    Configuration preCreate( Configuration taskModel )
+        throws TaskException;
+
+    void aspect( Parameters parameters, Configuration[] children )
         throws TaskException;
 
     void postCreate( Task task )
@@ -29,7 +33,7 @@ public interface AspectHandler
     void preLoggable( Logger logger )
         throws TaskException;
 
-    void preConfigure()
+    void preConfigure( Configuration taskModel )
         throws TaskException;
 
     void preExecute()
