@@ -69,6 +69,9 @@ Other changes:
   includes some iPlanet utility tasks
   
 * Add support for JBoss Application Server to the <ejbjar> task. 
+
+* Add a naming attribute to <ejbjar> to control the naming scheme that
+  ejbjar uses to name the generated EJB jars.
   
 * Allow the SQL Delimiter to be set in the so that Oracle stored procs may be
   entered  
@@ -87,6 +90,11 @@ Other changes:
 * added a force attribute to <style> to support dependencies that the
   task cannot determine itself (dependency on parameters, not file
   modification times for example)
+
+* added vmlauncher attribute to exec tasks. This defaults to true. If
+  it is set to false, the VM's ability to launch commands in bypassed
+  and the OS shell, either directly or through the auxillary antRun 
+  scripts is used. 
 
 Fixed bugs:
 -----------
@@ -126,13 +134,13 @@ Fixed bugs:
 * Initialise classes when loaded through the AntClassLoader - that is, run
   static initializers
   
-* Implement getResource() in AntClassLoader
+* Implement getResource() and getResources() in AntClassLoader
 
 * Create the <ejbjar> weblogic command line as a set of arguments rather than
   as a single line. Avoids problems with paths which contain spaces.
   
 * Make the AntClassLoader load resources in the same order as it currently
-  loads classes
+  loads classes. 
   
 * Allow DTD locations to be specified when building generic ejb-jars
 

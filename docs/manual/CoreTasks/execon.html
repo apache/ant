@@ -64,6 +64,17 @@ command. At least one nested <code>&lt;fileset&gt;</code> is required.</p>
     <td align="center" valign="top">No, default is <i>false</i></td>
   </tr>
   <tr>
+    <td valign="top">vmlauncher</td>
+    <td valign="top">Run command using the Java VM's execution facilities
+        where available. If set to false the underlying OS's shell,
+        either directly or through the antRun scripts, will be used.
+        Under some operating systems, this gives access to facilities
+        not nomrally available through the VM including, under Windows,
+        being able to execute scripts, rather than their associated
+        interpreter.</td>
+    <td align="center" valign="top">No, default is <i>true</i></td>
+  </tr>
+  <tr>
     <td valign="top">skipemptyfilesets</td>
     <td valign="top">Don't run the command, if no source files have
       been found.</td>
