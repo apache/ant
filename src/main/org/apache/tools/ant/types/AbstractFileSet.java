@@ -210,7 +210,7 @@ public abstract class AbstractFileSet extends DataType
      * @param file the single <code>File</code> included in this
      *             <code>AbstractFileSet</code>.
      */
-    public void setFile(File file) {
+    public synchronized void setFile(File file) {
         if (isReference()) {
             throw tooManyAttributes();
         }
