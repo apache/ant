@@ -388,21 +388,27 @@ public class Concat extends Task {
             BufferedReader in = null;
 
             try {
-                OutputStream os = null;
                 if (destinationFile == null) {
                     // Log using WARN so it displays in 'quiet' mode.
-                    os = new LogOutputStream(this, Project.MSG_WARN);
+                    out = new PrintWriter(
+                              new OutputStreamWriter(
+                                  new LogOutputStream(this, Project.MSG_WARN)
+                                  )
+                              );
                 } else {
-                    os = 
-                        new FileOutputStream(destinationFile.getAbsolutePath(),
-                                             append);
+                    out = new PrintWriter(
+                              new OutputStreamWriter(
+                                  new FileOutputStream(destinationFile
+                                                       .getAbsolutePath(),
+                                                       append),
+                                  encoding)
+                              );
                     
                     // This flag should only be recognized for the first
                     // file. In the context of a single 'cat', we always
                     // want to append.
                     append = true;
                 }
-                out = new PrintWriter(new OutputStreamWriter(os, encoding));
 
                 for (int i = 0; i < len; i++) {
                     in = new BufferedReader(
