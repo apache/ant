@@ -299,7 +299,9 @@ public class FileUtils {
      * @param file the "reference" file for relative paths. This
      * instance must be an absolute file and must not contain
      * &quot;./&quot; or &quot;../&quot; sequences (same for \ instead
-     * of /).
+     * of /).  If it is null, this call is equivalent to
+     * <code>new java.io.File(filename)</code>.
+     *
      * @param filename a file name
      *
      * @return an absolute file that doesn't contain &quot;./&quot; or
@@ -325,6 +327,10 @@ public class FileUtils {
             Character.isLetter(filename.charAt(0)) &&
             filename.charAt(1) == ':') {
             return normalize(filename);
+        }
+
+        if (file == null) {
+            return new File(filename);
         }
 
         File helpFile = new File(file.getAbsolutePath());
@@ -361,6 +367,9 @@ public class FileUtils {
      *   <li>DOS style paths that start with a drive letter will have
      *     \ as the separator.</li> 
      * </ul>
+     *
+     * @throws java.lang.NullPointerException if the file path is
+     * equal to null.
      */
     public File normalize(String path) {
         String orig = path;

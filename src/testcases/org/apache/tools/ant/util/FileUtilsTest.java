@@ -259,6 +259,21 @@ public class FileUtilsTest extends TestCase {
     }
 
     /**
+     * Test handling of null arguments.
+     */
+    public void testNullArgs() {
+        try {
+            fu.normalize(null);
+            fail("successfully normalized a null-file");
+        } catch (NullPointerException npe) {
+            // Expected exception caught
+        }
+        
+        File f = fu.resolveFile(null, "a");
+        assertEquals(f, new File("a"));
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {
