@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,6 +104,14 @@ public class ZipOutputStream extends DeflaterOutputStream {
      * @since 1.1
      */
     private int level = Deflater.DEFAULT_COMPRESSION;
+
+    /**
+     * Has the compression level changed when compared to the last
+     * entry?
+     *
+     * @since 1.5
+     */
+    private boolean hasCompressionLevelChanged = false;
 
     /**
      * Default compression method for next entry.
@@ -331,8 +339,9 @@ public class ZipOutputStream extends DeflaterOutputStream {
                 throw new ZipException("crc checksum is required for STORED method");
             }
             entry.setComprSize(entry.getSize());
-        } else {
+        } else if (hasCompressionLevelChanged) {
             def.setLevel(level);
+            hasCompressionLevelChanged = false;
         }        
         writeLocalFileHeader(entry);
     }
@@ -354,6 +363,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
      * @since 1.1
      */
     public void setLevel(int level) {
+        hasCompressionLevelChanged = (this.level != level);
         this.level = level;
     }
 

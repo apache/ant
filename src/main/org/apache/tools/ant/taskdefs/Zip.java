@@ -351,8 +351,8 @@ public class Zip extends MatchingTask {
                     }
                 }
             }
-        } catch (IOException ioe) {
-            String msg = "Problem creating " + archiveType + ": " + ioe.getMessage();
+        } catch (Throwable t) {
+            String msg = "Problem creating " + archiveType + ": " + t.getMessage();
 
             // delete a bogus ZIP file
             if (!zipFile.delete()) {
@@ -366,7 +366,7 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            throw new BuildException(msg, ioe, location);
+            throw new BuildException(msg, t, location);
         } finally {
             cleanUp();
         }
