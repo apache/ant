@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -123,7 +123,7 @@ public class Input extends Task {
     }
 
     /**
-     * Actual test method executed by jakarta-ant.
+     * Actual method executed by jakarta-ant.
      * @exception BuildException
      */
     public void execute () throws BuildException {
@@ -137,8 +137,9 @@ public class Input extends Task {
 
         getProject().getInputHandler().handleInput(request);
 
-        if (addproperty != null) {
-            project.setNewProperty(addproperty, request.getInput());
+        String value = request.getInput();
+        if (addproperty != null && value != null) {
+            project.setNewProperty(addproperty, value);
         }
     }
 
