@@ -85,6 +85,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* <available> has a new attribute named ignoreSystemClasses.
+
 * New filter readers: ClassConstants, ExpandProperties, HeadFilter, 
   LineContains, LineContainsRegExp, PrefixLines, ReplaceTokens, 
   StripJavaComments, StripLineBreaks, StripLineComments, TabsToSpaces, 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
+
 /**
  * @author Nico Seessle <nico@seessle.de>
  */
@@ -188,5 +190,39 @@ public class AvailableTest extends BuildFileTest {
     // Invalid type specified
     public void test19() {
         expectBuildException("test19", "Invalid value for type attribute.");
+    }
+
+    // Core class that exists in system classpath is ignored
+    public void test20() {
+        executeTarget("test20");
+        assertNull(project.getProperty("test"));
+    }
+
+    // Core class that exists in system classpath is ignored, but found in specified classpath
+    public void test21() {
+        if (project.getJavaVersion() == Project.JAVA_1_1) {
+            // java.* classes are not found in JDK 1.1 even if specified in classpath attribute; test24 shows correct operation
+            return;
+        }
+        executeTarget("test21");
+        assertEquals("true",project.getProperty("test"));
+    }
+
+    // Core class that exists in system classpath is not ignored with ignoresystemclass="false"
+    public void test22() {
+        executeTarget("test22");
+        assertEquals("true",project.getProperty("test"));
+    }
+
+    // Core class that exists in system classpath is not ignored with default ignoresystemclasses value
+    public void test23() {
+        executeTarget("test23");
+        assertEquals("true",project.getProperty("test"));
+    }
+
+    // Class is found in specified classpath
+    public void test24() {
+        executeTarget("test24");
+        assertEquals("true",project.getProperty("test"));
     }
 }

@@ -86,6 +86,7 @@ public class Available extends Task implements Condition {
     private AntClassLoader loader;
     private String value = "true";
     private boolean isTask = false;
+    private boolean ignoreSystemclasses = false;
 
     public void setClasspath(Path classpath) {
         createClasspath().append(classpath);
@@ -150,6 +151,10 @@ public class Available extends Task implements Condition {
 
     public void setType(FileDir type) {
         this.type = type;
+    }
+
+    public void setIgnoresystemclasses(boolean ignore) {
+        this.ignoreSystemclasses = ignore;
     }
 
     public void execute() throws BuildException {
@@ -349,7 +354,22 @@ public class Available extends Task implements Condition {
     private boolean checkClass(String classname) {
         try {
             Class requiredClass = null;
+            if( ignoreSystemclasses ) {
+                loader = new AntClassLoader(null,getProject(),classpath,false);
             if (loader != null) {
+                    try {
+                        loader.findClass(classname);
+                    }
+                    catch( SecurityException se ) {
+            // class found but restricted name; this is actually
+            // the case we're looking for, so catch the exception
+            // and return
+                        return true;
+            }
+                }
+                return false;
+            }
+            else if (loader != null) {
                 requiredClass = loader.loadClass(classname);
             } else {
                 ClassLoader l = this.getClass().getClassLoader();
@@ -364,12 +384,12 @@ public class Available extends Task implements Condition {
             AntClassLoader.initializeClass(requiredClass);
             return true;
         } catch (ClassNotFoundException e) {
-            log("class \"" + classname + "\" was not found", 
+            log("class \"" + classname + "\" was not found",
                 Project.MSG_DEBUG);
             return false;
         } catch (NoClassDefFoundError e) {
-            log("Could not load dependent class \"" + e.getMessage() 
-                + "\" for class \"" + classname + "\"", 
+            log("Could not load dependent class \"" + e.getMessage()
+                + "\" for class \"" + classname + "\"",
                 Project.MSG_DEBUG);
             return false;
         }

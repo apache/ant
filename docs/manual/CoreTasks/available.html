@@ -49,26 +49,32 @@ execution depending on system parameters.</p>
   <tr>
     <td valign="top">classpath</td>
     <td valign="top">The classpath to use when looking up <code>classname</code> or <code>resource</code>.</td>
-    <td align="center" valign="top">No</td>    
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">filepath</td>
     <td valign="top">The path to use when looking up <code>file</code>.</td>
-    <td align="center" valign="top">No</td>    
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">classpathref</td>
     <td valign="top">The classpath to use, given as a <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
-    <td align="center" valign="top">No</td>    
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">The type of <code>file</code> to look for, either a directory (<code>type=&quot;dir&quot;</code>) or a file 
-      (<code>type=&quot;file&quot;</code>). If not set, the property will be set if the name specified in the <code>file</code> 
+    <td valign="top">The type of <code>file</code> to look for, either a directory (<code>type=&quot;dir&quot;</code>) or a file
+      (<code>type=&quot;file&quot;</code>). If not set, the property will be set if the name specified in the <code>file</code>
       attribute exists as either a file or a directory.</td>
-    <td align="center" valign="top">No</td>    
+    <td align="center" valign="top">No</td>
   </tr>
-  
+  <tr>
+    <td valign="top">ignoresystemclasses</td>
+    <td valign="top">Ignore Ant's runtime classes, using only the specified
+      classpath.  Only affects the "classname" attribute.  Defaults to &quot;false&quot;</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
@@ -114,7 +120,7 @@ if the class <code>javax.xml.transform.Transformer</code> is found in the classp
 <p>sets the <code>have.extras</code> property to the value &quot;true&quot;
 if the resource-file <code>extratasks.properties</code> is found.
 </p>
-<hr><p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
