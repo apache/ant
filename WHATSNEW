@@ -67,6 +67,8 @@ Fixed bugs:
 
 * fix up folder creation in PVCS task
 
+* <tar>'s up-to-date check didn't work for nested <(tar)fileset>s.
+
 Other changes:
 --------------
 
