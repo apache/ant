@@ -107,10 +107,25 @@ public class Path {
      */
     public void setLocation(String location) {
         if (location != null && location.length() > 0) {
-            definition.addElement(translateFile(location));
+            String element = translateFile(location);
+            if (definition.indexOf(element) == -1) {
+                definition.addElement(element);
+            }
         }
     }
 
+
+    /**
+     * Append the contents of the other Path instance to this.
+     */
+    public void append(Path other) {
+        String[] l = other.list();
+        for (int i=0; i<l.length; i++) {
+            if (definition.indexOf(l[i]) == -1) {
+                definition.addElement(l[i]);
+            }
+        }
+    }
 
     /**
      * Parses a path definition and creates single PathElements.
@@ -119,7 +134,10 @@ public class Path {
     public void setPath(String path) {
         final Vector elements = translatePath(path);
         for (int i=0; i < elements.size(); i++) {
-            definition.addElement(elements.elementAt(i));
+            String element = (String) elements.elementAt(i);
+            if (definition.indexOf(element) == -1) {
+                definition.addElement(element);
+            }
         }
     }
 

@@ -130,7 +130,7 @@ public class Java extends Exec {
         if (this.classpath == null) {
             this.classpath = s;
         } else {
-            this.classpath.setPath(s.toString());
+            this.classpath.append(s);
         }
     }
     

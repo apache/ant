@@ -167,6 +167,39 @@ public class PathTest extends TestCase {
         p.setPath("\\d;\\e");
         l = p.list();
         assertEquals("5 after setPath", 5, l.length);
+        p.append(new Path("\\f"));
+        l = p.list();
+        assertEquals("6 after append", 6, l.length);
+    }
+
+    public void testEmpyPath() {
+        Path p = new Path("");
+        String[] l = p.list();
+        assertEquals("0 after construction", 0, l.length);
+        p.setLocation("");
+        l = p.list();
+        assertEquals("0 after setLocation", 0, l.length);
+        p.setPath("");
+        l = p.list();
+        assertEquals("0 after setPath", 0, l.length);
+        p.append(new Path());
+        l = p.list();
+        assertEquals("0 after append", 0, l.length);
+    }
+
+    public void testUnique() {
+        Path p = new Path("/a:/a");
+        String[] l = p.list();
+        assertEquals("1 after construction", 1, l.length);
+        p.setLocation("\\a");
+        l = p.list();
+        assertEquals("1 after setLocation", 1, l.length);
+        p.setPath("\\a;/a");
+        l = p.list();
+        assertEquals("1 after setPath", 1, l.length);
+        p.append(new Path("/a;\\a:\\a"));
+        l = p.list();
+        assertEquals("1 after append", 1, l.length);
     }
 
 }
