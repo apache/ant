@@ -100,6 +100,7 @@ public class Rpm extends Task
     }
 
     public void setSpecFile( String sf )
+        throws TaskException
     {
         if( ( sf == null ) || ( sf.trim().equals( "" ) ) )
         {

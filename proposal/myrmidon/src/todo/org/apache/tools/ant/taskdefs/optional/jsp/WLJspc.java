@@ -74,6 +74,7 @@ public class WLJspc extends MatchingTask
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( compileClasspath == null )
         {
@@ -92,7 +93,6 @@ public class WLJspc extends MatchingTask
      */
     public void setDest( File dirName )
     {
-
         destinationDirectory = dirName;
     }
 

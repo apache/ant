@@ -77,6 +77,7 @@ public class PathConvert extends Task
      * @param r The new Refid value
      */
     public void setRefid( Reference r )
+        throws TaskException
     {
         if( path != null )
             throw noChildrenAllowed();
@@ -90,8 +91,8 @@ public class PathConvert extends Task
      * @param target The new Targetos value
      */
     public void setTargetos( String target )
+        throws TaskException
     {
-
         targetOS = target.toLowerCase();
 
         if( !targetOS.equals( "windows" ) && !target.equals( "unix" ) &&
@@ -139,8 +140,8 @@ public class PathConvert extends Task
      * @return Description of the Returned Value
      */
     public Path createPath()
+        throws TaskException
     {
-
         if( isReference() )
             throw noChildrenAllowed();
 
@@ -159,7 +160,6 @@ public class PathConvert extends Task
     public void execute()
         throws TaskException
     {
-
         // If we are a reference, the create a Path from the reference
         if( isReference() )
         {
@@ -238,8 +238,8 @@ public class PathConvert extends Task
      * @return String Updated element
      */
     private String mapElement( String elem )
+        throws TaskException
     {
-
         int size = prefixMap.size();
 
         if( size != 0 )
@@ -365,6 +365,7 @@ public class PathConvert extends Task
          * @return String Updated path element after mapping
          */
         public String apply( String elem )
+            throws TaskException
         {
             if( from == null || to == null )
             {

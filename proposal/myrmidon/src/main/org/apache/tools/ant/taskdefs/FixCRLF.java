@@ -455,6 +455,7 @@ public class FixCRLF extends MatchingTask
      */
     private void notInConstant( OneLiner.BufferLine bufline, int end,
                                 BufferedWriter outWriter )
+        throws TaskException
     {
         // N.B. both column and string index are zero-based
         // Process a string not part of a constant;
@@ -922,7 +923,14 @@ public class FixCRLF extends MatchingTask
             }
             BufferLine tmpLine =
                 new BufferLine( line.toString(), eolStr.toString() );
-            nextLine();
+            try
+            {
+                nextLine();
+            }
+            catch( TaskException e )
+            {
+                throw new NoSuchElementException();
+            }
             return tmpLine;
         }
 

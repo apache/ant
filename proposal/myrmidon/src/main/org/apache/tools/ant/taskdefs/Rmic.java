@@ -682,7 +682,6 @@ public class Rmic extends MatchingTask
             {
                 String msg = "Failed to copy " + oldFile + " to " +
                     newFile + " due to " + ioe.getMessage();
-                newFile + " due to " + ioe.getMessage();
                 throw new TaskException( msg, ioe );
             }
         }

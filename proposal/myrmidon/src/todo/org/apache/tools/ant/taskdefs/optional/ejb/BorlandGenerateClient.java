@@ -55,6 +55,7 @@ public class BorlandGenerateClient extends Task
     Path classpath;
 
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -67,6 +68,7 @@ public class BorlandGenerateClient extends Task
     }
 
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -92,6 +94,7 @@ public class BorlandGenerateClient extends Task
     }
 
     public Path createClasspath()
+        throws TaskException
     {
         if( this.classpath == null )
         {

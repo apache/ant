@@ -59,6 +59,7 @@ public class JlinkTask extends MatchingTask
      * @param addfiles The new Addfiles value
      */
     public void setAddfiles( Path addfiles )
+        throws TaskException
     {
         if( this.addfiles == null )
         {
@@ -86,6 +87,7 @@ public class JlinkTask extends MatchingTask
      * @param mergefiles The new Mergefiles value
      */
     public void setMergefiles( Path mergefiles )
+        throws TaskException
     {
         if( this.mergefiles == null )
         {
@@ -113,6 +115,7 @@ public class JlinkTask extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createAddfiles()
+        throws TaskException
     {
         if( this.addfiles == null )
         {
@@ -128,6 +131,7 @@ public class JlinkTask extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createMergefiles()
+        throws TaskException
     {
         if( this.mergefiles == null )
         {
@@ -179,11 +183,13 @@ public class JlinkTask extends MatchingTask
     }
 
     private boolean haveAddFiles()
+        throws TaskException
     {
         return haveEntries( addfiles );
     }
 
     private boolean haveEntries( Path p )
+        throws TaskException
     {
         if( p == null )
         {
@@ -197,9 +203,9 @@ public class JlinkTask extends MatchingTask
     }
 
     private boolean haveMergeFiles()
+        throws TaskException
     {
         return haveEntries( mergefiles );
     }
-
 }
 

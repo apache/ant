@@ -54,6 +54,7 @@ public class Property extends Task
     }
 
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -66,6 +67,7 @@ public class Property extends Task
     }
 
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -136,6 +138,7 @@ public class Property extends Task
     }
 
     public Path createClasspath()
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -192,6 +195,7 @@ public class Property extends Task
     }
 
     protected void addProperties( Properties props )
+        throws TaskException
     {
         resolveAllProperties( props );
         Enumeration e = props.keys();

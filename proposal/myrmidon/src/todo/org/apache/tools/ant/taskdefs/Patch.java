@@ -68,6 +68,7 @@ public class Patch extends Task
      * @param file The new Patchfile value
      */
     public void setPatchfile( File file )
+        throws TaskException
     {
         if( !file.exists() )
         {

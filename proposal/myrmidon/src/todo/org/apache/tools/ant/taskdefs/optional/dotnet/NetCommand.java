@@ -76,6 +76,7 @@ public class NetCommand
      */
 
     public NetCommand( Task owner, String title, String program )
+        throws TaskException
     {
         _owner = owner;
         _title = title;
@@ -196,6 +197,7 @@ public class NetCommand
      * set up the command sequence..
      */
     protected void prepareExecutor()
+        throws TaskException
     {
         // default directory to the project's base directory
         File dir = _owner.getProject().getBaseDir();

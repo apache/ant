@@ -153,6 +153,7 @@ public class Tstamp extends Task
         }
 
         public void setLocale( String locale )
+            throws TaskException
         {
             StringTokenizer st = new StringTokenizer( locale, " \t\n\r\f," );
             try
@@ -207,6 +208,7 @@ public class Tstamp extends Task
         }
 
         public void execute( Project project, Date date, Location location )
+            throws TaskException
         {
             if( propertyName == null )
             {

@@ -167,6 +167,7 @@ public class ExecuteOn extends ExecTask
      * @return The Commandline value
      */
     protected String[] getCommandline( String[] srcFiles, File[] baseDirs )
+        throws TaskException
     {
         Vector targets = new Vector();
         if( targetFilePos != null )

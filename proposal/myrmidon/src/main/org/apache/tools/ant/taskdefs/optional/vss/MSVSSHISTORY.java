@@ -141,6 +141,7 @@ public class MSVSSHISTORY extends MSVSS
      * @param attr The new Style value
      */
     public void setStyle( BriefCodediffNofile attr )
+        throws TaskException
     {
         String option = attr.getValue();
         if( option.equals( "brief" ) )

@@ -200,6 +200,7 @@ public abstract class MSVSS extends Task
     }
 
     protected int run( Commandline cmd )
+        throws TaskException
     {
         try
         {

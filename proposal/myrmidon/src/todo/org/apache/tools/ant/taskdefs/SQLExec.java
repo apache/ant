@@ -171,6 +171,7 @@ public class SQLExec extends Task
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -188,6 +189,7 @@ public class SQLExec extends Task
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -364,6 +366,7 @@ public class SQLExec extends Task
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+    throws TaskException
     {
         if( this.classpath == null )
         {
@@ -739,7 +742,7 @@ public class SQLExec extends Task
     }
 
     protected void runStatements( Reader reader, PrintStream out )
-        throws SQLException, IOException
+        throws SQLException, IOException, TaskException
     {
         String sql = "";
         String line = "";
@@ -845,7 +848,7 @@ public class SQLExec extends Task
         }
 
         private void runTransaction( PrintStream out )
-            throws IOException, SQLException
+            throws IOException, SQLException, TaskException
         {
             if( tSqlCommand.length() != 0 )
             {

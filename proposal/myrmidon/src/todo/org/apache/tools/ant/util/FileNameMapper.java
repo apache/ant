@@ -7,6 +7,8 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.myrmidon.api.TaskException;
+
 /**
  * Interface to be used by SourceFileScanner. <p>
  *
@@ -27,7 +29,8 @@ public interface FileNameMapper
      *
      * @param from The new From value
      */
-    void setFrom( String from );
+    void setFrom( String from )
+        throws TaskException;
 
     /**
      * Sets the to part of the transformation rule.

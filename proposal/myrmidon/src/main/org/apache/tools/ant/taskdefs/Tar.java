@@ -222,7 +222,7 @@ public class Tar extends MatchingTask
 
     protected void tarFile( File file, TarOutputStream tOut, String vPath,
                             TarFileSet tarFileSet )
-        throws IOException
+        throws IOException, TaskException
     {
         FileInputStream fIn = null;
 
@@ -341,6 +341,7 @@ public class Tar extends MatchingTask
          *      for the project.
          */
         public String[] getFiles( Project p )
+            throws TaskException
         {
             if( files == null )
             {
@@ -380,7 +381,6 @@ public class Tar extends MatchingTask
      */
     public static class TarLongFileMode extends EnumeratedAttribute
     {
-
         // permissable values for longfile attribute
         public final static String WARN = "warn";
         public final static String FAIL = "fail";
@@ -391,6 +391,7 @@ public class Tar extends MatchingTask
         private final String[] validModes = {WARN, FAIL, TRUNCATE, GNU, OMIT};
 
         public TarLongFileMode()
+            throws TaskException
         {
             super();
             setValue( WARN );

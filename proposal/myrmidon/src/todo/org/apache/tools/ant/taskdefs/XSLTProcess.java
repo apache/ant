@@ -91,6 +91,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         createClasspath().append( classpath );
     }
@@ -102,6 +103,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }//-- setSourceDir
@@ -191,6 +193,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( classpath == null )
         {
@@ -279,6 +282,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
     }
 
     protected XSLTLiaison getLiaison()
+        throws TaskException
     {
         // if processor wasn't specified, see if TraX is available.  If not,
         // default it to xslp or xalan, depending on which is in the classpath

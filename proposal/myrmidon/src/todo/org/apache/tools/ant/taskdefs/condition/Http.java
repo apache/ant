@@ -21,7 +21,9 @@ import org.apache.tools.ant.ProjectComponent;
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  */
-public class Http extends ProjectComponent implements Condition
+public class Http
+    extends ProjectComponent
+    implements Condition
 {
     String spec = null;
 

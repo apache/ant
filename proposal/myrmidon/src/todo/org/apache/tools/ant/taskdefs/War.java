@@ -33,6 +33,7 @@ public class War extends Jar
     }
 
     public void setWebxml( File descr )
+        throws TaskException
     {
         deploymentDescriptor = descr;
         if( !deploymentDescriptor.exists() )

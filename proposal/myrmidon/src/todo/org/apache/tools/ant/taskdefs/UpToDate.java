@@ -107,6 +107,7 @@ public class UpToDate extends MatchingTask implements Condition
      * @return Description of the Returned Value
      */
     public boolean eval()
+        throws TaskException
     {
         if( sourceFileSets.size() == 0 )
         {

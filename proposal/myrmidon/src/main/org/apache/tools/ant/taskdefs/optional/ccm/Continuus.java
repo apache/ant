@@ -107,6 +107,7 @@ public abstract class Continuus extends Task
     }
 
     protected int run( Commandline cmd, ExecuteStreamHandler handler )
+        throws TaskException
     {
         try
         {

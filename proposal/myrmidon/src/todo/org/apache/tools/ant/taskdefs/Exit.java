@@ -41,6 +41,7 @@ public class Exit extends Task
      * @param msg The feature to be added to the Text attribute
      */
     public void addText( String msg )
+        throws TaskException
     {
         message += project.replaceProperties( msg );
     }

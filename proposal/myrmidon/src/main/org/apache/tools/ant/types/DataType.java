@@ -92,12 +92,6 @@ public abstract class DataType
         return ref != null;
     }
 
-    public void execute()
-        throws TaskException
-    {
-        //HACK: NOOP execute - should be deleted in the future!
-    }
-
     /**
      * Performs the check for circular references and returns the referenced
      * object.

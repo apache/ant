@@ -280,6 +280,7 @@ public class CSharp
      */
 
     public CSharp()
+        throws TaskException
     {
         Clear();
         setIncludes( csc_file_pattern );
@@ -417,6 +418,7 @@ public class CSharp
      * @param path another path to append
      */
     public void setReferenceFiles( Path path )
+        throws TaskException
     {
         //demand create pathlist
         if( _referenceFiles == null )

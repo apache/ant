@@ -109,7 +109,7 @@ public class Manifest extends Task
      * @throws IOException if the manifest cannot be read from the reader.
      */
     public Manifest( Reader r )
-        throws ManifestException, IOException
+        throws ManifestException, TaskException, IOException
     {
         BufferedReader reader = new BufferedReader( r );
         // This should be the manifest version
@@ -239,7 +239,7 @@ public class Manifest extends Task
     }
 
     public void addConfiguredAttribute( Attribute attribute )
-        throws ManifestException
+        throws ManifestException, TaskException
     {
         mainSection.addConfiguredAttribute( attribute );
     }
@@ -417,7 +417,7 @@ public class Manifest extends Task
         {
             write( new PrintWriter( sw ) );
         }
-        catch( IOException e )
+        catch( Exception e )
         {
             return null;
         }
@@ -431,7 +431,7 @@ public class Manifest extends Task
      * @throws IOException if the manifest cannot be written
      */
     public void write( PrintWriter writer )
-        throws IOException
+        throws IOException, TaskException
     {
         writer.println( ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion );
         String signatureVersion = mainSection.getAttributeValue( ATTRIBUTE_SIGNATURE_VERSION );
@@ -862,7 +862,7 @@ public class Manifest extends Task
          * @throws IOException if the section cannot be read from the reader.
          */
         public String read( BufferedReader reader )
-            throws ManifestException, IOException
+            throws ManifestException, IOException, TaskException
         {
             Attribute attribute = null;
             while( true )

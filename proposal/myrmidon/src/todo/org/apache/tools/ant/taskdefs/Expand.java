@@ -151,6 +151,7 @@ public class Expand extends MatchingTask
      * This method is to be overridden by extending unarchival tasks.
      */
     protected void expandFile( FileUtils fileUtils, File srcF, File dir )
+        throws TaskException
     {
         ZipInputStream zis = null;
         try
@@ -192,7 +193,7 @@ public class Expand extends MatchingTask
                                 InputStream compressedInputStream,
                                 String entryName,
                                 Date entryDate, boolean isDirectory )
-        throws IOException
+        throws IOException, TaskException
     {
 
         if( patternsets != null && patternsets.size() > 0 )

@@ -46,6 +46,12 @@ public abstract class ProjectComponent
         return project;
     }
 
+    public void execute()
+        throws TaskException
+    {
+        //HACK: NOOP execute - should be deleted in the future!
+    }
+
     protected File resolveFile( final String name )
         throws TaskException
     {

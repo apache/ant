@@ -109,8 +109,8 @@ public class XMLValidateTask extends Task
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
-
         if( this.classpath == null )
         {
             this.classpath = classpath;
@@ -126,6 +126,7 @@ public class XMLValidateTask extends Task
      * @see #setClasspath
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -202,6 +203,7 @@ public class XMLValidateTask extends Task
      * @see #setClasspath
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( this.classpath == null )
         {
@@ -319,6 +321,7 @@ public class XMLValidateTask extends Task
      * parse the file
      */
     private void doValidate( File afile )
+        throws TaskException
     {
         try
         {

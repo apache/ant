@@ -319,7 +319,7 @@ public class Pvcs extends org.apache.tools.ant.Task
      *      build...
      */
     public void execute()
-        throws org.apache.tools.ant.TaskException
+        throws TaskException
     {
         Project aProj = getProject();
         int result = 0;
@@ -446,6 +446,7 @@ public class Pvcs extends org.apache.tools.ant.Task
     }
 
     protected int runCmd( Commandline cmd, ExecuteStreamHandler out )
+        throws TaskException
     {
         try
         {

@@ -101,6 +101,7 @@ public class JspC extends MatchingTask
      * @param cp The new Classpath value
      */
     public void setClasspath( Path cp )
+        throws TaskException
     {
         if( classpath == null )
             classpath = cp;
@@ -114,6 +115,7 @@ public class JspC extends MatchingTask
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -187,6 +189,7 @@ public class JspC extends MatchingTask
      * @param srcDir The new Srcdir value
      */
     public void setSrcdir( Path srcDir )
+        throws TaskException
     {
         if( src == null )
         {
@@ -309,6 +312,7 @@ public class JspC extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( classpath == null )
             classpath = new Path( project );

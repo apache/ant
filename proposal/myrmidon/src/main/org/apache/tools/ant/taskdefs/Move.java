@@ -47,6 +47,7 @@ public class Move extends Copy
      * @param d Description of Parameter
      */
     protected void deleteDir( File d )
+        throws TaskException
     {
         String[] list = d.list();
         if( list == null )
@@ -77,6 +78,7 @@ public class Move extends Copy
     //************************************************************************
 
     protected void doFileOperations()
+        throws TaskException
     {
         //Attempt complete directory renames, if any, first.
         if( completeDirMap.size() > 0 )

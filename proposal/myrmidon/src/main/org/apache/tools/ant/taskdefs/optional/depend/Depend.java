@@ -105,6 +105,7 @@ public class Depend extends MatchingTask
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( dependClasspath == null )
         {
@@ -122,6 +123,7 @@ public class Depend extends MatchingTask
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -178,6 +180,7 @@ public class Depend extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( dependClasspath == null )
         {
@@ -359,6 +362,7 @@ public class Depend extends MatchingTask
      * @return a vector containing the classes to analyse.
      */
     private Vector getClassFiles( Path classLocations )
+        throws TaskException
     {
         // break the classLocations into its components.
         String[] classLocationsList = classLocations.list();

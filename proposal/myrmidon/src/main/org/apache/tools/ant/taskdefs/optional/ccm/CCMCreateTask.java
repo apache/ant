@@ -119,7 +119,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      * @exception IOException Description of Exception
      */
     public void setProcessOutputStream( InputStream is )
-        throws IOException
+        throws TaskException, IOException
     {
 
         String buffer = "";

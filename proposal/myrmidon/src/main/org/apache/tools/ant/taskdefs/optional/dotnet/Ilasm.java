@@ -119,6 +119,7 @@ public class Ilasm
      * constructor inits everything and set up the search pattern
      */
     public Ilasm()
+        throws TaskException
     {
         Clear();
         setIncludes( file_pattern );

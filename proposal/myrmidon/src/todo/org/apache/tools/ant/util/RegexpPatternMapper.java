@@ -69,9 +69,9 @@ public class RegexpPatternMapper implements FileNameMapper
      * @return Description of the Returned Value
      */
     public String[] mapFileName( String sourceFileName )
+        throws TaskException
     {
-        if( reg == null || to == null
-            || !reg.matches( sourceFileName ) )
+        if( reg == null || to == null || !reg.matches( sourceFileName ) )
         {
             return null;
         }
@@ -86,6 +86,7 @@ public class RegexpPatternMapper implements FileNameMapper
      * @return Description of the Returned Value
      */
     protected String replaceReferences( String source )
+        throws TaskException
     {
         Vector v = reg.getGroups( source );
 

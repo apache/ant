@@ -832,17 +832,6 @@ public class Javac extends MatchingTask
     }
 
     /**
-     * Recreate src
-     *
-     * @return a nested src element.
-     */
-    protected Path recreateSrc()
-    {
-        src = null;
-        return createSrc();
-    }
-
-    /**
      * Clear the list of files to be compiled and copied..
      */
     protected void resetFileLists()

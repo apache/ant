@@ -34,6 +34,7 @@ public class Ear extends Jar
     }
 
     public void setAppxml( File descr )
+        throws TaskException
     {
         deploymentDescriptor = descr;
         if( !deploymentDescriptor.exists() )

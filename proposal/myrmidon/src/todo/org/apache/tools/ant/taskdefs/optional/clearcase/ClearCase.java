@@ -13,6 +13,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import java.io.IOException;
 
 /**
  * A base class for creating tasks for executing commands on ClearCase. <p>
@@ -103,6 +104,7 @@ public abstract class ClearCase extends Task
     }
 
     protected int run( Commandline cmd )
+        throws TaskException
     {
         try
         {
@@ -113,7 +115,7 @@ public abstract class ClearCase extends Task
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
         }
-        catch( java.io.IOException e )
+        catch( IOException e )
         {
             throw new TaskException( "Error", e );
         }

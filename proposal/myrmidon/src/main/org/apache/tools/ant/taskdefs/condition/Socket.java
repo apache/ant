@@ -18,7 +18,9 @@ import org.apache.tools.ant.ProjectComponent;
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  */
-public class Socket extends ProjectComponent implements Condition
+public class Socket
+    extends ProjectComponent
+    implements Condition
 {
     String server = null;
     int port = 0;

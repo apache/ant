@@ -7,6 +7,8 @@
  */
 package org.apache.tools.ant;
 
+import org.apache.myrmidon.api.TaskException;
+
 /**
  * Interface for objects which can contain tasks <p>
  *
@@ -23,6 +25,7 @@ public interface TaskContainer
      *
      * @param task the task to be added to this container
      */
-    void addTask( Task task );
+    void addTask( Task task )
+        throws TaskException;
 }
 

@@ -98,11 +98,13 @@ public class Parallel extends Task
                 {
                     firstException = t;
                 }
+                /*
                 if( t instanceof TaskException &&
                     firstLocation == Location.UNKNOWN_LOCATION )
                 {
                     firstLocation = ( (TaskException)t ).getLocation();
                 }
+                */
                 exceptionMessage.append( lSep );
                 exceptionMessage.append( t.getMessage() );
             }

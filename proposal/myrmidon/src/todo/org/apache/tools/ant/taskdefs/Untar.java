@@ -26,6 +26,7 @@ public class Untar extends Expand
 {
 
     protected void expandFile( FileUtils fileUtils, File srcF, File dir )
+        throws TaskException
     {
         TarInputStream tis = null;
         try

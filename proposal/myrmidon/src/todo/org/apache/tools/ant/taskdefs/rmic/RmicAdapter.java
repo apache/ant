@@ -57,5 +57,6 @@ public interface RmicAdapter
      *
      * @return The Classpath value
      */
-    Path getClasspath();
+    Path getClasspath()
+        throws TaskException;
 }

@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.rmic;
 import java.io.File;
 import java.util.Random;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
@@ -51,6 +52,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
      * @return The Classpath value
      */
     public Path getClasspath()
+        throws TaskException
     {
         return getCompileClasspath();
     }
@@ -77,6 +79,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
      * @return Description of the Returned Value
      */
     protected Commandline setupRmicCommand()
+        throws TaskException
     {
         return setupRmicCommand( null );
     }
@@ -88,6 +91,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
      * @return Description of the Returned Value
      */
     protected Commandline setupRmicCommand( String[] options )
+        throws TaskException
     {
         Commandline cmd = new Commandline();
 
@@ -178,6 +182,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
      * @return The CompileClasspath value
      */
     protected Path getCompileClasspath()
+        throws TaskException
     {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath

@@ -32,6 +32,7 @@ public class Chmod extends ExecuteOn
     private boolean havePerm = false;
 
     public Chmod()
+        throws TaskException
     {
         super.setExecutable( "chmod" );
         super.setParallel( true );

@@ -384,6 +384,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
      * @return Description of the Returned Value
      */
     protected int executeExternalCompile( String[] args, int firstFileName )
+        throws TaskException
     {
         String[] commandArray = null;
         File tmpFile = null;

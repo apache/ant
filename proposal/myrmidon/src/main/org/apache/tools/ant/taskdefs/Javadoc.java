@@ -116,11 +116,13 @@ public class Javadoc extends Task
      * @param r The new BootClasspathRef value
      */
     public void setBootClasspathRef( Reference r )
+        throws TaskException
     {
         createBootclasspath().setRefid( r );
     }
 
     public void setBootclasspath( Path src )
+        throws TaskException
     {
         if( bootclasspath == null )
         {
@@ -145,6 +147,7 @@ public class Javadoc extends Task
     }
 
     public void setClasspath( Path src )
+        throws TaskException
     {
         if( classpath == null )
         {
@@ -162,6 +165,7 @@ public class Javadoc extends Task
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -209,6 +213,7 @@ public class Javadoc extends Task
     }
 
     public void setDocletPathRef( Reference r )
+        throws TaskException
     {
         if( doclet == null )
         {
@@ -445,6 +450,7 @@ public class Javadoc extends Task
     }
 
     public void setSourcepath( Path src )
+        throws TaskException
     {
         if( sourcePath == null )
         {
@@ -462,6 +468,7 @@ public class Javadoc extends Task
      * @param r The new SourcepathRef value
      */
     public void setSourcepathRef( Reference r )
+        throws TaskException
     {
         createSourcepath().setRefid( r );
     }
@@ -557,11 +564,13 @@ public class Javadoc extends Task
     }
 
     public void addSource( SourceFile sf )
+        throws TaskException
     {
         sourceFiles.addElement( sf );
     }
 
     public Path createBootclasspath()
+        throws TaskException
     {
         if( bootclasspath == null )
         {
@@ -571,6 +580,7 @@ public class Javadoc extends Task
     }
 
     public Path createClasspath()
+        throws TaskException
     {
         if( classpath == null )
         {
@@ -600,6 +610,7 @@ public class Javadoc extends Task
     }
 
     public Path createSourcepath()
+        throws TaskException
     {
         if( sourcePath == null )
         {
@@ -956,6 +967,7 @@ public class Javadoc extends Task
      * @return Description of the Returned Value
      */
     protected String expand( String content )
+        throws TaskException
     {
         return project.replaceProperties( content );
     }
@@ -1242,6 +1254,7 @@ public class Javadoc extends Task
         }
 
         public void setPath( Path path )
+            throws TaskException
         {
             if( this.path == null )
             {
@@ -1259,6 +1272,7 @@ public class Javadoc extends Task
          * @param r The new PathRef value
          */
         public void setPathRef( Reference r )
+            throws TaskException
         {
             createPath().setRefid( r );
         }
@@ -1287,6 +1301,7 @@ public class Javadoc extends Task
         }
 
         public Path createPath()
+            throws TaskException
         {
             if( path == null )
             {
