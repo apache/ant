@@ -384,7 +384,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 javaTask.setFork(true);
             }
             else {
-                javaTask.setFork(false);
+                javaTask.setFork(true);
             }
             
 
