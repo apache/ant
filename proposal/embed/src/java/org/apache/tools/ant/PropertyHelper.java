@@ -67,13 +67,12 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Deals with properties - substitution, dynamic properties, etc.
  *
- * Eventually the static methods from ProjectHelper should be
- * moved here ( with a wrapper for backward compat ).
+ * Important: the static methods from ProjectHelper belong here. They should
+ *  be changed to wrap this.
  *
- * Also the property store ( Hashtable ) and all property manipulation
- * logic could be moved here.
+ * Also the property store ( Hashtable ) from Project and all property manipulation
+ * logic should be moved here ( and delegated to interceptors ).
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author Costin Manolache
  */
 public class PropertyHelper {
@@ -105,10 +104,6 @@ public class PropertyHelper {
     public void addPropertyInterceptor( PropertyInterceptor pi ) {
         propertyInterceptors.addElement( pi );
     }
-
-//     public Vector getPropertyInterceptors() {
-//         return propertyInterceptors;
-//     }
     
     /** Process an value, doing the replacements.
      */
@@ -168,7 +163,6 @@ public class PropertyHelper {
     Object processDynamic( Project project, String name ) {
         for(int i=0; i<propertyInterceptors.size(); i++ ) {
             PropertyInterceptor pi=(PropertyInterceptor)propertyInterceptors.elementAt( i );
-            
             Object o=pi.getProperty( project, null, name );
             if( o!=null )
                 return o;
@@ -197,12 +191,17 @@ public class PropertyHelper {
         
         IntrospectionHelper ih = 
             IntrospectionHelper.getHelper(target.getClass());
-        
+
+        // Why ???
         project.addBuildListener(ih);
         
         for (int i = 0; i < attrs.getLength(); i++) {
+            String attValue=attrs.getValue(i);
+
+            // XXX ADD SPECIAL CASE FOR ${property} - don't convert to string
+            // and support ARRAYS.
             // reflect these into the target
-            String value = replaceProperties(attrs.getValue(i));
+            String value = replaceProperties(attValue);
             
             try {
                 ih.setAttribute(project, target, 
@@ -215,5 +214,4 @@ public class PropertyHelper {
             }
         }
     }
-
 }
