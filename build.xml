@@ -328,10 +328,6 @@
     <filename name="${ant.package}/launch/**/*"/>
   </selector>
 
-  <selector id="needs.apache-httpclient">
-  </selector>
-
-
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
     <exclude name="**/SignJarTest.java" if="offline"/>
@@ -674,8 +670,6 @@
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing"  unless="swing.present"/>
             <selector refid="needs.jsch" unless="jsch.present"/>
-            <selector refid="needs.apache-httpclient"
-                      unless="apache-httpclient.present"/>
           </or>
         </not>
       </selector>
@@ -850,7 +844,6 @@
             <selector refid="needs.jdepend"/>
             <selector refid="needs.swing"/>
             <selector refid="needs.jsch"/>
-            <selector refid="needs.apache-httpclient"/>
           </or>
         </not>
       </and>
@@ -895,7 +888,6 @@
     <optional-jar dep="swing"/>
     <optional-jar dep="jsch"/>
     <optional-jar dep="jdepend"/>
-    <optional-jar dep="apache-httpclient"/>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
          basedir="${build.classes}"
