@@ -78,6 +78,7 @@ public class Zip extends MatchingTask {
     private File zipFile;
     private File baseDir;
     private boolean doCompress = true;
+    private boolean doUpdate = true;
     private boolean doFilesonly = false;
     protected String archiveType = "zip";
     // For directories:
@@ -85,6 +86,7 @@ public class Zip extends MatchingTask {
     protected String emptyBehavior = "skip";
     private Vector filesets = new Vector ();
     private Hashtable addedDirs = new Hashtable();
+    private Vector addedFiles = new Vector();
 
     /**
      * Encoding to use for filenames, defaults to the platform's
@@ -120,6 +122,14 @@ public class Zip extends MatchingTask {
      */
     public void setFilesonly(boolean f) {
         doFilesonly = f;
+    }
+
+    /**
+     * Sets whether we want to update the file (if it exists)
+     * or create a new one.
+     */
+    public void setUpdate(boolean c) {
+        doUpdate = c;
     }
 
     /**
@@ -179,6 +189,39 @@ public class Zip extends MatchingTask {
             throw new BuildException("You must specify the " + archiveType + " file to create!");
         }
 
+        // Renamed version of original file, if it exists
+        File renamedFile=null;
+        // Whether or not an actual update is required -
+        // we don't need to update if the original file doesn't exist
+        boolean reallyDoUpdate=false;
+        if (doUpdate && zipFile.exists())
+        {
+            reallyDoUpdate=true;
+            
+            int i;
+            for (i=0; i < 1000; i++)
+            {
+                renamedFile = new File (zipFile.getParent(), "tmp."+i);
+                
+                if (!renamedFile.exists())
+                    break;
+            }
+            if (i==1000)
+                throw new BuildException 
+                ("Can't find temporary filename to rename old file to.");
+            try
+            {
+                if (!zipFile.renameTo (renamedFile))
+                    throw new BuildException 
+                    ("Unable to rename old file to temporary file");
+            }
+            catch (SecurityException e)
+            {
+                throw new BuildException 
+                    ("Not allowed to rename old file to temporary file");
+            }
+        }
+        
         // Create the scanners to pass to isUpToDate().
         Vector dss = new Vector ();
         if (baseDir != null)
@@ -195,10 +238,12 @@ public class Zip extends MatchingTask {
         // can also handle empty archives
         if (isUpToDate(scanners, zipFile)) return;
 
-        log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
+        String action=reallyDoUpdate ? "Updating " : "Building ";
+        
+        log(action + archiveType +": "+ zipFile.getAbsolutePath());
 
+        boolean success = false;
         try {
-            boolean success = false;
             ZipOutputStream zOut = 
               new ZipOutputStream(new FileOutputStream(zipFile));
             zOut.setEncoding(encoding);
@@ -215,6 +260,24 @@ public class Zip extends MatchingTask {
                     addFiles(getDirectoryScanner(baseDir), zOut, "", "");
                 // Add the explicit filesets to the archive.
                 addFiles(filesets, zOut);
+                if (reallyDoUpdate)
+                {
+                    ZipFileSet oldFiles = new ZipFileSet ();
+                    oldFiles.setSrc (renamedFile);
+                    
+                    StringBuffer exclusionPattern=new StringBuffer();
+                    for (int i=0; i < addedFiles.size(); i++)
+                    {
+                        if (i != 0)
+                            exclusionPattern.append (",");
+                        exclusionPattern.append 
+                            ((String) addedFiles.elementAt(i));
+                    }
+                    oldFiles.setExcludes (exclusionPattern.toString());
+                    Vector tmp = new Vector();
+                    tmp.addElement (oldFiles);
+                    addFiles (tmp, zOut);
+                }
                 success = true;
             } finally {
                 // Close the output stream.
@@ -240,10 +303,22 @@ public class Zip extends MatchingTask {
                 msg += " (and the archive is probably corrupt but I could not delete it)";
             }
 
+            if (reallyDoUpdate) {
+                if (!renamedFile.renameTo (zipFile)) {
+                    msg+=" (and I couldn't rename the temporary file "+
+                        renamedFile.getName()+" back)";
+                }
+            }
+            
             throw new BuildException(msg, ioe, location);
         } finally {
             cleanUp();
         }
+        // If we've been successful on an update, delete the temporary file
+        if (success && reallyDoUpdate)
+            if (!renamedFile.delete())
+                log ("Warning: unable to delete temporary file "+
+                     renamedFile.getName(), Project.MSG_WARN);
     }
 
     /**
@@ -514,6 +589,7 @@ public class Zip extends MatchingTask {
             }
             count = in.read(buffer, 0, buffer.length);
         } while (count != -1);
+        addedFiles.addElement (vPath);
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
@@ -612,5 +688,8 @@ public class Zip extends MatchingTask {
      * <p>When we get here, the Zip file has been closed and all we
      * need to do is to reset some globals.</p>
      */
-    protected void cleanUp() {}
+    protected void cleanUp() {
+        addedDirs = new Hashtable();
+        addedFiles = new Vector();
+    }
 }

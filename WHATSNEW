@@ -105,6 +105,9 @@ Other changes:
 * New filesonly attribute for <zip> and friends to suppress directory
   entries.
 
+* New update attribute for <zip> and friends - update an existing
+  archive instead of creating a new one.
+
 Fixed bugs:
 -----------
 
