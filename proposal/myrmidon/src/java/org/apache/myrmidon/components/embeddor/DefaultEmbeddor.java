@@ -122,36 +122,32 @@ public class DefaultEmbeddor
         return builder;
     }
 
-    public Workspace createWorkspace( final Project project, 
-                                      final Parameters parameters )
+    public Workspace createWorkspace( final Parameters parameters )
         throws Exception
     {
         final String component = getParameter( Workspace.ROLE );
-        final Workspace projectManager = 
+        final Workspace workspace = 
             (Workspace)createComponent( component, Workspace.class );
 
-        setupLogger( projectManager );
+        setupLogger( workspace );
 
 
-        if( projectManager instanceof Composable )
+        if( workspace instanceof Composable )
         {
-            final DefaultComponentManager componentManager =
-                new DefaultComponentManager( m_componentManager );
-            componentManager.put( Project.ROLE, project );
-            ((Composable)projectManager).compose( componentManager );
+            ((Composable)workspace).compose( m_componentManager );
         }
 
-        if( projectManager instanceof Parameterizable )
+        if( workspace instanceof Parameterizable )
         {
-            ((Parameterizable)projectManager).parameterize( parameters );
+            ((Parameterizable)workspace).parameterize( parameters );
         }        
 
-        if( projectManager instanceof Initializable )
+        if( workspace instanceof Initializable )
         {
-            ((Initializable)projectManager).initialize();
+            ((Initializable)workspace).initialize();
         }        
 
-        return projectManager;
+        return workspace;
     }
 
     /**

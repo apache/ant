@@ -53,7 +53,6 @@ public class DefaultWorkspace
     private ProjectListenerSupport   m_listenerSupport   = new ProjectListenerSupport();
     private ComponentManager         m_componentManager;
     private Parameters               m_parameters;
-    private Project                  m_project;
     private TaskContext              m_baseContext;
     private HashMap                  m_entrys            = new HashMap();
     private TypeManager              m_typeManager;
@@ -88,10 +87,8 @@ public class DefaultWorkspace
         throws ComponentException
     {
         m_componentManager = componentManager;
-
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_executor = (Executor)componentManager.lookup( Executor.ROLE );
-        m_project = (Project)componentManager.lookup( Project.ROLE );
     }
 
     public void parameterize( final Parameters parameters )

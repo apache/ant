@@ -353,7 +353,7 @@ public class CLIMain
         while( true )
         {
             //actually do the build ...
-            final Workspace workspace = embeddor.createWorkspace( project, m_defines );
+            final Workspace workspace = embeddor.createWorkspace( m_defines );
             workspace.addProjectListener( listener );
 
             doBuild( workspace, project, m_targets );

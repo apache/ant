@@ -38,10 +38,9 @@ public interface Embeddor
     /**
      * Create a Workspace for a particular project.
      *
-     * @param project the root project
-     * @param defines the defines in project
+     * @param defines the defines in workspace
      * @return the Workspace
      */
-    Workspace createWorkspace( Project project, Parameters parameters )
+    Workspace createWorkspace( Parameters parameters )
         throws Exception;
 }
