@@ -47,40 +47,24 @@
       </td></tr>
 
       <tr><td><blockquote>
-        Sets Java's web proxy properties, so that tasks and code run in
- the same JVM can have through-the-firewall access to remote web sites,
- and remote ftp sites.
- You can nominate an http and ftp proxy, or a socks server, reset the server 
- settings, or do nothing at all.
- <p> 
- Examples
- <pre>&lt;setproxy/&gt;</pre>
- do nothing
- <pre>&lt;setproxy proxyhost="firewall"/&gt;</pre>
- set the proxy to firewall:80
- <pre>&lt;setproxy proxyhost="firewall" proxyport="81"/&gt;</pre>
- set the proxy to firewall:81
- <pre>&lt;setproxy proxyhost=""/&gt;</pre>
- stop using the http proxy; don't change the socks settings
- <pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre>
- use socks via socksy:1080
- <pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
- stop using the socks server
+        Sets Java's web proxy properties, so that tasks and code run in the same JVM can have through-the-firewall access to remote web sites, and remote ftp sites. You can nominate an http and ftp proxy, or a socks server, reset the server settings, or do nothing at all. <p> Examples <pre>&lt;setproxy/&gt;</pre> do nothing <pre>&lt;setproxy proxyhost="firewall"/&gt;</pre> set the proxy to firewall:80 <pre>&lt;setproxy proxyhost="firewall" proxyport="81"/&gt;</pre> set the proxy to firewall:81 <pre>&lt;setproxy proxyhost=""/&gt;</pre> stop using the http proxy; don't change the socks settings <pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre> use socks via socksy:1080 <pre>&lt;setproxy socksproxyhost=""/&gt;</pre> stop using the socks server. <p> You can set a username and password for http with the <tt>proxyHost</tt> and <tt>proxyPassword</tt> attributes. On Java1.4 and above these can also be used against SOCKS5 servers. </p>
       </blockquote></td></tr>
 
     </table>
     <!-- End Description -->
 
+ <!-- Ignore -->
+
+
+
     <!-- Start Attributes -->
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
-
       <tr><td bgcolor="#525D76">
         <font color="#ffffff" face="arial,helvetica.sanserif">
           <a name="attributes">
           <strong>Parameters</strong></a></font>
       </td></tr>
-
       <tr><td><blockquote>
         <table>
           <tr>
@@ -93,19 +77,35 @@
         <td bgcolor="#cccccc" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
         </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
+        </td>
           </tr>
+    <!-- Attribute Group -->    
+    
+    <!-- Attribute Group -->    
+        <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">nonproxyhosts</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">A list of hosts to bypass the proxy on. These should be separated with the vertical bar character '|'. Only in Java 1.4 does ftp use this list. e.g. fozbot.corp.sun.com|*.eng.sun.com</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="7">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
+        </td>
+    </tr>
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">nonProxyHosts</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyhost</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          A list of hosts to bypass the proxy on. These should be separated
- with the vertical bar character '|'. Only in Java 1.4 does ftp use
- this list.
- e.g. fozbot.corp.sun.com|*.eng.sun.com.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">the HTTP/ftp proxy host. Set this to "" for the http proxy option to be disabled</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
@@ -114,13 +114,10 @@
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyHost</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxypassword</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          the HTTP/ftp proxy host. Set this to "" for the http proxy
- option to be disabled
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the password for the proxy. Used only if the proxyUser is set.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
@@ -129,27 +126,10 @@
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyPassword</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyport</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Set the password for the proxy. Used only if the proxyUser is set.<br>
-          <em>since Ant 1.6</em>
-        </font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyPort</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          the HTTP/ftp proxy port number; default is 80
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">the HTTP/ftp proxy port number; default is 80</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">int</font>
@@ -158,14 +138,10 @@
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyUser</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">proxyuser</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          set the proxy user. Probably requires a password to accompany this
-          setting. Default=""<br>
-          <em>since Ant 1.6</em>
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">set the proxy user. Probably requires a password to accompany this setting. Default=""</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
@@ -174,13 +150,10 @@
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">socksProxyHost</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">socksproxyhost</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          The name of a Socks server. Set to "" to turn socks
- proxying off.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">The name of a Socks server. Set to "" to turn socks proxying off.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
@@ -189,17 +162,16 @@
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">socksProxyPort</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">socksproxyport</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Set the ProxyPort for socks connections. The default value is 1080
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the ProxyPort for socks connections. The default value is 1080</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">int</font>
         </td>
     </tr>
+
 
         </table>
       </blockquote></td></tr>
@@ -240,7 +212,7 @@
   <tr>
     <td>
       <div align="center"><font color="#525D76" size="-1"><em>
-        Copyright &#169; 2002-2003, Apache Software Foundation
+        Copyright &#169; 2000-2003, Apache Software Foundation
       </em></font></div>
     </td>
   </tr>
