@@ -59,6 +59,8 @@ Legal:
   <property name="dist.lib" value="${dist.dir}/lib"/>
   <property name="dist.ext" value="${dist.dir}/ext"/>
 
+  <property name="test.classes" value="${build.dir}/test/classes"/>
+
   <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
 
   <path id="project.class.path">
@@ -425,6 +427,27 @@ Legal:
     </xdoclet>
   </target>
 
+  <!-- Compiles and runs the unit tests -->
+  <target name="test" depends="compile" if="junit.present">
+    <mkdir dir="${test.classes}"/>
+    <javac srcdir="src/testcases"
+           destdir="${test.classes}"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="${deprecation}">
+      <classpath refid="project.class.path"/>
+    </javac>
+    <junit printsummary="on"
+           fork="false">
+      <formatter type="brief" usefile="false"/>
+      <classpath refid="project.class.path"/>
+      <classpath location="${test.classes}"/>
+      <batchtest>
+        <fileset dir="${test.classes}" includes="**/*Test.class"/>
+      </batchtest>
+    </junit>
+  </target>
+
   <!-- Creates the distribution -->
   <target name="dist" depends="jars">
 
@@ -477,6 +500,7 @@ Legal:
     </delete>
   </target>
 
+  <!-- Rebuilds the distribution -->
   <target name="rebuild">
     <antcall target="clean"/>
     <antcall target="main"/>
