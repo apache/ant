@@ -455,15 +455,28 @@ public class Jar extends Zip {
     /**
      * Make sure we don't think we already have a MANIFEST next time this task
      * gets executed.
+     *
+     * @see Zip#cleanUp
      */
     protected void cleanUp() {
         super.cleanUp();
 
+        manifest = null;
+    }
+
+    /**
+     * reset to default values.
+     *
+     * @see Zip#reset
+     *
+     * @since 1.44, Ant 1.5
+     */
+    public void reset() {
+        super.reset();
         configuredManifest = null;
         filesetManifest = null;
         mergeManifests = false;
         mergeManifestsMain = false;
-        manifest = null;
         manifestFile = null;
         index = false;
     }

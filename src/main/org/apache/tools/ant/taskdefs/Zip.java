@@ -846,14 +846,33 @@ public class Zip extends MatchingTask {
      *
      * <p>When we get here, the Zip file has been closed and all we
      * need to do is to reset some globals.</p>
+     *
+     * <p>This method will only reset globals that have been changed
+     * during execute(), it will not alter the attributes or nested
+     * child elements.  If you want to reset the instance so that you
+     * can later zip a completely different set of files, you must use
+     * the reset method.</p>
+     *
+     * @see #reset
      */
     protected void cleanUp() {
         addedDirs.clear();
         addedFiles.removeAllElements();
+        entries.clear();
+    }
+
+    /**
+     * Makes this instance reset all attributes to their default
+     * values and forget all children.
+     *
+     * @since 1.72, Ant 1.5
+     *
+     * @see #cleanUp
+     */
+    public void reset() {
         filesets.removeAllElements();
         zipFile = null;
         baseDir = null;
-        entries.clear();
         groupfilesets.removeAllElements();
         duplicate = "add";
         archiveType = "zip";
