@@ -90,7 +90,6 @@ public abstract class AbstractTypeDef
         throws TaskException
     {
         //TODO: Make this support classpath sub-element in future
-
         try
         {
             final File file = getContext().resolveFile( m_lib );
