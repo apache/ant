@@ -125,6 +125,8 @@ Fixed bugs:
   cases; when split file-property, files were only created if
   writes were performed.
 
+* fixed case handling of scriptdef attributes and elements.
+
 Other changes:
 --------------
 
