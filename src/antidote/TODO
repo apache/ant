@@ -1,4 +1,13 @@
 TODO List:
+
+    * Add menu option to select the compiler to use, which then sets
+      the "build.compiler" property. Better yet, create a generic menu 
+      building capability that allows the setting of a property from a 
+      list of options.
+
+    * Add ability to put an "all" or "don't care" specifyer on the action
+      "enableOn" and "disableOn" properties.
+
     * Add ability to create new "nodes" in the build tree.
 
     * Add editors for defining file sets, and other "sets".

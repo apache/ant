@@ -1,3 +1,8 @@
+2000-11-27  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/ActionManager.java: Added ability to
+	generate popup menus from a list of action IDs. 
+
 2000-11-24  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/Console.java: Added context colorization.
