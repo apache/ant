@@ -1,0 +1,177 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>NUnit Task</title>
+  </head>
+
+  <body>
+    <h2><a name="dotnetexec">NUnit</a></h2>
+
+    <h3>Description</h3>
+
+    <p>Runs the <a href="http://www.nunit.org/">NUnit</a> console
+    test runner.</p>
+
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">vm</td>
+        <td valign="top">Same as <a
+            href="dotnetexec.html">dotnetexec</a>'s vm attribute.
+          Specify the framework to use.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">config</td>
+        <td valign="top">Config file to use</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">output</td>
+        <td valign="top">Where test output should go.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">error</td>
+        <td valign="top">Where test error output should go.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">xmlout</td>
+        <td valign="top">Where NUnit's XML output should go.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">transform</td>
+        <td valign="top">The transformation to apply.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">thread</td>
+        <td valign="top">Causes a separate thread to be created for
+        running the tests - see the NUnit documentation for
+        details.</td>
+        <td align="center">No - defaults to false.</td>
+      </tr>
+      <tr>
+        <td valign="top">noshadow</td>
+        <td valign="top">Disables shadow copying of the assembly in
+        order to provide improved performance..</td>
+        <td align="center">No - defaults to false.</td>
+      </tr>
+      <tr>
+        <td valign="top">fixture</td>
+        <td valign="top">Test fixture to run.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">labels</td>
+        <td valign="top">Causes an identifying label to be displayed
+        at the start of each test case.</td>
+        <td align="center">No - defaults to false.</td>
+      </tr>
+      <tr>
+        <td valign="top">failOnError</td>
+        <td valign="top">Stops the build if NUnit returns with a code
+        indicating an error or failure.</td>
+        <td align="center">No - defaults to false.</td>
+      </tr>
+    </table>
+
+    <h3>Parameters specified as nested elements</h3>
+    <h4>testassembly</h4>
+
+    <p><code>testassembly</code> has a single required attribute name -
+    specifies an assembly or a project file holding tests.</p>
+
+    <h4>include/exclude</h4>
+
+    <p><code>in/exclude</code> have a single required attribute name -
+    specifies a category to include or exclude from the tests.</p>
+
+    <p><b>Note</b> that in current versions of NUnit (up to 2.2) you
+    may choose to either include or exclude categories in a run, but
+    not both.  This task does <b>not</b> enforce this restriction
+    since future versions of NUnit may change behavior.</p>
+
+    <h4>redirector</h4>
+
+    <p>A nested <a
+    href="http://ant.apache.org/manual/CoreTypes/redirector.html">I/O
+    Redirector</a> can be specified.  Any file mapping is done using a
+    <code>null</code> sourcefile; therefore not all <a
+    href="http://ant.apache.org/manual/CoreTypes/mapper.html">Mapper</a>
+    types will return results.</p>
+
+    <h4>env</h4> <p>It is possible to specify environment variables to
+    pass to the system command via nested <code>&lt;env&gt;</code>
+    elements.  They support the same attributes as the nested <a
+    href="http://ant.apache.org/manual/CoreTasks/exec.html#env"><code>env</code>
+    element of the <code>&lt;exec&gt;</code> task</a>.</p>
+
+    <h3>Examples</h3>
+
+    <h4>Specify an assembly or project:</h4>
+
+    <pre>
+      &lt;nunit&gt;
+        &lt;testassembly name="nunit.tests.dll"/&gt;
+      &lt;/nunit&gt;
+    </pre>
+    
+    <p>or</p>
+
+    <pre>
+      &lt;nunit&gt;
+        &lt;testassembly name="nunit.tests.csproj"/&gt;
+      &lt;/nunit&gt;
+    </pre>
+    
+    <h4>Specifying an Assembly and a Fixture</h4>
+
+    <pre>
+      &lt;nunit fixture="NUnit.Tests.AssertionTests"&gt;
+        &lt;testassembly name="nunit.tests.dll"/&gt;
+      &lt;/nunit&gt;
+    </pre>
+
+    <h4>Specifying Test Categories to Include</h4>
+
+    <pre>
+      &lt;nunit&gt;
+        &lt;testassembly name="nunit.tests.dll"/&gt;
+        &lt;include name="Baseline"/&gt;
+      &lt;/nunit&gt;
+    </pre>
+
+    <h4>Specifying the XML file name</h4>
+
+    <pre>
+      &lt;nunit xmlout="console-test.xml"&gt;
+        &lt;testassembly name="nunit.tests.dll"/&gt;
+      &lt;/nunit&gt;
+    </pre>
+
+    <p>changes the name of the output file to "console-test.xml" -
+    note that this task will resolve file names relative to the
+    project's base directory, not the current working directory.</p>
+
+    <h4>Specifying Multiple Assemblies</h4>
+
+    <pre>
+      &lt;nunit&gt;
+        &lt;testassembly name="assembly1.dll"/&gt;
+        &lt;testassembly name="assembly2.dll"/&gt;
+        &lt;testassembly name="assembly3.dll"/&gt;
+      &lt;/nunit&gt;
+    </pre>
+
+    <hr/>
+      <p align="center">Copyright &copy; 2004 The Apache Software Foundation. All rights Reserved.</p>
+  </body>
+</html>

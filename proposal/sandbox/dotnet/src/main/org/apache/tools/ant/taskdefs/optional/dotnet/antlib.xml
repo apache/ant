@@ -31,4 +31,8 @@
     name="wix"
     classname="org.apache.tools.ant.taskdefs.optional.dotnet.WixTask"
     />
+  <taskdef
+    name="nunit"
+    classname="org.apache.tools.ant.taskdefs.optional.dotnet.NUnitTask"
+    />
 </antlib>

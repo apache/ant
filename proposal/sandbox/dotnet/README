@@ -32,8 +32,6 @@ Short term goals are:
 
 * A <wix> task.
 
-Mid term goals:
-
 * A <nunit> task.
 
 Those tasks should end up in an antlib of their own in order to be
