@@ -26,6 +26,11 @@
               href="/problems.html"/>
     </menu>
 
+    <menu name="Download">
+        <item name="Binary Distributions" href="/bindownload.cgi"/>
+        <item name="Source Distributions" href="/srcdownload.cgi"/>
+    </menu>
+
     <menu name="Get Involved">
         <item name="Mailing Lists"         href="/mail.html"/>
         <item name="CVS Repositories"      href="/cvs.html"/>
