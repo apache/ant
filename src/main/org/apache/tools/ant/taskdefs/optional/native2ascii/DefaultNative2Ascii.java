@@ -36,7 +36,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
     /**
      * Splits the task into setting up the command line switches
      * (delegated to {@link #setup setup}), adding the file names
-     * (delegated to {@link addFiles addFiles}) and running the tool
+     * (delegated to {@link #addFiles addFiles}) and running the tool
      * (delegated to {@link #run run}).
      */
     public final boolean convert(Native2Ascii args, File srcFile,
