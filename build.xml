@@ -295,9 +295,7 @@
                unless="jakarta.oro.present" />
       <exclude name="${regexp.package}/Jdk14Regexp*.java"
                unless="jdk1.4+" />
-      <exclude name="${ant.package}/AntSecurityManager.java"
-               unless="jdk1.2+" />
-      <exclude name="${ant.package}/util/optional/NoExitSecurityManager.java"
+      <exclude name="${util.package}/optional/NoExitSecurityManager.java"
                unless="jdk1.2+" />
       <exclude name="${ant.package}/listener/Log4jListener.java"
                unless="log4j.present" />
@@ -413,11 +411,19 @@
     <jar destfile="${build.lib}/${name}.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
-      <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
+      <exclude name="${optional.package}/**" />
+      <exclude name="${optional.type.package}/**" />
+      <exclude name="${util.package}/depend/**" />
+      <exclude name="${util.package}/optional/**" />
+      <exclude name="${util.package}/regexp/**" />
+      <exclude name="${ant.package}/listener/Log4jListener.class" />
+      <exclude name="${ant.package}/taskdefs/email/UUMailer.class" />
+      <exclude name="${ant.package}/taskdefs/email/MimeMailer.class" />
+      <exclude name="${ant.package}/taskdefs/Get.class" />
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
-        <section name="org/apache/tools/ant">
+        <section name="${ant.package}">
           <attribute name="Specification-Title"
                      value="Apache Ant" />
           <attribute name="Specification-Version"
@@ -437,11 +443,19 @@
     <jar destfile="${build.lib}/optional.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
-      <include name="org/apache/tools/ant/taskdefs/optional/**" />
+      <include name="${optional.package}/**" />
+      <include name="${optional.type.package}/**" />
+      <include name="${util.package}/depend/**" />
+      <include name="${util.package}/optional/**" />
+      <include name="${util.package}/regexp/**" />
+      <include name="${ant.package}/listener/Log4jListener.class" />
+      <include name="${ant.package}/taskdefs/email/UUMailer.class" />
+      <include name="${ant.package}/taskdefs/email/MimeMailer.class" />
+      <include name="${ant.package}/taskdefs/Get.class" />
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
-        <section name="org/apache/tools/ant/taskdefs/optional">
+        <section name="${optional.package}">
           <attribute name="Specification-Title"
                      value="Apache Ant Optional Tasks" />
           <attribute name="Specification-Version"
@@ -888,7 +902,7 @@
            deprecation="${deprecation}" >
       <classpath refid="tests-classpath" />
 
-      <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java"
+      <exclude name="${optional.package}/ANTLRTest.java"
                unless="antlr.present" />
       <exclude name="${regexp.package}/JakartaRegexp*Test.java"
                unless="jakarta.regexp.present" />
@@ -900,14 +914,14 @@
       <exclude name="${optional.package}/metamata/*.java"
                unless="jakarta.oro.present"/>
 
-      <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
+      <exclude name="${optional.package}/sitraka/*.java"
                unless="some.regexp.support" />
-      <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/XMLReportTest.java"
+      <exclude name="${optional.package}/sitraka/XMLReportTest.java"
                unless="trax.present" />
 
-      <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java"
+      <exclude name="${optional.package}/XslpLiaisonTest.java"
                unless="xslp.present"/>
-      <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java"
+      <exclude name="${optional.package}/XalanLiaisonTest.java"
                unless="xalan.present"/>
       <exclude name="${optional.package}/TraXLiaisonTest.java"
                unless="trax.present"/>
@@ -919,7 +933,7 @@
       <exclude name="${optional.package}/perforce/*.java"
                unless="jakarta.oro.present" />
 
-      <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java"
+      <exclude name="${ant.package}/taskdefs/TestProcess.java"
                unless="jdk1.3+" />
     </javac>
   </target>
@@ -978,19 +992,19 @@
           <exclude name="org/example/**" />
           <include name="**/*Test*" />
           <!-- abstract class, not a testcase -->
-          <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
-          <exclude name="org/apache/tools/ant/BuildFileTest.java" />
+          <exclude name="${ant.package}/taskdefs/TaskdefsTest.java" />
+          <exclude name="${ant.package}/BuildFileTest.java" />
           <exclude name="${regexp.package}/RegexpMatcherTest.java" />
           <exclude name="${regexp.package}/RegexpTest.java" />
 
           <!-- helper classes, not testcases -->
-          <exclude name="org/apache/tools/ant/taskdefs/TaskdefTest*Task.java" />
+          <exclude name="${ant.package}/taskdefs/TaskdefTest*Task.java" />
 
           <!-- these tests need to be localised before being ran???? -->
-          <exclude name="org/apache/tools/ant/taskdefs/optional/PvcsTest.java" />
+          <exclude name="${optional.package}/PvcsTest.java" />
 
           <!-- only run these tests if their required libraries are installed -->
-          <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java"
+          <exclude name="${optional.package}/ANTLRTest.java"
                    unless="antlr.present" />
           <exclude name="${regexp.package}/JakartaRegexp*Test.java"
                    unless="jakarta.regexp.present" />
@@ -1004,9 +1018,9 @@
           <exclude name="${optional.package}/sitraka/*.java" unless="jakarta.oro.present" />
           <exclude name="${optional.package}/ReplaceRegExpTest.java"
                    unless="some.regexp.support" />
-          <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" 
+          <exclude name="${optional.package}/XslpLiaisonTest.java" 
                    unless="xslp.present"/>
-          <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
+          <exclude name="${optional.package}/XalanLiaisonTest.java" 
                    unless="xalan.present"/>
 
           <!-- uses the context classloader -->
@@ -1020,10 +1034,10 @@
                    unless="jakarta.oro.present" />
 
           <!-- it's an abstract class, not a test -->
-          <exclude name="org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest.java" />
+          <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java" />
 
           <!-- ehm, this is not really a TraX test but rather a xalan2 test..-->
-          <exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaisonTest.java" unless="xalan2.present"/>
+          <exclude name="${optional.package}/TraXLiaisonTest.java" unless="xalan2.present"/>
 
           <!--
           XXX need to figure out what's causing this InvocationTargetException
@@ -1032,16 +1046,16 @@
                    unless="jdk1.2+" />
 
           <!-- DateTime handling seems to be broken in JDK 1.1 -->
-          <exclude name="org/apache/tools/ant/util/DateUtilsTest.java"
+          <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+" />
 
           <!-- interactive test -->
-          <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java" />
+          <exclude name="${ant.package}/taskdefs/TestProcess.java" />
 
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
-          <exclude name="org/apache/tools/ant/taskdefs/SQLExecTest.java"
+          <exclude name="${ant.package}/taskdefs/SQLExecTest.java"
                    unless="tests.and.ant.share.classloader" />
           <exclude name="${optional.package}/sos/SOSTest.java"
                    unless="tests.and.ant.share.classloader" />
@@ -1051,7 +1065,7 @@
           <!-- failure of this test case kills the current JVM
           so until the defect is actually fixed it is taken
           out of the test list -->
-          <exclude name="org/apache/tools/ant/taskdefs/JavaTest.java" />
+          <exclude name="${ant.package}/taskdefs/JavaTest.java" />
         </fileset>
       </batchtest>
 
