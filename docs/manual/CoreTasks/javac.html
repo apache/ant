@@ -289,8 +289,8 @@ Jikes also supports some extra options, which can be set be defining
 properties prior to invoking the task. The ant developers are aware that
 this is ugly and inflexible -expect a better solution in the future. All
 the options are boolean, and must be set to "true" or "yes" to be
-interpreted as anything other than false; by default they are all
-'false.
+interpreted as anything other than false; by default
+build.compiler.warnings is "true" while all others are "false"
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -303,10 +303,12 @@ interpreted as anything other than false; by default they are all
   </tr>
   <tr>
     <td valign="top">
-	build.compiler.warnings
+	build.compiler.warnings<br>
+        <b>This property has been deprecated, use the nowarn attribute
+          instead</b>
 	</td> 
 	<td valign="top">
-	disable warning messages
+	don't disable warning messages
     </td>
   </tr>
   <tr>
