@@ -191,7 +191,6 @@ public class Sync extends Task {
                 }
                 fs.appendSelector(ns);
             }
-            
             ds = fs.getDirectoryScanner(getProject());
         } else {
             ds = new DirectoryScanner();
