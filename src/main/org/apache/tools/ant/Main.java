@@ -575,6 +575,7 @@ public class Main {
 
             int indexOfDefDesc = topNames.indexOf(defaultTarget);
             if (indexOfDefDesc >= 0) {
+                defaultDesc = new Vector();
                 defaultDesc.addElement(topDescriptions.elementAt(indexOfDefDesc));
             }
             printTargets(defaultName, defaultDesc, "Default target:", maxLength);
