@@ -82,16 +82,17 @@ public class DefaultEmbeddor
     }
 
     public Project createProject( final String location,
-                                  String type,
+                                  final String type,
                                   final Parameters parameters )
         throws Exception
     {
-        if( null == type )
+        String projectType = type;
+        if( null == projectType )
         {
-            type = guessTypeFor( location );
+            projectType = guessTypeFor( location );
         }
 
-        final ProjectBuilder builder = getProjectBuilder( type, parameters );
+        final ProjectBuilder builder = getProjectBuilder( projectType, parameters );
         return builder.build( location );
     }
 
@@ -499,11 +500,10 @@ public class DefaultEmbeddor
             final String filename = files[ i ].getName();
 
             int index = filename.lastIndexOf( '.' );
-            if( -1 == index ) {
-              index = filename.length();
+            if( -1 == index )
+            {
+                index = filename.length();
             }
-
-            final String name = filename.substring( 0, index );
 
             try
             {
