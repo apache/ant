@@ -9,8 +9,6 @@ package org.apache.antlib.core;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -18,9 +16,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.framework.DataType;
-import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
@@ -41,24 +37,6 @@ public class Property
     private String m_name;
     private Object m_value;
     private boolean m_localScope = true;
-    private TypeFactory m_factory;
-
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
-    {
-        super.compose( componentManager );
-
-        final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        try
-        {
-            m_factory = typeManager.getFactory( DataType.ROLE );
-        }
-        catch( final TypeException te )
-        {
-            final String message = REZ.getString( "property.bad-factory.error" );
-            throw new ComponentException( message, te );
-        }
-    }
 
     public void configure( final Configuration configuration )
         throws ConfigurationException
@@ -76,7 +54,8 @@ public class Property
         {
             try
             {
-                final DataType value = (DataType)m_factory.create( children[ i ].getName() );
+                final TypeFactory typeFactory = getTypeFactory( DataType.ROLE );
+                final DataType value = (DataType)typeFactory.create( children[ i ].getName() );
                 configure( value, children[ i ] );
                 setValue( value );
             }
