@@ -82,6 +82,7 @@ public class Zip extends MatchingTask {
     protected String emptyBehavior = "skip";
     private Vector filesets = new Vector ();
     private Hashtable addedDirs = new Hashtable();
+    private Vector locFileSets = new Vector();
     
     /**
      * This is the name/location of where to 
@@ -111,6 +112,24 @@ public class Zip extends MatchingTask {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * FileSet with an additional prefix attribute to specify the
+     * location we want to move the files to (inside the archive).
+     */
+    public static class PrefixedFileSet extends FileSet {
+        private String prefix = "";
+
+        public void setPrefix(String loc) {
+            prefix = loc;
+        }
+
+        public String getPrefix() {return prefix;}
+    }
+
+    public void addPrefixedFileSet(PrefixedFileSet fs) {
+        locFileSets.addElement(fs);
     }
 
     /**
@@ -146,8 +165,11 @@ public class Zip extends MatchingTask {
             FileSet fs = (FileSet) filesets.elementAt(i);
             dss.addElement (fs.getDirectoryScanner(project));
         }
-        FileScanner[] scanners = new FileScanner[dss.size()];
+        int dssSize = dss.size();
+        FileScanner[] scanners = new FileScanner[dssSize + locFileSets.size()];
         dss.copyInto(scanners);
+
+        addScanners(scanners, dssSize, locFileSets);
 
         // quick exit if the target is up to date
         // can also handle empty archives
@@ -164,8 +186,10 @@ public class Zip extends MatchingTask {
                     zOut.setMethod(ZipOutputStream.STORED);
                 }
                 initZipOutputStream(zOut);
-                                
-                for (int j = 0; j < scanners.length; j++) {
+
+                addPrefixedFiles(locFileSets, zOut);
+            
+                for (int j = 0; j < dssSize; j++) {
                     addFiles(scanners[j], zOut, "");
                 }
             } finally {
@@ -180,6 +204,18 @@ public class Zip extends MatchingTask {
             }
 
             throw new BuildException(msg, ioe, location);
+        }
+    }
+
+    /**
+     * Add a DirectoryScanner for each FileSet included in fileSets to scanners
+     * starting with index startIndex.
+     */
+    protected void addScanners(FileScanner[] scanners, int startIndex, 
+                               Vector fileSets) {
+        for (int i=0; i<fileSets.size(); i++) {
+            FileSet fs = (FileSet) fileSets.elementAt(i);
+            scanners[startIndex+i] = fs.getDirectoryScanner(project);
         }
     }
 
@@ -416,6 +452,39 @@ public class Zip extends MatchingTask {
             String dir = (String) directories.pop();
             File f = new File(baseDir, dir);
             zipDir(f, zOut, prefix+dir);
+        }
+    }
+
+  /**
+     * Iterate over the given Vector of filesets and add all files to the
+     * ZipOutputStream using the given prefix.
+     */
+    protected void addFiles(Vector v, ZipOutputStream zOut, String prefix)
+        throws IOException {
+        for (int i=0; i<v.size(); i++) {
+            FileSet fs = (FileSet) v.elementAt(i);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            addFiles(ds, zOut, prefix);
+        }
+    }
+
+    /**
+     * Iterate over the given Vector of relocatablefilesets and add
+     * all files to the ZipOutputStream using the given prefix.
+     */
+    protected void addPrefixedFiles(Vector v, ZipOutputStream zOut)
+        throws IOException {
+        for (int i=0; i<v.size(); i++) {
+            PrefixedFileSet fs = (PrefixedFileSet) v.elementAt(i);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            String prefix = fs.getPrefix();
+            if (prefix.length() > 0 
+                && !prefix.endsWith("/")
+                && !prefix.endsWith("\\")) {
+                prefix += "/";
+            }
+            zipDir(null, zOut, prefix);
+            addFiles(ds, zOut, prefix);
         }
     }
 }
