@@ -157,19 +157,31 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
      * @see #addDefaultExcludes()
      */
     protected static final String[] DEFAULTEXCLUDES = {
+        // Miscellaneous typical temporary files
         "**/*~",
         "**/#*#",
         "**/.#*",
         "**/%*%",
         "**/._*",
+
+        // CVS
         "**/CVS",
         "**/CVS/**",
         "**/.cvsignore",
+
+        // SCCS
         "**/SCCS",
         "**/SCCS/**",
+
+        // Visual SourceSafe
         "**/vssver.scc",
+
+        // Subversion
         "**/.svn",
-        "**/.svn/**"
+        "**/.svn/**",
+
+        // Mac
+        "**/.DS_Store"
     };
 
     /** The base directory to be scanned. */

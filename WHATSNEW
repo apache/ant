@@ -98,6 +98,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* **/.DS_Store has been added to the list of default pattern excludes.
+
 * The filesetmanifest attribute of <jar> has been reenabled.
 
 * The start and end tokens for <translate> may now be longer than a
