@@ -245,6 +245,9 @@ Fixed bugs:
 * <junit includeantruntime="true" fork="true"> replaced the CLASSPATH instead
   of adding to it.  Bugzilla Report 14971.
 
+* <splash> could fail on JVMs that use null to indicate the system classloader.
+  Bugzilla Report 23320.
+
 Other changes:
 --------------
 * All tasks can be used outside of <target>s.  Note that some tasks
