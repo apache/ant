@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
@@ -82,6 +83,14 @@ public class Chmod extends ExecuteOn {
         super.setExecutable("chmod");
         super.setParallel(true);
         super.setSkipEmptyFilesets(true);
+    }
+
+    /**
+     * @see ProjectComponent#setProject
+     */
+    public void setProject(Project project) {
+        super.setProject(project);
+        defaultSet.setProject(project);
     }
 
     public void setFile(File src) {
@@ -171,11 +180,19 @@ public class Chmod extends ExecuteOn {
     }
 
     public void execute() throws BuildException {
+        /*
+         * In Ant 1.1, <chmod dir="foo" /> means, change the permissions
+         * of directory foo, not anything inside of it.  This is the case the
+         * second branch of the if statement below catches for backwards
+         * compatibility.
+         */
         if (defaultSetDefined || defaultSet.getDir(project) == null) {
             try {
                 super.execute();
             } finally {
-                filesets.removeElement(defaultSet);
+                if (defaultSetDefined && defaultSet.getDir(project) != null) {
+                    filesets.removeElement(defaultSet);
+                }
             }
         } else if (isValidOs()) {
             // we are chmodding the given directory
