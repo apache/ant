@@ -68,6 +68,12 @@ Ant uses the algorithm used by <a href="http://www.info-zip.org">Info-Zip's</a>
 implementation of the zip and unzip commands - these are the default
 versions of zip and unzip for many Unix and Unix-like systems.</p>
 
+<p><b>Please note that the zip format allows multiple files of the same
+fully-qualified name to exist within a single archive.  This has been
+documented as causing various problems for unsuspecting users.  If you wish
+to avoid this behavior you must set the <code>duplicate</code> attribute
+to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

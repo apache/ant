@@ -55,6 +55,12 @@ Note in particular that this may result in manifest lines greater than 72 bytes
 being wrapped and continued on the next line.
 </p>
 
+<p><b>Please note that the zip format allows multiple files of the same
+fully-qualified name to exist within a single archive.  This has been
+documented as causing various problems for unsuspecting users.  If you wish
+to avoid this behavior you must set the <code>duplicate</code> attribute
+to a value other than its default, <code>&quot;add&quot;</code>.</b></p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
