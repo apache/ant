@@ -362,11 +362,11 @@ public class SignJar extends AbstractJarSignerTask {
             throws BuildException {
 
 
-        File target = jarTarget;
-        if (target == null) {
-            target = jarSource;
+        File targetFile = jarTarget;
+        if (targetFile == null) {
+            targetFile = jarSource;
         }
-        if (isUpToDate(jarSource, target)) {
+        if (isUpToDate(jarSource, targetFile)) {
             return;
         }
 
@@ -384,9 +384,9 @@ public class SignJar extends AbstractJarSignerTask {
 
         //DO NOT SET THE -signedjar OPTION if source==dest
         //unless you like fielding hotspot crash reports
-        if (null != target && !jarSource.equals(target)) {
+        if (null != targetFile && !jarSource.equals(targetFile)) {
             addValue(cmd, "-signedjar");
-            addValue(cmd, target.getPath());
+            addValue(cmd, targetFile.getPath());
         }
 
         if (internalsf) {
@@ -409,14 +409,14 @@ public class SignJar extends AbstractJarSignerTask {
         log("Signing JAR: " +
                 jarSource.getAbsolutePath()
                 +" to " +
-                target.getAbsolutePath()
+                targetFile.getAbsolutePath()
                 + " as " + alias);
 
         cmd.execute();
 
         // restore the lastModified attribute
         if (preserveLastModified) {
-            target.setLastModified(lastModified);
+            targetFile.setLastModified(lastModified);
         }
     }
 

@@ -264,18 +264,18 @@ public abstract class AbstractJarSignerTask extends Task {
         if (null != keystore) {
             // is the keystore a file
             addValue(cmd,"-keystore");
-            String location;
+            String loc;
             File keystoreFile = getProject().resolveFile(keystore);
             if (keystoreFile.exists()) {
-                location = keystoreFile.getPath();
+                loc = keystoreFile.getPath();
             } else {
                 // must be a URL - just pass as is
-                location = keystore;
+                loc = keystore;
             }
-            addValue(cmd,location);
+            addValue(cmd, loc);
         }
         if (null != storetype) {
-            addValue(cmd,"-storetype");
+            addValue(cmd, "-storetype");
             addValue(cmd, storetype);
         }
     }
