@@ -544,8 +544,7 @@ public class CSharp
         }
     } 
     
-    /** source directory upon which the search 
-               } pattern is applied
+    /** source directory upon which the search pattern is applied
      */
     private File _srcDir;
     
@@ -553,7 +552,7 @@ public class CSharp
      * Set the source dir to find the files to be compiled
      * @param  srcDirName  The new SrcDir value 
      */
-    public void setSrcDir(File srcDirName) {{
+    public void setSrcDir(File srcDirName){
         _srcDir = srcDirName;
     }
     
