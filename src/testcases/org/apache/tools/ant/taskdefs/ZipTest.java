@@ -126,4 +126,17 @@ public class ZipTest extends BuildFileTest {
         executeTarget("testFilesOnlyDoesntCauseRecreate");
         assertEquals(l, getProject().resolveFile("test3.zip").lastModified());
     }
+
+    // Bugzilla Report 22865
+    public void testEmptySkip() {
+        executeTarget("testEmptySkip");
+        assertTrue("archive should get skipped",
+                   !getProject().resolveFile("test3.zip").exists());
+    }
+    // Bugzilla Report 30365
+    public void testZipEmptyDir() {
+        executeTarget("zipEmptyDir");
+        assertTrue("archive should be created",
+                   getProject().resolveFile("test3.zip").exists());
+    }
 }
