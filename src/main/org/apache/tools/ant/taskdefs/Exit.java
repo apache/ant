@@ -94,6 +94,9 @@ public class Exit extends Task {
      * Set a multiline message.
      */
     public void addText(String msg) {
+        if(message==null) {
+            message="";
+        }
         message += project.replaceProperties(msg);
     }
 
