@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * The interface that all compiler adapters must adher to. <p>
@@ -24,6 +25,7 @@ import org.apache.myrmidon.api.TaskException;
 
 public interface CompilerAdapter
 {
+    void setTaskContext( TaskContext context );
 
     /**
      * Sets the compiler attributes, which are stored in the Javac task.

@@ -7,7 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.compilers;
 
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -45,13 +45,20 @@ public class CompilerAdapterFactory
      *
      * @param compilerType either the name of the desired compiler, or the full
      *      classname of the compiler's adapter.
-     * @param task a task to log through.
      * @return The Compiler value
      * @throws TaskException if the compiler type could not be resolved into a
      *      compiler adapter.
      */
-    public static CompilerAdapter getCompiler( String compilerType, Logger logger )
+    public static CompilerAdapter getCompiler( String compilerType,
+                                               TaskContext context )
         throws TaskException
+    {
+        final CompilerAdapter adaptor = createAdaptor( compilerType, context );
+        adaptor.setTaskContext( context );
+        return adaptor;
+    }
+
+    private static CompilerAdapter createAdaptor( String compilerType, TaskContext context ) throws TaskException
     {
         /*
          * If I've done things right, this should be the extent of the
@@ -84,7 +91,7 @@ public class CompilerAdapterFactory
             {
                 final String message = "Modern compiler is not available - using "
                     + "classic compiler";
-                logger.warn( message );
+                context.warn( message );
                 return new Javac12();
             }
             return new Javac13();
@@ -144,5 +151,4 @@ public class CompilerAdapterFactory
                                      + "exception.", t );
         }
     }
-
 }

@@ -575,13 +575,10 @@ public class Javac
 
     /**
      * Adds an implementation specific command line argument.
-     *
-     * @return Description of the Returned Value
      */
-    public org.apache.tools.ant.taskdefs.compilers.ImplementationSpecificArgument createCompilerArg()
+    public ImplementationSpecificArgument createCompilerArg()
     {
-        org.apache.tools.ant.taskdefs.compilers.ImplementationSpecificArgument arg =
-            new org.apache.tools.ant.taskdefs.compilers.ImplementationSpecificArgument( this );
+        final ImplementationSpecificArgument arg = new ImplementationSpecificArgument( this );
         m_implementationSpecificArgs.add( arg );
         return arg;
     }
@@ -637,8 +634,8 @@ public class Javac
         if( m_compileList.length > 0 )
         {
 
-            CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
-                compiler, getLogger() );
+            CompilerAdapter adapter =
+                CompilerAdapterFactory.getCompiler( compiler, getContext() );
             final String message = "Compiling " + m_compileList.length + " source file" +
                 ( m_compileList.length == 1 ? "" : "s" ) +
                 ( m_destDir != null ? " to " + m_destDir : "" );

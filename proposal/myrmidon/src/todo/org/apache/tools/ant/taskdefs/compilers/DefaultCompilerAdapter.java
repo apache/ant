@@ -14,8 +14,6 @@ import java.io.PrintWriter;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
@@ -35,7 +33,6 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
 public abstract class DefaultCompilerAdapter
-//    extends AbstractLogEnabled
     implements CompilerAdapter
 {
     protected boolean m_debug;
