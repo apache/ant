@@ -166,6 +166,7 @@ public class JUnitTask extends Task {
 
     private Integer timeout = null;
     private boolean summary = false;
+    private boolean reloading = true;
     private String summaryValue = "";
     private JUnitTestRunner runner = null;
 
@@ -177,6 +178,15 @@ public class JUnitTask extends Task {
 
     private boolean showOutput = false;
     private File tmpDir;
+    private AntClassLoader classLoader = null;
+    /**
+    * If true, force ant to re-classload all classes for each JUnit TestCase
+    *
+    * @param value force class reloading for each test case
+    */
+    public void setReloading(boolean value) {
+        reloading = value;
+    }
 
     /**
      * If true, smartly filter the stack frames of
@@ -846,17 +856,17 @@ public class JUnitTask extends Task {
         if (sysProperties != null) {
             sysProperties.setSystem();
         }
-        AntClassLoader cl = null;
+
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
-            cl = createClassLoader();
-            if (cl != null) {
-                cl.setThreadContextLoader();
+            createClassLoader();
+            if (classLoader != null) {
+                classLoader.setThreadContextLoader();
             }
             runner = new JUnitTestRunner(test, test.getHaltonerror(),
                                          test.getFiltertrace(),
-                                         test.getHaltonfailure(), cl);
+                                         test.getHaltonfailure(), classLoader);
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);
 
@@ -878,7 +888,7 @@ public class JUnitTask extends Task {
                     } else {
                         fe.setOutput(getDefaultOutput());
                     }
-                    runner.addFormatter(fe.createFormatter(cl));
+                    runner.addFormatter(fe.createFormatter(classLoader));
                 }
             }
 
@@ -888,8 +898,8 @@ public class JUnitTask extends Task {
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }
-            if (cl != null) {
-                cl.resetThreadContextLoader();
+            if (classLoader != null) {
+                classLoader.resetThreadContextLoader();
             }
         }
     }
@@ -1012,11 +1022,11 @@ public class JUnitTask extends Task {
      */
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
-        AntClassLoader cl = createClassLoader();
+        createClassLoader();
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
             File outFile = getOutput(fe, test);
-            JUnitResultFormatter formatter = fe.createFormatter(cl);
+            JUnitResultFormatter formatter = fe.createFormatter(classLoader);
             if (outFile != null && formatter != null) {
                 try {
                     OutputStream out = new FileOutputStream(outFile);
@@ -1044,31 +1054,29 @@ public class JUnitTask extends Task {
      * Creates and configures an AntClassLoader instance from the
      * nested classpath element.
      *
-     * @return null if there is no user-specified classpath.
-     *
      * @since Ant 1.6
      */
-    private AntClassLoader createClassLoader() {
-        AntClassLoader cl = null;
+    private void createClassLoader() {
         Path userClasspath = commandline.getClasspath();
         if (userClasspath != null) {
-            Path classpath = (Path) userClasspath.clone();
-            if (includeAntRuntime) {
-                log("Implicitly adding " + antRuntimeClasses 
-                    + " to CLASSPATH", Project.MSG_VERBOSE);
-                classpath.append(antRuntimeClasses);
+            if (reloading || classLoader == null) {
+                Path classpath = (Path) userClasspath.clone();
+                if (includeAntRuntime) {
+                    log("Implicitly adding " + antRuntimeClasses
+                        + " to CLASSPATH", Project.MSG_VERBOSE);
+                    classpath.append(antRuntimeClasses);
+                }
+                classLoader = getProject().createClassLoader(classpath);
+                log("Using CLASSPATH " + classLoader.getClasspath(),
+                Project.MSG_VERBOSE);
+                classLoader.setParentFirst(false);
+                classLoader.addJavaLibraries();
+                log("Using CLASSPATH " + classLoader.getClasspath(), Project.MSG_VERBOSE);
+                // make sure the test will be accepted as a TestCase
+                classLoader.addSystemPackageRoot("junit");
+                // will cause trouble in JDK 1.1 if omitted
+                classLoader.addSystemPackageRoot("org.apache.tools.ant");
             }
-
-            cl = getProject().createClassLoader(classpath);
-            cl.setParentFirst(false);
-            cl.addJavaLibraries();
-            log("Using CLASSPATH " + cl.getClasspath(), Project.MSG_VERBOSE);
-
-            // make sure the test will be accepted as a TestCase
-            cl.addSystemPackageRoot("junit");
-            // will cause trouble in JDK 1.1 if omitted
-            cl.addSystemPackageRoot("org.apache.tools.ant");
         }
-        return cl;
     }
 }

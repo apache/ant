@@ -297,6 +297,9 @@ Other changes:
 * The xml formatter for JUnit will now honor test case names set with
   setName.  Bugzilla Report 17040.
 
+* JUnit now has an attribute reloading, which, when set to false,
+  makes the task reuse the same class loader for a series of tests.
+
 * <concat> now supports filtering and can check timestamps before
   overriding a file.  Bugzilla Report 18166.
 
