@@ -161,7 +161,8 @@ public class Jdk14RegexpMatcher implements RegexpMatcher {
 
     protected int getCompilerOptions(int options)
     {
-        int cOptions = 0;
+        // be strict about line separator
+        int cOptions = Pattern.UNIX_LINES;
 
         if (RegexpUtil.hasFlag(options, MATCH_CASE_INSENSITIVE)) {
             cOptions |= Pattern.CASE_INSENSITIVE;
