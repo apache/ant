@@ -85,10 +85,18 @@ public class Property extends Task {
     protected String resource;
     protected Path classpath;
     protected String env;
-    protected Reference ref = null;
+    protected Reference ref;
 
-    protected boolean userProperty=false; // set read-only properties
-
+    protected boolean userProperty; // set read-only properties
+    
+    public Property() {
+        super();
+    }
+    
+    protected Property(boolean userProperty) {
+        this.userProperty = userProperty;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -161,10 +169,11 @@ public class Property extends Task {
     }
 
     /**
-    * @deprecated
-    */
+     * @deprecated This was never a supported feature and has been deprecated without replacement
+     */
     public void setUserProperty(boolean userProperty) {
-        this.userProperty = userProperty;
+        log("DEPRECATED: Ignoring request to set user property in Property task.", 
+            Project.MSG_WARN);
     }
 
     public String toString() {
@@ -287,12 +296,11 @@ public class Property extends Task {
 
     protected void addProperty(String n, String v) {
         if( userProperty ) {
-            log("DEPRECATED - Setting user properties through the Property task has been deprecated.");
             if (project.getUserProperty(n) == null) {
                 project.setUserProperty(n, v);
             } else {
                 log("Override ignored for " + n, Project.MSG_VERBOSE);
-            } 
+            }
         } else {
             project.setNewProperty(n, v);
         }

@@ -159,7 +159,7 @@ public class Project {
     public Project() {
         fileUtils = FileUtils.newFileUtils();
     }
-
+    
     /**
      * Initialise the project.
      *
@@ -353,6 +353,18 @@ public class Project {
         userProperties.put(name, value);
         properties.put(name, value);
     }
+    
+    /**
+     * Allows Project and subclasses to set a property unless its
+     * already defined as a user property. There are a few cases 
+     * internally to Project that need to do this currently.
+     */
+    private void setPropertyInternal(String name, String value) {
+        if (null != userProperties.get(name)) {
+            return;
+        }
+        properties.put(name, value);
+    }
 
     /**
      * query a property.
@@ -377,19 +389,37 @@ public class Project {
     }
 
     /**
-     * get the property hashtable
+     * get a copy of the property hashtable
      * @return the hashtable containing all properties, user included
      */
     public Hashtable getProperties() {
-        return properties;
+        Hashtable propertiesCopy = new Hashtable();
+        
+        Enumeration e = properties.keys();
+        while (e.hasMoreElements()) {
+            Object name = e.nextElement();
+            Object value = properties.get(name);
+            propertiesCopy.put(name, value);
+        }
+        
+        return propertiesCopy;
     }
 
     /**
-     * get the user property hashtable
+     * get a copy of the user property hashtable
      * @return the hashtable user properties only
      */
     public Hashtable getUserProperties() {
-        return userProperties;
+        Hashtable propertiesCopy = new Hashtable();
+        
+        Enumeration e = userProperties.keys();
+        while (e.hasMoreElements()) {
+            Object name = e.nextElement();
+            Object value = properties.get(name);
+            propertiesCopy.put(name, value);
+        }
+        
+        return propertiesCopy;
     }
 
     /**
@@ -486,7 +516,7 @@ public class Project {
         if (!baseDir.isDirectory()) 
             throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " is not a directory");
         this.baseDir = baseDir;
-        setProperty( "basedir", this.baseDir.getPath());
+        setPropertyInternal( "basedir", this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
         log(msg, MSG_VERBOSE);
     }
@@ -521,7 +551,7 @@ public class Project {
      * @throws BuildException if this Java version is not supported
      */
     public void setJavaVersionProperty() throws BuildException {
-        setProperty("ant.java.version", javaVersion);
+        setPropertyInternal("ant.java.version", javaVersion);
 
         // sanity check
         if (javaVersion == JAVA_1_0) {
@@ -543,7 +573,7 @@ public class Project {
         while (e.hasMoreElements()) {
             Object name = e.nextElement();
             String value = systemP.get(name).toString();
-            this.setProperty(name.toString(), value);
+            this.setPropertyInternal(name.toString(), value);
         }
     }
 

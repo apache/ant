@@ -17,7 +17,9 @@ Changes that could break older environments:
   instead.
 
 * Some loopholes in the immutability rule have been closed. It is no longer
-  possible to overwrite a property using tasks like <available> or <condition>.  
+  possible to overwrite a property using tasks like <checksum>, <condition>,
+  <exec>, <pathconvert>, or <tstamp>. In some exceptional cases it will 
+  generate a warning if you attempt to subvert property immutability.
   
 * Taskwriters please note: Whenever tasks had any overloaded set* methods,
   Ant's introspection mechanism would select the last overloaded method
