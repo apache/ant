@@ -130,14 +130,15 @@ public class XmlLogger implements BuildListener {
             if (outFilename == null) {
                 outFilename = "log.xml";
             }
-            
+
             // specify output in UTF8 otherwise accented characters will blow
             // up everything
             Writer out =
                 new OutputStreamWriter(new FileOutputStream(outFilename),
                                        "UTF8");
+            out.write("<?xml version=\"1.0\"?>\n");
             out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
-                      (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
+            (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
             out.close();
             
@@ -155,7 +156,7 @@ public class XmlLogger implements BuildListener {
         }
         return threadStack;
     }
-    
+
     public void targetStarted(BuildEvent event) {
         Target target = event.getTarget();
         TimedElement targetElement = new TimedElement();
@@ -173,14 +174,14 @@ public class XmlLogger implements BuildListener {
             long totalTime = System.currentTimeMillis() - targetElement.startTime;
             targetElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
 
-            TimedElement parentElement = null;            
+            TimedElement parentElement = null;
             Stack threadStack = getStack();
             if (!threadStack.empty()) {
                 TimedElement poppedStack = (TimedElement)threadStack.pop();
                 if (poppedStack != targetElement) {
                     throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
                     " finished task element = " + targetElement.element);
-                }                                           
+                }
                 if (!threadStack.empty()) {
                     parentElement = (TimedElement)threadStack.peek();
                 }
@@ -188,7 +189,7 @@ public class XmlLogger implements BuildListener {
             if (parentElement == null) {
                 buildElement.element.appendChild(targetElement.element);
             }
-            else {                
+            else {
                 parentElement.element.appendChild(targetElement.element);
             }
         }
@@ -231,7 +232,7 @@ public class XmlLogger implements BuildListener {
                 if (poppedStack != taskElement) {
                     throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
                     " finished task element = " + taskElement.element);
-                }                                           
+                }
             }
         }
     }
@@ -239,7 +240,7 @@ public class XmlLogger implements BuildListener {
     public void messageLogged(BuildEvent event) {
         Element messageElement = doc.createElement(MESSAGE_TAG);
 
-        String name = "debug";
+        String name;
         switch(event.getPriority()) {
             case Project.MSG_ERR: name = "error"; break;
             case Project.MSG_WARN: name = "warn"; break;
@@ -252,7 +253,7 @@ public class XmlLogger implements BuildListener {
         messageElement.appendChild(messageText);
 
         TimedElement parentElement = null;
-        
+
         Task task = event.getTask();
         Target target = event.getTarget();
         if (task != null) {
@@ -261,7 +262,7 @@ public class XmlLogger implements BuildListener {
         if (parentElement == null && target != null) {
             parentElement = (TimedElement)targets.get(target);
         }
-         
+
         if (parentElement == null) {
             Stack threadStack = (Stack)threadStacks.get(Thread.currentThread());
             if (threadStack != null) {
@@ -270,7 +271,7 @@ public class XmlLogger implements BuildListener {
                 }
             }
         }
-        
+
         if (parentElement != null) {
             parentElement.element.appendChild(messageElement);
         }
