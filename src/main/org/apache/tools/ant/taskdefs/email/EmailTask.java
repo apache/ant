@@ -395,7 +395,7 @@ public class EmailTask
             {
                 try
                 {
-                    mailer = (Mailer)getClass().forName( "org.apache.tools.ant.taskdefs.email.MimeMailer" ).newInstance();
+                    mailer = (Mailer)Class.forName( "org.apache.tools.ant.taskdefs.email.MimeMailer" ).newInstance();
                     autoFound = true;
                     log( "Using MIME mail", Project.MSG_VERBOSE );
                 }
@@ -410,7 +410,7 @@ public class EmailTask
             {
                 try
                 {
-                    mailer = (Mailer)getClass().forName( "org.apache.tools.ant.taskdefs.email.UUMailer" ).newInstance();
+                    mailer = (Mailer)Class.forName( "org.apache.tools.ant.taskdefs.email.UUMailer" ).newInstance();
                     autoFound = true;
                     log( "Using UU mail", Project.MSG_VERBOSE );
                 }
