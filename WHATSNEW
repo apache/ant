@@ -40,7 +40,9 @@ behavior has been dropped.
 
 * <ejbjar> task syntax has been changed significantly
 
-* build.compiler supports now jvc as well.
+* <exec> is no longer implemented by org.apache.tool.ant.taskdefs.Exec. 
+Custom tasks that rely on Project.createTask("exec") to return an
+instance of this class are going to fail.
 
 Other changes:
 --------------
@@ -77,6 +79,8 @@ on log output.
 
 * <ejbc> optional task no longer uses a separate VM to invoke the ejbc tool.
 
+* build.compiler supports now jvc as well.
+
 * project specific help can now be obtained with the -projecthelp option.
 
 * Added a -debug option to make -verbose less verbose (and more useful)
@@ -84,6 +88,8 @@ on log output.
 * Ant will now search for a file named build.xml in the parent directory
 and above (towards the root of the filesystem) if you didn't specify
 -buildfile and there is no build.xml in the current directory.
+
+* <echo> can now write to a file and accepts nested text.
 
 Fixed bugs:
 -----------

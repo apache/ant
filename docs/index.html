@@ -12,7 +12,7 @@
 <!-- Names are in alphabetical order, on last name -->
 <ul>
   <li>Jacques Bergeron (<a href="mailto:jacques.bergeron@dogico.com">jacques.bergeron@dogico.com</a>)</li>
-  <li>Stefan Bodewig (<a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a>)</li>
+  <li>Stefan Bodewig (<a href="mailto:stefan.bodewig@epost.de">stefan.bodewig@epost.de</a>)</li>
   <li>Patrick Chanezon (<a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>)</li>
   <li>James Duncan Davison (<a href="mailto:duncan@x180.com">duncan@x180.com</a>)</li>
   <li>Tom Dimock (<a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>)</li>
@@ -26,7 +26,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/09/20</p>
+<p>Version 1.2 - 2000/09/27</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -1493,7 +1493,7 @@ subdirectories.</p>
 <hr>
 <h2><a name="echo">Echo</a></h2>
 <h3>Description</h3>
-<p>Echoes a message to System.out.</p>
+<p>Echoes a message to System.out or a file.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1506,6 +1506,16 @@ subdirectories.</p>
     <td valign="top">the message to echo.</td>
     <td valign="top" align="center">Yes, unless data is included in a
       character section within this element.</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file to write the message to.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">append</td>
+    <td valign="top">Append to an existing file?</td>
+    <td valign="top" align="center">No - default is false.</td>
   </tr>
 </table>
 <h3>Examples</h3>

@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import java.io.*;
-import java.net.*;
 /**
  * Echo
  *
@@ -64,6 +63,8 @@ import java.net.*;
  */
 public class Echo extends Task {
     private String message = ""; // required
+    private File file = null;
+    private boolean append = false;
     
     /**
      * Does the work.
@@ -71,7 +72,23 @@ public class Echo extends Task {
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
-	System.out.println(message);
+        if (file == null) {
+            System.out.println(message);
+        } else {
+            FileWriter out = null;
+            try {
+                out = new FileWriter(file.getAbsolutePath(), append);
+                out.write(message, 0, message.length());
+            } catch (IOException ioe) {
+                throw new BuildException(ioe, location);
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ioex) {}
+                }
+            }
+        }
     }
 
     /**
@@ -84,9 +101,24 @@ public class Echo extends Task {
     }
 
     /**
+     * Sets the file attribute.
+     */
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    /**
+     * Shall we append to an existing file?
+     */
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
+
+    /**
      * Set a multiline message.
      */
     public void addText(String msg) {
-        message += msg;
+        message += 
+            ProjectHelper.replaceProperties(msg, project.getProperties());
     }
 }
