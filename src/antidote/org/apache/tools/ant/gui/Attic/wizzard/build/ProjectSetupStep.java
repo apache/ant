@@ -51,36 +51,42 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizzard.build;
+
+import org.apache.tools.ant.gui.wizzard.AbstractWizzardStep;
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.Insets;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import org.apache.tools.ant.gui.acs.*;
 
 /**
- * Wizzard step whose only purpose is to display some text.
+ * Build file wizzard step for naming the project and 
+ * selecting what features are desired.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class InstructionStep extends AbstractWizzardStep {
+public class ProjectSetupStep extends AbstractWizzardStep {
 
-    /** 
-     * Initialize the contents of the container.
-     * 
-     */
+    /** Name of the project. */
+    private JTextField _name = null;
+
     protected void init() {
         setLayout(new BorderLayout());
-        String msg = getResources().getString(getID() + ".instructions");
 
-        JTextArea text = new JTextArea(msg);
-        text.setMargin(new Insets(30, 20, 5, 5));
-        text.setOpaque(false);
-        text.setFont(new Font("Serif", Font.PLAIN, 18));
-        text.setEditable(false);
-        text.setLineWrap(true);
-        text.setWrapStyleWord(true);
-        add(text);
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        add(p, BorderLayout.NORTH);
+
+        _name = new JTextField(10);
+        p.add(new JLabel(getResources().getString(getID() + ".nameLabel")));
+        p.add(_name);
+
+        p = new JPanel(new GridBagLayout());
+        p.setBorder(BorderFactory.createTitledBorder(
+            getResources().getString(getID() + ".optionsLabel")));
+        add(p, BorderLayout.CENTER);
+
     }
 
     /** 
@@ -89,14 +95,18 @@ public class InstructionStep extends AbstractWizzardStep {
      * 
      */
     public void updateDisplay() {
-        // NOOP
+        ACSProjectElement project = (ACSProjectElement) getDataModel();
+        _name.setText(project.getName());
     }
+
     /** 
      * Called when the step should update the data model based on the
      * settings of its widgets.
      * 
      */
     public void updateDataModel() {
-        // NOOP
+         ACSProjectElement project = (ACSProjectElement) getDataModel();
+         project.setName(_name.getText());
     }
+
 }

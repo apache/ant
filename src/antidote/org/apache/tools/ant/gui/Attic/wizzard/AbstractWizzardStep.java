@@ -52,6 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.wizzard;
+import org.apache.tools.ant.gui.core.ResourceManager;
 import javax.swing.JComponent;
 
 
@@ -64,6 +65,10 @@ import javax.swing.JComponent;
 public abstract class  AbstractWizzardStep extends JComponent 
     implements WizzardStep {
     
+    /** Flag to indicate whether or not init has been called. */
+    private boolean _initialized = false;
+    /** Resources. */
+    private ResourceManager _resources = null;
     /** Step id. */
     private String _id = null;
     /** Step display title. */
@@ -76,6 +81,31 @@ public abstract class  AbstractWizzardStep extends JComponent
     private String _nextID = null;
     /** ID of previous step. */
     private String _prevID = null;
+
+    /** 
+     * Called when the instance should initialize its contents, e.g.
+     * create the widgets, etc. When this is called then all
+     * data values, including the ResourceManager, have been setup.
+     * 
+     */
+    protected abstract void init();
+
+    /** 
+     * Set the step's resources.
+     * 
+     */
+    public void setResources(ResourceManager resources) {
+        _resources = resources;
+    }
+
+    /** 
+     * Get the step's resources.
+     * 
+     * @return Resources.
+     */
+    protected ResourceManager getResources() {
+        return _resources;
+    }
 
     /** 
      * Set the step id. The id must be unique among steps within the wizzard.
@@ -195,6 +225,11 @@ public abstract class  AbstractWizzardStep extends JComponent
      * @return Editing component.
      */
     public JComponent getEditorComponent() {
+        if(!_initialized) {
+            init();
+            _initialized = true;
+        }
+
         return this;
     }
 

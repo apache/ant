@@ -52,6 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.wizzard;
+import org.apache.tools.ant.gui.core.ResourceManager;
 import javax.swing.JComponent;
 
 
@@ -62,6 +63,12 @@ import javax.swing.JComponent;
  * @author Simeon Fitch 
  */
 public interface WizzardStep {
+    /** 
+     * Set the step's resources.
+     * 
+     */
+    void setResources(ResourceManager resources);
+
     /** 
      * Set the step id. The id must be unique among steps within the wizzard.
      * 
@@ -153,4 +160,19 @@ public interface WizzardStep {
      * @return Editing component.
      */
     JComponent getEditorComponent();
+
+    /** 
+     * Called when the step should refresh its display based on the 
+     * current model setting.
+     * 
+     */
+    void updateDisplay();
+
+    /** 
+     * Called when the step should update the data model based on the
+     * settings of its widgets.
+     * 
+     */
+    void updateDataModel();
+
 }

@@ -60,6 +60,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
 import java.util.*;
 
 /**
@@ -78,8 +79,12 @@ public class Wizzard extends JComponent {
     private CardLayout _layout = null;
     /** Set initialized steps. */
     private Map _steps = new HashMap();
+    /** Steps saved in a list to preserve ordering. */
+    private List _stepOrdering = new ArrayList();
     /** Description text. XXX should probably change to some other widget. */
     private JTextArea _description = null;
+    /** Progress meter. */
+    private JProgressBar _progress = null;
     /** Widget for navigating through steps. */
     private WizzardNavigator _nav = null;
     /** The data model to pass on to each step. */
@@ -100,21 +105,35 @@ public class Wizzard extends JComponent {
         _resources = resources;
         _model = dataModel;
 
-        TitledBorder border = new TitledBorder("Border");
-        setBorder(border);
+        _progress = new JProgressBar();
+        _progress.setBorder(BorderFactory.createTitledBorder(
+            _resources.getString("progress")));
+        _progress.setStringPainted(true);
+        add(_progress, BorderLayout.NORTH);
 
-        _description = new JTextArea(4, 40);
-        _description.setBorder(BorderFactory.createEtchedBorder());
-        _description.setOpaque(false);
+        _description = new JTextArea();
+        _description.setMargin(new Insets(5, 5, 5, 5));
+        _description.setPreferredSize(new Dimension(100, 100));
+        _description.setOpaque(true);
         _description.setFont(new Font("Serif", Font.PLAIN, 12));
         _description.setEditable(false);
         _description.setLineWrap(true);
         _description.setWrapStyleWord(true);
 
-        add(_description, BorderLayout.NORTH);
+        JScrollPane scroller = new JScrollPane(
+            _description, 
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+
+        scroller.setBorder(BorderFactory.createTitledBorder(
+            _resources.getString("help")));
+        add(scroller, BorderLayout.WEST);
 
         _stepContainer = new JPanel(_layout = new CardLayout());
         _stepContainer.setBorder(BorderFactory.createEtchedBorder());
+        _stepContainer.setPreferredSize(new Dimension(400, 400));
+
+
         add(_stepContainer, BorderLayout.CENTER);
 
         _nav = new ButtonNavigator(_resources);
@@ -123,10 +142,12 @@ public class Wizzard extends JComponent {
         add((ButtonNavigator)_nav, BorderLayout.SOUTH);
 
         String[] steps = _resources.getStringArray("steps");
+        _progress.setMaximum(steps.length - 1);
         try {
             for(int i = 0; i < steps.length; i++) {
                 Class type = _resources.getClass(steps[i] + ".editor");
                 WizzardStep step = (WizzardStep) type.newInstance();
+                step.setResources(_resources);
                 step.setID(steps[i]);
                 step.setTitle(_resources.getString(steps[i]+ ".title"));
                 step.setDescription(
@@ -141,6 +162,7 @@ public class Wizzard extends JComponent {
                 step.setPrevious(id);
 
                 _steps.put(steps[i], step);
+                _stepOrdering.add(step);
                 _stepContainer.add(step.getEditorComponent(), steps[i]);
             }
             // Initialize the first screen with the data model.
@@ -156,8 +178,6 @@ public class Wizzard extends JComponent {
             // XXX log me.
             ex.printStackTrace();
         }
-
-        setPreferredSize(new Dimension(500, 400));
 
     }
 
@@ -188,22 +208,26 @@ public class Wizzard extends JComponent {
         if(step == null) return;
 
         // Transfer data model (in case step wants to create a new one.
+        _curr.updateDataModel();
         step.setDataModel(_curr.getDataModel());
         
         // Update the title and description.
-        TitledBorder border = (TitledBorder) getBorder();
-        border.setTitle(step.getTitle());
+        _stepContainer.setBorder(
+            BorderFactory.createTitledBorder(step.getTitle()));
         _description.setText(step.getDescription());
 
         _nav.setBackEnabled(step.getPrevious() != null);
         _nav.setNextEnabled(step.getNext() != null);
         _nav.setFinishEnabled(step.getNext() == null);
+        _progress.setValue(_stepOrdering.indexOf(step));
+
+        // Tell the step to refresh its display based on the data model.
+        step.updateDisplay();
 
         // Display the step.
         _layout.show(_stepContainer, step.getID());
 
         _curr = step;
-
     }
 
     /** Handler for actions invoked by wizzard. */
