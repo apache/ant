@@ -327,7 +327,7 @@ public class FileSet extends DataType implements Cloneable {
         }
         
         Object o = ref.getReferencedObject(p);
-        if (!o.getClass().equals(getClass())) {
+        if (!getClass().isAssignableFrom(o.getClass())) {
             String msg = ref.getRefId()+" doesn\'t denote a " + dataTypeName;
             throw new BuildException(msg);
         } else {
