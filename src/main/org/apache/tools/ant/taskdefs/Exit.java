@@ -84,7 +84,7 @@ public class Exit extends Task {
      */
     public void addText(String msg) {
         message += 
-            ProjectHelper.replaceProperties(project, msg, project.getProperties());
+            ProjectHelper.replaceProperties(project, msg);
     }
 
 }

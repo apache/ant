@@ -280,7 +280,7 @@ public class Property extends Task {
             String name = (String) e.nextElement();
             String value = (String) props.getProperty(name);
 
-            String v = ProjectHelper.replaceProperties(project, value, project.getProperties());
+            String v = ProjectHelper.replaceProperties(project, value);
             addProperty(name, v);
         }
     }

@@ -222,7 +222,7 @@ public class Target implements TaskContainer {
             return true;
         }
         
-        String test = ProjectHelper.replaceProperties(getProject(), ifCondition, getProject().getProperties());
+        String test = ProjectHelper.replaceProperties(getProject(), ifCondition);
         return project.getProperty(test) != null;
     }
 
@@ -230,7 +230,7 @@ public class Target implements TaskContainer {
         if ("".equals(unlessCondition)) {
             return true;
         }
-        String test = ProjectHelper.replaceProperties(getProject(), unlessCondition, getProject().getProperties());
+        String test = ProjectHelper.replaceProperties(getProject(), unlessCondition);
         return project.getProperty(test) == null;
     }
 }
