@@ -102,6 +102,12 @@ public class StyleTest extends BuildFileTest {
                    .exists());
     }
 
+    public void testDirsWithSpaces() throws Exception {
+        executeTarget("testDirsWithSpaces");
+        assertTrue(getProject().resolveFile("out/d est/data.html")
+                   .exists());
+    }
+
     // *************  copied from ConcatTest  *************
 
     // ------------------------------------------------------

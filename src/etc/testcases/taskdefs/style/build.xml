@@ -77,6 +77,13 @@
            style="printParams.xsl"/>
   </target>
 
+  <target name="testDirsWithSpaces">
+    <mkdir dir="${out.dir}/s rc/"/>
+    <copy file="data.xml" todir="${out.dir}/s rc/"/>
+    <style basedir="${out.dir}/s rc" destdir="${out.dir}/d est"
+           style="printParams.xsl"/>
+  </target>
+
   <target name="copyXsl" if="xsl.value">
       <copy file="testNewerStylesheet.xsl" tofile="tmp.xsl" overwrite="true">
           <filterchain><expandproperties/></filterchain>
