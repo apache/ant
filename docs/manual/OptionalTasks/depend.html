@@ -54,7 +54,7 @@ relationships are sufficient - it is unusual for a class to depend on another
 without having a direct relationship. With closure set, you will notice that 
 depend typically removes far more class files. </p>
 
-<p>The classpath attribute for &lt;depend&gt; is optional. If it is present, 
+<p>The classpath attribute for <code>&lt;depend&gt;</code> is optional. If it is present, 
 depend will check class dependencies against classes and jars on this classpath.
 Any classes which depend on an element from this classpath and which are older 
 than that element will be deleted. A typical example where you would use this 
@@ -127,8 +127,14 @@ classes. Defaults to false</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">dump</td>
+    <td valign="top">If true the dependency information will be written to the debug level log
+                     </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">classpath</td>
-    <td valign="top">The classpath containg jars and classes for which depend should also
+    <td valign="top">The classpath containg jars and classes for which <code>&lt;depend&gt;</code> should also
                      check dependencies</td>
     <td valign="top" align="center">No</td>
   </tr>
