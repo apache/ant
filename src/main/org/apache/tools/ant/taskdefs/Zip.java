@@ -78,7 +78,7 @@ public class Zip extends MatchingTask {
     private File zipFile;
     private File baseDir;
     private boolean doCompress = true;
-    private boolean doUpdate = true;
+    private boolean doUpdate = false;
     private boolean doFilesonly = false;
     protected String archiveType = "zip";
     // For directories:
