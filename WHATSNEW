@@ -128,6 +128,10 @@ Fixed bugs:
 
 * JDependTask did not close an output file. Bugzilla Report 28557.
 
+* <jar> can now optionally create an index for jars different than the
+  one it currently builds as well.  See the new <indexjars> element
+  for details.  Bugzilla Report 14255.
+
 Other changes:
 --------------
 

@@ -126,7 +126,7 @@ public class Jar extends Zip {
     /**
      * Path containing jars that shall be indexed in addition to this archive.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     private Path indexJars;
 
@@ -320,7 +320,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     public void addConfiguredIndexJars(Path p) {
         if (indexJars == null) {
@@ -706,7 +706,7 @@ public class Jar extends Zip {
      * Writes the directory entries from the first and the filenames
      * from the second list to the given writer, one entry per line.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     protected final void writeIndexLikeList(List dirs, List files,
                                             PrintWriter writer)
@@ -764,7 +764,7 @@ public class Jar extends Zip {
      * <p>if there is a classpath and the given file doesn't match any
      * of its entries, return null.</p>
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     protected static final String findJarName(String fileName, 
                                               String[] classpath) {
