@@ -10,7 +10,7 @@ package org.apache.myrmidon;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
-import org.apache.avalon.framework.CascadingThrowable;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.log.Hierarchy;
@@ -115,14 +115,8 @@ public abstract class AbstractMyrmidonTest
                 assertEquals( message, current.getMessage() );
             }
 
-            if( current instanceof CascadingThrowable )
-            {
-                current = ( (CascadingThrowable)current ).getCause();
-            }
-            else
-            {
-                current = null;
-            }
+            // Get the next exception in the chain
+            current = ExceptionUtil.getCause( current, true );
         }
     }
 
