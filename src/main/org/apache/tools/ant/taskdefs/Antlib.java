@@ -90,9 +90,11 @@ public class Antlib extends Task implements TaskContainer {
      *
      * @param project   the current project
      * @param antlibUrl the url to read the definitions from
+     * @param uri       the uri that the antlib is to be placed in
      * @return   the ant lib task
      */
-    public static Antlib createAntlib(Project project, URL antlibUrl) {
+    public static Antlib createAntlib(Project project, URL antlibUrl,
+                                      String uri) {
         // Check if we can contact the URL
         try {
             antlibUrl.openConnection().connect();
@@ -100,22 +102,29 @@ public class Antlib extends Task implements TaskContainer {
             throw new BuildException(
                 "Unable to find " + antlibUrl, ex);
         }
-        // Should be safe to parse
-        ProjectHelper2 parser = new ProjectHelper2();
-        UnknownElement ue =
-            parser.parseUnknownElement(project, antlibUrl);
-        // Check name is "antlib"
-        if (!(ue.getTag().equals(TAG))) {
-            throw new BuildException(
-                "Unexpected tag " + ue.getTag() + " expecting "
-                + TAG, ue.getLocation());
+        ComponentHelper helper =
+            ComponentHelper.getComponentHelper(project);
+        helper.enterAntLib(uri);
+        try {
+            // Should be safe to parse
+            ProjectHelper2 parser = new ProjectHelper2();
+            UnknownElement ue =
+                parser.parseUnknownElement(project, antlibUrl);
+            // Check name is "antlib"
+            if (!(ue.getTag().equals(TAG))) {
+                throw new BuildException(
+                    "Unexpected tag " + ue.getTag() + " expecting "
+                    + TAG, ue.getLocation());
+            }
+            Antlib antlib = new Antlib();
+            antlib.setProject(project);
+            antlib.setLocation(ue.getLocation());
+            antlib.init();
+            ue.configure(antlib);
+            return antlib;
+        } finally {
+            helper.exitAntLib();
         }
-        Antlib antlib = new Antlib();
-        antlib.setProject(project);
-        antlib.setLocation(ue.getLocation());
-        antlib.init();
-        ue.configure(antlib);
-        return antlib;
     }
 
 
@@ -166,28 +175,21 @@ public class Antlib extends Task implements TaskContainer {
      * any tasks that derive from Definer.
      */
     public void execute() {
-        ComponentHelper helper =
-            ComponentHelper.getComponentHelper(getProject());
-        helper.enterAntLib();
-        try {
-            for (Iterator i = tasks.iterator(); i.hasNext();) {
-                UnknownElement ue = (UnknownElement) i.next();
-                ue.maybeConfigure();
-                setLocation(ue.getLocation());
-                Task t = ue.getTask();
-                if (t == null) {
-                    continue;
-                }
-                if (t instanceof AntlibInterface) {
-                    AntlibInterface d = (AntlibInterface) t;
-                    d.setURI(uri);
-                    d.setAntlibClassLoader(getClassLoader());
-                }
-                t.init();
-                t.execute();
+        for (Iterator i = tasks.iterator(); i.hasNext();) {
+            UnknownElement ue = (UnknownElement) i.next();
+            ue.maybeConfigure();
+            setLocation(ue.getLocation());
+            Task t = ue.getTask();
+            if (t == null) {
+                continue;
             }
-        } finally {
-            helper.exitAntLib();
+            if (t instanceof AntlibInterface) {
+                AntlibInterface d = (AntlibInterface) t;
+                d.setURI(uri);
+                d.setAntlibClassLoader(getClassLoader());
+            }
+            t.init();
+            t.execute();
         }
     }
 

@@ -315,7 +315,7 @@ public abstract class Definer extends DefBase {
      */
     private void loadAntlib(ClassLoader classLoader, URL url) {
         try {
-            Antlib antlib = Antlib.createAntlib(getProject(), url);
+            Antlib antlib = Antlib.createAntlib(getProject(), url, getUri());
             antlib.setClassLoader(classLoader);
             antlib.setURI(getUri());
             antlib.perform();

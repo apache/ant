@@ -14,4 +14,8 @@
     <mytask/>
   </target>
 
+  <target name="ns.current">
+    <typedef file="antlib.current-test.xml" uri="abc"/>
+    <x:useecho2 xmlns:x="abc"/>
+  </target>
 </project>

@@ -125,12 +125,20 @@ public class UnknownElement extends Task {
         return namespace;
     }
 
-    /** Set the namespace of the XML element associated with this component.
+    /**
+     * Set the namespace of the XML element associated with this component.
      * This method is typically called by the XML processor.
+     * If the namespace is "ant:current", the component helper
+     * is used to get the current antlib uri.
      *
      * @param namespace URI used in the xmlns declaration.
      */
     public void setNamespace(String namespace) {
+        if (namespace.equals(ProjectHelper.ANT_CURRENT_URI)) {
+            ComponentHelper helper = ComponentHelper.getComponentHelper(
+                getProject());
+            namespace = helper.getCurrentAntlibUri();
+        }
         this.namespace = namespace;
     }
 

@@ -111,8 +111,8 @@ public class ComponentHelper  {
      *   processing antlib
      */
     private Stack antLibStack = new Stack();
-    /** current antlib context */
-    private AntTypeTable antLibCurrentTypeTable = null;
+    /** current antlib uri */
+    private String antLibCurrentUri = null;
 
     /**
      * Map from task names to vectors of created tasks
@@ -268,14 +268,7 @@ public class ComponentHelper  {
     public AntTypeDefinition getDefinition(String componentName) {
         checkNamespace(componentName);
         AntTypeDefinition ret = null;
-        if (antLibCurrentTypeTable != null
-            && ProjectHelper.ANT_CURRENT_URI.equals(
-                ProjectHelper.extractUriFromComponentName(componentName))) {
-            ret = antLibCurrentTypeTable.getDefinition(componentName);
-        }
-        if (ret == null) {
-            ret = antTypeTable.getDefinition(componentName);
-        }
+        ret = antTypeTable.getDefinition(componentName);
         return ret;
     }
 
@@ -690,22 +683,23 @@ public class ComponentHelper  {
             project.log(" +Datatype " + name + " " + def.getClassName(),
                         Project.MSG_DEBUG);
             antTypeTable.put(name, def);
-
-            if (antLibCurrentTypeTable != null && name.lastIndexOf(':') != -1) {
-                String baseName = name.substring(name.lastIndexOf(':') + 1);
-                antLibCurrentTypeTable.put(
-                    ProjectHelper.genComponentName(
-                        ProjectHelper.ANT_CURRENT_URI, baseName), def);
-            }
         }
     }
 
     /**
      * Called at the start of processing an antlib
+     * @param uri the uri that is associated with this antlib
      */
-    public void enterAntLib() {
-        antLibCurrentTypeTable = new AntTypeTable(project);
-        antLibStack.push(antLibCurrentTypeTable);
+    public void enterAntLib(String uri) {
+        antLibCurrentUri = uri;
+        antLibStack.push(uri);
+    }
+
+    /**
+     * @return the current antlib uri
+     */
+    public String getCurrentAntlibUri() {
+        return antLibCurrentUri;
     }
 
     /**
@@ -714,9 +708,9 @@ public class ComponentHelper  {
     public void exitAntLib() {
         antLibStack.pop();
         if (antLibStack.size() != 0) {
-            antLibCurrentTypeTable = (AntTypeTable) antLibStack.peek();
+            antLibCurrentUri = (String) antLibStack.peek();
         } else {
-            antLibCurrentTypeTable = null;
+            antLibCurrentUri = null;
         }
     }
 

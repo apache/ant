@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<antlib xmlns:c="ant:current">
+  <typedef name="echo2" classname="org.apache.tools.ant.taskdefs.Echo"/>
+  <c:echo2>Echo2 called</c:echo2>
+  <macrodef name="useecho2">
+    <sequential>
+      <c:echo2>Echo2 inside a macro</c:echo2>
+    </sequential>
+  </macrodef>
+</antlib>

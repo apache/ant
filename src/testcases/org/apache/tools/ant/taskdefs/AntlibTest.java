@@ -74,6 +74,10 @@ public class AntlibTest extends BuildFileTest {
         expectLog("antlib.file", "MyTask called");
     }
 
+    public void testNsCurrent() {
+        expectLog("ns.current", "Echo2 calledEcho2 inside a macro");
+    }
+
     public static class MyTask extends Task {
         public void execute() {
             log("MyTask called");
