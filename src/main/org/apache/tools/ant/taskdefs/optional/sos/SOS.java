@@ -94,8 +94,9 @@ public abstract class SOS extends Task implements SOSCmd {
     protected Commandline commandLine;
 
     /**
-     * Flag to disable the cache when set;
-     * optional needed if SOSHOME is set as an environment variable., default false
+     * Flag to disable the cache when set.
+     * Required if SOSHOME is set as an environment variable.
+     * Defaults to false.
      *
      * @param  nocache  True to disable caching.
      */
@@ -104,7 +105,7 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Flag that disables compression when set; optional, default false
+     * Flag to disable compression when set. Defaults to false.
      *
      * @param  nocompress  True to disable compression.
      */
@@ -113,8 +114,8 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Set the directory where soscmd(.exe) is located;
-     * optional, soscmd must be on the path if omitted.
+     * The directory where soscmd(.exe) is located.
+     * soscmd must be on the path if omitted.
      *
      * @param  dir  The new sosCmd value
      */
@@ -123,16 +124,18 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Set the SourceSafe username; required.
+     * The SourceSafe username.
      *
      * @param  username  The new username value
+     *
+     * @ant.attribute group="required"
      */
     public final void setUsername(String username) {
         sosUsername = username;
     }
 
     /**
-     * Set the SourceSafe password; optional.
+     * The SourceSafe password.
      *
      * @param  password  The new password value
      */
@@ -141,9 +144,11 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Set the SourceSafe project path; required.
+     * The SourceSafe project path.
      *
      * @param  projectpath  The new projectpath value
+     *
+     * @ant.attribute group="required"
      */
     public final void setProjectPath(String projectpath) {
         if (projectpath.startsWith(SOSCmd.PROJECT_PREFIX)) {
@@ -154,17 +159,18 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Set the path to the location of the ss.ini file;
-     * required.
+     * The path to the location of the ss.ini file.
      *
      * @param  vssServerPath  The new vssServerPath value
+     *
+     * @ant.attribute group="required"
      */
     public final void setVssServerPath(String vssServerPath) {
         this.vssServerPath = vssServerPath;
     }
 
     /**
-     * The path to the SourceOffSite home directory
+     * Path to the SourceOffSite home directory.
      *
      * @param  sosHome  The new sosHome value
      */
@@ -173,17 +179,19 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Sets the address and port of SourceOffSite Server,
-     * for example 192.168.0.1:8888.; required.
+     * The address and port of SourceOffSite Server,
+     * for example 192.168.0.1:8888.
      *
      * @param  sosServerPath  The new sosServerPath value
+     *
+     * @ant.attribute group="required"
      */
     public final void setSosServerPath(String sosServerPath) {
         this.sosServerPath = sosServerPath;
     }
 
     /**
-     * Override the working directory and get to the specified path; optional.
+     * Override the working directory and get to the specified path.
      *
      * @param  path  The new localPath value
      */
@@ -192,7 +200,7 @@ public abstract class SOS extends Task implements SOSCmd {
     }
 
     /**
-     * Enable verbose output; optional, default false
+     * Enable verbose output. Defaults to false.
      *
      * @param  verbose  True for verbose output.
      */

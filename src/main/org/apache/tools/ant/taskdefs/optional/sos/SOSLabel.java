@@ -58,69 +58,15 @@ import org.apache.tools.ant.types.Commandline;
 
 /**
  * Labels Visual SourceSafe files via a SourceOffSite server.
- * <p>
- * The following attributes are interpreted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *     <td>soscmddir</td>
- *     <td>Directory which contains soscmd(.exe) <br>
- *     soscmd(.exe) must be in the path if this is not specified</td>
- *     <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vssserverpath</td>
- *      <td>path to the srcsafe.ini  - eg. \\server\vss\srcsafe.ini</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>sosserverpath</td>
- *      <td>address and port of the SOS server  - eg. 192.168.0.1:8888</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>projectpath</td>
- *      <td>SourceSafe project</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>username</td>
- *      <td>SourceSafe username</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>password</td>
- *      <td>SourceSafe password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>label</td>
- *      <td>The label to apply to a project</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>comment</td>
- *      <td>A comment to be applied to all files being labeled</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>verbose</td>
- *      <td>true or false - Status messages are displayed</td>
- *      <td>No</td>
- *   </tr>
- * </table>
  *
  * @author    Jesse Stockall
+ *
+ * @ant.task name="soslabel" category="scm"
  */
-
 public class SOSLabel extends SOS {
 
     /**
-     * Set the version number to label; optional.
+     * The version number to label.
      *
      * @param  version  The new version value
      */
@@ -129,17 +75,18 @@ public class SOSLabel extends SOS {
     }
 
     /**
-     * Set the label to apply the the files in SourceSafe.
+     * The label to apply the the files in SourceSafe.
      *
      * @param  label  The new label value
+     *
+     * @ant.attribute group="required"
      */
     public void setLabel(String label) {
         super.setInternalLabel(label);
     }
 
     /**
-     * Set the comment to apply to all files being labelled;
-     * optional
+     * The comment to apply to all files being labelled.
      *
      * @param  comment  The new comment value
      */

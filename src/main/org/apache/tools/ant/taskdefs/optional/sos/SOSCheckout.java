@@ -58,91 +58,16 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Retrieves and locks files in Visual SourceSafe via a SourceOffSite server.
  *
- * <p>
- * The following attributes are interpretted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *     <td>soscmddir</td>
- *     <td>Directory which contains soscmd(.exe) <br>
- *     soscmd(.exe) must be in the path if this is not specified</td>
- *     <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vssserverpath</td>
- *      <td>path to the srcsafe.ini  - eg. \\server\vss\srcsafe.ini</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>sosserverpath</td>
- *      <td>address and port of the SOS server  - eg. 192.168.0.1:8888</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>projectpath</td>
- *      <td>SourceSafe project path</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>file</td>
- *      <td>Filename to act upon<br> If no file is specified then act upon the project</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>username</td>
- *      <td>SourceSafe username</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>password</td>
- *      <td>SourceSafe password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>localpath</td>
- *      <td>Override the working directory and get to the specified path</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>soshome</td>
- *      <td>The path to the SourceOffSite home directory</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>nocompression</td>
- *      <td>true or false - disable compression</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>recursive</td>
- *      <td>true or false - Only works with the CheckOutProject command</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>nocache</td>
- *      <td>true or false - Only needed if SOSHOME is set as an enviroment variable</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>verbose</td>
- *      <td>true or false - Status messages are displayed</td>
- *      <td>No</td>
- *   </tr>
- * </table>
- *
  * @author    Jesse Stockall
+ *
+ * @ant.task name="soscheckout" category="scm"
  */
-
 public class SOSCheckout extends SOS {
 
     /**
-     * Set the Filename to act upon; optional.
-     * If no file is specified then the tasks
-     * act upon the project
+     * The filename to act upon.
+     * If no file is specified then the task
+     * acts upon the project.
      *
      * @param  filename  The new file value
      */
@@ -151,7 +76,7 @@ public class SOSCheckout extends SOS {
     }
 
     /**
-     * Flag to recursively apply the action; optional, default false
+     * Flag to recursively apply the action. Defaults to false.
      *
      * @param  recursive  True for recursive operation.
      */

@@ -58,102 +58,17 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Retrieves a read-only copy of the specified project or file
  * from Visual SourceSafe via a SourceOffSite server.
- * <p>
- * The following attributes are interpretted:
- * <table border="1">
- *    <tbody>
- *      <tr>
- *         <th>Attribute</th>
- *         <th>Values</th>
- *         <th>Required</th>
- *       </tr>
- *       <tr>
- *         <td>soscmddir</td>
- *         <td>Directory which contains soscmd(.exe) <br>
- *         soscmd(.exe) must be in the path if this is not specified</td>
- *         <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>vssserverpath</td>
- *          <td>path to the srcsafe.ini  - eg. \\server\vss\srcsafe.ini</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>sosserverpath</td>
- *          <td>address and port of the SOS server  - eg. 192.168.0.1:8888</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>projectpath</td>
- *          <td>SourceSafe project path</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>file</td>
- *          <td>Filename to act upon<br>
- *              If no file is specified then act upon the project</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>username</td>
- *          <td>SourceSafe username</td>
- *          <td>Yes</td>
- *       </tr>
- *       <tr>
- *          <td>password</td>
- *          <td>SourceSafe password</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>localpath</td>
- *          <td>Override the working directory and get to the specified path</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>soshome</td>
- *          <td>The path to the SourceOffSite home directory</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>nocompression</td>
- *          <td>true or false - disable compression</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>recursive</td>
- *          <td>true or false - Only works with the GetProject command</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>version</td>
- *          <td>a version number to get - Only works with the GetFile command</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>label</td>
- *          <td>a label version to get - Only works with the GetProject command</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>nocache</td>
- *          <td>true or false - Only needed if SOSHOME is set as an enviroment variable</td>
- *          <td>No</td>
- *       </tr>
- *       <tr>
- *          <td>verbose</td>
- *         <td>true or false - Status messages are displayed</td>
- *        <td>No</td>
- *      </tr>
  *
  * @author    Jesse Stockall
+ *
+ * @ant.task name="sosget" category="scm"
  */
-
 public class SOSGet extends SOS {
 
     /**
-     * Set the Filename to act upon; optional.
+     * The Filename to act upon.
      * If no file is specified then the tasks
-     * act upon the project
+     * act upon the project.
      *
      * @param  filename  The new file value
      */
@@ -162,7 +77,7 @@ public class SOSGet extends SOS {
     }
 
     /**
-     * Flag to recursively apply the action; optional, default false
+     * Flag to recursively apply the action. Defaults to false
      *
      * @param  recursive  True for recursive operation.
      */
@@ -172,7 +87,7 @@ public class SOSGet extends SOS {
 
     /**
      * Set the version number to get -
-     * only works with SOSGet on a file; optional.
+     * only works with SOSGet on a file.
      *
      * @param  version  The new version value
      */
@@ -181,7 +96,7 @@ public class SOSGet extends SOS {
     }
 
     /**
-     * Set the labeled version to operate on in SourceSafe
+     * The labeled version to operate on in SourceSafe.
      *
      * @param  label  The new label value
      */
