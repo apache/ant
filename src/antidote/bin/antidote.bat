@@ -36,6 +36,9 @@ goto end
 :checkJava
 if "%JAVACMD%" == "" set JAVACMD=java
 
+set LOCALCLASSPATH="%CLASSPATH%"
+for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" "%%i"
+
 %JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" org.apache.tools.ant.gui.Main %ANT_CMD_LINE_ARGS%
 goto end
 
