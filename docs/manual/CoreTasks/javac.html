@@ -229,8 +229,13 @@ invoking the compiler.</p>
   </tr>
   <tr>
     <td valign="top">target</td>
-    <td valign="top">Generate class files for specific VM version (e.g.,
-	 <code>1.1</code> or <code>1.2</code>).</td>
+    <td valign="top">Generate class files for specific VM version
+    (e.g., <code>1.1</code> or <code>1.2</code>). <b>Note that the
+    default value depends on the JVM that is running Ant.  In
+    particular, if you use JDK 1.4 the generated classes will not be
+    usable for a 1.1 Java VM unless you explicitly set this attribute
+    to the value 1.1 (which is the default value for JDK 1.1 to
+    1.3).</b></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
