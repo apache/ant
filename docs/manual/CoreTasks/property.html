@@ -51,7 +51,7 @@ This also holds for properties loaded from a property file.</p>
   <tr>
     <td valign="top">value</td>
     <td valign="top">the value of the property.</td>
-    <td valign="middle" align="center" rowspan="5">Yes</td>
+    <td valign="middle" align="center" rowspan="6">Yes</td>
   </tr>
   <tr>
     <td valign="top">refid</td>
@@ -74,6 +74,17 @@ This also holds for properties loaded from a property file.</p>
       is left unchanged (with / and \ characters converted to the
       current platforms conventions). Otherwise it is taken as a path
       relative to the project's basedir and expanded.</td>
+  </tr>
+  <tr>
+    <td valign="top">environment</td>
+    <td valign="top">the prefix to use when retrieving environment variables. Thus
+    if you specify environment="myenv" you will be able to access OS-specific 
+    environment variables via property names "myenv.PATH" or "myenv.TERM". Note
+    that if you supply a property name with a final "." it will not be doubled. ie
+    environment="myenv." will still allow access of environment variables through
+    "myenv.PATH" and "myenv.TERM". This functionality is currently only implemented 
+    on select platforms. Feel free to send patches to increase the number of platforms
+    this functionality is supported on ;)</td>
   </tr>
   <tr>
     <td valign="top">classpath</td> 
