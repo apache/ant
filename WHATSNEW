@@ -50,8 +50,8 @@ Changes that could break older environments:
   highly recommend that you upgrade.
 
   If you really need to continue using Xalan-J 1, please copy the
-  junit-frames-xalan1.xsl from the distributions etc directory as
-  junit-frames.xsl into a new directory and use the tasks styledir
+  junit-frames-xalan1.xsl from the distribution's etc directory as
+  junit-frames.xsl into a new directory and use the task's styledir
   attribute to point to.  This is the last version of the XSLT
   stylesheet that is expected to be compatible with Xalan-J 1.
 
