@@ -1,6 +1,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
     xmlns:lxslt="http://xml.apache.org/xslt"
-    xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect"
+    xmlns:redirect="org.apache.xalan.lib.Redirect"
     extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
@@ -59,18 +59,18 @@
  -->
 
 <!--
- 
+
  Sample stylesheet to be used with JProbe 3.0 XML output.
- 
+
  It creates a set of HTML files a la javadoc where you can browse easily
  through all packages and classes.
- 
+
  It is best used with JProbe Coverage Ant task that gives you the benefit
  of a reference classpath so that you have the list of classes/methods
  that are not used at all in a given classpath.
- 
+
  @author Stephane Bailliez <a href="mailto:sbailliez@apache.org"/>
- 
+
 -->
 
 <!-- default output directory is current directory -->
@@ -99,12 +99,12 @@
     <redirect:write file="{$output.dir}/overview-frame.html">
         <xsl:apply-templates select="." mode="all.packages"/>
     </redirect:write>
-    
+
     <!-- create the all-classes.html at the root -->
     <redirect:write file="{$output.dir}/allclasses-frame.html">
         <xsl:apply-templates select="." mode="all.classes"/>
     </redirect:write>
-    
+
     <!-- process all packages -->
     <xsl:apply-templates select="./package" mode="write"/>
 </xsl:template>
@@ -148,10 +148,10 @@
       background-color:#FFFFFF;
       color:#000000;
     }
-    .a td { 
+    .a td {
       background: #efefef;
     }
-    .b td { 
+    .b td {
       background: #fff;
     }
     th, td {
@@ -168,7 +168,7 @@
       border: none
     }
     table.log tr td, tr th {
-      
+
     }
     h2 {
       font-weight:bold;
@@ -314,12 +314,12 @@
     <redirect:write file="{$output.dir}/{$package.dir}/package-frame.html">
         <xsl:apply-templates select="." mode="classes.list"/>
     </redirect:write>
-    
+
     <!-- create a package-summary.html in the package directory -->
     <redirect:write file="{$output.dir}/{$package.dir}/package-summary.html">
         <xsl:apply-templates select="." mode="package.summary"/>
     </redirect:write>
-    
+
     <!-- for each class, creates a @name.html -->
     <xsl:for-each select="class">
         <redirect:write file="{$output.dir}/{$package.dir}/{@name}.html">
@@ -344,7 +344,7 @@
                     </td>
                 </tr>
             </table>
-    
+
             <H2>Classes</H2>
             <TABLE WIDTH="100%">
                 <xsl:for-each select="class">
@@ -371,12 +371,12 @@
         <!-- when loading this package, it will open the classes into the frame -->
         <BODY onload="open('package-frame.html','classListFrame')">
             <xsl:call-template name="pageHeader"/>
-            <h3>Package <xsl:value-of select="@name"/></h3>         
+            <h3>Package <xsl:value-of select="@name"/></h3>
             <table class="log" cellpadding="5" cellspacing="2" width="100%">
                 <xsl:apply-templates select="." mode="stats.header"/>
                 <xsl:apply-templates select="." mode="stats"/>
             </table>
-                    
+
             <xsl:if test="count(class) &gt; 0">
                 <H3>Classes</H3>
                 <table class="log" cellpadding="5" cellspacing="2" width="100%">
@@ -409,7 +409,7 @@
                 <xsl:apply-templates select="." mode="stats.header"/>
                 <xsl:apply-templates select="." mode="stats"/>
             </table>
-    
+
             <!-- details of methods -->
             <H3>Methods</H3>
             <table class="log" cellpadding="5" cellspacing="2" width="100%">

@@ -1,6 +1,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
     xmlns:lxslt="http://xml.apache.org/xslt"
-    xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect"
+    xmlns:redirect="org.apache.xalan.lib.Redirect"
     extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
@@ -59,15 +59,15 @@
  -->
 
 <!--
- 
+
  Sample stylesheet to be used with An JUnitReport output.
- 
+
  It creates a set of HTML files a la javadoc where you can browse easily
  through all packages and classes.
- 
+
  @author Stephane Bailliez <a href="mailto:sbailliez@apache.org"/>
  @author Erik Hatcher <a href="mailto:ehatcher@apache.org"/>
- 
+
 -->
 <xsl:param name="output.dir" select="'.'"/>
 
@@ -92,12 +92,12 @@
     <redirect:write file="{$output.dir}/overview-frame.html">
         <xsl:apply-templates select="." mode="all.packages"/>
     </redirect:write>
-    
+
     <!-- create the all-classes.html at the root -->
     <redirect:write file="{$output.dir}/allclasses-frame.html">
         <xsl:apply-templates select="." mode="all.classes"/>
     </redirect:write>
-    
+
     <!-- process all packages -->
     <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
         <xsl:call-template name="package">
@@ -112,7 +112,7 @@
     <xsl:variable name="package.dir">
         <xsl:if test="not($name = '')"><xsl:value-of select="translate($name,'.','/')"/></xsl:if>
         <xsl:if test="$name = ''">.</xsl:if>
-    </xsl:variable> 
+    </xsl:variable>
     <!--Processing package <xsl:value-of select="@name"/> in <xsl:value-of select="$output.dir"/> -->
     <!-- create a classes-list.html in the package directory -->
     <redirect:write file="{$output.dir}/{$package.dir}/package-frame.html">
@@ -120,14 +120,14 @@
             <xsl:with-param name="name" select="$name"/>
         </xsl:call-template>
     </redirect:write>
-    
+
     <!-- create a package-summary.html in the package directory -->
     <redirect:write file="{$output.dir}/{$package.dir}/package-summary.html">
         <xsl:call-template name="package.summary">
             <xsl:with-param name="name" select="$name"/>
         </xsl:call-template>
     </redirect:write>
-    
+
     <!-- for each class, creates a @name.html -->
     <!-- @bug there will be a problem with inner classes having the same name, it will be overwritten -->
     <xsl:for-each select="/testsuites/testsuite[@package = $name]">
@@ -265,19 +265,19 @@ h6 {
           doc.close();
           win.focus();
         }
-      ]]>  
+      ]]>
       </script>
         </head>
         <body>
-            <xsl:call-template name="pageHeader"/>  
+            <xsl:call-template name="pageHeader"/>
             <h3>Class <xsl:value-of select="$class.name"/></h3>
 
-            
+
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                 <xsl:call-template name="testsuite.test.header"/>
                 <xsl:apply-templates select="." mode="print.test"/>
             </table>
-    
+
             <h2>Tests</h2>
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
         <xsl:call-template name="testcase.test.header"/>
@@ -354,7 +354,7 @@ h6 {
                     </td>
                 </tr>
             </table>
-    
+
             <h2>Classes</h2>
             <table width="100%">
                 <xsl:for-each select="/testsuites/testsuite[./@package = $name]">
@@ -503,7 +503,7 @@ h6 {
         </td>
         </tr>
         </table>
-        
+
         <h2>Packages</h2>
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
             <xsl:call-template name="testsuite.test.header"/>
@@ -549,12 +549,12 @@ h6 {
             <xsl:attribute name="onload">open('package-frame.html','classListFrame')</xsl:attribute>
             <xsl:call-template name="pageHeader"/>
             <h3>Package <xsl:value-of select="$name"/></h3>
-            
+
             <!--table border="0" cellpadding="5" cellspacing="2" width="95%">
                 <xsl:call-template name="class.metrics.header"/>
                 <xsl:apply-templates select="." mode="print.metrics"/>
             </table-->
-            
+
             <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = $name]"/>
             <xsl:if test="count($insamepackage) &gt; 0">
                 <h2>Classes</h2>
@@ -579,13 +579,13 @@ h6 {
 <xsl:template name="path">
     <xsl:param name="path"/>
     <xsl:if test="contains($path,'.')">
-        <xsl:text>../</xsl:text>    
+        <xsl:text>../</xsl:text>
         <xsl:call-template name="path">
             <xsl:with-param name="path"><xsl:value-of select="substring-after($path,'.')"/></xsl:with-param>
-        </xsl:call-template>    
+        </xsl:call-template>
     </xsl:if>
     <xsl:if test="not(contains($path,'.')) and not($path = '')">
-        <xsl:text>../</xsl:text>    
+        <xsl:text>../</xsl:text>
     </xsl:if>
 </xsl:template>
 
@@ -633,7 +633,7 @@ h6 {
 
 <!-- class information -->
 <xsl:template match="testsuite" mode="print.test">
-    <tr valign="top">       
+    <tr valign="top">
         <xsl:attribute name="class">
             <xsl:choose>
                 <xsl:when test="@errors[.&gt; 0]">Error</xsl:when>
@@ -721,7 +721,7 @@ h6 {
             <xsl:value-of select="substring-before($string,&quot;'&quot;)"/>\&apos;<xsl:call-template name="JS-escape">
                 <xsl:with-param name="string" select="substring-after($string,&quot;'&quot;)"/>
             </xsl:call-template>
-        </xsl:when> 
+        </xsl:when>
         <xsl:when test="contains($string,'\')">
             <xsl:value-of select="substring-before($string,'\')"/>\\<xsl:call-template name="JS-escape">
                 <xsl:with-param name="string" select="substring-after($string,'\')"/>
