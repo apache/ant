@@ -107,10 +107,14 @@ class PlainMailer extends Mailer {
             }
 
             mailMessage.setHeader("Date", getDate());
-            mailMessage.setHeader("Content-Type", message.getMimeType());
+            if (message.getCharset() != null) {
+                mailMessage.setHeader("Content-Type", message.getMimeType()
+                    + "; charset=\"" + message.getCharset() + "\"");
 
+            } else {
+                mailMessage.setHeader("Content-Type", message.getMimeType());
+            }
             PrintStream out = mailMessage.getPrintStream();
-
             message.print(out);
 
             e = files.elements();
@@ -156,7 +160,8 @@ class PlainMailer extends Mailer {
         }
 
         int length;
-        byte[] buf = new byte[1024];
+        final int maxBuf = 1024;
+        byte[] buf = new byte[maxBuf];
         FileInputStream finstr = new FileInputStream(file);
 
         try {

@@ -389,7 +389,7 @@ Other changes:
 
 * <antlr>'s debug attribute has been enabled.  Bugzilla Report 19051.
 
-* <mail> has a new attribute encoding. Bugzilla Report 15434.
+* <mail> has a new attribute charset. Bugzilla Report 15434.
 
 * <mail> has new attributes user and password for SMTP auth.
   maillogger can also use this.
