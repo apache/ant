@@ -114,6 +114,17 @@ public class ACSFactory {
 
     }
 
+	/** 
+	 * Get an instance of the factory.
+	 * 
+	 * @return Factory instance.
+	 */
+    public static ACSFactory getInstance() {
+        if(_instance == null) {
+            _instance = new ACSFactory();
+        }
+        return _instance;
+    }
 
 	/** 
 	 * Load a project from the given XML file.
@@ -167,18 +178,32 @@ public class ACSFactory {
         return (ACSProjectElement) doc.getDocumentElement();
     }
 
-	/** 
-	 * Get an instance of the factory.
-	 * 
-	 * @return Factory instance.
-	 */
-    public static ACSFactory getInstance() {
-        if(_instance == null) {
-            _instance = new ACSFactory();
-        }
-        return _instance;
+    /** 
+     * Create a new, empty project.
+     * 
+     * @return Empty project.
+     */
+    public ACSProjectElement createProject() {
+        SimpleElementFactory fact = new SimpleElementFactory();
+        fact.addMapping(_elementMap, ACSFactory.class.getClassLoader());
+        XmlDocument doc = new XmlDocument();
+        doc.setElementFactory(fact);
+        return (ACSProjectElement) doc.createElement("project");
     }
 
+
+    /** 
+     * Create a new target.
+     * 
+     * @param project Project the target is assigned to.
+     * @return New, unnamed target.
+     */
+    public ACSTargetElement createTarget(ACSProjectElement project) {
+        ACSTargetElement retval = (ACSTargetElement) project.
+            getOwnerDocument().createElement("target");
+        project.appendChild(retval);
+        return retval;
+    }
 
 	/** 
 	 * Test code

@@ -169,6 +169,45 @@ public class ResourceManager {
     }
 
     /** 
+     * Get the boolean resource for the given name. Case
+     * insensitive values of "yes" or "true" evaluate to TRUE.
+     * All others, including undefined resources evaluate to FALSE.
+     * 
+     * @param name Name of the boolean resource.
+     * @return True if defined as true, false otherwise.
+     */
+    public boolean getBoolean(String name) {
+        return getBoolean(null, name);
+    }
+
+    /** 
+     * Get the boolean resource for the given class. Case
+     * insensitive values of "yes" or "true" evaluate to TRUE.
+     * All others, including undefined resources evaluate to FALSE.
+     * 
+     * @param clazz Class to get resource for.
+     * @param name Name of the boolean resource.
+     * @return True if defined as true, false otherwise.
+     */
+    public boolean getBoolean(Class clazz, String name) {
+        if(name == null) {
+            return false;
+        }
+
+        String key = getKey(clazz, name);
+
+        String value = "";
+        try {
+            value = _resources.getString(key);
+        }
+        catch(MissingResourceException ex) {
+            // Ignore missing resources as they imply false.
+        }
+
+        return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
+    }
+
+    /** 
      * Generate a composit key from the given class and key name.
      * 
      * @param clazz Class to find resource for.

@@ -123,6 +123,8 @@ public abstract class ACSTreeNodeElement extends ACSElement
      * Returns the parent <code>TreeNode</code> of the receiver.
      */
     public TreeNode getParent() {
+        // XXX this barfs becase a different "getParent()" is in Node 
+        // interface. Need to fix...
         return (TreeNode) getParent();
     }
 

@@ -53,6 +53,8 @@
  */
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.event.NewProjectEvent;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
 
 /**
  * Command for creating a new project.
@@ -61,6 +63,10 @@ import org.apache.tools.ant.gui.core.AppContext;
  * @author Simeon Fitch 
  */
 public class NewProjectCmd extends AbstractCommand {
+    /** New project count for this session. Used to create default names, 
+     *  numbered as a convenience. */
+    private static int _count = 1;
+
 	/** 
 	 * Standard ctor.
 	 * 
@@ -77,17 +83,12 @@ public class NewProjectCmd extends AbstractCommand {
 	 * 
 	 */
     public void run() {
-/*
-        FileFilter filter = new XMLFileFilter(getContext().getResources());
-
-        JFileChooser chooser = new JFileChooser();
-        chooser.addChoosableFileFilter(filter);
-        int val = chooser.showOpenDialog(getContext().getParentFrame());
-        if(val == JFileChooser.APPROVE_OPTION) {
-            File selected = chooser.getSelectedFile();
-            getContext().getEventBus().postEvent(
-                new OpenRequestEvent(getContext(), selected));
-        }
-*/
+        ACSProjectElement project = 
+            getContext().getProjectManager().createNew();
+        project.setName(getContext().getResources().
+                        getString(getClass(), "defName") + " " + _count++);
+        getContext().getEventBus().postEvent(
+            new NewProjectEvent(getContext(), project));
+        
     }
 }

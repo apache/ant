@@ -59,6 +59,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.beans.PropertyChangeEvent;
+
 /**
  * Specialization of JMenu providing selectability of the currently
  * open projects.
@@ -153,8 +155,12 @@ public class ProjectSelectionMenu extends JMenu {
     /** Filter for project related events. */
     private static class Filter implements BusFilter {
         public boolean accept(EventObject event) {
+            // We want events related to projects.
             return event instanceof ProjectSelectedEvent ||
-                event instanceof ProjectClosedEvent;
+                event instanceof ProjectClosedEvent || 
+                (event instanceof PropertyChangeEvent && 
+                 ((PropertyChangeEvent)event).getSource() 
+                 instanceof ACSProjectElement);
         }
     }
 

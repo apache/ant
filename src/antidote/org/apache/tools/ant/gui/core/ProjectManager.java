@@ -120,17 +120,32 @@ public class ProjectManager {
             location = project.getLocation();
         }
         if(location == null) {
-            // xxx Fix me.
-            throw new IOException("xxx need a file name xxx");
+            // This shouldn't happen.
+            throw new IOException("Logic error: Save location mising.");
         }
 
         Writer out = null;
         try {
-            URLConnection connection = location.openConnection();
-            connection.setDoInput(false);
-            connection.setDoOutput(true);
-            out = new OutputStreamWriter(connection.getOutputStream());
+            // XXX for some reason the URLConnection for protocol type "file"
+            // doesn't support output (at least that is what the exception
+            // says. I don't know if I'm doing something wrong or not, but 
+            // since we need to handle files differently (which is fine
+            // right now since files are all we really support anyway.
+            if(location.getProtocol().equals("file")) {
+                out = new FileWriter(location.getFile());
+            }
+            else {
+                // XXX This is here for future support of FTP/HTTP and
+                // the like. JDBC will have to be dealt with differently.
+                URLConnection connection = location.openConnection();
+                connection.setDoInput(false);
+                connection.setDoOutput(true);
+                out = new OutputStreamWriter(connection.getOutputStream());
+            }
+
+            // Persist the project.
             project.write(out);
+            out.flush();
             project.setLocation(location);
         }
         finally {
@@ -170,7 +185,8 @@ public class ProjectManager {
      * @return Unpopulated project.
      */
     public ACSProjectElement createNew() {
-        ACSProjectElement retval = null;
+        ACSProjectElement retval = ACSFactory.getInstance().createProject();
+        _projects.add(retval);
         return retval;
     }
 
