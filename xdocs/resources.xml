@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <document>
 
   <properties>
@@ -52,11 +52,32 @@
       </subsection>
     </section>
 
+    <section name="WIKIs">
+      <subsection name="Apache">
+
+        <p>The ASF provides a Wiki for several topics. </p>
+
+        <table class="externals">
+          <tr>
+            <th>Main page:</th>
+            <td><a href="http://nagoya.apache.org/wiki/apachewiki.cgi">http://nagoya.apache.org/wiki/apachewiki.cgi</a></td>
+          </tr>
+          <tr>
+            <th>Ant main page:</th>
+            <td><a href="http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages">http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages</a></td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+
+
+
+
     <section name="Books">
       <p>Listed by descending publication date.</p>
       <!-- TODO: reorganize as a table? -->
       <subsection name="Extreme Programming with Ant">
-         <p> This book shows how to implement an XP project using Ant 1.5.3, and many other 3rd party tools.  Covers:</p> 
+         <p> This book shows how to implement an XP project using Ant 1.5.3, and many other 3rd party tools.  Covers:</p>
             <ul>
                <li>The fundamentals of Ant: concepts, core and optional tasks</li>
                <li>How to write custom Ant components, including custom Tasks, Loggers, Listeners, Input Handlers, Selectors, Filters, Mappers and Data Types</li>
@@ -73,8 +94,8 @@
             </ul>
          <table class="externals">
           <tr>
-            <th>Authors:</th> 
-            <td>Glenn Niemeyer and Jeremy Poteet</td> 
+            <th>Authors:</th>
+            <td>Glenn Niemeyer and Jeremy Poteet</td>
           </tr>
           <tr>
             <th>URL:</th>
