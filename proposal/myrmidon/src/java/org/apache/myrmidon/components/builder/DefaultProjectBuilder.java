@@ -20,7 +20,7 @@ import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.ClassicSAXConfigurationHandler;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
@@ -76,7 +76,7 @@ public class DefaultProjectBuilder
             return result;
         }
 
-        final ClassicSAXConfigurationHandler handler = new ClassicSAXConfigurationHandler();
+        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
 
         process( systemID, handler );
 
@@ -93,7 +93,7 @@ public class DefaultProjectBuilder
     }
 
     protected void process( final URL systemID,
-                            final ClassicSAXConfigurationHandler handler )
+                            final SAXConfigurationHandler handler )
         throws Exception
     {
         final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();

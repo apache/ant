@@ -28,7 +28,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.ClassicSAXConfigurationHandler;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -89,7 +89,7 @@ public class DefaultDeployer
         final XMLReader parser = saxParser.getXMLReader();
         //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
 
-        final ClassicSAXConfigurationHandler handler = new ClassicSAXConfigurationHandler();
+        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
         parser.setContentHandler( handler );
         parser.setErrorHandler( handler );
 
