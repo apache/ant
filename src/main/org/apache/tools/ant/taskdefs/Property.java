@@ -255,8 +255,9 @@ public class Property extends Task {
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             String value = (String) props.getProperty(name);
+
             String v = ProjectHelper.replaceProperties(project, value, project.getProperties());
-            addProperty(name, value);
+            addProperty(name, v);
         }
     }
 
