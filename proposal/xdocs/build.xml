@@ -8,9 +8,6 @@
   <property file=".ant.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
-  <property name="log4j.jar" location="lib/log4j-core.jar"/>
-  <property name="xdoclet.jar" location="lib/xdoclet.jar"/>
-
   <property name="src.dir"
             location="../../src/main/org/apache/tools/ant"/>
   <property name="src.root"
@@ -38,24 +35,20 @@
 
     <!-- hack, this should be outside a target but ${build.dir} gets stripped ?? -->
     <path id="xdoclet.classpath">
-      <pathelement location="${log4j.jar}"/>
-      <pathelement location="${xdoclet.jar}"/>
+      <path>
+        <fileset dir="lib" includes="*.jar"/>
+      </path>
 
-      <!-- javadoc is needed -->
-      <pathelement path="${java.class.path}"/>
-      <pathelement location="${ant.home}/lib/ant.jar"/>
-      <pathelement location="${ant.home}/lib/optional.jar"/>
+      <path>
+        <fileset dir="${ant.home}/lib" includes="*.jar"/>
+      </path>
       <pathelement location="${build.dir}"/>
       <pathelement path="${xdoclet.extra.classpath}" />
+      <pathelement location="."/>
     </path>
 
     <property name="the.classpath" refid="xdoclet.classpath"/>
     <echo>the.classpath = ${the.classpath}</echo>
-
-    <taskdef name="document"
-             classname="xdoclet.doc.DocumentDocletTask"
-             classpathref="xdoclet.classpath"/>
-
   </target>
 
 
@@ -66,12 +59,37 @@
   <target name="compile" depends="init">
     <javac srcdir="src" destdir="${build.dir}"
            debug="true" classpathref="xdoclet.classpath"/>
+  </target>
+
+  <target name="gen2" depends="init">
+    <taskdef name="antdoclet"
+             classname="xdoclet.modules.apache.ant.AntDocletTask"
+             classpathref="xdoclet.classpath"/>
+    <antdoclet destdir="${gen.dir}"
+               excludedtags="@version,@author"
+               force="${xdoclet.force}">
+      <fileset dir="${src.root}">
+        <include name="**/*.java" unless="class.name"/>
+        <include name="**/*${class.name}*.java" if="class.name"/>
+        <exclude name="**/*${exclude.class.name}*.java" if="exclude.class.name"/>
+      </fileset>
+      <taskdescriptor/>
+      <taskdefproperties/>
+    </antdoclet>
+  </target>
+<!--
+      <taskdescriptor templateFile="${task_xdoc.template}"
+             destinationfile="{0}.xml"
+      />
+      <template  templateFile="${task.properties.template}"
+             destinationfile="task_defaults.properties"
+      />
+-->
+
+  <target name="gen" depends="compile">
     <taskdef name="xdocs"
              classname="org.apache.tools.ant.xdoclet.AntXDocletTask"
              classpathref="xdoclet.classpath"/>
-  </target>
-
-  <target name="gen" depends="compile">
     <xdocs sourcepath="${src.root}"
            destdir="${gen.dir}"
            mergedir="${basedir}/src"
@@ -112,6 +130,9 @@
   </target>
 
   <target name="document" depends="init">
+    <taskdef name="document"
+             classname="xdoclet.doc.DocumentDocletTask"
+             classpathref="xdoclet.classpath"/>
     <document sourcepath="${basedir}/src"
            destdir="${gen.dir}"
            mergedir="${basedir}/src"
