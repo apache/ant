@@ -92,7 +92,7 @@ with GNU tar.</p>
 </table>
 
 <h3>Nested Elements</h3>
-The tar task supports nested <a href="../CoreTypes/fileset.html">Fileset</a> elements. These are
+The tar task supports nested <a href="../CoreTypes/fileset.html">tarfileset</a> elements. These are
 extended Filesets which, in addition to the standard fileset elements, support three additional
 attributes
 
@@ -138,11 +138,11 @@ or files with the name <code>todo.html</code> are excluded.</p>
 
 <pre>&lt;tar longfile=&quot;gnu&quot;
      tarfile=&quot;${dist.base}/${dist.name}-src.tar&quot; &gt;
-  &lt;fileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
+  &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
   &lt;/fileset&gt; 
-  &lt;fileset dir=&quot;${dist.name}/..&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt; 
+  &lt;tarfileset dir=&quot;${dist.name}/..&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt; 
     &lt;include name=&quot;${dist.name}/**&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/build.sh&quot;/&gt;
@@ -156,7 +156,7 @@ fileset selects just the executable files. The second fileset must exclude
 the executable files and include all others. </p>
 
 <p><strong>Note: </strong> The tar task does not ensure that a file is only selected
-once by one fileset. If the same file is selected by more than one fileset, it will be included in the 
+by one fileset. If the same file is selected by more than one fileset, it will be included in the 
 tar file twice, with the same path.</p>
 
 <hr>
