@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -72,12 +73,33 @@ public class JavacExternal extends DefaultCompilerAdapter {
         attributes.log("Using external javac compiler", Project.MSG_VERBOSE);
 
         Commandline cmd = new Commandline();
-        cmd.setExecutable("javac");
-        setupJavacCommandlineSwitches(cmd);
+        cmd.setExecutable(getJavacExecutableName());
+        setupModernJavacCommandlineSwitches(cmd);
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
         return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
+
+    private String getJavacExecutableName() {
+	// This is the most common extension case - exe for windows and OS/2, 
+        // nothing for *nix.
+	String extension =  Os.isFamily("dos") ? ".exe" : "";
+
+	// Look for java in the java.home/../bin directory.  Unfortunately
+	// on Windows java.home doesn't always refer to the correct location, 
+	// so we need to fall back to assuming java is somewhere on the
+	// PATH.
+	java.io.File jExecutable = 
+            new java.io.File(System.getProperty("java.home") +
+                             "/../bin/javac" + extension );
+
+	if (jExecutable.exists() && !Os.isFamily("netware")) {
+	    return jExecutable.getAbsolutePath();
+	} else {
+	    return "javac";
+	}
+    }
+    
 }
 
