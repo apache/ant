@@ -119,6 +119,10 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
      *     modified value.
      */
     public void setValue(Object value) {
+        if(value == null) {
+            value = "";
+        }
+
         Object old = _widget.getText();
         _widget.setText(String.valueOf(value));
     }
@@ -129,9 +133,6 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
      * object type such as "java.lang.Integer".  */
     public Object getValue() {
         String retval = _widget.getText();
-        if(retval != null && retval.length() == 0) {
-            retval = null;
-        }
         return retval;
     }
 

@@ -114,7 +114,7 @@ public class PropertiesPropertyEditor extends AbstractPropertyEditor {
      *      current value.
      */
     public String getJavaInitializationString() {
-        return getAsText();
+        return "new Properties()";
     }
 
     /**
@@ -128,7 +128,11 @@ public class PropertiesPropertyEditor extends AbstractPropertyEditor {
      *     modified value.
      */
     public void setValue(Object value) {
-        if(value != null && !(value instanceof Properties)) {
+        if(value == null) {
+            value = new Properties();
+        }
+
+        if(!(value instanceof Properties)) {
             throw new IllegalArgumentException(
                 value.getClass().getName() + " is not of type Properties.");
         }

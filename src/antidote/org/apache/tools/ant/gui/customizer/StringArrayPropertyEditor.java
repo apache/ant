@@ -114,6 +114,9 @@ public class StringArrayPropertyEditor extends AbstractPropertyEditor {
      *     modified value.
      */
     public void setValue(Object value) {
+        if(value == null) {
+            value = new String[0];
+        }
         if(!(value instanceof String[])) {
             throw new IllegalArgumentException(
                 "Value must be of type String[].");
