@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -212,7 +212,7 @@ public class FilterSet extends DataType implements Cloneable {
      */
     public Hashtable getFilterHash() {
         int filterSize = getFilters().size();
-        Hashtable filterHash = new Hashtable(filterSize);
+        Hashtable filterHash = new Hashtable(filterSize + 1);
         for (Enumeration e = getFilters().elements(); e.hasMoreElements();) {
            Filter filter = (Filter) e.nextElement();
            filterHash.put(filter.getToken(), filter.getValue());
