@@ -8,6 +8,8 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
+* subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
+
 
 Other changes:
 --------------
