@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.apache.tools.ant.taskdefs.Java;
  * and options are available. Do not set any apart from the <tt>classpath</tt>
  * as they are not guaranteed to be there in future.
  * @todo stop extending from Java.
+ * @deprecated This task is considered unsupported by the Ant developers
  */
 public class StyleBook extends Java {
     protected File m_targetDirectory;
@@ -37,6 +38,9 @@ public class StyleBook extends Java {
     protected File m_book;
 
 
+    /**
+     * Constructor
+     */
     public StyleBook() {
         setClassname("org.apache.stylebook.StyleBook");
         setFork(true);
@@ -44,8 +48,9 @@ public class StyleBook extends Java {
     }
 
     /**
-     * The book xml file that the documentation generation starts from;
+     * Set the book xml file that the documentation generation starts from;
      * required.
+     * @param book the source file
      */
 
     public void setBook(final File book) {
@@ -54,8 +59,9 @@ public class StyleBook extends Java {
 
 
     /**
-     * the directory that contains the stylebook skin;
+     * Set the directory that contains the stylebook skin;
      * required.
+     * @param skinDirectory the location of the stylebook skin 
      */
     public void setSkinDirectory(final File skinDirectory) {
         m_skinDirectory = skinDirectory;
@@ -63,8 +69,9 @@ public class StyleBook extends Java {
 
 
     /**
-     * the destination directory where the documentation is generated;
+     * Set the destination directory where the documentation is generated;
      * required.
+     * @param targetDirectory the document output directory
      */
     public void setTargetDirectory(final File targetDirectory) {
         m_targetDirectory = targetDirectory;
@@ -72,6 +79,7 @@ public class StyleBook extends Java {
 
     /**
      * A loader configuration to send to stylebook; optional.
+     * @param loaderConfig
      */
     public void setLoaderConfig(final String loaderConfig) {
         m_loaderConfig = loaderConfig;
@@ -106,4 +114,3 @@ public class StyleBook extends Java {
         super.execute();
     }
 }
-
