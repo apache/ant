@@ -18,10 +18,10 @@ package org.apache.myrmidon.components.configurer;
 public class DefaultConfigurationState
     implements ConfigurationState
 {
-    final private int[] m_propCount;
-    final private Object[] m_createdObjects;
-    final private ObjectConfigurer m_configurer;
-    final private Object m_object;
+    private final int[] m_propCount;
+    private final Object[] m_createdObjects;
+    private final ObjectConfigurer m_configurer;
+    private final Object m_object;
 
     public DefaultConfigurationState( final ObjectConfigurer configurer,
                                       final Object object,
