@@ -154,7 +154,7 @@ final class Environment
     {
         final String[] command = getEnvCommand();
         final File workingDirectory = new File( "." );
-        final ExecMetaData metaData = new ExecMetaData( command, null, workingDirectory, false );
+        final ExecMetaData metaData = new ExecMetaData( command, null, workingDirectory );
 
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         final int retval = m_execManager.execute( metaData, null, output, output, 0 );

@@ -46,14 +46,6 @@ public class ExecMetaData
     private Properties m_environment;
 
     /**
-     * If this variable is true then then the environment specified is
-     * added to the environment variables for current process. If this
-     * value is false then the specified environment replaces the environment
-     * for the command.
-     */
-    private boolean m_isEnvironmentAdditive;
-
-    /**
      * Construct the meta data for executable as appropriate.
      * Note that it is invalid to specify a <code>null</code>
      * workingDirectory or command. It is also invalid to specify
@@ -61,13 +53,11 @@ public class ExecMetaData
      */
     public ExecMetaData( final String[] command,
                          final Properties environment,
-                         final File workingDirectory,
-                         final boolean environmentAdditive )
+                         final File workingDirectory )
     {
         m_command = command;
         m_environment = environment;
         m_workingDirectory = workingDirectory;
-        m_isEnvironmentAdditive = environmentAdditive;
 
         if( null == m_workingDirectory )
         {
@@ -77,11 +67,6 @@ public class ExecMetaData
         if( null == m_command )
         {
             throw new NullPointerException( "command" );
-        }
-
-        if( null == m_environment && m_isEnvironmentAdditive )
-        {
-            throw new IllegalArgumentException( "isEnvironmentAdditive" );
         }
     }
 
@@ -98,10 +83,5 @@ public class ExecMetaData
     public Properties getEnvironment()
     {
         return m_environment;
-    }
-
-    public boolean isEnvironmentAdditive()
-    {
-        return m_isEnvironmentAdditive;
     }
 }

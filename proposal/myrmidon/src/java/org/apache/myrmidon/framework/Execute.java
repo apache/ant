@@ -80,11 +80,12 @@ public class Execute
     }
 
     /**
-     * Set whether to propagate the default environment or not.
-     *
-     * @param newEnvironment whether to propagate the process environment.
+     * If this variable is false then then the environment specified is
+     * added to the environment variables for current process. If this
+     * value is true then the specified environment replaces the environment
+     * for the command.
      */
-    public void setNewenvironment( boolean newEnvironment )
+    public void setNewenvironment( final boolean newEnvironment )
     {
         m_newEnvironment = newEnvironment;
     }
@@ -137,9 +138,9 @@ public class Execute
     private int executeNativeProcess()
         throws TaskException
     {
-        final ExecMetaData metaData = buildExecMetaData();
         try
         {
+            final ExecMetaData metaData = buildExecMetaData();
             if( null != m_handler )
             {
                 return m_execManager.execute( metaData, m_handler, m_timeout );
@@ -168,12 +169,19 @@ public class Execute
      * to pass to the ExecManager service.
      */
     private ExecMetaData buildExecMetaData()
+        throws ExecException
     {
         final String[] command = m_command.getCommandline();
 
+        final Properties newEnvironment = new Properties();
+        if( !m_newEnvironment )
+        {
+            newEnvironment.putAll( m_execManager.getNativeEnvironment() );
+        }
+        newEnvironment.putAll( m_environment );
+
         return new ExecMetaData( command,
-                                 m_environment,
-                                 m_workingDirectory,
-                                 m_newEnvironment );
+                                 newEnvironment,
+                                 m_workingDirectory );
     }
 }

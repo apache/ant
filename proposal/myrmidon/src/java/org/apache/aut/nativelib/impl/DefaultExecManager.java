@@ -112,9 +112,8 @@ public class DefaultExecManager
                         final long timeout )
         throws IOException, ExecException
     {
-        final ExecMetaData metaData = prepareExecMetaData( command );
-        final CommandLauncher launcher = getLauncher( metaData );
-        final Process process = launcher.exec( metaData );
+        final CommandLauncher launcher = getLauncher( command );
+        final Process process = launcher.exec( command );
         final ProcessMonitor monitor =
             new ProcessMonitor( process, input, output, error, timeout );
 
@@ -157,30 +156,6 @@ public class DefaultExecManager
         catch( final InterruptedException ie )
         {
             //should never happen
-        }
-    }
-
-    /**
-     * Utility method to preapre a metaData object.
-     * This involves adding the native environment to the metaData if the
-     * metaData is specified as being additive.
-     */
-    private ExecMetaData prepareExecMetaData( final ExecMetaData metaData )
-        throws ExecException
-    {
-        if( !metaData.isEnvironmentAdditive() )
-        {
-            return metaData;
-        }
-        else
-        {
-            final Properties newEnvironment = new Properties();
-            newEnvironment.putAll( getNativeEnvironment() );
-            newEnvironment.putAll( metaData.getEnvironment() );
-            return new ExecMetaData( metaData.getCommand(),
-                                     newEnvironment,
-                                     metaData.getWorkingDirectory(),
-                                     false );
         }
     }
 

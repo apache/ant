@@ -64,8 +64,7 @@ class ExecUtil
 
         return new ExecMetaData( command,
                                  metaData.getEnvironment(),
-                                 metaData.getWorkingDirectory(),
-                                 metaData.isEnvironmentAdditive() );
+                                 metaData.getWorkingDirectory() );
     }
 
     /**
