@@ -129,6 +129,10 @@ public class Checksum extends MatchingTask implements Condition {
      * is this task being used as a nested condition element?
      */
     private boolean isCondition;
+    /**
+     * Size of the read buffer to use.
+     */
+    private int readBufferSize = 8 * 1024;
 
     /**
      * Sets the file for which the checksum is to be calculated.
@@ -183,6 +187,13 @@ public class Checksum extends MatchingTask implements Condition {
      */
     public void setForceOverwrite(boolean forceOverwrite) {
         this.forceOverwrite = forceOverwrite;
+    }
+
+    /**
+     * The size of the read buffer to use.
+     */
+    public void setReadBufferSize(int size) {
+        this.readBufferSize = size;
     }
 
     /**
@@ -356,6 +367,7 @@ public class Checksum extends MatchingTask implements Condition {
         boolean checksumMatches = true;
         FileInputStream fis = null;
         FileOutputStream fos = null;
+        byte[] buf = new byte[readBufferSize];
         try {
             for (Enumeration e = includeFileMap.keys(); e.hasMoreElements();) {
                 messageDigest.reset();
@@ -366,8 +378,8 @@ public class Checksum extends MatchingTask implements Condition {
                 fis = new FileInputStream(src);
                 DigestInputStream dis = new DigestInputStream(fis,
                                                               messageDigest);
-                while (dis.read() != -1) {
-                 ;
+                while (dis.read(buf, 0, readBufferSize) != -1) {
+                    ;
                 }
                 dis.close();
                 fis.close();

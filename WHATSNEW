@@ -20,6 +20,11 @@ Fixed bugs:
 * Nested <property>'s inside <ant> can now be overriden by subsequent
   <ant> and <antcall> tasks.
 
+Other changes:
+--------------
+
+* <checksum> now uses a buffer (of configurable size).
+
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================
 
