@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@ public class ExecuteJavaTest extends TestCase {
 
     private ExecuteJava ej;
     private Project project;
+    private Path cp;
 
     public ExecuteJavaTest(String name) {
         super(name);
@@ -50,7 +51,8 @@ public class ExecuteJavaTest extends TestCase {
         ej.setTimeout(new Long(TIME_OUT));
         project = new Project();
         project.setBasedir(".");
-        ej.setClasspath(new Path(project, getTestClassPath()));
+        cp = new Path(project, getTestClassPath());
+        ej.setClasspath(cp);
     }
 
     private Commandline getCommandline(int timetorun) throws Exception {
@@ -84,6 +86,30 @@ public class ExecuteJavaTest extends TestCase {
                    elapsed < TIME_OUT*2);
     }
 
+
+    public void testNoTimeOutForked() throws Exception {
+        Commandline cmd = getCommandline(TIME_OUT/2);
+        ej.setJavaCommand(cmd);
+        ej.fork(cp);
+        assertTrue("process should not have been killed", !ej.killedProcess());
+    }
+
+    // test that the watchdog ends the process
+    public void testTimeOutForked() throws Exception {
+        Commandline cmd = getCommandline(TIME_OUT*2);
+        ej.setJavaCommand(cmd);
+        long now = System.currentTimeMillis();
+        ej.fork(cp);
+        long elapsed = System.currentTimeMillis() - now;
+        assertTrue("process should have been killed", ej.killedProcess());
+
+        assertTrue("elapse time of "+elapsed
+                   +" ms is less than timeout value of "+TIME_OUT_TEST+" ms",
+                   elapsed >= TIME_OUT_TEST);
+        assertTrue("elapse time of "+elapsed
+                   +" ms is greater than run value of "+(TIME_OUT*2)+" ms",
+                   elapsed < TIME_OUT*2);
+    }
 
     /**
      * Dangerous method to obtain the classpath for the test. This is

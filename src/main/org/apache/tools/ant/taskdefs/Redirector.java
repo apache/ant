@@ -31,8 +31,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Vector;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.util.StringUtils;
@@ -46,7 +47,7 @@ import org.apache.tools.ant.util.KeepAliveOutputStream;
 
 /**
  * The Redirector class manages the setup and connection of
- * input and output redirection for an Ant task.
+ * input and output redirection for an Ant project component.
  *
  * @since Ant 1.6
  */
@@ -125,7 +126,7 @@ public class Redirector {
     private boolean createEmptyFiles = true;
 
     /** The task for which this redirector is working */
-    private Task managingTask;
+    private ProjectComponent managingTask;
 
     /** The stream for output data */
     private OutputStream outputStream = null;
@@ -172,6 +173,17 @@ public class Redirector {
      * @param managingTask the task for which the redirector is to work
      */
     public Redirector(Task managingTask) {
+        this((ProjectComponent) managingTask);
+    }
+
+    /**
+     * Create a redirector instance for the given task
+     *
+     * @param managingTask the project component for which the
+     * redirector is to work
+     * @since Ant 1.6.3
+     */
+    public Redirector(ProjectComponent managingTask) {
         this.managingTask = managingTask;
     }
 
@@ -498,7 +510,7 @@ public class Redirector {
             || !(outputEncoding.equalsIgnoreCase(inputEncoding))) {
             try {
                 LeadPipeInputStream snk = new LeadPipeInputStream();
-                snk.setManagingTask(managingTask);
+                snk.setManagingComponent(managingTask);
 
                 InputStream outPumpIn = snk;
 
@@ -527,7 +539,7 @@ public class Redirector {
             || !(errorEncoding.equalsIgnoreCase(inputEncoding))) {
             try {
                 LeadPipeInputStream snk = new LeadPipeInputStream();
-                snk.setManagingTask(managingTask);
+                snk.setManagingComponent(managingTask);
 
                 InputStream errPumpIn = snk;
 
@@ -563,7 +575,7 @@ public class Redirector {
             } catch (IOException eyeOhEx) {
                 throw new BuildException(eyeOhEx);
             }
-            ((ConcatFileInputStream) inputStream).setManagingTask(managingTask);
+            ((ConcatFileInputStream) inputStream).setManagingComponent(managingTask);
         } else if (inputString != null) {
             managingTask.log("Using input \"" + inputString + "\"",
                 Project.MSG_VERBOSE);

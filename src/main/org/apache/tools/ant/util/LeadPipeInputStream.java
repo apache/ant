@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
@@ -29,7 +30,7 @@ import org.apache.tools.ant.Project;
  * when the writing <CODE>Thread</CODE> is no longer alive.
  */
 public class LeadPipeInputStream extends PipedInputStream {
-    private Task managingTask;
+    private ProjectComponent managingPc;
 
     /**
      * Construct a new <CODE>LeadPipeInputStream</CODE>.
@@ -73,7 +74,16 @@ public class LeadPipeInputStream extends PipedInputStream {
      * @param task   the managing <CODE>Task</CODE>.
      */
     public void setManagingTask(Task task) {
-        this.managingTask = task;
+        setManagingComponent(task);
+    }
+
+    /**
+     * Set a managing <CODE>ProjectComponent</CODE> for
+     * this <CODE>LeadPipeInputStream</CODE>.
+     * @param pc   the managing <CODE>ProjectComponent</CODE>.
+     */
+    public void setManagingComponent(ProjectComponent pc) {
+        this.managingPc = pc;
     }
 
     /**
@@ -82,8 +92,8 @@ public class LeadPipeInputStream extends PipedInputStream {
      * @param loglevel   the <CODE>int</CODE> logging level.
      */
     public void log(String message, int loglevel) {
-        if (managingTask != null) {
-            managingTask.log(message, loglevel);
+        if (managingPc != null) {
+            managingPc.log(message, loglevel);
         } else {
             if (loglevel > Project.MSG_WARN) {
                 System.out.println(message);

@@ -192,6 +192,16 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
+         * add a propertyset to the total set
+         * @param ps the new property set
+         * @since Ant 1.6.3
+         */
+        public void addSysproperties(SysProperties ps) {
+            variables.addAll(ps.variables);
+            propertySets.addAll(ps.propertySets);
+        }        
+
+        /**
          * merge all property sets into a single Properties object
          * @return the merged object
          */
@@ -204,6 +214,7 @@ public class CommandlineJava implements Cloneable {
             }
             return p;
         }
+
     }
 
     /**
@@ -244,6 +255,15 @@ public class CommandlineJava implements Cloneable {
      */
     public void addSyspropertyset(PropertySet sysp) {
         sysProperties.addSyspropertyset(sysp);
+    }
+
+    /**
+     * add a set of system properties
+     * @param sysp a set of properties
+     * @since Ant 1.6.3
+     */
+    public void addSysproperties(SysProperties sysp) {
+        sysProperties.addSysproperties(sysp);
     }
 
     /**

@@ -840,23 +840,7 @@ public class Java extends Task {
      * @param command
      */
     private void setupCommandLineForVMS(Execute exe, String[] command) {
-        //Use the VM launcher instead of shell launcher on VMS
-        exe.setVMLauncher(true);
-        File vmsJavaOptionFile = null;
-        try {
-            String [] args = new String[command.length - 1];
-            System.arraycopy(command, 1, args, 0, command.length - 1);
-            vmsJavaOptionFile = JavaEnvUtils.createVmsJavaOptionFile(args);
-            //we mark the file to be deleted on exit.
-            //the alternative would be to cache the filename and delete
-            //after execution finished, which is much better for long-lived runtimes
-            //though spawning complicates things...
-            vmsJavaOptionFile.deleteOnExit();
-            String [] vmsCmd = {command[0], "-V", vmsJavaOptionFile.getPath()};
-            exe.setCommandline(vmsCmd);
-        } catch (IOException e) {
-            throw new BuildException("Failed to create a temporary file for \"-V\" switch");
-        }
+        ExecuteJava.setupCommandLineForVMS(exe, command);
     }
 
     /**

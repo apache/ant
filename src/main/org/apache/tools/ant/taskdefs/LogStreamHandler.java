@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002,2004 The Apache Software Foundation
+ * Copyright  2000,2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.IOException;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 
 /**
@@ -36,8 +37,19 @@ public class LogStreamHandler extends PumpStreamHandler {
      * @param errlevel the loglevel used to log standard error
      */
     public LogStreamHandler(Task task, int outlevel, int errlevel) {
-        super(new LogOutputStream(task, outlevel),
-              new LogOutputStream(task, errlevel));
+        this((ProjectComponent) task, outlevel, errlevel);
+    }
+
+    /**
+     * Creates log stream handler
+     *
+     * @param pc the project component for whom to log
+     * @param outlevel the loglevel used to log standard output
+     * @param errlevel the loglevel used to log standard error
+     */
+    public LogStreamHandler(ProjectComponent pc, int outlevel, int errlevel) {
+        super(new LogOutputStream(pc, outlevel),
+              new LogOutputStream(pc, errlevel));
     }
 
     /**

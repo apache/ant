@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  *
  */
 
-
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,11 +26,14 @@ import java.lang.reflect.Modifier;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Permissions;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.TimeoutObserver;
 import org.apache.tools.ant.util.Watchdog;
 
@@ -226,4 +230,76 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     public synchronized boolean killedProcess() {
         return timedOut;
     }
+
+    /**
+     * Runs the Java command in a separate VM, this does not give you
+     * the full flexibility of the Java task, but may be enough for
+     * simple needs.
+     *
+     * @since Ant 1.6.3
+     */
+    public int fork(ProjectComponent pc) throws BuildException {
+        CommandlineJava cmdl = new CommandlineJava();
+        cmdl.setClassname(javaCommand.getExecutable());
+        String[] args = javaCommand.getArguments();
+        for (int i = 0; i < args.length; i++) {
+            cmdl.createArgument().setValue(args[i]);
+        }
+        if (classpath != null) {
+            cmdl.createClasspath(pc.getProject()).append(classpath);
+        }
+        if (sysProperties != null) {
+            cmdl.addSysproperties(sysProperties);
+        }
+
+        Redirector redirector = new Redirector(pc);
+        Execute exe
+            = new Execute(redirector.createHandler(),
+                          timeout == null 
+                          ? null 
+                          : new ExecuteWatchdog(timeout.longValue()));
+        exe.setAntRun(pc.getProject());
+        if (Os.isFamily("openvms")) {
+            setupCommandLineForVMS(exe, cmdl.getCommandline());
+        } else {
+            exe.setCommandline(cmdl.getCommandline());
+        }
+        try {
+            int rc = exe.execute();
+            redirector.complete();
+            timedOut = exe.killedProcess();
+            return rc;
+        } catch (IOException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * On VMS platform, we need to create a special java options file
+     * containing the arguments and classpath for the java command.
+     * The special file is supported by the "-V" switch on the VMS JVM.
+     *
+     * @param exe
+     * @param command
+     */
+    public static void setupCommandLineForVMS(Execute exe, String[] command) {
+        //Use the VM launcher instead of shell launcher on VMS
+        exe.setVMLauncher(true);
+        File vmsJavaOptionFile = null;
+        try {
+            String [] args = new String[command.length - 1];
+            System.arraycopy(command, 1, args, 0, command.length - 1);
+            vmsJavaOptionFile = JavaEnvUtils.createVmsJavaOptionFile(args);
+            //we mark the file to be deleted on exit.
+            //the alternative would be to cache the filename and delete
+            //after execution finished, which is much better for long-lived runtimes
+            //though spawning complicates things...
+            vmsJavaOptionFile.deleteOnExit();
+            String [] vmsCmd = {command[0], "-V", vmsJavaOptionFile.getPath()};
+            exe.setCommandline(vmsCmd);
+        } catch (IOException e) {
+            throw new BuildException("Failed to create a temporary file for \"-V\" switch");
+        }
+    }
+
 }
