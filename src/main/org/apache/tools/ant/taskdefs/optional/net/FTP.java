@@ -215,7 +215,19 @@ public class FTP
 
             try {
                 String cwd = ftp.printWorkingDirectory();
+                // register also the root directory of the fileset if it matches
+                // include and exclude patterns
+                if (isIncluded("")) {
+                    if (!isExcluded("")) {
+                        dirsIncluded.addElement("");
+                    } else {
+                        dirsExcluded.addElement("");
+                    }
+                } else {
+                    dirsNotIncluded.addElement("");
+                }
                 // always start from the current ftp working dir
+
                 scandir(".", "", true);
                 ftp.changeWorkingDirectory(cwd);
             } catch (IOException e) {
