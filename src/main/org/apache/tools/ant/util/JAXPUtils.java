@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,6 +91,14 @@ public class JAXPUtils {
     private static SAXParserFactory parserFactory = null;
 
     /**
+     * Parser Factory to create Namespace aware parsers.
+     *
+     * @since Ant 1.6
+     */
+    private static SAXParserFactory nsParserFactory = null;
+
+
+    /**
      * Returns the parser factory to use. Only one parser factory is
      * ever created by this method and is then cached for future use.
      *
@@ -98,13 +106,31 @@ public class JAXPUtils {
      *
      * @since Ant 1.5
      */
-    public synchronized static SAXParserFactory getParserFactory() 
+    public synchronized static SAXParserFactory getParserFactory()
         throws BuildException {
 
         if (parserFactory == null) {
             parserFactory = newParserFactory();
         }
         return parserFactory;
+    }
+
+    /**
+     * Returns the parser factory to use to create namespace aware parsers.
+     *
+     * @return a SAXParserFactory to use which supports manufacture of
+     * namespace aware parsers
+     *
+     * @since Ant 1.6
+     */
+    public synchronized static SAXParserFactory getNSParserFactory()
+        throws BuildException {
+
+        if (nsParserFactory == null) {
+            nsParserFactory = newParserFactory();
+            nsParserFactory.setNamespaceAware(true);
+        }
+        return nsParserFactory;
     }
 
     /**
@@ -118,7 +144,7 @@ public class JAXPUtils {
             return SAXParserFactory.newInstance();
         } catch (FactoryConfigurationError e) {
             throw new BuildException("XML parser factory has not been "
-                                     + "configured correctly: " 
+                                     + "configured correctly: "
                                      + e.getMessage(), e);
         }
     }
@@ -133,7 +159,7 @@ public class JAXPUtils {
      */
     public static Parser getParser() throws BuildException {
         try {
-            return newSAXParser().getParser();
+            return newSAXParser(getParserFactory()).getParser();
         } catch (SAXException e) {
             throw convertToBuildException(e);
         }
@@ -149,7 +175,22 @@ public class JAXPUtils {
      */
     public static XMLReader getXMLReader() throws BuildException {
         try {
-            return newSAXParser().getXMLReader();
+            return newSAXParser(getParserFactory()).getXMLReader();
+        } catch (SAXException e) {
+            throw convertToBuildException(e);
+        }
+    }
+
+    /**
+     * Returns a newly created SAX 2 XMLReader, which is namespace aware
+     *
+     * @return a SAX 2 XMLReader.
+     * @see #getParserFactory
+     * @since Ant 1.6
+     */
+    public static XMLReader getNamespaceXMLReader() throws BuildException {
+        try {
+            return newSAXParser(getNSParserFactory()).getXMLReader();
         } catch (SAXException e) {
             throw convertToBuildException(e);
         }
@@ -174,9 +215,10 @@ public class JAXPUtils {
      *
      * @since Ant 1.5
      */
-    private static SAXParser newSAXParser() throws BuildException {
+    private static SAXParser newSAXParser(SAXParserFactory factory)
+         throws BuildException {
         try {
-            return getParserFactory().newSAXParser();
+            return factory.newSAXParser();
         } catch (ParserConfigurationException e) {
             throw new BuildException("Cannot create parser for the given "
                                      + "configuration: " + e.getMessage(), e);

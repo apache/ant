@@ -161,7 +161,7 @@ public class ProjectHelper2 extends ProjectHelper {
             /**
              * SAX 2 style parser used to parse the given file.
              */
-            context.parser =JAXPUtils.getXMLReader();
+            context.parser =JAXPUtils.getNamespaceXMLReader();
 
             String uri = fu.toURI(context.buildFile.getAbsolutePath());
 
