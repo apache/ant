@@ -156,7 +156,6 @@ import org.xml.sax.XMLReader;
  * @author Erik Hatcher
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @author Jeff Turner
- * @version $Id$
  */
 public class XMLCatalog extends DataType
     implements Cloneable, EntityResolver, URIResolver {
