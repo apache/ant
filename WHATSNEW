@@ -43,6 +43,8 @@ Fixed bugs:
 
 * the plain mailer would always use port 25 in <mail>.
 
+* Ant's default logger couls swallow empty lines.
+
 Other changes:
 --------------
 
