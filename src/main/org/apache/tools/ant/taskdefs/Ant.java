@@ -467,11 +467,13 @@ public class Ant extends Task {
      */
     private void copyReference(String oldKey, String newKey) {
         Object orig = getProject().getReference(oldKey);
-        if( orig==null ) {
-            log( "No object referenced by " + oldKey + ". Can't copy to " + newKey,
-                    Project.MSG_WARN);
+        if (orig == null) {
+            log("No object referenced by " + oldKey + ". Can't copy to " 
+                + newKey, 
+                Project.MSG_WARN);
             return;
         }
+
         Class c = orig.getClass();
         Object copy = orig;
         try {
