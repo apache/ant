@@ -25,6 +25,9 @@ public interface FileSystemProvider
     /**
      * Sets the context for this file system provider.  This method is called
      * before any of the other provider methods.
+     *
+     * @todo - move this to a lifecycle interface (this interface is accessable to
+     * other providers, so need to prevent this being called).
      */
     void setContext( FileSystemProviderContext context );
 

@@ -16,7 +16,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * A parser for SMB URI.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class SmbFileNameParser
     extends UriParser

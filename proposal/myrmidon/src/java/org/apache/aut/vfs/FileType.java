@@ -5,7 +5,8 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 package org.apache.aut.vfs;
 

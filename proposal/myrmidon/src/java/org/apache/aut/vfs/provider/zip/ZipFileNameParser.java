@@ -13,12 +13,13 @@ import org.apache.aut.vfs.provider.UriParser;
 /**
  * A parser for Zip file names.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class ZipFileNameParser
     extends UriParser
 {
-    private static final char[] ZIP_URL_RESERVED_CHARS = { '!' };
+    private static final char[] ZIP_URL_RESERVED_CHARS = {'!'};
 
     /**
      * Parses an absolute URI, splitting it into its components.

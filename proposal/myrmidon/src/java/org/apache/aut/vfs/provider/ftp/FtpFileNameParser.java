@@ -13,7 +13,8 @@ import org.apache.aut.vfs.provider.UriParser;
 /**
  * A parser for FTP URI.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class FtpFileNameParser extends UriParser
 {

@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.aut.vfs.FileName;
 import org.apache.aut.vfs.FileObject;
+import org.apache.aut.vfs.FileSelector;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.provider.AbstractFileObject;
@@ -94,7 +95,7 @@ final class LocalFile
     /**
      * Deletes this file, and all children.
      */
-    public void doDelete()
+    protected void doDelete()
         throws Exception
     {
         if( !m_file.delete() )
@@ -142,5 +143,14 @@ final class LocalFile
         throws Exception
     {
         return m_file.length();
+    }
+
+    /**
+     * Creates a temporary local copy of this file, and its descendents.
+     */
+    protected File doReplicateFile( final FileSelector selector )
+        throws FileSystemException
+    {
+        return m_file;
     }
 }

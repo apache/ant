@@ -14,7 +14,7 @@ import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystemProvider;
 import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
-import org.apache.aut.vfs.provider.FileSystemProvider;
+import org.apache.aut.vfs.provider.LocalFileSystemProvider;
 import org.apache.aut.vfs.provider.ParsedUri;
 
 /**
@@ -22,13 +22,17 @@ import org.apache.aut.vfs.provider.ParsedUri;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
+ *
+ * @ant.type type="file-system" name="file"
+ *
  */
-public class LocalFileSystemProvider extends AbstractFileSystemProvider
-    implements FileSystemProvider
+public class DefaultLocalFileSystemProvider
+    extends AbstractFileSystemProvider
+    implements LocalFileSystemProvider
 {
     private final LocalFileNameParser m_parser;
 
-    public LocalFileSystemProvider()
+    public DefaultLocalFileSystemProvider()
     {
         if( Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
         {
@@ -96,6 +100,6 @@ public class LocalFileSystemProvider extends AbstractFileSystemProvider
 
         // Create the file system
         final DefaultFileName rootName = new DefaultFileName( m_parser, fileUri.getRootUri(), "/" );
-        return new LocalFileSystem( rootName, rootFile );
+        return new LocalFileSystem( getContext(), rootName, rootFile );
     }
 }

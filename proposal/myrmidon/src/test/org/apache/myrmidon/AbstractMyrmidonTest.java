@@ -174,12 +174,6 @@ public abstract class AbstractMyrmidonTest
      */
     protected void assertSameMessage( final String[] messages, final Throwable throwable )
     {
-        //System.out.println( "exception:" );
-        //for( Throwable t = throwable; t != null; t = ExceptionUtil.getCause( t, true ) )
-        //{
-        //    System.out.println( "  " + t.getMessage() );
-        //}
-
         Throwable current = throwable;
         for( int i = 0; i < messages.length; i++ )
         {

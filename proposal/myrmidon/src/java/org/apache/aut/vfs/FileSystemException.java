@@ -10,7 +10,8 @@ package org.apache.aut.vfs;
 /**
  * Thrown for file system errors.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class FileSystemException
     extends Exception

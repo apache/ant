@@ -12,7 +12,8 @@ import org.apache.aut.vfs.provider.ParsedUri;
 /**
  * A parsed SMB URI.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class ParsedSmbUri extends ParsedUri
 {

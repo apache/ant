@@ -7,6 +7,8 @@
  */
 package org.apache.aut.vfs;
 
+import java.io.File;
+
 /**
  * This interface represents a file, and is used to access the content and
  * structure of the file.
@@ -53,7 +55,8 @@ package org.apache.aut.vfs;
  * @see FileContent
  * @see FileName
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public interface FileObject
 {
@@ -154,17 +157,19 @@ public interface FileObject
     FileObject resolveFile( String path ) throws FileSystemException;
 
     /**
-     * Deletes this file, and all children.  Does nothing if the file
+     * Deletes this file, and all descendents.  Does nothing if the file
      * does not exist.
      *
      * <p>This method is not transactional.  If it fails and throws an
-     * exception, some of this file's descendents may have been deleted.
+     * exception, this file will potentially only be partially deleted.
+     *
+     * @param selector The selector to use to select which files to delete.
      *
      * @throws FileSystemException
      *      If this file or one of its descendents is read-only, or on error
      *      deleting this file or one of its descendents.
      */
-    void delete() throws FileSystemException;
+    void delete( FileSelector selector ) throws FileSystemException;
 
     /**
      * Creates this file, if it does not exist.  Also creates any ancestor
@@ -182,18 +187,42 @@ public interface FileObject
     void create( FileType type ) throws FileSystemException;
 
     /**
-     * Copies the content of another file to this file.
+     * Copies another file, and all its descendents, to this file.
      *
      * If this file does not exist, it is created.  Its parent folder is also
-     * created, if necessary.  If this file does exist, its content is replaced.
+     * created, if necessary.  If this file does exist, it is deleted first.
      *
-     * @param file The file to copy the content from.
+     * <p>This method is not transactional.  If it fails and throws an
+     * exception, this file will potentially only be partially copied.
+     *
+     * @param srcFile The source file to copy.
+     * @param selector The selector to use to select which files to copy.
      *
      * @throws FileSystemException
-     *      If this file is read-only, or is a folder, or if the supplied file
-     *      is not a file, or on error copying the content.
+     *      If this file is read-only, or if the source file does not exist,
+     *      or on error copying the file.
      */
-    void copy( FileObject file ) throws FileSystemException;
+    void copyFrom( FileObject srcFile, FileSelector selector ) throws FileSystemException;
+
+    /**
+     * Creates a temporary local copy of this file, and its descendents.  If
+     * this file is a local file, a copy is not made.
+     *
+     * <p>Note that the local copy may include additonal files, that were
+     * not selected by the given selector.
+     *
+     * @todo Add options to indicate whether the caller is happy to deal with
+     *       extra files being present locally (eg if the file has been
+     *       replicated previously), or whether the caller expects only
+     *       the selected files to be present.
+     *
+     * @param selector the selector to use to select the files to replicate.
+     * @return The local copy of this file.
+     *
+     * @throws FileSystemException
+     *      If this file does not exist, or on error replicating the file.
+     */
+    File replicateFile( FileSelector selector ) throws FileSystemException;
 
     /**
      * Returns this file's content.  The {@link FileContent} returned by this

@@ -13,13 +13,14 @@ package org.apache.aut.vfs;
  *
  * @see FileObject
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public interface FileName
 {
     /**
-     * Returns the base name of the file.  The base name of a file is the
-     * last element of its name.  For example the base name of
+     * Returns the base name of this file.  The base name is the last element
+     * of the file name.  For example the base name of
      * <code>/somefolder/somefile</code> is <code>somefile</code>.
      *
      * <p>The root file of a file system has an empty base name.
@@ -27,23 +28,23 @@ public interface FileName
     String getBaseName();
 
     /**
-     * Returns the absolute path of the file, within its file system.  This
+     * Returns the absolute path of this file, within its file system.  This
      * path is normalised, so that <code>.</code> and <code>..</code> elements
      * have been removed.  Also, the path only contains <code>/</code> as its
      * separator character.  The path always starts with <code>/</code>
      *
-     * <p>The root of a file system has <code>/</code> as its path.
+     * <p>The root of a file system has <code>/</code> as its absolute path.
      */
     String getPath();
 
     /**
-     * Returns the absolute URI of the file.
+     * Returns the absolute URI of this file.
      */
     String getURI();
 
     /**
-     * Returns the name of the parent of the file.  The root of a file system
-     * has no parent.
+     * Returns the file name of the parent of this file.  The root of a
+     * file system has no parent.
      *
      * @return
      *      A {@link FileName} object representing the parent name.  Returns
@@ -52,35 +53,49 @@ public interface FileName
     FileName getParent();
 
     /**
-     * Resolves a name, relative to the file.  Equivalent to calling
+     * Resolves a name, relative to this file name.  Equivalent to calling
      * <code>resolveName( path, NameScope.FILE_SYSTEM )</code>.
      *
-     * @param path
-     *      The path to resolve.
+     * @param name
+     *      The name to resolve.
      *
      * @return
-     *      A {@link FileName} object representing the resolved name.
+     *      A {@link FileName} object representing the resolved file name.
      *
      * @throws FileSystemException
      *      If the name is invalid.
      */
-    FileName resolveName( String path ) throws FileSystemException;
+    FileName resolveName( String name ) throws FileSystemException;
 
     /**
-     * Resolves a name, relative to the file.  Refer to {@link NameScope}
+     * Resolves a name, relative to this file name.  Refer to {@link NameScope}
      * for a description of how names are resolved.
      *
      * @param name
-     *      The path to resolve.
+     *      The name to resolve.
      *
      * @param scope
      *      The scope to use when resolving the name.
      *
      * @return
-     *      A {@link FileName} object representing the resolved name.
+     *      A {@link FileName} object representing the resolved file name.
      *
      * @throws FileSystemException
      *      If the name is invalid.
      */
     FileName resolveName( String name, NameScope scope ) throws FileSystemException;
+
+    /**
+     * Converts a file name to a relative name, relative to this file name.
+     *
+     * @param name
+     *      The name to convert to a relative path.
+     *
+     * @return
+     *      The relative name.
+     *
+     * @throws FileSystemException
+     *      On error.
+     */
+    String getRelativeName( FileName name ) throws FileSystemException;
 }

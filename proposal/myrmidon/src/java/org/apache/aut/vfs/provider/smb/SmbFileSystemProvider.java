@@ -19,7 +19,8 @@ import org.apache.aut.vfs.provider.ParsedUri;
 /**
  * A provider for SMB (Samba, Windows share) file systems.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  *
  * @ant.type type="file-system" name="smb"
  */
@@ -45,6 +46,6 @@ public class SmbFileSystemProvider extends AbstractFileSystemProvider implements
     {
         final ParsedSmbUri smbUri = (ParsedSmbUri)uri;
         final FileName rootName = new DefaultFileName( m_parser, smbUri.getRootUri(), "/" );
-        return new SmbFileSystem( rootName );
+        return new SmbFileSystem( getContext(), rootName );
     }
 }

@@ -7,6 +7,7 @@
  */
 package org.apache.aut.vfs.provider.ftp;
 
+import com.oroinc.net.ftp.FTPClient;
 import com.oroinc.net.ftp.FTPFile;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,7 +21,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * An FTP file.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 class FtpFileObject
     extends AbstractFileObject
@@ -160,7 +162,17 @@ class FtpFileObject
      */
     protected void doDelete() throws Exception
     {
-        if( !m_ftpFs.getClient().deleteFile( getName().getPath() ) )
+        final FTPClient ftpClient = m_ftpFs.getClient();
+        boolean ok;
+        if( m_fileInfo.isDirectory() )
+        {
+            ok = ftpClient.removeDirectory( getName().getPath() );
+        }
+        else
+        {
+            ok = ftpClient.deleteFile( getName().getPath() );
+        }
+        if( !ok )
         {
             final String message = REZ.getString( "delete-file.error", getName() );
             throw new FileSystemException( message );

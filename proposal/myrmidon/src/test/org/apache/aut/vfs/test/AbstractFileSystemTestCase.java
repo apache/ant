@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 import org.apache.aut.vfs.provider.AbstractFileObject;
+import org.apache.aut.vfs.provider.LocalFileSystemProvider;
+import org.apache.aut.vfs.provider.local.DefaultLocalFileSystemProvider;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.FileSystemException;
@@ -59,15 +61,15 @@ public abstract class AbstractFileSystemTestCase
     {
         // Build the expected structure
         final FileInfo base = new FileInfo( "test", FileType.FOLDER );
-        base.addChild( new FileInfo( "file1.txt", FileType.FILE ) );
-        base.addChild( new FileInfo( "empty.txt", FileType.FILE ) );
-        base.addChild( new FileInfo( "emptydir", FileType.FOLDER ) );
+        base.addChild( "file1.txt", FileType.FILE );
+        base.addChild( "empty.txt", FileType.FILE );
+        base.addChild( "emptydir", FileType.FOLDER );
 
         final FileInfo dir = new FileInfo( "dir1", FileType.FOLDER );
         base.addChild( dir );
-        dir.addChild( new FileInfo( "file1.txt", FileType.FILE ) );
-        dir.addChild( new FileInfo( "file2.txt", FileType.FILE ) );
-        dir.addChild( new FileInfo( "file3.txt", FileType.FILE ) );
+        dir.addChild( "file1.txt", FileType.FILE );
+        dir.addChild( "file2.txt", FileType.FILE );
+        dir.addChild( "file3.txt", FileType.FILE );
         return base;
     }
 
@@ -83,6 +85,8 @@ public abstract class AbstractFileSystemTestCase
     {
         // Create the file system manager
         m_manager = new DefaultFileSystemManager();
+        m_manager.enableLogging( getLogger() );
+        m_manager.addProvider( "file", new DefaultLocalFileSystemProvider() );
 
         // Locate the base folder
         m_baseFolder = getBaseFolder();
@@ -100,7 +104,7 @@ public abstract class AbstractFileSystemTestCase
      */
     protected void tearDown() throws Exception
     {
-        m_manager.close();
+        m_manager.dispose();
     }
 
     /**
@@ -466,6 +470,70 @@ public abstract class AbstractFileSystemTestCase
     }
 
     /**
+     * Tests conversion from absolute to relative names.
+     */
+    public void testAbsoluteNameConvert() throws Exception
+    {
+        final FileName baseName = m_baseFolder.getName();
+
+        String path = "/test1/test2";
+        FileName name = baseName.resolveName( path );
+        assertEquals( path, name.getPath() );
+
+        // Try child and descendent names
+        testRelName( name, "child" );
+        testRelName( name, "child1/child2" );
+
+        // Try own name
+        testRelName( name, "." );
+
+        // Try parent, and root
+        testRelName( name, ".." );
+        testRelName( name, "../.." );
+
+        // Try sibling and descendent of sibling
+        testRelName( name, "../sibling" );
+        testRelName( name, "../sibling/child" );
+
+        // Try siblings with similar names
+        testRelName( name, "../test2_not" );
+        testRelName( name, "../test2_not/child" );
+        testRelName( name, "../test" );
+        testRelName( name, "../test/child" );
+
+        // Try unrelated
+        testRelName( name, "../../unrelated" );
+        testRelName( name, "../../test" );
+        testRelName( name, "../../test/child" );
+
+        // Test against root
+        path = "/";
+        name = baseName.resolveName( path );
+        assertEquals( path, name.getPath() );
+
+        // Try child and descendent names (against root)
+        testRelName( name, "child" );
+        testRelName( name, "child1/child2" );
+
+        // Try own name (against root)
+        testRelName( name, "." );
+    }
+
+    /**
+     * Checks that a file name converts to an expected relative path
+     */
+    private void testRelName( final FileName baseName,
+                              final String relPath )
+        throws Exception
+    {
+        final FileName expectedName = baseName.resolveName( relPath );
+
+        // Convert to relative path, and check
+        final String actualRelPath = baseName.getRelativeName( expectedName );
+        assertEquals( relPath, actualRelPath );
+    }
+
+    /**
      * Walks the base folder structure, asserting it contains exactly the
      * expected files and folders.
      */
@@ -496,9 +564,9 @@ public abstract class AbstractFileSystemTestCase
             final FileInfo info = (FileInfo)queueExpected.remove( 0 );
 
             // Check the type is correct
-            assertSame( file.getType(), info._type );
+            assertSame( file.getType(), info.m_type );
 
-            if( info._type == FileType.FILE )
+            if( info.m_type == FileType.FILE )
             {
                 continue;
             }
@@ -508,13 +576,13 @@ public abstract class AbstractFileSystemTestCase
 
             // Make sure all children were found
             assertNotNull( children );
-            assertEquals( "count children of \"" + file.getName() + "\"", info._children.size(), children.length );
+            assertEquals( "count children of \"" + file.getName() + "\"", info.m_children.size(), children.length );
 
             // Recursively check each child
             for( int i = 0; i < children.length; i++ )
             {
                 final FileObject child = children[ i ];
-                final FileInfo childInfo = (FileInfo)info._children.get( child.getName().getBaseName() );
+                final FileInfo childInfo = (FileInfo)info.m_children.get( child.getName().getBaseName() );
 
                 // Make sure the child is expected
                 assertNotNull( childInfo );
@@ -776,20 +844,36 @@ public abstract class AbstractFileSystemTestCase
      */
     protected static final class FileInfo
     {
-        String _baseName;
-        FileType _type;
-        Map _children = new HashMap();
+        String m_baseName;
+        FileType m_type;
+        Map m_children = new HashMap();
 
-        public FileInfo( String name, FileType type )
+        public FileInfo( final String name, final FileType type )
         {
-            _baseName = name;
-            _type = type;
+            m_baseName = name;
+            m_type = type;
         }
 
         /** Adds a child. */
-        public void addChild( FileInfo child )
+        public void addChild( final FileInfo child )
         {
-            _children.put( child._baseName, child );
+            m_children.put( child.m_baseName, child );
+        }
+
+        /** Adds a child. */
+        public void addChild( final String baseName, final FileType type )
+        {
+            addChild( new FileInfo( baseName, type ) );
+        }
+
+        /** Adds a bunch of children. */
+        public void addChildren( final String[] baseNames, final FileType type )
+        {
+            for( int i = 0; i < baseNames.length; i++ )
+            {
+                String baseName = baseNames[i ];
+                addChild( new FileInfo( baseName, type ) );
+            }
         }
     }
 }

@@ -17,7 +17,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * A name parser which parses absolute URIs.  See RFC 2396 for details.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class UriParser
 {
@@ -452,6 +453,17 @@ public class UriParser
                 throw new FileSystemException( message );
             }
         }
+        else if( scope == NameScope.DESCENDENT_OR_SELF )
+        {
+            final int baseLen = baseFile.length();
+            if( !resolvedPath.startsWith( baseFile )
+                || ( resolvedPath.length() != baseLen
+                && resolvedPath.charAt( baseLen ) != m_separatorChar ) )
+            {
+                final String message = REZ.getString( "invalid-descendent-name.error", path );
+                throw new FileSystemException( message );
+            }
+        }
         else if( scope != NameScope.FILE_SYSTEM )
         {
             throw new IllegalArgumentException();
@@ -480,6 +492,67 @@ public class UriParser
             return m_separator;
         }
         return path.substring( 0, idx );
+    }
+
+    /**
+     * Converts an absolute path into a relative path.
+     *
+     * @param basePath The base path.
+     * @param path The path to convert.
+     */
+    public String makeRelative( final String basePath, final String path )
+    {
+        // Calculate the common prefix
+        final int basePathLen = basePath.length();
+        final int pathLen = path.length();
+
+        // Deal with root
+        if( basePathLen == 1 && pathLen == 1 )
+        {
+            return ".";
+        }
+        else if( basePathLen == 1 )
+        {
+            return path.substring( 1 );
+        }
+
+        final int maxlen = Math.min( basePathLen, pathLen );
+        int pos = 0;
+        for( ; pos < maxlen && basePath.charAt( pos ) == path.charAt( pos ); pos++ )
+        {
+        }
+
+        if( pos == basePathLen && pos == pathLen )
+        {
+            // Same names
+            return ".";
+        }
+        else if( pos == basePathLen && pos < pathLen && path.charAt( pos ) == m_separatorChar )
+        {
+            // A descendent of the base path
+            return path.substring( pos + 1 );
+        }
+
+        // Strip the common prefix off the path
+        final StringBuffer buffer = new StringBuffer();
+        if( pathLen > 1 && ( pos < pathLen || basePath.charAt( pos ) != m_separatorChar ) )
+        {
+            // Not a direct ancestor, need to back up
+            pos = basePath.lastIndexOf( m_separatorChar, pos );
+            buffer.append( path.substring( pos ) );
+        }
+
+        // Prepend a '../' for each element in the base path past the common
+        // prefix
+        buffer.insert( 0, ".." );
+        pos = basePath.indexOf( m_separatorChar, pos + 1 );
+        while( pos != -1 )
+        {
+            buffer.insert( 0, "../" );
+            pos = basePath.indexOf( m_separatorChar, pos + 1 );
+        }
+
+        return buffer.toString();
     }
 
     /**

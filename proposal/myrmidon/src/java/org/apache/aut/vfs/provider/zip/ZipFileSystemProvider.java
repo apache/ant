@@ -8,7 +8,7 @@
 package org.apache.aut.vfs.provider.zip;
 
 import java.io.File;
-import java.io.IOException;
+import org.apache.aut.vfs.FileConstants;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystemProvider;
@@ -21,7 +21,8 @@ import org.apache.aut.vfs.provider.ParsedUri;
  * A file system provider for Zip/Jar files.  Provides read-only file
  * systems, for local Zip files only.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  *
  * @ant.type type="file-system" name="zip"
  */
@@ -80,25 +81,12 @@ public class ZipFileSystemProvider
         final ParsedZipUri zipUri = (ParsedZipUri)uri;
         final FileObject file = zipUri.getZipFile();
 
-        // TODO - temporary hack; need to use a converter
-        File destFile = null;
-        try
-        {
-            final File cacheDir = new File( "ant_vfs_cache" );
-            cacheDir.mkdirs();
-            destFile = File.createTempFile( "cache_", "_" + file.getName().getBaseName(), cacheDir );
-            destFile.deleteOnExit();
-        }
-        catch( IOException e )
-        {
-            throw new FileSystemException( "Could not replicate file", e );
-        }
-        FileObject destFileObj = getContext().resolveFile( null, destFile.getAbsolutePath() );
-        destFileObj.copy( file );
+        // Make a local copy of the file
+        final File zipFile = file.replicateFile( FileConstants.SELECT_SELF );
 
         // Create the file system
         DefaultFileName name = new DefaultFileName( m_parser, zipUri.getRootUri(), "/" );
-        return new ZipFileSystem( name, destFile );
+        return new ZipFileSystem( getContext(), name, zipFile );
     }
 
 }

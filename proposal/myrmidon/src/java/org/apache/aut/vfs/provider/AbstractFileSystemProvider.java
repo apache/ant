@@ -7,23 +7,36 @@
  */
 package org.apache.aut.vfs.provider;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
  * A partial file system provider implementation.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractFileSystemProvider
-    implements FileSystemProvider
+    extends AbstractLogEnabled
+    implements FileSystemProvider, Disposable
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractFileSystemProvider.class );
 
     private FileSystemProviderContext m_context;
+
+    /**
+     * The cached file systems.  This is a mapping from root URI to
+     * FileSystem object.
+     */
+    private final Map m_fileSystems = new HashMap();
 
     /**
      * Returns the context for this provider.
@@ -40,6 +53,23 @@ public abstract class AbstractFileSystemProvider
     public void setContext( final FileSystemProviderContext context )
     {
         m_context = context;
+    }
+
+    /**
+     * Closes the file systems created by this provider.
+     */
+    public void dispose()
+    {
+        for( Iterator iterator = m_fileSystems.values().iterator(); iterator.hasNext(); )
+        {
+            FileSystem fileSystem = (FileSystem)iterator.next();
+            if( fileSystem instanceof Disposable )
+            {
+                Disposable disposable = (Disposable)fileSystem;
+                disposable.dispose();
+            }
+        }
+        m_fileSystems.clear();
     }
 
     /**
@@ -65,7 +95,6 @@ public abstract class AbstractFileSystemProvider
 
         // Locate the file
         return findFile( parsedUri );
-
     }
 
     /**
@@ -76,12 +105,13 @@ public abstract class AbstractFileSystemProvider
     {
         // Check in the cache for the file system
         final String rootUri = parsedUri.getRootUri();
-        FileSystem fs = m_context.getFileSystem( rootUri );
+        FileSystem fs = (FileSystem)m_fileSystems.get( rootUri );
         if( fs == null )
         {
             // Need to create the file system, and cache it
             fs = createFileSystem( parsedUri );
-            m_context.putFileSystem( rootUri, fs );
+            setupLogger( fs );
+            m_fileSystems.put( rootUri, fs );
         }
 
         // Locate the file

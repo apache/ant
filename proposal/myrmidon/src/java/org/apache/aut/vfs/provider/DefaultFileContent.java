@@ -21,7 +21,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * The content of a file.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultFileContent
     implements FileContent

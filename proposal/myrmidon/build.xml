@@ -682,7 +682,7 @@ Legal:
             <!-- Pass config to the tests -->
             <sysproperty key="test.basedir" value="${test.working.dir}"/>
             <sysproperty key="test.smb.uri" value="smb://${vfs.user}:${vfs.password}@${vfs.host}/${vfs.user}/vfs"/>
-            <sysproperty key="test.ftp.uri" value="ftp://${vfs.user}:${vfs.password}@${vfs.host}/home/${vfs.user}/vfs"/>
+            <sysproperty key="test.ftp.uri" value="ftp://${vfs.user}:${vfs.password}@${vfs.host}/vfs"/>
 
             <batchtest>
                 <fileset dir="${test.classes}">

@@ -7,15 +7,16 @@
  */
 package org.apache.aut.vfs.provider;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import org.apache.aut.vfs.FileConstants;
 import org.apache.aut.vfs.FileContent;
 import org.apache.aut.vfs.FileName;
 import org.apache.aut.vfs.FileObject;
+import org.apache.aut.vfs.FileSelector;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.NameScope;
@@ -26,7 +27,11 @@ import org.apache.avalon.excalibur.io.IOUtil;
 /**
  * A partial file object implementation.
  *
- * @author Adam Murdoch
+ * @todo Chop this class up - move all the protected methods to several
+ *       interfaces, so that structure and content can be separately overridden.
+ *
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractFileObject
     implements FileObject
@@ -98,7 +103,7 @@ public abstract class AbstractFileObject
      * <ul>
      * <li>{@link #isReadOnly} returns false.
      * <li>{@link #doGetType} does not return null.
-     * <li>If this file is a folder, it has no children.
+     * <li>This file has no children.
      * </ul>
      */
     protected void doDelete() throws Exception
@@ -120,6 +125,15 @@ public abstract class AbstractFileObject
     {
         final String message = REZ.getString( "create-folder-not-supported.error" );
         throw new FileSystemException( message );
+    }
+
+    /**
+     * Creates a local copy of this file.
+     */
+    protected File doReplicateFile( final FileSelector selector ) throws FileSystemException
+    {
+        final FileReplicator replicator = m_fs.getContext().getReplicator();
+        return replicator.replicateFile( this, selector );
     }
 
     /**
@@ -321,9 +335,9 @@ public abstract class AbstractFileObject
      *          absolute path, which is resolved relative to the file system
      *          that contains this file.
      */
-    public FileObject resolveFile( String path ) throws FileSystemException
+    public FileObject resolveFile( final String path ) throws FileSystemException
     {
-        FileName name = m_name.resolveName( path );
+        final FileName name = m_name.resolveName( path );
         return m_fs.findFile( name );
     }
 
@@ -356,7 +370,7 @@ public abstract class AbstractFileObject
     /**
      * Deletes this file, and all children.
      */
-    public void delete() throws FileSystemException
+    public void delete( final FileSelector selector ) throws FileSystemException
     {
         attach();
         if( m_type == null )
@@ -365,51 +379,27 @@ public abstract class AbstractFileObject
             return;
         }
 
-        // Recursively delete this file and all its children
-        List queue = new ArrayList();
-        Set expanded = new HashSet();
-        queue.add( this );
+        // Locate all the files to delete
+        ArrayList files = new ArrayList();
+        findFiles( selector, true, files );
 
-        // Recursively delete each file
-        // TODO - recover from errors
-        while( queue.size() > 0 )
+        // Delete 'em
+        final int count = files.size();
+        for( int i = 0; i < count; i++ )
         {
-            AbstractFileObject file = (AbstractFileObject)queue.get( 0 );
+            final AbstractFileObject file = (AbstractFileObject)files.get( i );
             file.attach();
 
-            if( file.m_type == null )
+            // If the file is a folder, make sure all its children have been deleted
+            if( file.m_type == FileType.FOLDER && file.getChildren().length != 0 )
             {
-                // Shouldn't happen
-                queue.remove( 0 );
+                // Skip
+                continue;
             }
-            else if( file.m_type == FileType.FILE )
-            {
-                // Delete the file
-                file.deleteSelf();
-                queue.remove( 0 );
-            }
-            else if( expanded.contains( file ) )
-            {
-                // Have already deleted all the children of this folder -
-                // delete it
-                file.deleteSelf();
-                queue.remove( 0 );
-            }
-            else
-            {
-                // Delete the folder's children
-                FileObject[] children = file.getChildren();
-                for( int i = 0; i < children.length; i++ )
-                {
-                    FileObject child = children[ i ];
-                    queue.add( 0, child );
-                }
-                expanded.add( file );
-            }
-        }
 
-        // Update parent's child list
-        notifyParent();
+            // Delete the file
+            file.deleteSelf();
+        }
     }
 
     /**
@@ -468,18 +458,87 @@ public abstract class AbstractFileObject
     }
 
     /**
+     * Copies another file to this file.
+     */
+    public void copyFrom( final FileObject file, final FileSelector selector )
+        throws FileSystemException
+    {
+        if( !file.exists() )
+        {
+            final String message = REZ.getString( "copy-missing-file.error", file.getName() );
+            throw new FileSystemException( message );
+        }
+        if( isReadOnly() )
+        {
+            final String message = REZ.getString( "copy-read-only.error", file.getType(), file.getName(), m_name );
+            throw new FileSystemException( message );
+        }
+
+        // Locate the files to copy across
+        final ArrayList files = new ArrayList();
+        ( (AbstractFileObject)file ).findFiles( selector, false, files );
+
+        // Copy everything across
+        final int count = files.size();
+        for( int i = 0; i < count; i++ )
+        {
+            final FileObject srcFile = (FileObject)files.get( i );
+
+            // Determine the destination file
+            final String relPath = file.getName().getRelativeName( srcFile.getName() );
+            final FileObject destFile = resolveFile( relPath, NameScope.DESCENDENT_OR_SELF );
+
+            // Clean up the destination file, if necessary
+            if( destFile.exists() && destFile.getType() != srcFile.getType() )
+            {
+                // The destination file exists, and is not of the same type,
+                // so delete it
+                // TODO - add a pluggable policy for deleting and overwriting existing files
+                destFile.delete( FileConstants.SELECT_ALL );
+            }
+
+            // Copy across
+            if( srcFile.getType() == FileType.FILE )
+            {
+                copyContent( srcFile, destFile );
+            }
+            else
+            {
+                destFile.create( FileType.FOLDER );
+            }
+        }
+    }
+
+    /**
+     * Creates a temporary local copy of this file, and its descendents.
+     */
+    public File replicateFile( final FileSelector selector )
+        throws FileSystemException
+    {
+        if( !exists() )
+        {
+            final String message = REZ.getString( "copy-missing-file.error", m_name );
+            throw new FileSystemException( message );
+        }
+
+        return doReplicateFile( selector );
+    }
+
+    /**
      * Copies the content of another file to this file.
      */
-    public void copy( final FileObject file ) throws FileSystemException
+    private static void copyContent( final FileObject srcFile,
+                                     final FileObject destFile )
+        throws FileSystemException
     {
         try
         {
-            final InputStream instr = file.getContent().getInputStream();
+            final InputStream instr = srcFile.getContent().getInputStream();
             try
             {
-                // Create the output strea via getContent(), to pick up the
+                // Create the output stream via getContent(), to pick up the
                 // validation it does
-                final OutputStream outstr = getContent().getOutputStream();
+                final OutputStream outstr = destFile.getContent().getOutputStream();
                 try
                 {
                     IOUtil.copy( instr, outstr );
@@ -496,7 +555,7 @@ public abstract class AbstractFileObject
         }
         catch( final Exception exc )
         {
-            final String message = REZ.getString( "copy-file.error", file.getName(), m_name );
+            final String message = REZ.getString( "copy-file.error", srcFile.getName(), destFile.getName() );
             throw new FileSystemException( message, exc );
         }
     }
@@ -678,4 +737,69 @@ public abstract class AbstractFileObject
         m_children = null;
         onChildrenChanged();
     }
+
+    /**
+     * Traverses the descendents of this file, and builds a list of selected
+     * files.
+     */
+    void findFiles( final FileSelector selector,
+                    final boolean depthwise,
+                    final List selected ) throws FileSystemException
+    {
+        if( exists() )
+        {
+            // Traverse starting at this file
+            final DefaultFileSelectorInfo info = new DefaultFileSelectorInfo();
+            info.setBaseFolder( this );
+            info.setDepth( 0 );
+            info.setFile( this );
+            traverse( info, selector, depthwise, selected );
+        }
+    }
+
+    /**
+     * Traverses a file.
+     */
+    private void traverse( final DefaultFileSelectorInfo fileInfo,
+                           final FileSelector selector,
+                           final boolean depthwise,
+                           final List selected )
+        throws FileSystemException
+    {
+        // Check the file itself
+        final boolean includeFile = selector.includeFile( fileInfo );
+        final FileObject file = fileInfo.getFile();
+
+        // Add the file if not doing depthwise traversal
+        if( !depthwise && includeFile )
+        {
+            selected.add( file );
+        }
+
+        // If the file is a folder, traverse it
+        if( file.getType() == FileType.FOLDER && selector.traverseDescendents( fileInfo ) )
+        {
+            final int curDepth = fileInfo.getDepth();
+            fileInfo.setDepth( curDepth + 1 );
+
+            // Traverse the children
+            final FileObject[] children = file.getChildren();
+            for( int i = 0; i < children.length; i++ )
+            {
+                final FileObject child = children[ i ];
+                fileInfo.setFile( child );
+                traverse( fileInfo, selector, depthwise, selected );
+            }
+
+            fileInfo.setFile( file );
+            fileInfo.setDepth( curDepth );
+        }
+
+        // Add the file if doing depthwise traversal
+        if( depthwise && includeFile )
+        {
+            selected.add( file );
+        }
+    }
+
 }

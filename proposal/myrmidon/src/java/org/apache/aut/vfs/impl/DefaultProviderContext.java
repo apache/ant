@@ -7,11 +7,9 @@
  */
 package org.apache.aut.vfs.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.aut.vfs.provider.FileSystem;
+import org.apache.aut.vfs.provider.FileReplicator;
 import org.apache.aut.vfs.provider.FileSystemProviderContext;
 
 /**
@@ -24,12 +22,6 @@ final class DefaultProviderContext
     implements FileSystemProviderContext
 {
     private final DefaultFileSystemManager m_manager;
-
-    /**
-     * The cached file systems.  This is a mapping from root URI to
-     * FileSystem object.
-     */
-    private final Map m_fileSystems = new HashMap();
 
     public DefaultProviderContext( final DefaultFileSystemManager manager )
     {
@@ -46,21 +38,10 @@ final class DefaultProviderContext
     }
 
     /**
-     * Locates a cached file system by root URI.
+     * Locates a file replicator for the provider to use.
      */
-    public FileSystem getFileSystem( final String rootURI )
+    public FileReplicator getReplicator() throws FileSystemException
     {
-        // TODO - need to have a per-fs uri comparator
-        return (FileSystem)m_fileSystems.get( rootURI );
-    }
-
-    /**
-     * Registers a file system for caching.
-     */
-    public void putFileSystem( final String rootURI, final FileSystem fs )
-        throws FileSystemException
-    {
-        // TODO - should really check that there's not one already cached
-        m_fileSystems.put( rootURI, fs );
+        return m_manager.getReplicator();
     }
 }

@@ -18,15 +18,19 @@ import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystem;
 import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
+import org.apache.aut.vfs.provider.FileSystemProviderContext;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A read-only file system for Zip/Jar files.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
-public class ZipFileSystem extends AbstractFileSystem implements FileSystem
+public class ZipFileSystem
+    extends AbstractFileSystem
+    implements FileSystem
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( ZipFileSystem.class );
@@ -34,9 +38,11 @@ public class ZipFileSystem extends AbstractFileSystem implements FileSystem
     private File m_file;
     private ZipFile m_zipFile;
 
-    public ZipFileSystem( DefaultFileName rootName, File file ) throws FileSystemException
+    public ZipFileSystem( final FileSystemProviderContext context,
+                          final DefaultFileName rootName,
+                          final File file ) throws FileSystemException
     {
-        super( rootName );
+        super( context, rootName );
         m_file = file;
 
         // Open the Zip file
@@ -98,6 +104,22 @@ public class ZipFileSystem extends AbstractFileSystem implements FileSystem
                 // Attach child to parent
                 parent.attachChild( fileObj.getName() );
             }
+        }
+    }
+
+    public void dispose()
+    {
+        super.dispose();
+
+        // Release the zip file
+        try
+        {
+            m_zipFile.close();
+        }
+        catch( final IOException e )
+        {
+            final String message = REZ.getString( "close-zip-file.error", m_file );
+            getLogger().warn( message, e );
         }
     }
 

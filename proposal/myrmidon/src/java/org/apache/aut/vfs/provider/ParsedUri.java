@@ -10,7 +10,8 @@ package org.apache.aut.vfs.provider;
 /**
  * A data container for information parsed from an absolute URI.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class ParsedUri
 {

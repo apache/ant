@@ -10,6 +10,7 @@ package org.apache.myrmidon;
 import java.io.File;
 import org.apache.myrmidon.frontends.EmbeddedAnt;
 import org.apache.myrmidon.listeners.ProjectListener;
+import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * A base class for test cases which need to execute projects.
@@ -72,28 +73,35 @@ public class AbstractProjectTest
                                   final ProjectListener listener )
         throws Exception
     {
-        // Create the project and workspace
         final EmbeddedAnt embeddor = new EmbeddedAnt();
-        embeddor.setHomeDirectory( getInstallDirectory() );
-        embeddor.enableLogging( getLogger() );
-        embeddor.setSharedClassLoader( getClass().getClassLoader() );
-        embeddor.setProjectFile( projectFile.getAbsolutePath() );
-        embeddor.setProjectListener( null );
-
-        // Add a listener to make sure all is good
         final TrackingProjectListener tracker = new TrackingProjectListener();
-        embeddor.addProjectListener( tracker );
 
-        // Add supplied listener
-        if( listener != null )
+        try
         {
-            embeddor.addProjectListener( listener );
+            // Configure embeddor
+            embeddor.setHomeDirectory( getInstallDirectory() );
+            embeddor.enableLogging( getLogger() );
+            embeddor.setSharedClassLoader( getClass().getClassLoader() );
+            embeddor.setProjectFile( projectFile.getAbsolutePath() );
+            embeddor.setProjectListener( null );
+
+            // Add a listener to make sure all is good
+            embeddor.addProjectListener( tracker );
+
+            // Add supplied listener
+            if( listener != null )
+            {
+                embeddor.addProjectListener( listener );
+            }
+
+            // Now execute the target
+            embeddor.executeTargets( new String[] { targetName } );
+        }
+        finally
+        {
+            embeddor.stop();
         }
 
-        // Now execute the target
-        embeddor.executeTargets( new String[] { targetName } );
-
-        embeddor.stop();
 
         // Make sure all expected events were delivered
         tracker.assertComplete();

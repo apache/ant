@@ -335,7 +335,7 @@ public class DefaultClassLoaderManagerTestCase
      * add some classes to common loader only.
      *
      * unknown extension
-     * multiple versions of extensions
+     * multiple versions of the same extension
      * extn with requirement on itself
      *
      * jar with 1 and 2 extns:

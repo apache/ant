@@ -12,7 +12,6 @@ import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 import org.apache.aut.vfs.provider.FileSystemProvider;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -28,7 +27,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public class VfsManager
     extends DefaultFileSystemManager
-    implements Serviceable, Initializable, Disposable
+    implements Serviceable, Initializable
 {
     private static final Resources REZ
         = ResourceManager.getPackageResources( VfsManager.class );
@@ -53,20 +52,12 @@ public class VfsManager
         // TODO - make this list configurable
 
         // Required providers
+        addProvider( factory, new String[]{"file"}, "file", false );
         addProvider( factory, new String[]{"zip", "jar"}, "zip", false );
 
         // Optional providers
         addProvider( factory, new String[]{"smb"}, "smb", true );
         addProvider( factory, new String[]{"ftp"}, "ftp", true );
-    }
-
-    /**
-     * Disposes this service.
-     */
-    public void dispose()
-    {
-        // Clean-up
-        close();
     }
 
     /**

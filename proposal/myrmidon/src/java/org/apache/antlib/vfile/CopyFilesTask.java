@@ -13,6 +13,7 @@ import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.NameScope;
+import org.apache.aut.vfs.FileConstants;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
@@ -114,7 +115,7 @@ public class CopyFilesTask
                 }
 
                 getContext().verbose( "copy " + m_srcFile + " to " + m_destFile );
-                m_destFile.copy( m_srcFile );
+                m_destFile.copyFrom( m_srcFile, FileConstants.SELECT_SELF );
             }
 
             // Copy the contents of the filesets across
@@ -142,7 +143,7 @@ public class CopyFilesTask
 
                     // Copy the file across
                     getContext().verbose( "copy " + srcFile + " to " + destFile );
-                    destFile.copy( srcFile );
+                    destFile.copyFrom( srcFile, FileConstants.SELECT_SELF );
                 }
             }
         }

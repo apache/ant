@@ -19,7 +19,8 @@ import org.apache.aut.vfs.provider.AbstractFileObject;
 /**
  * A file in a Zip file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 class ZipFileObject extends AbstractFileObject implements FileObject
 {

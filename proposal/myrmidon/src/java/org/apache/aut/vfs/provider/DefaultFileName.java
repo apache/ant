@@ -14,7 +14,8 @@ import org.apache.aut.vfs.NameScope;
 /**
  * A default file name implementation.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultFileName implements FileName
 {
@@ -126,5 +127,13 @@ public class DefaultFileName implements FileName
             m_uri = m_parser.getUri( m_rootPrefix, m_absPath );
         }
         return m_uri;
+    }
+
+    /**
+     * Converts a file name to a relative name, relative to this file name.
+     */
+    public String getRelativeName( final FileName name ) throws FileSystemException
+    {
+        return m_parser.makeRelative( m_absPath, name.getPath() );
     }
 }

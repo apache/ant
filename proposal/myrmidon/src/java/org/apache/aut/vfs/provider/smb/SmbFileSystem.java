@@ -12,25 +12,28 @@ import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystem;
 import org.apache.aut.vfs.provider.FileSystem;
+import org.apache.aut.vfs.provider.FileSystemProviderContext;
 
 /**
  * A SMB file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class SmbFileSystem extends AbstractFileSystem implements FileSystem
 {
-    public SmbFileSystem( FileName rootName )
+    public SmbFileSystem( final FileSystemProviderContext context,
+                          final FileName rootName )
     {
-        super( rootName );
+        super( context, rootName );
     }
 
     /**
      * Creates a file object.
      */
-    protected FileObject createFile( FileName name ) throws FileSystemException
+    protected FileObject createFile( final FileName name ) throws FileSystemException
     {
-        String fileName = name.getURI();
+        final String fileName = name.getURI();
         return new SmbFileObject( fileName, name, this );
     }
 }

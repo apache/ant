@@ -12,45 +12,67 @@ import java.util.Map;
 import org.apache.aut.vfs.FileName;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
  * A partial file system implementation.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
-public abstract class AbstractFileSystem implements FileSystem
+public abstract class AbstractFileSystem
+    extends AbstractLogEnabled
+    implements FileSystem, Disposable
 {
     private FileObject m_root;
-    private FileName m_rootName;
+    private final FileName m_rootName;
+    private final FileSystemProviderContext m_context;
 
-    /** Map from absolute file path to FileObject. */
-    private Map m_files = new HashMap();
+    /** Map from FileName to FileObject. */
+    private final Map m_files = new HashMap();
 
-    protected AbstractFileSystem( FileName rootName )
+    protected AbstractFileSystem( final FileSystemProviderContext context,
+                                  final FileName rootName )
     {
         m_rootName = rootName;
+        m_context = context;
+    }
+
+    public void dispose()
+    {
+        // Clean-up
+        m_files.clear();
     }
 
     /**
      * Creates a file object.  This method is called only if the requested
      * file is not cached.
      */
-    protected abstract FileObject createFile( FileName name ) throws FileSystemException;
+    protected abstract FileObject createFile( final FileName name ) throws FileSystemException;
 
     /**
      * Adds a file object to the cache.
      */
-    protected void putFile( FileObject file )
+    protected void putFile( final FileObject file )
     {
-        m_files.put( file.getName().getPath(), file );
+        m_files.put( file.getName(), file );
     }
 
     /**
      * Returns a cached file.
      */
-    protected FileObject getFile( FileName name )
+    protected FileObject getFile( final FileName name )
     {
-        return (FileObject)m_files.get( name.getPath() );
+        return (FileObject)m_files.get( name );
+    }
+
+    /**
+     * Returns the context fir this file system.
+     */
+    public FileSystemProviderContext getContext()
+    {
+        return m_context;
     }
 
     /**
@@ -68,24 +90,24 @@ public abstract class AbstractFileSystem implements FileSystem
     /**
      * Finds a file in this file system.
      */
-    public FileObject findFile( String nameStr ) throws FileSystemException
+    public FileObject findFile( final String nameStr ) throws FileSystemException
     {
         // Resolve the name, and create the file
-        FileName name = m_rootName.resolveName( nameStr );
+        final FileName name = m_rootName.resolveName( nameStr );
         return findFile( name );
     }
 
     /**
      * Finds a file in this file system.
      */
-    public FileObject findFile( FileName name ) throws FileSystemException
+    public FileObject findFile( final FileName name ) throws FileSystemException
     {
         // TODO - assert that name is from this file system
-        FileObject file = (FileObject)m_files.get( name.getPath() );
+        FileObject file = (FileObject)m_files.get( name );
         if( file == null )
         {
             file = createFile( name );
-            m_files.put( name.getPath(), file );
+            m_files.put( name, file );
         }
         return file;
     }

@@ -25,7 +25,8 @@ import java.io.OutputStream;
  *
  * @see FileObject#getContent
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public interface FileContent
 {

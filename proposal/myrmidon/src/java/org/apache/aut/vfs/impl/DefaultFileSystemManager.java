@@ -9,47 +9,49 @@ package org.apache.aut.vfs.impl;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileSystemManager;
+import org.apache.aut.vfs.provider.FileReplicator;
 import org.apache.aut.vfs.provider.FileSystemProvider;
+import org.apache.aut.vfs.provider.LocalFileSystemProvider;
 import org.apache.aut.vfs.provider.UriParser;
-import org.apache.aut.vfs.provider.local.LocalFileSystemProvider;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 
 /**
  * A default file system manager implementation.
+ *
+ * @todo - Extract an AbstractFileSystemManager super-class from this class.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
 public class DefaultFileSystemManager
-    implements FileSystemManager
+    extends AbstractLogEnabled
+    implements FileSystemManager, Disposable
 {
     private static final Resources REZ
         = ResourceManager.getPackageResources( DefaultFileSystemManager.class );
 
-    /** The default provider. */
-    private final LocalFileSystemProvider m_localFileProvider;
+    /** The provider for local files. */
+    private LocalFileSystemProvider m_localFileProvider;
+
+    /** The file replicator to use. */
+    private final DefaultFileReplicator m_fileReplicator = new DefaultFileReplicator( this );
 
     /** Mapping from URI scheme to FileSystemProvider. */
     private final Map m_providers = new HashMap();
 
-    /** The provider context. */
-    private final DefaultProviderContext m_context = new DefaultProviderContext( this );
-
     /** The base file to use for relative URI. */
     private FileObject m_baseFile;
-
-    public DefaultFileSystemManager()
-    {
-        // Create the local provider
-        m_localFileProvider = new LocalFileSystemProvider();
-        m_providers.put( "file", m_localFileProvider );
-        m_localFileProvider.setContext( m_context );
-    }
 
     /**
      * Registers a file system provider.
@@ -58,7 +60,7 @@ public class DefaultFileSystemManager
                              final FileSystemProvider provider )
         throws FileSystemException
     {
-        addProvider( new String[] { urlScheme }, provider );
+        addProvider( new String[]{urlScheme}, provider );
     }
 
     /**
@@ -71,7 +73,7 @@ public class DefaultFileSystemManager
         // Check for duplicates
         for( int i = 0; i < urlSchemes.length; i++ )
         {
-            final String scheme = urlSchemes[i ];
+            final String scheme = urlSchemes[ i ];
             if( m_providers.containsKey( scheme ) )
             {
                 final String message = REZ.getString( "multiple-providers-for-scheme.error", scheme );
@@ -80,7 +82,8 @@ public class DefaultFileSystemManager
         }
 
         // Contextualise
-        provider.setContext( m_context );
+        setupLogger( provider );
+        provider.setContext( new DefaultProviderContext( this ) );
 
         // Add to map
         for( int i = 0; i < urlSchemes.length; i++ )
@@ -88,14 +91,55 @@ public class DefaultFileSystemManager
             final String scheme = urlSchemes[ i ];
             m_providers.put( scheme, provider );
         }
+
+        if( provider instanceof LocalFileSystemProvider )
+        {
+            m_localFileProvider = (LocalFileSystemProvider)provider;
+        }
     }
 
     /**
-     * Closes all file systems created by this file system manager.
+     * Returns the file replicator.
+     *
+     * @return The file replicator.  Never returns null.
      */
-    public void close()
+    public FileReplicator getReplicator()
+        throws FileSystemException
     {
-        // TODO - implement this
+        return m_fileReplicator;
+    }
+
+    /**
+     * Enable logging.
+     */
+    public void enableLogging( final Logger logger )
+    {
+        super.enableLogging( logger );
+        setupLogger( m_fileReplicator );
+    }
+
+    /**
+     * Closes all files created by this manager, and cleans up any temporary
+     * files.
+     */
+    public void dispose()
+    {
+        // Dispose the providers (making sure we only dispose each provider
+        // once
+        final Set providers = new HashSet();
+        providers.addAll( m_providers.values() );
+        for( Iterator iterator = providers.iterator(); iterator.hasNext(); )
+        {
+            Object provider = iterator.next();
+            if( provider instanceof Disposable )
+            {
+                Disposable disposable = (Disposable)provider;
+                disposable.dispose();
+            }
+        }
+        m_providers.clear();
+
+        m_fileReplicator.dispose();
     }
 
     /**
@@ -111,7 +155,7 @@ public class DefaultFileSystemManager
      */
     public void setBaseFile( final File baseFile ) throws FileSystemException
     {
-        m_baseFile = m_localFileProvider.findLocalFile( baseFile.getAbsolutePath() );
+        m_baseFile = getLocalFileProvider().findLocalFile( baseFile );
     }
 
     /**
@@ -136,7 +180,7 @@ public class DefaultFileSystemManager
     public FileObject resolveFile( final File baseFile, final String uri )
         throws FileSystemException
     {
-        final FileObject baseFileObj = m_localFileProvider.findLocalFile( baseFile );
+        final FileObject baseFileObj = getLocalFileProvider().findLocalFile( baseFile );
         return resolveFile( baseFileObj, uri );
     }
 
@@ -162,19 +206,20 @@ public class DefaultFileSystemManager
         final String decodedUri = UriParser.decode( uri );
 
         // Handle absolute file names
-        if( m_localFileProvider.isAbsoluteLocalName( decodedUri ) )
+        if( m_localFileProvider != null
+            && m_localFileProvider.isAbsoluteLocalName( decodedUri ) )
         {
             return m_localFileProvider.findLocalFile( decodedUri );
         }
 
-        // Assume a bad scheme
         if( scheme != null )
         {
+            // Assume a bad scheme
             final String message = REZ.getString( "unknown-scheme.error", scheme, uri );
             throw new FileSystemException( message );
         }
 
-        // Use the supplied base file
+        // Assume a relative name - use the supplied base file
         if( baseFile == null )
         {
             final String message = REZ.getString( "find-rel-file.error", uri );
@@ -189,7 +234,7 @@ public class DefaultFileSystemManager
     public FileObject convert( final File file )
         throws FileSystemException
     {
-        return m_localFileProvider.findLocalFile( file );
+        return getLocalFileProvider().findLocalFile( file );
     }
 
     /**
@@ -206,5 +251,19 @@ public class DefaultFileSystemManager
             throw new FileSystemException( message );
         }
         return provider.createFileSystem( scheme, file );
+    }
+
+    /**
+     * Locates the local file provider.
+     */
+    private LocalFileSystemProvider getLocalFileProvider()
+        throws FileSystemException
+    {
+        if( m_localFileProvider == null )
+        {
+            final String message = REZ.getString( "no-local-file-provider.error" );
+            throw new FileSystemException( message );
+        }
+        return m_localFileProvider;
     }
 }

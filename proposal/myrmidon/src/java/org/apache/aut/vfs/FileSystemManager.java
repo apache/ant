@@ -49,7 +49,9 @@ import java.io.File;
  *
  * </ul>
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
+ *
  * @ant:role shorthand="file-system-manager"
  */
 public interface FileSystemManager
@@ -128,7 +130,7 @@ public interface FileSystemManager
 
     /**
      * Creates a layered file system.  A layered file system is a file system
-     * that is created from the contents of another file file, such as a zip
+     * that is created from the contents of another file, such as a zip
      * or tar file.
      *
      * @param provider

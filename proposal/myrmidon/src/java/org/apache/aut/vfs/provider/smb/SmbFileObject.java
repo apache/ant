@@ -23,7 +23,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * A file in an SMB file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class SmbFileObject
     extends AbstractFileObject

@@ -29,12 +29,7 @@ public interface FileSystemProviderContext
         throws FileSystemException;
 
     /**
-     * Locates a cached file system by root URI.
+     * Locates a file replicator for the provider to use.
      */
-    FileSystem getFileSystem( String rootURI );
-
-    /**
-     * Registers a file system for caching.
-     */
-    void putFileSystem( String rootURI, FileSystem fs ) throws FileSystemException;
+    FileReplicator getReplicator() throws FileSystemException;
 }

@@ -14,7 +14,8 @@ import org.apache.aut.vfs.FileSystemException;
 /**
  * A file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public interface FileSystem
 {

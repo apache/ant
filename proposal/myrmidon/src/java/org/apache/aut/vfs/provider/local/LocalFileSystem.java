@@ -13,6 +13,7 @@ import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystem;
 import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
+import org.apache.aut.vfs.provider.FileSystemProviderContext;
 
 /**
  * A local file system.
@@ -24,19 +25,21 @@ class LocalFileSystem extends AbstractFileSystem implements FileSystem
 {
     private String m_rootFile;
 
-    public LocalFileSystem( DefaultFileName rootName, String rootFile )
+    public LocalFileSystem( final FileSystemProviderContext context,
+                            final DefaultFileName rootName,
+                            final String rootFile )
     {
-        super( rootName );
+        super( context, rootName );
         m_rootFile = rootFile;
     }
 
     /**
      * Creates a file object.
      */
-    protected FileObject createFile( FileName name ) throws FileSystemException
+    protected FileObject createFile( final FileName name ) throws FileSystemException
     {
         // Create the file
-        String fileName = m_rootFile + name.getPath();
+        final String fileName = m_rootFile + name.getPath();
         return new LocalFile( this, fileName, name );
     }
 }

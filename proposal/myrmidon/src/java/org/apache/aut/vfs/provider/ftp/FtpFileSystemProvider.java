@@ -18,7 +18,8 @@ import org.apache.aut.vfs.provider.ParsedUri;
 /**
  * A provider for FTP file systems.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  *
  * @ant.type type="file-system" name="ftp"
  */
@@ -60,6 +61,6 @@ public class FtpFileSystemProvider extends AbstractFileSystemProvider
         }
 
         // Create the file system
-        return new FtpFileSystem( rootName, ftpUri.getHostName(), username, password );
+        return new FtpFileSystem( getContext(), rootName, ftpUri.getHostName(), username, password );
     }
 }

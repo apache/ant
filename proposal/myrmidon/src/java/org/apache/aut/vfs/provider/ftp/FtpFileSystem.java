@@ -15,13 +15,15 @@ import org.apache.aut.vfs.FileName;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystem;
+import org.apache.aut.vfs.provider.FileSystemProviderContext;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * An FTP file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 class FtpFileSystem
     extends AbstractFileSystem
@@ -31,13 +33,14 @@ class FtpFileSystem
 
     private FTPClient m_client;
 
-    public FtpFileSystem( final FileName rootName,
+    public FtpFileSystem( final FileSystemProviderContext context,
+                          final FileName rootName,
                           final String hostname,
                           final String username,
                           final String password )
         throws FileSystemException
     {
-        super( rootName );
+        super( context, rootName );
         try
         {
             m_client = new FTPClient();
@@ -64,26 +67,39 @@ class FtpFileSystem
                 throw new FileSystemException( message );
             }
         }
-        catch( Exception exc )
+        catch( final Exception exc )
         {
-            try
-            {
-                // Clean up
-                if( m_client.isConnected() )
-                {
-                    m_client.disconnect();
-                }
-            }
-            catch( IOException e )
-            {
-                // Ignore
-            }
-
+            closeConnection();
             final String message = REZ.getString( "connect.error", hostname );
             throw new FileSystemException( message, exc );
         }
+    }
 
-        // TODO - close connection
+    public void dispose()
+    {
+        // Clean up the connection
+        super.dispose();
+        closeConnection();
+    }
+
+    /**
+     * Cleans up the connection to the server.
+     */
+    private void closeConnection()
+    {
+        try
+        {
+            // Clean up
+            if( m_client.isConnected() )
+            {
+                m_client.disconnect();
+            }
+        }
+        catch( final IOException e )
+        {
+            final String message = REZ.getString( "close-connection.error" );
+            getLogger().warn( message, e );
+        }
     }
 
     /**
@@ -91,6 +107,7 @@ class FtpFileSystem
      */
     public FTPClient getClient()
     {
+        // TODO - connect on demand, and garbage collect connections
         return m_client;
     }
 

@@ -13,7 +13,8 @@ import org.apache.aut.vfs.provider.ParsedUri;
 /**
  * A parsed Zip URI.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class ParsedZipUri extends ParsedUri
 {
