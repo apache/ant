@@ -160,26 +160,21 @@ public class Property extends Task {
     }
 
     public void execute() throws BuildException {
-        try {
-            if ((name != null) && (value != null)) {
-                addProperty(name, value);
+        if ((name != null) && (value != null)) {
+            addProperty(name, value);
+        }
+        
+        if (file != null) loadFile(file);
+        
+        if (resource != null) loadResource(resource);
+        
+        if (env != null) loadEnvironment(env);
+        
+        if ((name != null) && (ref != null)) {
+            Object obj = ref.getReferencedObject(getProject());
+            if (obj != null) {
+                addProperty(name, obj.toString());
             }
-
-            if (file != null) loadFile(file);
-
-            if (resource != null) loadResource(resource);
-
-            if (env != null) loadEnvironment(env);
-
-            if ((name != null) && (ref != null)) {
-                Object obj = ref.getReferencedObject(getProject());
-                if (obj != null) {
-                    addProperty(name, obj.toString());
-                }
-            }
-
-        } catch (Exception e) {
-            throw new BuildException(e, location);
         }
     }
 
@@ -201,8 +196,8 @@ public class Property extends Task {
                 log("Unable to find property file: " + file.getAbsolutePath(), 
                     Project.MSG_VERBOSE);
             }
-        } catch(Exception ex) {
-            throw new BuildException(ex.getMessage(), ex, location);
+        } catch(IOException ex) {
+            throw new BuildException(ex, location);
         }
     }
 
@@ -231,8 +226,8 @@ public class Property extends Task {
             } else {
                 log("Unable to find resource " + name, Project.MSG_WARN);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            throw new BuildException(ex, location);
         }
     }
 
@@ -240,22 +235,18 @@ public class Property extends Task {
         Properties props = new Properties();
         if (!prefix.endsWith(".")) prefix += ".";
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
-        try {
-            Vector osEnv = Execute.getProcEnvironment();
-            for (Enumeration e = osEnv.elements(); e.hasMoreElements(); ) {
-                String entry = (String)e.nextElement();
-                int pos = entry.indexOf('=');
-                if (pos == -1) {
-                    log("Ignoring: " + entry, Project.MSG_WARN);
-                } else {
-                    props.put(prefix + entry.substring(0, pos), 
-                              entry.substring(pos + 1));
-                }
+        Vector osEnv = Execute.getProcEnvironment();
+        for (Enumeration e = osEnv.elements(); e.hasMoreElements(); ) {
+            String entry = (String)e.nextElement();
+            int pos = entry.indexOf('=');
+            if (pos == -1) {
+                log("Ignoring: " + entry, Project.MSG_WARN);
+            } else {
+                props.put(prefix + entry.substring(0, pos), 
+                entry.substring(pos + 1));
             }
-            addProperties(props);
-        } catch (Exception ex) {
-            throw new BuildException(ex, location);
         }
+        addProperties(props);
     }
 
     protected void addProperties(Properties props) {
@@ -285,72 +276,43 @@ public class Property extends Task {
         }
     }
 
-    private void resolveAllProperties(Hashtable props) {
-        Hashtable unresolvableProperties = new Hashtable();
-        for (Enumeration e = props.keys(); e.hasMoreElements(); ) {
-            String name = (String) e.nextElement();
-            String value = (String) props.get(name);
+    private void resolveAllProperties(Properties props) throws BuildException {
+        for (Enumeration e = props.keys(); e.hasMoreElements();) {
+            String name = (String)e.nextElement();
+            String value = props.getProperty(name);
 
             boolean resolved = false;
-            while (!resolved) { 
-                Vector propsInValue = new Vector();
-    
-                // assume it will be resolved
+            while (!resolved) {
+                Vector fragments = new Vector();
+                Vector propertyRefs = new Vector();
+                ProjectHelper.parsePropertyString(value, fragments, propertyRefs);
+                
                 resolved = true;
-                boolean unresolvable = false;
-                if (extractProperties(value, propsInValue)) {
-                    for (int i=0; i < propsInValue.size(); i++) {
-                        String elem = (String) propsInValue.elementAt(i);
-                        if (elem.equals(name) || unresolvableProperties.containsKey(elem)) {
-                            // we won't try further resolving elements with circular 
-                            // property dependencies or dependencies on unresolvable elements
-                            unresolvable = true;
-                            break;
+                if (propertyRefs.size() != 0) {
+                    StringBuffer sb = new StringBuffer();
+                    Enumeration i = fragments.elements();
+                    Enumeration j = propertyRefs.elements();
+                    while (i.hasMoreElements()) {
+                        String fragment = (String)i.nextElement();
+                        if (fragment == null) {
+                            String propertyName = (String)j.nextElement();
+                            if (propertyName.equals(name)) {
+                                throw new BuildException("Property " + name + " was circularly defined.");
+                            }
+                            if (props.containsKey(propertyName)) {
+                                fragment = props.getProperty(propertyName);
+                                resolved = false;
+                            }
+                            else {
+                                fragment = "${" + propertyName + "}";
+                            }
                         }
-                        
-                        if (project.getProperties().containsKey(elem) ||
-                            props.containsKey(elem)) {
-                            resolved = false;
-                        }
+                        sb.append(fragment);
                     }
-                }
-    
-                if (unresolvable) {
-                    unresolvableProperties.put(name, value);
-                    resolved = true;
-                }
-    
-                if (!resolved) {
-                    value = ProjectHelper.replaceProperties(project, value,
-                                                               project.getProperties());
-                    value = ProjectHelper.replaceProperties(project, value, props);
+                    value = sb.toString();
                     props.put(name, value);
-                }    
+                }
             }
         }
-    }
-
-    private boolean extractProperties(String source, Vector properties) {
-        // This is an abreviated version of 
-        // ProjectHelper.replaceProperties method
-        int i=0;
-        int prev=0;
-        int pos;
-
-        while( (pos=source.indexOf( "$", prev )) >= 0 ) {
-            if( pos == (source.length() - 1)) {
-                prev = pos + 1;
-            } else if (source.charAt( pos + 1 ) != '{' ) {
-                prev=pos+2;
-            } else {
-                int endName=source.indexOf( '}', pos );
-                String n=source.substring( pos+2, endName );
-                properties.addElement(n);
-                prev=endName+1;
-            }
-        }
-        
-        return (properties.size() > 0);
-    }
-    
+    }    
 }

@@ -689,52 +689,80 @@ public class ProjectHelper {
     }
 
 
-    /** Replace ${NAME} with the property value
+    /**
+     * Replace ${} style constructions in the given value with the string value of
+     * the corresponding data types.
+     *
+     * @param value the string to be scanned for property references.
      */
     public static String replaceProperties(Project project, String value, Hashtable keys )
-        throws BuildException
-    {
-        // XXX use Map instead of proj, it's too heavy
+            throws BuildException {
+        if (value == null) {
+            return null;
+        }
 
-        // XXX need to replace this code with something better.
-        StringBuffer sb=new StringBuffer();
-        int i=0;
-        int prev=0;
-        // assert value!=nil
-        int pos;
-        while( (pos=value.indexOf( "$", prev )) >= 0 ) {
-            if(pos>0) {
-                sb.append( value.substring( prev, pos ) );
+        Vector fragments = new Vector();
+        Vector propertyRefs = new Vector();
+        parsePropertyString(value, fragments, propertyRefs);
+
+        StringBuffer sb = new StringBuffer();
+        Enumeration i = fragments.elements();
+        Enumeration j = propertyRefs.elements();
+        while (i.hasMoreElements()) {
+            String fragment = (String)i.nextElement();
+            if (fragment == null) {
+                String propertyName = (String)j.nextElement();
+                if (!keys.containsKey(propertyName)) {
+                    project.log("Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE);
+                }
+                fragment = (keys.containsKey(propertyName)) ? (String) keys.get(propertyName) 
+                                                            : "${" + propertyName + "}"; 
             }
+            sb.append(fragment);
+        }                        
+        
+        return sb.toString();
+    }
+
+    /**
+     * This method will parse a string containing ${value} style 
+     * property values into two lists. The first list is a collection
+     * of text fragments, while the other is a set of string property names
+     * null entries in the first list indicate a property reference from the
+     * second list.
+     */
+    public static void parsePropertyString(String value, Vector fragments, Vector propertyRefs) 
+        throws BuildException {
+        int prev = 0;
+        int pos;
+        while ((pos = value.indexOf("$", prev)) >= 0) {
+            if (pos > 0) {
+                fragments.addElement(value.substring(prev, pos));
+            }
+
             if( pos == (value.length() - 1)) {
-                sb.append('$');
+                fragments.addElement("$");
                 prev = pos + 1;
             }
-            else if (value.charAt( pos + 1 ) != '{' ) {
-                sb.append( value.charAt( pos + 1 ) );
-                prev=pos+2; // XXX
+            else if (value.charAt(pos + 1) != '{' ) {
+                fragments.addElement(value.substring(pos + 1, pos + 2));
+                prev = pos + 2;
             } else {
-                int endName=value.indexOf( '}', pos );
-                if( endName < 0 ) {
-                    throw new BuildException("Syntax error in prop: " +
-                                             value );
+                int endName = value.indexOf('}', pos);
+                if (endName < 0) {
+                    throw new BuildException("Syntax error in property: " 
+                                                 + value );
                 }
-                String n=value.substring( pos+2, endName );
-                if (!keys.containsKey(n)) {
-                    project.log("Property ${" + n + "} has not been set", Project.MSG_VERBOSE);
-                }
-                
-                String v = (keys.containsKey(n)) ? (String) keys.get(n) : "${"+n+"}"; 
-                
-                //System.out.println("N: " + n + " " + " V:" + v);
-                sb.append( v );
-                prev=endName+1;
+                String propertyName = value.substring(pos + 2, endName);
+                fragments.addElement(null);
+                propertyRefs.addElement(propertyName);
+                prev = endName + 1;
             }
         }
-        if( prev < value.length() ) sb.append( value.substring( prev ) );
-        //      System.out.println("After replace: " + sb.toString());
-        // System.out.println("Before replace: " + value);
-        return sb.toString();
+
+        if (prev < value.length()) {
+            fragments.addElement(value.substring(prev));
+        }
     }
 
     private static SAXParserFactory getParserFactory() {
