@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,13 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import org.apache.tools.ant.taskdefs.LogOutputStream;
+import org.apache.tools.ant.util.LineOrientedOutputStream;
 
 /**
  * A dummy stream that just passes stuff to the parser.
- *
- * @version $Revision$ $Date$
  */
-class RedirectingOutputStream
-     extends LogOutputStream {
+class RedirectingOutputStream extends LineOrientedOutputStream {
     private final ChangeLogParser parser;
-
 
     /**
      * Creates a new instance of this class.
@@ -34,10 +30,8 @@ class RedirectingOutputStream
      * @param parser the parser to which output is sent.
      */
     public RedirectingOutputStream(final ChangeLogParser parser) {
-        super(null, 0);
         this.parser = parser;
     }
-
 
     /**
      * Logs a line to the log system of ant.

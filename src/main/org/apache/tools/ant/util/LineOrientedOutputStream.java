@@ -73,7 +73,7 @@ public abstract class LineOrientedOutputStream extends OutputStream {
      * Converts the buffer to a string and sends it to
      * <code>processLine</code>
      */
-    private void processBuffer() throws IOException {
+    protected void processBuffer() throws IOException {
         try {
             processLine(buffer.toString());
         } finally {
