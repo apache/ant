@@ -2,6 +2,9 @@
 
 <project name="jar-test" basedir="." default="test1">
 
+  <property name="tmp.jar" location="tmp.jar"/>
+  <property name="tmp.dir" location="jartmp"/>
+
   <target name="test1">
     <jar/>
   </target>
@@ -22,7 +25,7 @@
 
   <target name="test4">
    <jar
-    	destfile="tmp.jar"
+    	destfile="${tmp.jar}"
 	basedir="."
 	includes="jar.xml"
     />
@@ -31,14 +34,29 @@
   <!-- This test is to make sure upToDate is working -->
   <target name="test5">
     <jar
-    	destfile="tmp.jar"
+    	destfile="${tmp.jar}"
 	basedir="."
 	includes="jar.xml"
     />
   </target>
 
+  <target name="testManifestStaysIntact">
+    <mkdir dir="${tmp.dir}"/>
+    <manifest file="${tmp.dir}/manifest">
+      <attribute name="Foo" value="bar"/>
+    </manifest>
+    <jar destfile="${tmp.jar}" basedir="." includes="jar.xml"
+         manifest="${tmp.dir}/manifest"/>
+    <sleep seconds="3"/>
+    <touch file="jar.xml"/>
+    <jar destfile="${tmp.jar}" basedir="." includes="jar.xml"
+         update="true"/>
+    <unjar src="${tmp.jar}" dest="${tmp.dir}"/>
+  </target>    
+
   <target name="cleanup">
-    <delete file="tmp.jar" />
+    <delete file="${tmp.jar}" />
+    <delete dir="${tmp.dir}"/>
   </target>
 
 </project>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.IOException;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Date;
 import org.apache.tools.ant.BuildFileTest;
 
@@ -63,7 +65,6 @@ import org.apache.tools.ant.BuildFileTest;
  */
 public class JarTest extends BuildFileTest {
 
-    private static long jarModifiedDate;
     private static String tempJar = "tmp.jar";
 
     public JarTest(String name) {
@@ -94,12 +95,17 @@ public class JarTest extends BuildFileTest {
         executeTarget("test4");
         File jarFile = new File(getProjectDir(), tempJar);
         assertTrue(jarFile.exists());
-        jarModifiedDate = jarFile.lastModified();
     }
 
-    public void XXXtest5() {
-        executeTarget("test5");
-        File jarFile = new File(getProjectDir(), tempJar);
-        assertEquals(jarModifiedDate, jarFile.lastModified());
+    public void testManifestStaysIntact() 
+        throws IOException, ManifestException {
+        executeTarget("testManifestStaysIntact");
+        Manifest mf1 = 
+            new Manifest(new FileReader(getProject()
+                                        .resolveFile("jartmp/manifest")));
+        Manifest mf2 = 
+            new Manifest(new FileReader(getProject()
+                                        .resolveFile("jartmp/META-INF/MANIFEST.MF")));
+        assertEquals(mf1, mf2);
     }
 }

@@ -61,6 +61,7 @@ Fixed bugs:
   it to once again accept URLs. This should not affect current FIle based usage
   unless you are extending the Signjar task.
 
+* <jar update="true"> would remove the original manifest.
 
 Other changes:
 --------------
