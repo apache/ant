@@ -16,7 +16,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional.javah;
 
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.optional.Javah;
 import org.apache.tools.ant.types.Commandline;
@@ -40,22 +43,25 @@ public class SunJavah implements JavahAdapter {
     public boolean compile(Javah javah) throws BuildException {
         Commandline cmd = setupJavahCommand(javah);
         ExecuteJava ej = new ExecuteJava();
-
+        Class c = null;
         try {
             try {
                 // first search for the "old" javah class in 1.4.2 tools.jar
-                Class.forName("com.sun.tools.javah.oldjavah.Main");
-                cmd.setExecutable("com.sun.tools.javah.oldjavah.Main");
+                c = Class.forName("com.sun.tools.javah.oldjavah.Main");
             } catch (ClassNotFoundException cnfe) {
                 // assume older than 1.4.2 tools.jar
-                Class.forName("com.sun.tools.javah.Main");
-                cmd.setExecutable("com.sun.tools.javah.Main");
+                c = Class.forName("com.sun.tools.javah.Main");
             }
         } catch (ClassNotFoundException ex) {
             throw new BuildException("Can't load javah", ex, 
                                      javah.getLocation());
         }
+        cmd.setExecutable(c.getName());
         ej.setJavaCommand(cmd);
+        File f = Locator.getClassSource(c);
+        if (f != null) {
+            ej.setClasspath(new Path(javah.getProject(), f.getPath()));
+        }
         return ej.fork(javah) == 0;
     }
 
