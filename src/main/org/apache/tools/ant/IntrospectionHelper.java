@@ -116,10 +116,18 @@ public class IntrospectionHelper  {
             Class returnType = m.getReturnType();
             Class[] args = m.getParameterTypes();
 
-            // not really user settable properties
-            if ("setLocation".equals(name) || 
-                "setDescription".equals(name) ||
-                "setTaskType".equals(name)) {
+            // not really user settable properties on tasks
+            if (org.apache.tools.ant.Task.class.isAssignableFrom(bean) 
+                && args.length == 1 &&
+                (
+                 (
+                  "setLocation".equals(name) && org.apache.tools.ant.Location.class.equals(args[0])
+                  ) || ( 
+                   "setDescription".equals(name) && java.lang.String.class.equals(args[0])
+                  ) || (
+                   "setTaskType".equals(name) && java.lang.String.class.equals(args[0])
+                  )
+                 )) {
                 continue;
             }
             

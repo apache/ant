@@ -254,6 +254,7 @@
       <exclude name="**/AllJUnitTests.java" unless="junit.present" />
       <exclude name="**/EnumeratedAttributeTest.java" unless="junit.present" />
       <exclude name="**/IntrospectionHelperTest.java" unless="junit.present" />
+      <exclude name="**/PathTest.java" unless="junit.present" />
     </javac>
    </target>
 
@@ -264,9 +265,14 @@
     <java fork="yes"
           classname="junit.textui.TestRunner"
           args="org.apache.tools.ant.AllJUnitTests"
-          taskname="junit"
-          classpath="${lib.dir}/${name}.jar:${build.tests}:${classpath}:${java.class.path}"
-    />
+          taskname="junit">
+      <classpath>
+        <pathelement location="${lib.dir}/${name}.jar" />
+        <pathelement location="${build.tests}" />
+        <pathelement path="${classpath}" />
+        <pathelement path="${java.class.path}" />
+      </classpath>
+    </java>
   </target>
 
 </project>

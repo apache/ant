@@ -69,7 +69,7 @@ public class Java extends Exec {
     private String classname = null;
     private String args = null;
     private String jvmargs = null;
-    private String classpath = null;
+    private Path classpath = null;
     private boolean fork = false;
     
     /**
@@ -97,7 +97,7 @@ public class Java extends Exec {
             b.append("java ");
             if (classpath != null) {
                 b.append("-classpath ");
-                b.append(classpath);
+                b.append(classpath.toString());
                 b.append(" ");
             }
             if (jvmargs != null) {
@@ -126,10 +126,24 @@ public class Java extends Exec {
     /**
      * Set the classpath to be used for this compilation.
      */
-    public void setClasspath(String s) {
-        this.classpath = project.translatePath(s);
+    public void setClasspath(Path s) {
+        if (this.classpath == null) {
+            this.classpath = s;
+        } else {
+            this.classpath.setPath(s.toString());
+        }
     }
     
+    /**
+     * Creates a nested classpath element
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path();
+        }
+        return classpath;
+    }
+
     /**
      * Set the source file (deprecated).
      */
