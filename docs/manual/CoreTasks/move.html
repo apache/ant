@@ -79,6 +79,13 @@ href="../CoreTypes/mapper.html#identity-mapper">identity</a>.</p>
 <h4>filterchain</h4>
 <p>The Move task supports nested <a href="../CoreTypes/filterchain.html">
 FilterChain</a>s.</p>
+
+<p>
+If &lt;filterset&gt; and &lt;filterchain&gt; elements are used inside the
+same &lt;move&gt; task, all &lt;filterchain&gt; elements are processed first
+followed by &lt;filterset&gt; elements.
+</p>
+
 <h3>Examples</h3>
 <p><b>Move a single file (rename a file)</b></p>
 <pre>

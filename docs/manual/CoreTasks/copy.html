@@ -117,6 +117,12 @@ tokens in files that are copied.
 <p>The Copy task supports nested <a href="../CoreTypes/filterchain.html">
 FilterChain</a>s.</p>
 
+<p>
+If &lt;filterset&gt; and &lt;filterchain&gt; elements are used inside the
+same &lt;copy&gt; task, all &lt;filterchain&gt; elements are processed first
+followed by &lt;filterset&gt; elements.
+</p>
+
 <h3>Examples</h3>
 <p><b>Copy a single file</b></p>
 <pre>
