@@ -521,22 +521,16 @@ public class Javadoc extends Exec {
             
             // add the group arguments
             if (groups.size() != 0) {
-                String title = null;
-                String packages = null;
-                GroupArgument ga = null;
-                for (int i = 0; i < groups.size(); i++) {
-                    ga = (GroupArgument)groups.get(i);
-                    if (ga != null) {
-                        title = ga.getTitle();
-                        packages = ga.getPackages();
+                for (Enumeration e = groups.elements(); e.hasMoreElements(); ) {
+                    GroupArgument ga = (GroupArgument)e.nextElement();
+                    String title = ga.getTitle();
+                    String packages = ga.getPackages();
+                    if (title == null || packages == null) {
+                        throw new BuildException("The title and packages must be specified for group elements.");
                     }
-                    if (title != null) {
-                        argList.addElement("-group");
-                        argList.addElement(title);
-                        if (packages != null) {
-                            argList.addElement(packages);
-                        }
-                    }
+                    argList.addElement("-group");
+                    argList.addElement(title);
+                    argList.addElement(packages);
                 }
             }
 
