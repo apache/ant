@@ -749,26 +749,6 @@ Legal:
             style="${ant.home}/etc/jdepend-frames.xsl"/>
     </target>
 
-    <target name="docs" description="Generate documentation and website">
-        <taskdef name="anakia"
-            classname="org.apache.velocity.anakia.AnakiaTask">
-            <classpath>
-                <fileset dir="${jakarta-site.dir}/lib">
-                    <include name="*.jar"/>
-                </fileset>
-            </classpath>
-        </taskdef>
-
-        <anakia basedir="src/xdocs"
-            destdir="docs"
-            style="docs.vsl"
-            projectfile="stylesheets/project.xml"
-            includes="**/*.xml"
-            excludes="stylesheets/**"
-            velocitypropertiesfile="src/xdocs/velocity.properties"
-            />
-    </target>
-
     <target name="javadoc" description="Generates the API docs.">
         <property name="build.apidocs" value="${build.dir}/apidocs"/>
         <mkdir dir="${build.apidocs}"/>
