@@ -294,6 +294,16 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
+     * Force the task to be reconfigured from it's RuntimeConfigurable
+     *
+     */
+    public void reconfigure() {
+        if (wrapper != null) {
+            wrapper.reconfigure(getProject());
+        }
+    }
+    
+    /**
      * Handles a line of output by logging it with the INFO priority.
      *
      * @param line The line of output to log. Should not be <code>null</code>.

@@ -127,12 +127,7 @@ public class UnknownElement extends Task {
         if (realThing instanceof Task) {
             Task task = (Task) realThing;
 
-            task.setProject(project);
             task.setRuntimeConfigurableWrapper(getWrapper());
-            task.setLocation(this.getLocation());
-            // UnknownElement always has an associated target
-            task.setOwningTarget(this.getOwningTarget());
-            task.init();
 
             // For Script to work. Ugly
             // The reference is replaced by RuntimeConfigurable
@@ -272,38 +267,26 @@ public class UnknownElement extends Task {
             UnknownElement child = (UnknownElement) children.elementAt(i);
             Object realChild = null;
 
-            if (!ih.supportsNestedElement(child.getTag()) 
-                && parent instanceof TaskContainer) {
-                realChild = makeTask(child, childWrapper);
-
-                if (realChild == null) {
-                    ih.throwNotSupported(getProject(), parent, child.getTag());
-                }
-
-                // XXX DataTypes will be wrapped or treated like normal components
-                if (realChild instanceof Task) {
-                    Task task = (Task) realChild;
-                    ((TaskContainer) parent).addTask(task);
-                    task.setLocation(child.getLocation());
-                    // UnknownElement always has an associated target
-                    task.setOwningTarget(this.getOwningTarget());
-                    task.init();
-                } else {
-                    // should not happen
-                    ih.throwNotSupported(getProject(), parent, child.getTag());
-                }
-            } else {
+            if (ih.supportsNestedElement(child.getTag())) { 
                 realChild 
                     = ih.createElement(getProject(), parent, child.getTag());
-            }
+                childWrapper.setProxy(realChild);
+                if (realChild instanceof Task) {
+                    Task childTask = (Task) realChild;
+                    childTask.setRuntimeConfigurableWrapper(childWrapper);
+                    childTask.setTaskName(child.getTag());
+                    childTask.setTaskType(child.getTag());
+                }
+                child.handleChildren(realChild, childWrapper);
 
-            childWrapper.setProxy(realChild);
-            if (parent instanceof TaskContainer 
-                && realChild instanceof Task) {
-                ((Task) realChild).setRuntimeConfigurableWrapper(childWrapper);
-            }
-
-            child.handleChildren(realChild, childWrapper);
+            } else if (!(parent instanceof TaskContainer)) {
+                ih.throwNotSupported(getProject(), parent, child.getTag());
+            } else {
+                // a task container - anything could happen - just add the 
+                // child to the container
+                TaskContainer container = (TaskContainer) parent;
+                container.addTask(child);
+            }                
         }
     }
 

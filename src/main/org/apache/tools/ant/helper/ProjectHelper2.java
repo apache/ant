@@ -745,7 +745,6 @@ public class ProjectHelper2 extends ProjectHelper {
                                    AntXMLContext context)
             throws SAXParseException {
             RuntimeConfigurable parentWrapper = context.currentWrapper();
-            RuntimeConfigurable wrapper = null;
             Object parent = null;
 
             if (parentWrapper != null) {
@@ -796,7 +795,8 @@ public class ProjectHelper2 extends ProjectHelper {
             // container.addTask(task);
             // This is a nop in UE: task.init();
 
-            wrapper = new RuntimeConfigurable(task, task.getTaskName());
+            RuntimeConfigurable wrapper 
+                = new RuntimeConfigurable(task, task.getTaskName());
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 wrapper.setAttribute(attrs.getQName(i),
@@ -851,11 +851,6 @@ public class ProjectHelper2 extends ProjectHelper {
 
         public void onEndElement(String uri, String tag, AntXMLContext context) {
             context.popWrapper();
-        }
-
-        public void onEndChild(String uri, String tag, String qname,
-                                     AntXMLContext context)
-            throws SAXParseException {
         }
     }
 }

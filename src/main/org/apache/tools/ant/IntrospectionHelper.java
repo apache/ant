@@ -577,7 +577,8 @@ public class IntrospectionHelper implements BuildListener {
      * @return true if the given nested element is supported
      */
     public boolean supportsNestedElement(String elementName) {
-        return nestedCreators.containsKey(elementName);
+        return nestedCreators.containsKey(elementName) ||
+            DynamicConfigurator.class.isAssignableFrom(bean);
     }
     
     /**

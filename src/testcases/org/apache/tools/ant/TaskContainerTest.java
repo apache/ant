@@ -82,6 +82,8 @@ public class TaskContainerTest extends BuildFileTest {
                    getLog().indexOf("As attribute: it worked") > -1);
         assertTrue("nested text worked",
                    getLog().indexOf("As nested text: it worked") > -1);
+        assertTrue("nested text worked",
+                   getLog().indexOf("As nested task: it worked") > -1);
     }
 
 }

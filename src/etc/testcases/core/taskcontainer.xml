@@ -22,9 +22,11 @@
     <sequential>    
       <taskdef name="sseq" classpath="${build.dir}" classname="test.SpecialSeq"/>
       <sseq>
+        <fileset dir="."/>
         <property name="foo" value="it worked"/>
         <echo message="As attribute: ${foo}"/>
         <echo>As nested text: ${foo}</echo>
+        <nested message="As nested task: ${foo}"/>
       </sseq>
     </sequential>
   </target>

@@ -336,18 +336,9 @@ public class RuntimeConfigurable implements Serializable {
                 childTask.setRuntimeConfigurableWrapper(child);
             }
 
-            if (configureChildren) {
-                if (child.wrappedObject instanceof Task) {
-                    Task childTask = (Task) child.wrappedObject;
-                    
-                    // we don't configure tasks of task containers These
-                    // we be configured at the time they are used.
-                    if (!(target instanceof TaskContainer)) {
-                        childTask.maybeConfigure();
-                    }
-                } else {
-                    child.maybeConfigure(p);
-                }
+            if (configureChildren 
+                && ih.supportsNestedElement(child.getElementTag())) {
+                child.maybeConfigure(p);
                 Object container = wrappedObject;
                 if (container instanceof TaskAdapter) {
                     container = ((TaskAdapter) container).getProxy();
@@ -362,5 +353,13 @@ public class RuntimeConfigurable implements Serializable {
             p.addReference(id, wrappedObject);
         }
         proxyConfigured = true;
+    }
+    
+    /**
+     * Reconfigure the element, even if it has already been configured.
+     */
+    public void reconfigure(Project p) {
+        proxyConfigured = false;
+        maybeConfigure(p);
     }
 }
