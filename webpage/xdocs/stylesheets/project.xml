@@ -11,12 +11,19 @@
     <menu name="Ant">
         <item name="Front Page"            
               href="/index.html"/>
-        <item name="Documentation"            
-              href="/ant/manual/"/>
         <item name="News"                 
               href="/antnews.html"/>
+        <item name="Documentation"            
+              href="/manual/"/>
         <item name="External Resources"
               href="/external.html"/>
+        <item name="Ant FAQ"
+              href="/faq.html"/>
+    </menu>
+
+    <menu name="Download">
+        <item name="Binaries"              href="/site/binindex.html"/>
+        <item name="Source Code"           href="/site/sourceindex.html"/>
     </menu>
 
     <menu name="Jakarta">
@@ -24,11 +31,6 @@
         <item name="Mission"               href="/site/mission.html"/>
         <item name="Guidelines Notes"      href="/site/guidelines.html"/>
         <item name="FAQs"                  href="/site/faqs.html"/>
-    </menu>
-
-    <menu name="Download">
-        <item name="Binaries"              href="/site/binindex.html"/>
-        <item name="Source Code"           href="/site/sourceindex.html"/>
     </menu>
 
     <menu name="Get Involved">
