@@ -9,21 +9,12 @@ package org.apache.tools.ant.taskdefs.exec;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
+import java.io.OutputStream;
 import java.util.Properties;
-import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Os;
-import org.apache.myrmidon.framework.exec.CommandLauncher;
-import org.apache.myrmidon.framework.exec.Environment;
+import org.apache.myrmidon.framework.exec.DefaultExecManager;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
-import org.apache.myrmidon.framework.exec.ProcessDestroyer;
-import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -35,96 +26,20 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class Execute
 {
-    private static final CommandLauncher c_launcher = new DefaultCommandLauncher();
-    private static final CommandLauncher c_shellLauncher = createShellLauncher();
-
-    /**
-     * Used to destroy processes when the VM exits.
-     */
-    private static final ProcessDestroyer c_processDestroyer = new ProcessDestroyer();
-
-    private ExecMetaData m_metaData;
     private String[] m_command;
     private Properties m_environment = new Properties();
     private File m_workingDirectory = new File( "." );
     private boolean m_newEnvironment;
+    private OutputStream m_output;
+    private OutputStream m_error;
+    private long m_timeout;
 
     /**
      * Controls whether the VM is used to launch commands, where possible
      */
     private boolean m_useVMLauncher = true;
-    private ExecuteStreamHandler m_streamHandler;
-    private ExecuteWatchdog m_watchdog;
 
-    private static CommandLauncher createShellLauncher()
-    {
-        CommandLauncher launcher = null;
-        try
-        {
-            if( Os.isFamily( "mac" ) )
-            {
-                // Mac
-                launcher = new MacCommandLauncher();
-            }
-            else if( Os.isFamily( "os/2" ) )
-            {
-                // OS/2 - use same mechanism as Windows 2000
-                launcher = new WinNTCommandLauncher();
-            }
-            else if( Os.isFamily( "windows" ) )
-            {
-                // Windows.  Need to determine which JDK we're running in
-
-                // Determine if we're running under 2000/NT or 98/95
-                final String osname =
-                    System.getProperty( "os.name" ).toLowerCase( Locale.US );
-
-                if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
-                {
-                    // Windows 2000/NT
-                    launcher = new WinNTCommandLauncher();
-                }
-                else
-                {
-                    // Windows 98/95 - need to use an auxiliary script
-                    final String script = resolveCommand( "bin/antRun.bat" );
-                    launcher = new ScriptCommandLauncher( script );
-                }
-            }
-            else if( ( new Os( "netware" ) ).eval() )
-            {
-                // NetWare.  Need to determine which JDK we're running in
-                final String perlScript = resolveCommand( "bin/antRun.pl" );
-                final String[] script = new String[]{"perl", perlScript};
-                launcher = new ScriptCommandLauncher( script );
-            }
-            else
-            {
-                // Generic
-                final String script = resolveCommand( "bin/antRun" );
-                launcher = new ScriptCommandLauncher( script );
-            }
-        }
-        catch( final TaskException te )
-        {
-            te.printStackTrace();
-        }
-        return launcher;
-    }
-
-    private static String resolveCommand( final String command )
-    {
-        final File homeDir = getAntHomeDirectory();
-        final String script =
-            FileUtil.resolveFile( homeDir, command ).toString();
-        return script;
-    }
-
-    /**
-     * Retrieve the directory in which Myrmidon is installed.
-     * This is used to determine the locaiton of scripts in various launchers.
-     */
-    protected static File getAntHomeDirectory()
+    private static File getAntHomeDirectory()
     {
         final String antHome = System.getProperty( "ant.home" );
         if( null == antHome )
@@ -135,41 +50,6 @@ public class Execute
         }
 
         return new File( antHome );
-    }
-
-    /**
-     * Creates a new execute object using <code>PumpStreamHandler</code> for
-     * stream handling.
-     */
-    public Execute()
-    {
-        this( new PumpStreamHandler() );
-    }
-
-    /**
-     * Creates a new execute object.
-     *
-     * @param streamHandler the stream handler used to handle the input and
-     *      output streams of the subprocess.
-     */
-    public Execute( final ExecuteStreamHandler streamHandler )
-    {
-        this( streamHandler, null );
-    }
-
-    /**
-     * Creates a new execute object.
-     *
-     * @param streamHandler the stream handler used to handle the input and
-     *      output streams of the subprocess.
-     * @param watchdog a watchdog for the subprocess or <code>null</code> to to
-     *      disable a timeout for the subprocess.
-     */
-    public Execute( final ExecuteStreamHandler streamHandler,
-                    final ExecuteWatchdog watchdog )
-    {
-        m_streamHandler = streamHandler;
-        m_watchdog = watchdog;
     }
 
     /**
@@ -186,10 +66,10 @@ public class Execute
         try
         {
             task.log( Commandline.toString( cmdline ), Project.MSG_VERBOSE );
-            final Execute exe =
-                new Execute( new LogStreamHandler( task,
-                                                   Project.MSG_INFO,
-                                                   Project.MSG_ERR ) );
+            final Execute exe = new Execute();
+            exe.setOutput( new LogOutputStream( task, Project.MSG_INFO ) );
+            exe.setError( new LogOutputStream( task, Project.MSG_WARN ) );
+
             exe.setCommandline( cmdline );
             int retval = exe.execute();
             if( retval != 0 )
@@ -201,6 +81,36 @@ public class Execute
         {
             throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + ioe );
         }
+    }
+
+    /**
+     * Creates a new execute object.
+     *
+     * @param streamHandler the stream handler used to handle the input and
+     *      output streams of the subprocess.
+     */
+    public Execute( final ExecuteStreamHandler streamHandler )
+    {
+        //m_streamHandler = streamHandler;
+    }
+
+    public Execute()
+    {
+    }
+
+    public void setTimeout( final long timeout )
+    {
+        m_timeout = timeout;
+    }
+
+    public void setOutput( final OutputStream output )
+    {
+        m_output = output;
+    }
+
+    public void setError( final OutputStream error )
+    {
+        m_error = error;
     }
 
     /**
@@ -256,17 +166,6 @@ public class Execute
     }
 
     /**
-     * test for an untimely death of the process
-     *
-     * @return true iff a watchdog had to kill the process
-     * @since 1.5
-     */
-    public boolean killedProcess()
-    {
-        return m_watchdog != null && m_watchdog.killedProcess();
-    }
-
-    /**
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>
@@ -275,75 +174,19 @@ public class Execute
     public int execute()
         throws IOException, TaskException
     {
-
         try
         {
+            final DefaultExecManager manager =
+                new DefaultExecManager( getAntHomeDirectory() );
+
             final ExecMetaData metaData =
                 new ExecMetaData( m_command, m_environment,
                                   m_workingDirectory, m_newEnvironment );
-
-            final CommandLauncher launcher = getLauncher();
-            final Process process = launcher.exec( metaData );
-
-            try
-            {
-                m_streamHandler.setProcessInputStream( process.getOutputStream() );
-                m_streamHandler.setProcessOutputStream( process.getInputStream() );
-                m_streamHandler.setProcessErrorStream( process.getErrorStream() );
-            }
-            catch( final IOException ioe )
-            {
-                process.destroy();
-                throw ioe;
-            }
-
-            m_streamHandler.start();
-
-            // add the process to the list of those to destroy if the VM exits
-            //
-            c_processDestroyer.add( process );
-
-            if( m_watchdog != null )
-            {
-                m_watchdog.start( process );
-            }
-            try
-            {
-                process.waitFor();
-            }
-            catch( final InterruptedException ie )
-            {
-                //shu\ould never happen
-            }
-
-            // remove the process to the list of those to destroy if the VM exits
-            //
-            c_processDestroyer.remove( process );
-
-            if( m_watchdog != null )
-            {
-                m_watchdog.stop();
-            }
-            m_streamHandler.stop();
-            if( m_watchdog != null )
-            {
-                m_watchdog.checkException();
-            }
-            return process.exitValue();
+            return manager.execute( metaData, null, m_output, m_error, m_timeout );
         }
         catch( final ExecException ee )
         {
             throw new TaskException( ee.getMessage(), ee );
         }
-    }
-
-    private CommandLauncher getLauncher()
-    {
-        CommandLauncher launcher = c_launcher;
-        if( !m_useVMLauncher )
-        {
-            launcher = c_shellLauncher;
-        }
-        return launcher;
     }
 }
