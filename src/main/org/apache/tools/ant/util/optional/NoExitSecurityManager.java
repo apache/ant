@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,10 +29,20 @@ import org.apache.tools.ant.ExitException;
  */
 public class NoExitSecurityManager extends SecurityManager {
 
+    /**
+     * Override SecurityManager#checkExit.
+     * This throws an ExitException(status) exception.
+     * @param status the exit status
+     */
     public void checkExit(int status) {
         throw new ExitException(status);
     }
 
+    /**
+     * Override SecurityManager#checkPermission.
+     * This does nothing.
+     * @param perm the requested permission.
+     */
     public void checkPermission(Permission perm) {
         // no permission here
     }
