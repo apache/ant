@@ -80,7 +80,7 @@ public class MSVSSLABEL extends MSVSS {
         }
 
         String label = getLabel();
-        if (label == "") {
+        if (label.equals("")) {
             String msg = "label attribute must be set!";
             throw new BuildException(msg, getLocation());
         }
