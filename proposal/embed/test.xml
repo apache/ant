@@ -6,11 +6,10 @@
 
 
   <target name="main" >
-    <antcall target="embed.main" />
-
     <path id="myJars" >
       <pathelement path="${junit.jar}" />
       <pathelement path="${jxpath.jar}" />
+      <pathelement path="${ant.home}/lib/ant-sax2.jar" />
     </path>
 
     <systemPath pathRef="myJars"/>
@@ -18,10 +17,26 @@
     <junit id="replacedJunit" />
   
     <echo message="toString sample: ${toString:replacedJunit}" />
-    <echo message="${jxpath.jar}" />
+ 
+    <!-- This is Taksdef2.java - it'll use the systemPath as parent loader
+      -->
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
+             name="jxpath" />
 
+    <!-- Init JxPath. '/' is the project -->
     <jxpath/>
-    <echo message="jxPath sample: ${jxpath:/}" />
+
+    <echo message="jxPath /targets[1]: ${jxpath:/targets[1]}" />
+    <echo message="jxPath /references: ${jxpath:/references}" />
+    <echo message="jxPath /references[@name='myJars']: ${jxpath:/references[@name='myJars']}" />
+    <echo message="jxPath /references/myJars: ${jxpath:/references/myJars}" />
+
   </target>
+
+
+  <target name="test-import" >
+    <antcall target="embed.main" />
+  </target>
+
 
 </project>
