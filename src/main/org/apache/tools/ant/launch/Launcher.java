@@ -88,6 +88,8 @@ public class Launcher {
         try {
             Launcher launcher = new Launcher();
             launcher.run(args);
+        } catch (LaunchException e) {
+            System.err.println(e.getMessage());
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -102,7 +104,7 @@ public class Launcher {
      * @exception MalformedURLException if the URLs required for the classloader
      *            cannot be created.
      */
-    private void run(String[] args) throws MalformedURLException {
+    private void run(String[] args) throws LaunchException, MalformedURLException {
         String antHomeProperty = System.getProperty(ANTHOME_PROPERTY);
         File antHome = null;
 
@@ -119,7 +121,7 @@ public class Launcher {
         }
 
         if (!antHome.exists()) {
-            throw new IllegalStateException("Ant home is set incorrectly or "
+            throw new LaunchException("Ant home is set incorrectly or "
                 + "ant could not be located");
         }
 
@@ -130,7 +132,7 @@ public class Launcher {
         for (int i = 0; i < args.length; ++i) {
             if (args[i].equals("-lib")) {
                 if (i == args.length - 1) {
-                    throw new IllegalStateException("The -lib argument must "
+                    throw new LaunchException("The -lib argument must "
                         + "be followed by a library location");
                 }
                 libPaths.add(args[++i]);

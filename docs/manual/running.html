@@ -87,6 +87,7 @@ Options:
   -verbose, -v           be extra verbose
   -debug                 print debugging information
   -emacs                 produce logging information without adornments
+  -lib <path>            specifies a path to search for jars and classes
   -logfile &lt;file&gt;        use given file for log
     -l     &lt;file&gt;                ''
   -logger &lt;classname&gt;    the class which is to perform logging
@@ -108,6 +109,45 @@ Options:
 <a href="listeners.html">Loggers &amp; Listeners</a>.
 <p>For more information about <code>-inputhandler</code> see
 <a href="inputhandler.html">InputHandler</a>.
+
+<h3><a name="libs">Library Directories</a></h3>
+<p>
+Prior to Ant 1.6, all jars in the ANT_HOME/lib would be added to the CLASSPATH
+used to run Ant. This was done in the scripts that started Ant. From Ant 1.6,
+two directories are scanned by default and more can be added as required. The
+default directories scanned are ANT_HOME/lib and a user specific directory,
+${user.home}/.ant/lib. This arrangement allows the Ant installation to be
+shared by many users while still allowing each user to deploy additional jars.
+Such additional jars could be support jars for Ant's optional tasks or jars
+containing third-party tasks to be used in the build. It also allows the main Ant
+installation to be locked down which will please system adminstrators.
+</p>
+
+<p>
+Additional directories to be searched may be added by using the -lib option.
+The -lib option specifies a search path. Any jars or classes in the directories
+of the path will be added to Ant's classloader. The order in which jars are
+added to the classpath is as follows
+</p>
+
+<ul>
+  <li>-lib jars in the order specified by the -lib elements on the command line</li>
+  <li>jars from ${user.home}/.ant/lib</li>
+  <li>jars from ANT_HOME/lib</li>
+</ul>
+
+<p>
+Note that the CLASSPATH environment variable is passed to Ant using a -lib
+option. Ant itself is started with a very minimalistic classpath.
+</p>
+
+<p>
+The location of ${user.home}/.ant/lib is somewhat dependent on the JVM. On Unix
+systems ${user.home} maps to the user's home directory whilst on recent
+versions of Windows it will be somewhere such as
+C:\Documents&nbsp;and&nbsp;Settings\username\.ant\lib. You should consult your
+JVM documentation for more details.
+</p>
 
 <h3>Examples</h3>
 <blockquote>
@@ -131,6 +171,13 @@ the target called <code>dist</code>.</p>
 <p>runs Ant using the <code>test.xml</code> file in the current directory, on
 the target called <code>dist</code>, setting the <code>build</code> property
 to the value <code>build/classes</code>.</p>
+
+<blockquote>
+  <pre>ant -lib /home/ant/extras</pre>
+</blockquote>
+<p>runs Ant picking up additional task and support jars from the
+/home/ant/extras location
+</p>
 
 <h3><a name="files">Files</a></h3>
 
@@ -207,19 +254,35 @@ have some documentation inside.</p>
 
 <h2><a name="viajava">Running Ant via Java</a></h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
-with:</p>
+with two entry points:</p>
 <blockquote>
   <pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
 </blockquote>
 
-<p>These instructions actually do exactly the same as the <code>ant</code>
-command. The options and target are the same as when running Ant with the <code>ant</code>
-command. This example assumes you have set your classpath to include:</p>
+<blockquote>
+  <pre>java -Dant.home=c:\ant org.apache.tools.ant.launch.Launcher [options] [target]</pre>
+</blockquote>
+
+<p>
+The first method runs Ant's traditional entry point. The second method uses
+the Ant Launcher introduced in Ant 1.6. The former method does not support
+the -lib option and all required classes are loaded from the CLASSPATH. You must
+ensure that all required jars are available. At a minimum the CLASSPATH should
+include:
+</p>
+
 <ul>
-<li><code>ant.jar</code></li>
+<li><code>ant.jar</code> and <code>ant-launcher.jar</code></li>
 <li>jars/classes for your XML parser</li>
 <li>the JDK's required jar/zip files</li>
 </ul>
+
+<p>
+The latter method supports the -lib option and will load jars from the
+specified ANT_HOME. You should start the latter with the most minimal
+classpath possible, generally just the ant-launcher.jar.
+</p>
+
 <br>
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
