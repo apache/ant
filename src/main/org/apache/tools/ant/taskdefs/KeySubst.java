@@ -140,6 +140,8 @@ public class KeySubst extends Task {
         this.sep = sep;
     }
     /**
+     * Sets the keys.
+     * 
         Format string is like this:
         <p>
         name=value*name2=value
@@ -184,7 +186,7 @@ public class KeySubst extends Task {
     /**
         Does replacement on text using the hashtable of keys.
         
-        @returns the string with the replacements in it.
+        @return the string with the replacements in it.
     */
     public static String replace ( String origString, Hashtable keys )
         throws BuildException

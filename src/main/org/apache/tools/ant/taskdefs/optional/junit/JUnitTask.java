@@ -357,7 +357,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Use a completely new environment
+     * Use a completely new environment.
      *
      * <p>Will be ignored if we are not forking a new VM.
      *

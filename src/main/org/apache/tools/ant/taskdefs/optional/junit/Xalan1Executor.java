@@ -63,7 +63,7 @@ import org.apache.xalan.xslt.XSLTResultTarget;
 /**
  * Xalan 1 executor. It will need a lot of things in the classpath:
  * xerces for the serialization, xalan and bsf for the extension.
- * @todo do everything via reflection to avoid compile problems ?
+ * To-do: do everything via reflection to avoid compile problems ?
  */
 public class Xalan1Executor extends XalanExecutor {
     void execute() throws Exception {

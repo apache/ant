@@ -75,7 +75,6 @@ import org.apache.tools.ant.Project;
  * A filter set may have begintoken and endtokens defined.
  *
  * @author     <A href="mailto:gholam@xtra.co.nz">  Michael McCallum  </A>
- * @created   14 March 2001
  */
 public class FilterSet extends DataType implements Cloneable {
     
@@ -83,7 +82,6 @@ public class FilterSet extends DataType implements Cloneable {
      * Individual filter component of filterset
      *
      * @author    Michael McCallum
-     * @created   14 March 2001
      */
     public static class Filter {
         /** Token which will be replaced in the filter operation */
@@ -150,7 +148,6 @@ public class FilterSet extends DataType implements Cloneable {
      * The filtersfile nested element.
      *
      * @author    Michael McCallum
-     * @created   Thursday, April 19, 2001
      */
     public class FiltersFile {
         

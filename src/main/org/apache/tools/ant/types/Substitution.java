@@ -68,7 +68,7 @@ import org.apache.tools.ant.types.DataType;
  *   /&gt;
  * </pre>
  *
- * @see org.apache.oro.text.regex.Perl5Substitition
+ * @see org.apache.oro.text.regex.Perl5Substitution
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class Substitution extends DataType

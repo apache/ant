@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,20 +55,24 @@
 package org.apache.tools.ant;
 
 /**
- * Interface for objects which can contain tasks 
+ * Interface for objects which can contain tasks.
+ * <p>
+ * It is recommended that implementations call perform rather than
+ * execute for the tasks they contain, as this method ensures that the
+ * appropriate BuildEvents will be generated.
  *
- * <p>It is recommended that implementations call {@link Task#perform
- * perform} instead of {@link Task#execute execute} for the tasks they
- * contain, as this method ensures that {@link BuildEvent BuildEvents}
- * will be generated.</p>
- *
+ * @see Task#perform
+ * @see Task#execute
+ * @see BuildEvent
+ * 
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
 public interface TaskContainer {
     /**
-     * Add a task to this task container
+     * Adds a task to this task container
      *
-     * @param task the task to be added to this container
+     * @param task The task to be added to this container.
+     *             Must not be <code>null</code>.
      */
     void addTask(Task task);
 }

@@ -64,7 +64,6 @@ import java.io.*;
  * Load a file into a property
  *
  * @author Steve Loughran
- * @created 10 December 2001
  */
 public class LoadFile extends Task {
 

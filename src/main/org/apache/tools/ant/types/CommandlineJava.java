@@ -64,9 +64,9 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * A representation of a Java command line that is nothing more
- * than a composite of 2 <tt>Commandline</tt>. 1 for the vm/options and
- * 1 for the classname/arguments. It provides specific methods for
- * a java command line.
+ * than a composite of 2 <tt>Commandline</tt>. One is used for the 
+ * vm/options and one for the classname/arguments. It provides 
+ * specific methods for a java command line.
  *
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>

@@ -65,7 +65,6 @@ import java.io.File;
  * </pre>
  *
  *@author     Erik Hatcher
- *@created    December 29, 2001
  */
 public class PackageNameMapper extends GlobPatternMapper {
     /**

@@ -112,11 +112,12 @@ public class RegexpFactory extends RegexpMatcherFactory
     }
 
     /**
-     * Wrapper over {@seee RegexpMatcherFactory#createInstance
-     * createInstance} that ensures that we are dealing with a Regexp
-     * implementation.
+     * Wrapper over RegexpMatcherFactory.createInstance that ensures that 
+     * we are dealing with a Regexp implementation.
      *
      * @since 1.3
+     * 
+     * @see RegexpMatcherFactory#createInstance(String)
      */
     protected Regexp createRegexpInstance(String classname) 
         throws BuildException {

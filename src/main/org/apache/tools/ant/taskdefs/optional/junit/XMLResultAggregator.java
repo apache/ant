@@ -105,7 +105,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     protected Vector transformers = new Vector();
 
-    /** the default directory: <tt>.</tt>. It is resolved from the project directory */
+    /** The default directory: <tt>&#046;</tt>. It is resolved from the project directory */
     public final static String DEFAULT_DIR = ".";
 
     /** the default file name: <tt>TESTS-TestSuites.xml</tt> */
@@ -307,8 +307,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /**
      * Create a new document builder. Will issue an <tt>ExceptionInitializerError</tt>
      * if something is going wrong. It is fatal anyway.
+     * To-do: factorize this somewhere else. It is duplicated code.
      * @return a new document builder to create a DOM
-     * @todo factorize this somewhere else. It is duplicated code.
      */
     private static DocumentBuilder getDocumentBuilder() {
         try {

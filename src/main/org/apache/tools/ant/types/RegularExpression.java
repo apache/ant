@@ -87,7 +87,7 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  *   /&gt;
  * </pre>
  *
- * @see org.apache.oro.regex.Perl5Compiler
+ * @see org.apache.oro.text.regex.Perl5Compiler
  * @see org.apache.regexp.RE
  * @see java.util.regex.Pattern
  *
