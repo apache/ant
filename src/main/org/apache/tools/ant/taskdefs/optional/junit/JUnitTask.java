@@ -147,6 +147,7 @@ import junit.framework.TestResult;
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof></a>
+ * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
  *
  * @version $Revision$
  *
@@ -653,15 +654,17 @@ public class JUnitTask extends Task {
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
-            formatterArg.append("formatter=");
-            formatterArg.append(fe.getClassname());
-            File outFile = getOutput(fe, test);
-            if (outFile != null) {
-                formatterArg.append(",");
-                formatterArg.append(outFile);
+            if(fe.shouldUse(this)) {
+                formatterArg.append("formatter=");
+                formatterArg.append(fe.getClassname());
+                File outFile = getOutput(fe, test);
+                if (outFile != null) {
+                    formatterArg.append(",");
+                    formatterArg.append(outFile);
+                }
+                cmd.createArgument().setValue(formatterArg.toString());
+                formatterArg = new StringBuffer();
             }
-            cmd.createArgument().setValue(formatterArg.toString());
-            formatterArg = new StringBuffer();
         }
 
         // Create a temporary file to pass the Ant properties to the
@@ -868,13 +871,15 @@ public class JUnitTask extends Task {
             final FormatterElement[] feArray = mergeFormatters(test);
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];
-                File outFile = getOutput(fe, test);
-                if (outFile != null) {
-                    fe.setOutfile(outFile);
-                } else {
-                    fe.setOutput(getDefaultOutput());
+                if(fe.shouldUse(this)) {
+                    File outFile = getOutput(fe, test);
+                    if (outFile != null) {
+                        fe.setOutfile(outFile);
+                    } else {
+                        fe.setOutput(getDefaultOutput());
+                    }
+                    runner.addFormatter(fe.createFormatter(cl));
                 }
-                runner.addFormatter(fe.createFormatter(cl));
             }
 
             runner.run();

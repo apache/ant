@@ -23,8 +23,8 @@ Changes that could break older environments:
 
 * <xmlproperty> will no longer fail if the file to be loaded doesn't exist.
 
-* XML namespaces are now enabled in the XML parser, meaning XML namespace 
-  declarations no longer cause errors. 
+* XML namespaces are now enabled in the XML parser, meaning XML namespace
+  declarations no longer cause errors.
 
 * The <ftp> and <telnet> tasks now require Jakarta Commons Net instead
   of the older ORO Netcomponents version.  See
@@ -82,7 +82,7 @@ Fixed bugs:
 * <exec> output and error streams can now be redirected independently
   to either a property or a file (or both)
 
-* TarEntry's File-arg constructor would fail with a 
+* TarEntry's File-arg constructor would fail with a
   StringIndexOutOfBoundsException on all OSes where os.name is shorter
   than seven characters.  Bugzilla Report 18105.
 
@@ -112,7 +112,7 @@ Fixed bugs:
 * Perforce tasks relying on output from the server such as <p4change> and <p4label>
   were hanging. Bugzilla Reports 18129 and 18956.
 
-* build.sh install had a problem on cygwin (with REALANTHOME). 
+* build.sh install had a problem on cygwin (with REALANTHOME).
   Bugzilla Report 17257
 
 * <replaceregexp> didn't work for multi-byte encodings if byline was false.
@@ -139,19 +139,19 @@ Fixed bugs:
 * <different> selector : make ignoreFileTimes effectively default to true
   and fix a bug in the comparison of timestamps. Bugzilla Report 20205.
 
-* <different> selector can now be nested directly under a fileset 
+* <different> selector can now be nested directly under a fileset
   Bugzilla Report 20220.
 
 Other changes:
 --------------
 * Six new Clearcase tasks added.
 
-* A new filter reader namely tokenfilter has been added.  Bugzilla 
+* A new filter reader namely tokenfilter has been added.  Bugzilla
   Report 18312.
 
 * A new attribute named skip is added to the TailFilter and
   HeadFilter filter readers.
-  
+
 * Shipped XML parser is now Xerces 2.4.0
 
 * The filesetmanifest attribute of <jar> has been reenabled.
@@ -223,25 +223,25 @@ Other changes:
   all compilers.
 
 * a new attribute "globalopts" can be added to all Perforce tasks.
-  You can put in it all the strings described by p4 help usage. Refer to 
+  You can put in it all the strings described by p4 help usage. Refer to
   the docs for more information.
 
 * new Perforce tasks <p4integrate> , <p4resolve>, and <p4labelsync>
 
-* <p4submit> will change the property p4.change if the Perforce server 
+* <p4submit> will change the property p4.change if the Perforce server
   renumbers the change list.
-  It will set the property p4.needsresolve if the submit fails, 
+  It will set the property p4.needsresolve if the submit fails,
   and the message says that file(s) need to be resolved.
 
 * <replaceregexp> now has an optional encoding attribute to support
   replacing in files that are in a different encoding than the
   platform's default.
-  
+
 * The <exec> task may now have its input redirected from either a file
   or a string from the build file. The error output can be separated
   to a different file when outut is redirected. standard error may be
   logged to the Ant log when redirecting output to a file
-  
+
 * The <java> task also supports the input redirection and separate
   error streams introduced to the <exec> task. In addition, it is now
   possible to save the output into a property for use within the build
@@ -302,7 +302,7 @@ Other changes:
 * <mail> has a new attribute encoding. Bugzilla Report 15434.
 
 * <mail> has new attributes user and password for SMTP auth.
-maillogger can also use this. 
+maillogger can also use this.
 The implementation only with JavaMail (encoding="MIME").
 Implementation with plain mail remains to do.
 Bugzilla Report 5969.
@@ -384,6 +384,8 @@ Bugzilla Report 5969.
 * <java> and <junit> now support a nested <bootclasspath> element that
   will be ignored if not forking a new VM.
 
+* <junit>'s nested <formatter> elements now support if/unless clauses.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
@@ -426,7 +428,7 @@ Fixed bugs:
 
 Other Changes:
 --------------
-* Added ability to specify manifest encoding for the <jar> and 
+* Added ability to specify manifest encoding for the <jar> and
   <manifest> tasks
 
 Changes from Ant 1.5.1 to Ant 1.5.2
@@ -515,7 +517,7 @@ Fixed bugs:
 * Corrected a problem in XMLLogger where it would not associated
   messages with a taskdef'd task
 
-* <uptodate> now works when using attributes (i.e. not filesets) and pointing 
+* <uptodate> now works when using attributes (i.e. not filesets) and pointing
   to the same file
 
 * Java task (and output system) now stores output which doos not end
