@@ -269,8 +269,7 @@ public class SignJar extends Task {
         }
 
         long lastModified = jarSource.lastModified();
-        final ExecTask cmd = new ExecTask();
-        cmd.setProject(getProject());
+        final ExecTask cmd = new ExecTask(this);
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("jarsigner"));
 
         if (maxMemory != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -170,8 +170,8 @@ public class BorlandGenerateClient extends Task {
 
             log("mode : java");
 
-            org.apache.tools.ant.taskdefs.Java execTask = null;
-            execTask = (Java) getProject().createTask("java");
+            Java execTask = null;
+            execTask = new Java(this);
 
             execTask.setDir(new File("."));
             execTask.setClassname("com.inprise.server.commandline.EJBUtilities");
@@ -221,8 +221,7 @@ public class BorlandGenerateClient extends Task {
 
             log("mode : fork " + BorlandDeploymentTool.BAS, Project.MSG_DEBUG);
 
-            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-            execTask = (ExecTask) getProject().createTask("exec");
+            ExecTask execTask = new ExecTask(this);
 
             execTask.setDir(new File("."));
             execTask.setExecutable("iastool");
@@ -254,8 +253,7 @@ public class BorlandGenerateClient extends Task {
     protected  void executeForkV5() throws BuildException {
         try {
             log("mode : fork " + BorlandDeploymentTool.BES, Project.MSG_DEBUG);
-            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-            execTask = (ExecTask) getProject().createTask("exec");
+            ExecTask execTask = new ExecTask(this);
 
             execTask.setDir(new File("."));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,7 +69,8 @@ public class AntResolver implements ExtensionResolver {
                          final Project project) throws BuildException {
         validate();
 
-        final Ant ant = (Ant) project.createTask("ant");
+        final Ant ant = new Ant();
+        ant.setProject(project);
         ant.setInheritAll(false);
         ant.setAntfile(antfile.getName());
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -281,8 +281,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     private void verifyBorlandJarV5(File sourceJar) {
         log("verify BES " + sourceJar, Project.MSG_INFO);
         try {
-            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-            execTask = (ExecTask) getTask().getProject().createTask("exec");
+            ExecTask execTask = null;
+            execTask = new ExecTask(getTask());
             execTask.setDir(new File("."));
             execTask.setExecutable("iastool");
             //classpath
@@ -319,7 +319,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             String args = verifyArgs;
             args += " " + sourceJar.getPath();
 
-            javaTask = (Java) getTask().getProject().createTask("java");
+            javaTask = new Java(getTask());
             javaTask.setTaskName("verify");
             javaTask.setClassname(VERIFY);
             Commandline.Argument arguments = javaTask.createArg();

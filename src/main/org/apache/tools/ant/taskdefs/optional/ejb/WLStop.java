@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2002,2004 The Apache Software Foundation
+ * Copyright  2000-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ public class WLStop extends Task {
             throw new BuildException("The url of the weblogic server must be provided.");
         }
 
-        Java weblogicAdmin = (Java) getProject().createTask("java");
+        Java weblogicAdmin = new Java(this);
         weblogicAdmin.setFork(true);
         weblogicAdmin.setClassname("weblogic.Admin");
         String args;

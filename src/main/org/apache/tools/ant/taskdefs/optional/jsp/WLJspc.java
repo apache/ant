@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ public class WLJspc extends MatchingTask {
         // Therefore, takes loads of time
         // Can pass directories at a time (*.jsp) but easily runs out of
         // memory on hefty dirs (even on  a Sun)
-        Java helperTask = (Java) getProject().createTask("java");
+        Java helperTask = new Java(this);
         helperTask.setFork(true);
         helperTask.setClassname("weblogic.jspc");
         helperTask.setTaskName(getTaskName());

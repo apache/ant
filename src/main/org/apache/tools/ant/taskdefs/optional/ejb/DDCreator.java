@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
@@ -86,9 +87,8 @@ public class DDCreator extends MatchingTask {
         }
 
         String systemClassPath = System.getProperty("java.class.path");
-        String execClassPath = getProject().translatePath(systemClassPath + ":" + classpath);
-        Java ddCreatorTask = (Java) getProject().createTask("java");
-        ddCreatorTask.setTaskName(getTaskName());
+        String execClassPath = Project.translatePath(systemClassPath + ":" + classpath);
+        Java ddCreatorTask = new Java(this);
         ddCreatorTask.setFork(true);
         ddCreatorTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper");
         Commandline.Argument arguments = ddCreatorTask.createArg();

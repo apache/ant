@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -216,9 +216,8 @@ public class LoadProperties extends Task {
                 final Properties props = new Properties();
                 props.load(tis);
 
-                Property propertyTask =
-                    (Property) getProject().createTask("property");
-                propertyTask.setTaskName(getTaskName());
+                Property propertyTask = new Property();
+                propertyTask.bindToOwner(this);
                 propertyTask.addProperties(props);
             }
 

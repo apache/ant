@@ -511,7 +511,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         String ejbcClassName = ejbcClass;
 
         try {
-            javaTask = (Java) getTask().getProject().createTask("java");
+            javaTask = new Java(getTask());
             javaTask.setTaskName("ejbc");
 
             javaTask.createJvmarg().setLine(additionalJvmArgs);

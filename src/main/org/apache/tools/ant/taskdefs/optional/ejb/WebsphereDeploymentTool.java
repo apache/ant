@@ -541,7 +541,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     private void buildWebsphereJar(File sourceJar, File destJar) {
         try {
             if (ejbdeploy) {
-                Java javaTask = (Java) getTask().getProject().createTask("java");
+                Java javaTask = new Java(getTask());
                 // Set the JvmArgs
                 javaTask.createJvmarg().setValue("-Xms64m");
                 javaTask.createJvmarg().setValue("-Xmx128m");

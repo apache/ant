@@ -1504,7 +1504,8 @@ public class FTP
             }
             // delegate the deletion of the local temp file to the delete task
             // because of race conditions occuring on Windows
-            Delete mydelete = (Delete) getProject().createTask("delete");
+            Delete mydelete = new Delete();
+            mydelete.bindToOwner(this);
             mydelete.setFile(tempFile.getCanonicalFile());
             mydelete.execute();
         } catch (Exception e) {

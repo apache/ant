@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -522,7 +522,8 @@ public class IContract extends MatchingTask {
             // Prepare the directories for iContract. iContract will make
             // them if they don't exist, but for some reason I don't know,
             // it will complain about the REP files afterwards
-            Mkdir mkdir = (Mkdir) getProject().createTask("mkdir");
+            Mkdir mkdir = new Mkdir();
+            mkdir.bindToOwner(this);
 
             mkdir.setDir(instrumentDir);
             mkdir.execute();
@@ -590,9 +591,7 @@ public class IContract extends MatchingTask {
                 buildDir.getAbsolutePath()));
 
             // Create a forked java process
-            Java iContract = (Java) getProject().createTask("java");
-
-            iContract.setTaskName(getTaskName());
+            Java iContract = new Java(this);
             iContract.setFork(true);
             iContract.setClassname("com.reliablesystems.iContract.Tool");
             iContract.setClasspath(iContractClasspath);

@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -478,9 +478,7 @@ public class SubAnt
      *         references necessary to run the sub-build.
      */
     private Ant createAntTask(File directory) {
-        Ant antTask = (Ant) getProject().createTask("ant");
-        antTask.setOwningTarget(getOwningTarget());
-        antTask.setTaskName(getTaskName());
+        Ant antTask = new Ant(this);
         antTask.init();
         if (subTarget != null && subTarget.length() > 0) {
             antTask.setTarget(subTarget);

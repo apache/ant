@@ -122,11 +122,7 @@ public class Cab extends MatchingTask {
      * it appears in the logs to be the same task as this one.
      */
     protected ExecTask createExec() throws BuildException {
-        ExecTask exec = (ExecTask) getProject().createTask("exec");
-        exec.setOwningTarget(this.getOwningTarget());
-        exec.setTaskName(this.getTaskName());
-        exec.setDescription(this.getDescription());
-
+        ExecTask exec = new ExecTask(this);
         return exec;
     }
 

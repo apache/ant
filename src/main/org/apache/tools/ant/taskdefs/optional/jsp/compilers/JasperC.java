@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            Java java = (Java) (getProject().createTask("java"));
+            Java java = new Java(owner);
             Path p = getClasspath();
             if (getJspc().getClasspath() != null) {
                 getProject().log("using user supplied classpath: " + p,

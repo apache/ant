@@ -109,6 +109,23 @@ public class Ant extends Task {
     private boolean targetAttributeSet = false;
 
     /**
+     * simple constructor
+     */
+    public Ant() {
+    }
+
+    /**
+     * create a task bound to its creator
+     * @param owner owning task
+     */
+    public Ant(Task owner) {
+        bindToOwner(owner);
+    }
+
+
+
+
+    /**
      * If true, pass all properties to the new Ant project.
      * Defaults to true.
      * @param value if true pass all properties to the new Ant project.
