@@ -301,6 +301,10 @@
                unless="bcel.present" />
       <exclude name="${util.package}/depend/*.java"
                unless="bcel.present" />
+      <exclude name="${optional.type.package}/depend/*.java"
+               unless="jdk1.2+" />
+      <exclude name="${util.package}/depend/*.java"
+               unless="jdk1.2+" />
     </javac>
 
     <copy todir="${build.classes}">

@@ -884,7 +884,7 @@ public class FixCRLF extends MatchingTask {
                     if (i < line.length() - 1) {
                         // Trailing characters are ^Zs
                         // Construct new line and eofStr
-                        eofStr.append(line.substring(i + 1));
+                        eofStr.append(line.toString().substring(i + 1));
                         if (i < 0) {
                             line.setLength(0);
                             reachedEof = true;
