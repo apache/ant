@@ -152,4 +152,11 @@ public interface FileScanner {
      * @param includes list of include patterns
      */
     void setIncludes(String[] includes);
+
+    /**
+     * Sets the case sensitivity of the file system
+     *
+     * @param specifies if the filesystem is case sensitive
+     */
+    void setCaseSensitive(boolean isCaseSensitive);
 }

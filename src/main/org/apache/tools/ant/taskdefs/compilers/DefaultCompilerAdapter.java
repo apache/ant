@@ -216,11 +216,21 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         boolean usingJava1_1 = Project.getJavaVersion().equals(Project.JAVA_1_1);
         String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
         if (memoryInitialSize != null) {
-            cmd.createArgument().setValue(memoryParameterPrefix+"ms"+memoryInitialSize);
+            if (!attributes.isForkedJavac()) {
+                attributes.log("Since fork is false, ignoring memoryInitialSize setting.",
+                               Project.MSG_WARN);
+            } else {
+                cmd.createArgument().setValue(memoryParameterPrefix+"ms"+memoryInitialSize);
+            }
         }
 
         if (memoryMaximumSize != null) {
-            cmd.createArgument().setValue(memoryParameterPrefix+"mx"+memoryMaximumSize);
+            if (!attributes.isForkedJavac()) {
+                attributes.log("Since fork is false, ignoring memoryMaximumSize setting.",
+                               Project.MSG_WARN);
+            } else {
+                cmd.createArgument().setValue(memoryParameterPrefix+"mx"+memoryMaximumSize);
+            }
         }
 
         if (attributes.getNowarn()) {
@@ -300,6 +310,23 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (verbose) {
             cmd.createArgument().setValue("-verbose");
         }
+        return cmd;
+    }
+
+    /**
+     * Does the command line argument processing common to classic and
+     * modern and adds the files to compile as well.
+     */
+    protected Commandline setupModernJavacCommand() {
+        Commandline cmd = new Commandline();
+        setupJavacCommandlineSwitches(cmd);
+
+        if (attributes.getSource() != null) {
+            cmd.createArgument().setValue("-source");
+            cmd.createArgument().setValue(attributes.getSource());
+        }
+        
+        logAndAddFilesToCompile(cmd);
         return cmd;
     }
 

@@ -146,7 +146,7 @@ public class AntStructure extends Task {
 
     private void printHead(PrintWriter out, Enumeration tasks, 
                            Enumeration types) {
-        out.println("<?xml version=\"1.0\" ?>");
+        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
         out.print("<!ENTITY % tasks \"");
         boolean first = true;

@@ -74,11 +74,14 @@ public class SourceFileScanner {
 
     protected Task task;
 
+    private FileUtils fileUtils;
+
     /**
      * @param task The task we should log messages through
      */
     public SourceFileScanner(Task task) {
         this.task = task;
+        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
@@ -118,7 +121,7 @@ public class SourceFileScanner {
                 continue;
             }
 
-            File src = new File(srcDir, files[i]);
+            File src = fileUtils.resolveFile(srcDir, files[i]);
             if (src.lastModified() > now) {
                 task.log("Warning: "+files[i]+" modified in the future.", 
                          Project.MSG_WARN);
@@ -131,7 +134,7 @@ public class SourceFileScanner {
                 if (destDir == null) {
                     dest = new File(targets[j]);
                 } else {
-                    dest = new File(destDir, targets[j]);
+                    dest = fileUtils.resolveFile(destDir, targets[j]);
                 }
                 
                 if (!dest.exists()) {

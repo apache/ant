@@ -82,6 +82,7 @@ import java.io.File;
  * <li>failonerror
  * <li>includeantruntime
  * <li>includejavaruntime
+ * <li>source
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
  * <p>
@@ -121,6 +122,24 @@ public class Javac extends MatchingTask {
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
+
+    private String source;
+    
+    /**
+     * Get the value of source.
+     * @return value of source.
+     */
+    public String getSource() {
+        return source;
+    }
+    
+    /**
+     * Set the value of source.
+     * @param v  Value to assign to source.
+     */
+    public void setSource(String  v) {
+        this.source = v;
+    }
 
     /**
      * Create a nested <src ...> element for multiple source path
@@ -433,7 +452,15 @@ public class Javac extends MatchingTask {
      */
     public void setFork(boolean fork)
     {
-  this.fork = fork;
+        this.fork = fork;
+    }
+
+    /**
+     * Is this a forked invocation of JDK's javac?
+     */
+    public boolean isForkedJavac() {
+        return fork || 
+            "extJavac".equals(project.getProperty("build.compiler"));
     }
 
 
@@ -489,8 +516,8 @@ public class Javac extends MatchingTask {
 
         String compiler = project.getProperty("build.compiler");
 
-  if (fork) {
-      if (compiler != null) {
+        if (fork) {
+            if (compiler != null) {
                 if (isJdkCompiler(compiler)) {
                     log("Since fork is true, ignoring build.compiler setting.",
                         Project.MSG_WARN);
@@ -499,13 +526,13 @@ public class Javac extends MatchingTask {
                 else {
                     log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
                 }
-      }
+            }
             else {
                 compiler = "extJavac";
             }
-  }
+        }
 
-  if (compiler == null) {
+        if (compiler == null) {
             if (Project.getJavaVersion() != Project.JAVA_1_1 &&
                 Project.getJavaVersion() != Project.JAVA_1_2) {
                 compiler = "modern";

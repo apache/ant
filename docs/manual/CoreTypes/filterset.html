@@ -28,7 +28,7 @@ replacements in tasks like copy etc.<BR>
     <TD vAlign=top align="center"><B>Required</B></TD>
   </TR>
   <TR>
-    <TD vAlign=top>starttoken</TD>
+    <TD vAlign=top>begintoken</TD>
     <TD vAlign=top>The string marking the beginning of a token. eg 
       <STRONG>@</STRONG>Date@</TD>
     <TD vAlign=top>@</TD>
@@ -82,7 +82,7 @@ replacements in tasks like copy etc.<BR>
 <p>You are copying the version.txt file to the dist directory from the build directory 
 but wish to replace the token @DATE@ with todays date.</p>
 <BLOCKQUOTE><PRE>
-&lt;copy file=&quot;${build.home}/version.txt&quot; toFile=&quot;${dist.home}/version.txt&quot;&lt;
+&lt;copy file=&quot;${build.home}/version.txt&quot; toFile=&quot;${dist.home}/version.txt&quot;&gt;
   &lt;filterset&gt;
     &lt;filter token=&quot;DATE&quot; value=&quot;${DATE}&quot;/&gt;
   &lt;/filterset&gt;

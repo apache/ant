@@ -533,20 +533,6 @@ include: </p>
   <li>TOPLink for WebLogic 2.5.1-enabled entity beans</li>
 </ul>
 
-<p>This task supports two approaches to creating ejb jar files. The first 
-approach assumes a particular naming convention for deployment descriptor files. 
-For an Account bean, for example, the deployment descriptor would be named 
-<code>Account-ejb-jar.xml</code>. This naming convention allows the task to 
-distinguish deployment descriptors without relying on their positioning within a 
-source tree. It is also used to derive the name of the .jar file which is 
-generated. For the example this would be <code>Account.jar</code>. Vendor 
-specific files are assumed to be named in a similar fashion. The deployment 
-descriptor file which defines additional weblogic specific information for the 
-above bean would be <code>Account-weblogic-ejb-jar.xml</code>. The second 
-approach does not require a naming convention. This approach uses a specified a 
-jar name for the resultant ejb jar. If the jar name is present, then no naming 
-convention is required. If the jar name is not specified, then the default 
-naming convention is expected for the deployment descriptor files.</p>
 
 <p>The task works as a directory scanning task, and performs an action for each 
 deployment descriptor found. As such the includes and excludes should be set 
@@ -571,6 +557,75 @@ respect to the class files and deployment descriptors that make up the bean. If
 any of these files are newer than the jar file the jar will be rebuilt otherwise 
 a message is logged that the jar file is up to date.</p>
 
+<h3>Naming Convention</h3>
+
+Ejbjar handles the processing of multiple beans, and it uses a set of naming 
+conventions to determine the name of the generated EJB jars. The naming convention 
+that is used is controlled by the &quot;naming&quot; attribute. It supports the 
+following values
+<ul>
+
+<li>descriptor</li>
+<p>This is the default naming scheme. The name of the generated bean is derived from the 
+name of the deployment descriptor.  For an Account bean, for example, the deployment 
+descriptor would be named <code>Account-ejb-jar.xml</code>. Vendor specific descriptors are
+located using the same naming convention. The weblogic bean, for example, would be named
+<code>Account-weblogic-ejb-jar.xml</code>. Under this arrangment, the deployment descriptors
+can be separated from the code implementing the beans, which can be useful whe the same bean code
+is deployed in separate beans. 
+</p>
+
+<p>This scheme is useful when you are using one bean per EJB jar and where you may be 
+deploying the same bean classes in different beans, with different deployment characteristics.  
+
+<li>ejb-name</li>
+<p> This naming scheme uses the &lt;ejb-name&gt; element from the deployment descriptor to
+determine the bean name. In this situation, the descriptors normally use the generic
+descriptor names, such as <code>ejb-jar.xml</code> along with any associated vendor specific descriptor
+names. For example, If the value of the &lt;ejb-name&gt; were to be given in the deployment descriptor 
+as follows:
+<pre>
+&lt;ejb-jar&gt;
+    &lt;enterprise-beans&gt;
+        &lt;entity&gt;
+            &lt;ejb-name&gt;Sample&lt;/ejb-name&gt;
+            &lt;home&gt;org.apache.ant.ejbsample.SampleHome&lt;/home&gt;
+</pre>
+
+then the name of the generated bean would be <code>Sample.jar</code> 
+</p>
+<p> This scheme is useful where you want to use the standard deployment descriptor names, which may be more
+compatible with other EJB tools. This scheme must have one bean per jar.
+</p>
+<li>directory</li>
+<p>
+In this mode, the name of the generated bean jar is derived from the directory 
+containing the deployment descriptors. Again the deployment descriptors typically use
+the standard filenames. For example, if the path to the deployment descriptor is 
+<code>/home/user/dev/appserver/dd/sample</code>, then the generated 
+bean will be named <code>sample.jar</code>
+</p>
+<p>
+This scheme is also useful when you want to use standard style descriptor names. It is often
+most useful when the  descriptors are located in the same directory as the bean source code, 
+although that is not mandatory. This scheme can handle multiple beans per jar.  
+</p>
+
+<li>basejarname</li>
+<p>
+The final scheme supported by the &lt;ejbjar&gt; task is used when you want to specify the generated
+bean jar name directly. In this case the name of the generated jar is specified by the 
+&quot;basejarname&quot; attribute. Since all generated beans will have the same name, this task should
+be only used when each descriptor is in its own directory.
+</p>
+
+<p>
+This scheme is most appropriate when you are using multiple beans per jar and only process a single 
+deployment descriptor. You typically want to specify the name of the jar and not derive it from the
+beans in the jar.
+</p>
+
+</ul>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -604,6 +659,12 @@ a message is logged that the jar file is up to date.</p>
                      task is generating generic jars (i.e. no vendor-specific
                      deployment elements have been specified).</td>
     <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">naming</td>
+    <td valign="top">Controls the naming convention used to name generated
+                     EJB jars. Please refer to the description above.</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">basejarname</td>

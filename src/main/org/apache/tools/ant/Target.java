@@ -85,7 +85,10 @@ public class Target implements TaskContainer {
             StringTokenizer tok =
                 new StringTokenizer(depS, ",", false);
             while (tok.hasMoreTokens()) {
-                addDependency(tok.nextToken().trim());
+                String token = tok.nextToken().trim();
+                if (!token.equals("")) {
+                    addDependency(token);
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
-Changes from Ant 1.4 to current CVS version
-===========================================
+Changes from Ant 1.4.1 to current CVS version
+==============================================
 
 Changes that could break older environments:
 --------------------------------------------
@@ -19,6 +19,49 @@ Fixed bugs:
 
 * Fixed bug where ant would not copy system properties into new Project
   in ant/antcall tasks when inheritall="false" is set.
+
+Changes from Ant 1.4 to Ant 1.4.1
+===========================================
+
+Fixed bugs:
+-----------
+
+* <ant>'s antfile attribute will now also be considered an absolute path on
+  Windows systems, if it starts with a \ and no drive specifier.
+ 
+* The fullpath attribute of <zipfileset> has been ignored if you used
+  the src attribute at the same time.
+
+* The manifest file is now always placed as the second entry (after /META-INF)
+  in generated jars. This allows the manifest to be read by JarInputStreams
+  
+* Fixed bug in depend task which would fail with a NullPointerException if no
+  dependency cache was specified.
+  
+* sql task now handles REM statements correctly so that lines starying with rem
+  but which are not comments are actually processed.
+  
+* XMLLogger now uses the task's name rather than the classname
+  
+* <mapper>s will now work as expected if the to pattern expands to an
+  absolute pathname.
+
+* <javac> didn't ignore memory settings in non-fork mode
+
+* <cab> didn't split the options attribute into several command line
+  arguments correctly.
+
+Other changes:
+--------------
+
+* New source attribute for <javac> to enable assertion in JDK 1.4
+
+* XmlLogger and <antstructure> now add an encoding declaration to the
+  XML files they generate.
+
+* <fileset> has a new attribute "casesensitive" to make it match
+  filenames in a case insensitive way (if you set it to false) - by
+  default filesets remain case sensitive.
 
 Changes from Ant 1.3 to Ant 1.4
 ===========================================

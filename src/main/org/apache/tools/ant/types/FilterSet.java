@@ -72,7 +72,7 @@ import org.apache.tools.ant.Task;
 /**
  * A set of filters to be applied to something.
  *
- * A filter set may have starttoken and endtokens defined.
+ * A filter set may have begintoken and endtokens defined.
  *
  * @author     <A href="mailto:gholam@xtra.co.nz">  Michael McCallum  </A>
  * @created   14 March 2001
@@ -324,7 +324,7 @@ public class FilterSet extends DataType {
     
     /**
      * Does replacement on the given string with token matching.
-     * This uses the defined starttoken and endtoken values which default to @ for both.
+     * This uses the defined begintoken and endtoken values which default to @ for both.
      *
      * @param line  The line to process the tokens in.
      * @return      The string with the tokens replaced.

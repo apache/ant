@@ -93,7 +93,7 @@ public class FilterSetCollection {
     
     /**
      * Does replacement on the given string with token matching.
-     * This uses the defined starttoken and endtoken values which default to @ for both.
+     * This uses the defined begintoken and endtoken values which default to @ for both.
      *
      * @param line  The line to process the tokens in.
      * @return      The string with the tokens replaced.

@@ -129,6 +129,12 @@ on the same schema.</p>
     <td valign="top" align="center">Yes, unless statements enclosed within tags</td>
   </tr>
 </table>
+<h4>fileset</h4>
+<p>You can specify multiple source files via nested <a
+href="../CoreTypes/fileset.html">fileset</a> elements.  Each file of
+the fileset will be run in a transaction of its own, the order by
+which the files of a single fileset will be executed is not
+defined.</p>
 <h4>classpath</h4>
 <p><code>Sql</code>'s <em>classpath</em> attribute is a <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
@@ -199,6 +205,25 @@ operation on <i>some_other_table</i>.</p>
   &lt;transaction  src=&quot;data1.sql&quot; /&gt;
   &lt;transaction  src=&quot;data2.sql&quot; /&gt;
   &lt;transaction  src=&quot;data3.sql&quot; /&gt;
+  &lt;transaction&gt;
+    truncate table some_other_table;
+  &lt;/transaction&gt;
+&lt;/sql&gt;
+</pre></blockquote>
+
+<p>The following example does the same as (and may execute additional
+SQL files if there are more files matching the pattern
+<code>data*.sql</code>) but doesn't guarantee that data1.sql will be
+run before <code>data2.sql</code>.</p>
+
+<blockquote><pre>&lt;sql
+    driver=&quot;org.database.jdbcDriver&quot;
+    url=&quot;jdbc:database-url&quot;
+    userid=&quot;sa&quot;
+    password=&quot;pass&quot; &gt;
+  &lt;fileset dir=&quot;.&quot;&gt;
+    &lt;include name=&quot;data*.sql&quot; /&gt;
+  &lt;/fileset&gt;
   &lt;transaction&gt;
     truncate table some_other_table;
   &lt;/transaction&gt;

@@ -512,8 +512,13 @@ public class SQLExec extends Task {
                                                        project.getProperties());
                 if (line.startsWith("//")) continue;
                 if (line.startsWith("--")) continue;
-                if (line.length() > 2 &&
-                    line.substring(0,3).equalsIgnoreCase("REM")) continue;
+                StringTokenizer st = new StringTokenizer(line);
+                if (st.hasMoreTokens()) {
+                    String token = st.nextToken();
+                    if ("REM".equalsIgnoreCase(token)) {
+                        continue;
+                    }
+                }
 
                 sql += " " + line;
                 sql = sql.trim();
