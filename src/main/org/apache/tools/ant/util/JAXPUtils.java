@@ -54,6 +54,8 @@
 package org.apache.tools.ant.util;
 
 import java.io.File;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -97,6 +99,12 @@ public class JAXPUtils {
      */
     private static SAXParserFactory nsParserFactory = null;
 
+    /**
+     * Parser factory to use to create document builders.
+     *
+     * @since Ant 1.7
+     */
+    private static DocumentBuilderFactory builderFactory = null;
 
     /**
      * Returns the parser factory to use. Only one parser factory is
@@ -210,6 +218,20 @@ public class JAXPUtils {
     }
 
     /**
+     * Returns a newly created DocumentBuilder.
+     *
+     * @return a DocumentVuilder
+     * @since Ant 1.7
+     */
+    public static DocumentBuilder getDocumentBuilder() throws BuildException {
+        try {
+            return getDocumentBuilderFactory().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
      * @return a new SAXParser instance as helper for getParser and
      * getXMLReader.
      *
@@ -239,6 +261,26 @@ public class JAXPUtils {
         } else {
             return new BuildException(e);
         }
+    }
+
+    /**
+     * Obtains the default builder factory if not already.
+     *
+     * @since Ant 1.7
+     */
+    private static synchronized 
+        DocumentBuilderFactory getDocumentBuilderFactory() 
+        throws BuildException {
+        if (builderFactory == null) {
+            try {
+                builderFactory = DocumentBuilderFactory.newInstance();
+            } catch (FactoryConfigurationError e) {
+                throw new BuildException("Document builder factory has not "
+                                         + "been configured correctly: "
+                                         + e.getMessage(), e);
+            }
+        }
+        return builderFactory;
     }
 
 }
