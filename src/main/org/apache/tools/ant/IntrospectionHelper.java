@@ -55,7 +55,6 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.lang.reflect.Method;
@@ -328,8 +327,8 @@ public class IntrospectionHelper implements BuildListener {
         }
         try {
             Object nestedElement = nc.create(element);
-            if (nestedElement instanceof DataType) {
-                ((DataType)nestedElement).setProject(project);
+            if (nestedElement instanceof ProjectComponent) {
+                ((ProjectComponent) nestedElement).setProject(project);
             }
             return nestedElement;
         } catch (IllegalAccessException ie) {
@@ -575,8 +574,8 @@ public class IntrospectionHelper implements BuildListener {
                             throws InvocationTargetException, IllegalAccessException, BuildException {
                             try {
                                 Object attribute = c.newInstance(new String[] {value});
-                                if (attribute instanceof DataType) {
-                                    ((DataType)attribute).setProject(p);
+                                if (attribute instanceof ProjectComponent) {
+                                    ((ProjectComponent) attribute).setProject(p);
                                 }
                                 m.invoke(parent, new Object[] {attribute});
                             } catch (InstantiationException ie) {

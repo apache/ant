@@ -260,6 +260,7 @@ public class Ant extends Task {
             Enumeration e = properties.elements();
             while (e.hasMoreElements()) {
                 Property p=(Property) e.nextElement();
+                p.setProject(newProject);
                 p.execute();
             }
             

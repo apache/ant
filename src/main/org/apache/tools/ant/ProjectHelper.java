@@ -561,8 +561,10 @@ public class ProjectHelper {
             try {
                 String elementName = propType.toLowerCase(Locale.US);
                 if (parent instanceof UnknownElement) {
-                    child = new UnknownElement(elementName);
-                    ((UnknownElement) parent).addChild((UnknownElement) child);
+                    UnknownElement uc = new UnknownElement(elementName);
+                    uc.setProject(project);
+                    ((UnknownElement) parent).addChild(uc);
+                    child = uc;
                 } else {
                     child = ih.createElement(project, parent, elementName);
                 }
