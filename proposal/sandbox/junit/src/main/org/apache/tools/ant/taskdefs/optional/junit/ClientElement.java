@@ -127,7 +127,7 @@ public final class ClientElement extends ProjectComponent {
         // must appended to classpath to avoid conflicts.
         JUnitHelper.addClasspathEntry(createClasspath(), "/junit/framework/TestCase.class");
         JUnitHelper.addClasspathEntry(createClasspath(), "/org/apache/tools/ant/Task.class");
-        JUnitHelper.addClasspathEntry(createClasspath(), "/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
+        JUnitHelper.addClasspathEntry(createClasspath(), "/org/apache/tools/ant/taskdefs/optional/junit/remote/TestRunner.class");
     }
 
     protected void doExecute() throws BuildException {
@@ -161,7 +161,7 @@ public final class ClientElement extends ProjectComponent {
             TestCollector te = (TestCollector) testCollectors.elementAt(i);
             tests[i] = te.collectTests();
         }
-        return Enumerations.fromCompound(tests);
+        return new CompoundEnumeration(tests);
     }
 
     /**

@@ -76,7 +76,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.remote.Server;
 public final class ServerElement extends ProjectComponent {
 
     /** formatters that write the tests results */
-    private Vector formatters = new Vector();
+    private Vector formatterElements = new Vector();
 
     /** port to run the server on. Default to 6666 */
     private int port = 6666;
@@ -99,9 +99,11 @@ public final class ServerElement extends ProjectComponent {
     public void execute() throws BuildException {
         // configure the server...
         Server server = new Server(port);
-        Enumeration listeners = formatters.elements();
+        Enumeration listeners = formatterElements.elements();
         while (listeners.hasMoreElements()) {
-            server.addListener((TestRunListener) listeners.nextElement());
+            FormatterElement fe = (FormatterElement)listeners.nextElement();
+            Formatter formatter = fe.createFormatter();
+            server.addListener( formatter );
         }
         // and run it. It will stop once a client has finished.
         server.start();
@@ -125,7 +127,6 @@ public final class ServerElement extends ProjectComponent {
 
     /** add a new formatter element */
     public void addFormatter(FormatterElement fe) {
-        Formatter f = fe.createFormatter();
-        formatters.addElement(f);
+        formatterElements.addElement(fe);
     }
 }

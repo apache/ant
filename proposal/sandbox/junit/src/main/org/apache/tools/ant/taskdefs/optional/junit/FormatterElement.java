@@ -54,6 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.OutputStream;
+import java.io.File;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -62,6 +63,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.BriefFormatter;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.XMLFormatter;
+import org.apache.tools.ant.taskdefs.optional.junit.formatter.PlainFormatter;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -92,7 +94,7 @@ public class FormatterElement {
     private Vector filters = new Vector();
 
     /** the parameters set for configuration purposes */
-    private Properties params = new Properties();
+    private Vector params = new Vector();
 
     /**
      * set an existing type of formatter.
@@ -139,7 +141,7 @@ public class FormatterElement {
      * Add a parameter that can be used for configuration.
      */
     public void addParam(Parameter param) {
-        params.setProperty(param.getName(), param.getValue());
+        params.addElement(param);
     }
 
     /**
@@ -174,9 +176,16 @@ public class FormatterElement {
             FilterElement fe = (FilterElement) filters.elementAt(i);
             f = fe.createFilterFormatter(f);
         }
+
+        // create properties from parameters
+        Properties props = new Properties();
+        for (int i = 0; i < params.size(); i++){
+            Parameter param = (Parameter)params.elementAt(i);
+            props.put(param.getName(), param.getValue());
+        }
         // it is assumed here that the filters are chaining til the
         // wrapped formatter.
-        f.init(params);
+        f.init(props);
         return f;
     }
 
@@ -186,7 +195,7 @@ public class FormatterElement {
      */
     public final static class TypeAttribute extends EnumeratedAttribute {
         private final static String[] VALUES = {"plain", "xml", "brief"};
-        private final static String[] CLASSNAMES = {"xxx", XMLFormatter.class.getName(), BriefFormatter.class.getName()};
+        private final static String[] CLASSNAMES = {PlainFormatter.class.getName(), XMLFormatter.class.getName(), BriefFormatter.class.getName()};
 
         public String[] getValues() {
             return VALUES;
@@ -204,6 +213,10 @@ public class FormatterElement {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public void setLocation(File file) {
+            setValue(file.getAbsolutePath());
         }
 
         public void setValue(String value) {
