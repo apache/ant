@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,8 +58,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Command class that encapsulate specific behavior for each
@@ -106,12 +109,20 @@ abstract class XalanExecutor {
             executor = (XalanExecutor) Class.forName(
                 "org.apache.tools.ant.taskdefs.optional.junit.Xalan2Executor").newInstance();
         } catch (Exception xalan2missing){
+            StringWriter swr = new StringWriter();
+            xalan2missing.printStackTrace(new PrintWriter(swr));
+            caller.task.log("Didn't find Xalan2.", Project.MSG_DEBUG);
+            caller.task.log(swr.toString(), Project.MSG_DEBUG);
             try {
                 procVersion = Class.forName("org.apache.xalan.xslt.XSLProcessorVersion");
                 executor = (XalanExecutor) Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.junit.Xalan1Executor").newInstance();
             } catch (Exception xalan1missing){
-                throw new BuildException("Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j/");
+                swr = new StringWriter();
+                xalan1missing.printStackTrace(new PrintWriter(swr));
+                caller.task.log("Didn't find Xalan1.", Project.MSG_DEBUG);
+                caller.task.log(swr.toString(), Project.MSG_DEBUG);
+                throw new BuildException("Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j");
             }
         }
         String version = getXalanVersion(procVersion);
