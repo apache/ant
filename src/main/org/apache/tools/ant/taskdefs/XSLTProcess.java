@@ -122,32 +122,7 @@ public class XSLTProcess extends MatchingTask {
             baseDir = project.resolveFile(".");
         }
         
-        //-- make sure Source directory exists...
-        if (destDir == null ) {
-            String msg = "destdir attributes must be set!";
-            throw new BuildException(msg);
-        }
-        scanner = getDirectoryScanner(baseDir);
-        log("Transforming into "+destDir, Project.MSG_INFO);
-
-        // if processor wasn't specified, see if TraX is available.  If not,
-        // default it to xslp or xalan, depending on which is in the classpath
-        if (liaison == null) {
-            try {
-                setProcessor("trax");
-            } catch (Throwable e1) {
-                try {
-                    setProcessor("xslp");
-                } catch (Throwable e2) {
-                    try {
-                        setProcessor("xalan");
-                    } catch (Throwable e3) {
-                        throw new BuildException(e1);
-                    }
-                }
-            }
-        }
-
+        liaison = getLiaison();
         log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
         long styleSheetLastModified = 0;
@@ -156,9 +131,15 @@ public class XSLTProcess extends MatchingTask {
                 File file = project.resolveFile(xslFile, project.getBaseDir());
 
                 if (!file.exists()) {
-                    log("DEPRECATED - the style attribute should be relative to the project\'s");
-                    log("             basedir, not the tasks\'s basedir.");
                     file = project.resolveFile(xslFile, baseDir);
+                    /*
+                     * shouldn't throw out deprectaion warnings before we know,
+                     * the wrong version has been used.
+                     */
+                    if (file.exists()) {
+                        log("DEPRECATED - the style attribute should be relative to the project\'s");
+                        log("             basedir, not the tasks\'s basedir.");
+                    }
                 }
                 
                 // Create a new XSL processor with the specified stylesheet
@@ -180,6 +161,19 @@ public class XSLTProcess extends MatchingTask {
             process(inFile, outFile, styleSheetLastModified);
             return;
         }
+
+        /*
+         * if we get here, in and out have not been specified, we are
+         * in batch processing mode.
+         */
+
+        //-- make sure Source directory exists...
+        if (destDir == null ) {
+            String msg = "destdir attributes must be set!";
+            throw new BuildException(msg);
+        }
+        scanner = getDirectoryScanner(baseDir);
+        log("Transforming into "+destDir, Project.MSG_INFO);
 
         // Process all the files marked for styling
         list = scanner.getIncludedFiles();
@@ -331,6 +325,27 @@ public class XSLTProcess extends MatchingTask {
         }
     }
     
+    protected XSLTLiaison getLiaison() {
+        // if processor wasn't specified, see if TraX is available.  If not,
+        // default it to xslp or xalan, depending on which is in the classpath
+        if (liaison == null) {
+            try {
+                setProcessor("trax");
+            } catch (Throwable e1) {
+                try {
+                    setProcessor("xslp");
+                } catch (Throwable e2) {
+                    try {
+                        setProcessor("xalan");
+                    } catch (Throwable e3) {
+                        throw new BuildException(e1);
+                    }
+                }
+            }
+        }
+        return liaison;
+    }
+
     public Param createParam() {
         Param p = new Param();
         params.addElement(p);
