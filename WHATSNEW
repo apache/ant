@@ -262,6 +262,9 @@ Other changes:
 
 * Added <image> task (requires JAI).
 
+* <image> task has now proportions attribute in the <scale/> nested element
+  instead of keepproportions (bringing in more functionality)
+
 * New condition <isreference>
 
 * <ftp> now has a preservelastmodified attribute to preserve the

@@ -138,11 +138,15 @@ ImageOperation can handle nested Rotate, Draw, Rectangle, Text and Scale objects
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
-  <tr>
-    <td valign="top"> keepproportions </td>
-    <td valign="top"> Boolean value. Sets whether the proportion heigth/width should be kept. </td>
-    <td align="center"> no (defaults to <i>false</i>) </td>
-  </tr>
+    <td valign="top"> proportions </td>
+    <td valign="top"> Sets which dimension to control proportions from. Valid values are:<ul>
+        <li>&quot;ignore&quot; -  treat the dimensions independently.</li>
+        <li>&quot;height&quot; - keep proportions based on the width.</li>
+        <li>&quot;width&quot; - keep proportions based on the height.</li>
+        <li>&quot;cover&quot; - keep proportions and fit in the supplied dimensions.</li>
+        <li>&quot;fit&quot; - keep proportions and cover the supplied dimensions.</li>
+    </ul></td>
++    <td align="center"> no (defaults to <i>ignore</i>) </td>
   <tr>
     <td valign="top"> width </td>
     <td valign="top"> Sets the width of the image, either as an integer or a %. </td>

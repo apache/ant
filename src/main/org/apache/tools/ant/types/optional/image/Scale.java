@@ -53,26 +53,42 @@
  */
 package org.apache.tools.ant.types.optional.image;
 
+import org.apache.tools.ant.types.EnumeratedAttribute;
+
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
+import javax.media.jai.InterpolationBilinear;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.renderable.ParameterBlock;
 
 /**
  *
  * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
+ * @author <a href="mailto:roxspring@imapmail.org">Rob Oxspring</a>
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Scale extends TransformOperation implements DrawOperation {
+
     private String width_str = "100%";
     private String height_str = "100%";
     private boolean x_percent = true;
     private boolean y_percent = true;
-    private boolean keep_proportions = false;
+    private String proportions = "ignore";
 
-    public void setKeepproportions(boolean props) {
-        keep_proportions = props;
+    public static class ProportionsAttribute extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"ignore", "width", "height", "cover", "fit"};
+        }
     }
+
+    /**
+     *  Sets the behaviour regarding the image proportions.
+     */
+    public void setProportions(ProportionsAttribute pa){
+        proportions = pa.getValue();
+    }
+
     /**
      *  Sets the width of the image, either as an integer or a %.  Defaults to 100%.
      */
@@ -117,19 +133,32 @@ public class Scale extends TransformOperation implements DrawOperation {
         pb.addSource(image);
         float x_fl = getWidth();
         float y_fl = getHeight();
+
         if (!x_percent) {
             x_fl = (x_fl / image.getWidth());
         }
         if (!y_percent) {
             y_fl = (y_fl / image.getHeight());
         }
-        if (keep_proportions) {
+
+        if("width".equals(proportions)){
             y_fl = x_fl;
         }
+        else if("height".equals(proportions)){
+            x_fl = y_fl;
+        }
+        else if("fit".equals(proportions)){
+            x_fl = y_fl = Math.min(x_fl,y_fl);
+        }
+        else if("cover".equals(proportions)){
+            x_fl = y_fl = Math.max(x_fl,y_fl);
+        }
+
         pb.add(new Float(x_fl));
         pb.add(new Float(y_fl));
 
-        log("\tScaling to " + x_fl + "% x " + y_fl + "%");
+        log("\tScaling to " + (x_fl*100) + "% x " + (y_fl*100)+ "%");
+
         return JAI.create("scale", pb);
     }
 
