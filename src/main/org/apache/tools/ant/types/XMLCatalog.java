@@ -188,7 +188,13 @@ public class XMLCatalog extends DataType
     public static final String APACHE_RESOLVER
         = "org.apache.tools.ant.types.resolver.ApacheCatalogResolver";
 
-    //-- Methods ---------------------------------------------------------------
+    /**
+     * Resolver base class
+     */
+    public static final String CATALOG_RESOLVER
+        = "org.apache.xml.resolver.tools.CatalogResolver";
+
+        //-- Methods ---------------------------------------------------------------
 
     /**
      * Default constructor
@@ -534,13 +540,34 @@ public class XMLCatalog extends DataType
             loader = getProject().createClassLoader(Path.systemClasspath);
 
             try {
-                Class clazz = loader.forceLoadSystemClass(APACHE_RESOLVER);
+                Class clazz = Class.forName(CATALOG_RESOLVER, true, loader);
+                Class clazz = Class.forName(APACHE_RESOLVER, true, loader);
+
+                // The Apache resolver is present - Need to check if it can
+                // be seen by the catalog resolver class. Start by getting
+                // the actual loader
+                ClassLoader apacheResolverLoader = clazz.getClassLoader();
+
+                // load the base class through this loader.
+                Class baseResolverClass
+                    = Class.forName(CATALOG_RESOLVER, true, apacheResolverLoader);
+
+                // and find its actual loader
+                ClassLoader baseResolverLoader
+                    = baseResolverClass.getClassLoader();
+
+                // We have the loader which is being used to load the
+                // CatalogResolver. Can it see the ApacheResolver? The
+                // base resolver will only be able to create the ApacheResolver
+                // if it can see it - doesn't use the context loader.
+                clazz = Class.forName(APACHE_RESOLVER, true, baseResolverLoader);
+
                 Object obj  = clazz.newInstance();
                 //
                 // Success!  The xml-commons resolver library is
                 // available, so use it.
                 //
-                catalogResolver = new ApacheResolver(clazz, obj);
+                catalogResolver = new ExternalResolver(clazz, obj);
             } catch (Throwable ex) {
                 //
                 // The xml-commons resolver library is not
@@ -789,7 +816,7 @@ public class XMLCatalog extends DataType
 
     /**
      * Interface implemented by both the InternalResolver strategy and
-     * the ApacheResolver strategy.
+     * the ExternalResolver strategy.
      */
     private interface CatalogResolver extends URIResolver, EntityResolver {
 
@@ -894,13 +921,13 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * The ApacheResolver strategy is used if the Apache resolver
+     * The ExternalResolver strategy is used if the Apache resolver
      * library (Norm Walsh's library from xml-commons) is available in
-     * the classpath.  The ApacheResolver is a essentially a superset
+     * the classpath.  The ExternalResolver is a essentially a superset
      * of the InternalResolver.
      *
      */
-    private class ApacheResolver implements CatalogResolver {
+    private class ExternalResolver implements CatalogResolver {
 
         private Method setXMLCatalog = null;
         private Method parseCatalog = null;
@@ -912,7 +939,7 @@ public class XMLCatalog extends DataType
 
         private boolean externalCatalogsProcessed = false;
 
-        public ApacheResolver(Class resolverImplClass,
+        public ExternalResolver(Class resolverImplClass,
                               Object resolverImpl) {
 
             this.resolverImpl = resolverImpl;
