@@ -120,7 +120,7 @@ import org.apache.tools.ant.types.Reference;
  *     <td valign="top" align="center">No</td>
  *   </tr>
  *   <tr>
- *     <td valign="top">repositorybuilddir</td>
+ *     <td valign="top">repbuilddir</td>
  *     <td valign="top">Indicates where the compiled repository classes should go.
  *       Defaults to the value of repositorydir.</td>
  *     <td valign="top" align="center">No</td>
