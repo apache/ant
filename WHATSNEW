@@ -59,6 +59,11 @@ Changes that could break older environments:
   been configured from the build file. Custom tasks supporting nested elements 
   starting with the name configured will no longer function.  
 
+* The environment variable JAVACMD that can be used to specify the
+  java executable to Ant's wrapper scripts must not contain additional
+  command line parameters any longer - please use the environment
+  variable ANT_OPTS for such parameters now.
+
 Other changes:
 --------------
 
