@@ -99,6 +99,9 @@ Other changes:
 * Recursive token expansion in a filterset can now be disabled by
   setting its recurse attribute to false.
 
+* Pathconvert no longer requires that one of (targetos|pathsep|dirsep)
+  be set; platform defaults are used when this is the case.
+
 Fixed bugs:
 -----------
 
