@@ -19,16 +19,6 @@ import org.apache.myrmidon.api.TaskException;
 public abstract class ProjectComponent
     extends AbstractTask
 {
-    /**
-     * Get the Project to which this component belongs
-     *
-     * @return the components's project.
-     */
-    public Project getProject()
-    {
-        return null;
-    }
-
     public void execute()
         throws TaskException
     {
