@@ -1292,6 +1292,37 @@
         </table>
       </subsection>
 
+      <subsection name="ProGuard">
+        <p><a href="http://proguard.sourceforge.net/">ProGuard</a> is
+        a free Java class file shrinker and obfuscator.  It can detect
+        and remove unused classes, fields, methods, and attributes. It
+        can then rename the remaining classes, fields, and methods
+        using short meaningless names.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th> 
+            <td>Tested with 1.5. Should work with all versions.</td> 
+          </tr>
+          <tr>
+            <th>URL:</th> 
+            <td>
+              <a href="http://proguard.sourceforge.net/">http://proguard.sourceforge.net/</a> 
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th> 
+            <td>
+              <a href="http://proguard.sourceforge.net/feedback.html">Feedback Page</a> 
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th> 
+            <td>GNU General Public Licen</td> 
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Purge">
 
         <p>Purge deletes all but the most recent few files from a fileset.
