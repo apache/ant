@@ -833,6 +833,65 @@
       </tr>
         </table>
                                                     <h4 class="subsection">
+        <a name="IDLDepend"></a>
+        IDLDepend
+      </h4>
+                        <p>idldepend is a task that (re)generates Java sources to be
+        created from CORBA/IDL files.</p>
+                                <p>It parses the IDL file and determines the Java files that
+        must be generated, taking in account the modifications that
+        can happen due to command line parameters.  If any of the Java
+        files are missing or older than the source IDL specification,
+        it launches the specified compiler.  The compilers of Orbacus,
+        Jacorb, OpenORB, Orbix2k and Sun'JDK distributions are
+        supported.</p>
+                                <p>To speed up the process and avoid unnecesary re-parsing, it
+        keeps the dependencies in intermediate files.  This task does
+        not launch the javac compiler as well, that is, its output are
+        Java files and not the final bytecode.</p>
+                                  <table class="ForrestTable" cellspacing="1" cellpadding="4">
+              <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Compatibility:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          Ant 1.4 or later
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          URL:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          <a href="http://grasia.fdi.ucm.es/~luismi/idldepend/">http://grasia.fdi.ucm.es/~luismi/idldepend/</a>
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          Contact:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          <a href="mailto:luismpena@gmx.net">luismpena@gmx.net</a>
+      </td>
+      </tr>
+                  <tr>
+                      <th colspan="1" rowspan="1"
+      valign="top" align="left">
+          License:
+      </th>
+                          <td colspan="1" rowspan="1"
+      valign="top" align="left">
+          free source, no license restrictions
+      </td>
+      </tr>
+        </table>
+                                                    <h4 class="subsection">
         <a name="Importscrubber"></a>
         Importscrubber
       </h4>
