@@ -232,6 +232,9 @@ command. This example assumes you have set up your classpath to include
 <hr>
 <h2><a name="buildfile">Writing a simple buildfile</a></h2>
 <p>The buildfile is written in XML. Each buildfile contains one project.</p>
+<p>Each element of the buildfile can have an <code>ID</code> attribute and
+can later be referred to by the value supplied to this. The value has
+to be unique.</p>
 <h3>Projects</h3>
 <p>A project has three attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -507,6 +510,46 @@ that contain space characters, nested elements can be used.</p>
 <p>is a single command line argument with value
 <code>\dir;\dir2;\dir3</code> on DOS based systems and
 <code>/dir:/dir2:/dir3</code> on Unix like systems.</p>
+<h3><a name="references">References</a></h3>
+<p>The <code>ID</code> attribute of the buildfile's elements can be
+used to refer to them. This can useful if you are going to replicate
+the same snippet of XML over and over again - using a
+<code>&lt;classpath&gt;</code> structure more than once for
+example.</p>
+<p>The following example</p>
+<blockquote><pre>
+&lt;rmic ...&gt;
+  &lt;classpath&gt;
+    &lt;pathelement location=&quot;lib/&quot; /&gt;
+    &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
+    &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+  &lt;/classpath&gt;
+&lt;/rmic&gt;
+&lt;javac ...&gt;
+  &lt;classpath&gt;
+    &lt;pathelement location=&quot;lib/&quot; /&gt;
+    &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
+    &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+  &lt;/classpath&gt;
+&lt;/javac&gt;
+</pre></blockquote>
+<p>could be rewritten as</p>
+<blockquote><pre>
+&lt;rmic ...&gt;
+  &lt;classpath ID=&quot;project.class.path&quot;&gt;
+    &lt;pathelement location=&quot;lib/&quot; /&gt;
+    &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
+    &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+  &lt;/classpath&gt;
+&lt;/rmic&gt;
+&lt;javac ...&gt;
+  &lt;classpathref refid=&quot;project.class.path&quot; /&gt;
+&lt;/javac&gt;
+</pre></blockquote>
+<p>All tasks that use nested elements for <a
+href="#patternset">PatternSet</a>s, <a href="#fileset">FileSet</a>s or
+<a href="#path">PATH like structures</a> accept references to these
+structures as well.</p>
 <hr>
 <h2><a name="directorybasedtasks">Directory based tasks</a></h2>
 <p>Some tasks use directory trees for the task they perform. For instance, the <a
@@ -663,9 +706,9 @@ an implicit FileSet.</p>
 </pre></blockquote>
 <p>Builds a set of patterns, that matches all <code>.java</code> files
 that do not contain the text <code>Test</code> in their name. This set
-can be referred to via <code>&lt;patternsetref
-refid=&quot;non.test.sources&quot; /&gt;</code> by tasks that support
-this feature or by FileSets.</p>
+can be <a href="#references">referred</a> to via
+<code>&lt;patternsetref refid=&quot;non.test.sources&quot;
+/&gt;</code> by tasks that support this feature or by FileSets.</p>
 <h3><a name="fileset">FileSets</a></h3>
 <p>FileSets are groups of files. These files can be found in a
 directory tree starting in a base directory and are matched by
@@ -2085,6 +2128,12 @@ the one that is currently running Ant.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">the classpath to use, given as <a
+      href="#references">reference</a> to a PATH defined elsewhere.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">fork</td>
     <td valign="top">if enabled triggers the class execution in another VM
       (disabled by default)</td>
@@ -2123,10 +2172,12 @@ the one that is currently running Ant.</p>
 <p>Use nested <code>&lt;arg&gt;</code> and <code>&lt;jvmarg&gt;</code>
 elements to specify arguments for the or the forked VM. See <a
 href="index.html#arg">Command line arguments</a>.</p>
-<h4>classpath</h4>
+<h4>classpath and classpathref</h4>
 <p><code>Java</code>'s <em>classpath</em> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> element.</p>
+<em>classpath</em> element. PATHs defined elsewhere can be
+<a href="#references">referred</a> to via nested <em>classpathref</em>
+elements.</p>
 <h5>Example</h5>
 <pre>  
        &lt;java classname=&quot;test.Main&quot; &gt;
@@ -2232,6 +2283,18 @@ inclusion/exclusion of files works, and how to write patterns.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">the classpath to use, given as <a
+      href="#references">reference</a> to a PATH defined elsewhere.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">bootclasspathref</td>
+    <td valign="top">location of bootstrap class files, given as by <a
+      href="#references">reference</a> to a PATH defined elsewhere.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">extdirs</td>
     <td valign="top">location of installed extensions.</td>
     <td align="center" valign="top">No</td>
@@ -2268,12 +2331,14 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
 <code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
 elements.</p>
-<h4>src, classpath, bootclasspath and extdirs</h4>
+<h4>src, classpath, classpathref, bootclasspath, bootclasspathref and extdirs</h4>
 <p><code>Javac</code>'s <em>srcdir</em>, <em>classpath</em>,
 <em>bootclasspath</em> and <em>extdirs</em> attributes are <a
 href="#path">PATH like structure</a> and can also be set via nested
 <em>src</em>, <em>classpath</em>, <em>bootclasspath</em> and
-<em>extdirs</em> elements respectively.</p>
+<em>extdirs</em> elements respectively. PATHs defined elsewhere can be
+<a href="#references">referred</a> to via nested <em>classpathref</em>
+and <em>bootclasspathref</em> elements.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -2361,7 +2426,15 @@ instead.</p>
     <td valign="top">sourcepath</td>
     <td valign="top">Specify where to find source files</td>
     <td align="center" valign="top">all</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" rowspan="2">At least one of the two or nested
+      <code>&lt;sourcepath&gt;</code> or
+      <code>&lt;sourcepathref&gt;</code></td>
+  </tr>
+  <tr>
+    <td valign="top">sourcepathref</td>
+    <td valign="top">Specify where to find source files by <a
+      href="#references">reference</a> to a PATH defined elsewhere.</td>
+    <td align="center" valign="top">all</td>
   </tr>
   <tr>
     <td valign="top">destdir</td>
@@ -2403,6 +2476,21 @@ instead.</p>
     <td valign="top">Bootclasspath</td>
     <td valign="top">Override location of class files loaded by the bootstrap
       class loader</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">Specify where to find user class files by <a
+      href="#references">reference</a> to a PATH defined elsewhere.</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">bootclasspathref</td>
+    <td valign="top">Override location of class files loaded by the
+      bootstrap class loader by <a href="#references">reference</a> to a
+      PATH defined elsewhere.</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -2619,6 +2707,14 @@ instead.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">docletpathref</td>
+    <td valign="top">Specifies the path to the doclet class file that
+      is specified with the -doclet option by <a
+      href="#references">reference</a> to a PATH defined elsewhere.</td>
+    <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">additionalparam</td>
     <td valign="top">Lets you add additional parameters to the javadoc command line. Useful for doclets</td>
     <td align="center" valign="top">1.2</td>
@@ -2634,14 +2730,11 @@ instead.</p>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
-Two parameters of the Javadoc task may be specified as nested elements of the
-Javadoc task element: link and group.
-When present, there can be any number of each of these elements.
-They perform the same role as the link, linkoffline and
-group attributes. You can use either syntax (or both at once), but with the  nested 
-elements you can easily specify multiple occurrences of the arguments.
 <h4>link</h4>
-Create link to javadoc output at the given URL
+<p>Create link to javadoc output at the given URL. This performs the
+same role as the link and linkoffline attributes. You can use either
+syntax (or both at once), but with the nested elements you can easily
+specify multiple occurrences of the arguments.</p>
 <h4>Parameters</h4>
 
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
@@ -2669,9 +2762,12 @@ Create link to javadoc output at the given URL
   </tr>
 </table>
   
-<h4>groups</h4>
-Separates packages on the overview page into whatever groups you specify,
-one group per table.
+<h4>groups</h4> 
+<p>Separates packages on the overview page into whatever groups you
+specify, one group per table. This performs the same role as the group
+attribute. You can use either syntax (or both at once), but with the
+nested elements you can easily specify multiple occurrences of the
+arguments.</p>
 
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -2691,12 +2787,15 @@ one group per table.
   </tr>
 </table>
 
-<h4>sourcepath, classpath and bootclasspath</h4>
+<h4>sourcepath, classpath, bootclasspath, sourcepathref, classpathref
+and bootclasspathref</h4>
 <p><code>Javadoc</code>'s <em>sourcepath</em>, <em>classpath</em> and
 <em>bootclasspath</em> attributes are <a href="#path">PATH like
 structure</a> and can also be set via nested <em>sourcepath</em>,
 <em>classpath</em> and <em>bootclasspath</em> elements
-respectively.</p>
+respectively. PATHs defined elsewhere can be <a
+href="#references">referred</a> to via nested <em>sourcepathref</em>,
+<em>classpathref</em> and <em>bootclasspathref</em> elements.</p>
 
 <h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
@@ -3060,6 +3159,12 @@ elements.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">The classpath to use during compilation, given as <a
+      href="#references">reference</a> to a PATH defined elsewhere</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">includes</td>
     <td valign="top">comma separated list of patterns of files that must be
       included. All files are included when omitted.</td>
@@ -3097,10 +3202,12 @@ elements.</p>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
-<h4>classpath</h4>
+<h4>classpath and classpathref</h4>
 <p><code>Rmic</code>'s <em>classpath</em> attribute is a <a
 href="#path">PATH like structure</a> and can also be set via a nested
-<em>classpath</em> elements.</p>
+<em>classpath</em> elements. PATHs defined elsewhere can be
+<a href="#references">referred</a> to via nested <em>classpathref</em>
+elements.</p>
 <h3>Examples</h3>
 <pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The

@@ -16,7 +16,7 @@ the filtering attribute.
 org.apache.tools.ant to org.apache.tools.ant.types.
 
 * the class attributes of <available>, <java>, <rmic> and <taskdef>
-has been removed.
+have been removed.
 
 * the src attribute of <chmod> has been removed.
 
@@ -31,10 +31,9 @@ behavior has been dropped.
 Other changes:
 --------------
 
-* New tasks: antstructure, cab, ftp, genkey, junit, sql.
+* New tasks: antstructure, cab, execon, ftp, genkey, junit, sql.
 
-* New tasks mparse, execon. All pending documentation, most of
-them pending review.
+* New tasks mparse pending documentation.
 
 * <java> uses ClassLoader of its own in no-fork mode if a classpath is
 specified.
