@@ -113,4 +113,39 @@ public class CollectionUtils {
         }
     }
 
+    /**
+     * Append one enumeration to another.
+     * Elements are evaluated lazily.
+     * @param e1 the first enumeration
+     * @param e2 the subsequent enumeration
+     * @return an enumeration representing e1 followed by e2
+     * @since Ant 1.6.3
+     */
+    public static Enumeration append(Enumeration e1, Enumeration e2) {
+        return new CompoundEnumeration(e1, e2);
+    }
+
+    private static final class CompoundEnumeration implements Enumeration {
+
+        private final Enumeration e1, e2;
+
+        public CompoundEnumeration(Enumeration e1, Enumeration e2) {
+            this.e1 = e1;
+            this.e2 = e2;
+        }
+
+        public boolean hasMoreElements() {
+            return e1.hasMoreElements() || e2.hasMoreElements();
+        }
+
+        public Object nextElement() throws NoSuchElementException {
+            if (e1.hasMoreElements()) {
+                return e1.nextElement();
+            } else {
+                return e2.nextElement();
+            }
+        }
+
+    }
+
 }

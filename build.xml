@@ -1456,7 +1456,7 @@
       <classpath refid="tests-classpath"/>
 
       <sysproperty key="ant.home" value="${ant.home}"/>
-      <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="build.tests" file="${build.tests}"/>
       <sysproperty key="build.tests.value" value="${build.tests.value}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
@@ -1606,7 +1606,7 @@
           filtertrace="${junit.filtertrace}">
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="ant.home" value="${ant.home}"/>
-      <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="build.tests" file="${build.tests}"/>
       <sysproperty key="build.tests.value" value="${build.tests.value}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
