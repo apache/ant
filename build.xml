@@ -698,6 +698,9 @@
                unless="adaptx.present"/>
       <exclude name="${optional.package}/TraXLiaisonTest.java" 
                unless="trax.present"/>
+
+      <exclude name="${optional.package}/perforce/*.java" 
+               unless="jakarta.oro.present" />
     </javac>
   </target>
 
@@ -795,6 +798,9 @@
           -->
           <exclude name="${optional.package}/junit/JUnitTestRunnerTest.java" 
                    unless="jdk1.2+" />
+
+          <exclude name="${optional.package}/perforce/*.java" 
+                   unless="jakarta.oro.present" />
         </fileset>
       </batchtest>
 
