@@ -103,7 +103,21 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /** Name for EJB Deployment descriptor within EJB jars */
     protected static final String EJB_DD    = "ejb-jar.xml";
 
-    public static final String DEFAULT_ANALYZER_CLASS
+    /** A dependency analyzer name to find ancestor classes */
+    public static final String ANALYZER_SUPER = "super";
+    /** A dependency analyzer name to find all related classes */
+    public static final String ANALYZER_FULL = "full";
+    /** A dependency analyzer name for no analyzer */
+    public static final String ANALYZER_NONE = "none";
+
+    /** The default analyzer */
+    public static final String DEFAULT_ANALYZER = ANALYZER_SUPER;
+
+    /** The analyzer class for the super analyzer */    
+    public static final String ANALYZER_CLASS_SUPER
+        = "org.apache.tools.ant.util.depend.bcel.AncestorAnalyzer";
+    /** The analyzer class for the super analyzer */    
+    public static final String ANALYZER_CLASS_FULL
         = "org.apache.tools.ant.util.depend.bcel.FullAnalyzer";
 
     /**
@@ -151,14 +165,6 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     private DependencyAnalyzer dependencyAnalyzer;
 
     public GenericDeploymentTool() {
-        String analyzerClassName = DEFAULT_ANALYZER_CLASS;
-        try {
-            Class analyzerClass = Class.forName(analyzerClassName);
-            dependencyAnalyzer = (DependencyAnalyzer)analyzerClass.newInstance();
-        } catch (Exception e) {
-            task.log("Unable to load dependency analyzer: " + analyzerClassName,
-                Project.MSG_VERBOSE);
-        }
     }
 
 
@@ -172,7 +178,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     /**
-     * Get the desitination directory.
+     * Get the destination directory.
      *
      * @return the destination directory into which EJB jars are to be written
      */
@@ -285,7 +291,43 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         return getTask().getLocation();
     }
 
-
+    private void createAnalyzer() {
+        String analyzer = config.analyzer;
+        if (analyzer == null) {
+            analyzer = DEFAULT_ANALYZER;
+        }
+        
+        if (analyzer.equals(ANALYZER_NONE)) {
+            return;
+        }
+        
+        String analyzerClassName = null;
+        if (analyzer.equals(ANALYZER_SUPER)) {
+            analyzerClassName = ANALYZER_CLASS_SUPER;
+        } else if (analyzer.equals(ANALYZER_FULL)) {
+            analyzerClassName = ANALYZER_CLASS_FULL;
+        } else {
+            analyzerClassName = analyzer;
+        }
+        
+        try {
+            Class analyzerClass = Class.forName(analyzerClassName);
+            dependencyAnalyzer = (DependencyAnalyzer)analyzerClass.newInstance();
+            dependencyAnalyzer.addClassPath(new Path(task.getProject(),
+                config.srcDir.getPath()));
+            dependencyAnalyzer.addClassPath(config.classpath);
+        } catch (NoClassDefFoundError e) {
+            dependencyAnalyzer = null;
+            task.log("Unable to load dependency analyzer: " + analyzerClassName,
+                Project.MSG_WARN);
+        } catch (Exception e) {
+            dependencyAnalyzer = null;
+            task.log("Unable to load dependency analyzer: " + analyzerClassName,
+                Project.MSG_WARN);
+        }
+    }
+    
+    
     /**
      * Configure this tool for use in the ejbjar task.
      *
@@ -293,10 +335,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      */
     public void configure(EjbJar.Config config) {
         this.config = config;
-        dependencyAnalyzer.addClassPath(new Path(task.getProject(),
-            config.srcDir.getPath()));
-        dependencyAnalyzer.addClassPath(config.classpath);
 
+        createAnalyzer();
         classpathLoader = null;
     }
 
@@ -814,6 +854,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     protected void checkAndAddDependants(Hashtable checkEntries)
         throws BuildException {
 
+        if (dependencyAnalyzer == null) {
+            return;
+        }
+        
         dependencyAnalyzer.reset();
 
         Iterator i = checkEntries.keySet().iterator();

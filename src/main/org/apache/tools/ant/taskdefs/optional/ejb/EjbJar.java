@@ -199,6 +199,11 @@ public class EjbJar extends MatchingTask {
          * The Manifest file
          */
         public File manifest;
+        
+        /**
+         * The dependency analyzer to use to add additional classes to the jar
+         */
+        public String analyzer;
     }
 
     /**
@@ -442,6 +447,15 @@ public class EjbJar extends MatchingTask {
         config.descriptorDir = inDir;
     }
 
+    /**
+     * Set the analyzer to use when adding in dependencies to the jar
+     *
+     * @param analyzer the name of the dependency analyzer or a class.
+     */
+    public void setDependency(String analyzer) {
+        config.analyzer = analyzer;
+    }
+    
     /**
      * Set the base name of the EJB jar that is to be created if it is not
      * to be determined from the name of the deployment descriptor files.

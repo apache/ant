@@ -69,6 +69,15 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class FullAnalyzer extends AbstractAnalyzer {
+    public FullAnalyzer() {
+        // force BCEL classes to load now
+        try {
+            ClassParser parser = new ClassParser("force");
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+    
     /**
      * Determine the dependencies of the configured root classes.
      *

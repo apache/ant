@@ -68,6 +68,16 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  * @author Conor MacNeill
  */
 public class AncestorAnalyzer extends AbstractAnalyzer {
+    
+    public AncestorAnalyzer() {
+        // force BCEL classes to load now
+        try {
+            ClassParser parser = new ClassParser("force");
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+    
     /**
      * Determine the dependencies of the configured root classes.
      *
