@@ -55,52 +55,87 @@ package org.apache.tools.ant.types.optional.depend;
 
 
 
-import java.util.List;
-import java.util.ArrayList;
-import org.apache.tools.ant.BuildException;
+import java.util.Vector;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
 
 /**
- * A DepSet is a FileSet, that enlists all classes that depend on a
- * certain class.
+ * A ClassfileSet is a FileSet, that enlists all classes that depend on a
+ * certain set of root classes.
  *
- * A DependSet extends FileSets and uses another FileSet as input. The
+ * A ClassfileSet extends FileSets. The
  * nested FileSet attribute provides the domain, that is used for searching
  * for dependent classes
  *
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class ClassfileSet extends FileSet {
-    private List rootClasses = new ArrayList();
+    /** 
+     * The list of root classes for this class file set. These are the 
+     * classes which must be included in the fileset and which are the 
+     * starting point for the dependency search.
+     */
+    private Vector rootClasses = new Vector();
 
+    /**
+     * Inner class used to contain info about root classes
+     */
     public static class ClassRoot {
+        /** The name of the root class */
         private String rootClass;
         
+        /** 
+         * Set the root class name 
+         *
+         * @param name the name of the root class 
+         */
         public void setClassname(String name) {
             this.rootClass = name;
         }
         
+        /**
+         * Get the name of the root class
+         *
+         * @return the name of the root class.
+         */
         public String getClassname() {
             return rootClass;
         }
     }
     
+    /**
+     * Default constructor
+     */
+    public ClassfileSet() {
+    }
+    
+    /**
+     * Create a ClassfileSet from another ClassfileSet
+     *
+     * @param s the other classfileset
+     */
     protected ClassfileSet(ClassfileSet s) {
         super(s);
-        rootClasses = s.rootClasses;
+        rootClasses = (Vector)s.rootClasses.clone();
     }
 
-    public void setRootClass(String rootClass)
-        throws BuildException
-    {
-        rootClasses.add(rootClass);
+    /**
+     * Set the root class attribute
+     *
+     * @param rootClass the name of the root class.
+     */
+    public void setRootClass(String rootClass) {
+        rootClasses.addElement(rootClass);
     }
 
     /**
      * Return the DirectoryScanner associated with this FileSet.
+     *
+     * @param p the project used to resolve dirs, etc.
+     *
+     * @return a dependency scanner.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
         DependScanner scanner = new DependScanner();
@@ -110,10 +145,20 @@ public class ClassfileSet extends FileSet {
         return scanner;
     } 
     
+    /** 
+     * Add a nested root class definition to this class file set
+     *
+     * @param root the configured class root.
+     */
     public void addConfiguredRoot(ClassRoot root) {
         rootClasses.add(root.getClassname());    
     }
 
+    /**
+     * Clone this data type.
+     *
+     * @return a clone of the class file set
+     */
     public Object clone() {
         if (isReference()) {
             return new ClassfileSet((ClassfileSet) getRef(getProject()));

@@ -54,43 +54,43 @@
 package org.apache.tools.ant.types.optional.depend;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Iterator;
-import java.util.HashSet;
-
-import org.apache.tools.ant.util.depend.Dependencies;
-import org.apache.tools.ant.util.depend.Filter;
+import java.util.Vector;
+import java.util.Enumeration;
+import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 import org.apache.tools.ant.DirectoryScanner;
-
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.ClassParser;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Path;
 
 
 /**
  * An interface used to describe the actions required by any type of 
  * directory scanner.
+ *
+ * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class DependScanner extends DirectoryScanner {
-    File basedir;
-    File baseClass;
-    List included = new LinkedList();
+    /**
+     * The name of the analyzer to use by default.
+     */
+    public static final String DEFAULT_ANALYZER_CLASS
+        = "org.apache.tools.ant.util.depend.bcel.FullAnalyzer";
 
-    private List rootClasses;
+    /**
+     * The base directory for the scan
+     */
+    private File basedir;
     
     /**
-     * Sets the basedir for scanning. This is the directory that is scanned
-     * recursively. 
-     *
-     * @param basedir the (non-null) basedir for scanning
+     * The root classes to drive the search for dependent classes
      */
-    public void setBasedir(String basedir) {
-        setBasedir(new File(basedir.replace('/',File.separatorChar).replace('\\',File.separatorChar)));
-    }
-
+    private Vector rootClasses;
+    
+    /**
+     * The names of the classes to include in the fileset
+     */
+    private Vector included;
+    
     /**
      * Sets the basedir for scanning. This is the directory that is scanned
      * recursively.
@@ -100,6 +100,7 @@ public class DependScanner extends DirectoryScanner {
     public void setBasedir(File basedir) {
         this.basedir = basedir;
     }
+
     /**
      * Gets the basedir that is used for scanning.
      *
@@ -108,11 +109,11 @@ public class DependScanner extends DirectoryScanner {
     public File getBasedir() { return basedir; }
 
     /**
-     * Sets the domain, where dependant classes are searched
+     * Sets the root classes to be used to drive the scan.
      *
-     * @param domain the domain
+     * @param rootClasses the rootClasses to be used for this scan
      */
-    public void setRootClasses(List rootClasses) {
+    public void setRootClasses(Vector rootClasses) {
         this.rootClasses = rootClasses;
     }
 
@@ -125,7 +126,11 @@ public class DependScanner extends DirectoryScanner {
         int count = included.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = included.get(i) + ".class";
+            String classname = (String)included.elementAt(i); 
+            String filename = classname.replace('.', File.separatorChar);
+            filename = filename + ".class";
+            File file = new File(basedir, filename); 
+            files[i] =  file.getPath();
             //System.err.println("  " + files[i]);
         }
         return files;
@@ -136,68 +141,86 @@ public class DependScanner extends DirectoryScanner {
      *
      * @exception IllegalStateException when basedir was set incorrecly
      */
-    public void scan() {
-        Dependencies visitor = new Dependencies();
-        
-        Set set = new TreeSet();
-
-        final String base;
+    public void scan() throws IllegalStateException {
+        String analyzerClassName = DEFAULT_ANALYZER_CLASS;
+        DependencyAnalyzer analyzer = null;
         try {
-            base = basedir.getCanonicalPath() + File.separator;
+            Class analyzerClass = Class.forName(analyzerClassName);
+            analyzer = (DependencyAnalyzer)analyzerClass.newInstance();
+        } catch (Exception e) {
+            throw new BuildException("Unable to load dependency analyzer: " 
+                + analyzerClassName, e);
         }
-        catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-
-        for (Iterator rootClassIterator = rootClasses.iterator(); rootClassIterator.hasNext();) {
-            Set newSet = new HashSet();
-            String start = (String)rootClassIterator.next();
-            start = start.replace('.', '/');
-
-            newSet.add(start);
-            set.add(start);
-            
-            do {
-                Iterator i = newSet.iterator();
-                while (i.hasNext()) {
-                    String fileName = base + ((String)i.next()).replace('/', File.separatorChar) + ".class";
-                    
-                    try {
-                        JavaClass javaClass = new ClassParser(fileName).parse();
-                        javaClass.accept(visitor);
-                    }
-                    catch (IOException e) {
-                        System.err.println("exception: " +  e.getMessage());
-                    }
-                }
-                newSet.clear();
-                newSet.addAll(visitor.getDependencies());
-                visitor.clearDependencies();
-                
-                Dependencies.applyFilter(newSet, new Filter() {
-                    public boolean accept(Object object) {
-                        String fileName = base + ((String)object).replace('/', File.separatorChar) + ".class";
-                        return new File(fileName).exists();
-                    }
-                });
-                newSet.removeAll(set);
-                set.addAll(newSet);
-            }
-            while (newSet.size() > 0);
-        }
+        analyzer.addClassPath(new Path(null, basedir.getPath()));
         
-        included.clear();
-        included.addAll(set);
+        for (Enumeration e = rootClasses.elements(); e.hasMoreElements(); ) {
+            analyzer.addRootClass((String)e.nextElement());
+        }
+
+        Enumeration e = analyzer.getClassDependencies();
+
+        included.removeAllElements();
+        while (e.hasMoreElements()) {
+            included.addElement(e.nextElement());
+        }
     }
 
-    public void addDefaultExcludes() {}
-    public String[] getExcludedDirectories() { return null; }
-    public String[] getExcludedFiles() { return null; }
-    public String[] getIncludedDirectories() { return new String[0]; }
-    public String[] getNotIncludedDirectories() { return null; }
-    public String[] getNotIncludedFiles() { return null; }
+    /**
+     * @see DirectoryScanner#addDefaultExcludes
+     */
+    public void addDefaultExcludes() {
+    }
+    
+    /**
+     * @see DirectoryScanner#getExcludedDirectories
+     */
+    public String[] getExcludedDirectories() { 
+        return null; 
+    }
+    
+    /**
+     * @see DirectoryScanner#getExcludedFiles
+     */
+    public String[] getExcludedFiles() { 
+        return null; 
+    }
+    
+    /**
+     * @see DirectoryScanner#getIncludedDirectories
+     */
+    public String[] getIncludedDirectories() { 
+        return new String[0]; 
+    }
+    
+    /**
+     * @see DirectoryScanner#getNotIncludedDirectories
+     */
+    public String[] getNotIncludedDirectories() { 
+        return null; 
+    }
+    
+    /**
+     * @see DirectoryScanner#getNotIncludedFiles
+     */
+    public String[] getNotIncludedFiles() { 
+        return null; 
+    }
 
-    public void setExcludes(String[] excludes) {}
-    public void setIncludes(String[] includes) {}
-    public void setCaseSensitive(boolean isCaseSensitive) {}
+    /**
+     * @see DirectoryScanner#setExcludes
+     */
+    public void setExcludes(String[] excludes) {
+    }
+    
+    /**
+     * @see DirectoryScanner#setIncludes
+     */
+    public void setIncludes(String[] includes) {
+    }
+    
+    /**
+     * @see DirectoryScanner#setCaseSensitive
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+    }
 }

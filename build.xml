@@ -212,15 +212,7 @@
   <patternset id="needs.jakarta.bcel">
     <exclude name="${ant.package}/filters/util/JavaClassHelper.java" 
              unless="bcel.present" />
-    <exclude name="${optional.type.package}/depend/*.java" 
-             unless="bcel.present" />
-    <exclude name="${util.package}/depend/*.java"
-             unless="bcel.present" />
-    <exclude name="${optional.package}/ejb/EjbJar.java"
-             unless="bcel.present" />
-    <exclude name="${optional.package}/ejb/*DeploymentTool.java"
-             unless="bcel.present" />
-    <exclude name="${optional.package}/ejb/IPlanet*.java"
+    <exclude name="${util.package}/depend/bcel/*.java"
              unless="bcel.present" />
   </patternset>
   <patternset id="needs.jakarta.log4j">

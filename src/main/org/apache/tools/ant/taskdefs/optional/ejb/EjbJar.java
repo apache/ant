@@ -210,25 +210,25 @@ public class EjbJar extends MatchingTask {
          * Naming scheme where generated jar is determined from the ejb-name in
          * the deployment descripor 
          */
-        public final static String EJB_NAME = "ejb-name";
+        public static final String EJB_NAME = "ejb-name";
 
         /**
          * Naming scheme where the generated jar name is based on the 
          * name of the directory containing the deployment descriptor 
          */
-        public final static String DIRECTORY = "directory";
+        public static final String DIRECTORY = "directory";
         
         /** 
          * Naming scheme where the generated jar name is based on the name of
          * the deployment descriptor file
          */
-        public final static String DESCRIPTOR = "descriptor";
+        public static final String DESCRIPTOR = "descriptor";
         
         /** 
          * Naming scheme where the generated jar is named by the basejarname 
          * attribute 
          */
-        public final static String BASEJARNAME = "basejarname";
+        public static final String BASEJARNAME = "basejarname";
         
         /**
          * Gets the values of the NamingScheme
@@ -451,8 +451,7 @@ public class EjbJar extends MatchingTask {
         if (config.namingScheme == null) {
             config.namingScheme = new NamingScheme();
             config.namingScheme.setValue(NamingScheme.BASEJARNAME);
-        }
-        else if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)) {
+        } else if (!config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME)) {
             throw new BuildException("The basejarname attribute is not compatible with the " +
                                      config.namingScheme.getValue() + " naming scheme");
         }
@@ -543,7 +542,7 @@ public class EjbJar extends MatchingTask {
      *
      * @throws BuildException if the config is not valid
      */
-    private void validateConfig() {
+    private void validateConfig() throws BuildException {
         if (config.srcDir == null) {
             throw new BuildException("The srcDir attribute must be specified");
         }
@@ -555,8 +554,7 @@ public class EjbJar extends MatchingTask {
         if (config.namingScheme == null) {
             config.namingScheme = new NamingScheme();
             config.namingScheme.setValue(NamingScheme.DESCRIPTOR);
-        }
-        else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
+        } else if (config.namingScheme.getValue().equals(NamingScheme.BASEJARNAME) &&
                  config.baseJarName == null) {
             throw new BuildException("The basejarname attribute must be specified " +
                                      "with the basejarname naming scheme");
@@ -618,14 +616,12 @@ public class EjbJar extends MatchingTask {
                     tool.processDescriptor(files[index], saxParser);
                 }
             }
-        }
-        catch (SAXException se) {
+        } catch (SAXException se) {
             String msg = "SAXException while creating parser."
                 + "  Details: "
                 + se.getMessage();
             throw new BuildException(msg, se);
-        }
-        catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException pce) {
             String msg = "ParserConfigurationException while creating parser. "
                        + "Details: " + pce.getMessage();
             throw new BuildException(msg, pce);
