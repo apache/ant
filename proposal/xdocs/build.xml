@@ -18,22 +18,19 @@
             location="${template.dir}/task_xdoc.template"/>
 
 
-  <path id="xdoclet.classpath">
-    <pathelement location="${log4j.jar}"/>
-    <pathelement location="${xdoclet.jar}"/>
-
-    <!-- javadoc is needed -->
-    <pathelement path="${java.class.path}"/>
-    <pathelement location="${build.dir}"/>
-  </path>
-
-  <taskdef name="document"
-           classname="xdoclet.doc.DocumentDocletTask"
-           classpathref="xdoclet.classpath"/>
-
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${gen.dir}" />
+
+    <!-- hack, this should be outside a target but ${build.dir} gets stripped ?? -->
+    <path id="xdoclet.classpath">
+      <pathelement location="${log4j.jar}"/>
+      <pathelement location="${xdoclet.jar}"/>
+
+      <!-- javadoc is needed -->
+      <pathelement path="${java.class.path}"/>
+      <pathelement location="${build.dir}"/>
+    </path>
   </target>
 
 
@@ -49,6 +46,10 @@
   <target name="gen" depends="compile">
     <delete dir="${gen.dir}"/>
 
+    <taskdef name="document"
+             classname="xdoclet.doc.DocumentDocletTask"
+             classpathref="xdoclet.classpath"/>
+
     <document sourcepath="${src.root}"
               destdir="${gen.dir}"
               classpathref="xdoclet.classpath">
@@ -56,7 +57,8 @@
         <include name="*.java" unless="class.name"/>
         <include name="${class.name}.java" if="class.name"/>
       </fileset>
-      <template templateFile="${defaults.properties.template}"
+      <template subTaskClassName="org.apache.tools.ant.xdoclet.AntSubTask"
+                templateFile="${defaults.properties.template}"
                 destinationfile="defaults.properties"/>
 <!--       <template templateFile="${xdoc.template}"
                 destinationfile="{0}.xml" extent="concrete-type"/> -->

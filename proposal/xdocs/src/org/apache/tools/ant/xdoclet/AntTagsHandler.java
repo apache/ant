@@ -57,6 +57,7 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
+import xdoclet.tags.AbstractProgramElementTagsHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,6 +80,24 @@ import java.util.Properties;
  * @todo add ifIsAntTask, among other convenience tags
  */
 public class AntTagsHandler extends XDocletTagSupport {
+
+    /**
+     * @todo add check for execute method
+     */
+    public void forAllTasks(String template, Properties attributes) throws XDocletException {
+        ClassDoc[] classes = AbstractProgramElementTagsHandler.getAllClasses();
+        ClassDoc cur_class = null;
+
+        for (int i = 0; i < classes.length; i++) {
+            cur_class = classes[i];
+            setCurrentClass(cur_class);
+
+            if (AntSubTask.isAntTask(cur_class)) {
+                generate(template);
+            }
+        }
+    }
+
 
     /**
      * Iterates over all Ant attributes.
@@ -120,21 +139,22 @@ public class AntTagsHandler extends XDocletTagSupport {
         }
     }
 
+
     /**
      * Provides the element name for the current method
      */
     public String elementName() throws XDocletException {
         String methodName = getCurrentMethod().name();
-        System.out.println(">>>> " + methodName);
         String elementName = "<not a valid element>";
         if (methodName.startsWith("addConfigured")) {
-            elementName = methodName.substring(13,methodName.length());
-        } else if (methodName.startsWith("add")) {
-            elementName = methodName.substring(3,methodName.length());
-        } else if (methodName.startsWith("create")) {
-            elementName = methodName.substring(6,methodName.length());
+            elementName = methodName.substring(13, methodName.length());
         }
-        System.out.println("        = " + elementName);
+        else if (methodName.startsWith("add")) {
+            elementName = methodName.substring(3, methodName.length());
+        }
+        else if (methodName.startsWith("create")) {
+            elementName = methodName.substring(6, methodName.length());
+        }
         return elementName.toLowerCase();
     }
 

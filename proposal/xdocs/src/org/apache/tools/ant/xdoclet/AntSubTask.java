@@ -83,15 +83,31 @@ public class AntSubTask extends TemplateSubTask {
      *       - and only throw BuildException if at all
      */
     protected boolean matchesGenerationRules(ClassDoc clazz) throws XDocletException {
-        MethodDoc[] methods = clazz.methods();
 
         if (clazz.isAbstract()) {
             return false;
         }
 
+        return isAntTask(clazz);;
+    }
+
+    /**
+     * @todo pull out to utility method
+     * @todo add more logic (like execute method signature)
+     */
+    public static final boolean isAntTask(ClassDoc clazz) {
+        if (clazz.isAbstract()) {
+            return false;
+        }
+
+        // no inner classes (for now - but is this possible? desired?)
+        if (clazz.containingClass() != null) {
+            return false;
+        }
+
+        MethodDoc[] methods = clazz.methods();
         for (int i = 0; i < methods.length; i++) {
             if ("execute".equals(methods[i].name())) {
-                System.out.println("Task: " + clazz.name());
                 return true;
             }
         }
@@ -104,12 +120,17 @@ public class AntSubTask extends TemplateSubTask {
      * default class name.
      */
     protected String getGeneratedFileName(ClassDoc clazz) throws XDocletException {
-        PackageDoc pak = clazz.containingPackage();
-        String packageName = PackageTagsHandler.packageNameAsPathFor(pak);
-        String taskName = AntTagsHandler.getTaskName(clazz);
-        String filename = MessageFormat.format(getDestinationFile(), new Object[]{taskName});
+        String filename = getDestinationFile();
+        String dir = getDestDir().getAbsolutePath();
 
-        return new File(packageName, filename).toString();
+        if (filename.indexOf("{0}") != -1) {
+            PackageDoc pak = clazz.containingPackage();
+            dir = PackageTagsHandler.packageNameAsPathFor(pak);
+            String taskName = AntTagsHandler.getTaskName(clazz);
+            filename = MessageFormat.format(getDestinationFile(), new Object[]{taskName});
+        }
+
+        return new File(dir, filename).toString();
     }
 
 }
