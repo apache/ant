@@ -10,7 +10,7 @@
 <h2><a name="log">Record</a></h2>
 <h3>Description</h3>
 <p>A recorder is a listener to the current build process that records the
-output to a file.
+output to a file.</p>
 
 <p>Several recorders can exist at the same time.  Each recorder is
 associated with a file.  The filename is used as a unique identifier for
@@ -18,11 +18,11 @@ the recorders.  The first call to the recorder task with an unused filename
 will create a recorder (using the parameters provided) and add it to the
 listeners of the build.  All subsequent calls to the recorder task using
 this filename will modify that recorders state (recording or not) or other
-properties (like logging level).
+properties (like logging level).</p>
 
 <p>Some technical issues: the file's print stream is flushed for &quot;finished&quot;
 events (buildFinished, targetFinished and taskFinished), and is closed on
-a buildFinished event.
+a buildFinished event.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -66,7 +66,7 @@ a buildFinished event.
 
 <h3>Examples</h3>
 <p>The following build.xml snippet is an example of how to use the recorder
-to record just the <code>&lt;javac&gt;</code> task:
+to record just the <code>&lt;javac&gt;</code> task:</p>
 <pre>
     ...
     &lt;compile &gt;
@@ -80,7 +80,7 @@ to record just the <code>&lt;javac&gt;</code> task:
 <p>The following two calls to <code>&lt;record&gt;</code> set up two
 recorders: one to file &quot;records-simple.log&quot; at logging level <code>info</code>
 (the default) and one to file &quot;ISO.log&quot; using logging level of
-<code>verbose</code>.
+<code>verbose</code>.</p>
 <pre>
     ...
     &lt;record name=&quot;records-simple.log&quot; /&gt;
@@ -90,7 +90,7 @@ recorders: one to file &quot;records-simple.log&quot; at logging level <code>inf
 
 <h3>Notes</h3>
 <p>There is some functionality that I would like to be able to add in the
-future.  They include things like the following:
+future.  They include things like the following:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>

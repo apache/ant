@@ -23,19 +23,14 @@ Version 1.0 - 2001/01/31<br>
 <hr>
 <h2>
 Table of Contents</h2>
-
 <ul>
-<li>
-<a href="#introduction">Introduction</a></li>
-
-<li>
-<a href="#configuretask">Pvcs Task</a></li>
-
-<br>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#pvcs">Pvcs Task</a></li>
+</ul>
 <hr>
-<h2>
-<a NAME="introduction"></a>Introduction</h2>
-The &lt;pvcs> task allows the user of ant to extract the latest edition
+
+<h2><a NAME="introduction">Introduction</a></h2>
+The pvcs task allows the user of ant to extract the latest edition
 of the source code from a PVCS repository. PVCS is a version control system
 developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
 <br>
@@ -44,13 +39,10 @@ of PVCS (get and pcli) and must have access to the repository. Note that the way
 the repository is platform dependent so use property to specify location of repository.
 <br>
 This version has been tested agains PVCS version 6.5 and 6.6 under Windows and Solaris.
-<br>
-<hr>
-<h2>
-<a NAME="pvcs"></a>Pvcs Task</h2>
 
-<h3>
-Description</h3>
+<hr>
+<h2><a NAME="pvcs">Pvcs Task</a></h2>
+<h3>Description</h3>
 The pvcs task is set to point at a PVCS repository and optionally a project
 within that repository, and can from that specification get the latest
 version of the files contained by the repository.
@@ -79,7 +71,7 @@ manuals)</td>
 <td VALIGN=TOP WIDTH="12%">pvcsproject</td>
 
 <td VALIGN=TOP WIDTH="78%">The project within the PVCS repository to extract
-files from ("/" is root project and that is default if this attribute isn't
+files from (&quot;/&quot; is root project and that is default if this attribute isn't
 specified)</td>
 
 <td VALIGN=TOP WIDTH="10%">No</td>
@@ -176,74 +168,68 @@ specified.</p>
 </tr>
 </table>
 
-<h3>
-Examples</h3>
-The following set-up extracts the latest version of the files in the pvcs
-repository.
-<ul>&nbsp;&nbsp;&nbsp; &lt;!-- ===================================================================
--->
-<br>&nbsp;&nbsp;&nbsp; &lt;!-- Get the latest version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--->
-<br>&nbsp;&nbsp;&nbsp; &lt;!-- ===================================================================
--->
-<br>&nbsp;&nbsp;&nbsp; &lt;target name="getlatest">
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt; pvcs repository="/mnt/pvcs"
-pvcsproject="/myprj"/>
-<br>&nbsp;&nbsp;&nbsp; &lt;/target></ul>
-Now run:
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ant getlatest
-<p>This will cause the following output to appear:
-<pre>&nbsp;&nbsp;&nbsp; getlatest:
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] PVCS Version Manager (VMGUI) v6.6.10 (Build 870) for Windows NT/80x86
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] Copyright 1985-2000 MERANT.&nbsp; All rights reserved.
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] PVCS Version Manager (get) v6.6.10 (Build 870) for Windows NT/80x86
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] Copyright 1985-2000 MERANT.&nbsp; All rights reserved.
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] c:\myws\myprj\main.java &lt;- C:\mypvcs\archives\myprj\main.java-arc
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] rev 1.1
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] c:\myws\myprj\apache\tool.java &lt;- C:\mypvcs\archives\myprj\apache\tools.java-arc
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] rev 1.5
+<h3>Examples</h3>
+The following set-up extracts the latest version of the files in the pvcs repository.
+<pre>
+  &lt;!-- =================================================================== --&gt;
+  &lt;!-- Get the latest version                                              --&gt;
+  &lt;!-- =================================================================== --&gt;
+  &lt;target name=&quot;getlatest&quot;&gt;
+    &lt;pvcs repository=&quot;/mnt/pvcs&quot; pvcsproject=&quot;/myprj&quot;/&gt;
+  &lt;/target&gt;</ul>
+</pre>
+<p>Now run:</p>
+<code>ant getlatest</code>
+<p>This will cause the following output to appear:</p>
+<pre>
+  getlatest:
+  [pvcs] PVCS Version Manager (VMGUI) v6.6.10 (Build 870) for Windows NT/80x86
+  [pvcs] Copyright 1985-2000 MERANT. All rights reserved.
+  [pvcs] PVCS Version Manager (get) v6.6.10 (Build 870) for Windows NT/80x86
+  [pvcs] Copyright 1985-2000 MERANT. All rights reserved.
+  [pvcs] c:\myws\myprj\main.java &lt;- C:\mypvcs\archives\myprj\main.java-arc
+  [pvcs] rev 1.1
+  [pvcs] c:\myws\myprj\apache\tool.java &lt;- C:\mypvcs\archives\myprj\apache\tools.java-arc
+  [pvcs] rev 1.5
 
-&nbsp;&nbsp;&nbsp; BUILD SUCCESSFUL
+  BUILD SUCCESSFUL
 
-&nbsp;&nbsp;&nbsp; Total time: 19 seconds</pre>
+  Total time: 19 seconds</pre>
 
 This next example extracts the latest version of the files in the pvcs
 repository from two projects using nested &lt;pvcsproject&gt; elements.
-<ul>&nbsp;&nbsp;&nbsp; &lt;!-- ===================================================================
--->
-<br>&nbsp;&nbsp;&nbsp; &lt;!-- Get latest from myprj and myprj2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
--->
-<br>&nbsp;&nbsp;&nbsp; &lt;!-- ===================================================================
--->
-<br>&nbsp;&nbsp;&nbsp; &lt;target name="getlatest2">
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;pvcs repository="/mnt/pvcs">
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;pvcsproject name="/myprj" />
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;pvcsproject name="/myprj2" />
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/pvcs>
-<br>&nbsp;&nbsp;&nbsp; &lt;/target></ul>
-Now run:
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ant getlatest2
-<p>This will cause the following output to appear:
-<pre>&nbsp;&nbsp;&nbsp; getlatest2:
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] PVCS Version Manager (VMGUI) v6.6.10 (Build 870) for Windows NT/80x86
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] Copyright 1985-2000 MERANT.&nbsp; All rights reserved.
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] PVCS Version Manager (get) v6.6.10 (Build 870) for Windows NT/80x86
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] Copyright 1985-2000 MERANT.&nbsp; All rights reserved.
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] c:\myws\myprj\main.java &lt;- C:\mypvcs\archives\myprj\main.java-arc
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] rev 1.1
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] c:\myws\myprj\apache\tool.java &lt;- C:\mypvcs\archives\myprj\apache\tool.java-arc
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] rev 1.5
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] c:\myws\myprj2\apache\tool2.java &lt;- C:\mypvcs\archives\myprj2\apache\tool2.java-arc
-&nbsp;&nbsp;&nbsp;&nbsp; [pvcs] rev 1.2
-
-&nbsp;&nbsp;&nbsp; BUILD SUCCESSFUL
-
-&nbsp;&nbsp;&nbsp; Total time: 22 seconds</pre>
-
 <pre>
+  &lt;!-- ===================================================================--&gt;
+  &lt;!-- Get latest from myprj and myprj2                                   --&gt;
+  &lt;!-- ===================================================================--&gt;
+  &lt;target name=&quot;getlatest2&quot;&gt;
+    &lt;pvcs repository=&quot;/mnt/pvcs&quot;&gt;
+      &lt;pvcsproject name=&quot;/myprj&quot;/&gt;
+      &lt;pvcsproject name=&quot;/myprj2&quot;/&gt;
+    &lt;/pvcs&gt;
+  &lt;/target&gt;</ul>
 </pre>
+<p>Now run:</p>
+<code>ant getlatest2</code>
+<p>This will cause the following output to appear:</p>
+<pre>
+  getlatest2:
+  [pvcs] PVCS Version Manager (VMGUI) v6.6.10 (Build 870) for Windows NT/80x86
+  [pvcs] Copyright 1985-2000 MERANT.  All rights reserved.
+  [pvcs] PVCS Version Manager (get) v6.6.10 (Build 870) for Windows NT/80x86
+  [pvcs] Copyright 1985-2000 MERANT.  All rights reserved.
+  [pvcs] c:\myws\myprj\main.java &lt;- C:\mypvcs\archives\myprj\main.java-arc
+  [pvcs] rev 1.1
+  [pvcs] c:\myws\myprj\apache\tool.java &lt;- C:\mypvcs\archives\myprj\apache\tool.java-arc
+  [pvcs] rev 1.5
+  [pvcs] c:\myws\myprj2\apache\tool2.java &lt;- C:\mypvcs\archives\myprj2\apache\tool2.java-arc
+  [pvcs] rev 1.2
 
-<hr WIDTH="100%"></ul>
+  BUILD SUCCESSFUL
+
+  Total time: 22 seconds</pre>
+
+<hr WIDTH="100%">
 PVCS is a registered trademark of MERANT.
 </body>
 </html>

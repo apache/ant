@@ -97,7 +97,7 @@ structure</a>.</p>
 <h4>jvmarg</h4>
 
 <p>If fork is enabled, additional parameters may be passed to the new
-VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:
+VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:</p>
 
 <pre>
 &lt;junit fork=&quot;yes&quot;&gt;
@@ -106,7 +106,7 @@ VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:
 &lt;/junit&gt;
 </pre>
 
-would run the test in a VM without JIT.</p>
+<p>would run the test in a VM without JIT.</p>
 
 <p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
 href="../using.html#arg">Command line arguments</a>.</p>
@@ -116,7 +116,7 @@ href="../using.html#arg">Command line arguments</a>.</p>
 <p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify system
 properties required by the class. These properties will be made available
 to the VM during the execution of the test (either ANT's VM or the forked VM).
-The attributes for this element are the same as for <a href="../CoreTasks/exec.html#env">environment variables</a>.
+The attributes for this element are the same as for <a href="../CoreTasks/exec.html#env">environment variables</a>.</p>
 
 <pre>
 &lt;junit fork=&quot;no&quot;&gt;
@@ -125,7 +125,7 @@ The attributes for this element are the same as for <a href="../CoreTasks/exec.h
 &lt;/junit&gt;
 </pre>
 
-would run the test in ANT's VM and make the <code>basedir</code> property
+<p>would run the test in ANT's VM and make the <code>basedir</code> property
 available to the test.</p>
 
 
@@ -135,7 +135,7 @@ available to the test.</p>
 formats. Output will always be sent to a file unless you set the
 usefile attribute to false, the name of the file is determined by the
 name of the test and can be set by the <code>outfile</code> attribute
-of <code>&lt;test&gt;</code>.
+of <code>&lt;test&gt;</code>.</p>
 
 <p>There are three predefined formatters, one prints the test results
 in XML format, the other emit plain text.  The formatter named
@@ -317,29 +317,29 @@ generates a test class name for each file that ends in
 
 <h3>Examples</h3>
 
-<p><pre>
+<pre>
 &lt;junit&gt;
   &lt;test name="my.test.TestCase" /&gt;
 &lt;/junit&gt;
 </pre>
 
-Runs the test defined in <code>my.test.TestCase</code> in the same
+<p>Runs the test defined in <code>my.test.TestCase</code> in the same
 VM. No output will be generated unless the test fails.</p>
 
-<p><pre>
+<pre>
 &lt;junit printsummary="yes" fork="yes" haltonfailure="yes"&gt;
   &lt;formatter type="plain" /&gt;
   &lt;test name="my.test.TestCase" /&gt;
 &lt;/junit&gt;
 </pre>
 
-Runs the test defined in <code>my.test.TestCase</code> in a
+<p>Runs the test defined in <code>my.test.TestCase</code> in a
 separate VM.  At the end of the test a single line summary will be
 printed. A detailed report of the test can be found in
 <code>TEST-my.test.TestCase.txt</code>. The build process will be
 stopped if the test fails.</p>
 
-<p><pre>
+<pre>
 &lt;junit printsummary="yes" haltonfailure="yes"&gt;
   &lt;classpath&gt;
     &lt;pathelement location="${build.tests}" /&gt;
@@ -361,7 +361,7 @@ stopped if the test fails.</p>
 &lt;/junit&gt;
 </pre>
 
-Runs <code>my.test.TestCase</code> in the same VM (ignoring the
+<p>Runs <code>my.test.TestCase</code> in the same VM (ignoring the
 given CLASSPATH), only a warning is printed if this test fails. In
 addition to the plain text test results, for this test a XML result
 will be output to <code>result.xml</code>.</p>

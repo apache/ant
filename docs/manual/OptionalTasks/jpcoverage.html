@@ -24,7 +24,6 @@ and is not intended as a replacement to the manual.
 </p>
 
 <h2>Tasks</h2>
-<ul>
 <table border="0" cellspacing="0" cellpadding="3">
     <tr>
         <td><a href="#jpcoverage">JPCoverage</a></td>
@@ -39,7 +38,6 @@ and is not intended as a replacement to the manual.
         <td>Create a report from a snapshot</td>
     </tr>
 </table>
-</ul>
 
 <hr>
 
@@ -97,8 +95,8 @@ Perform code covering functions by comparing source code line execution to the p
   
   <tr>
     <td valign="top">exitprompt</td> 
-    <td valign="top">Toggles display of the console prompt: "Press Enter to close
-	this window." &quot;always&quot;: Always displays the prompt. &quot;never&quot;: Never displays the
+    <td valign="top">Toggles display of the console prompt: &quot;Press Enter to close
+	this window.&quot; &quot;always&quot;: Always displays the prompt. &quot;never&quot;: Never displays the
 	prompt. &quot;error&quot;: Only displays prompt after an error.</td>
     <td align="center" valign="top">No, default is "never"</td>
   </tr>
@@ -150,7 +148,7 @@ Perform code covering functions by comparing source code line execution to the p
 
 <h4>classpath</h4>
 <p><code>jpcoverage</code> supports a nested <code>&lt;classpath&gt;</code>
-element, that represents a <a href="index.html#path">PATH like
+element, that represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 
 <h4>jvmarg</h4>
@@ -169,13 +167,13 @@ attributes, for example:</p>
 would run the coverage on &quot;MyClass&quot; in classic mode VM.
 
 <p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
-href="index.html#arg">Command line arguments</a>.</p>
+href="../using.html#arg">Command line arguments</a>.</p>
 
 <h4>arg</h4>
 
 <p>
 Parameters may be passed to the executed class via nested <tt>&lt;arg&gt;</tt>
-attributes, as described in <a href="index.html#arg">Command line arguments</a>.
+attributes, as described in <a href="../using.html#arg">Command line arguments</a>.
 </p>
 
 <h4>socket</h4>
@@ -204,7 +202,7 @@ attributes, as described in <a href="index.html#arg">Command line arguments</a>.
 <h4>filters</h4>
 
 <p>Defines class/method filters based on pattern matching.
-The syntax is filters is similar to a <a href="index.html#fileset">fileset</a>.
+The syntax is filters is similar to a <a href="../CoreTypes/fileset.html">fileset</a>.
 </p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -348,7 +346,7 @@ same class.</p>
 </table>
 
 <p>
-<tt>jpcovmerge</tt> collects snapshots using the nested <a href="index.html#fileset"><code>&lt;FileSet&gt;</code></a>
+<tt>jpcovmerge</tt> collects snapshots using the nested <a href="../CoreTypes/fileset.html"><code>&lt;FileSet&gt;</code></a>
 element.
 </p>
 
@@ -368,7 +366,7 @@ directory <tt>snapshots</tt>. The resulting file will be named <tt>merge.jpc</tt
 
 <hr>
 
-<h2>JPCovReport</h2>
+<h2><a name="jpcovreport">JPCovReport</a></h2>
 
 <h3>Description</h3>
 
@@ -425,7 +423,7 @@ Oro</a> in Ant classpath, to run the <tt>reference</tt> feature.</p>
 <h4>sourcepath</h4>
 
 <p>
-Path to source files can be set via nested sourcepath elements that are <a href="index.html#path">PATH like structures</a>.
+Path to source files can be set via nested sourcepath elements that are <a href="../using.html#path">PATH like structures</a>.
 </p>
 
 <h4>reference (only applies to format=&quot;xml&quot;)</h4>
@@ -456,7 +454,7 @@ the XML report accordingly. In short, it will:
 </h4>
 
   <p>
-Path to the reference set of files can be set via nested classpath elements that are <a href="index.html#path">PATH like structures</a>.
+Path to the reference set of files can be set via nested classpath elements that are <a href="../using.html#path">PATH like structures</a>.
 </p>
 
   <h4>filters

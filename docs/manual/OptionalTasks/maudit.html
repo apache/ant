@@ -76,20 +76,20 @@ An evaluation version is available at <a href="http://www.webgain.com/products/q
 <h3>Nested elements</h3>
 <h4>jvmarg</h4>
 <p>Additional parameters may be passed to the VM via nested <code>&lt;jvmarg&gt;</code>
-attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="index.html#arg">Command
+attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="../using.html#arg">Command
 line arguments</a>.</p>
 <h4>classpath</h4>
 <p>Sets class path (also source path unless one explicitly set). Overrides
-METAPATH/CLASSPATH environment variables. The <tt>classpath</tt> element represents a <a href="../#path">PATH like
+METAPATH/CLASSPATH environment variables. The <tt>classpath</tt> element represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 <h4>sourcepath</h4>
-<p>Sets source path. Overrides the SOURCEPATH environment variable. The <tt>sourcepath</tt> element represents a <a href="../coreTypes/fileset.htmlindex.html#path">PATH like
+<p>Sets source path. Overrides the SOURCEPATH environment variable. The <tt>sourcepath</tt> element represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 <h4>sourcepath</h4>
-<p>Sets the search path to use as the use domain when looking for unused global declarations. The <tt>searchpath</tt> element represents a <a href="../coreTypes/fileset.htmlindex.html#path">PATH like
+<p>Sets the search path to use as the use domain when looking for unused global declarations. The <tt>searchpath</tt> element represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 <h4>fileset</h4>
-<p>Sets the Java files to audit via a <a href="index.html#fileset">FILESET</a> structure.
+<p>Sets the Java files to audit via a <a href="../CoreTypes/fileset.html">FILESET</a> structure.
 Whatever the filter is, only the files that ends with <i>.java</i> will be included for processing.
 Note that the base directory used for the fileset MUST be the root of the source files otherwise
 package names deduced from the file path will be incorrect.
@@ -128,10 +128,5 @@ in the current directory), it can be run in Ant as follows:
 &lt;/java&gt;
 </pre>
 
-<hr>
-
-
-
-<hr>
-
-
+</body>
+</html>

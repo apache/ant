@@ -198,7 +198,7 @@ task will also attempt to locate the EJB stubs and skeletons in this directory.
 If found, the timestamps on the stubs and skeletons will be checked to
 ensure they are up to date. Only if these files cannot be found or if they
 are out of date will the iAS ejbc utility be called to generate new stubs
-and skeletons.
+and skeletons.</p>
 <h3>
 Parameters:</h3>
  
@@ -222,7 +222,7 @@ Parameters:</h3>
 <tr>
 <td VALIGN=TOP>iasdescriptor</td>
 
-<td VALIGN=TOP>iAS-specific EJB XML descriptor (typically titled "ias-ejb-jar.xml).</td>
+<td VALIGN=TOP>iAS-specific EJB XML descriptor (typically titled "ias-ejb-jar.xml").</td>
 
 <td ALIGN=CENTER VALIGN=TOP>Yes</td>
 </tr>
@@ -529,7 +529,7 @@ include: </p>
   <li>Borland Application Server 4.5</li>
   <li>iPlanet Application Server 6.0</li>
   <li>Jboss 2.1 and above</li>
-  <li>Weblogic 5.1/6.0 session/entity beans using the weblogic.ejbc tool
+  <li>Weblogic 5.1/6.0 session/entity beans using the weblogic.ejbc tool</li>
   <li>TOPLink for WebLogic 2.5.1-enabled entity beans</li>
 </ul>
 
@@ -716,9 +716,8 @@ Each vendor-specific nested element controls the generation of a deployable jar
 specific to that vendor's EJB container. The parameters for each supported 
 deployment element are detailed here.
 
-<a name="ejbjar_jboss">
-<h3>Jboss element</h3>
-</a>
+
+<h3><a name="ejbjar_jboss">Jboss element</a></h3>
 
 <p>The jboss element searches for the jboss specific deployment descriptors and adds them
 to the final ejb jar file. Jboss has two deployment descriptors jboss.xml and jaws.xml
@@ -764,9 +763,8 @@ not require compilation of additional stubs and skeletons.</p>
   </tr>
 </table>
 
-<a name="ejbjar_weblogic">
-<h3>Weblogic element</h3>
-</a>
+
+<h3><a name="ejbjar_weblogic">Weblogic element</a></h3>
 
 <p>The weblogic element is used to control the weblogic.ejbc compiler for 
 generating weblogic EJB jars. Prior to Ant 1.3, the method of locating CMP 
@@ -1044,7 +1042,7 @@ This will create only one TOPLink-enabled ejb jar file - 'Address.jar'.</p>
 </pre>
 
 <p>This final example shows how you would set-up ejbjar under Weblogic 6.0. It also shows the use of the 
-&lt;support&gt; element to add support files
+&lt;support&gt; element to add support files</p>
 
 <pre>
     &lt;ejbjar descriptordir=&quot;${dd.dir}&quot; srcdir=&quot;${build.classes.server}&quot;&gt;
@@ -1067,9 +1065,8 @@ This will create only one TOPLink-enabled ejb jar file - 'Address.jar'.</p>
     &lt;/ejbjar&gt;
 </pre>
 
-<a name="ejbjar_iplanet">
-<h3>iPlanet Application Server (iAS) element</h3>
-</a>
+
+<h3><a name="ejbjar_iplanet">iPlanet Application Server (iAS) element</a></h3>
 
 The &lt;iplanet> nested element is used to build iAS-specific stubs and
 skeletons and construct a JAR file which may be deployed to the iPlanet
@@ -1084,11 +1081,11 @@ EJB descriptor file named ejb/Account-ias-ejb-jar.xml (if it isn't found,
 the task will fail) and a JAR file named ejb/Account.jar will be written
 in the destination directory.  Note that when the EJB descriptors
 are added to the JAR file, they are automatically renamed META-INF/ejb-jar.xml
-and META-INF/ias-ejb-jar.xml.
+and META-INF/ias-ejb-jar.xml.</p>
 <p>Of course, this naming behavior can be modified by specifying attributes
 in the ejbjar task (for example, basejarname, basenameterminator, and flatdestdir)
 as well as the iplanet element (for example, suffix).  Refer to the
-appropriate documentation for more details.
+appropriate documentation for more details.</p>
 <h3>
 Parameters:</h3>
 
@@ -1166,7 +1163,7 @@ If omitted, it defaults to ".jar". </td>
 </table>
 
 <p>As noted above, the iplanet element supports additional &lt;classpath>
-nested elements.
+nested elements.</p>
 <h3>
 Examples</h3>
 This example demonstrates the typical use of the &lt;iplanet> nested element. 

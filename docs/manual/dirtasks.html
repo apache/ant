@@ -126,7 +126,7 @@ way to select just the files you want.</p>
 
 <h3>Examples</h3>
 <pre>  
-&lt;copy todir=&quot;${dist}&quot;>
+&lt;copy todir=&quot;${dist}&quot;&gt;
   &lt;fileset dir=&quot;${src}&quot; 
            includes=&quot;**/images/*&quot; 
            excludes=&quot;**/*.gif&quot; 
@@ -138,7 +138,7 @@ destination directory defined by <code>${dist}</code>,
 but excludes all <code>*.gif</code> files from the copy.</p>
 <p> This example can also be expressed using nested elements:</p>
 <pre>
-&lt;copy todir=&quot;${dist}&quot;>
+&lt;copy todir=&quot;${dist}&quot;&gt;
   &lt;fileset dir=&quot;${src}&quot;&gt;
     &lt;include name=&quot;**/images/*&quot;/&gt;
     &lt;exclude name=&quot;**/*.gif&quot;/&gt;

@@ -19,7 +19,7 @@ An evaluation version is available at <a href="http://www.webgain.com/products/q
 You also need a TRaX compliant processor(such as <a href="http://xml.apache.org/xalan-j">Xalan 2.x</a>) via JAXP 1.1</p>
 <h3>Description</h3> 
 <p>
-  Invokes the Metamata Metrics / WebGain Quality Analyzer</a> source code 
+  Invokes the Metamata Metrics / WebGain Quality Analyzer source code 
   analyzer on a set of Java files.
 </p>
 <p>
@@ -60,23 +60,23 @@ You also need a TRaX compliant processor(such as <a href="http://xml.apache.org/
   </tr>
 </table>
 <h3>Nested elements</h3>
-For specifying the source code to analyze, you can either use a <tt>path</tt> or <tt>fileset</tt> elements (though a single path element is preferred, see note below).</i>
+For specifying the source code to analyze, you can either use a <tt>path</tt> or <tt>fileset</tt> elements (though a single path element is preferred, see note below).
 <h4>jvmarg</h4>
 <p>Additional parameters may be passed to the VM via nested <code>&lt;jvmarg&gt;</code>
-attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="index.html#arg">Command
+attributes. <code>&lt;jvmarg&gt;</code> allows all attributes described in <a href="../using.html#arg">Command
 line arguments</a>.</p>
 <h4>classpath</h4>
 <p>Sets class path (also source path unless one explicitly set). Overrides
-METAPATH/CLASSPATH environment variables. The <tt>classpath</tt> element represents a <a href="index.html#path">PATH like
+METAPATH/CLASSPATH environment variables. The <tt>classpath</tt> element represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 <h4>sourcepath</h4>
-<p>Sets source path. Overrides the SOURCEPATH environment variable. The <tt>sourcepath</tt> element represents a <a href="index.html#path">PATH like
+<p>Sets source path. Overrides the SOURCEPATH environment variable. The <tt>sourcepath</tt> element represents a <a href="../using.html#path">PATH like
 structure</a>.</p>
 
 <h4>path</h4>
-<p>Sets the list of directories to analyze the code for metrics.;It represents a <a href="index.html#path">PATH structure</a>.</p>
+<p>Sets the list of directories to analyze the code for metrics.;It represents a <a href="../using.html#path">PATH structure</a>.</p>
 <h4>fileset</h4>
-<p>Sets a set of files to analyze for metrics.source  It represents a <a href="index.html#fileset">FILESET structure</a>.</p>
+<p>Sets a set of files to analyze for metrics.source  It represents a <a href="../CoreTypes/fileset.html">FILESET structure</a>.</p>
 
 <p>
 <font color="#FF0000">
@@ -122,7 +122,5 @@ in the current directory), it can be run in Ant as follows:
     &lt;param value=&quot;&amp;quot;'${report.dir}'&amp;quot;&quot;/&gt;
 &lt;/java&gt;
 </pre>
-
-<hr>
-
-
+</body>
+</html>
