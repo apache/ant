@@ -69,12 +69,8 @@ public interface XSLTLiaison {
      * the file protocol prefix for systemid.
      * This file protocol must be appended to an absolute path.
      * Typically: <tt>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</tt>
-     * This is not correct in specification terms since an absolute
-     * url in Unix is file:// + file.getAbsolutePath() while it is
-     * file:/// + file.getAbsolutePath() under Windows.
-     * Whatever, it should not be a problem to put file:/// in every
-     * case since most parsers for now incorrectly makes no difference
-     * between it.. and users also have problem with that :)
+     * Note that on Windows, an extra '/' must be appended to the
+     * protocol prefix so that there is always 3 consecutive slashes.
      */
     String FILE_PROTOCOL_PREFIX = "file://";
 
