@@ -27,26 +27,38 @@ import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
  *
  * @version $Revision$ $Date$
  */
-public class LocationResolver
-    implements ExtensionResolver {
-    private String m_location;
+public class LocationResolver implements ExtensionResolver {
+    private String location;
 
+    /**
+     * Sets the location for this resolver
+     * @param location the location
+     */
     public void setLocation(final String location) {
-        m_location = location;
+        this.location = location;
     }
 
+    /**
+     * Returns the resolved file
+     * @param extension the extension
+     * @param project the project
+     * @return the file resolved
+     * @throws BuildException if no location is set
+     */
     public File resolve(final Extension extension,
-                        final Project project)
-        throws BuildException {
-        if (null == m_location) {
+                        final Project project) throws BuildException {
+        if (null == location) {
             final String message = "No location specified for resolver";
             throw new BuildException(message);
         }
 
-        return project.resolveFile(m_location);
+        return project.resolveFile(location);
     }
-
+    /**
+     * Returns a string representation of the Location
+     * @return the string representation
+     */
     public String toString() {
-        return "Location[" + m_location + "]";
+        return "Location[" + location + "]";
     }
 }
