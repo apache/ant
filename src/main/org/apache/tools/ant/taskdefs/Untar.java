@@ -72,6 +72,16 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Untar a file.
+ * <p>For JDK 1.1 &quot;last modified time&quot; field is set to current time instead of being
+ * carried from the archive file.</p>
+ * <p>PatternSets are used to select files to extract
+ * <I>from</I> the archive.  If no patternset is used, all files are extracted.
+ * </p>
+ * <p>FileSet>s may be used used to select archived files
+ * to perform unarchival upon.
+ * </p>
+ * <p>File permissions will not be restored on extracted files.</p>
+ * <p>The untar task recognizes the long pathname entries used by GNU tar.<p>
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
@@ -87,12 +97,14 @@ public class Untar extends Expand {
     private UntarCompressionMethod compression = new UntarCompressionMethod();
 
     /**
-     * Set compression method.
+     * Set decompression algorithm to use; default=none.
      *
      * Allowable values are
-     *   none - no compression
-     *   gzip - Gzip compression
-     *   bzip2 - Bzip2 compression
+     * <ul>
+     *   <li>none - no compression
+     *   <li>gzip - Gzip compression
+     *   <li>bzip2 - Bzip2 compression
+     * </ul>
      *
      * @param method compression method
      */

@@ -77,6 +77,7 @@ public abstract class Unpack extends Task {
      *             setSrc(File) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
+     * @ant.attribute ignore="true"
      */
     public void setSrc(String src) {
         log("DEPRECATED - The setSrc(String) method has been deprecated."
@@ -89,6 +90,7 @@ public abstract class Unpack extends Task {
      *             setDest(File) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
+     * @ant.attribute ignore="true"
      */
     public void setDest(String dest) {
         log("DEPRECATED - The setDest(String) method has been deprecated."
@@ -97,7 +99,7 @@ public abstract class Unpack extends Task {
     }
 
     /**
-     * The file to expand.
+     * The file to expand; required.
      * @param src file to expand
      */
     public void setSrc(File src) {
@@ -105,7 +107,7 @@ public abstract class Unpack extends Task {
     }
 
     /**
-     * The destination file or directory.
+     * The destination file or directory; optional.
      * @param dest destination file or directory
      */
     public void setDest(File dest) {
