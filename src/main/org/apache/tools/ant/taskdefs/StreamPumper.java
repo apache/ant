@@ -131,7 +131,7 @@ public class StreamPumper implements Runnable {
             }
             synchronized (this) {
                 finished = true;
-                notify();
+                notifyAll();
             }
         }
     }

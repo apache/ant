@@ -214,7 +214,7 @@ class ProcessDestroyer implements Runnable {
         synchronized (processes) {
             boolean processRemoved = processes.removeElement(process);
             if (processes.size() == 0) {
-                processes.notify();
+                processes.notifyAll();
                 removeShutdownHook();
             }
             return processRemoved;
