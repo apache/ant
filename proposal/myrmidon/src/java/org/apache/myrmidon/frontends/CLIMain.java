@@ -61,6 +61,7 @@ public class CLIMain
     private static final int       FILE_OPT                  = 'f';
     private static final int       LOG_LEVEL_OPT             = 'l';
     private static final int       DEFINE_OPT                = 'D';
+    private static final int       BUILDER_PARAM_OPT         = 'B';
     private static final int       VERSION_OPT               = 1;
     private static final int       LISTENER_OPT              = 2;
     private static final int       TASKLIB_DIR_OPT           = 5;
@@ -91,6 +92,9 @@ public class CLIMain
 
     ///List of user supplied defines
     private Parameters           m_defines     = new Parameters();
+
+    ///List of user supplied parameters for builder
+    private Parameters           m_builderParameters = new Parameters();
 
     /**
      * Main entry point called to run standard Myrmidon.
@@ -128,7 +132,7 @@ public class CLIMain
     private CLOptionDescriptor[] createCLOptions()
     {
         //TODO: localise
-        final CLOptionDescriptor[] options = new CLOptionDescriptor[ 11 ];
+        final CLOptionDescriptor[] options = new CLOptionDescriptor[ 12 ];
 
         options[0] =
             new CLOptionDescriptor( "help",
@@ -199,6 +203,14 @@ public class CLIMain
                                     DEFINE_OPT,
                                     "Define a variable (ie -Dfoo=var)",
                                     new int[ 0 ] );
+
+        options[11] =
+            new CLOptionDescriptor( "builder-parameter",
+                                    CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
+                                    BUILDER_PARAM_OPT,
+                                    "Define a builder parameter (ie -Bfoo=var)" );
+
+
         return options;
     }
 
@@ -241,6 +253,10 @@ public class CLIMain
 
             case DEFINE_OPT:
                 m_defines.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
+                break;
+
+            case BUILDER_PARAM_OPT:
+                m_builderParameters.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
                 break;
 
             case 0: m_targets.add( option.getArgument() ); break;
@@ -310,7 +326,7 @@ public class CLIMain
 
         //create the project
         final Project project = 
-            embeddor.createProject( buildFile.toString(), null, null );
+            embeddor.createProject( buildFile.toString(), null, m_builderParameters );
 
         BufferedReader reader = null;
 
