@@ -9,6 +9,8 @@ package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
 import java.util.Map;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
@@ -27,6 +29,9 @@ public class DefaultTaskContext
     extends DefaultContext
     implements TaskContext
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultTaskContext.class );
+
     /**
      * Constructor for Context with no parent contexts.
      */
@@ -61,7 +66,8 @@ public class DefaultTaskContext
         try { return (JavaVersion)get( JAVA_VERSION ); }
         catch( final ContextException ce )
         {
-            throw new IllegalStateException( "No JavaVersion in Context" );
+            final String message = REZ.getString( "no-version.error" );
+            throw new IllegalStateException( message );
         }
     }
 
@@ -76,7 +82,8 @@ public class DefaultTaskContext
         try { return (String)get( NAME ); }
         catch( final ContextException ce )
         {
-            throw new IllegalStateException( "No Name in Context" );
+            final String message = REZ.getString( "no-name.error" );
+            throw new IllegalStateException( message );
         }
     }
 
@@ -90,7 +97,8 @@ public class DefaultTaskContext
         try { return (File)get( BASE_DIRECTORY ); }
         catch( final ContextException ce )
         {
-            throw new IllegalStateException( "No Base Directory in Context" );
+            final String message = REZ.getString( "no-dir.error" );
+            throw new IllegalStateException( message );
         }
     }
 
@@ -151,8 +159,8 @@ public class DefaultTaskContext
         {
             if( null == getParent() )
             {
-                throw new TaskException( "Can't set a property with parent scope when context " +
-                                         " has no parent" );
+                final String message = REZ.getString( "no-parent.error" );
+                throw new TaskException( message );
             }
             else
             {
@@ -172,7 +180,8 @@ public class DefaultTaskContext
         }
         else
         {
-            throw new IllegalStateException( "Unknown property scope! (" + scope + ")" );
+            final String message = REZ.getString( "bad-scope.error", scope );
+            throw new IllegalStateException( message );
         }
     }
 
@@ -208,21 +217,21 @@ public class DefaultTaskContext
     {
         if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
         {
-            throw new TaskException( "Property " + BASE_DIRECTORY +
-                                     " must have a value of type " +
-                                     File.class.getName() );
+            final String message = 
+                REZ.getString( "bad-property.error", BASE_DIRECTORY, File.class.getName() );
+            throw new TaskException( message );
         }
         else if( NAME.equals( name ) && !( value instanceof String ) )
         {
-            throw new TaskException( "Property " + NAME +
-                                     " must have a value of type " +
-                                     String.class.getName() );
+            final String message = 
+                REZ.getString( "bad-property.error", NAME, String.class.getName() );
+            throw new TaskException( message );
         }
         else if( JAVA_VERSION.equals( name ) && !( value instanceof JavaVersion ) )
         {
-            throw new TaskException( "Property " + JAVA_VERSION +
-                                     " must have a value of type " +
-                                     JavaVersion.class.getName() );
+            final String message = 
+                REZ.getString( "bad-property.error", JAVA_VERSION, JavaVersion.class.getName() );
+            throw new TaskException( message );
         }
     }
 }
