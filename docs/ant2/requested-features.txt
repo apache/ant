@@ -33,7 +33,7 @@ enhancements of existing tasks.
   especially for sending emails. Make the existing one more flexible
   (stylesheet used by XmlLogger).
 
-  Could be part of the same module task would be developed in?
+  Could be part of the same module tasks would be developed in?
 
 * make the default logger's output clear, informative, and terse.
 
@@ -64,7 +64,7 @@ enhancements of existing tasks.
 * Task to extract classes from a JAR file that a given class depends
   on.
 
-  Based on <depend> of IBM's JAX for example.
+  Based on <depend> or IBM's JAX for example.
 
 * Unify <available> and <uptodate> into a more general <condition>
   task, support AND/OR of several tests here.
@@ -428,3 +428,6 @@ V. Things we probably don't agree on.
 * provide a way to define the order in which targets a given target
   depends upon get executed.
 
+* Allow a target to depend on a target which is in another buildfile.  
+
+* Allow a target to reference properties defined in another buildfile.
