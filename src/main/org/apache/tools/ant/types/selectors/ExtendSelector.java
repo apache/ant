@@ -107,7 +107,10 @@ public class ExtendSelector extends BaseSelector {
                     AntClassLoader.initializeClass(c);
                 }
                 dynselector = (FileSelector) c.newInstance();
-                Project.setProjectOnObject(getProject(), dynselector);
+                final Project project = getProject();
+                if ( project != null ) {
+                    project.setProjectReference( dynselector );
+                }
             }
             catch (ClassNotFoundException cnfexcept) {
                 setError("Selector " + classname +

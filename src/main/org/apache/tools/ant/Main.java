@@ -182,7 +182,7 @@ public class Main {
             printMessage(exc);
             System.exit(1);
         }
-        
+
         if (additionalUserProperties != null) {
             for (Enumeration e = additionalUserProperties.keys();
                     e.hasMoreElements();) {
@@ -649,7 +649,9 @@ public class Main {
             try {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
-                Project.setProjectOnObject(project, listener);
+                if ( project != null ) {
+                    project.setProjectReference( listener );
+                }
                 project.addBuildListener(listener);
             } catch (Throwable exc) {
                 throw new BuildException("Unable to instantiate listener "
@@ -672,7 +674,9 @@ public class Main {
             try {
                 handler = (InputHandler)
                     (Class.forName(inputHandlerClassname).newInstance());
-                Project.setProjectOnObject(project, handler);
+                if ( project != null ) {
+                    project.setProjectReference( handler );
+                }
             } catch (ClassCastException e) {
                 String msg = "The specified input handler class "
                     + inputHandlerClassname

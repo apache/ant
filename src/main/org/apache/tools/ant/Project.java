@@ -115,12 +115,12 @@ public class Project {
     private static final String VISITED = "VISITED";
 
     /**
-     * The class name of the Ant class loader to use for 
+     * The class name of the Ant class loader to use for
      * JDK 1.2 and above
      */
     private static final String ANTCLASSLOADER_JDK12
         = "org.apache.tools.ant.loader.AntClassLoader2";
-    
+
     /**
      * Version constant for Java 1.0
      *
@@ -219,10 +219,10 @@ public class Project {
      * The default input stream used to read any input
      */
     private InputStream defaultInputStream = null;
-    
+
     /**
      * Sets the input handler
-     * 
+     *
      * @param handler the InputHandler instance to use for gathering input.
      */
     public void setInputHandler(InputHandler handler) {
@@ -230,11 +230,11 @@ public class Project {
     }
 
     /**
-     * Set the default System input stream. Normally this stream is set to 
+     * Set the default System input stream. Normally this stream is set to
      * System.in. This inputStream is used when no task inptu redirection is
      * being performed.
      *
-     * @param defaultInputStream the default input stream to use when input 
+     * @param defaultInputStream the default input stream to use when input
      *        is reuested.
      * @since Ant 1.6
      */
@@ -245,17 +245,17 @@ public class Project {
     /**
      * Get this project's input stream
      *
-     * @return the InputStream instance in use by this Porject instance to 
+     * @return the InputStream instance in use by this Porject instance to
      * read input
      */
     public InputStream getDefaultInputStream() {
         return defaultInputStream;
     }
-    
+
     /**
      * Retrieves the current input handler.
      *
-     * @return the InputHandler instance currently in place for the project 
+     * @return the InputHandler instance currently in place for the project
      *         instance.
      */
     public InputHandler getInputHandler() {
@@ -265,11 +265,11 @@ public class Project {
     /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
 
-    /** 
-     * Flag which catches Listeners which try to use System.out or System.err 
+    /**
+     * Flag which catches Listeners which try to use System.out or System.err
      */
     private boolean loggingMessage = false;
-    
+
     /**
      * Creates a new Ant project.
      */
@@ -359,7 +359,7 @@ public class Project {
      * a given path
      *
      * @param path the path from whcih clases are to be loaded.
-     * 
+     *
      * @return an appropriate classloader
      */
     public AntClassLoader createClassLoader(Path path) {
@@ -496,7 +496,7 @@ public class Project {
      * @since 1.5
      */
     public synchronized void setNewProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).setNewProperty(null, name, 
+        PropertyHelper.getPropertyHelper(this).setNewProperty(null, name,
                                                               value);
     }
 
@@ -510,7 +510,7 @@ public class Project {
      * @see #setProperty(String,String)
      */
     public synchronized void setUserProperty(String name, String value) {
-        PropertyHelper.getPropertyHelper(this).setUserProperty(null, name, 
+        PropertyHelper.getPropertyHelper(this).setUserProperty(null, name,
                                                                value);
     }
 
@@ -1134,7 +1134,7 @@ public class Project {
 
         try {
             Object o = c.newInstance();
-            setProjectOnObject(this, o);
+            setProjectReference( o );
             Task task = null;
             if (o instanceof Task) {
                task = (Task) o;
@@ -1247,7 +1247,7 @@ public class Project {
             } else {
                  o = ctor.newInstance(new Object[] {this});
             }
-            setProjectOnObject(this, o);
+            setProjectReference( o );
             String msg = "   +DataType: " + typeName;
             log (msg, MSG_DEBUG);
             return o;
@@ -1302,19 +1302,19 @@ public class Project {
     }
 
     /**
-     * Read data from the default input stream. If no default has been 
-     * specified, System.in is used. 
+     * Read data from the default input stream. If no default has been
+     * specified, System.in is used.
      *
      * @param buffer the buffer into which data is to be read.
      * @param offset the offset into the buffer at which data is stored.
      * @param length the amount of data to read
      *
      * @return the number of bytes read
-     * 
+     *
      * @exception IOException if the data cannot be read
      * @since Ant 1.6
      */
-    public int defaultInput(byte[] buffer, int offset, int length) 
+    public int defaultInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (defaultInputStream != null) {
             return defaultInputStream.read(buffer, offset, length);
@@ -1322,7 +1322,7 @@ public class Project {
             throw new EOFException("No input provided for project");
         }
     }
-    
+
     /**
      * Demux an input request to the correct task.
      *
@@ -1331,11 +1331,11 @@ public class Project {
      * @param length the amount of data to read
      *
      * @return the number of bytes read
-     * 
+     *
      * @exception IOException if the data cannot be read
      * @since Ant 1.6
-     */     
-    public int demuxInput(byte[] buffer, int offset, int length) 
+     */
+    public int demuxInput(byte[] buffer, int offset, int length)
         throws IOException {
         Task task = getThreadTask(Thread.currentThread());
         if (task == null) {
@@ -1344,7 +1344,7 @@ public class Project {
             return task.handleInput(buffer, offset, length);
         }
     }
-    
+
     /**
      * Demultiplexes flush operation so that each task receives the appropriate
      * messages. If the current thread is not currently executing a task,
@@ -1369,8 +1369,8 @@ public class Project {
         }
     }
 
-    
-    
+
+
     /**
      * Executes the specified target and any targets it depends on.
      *
@@ -2072,11 +2072,11 @@ public class Project {
         Vector listeners = getBuildListeners();
         synchronized (this) {
             if (loggingMessage) {
-                throw new BuildException("Listener attempted to access " 
-                    + (priority == MSG_ERR ? "System.err" : "System.out") 
+                throw new BuildException("Listener attempted to access "
+                    + (priority == MSG_ERR ? "System.err" : "System.out")
                     + " - infinite loop terminated");
             }
-            loggingMessage = true;                
+            loggingMessage = true;
             for (int i = 0; i < listeners.size(); i++) {
                 BuildListener listener = (BuildListener) listeners.elementAt(i);
                 listener.messageLogged(event);
@@ -2166,7 +2166,7 @@ public class Project {
         return task;
     }
 
-    
+
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
@@ -2274,7 +2274,7 @@ public class Project {
                 return taskClass;
             } catch (NoClassDefFoundError ncdfe) {
                 project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task " 
+                        + ncdfe.getMessage() + ") for task "
                         + key, Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 project.log("Could not load class (" + value
@@ -2292,7 +2292,7 @@ public class Project {
             if (!(key instanceof String)) {
                 return null;
             }
-            
+
             project.log("Get task " + key, Project.MSG_DEBUG);
             Object taskClass = getTask((String) key);
             if (taskClass != null) {
@@ -2305,27 +2305,24 @@ public class Project {
             return get(key) != null;
         }
     }
-    
+
     /**
-     * set the project on a created object using object.setProject(project).
+     * Set a reference to this Project on the parameterized object.
      * Need to set the project before other set/add elements
      * are called
-     * @param project the project object
-     * @param obj the object to invoke setProject(project) on
+     * @param obj the object to invoke setProject(this) on
      */
-    public static void setProjectOnObject(Project project, Object obj) {
-        if (project == null)
-            return;
-        if (obj instanceof ProjectComponent) {
-            ((ProjectComponent) obj).setProject(project);
+    public final void setProjectReference( final Object obj ) {
+        if ( obj instanceof ProjectComponent ) {
+            ( (ProjectComponent) obj ).setProject( this );
             return;
         }
         try {
-            Method method = 
+            Method method =
                 obj.getClass().getMethod(
-                    "setProject", new Class[] {Project.class});
-            if (method != null) {
-                method.invoke(obj, new Object[] {project});
+                    "setProject", new Class[] {Project.class} );
+            if ( method != null ) {
+                method.invoke( obj, new Object[] { this } );
             }
         } catch (Throwable e) {
             // ignore this if the object does not have
@@ -2333,5 +2330,4 @@ public class Project {
             // is private/protected.
         }
     }
-
 }

@@ -65,12 +65,12 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 
-/** 
+/**
  * Component creation and configuration.
  *
  * This is cut&paste from Project.java of everything related to
  * task/type management. Project will just delegate.
- * 
+ *
  * A very simple hook mechnism is provided that allows users to plug
  * in custom code. It is also possible to replace the default behavior
  * ( for example in an app embeding ant )
@@ -407,7 +407,9 @@ public class ComponentHelper  {
 
         try {
             Object o = c.newInstance();
-            Project.setProjectOnObject(project, o);
+            if ( project != null ) {
+                project.setProjectReference( o );
+            }
             Task task = null;
             if (o instanceof Task) {
                 task = (Task) o;
@@ -416,7 +418,9 @@ public class ComponentHelper  {
                 // and an Adapter
                 TaskAdapter taskA = new TaskAdapter();
                 taskA.setProxy(o);
-                Project.setProjectOnObject(project, taskA);
+                if ( project != null ) {
+                    project.setProjectReference( taskA );
+                }
                 task = taskA;
             }
             task.setTaskType(taskType);
@@ -521,7 +525,9 @@ public class ComponentHelper  {
             } else {
                 o = ctor.newInstance(new Object[] {this});
             }
-            Project.setProjectOnObject(project, o);
+            if ( project != null ) {
+                project.setProjectReference( o );
+            }
             String msg = "   +DataType: " + typeName;
             project.log(msg, Project.MSG_DEBUG);
             return o;
