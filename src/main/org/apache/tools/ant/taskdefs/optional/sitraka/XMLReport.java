@@ -198,9 +198,9 @@ public class XMLReport {
         // Iterate over the classpath to identify reference classes
         classFiles = new Hashtable();
         ClassPathLoader cpl = new ClassPathLoader(classPath);
-        Enumeration enum = cpl.loaders();
-        while (enum.hasMoreElements()) {
-            ClassPathLoader.FileLoader fl = (ClassPathLoader.FileLoader) enum.nextElement();
+        Enumeration e = cpl.loaders();
+        while (e.hasMoreElements()) {
+            ClassPathLoader.FileLoader fl = (ClassPathLoader.FileLoader) e.nextElement();
             ClassFile[] classes = fl.getClasses();
             log("Processing " + classes.length + " classes in " + fl.getFile());
             // process all classes
@@ -435,9 +435,9 @@ public class XMLReport {
         int total_lines = 0;
 
         // use the map for access, all nodes should be there
-        Enumeration enum = pkgMap.elements();
-        while (enum.hasMoreElements()) {
-            Element pkgElem = (Element) enum.nextElement();
+        Enumeration e = pkgMap.elements();
+        while (e.hasMoreElements()) {
+            Element pkgElem = (Element) e.nextElement();
             String pkgname = pkgElem.getAttribute("name");
             Element[] classes = getClasses(pkgElem);
             int pkg_calls = 0;
@@ -461,10 +461,10 @@ public class XMLReport {
                     pkg_total_methods += Integer.parseInt(covdata.getAttribute("total_methods"));
                     pkg_hit_lines += Integer.parseInt(covdata.getAttribute("hit_lines"));
                     pkg_total_lines += Integer.parseInt(covdata.getAttribute("total_lines"));
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException ex) {
                     log("Error parsing '" + classname + "' (" + j + "/"
                         + classes.length + ") in package '" + pkgname + "'");
-                    throw e;
+                    throw ex;
                 }
             }
             Element covdata = getCovDataChild(pkgElem);

@@ -525,8 +525,8 @@ public class JUnitTestRunner implements TestListener {
 
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
-        for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
-            Object key = enum.nextElement();
+        for (Enumeration e = p.keys(); e.hasMoreElements();) {
+            Object key = e.nextElement();
             props.put(key, p.get(key));
         }
         t.setProperties(props);

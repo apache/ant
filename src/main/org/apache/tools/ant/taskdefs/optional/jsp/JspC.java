@@ -614,9 +614,9 @@ public class JspC extends MatchingTask {
      */
     public void deleteEmptyJavaFiles() {
         if (javaFiles != null) {
-            Enumeration enum = javaFiles.elements();
-            while (enum.hasMoreElements()) {
-                File file = (File) enum.nextElement();
+            Enumeration e = javaFiles.elements();
+            while (e.hasMoreElements()) {
+                File file = (File) e.nextElement();
                 if (file.exists() && file.length() == 0) {
                     log("deleting empty output file " + file);
                     file.delete();

@@ -91,9 +91,9 @@ public abstract class DefaultJspCompilerAdapter
 
         niceSourceList.append(lSep);
 
-        Enumeration enum = compileList.elements();
-        while (enum.hasMoreElements()) {
-            String arg = (String) enum.nextElement();
+        Enumeration e = compileList.elements();
+        while (e.hasMoreElements()) {
+            String arg = (String) e.nextElement();
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg + lSep);
         }

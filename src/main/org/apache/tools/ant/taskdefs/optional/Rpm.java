@@ -310,8 +310,8 @@ public class Rpm extends Task {
     protected String guessRpmBuildCommand() {
         Vector env = Execute.getProcEnvironment();
         String path = null;
-        for (Enumeration enum = env.elements(); enum.hasMoreElements();) {
-            String var = (String) enum.nextElement();
+        for (Enumeration e = env.elements(); e.hasMoreElements();) {
+            String var = (String) e.nextElement();
             if (var.startsWith("PATH=") || var.startsWith("Path=")) {
                 path = var.substring(6 /* "PATH=".length() + 1 */);
                 break;

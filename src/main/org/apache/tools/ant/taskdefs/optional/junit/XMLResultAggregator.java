@@ -165,10 +165,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
             throw new BuildException("Unable to write test aggregate to '" + destFile + "'", e);
         }
         // apply transformation
-        Enumeration enum = transformers.elements();
-        while (enum.hasMoreElements()) {
+        Enumeration e = transformers.elements();
+        while (e.hasMoreElements()) {
             AggregateTransformer transformer =
-                (AggregateTransformer) enum.nextElement();
+                (AggregateTransformer) e.nextElement();
             transformer.setXmlDocument(rootElement.getOwnerDocument());
             transformer.transform();
         }

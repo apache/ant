@@ -74,9 +74,9 @@ public class And extends ConditionBase implements Condition {
      * @exception BuildException if an error occurs
      */
     public boolean eval() throws BuildException {
-        Enumeration enum = getConditions();
-        while (enum.hasMoreElements()) {
-            Condition c = (Condition) enum.nextElement();
+        Enumeration e = getConditions();
+        while (e.hasMoreElements()) {
+            Condition c = (Condition) e.nextElement();
             if (!c.eval()) {
                 return false;
             }

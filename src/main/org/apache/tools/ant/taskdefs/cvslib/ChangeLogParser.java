@@ -103,10 +103,10 @@ class ChangeLogParser {
      */
     CVSEntry[] getEntrySetAsArray() {
         final CVSEntry[] array = new CVSEntry[ m_entries.size() ];
-        Enumeration enum = m_entries.elements();
+        Enumeration e = m_entries.elements();
         int i = 0;
-        while (enum.hasMoreElements()) {
-            array[i++] = (CVSEntry) enum.nextElement();
+        while (e.hasMoreElements()) {
+            array[i++] = (CVSEntry) e.nextElement();
         }
         return array;
     }

@@ -302,9 +302,9 @@ public class EchoProperties extends Task {
             }
         }
 
-        Enumeration enum = propertySets.elements();
-        while (enum.hasMoreElements()) {
-            PropertySet ps = (PropertySet) enum.nextElement();
+        Enumeration e = propertySets.elements();
+        while (e.hasMoreElements()) {
+            PropertySet ps = (PropertySet) e.nextElement();
             CollectionUtils.putAll(allProps, ps.getProperties());
         }
 
@@ -348,7 +348,7 @@ public class EchoProperties extends Task {
             if (os != null) {
                 try {
                     os.close();
-                } catch (IOException e) {
+                } catch (IOException ex) {
                     //ignore
                 }
             }
@@ -369,9 +369,9 @@ public class EchoProperties extends Task {
     protected void saveProperties(Hashtable allProps, OutputStream os)
              throws IOException, BuildException {
         Properties props = new Properties();
-        Enumeration enum = allProps.keys();
-        while (enum.hasMoreElements()) {
-            String name = enum.nextElement().toString();
+        Enumeration e = allProps.keys();
+        while (e.hasMoreElements()) {
+            String name = e.nextElement().toString();
             String value = allProps.get(name).toString();
             props.put(name, value);
         }
