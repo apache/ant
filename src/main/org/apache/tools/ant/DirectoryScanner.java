@@ -676,6 +676,15 @@ strLoop:
         dirsNotIncluded  = new Vector();
         dirsExcluded     = new Vector();
 
+        if (isIncluded("")) {
+            if (!isExcluded("")) {
+                dirsIncluded.addElement("");
+            } else {
+                dirsExcluded.addElement("");
+            }
+        } else {
+            dirsNotIncluded.addElement("");
+        }
         scandir(basedir, "", true);
     }
 
