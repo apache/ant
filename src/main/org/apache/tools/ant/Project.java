@@ -59,6 +59,7 @@ import java.util.*;
 import java.text.*;
 
 import org.apache.tools.ant.types.FilterSet; 
+import org.apache.tools.ant.types.FilterSetCollection; 
 import org.apache.tools.ant.util.FileUtils; 
 
 /**
@@ -108,6 +109,7 @@ public class Project {
     private Hashtable taskClassDefinitions = new Hashtable();
     private Hashtable targets = new Hashtable();
     private FilterSet globalFilterSet = new FilterSet();
+    private FilterSetCollection globalFilters = new FilterSetCollection(globalFilterSet);
     private File baseDir;
 
     private Vector listeners = new Vector();
@@ -671,7 +673,7 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null);
     }
 
     /**
@@ -685,7 +687,7 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, overwrite);
     }
 
      /**
@@ -702,7 +704,7 @@ public class Project {
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, 
                            overwrite, preserveLastModified);
     }
 
@@ -728,7 +730,7 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null);
     }
 
     /**
@@ -742,7 +744,7 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, overwrite);
     }
 
     /**
@@ -759,7 +761,7 @@ public class Project {
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, 
                            overwrite, preserveLastModified);
     }
 

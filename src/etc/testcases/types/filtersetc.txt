@@ -1,0 +1,7 @@
+Combined filter test
+@aaaa@ - should change
+@bbbb@ - should change
+@cccc@ - should not change
+%cccc^ - should change
+^dddd% - should not change
+%dddd^ - should change
