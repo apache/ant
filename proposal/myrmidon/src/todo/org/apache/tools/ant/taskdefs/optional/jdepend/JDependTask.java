@@ -12,14 +12,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.PathTokenizer;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -33,62 +31,41 @@ import org.apache.tools.ant.types.Reference;
  * @author <a href="mailto:Jerome@jeromelacoste.com">Jerome Lacoste</a>
  * @author <a href="mailto:roxspring@yahoo.com">Rob Oxspring</a>
  */
-public class JDependTask extends Task
+public class JDependTask
+    extends Task
 {
-
     /**
      * No problems with this test.
      */
     private final static int SUCCESS = 0;
+
     /**
      * An error occured.
      */
     private final static int ERRORS = 1;
-    private boolean _haltonerror = false;
-    private boolean _fork = false;
-    //private Integer _timeout = null;
 
-    private String _jvm = null;
-    private String format = "text";
-    private Path _compileClasspath;
-    private File _dir;
-
-    // optional attributes
-    private File _outputFile;
-    //private CommandlineJava commandline = new CommandlineJava();
-
-    // required attributes
-    private Path _sourcesPath;
-
-    public JDependTask()
-    {
-    }
+    private boolean m_fork;
+    private String m_jvm;
+    private String m_format = "text";
+    private Path m_compileClasspath;
+    private File m_dir;
+    private File m_outputFile;
+    private Path m_sourcesPath;
 
     /**
      * Set the classpath to be used for this compilation.
-     *
-     * @param classpath The new Classpath value
      */
-    public void setClasspath( Path classpath )
+    public void setClasspath( final Path classpath )
+        throws TaskException
     {
-        if( _compileClasspath == null )
+        if( m_compileClasspath == null )
         {
-            _compileClasspath = classpath;
+            m_compileClasspath = classpath;
         }
         else
         {
-            _compileClasspath.append( classpath );
+            m_compileClasspath.append( classpath );
         }
-    }
-
-    /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
-     *
-     * @param r The new ClasspathRef value
-     */
-    public void setClasspathRef( Reference r )
-    {
-        createClasspath().setRefid( r );
     }
 
     /**
@@ -97,9 +74,9 @@ public class JDependTask extends Task
      * @param dir the directory to invoke the JVM from.
      * @see #setFork(boolean)
      */
-    public void setDir( File dir )
+    public void setDir( final File dir )
     {
-        _dir = dir;
+        m_dir = dir;
     }
 
     /**
@@ -108,24 +85,14 @@ public class JDependTask extends Task
      * @param value <tt>true</tt> if a JVM should be forked, otherwise <tt>false
      *      <tt>
      */
-    public void setFork( boolean value )
+    public void setFork( final boolean fork )
     {
-        _fork = value;
+        m_fork = fork;
     }
 
-    public void setFormat( FormatAttribute ea )
+    public void setFormat( final FormatAttribute format )
     {
-        format = ea.getValue();
-    }
-
-    /**
-     * Halt on Failure? default: false.
-     *
-     * @param value The new Haltonerror value
-     */
-    public void setHaltonerror( boolean value )
-    {
-        _haltonerror = value;
+        m_format = format.getValue();
     }
 
     /**
@@ -135,10 +102,9 @@ public class JDependTask extends Task
      * @param value the new VM to use instead of <tt>java</tt>
      * @see #setFork(boolean)
      */
-    public void setJvm( String value )
+    public void setJvm( final String jvm )
     {
-        _jvm = value;
-
+        m_jvm = jvm;
     }
 
     /*
@@ -149,49 +115,9 @@ public class JDependTask extends Task
      * return _timeout;
      * }
      */
-    public void setOutputFile( File outputFile )
+    public void setOutputFile( final File outputFile )
     {
-        _outputFile = outputFile;
-    }
-
-    /**
-     * Gets the classpath to be used for this compilation.
-     *
-     * @return The Classpath value
-     */
-    public Path getClasspath()
-    {
-        return _compileClasspath;
-    }
-
-    public File getDir()
-    {
-        return _dir;
-    }
-
-    public boolean getFork()
-    {
-        return _fork;
-    }
-
-    public boolean getHaltonerror()
-    {
-        return _haltonerror;
-    }
-
-    public File getOutputFile()
-    {
-        return _outputFile;
-    }
-
-    /**
-     * Gets the sourcepath.
-     *
-     * @return The Sourcespath value
-     */
-    public Path getSourcespath()
-    {
-        return _sourcesPath;
+        m_outputFile = outputFile;
     }
 
     /**
@@ -201,11 +127,11 @@ public class JDependTask extends Task
      */
     public Path createClasspath()
     {
-        if( _compileClasspath == null )
+        if( m_compileClasspath == null )
         {
-            _compileClasspath = new Path();
+            m_compileClasspath = new Path();
         }
-        return _compileClasspath.createPath();
+        return m_compileClasspath.createPath();
     }
 
     /**
@@ -216,46 +142,50 @@ public class JDependTask extends Task
      *      the JVM.
      * @see #setFork(boolean)
      */
-    public Argument createJvmarg( CommandlineJava commandline )
+    public Argument createJvmarg( final CommandlineJava commandline )
     {
         return commandline.createVmArgument();
     }
 
     /**
      * Maybe creates a nested classpath element.
-     *
-     * @return Description of the Returned Value
      */
     public Path createSourcespath()
     {
-        if( _sourcesPath == null )
+        if( m_sourcesPath == null )
         {
-            _sourcesPath = new Path();
+            m_sourcesPath = new Path();
         }
-        return _sourcesPath.createPath();
+        return m_sourcesPath.createPath();
     }
 
     public void execute()
         throws TaskException
     {
+        final CommandlineJava commandline = new CommandlineJava();
 
-        CommandlineJava commandline = new CommandlineJava();
-
-        if( "text".equals( format ) )
+        if( "text".equals( m_format ) )
+        {
             commandline.setClassname( "jdepend.textui.JDepend" );
-        else if( "xml".equals( format ) )
+        }
+        else if( "xml".equals( m_format ) )
+        {
             commandline.setClassname( "jdepend.xmlui.JDepend" );
+        }
 
-        if( _jvm != null )
-            commandline.setVm( _jvm );
+        if( m_jvm != null )
+        {
+            commandline.setVm( m_jvm );
+        }
 
-        if( getSourcespath() == null )
+        if( m_sourcesPath == null )
+        {
             throw new TaskException( "Missing Sourcepath required argument" );
+        }
 
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
-        boolean wasKilled = false;
-        if( !getFork() )
+        if( !m_fork )
         {
             exitValue = executeInVM( commandline );
         }
@@ -266,14 +196,10 @@ public class JDependTask extends Task
 
         // if there is an error/failure and that it should halt, stop everything otherwise
         // just log a statement
-        boolean errorOccurred = exitValue == JDependTask.ERRORS;
-
+        final boolean errorOccurred = exitValue == JDependTask.ERRORS;
         if( errorOccurred )
         {
-            if( getHaltonerror() )
-                throw new TaskException( "JDepend failed" );
-            else
-                getLogger().error( "JDepend FAILED" );
+            throw new TaskException( "JDepend failed" );
         }
     }
 
@@ -282,16 +208,9 @@ public class JDependTask extends Task
      * Execute the task by forking a new JVM. The command will block until it
      * finishes. To know if the process was destroyed or not, use the <tt>
      * killedProcess()</tt> method of the watchdog class.
-     *
-     * @param watchdog the watchdog in charge of cancelling the test if it
-     *      exceeds a certain amount of time. Can be <tt>null</tt> , in this
-     *      case the test could probably hang forever.
-     * @param commandline Description of Parameter
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
-    public int executeAsForked( CommandlineJava commandline )
+    private int executeAsForked( final CommandlineJava commandline )
         throws TaskException
     {
         // if not set, auto-create the ClassPath from the project
@@ -299,22 +218,22 @@ public class JDependTask extends Task
 
         // not sure whether this test is needed but cost nothing to put.
         // hope it will be reviewed by anybody competent
-        if( getClasspath().toString().length() > 0 )
+        if( m_compileClasspath.toString().length() > 0 )
         {
             createJvmarg( commandline ).setValue( "-classpath" );
-            createJvmarg( commandline ).setValue( getClasspath().toString() );
+            createJvmarg( commandline ).setValue( m_compileClasspath.toString() );
         }
 
-        if( getOutputFile() != null )
+        if( m_outputFile != null )
         {
             // having a space between the file and its path causes commandline to add quotes "
             // around the argument thus making JDepend not taking it into account. Thus we split it in two
             commandline.createArgument().setValue( "-file" );
-            commandline.createArgument().setValue( _outputFile.getPath() );
+            commandline.createArgument().setValue( m_outputFile.getPath() );
             // we have to find a cleaner way to put this output
         }
 
-        PathTokenizer sourcesPath = new PathTokenizer( getSourcespath().toString() );
+        PathTokenizer sourcesPath = new PathTokenizer( m_sourcesPath.toString() );
         while( sourcesPath.hasMoreTokens() )
         {
             File f = new File( sourcesPath.nextToken() );
@@ -329,13 +248,15 @@ public class JDependTask extends Task
         setupLogger( exe );
 
         exe.setCommandline( commandline.getCommandline() );
-        if( getDir() != null )
+        if( m_dir != null )
         {
-            exe.setWorkingDirectory( getDir() );
+            exe.setWorkingDirectory( m_dir );
         }
 
-        if( getOutputFile() != null )
-            getLogger().info( "Output to be stored in " + getOutputFile().getPath() );
+        if( m_outputFile != null )
+        {
+            getLogger().info( "Output to be stored in " + m_outputFile.getPath() );
+        }
         getLogger().debug( "Executing: " + commandline.toString() );
         try
         {
@@ -360,22 +281,26 @@ public class JDependTask extends Task
      * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    public int executeInVM( CommandlineJava commandline )
+    public int executeInVM( final CommandlineJava commandline )
         throws TaskException
     {
         jdepend.textui.JDepend jdepend;
 
-        if( "xml".equals( format ) )
+        if( "xml".equals( m_format ) )
+        {
             jdepend = new jdepend.xmlui.JDepend();
+        }
         else
+        {
             jdepend = new jdepend.textui.JDepend();
+        }
 
-        if( getOutputFile() != null )
+        if( m_outputFile != null )
         {
             FileWriter fw;
             try
             {
-                fw = new FileWriter( getOutputFile().getPath() );
+                fw = new FileWriter( m_outputFile.getPath() );
             }
             catch( IOException e )
             {
@@ -384,10 +309,10 @@ public class JDependTask extends Task
                 throw new TaskException( msg );
             }
             jdepend.setWriter( new PrintWriter( fw ) );
-            getLogger().info( "Output to be stored in " + getOutputFile().getPath() );
+            getLogger().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
-        PathTokenizer sourcesPath = new PathTokenizer( getSourcespath().toString() );
+        PathTokenizer sourcesPath = new PathTokenizer( m_sourcesPath.toString() );
         while( sourcesPath.hasMoreTokens() )
         {
             File f = new File( sourcesPath.nextToken() );
@@ -412,15 +337,5 @@ public class JDependTask extends Task
         }
         jdepend.analyze();
         return SUCCESS;
-    }
-
-    public static class FormatAttribute extends EnumeratedAttribute
-    {
-        private String[] formats = new String[]{"xml", "text"};
-
-        public String[] getValues()
-        {
-            return formats;
-        }
     }
 }
