@@ -1546,7 +1546,7 @@ public class Javadoc extends Task {
      *
      * @since Ant 1.6
      */
-    public void setNoqualifier(String noq) {
+    public void setNoqualifier(String noqualifier) {
         if (!javadoc4) {
             log ("-noqualifier option not supported on JavaDoc < 1.4",
                  Project.MSG_VERBOSE);
