@@ -1,0 +1,96 @@
+A DESCRIPTION OF THE SELECTOR TEST FRAMEWORK
+
+When writing tests for selectors, I found that I wanted to have some
+standard way of working with a set of files and testing whether one or
+another of them was selected. To that end, I created a base class called
+BaseSelectorTest that does most of the heavy lifting. Of course, you can
+test your selectors any way you want, but if you want to reuse this code,
+read on.
+
+What BaseSelectorTest does is use an ant build file
+"src/etc/testcases/types/selector.xml" to copy a tree of files out of
+"src/etc/testcases/taskdefs/expected" into a "selectortest" directories.
+Then it takes a list of 12 of the files and directories in this tree, and
+applies whatever selector you pass in to each one. It passes back to your
+test a 12 character long string indicating which of the 12 files and
+directories was selected, using 'T' for selected and 'F' for not selected.
+In the Test class for your selector, you override the getInstance() method
+to create your own type of selector, and set the elements of your selector
+a variety of ways to ensure that the string of T's and F's returned when
+the selector is applied to those 12 files is correct.
+
+So, for example, DepthSelectorTest.java extends BaseSelectorTest and has
+the following code:
+
+
+    public BaseSelector getInstance() {
+        return new DepthSelector();
+    }
+
+
+    public void testSelectionBehaviour() {
+        DepthSelector s;
+        String results;
+
+
+        try {
+            makeBed();
+
+
+            s = (DepthSelector)getInstance();
+            s.setMin(20);
+            s.setMax(25);
+            results = selectionString(s);
+            assertEquals("FFFFFFFFFFFF", results);
+
+
+            s = (DepthSelector)getInstance();
+            s.setMin(0);
+            results = selectionString(s);
+            assertEquals("TTTTTTTTTTTT", results);
+
+
+            s = (DepthSelector)getInstance();
+            s.setMin(1);
+            results = selectionString(s);
+            assertEquals("FFFFFTTTTTTT", results);
+
+
+The first test says that none of the 12 files or directories will match if
+the depth range for the selector is between 20 and 25 (that would be one
+deep directory tree!). The second says that all files and directories
+match if the minimum depth is set to 0 and the maximum isn't specified. The
+third test says that if the minumum depth is 1, the first 5 entries in the
+list of 12 will not be selected and the rest will.
+
+
+You can find the 12 files and directories that are tested for selection in
+the BaseSelectorTest class. I used a fixed list so that if someone added
+new files to the src/etc/testcases/types directory it wouldn't break my
+tests:
+
+
+    protected String[] filenames = {".","asf-logo.gif.md5","asf-
+    logo.gif.bz2",
+            "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-
+            logo.gif.zip",
+            "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar.gz",
+            "tar/gz/asf-logo.gif.tar.gz","tar/bz2/asf-logo.gif.tar.bz2",
+            "tar/bz2/asf-logo-huge.tar.bz2","tar/bz2"};
+
+
+If you wish to use this set of files and directories to test your selector,
+you can reuse the BaseSelectorTest with no change to it.
+
+You may find you need to alter the build file so that you get some
+variation in the files that your selector can work with. Most of the core
+selectors have required that kind of modification. If you do that, make
+sure that it doesn't alter the output strings on the other selector test,
+or if it does that you update their expected return results.
+
+You may also want to alter the set of files you look at in a particular
+selector test. Since the filelist in BaseSelectorTest is protected, you
+should be able to override it as you need to. Or you can alter the fileset
+in BaseSelectorTest itself, provided you update the test strings in all the
+other unit tests.
+
