@@ -142,7 +142,7 @@ public class ACSDocumentType extends java.lang.Object {
     static class DtdElement {
         private String _name;
         private String[] _contentModel;
-        private HashMap _map = new HashMap();
+        private DtdAttributes _map = new DtdAttributes();
         
         public String getName() {
             return _name;
@@ -156,7 +156,7 @@ public class ACSDocumentType extends java.lang.Object {
         public void setContentModel(String[] model) {
             _contentModel = model;
         }
-        public HashMap getMap() {
+        public DtdAttributes getAttributes() {
             return _map;
         }
     }
@@ -176,13 +176,13 @@ public class ACSDocumentType extends java.lang.Object {
             return _name;
         }
         public void setName(String name) {
-            _name = _name;
+            _name = name;
         }
         public String getType() {
             return _type;
         }
         public void setType(String type) {
-            _name = type;
+            _type = type;
         }
         public String getDefaultValue() {
             return _defaultValue;
@@ -210,6 +210,84 @@ public class ACSDocumentType extends java.lang.Object {
         }
     }
 
+    /**
+     * Class which represents a collection of DTD attributes.
+     */
+    public static class DtdAttributes extends HashMap {
+        /**
+         * Default constructor
+         */
+        public DtdAttributes() {
+        }
+
+        /**
+         * Adds the Attribute
+         *
+         * @param attribute new attribute
+         */
+        public void addAttribute(DtdAttribute attribute) {
+            put(attribute.getName(), attribute);
+        }
+
+        /**
+         * Return the requested attribute
+         *
+         * @param name attribute name
+         * @returns the requested attribute
+         */
+        public DtdAttribute getAttribute(String name) {
+            return (DtdAttribute) get(name);
+        }
+
+        /**
+         * @returns an array of the optional attribute names
+         */
+        public String[] getOptionalAttributes() {
+            ArrayList list = new ArrayList();
+            Iterator i = values().iterator();
+            while(i.hasNext()) {
+                DtdAttribute a = (DtdAttribute)i.next();
+                if (a.isRequired()) {
+                    list.add(a.getName());
+                }
+            }
+            String[] result = new String[list.size()];
+            list.toArray(result);
+            return result;
+        }
+
+        /**
+         * @returns an array of the required attribute names
+         */
+        public String[] getRequiredAttributes() {
+            ArrayList list = new ArrayList();
+            Iterator i = values().iterator();
+            while(i.hasNext()) {
+                DtdAttribute a = (DtdAttribute)i.next();
+                if (!a.isRequired()) {
+                    list.add(a.getName());
+                }
+            }
+            String[] result = new String[list.size()];
+            list.toArray(result);
+            return result;
+        }
+        /**
+         * @returns an array of the all attribute names
+         */
+        public String[] getAttributes() {
+            ArrayList list = new ArrayList();
+            Iterator i = values().iterator();
+            while(i.hasNext()) {
+                DtdAttribute a = (DtdAttribute)i.next();
+                list.add(a.getName());
+            }
+            String[] result = new String[list.size()];
+            list.toArray(result);
+            return result;
+        }
+    }
+    
     /**
      * When parsing XML documents, DTD related events are signaled through
      * this interface. 
@@ -303,7 +381,7 @@ public class ACSDocumentType extends java.lang.Object {
             attrib.setRequired(isRequired);
             attrib.setDefaultValue(defaultValue);
             attrib.setOptions(options);
-            e.getMap().put(attrib.getName(), e);
+            e.getAttributes().addAttribute(attrib);
         }
 
         /**
