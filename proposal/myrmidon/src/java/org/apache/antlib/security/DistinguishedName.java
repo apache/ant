@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.security;
+package org.apache.antlib.security;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +28,7 @@ public class DistinguishedName
         return param;
     }
 
-    public String encode( final String string )
+    private String encode( final String string )
     {
         int end = string.indexOf( ',' );
         if( -1 == end )

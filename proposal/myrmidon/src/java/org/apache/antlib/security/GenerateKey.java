@@ -5,14 +5,13 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.security;
+package org.apache.antlib.security;
 
+import java.io.IOException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
-
-import java.io.IOException;
 
 /**
  * Generates a key.
@@ -51,11 +50,6 @@ public class GenerateKey
     public void setDname( final String dname )
         throws TaskException
     {
-        if( null != m_expandedDname )
-        {
-            throw new TaskException( "It is not possible to specify dname both " +
-                                     "as attribute and element." );
-        }
         m_dname = dname;
     }
 
@@ -69,17 +63,9 @@ public class GenerateKey
         m_keypass = keypass;
     }
 
-    public void setKeysize( final String keysize )
-        throws TaskException
+    public void setKeysize( final int keysize )
     {
-        try
-        {
-            m_keysize = Integer.parseInt( keysize );
-        }
-        catch( final NumberFormatException nfe )
-        {
-            throw new TaskException( "KeySize attribute should be a integer" );
-        }
+        m_keysize = keysize;
     }
 
     public void setKeystore( final String keystore )
@@ -102,17 +88,10 @@ public class GenerateKey
         m_storetype = storetype;
     }
 
-    public void setValidity( final String validity )
+    public void setValidity( final int validity )
         throws TaskException
     {
-        try
-        {
-            m_validity = Integer.parseInt( validity );
-        }
-        catch( final NumberFormatException nfe )
-        {
-            throw new TaskException( "Validity attribute should be a integer" );
-        }
+        m_validity = validity;
     }
 
     public void setVerbose( final boolean verbose )
@@ -120,20 +99,15 @@ public class GenerateKey
         m_verbose = verbose;
     }
 
-    public DistinguishedName createDname()
+    public void addDname( final DistinguishedName distinguishedName )
         throws TaskException
     {
         if( null != m_expandedDname )
         {
-            throw new TaskException( "DName sub-element can only be specified once." );
+            final String message = "DName sub-element can only be specified once.";
+            throw new TaskException( message );
         }
-        if( null != m_dname )
-        {
-            throw new TaskException( "It is not possible to specify dname both " +
-                                     "as attribute and element." );
-        }
-        m_expandedDname = new DistinguishedName();
-        return m_expandedDname;
+        m_expandedDname = distinguishedName;
     }
 
     public void execute()
@@ -259,6 +233,13 @@ public class GenerateKey
             final String message = "dname must be set";
             throw new TaskException( message );
         }
+        else if( null != m_expandedDname && null != m_dname )
+        {
+            final String message = "It is not possible to specify dname both " +
+                "as attribute and element.";
+            throw new TaskException( message );
+        }
+
     }
 }
 

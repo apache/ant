@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.security;
+package org.apache.antlib.security;
 
 public final class DnameParam
 {
@@ -22,12 +22,12 @@ public final class DnameParam
         m_value = value;
     }
 
-    public String getName()
+    protected String getName()
     {
         return m_name;
     }
 
-    public String getValue()
+    protected String getValue()
     {
         return m_value;
     }

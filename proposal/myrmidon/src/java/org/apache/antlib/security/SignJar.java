@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.security;
+package org.apache.antlib.security;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +15,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-
 
 /**
  * Sign a archive.
@@ -206,7 +205,8 @@ public class SignJar
                 final Enumeration entries = jarFile.entries();
                 while( entries.hasMoreElements() )
                 {
-                    final String name = ( (ZipEntry)entries.nextElement() ).getName();
+                    final ZipEntry entry = (ZipEntry)entries.nextElement();
+                    final String name = entry.getName();
                     if( name.startsWith( SIG_START ) && name.endsWith( SIG_END ) )
                     {
                         return true;
@@ -282,7 +282,8 @@ public class SignJar
     private void doOneJar( final File jarSource, final File jarTarget )
         throws TaskException
     {
-        if( isUpToDate( jarSource, jarTarget ) ) {
+        if( isUpToDate( jarSource, jarTarget ) )
+        {
             return;
         }
 

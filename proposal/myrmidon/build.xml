@@ -389,6 +389,13 @@ Legal:
       <include name="org/apache/antlib/selftest/extension1/**" />
     </jar>
 
+    <jar jarfile="${build.lib}/security.atl" basedir="${build.classes}">
+      <include name="org/apache/antlib/security/**"/>
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="security-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+
     <jar jarfile="${build.lib}/runtime.atl" basedir="${build.classes}">
       <include name="org/apache/antlib/runtime/**"/>
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">

@@ -1,0 +1,8 @@
+<ant-lib>
+
+  <types>
+    <task name="generate-key" classname="org.apache.antlib.security.GenerateKey" />
+    <task name="sign-jar" classname="org.apache.antlib.security.SignJar" />
+  </types>
+
+</ant-lib>
