@@ -11,9 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
 import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
@@ -31,7 +29,6 @@ import org.apache.log.Priority;
 import org.apache.log.format.PatternFormatter;
 import org.apache.log.output.io.StreamTarget;
 import org.apache.myrmidon.Constants;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
@@ -381,8 +378,9 @@ public class CLIMain
 
             doBuild( workspace, project, m_targets );
 
-            if( !incremental ) {
-              break;
+            if( !incremental )
+            {
+                break;
             }
 
             final String message = REZ.getString( "repeat.notice" );
@@ -395,8 +393,9 @@ public class CLIMain
 
             String line = reader.readLine();
 
-            if( line.equalsIgnoreCase( "no" ) ) {
-              break;
+            if( line.equalsIgnoreCase( "no" ) )
+            {
+                break;
             }
 
         }

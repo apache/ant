@@ -30,7 +30,6 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.executor.DefaultExecutionFrame;
-import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
@@ -41,7 +40,6 @@ import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**

@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
@@ -26,10 +25,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.type.TypeException;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class used to configure tasks.
