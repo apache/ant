@@ -115,7 +115,8 @@ public class SourceSelector {
             if (targetnames != null) {
                 boolean added = false;
                 targetList.setLength(0);
-                for (int ctarget = 0; ctarget < targetnames.length; ctarget++) {
+                for (int ctarget = 0; !added && ctarget < targetnames.length; 
+                     ctarget++) {
                     Resource atarget = 
                         targets.getResource(targetnames[ctarget]);
                     // if the target does not exist, or exists and
