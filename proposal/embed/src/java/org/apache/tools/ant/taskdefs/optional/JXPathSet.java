@@ -71,11 +71,9 @@ import org.apache.commons.jxpath.*;
  */
 public class JXPathSet extends Task {
 
-    JXPathContext jxpathCtx;
     String path;
-    String value;
+    String valueString;
     String refId;
-    
     
     public JXPathSet() {
     }
@@ -99,12 +97,20 @@ public class JXPathSet extends Task {
     /** Set the value to be used.
      */
     public void setValue( String s ) {
-        this.value=s;
+        this.valueString=s;
     }
 
     public void execute() {
-        jxpathCtx=JXPathContext.newContext( project );
+        JXPathContext jxpathCtx;
+        JXPath jxpathTask=(JXPath)project.getReference( "jxpathTask" );
+        jxpathCtx=jxpathTask.getJXPathContext();
 
+        Object value=null;
+        if( refId!=null )
+            value=project.getReference( refId );
+        if( value==null )
+            value=valueString;
         
+        jxpathCtx.setValue( path, value );
     }    
 }

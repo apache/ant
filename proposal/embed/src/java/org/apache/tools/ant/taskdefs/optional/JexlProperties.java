@@ -74,7 +74,11 @@ public class JexlProperties extends Task implements PropertyInterceptor {
     public JexlProperties() {
     }
     
-    public Object getProperty( Project p, String ns, String name ) {
+    public boolean setProperty( Object ctx, String ns, String name, Object value ) {
+        return false;
+    }
+
+    public Object getProperty( Object p, String ns, String name ) {
         if( ! name.startsWith(PREFIX) )
             return null;
         try {

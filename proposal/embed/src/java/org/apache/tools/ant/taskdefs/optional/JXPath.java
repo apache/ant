@@ -77,8 +77,16 @@ public class JXPath extends Task implements PropertyInterceptor {
     
     public JXPath() {
     }
+
+    public JXPathContext getJXPathContext() {
+        return jxpathCtx;
+    }
     
-    public Object getProperty( Project p, String ns, String name ) {
+    public boolean setProperty( Object c, String ns, String name, Object v ) {
+        return false;
+    }
+    
+    public Object getProperty( Object p, String ns, String name ) {
         if( ! name.startsWith(PREFIX) )
             return null;
         name=name.substring( PREFIX.length() );
@@ -105,13 +113,25 @@ public class JXPath extends Task implements PropertyInterceptor {
         
         return result;
     }
-    
+
+    // testing
+    String foo;
+    public void setFoo( String s ) {
+        System.out.println("Set foo " + s );
+        foo=s;
+    }
+
+    public String getFoo() {
+        return foo;
+    }
     
     public void execute() {
         JXPathIntrospector.registerDynamicClass(Hashtable.class, JXPathHashtableHandler.class);
 
         PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
         phelper.addPropertyInterceptor( this );
+
+        project.addReference( "jxpathTask", this );
         
         jxpathCtx=JXPathContext.newContext( project );
         

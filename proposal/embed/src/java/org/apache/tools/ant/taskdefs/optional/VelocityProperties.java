@@ -76,8 +76,12 @@ public class VelocityProperties extends Task implements PropertyInterceptor {
     
     public VelocityProperties() {
     }
+
+    public boolean setProperty( Object c, String ns, String name, Object v ) {
+        return false;
+    }
     
-    public Object getProperty( Project p, String ns, String name ) {
+    public Object getProperty( Object p, String ns, String name ) {
         if( ! name.startsWith(PREFIX) )
             return null;
         try {
@@ -93,13 +97,16 @@ public class VelocityProperties extends Task implements PropertyInterceptor {
             return null;
         }
     }
-    
+
+    public VelocityEngine getVelocityEngine() {
+        return engine;
+    }
     
     public void execute() {
         try {
             PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
             phelper.addPropertyInterceptor( this );
-            
+
             engine=new VelocityEngine();
             engine.init();
             
