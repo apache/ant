@@ -108,7 +108,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected String memoryMaximumSize;
 
     protected File[] compileList;
-    protected static String lSep = System.getProperty("line.separator");
+    protected static final String lSep = System.getProperty("line.separator");
     protected Javac attributes;
 
     private FileUtils fileUtils = FileUtils.newFileUtils();
