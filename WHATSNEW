@@ -99,6 +99,9 @@ Fixed bugs:
 
 * <jar update="true"> would remove the original manifest.
 
+* Ant will now exit with a return code of 1 if it encounters problems
+  with the command line arguments.
+
 Other changes:
 --------------
 * **/.DS_Store has been added to the list of default pattern excludes.

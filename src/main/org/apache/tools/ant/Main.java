@@ -178,10 +178,11 @@ public class Main {
             Diagnostics.validateVersion();
             m = new Main(args);
         } catch (Throwable exc) {
+            handleLogfile();
             printMessage(exc);
             System.exit(1);
         }
-
+        
         if (additionalUserProperties != null) {
             for (Enumeration e = additionalUserProperties.keys();
                     e.hasMoreElements();) {
@@ -204,24 +205,33 @@ public class Main {
             exc.printStackTrace();
             printMessage(exc);
         } finally {
-            if (isLogFileUsed) {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (final Exception e) {
-                        //ignore
-                    }
+            handleLogfile();
+        }
+        System.exit(exitCode);
+    }
+
+    /**
+     * Close logfiles, if we have been writing to them.
+     *
+     * @since Ant 1.6
+     */
+    private static void handleLogfile() {
+        if (isLogFileUsed) {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (final Exception e) {
+                    //ignore
                 }
-                if (err != null) {
-                    try {
-                        err.close();
-                    } catch (final Exception e) {
-                        //ignore
-                    }
+            }
+            if (err != null) {
+                try {
+                    err.close();
+                } catch (final Exception e) {
+                    //ignore
                 }
             }
         }
-        System.exit(exitCode);
     }
 
     /**
@@ -235,10 +245,6 @@ public class Main {
         start(args, null, null);
     }
 
-    // XXX: (Jon Skeet) Error handling appears to be inconsistent here.
-    // Sometimes there's just a return statement, and sometimes a
-    // BuildException is thrown. What's the rationale for when to do
-    // what?
     /**
      * Sole constructor, which parses and deals with command line
      * arguments.
@@ -285,13 +291,11 @@ public class Main {
                     String msg = "Cannot write on the specified log file. "
                         + "Make sure the path exists and you have write "
                         + "permissions.";
-                    System.out.println(msg);
-                    return;
+                    throw new BuildException(msg);
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a log file when " +
                         "using the -log argument";
-                    System.out.println(msg);
-                    return;
+                    throw new BuildException(msg);
                 }
             } else if (arg.equals("-buildfile") || arg.equals("-file")
                        || arg.equals("-f")) {
@@ -301,8 +305,7 @@ public class Main {
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a buildfile when " +
                         "using the -buildfile argument";
-                    System.out.println(msg);
-                    return;
+                    throw new BuildException(msg);
                 }
             } else if (arg.equals("-listener")) {
                 try {
@@ -311,8 +314,7 @@ public class Main {
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a classname when " +
                         "using the -listener argument";
-                    System.out.println(msg);
-                    return;
+                    throw new BuildException(msg);
                 }
             } else if (arg.startsWith("-D")) {
 
@@ -335,34 +337,31 @@ public class Main {
                     name = name.substring(0, posEq);
                 } else if (i < args.length - 1) {
                     value = args[++i];
-                       }
+                }
 
                 definedProps.put(name, value);
             } else if (arg.equals("-logger")) {
                 if (loggerClassname != null) {
-                    System.out.println("Only one logger class may "
+                    throw new BuildException("Only one logger class may "
                         + " be specified.");
-                    return;
                 }
                 try {
                     loggerClassname = args[++i];
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    System.out.println("You must specify a classname when " +
-                                       "using the -logger argument");
-                    return;
+                    throw new BuildException("You must specify a classname when"
+                                             + " using the -logger argument");
                 }
             } else if (arg.equals("-inputhandler")) {
                 if (inputHandlerClassname != null) {
-                    System.out.println("Only one input handler class may " +
-                                       "be specified.");
-                    return;
+                    throw new BuildException("Only one input handler class may "
+                                             + "be specified.");
                 }
                 try {
                     inputHandlerClassname = args[++i];
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    System.out.println("You must specify a classname when " +
-                                       "using the -inputhandler argument");
-                    return;
+                    throw new BuildException("You must specify a classname when"
+                                             + " using the -inputhandler"
+                                             + " argument");
                 }
             } else if (arg.equals("-emacs")) {
                 emacsMode = true;
@@ -383,15 +382,14 @@ public class Main {
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a property filename when " +
                         "using the -propertyfile argument";
-                    System.out.println(msg);
-                    return;
+                    throw new BuildException(msg);
                 }
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
                 System.out.println(msg);
                 printUsage();
-                return;
+                throw new BuildException("");
             } else {
                 // if it's no other arg, it may be the target
                 targets.addElement(arg);
