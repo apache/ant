@@ -1,0 +1,539 @@
+<html>
+<head>
+</head>
+<body>
+
+<h1><a name="jprobe">JProbe</a></h1>
+<p>by</p>
+<ul>
+    <li>Stephane Bailliez (<a href="mailto:sbailliez@imediation.com">sbailliez@imediation.com</a>)</li>
+</ul>
+<h2>Introduction</h2>
+
+<p>This task runs the tools from the JProbe suite.<br>
+For more information, visit <a href="http://www.sitraka.com">http://www.sitraka.com</a>.
+An evaluation version is available for download if you already don't own it.
+</p>
+
+<p>This task has been written using JProbe Suite Server Side 3.0.</p>
+
+<p>It is highly recommended to read the JProbe documentation to understand
+the values of the command line arguments described below. This
+document is less complete than the manual, it only gives the basic information
+and is not intended as a replacement to the manual.
+</p>
+
+<h2>Tasks</h2>
+<ul>
+<table border="0" cellspacing="0" cellpadding="3">
+    <tr>
+        <td><a href="#jpcoverage">JPCoverage</a></td>
+        <td>Measure coverage of Java code.</td>
+    </tr>
+    <tr>
+        <td><a href="#jpcovmerge">JPCovMerge</a></td>
+        <td>Merge different snapshots into one.</td>
+    </tr>
+    <tr>
+        <td><a href="#jpcovreport">JPCovReport</a></td>
+        <td>Create a report from a snapshot</td>
+    </tr>
+</table>
+</ul>
+
+<hr>
+
+<h2><a name="jpcoverage">JPCoverage</a></h2>
+Perform code covering functions by comparing source code line execution to the program’s source code as a whole.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">home</td> 
+    <td valign="top">The directory where is intalled JProbe.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">vm</td> 
+    <td valign="top">
+	Indicates which virtual machine to run.
+	Must be one of "jdk117", "jdk118" or "java2".If "java2" is specified, the user is
+	also required to specify a path via <tt>javahome</tt>, otherwise it will check if
+	the current executing VM is 1.2+ and use its java.home property to determine its
+	location.
+	in the registry for the default 1.2.x (Java 2) VM.</td>
+    <td align="center" valign="top">No, default to embedded VM if 1.2+</td>
+  </tr>
+  <tr>
+    <td valign="top">javahome</td> 
+    <td valign="top">For Java 2 only, specifies the path of the jdk1.2.x virtual
+	machine to be used. This is only valid when specifying the <tt>vm="java2"</tt>.</td>
+    <td align="center" valign="top">No, use only for java2</td>
+  </tr>
+  <tr>
+    <td valign="top">javaexe</td> 
+    <td valign="top">Similar to <tt>javahome</tt>, except this is the path to
+	the java executable.</td>
+    <td align="center" valign="top">No, use only for java2</td>
+  </tr>
+  
+  <tr>
+    <td valign="top">applet</td> 
+    <td valign="top">Run an applet. The default is false, unless the file under
+	analysis ends with htm or html.</td>
+    <td align="center" valign="top">No, default is "false".</td>
+  </tr>
+  <tr>
+    <td valign="top">seedname</td>
+    <td valign="top">Seed name for the temporary snapshot files (files will be named
+	seed.jpc, seed1.jpc, seed2.jpc, ...)</td>
+    <td align="center" valign="top">No, default to &quot;snapshot&quot;</td>
+  </tr>
+  
+  <tr>
+    <td valign="top">exitprompt</td> 
+    <td valign="top">Toggles display of the console prompt: "Press Enter to close
+	this window." &quot;always&quot;: Always displays the prompt. &quot;never&quot;: Never displays the
+	prompt. &quot;error&quot;: Only displays prompt after an error.</td>
+    <td align="center" valign="top">No, default is "never"</td>
+  </tr>
+  
+  <tr>
+    <td valign="top">finalsnapshot</td> 
+    <td valign="top">Type of snapshot to send at program termination. Must be one
+	of &quot;none&quot;,&quot;coverage&quot;,&quot;all&quot;</td> 
+    <td align="center" valign="top">No, default to &quot;coverage&quot;</td>
+  </tr>
+  <tr>
+    <td valign="top">recordfromstart</td>
+    <td valign="top">Must be one of "coverage", "all", "none". If you want
+	Coverage to start analyzing as soon as the program begins to run, use "all".
+	If not, select "none".</td>
+    <td align="center" valign="top">No, default to "coverage"</td>
+  </tr>
+  <tr>
+    <td valign="top">warnlevel</td>
+    <td valign="top">Set warning level (0-3, where 0 is the least amount of warnings).</td>
+    <td align="center" valign="top">No, default to 0</td>
+  </tr>
+  <tr>
+    <td valign="top">snapshotdir</td>
+    <td valign="top">The path to the directory where snapshot files are stored.
+	Choose a directory that is reachable by both the remote and local computers,
+	and enter the same path on the command line and in the viewer.</td>
+    <td align="center" valign="top">No, default to current directory</td>
+  </tr>
+  <tr>
+    <td valign="top">workingdir</td>
+    <td valign="top">The physical path to the working directory for the VM.</td>
+    <td align="center" valign="top">No, default is current directory.</td>
+  </tr> 
+  <tr>
+    <td valign="top">tracknatives</td>
+    <td valign="top">Test native methods. Note that testing native methods with
+	Java 2 disables the JIT</td>
+    <td align="center" valign="top">No, default to &quot;false&quot;.</td>
+  </tr> 
+  <tr>
+    <td valign="top">classname</td>
+    <td valign="top">the name of the class to analyze.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h3><a name="nested">Nested Elements</a></h3>
+
+<h4>classpath</h4>
+<p><code>jpcoverage</code> supports a nested <code>&lt;classpath&gt;</code>
+element, that represents a <a href="index.html#path">PATH like
+structure</a>.</p>
+
+<h4>jvmarg</h4>
+
+<p>Additional parameters may be passed to the VM via nested <code>&lt;jvmarg&gt;</code>
+attributes, for example:</p>
+
+<pre></pre>
+<blockquote>
+<pre>&lt;jpcoverage home=&quot;c:\jprobe&quot; classname=&quot;MyClass&quot;&gt;
+  &lt;jvmarg value=&quot;-classic&quot;/&gt;
+  &lt;classpath path=&quot;.&quot;/&gt;
+&lt;/jpcoverage&gt;
+</pre>
+</blockquote>
+would run the coverage on &quot;MyClass&quot; in classic mode VM.
+
+<p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
+href="index.html#arg">Command line arguments</a>.</p>
+
+<h4>arg</h4>
+
+<p>
+Parameters may be passed to the executed class via nested <tt>&lt;arg&gt;</tt>
+attributes, as described in <a href="index.html#arg">Command line arguments</a>.
+</p>
+
+<h4>socket</h4>
+<p>Define a host and port to connect to if you want to do remote viewing. 
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">host</td> 
+    <td valign="top">the host name/ip of the machine on which the Viewer is running</td>
+    <td align="center">No, default to localhost</td>
+  </tr>
+  <tr>
+    <td valign="top">port</td> 
+    <td valign="top">The port number on which you will connect to the Viewer</td>
+    <td align="center">No, default to 4444</td>
+  </tr>  
+</table>
+
+
+
+<h4>filters</h4>
+
+<p>Defines class/method filters based on pattern matching.
+The syntax is filters is similar to a <a href="index.html#fileset">fileset</a>.
+</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">defaultexclude</td> 
+    <td valign="top">As a default, the coverage exclude all classes and methods.
+     Default filters are equivalent to
+<pre>
+  &lt;filters&gt;
+    &lt;exclude class=&quot;*&quot; method=&quot;*&quot;/&gt;
+  &lt;/filters&gt;
+</pre>	
+	</td>
+    <td align="center">No, default to "true"</td>
+  </tr>
+</table>
+<p>
+As seen above, nested elements are <b><tt>include</tt></b> and <b><tt>exclude</tt></b>
+with a <tt>name</tt> attribute.
+</p>
+<blockquote>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">class</td> 
+    <td valign="top">The class mask as a simple regular expression</td>
+    <td align="center">No, default to *</td>
+  </tr>
+  <tr>
+    <td valign="top">method</td> 
+    <td valign="top">The method mask as a simple regular expression</td>
+    <td align="center">No, default to *</td>
+  </tr>
+</table>
+</blockquote>
+
+<h3>Example of filters</h3>
+<blockquote>
+  <pre>&lt;filters&gt;
+    &lt;include class=&quot;com.mycompany.*&quot; method=&quot;*&quot;/&gt;
+    &lt;exclude class=&quot;com.mycompany.MyClass&quot; method=&quot;test*&quot;/&gt;
+&lt;/filters&gt;</pre>
+</blockquote>
+
+reports the coverage on all packages, classes and methods from <tt>com.mycompany</tt>
+except all methods starting by <tt>test</tt> on the class <tt>MyClass</tt>
+in the package <tt>com.mycompany</tt>
+
+<h4>triggers</h4>
+
+<p>Define a number of events to use for interacting with the collection
+of data performed during coverage. For example you may run a whole application
+but only decide to collect data once it reaches a certain method and once it
+exits another one.</p>
+<p>
+The only type of nested element is the <tt>method</tt> element (triggers are performed
+on method) and it has the following attributes:
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">name</td> 
+    <td valign="top">The name of the method(s) as a regular expression. The name
+	is the fully qualified name on the form <tt>package.classname.method</tt></td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">event</td> 
+    <td valign="top">the event on the method that will trigger the action. Must be
+	&quot;enter&quot; or &quot;exit&quot;.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">action</td> 
+    <td valign="top">the action to execute. Must be one of &quot;clear&quot;,
+	&quot;pause&quot;, &quot;resume&quot;, &quot;snapshot&quot;, &quot;suspend&quot;,
+	or &quot;exit&quot;. They respectively clear recording, pause recording, 
+	resume recording, take a snapshot, suspend the recording and exit the program.
+</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<h3>Example of triggers</h3>
+<blockquote>
+<pre>&lt;triggers&gt;
+  &lt;method name=&quot;ClassName.*()&quot; event=&quot;enter&quot; action=&quot;snapshot&quot;/&gt;
+  &lt;method name=&quot;ClassName.MethodName()&quot; event=&quot;exit&quot; action=&quot;exit&quot;/&gt;  
+&lt;/triggers&gt;
+</pre>
+</blockquote>
+
+<p>Will take a snapshot when it enters any method of the class <tt>ClassName</tt>
+and will exit the program once it exits the method <tt>MethodName</tt> of the
+same class.</p>
+
+<hr>
+<h2><a name="jpcovmerge">JPCovMerge</a></h2>
+
+<h3>Description</h3>
+
+<p>Perform the merge of several snapshots into a single one.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+	<td width="12%" valign="top"><b>Attribute</b></td>
+	<td width="78%" valign="top"><b>Description</b></td>
+	<td width="10%" valign="top"><b>Required</b></td>
+</tr>
+<tr>
+	<td valign="top">home</td>
+    <td valign="top">The directory where is installed JProbe.</td>
+    <td align="center" valign="top">Yes</td>
+</tr>
+<tr>
+	<td valign="top">tofile</td>
+	<td valign="top">the output filename that will be the result
+	of the name.</td>
+	<td align="center" valign="top">Yes</td>
+</tr>
+<tr>
+	<td valign="top">verbose</td>
+	<td valign="top">Perform the merge in verbose mode giving
+	details about the snapshot processing.</td>
+	<td align="center" valign="top">No. Default to false</td>
+</tr>
+</table>
+
+<p>
+<tt>jpcovmerge</tt> collects snapshots using the nested <a href="index.html#fileset"><code>&lt;FileSet&gt;</code></a>
+element.
+</p>
+
+<h3>Example of merge</h3>
+<blockquote>
+<pre>&lt;jpcovreport home=&quot;c:\jprobe&quot; tofile=&quot;merge.jpc&quot; verbose=&quot;true&quot;&gt;
+  &lt;fileset dir=&quot;./snapshots&quot;&gt;
+    &lt;include name=&quot;snap*.jpc&quot;/&gt;
+  &lt;/fileset&gt;
+&lt;/jpcovreport&gt;
+</pre>
+</blockquote>
+<p>
+would run the merge in verbose mode on all snapshot files starting by <tt>snap</tt> in the
+directory <tt>snapshots</tt>. The resulting file will be named <tt>merge.jpc</tt>.
+</p>
+
+<hr>
+
+<h2>JPCovReport</h2>
+
+<h3>Description</h3>
+
+<p>Generate a readable/printable report of a snapshot. Note that you will need <a href="http://jakarta.apache.org/oro/index.html">Jakarta
+Oro</a> in Ant classpath, to run the <tt>reference</tt> feature.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+	<td width="12%" valign="top"><b>Attribute</b></td>
+	<td width="78%" valign="top"><b>Description</b></td>
+	<td width="10%" valign="top"><b>Required</b></td>
+</tr>
+<tr>
+	<td valign="top">home</td>
+    <td valign="top">The directory where is intalled JProbe.</td>
+    <td align="center" valign="top">Yes</td>
+</tr>
+<tr>
+	<td valign="top">format</td>
+	<td valign="top">The format of the generated report. Must be &quot;xml&quot;, &quot;html&quot; or &quot;text&quot;</td>
+	<td align="center" valign="top">No, default to &quot;html&quot;</td>
+</tr>
+<tr>
+	<td valign="top">type</td>
+	<td valign="top">The type of report to be generated. Must be &quot;executive&quot;,
+	&quot;summary&quot;, &quot;detailed&quot; or &quot;verydetailed&quot;</td>
+	<td align="center" valign="top">No. Default to &quot;detailed&quot;</td>
+</tr>
+<tr>
+	<td valign="top">percent</td>
+	<td valign="top">A numeric value for the threshold for printing methods. Must
+	be between 0 and 100.</td>
+	<td align="center" valign="top">No, default to 100</td>
+</tr>
+<tr>
+	<td valign="top">snapshot</td>
+	<td valign="top">The name of the snapshot file that is the source to the report.</td>
+	<td align="center" valign="top">Yes</td>
+</tr>
+<tr>
+	<td valign="top">tofile</td>
+	<td valign="top">The name of the generated output file</td>
+	<td align="center" valign="top">Yes</td>
+</tr>
+<tr>
+	<td valign="top">includesource</td>
+	<td valign="top">Include text of the source code lines. Only applies to
+      format=&quot;xml&quot; and type=&quot;verydetailed&quot;</td>
+	<td align="center" valign="top">No. Defaults to &quot;yes&quot;</td>
+</tr>
+</table>
+
+<h4>sourcepath</h4>
+
+<p>
+Path to source files can be set via nested sourcepath elements that are <a href="index.html#path">PATH like structures</a>.
+</p>
+
+<h4>reference (only applies to format=&quot;xml&quot;)</h4>
+
+<p>A reference is a set of classes whose coverage information will be checked
+against. Since Coverage is only able to give you information about loaded
+classes, it will only report classes that were at least used in some points in
+your tests,
+therefore you will not be able to know what classes are not exercised at all
+during your tests. The reference is an additional feature that will analyze the
+bytecode of all classes in a given classpath that match some filters and modify
+the XML report accordingly. In short, it will:
+</p>
+
+<ul>
+  <li>remove the classes that do not exists in the reference classpath. (For
+    example you might have in your report some helper test classes that you do
+    not want to appear in the report, but are unable to filter without adding
+    hundred of filters for all your classes).</li>
+  <li>add classes that exists in the reference set and match the filters but are
+    not reported.</li>
+  <li>remove abstract methods that are incorrectly reported in JProbe 3.0
+    (should be fixed in a later SP)</li>
+  <li>remove classes/methods that do not match the filters.</li>
+</ul>
+<blockquote>
+  <h4>classpath
+</h4>
+
+  <p>
+Path to the reference set of files can be set via nested classpath elements that are <a href="index.html#path">PATH like structures</a>.
+</p>
+
+  <h4>filters
+</h4>
+
+  <p>Nested elements are <b><tt>include</tt></b> and <b><tt>exclude</tt></b>
+with a <tt>class </tt>and&nbsp; <tt>method </tt>attribute.
+</p>
+</blockquote>
+<blockquote>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">class</td> 
+    <td valign="top">The class mask as a simple regular expression</td>
+    <td align="center">No, default to *</td>
+  </tr>
+  <tr>
+    <td valign="top">method</td> 
+    <td valign="top">The method mask as a simple regular expression</td>
+    <td align="center">No, default to *</td>
+  </tr>
+</table>
+</blockquote>
+
+<h3>Example of report</h3>
+<blockquote>
+<pre>&lt;jpcovreport home=&quot;c:\jprobe&quot; snapshot=&quot;merge.jpc&quot; format=&quot;xml&quot; tofile=&quot;result.xml&quot;&gt;
+  &lt;sourcepath path=&quot;./src&quot;/&gt;
+  &lt;reference&gt;
+    &lt;classpath path=&quot;./bin/classes&quot;/&gt;
+    &lt;filters&gt;
+      &lt;include class=&quot;com.mycompany.*&quot;/&gt;
+      &lt;exclude class=&quot;com.mycompany.MyClass&quot; method=&quot;test*&quot;/&gt;
+    &lt;/filters&gt;
+  &lt;/reference&gt;
+&lt;/jpcovreport&gt;
+</pre>
+</blockquote><p>
+would generate the report of the file <tt>merge.jpc</tt> and write it to <tt>result.xml</tt>
+using the source path <tt>src</tt>. As well, it will modify the result.xml by
+analyzing all classes in the <tt>./bin/classes</tt> that are port of the package
+<tt>com.mycompany</tt> except the method that start by <tt>test</tt> from the class <tt>MyClass</tt>.
+</p>
+
+<h3>Recommendation</h3>
+
+<p>If you generate your main code and your testcases in a separate directory,
+say bin/classes and test/classes. You should mostly end up with a reference such
+as:</p>
+<blockquote>
+<pre>&lt;reference&gt;
+&nbsp;&nbsp;&nbsp; &lt;classpath path=&quot;./bin/classes&quot;/&gt;
+&lt;/reference&gt;</pre>
+</blockquote>
+<p>With such a reference, your XML report will be cleaned up against parasite
+classes from your testcases (that as a common practice, generally match the
+exact package structure of the class you exercise).</p>
+<h3>HTML reports</h3>
+<p>You will find in Ant etc directory a stylesheet called coverage-frames.xsl.
+This file can be used to generate a framed report a la javadoc similar to the
+one for JUnit. It needs either Xalan 1.2.2 or Xalan 2.x.</p>
+<p>Xalan 1.2.2 (you must have xalan.jar and bsf.jar in your classpath)
+</p>
+<pre>&lt;style processor=&quot;xalan&quot; in=&quot;./reports/xml/results.xml&quot; out=&quot;./reports/html/dummy.file&quot;
+ style=&quot;${ant.home}/etc/coverage-frames.xsl&quot;&gt;
+	&lt;param name=&quot;output.dir&quot; expression=&quot;'${basedir}/reports/html'&quot;/&gt;
+&lt;/style&gt;</pre>
+<p>Xalan 2.x (note the parameter without single quote)</p>
+<pre>&lt;style processor=&quot;trax&quot; in=&quot;./reports/xml/results.xml&quot; out=&quot;./reports/html/dummy.file&quot;
+ style=&quot;${ant.home}/etc/coverage-frames.xsl&quot;&gt;
+&nbsp; &lt;param name=&quot;output.dir&quot; expression=&quot;${basedir}/reports/html&quot;/&gt;
+&lt;/style&gt;</pre>
+
+</body>
+</html>
