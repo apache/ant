@@ -921,12 +921,11 @@ public class FileUtils {
      * @since ant 1.5
      */
     public File createTempFile(String prefix, String suffix, File parentDir) {
-
         File result = null;
-        String parent = System.getProperty("java.io.tmpdir");
-        if (parentDir != null) {
-            parent = parentDir.getPath();
-        }
+        String parent = (parentDir == null)
+            ? System.getProperty("java.io.tmpdir")
+            : parentDir.getPath();
+
         DecimalFormat fmt = new DecimalFormat("#####");
         synchronized (rand) {
             do {
