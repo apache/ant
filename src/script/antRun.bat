@@ -1,5 +1,8 @@
 @echo off
 
+REM   Copyright (c) 2001 The Apache Software Foundation.  All rights
+REM   reserved.
+
 rem Change drive and directory to %1 (Win9X only for NT/2K use "cd /d")
 cd %1
 %1\

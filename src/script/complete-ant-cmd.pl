@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 #
+#   Copyright (c) 2001 The Apache Software Foundation.  All rights
+#   reserved.
+#
 # A script to allow Bash or Z-Shell to complete an Ant command-line.  
 #
 # To install for Bash 2.0 or better, add the following to ~/.bashrc:

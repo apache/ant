@@ -1,5 +1,8 @@
 @echo off
 
+REM   Copyright (c) 2001 The Apache Software Foundation.  All rights
+REM   reserved.
+
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 
 if not "%OS%"=="Windows_NT" goto win9xStart

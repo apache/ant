@@ -1,5 +1,8 @@
 #!/bin/sh
 
+#   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+#   reserved.
+
 cygwin=false;
 case "`uname`" in
   CYGWIN*) cygwin=true ;;

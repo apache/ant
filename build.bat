@@ -1,5 +1,8 @@
 @echo off
 
+REM   Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+REM   reserved.
+
 set OLDCLASSPATH=%CLASSPATH%
 set REAL_ANT_HOME=%ANT_HOME%
 set ANT_HOME=bootstrap

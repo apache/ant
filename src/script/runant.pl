@@ -1,4 +1,8 @@
 #!/usr/bin/perl
+#
+#   Copyright (c) 2001 The Apache Software Foundation.  All rights
+#   reserved.
+#
 #######################################################################
 #
 # runant.pl

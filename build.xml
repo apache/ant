@@ -3,6 +3,10 @@
 <!--
   =======================================================================
     Apache Ant own build file
+
+   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+   reserved.
+
   =======================================================================
 -->
 <project default="main" basedir=".">

@@ -1,5 +1,8 @@
 #! /bin/sh
 
+#   Copyright (c) 2001 The Apache Software Foundation.  All rights
+#   reserved.
+
 if [ -f "$HOME/.antrc" ] ; then 
   . $HOME/.antrc
 fi
