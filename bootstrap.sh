@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Cygwin support.  $cygwin _must_ be set to either true or false.
 case "`uname`" in
@@ -50,7 +50,7 @@ echo ... Bootstrapping Ant Distribution
 rm -rf build
 
 TOOLS=src/main/org/apache/tools
-CLASSDIR=build\classes
+CLASSDIR=build/classes
 
 mkdir -p build
 mkdir -p ${CLASSDIR}
