@@ -566,6 +566,24 @@ public class Main {
                 }
             }
         }
+
+        String defaultTarget = project.getDefaultTarget();
+        if (defaultTarget != null && !"".equals(defaultTarget)) { // shouldn't need to check but...
+            Vector defaultName = new Vector();
+            Vector defaultDesc = new Vector();
+            defaultName.addElement(defaultTarget);
+
+            int indexOfDefDesc = topNames.indexOf(defaultTarget);
+            if (indexOfDefDesc >= 0) {
+                defaultDesc.addElement(topDescriptions.elementAt(indexOfDefDesc));
+            } else {
+                defaultDesc.addElement("");
+            }
+
+            printTargets(defaultName, defaultDesc, "Default target:", maxLength);
+
+        }
+
         printTargets(topNames, topDescriptions, "Main targets:", maxLength);
         printTargets(subNames, null, "Subtargets:", 0);
     }
