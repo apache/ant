@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,20 +53,18 @@
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
-import org.apache.tools.ant.taskdefs.LogStreamHandler;
-import org.apache.tools.ant.types.Path;
-
-
-
 import java.io.File;
-import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Vector;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Metamata Audit evaluates Java code for programming errors, weaknesses, and
@@ -81,7 +79,7 @@ import java.util.Vector;
  * For more information, visit the website at
  * <a href="http://www.metamata.com">www.metamata.com</a>
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class MAudit extends AbstractMetamataTask {
 
@@ -119,15 +117,24 @@ public class MAudit extends AbstractMetamataTask {
     // (?:file:)?((?#filepath).+):((?#line)\\d+)\\s*:\\s+((?#message).*)
     final static String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
 
-    protected File outFile = null;
-    
-    protected Path searchPath = null;
-    
-    protected boolean fix = false;
-    
-    protected boolean list = false;
-    
-    protected boolean unused = false;
+    private File outFile = null;
+
+    private Path searchPath = null;
+
+    private Path rulesPath = null;
+
+    private boolean fix = false;
+
+    private boolean list = false;
+
+    private boolean unused = false;
+
+//  add a bunch of undocumented options for the task
+    private boolean quiet = false;
+    private boolean exit = false;
+    private boolean offsets = false;
+    private boolean verbose = false;
+    private boolean fullsemanticize = false;
 
     /** default constructor */
     public MAudit() {
@@ -135,49 +142,101 @@ public class MAudit extends AbstractMetamataTask {
     }
 
     /** set the destination file which should be an xml file */
-    public void setTofile(File outFile){
+    public void setTofile(File outFile) {
         this.outFile = outFile;
     }
 
-    public void setFix(boolean flag){
+    public void setFix(boolean flag) {
         this.fix = flag;
     }
 
-    public void setList(boolean flag){
+    public void setList(boolean flag) {
         this.list = flag;
     }
 
-    public void setUnused(boolean flag){
+    public void setUnused(boolean flag) {
         this.unused = flag;
     }
 
-    public Path createSearchpath(){
-        if (searchPath == null){
-            searchPath = new Path(project);
+    public void setQuiet(boolean flag) {
+        this.quiet = flag;
+    }
+
+    public void setExit(boolean flag) {
+        this.exit = flag;
+    }
+
+    public void setOffsets(boolean flag) {
+        this.offsets = flag;
+    }
+
+    public void setVerbose(boolean flag) {
+        this.verbose = flag;
+    }
+
+    public void setFullsemanticize(boolean flag) {
+        this.fullsemanticize = flag;
+    }
+
+    /** one or more path for rules that must be placed before metamata.jar !! */
+    public Path createRulespath() {
+        if (rulesPath == null) {
+            rulesPath = new Path(getProject());
+        }
+        return rulesPath;
+    }
+
+    /** search path to use for unused global declarations */
+    public Path createSearchpath() {
+        if (searchPath == null) {
+            searchPath = new Path(getProject());
         }
         return searchPath;
     }
 
-    protected Vector getOptions(){
+    protected Vector getOptions() {
         Vector options = new Vector(512);
+        // add the source path automatically from the fileset.
+        // to avoid redundancy...
+        for (int i = 0; i < fileSets.size(); i++) {
+            FileSet fs = (FileSet) fileSets.elementAt(i);
+            Path path = createSourcepath();
+            File dir = fs.getDir(getProject());
+            path.setLocation(dir);
+        }
+
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
-        if (sourcePath != null){
+        if (sourcePath != null) {
             sourcePath.append(classPath); // srcpath is prepended
             classPath = sourcePath;
             sourcePath = null; // prevent from using -sourcepath
-        }        
-        
+        }
+
         // don't forget to modify the pattern if you change the options reporting
-        if (classPath != null){
+        if (classPath != null) {
             options.addElement("-classpath");
             options.addElement(classPath.toString());
         }
         // suppress copyright msg when running, we will let it so that this
         // will be the only output to the console if in xml mode
-//      options.addElement("-quiet");
-        if (fix){
+        if (quiet) {
+            options.addElement("-quiet");
+        }
+        if (fullsemanticize) {
+            options.addElement("-full-semanticize");
+        }
+        if (verbose) {
+            options.addElement("-verbose");
+        }
+        if (offsets) {
+            options.addElement("-offsets");
+        }
+        if (exit) {
+            options.addElement("-exit");
+        }
+        if (fix) {
             options.addElement("-fix");
         }
         options.addElement("-fullpath");
@@ -185,43 +244,45 @@ public class MAudit extends AbstractMetamataTask {
         // generate .maudit files much more detailed than the report
         // I don't like it very much, I think it could be interesting
         // to get all .maudit files and include them in the XML.
-        if (list){
+        if (list) {
             options.addElement("-list");
         }
-        if (sourcePath != null){
+        if (sourcePath != null) {
             options.addElement("-sourcepath");
             options.addElement(sourcePath.toString());
         }
-        
-        if (unused){
+        addAllVector(options, includedFiles.keys());
+        if (unused) {
             options.addElement("-unused");
             options.addElement(searchPath.toString());
         }
-        addAllVector(options, includedFiles.keys());
         return options;
     }
 
     protected void checkOptions() throws BuildException {
         super.checkOptions();
-        if (unused && searchPath == null){
+        if (unused && searchPath == null) {
             throw new BuildException("'searchpath' element must be set when looking for 'unused' declarations.");
         }
-        if (!unused && searchPath != null){
+        if (!unused && searchPath != null) {
             log("'searchpath' element ignored. 'unused' attribute is disabled.", Project.MSG_WARN);
         }
+        if (rulesPath != null) {
+            cmdl.createClasspath(getProject()).addExisting(rulesPath);
+        }
     }
-    
+
     protected ExecuteStreamHandler createStreamHandler() throws BuildException {
         ExecuteStreamHandler handler = null;
         // if we didn't specify a file, then use a screen report
-        if (outFile == null){
-           handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_INFO);
+        if (outFile == null) {
+            handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_INFO);
         } else {
             try {
                 //XXX
-                OutputStream out = new FileOutputStream( outFile );
+                OutputStream out = new FileOutputStream(outFile);
                 handler = new MAuditStreamHandler(this, out);
-            } catch (IOException e){
+            } catch (IOException e) {
                 throw new BuildException(e);
             }
         }
@@ -242,18 +303,9 @@ public class MAudit extends AbstractMetamataTask {
 
     /** the inner class used to report violation information */
     final static class Violation {
-        int line;
+        String line;
         String error;
     }
 
-    /** handy factory to create a violation */
-    static final Violation createViolation(int line, String msg){
-        Violation violation = new Violation();
-        violation.line = line;
-        violation.error = msg;
-        return violation;
-    }
-
 }
-
 

@@ -54,32 +54,36 @@
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
 
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.AttributesImpl;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import java.util.Stack;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.EmptyStackException;
 import java.util.Enumeration;
+import java.util.Stack;
 import java.util.Vector;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.NumberFormat;
-import java.text.DecimalFormat;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
 
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
-import org.apache.tools.ant.Task;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import org.apache.tools.ant.util.DateUtils;
 
 /**
  * A handy metrics handler. Most of this code was done only with the
@@ -95,44 +99,44 @@ import org.apache.tools.ant.Project;
 public class MMetricsStreamHandler implements ExecuteStreamHandler {
 
     /** CLASS construct, it should be named something like 'MyClass' */
-    protected final static String CLASS = "class";
+    private final static String CLASS = "class";
 
     /** package construct, it should be look like 'com.mycompany.something' */
-    protected final static String PACKAGE = "package";
+    private final static String PACKAGE = "package";
 
     /** FILE construct, it should look like something 'MyClass.java' or 'MyClass.class' */
-    protected final static String FILE = "file";
+    private final static String FILE = "file";
 
     /** METHOD construct, it should looke like something 'doSomething(...)' or 'doSomething()' */
-    protected final static String METHOD = "method";
+    private final static String METHOD = "method";
 
-    protected final static String[] ATTRIBUTES = { "name", "vg", "loc",
-    "dit", "noa", "nrm", "nlm", "wmc", "rfc", "dac", "fanout", "cbo", "lcom", "nocl"
-    };
+    private final static String[] ATTRIBUTES = {
+        "name", "vg", "loc", "dit", "noa", "nrm", "nlm", "wmc",
+        "rfc", "dac", "fanout", "cbo", "lcom", "nocl"};
 
     /** reader for stdout */
-    protected InputStream metricsOutput;
+    private InputStream metricsOutput;
 
     /**
      * this is where the XML output will go, should mostly be a file
      * the caller is responsible for flushing and closing this stream
      */
-    protected OutputStream xmlOutputStream;
+    private OutputStream xmlOutputStream;
 
     /** metrics handler */
-    protected TransformerHandler metricsHandler;
+    private TransformerHandler metricsHandler;
 
     /** the task */
-    protected Task task;
+    private Task task;
 
     /**
      * the stack where are stored the metrics element so that they we can
      * know if we have to close an element or not.
      */
-    protected Stack stack = new Stack();
+    private Stack stack = new Stack();
 
     /** initialize this handler */
-    MMetricsStreamHandler(Task task, OutputStream xmlOut){
+    MMetricsStreamHandler(Task task, OutputStream xmlOut) {
         this.task = task;
         this.xmlOutputStream = xmlOut;
     }
@@ -147,34 +151,39 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
 
     /** Set the inputstream */
     public void setProcessOutputStream(InputStream is) throws IOException {
-            metricsOutput = is;
+        metricsOutput = is;
     }
 
     public void start() throws IOException {
         // create the transformer handler that will be used to serialize
         // the output.
         TransformerFactory factory = TransformerFactory.newInstance();
-        if ( !factory.getFeature(SAXTransformerFactory.FEATURE) ){
+        if (!factory.getFeature(SAXTransformerFactory.FEATURE)) {
             throw new IllegalStateException("Invalid Transformer factory feature");
         }
         try {
-            metricsHandler = ((SAXTransformerFactory)factory).newTransformerHandler();
-            metricsHandler.setResult( new StreamResult( new OutputStreamWriter(xmlOutputStream, "UTF-8")) );
+            metricsHandler = ((SAXTransformerFactory) factory).newTransformerHandler();
+            metricsHandler.setResult(new StreamResult(new OutputStreamWriter(xmlOutputStream, "UTF-8")));
             Transformer transformer = metricsHandler.getTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
             // start the document with a 'metrics' root
+            final Date now = new Date();
             metricsHandler.startDocument();
             AttributesImpl attr = new AttributesImpl();
             attr.addAttribute("", "company", "company", "CDATA", "metamata");
+            attr.addAttribute("", "snapshot_created", "snapshot_created", "CDATA",
+                    DateUtils.format(now, DateUtils.ISO8601_DATETIME_PATTERN));
+//            attr.addAttribute("", "elapsed_time", "elapsed_time", "CDATA", String.valueOf(now.getTime() - program_start.getTime()));
+            attr.addAttribute("", "program_start", "program_start", "CDATA",
+                    DateUtils.format(new Date(), DateUtils.ISO8601_DATETIME_PATTERN));
             metricsHandler.startElement("", "metrics", "metrics", attr);
 
             // now parse the whole thing
             parseOutput();
 
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new IOException(e.getMessage());
+        } catch (Exception e) {
+            throw new BuildException(e);
         }
     }
 
@@ -185,15 +194,15 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
         try {
             // we need to pop everything and close elements that have not been
             // closed yet.
-            while ( stack.size() > 0){
-                ElementEntry elem = (ElementEntry)stack.pop();
+            while (stack.size() > 0) {
+                ElementEntry elem = (ElementEntry) stack.pop();
                 metricsHandler.endElement("", elem.getType(), elem.getType());
             }
             // close the root
             metricsHandler.endElement("", "metrics", "metrics");
             // document is finished for good
             metricsHandler.endDocument();
-        } catch (SAXException e){
+        } catch (SAXException e) {
             e.printStackTrace();
             throw new IllegalStateException(e.getMessage());
         }
@@ -203,7 +212,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
     protected void parseOutput() throws IOException, SAXException {
         BufferedReader br = new BufferedReader(new InputStreamReader(metricsOutput));
         String line = null;
-        while ( (line = br.readLine()) != null ){
+        while ((line = br.readLine()) != null) {
             processLine(line);
         }
     }
@@ -214,16 +223,16 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
      * @param line the line to process, it is normally a line full of metrics.
      */
     protected void processLine(String line) throws SAXException {
-        if ( line.startsWith("Construct\tV(G)\tLOC\tDIT\tNOA\tNRM\tNLM\tWMC\tRFC\tDAC\tFANOUT\tCBO\tLCOM\tNOCL") ){
+        if (line.startsWith("Construct\tV(G)\tLOC\tDIT\tNOA\tNRM\tNLM\tWMC\tRFC\tDAC\tFANOUT\tCBO\tLCOM\tNOCL")) {
             return;
         }
         try {
             MetricsElement elem = MetricsElement.parse(line);
             startElement(elem);
         } catch (ParseException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             // invalid lines are sent to the output as information, it might be anything,
-           task.log(line, Project.MSG_INFO);
+            task.log(line, Project.MSG_INFO);
         }
     }
 
@@ -238,16 +247,17 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
         // if there are elements in the stack we possibly need to close one or
         // more elements previous to this one until we got its parent
         int indent = elem.getIndent();
-        if ( stack.size() > 0 ){
-            ElementEntry previous = (ElementEntry)stack.peek();
+        if (stack.size() > 0) {
+            ElementEntry previous = (ElementEntry) stack.peek();
             // close nodes until you got the parent.
             try {
-                while ( indent <= previous.getIndent() && stack.size() > 0){
+                while (indent <= previous.getIndent() && stack.size() > 0) {
                     stack.pop();
                     metricsHandler.endElement("", previous.getType(), previous.getType());
-                        previous = (ElementEntry)stack.peek();
+                    previous = (ElementEntry) stack.peek();
                 }
-            } catch (EmptyStackException ignored){}
+            } catch (EmptyStackException ignored) {
+            }
         }
 
         // ok, now start the new construct
@@ -256,7 +266,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
         metricsHandler.startElement("", type, type, attrs);
 
         // make sure we keep track of what we did, that's history
-        stack.push( new ElementEntry(type, indent) );
+        stack.push(new ElementEntry(type, indent));
     }
 
     /**
@@ -267,36 +277,36 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
      * @return the type of the metrics element, either PACKAGE, FILE, CLASS or
      * METHOD.
      */
-    protected String getConstructType(MetricsElement elem){
+    protected String getConstructType(MetricsElement elem) {
         // ok no doubt, it's a file
-        if ( elem.isCompilationUnit() ){
+        if (elem.isCompilationUnit()) {
             return FILE;
         }
 
         // same, we're sure it's a method
-        if ( elem.isMethod() ){
+        if (elem.isMethod()) {
             return METHOD;
         }
 
         // if it's empty, and none of the above it should be a package
-        if ( stack.size() == 0 ){
+        if (stack.size() == 0) {
             return PACKAGE;
         }
 
         // ok, this is now black magic time, we will guess the type based on
         // the previous type and its indent...
-        final ElementEntry previous = (ElementEntry)stack.peek();
+        final ElementEntry previous = (ElementEntry) stack.peek();
         final String prevType = previous.getType();
         final int prevIndent = previous.getIndent();
         final int indent = elem.getIndent();
         // we're just under a file with a bigger indent so it's a class
-        if ( prevType.equals(FILE) && indent > prevIndent ){
+        if (prevType.equals(FILE) && indent > prevIndent) {
             return CLASS;
         }
 
         // we're just under a class with a greater or equals indent, it's a class
         // (there might be several classes in a compilation unit and inner classes as well)
-        if ( prevType.equals(CLASS) && indent >= prevIndent ){
+        if (prevType.equals(CLASS) && indent >= prevIndent) {
             return CLASS;
         }
 
@@ -308,17 +318,16 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
     /**
      * Create all attributes of a MetricsElement skipping those who have an
      * empty string
-     * @param   elem
      */
-    protected Attributes createAttributes(MetricsElement elem){
+    protected Attributes createAttributes(MetricsElement elem) {
         AttributesImpl impl = new AttributesImpl();
         int i = 0;
         String name = ATTRIBUTES[i++];
         impl.addAttribute("", name, name, "CDATA", elem.getName());
         Enumeration metrics = elem.getMetrics();
-        for (; metrics.hasMoreElements(); i++){
-            String value = (String)metrics.nextElement();
-            if ( value.length() > 0 ){
+        for (; metrics.hasMoreElements(); i++) {
+            String value = (String) metrics.nextElement();
+            if (value.length() > 0) {
                 name = ATTRIBUTES[i];
                 impl.addAttribute("", name, name, "CDATA", value);
             }
@@ -333,13 +342,16 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler {
     private final static class ElementEntry {
         private String type;
         private int indent;
-        ElementEntry(String type, int indent){
+
+        ElementEntry(String type, int indent) {
             this.type = type;
             this.indent = indent;
         }
-        public String getType(){
+
+        public String getType() {
             return type;
         }
+
         public int getIndent() {
             return indent;
         }
@@ -351,6 +363,7 @@ class MetricsElement {
     private final static NumberFormat METAMATA_NF;
 
     private final static NumberFormat NEUTRAL_NF;
+
     static {
         METAMATA_NF = NumberFormat.getInstance();
         METAMATA_NF.setMaximumFractionDigits(1);
@@ -367,30 +380,30 @@ class MetricsElement {
 
     private Vector metrics;
 
-    MetricsElement(int indent, String construct, Vector metrics){
+    MetricsElement(int indent, String construct, Vector metrics) {
         this.indent = indent;
         this.construct = construct;
         this.metrics = metrics;
     }
 
-    public int getIndent(){
+    public int getIndent() {
         return indent;
     }
 
-    public String getName(){
+    public String getName() {
         return construct;
     }
 
-    public Enumeration getMetrics(){
+    public Enumeration getMetrics() {
         return metrics.elements();
     }
 
-    public boolean isCompilationUnit(){
-        return ( construct.endsWith(".java") || construct.endsWith(".class") );
+    public boolean isCompilationUnit() {
+        return (construct.endsWith(".java") || construct.endsWith(".class"));
     }
 
-    public boolean isMethod(){
-        return ( construct.endsWith("(...)") || construct.endsWith("()") );
+    public boolean isMethod() {
+        return (construct.endsWith("(...)") || construct.endsWith("()"));
     }
 
     public static MetricsElement parse(String line) throws ParseException {
@@ -399,32 +412,32 @@ class MetricsElement {
 
         // i'm using indexOf since I need to know if there are empty strings
         // between tabs and I find it easier than with StringTokenizer
-        while ( (pos = line.indexOf('\t')) != -1 ){
+        while ((pos = line.indexOf('\t')) != -1) {
             String token = line.substring(0, pos);
             // only parse what coudl be a valid number. ie not constructs nor no value
             /*if (metrics.size() != 0 || token.length() != 0){
                 Number num = METAMATA_NF.parse(token); // parse with Metamata NF
                 token = NEUTRAL_NF.format(num.doubleValue()); // and format with a neutral NF
             }*/
-            metrics.addElement( token );
+            metrics.addElement(token);
             line = line.substring(pos + 1);
         }
-        metrics.addElement( line );
+        metrics.addElement(line);
 
         // there should be exactly 14 tokens (1 name + 13 metrics), if not, there is a problem !
-        if ( metrics.size() != 14 ){
-            throw new ParseException("Could not parse the following line as a metrics: -->" + line +"<--", -1);
+        if (metrics.size() != 14) {
+            throw new ParseException("Could not parse the following line as a metrics: -->" + line + "<--", -1);
         }
 
         // remove the first token it's made of the indentation string and the
         // construct name, we'll need all this to figure out what type of
         // construct it is since we lost all semantics :(
         // (#indent[/]*)(#construct.*)
-        String name = (String)metrics.elementAt(0);
+        String name = (String) metrics.elementAt(0);
         metrics.removeElementAt(0);
         int indent = 0;
         pos = name.lastIndexOf('/');
-        if (pos != -1){
+        if (pos != -1) {
             name = name.substring(pos + 1);
             indent = pos + 1; // indentation is last position of token + 1
         }
