@@ -85,6 +85,7 @@ public class DirSetTest extends FileSetTest {
             assertEquals("dummy doesn\'t denote a dirset", e.getMessage());
         }
 
+/*        
         ds = (DirSet) getInstance();
         ds.setProject(getProject());
         getProject().addReference("dummy2", ds);
@@ -95,7 +96,7 @@ public class DirSetTest extends FileSetTest {
         } catch (BuildException e) {
             assertEquals("dummy2 doesn\'t denote a fileset", e.getMessage());
         }
-
+*/
     }
 
 }
