@@ -20,16 +20,16 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class LogTargetToListenerAdapter
     implements LogTarget
 {
-    private final ProjectListener m_listener;
+    private final ProjectListenerSupport m_listenerSupport;
 
     /**
      * Constructor taking listener to convert to.
      *
-     * @param listener the ProjectListener
+     * @param listenerSupport the ProjectListener
      */
-    public LogTargetToListenerAdapter( final ProjectListener listener )
+    public LogTargetToListenerAdapter( final ProjectListenerSupport listenerSupport )
     {
-        m_listener = listener;
+        m_listenerSupport = listenerSupport;
     }
 
     /**
@@ -39,13 +39,6 @@ public class LogTargetToListenerAdapter
      */
     public void processEvent( final LogEvent event )
     {
-        if( null == event.getThrowable() )
-        {
-            m_listener.log( event.getMessage() );
-        }
-        else
-        {
-            m_listener.log( event.getMessage(), event.getThrowable() );
-        }
+        m_listenerSupport.log( event.getMessage(), event.getThrowable() );
     }
 }

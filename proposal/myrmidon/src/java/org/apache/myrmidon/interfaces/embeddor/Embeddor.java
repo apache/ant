@@ -15,6 +15,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * Interface through which you embed Myrmidon into applications.
@@ -28,17 +29,30 @@ public interface Embeddor
     String ROLE = Embeddor.class.getName();
 
     /**
-     * Create a project.
+     * Creates a project from a project file.
      *
+     * @param location The path to the project file.
+     * @param type The project file type.  If null the type is inferred from the
+     *             project file name.
+     * @param parameters The project builder parameters.
      * @return the created Project
      */
     Project createProject( String location, String type, Parameters parameters )
         throws Exception;
 
     /**
-     * Create a Workspace for a particular project.
+     * Creates a project listener.
      *
-     * @param defines the defines in workspace
+     * @param name The shorthand name of the listener.
+     * @return the listener.
+     */
+    ProjectListener createListener( String name )
+        throws Exception;
+
+    /**
+     * Creates a {@link Workspace} that can be used to execute projects.
+     *
+     * @param parameters The properties to define in the workspace
      * @return the Workspace
      */
     Workspace createWorkspace( Parameters parameters )

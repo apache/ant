@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
+import org.apache.myrmidon.listeners.LogEvent;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -1067,10 +1068,8 @@ public class IContract extends MatchingTask
     {
         /**
          * Notify listener of log message event.
-         *
-         * @param message the message
          */
-        public void log( final String message )
+        public void log( final LogEvent event )
         {
             if( "java.lang.NoClassDefFoundError: com/reliablesystems/iContract/Tool".equals( event.getMessage() ) )
             {

@@ -8,6 +8,10 @@
 package org.apache.myrmidon.components.workspace;
 
 import org.apache.myrmidon.listeners.ProjectListener;
+import org.apache.myrmidon.listeners.ProjectEvent;
+import org.apache.myrmidon.listeners.TargetEvent;
+import org.apache.myrmidon.listeners.TaskEvent;
+import org.apache.myrmidon.listeners.LogEvent;
 
 /**
  * Support for the project listener event dispatching.
@@ -16,9 +20,14 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * @version $Revision$ $Date$
  */
 public class ProjectListenerSupport
-    implements ProjectListener
+    implements LogEvent
 {
     private ProjectListener[] m_listeners = new ProjectListener[ 0 ];
+    private String m_projectName;
+    private String m_targetName;
+    private String m_taskName;
+    private String m_message;
+    private Throwable m_throwable;
 
     /**
      * Add an extra project listener that wants to receive notification of listener events.
@@ -68,35 +77,47 @@ public class ProjectListenerSupport
     /**
      * Fire a projectStarted event.
      */
-    public void projectStarted()
+    public void projectStarted( final String projectName )
     {
+        m_projectName = projectName;
+        m_targetName = null;
+        m_taskName = null;
+
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].projectStarted();
+            m_listeners[ i ].projectStarted( this );
         }
     }
 
     /**
      * Fire a projectFinished event.
      */
-    public void projectFinished()
+    public void projectFinished( final String projectName )
     {
+        m_projectName = projectName;
+
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].projectFinished();
+            m_listeners[ i ].projectFinished( this );
         }
+
+        m_projectName = null;
+        m_targetName = null;
+        m_taskName = null;
     }
 
     /**
      * Fire a targetStarted event.
-     *
-     * @param targetName the name of target
      */
-    public void targetStarted( String targetName )
+    public void targetStarted( final String projectName, final String targetName )
     {
+        m_projectName = projectName;
+        m_targetName = targetName;;
+        m_taskName = null;
+
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].targetStarted( targetName );
+            m_listeners[ i ].targetStarted( this );
         }
     }
 
@@ -107,20 +128,23 @@ public class ProjectListenerSupport
     {
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].targetFinished();
+            m_listeners[ i ].targetFinished( this );
         }
+
+        m_targetName = null;
+        m_taskName = null;
     }
 
     /**
      * Fire a targetStarted event.
-     *
-     * @param targetName the name of target
      */
-    public void taskStarted( String taskName )
+    public void taskStarted( final String taskName )
     {
+        m_taskName = taskName;
+
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].taskStarted( taskName );
+            m_listeners[ i ].taskStarted( this );
         }
     }
 
@@ -131,34 +155,73 @@ public class ProjectListenerSupport
     {
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].taskFinished();
+            m_listeners[ i ].taskFinished( this );
         }
+
+        m_taskName = null;
     }
 
     /**
      * Fire a log event.
      *
      * @param message the log message
-     */
-    public void log( String message )
-    {
-        for( int i = 0; i < m_listeners.length; i++ )
-        {
-            m_listeners[ i ].log( message );
-        }
-    }
-
-    /**
-     * Fire a log event.
-     *
-     * @param message the log message
-     * @param throwable the throwable to be logged
      */
     public void log( String message, Throwable throwable )
     {
-        for( int i = 0; i < m_listeners.length; i++ )
+        m_message = message;
+        m_throwable = throwable;
+
+        try
         {
-            m_listeners[ i ].log( message, throwable );
+            for( int i = 0; i < m_listeners.length; i++ )
+            {
+                m_listeners[ i ].log( this );
+            }
         }
+        finally
+        {
+            m_message = null;
+            m_throwable = null;
+        }
+    }
+
+    /**
+     * Returns the message.
+     */
+    public String getMessage()
+    {
+        return m_message;
+    }
+
+    /**
+     * Returns the error that occurred.
+     */
+    public Throwable getThrowable()
+    {
+        return m_throwable;
+    }
+
+    /**
+     * Returns the name of the task.
+     */
+    public String getTaskName()
+    {
+        return m_taskName;
+    }
+
+    /**
+     * Returns the name of the target.
+     */
+    public String getTargetName()
+    {
+        return m_targetName;
+    }
+
+    /**
+     * Returns the name of the project.
+     */
+    public String getProjectName()
+    {
+        return m_projectName;
     }
 }

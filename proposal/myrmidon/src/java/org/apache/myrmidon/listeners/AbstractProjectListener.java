@@ -8,7 +8,8 @@
 package org.apache.myrmidon.listeners;
 
 /**
- * Abstract listener from which to extend.
+ * Abstract listener from which to extend.  This implementation provedes
+ * empty implementions of each of the event methods.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
@@ -17,97 +18,51 @@ public abstract class AbstractProjectListener
     implements ProjectListener
 {
     /**
-     * This contains the name of the current target.
-     */
-    private String m_target;
-
-    /**
-     * This contains the name of the current task.
-     */
-    private String m_task;
-
-    /**
      * Notify listener of projectStarted event.
      */
-    public void projectStarted()
+    public void projectStarted( final ProjectEvent event )
     {
     }
 
     /**
      * Notify listener of projectFinished event.
      */
-    public void projectFinished()
+    public void projectFinished( final ProjectEvent event )
     {
     }
 
     /**
      * Notify listener of targetStarted event.
-     *
-     * @param targetName the name of target
      */
-    public void targetStarted( final String target )
+    public void targetStarted( final TargetEvent event )
     {
-        m_target = target;
     }
 
     /**
      * Notify listener of targetFinished event.
      */
-    public void targetFinished()
+    public void targetFinished( final TargetEvent event )
     {
-        m_target = null;
     }
 
     /**
      * Notify listener of taskStarted event.
-     *
-     * @param task the name of task
      */
-    public void taskStarted( final String task )
+    public void taskStarted( final TaskEvent event )
     {
-        m_task = task;
     }
 
     /**
      * Notify listener of taskFinished event.
      */
-    public void taskFinished()
-    {
-        m_task = null;
-    }
-
-    /**
-     * Notify listener of log message event.
-     *
-     * @param message the message
-     */
-    public void log( String message )
+    public void taskFinished( final TaskEvent event )
     {
     }
 
     /**
      * Notify listener of log message event.
-     *
-     * @param message the message
-     * @param throwable the throwable
      */
-    public void log( String message, Throwable throwable )
+    public void log( final LogEvent event )
     {
-    }
-
-    /**
-     * Utility method to get the name of current target.
-     */
-    protected final String getTarget()
-    {
-        return m_target;
-    }
-
-    /**
-     * Utility method to get the name of current task.
-     */
-    protected final String getTask()
-    {
-        return m_task;
     }
 }

@@ -18,51 +18,43 @@ package org.apache.myrmidon.listeners;
 public interface ProjectListener
 {
     /**
-     * Notify listener of projectStarted event.
+     * Notify the listener that a project is about to start.  This method
+     * is called for top-level projects only.
      */
-    void projectStarted();
+    void projectStarted( ProjectEvent event );
 
     /**
-     * Notify listener of projectFinished event.
+     * Notify the listener that a project has finished.  This method is called
+     * for top-level projects only.
      */
-    void projectFinished();
+    void projectFinished( ProjectEvent event );
 
     /**
-     * Notify listener of targetStarted event.
-     *
-     * @param target the name of target
+     * Notify the listener that a target is about to start.  Note that the
+     * project name reported by the event may be different to that reported
+     * in {@link #projectStarted}.
      */
-    void targetStarted( String target );
+    void targetStarted( TargetEvent event );
 
     /**
-     * Notify listener of targetFinished event.
+     * Notify the listener that a target has finished.
      */
-    void targetFinished();
+    void targetFinished( TargetEvent event );
 
     /**
-     * Notify listener of taskStarted event.
-     *
-     * @param task the name of task
+     * Notify the listener that a task is about to start.
      */
-    void taskStarted( String task );
+    void taskStarted( TaskEvent event );
 
     /**
-     * Notify listener of taskFinished event.
+     * Notify the listener that a task has finished.
      */
-    void taskFinished();
+    void taskFinished( TaskEvent event );
 
     /**
-     * Notify listener of log message event.
-     *
-     * @param message the message
+     * Notify listener of log message event.  Note that this method may
+     * be called at any time, so the reported task, target, or project names
+     * may be null.
      */
-    void log( String message );
-
-    /**
-     * Notify listener of log message event.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    void log( String message, Throwable throwable );
+    void log( LogEvent event );
 }

@@ -10,70 +10,49 @@ package org.apache.myrmidon.listeners;
 import org.apache.avalon.framework.ExceptionUtil;
 
 /**
- * Default listener that emulates the old ant listener notifications.
+ * Default listener that emulates the Ant 1.x no banner listener.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public final class DefaultProjectListener
-    extends AbstractProjectListener
+public class DefaultProjectListener
+    extends ClassicProjectListener
 {
     private boolean m_targetOutput;
 
     /**
      * Notify listener of targetStarted event.
-     *
-     * @param target the name of target
      */
-    public void targetStarted( final String target )
+    public void targetStarted( final TargetEvent target )
     {
-        super.targetStarted( target );
         m_targetOutput = false;
     }
 
     /**
-     * Notify listener of log message event.
-     *
-     * @param message the message
+     * Notify listener of targetFinished event.
      */
-    public void log( final String message )
+    public void targetFinished( final TargetEvent event )
     {
-        output( message );
-    }
-
-    /**
-     * Notify listener of log message event.
-     *
-     * @param message the message
-     * @param throwable the throwable
-     */
-    public void log( final String message, final Throwable throwable )
-    {
-        output( message + "\n" + ExceptionUtil.printStackTrace( throwable, 5, true ) );
-    }
-
-    /**
-     * Utility class to output data.
-     * Overide in sub-classes to direct to a different destination.
-     *
-     * @param data the data
-     */
-    private void output( final String data )
-    {
-        if( !m_targetOutput )
+        if( m_targetOutput )
         {
-            System.out.println( getTarget() + ":\n" );
+            getWriter().println();
+        }
+    }
+
+    /**
+     * Notify listener of log message event.
+     */
+    public void log( final LogEvent event )
+    {
+        // Write the target header, if necessary
+        final String target = event.getTargetName();
+        if( target != null && !m_targetOutput )
+        {
+            writeTargetHeader( event );
             m_targetOutput = true;
         }
 
-        final String task = getTask();
-        if( null != task )
-        {
-            System.out.println( "\t[" + task + "] " + data );
-        }
-        else
-        {
-            System.out.println( data );
-        }
+        // Write the message
+        super.log( event );
     }
 }

@@ -42,7 +42,6 @@ public interface Workspace
      *
      * @param project the Project
      * @param target the name of the target
-     * @param defines the defines
      * @exception TaskException if an error occurs
      */
     void executeProject( Project project, String target )

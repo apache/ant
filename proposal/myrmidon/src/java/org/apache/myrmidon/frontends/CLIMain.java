@@ -61,6 +61,7 @@ public class CLIMain
     private final static int LOG_LEVEL_OPT = 'l';
     private final static int DEFINE_OPT = 'D';
     private final static int BUILDER_PARAM_OPT = 'B';
+    private final static int NO_PREFIX_OPT = 'p';
     private final static int VERSION_OPT = 1;
     private final static int LISTENER_OPT = 2;
     private final static int TASKLIB_DIR_OPT = 5;
@@ -72,14 +73,21 @@ public class CLIMain
     private final static int[] INFO_OPT_INCOMPAT = new int[]
     {
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
-        LOG_LEVEL_OPT, VERSION_OPT, LISTENER_OPT,
-        DEFINE_OPT, DRY_RUN_OPT //TASKLIB_DIR_OPT, HOME_DIR_OPT
+        LOG_LEVEL_OPT, BUILDER_PARAM_OPT, NO_PREFIX_OPT,
+        VERSION_OPT, LISTENER_OPT, TASKLIB_DIR_OPT,
+        INCREMENTAL_OPT, HOME_DIR_OPT, DRY_RUN_OPT
     };
 
     //incompatable options for other logging options
     private final static int[] LOG_OPT_INCOMPAT = new int[]
     {
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
+    };
+
+    //incompatible options for listener options
+    private final static int[] LISTENER_OPT_INCOMPAT = new int[]
+    {
+        LISTENER_OPT, NO_PREFIX_OPT
     };
 
     ///Parameters for run of myrmidon
@@ -138,79 +146,73 @@ public class CLIMain
     private CLOptionDescriptor[] createCLOptions()
     {
         //TODO: localise
-        final CLOptionDescriptor[] options = new CLOptionDescriptor[ 13 ];
-        options[ 0 ] =
+        final CLOptionDescriptor[] options = {
             new CLOptionDescriptor( "help",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     HELP_OPT,
                                     REZ.getString( "help.opt" ),
-                                    INFO_OPT_INCOMPAT );
-        options[ 1 ] =
+                                    INFO_OPT_INCOMPAT ),
             new CLOptionDescriptor( "file",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     FILE_OPT,
-                                    REZ.getString( "file.opt" ) );
-        options[ 2 ] =
+                                    REZ.getString( "file.opt" ) ),
             new CLOptionDescriptor( "log-level",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LOG_LEVEL_OPT,
                                     REZ.getString( "log-level.opt" ),
-                                    LOG_OPT_INCOMPAT );
-        options[ 3 ] =
+                                    LOG_OPT_INCOMPAT ),
             new CLOptionDescriptor( "quiet",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     QUIET_OPT,
                                     REZ.getString( "quiet.opt" ),
-                                    LOG_OPT_INCOMPAT );
-        options[ 4 ] =
+                                    LOG_OPT_INCOMPAT ),
             new CLOptionDescriptor( "verbose",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     VERBOSE_OPT,
                                     REZ.getString( "verbose.opt" ),
-                                    LOG_OPT_INCOMPAT );
-        options[ 5 ] =
+                                    LOG_OPT_INCOMPAT ),
             new CLOptionDescriptor( "listener",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LISTENER_OPT,
-                                    REZ.getString( "listener.opt" ) );
-        options[ 6 ] =
+                                    REZ.getString( "listener.opt" ),
+                                    LISTENER_OPT_INCOMPAT ),
+            new CLOptionDescriptor( "noprefix",
+                                    CLOptionDescriptor.ARGUMENT_DISALLOWED,
+                                    NO_PREFIX_OPT,
+                                    REZ.getString( "noprefix.opt" ),
+                                    LISTENER_OPT_INCOMPAT ),
             new CLOptionDescriptor( "version",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     VERSION_OPT,
                                     REZ.getString( "version.opt" ),
-                                    INFO_OPT_INCOMPAT );
-
-        options[ 7 ] =
+                                    INFO_OPT_INCOMPAT ),
             new CLOptionDescriptor( "task-lib-dir",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     TASKLIB_DIR_OPT,
-                                    REZ.getString( "tasklib.opt" ) );
-        options[ 8 ] =
+                                    REZ.getString( "tasklib.opt" ) ),
             new CLOptionDescriptor( "incremental",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     INCREMENTAL_OPT,
-                                    REZ.getString( "incremental.opt" ) );
-        options[ 9 ] =
+                                    REZ.getString( "incremental.opt" ) ),
             new CLOptionDescriptor( "ant-home",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     HOME_DIR_OPT,
-                                    REZ.getString( "home.opt" ) );
-        options[ 10 ] =
+                                    REZ.getString( "home.opt" ) ),
             new CLOptionDescriptor( "define",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     DEFINE_OPT,
                                     REZ.getString( "define.opt" ),
-                                    new int[ 0 ] );
-        options[ 11 ] =
+                                    new int[ 0 ] ),
             new CLOptionDescriptor( "builder-parameter",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
                                     BUILDER_PARAM_OPT,
-                                    REZ.getString( "build.opt" ) );
-        options[ 12 ] =
+                                    REZ.getString( "build.opt" ) ),
             new CLOptionDescriptor( "dry-run",
                                     CLOptionDescriptor.ARGUMENT_DISALLOWED,
                                     DRY_RUN_OPT,
-                                    REZ.getString( "dry-run.opt" ) );
+                                    REZ.getString( "dry-run.opt" ) )
+        };
+
         return options;
     }
 
@@ -266,8 +268,12 @@ public class CLIMain
                 case FILE_OPT:
                     m_parameters.setParameter( "filename", option.getArgument() );
                     break;
+
                 case LISTENER_OPT:
                     m_parameters.setParameter( "listener", option.getArgument() );
+                    break;
+                case NO_PREFIX_OPT:
+                    m_parameters.setParameter( "listener", "noprefix" );
                     break;
 
                 case DEFINE_OPT:
@@ -298,7 +304,7 @@ public class CLIMain
 
         m_parameters.setParameter( "filename", "build.ant" );
         m_parameters.setParameter( "log.level", "WARN" );
-        m_parameters.setParameter( "listener", "org.apache.myrmidon.listeners.DefaultProjectListener" );
+        m_parameters.setParameter( "listener", "default" );
         m_parameters.setParameter( "incremental", "false" );
     }
 
@@ -332,10 +338,6 @@ public class CLIMain
             throw new Exception( message );
         }
 
-        //handle listener..
-        final String listenerName = m_parameters.getParameter( "listener", null );
-        final ProjectListener listener = createListener( listenerName );
-
         if( getLogger().isInfoEnabled() )
         {
             final String message = REZ.getString( "buildfile.notice", buildFile );
@@ -362,6 +364,10 @@ public class CLIMain
         embeddor.parameterize( m_parameters );
         embeddor.initialize();
         embeddor.start();
+
+        //create the listener
+        final String listenerName = m_parameters.getParameter( "listener", null );
+        final ProjectListener listener = embeddor.createListener( listenerName );
 
         //create the project
         final Project project =
@@ -415,7 +421,7 @@ public class CLIMain
     /**
      * Actually do the build.
      *
-     * @param manager the manager
+     * @param workspace the workspace
      * @param project the project
      * @param targets the targets to build as passed by CLI
      */
@@ -477,27 +483,4 @@ public class CLIMain
 
         return logger;
     }
-
-    /**
-     * Setup project listener.
-     *
-     * @param listener the classname of project listener
-     */
-    private ProjectListener createListener( final String listener )
-        throws Exception
-    {
-        try
-        {
-            return (ProjectListener)Class.forName( listener ).newInstance();
-        }
-        catch( final Throwable t )
-        {
-            final String message =
-                REZ.getString( "bad-listener.error",
-                               listener,
-                               ExceptionUtil.printStackTrace( t, 5, true ) );
-            throw new Exception( message );
-        }
-    }
 }
-

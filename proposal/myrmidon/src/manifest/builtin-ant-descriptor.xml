@@ -4,6 +4,7 @@
 
     <listener name="default" classname="org.apache.myrmidon.listeners.DefaultProjectListener"/>
     <listener name="classic" classname="org.apache.myrmidon.listeners.ClassicProjectListener"/>
+    <listener name="noprefix" classname="org.apache.myrmidon.listeners.NoPrefixProjectListener"/>
     <aspect name="noop" classname="org.apache.myrmidon.aspects.NoopAspectHandler"/>
     <project-builder name="ant" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>
     <project-builder name="xml" classname="org.apache.myrmidon.components.builder.DefaultProjectBuilder"/>

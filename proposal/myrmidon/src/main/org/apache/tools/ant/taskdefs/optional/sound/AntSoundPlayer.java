@@ -22,6 +22,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
+import org.apache.myrmidon.listeners.ProjectEvent;
+import org.apache.myrmidon.listeners.LogEvent;
 
 /**
  * This class is designed to be used by any AntTask that requires audio output.
@@ -65,20 +67,20 @@ public class AntSoundPlayer
     /**
      * Notify listener of projectFinished event.
      */
-    public void projectFinished()
+    public void projectFinished( final ProjectEvent event )
     {
         success();
     }
 
     /**
      * Notify listener of log message event.
-     *
-     * @param message the message
-     * @param throwable the throwable
      */
-    public void log( final String message, final Throwable throwable )
+    public void log( final LogEvent event )
     {
-        failure();
+        if( event.getThrowable() != null )
+        {
+            failure();
+        }
     }
 
     /**

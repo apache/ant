@@ -41,6 +41,7 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * Default implementation of Embeddor.
@@ -124,6 +125,19 @@ public class DefaultEmbeddor
             (Workspace)createComponent( component, Workspace.class );
         setupObject( workspace, parameters );
         return workspace;
+    }
+
+    /**
+     * Creates a project listener.
+     *
+     * @param name The shorthand name of the listener.
+     * @return the listener.
+     */
+    public ProjectListener createListener( String name )
+        throws Exception
+    {
+        final TypeFactory factory = m_typeManager.getFactory( ProjectListener.class );
+        return (ProjectListener)factory.create( name );
     }
 
     /**

@@ -8,63 +8,93 @@
 package org.apache.myrmidon.listeners;
 
 import org.apache.avalon.framework.ExceptionUtil;
+import java.io.PrintWriter;
 
 /**
- * Classic listener that emulates the default ant1.x listener notifications.
+ * Classic listener that emulates the default ant1.x listener.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public final class ClassicProjectListener
+public class ClassicProjectListener
     extends AbstractProjectListener
 {
+    private final PrintWriter m_printWriter;
+
+    public ClassicProjectListener()
+    {
+        m_printWriter = new PrintWriter( System.out, true );
+    }
+
     /**
      * Notify listener of targetStarted event.
-     *
-     * @param target the name of target
      */
-    public void targetStarted( final String target )
+    public void targetStarted( final TargetEvent event )
     {
-        output( target + ":\n" );
+        writeTargetHeader( event );
+    }
+
+    /**
+     * Notify listener of targetFinished event.
+     */
+    public void targetFinished( TargetEvent event )
+    {
+        getWriter().println();
     }
 
     /**
      * Notify listener of log message event.
-     *
-     * @param message the message
      */
-    public void log( String message )
+    public void log( final LogEvent event  )
     {
-        output( message );
+        writeMessage( event );
+        writeThrowable( event );
     }
 
     /**
-     * Notify listener of log message event.
-     *
-     * @param message the message
-     * @param throwable the throwable
+     * Returns the PrintWriter to write to.
      */
-    public void log( String message, Throwable throwable )
+    protected PrintWriter getWriter()
     {
-        output( message + "\n" + ExceptionUtil.printStackTrace( throwable, 5, true ) );
+        return m_printWriter;
     }
 
     /**
-     * Utility class to output data.
-     * Overide in sub-classes to direct to a different destination.
-     *
-     * @param data the data
+     * Writes the target header.
      */
-    private void output( final String data )
+    protected void writeTargetHeader( final TargetEvent event )
     {
-        final String task = getTask();
+        getWriter().println( event.getTargetName() + ":" );
+    }
+
+    /**
+     * Writes a message
+     */
+    protected void writeMessage( final LogEvent event )
+    {
+        // Write the message
+        final String message = event.getMessage();
+        final String task = event.getTaskName();
         if( null != task )
         {
-            System.out.println( "\t[" + task + "] " + data );
+            getWriter().println( "\t[" + task + "] " + message );
         }
         else
         {
-            System.out.println( data );
+            getWriter().println( message );
+        }
+    }
+
+    /**
+     * Writes a throwable.
+     */
+    private void writeThrowable( final LogEvent event )
+    {
+        // Write the exception, if any
+        final Throwable throwable = event.getThrowable();
+        if( throwable != null )
+        {
+            getWriter().println( ExceptionUtil.printStackTrace( throwable, 5, true ) );
         }
     }
 }

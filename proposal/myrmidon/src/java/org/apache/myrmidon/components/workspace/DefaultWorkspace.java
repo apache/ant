@@ -130,13 +130,13 @@ public class DefaultWorkspace
     {
         final ProjectEntry entry = getProjectEntry( project );
 
-        m_listenerSupport.projectStarted();
+        m_listenerSupport.projectStarted( project.getProjectName() );
 
         executeTarget( "<init>", project.getImplicitTarget(), entry.getFrame() );
 
         execute( project, target, entry );
 
-        m_listenerSupport.projectFinished();
+        m_listenerSupport.projectFinished( project.getProjectName() );
     }
 
     private TaskContext createBaseContext()
@@ -383,7 +383,7 @@ public class DefaultWorkspace
         }
 
         //notify listeners
-        m_listenerSupport.targetStarted( targetName );
+        m_listenerSupport.targetStarted( project.getProjectName(), targetName );
 
         executeTarget( targetName, target, entry.getFrame() );
 
