@@ -39,6 +39,8 @@ Fixed bugs:
 
 * Zip task was not zipping when only empty directories were found. Bugzilla 30365.
 
+* Classpath was treated in the same way as -lib options. Bugzilla 28046.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
