@@ -29,63 +29,87 @@ import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
  *
  * @version $Revision$ $Date$
  */
-public class AntResolver
-    implements ExtensionResolver {
-    private File m_antfile;
-    private File m_destfile;
-    private String m_target;
+public class AntResolver implements ExtensionResolver {
+    private File antfile;
+    private File destfile;
+    private String target;
 
-    public void setAntfile(File antfile) {
-        m_antfile = antfile;
+    /**
+     * Sets the ant file
+     * @param antfile the ant file to set
+     */
+    public void setAntfile(final File antfile) {
+        this.antfile = antfile;
     }
 
-    public void setDestfile(File destfile) {
-        m_destfile = destfile;
+    /**
+     * Sets the destination file
+     * @param destfile the destination file
+     */
+    public void setDestfile(final File destfile) {
+        this.destfile = destfile;
     }
 
+    /**
+     * Sets the target
+     * @param target the target
+     */
     public void setTarget(final String target) {
-        m_target = target;
+        this.target = target;
     }
 
+    /**
+     * Returns the resolved file
+     * @param extension the extension
+     * @param project the project
+     * @return the file resolved
+     * @throws BuildException if the file cannot be resolved
+     */
     public File resolve(final Extension extension,
-                         final Project project)
-        throws BuildException {
+                         final Project project) throws BuildException {
         validate();
 
         final Ant ant = (Ant) project.createTask("ant");
         ant.setInheritAll(false);
-        ant.setAntfile(m_antfile.getName());
+        ant.setAntfile(antfile.getName());
 
         try {
             final File dir =
-                m_antfile.getParentFile().getCanonicalFile();
+                antfile.getParentFile().getCanonicalFile();
             ant.setDir(dir);
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
         }
 
-        if (null != m_target) {
-            ant.setTarget(m_target);
+        if (null != target) {
+            ant.setTarget(target);
         }
 
         ant.execute();
 
-        return m_destfile;
+        return destfile;
     }
 
+    /*
+     * Validates URL
+     */
     private void validate() {
-        if (null == m_antfile) {
+        if (null == antfile) {
             final String message = "Must specify Buildfile";
             throw new BuildException(message);
         }
 
-        if (null == m_destfile) {
+        if (null == destfile) {
             final String message = "Must specify destination file";
             throw new BuildException(message);
         }
     }
 
+    /**
+     * Returns a string representation
+     * @return the string representation
+     */
     public String toString() {
-        return "Ant[" + m_antfile + "==>" + m_destfile + "]";
+        return "Ant[" + antfile + "==>" + destfile + "]";
     }
 }
