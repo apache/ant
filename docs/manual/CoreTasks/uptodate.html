@@ -87,8 +87,25 @@ any of the DTD files in the <code>${src}/xml</code> directory.</p>
     &lt;mapper type=&quot;merge&quot; to=&quot;${deploy}\xmlClasses.jar&quot;/&gt;
   &lt;/uptodate&gt;</pre>
 as well.
+
+The <code>xmlBuild.notRequired</code> property can then be used in a
+<code>&lt;target&gt;</code> tag's <code>unless</code> attribute to
+conditionally run that target. For example, running the following target:</p>
+<pre>
+&lt;target name=&quot;xmlBuild&quot; depends="chkXmlBuild" unless="xmlBuild.notRequired&quot;&gt;
+  ...
+&lt;/target&gt;
+</pre>
+will first run the <code>chkXmlBuild</code> target, which contains
+the <code>&lt;uptodate&gt;</code> task that determines whether
+<code>xmlBuild.notRequired</code> gets set. The property named in
+the <code>unless</code> attribute is then checked for being set/not set.
+If it did get set (ie., the jar file is up-to-date),
+then the <code>xmlBuild</code> target won't be run.
 </p>
 
+<p> The following example shows a single source file being checked
+against a single target file:</p>
 <pre>  &lt;uptodate property=&quot;isUpToDate&quot;
             srcfile=&quot;/usr/local/bin/testit&quot;
             targetfile=&quot;${build}/.flagfile&quot;/&gt;
