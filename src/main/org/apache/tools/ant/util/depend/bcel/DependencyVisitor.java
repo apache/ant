@@ -62,6 +62,7 @@ import org.apache.bcel.classfile.EmptyVisitor;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.ConstantNameAndType;
 
 /**
  * A BCEL visitor implementation to collect class dependency information
@@ -111,6 +112,26 @@ public class DependencyVisitor extends EmptyVisitor {
         String classname
              = constantClass.getConstantValue(constantPool).toString();
         addSlashClass(classname);
+    }
+
+    /**
+     * Visit a name and type ref
+     *
+     * Look for class references in this
+     */
+    public void visitConstantNameAndType(ConstantNameAndType obj) {
+        String name = obj.getName(constantPool);
+        if (obj.getSignature(constantPool).equals("Ljava/lang/Class;")
+                && name.startsWith("class$")) {
+            String classname = name.substring(6).replace('$', '.');
+            addClass(classname);
+            int index = classname.lastIndexOf(".");
+            if (index != -1) {
+                classname = classname.substring(0, index) + "$" +
+                            classname.substring(index + 1);
+                addClass(classname);
+            }
+        }
     }
 
     /**
@@ -170,7 +191,7 @@ public class DependencyVisitor extends EmptyVisitor {
     }
 
     /**
-     * Adds a class name in slash format 
+     * Adds a class name in slash format
      * (for example org/apache/tools/ant/Main).
      *
      * @param classname the class name in slash format
