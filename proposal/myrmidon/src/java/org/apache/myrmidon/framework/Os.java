@@ -10,7 +10,6 @@ package org.apache.myrmidon.framework;
 import java.util.Locale;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class to help determining the OS.
@@ -249,7 +248,6 @@ public class Os
      * @see Os#setFamily(String)
      */
     public boolean eval()
-        throws TaskException
     {
         return isOs( m_family, m_name, m_arch, m_version );
     }
