@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
  * The interface that all rmic adapters must adher to. <p>

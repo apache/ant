@@ -15,13 +15,12 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.framework.FileNameMapper;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
-import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Task to compile RMI stubs and skeletons. This task can take the following
@@ -569,7 +568,7 @@ public class Rmic extends MatchingTask
         {
             final SourceFileScanner scanner = new SourceFileScanner();
             setupLogger( scanner );
-            newFiles = scanner.restrict( files, baseDir, baseDir, mapper );
+            newFiles = scanner.restrict( files, baseDir, baseDir, mapper, getContext() );
         }
 
         for( int i = 0; i < newFiles.length; i++ )
@@ -603,7 +602,7 @@ public class Rmic extends MatchingTask
         String classFileName =
             classname.replace( '.', File.separatorChar ) + ".class";
         String[] generatedFiles =
-            adapter.getMapper().mapFileName( classFileName );
+            adapter.getMapper().mapFileName( classFileName, getContext() );
 
         for( int i = 0; i < generatedFiles.length; i++ )
         {

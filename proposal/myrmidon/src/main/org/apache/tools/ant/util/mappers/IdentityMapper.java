@@ -7,43 +7,28 @@
  */
 package org.apache.tools.ant.util.mappers;
 
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.FileNameMapper;
+
 /**
  * Implementation of FileNameMapper that always returns the source file name.
  * <p>
  *
- * This is the default FileNameMapper for the copy and move tasks.</p>
- *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:type type="mapper" name="identity"
  */
 public class IdentityMapper
     implements FileNameMapper
 {
-    /**
-     * Ignored.
-     *
-     * @param from The new From value
-     */
-    public void setFrom( final String from )
-    {
-    }
-
-    /**
-     * Ignored.
-     *
-     * @param to The new To value
-     */
-    public void setTo( final String to )
-    {
-    }
-
     /**
      * Returns an one-element array containing the source file name.
      *
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( final String sourceFileName )
+    public String[] mapFileName( final String sourceFileName, TaskContext context )
     {
-        return new String[]{sourceFileName};
+        return new String[]{ sourceFileName };
     }
 }

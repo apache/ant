@@ -10,13 +10,13 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
-import org.apache.tools.ant.util.mappers.Mapper;
 import org.apache.tools.ant.util.mappers.MergingMapper;
 
 /**
@@ -29,16 +29,15 @@ import org.apache.tools.ant.util.mappers.MergingMapper;
  *      hnakamur@mc.neweb.ne.jp</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
-public class UpToDate extends MatchingTask
+public class UpToDate
+    extends AbstractTask
 {
-    private ArrayList sourceFileSets = new ArrayList();
+    private final ArrayList m_fileSets = new ArrayList();
+    private FileNameMapper m_mapper;
 
-    protected Mapper mapperElement = null;
-
-    private String _property;
-    private File _targetFile;
-    private String _value;
+    private String m_property;
+    private File m_targetFile;
+    private String m_value;
 
     /**
      * The property to set if the target file is more up to date than each of
@@ -46,9 +45,9 @@ public class UpToDate extends MatchingTask
      *
      * @param property the name of the property to set if Target is up to date.
      */
-    public void setProperty( String property )
+    public void setProperty( final String property )
     {
-        _property = property;
+        m_property = property;
     }
 
     /**
@@ -57,9 +56,9 @@ public class UpToDate extends MatchingTask
      *
      * @param file the file which we are checking against.
      */
-    public void setTargetFile( File file )
+    public void setTargetFile( final File file )
     {
-        _targetFile = file;
+        m_targetFile = file;
     }
 
     /**
@@ -68,9 +67,9 @@ public class UpToDate extends MatchingTask
      *
      * @param value the value to set the property to if Target is up to date
      */
-    public void setValue( String value )
+    public void setValue( final String value )
     {
-        _value = value;
+        m_value = value;
     }
 
     /**
@@ -78,26 +77,22 @@ public class UpToDate extends MatchingTask
      *
      * @param fs The feature to be added to the Srcfiles attribute
      */
-    public void addSrcfiles( FileSet fs )
+    public void addSrcfiles( final FileSet fs )
     {
-        sourceFileSets.add( fs );
+        m_fileSets.add( fs );
     }
 
     /**
      * Defines the FileNameMapper to use (nested mapper element).
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
-    public Mapper createMapper()
+    public void addMapper( final FileNameMapper mapper )
         throws TaskException
     {
-        if( mapperElement != null )
+        if( m_mapper != null )
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapperElement = new Mapper();
-        return mapperElement;
+        m_mapper = mapper;
     }
 
     /**
@@ -108,23 +103,23 @@ public class UpToDate extends MatchingTask
     public boolean eval()
         throws TaskException
     {
-        if( sourceFileSets.size() == 0 )
+        if( m_fileSets.size() == 0 )
         {
             throw new TaskException( "At least one <srcfiles> element must be set" );
         }
 
-        if( _targetFile == null && mapperElement == null )
+        if( m_targetFile == null && m_mapper == null )
         {
             throw new TaskException( "The targetfile attribute or a nested mapper element must be set" );
         }
 
         // if not there then it can't be up to date
-        if( _targetFile != null && !_targetFile.exists() )
+        if( m_targetFile != null && !m_targetFile.exists() )
         {
             return false;
         }
 
-        Iterator enum = sourceFileSets.iterator();
+        Iterator enum = m_fileSets.iterator();
         boolean upToDate = true;
         while( upToDate && enum.hasNext() )
         {
@@ -148,12 +143,12 @@ public class UpToDate extends MatchingTask
         boolean upToDate = eval();
         if( upToDate )
         {
-            final String name = _property;
+            final String name = m_property;
             final Object value = this.getValue();
             getContext().setProperty( name, value );
-            if( mapperElement == null )
+            if( m_mapper == null )
             {
-                getLogger().debug( "File \"" + _targetFile.getAbsolutePath() + "\" is up to date." );
+                getLogger().debug( "File \"" + m_targetFile.getAbsolutePath() + "\" is up to date." );
             }
             else
             {
@@ -169,18 +164,18 @@ public class UpToDate extends MatchingTask
         setupLogger( scanner );
         FileNameMapper mapper = null;
         File dir = srcDir;
-        if( mapperElement == null )
+        if( m_mapper == null )
         {
             MergingMapper mm = new MergingMapper();
-            mm.setTo( _targetFile.getAbsolutePath() );
+            mm.setTo( m_targetFile.getAbsolutePath() );
             mapper = mm;
             dir = null;
         }
         else
         {
-            mapper = mapperElement.getImplementation();
+            mapper = m_mapper;
         }
-        return scanner.restrict( files, srcDir, dir, mapper ).length == 0;
+        return scanner.restrict( files, srcDir, dir, mapper, getContext() ).length == 0;
     }
 
     /**
@@ -190,6 +185,6 @@ public class UpToDate extends MatchingTask
      */
     private String getValue()
     {
-        return ( _value != null ) ? _value : "true";
+        return ( m_value != null ) ? m_value : "true";
     }
 }

@@ -483,7 +483,7 @@ public class Zip
             for( int i = 0; i < scanners.length; i++ )
             {
                 if( scanner.restrict( fileNames[ i ], scanners[ i ].getBasedir(), null,
-                                      mm ).length > 0 )
+                                      mm, getContext() ).length > 0 )
                 {
                     return false;
                 }

@@ -13,8 +13,9 @@ import java.util.Date;
 import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.myrmidon.framework.FileNameMapper;
 
 /**
  * Utility class that collects the functionality of the various scanDir methods
@@ -40,8 +41,11 @@ public class SourceFileScanner
      * @param mapper knows how to construct a target file names from source file
      *      names.
      */
-    public String[] restrict( String[] files, File srcDir, File destDir,
-                              FileNameMapper mapper )
+    public String[] restrict( final String[] files,
+                              final File srcDir,
+                              final File destDir,
+                              final FileNameMapper mapper,
+                              final TaskContext context )
         throws TaskException
     {
 
@@ -64,7 +68,7 @@ public class SourceFileScanner
         final ArrayList v = new ArrayList();
         for( int i = 0; i < files.length; i++ )
         {
-            final String[] targets = mapper.mapFileName( files[ i ] );
+            final String[] targets = mapper.mapFileName( files[ i ], context );
             if( targets == null || targets.length == 0 )
             {
                 final String message = files[ i ] + " skipped - don\'t know how to handle it";
@@ -130,10 +134,11 @@ public class SourceFileScanner
     public File[] restrictAsFiles( final String[] files,
                                    final File srcDir,
                                    final File destDir,
-                                   final FileNameMapper mapper )
+                                   final FileNameMapper mapper,
+                                   final TaskContext context )
         throws TaskException
     {
-        final String[] res = restrict( files, srcDir, destDir, mapper );
+        final String[] res = restrict( files, srcDir, destDir, mapper, context );
         final File[] result = new File[ res.length ];
         for( int i = 0; i < res.length; i++ )
         {

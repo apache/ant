@@ -18,14 +18,12 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
-import org.apache.tools.ant.util.mappers.FlatFileNameMapper;
 import org.apache.tools.ant.util.mappers.IdentityMapper;
-import org.apache.tools.ant.util.mappers.Mapper;
 
 /**
  * This is a task used to copy files.
@@ -50,9 +48,8 @@ public class CopyTask
     private File m_destDir;
     private boolean m_preserveLastModified;
     private boolean m_overwrite;
-    private boolean m_flatten;
     private boolean m_includeEmpty = true;
-    private Mapper m_mapper;
+    private FileNameMapper m_mapper;
 
     private HashMap m_fileMap = new HashMap();
     private HashMap m_dirMap = new HashMap();
@@ -94,22 +91,9 @@ public class CopyTask
     }
 
     /**
-     * When copying directory trees, the files can be "flattened" into a single
-     * directory. If there are multiple files with the same name in the source
-     * directory tree, only the first file will be copied into the "flattened"
-     * directory, unless the forceoverwrite attribute is true.
-     *
-     * @param flatten The new Flatten value
-     */
-    public void setFlatten( final boolean flatten )
-    {
-        m_flatten = flatten;
-    }
-
-    /**
      * Defines the FileNameMapper to use (nested mapper element).
      */
-    public void addMapper( final Mapper mapper )
+    public void addMapper( final FileNameMapper mapper )
         throws TaskException
     {
         if( null != m_mapper )
@@ -269,7 +253,7 @@ public class CopyTask
         final String[] toCopy = buildFilenameList( files, mapper, sourceDir, destDir );
         for( int i = 0; i < toCopy.length; i++ )
         {
-            final String destFilename = mapper.mapFileName( toCopy[ i ] )[ 0 ];
+            final String destFilename = mapper.mapFileName( toCopy[ i ], getContext() )[ 0 ];
             final File source = new File( sourceDir, toCopy[ i ] );
             final File destination = new File( destDir, destFilename );
             map.put( source.getAbsolutePath(), destination.getAbsolutePath() );
@@ -292,7 +276,7 @@ public class CopyTask
             for( int i = 0; i < names.length; i++ )
             {
                 final String name = names[ i ];
-                if( null != mapper.mapFileName( name ) )
+                if( null != mapper.mapFileName( name, getContext() ) )
                 {
                     list.add( name );
                 }
@@ -304,7 +288,7 @@ public class CopyTask
         {
             final SourceFileScanner scanner = new SourceFileScanner();
             setupLogger( scanner );
-            return scanner.restrict( names, fromDir, toDir, mapper );
+            return scanner.restrict( names, fromDir, toDir, mapper, getContext() );
         }
     }
 
@@ -406,11 +390,7 @@ public class CopyTask
     {
         if( null != m_mapper )
         {
-            return m_mapper.getImplementation();
-        }
-        else if( m_flatten )
-        {
-            return new FlatFileNameMapper();
+            return m_mapper;
         }
         else
         {

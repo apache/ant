@@ -8,7 +8,9 @@
 package org.apache.tools.ant.util.mappers;
 
 import java.util.ArrayList;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
@@ -16,6 +18,8 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  * Implementation of FileNameMapper that does regular expression replacements.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:type type="mapper" name="regexp"
  */
 public class RegexpPatternMapper
     implements FileNameMapper
@@ -65,7 +69,7 @@ public class RegexpPatternMapper
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( final String sourceFileName )
+    public String[] mapFileName( final String sourceFileName, TaskContext context )
         throws TaskException
     {
         if( m_matcher == null || m_to == null ||

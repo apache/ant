@@ -116,7 +116,7 @@ public final class Main
             final String name = file.getName();
             if( !name.endsWith( ".jar" ) && !name.endsWith( ".zip" ) )
             {
-                //Ifnore files in lib dir that are not jars or zips
+                //Ignore files in lib dir that are not jars or zips
                 continue;
             }
 

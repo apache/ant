@@ -7,13 +7,17 @@
  */
 package org.apache.tools.ant.util.mappers;
 
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
+
 /**
  * Implementation of FileNameMapper that always returns the same target file
  * name. <p>
  *
- * This is the default FileNameMapper for the archiving tasks and uptodate.</p>
- *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:type type="mapper" name="merge"
  */
 public class MergingMapper
     implements FileNameMapper
@@ -21,22 +25,13 @@ public class MergingMapper
     private String[] m_mergedFile;
 
     /**
-     * Ignored.
-     *
-     * @param from The new From value
-     */
-    public void setFrom( String from )
-    {
-    }
-
-    /**
      * Sets the name of the merged file.
      *
      * @param to The new To value
      */
-    public void setTo( String to )
+    public void setTo( final String to )
     {
-        m_mergedFile = new String[]{to};
+        m_mergedFile = new String[]{ to };
     }
 
     /**
@@ -45,8 +40,13 @@ public class MergingMapper
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( final String sourceFileName )
+    public String[] mapFileName( final String sourceFileName, TaskContext context )
+        throws TaskException
     {
+        if( m_mergedFile == null )
+        {
+            throw new TaskException( "Destination file was not specified." );
+        }
         return m_mergedFile;
     }
 }

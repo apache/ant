@@ -13,11 +13,11 @@ import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.JavaVersion;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.mappers.GlobPatternMapper;
-import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Task to compile Java source files. This task can take the following
@@ -713,7 +713,7 @@ public class Javac
         m.setTo( "*.class" );
         SourceFileScanner sfs = new SourceFileScanner();
         setupLogger( sfs );
-        File[] newFiles = sfs.restrictAsFiles( files, srcDir, destDir, m );
+        File[] newFiles = sfs.restrictAsFiles( files, srcDir, destDir, m, getContext() );
 
         if( newFiles.length > 0 )
         {

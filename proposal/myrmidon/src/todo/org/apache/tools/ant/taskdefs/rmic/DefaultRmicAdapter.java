@@ -11,11 +11,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,
@@ -268,7 +269,7 @@ public abstract class DefaultRmicAdapter
         {
         }
 
-        public String[] mapFileName( String name )
+        public String[] mapFileName( String name, TaskContext context )
         {
             if( name == null
                 || !name.endsWith( ".class" )

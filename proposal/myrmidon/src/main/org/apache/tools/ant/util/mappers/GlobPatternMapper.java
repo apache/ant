@@ -7,6 +7,9 @@
  */
 package org.apache.tools.ant.util.mappers;
 
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.framework.FileNameMapper;
+
 /**
  * Implementation of FileNameMapper that does simple wildcard pattern
  * replacements. <p>
@@ -18,6 +21,8 @@ package org.apache.tools.ant.util.mappers;
  * This is one of the more useful Mappers, it is used by javac for example.</p>
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:type type="mapper" name="glob"
  */
 public class GlobPatternMapper
     implements FileNameMapper
@@ -101,7 +106,7 @@ public class GlobPatternMapper
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( final String sourceFileName )
+    public String[] mapFileName( final String sourceFileName, TaskContext context )
     {
         if( m_fromPrefix == null ||
             !sourceFileName.startsWith( m_fromPrefix ) ||
@@ -124,7 +129,7 @@ public class GlobPatternMapper
      * @param name Description of Parameter
      * @return Description of the Returned Value
      */
-    protected String extractVariablePart( final String name )
+    private String extractVariablePart( final String name )
     {
         return name.substring( m_prefixLength,
                                name.length() - m_postfixLength );

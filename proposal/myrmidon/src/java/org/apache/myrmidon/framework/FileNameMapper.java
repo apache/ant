@@ -5,8 +5,9 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.util.mappers;
+package org.apache.myrmidon.framework;
 
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -20,36 +21,24 @@ import org.apache.myrmidon.api.TaskException;
  * </p>
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:role shorthand="mapper"
  */
 public interface FileNameMapper
 {
     /**
-     * Sets the from part of the transformation rule.
-     *
-     * @param from The new From value
-     */
-    void setFrom( String from )
-        throws TaskException;
-
-    /**
-     * Sets the to part of the transformation rule.
-     *
-     * @param to The new To value
-     */
-    void setTo( String to );
-
-    /**
      * Returns an array containing the target filename(s) for the given source
-     * file. <p>
+     * file.
      *
-     * if the given rule doesn't apply to the source file, implementation must
-     * return null. SourceFileScanner will then omit the source file in
+     * <p>if the given rule doesn't apply to the source file, implementation
+     * must return null. SourceFileScanner will then omit the source file in
      * question.</p>
      *
      * @param sourceFileName the name of the source file relative to some given
      *      basedirectory.
+     * @param context the context to perform the mapping in.
      * @return Description of the Returned Value
      */
-    String[] mapFileName( String sourceFileName )
+    String[] mapFileName( String sourceFileName, TaskContext context )
         throws TaskException;
 }

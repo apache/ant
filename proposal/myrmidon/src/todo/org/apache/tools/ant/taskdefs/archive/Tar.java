@@ -227,7 +227,7 @@ public class Tar
         setupLogger( scanner );
         final MergingMapper mapper = new MergingMapper();
         mapper.setTo( tarFile.getAbsolutePath() );
-        return scanner.restrict( files, baseDir, null, mapper ).length == 0;
+        return scanner.restrict( files, baseDir, null, mapper, getContext() ).length == 0;
     }
 
     private void tarFile( final File file,

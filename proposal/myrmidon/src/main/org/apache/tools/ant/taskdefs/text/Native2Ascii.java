@@ -9,13 +9,12 @@ package org.apache.tools.ant.taskdefs.text;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.mappers.IdentityMapper;
-import org.apache.tools.ant.util.mappers.Mapper;
 
 /**
  * Convert files from native encodings to ascii.
@@ -30,8 +29,7 @@ public class Native2Ascii
     private String m_encoding;// encoding to convert to/from
     private File m_srcDir;// Where to find input files
     private File m_destDir;// Where to put output files
-    private String m_ext;// Extension of output files if different
-    private Mapper m_mapper;
+    private FileNameMapper m_mapper;
 
     /**
      * Set the destination dirctory to place converted files into.
@@ -53,17 +51,6 @@ public class Native2Ascii
     public void setEncoding( final String encoding )
     {
         m_encoding = encoding;
-    }
-
-    /**
-     * Set the extension which converted files should have. If unset, files will
-     * not be renamed.
-     *
-     * @param ext File extension to use for converted files.
-     */
-    public void setExt( final String ext )
-    {
-        m_ext = ext;
     }
 
     /**
@@ -89,19 +76,15 @@ public class Native2Ascii
 
     /**
      * Defines the FileNameMapper to use (nested mapper element).
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
-    public Mapper createMapper()
+    public void createMapper( final FileNameMapper mapper )
         throws TaskException
     {
         if( m_mapper != null )
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        m_mapper = new Mapper();
-        return m_mapper;
+        m_mapper = mapper;
     }
 
     public void execute()
@@ -115,7 +98,7 @@ public class Native2Ascii
         final SourceFileScanner sfs = new SourceFileScanner();
         setupLogger( sfs );
         final FileNameMapper mapper = buildMapper();
-        files = sfs.restrict( files, m_srcDir, m_destDir, mapper );
+        files = sfs.restrict( files, m_srcDir, m_destDir, mapper, getContext() );
         int count = files.length;
         if( count == 0 )
         {
@@ -129,7 +112,7 @@ public class Native2Ascii
 
         for( int i = 0; i < files.length; i++ )
         {
-            final String name = mapper.mapFileName( files[ i ] )[ 0 ];
+            final String name = mapper.mapFileName( files[ i ], getContext() )[ 0 ];
             convert( files[ i ], name );
         }
     }
@@ -140,18 +123,11 @@ public class Native2Ascii
         FileNameMapper mapper = null;
         if( m_mapper == null )
         {
-            if( m_ext == null )
-            {
-                mapper = new IdentityMapper();
-            }
-            else
-            {
-                mapper = new ExtMapper( m_ext );
-            }
+            mapper = new IdentityMapper();
         }
         else
         {
-            mapper = m_mapper.getImplementation();
+            mapper = m_mapper;
         }
 
         return mapper;
@@ -169,9 +145,9 @@ public class Native2Ascii
         // if src and dest dirs are the same, require the extension
         // to be set, so we don't stomp every file.  One could still
         // include a file with the same extension, but ....
-        if( m_srcDir.equals( m_destDir ) && m_ext == null && m_mapper == null )
+        if( m_srcDir.equals( m_destDir ) && m_mapper == null )
         {
-            throw new TaskException( "The ext attribute or a mapper must be set if" +
+            throw new TaskException( "A mapper must be specified if" +
                                      " src and dest dirs are the same." );
         }
 
