@@ -293,7 +293,7 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.4</td>
+            <td>Ant 1.4 (or higher)</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -301,11 +301,13 @@
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:jalopy@hunsicker.de">jalopy@hunsicker.de</a></td>
+            <td><a href="http://jalopy.sf.net/contact.html">http://jalopy.sf.net/contact.html</a></td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>GNU General Public License</td>
+            <td>Starting with release 1.0 Beta 6 the license is the
+            BSD License.  Prior releases were under the GNU General
+            Public License.</td>
           </tr>
         </table>
       </subsection>
