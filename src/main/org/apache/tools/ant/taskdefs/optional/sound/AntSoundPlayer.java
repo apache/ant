@@ -56,8 +56,8 @@ public class AntSoundPlayer implements LineListener, BuildListener {
     private int loopsFail = 0;
     private Long durationFail = null;
 
+    /** Constructor for AntSoundPlayer. */
     public AntSoundPlayer() {
-
     }
 
     /**
@@ -139,6 +139,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
         clip.loop(loops);
         while (clip.isRunning()) {
+            // Empty block
         }
     }
 
@@ -147,12 +148,14 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         try {
             Thread.sleep(duration);
         } catch (InterruptedException e) {
+            // Ignore Exception
         }
     }
 
     /**
      * This is implemented to listen for any line events and closes the
      * clip if required.
+     * @param event the line event to follow
      */
     public void update(LineEvent event) {
         if (event.getType().equals(LineEvent.Type.STOP)) {
@@ -171,6 +174,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
     /**
      *  Fired before any targets are started.
+     * @param event ignored
      */
     public void buildStarted(BuildEvent event) {
     }
@@ -226,7 +230,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
 
     /**
      *  Fired whenever a message is logged.
-     *
+     *  @param event the build event
      *  @see BuildEvent#getMessage()
      *  @see BuildEvent#getPriority()
      */

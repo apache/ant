@@ -49,6 +49,7 @@ public class SoundTask extends Task {
 
     /**
      * add a sound when the build succeeds
+     * @return a BuildAlert to be configured
      */
     public BuildAlert createSuccess() {
         success = new BuildAlert();
@@ -57,18 +58,26 @@ public class SoundTask extends Task {
 
     /**
      * add a sound when the build fails
+     * @return a BuildAlert to be configured
      */
     public BuildAlert createFail() {
         fail = new BuildAlert();
         return fail;
      }
 
+    /** Constructor for SoundTask. */
     public SoundTask() {
     }
 
+    /**
+     * Initialize the task.
+     */
     public void init() {
     }
 
+    /**
+     * Execute the task.
+     */
     public void execute() {
 
         AntSoundPlayer soundPlayer = new AntSoundPlayer();
@@ -102,6 +111,7 @@ public class SoundTask extends Task {
 
         /**
          * Sets the duration in milliseconds the file should be played; optional.
+         * @param duration the duration in millisconds
          */
         public void setDuration(Long duration) {
             this.duration = duration;
@@ -127,6 +137,7 @@ public class SoundTask extends Task {
 
         /**
          * Gets the location of the file to get the audio.
+         * @return the file location
          */
         public File getSource() {
             File nofile = null;
@@ -170,6 +181,7 @@ public class SoundTask extends Task {
 
         /**
          * Gets the duration in milliseconds the file should be played.
+         * @return the duration in milliseconds
          */
         public Long getDuration() {
             return this.duration;
