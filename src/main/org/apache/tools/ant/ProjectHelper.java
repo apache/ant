@@ -75,6 +75,7 @@ public class ProjectHelper {
     private org.xml.sax.Parser parser;
     private Project project;
     private File buildFile;
+    private File buildFileParent;
     private Locator locator;
 
     /**
@@ -89,7 +90,8 @@ public class ProjectHelper {
      */
     private ProjectHelper(Project project, File buildFile) {
         this.project = project;
-        this.buildFile = buildFile;
+        this.buildFile = new File(buildFile.getAbsolutePath());
+        buildFileParent = new File(this.buildFile.getParent());
     }
 
     /**
@@ -181,16 +183,23 @@ public class ProjectHelper {
     private class RootHandler extends HandlerBase {
 
         /**
-         * resolve file: URIs as releative to the project's basedir.
+         * resolve file: URIs as relative to the build file.
          */
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
 
             if (systemId.startsWith("file:")) {
+                String path = systemId.substring(5);
+                File file = new File(path);
+                if (!file.isAbsolute()) {
+                    file = new File(buildFileParent, path);
+                }
+                
                 try {
-                    return new InputSource(new FileInputStream(project.resolveFile(systemId.substring(5))));
+                    return new InputSource(new FileInputStream(file));
                 } catch (FileNotFoundException fne) {
-                    project.log(fne.getMessage(), Project.MSG_WARN);
+                    project.log(file.getAbsolutePath()+" could not be found", 
+                                Project.MSG_WARN);
                 }
             }
             // use default if not file or file not found
@@ -251,9 +260,8 @@ public class ProjectHelper {
             if (project.getProperty("basedir") != null) {
                 project.setBasedir(project.getProperty("basedir"));
             } else {
-                String buildFileParent = (new File(buildFile.getAbsolutePath())).getParent();
                 if (baseDir == null) {
-                    project.setBasedir((new File(buildFileParent)).getAbsolutePath());
+                    project.setBasedir(buildFileParent.getAbsolutePath());
                 } else {
                     // check whether the user has specified an absolute path
                     if ((new File(baseDir)).isAbsolute()) {
