@@ -80,7 +80,7 @@ public class Java extends Exec {
         project.log("Calling " + classname, "java", project.MSG_VERBOSE);
 
         if (classname == null) {
-            throw new BuildException("Class name must not be null.");
+            throw new BuildException("Classname must not be null.");
         }
 
         if (fork) {
@@ -187,6 +187,8 @@ public class Java extends Exec {
      */
     protected Vector tokenize(String args) {
         Vector v = new Vector();
+        if (args == null) return v;
+
         StringTokenizer t = new StringTokenizer(args, " ");
         
         while (t.hasMoreTokens()) {
