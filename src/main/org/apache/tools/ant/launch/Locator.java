@@ -101,21 +101,25 @@ public final class Locator {
      * @since Ant 1.6
      */
     public static String fromURI(String uri) {
+        URL url = null;
         try {
-            URL url = new URL(uri);
-            if (!("file".equals(url.getProtocol()))) {
-                throw new IllegalArgumentException("Can only handle file: URIs");
-            }
-            StringBuffer buf = new StringBuffer(url.getHost());
-            if (buf.length() > 0) {
-                buf.insert(0, "//");
-            }
-            buf.append(url.getPath());
-            uri = buf.toString();
+            url = new URL(uri);
         } catch (MalformedURLException emYouEarlEx) {
         }
+        if (url == null || !("file".equals(url.getProtocol()))) {
+            throw new IllegalArgumentException("Can only handle valid file: URIs");
+        }
+        StringBuffer buf = new StringBuffer(url.getHost());
+        if (buf.length() > 0) {
+            buf.insert(0, File.separatorChar).insert(0, File.separatorChar);
+        }
 
-        uri = uri.replace('/', File.separatorChar);
+        String file = url.getFile();
+        int queryPos = file.indexOf('?');
+        buf.append((queryPos < 0) ? file : file.substring(0, queryPos));
+
+        uri = buf.toString().replace('/', File.separatorChar);
+
         if (File.pathSeparatorChar == ';' && uri.startsWith("\\") && uri.length() > 2
             && Character.isLetter(uri.charAt(1)) && uri.lastIndexOf(':') > -1) {
             uri = uri.substring(1);
