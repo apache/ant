@@ -6,6 +6,10 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Remove a recursive template call in the junit xsls that could trigger a stack
+  overflow. It now uses Xalan extensions to call a Java class directly.
+  Bugzilla Report 19301
+  
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
