@@ -53,9 +53,12 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 
@@ -143,10 +146,25 @@ public final class ChainReaderHelper {
                 final AntFilterReader filter =
                     (AntFilterReader) finalFilters.elementAt(i);
                 final String className = filter.getClassName();
+                final Path classpath = filter.getClasspath();
+                final Project project = filter.getProject();
                 if (className != null) {
                     try {
-                        final Class clazz = Class.forName(className);
+                        Class clazz = null;
+                        if (classpath == null) {
+                            clazz = Class.forName(className);
+                        } else {
+                            System.out.println(project + " " + classpath);
+                            AntClassLoader al = new AntClassLoader(project,
+                                                                   classpath);
+                            clazz = al.loadClass(className);
+                            AntClassLoader.initializeClass(clazz);
+                        }
                         if (clazz != null) {
+                            if (!FilterReader.class.isAssignableFrom(clazz)) {
+                                throw new BuildException(className +
+                                    " does not extend java.io.FilterReader");
+                            }
                             final Constructor[] constructors =
                                 clazz.getConstructors();
                             final Reader[] rdr = {instream};
