@@ -7,12 +7,14 @@
  */
 package org.apache.myrmidon.components.embeddor;
 
+import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.myrmidon.components.builder.ProjectBuilder;
+import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.manager.ProjectManager;
 
 /**
@@ -26,18 +28,20 @@ public interface Embeddor
     String ROLE = "org.apache.myrmidon.components.embeddor.Embeddor";
 
     /**
-     * Retrieve builder for runtime.
-     * Valid after initialize() call
+     * Create a project.
      *
-     * @return the ProjectBuilder
+     * @return the created Project
      */
-    ProjectBuilder getProjectBuilder();
+    Project createProject( String location, String type, Parameters parameters )
+        throws Exception;
 
     /**
-     * Retrieve project engine for runtime.
-     * Valid after initialize() call
+     * Create a ProjectManager for a particular project.
      *
-     * @return the ProjectBuilder
+     * @param project the root project
+     * @param defines the defines in project
+     * @return the ProjectManager
      */
-    ProjectManager getProjectManager();
+    ProjectManager createProjectManager( Project project, Parameters parameters )
+        throws Exception;
 }
