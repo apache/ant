@@ -304,7 +304,7 @@ public class Get extends Task {
      * @param v "true" to enable file time fetching
      */
     public void setUseTimestamp(boolean v) {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             useTimestamp = v;
         }
     }
