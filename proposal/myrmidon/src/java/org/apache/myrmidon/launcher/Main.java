@@ -79,7 +79,7 @@ public final class Main
 
         for( int i = 0; i < contents.length; i++ )
         {
-            final File file = contents[ i ];
+            File file = contents[ i ];
 
             if( !file.isFile() || !file.canRead() )
             {
@@ -94,6 +94,8 @@ public final class Main
                 continue;
             }
 
+            file = file.getCanonicalFile();
+            
             urlList.add( file.toURL() );
         }
 
