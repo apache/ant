@@ -450,6 +450,9 @@ Fixed bugs:
 * <xslt> failed to process file-hierarchies of more than one level if
   scanincludeddirectories was true.  Bugzilla Report 24866.
 
+* forkmode="perBatch" or "once" would ignore extension attributes that
+  had been specified for <formatter>s.  Bugzilla Report 32973.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
