@@ -8,6 +8,8 @@ Other changes:
 
 * Added output attribute to <java>.
 
+* Added nested prefixedfileset element to <war>
+
 Fixed bugs:
 -----------
 

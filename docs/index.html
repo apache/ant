@@ -26,7 +26,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.3 - 2000/10/27</p>
+<p>Version 1.3 - 2000/10/31</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -4220,9 +4220,12 @@ carried from tarfile.</p>
 <h2><a name="war">War</a></h2>
 <h3>Description</h3>
 <p>An extension of the <a href="#jar">Jar</a> task with special
-treatment for files that should end up in the <code>WEB-INF/lib</code>,
-<code>WEB-INF/classes</code> or <code>WEB-INF</code> directories of the Web
-Application Archive.</p>
+treatment for files that should end up in the
+<code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
+<code>WEB-INF</code> directories of the Web Application Archive. It
+also gives you more control over where your files end up in the
+archive by means of its nested <code>prefixedfileset</code>
+element.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -4306,6 +4309,60 @@ href="#fileset">FileSet</a>. All files included in this fileset will
 end up in the <code>WEB-INF</code> directory of the war file. If this
 fileset includes a file named <code>web.xml</code>, the file is
 ignored and you will get a warning.</p>
+<h4>prefixedfileset</h4>
+<p>The nested <code>prefixedfileset</code> element specifies a <a
+href="#fileset">FileSet</a> with an additional prefix attribute. All
+files included in this fileset will end up in the <em>prefix</em>
+directory of the war file, where <em>prefix</em> is the value of the
+<code>prefix</code> attribute.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">prefix</td>
+    <td valign="top">The prefix directory to add to each filename when
+      adding it to the archive. Default is none.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">The root of the directory tree of this FileSet.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
 <h3>Examples</h3>
 <p>Assume the following structure in the project's base directory:
 <pre>
@@ -4315,6 +4372,8 @@ build/main/com/myco/myapp/Servlet.class
 src/metadata/myapp.xml
 src/html/myapp/index.html
 src/jsp/myapp/front.jsp
+src/graphics/images/gifs/small/logo.gif
+src/graphics/images/gifs/large/logo.gif
 </pre>
 then the war file <code>myapp.war</code> created with
 <pre>
@@ -4325,6 +4384,8 @@ then the war file <code>myapp.war</code> created with
     &lt;exclude name=&quot;jdbc1.jar&quot; /&gt;
   &lt;/lib&gt;
   &lt;classes dir=&quot;build/main&quot; /&gt;
+  &lt;prefixedfileset dir=&quot;src/graphics/images/gifs&quot; 
+                   prefix="images"/&gt;
 &lt;/war&gt;
 </pre>
 will consist of
@@ -4335,6 +4396,8 @@ WEB-INF/classes/com/myco/myapp/Servlet.class
 META-INF/MANIFEST.MF
 index.html
 front.jsp
+images/small/logo.gif
+images/large/logo.gif
 </pre>
 using Ant's default manifest file. The content of
 <code>WEB-INF/web.xml</code> is identical to

@@ -64,7 +64,7 @@ import java.util.zip.*;
 /**
  * Creates a WAR archive.
  * 
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public class War extends Jar {
 
@@ -73,6 +73,7 @@ public class War extends Jar {
     private Vector libFileSets = new Vector();
     private Vector classesFileSets = new Vector();
     private Vector webInfFileSets = new Vector();
+    private Vector locFileSets = new Vector();
 
     public War() {
         super();
@@ -101,6 +102,24 @@ public class War extends Jar {
     }
 
     /**
+     * FileSet with an additional prefix attribute to specify the
+     * location we want to move the files to (inside the archive).
+     */
+    public static class PrefixedFileSet extends FileSet {
+        private String prefix = "";
+
+        public void setPrefix(String loc) {
+            prefix = loc;
+        }
+
+        public String getPrefix() {return prefix;}
+    }
+
+    public void addPrefixedFileSet(PrefixedFileSet fs) {
+        locFileSets.addElement(fs);
+    }
+
+    /**
      * Add the deployment descriptor as well as all files added the
      * special way of nested lib, classes or webinf filesets.  
      */
@@ -119,6 +138,7 @@ public class War extends Jar {
         addFiles(libFileSets, zOut, "WEB-INF/lib/");
         addFiles(classesFileSets, zOut, "WEB-INF/classes/");
         addFiles(webInfFileSets, zOut, "WEB-INF/");
+        addPrefixedFiles(locFileSets, zOut);
 
         super.initZipOutputStream(zOut);
      }
@@ -136,7 +156,8 @@ public class War extends Jar {
                                                   + 1 // web.xml
                                                   + libFileSets.size()
                                                   + classesFileSets.size()
-                                                  + webInfFileSets.size()];
+                                                  + webInfFileSets.size()
+                                                  + locFileSets.size()];
 
         System.arraycopy(scanners, 0, myScanners, 0, scanners.length);
 
@@ -151,6 +172,9 @@ public class War extends Jar {
                     classesFileSets);
         addScanners(myScanners, scanners.length+1+libFileSets.size()+classesFileSets.size(), 
                     webInfFileSets);
+        addScanners(myScanners, scanners.length + 1 + libFileSets.size()
+                                +classesFileSets.size()+webInfFileSets.size(), 
+                    locFileSets);
 
         return super.isUpToDate(myScanners, zipFile);
     }
@@ -188,6 +212,26 @@ public class War extends Jar {
         for (int i=0; i<v.size(); i++) {
             FileSet fs = (FileSet) v.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
+            addFiles(ds, zOut, prefix);
+        }
+    }
+
+    /**
+     * Iterate over the given Vector of relocatablefilesets and add
+     * all files to the ZipOutputStream using the given prefix.
+     */
+    protected void addPrefixedFiles(Vector v, ZipOutputStream zOut)
+        throws IOException {
+        for (int i=0; i<v.size(); i++) {
+            PrefixedFileSet fs = (PrefixedFileSet) v.elementAt(i);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            String prefix = fs.getPrefix();
+            if (prefix.length() > 0 
+                && !prefix.endsWith("/")
+                && !prefix.endsWith("\\")) {
+                prefix += "/";
+            }
+            zipDir(null, zOut, prefix);
             addFiles(ds, zOut, prefix);
         }
     }
