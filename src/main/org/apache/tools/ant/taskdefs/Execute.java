@@ -627,8 +627,12 @@ public class Execute {
         public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
         {
             File commandDir = workingDir;
-            if ( workingDir == null && project != null ) {
-                commandDir = project.getBaseDir();
+            if ( workingDir == null ) {
+                if ( project != null ) {
+                    commandDir = project.getBaseDir();
+                } else {
+                    return exec(project, cmd, env);
+                }
             }
 
             // Use cmd.exe to change to the specified directory before running
