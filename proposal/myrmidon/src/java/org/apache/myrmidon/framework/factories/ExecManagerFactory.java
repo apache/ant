@@ -12,6 +12,9 @@ import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.impl.DefaultExecManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.myrmidon.interfaces.service.AntServiceException;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
 
@@ -22,10 +25,18 @@ import org.apache.myrmidon.interfaces.service.ServiceFactory;
  * @version $Revision$ $Date$
  */
 public class ExecManagerFactory
-    implements ServiceFactory
+    implements ServiceFactory, Parameterizable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( ExecManagerFactory.class );
+
+    private Parameters m_parameters;
+
+    public void parameterize( final Parameters parameters )
+        throws ParameterException
+    {
+        m_parameters = parameters;
+    }
 
     /**
      * Create the ExecManager Service.
@@ -33,12 +44,12 @@ public class ExecManagerFactory
     public Object createService()
         throws AntServiceException
     {
-        final File home = getHomeDirectory();
         try
         {
+            final File home = getHomeDirectory();
             return new DefaultExecManager( home );
         }
-        catch( final ExecException ee )
+        catch( final Exception ee )
         {
             throw new AntServiceException( ee.getMessage(), ee );
         }
@@ -47,10 +58,10 @@ public class ExecManagerFactory
     /**
      * Utility method to retrieve home directory.
      */
-    private static File getHomeDirectory()
-        throws AntServiceException
+    private File getHomeDirectory()
+        throws Exception
     {
-        final String home = System.getProperty( "myrmidon.home" );
+        final String home = m_parameters.getParameter( "myrmidon.home" );
         if( null == home )
         {
             final String message = REZ.getString( "missing-home-dir.error" );

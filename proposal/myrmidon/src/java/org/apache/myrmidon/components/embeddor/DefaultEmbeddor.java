@@ -74,6 +74,7 @@ public class DefaultEmbeddor
 
     private File m_homeDir;
     private File m_taskLibDir;
+    private static final String MYRMIDON_HOME = "myrmidon.home";
 
     /**
      * Setup basic properties of engine.
@@ -133,6 +134,9 @@ public class DefaultEmbeddor
     {
         final Workspace workspace =
             (Workspace)createService( Workspace.class, PREFIX + "workspace.DefaultWorkspace" );
+        // TODO - don't do this; need some way to pass separate sets of defines and config
+        // to the workspace
+        parameters.setParameter( MYRMIDON_HOME, m_parameters.getParameter( MYRMIDON_HOME ) );
         setupObject( workspace, m_workspaceServiceManager, parameters );
         return workspace;
     }
@@ -186,7 +190,7 @@ public class DefaultEmbeddor
         throws Exception
     {
         // Deploy all type libraries found in the classpath
-        final ClassLoader libClassloader = Thread.currentThread().getContextClassLoader();
+        final ClassLoader libClassloader = getClass().getClassLoader();
         final TypeDeployer typeDeployer = m_deployer.createDeployer( libClassloader );
         typeDeployer.deployAll();
 
@@ -297,7 +301,7 @@ public class DefaultEmbeddor
     {
         String filepath = null;
 
-        filepath = getParameter( "myrmidon.home" );
+        filepath = getParameter( MYRMIDON_HOME );
         m_homeDir = ( new File( filepath ) ).getAbsoluteFile();
         checkDirectory( m_homeDir, "home-dir.name" );
 

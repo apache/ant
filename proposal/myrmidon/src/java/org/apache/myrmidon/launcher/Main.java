@@ -14,6 +14,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Basic Loader that is responsible for all the hackery to get classloader to work.
@@ -34,16 +36,26 @@ public final class Main
     {
         try
         {
-            //actually try to discover the install directory based on where
-            // the myrmidon.jar is
+            final Map properties = new HashMap();
+
+            // Try to discover the install directory based on where the
+            // launcher Jar is
             final File installDirectory = findInstallDir();
-            System.setProperty( "myrmidon.home", installDirectory.toString() );
+            properties.put( "myrmidon.home", installDirectory );
 
-            final URLClassLoader sharedClassLoader = createSharedClassLoader( installDirectory );
-            final URLClassLoader classLoader =
-                createContainerClassLoader( installDirectory, sharedClassLoader );
+            // Build the shared classloader
+            final URL[] sharedClassPath = getSharedClassPath( installDirectory );
+            properties.put( "myrmidon.shared.classpath", sharedClassPath );
+            final URLClassLoader sharedClassLoader = new URLClassLoader( sharedClassPath );
+            properties.put( "myrmidon.shared.classloader", sharedClassLoader );
 
-            execMainClass( classLoader, args );
+            // Build the container classloader
+            final URL[] containerClassPath = getContainerClassPath( installDirectory );
+            properties.put( "myrmidon.container.classpath", containerClassPath );
+            final URLClassLoader containerClassLoader = new URLClassLoader( containerClassPath, sharedClassLoader );
+            properties.put( "myrmidon.container.classloader", containerClassLoader );
+
+            execMainClass( containerClassLoader, properties, args );
         }
         catch( final InvocationTargetException ite )
         {
@@ -57,38 +69,42 @@ public final class Main
         }
     }
 
-    private static void execMainClass( final URLClassLoader classLoader, final String[] args )
+    /**
+     * Executes the main class.
+     */
+    private static void execMainClass( final ClassLoader classLoader,
+                                       final Map properties,
+                                       final String[] args )
         throws Exception
     {
         //load class and retrieve appropriate main method.
         final Class clazz = classLoader.loadClass( "org.apache.myrmidon.frontends.CLIMain" );
-        final Method method = clazz.getMethod( "main", new Class[]{args.getClass()} );
-
-        Thread.currentThread().setContextClassLoader( classLoader );
+        final Method method = clazz.getMethod( "main", new Class[]{Map.class, args.getClass()} );
 
         //kick the tires and light the fires....
-        method.invoke( null, new Object[]{args} );
+        method.invoke( null, new Object[]{properties, args} );
     }
 
-    private static URLClassLoader createContainerClassLoader( final File installDirectory,
-                                                              final URLClassLoader sharedClassLoader )
+    /**
+     * Builds the classpath for the container classloader.
+     */
+    private static URL[] getContainerClassPath( final File installDirectory )
         throws Exception
     {
+        // Include everything from the bin/lib/ directory
         final File containerLibDir = new File( installDirectory, "bin" + File.separator + "lib" );
-        final URL[] containerLibUrls = buildURLList( containerLibDir );
-        final URLClassLoader classLoader =
-            new URLClassLoader( containerLibUrls, sharedClassLoader );
-        return classLoader;
+        return buildURLList( containerLibDir );
     }
 
-    private static URLClassLoader createSharedClassLoader( final File installDirectory )
+    /**
+     * Builds the classpath for the shared classloader.
+     */
+    private static URL[] getSharedClassPath( final File installDirectory )
         throws Exception
     {
-        //setup classloader appropriately for myrmidon jar
+        // Include everything from the lib/ directory
         final File libDir = new File( installDirectory, "lib" );
-        final URL[] libUrls = buildURLList( libDir );
-        final URLClassLoader libClassLoader = new URLClassLoader( libUrls );
-        return libClassLoader;
+        return buildURLList( libDir );
     }
 
     private static final URL[] buildURLList( final File dir )
@@ -137,25 +153,23 @@ public final class Main
         final String classpath = System.getProperty( "java.class.path" );
         final String pathSeparator = System.getProperty( "path.separator" );
         final StringTokenizer tokenizer = new StringTokenizer( classpath, pathSeparator );
+        final String jarName = "myrmidon-launcher.jar";
 
         while( tokenizer.hasMoreTokens() )
         {
             final String element = tokenizer.nextToken();
-
-            if( element.endsWith( "myrmidon-launcher.jar" ) )
+            File file = ( new File( element ) ).getAbsoluteFile();
+            if( file.isFile() && file.getName().equals( jarName ) )
             {
-                File file = ( new File( element ) ).getAbsoluteFile();
                 file = file.getParentFile();
-
                 if( null != file )
                 {
                     file = file.getParentFile();
                 }
-
                 return file;
             }
         }
 
-        throw new Exception( "Unable to locate ant.jar in classpath" );
+        throw new Exception( "Unable to locate " + jarName + " in classpath." );
     }
 }

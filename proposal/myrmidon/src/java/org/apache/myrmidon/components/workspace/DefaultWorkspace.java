@@ -147,7 +147,7 @@ public class DefaultWorkspace
     }
 
     private File findTypeLib( final String libraryName )
-        throws TaskException
+        throws Exception
     {
         //TODO: In future this will be expanded to allow
         //users to specify search path or automagically
@@ -155,7 +155,7 @@ public class DefaultWorkspace
         //workspace specific)
         final String name = libraryName.replace( '/', File.separatorChar ) + ".atl";
 
-        final String home = System.getProperty( "myrmidon.home" );
+        final String home = m_parameters.getParameter( "myrmidon.home" );
         final File homeDir = new File( home + File.separatorChar + "ext" );
 
         final File library = new File( homeDir, name );
@@ -178,7 +178,7 @@ public class DefaultWorkspace
     }
 
     private void deployTypeLib( final Deployer deployer, final Project project )
-        throws TaskException
+        throws Exception
     {
         final TypeLib[] typeLibs = project.getTypeLibs();
 
@@ -213,7 +213,7 @@ public class DefaultWorkspace
      * Creates an execution frame for a project.
      */
     private ExecutionFrame createExecutionFrame( final Project project )
-        throws TaskException, ServiceException
+        throws Exception
     {
         //Create per frame ComponentManager
         final DefaultServiceManager serviceManager =
