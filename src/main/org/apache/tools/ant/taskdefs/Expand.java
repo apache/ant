@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -35,7 +36,6 @@ import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.FlatFileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -98,7 +98,7 @@ public class Expand extends Task {
             }
         }
         if (filesets.size() > 0) {
-            for (int j = 0; j < filesets.size(); j++) {
+            for (int j = 0, size = filesets.size(); j < size; j++) {
                 FileSet fs = (FileSet) filesets.elementAt(j);
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
                 File fromDir = fs.getDir(getProject());
@@ -178,7 +178,7 @@ public class Expand extends Task {
             String name = entryName.replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
             boolean included = false;
-            for (int v = 0; v < patternsets.size(); v++) {
+            for (int v = 0, size = patternsets.size(); v < size; v++) {
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
                 String[] incls = p.getIncludePatterns(getProject());
                 if (incls == null || incls.length == 0) {
