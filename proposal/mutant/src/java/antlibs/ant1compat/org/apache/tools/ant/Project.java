@@ -341,6 +341,45 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
+     * Returns a description of the type of the given element, with
+     * special handling for instances of tasks and data types.
+     * <p>
+     * This is useful for logging purposes.
+     * 
+     * @param element The element to describe.
+     *                Must not be <code>null</code>.
+     * 
+     * @return a description of the element type
+     *
+     * @since 1.95, Ant 1.5
+     */
+    public String getElementName(Object element) {
+        Hashtable elements = taskClassDefinitions;
+        Class elementClass = element.getClass();
+        String typeName = "task";
+        if (!elements.contains(elementClass)) {
+            elements = dataClassDefinitions;
+            typeName = "data type";
+            if (!elements.contains(elementClass)) {
+                elements = null;
+            }
+        }
+
+        if (elements != null) {
+            Enumeration e = elements.keys();
+            while (e.hasMoreElements()) {
+                String name = (String) e.nextElement();
+                Class clazz = (Class) elements.get(name);
+                if (elementClass.equals(clazz)) {
+                    return "The <" + name + "> " + typeName;
+                }
+            }
+        }
+
+        return "Class " + elementClass.getName();
+    }
+
+    /**
      * Gets the Antlib factory of the Project
      *
      * @return The project's associated factory object

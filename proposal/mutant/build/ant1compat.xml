@@ -28,11 +28,7 @@
   </patternset>
   
   <patternset id="toohard">
-    <exclude name="org/apache/tools/ant/taskdefs/AntStructure.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Recorder.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/RecorderEntry.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/Do.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/optional/jdepend/*.java"/>
   </patternset>
   
   <patternset id="converted">
@@ -40,8 +36,21 @@
     <exclude name="org/apache/tools/ant/taskdefs/CallTarget.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/input/InputRequest.java"/>
     <exclude name="org/apache/tools/ant/types/DataType.java"/>
+    <exclude name="org/apache/tools/ant/Project.java"/>
+    <exclude name="org/apache/tools/ant/Target.java"/>
+    <exclude name="org/apache/tools/ant/TaskContainer.java"/>
+    <exclude name="org/apache/tools/ant/ProjectComponent.java"/>
+    <exclude name="org/apache/tools/ant/ProjectHelper.java"/>
+    <exclude name="org/apache/tools/ant/Task.java"/>
+    <exclude name="org/apache/tools/ant/Main.java"/>
   </patternset>
 
+  <patternset id="notrequired">
+    <exclude name="org/apache/tools/ant/DemuxOutputStream.java"/>
+    <exclude name="org/apache/tools/ant/RuntimeConfigurable.java"/>
+    <exclude name="org/apache/tools/ant/UnknownElement.java"/>
+  </patternset>
+  
   <fileset id="ant1src_tocopy" dir="${ant1java.dir}">
     <include name="**/*.properties"/>
     <include name="**/*.mf"/>
@@ -53,21 +62,11 @@
     <include name="org/apache/tools/bzip2/**/*.java"/>
     <include name="org/apache/tools/mail/**/*.java"/>
     <include name="org/apache/tools/tar/**/*.java"/>
-    <include name="org/apache/tools/ant/BuildException.java"/>
-    <include name="org/apache/tools/ant/ExitException.java"/>
-    <include name="org/apache/tools/ant/DirectoryScanner.java"/>
-    <include name="org/apache/tools/ant/PathTokenizer.java"/>
-    <include name="org/apache/tools/ant/FileScanner.java"/>
-    <include name="org/apache/tools/ant/TaskAdapter.java"/>
-    <include name="org/apache/tools/ant/MatchingTask.java"/>
-    <include name="org/apache/tools/ant/Location.java"/>
-    <include name="org/apache/tools/ant/AntClassLoader.java"/>
-    <include name="org/apache/tools/ant/BuildEvent.java"/>
-    <include name="org/apache/tools/ant/BuildListener.java"/>
-    <include name="org/apache/tools/ant/BuildLogger.java"/>
+    <include name="org/apache/tools/ant/*.java"/>
     <!-- <patternset refid="deprecated"/> -->
     <patternset refid="toohard"/>
     <patternset refid="converted"/>
+    <patternset refid="notrequired"/>
   </fileset>
 
   <path id="classpath">

@@ -61,7 +61,7 @@ import java.util.Map;
 import org.apache.ant.common.util.Location;
 
 /**
- * A BuildElement is a holder configuration information for an element of
+ * A BuildElement is a holder of configuration information for an element of
  * the build. BuildElements may be grouped into a hierarchy to capture any
  * level of element nesting.
  *
