@@ -150,11 +150,22 @@ public class UnknownElement extends Task {
         //realThing = helper.createProjectComponent( this, getProject(), null,
         //                                           this.getTag());
 
-        realThing = makeObject(this, getWrapper());
+        configure(makeObject(this, getWrapper()));
+    }
 
+    /**
+     * Configure the given object from this UnknownElement
+     *
+     * @param realObject the real object this UnknownElement is representing.
+     *
+     */
+    public void configure(Object realObject) {
+        realThing = realObject;
+    
         getWrapper().setProxy(realThing);
+        Task task = null;
         if (realThing instanceof Task) {
-            Task task = (Task) realThing;
+            task = (Task) realThing;
 
             task.setRuntimeConfigurableWrapper(getWrapper());
 
@@ -168,7 +179,12 @@ public class UnknownElement extends Task {
         // configure attributes of the object and it's children. If it is
         // a task container, defer the configuration till the task container
         // attempts to use the task
-        getWrapper().maybeConfigure(getProject());
+        
+        if (task != null) {
+            task.maybeConfigure();
+        } else {
+            getWrapper().maybeConfigure(getProject());
+        }
     }
 
     /**
@@ -294,7 +310,6 @@ public class UnknownElement extends Task {
         for (int i = 0;  i < children.size(); i++) {
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
             UnknownElement child = (UnknownElement) children.elementAt(i);
-            Object realChild = null;
             
             // backwards compatibility - element names of nested
             // elements have been all lower-case in Ant, except for

@@ -128,7 +128,7 @@ public class RuntimeConfigurable implements Serializable {
      *
      * @param proxy The element to configure. Must not be <code>null</code>.
      */
-    void setProxy(Object proxy) {
+    public void setProxy(Object proxy) {
         wrappedObject = proxy;
         proxyConfigured = false;
     }

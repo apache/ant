@@ -205,6 +205,7 @@
   <selector id="needs.bsf">
     <or>
       <filename name="${optional.package}/Script*"/>
+      <filename name="${optional.package}/script/**/*"/>
       <filename name="${optional.type.package}/Script*"/>
     </or>
   </selector>
@@ -1516,6 +1517,8 @@
           <exclude name="${optional.package}/RhinoScriptTest.java"
                    unless="bsf.present"/>
           <exclude name="${optional.package}/RhinoScriptTest.java"
+                   unless="rhino.present"/>
+          <exclude name="${optional.package}/script/*.java"
                    unless="rhino.present"/>
           <exclude name="${optional.package}/BeanShellScriptTest.java"
                    unless="bsf.present"/>

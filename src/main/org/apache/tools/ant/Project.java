@@ -1014,7 +1014,7 @@ public class Project {
      *                           creation fails.
      */
     public Task createTask(String taskType) throws BuildException {
-        return ComponentHelper.getComponentHelper(this).createTask( taskType );
+        return ComponentHelper.getComponentHelper(this).createTask(taskType);
     }
 
     /**
