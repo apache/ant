@@ -98,7 +98,7 @@ set of links to record, or a set of property files to create links from. </p>
  </pre>
 
   <p><strong>Java 1.2 and earlier:</strong> Due to limitations on executing system
-  level comands in Java versions earlier than 1.3 this task may have difficulty
+  level commands in Java versions earlier than 1.3 this task may have difficulty
   operating with a relative path in ANT_HOME. The typical symptom is an 
   IOException where ant can't find /some/working/directory${ANT_HOME}/bin/antRun
   or something similar. The workaround is to change your ANT_HOME environment
@@ -110,7 +110,7 @@ set of links to record, or a set of property files to create links from. </p>
   absolute paths. On non-unix systems this may cause false positives.
   Furthermore, any operating system on which the command
   <code>ln -s &lt;linkname&gt; &lt;resourcename&gt;</code> is not a valid 
-  command on the comand line will not be able to use action="single" or 
+  command on the command line will not be able to use action="single" or 
   action="recreate". Action="record" and action=delete should still work. Finally, 
   the lack of support for symlinks in Java means that all links are recorded as 
   links to the <strong>canonical</strong> resource name. Therefore the link:

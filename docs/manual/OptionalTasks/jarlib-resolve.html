@@ -13,7 +13,7 @@
 <p>Try to locate a jar to satisfy an extension and place
  location of jar into property. The task allows you to
  add a number of resolvers that are capable of locating a
- library for a specifc extension. Each resolver will be attempted
+ library for a specific extension. Each resolver will be attempted
  in specified order until library is found or no resolvers are left.
  If no resolvers are left and failOnError is true then a BuildException
  will be thrown.</p>
@@ -47,7 +47,7 @@ http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
   </tr>
   <tr>
     <td valign="top">checkExtension</td>
-    <td valign="top">True if librarys returned by nested resolvers should be checked to see if
+    <td valign="top">True if libraries returned by nested resolvers should be checked to see if
     they supply extension.</td>
     <td valign="top" align="center">No, defaults to true.</td>
   </tr>
@@ -172,7 +172,7 @@ http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
 </pre>
 
 <p><b>Resolve Extension via multiple methods.</b> First check local file to see if it implements
-  extension. If it does not then try to build it from source in parralel directory. If that
+  extension. If it does not then try to build it from source in parallel directory. If that
   fails then finally try to download it from a website. If all steps fail then throw a build
   exception.</p>
 <pre>
