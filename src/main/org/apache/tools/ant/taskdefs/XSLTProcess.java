@@ -295,6 +295,7 @@ public class XSLTProcess extends MatchingTask {
 	    inFile = new File(baseDir,xmlFile);
 	    outFile = new File(destDir,xmlFile.substring(0,xmlFile.lastIndexOf('.'))+fileExt);
 	    if (inFile.lastModified() > outFile.lastModified()) {
+                ensureDirectoryFor( outFile );
 		//-- command line status
 		log("Processing " + xmlFile + " to " + outFile, Project.MSG_VERBOSE);
 
@@ -311,4 +312,13 @@ public class XSLTProcess extends MatchingTask {
 
     } //-- processXML
 
+    private void ensureDirectoryFor( File targetFile ) throws BuildException {
+        File directory = new File( targetFile.getParent() );
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                throw new BuildException("Unable to create directory: " 
+                                         + directory.getAbsolutePath() );
+            }
+        }
+    }
 } //-- XSLTProcess
