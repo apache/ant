@@ -142,8 +142,7 @@ public class Recorder extends Task
         if( filename == null )
             throw new TaskException( "No filename specified" );
 
-        log( "setting a recorder for name " + filename,
-             Project.MSG_DEBUG );
+        getLogger().debug( "setting a recorder for name " + filename );
 
         // get the recorder entry
         RecorderEntry recorder = getRecorder( filename, getProject() );
