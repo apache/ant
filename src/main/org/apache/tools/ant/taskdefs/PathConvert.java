@@ -89,12 +89,11 @@ public class PathConvert extends Task {
     private Mapper mapper = null;
 
     /**
-     * constructor
+     * Construct a new instance of the PathConvert task.
      */
     public PathConvert() {
         onWindows = Os.isFamily("dos");
     }
-
 
     /**
      * Helper class, holds the nested &lt;map&gt; values. Elements will look like
@@ -105,39 +104,40 @@ public class PathConvert extends Task {
      */
     public class MapEntry {
 
-        /** Set the &quot;from&quot; attribute of the map entry  */
+        // Members
+        private String from = null;
+        private String to = null;
+
         /**
-         * the prefix string to search for; required.
+         * Set the &quot;from&quot; attribute of the map entry.
+         * @param from the prefix string to search for; required.
          * Note that this value is case-insensitive when the build is
          * running on a Windows platform and case-sensitive when running on
          * a Unix platform.
-         * @param from the prefix string to search for
          */
         public void setFrom(String from) {
             this.from = from;
         }
 
         /**
-         *  The replacement text to use when from is matched; required.
-         * @param to new prefix
+         * Set the replacement text to use when from is matched; required.
+         * @param to new prefix.
          */
         public void setTo(String to) {
             this.to = to;
         }
 
-
         /**
-         * Apply this map entry to a given path element
+         * Apply this map entry to a given path element.
          *
-         * @param elem Path element to process
-         * @return String Updated path element after mapping
+         * @param elem Path element to process.
+         * @return String Updated path element after mapping.
          */
         public String apply(String elem) {
             if (from == null || to == null) {
                 throw new BuildException("Both 'from' and 'to' must be set "
                      + "in a map entry");
             }
-
             // If we're on windows, then do the comparison ignoring case
             String cmpElem = onWindows ? elem.toLowerCase() : elem;
             String cmpFrom = onWindows ? from.toLowerCase() : from;
@@ -154,18 +154,12 @@ public class PathConvert extends Task {
                     elem = to + elem.substring(len);
                 }
             }
-
             return elem;
         }
-
-        // Members
-        private String from = null;
-        private String to = null;
     }
 
-
     /**
-     * an enumeration of supported targets:
+     * An enumeration of supported targets:
      * windows", "unix", "netware", and "os/2".
      */
     public static class TargetOs extends EnumeratedAttribute {
@@ -177,64 +171,52 @@ public class PathConvert extends Task {
         }
     }
 
-
     /**
-     * Create a nested PATH element
-     * @return a Path to be used by ant reflection
+     * Create a nested PATH element.
+     * @return a Path to be used by Ant reflection.
      */
     public Path createPath() {
-
         if (isReference()) {
             throw noChildrenAllowed();
         }
-
         if (path == null) {
             path = new Path(getProject());
         }
         return path.createPath();
     }
 
-
     /**
-     * Create a nested MAP element
-     * @return a Map to configure
+     * Create a nested MAP element.
+     * @return a Map to configure.
      */
     public MapEntry createMap() {
-
         MapEntry entry = new MapEntry();
-
         prefixMap.addElement(entry);
         return entry;
     }
 
-
     /**
      * Set targetos to a platform to one of
-     * "windows", "unix", "netware", or "os/2".
-     *
-     * Required unless unless pathsep and/or dirsep are specified.
-     *
-     * @deprecated use the method taking a TargetOs argument instead
+     * "windows", "unix", "netware", or "os/2";
+     * defaults to the current platform.
+     * @deprecated use the method taking a TargetOs argument instead.
      * @see #setTargetos(PathConvert.TargetOs)
      */
     public void setTargetos(String target) {
         TargetOs to = new TargetOs();
-
         to.setValue(target);
         setTargetos(to);
     }
 
-
     /**
      * Set targetos to a platform to one of
-     * "windows", "unix", "netware", or "os/2"; required unless
-     * unless pathsep and/or dirsep are specified.
+     * "windows", "unix", "netware", or "os/2";
+     * defaults to the current platform.
      * @param target the target os
      *
      * @since Ant 1.5
      */
     public void setTargetos(TargetOs target) {
-
         targetOS = target.getValue();
 
         // Currently, we deal with only two path formats: Unix and Windows
@@ -248,10 +230,9 @@ public class PathConvert extends Task {
     }
 
     /**
-     * Set setonempty
-     *
-     * If false, don't set the new property if the result is the empty string.
-     * @param setonempty true or false
+     * Set whether the specified property will be set if the result
+     * is the empty string.
+     * @param setonempty true or false.
      *
      * @since Ant 1.5
      */
@@ -260,33 +241,28 @@ public class PathConvert extends Task {
      }
 
     /**
-     * The property into which the converted path will be placed.
-     * @param p the property name
+     * Set the name of the property into which the converted path will be placed.
+     * @param p the property name.
      */
     public void setProperty(String p) {
         property = p;
     }
 
-
     /**
-     * Adds a reference to a Path, FileSet, DirSet, or FileList defined
-     * elsewhere.
-     * @param r the reference to a path, fileset, dirset or filelist
+     * Add a reference to a Path, FileSet, DirSet, or FileList defined elsewhere.
+     * @param r the reference to a path, fileset, dirset or filelist.
      */
     public void setRefid(Reference r) {
         if (path != null) {
             throw noChildrenAllowed();
         }
-
         refid = r;
     }
 
-
     /**
-     * Set the default path separator string;
-     * defaults to current JVM
-     * {@link java.io.File#pathSeparator File.pathSeparator}
-     * @param sep path separator string
+     * Set the default path separator string; defaults to current JVM
+     * {@link java.io.File#pathSeparator File.pathSeparator}.
+     * @param sep path separator string.
      */
     public void setPathSep(String sep) {
         pathSep = sep;
@@ -295,25 +271,24 @@ public class PathConvert extends Task {
 
     /**
      * Set the default directory separator string;
-     * defaults to current JVM {@link java.io.File#separator File.separator}
-     * @param sep directory separator string
+     * defaults to current JVM {@link java.io.File#separator File.separator}.
+     * @param sep directory separator string.
      */
     public void setDirSep(String sep) {
         dirSep = sep;
     }
 
-
     /**
-     * Has the refid attribute of this element been set?
-     * @return true if refid is valid
+     * Learn whether the refid attribute of this element been set.
+     * @return true if refid is valid.
      */
     public boolean isReference() {
         return refid != null;
     }
 
-
-    /** Do the execution.
-     * @throws BuildException if something is invalid
+    /**
+     * Do the execution.
+     * @throws BuildException if something is invalid.
      */
     public void execute() throws BuildException {
         Path savedPath = path;
@@ -432,8 +407,8 @@ public class PathConvert extends Task {
      * between Windows drive letters and Unix paths. If no map is configured,
      * then the input string is returned unchanged.
      *
-     * @param elem The path element to apply the map to
-     * @return String Updated element
+     * @param elem The path element to apply the map to.
+     * @return String Updated element.
      */
     private String mapElement(String elem) {
 
@@ -464,7 +439,7 @@ public class PathConvert extends Task {
     /**
      * Add a mapper to convert the file names.
      *
-     * @param mapper a <code>Mapper</code> value
+     * @param mapper a <code>Mapper</code> value.
      */
     public void addMapper(Mapper mapper) {
         if (this.mapper != null) {
@@ -475,8 +450,8 @@ public class PathConvert extends Task {
     }
 
     /**
-     * A nested filenamemapper
-     * @param fileNameMapper the mapper to add
+     * Add a nested filenamemapper.
+     * @param fileNameMapper the mapper to add.
      * @since Ant 1.6.3
      */
     public void add(FileNameMapper fileNameMapper) {
@@ -489,7 +464,7 @@ public class PathConvert extends Task {
     /**
      * Validate that all our parameters have been properly initialized.
      *
-     * @throws BuildException if something is not setup properly
+     * @throws BuildException if something is not set up properly.
      */
     private void validateSetup() throws BuildException {
 
@@ -532,10 +507,10 @@ public class PathConvert extends Task {
         dirSep = dsep;
     }
 
-
     /**
      * Creates an exception that indicates that this XML element must not have
      * child elements if the refid attribute is set.
+     * @return BuildException.
      */
     private BuildException noChildrenAllowed() {
         return new BuildException("You must not specify nested <path> "
