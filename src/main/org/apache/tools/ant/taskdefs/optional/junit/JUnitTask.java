@@ -778,8 +778,12 @@ public class JUnitTask extends Task {
                 Project.MSG_WARN);
         }
 
-        CommandlineJava cmd = (CommandlineJava) getCommandline().clone();
-
+        CommandlineJava cmd = null;
+        try {
+            cmd = (CommandlineJava)(getCommandline().clone());
+        } catch (CloneNotSupportedException e) {
+            throw new BuildException("This shouldn't happen", e, getLocation());
+        }
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
         if (casesFile == null) {
             cmd.createArgument().setValue(test.getName());
