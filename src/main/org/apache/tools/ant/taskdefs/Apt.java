@@ -103,6 +103,7 @@ public class Apt
     public Apt() {
         super();
         super.setCompiler(AptCompilerAdapter.class.getName());
+        setFork(true);
     }
 
     /**
@@ -125,7 +126,7 @@ public class Apt
     }
 
     /**
-     * Set the fork attribute.
+     * Set the fork attribute (optional, default=true).
      * If fork is true run the external apt command.
      * If fork is false run the apt compiler in the same jvm as the task.
      * @param fork if true use the external command.
