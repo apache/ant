@@ -403,7 +403,7 @@ public class Main {
 
         final Project project = new Project();
         project.setCoreLoader(coreLoader);
-        
+
         Throwable error = null;
 
         try {
@@ -416,7 +416,10 @@ public class Main {
             try {
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
                 System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
-                project.fireBuildStarted();
+
+                if (!projectHelp) {
+                    project.fireBuildStarted();
+                }
                 project.init();
                 project.setUserProperty("ant.version", getAntVersion());
 
@@ -444,23 +447,23 @@ public class Main {
                 } catch (NullPointerException npe) {
                     throw new BuildException(noParserMessage, npe);
                 }
+
+                if (projectHelp) {
+                    printDescription(project);
+                    printTargets(project, msgOutputLevel > Project.MSG_INFO );
+                    return;
+                }
                 
                 // make sure that we have a target to execute
                 if (targets.size() == 0) {
                     targets.addElement(project.getDefaultTarget());
                 }
                 
-                if (!projectHelp) {
-                    project.executeTargets(targets);
-                }
+                project.executeTargets(targets);
             }
             finally {
                 System.setOut(out);
                 System.setErr(err);
-            }
-            if (projectHelp) {
-                printDescription(project);
-                printTargets(project);
             }
         }
         catch(RuntimeException exc) {
@@ -472,7 +475,9 @@ public class Main {
             throw err;
         }
         finally {
-            project.fireBuildFinished(error);
+            if (!projectHelp) {
+                project.fireBuildFinished(error);
+            }
         }
     }
 
@@ -595,7 +600,7 @@ public class Main {
     /**
      * Print out a list of all targets in the current buildfile
      */
-    private static void printTargets(Project project) {
+    private static void printTargets(Project project, boolean printSubTargets) {
         // find the target with the longest name
         int maxLength = 0;
         Enumeration ptargets = project.getTargets().elements();
@@ -626,23 +631,16 @@ public class Main {
             }
         }
 
-        String defaultTarget = project.getDefaultTarget();
-        if (defaultTarget != null && !"".equals(defaultTarget)) { // shouldn't need to check but...
-            Vector defaultName = new Vector();
-            Vector defaultDesc = null;
-            defaultName.addElement(defaultTarget);
-
-            int indexOfDefDesc = topNames.indexOf(defaultTarget);
-            if (indexOfDefDesc >= 0) {
-                defaultDesc = new Vector();
-                defaultDesc.addElement(topDescriptions.elementAt(indexOfDefDesc));
-            }
-            printTargets(defaultName, defaultDesc, "Default target:", maxLength);
-
+        printTargets(topNames, topDescriptions, "Main targets:", maxLength);
+        
+        if( printSubTargets ) {
+            printTargets(subNames, null, "Subtargets:", 0);
         }
 
-        printTargets(topNames, topDescriptions, "Main targets:", maxLength);
-        printTargets(subNames, null, "Subtargets:", 0);
+        String defaultTarget = project.getDefaultTarget();
+        if (defaultTarget != null && !"".equals(defaultTarget)) { // shouldn't need to check but...
+            System.out.println( "Default target: " + defaultTarget );
+        }
     }
 
     /**
