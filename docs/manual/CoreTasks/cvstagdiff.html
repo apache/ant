@@ -135,7 +135,10 @@ It writes these changes into the file <code>tagdiff.xml</code>.</p>
 <p>Generates a tagdiff report for all the changes that have been made
 in the <code>jakarta-ant</code> module in january 2002, with <code>rootdir</code> indicating that 
 the actual location of the <code>jakarta-ant</code> module in cvs is <code>jakarta/ant</code> 
-rather than <code>jakarta-ant</code>.
+rather than <code>jakarta-ant</code>. In this example <code>cvsRoot</code>
+has not been set. The current <code>cvsRoot</code> will be used (assuming the build is started
+from a folder stored in <code>cvs</code>.
+It writes these changes into the file <code>tagdiff.xml</code>.</p>
 
 <h4>Generate Report</h4>
 <p>Ant includes a basic XSLT stylesheet that you can use to generate 

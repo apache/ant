@@ -50,6 +50,9 @@ Fixed bugs:
 
 * <javadoc> will now pass -source to custom doclets as well.
 
+* <cvstagdiff> would throw a NullPointException if there had been no
+  differences.
+
 Other changes:
 --------------
 * <setproxy> lets you set the username and password for proxies that want authentication

@@ -96,6 +96,7 @@ import org.apache.tools.ant.util.FileUtils;
  * </PRE>
  *
  * @author <a href="mailto:fred@castify.net">Frederic Lavigne</a>
+ * @author <a href="mailto:rvanoo@xs4all.nl">Rob van Oostrum</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"
