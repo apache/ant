@@ -56,12 +56,14 @@ package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.*;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.GlobPatternMapper;
+import org.apache.tools.ant.util.JavaEnvUtils;
+
+import java.io.File;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -118,6 +120,7 @@ public class DependSelectorTest extends BaseSelectorTest {
     public void testSelectionBehaviour() {
         DependSelector s;
         String results;
+        File subdir;
         Mapper m;
         Mapper.MapperType identity = new Mapper.MapperType();
         identity.setValue("identity");
@@ -130,41 +133,80 @@ public class DependSelectorTest extends BaseSelectorTest {
             makeBed();
 
             s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname);
+            s.setTargetdir(beddir);
             results = selectionString(s);
             assertEquals("FFFFFFFFFFFF", results);
 
             s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname);
+            s.setTargetdir(beddir);
             m = s.createMapper();
             m.setType(identity);
             results = selectionString(s);
             assertEquals("FFFFFFFFFFFF", results);
 
-            s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.gz");
-            results = selectionString(s);
-            assertEquals("TFFFFTTTFFFF", results);
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+                s = (DependSelector)getInstance();
+                s.setTargetdir(beddir);
+                m = s.createMapper();
+                m.setType(merge);
+                m.setTo("asf-logo.gif.gz");
+                results = selectionString(s);
+                assertEquals("TFFFFTTTFFF", results.substring(0,11));
+
+                s = (DependSelector)getInstance();
+                s.setTargetdir(beddir);
+                m = s.createMapper();
+                m.setType(merge);
+                m.setTo("asf-logo.gif.bz2");
+                results = selectionString(s);
+                assertEquals("TTFTTTTTTTTT", results);
+
+                // Test for path relative to project base directory
+                s = (DependSelector)getInstance();
+                subdir = new File("selectortest/tar/bz2");
+                s.setTargetdir(subdir);
+                m = s.createMapper();
+                m.setType(glob);
+                m.setFrom("*.bz2");
+                m.setTo("*.tar.bz2");
+                results = selectionString(s);
+                assertEquals("FFTFFFFFFTTF", results);
+            }
 
             s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.bz2");
-            results = selectionString(s);
-            assertEquals("TTFTTTTTTTTT", results);
-
-            s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname + "/tar/bz2");
+            subdir = new File(beddir,"tar/bz2");
+            s.setTargetdir(subdir);
             m = s.createMapper();
             m.setType(glob);
             m.setFrom("*.bz2");
             m.setTo("*.tar.bz2");
             results = selectionString(s);
             assertEquals("FFFFFFFFFTTF", results);
+
+            try {
+                makeMirror();
+
+                s = (DependSelector)getInstance();
+                File testdir = getProject().resolveFile("selectortest2");
+                s.setTargetdir(testdir);
+                results = selectionString(s);
+                assertEquals("FFFTTFFFFFFF", results);
+
+                s = (DependSelector)getInstance();
+                testdir = getProject().resolveFile("selectortest2/tar/bz2");
+                s.setTargetdir(testdir);
+                m = s.createMapper();
+                m.setType(glob);
+                m.setFrom("*.bz2");
+                m.setTo("*.tar.bz2");
+                results = mirrorSelectionString(s);
+                assertEquals("FFFFFFFFFTTF", results);
+                results = selectionString(s);
+                assertEquals("FFFFFFFFFTTF", results);
+            }
+            finally {
+                cleanupMirror();
+            }
 
         }
         finally {

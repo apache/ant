@@ -99,9 +99,9 @@ public class ExecTask extends Task {
     private boolean failIfExecFails = true;
     private boolean append = false;
 
-    /** 
+    /**
      * Controls whether the VM (1.3 and above) is used to execute the
-     * command 
+     * command
      */
     private boolean vmLauncher = true;
 
@@ -147,8 +147,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Deprecated, use executable instead.
-     * The full commandline to execute, executable + arguments.
+     * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
         log("The command attribute is deprecated. " +
@@ -209,9 +208,9 @@ public class ExecTask extends Task {
     public void setResultProperty(String resultProperty) {
         this.resultProperty = resultProperty;
     }
-    
+
     /**
-     * helper method to set result property to the 
+     * helper method to set result property to the
      * passed in value if appropriate
      */
     protected void maybeSetResultPropertyValue(int result) {
@@ -220,16 +219,16 @@ public class ExecTask extends Task {
             project.setNewProperty(resultProperty, res);
         }
     }
-    
+
     /**
      * Stop the build if program cannot be started. Defaults to true.
      *
-     * @since Ant 1.5     
+     * @since Ant 1.5
      */
     public void setFailIfExecutionFails(boolean flag) {
         failIfExecFails = flag;
     }
-    
+
     /**
      * Whether output should be appended to or overwrite an existing file.
      * Defaults to false.
@@ -281,7 +280,7 @@ public class ExecTask extends Task {
         log("Current OS is " + myos, Project.MSG_VERBOSE);
         if ((os != null) && (os.indexOf(myos) < 0)){
             // this command will be executed only on the specified OS
-            log("This OS, " + myos 
+            log("This OS, " + myos
                 + " was not found in the specified list of valid OSes: " + os,
                 Project.MSG_VERBOSE);
             return false;
@@ -330,7 +329,7 @@ public class ExecTask extends Task {
         err = exe.execute();
         //test for and handle a forced process death
         if (exe.killedProcess()) {
-            log("Timeout: killed the sub-process", Project.MSG_WARN); 
+            log("Timeout: killed the sub-process", Project.MSG_WARN);
         }
         maybeSetResultPropertyValue(err);
         if (err != 0) {
@@ -390,10 +389,10 @@ public class ExecTask extends Task {
                 log("Output redirected to " + out, Project.MSG_VERBOSE);
                 return new PumpStreamHandler(fos);
             } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot write to " + out, fne, 
+                throw new BuildException("Cannot write to " + out, fne,
                                          location);
             } catch (IOException ioe) {
-                throw new BuildException("Cannot write to " + out, ioe, 
+                throw new BuildException("Cannot write to " + out, ioe,
                                          location);
             }
         } else if (outputprop != null) {

@@ -184,6 +184,10 @@ public class ExecuteOn extends ExecTask {
         return mapperElement;
     }
 
+    /**
+     * @todo using taskName here is brittle, as a user could override it.
+     *       this should probably be modified to use the classname instead.
+     */
     protected void checkConfiguration() {
         if ("execon".equals(taskName)) {
             log("!! execon is deprecated. Use apply instead. !!");

@@ -170,6 +170,13 @@ of 400 or greater are viewed as invalid.</p>
     are detected</td>
     <td align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">errorsBeginAt</td>
+    <td valign="top">The lowest HTTP response code that signals an error;
+    by default '400'; server errors, not-authorized, not-found and the like
+    are detected</td>
+    <td align="center">No</td>
+  </tr>
 </table>
 
 <h4>socket</h4>
@@ -263,8 +270,8 @@ that is "true","yes", or "on"</p>
 <pre>
     &lt;istrue value=&quot;${someproperty}&quot; /&gt;
     &lt;istrue value=&quot;false&quot; /&gt;
-</pre>   
- 
+</pre>
+
 <h4>isfalse</h4>
 <p>Tests whether a string is not true, the negation of &lt;istrue&gt;
 </p>
@@ -283,8 +290,8 @@ that is "true","yes", or "on"</p>
 <pre>
     &lt;isfalse value=&quot;${someproperty}&quot; /&gt;
     &lt;isfalse value=&quot;false&quot; /&gt;
-</pre>   
- 
+</pre>
+
 <hr>
 <p align="center">Copyright &copy; 2001-2002 Apache Software
 Foundation. All rights Reserved.</p>

@@ -62,11 +62,12 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
-/** P4Change - grab a new changelist from Perforce.
- *
+/** 
+ * Requests a new changelist from the Perforce server.
  * P4Change creates a new changelist in perforce. P4Change sets the property
  * ${p4.change} with the new changelist number. This should then be passed into
  * p4edit and p4submit.
+ * 
  *
  * @see P4Edit
  * @see P4Submit
@@ -78,6 +79,9 @@ public class P4Change extends P4Base {
     protected String emptyChangeList = null;
     protected String description = "AutoSubmit By Ant";
 
+    /**
+     * throw all immutability rules to the wind
+     */
     public void execute() throws BuildException {
 
         if (emptyChangeList == null) {
@@ -162,7 +166,10 @@ public class P4Change extends P4Base {
         return buf.toString();
     }
 
-    /* Set Description Variable. */
+    /**
+     * Description for ChangeList;optional.
+     * If none is specified, it will default to "AutoSubmit By Ant"
+     */
     public void setDescription(String desc) {
         this.description = desc;
     }

@@ -69,13 +69,15 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * Simple Metamata MParse task based on the original written by
+ * Simple Metamata MParse task.
+ * Based on the original written by
  * <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>.
  *
  * This version was written for Metamata 2.0 available at
  * <a href="http://www.metamata.com">http://www.metamata.com</a>
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ * @todo make a subclass of AbstractMetaMataTask
  */
 public class MParse extends AbstractMetamataTask {
 
@@ -85,7 +87,7 @@ public class MParse extends AbstractMetamataTask {
     private boolean debugscanner = false;
     private boolean cleanup = false;
 
-    /** the .jj file to process */
+    /** The .jj file to process; required. */
     public void setTarget(File target) {
         this.target = target;
     }
@@ -95,17 +97,19 @@ public class MParse extends AbstractMetamataTask {
         verbose = flag;
     }
 
-    /** set scanner debug mode */
+    /** set scanner debug mode; optional, default false */
     public void setDebugscanner(boolean flag){
         debugscanner = flag;
     }
 
-    /** set parser debug mode */
+    /** set parser debug mode; optional, default false */
     public void setDebugparser(boolean flag){
         debugparser = flag;
     }
 
-    /** set the hack to cleanup the temp file */
+    /** Remove the intermediate Sun JavaCC file
+     * ; optional, default false.
+     */
     public void setCleanup(boolean value) {
         cleanup = value;
     }
@@ -253,6 +257,7 @@ public class MParse extends AbstractMetamataTask {
 
     /**
      * return all options of the command line as string elements
+     * @return an array of options corresponding to the setted options.
      */
     protected Vector getOptions() {
         Vector options = new Vector();

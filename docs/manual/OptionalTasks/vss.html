@@ -31,7 +31,11 @@ The <code>org.apache.tools.ant.taskdefs.optional.vss</code> package consists of 
 vss functionality as well as some Ant tasks encapsulating frequently used vss commands.
 Although it is possible to use these commands on the desktop,
 they were primarily intended to be used by automated build systems.</p>
-
+<p>
+If you get a CreateProcesss IOError=2 when running these, it means
+that ss.exe was not found. Check to see if you can run it from the
+command line -you may need to alter your path, or set the <tt>ssdir</tt>
+property.
 <h2><a name="tasks">The Tasks</a></h2>
 
 <table border="0" cellspacing="0" cellpadding="3">
@@ -64,9 +68,9 @@ they were primarily intended to be used by automated build systems.</p>
         <td>Change the current project being used in VSS</td>
     </tr>
     <tr>
-		<td><a href="#vsscreate">vsscreate</a></td>
-		<td>Creates a project in VSS.</td>
-	</tr>
+        <td><a href="#vsscreate">vsscreate</a></td>
+        <td>Creates a project in VSS.</td>
+    </tr>
 </table>
 
 <hr>
@@ -114,17 +118,17 @@ label only one will be used in the order version, date, label.</p>
   </tr>
   <tr>
      <td>serverPath</td>
-     <td>directory where <code>srssafe.ini</code> resides.</td>
+     <td>directory where <code>ss.ini</code> resides.</td>
      <td>No</td>
   </tr>
   <tr>
      <td>writable</td>
-     <td>true or false</td>
+     <td>true or false<; default false/td>
      <td>No</td>
   </tr>
   <tr>
      <td>recursive</td>
-     <td>true or false</td>
+     <td>true or false; default false</td>
      <td>No</td>
   </tr>
   <tr>
@@ -303,7 +307,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
   </tr>
   <tr>
     <td>toDate</td>
-    <td>Start date for comparison</td>
+    <td>End date for comparison</td>
     <td>See below</td>
   </tr>
   <tr>
@@ -341,6 +345,11 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
   <tr>
     <td>style</td>
     <td>brief, codediff, default or nofile. The default is default.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>user</td>
+    <td>Name the user whose changes we would like to see</td>
     <td>No</td>
   </tr>
 </table>

@@ -169,6 +169,13 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
                      processed.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">keepgenerated</td>
+    <td>Controls whether ejbc will keep the
+        intermediate Java files used to build the class files. This can be
+        useful when debugging.</td>
+    <td>No, defaults to false.</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>&lt;ejbc descriptors=&quot;${gen.classes}&quot;
@@ -323,7 +330,7 @@ and hence ant, will not complete until the weblogic instance is stopped.</p>
   </tr>
   <tr>
     <td valign="top">BEA Home</td>
-    <td valign="top">The location of the BEA Home qwhere the server's config is defined.
+    <td valign="top">The location of the BEA Home where the server's config is defined.
                      If this attribute is present, wlrun assumes that the server will
                      be running under Weblogic 6.0</td>
     <td valign="top" align="center">N/A</td>
@@ -407,8 +414,8 @@ and hence ant, will not complete until the weblogic instance is stopped.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
-    <td valign="top">args</td>
-    <td valign="top">Additional argument string passed to the Weblogic instance.</td>
+    <td valign="top">weblogicMainClass</td>
+    <td valign="top">name of the main class for weblogic</td>
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -473,7 +480,7 @@ specify the BEA Home to have this task work correctly under 6.0</p>
   <tr>
     <td valign="top">classpath</td>
     <td valign="top">The classpath to be used with the Java Virtual Machine that runs the Weblogic
-                     Shutdown comment.</td>
+                     Shutdown command.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -502,7 +509,7 @@ specify the BEA Home to have this task work correctly under 6.0</p>
 
 <h3>Nested Element</h3>
 
-<p>The classpath of the welstop task can be set by a &lt;classpath&gt; nested element.</p>
+<p>The classpath of the wlstop task can be set by a &lt;classpath&gt; nested element.</p>
 
 <h3>Examples</h3>
 
@@ -1002,8 +1009,8 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
                      the weblogic class hierarchy. This should not be necessary if you
                      have weblogic in your classpath. If you do not, you should use a
                      nested &lt;dtd&gt; element, described above. If you do choose
-                     to use an attribute, you should use the ejbdtd attribute in
-                     preference to this one, anyway.
+                     to use an attribute, you should use a
+                     nested &lt;dtd&gt; element.
                      </td>
     <td valign="top" align="center">No.</td>
   </tr>
@@ -1071,7 +1078,7 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
   <tr>
     <td valign="top">outputdir</td>
     <td valign="top">If set ejbc will be given this directory as the output
-                     desitination rather than a jar file. This allows for the
+                     destination rather than a jar file. This allows for the
                      generation of &quot;exploded&quot; jars.
                      </td>
     <td valign="top" align="center">No.</td>
@@ -1286,7 +1293,7 @@ the classpath of the ejbdeploy tool (look at the examples below).
     <td valign="top" align="center">No, defaults to false</td>
   </tr>
   <tr>
-    <td valign="top">alwaysrebuild</td>
+    <td valign="top">rebuild</td>
     <td valign="top">This controls whether ejbdeploy is called although no changes
                      have occurred.</td>
     <td valign="top" align="center">No, defaults to false</td>
@@ -1308,6 +1315,7 @@ the classpath of the ejbdeploy tool (look at the examples below).
                      <li>SQL92</li> <li>SQL99</li> <li>DB2UDBWIN_V71</li>
                      <li>DB2UDBOS390_V6</li> <li>DB2UDBAS400_V4R5</li> <li>ORACLE_V8</li>
                      <li>INFORMIX_V92</li> <li>SYBASE_V1192</li> <li>MYSQL_V323</li>
+                     <li>MSSQLSERVER_V7</li>
                      </ul>
                      This is also used to determine the name of the Map.mapxmi and
                      Schema.dbxmi files, for example Account-DB2UDBWIN_V71-Map.mapxmi
@@ -1623,6 +1631,7 @@ documentation for more details.</p>
     <tr>
       <td valign="Top">verbose</td>
       <td valign="Top">Indicates whether or not to use -verbose switch. If
+
       omitted, it defaults to <code>false</code>.</td>
       <td align="Center" valign="Top">No</td>
     </tr>

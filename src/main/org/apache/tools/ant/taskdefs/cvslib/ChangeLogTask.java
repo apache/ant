@@ -74,8 +74,8 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * Change log task.
- * The task will examine the output of cvs log and group related changes together.
+ * Examines the output of cvs log and group related changes together.
+ *
  * It produces an XML output representing the list of changes.
  * <PRE>
  * <FONT color=#0000ff>&lt;!-- Root element --&gt;</FONT>
@@ -217,7 +217,7 @@ public class ChangeLogTask extends Task {
     /**
      * Execute task
      *
-     * @exception BuildException if something goes wrong executing the 
+     * @exception BuildException if something goes wrong executing the
      *            cvs command
      */
     public void execute() throws BuildException {

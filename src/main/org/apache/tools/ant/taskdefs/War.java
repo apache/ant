@@ -68,7 +68,7 @@ import java.io.IOException;
  * Contains special treatment for files that should end up in the
  * <code>WEB-INF/lib</code>, <code>WEB-INF/classes</code> or
  * <code>WEB-INF</code> directories of the Web Application Archive.</p>
- * <p>(The War task is a shortcut for specifying the particular layout of a WAR file. 
+ * <p>(The War task is a shortcut for specifying the particular layout of a WAR file.
  * The same thing can be accomplished by using the <i>prefix</i> and <i>fullpath</i>
  * attributes of zipfilesets in a Zip or Jar task.)</p>
  * <p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
@@ -86,7 +86,7 @@ public class War extends Jar {
      * our web.xml deployment descriptor
      */
     private File deploymentDescriptor;
-    
+
     /**
      * flag set if the descriptor is added
      */
@@ -99,10 +99,10 @@ public class War extends Jar {
     }
 
     /**
-     * <i>Deprecated<i> name of the file to create 
-     * -use <tt>destfile</tt> instead. 
+     * <i>Deprecated<i> name of the file to create
+     * -use <tt>destfile</tt> instead.
      * @deprecated Use setDestFile(File) instead
-     * @ant.attribute ignored="true"
+     * @ant.attribute ignore="true"
      */
     public void setWarfile(File warFile) {
         setDestFile(warFile);
@@ -115,8 +115,8 @@ public class War extends Jar {
     public void setWebxml(File descr) {
         deploymentDescriptor = descr;
         if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: " 
-                                     + deploymentDescriptor 
+            throw new BuildException("Deployment descriptor: "
+                                     + deploymentDescriptor
                                      + " does not exist.");
         }
 
@@ -131,7 +131,7 @@ public class War extends Jar {
     /**
      * add files under WEB-INF/lib/
      */
-     
+
     public void addLib(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/lib/");
@@ -148,7 +148,7 @@ public class War extends Jar {
     }
 
     /**
-     * files to add under WEB-INF; 
+     * files to add under WEB-INF;
      */
     public void addWebinf(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
@@ -180,8 +180,8 @@ public class War extends Jar {
         // it's being added twice, meaning the same file is specified
         // by the "webxml" attribute and in a <fileset> element.
         if (vPath.equalsIgnoreCase("WEB-INF/web.xml"))  {
-            if (deploymentDescriptor == null 
-                || !deploymentDescriptor.equals(file) 
+            if (deploymentDescriptor == null
+                || !deploymentDescriptor.equals(file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType
                     + " files include a WEB-INF/web.xml which will be ignored "

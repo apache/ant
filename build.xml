@@ -27,6 +27,7 @@
   <property name="chmod.fail" value="true" />
   <property name="deprecation" value="false" />
   <property name="optimize" value="true" />
+  <property name="javac.target" value="1.1" />
   <property name="junit.fork" value="false" />
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
@@ -134,6 +135,10 @@
     <exclude name="${optional.package}/ejb/*DeploymentTool.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/IPlanet*.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/ejb/Borland*.java"
+             unless="jdk1.2+" />
+    <exclude name="${optional.package}/j2ee/*.java"
              unless="jdk1.2+" />
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
@@ -305,6 +310,20 @@
   </patternset>
   <patternset id="teststhatfail">
     <exclude name="${ant.package}/types/XMLCatalogTest.java"/>
+  </patternset>
+  
+  <!--
+       ===================================================================
+         Set up a patternsets that matches the parts of our JUnit testsuite
+         that may be useful for task developers.
+       ===================================================================
+  -->
+  <patternset id="useful.tests">
+    <include name="${ant.package}/BuildFileTest*" />
+    <include name="${regexp.package}/RegexpMatcherTest*" />
+    <include name="${regexp.package}/RegexpTest*" />
+    <include name="${optional.package}/AbstractXSLTLiaisonTest*" />
+    <include name="${ant.package}/types/AbstractFileSetTest*" />
   </patternset>
   
   <!--
@@ -559,6 +578,7 @@
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
+           target="${javac.target}"
            optimize="${optimize}" >
       <classpath refid="classpath" />
 
@@ -635,6 +655,8 @@
       <fileset dir=".">
         <include name="LICENSE" />
         <include name="LICENSE.xerces" />
+        <include name="LICENSE.dom" />
+        <include name="LICENSE.sax" />
       </fileset>
       <mapper type="glob" from="*" to="*.txt" />
     </copy>
@@ -656,7 +678,7 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
-        <section name="${ant.package}">
+        <section name="${ant.package}/">
           <attribute name="Extension-name"
                      value="org.apache.tools.ant" />
           <attribute name="Specification-Title"
@@ -696,7 +718,7 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
 
       <manifest>
-        <section name="${optional.package}">
+        <section name="${optional.package}/">
           <attribute name="Extension-name"
                      value="org.apache.tools.ant.taskdefs.optional" />
           <attribute name="Specification-Title"
@@ -817,9 +839,12 @@
         <include name="README"/>
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
+        <include name="LICENSE.dom"/>
+        <include name="LICENSE.sax"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
+        <include name="welcome.html"/>
       </fileset>
     </copy>
 
@@ -901,6 +926,8 @@
         <include name="README"/>
         <include name="LICENSE"/>
         <include name="LICENSE.xerces"/>
+        <include name="LICENSE.dom"/>
+        <include name="LICENSE.sax"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
         <include name="KEYS"/>
@@ -909,6 +936,7 @@
         <include name="bootstrap.bat"/>
         <include name="bootstrap.sh"/>
         <include name="build.xml"/>
+        <include name="welcome.html"/>
       </fileset>
     </copy>
 
@@ -1147,6 +1175,7 @@
     <javac srcdir="${tests.dir}"
            destdir="${build.tests}"
            debug="${debug}"
+           target="${javac.target}"
            deprecation="${deprecation}" >
       <classpath refid="tests-classpath" />
 

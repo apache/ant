@@ -97,12 +97,17 @@ public class RenameExtensions extends MatchingTask {
         globType.setValue("glob");
     }
 
-    /** store fromExtension **/
+    /**
+     * The string that files must end in to be renamed
+     **/
     public void setFromExtension(String from) {
         fromExtension = from;
     }
 
-    /** store toExtension **/
+    /** 
+     * The string that renamed files will end with on
+     * completion
+     */
     public void setToExtension(String to) {
         toExtension = to;
     }

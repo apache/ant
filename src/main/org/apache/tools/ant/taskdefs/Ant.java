@@ -72,7 +72,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 /**
- * Call Ant in a sub-project.
+ * Build a sub-project.
  *
  *  <pre>
  *  &lt;target name=&quot;foo&quot; depends=&quot;init&quot;&gt;
@@ -329,7 +329,10 @@ public class Ant extends Task {
 
             if (dir != null) {
                 newProject.setBaseDir(dir);
-                newProject.setUserProperty("basedir" , dir.getAbsolutePath());
+                if (savedDir != null) { // has been set explicitly
+                    newProject.setInheritedProperty("basedir" ,
+                                                    dir.getAbsolutePath());
+                }
             } else {
                 dir = project.getBaseDir();
             }
@@ -487,7 +490,7 @@ public class Ant extends Task {
     }
 
     /**
-     * The directory to use as a basedir for the new Ant project.
+     * The directory to use as a base directory for the new Ant project.
      * Defaults to the current project's basedir, unless inheritall
      * has been set to false, in which case it doesn't have a default
      * value. This will override the basedir setting of the called project.

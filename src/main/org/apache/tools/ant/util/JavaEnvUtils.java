@@ -82,7 +82,7 @@ public class JavaEnvUtils {
 
     /** Version of currently running VM. */
     private static String javaVersion;
-    
+
     /** floating version of the JVM */
     private static int javaVersionNumber;
 
@@ -97,9 +97,9 @@ public class JavaEnvUtils {
     /** Version constant for Java 1.4 */
     public static final String JAVA_1_4 = "1.4";
 
-    /** array of packages in the runtime */ 
+    /** array of packages in the runtime */
     private static Vector jrePackages;
-    
+
 
     static {
 
@@ -185,7 +185,7 @@ public class JavaEnvUtils {
             jExecutable = findInDir(javaHome + "/sh", command);
         }
 
-        if (jExecutable == null) { 
+        if (jExecutable == null) {
             jExecutable = findInDir(javaHome + "/bin", command);
         }
 
@@ -225,7 +225,7 @@ public class JavaEnvUtils {
             jExecutable = findInDir(javaHome + "/../sh", command);
         }
 
-        if (jExecutable == null) { 
+        if (jExecutable == null) {
             jExecutable = findInDir(javaHome + "/../bin", command);
         }
 
@@ -266,11 +266,12 @@ public class JavaEnvUtils {
         }
         return executable;
     }
-        
+
     /**
-     * demand creation of the package list
+     * demand creation of the package list.
+     * When you add a new package, add a new test below
      */
-     
+
     private static void buildJrePackages() {
         jrePackages=new Vector();
         switch(javaVersionNumber) {
@@ -279,28 +280,83 @@ public class JavaEnvUtils {
                 jrePackages.addElement("org.apache.xalan");
                 jrePackages.addElement("org.apache.xml");
                 jrePackages.addElement("org.apache.xpath");
+                jrePackages.addElement("org.ietf.jgss");
                 jrePackages.addElement("org.w3c.dom");
                 jrePackages.addElement("org.xml.sax");
                 // fall through
-            case 13:    
+            case 13:
                 jrePackages.addElement("org.omg");
+                jrePackages.addElement("com.sun.corba");
+                jrePackages.addElement("com.sun.jndi");
+                jrePackages.addElement("com.sun.media");
+                jrePackages.addElement("com.sun.naming");
+                jrePackages.addElement("com.sun.org.omg");
+                jrePackages.addElement("com.sun.rmi");
+                jrePackages.addElement("sunw.io");
+                jrePackages.addElement("sunw.util");
                 // fall through
-            case 12:    
-                jrePackages.addElement("sun.misc");
+            case 12:
+                jrePackages.addElement("com.sun.java");
+                jrePackages.addElement("com.sun.image");
                 // are there any here that we forgot?
                 // fall through
-            case 11:    
+            case 11:
             default:
+                //things like sun.reflection, sun.misc, sun.net
+                jrePackages.addElement("sun.");
                 jrePackages.addElement("java");
                 jrePackages.addElement("javax");
                 break;
         }
     }
-    
+
     /**
-     * get a vector of strings of packages built into 
+     * testing helper method; kept here for unification of changes.
+     * @return
+     */
+    public static Vector getJrePackageTestCases() {
+        Vector tests=new Vector();
+        tests.addElement("java.lang.Object");
+        switch(javaVersionNumber) {
+            case 14:
+                tests.addElement("sun.audio.AudioPlayer");
+                tests.addElement("org.apache.crimson.parser.ContentModel");
+                tests.addElement("org.apache.xalan.processor.ProcessorImport");
+                tests.addElement("org.apache.xml.utils.URI");
+                tests.addElement("org.apache.xpath.XPathFactory");
+                tests.addElement("org.ietf.jgss.Oid");
+                tests.addElement("org.w3c.dom.Attr");
+                tests.addElement("org.xml.sax.XMLReader");
+                // fall through
+            case 13:
+                tests.addElement("org.omg.CORBA.Any");
+                tests.addElement("com.sun.corba.se.internal.corba.AnyImpl");
+                tests.addElement("com.sun.jndi.ldap.LdapURL");
+                tests.addElement("com.sun.media.sound.Printer");
+                tests.addElement("com.sun.naming.internal.VersionHelper");
+                tests.addElement("com.sun.org.omg.CORBA.Initializer");
+                tests.addElement("sunw.io.Serializable");
+                tests.addElement("sunw.util.EventListener");
+                // fall through
+            case 12:
+                tests.addElement("javax.accessibility.Accessible");
+                tests.addElement("sun.misc.BASE64Encoder");
+                tests.addElement("com.sun.image.codec.jpeg.JPEGCodec");
+                // fall through
+            case 11:
+            default:
+                //things like sun.reflection, sun.misc, sun.net
+                tests.addElement("sun.reflect.SerializationConstructorAccessorImpl");
+                tests.addElement("sun.net.www.http.HttpClient");
+                tests.addElement("sun.audio.AudioPlayer");
+                break;
+        }
+        return tests;
+    }
+    /**
+     * get a vector of strings of packages built into
      * that platforms runtime jar(s)
-     * @return list of packages 
+     * @return list of packages
      */
     public static Vector getJrePackages() {
         if(jrePackages==null) {

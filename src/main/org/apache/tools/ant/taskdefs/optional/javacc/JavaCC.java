@@ -69,7 +69,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 /**
- * Taskdef for the JavaCC compiler compiler.
+ * JavaCC compiler compiler task.
  *
  * @author thomas.haas@softwired-inc.com
  * @author Michael Saunders <a href="mailto:michael@amtec.com">michael@amtec.com</a>
@@ -109,94 +109,165 @@ public class JavaCC extends Task {
     private CommandlineJava cmdl = new CommandlineJava();
 
 
+    /**
+     * Sets the LOOKAHEAD grammar option.
+     */
     public void setLookahead(int lookahead) {
         optionalAttrs.put(LOOKAHEAD, new Integer(lookahead));
     }
 
+    /**
+     * Sets the CHOICE_AMBIGUITY_CHECK grammar option.
+     */
     public void setChoiceambiguitycheck(int choiceAmbiguityCheck) {
         optionalAttrs.put(CHOICE_AMBIGUITY_CHECK, new Integer(choiceAmbiguityCheck));
     }
 
+    /**
+     * Sets the OTHER_AMBIGUITY_CHECK grammar option.
+     */
     public void setOtherambiguityCheck(int otherAmbiguityCheck) {
         optionalAttrs.put(OTHER_AMBIGUITY_CHECK, new Integer(otherAmbiguityCheck));
     }
 
+    /**
+     * Sets the STATIC grammar option.
+     */
     public void setStatic(boolean staticParser) {
         optionalAttrs.put(STATIC, new Boolean(staticParser));
     }
 
+    /**
+     * Sets the DEBUG_PARSER grammar option.
+     */
     public void setDebugparser(boolean debugParser) {
         optionalAttrs.put(DEBUG_PARSER, new Boolean(debugParser));
     }
 
+    /**
+     * Sets the DEBUG_LOOKAHEAD grammar option.
+     */
     public void setDebuglookahead(boolean debugLookahead) {
         optionalAttrs.put(DEBUG_LOOKAHEAD, new Boolean(debugLookahead));
     }
 
+    /**
+     * Sets the DEBUG_TOKEN_MANAGER grammar option.
+     */
     public void setDebugtokenmanager(boolean debugTokenManager) {
         optionalAttrs.put(DEBUG_TOKEN_MANAGER, new Boolean(debugTokenManager));
     }
 
+    /**
+     * Sets the OPTIMIZE_TOKEN_MANAGER grammar option.
+     */
     public void setOptimizetokenmanager(boolean optimizeTokenManager) {
         optionalAttrs.put(OPTIMIZE_TOKEN_MANAGER, new Boolean(optimizeTokenManager));
     }
 
+    /**
+     * Sets the ERROR_REPORTING grammar option.
+     */
     public void setErrorreporting(boolean errorReporting) {
         optionalAttrs.put(ERROR_REPORTING, new Boolean(errorReporting));
     }
 
+    /**
+     * Sets the JAVA_UNICODE_ESCAPE grammar option.
+     */
     public void setJavaunicodeescape(boolean javaUnicodeEscape) {
         optionalAttrs.put(JAVA_UNICODE_ESCAPE, new Boolean(javaUnicodeEscape));
     }
 
+    /**
+     * Sets the UNICODE_INPUT grammar option.
+     */
     public void setUnicodeinput(boolean unicodeInput) {
         optionalAttrs.put(UNICODE_INPUT, new Boolean(unicodeInput));
     }
 
+    /**
+     * Sets the IGNORE_CASE grammar option.
+     */
     public void setIgnorecase(boolean ignoreCase) {
         optionalAttrs.put(IGNORE_CASE, new Boolean(ignoreCase));
     }
 
+    /**
+     * Sets the COMMON_TOKEN_ACTION grammar option.
+     */
     public void setCommontokenaction(boolean commonTokenAction) {
         optionalAttrs.put(COMMON_TOKEN_ACTION, new Boolean(commonTokenAction));
     }
 
+    /**
+     * Sets the USER_TOKEN_MANAGER grammar option.
+     */
     public void setUsertokenmanager(boolean userTokenManager) {
         optionalAttrs.put(USER_TOKEN_MANAGER, new Boolean(userTokenManager));
     }
 
+    /**
+     * Sets the USER_CHAR_STREAM grammar option.
+     */
     public void setUsercharstream(boolean userCharStream) {
         optionalAttrs.put(USER_CHAR_STREAM, new Boolean(userCharStream));
     }
 
+    /**
+     * Sets the BUILD_PARSER grammar option.
+     */
     public void setBuildparser(boolean buildParser) {
         optionalAttrs.put(BUILD_PARSER, new Boolean(buildParser));
     }
 
+    /**
+     * Sets the BUILD_TOKEN_MANAGER grammar option.
+     */
     public void setBuildtokenmanager(boolean buildTokenManager) {
         optionalAttrs.put(BUILD_TOKEN_MANAGER, new Boolean(buildTokenManager));
     }
 
+    /**
+     * Sets the SANITY_CHECK grammar option.
+     */
     public void setSanitycheck(boolean sanityCheck) {
         optionalAttrs.put(SANITY_CHECK, new Boolean(sanityCheck));
     }
 
+    /**
+     * Sets the FORCE_LA_CHECK grammar option.
+     */
     public void setForcelacheck(boolean forceLACheck) {
         optionalAttrs.put(FORCE_LA_CHECK, new Boolean(forceLACheck));
     }
 
+    /**
+     * Sets the CACHE_TOKENS grammar option.
+     */
     public void setCachetokens(boolean cacheTokens) {
         optionalAttrs.put(CACHE_TOKENS, new Boolean(cacheTokens));
     }
 
+    /**
+     * The directory to write the generated files to.
+     * If not set, the files are written to the directory
+     * containing the grammar file.
+     */
     public void setOutputdirectory(File outputDirectory) {
         this.outputDirectory = outputDirectory;
     }
 
+    /**
+     * The grammar file to process.
+     */
     public void setTarget(File target) {
         this.target = target;
     }
 
+    /**
+     * The directory containing the JavaCC distribution.
+     */
     public void setJavacchome(File javaccHome) {
         this.javaccHome = javaccHome;
     }

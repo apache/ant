@@ -68,8 +68,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * This class logs into StarTeam checks out any changes that have occurred since
- * the last successful build. It also creates all working directories on the
+ * Checks out files from a StarTeam project.
+ * It also creates all working directories on the
  * local directory if appropriate. Ant Usage:
  * <pre>
  * &lt;taskdef name="starteamcheckout"
@@ -102,8 +102,8 @@ public class StarTeamCheckout extends TreeBasedTask {
     private boolean deleteUncontrolled = true;
 
     /**
-     * Set the attribute that tells ant if we want to create all directories
-     * that are in the Starteam repository regardless if they are empty.
+     * flag (defaults to true) to create all directories
+     * that are in the Starteam repository even if they are empty.
      *
      * @param value  the value to set the attribute to.
      */
@@ -112,9 +112,8 @@ public class StarTeamCheckout extends TreeBasedTask {
     }
 
     /**
-     * Sets the attribute that tells ant whether or not to remove local files
-     * that are NOT found in the Starteam repository to the supplied value.
-     *
+     * Should all all local files <i>not<i> in StarTeam be deleted?
+     * Optional, defaults to "true".     
      * @param value  the value to set the attribute to.
      */
     public void setDeleteUncontrolled(boolean value) {
@@ -122,8 +121,8 @@ public class StarTeamCheckout extends TreeBasedTask {
     }
 
     /**
-     * Sets the label StarTeam is to use for checkout.
-     *
+     * Sets the label StarTeam is to use for checkout; defaults to the most recent file.
+     * The label must exist in starteam or an exception will be thrown. 
      * @param label the label to be used
      */
     public void setLabel(String label) {
@@ -142,7 +141,7 @@ public class StarTeamCheckout extends TreeBasedTask {
     private int lockStatus = Item.LockType.UNCHANGED;
 
     /**
-     * Set to do a locked checkout.  Default is false.
+     * Set to do a locked checkout; optional default is false. 
      * @param v  True to do a locked checkout, false to checkout without
      *           changing status/.
      * @exception BuildException if both locked and unlocked are set true

@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
 /**
- * ANTLR task.
+ *  Invokes the ANTLR Translator generator on a grammar file.
  *
  * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
@@ -121,32 +121,38 @@ public class ANTLR extends Task {
         commandline.setClassname("antlr.Tool");
     }
 
+    /**
+     * The grammar file to process.
+     */
     public void setTarget(File target) {
         log("Setting target to: " + target.toString(), Project.MSG_VERBOSE);
         this.target = target;
     }
 
+    /**
+     * The directory to write the generated files to.
+     */
     public void setOutputdirectory(File outputDirectory) {
         log("Setting output directory to: " + outputDirectory.toString(), Project.MSG_VERBOSE);
         this.outputDirectory = outputDirectory;
     }
 
     /**
-     * Sets an optional super grammar file
+     * Sets an optional super grammar file.
      */
     public void setGlib(String superGrammar) {
         this.superGrammar = superGrammar;
     }
-    
+
     /**
      * Sets a flag to enable ParseView debugging
      */
     public void setDebug(boolean enable) {
         debug = enable;
     }
-    
+
     /**
-     * Sets a flag to emit html
+     * If true, emit html
      */
     public void setHtml(boolean enable) {
         html = enable;
@@ -158,43 +164,46 @@ public class ANTLR extends Task {
     public void setDiagnostic(boolean enable) {
         diagnostic = enable;
     }
-    
+
     /**
-     * Sets a flag to enable all tracing
+     * If true, enables all tracing.
      */
     public void setTrace(boolean enable) {
         trace = enable;
     }
-    
+
     /**
-     * Sets a flag to enable parser tracing
+     * If true, enables parser tracing.
      */
     public void setTraceParser(boolean enable) {
         traceParser = enable;
     }
-    
+
     /**
-     * Sets a flag to allow the user to enable lexer tracing
+     * If true, enables lexer tracing.
      */
     public void setTraceLexer(boolean enable) {
         traceLexer = enable;
     }
-    
+
     /**
      * Sets a flag to allow the user to enable tree walker tracing
      */
     public void setTraceTreeWalker(boolean enable) {
         traceTreeWalker = enable;
     }
-    
+
     // we are forced to fork ANTLR since there is a call
     // to System.exit() and there is nothing we can do
     // right now to avoid this. :-( (SBa)
     // I'm not removing this method to keep backward compatibility
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setFork(boolean s) {
         //this.fork = s;
     }
-    
+
     /**
      * The working directory of the process
      */
@@ -203,15 +212,15 @@ public class ANTLR extends Task {
     }
 
     /**
-     * <code>&lt;classpath&gt;</code> allows classpath to be set
-     * because a directory might be given for Antlr debug...
+     * Adds a classpath to be set
+     * because a directory might be given for Antlr debug.
      */
     public Path createClasspath() {
         return commandline.createClasspath(project).createPath();
     }
 
     /**
-     * Create a new JVM argument. Ignored if no JVM is forked.
+     * Adds a new JVM argument.
      * @return  create a new JVM argument so that any argument can be passed to the JVM.
      * @see #setFork(boolean)
      */
@@ -266,7 +275,7 @@ public class ANTLR extends Task {
         if (target.lastModified() > getGeneratedFile().lastModified()) {
             populateAttributes();
             commandline.createArgument().setValue(target.toString());
-            
+
             log(commandline.describeCommand(), Project.MSG_VERBOSE);
             int err = run(commandline.getCommandline());
             if (err == 1) {
@@ -312,12 +321,12 @@ public class ANTLR extends Task {
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
-        
+
         // validate the superGrammar file
         if (superGrammar != null && !new File(superGrammar).isFile()) {
             throw new BuildException("Invalid super grammar file: " + superGrammar);
         }
-        
+
         // if no output directory is specified, used the target's directory
         if (outputDirectory == null) {
             String fileName = target.toString();

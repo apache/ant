@@ -67,10 +67,25 @@ compiler is supported.
 </p>  
 <hr>
 <h2><a name="installing">Installing Ant</a></h2>
-<p>The binary distribution of Ant consists of three directories:
-<code>bin</code>,
-<code>docs</code> and
-<code>lib</code>
+<p>The binary distribution of Ant consists of the following directory layout:
+<pre>
+  ant
+   +--- bin  // contains launcher scripts
+   |
+   +--- lib  // contains Ant jars plus necessary dependencies
+   |
+   +--- docs // contains documentation
+   |      +--- ant2    // a brief description of ant2 requirements
+   |      |
+   |      +--- images  // various logos for html documentation
+   |      |
+   |      +--- manual  // Ant documentation (a must read ;-)
+   |
+   +--- etc // contains xsl goodies to:
+            //   - create an enhanced report from xml output of various tasks.
+            //   - migrate your build files and get rid of 'deprecated' warning
+            //   - ... and more ;-)
+</pre>
 
 Only the <code>bin</code> and <code>lib</code> directories are 
 required to run Ant. 
@@ -193,7 +208,7 @@ for examples on how to do this for your operating system. </p>
 
 <p>Make sure you have downloaded any auxiliary jars required to
 build tasks you are interested in. These should either be available
-on the CLASSPATH or added to the <code>lib/optional</code>
+on the CLASSPATH or added to the <code>lib</code>
 directory.
 See <a href="#librarydependencies">Library Dependencies</a>
 for a list of jar requirements for various features.

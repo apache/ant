@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+    <!ENTITY included_file SYSTEM "file:./included_file.xml">
+]>
+
+<project name="test" default="test" basedir=".">
+
+  <target name="setup">
+  </target>
+
+  &included_file;
+
+  <target name="test" depends="included-target">
+    <echo>test target ran.</echo>
+  </target>
+
+</project>

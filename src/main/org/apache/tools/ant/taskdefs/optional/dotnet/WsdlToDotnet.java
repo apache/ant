@@ -58,7 +58,8 @@ import org.apache.tools.ant.BuildException;
 import java.io.File;
 
 /**
- * Task to convert a WSDL file/url into a dotnet language.
+ * Converts a WSDL file or URL resource into a .NET language.
+ *
  * See "Creating an XML Web Service Proxy", "wsdl.exe" docs in
  * the framework SDK documentation
  * @author      Steve Loughran steve_l@iseran.com

@@ -86,7 +86,8 @@ public abstract class MSVSS extends Task {
     private String m_serverPath = null;
 
     /**
-     * Set the directory where ss.exe is located
+     * directory where <code>ss.exe</code> resides; optional.
+     * By default the task expects it to be in the PATH.
      *
      * @param dir the directory containing ss.exe
      */
@@ -108,9 +109,11 @@ public abstract class MSVSS extends Task {
     }
 
     /**
-     * Set the login to use when accessing vss.
+     * The login to use when accessing VSS, formatted as "username,password";
+     * optional.
      * <p>
-     * Should be formatted as username,password
+     * You can omit the password if your database is not password protected.
+     *  if you have a password and omit it, Ant/VSS will hang.
      *
      * @param login the login string to use
      */
@@ -130,11 +133,13 @@ public abstract class MSVSS extends Task {
     }
 
     /**
-     * Set the path to the item in vss to operate on.
+     * SourceSafe path which specifies the project/file(s) you wish to 
+     * perform the action on; required. You should not specify the leading dollar-sign - 
+     * it is prepended by Ant automatically.
      * <p>
      * Ant can't cope with a '$' sign in an attribute so we have to add it here.
      * Also we strip off any 'vss://' prefix which is an XMS special and should probably be removed!
-     *
+     * @todo dont add a $ prefix if it has one
      * @param vssPath
      */
     public final void setVsspath(String vssPath) {
@@ -153,8 +158,7 @@ public abstract class MSVSS extends Task {
     }
 
     /**
-     * Set the path to the location of the ss.ini
-     *
+     * Set the directory where <code>srssafe.ini</code> resides; optional.
      * @param serverPath
      */
     public final void setServerpath(String serverPath) {

@@ -74,8 +74,7 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * <pre>
- * Task to do regular expression string replacements in a text
+ * Performs regular expression string replacements in a text
  * file.  The input file(s) must be able to be properly processed by
  * a Reader instance.  That is, they must be text only, no binary.
  *
@@ -85,6 +84,7 @@ import java.util.Vector;
  * is <code>org.apache.tools.ant.util.regexp.JakartaOroRegexp</code> and
  * requires the Jakarta Oro Package).
  *
+ * <pre>
  * For jdk  &lt;= 1.3, there are two available implementations:
  *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
  *        Requires  the jakarta-oro package
@@ -169,11 +169,19 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * file for which the regular expression should be replaced;
+     * required unless a nested fileset is supplied.
+     */
     public void setFile(File file) {
         this.file = file;
     }
 
 
+    /**
+     * the regular expression pattern to match in the file(s);
+     * required if no nested &lt;regexp&gt; is used
+     */
     public void setMatch(String match) {
         if (regex != null) {
             throw new BuildException("Only one regular expression is allowed");
@@ -184,6 +192,12 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * The substitution pattern to place in the file(s) in place
+     * of the regular expression.
+     * Required if no nested &lt;substitution&gt; is used
+     */
+                     
     public void setReplace(String replace) {
         if (subs != null) {
             throw new BuildException("Only one substitution expression is "
@@ -194,12 +208,30 @@ public class ReplaceRegExp extends Task {
         subs.setExpression(replace);
     }
 
-
+    /**
+     * The flags to use when matching the regular expression.  For more
+     * information, consult the Perl5 syntax.
+     * <ul>
+     *  <li>g : Global replacement.  Replace all occurences found
+     *  <li>i : Case Insensitive.  Do not consider case in the match
+     *  <li>m : Multiline.  Treat the string as multiple lines of input, 
+     *         using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.
+     *  <li> s : Singleline.  Treat the string as a single line of input, using
+     *        "." to match any character, including a newline, which normally, it would not match.
+     *</ul>
+     */                     
     public void setFlags(String flags) {
         this.flags = flags;
     }
 
 
+    /**
+     * Process the file(s) one line at a time, executing the replacement
+     * on one line at a time.  This is useful if you
+     * want to only replace the first occurence of a regular expression on
+     * each line, which is not easy to do when processing the file as a whole.
+     * Defaults to <i>false</i>.</td>
+     */
     public void setByLine(String byline) {
         Boolean res = Boolean.valueOf(byline);
 
@@ -210,11 +242,19 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * list files to apply the replacement to
+     */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
 
+    /**
+     * A regular expression.
+     * You can use this element to refer to a previously
+     * defined regular expression datatype instance
+     */
     public RegularExpression createRegexp() {
         if (regex != null) {
             throw new BuildException("Only one regular expression is allowed.");
@@ -225,6 +265,10 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * A substitution pattern.  You can use this element to refer to a previously
+     * defined substitution pattern datatype instance.
+     */
     public Substitution createSubstitution() {
         if (subs != null) {
             throw new BuildException("Only one substitution expression is "

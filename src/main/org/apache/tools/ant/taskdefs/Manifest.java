@@ -58,9 +58,6 @@ import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -70,16 +67,11 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.CollectionUtils;
 
 /**
+ * Holds the data of a jar manifest.
  *
- * Creates a manifest file for inclusion in a JAR.
- * This task can be used to write a Manifest file, optionally
- *  replacing or updating an existing file.
  * Manifests are processed according to the
  * {@link <a href="http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html">Jar
  * file specification.</a>}.
@@ -89,16 +81,13 @@ import org.apache.tools.ant.util.CollectionUtils;
  * greater than 72 bytes being wrapped and continued on the next
  * line. If an application can not handle the continuation mechanism, it
  * is a defect in the application, not this task.
-
  * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
  *
  * @since Ant 1.4
- *
- * @ant.task category="java"
  */
-public class Manifest extends Task {
+public class Manifest {
     /** The standard manifest version header */
     public static final String ATTRIBUTE_MANIFEST_VERSION
         = "Manifest-Version";
@@ -130,20 +119,6 @@ public class Manifest extends Task {
 
     /** The End-Of-Line marker in manifests */
     public static final String EOL = "\r\n";
-
-    /**
-     * Helper class for Manifest's mode attribute.
-     */
-    public static class Mode extends EnumeratedAttribute {
-        /**
-         * Get Allowed values for the mode attribute.
-         *
-         * @return a String array of the allowed values.
-         */
-        public String[] getValues() {
-            return new String[] {"update", "replace"};
-        }
-    }
 
     /**
      * An attribute for the manifest.
@@ -704,7 +679,7 @@ public class Manifest extends Task {
 
             Section rhsSection = (Section) rhs;
 
-            return attributes.equals(rhsSection.attributes);
+            return CollectionUtils.equals(attributes, rhsSection.attributes);
         }
     }
 
@@ -720,16 +695,6 @@ public class Manifest extends Task {
 
     /** Index of sections - used to retain order of sections in manifest */
     private Vector sectionIndex = new Vector();
-
-    /**
-     * The file to which the manifest should be written when used as a task
-     */
-    private File manifestFile;
-
-    /**
-     * The mode with which the manifest file is written
-     */
-    private Mode mode;
 
     /**
      * Construct a manifest from Ant's default manifest file.
@@ -760,8 +725,6 @@ public class Manifest extends Task {
 
     /** Construct an empty manifest */
     public Manifest() {
-        mode = new Mode();
-        mode.setValue("replace");
         manifestVersion = null;
     }
 
@@ -843,7 +806,14 @@ public class Manifest extends Task {
      */
     public void addConfiguredAttribute(Attribute attribute)
          throws ManifestException {
-        mainSection.addConfiguredAttribute(attribute);
+        if (attribute.getKey() == null || attribute.getValue() == null) {
+            throw new BuildException("Attributes must have name and value");
+        }
+        if (attribute.getKey().equalsIgnoreCase(ATTRIBUTE_MANIFEST_VERSION)) {
+            manifestVersion = attribute.getValue();
+        } else {
+            mainSection.addConfiguredAttribute(attribute);
+        }
     }
 
     /**
@@ -1017,24 +987,7 @@ public class Manifest extends Task {
             return false;
         }
 
-        return sections.equals(rhsManifest.sections);
-    }
-
-    /**
-     * The name of the manifest file to create/update.
-     * Required if used as a task.
-     * @param f the Manifest file to be written
-     */
-    public void setFile(File f) {
-        manifestFile = f;
-    }
-
-    /**
-     * Update policy: either "update" or "replace"; default is "replace".
-     * @param m the mode value - update or replace.
-     */
-    public void setMode(Mode m) {
-        mode = m;
+        return CollectionUtils.equals(sections, rhsManifest.sections);
     }
 
     /**
@@ -1074,73 +1027,4 @@ public class Manifest extends Task {
     public Enumeration getSectionNames() {
         return sectionIndex.elements();
     }
-
-    /**
-     * Create or update the Manifest when used as a task.
-     *
-     * @throws BuildException if the manifest cannot be written.
-     */
-    public void execute() throws BuildException {
-        if (manifestFile == null) {
-            throw new BuildException("the file attribute is required");
-        }
-
-        Manifest toWrite = getDefaultManifest();
-        Manifest current = null;
-        BuildException error = null;
-
-        if (manifestFile.exists()) {
-            FileReader f = null;
-            try {
-                f = new FileReader(manifestFile);
-                current = new Manifest(f);
-            } catch (ManifestException m) {
-                error = new BuildException("Existing manifest " + manifestFile
-                                           + " is invalid", m, location);
-            } catch (IOException e) {
-                error = new BuildException("Failed to read " + manifestFile,
-                                           e, location);
-            } finally {
-                if (f != null) {
-                    try {
-                        f.close();
-                    } catch (IOException e) {}
-                }
-            }
-        }
-
-        try {
-            if (mode.getValue().equals("update") && manifestFile.exists()) {
-                if (current != null) {
-                    toWrite.merge(current);
-                } else if (error != null) {
-                    throw error;
-                }
-            }
-
-            toWrite.merge(this);
-        } catch (ManifestException m) {
-            throw new BuildException("Manifest is invalid", m, location);
-        }
-
-        if (toWrite.equals(current)) {
-            log("Manifest has not changed, do not recreate",
-                Project.MSG_VERBOSE);
-            return;
-        }
-
-        PrintWriter w = null;
-        try {
-            w = new PrintWriter(new FileWriter(manifestFile));
-            toWrite.write(w);
-        } catch (IOException e) {
-            throw new BuildException("Failed to write " + manifestFile,
-                                     e, location);
-        } finally {
-            if (w != null) {
-                w.close();
-            }
-        }
-    }
-
 }

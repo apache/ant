@@ -16,7 +16,7 @@ by
   <li>Don Jeffery (<a href="mailto:donj@apogeenet.com">donj@apogeenet.com</a>)</li>
 </ul>
 Version 1.1 - 2001/06/27<br>
-<p>Problems with UNC pathnames and the use of () in paths are fixed and an updateonly 
+<p>Problems with UNC pathnames and the use of () in paths are fixed and an updateonly
   argument introduced.</p>
 Version 1.0 - 2001/01/31<br>
 <p>Initial release.</p>
@@ -34,7 +34,7 @@ The pvcs task allows the user of ant to extract the latest edition
 of the source code from a PVCS repository. PVCS is a version control system
 developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
 <br>
-Before using this tag, the user running ant must have access to the commands 
+Before using this tag, the user running ant must have access to the commands
 of PVCS (get and pcli) and must have access to the repository. Note that the way to specify
 the repository is platform dependent so use property to specify location of repository.
 <br>
@@ -88,8 +88,8 @@ specified)</td>
 <tr>
 <td VALIGN=TOP WIDTH="12%">promotiongroup</td>
 
-<td VALIGN=TOP WIDTH="78%">Only files within this promotion group are extracted. Using 
-both the <i>label</i> and the <i>promotiongroup</i> tag will cause the files in the 
+<td VALIGN=TOP WIDTH="78%">Only files within this promotion group are extracted. Using
+both the <i>label</i> and the <i>promotiongroup</i> tag will cause the files in the
 promotion group and with that label to be extracted.
 </td>
 
@@ -125,34 +125,34 @@ tag expects the executables to be found using the PATH environment variable.</td
 
 <td VALIGN=TOP WIDTH="10%">No</td>
 </tr>
-    <tr> 
+    <tr>
       <td VALIGN=TOP WIDTH="12%">ignorereturncode</td>
-      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> the return value from executing 
+      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> the return value from executing
         the pvcs commands are ignored.</td>
       <td VALIGN=TOP WIDTH="10%">No</td>
     </tr>
-    <tr> 
+    <tr>
       <td VALIGN=TOP WIDTH="12%">updateonly</td>
-      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> files are gotten only if 
+      <td VALIGN=TOP WIDTH="78%">If set to <i>true</i> files are gotten only if
         newer than existing local files.</td>
       <td VALIGN=TOP WIDTH="10%">No</td>
     </tr>
-    <tr> 
+    <tr>
       <td valign="TOP">filenameformat</td>
       <td valign="TOP">The format of your folder names in a
           format suitable for <code>java.text.MessageFormat</code>.
-          Index 1 of the format will be used as the file name.
-          Defaults to <code>{0}-arc({1})</code>.</td>
+          Defaults to <code>{0}-arc({1})</code>.  Repositories where
+          the archive extension is not  <code>-arc</code> should set
+          this.</td>
       <td valign="TOP">No</td>
     </tr>
-    <tr> 
+    <tr>
       <td valign="TOP">linestart</td>
-      <td valign="TOP">What a valid return value from PVCS looks like
-        when it describes a file.  Defaults to <code>&quot;P:</code>.
-        If you are not using an UNC name for your repository and the
-        drive letter <code>P</code> is incorrect for your setup, you may
-        need to change this value, UNC names will always be
-        accepted.</td>
+        <td valign="TOP">Used to parse the output of the pcli
+          command. It defaults to <code>&quot;P:</code>.  The parser already
+          knows about / and \\, this property is useful in cases where the
+          repository is accessed on a Windows platform via a drive letter
+          mapping.</td>
       <td valign="TOP">No</td>
     </tr>
 </table>

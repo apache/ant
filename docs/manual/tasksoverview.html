@@ -21,6 +21,7 @@ documentation.</p>
 <a href="#ejb">EJB Tasks</a><br>
 <a href="#exec">Execution Tasks</a><br>
 <a href="#file">File Tasks</a><br>
+<a href="#extensions">Java2 Extensions Tasks</a><br>
 <a href="#log">Logging Tasks</a><br>
 <a href="#mail">Mail Tasks</a><br>
 <a href="#misc">Miscellaneous Tasks</a><br>
@@ -562,12 +563,72 @@ documentation.</p>
   </tr>
 
   <tr valign="top">
+    <td nowrap><a href="CoreTasks/tempfile.html">Tempfile</a></td>
+    <td><p>Generates a name for a new temporary file and sets the specified
+     property to that name.</p></td>
+  </tr>
+
+  <tr valign="top">
     <td nowrap><a href="CoreTasks/touch.html">Touch</a></td>
     <td><p>Changes the modification time of a file and possibly creates it at
      the same time.</p></td>
   </tr>
 </table>
 
+<p></p>
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
+<th align="left">
+<font size="+0" face="arial,helvetica,sanserif">
+<a name="extensions">Java2 Extensions Tasks</a></th>
+</font>
+<font size="-1" face="arial,helvetica,sanserif">
+<th align="right"><a href="#top">[Back to top]</a></th>
+</font>
+</table>
+<table width="100%" border="1" cellpadding="4" cellspacing="0">
+  <tr valign="top">
+    <th nowrap>Task Name</th>
+    <th>Description</th>
+  </tr>
+
+  <tr valign="top">
+    <td nowrap>
+    <a href="OptionalTasks/jarlib-available.html">Jarlib-available</a></td>
+    <td><p>Check whether an extension is present in a FileSet or an
+      ExtensionSet. If the extension is present, the specified property is
+     set.</p>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td nowrap>
+    <a href="OptionalTasks/jarlib-display.html">Jarlib-display</a></td>
+    <td><p>Display the &quot;Optional Package&quot; and
+      &quot;Package Specification&quot; information contained within the
+      specified jars.</p>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td nowrap>
+    <a href="OptionalTasks/jarlib-manifest.html">Jarlib-manifest</a></td>
+    <td><p>Task to generate a manifest that declares all the dependencies
+      in manifest. The dependencies are determined by looking in the
+      specified path and searching for Extension/&quot;Optional Package&quot;
+      specifications in the manifests of the jars.</p>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td nowrap>
+    <a href="OptionalTasks/jarlib-resolve.html">Jarlib-resolve</a></td>
+    <td><p>Try to locate a jar to satisfy an extension, and place the
+      location of the jar into the specified property.</p>
+    </td>
+  </tr>
+</table>
+
+<p></p>
 <p></p>
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
 <th align="left">
@@ -949,7 +1010,13 @@ documentation.</p>
      nested <code>&lt;read&gt;</code> and <code>&lt;write&gt;</code> tags
      to indicate strings to wait for and specify text to send.</p></td>
   </tr>
+  <tr valign="top">
+    <td nowrap><a href="OptionalTasks/setproxy.html">setproxy</a></td>
+    <td><p>Sets Java's web proxy properties, so that tasks and code run
+ in the same JVM can have through-the-firewall access to remote web sites.</p></td>
+  </tr>
 
+  
 </table>
 
 <p></p>

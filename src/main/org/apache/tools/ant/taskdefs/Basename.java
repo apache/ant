@@ -59,8 +59,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Task to determine the basename of a specified file, optionally minus a
- * specified suffix.
+ * Sets a property to the base name of a specified file, optionally minus a
+ * suffix.
  *
  * This task can accept the following attributes:
  * <ul>

@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Task to determine the directory name of the specified file.
+ * Determines the directory name of the specified file.
  *
  * This task can accept the following attributes:
  * <ul>

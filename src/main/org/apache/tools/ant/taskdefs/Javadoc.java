@@ -1654,7 +1654,6 @@ public class Javadoc extends Task {
                         }
                     }
 
-
                     if (la.isLinkOffline()) {
                         File packageListLocation = la.getPackagelistLoc();
                         if (packageListLocation == null) {

@@ -103,24 +103,6 @@ public class EchoPropertiesTest extends BuildFileTest {
     }
 
 
-    public void testEchoToLogXml() {
-        executeTarget( "testEchoToLogXml" );
-        String out = getLog();
-        assertTrue(
-            "Did not output testEchoToLogXml.",
-            out.indexOf( "<property name=\"test.property\" value=\""+TEST_VALUE+"\"></property>" ) >= 0 );
-    }
-
-
-    public void testReadAndEchoToLog() {
-        executeTarget( "testReadAndEchoToLog" );
-        String out = getLog();
-        assertTrue(
-            "Did not output testEchoToLog.",
-            out.indexOf( "test.infile=true" ) >= 0 );
-    }
-
-
     public void testReadBadFile() {
         expectBuildExceptionContaining( "testReadBadFile",
             "srcfile is a directory", "srcfile is a directory!" );

@@ -76,7 +76,17 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * A task that fetches source files from a PVCS archive.
+ *
+ * Extracts the latest edition of the source code from a PVCS repository.
+ * PVCS is a version control system
+ * developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
+ * <br>
+ * Before using this tag, the user running ant must have access to the commands 
+ * of PVCS (get and pcli) and must have access to the repository. Note that the way to specify
+ * the repository is platform dependent so use property to specify location of repository.
+ * <br>
+ * This version has been tested agains PVCS version 6.5 and 6.6 under Windows and Solaris.
+ 
  *
  * <b>19-04-2001</b> <p>The task now has a more robust
  * parser. It allows for platform independant file paths
@@ -91,7 +101,7 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
  * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
- * @author <a href="snewton@standard.com">Steven E. Newton</a>
+ * @author <a href="mailto:snewton@standard.com">Steven E. Newton</a>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;
@@ -380,24 +390,54 @@ public class Pvcs extends org.apache.tools.ant.Task {
         return repository;
     }
 
+    /**
+     *  The filenameFormat attribute defines a MessageFormat string used
+     *  to parse the output of the pcli command.  It defaults to
+     *  <code>{0}-arc({1})</code>.  Repositories where the archive
+     *   extension is not  -arc should set this.
+     */
     public String getFilenameFormat() {
         return filenameFormat;
     }
 
+    /**
+     * The format of the folder names; optional.
+     * This must be in a format suitable for 
+     * <code>java.text.MessageFormat</code>.
+     *  Index 1 of the format will be used as the file name.
+     *  Defaults to <code>{0}-arc({1})</code>
+     */
     public void setFilenameFormat(String f) {
         filenameFormat = f;
     }
 
+    /**
+
+     * The lineStart attribute is used to parse the output of the pcli
+     * command. It defaults to <code>&quot;P:</code>.  The parser already
+     * knows about / and \\, this property is useful in cases where the
+     * repository is accessed on a Windows platform via a drive letter
+     * mapping.
+     */
     public String getLineStart() {
         return lineStart;
     }
 
+    /**
+     * What a valid return value from PVCS looks like
+     *  when it describes a file.  Defaults to <code>&quot;P:</code>.
+     * If you are not using an UNC name for your repository and the
+     * drive letter <code>P</code> is incorrect for your setup, you may
+     * need to change this value, UNC names will always be
+     * accepted.
+     */
+        
     public void setLineStart(String l) {
         lineStart = l;
     }
 
     /**
-     * Specifies the network name of the PVCS repository
+     * The network name of the PVCS repository; required.
      * @param repo String
      */
     public void setRepository(String repo) {
@@ -413,7 +453,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Specifies the name of the project in the PVCS repository
+     * The project within the PVCS repository to extract files from;
+     * optional, default &quot;/&quot;
      * @param prj String
      */
     public void setPvcsproject(String prj) {
@@ -437,7 +478,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Specifies the name of the workspace to store retrieved files
+     * Workspace to use; optional.  
+     * By specifying a workspace, the files are extracted to that location.
+     * A PVCS workspace is a name for a location of the workfiles and 
+     * isn't as such the location itself. 
+     * You define the location for a workspace using the PVCS GUI clients.
+     * If this isn't specified the default workspace for the current user is used.
      * @param ws String
      */
     public void setWorkspace(String ws) {
@@ -453,8 +499,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Specifies the location of the PVCS bin directory
+     * Specifies the location of the PVCS bin directory; optional if on the PATH.
+     * On some systems the PVCS executables <i>pcli</i>
+     * and <i>get</i> are not found in the PATH. In such cases this attribute
+     * should be set to the bin directory of the PVCS installation containing
+     * the executables mentioned before. If this attribute isn't specified the
+     * tag expects the executables to be found using the PATH environment variable.
      * @param ws String
+     * @todo use a File setter and resolve paths.
      */
     public void setPvcsbin(String bin) {
         pvcsbin = bin;
@@ -469,7 +521,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Specifies the value of the force argument
+     * Specifies the value of the force argument; optional.
+     * If set to <i>yes</i> all files that exists and are 
+     * writable are overwritten. Default <i>no</i> causes the files 
+     * that are writable to be ignored. This stops the PVCS command 
+     * <i>get</i> to stop asking questions!
+     * @todo make a boolean setter
      * @param repo String (yes/no)
      */
     public void setForce(String f) {
@@ -505,7 +562,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Specifies the name of the label argument
+     * Only files marked with this label are extracted; optional.
      * @param repo String
      */
     public void setLabel(String l) {
@@ -522,14 +579,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * If set to true the return value from executing the pvcs
-     * commands are ignored.
+     * commands are ignored; optional, default false.
      */
     public void setIgnoreReturnCode(boolean b) {
         ignorerc = b;
     }
 
     /**
-     * handles &lt;pvcsproject&gt; subelements
+     * Specify a project within the PVCS repository to extract files from.
      * @param PvcsProject
      */
     public void addPvcsproject(PvcsProject p) {
@@ -541,8 +598,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * If set to true files are gotten only if newer
-     * than existing local files.
+     * If set to <i>true</i> files are fetched only if 
+     * newer than existing local files; optional, default false.
      */
     public void setUpdateOnly(boolean l) {
         updateOnly = l;
@@ -552,6 +609,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
         return userId;
     }
 
+    /**
+     * User ID; unused.
+     * @ant.attribute ignore="true"
+     */
+     
     public void setUserId(String u) {
         userId = u;
     }

@@ -162,11 +162,9 @@ public class Property extends Task {
      * Sets the value of the property.
      * @param value value to assign
      */
-
     public void setValue(String value) {
         this.value = value;
     }
-
 
     public String getValue() {
         return value;
@@ -250,7 +248,6 @@ public class Property extends Task {
     * will be ${env.Path} not ${env.PATH} on Windows 2000.
     * @param env prefix
     */
-
     public void setEnvironment(String env) {
         this.env = env;
     }
@@ -262,12 +259,10 @@ public class Property extends Task {
         return env;
     }
 
-
     /**
      * The classpath to use when looking up a resource.
      * @param classpath to add to any existing classpath
      */
-
     public void setClasspath(Path classpath) {
         if (this.classpath == null) {
             this.classpath = classpath;

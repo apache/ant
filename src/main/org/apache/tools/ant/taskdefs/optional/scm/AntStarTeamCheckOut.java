@@ -111,7 +111,7 @@ import org.apache.tools.ant.Project;
  * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  *
- * @ant.task name="starteam" category="scm"
+ * @ant.task name="starteam" category="scm" ignore="true"
  */
 public class AntStarTeamCheckOut extends org.apache.tools.ant.Task {
 

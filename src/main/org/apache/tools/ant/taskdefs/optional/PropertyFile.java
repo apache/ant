@@ -78,10 +78,9 @@ import java.text.ParseException;
 import java.text.DecimalFormat;
 
 /**
- *PropertyFile task uses java.util.Properties to modify integer, String and
- *Date settings in a property file.<p>
+ *Modifies settings in a property file.
  *
- *
+ * <p>
  *The following is an example of its usage:
  *    <ul>&lt;target name="setState"&gt;<br>
  *    <ul>&lt;property<br>
@@ -240,10 +239,16 @@ public class PropertyFile extends Task {
         }
     }
 
+    /**
+     * Location of the property file to be edited; required.
+     */
     public void setFile(File file) {
         propertyfile = file;
     }
 
+    /**
+     * optional header comment for the file
+     */
     public void setComment(String hdr) {
         comment = hdr;
     }
@@ -280,8 +285,9 @@ public class PropertyFile extends Task {
         }
     }
 
-    /*
+    /**
     * Returns whether the given parameter has been defined.
+    * @todo IDEA is saying this method is never used - remove?
     */
     private boolean checkParam(String param) {
         return !((param == null) || (param.equals("null")));
@@ -308,27 +314,69 @@ public class PropertyFile extends Task {
         private String              pattern = null;
         private int                 field = Calendar.DATE;
 
+        /**
+         * Name of the property name/value pair
+         */
         public void setKey(String value) {
             this.key = value;
         }
+        
+        /** 
+         * Value to set (=), to add (+) or subtract (-)
+         */
         public void setValue(String value) {
             this.value = value;
         }
+        
+        /**
+         * operation to apply. 
+         * &quot;+&quot; or &quot;=&quot; 
+         *(default) for all datatypes; &quot;-&quot; for date and int only)\.
+         */
         public void setOperation(Operation value) {
             this.operation = Operation.toOperation(value.getValue());
         }
+        
+        /**
+         * Regard the value as : int, date or string (default)
+         */
         public void setType(Type value) {
             this.type = Type.toType(value.getValue());
         }
+        
+        /**
+         * Initial value to set for a property if it is not
+         * already defined in the property file.
+         * For type date, an additional keyword is allowed: &quot;now&quot;
+         */
+                     
         public void setDefault(String value) {
             this.defaultValue = value;
         }
+        
+        /**
+         * For int and date type only. If present, Values will
+         * be parsed and formatted accordingly.
+         */
         public void setPattern(String value) {
             this.pattern = value;
         }
         
         /**
-         * @since 1.15, Ant 1.5
+         * The unit of the value to be applied to date +/- operations.
+         *            Valid Values are:
+         *            <ul>
+         *               <li>millisecond</li>
+         *               <li>second</li>
+         *               <li>minute</li>
+         *               <li>hour</li>
+         *               <li>day (default)</li>
+         *               <li>week</li>
+         *               <li>month</li>
+         *               <li>year</li>
+         *            </ul>
+         *            This only applies to date types using a +/- operation.        
+         * @since Ant 1.5
          */
         public void setUnit(PropertyFile.Unit unit) {
             field = unit.getCalendarField();
@@ -598,8 +646,8 @@ public class PropertyFile extends Task {
     
     /**
      * Borrowed from Tstamp
-     *
-     * @since 1.15, Ant 1.5
+     * @todo share all this time stuff across many tasks as a datetime datatype
+     * @since Ant 1.5
      */
     public static class Unit extends EnumeratedAttribute {
 

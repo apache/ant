@@ -70,7 +70,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * Will set the given property if the specified target has a timestamp
+ * Sets the given property if the specified target has a timestamp
  * greater than all of the source files.
  *
  * @author William Ferguson 

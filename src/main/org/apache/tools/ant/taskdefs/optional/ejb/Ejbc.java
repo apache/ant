@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Build EJB support classes using Weblogic's ejbc tool from a directory containing
+ * Builds EJB support classes using WebLogic's ejbc tool from a directory containing
  * a set of deployment descriptors.
  *
  *
@@ -184,6 +184,11 @@ public class Ejbc extends MatchingTask {
         generatedFilesDirectory = new File(dirName);
     }
 
+    /**
+     * If true, ejbc will keep the
+     * intermediate Java files used to build the class files.
+     * This can be useful when debugging.
+     */
     public void setKeepgenerated(String newKeepgenerated) {
         keepgenerated = Boolean.valueOf(newKeepgenerated.trim()).booleanValue();
 

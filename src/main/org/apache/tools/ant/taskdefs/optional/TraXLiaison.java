@@ -78,7 +78,6 @@ import javax.xml.transform.Templates;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.URIResolver;
 
@@ -107,7 +106,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     private Transformer transformer = null;
 
     private XSLTLogger logger;
-    
+
     /** possible resolver for publicIds */
     private EntityResolver entityResolver;
 
@@ -117,6 +116,21 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     public TraXLiaison() throws Exception {
         tfactory = TransformerFactory.newInstance();
         tfactory.setErrorListener(this);
+    }
+
+
+    /**
+     * Set the output property for the current transformer.
+     * Note that the stylesheet must be set prior to calling
+     * this method.
+     * @param name the output property name.
+     * @param value the output property value.
+     */
+    public void setOutputProperty(String name, String value){
+        if (transformer == null){
+            throw new IllegalStateException("stylesheet must be set prior to setting the output properties");
+        }
+        transformer.setOutputProperty(name, value);
     }
 
 //------------------- IMPORTANT
@@ -152,7 +166,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             if (entityResolver != null) {
                 if (tfactory.getFeature(SAXSource.FEATURE)) {
                     SAXParserFactory spFactory = SAXParserFactory.newInstance();
-                    spFactory.setNamespaceAware(true); 
+                    spFactory.setNamespaceAware(true);
                     XMLReader reader = spFactory.newSAXParser().getXMLReader();
                     reader.setEntityResolver(entityResolver);
                     src = new SAXSource(reader, new InputSource(fis));
@@ -214,32 +228,28 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         transformer.setParameter(name, value);
     }
 
-    public void setOutputtype(String type) throws Exception {
-        transformer.setOutputProperty(OutputKeys.METHOD, type);
-    }
-
     public void setLogger(XSLTLogger l) {
         logger = l;
     }
-    
+
     public void error(TransformerException e)  {
         logError(e, "Error");
     }
-    
+
     public void fatalError(TransformerException e)  {
         logError(e, "Fatal Error");
         throw new BuildException("Fatal error during transformation", e);
     }
-    
+
     public void warning(TransformerException e)  {
         logError(e, "Warning");
     }
-    
+
     private void logError(TransformerException e, String type) {
         if (logger == null) {
             return;
         }
-        
+
         StringBuffer msg = new StringBuffer();
         if (e.getLocator() != null) {
             if (e.getLocator().getSystemId() != null) {
@@ -251,7 +261,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             } else {
                 msg.append("Unknown file");
             }
-            if (e.getLocator().getLineNumber() != -1) {                          
+            if (e.getLocator().getLineNumber() != -1) {
                 msg.append(":" + e.getLocator().getLineNumber());
                 if (e.getLocator().getColumnNumber() != -1) {
                     msg.append(":" + e.getLocator().getColumnNumber());
@@ -269,14 +279,14 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
 
     /** Set the class to resolve entities during the transformation
      */
-    public void setEntityResolver(EntityResolver aResolver) throws Exception {
+    public void setEntityResolver(EntityResolver aResolver) {
         entityResolver = aResolver;
     }
 
     /** Set the class to resolve URIs during the transformation
      */
-    public void setURIResolver(URIResolver aResolver) throws Exception {
+    public void setURIResolver(URIResolver aResolver) {
         uriResolver = aResolver;
     }
-    
+
 } //-- TraXLiaison

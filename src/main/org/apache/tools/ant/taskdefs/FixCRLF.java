@@ -449,7 +449,7 @@ public class FixCRLF extends MatchingTask {
                             break;
 
                         case IN_MULTI_COMMENT:
-                            endComment 
+                            endComment
                                 = lineString.indexOf("*/", line.getNext());
                             if (endComment >= 0) {
                                 // End of multiLineComment on this line
@@ -486,7 +486,7 @@ public class FixCRLF extends MatchingTask {
                                 if (line.getNextCharInc() == '\t') {
                                     line.setColumn(line.getColumn() +
                                                    tablength -
-                                                   (line.getColumn() 
+                                                   (line.getColumn()
                                                     % tablength));
                                 } else {
                                     line.incColumn();
@@ -495,7 +495,7 @@ public class FixCRLF extends MatchingTask {
 
                             // Now output the substring
                             try {
-                                outWriter.write(line.substring(begin, 
+                                outWriter.write(line.substring(begin,
                                                                line.getNext()));
                             } catch (IOException e) {
                                 throw new BuildException(e);
@@ -547,7 +547,7 @@ public class FixCRLF extends MatchingTask {
                 lines.close();
                 lines = null;
             } catch (IOException e) {
-                throw new BuildException("Unable to close source file " 
+                throw new BuildException("Unable to close source file "
                                          + srcFile);
             }
 

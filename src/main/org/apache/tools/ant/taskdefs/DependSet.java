@@ -66,7 +66,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 
 /**
- * A Task to record explicit dependencies.  If any of the target files
+ * Examines and removes out of date target files.  If any of the target files
  * are out of date with respect to any of the source files, all target
  * files are removed.  This is useful where dependencies cannot be
  * computed (for example, dynamically interpreted parameters or files

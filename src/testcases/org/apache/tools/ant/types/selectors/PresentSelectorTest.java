@@ -63,6 +63,8 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.GlobPatternMapper;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
@@ -132,26 +134,31 @@ public class PresentSelectorTest extends BaseSelectorTest {
             makeBed();
 
             s = (PresentSelector)getInstance();
-            s.setTargetdir(basedirname);
+            s.setTargetdir(beddir);
             results = selectionString(s);
             assertEquals("TTTTTTTTTTTT", results);
 
             s = (PresentSelector)getInstance();
-            s.setTargetdir(basedirname);
+            s.setTargetdir(beddir);
             m = s.createMapper();
             m.setType(identity);
             results = selectionString(s);
             assertEquals("TTTTTTTTTTTT", results);
 
             s = (PresentSelector)getInstance();
-            s.setTargetdir("src/etc/testcases/taskdefs/expected");
+            File subdir = new File("src/etc/testcases/taskdefs/expected");
+            s.setTargetdir(subdir);
             m = s.createMapper();
             m.setType(flatten);
             results = selectionString(s);
-            assertEquals("TTTTTTTTTTTF", results);
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+                assertEquals("TTTTTFFFFFFF", results);
+            } else {
+                assertEquals("TTTTTTTTTTTF", results);
+            }
 
             s = (PresentSelector)getInstance();
-            s.setTargetdir(basedirname);
+            s.setTargetdir(beddir);
             m = s.createMapper();
             m.setType(merge);
             m.setTo("asf-logo.gif.gz");
@@ -159,13 +166,31 @@ public class PresentSelectorTest extends BaseSelectorTest {
             assertEquals("TTTTTTTTTTTT", results);
 
             s = (PresentSelector)getInstance();
-            s.setTargetdir(basedirname + "/tar/bz2");
+            subdir = new File(beddir, "tar/bz2");
+            s.setTargetdir(subdir);
             m = s.createMapper();
             m.setType(glob);
             m.setFrom("*.bz2");
             m.setTo("*.tar.bz2");
             results = selectionString(s);
             assertEquals("FFTFFFFFFFFF", results);
+
+            try {
+                makeMirror();
+
+                s = (PresentSelector)getInstance();
+                subdir = getProject().resolveFile("selectortest2");
+                s.setTargetdir(subdir);
+                results = mirrorSelectionString(s);
+                assertEquals("TTTFFTTTTTTT", results);
+                results = selectionString(s);
+                assertEquals("TTTFFTTTTTTT", results);
+
+
+            }
+            finally {
+                cleanupMirror();
+            }
 
         }
         finally {

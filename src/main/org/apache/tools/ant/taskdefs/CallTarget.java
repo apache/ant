@@ -136,7 +136,6 @@ public class CallTarget extends Task {
                                      location);
         }
         
-        callee.setDir(getProject().getBaseDir());
         callee.setAntfile(getProject().getProperty("ant.file"));
         callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);

@@ -67,7 +67,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 /**
- * Add a listener to the current build process that records the
+ * Adds a listener to the current build process that records the
  * output to a file.
  * <p>Several recorders can exist at the same time.  Each recorder is
  * associated with a file.  The filename is used as a unique identifier for
@@ -79,7 +79,6 @@ import java.util.Hashtable;
  * <p>Some technical issues: the file's print stream is flushed for &quot;finished&quot;
  * events (buildFinished, targetFinished and taskFinished), and is closed on
  * a buildFinished event.</p>
- 
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @see RecorderEntry
  * @version 0.5

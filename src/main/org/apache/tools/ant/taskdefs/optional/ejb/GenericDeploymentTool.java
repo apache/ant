@@ -169,8 +169,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
 
     /**
-     * Setter used to store the value of destination directory prior to
-     * execute() being called.
+     * Set the destination directory; required.
      * @param inDir the destination directory.
      */
     public void setDestdir(File inDir) {
@@ -225,7 +224,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     /**
-     * Setter used to store the suffix for the generated jar file.
+     * Set the suffix for the generated jar file.
      * @param inString the string to use as the suffix.
      */
     public void setGenericJarSuffix(String inString) {

@@ -137,9 +137,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Not supported.
-     *
-     * @param we
+     * @ant.attribute ignore="true"
      */
     public void setWhenempty(WhenEmpty we) {
         log("JARs are never empty, they contain at least a manifest file",
@@ -246,10 +244,12 @@ public class Jar extends Zip {
      *
      * @param config setting for found manifest behavior.
      */
+    /*
     public void setFilesetmanifest(FilesetManifestConfig config) {
         filesetManifestConfig = config;
         mergeManifestsMain = "merge".equals(config.getValue());
     }
+    */
 
     /**
      * Adds a zipfileset to include in the META-INF directory.
@@ -439,7 +439,13 @@ public class Jar extends Zip {
                 Project.MSG_VERBOSE);
 
             try {
-                Manifest newManifest = getManifest(new InputStreamReader(is));
+                Manifest newManifest = null;
+                if (is != null) {
+                    newManifest = getManifest(new InputStreamReader(is));
+                } else {
+                    newManifest = getManifest(file);
+                }
+
                 if (filesetManifest == null) {
                     filesetManifest = newManifest;
                 } else {

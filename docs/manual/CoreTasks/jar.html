@@ -31,9 +31,7 @@ multiple ones to merge together different trees of files into one JAR.
 The extended fileset and groupfileset attributes from the zip task are
 also available in the jar task.
 See the <a href="zip.html">Zip</a> task for more details and examples.</p>
-<p>If the manifest is omitted, a simple one will be supplied by Ant.
-If there is a manifest or manifests in your set of files, these manifests can
-be used if <i>filesetmanifests</i> is set to <i>merge</i> or <i>mergewithoutmain</i>.</p>
+<p>If the manifest is omitted, a simple one will be supplied by Ant.</p>
 <p>The <code>update</code> parameter controls what happens if the
 JAR file already exists. When set to <code>yes</code>, the JAR file is
 updated with the files specified. When set to <code>no</code> (the
@@ -119,19 +117,6 @@ being wrapped and continued on the next line.
   <tr>
     <td valign="top">manifest</td>
     <td valign="top">the manifest file to use.  This can be either the location of a manifest, or the name of a jar added through a fileset.  If its the name of an added jar, the task expects the manifest to be in the jar at META-INF/MANIFEST.MF</td>
-    <td valign="top" align="center">No</td>
-  </tr>
-  <tr>
-    <td valign="top">filesetmanifest</td>
-    <td valign="top">behavior when a Manifest is found in a zipfileset or
-    zipgroupfileset file is found.  Valid values are &quot;skip&quot;,
-    &quot;merge&quot;, and &quot;mergewithoutmain&quot;.  &quot;merge&quot;
-    will merge all of manifests together, and merge this into any other
-    specified manifests.  &quot;mergewithoutmain&quot; merges everything
-    but the Main section of the manifests.  Default value is &quot;skip&quot;.
-    <b>Note:</b> if this attribute's value is not &quot;skip&quot;, the
-    created jar will not be readable by using java.util.jar.JarInputStream
-    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>

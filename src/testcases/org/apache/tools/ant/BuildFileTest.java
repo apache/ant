@@ -221,7 +221,7 @@ public abstract class BuildFileTest extends TestCase {
      *
      * @param  filename name of project file to run
      */    
-    protected void configureProject(String filename) { 
+    protected void configureProject(String filename) throws BuildException { 
         logBuffer = new StringBuffer();
         fullLogBuffer = new StringBuffer();
         project = new Project();

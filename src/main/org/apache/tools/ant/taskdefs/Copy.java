@@ -76,7 +76,7 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 /**
- * A consolidated copy task.  Copies a file or directory to a new file
+ * Copies a file or directory to a new file
  * or directory.  Files are only copied if the source file is newer
  * than the destination file, or when the destination file does not
  * exist.  It is possible to explicitly overwrite existing files.</p>
@@ -85,7 +85,7 @@ import java.util.Enumeration;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- * @author Glenn McAllister 
+ * @author Glenn McAllister
  *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
@@ -122,7 +122,7 @@ public class Copy extends Task {
     private String encoding = null;
 
     /**
-     * Copy task constructor. 
+     * Copy task constructor.
      */
     public Copy() {
         fileUtils = FileUtils.newFileUtils();
@@ -316,12 +316,12 @@ public class Copy extends Task {
             // will be removed in validateAttributes
             savedFileSet = (FileSet) filesets.elementAt(0);
         }
-        
+
         // make sure we don't have an illegal set of options
         validateAttributes();
 
         try {
-            
+
             // deal with the single file
             if (file != null) {
                 if (file.exists()) {
@@ -331,10 +331,10 @@ public class Copy extends Task {
 
                     if (forceOverwrite ||
                         (file.lastModified() > destFile.lastModified())) {
-                        fileCopyMap.put(file.getAbsolutePath(), 
+                        fileCopyMap.put(file.getAbsolutePath(),
                                         destFile.getAbsolutePath());
                     } else {
-                        log(file + " omitted as " + destFile 
+                        log(file + " omitted as " + destFile
                             + " is up to date.", Project.MSG_VERBOSE);
                     }
                 } else {
@@ -353,7 +353,7 @@ public class Copy extends Task {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 File fromDir = fs.getDir(project);
-                
+
                 String[] srcFiles = ds.getIncludedFiles();
                 String[] srcDirs = ds.getIncludedDirectories();
                 boolean isEverythingIncluded = ds.isEverythingIncluded();
@@ -363,7 +363,7 @@ public class Copy extends Task {
                 }
                 scan(fromDir, destDir, srcFiles, srcDirs);
             }
-            
+
             // do all the copy operations now...
             doFileOperations();
         } finally {
@@ -447,7 +447,7 @@ public class Copy extends Task {
      * Compares source files to destination files to see if they should be
      * copied.
      */
-    protected void scan(File fromDir, File toDir, String[] files, 
+    protected void scan(File fromDir, File toDir, String[] files,
                         String[] dirs) {
         FileNameMapper mapper = null;
         if (mapperElement != null) {
@@ -496,8 +496,8 @@ public class Copy extends Task {
      */
     protected void doFileOperations() {
         if (fileCopyMap.size() > 0) {
-            log("Copying " + fileCopyMap.size() 
-                + " file" + (fileCopyMap.size() == 1 ? "" : "s") 
+            log("Copying " + fileCopyMap.size()
+                + " file" + (fileCopyMap.size() == 1 ? "" : "s")
                 + " to " + destDir.getAbsolutePath());
 
             Enumeration e = fileCopyMap.keys();
@@ -513,20 +513,20 @@ public class Copy extends Task {
                 try {
                     log("Copying " + fromFile + " to " + toFile, verbosity);
 
-                    FilterSetCollection executionFilters = 
+                    FilterSetCollection executionFilters =
                         new FilterSetCollection();
                     if (filtering) {
                         executionFilters
                             .addFilterSet(project.getGlobalFilterSet());
                     }
-                    for (Enumeration filterEnum = filterSets.elements(); 
+                    for (Enumeration filterEnum = filterSets.elements();
                          filterEnum.hasMoreElements();) {
                         executionFilters
                             .addFilterSet((FilterSet) filterEnum.nextElement());
                     }
-                    fileUtils.copyFile(fromFile, toFile, executionFilters, 
-                                       filterChains, forceOverwrite, 
-                                       preserveLastModified, encoding, 
+                    fileUtils.copyFile(fromFile, toFile, executionFilters,
+                                       filterChains, forceOverwrite,
+                                       preserveLastModified, encoding,
                                        project);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
@@ -543,7 +543,7 @@ public class Copy extends Task {
                 File d = new File((String) e.nextElement());
                 if (!d.exists()) {
                     if (!d.mkdirs()) {
-                        log("Unable to create directory " 
+                        log("Unable to create directory "
                             + d.getAbsolutePath(), Project.MSG_ERR);
                     } else {
                         count++;

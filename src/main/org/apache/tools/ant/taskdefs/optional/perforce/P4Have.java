@@ -62,7 +62,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.tools.ant.BuildException;
 
 
-/** P4Have - lists files currently on client.
+/** Lists Perforce files currently on client.
  *
  * P4Have simply dumps the current file version info into
  * the Ant log (or stdout).

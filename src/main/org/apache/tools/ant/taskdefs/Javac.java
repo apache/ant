@@ -97,7 +97,7 @@ import java.io.File;
  * compile decision based on timestamp.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green 
+ * @author Robin Green
  *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
@@ -198,7 +198,7 @@ public class Javac extends MatchingTask {
      *
      * If you use this attribute together with jikes, you must
      * make sure that your version of jikes supports the -source switch.
-     * Legal values are 1.3 and 1.4 – by default, no -source argument
+     * Legal values are 1.3 and 1.4 - by default, no -source argument
      * will be used at all.
      *
      * @param v  Value to assign to source.
@@ -220,7 +220,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Recreate src
+     * Recreate src.
      *
      * @return a nested src element.
      */
@@ -296,7 +296,7 @@ public class Javac extends MatchingTask {
 
     /**
      * Set the classpath to be used for this compilation.
-     * 
+     *
      * @param classpath an Ant Path object containing the compilation classpath.
      */
     public void setClasspath(Path classpath) {
@@ -417,8 +417,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Proceed if compilation fails, but use
-     * failonerror instead.
+     * @ant.attribute ignore="true"
      */
     public void setProceed(boolean proceed) {
         failOnError = !proceed;
@@ -654,7 +653,7 @@ public class Javac extends MatchingTask {
             facade.setImplementation(chosen);
         }
     }
-        
+
 
     /**
      * Executes the task.
@@ -669,8 +668,8 @@ public class Javac extends MatchingTask {
         for (int i = 0; i < list.length; i++) {
             File srcDir = project.resolveFile(list[i]);
             if (!srcDir.exists()) {
-                throw new BuildException("srcdir \"" 
-                                         + srcDir.getPath() 
+                throw new BuildException("srcdir \""
+                                         + srcDir.getPath()
                                          + "\" does not exist!", location);
             }
 
@@ -748,9 +747,9 @@ public class Javac extends MatchingTask {
      * <p>If fork has been set to true, the result will be extJavac
      * and not classic or java1.2 - no matter what the compiler
      * attribute looks like.</p>
-     * 
+     *
      * @see #getCompilerVersion
-     * 
+     *
      * @since Ant 1.5
      */
     public String getCompiler() {
@@ -776,7 +775,7 @@ public class Javac extends MatchingTask {
      *
      * <p>This method does not take the fork attribute into
      * account.</p>
-     * 
+     *
      * @see #getCompiler
      *
      * @since Ant 1.5
@@ -794,17 +793,17 @@ public class Javac extends MatchingTask {
      */
     protected void checkParameters() throws BuildException {
         if (src == null) {
-            throw new BuildException("srcdir attribute must be set!", 
+            throw new BuildException("srcdir attribute must be set!",
                                      location);
         }
         if (src.size() == 0) {
-            throw new BuildException("srcdir attribute must be set!", 
+            throw new BuildException("srcdir attribute must be set!",
                                      location);
         }
 
         if (destDir != null && !destDir.isDirectory()) {
-            throw new BuildException("destination directory \"" 
-                                     + destDir 
+            throw new BuildException("destination directory \""
+                                     + destDir
                                      + "\" does not exist "
                                      + "or is not a directory", location);
         }
@@ -831,7 +830,7 @@ public class Javac extends MatchingTask {
                 }
             }
 
-            CompilerAdapter adapter = 
+            CompilerAdapter adapter =
                 CompilerAdapterFactory.getCompiler(compilerImpl, this);
 
             // now we need to populate the compiler adapter
@@ -853,7 +852,7 @@ public class Javac extends MatchingTask {
      * filter command line attributes based on the current
      * implementation.
      */
-    public class ImplementationSpecificArgument extends 
+    public class ImplementationSpecificArgument extends
         org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
 
         public void setCompiler(String impl) {

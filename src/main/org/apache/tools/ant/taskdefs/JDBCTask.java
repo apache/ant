@@ -83,7 +83,7 @@ import java.sql.Statement;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.JDBCTask;
 
-public class SQLExampleTask extends JDBCTask {	
+public class SQLExampleTask extends JDBCTask {
 
     private String tableName;
 
@@ -93,7 +93,7 @@ public class SQLExampleTask extends JDBCTask {
         try {
             if (tableName == null ) {
                 throw new BuildException("TableName must be specified",location);
-            }             
+            }
             String sql = "SELECT * FROM "+tableName;
             stmt= conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -101,7 +101,7 @@ public class SQLExampleTask extends JDBCTask {
                 log(rs.getObject(1).toString());
             }
         } catch (SQLException e) {
-        
+
         } finally {
             if (stmt != null) {
                 try {stmt.close();}catch (SQLException ingore){}
@@ -117,7 +117,7 @@ public class SQLExampleTask extends JDBCTask {
 
 }
 
- 
+
 </pre></code>
 
 
@@ -182,7 +182,7 @@ public abstract class JDBCTask extends Task {
     private String version = null;
 
     /**
-     * Sets the classpath.
+     * Sets the classpath for loading the driver.
      * @param classpath The classpath to set
      */
     public void setClasspath(Path classpath) {
@@ -200,7 +200,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Add the classpath for loading the driver; 
+     * Add a path to the classpath for loading the driver.
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -210,7 +210,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Set the classpath for loading the driver 
+     * Set the classpath for loading the driver
      * using the classpath reference.
      */
     public void setClasspathRef(Reference r) {
@@ -218,7 +218,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Class name of the jdbc driver; required.
+     * Class name of the JDBC driver; required.
      * @param driver The driver to set
      */
     public void setDriver(String driver) {
@@ -226,18 +226,11 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the database connection url; required.
+     * Sets the database connection URL; required.
      * @param url The url to set
      */
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    /**
-     * Set the user name for the connection; required.
-     */
-    public void setUserid(String userId) {
-        this.userId = userId;
     }
 
     /**
@@ -258,7 +251,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Execute task only if the lower case product name 
+     * Execute task only if the lower case product name
      * of the DB matches this
      * @param rdbms The rdbms to set
      */
@@ -267,7 +260,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the version string, execute task only if 
+     * Sets the version string, execute task only if
      * rdbms version match; optional.
      * @param version The version to set
      */
@@ -460,10 +453,10 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the userId.
+     * Set the user name for the connection; required.
      * @param userId The userId to set
      */
-    public void setUserId(String userId) {
+    public void setUserid(String userId) {
         this.userId = userId;
     }
 

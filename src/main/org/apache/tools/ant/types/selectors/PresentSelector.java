@@ -74,8 +74,7 @@ import org.apache.tools.ant.BuildException;
  */
 public class PresentSelector extends BaseSelector {
 
-    private String targetdir = null;
-    private File targetbase = null;
+    private File targetdir = null;
     private Mapper mapperElement = null;
     private FileNameMapper map = null;
     private boolean destmustexist = true;
@@ -85,7 +84,12 @@ public class PresentSelector extends BaseSelector {
 
     public String toString() {
         StringBuffer buf = new StringBuffer("{presentselector targetdir: ");
-        buf.append(targetdir);
+        if (targetdir == null) {
+            buf.append("NOT YET SET");
+        }
+        else {
+            buf.append(targetdir.getName());
+        }
         buf.append(" present: ");
         if (destmustexist) {
             buf.append("both");
@@ -108,9 +112,8 @@ public class PresentSelector extends BaseSelector {
      *
      * @param targetdir the directory to scan looking for matching files.
      */
-    public void setTargetdir(String targetdir) {
-        this.targetdir = SelectorUtils.fixPath(targetdir);
-        targetbase = new File(this.targetdir);
+    public void setTargetdir(File targetdir) {
+        this.targetdir = targetdir;
     }
 
     /**
@@ -176,12 +179,6 @@ public class PresentSelector extends BaseSelector {
         // throw BuildException on error
         validate();
 
-        // Get File object for the target directory
-	File target = targetbase;
-	if (target == null) {
-            target = new File(basedir,targetdir);
-	}
-
         // Determine file whose existence is to be checked
         String[] destfiles = map.mapFileName(filename);
         // If filename does not match the To attribute of the mapper
@@ -195,7 +192,7 @@ public class PresentSelector extends BaseSelector {
                 + targetdir + " with filename " + filename);
         }
         String destname = destfiles[0];
-        File destfile = new File(target,destname);
+        File destfile = new File(targetdir,destname);
         return destfile.exists() == destmustexist;
     }
 

@@ -99,6 +99,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         this.dir = fileset.dir;
         this.defaultPatterns = fileset.defaultPatterns;
         this.additionalPatterns = fileset.additionalPatterns;
+        this.selectors = fileset.selectors;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.isCaseSensitive = fileset.isCaseSensitive;
         this.followSymlinks = fileset.followSymlinks;

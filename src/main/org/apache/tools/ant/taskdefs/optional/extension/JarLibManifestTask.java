@@ -65,8 +65,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 
 /**
- * Task to generate a manifest that declares all the dependencies
- * in manifest. The dependencies are determined by looking in the
+ * Generates a manifest that declares all the dependencies.
+ * The dependencies are determined by looking in the
  * specified path and searching for Extension / "Optional Package"
  * specifications in the manifests of the jars.
  *

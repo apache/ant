@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildException;
 
 
 /**
- * Exit the active build, giving an additional message
+ * Exits the active build, giving an additional message
  * if available.
  *
  * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
@@ -68,7 +68,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @ant.task name="fail" category="control"
  */
-public class Exit extends Task { 
+public class Exit extends Task {
     private String message;
     private String ifCondition, unlessCondition;
 
@@ -100,7 +100,7 @@ public class Exit extends Task {
 
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            if (message != null && message.length() > 0) { 
+            if (message != null && message.length() > 0) {
                 throw new BuildException(message);
             } else {
                 throw new BuildException("No message");
@@ -122,7 +122,7 @@ public class Exit extends Task {
         if (ifCondition == null || "".equals(ifCondition)) {
             return true;
         }
-        
+
         return project.getProperty(ifCondition) != null;
     }
 

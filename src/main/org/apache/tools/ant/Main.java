@@ -176,6 +176,7 @@ public class Main {
         Main m = null;
 
         try {
+            Diagnostics.validateVersion();
             m = new Main(args);
         } catch (Throwable exc) {
             printMessage(exc);
@@ -263,6 +264,9 @@ public class Main {
                 return;
             } else if (arg.equals("-version")) {
                 printVersion();
+                return;
+            } else if (arg.equals("-diagnostics")){
+                Diagnostics.doReport(System.out);
                 return;
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 msgOutputLevel = Project.MSG_WARN;
@@ -589,7 +593,7 @@ public class Main {
                 }
 
                 project.setUserProperty("ant.file",
-                    buildFile.getAbsolutePath());
+                                        buildFile.getAbsolutePath());
 
                 ProjectHelper.configureProject(project, buildFile);
 
@@ -732,6 +736,8 @@ public class Main {
         msg.append("  -help                  print this message" + lSep);
         msg.append("  -projecthelp           print project help information" + lSep);
         msg.append("  -version               print the version information and exit" + lSep);
+        msg.append("  -diagnostics           print information that might be helpful to" + lSep);
+        msg.append("                         diagnose or report problems." + lSep);
         msg.append("  -quiet, -q             be extra quiet" + lSep);
         msg.append("  -verbose, -v           be extra verbose" + lSep);
         msg.append("  -debug                 print debugging information" + lSep);
@@ -785,7 +791,6 @@ public class Main {
                 props.load(in);
                 in.close();
 
-                String lSep = System.getProperty("line.separator");
                 StringBuffer msg = new StringBuffer();
                 msg.append("Apache Ant version ");
                 msg.append(props.getProperty("VERSION"));

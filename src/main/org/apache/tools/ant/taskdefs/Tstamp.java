@@ -72,7 +72,7 @@ import java.util.Vector;
 import java.text.SimpleDateFormat;
 
 /**
- * Sets properties to the current time.
+ * Sets properties to the current time, or offsets from the current time.
  * The default properties are TSTAMP, DSTAMP and TODAY;
  *
  * @author costin@dnt.ro
@@ -204,7 +204,7 @@ public class Tstamp extends Task {
                     if (st.hasMoreElements()) {
                         variant = st.nextToken();
                         if (st.hasMoreElements()) {
-                            throw new BuildException("bad locale format", 
+                            throw new BuildException("bad locale format",
                                                       getLocation());
                         }
                     }
@@ -212,7 +212,7 @@ public class Tstamp extends Task {
                     country = "";
                 }
             } catch (NoSuchElementException e) {
-                throw new BuildException("bad locale format", e, 
+                throw new BuildException("bad locale format", e,
                                          getLocation());
             }
         }

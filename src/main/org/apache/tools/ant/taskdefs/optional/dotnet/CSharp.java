@@ -156,6 +156,7 @@ import org.apache.tools.ant.types.Path;
  *@author      Steve Loughran steve_l@iseran.com
  *@version     0.5
  *@ant.task    name="csc" category="dotnet"
+ * @since Ant 1.3
  */
 
 public class CSharp
@@ -208,7 +209,8 @@ public class CSharp
     private File win32res;
 
     /**
-     *  Description of the Field
+     * A flag that tells the compiler not to read in the compiler 
+     * settings files 'csc.rsp' in its bin directory and then the local directory
      */
     private boolean noconfig = false;
 
@@ -850,11 +852,12 @@ public class CSharp
 
 
     /**
-     *  Sets the noConfig attribute of the CSharp object
+     * A flag that tells the compiler not to read in the compiler 
+     * settings files 'csc.rsp' in its bin directory and then the local directory
      *
      *@param  enabled  The new noConfig value
      */
-    protected void setNoConfig(boolean enabled) {
+    public void setNoConfig(boolean enabled) {
         noconfig = enabled;
     }
 

@@ -72,7 +72,9 @@ import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFa
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
-/** Ant task to run the jsp compiler.
+/**
+ * Runs a JSP compiler.
+ *
  * <p> This task takes the given jsp files and compiles them into java
  * files. It is then up to the user to compile the java files into classes.
  *
@@ -130,7 +132,7 @@ public class JspC extends MatchingTask {
      *  flag to control action on execution trouble
      */
     protected boolean failOnError = true;
-        
+
     /**
      *  -uribase &lt;dir&gt; The uri directory compilations should be relative to
      *  (Default is "/")
@@ -140,7 +142,7 @@ public class JspC extends MatchingTask {
 
     /**
      *  -uriroot &lt;dir&gt; The root directory that uri files should be resolved
-     *  against, 
+     *  against,
      */
     private File uriroot;
 
@@ -161,12 +163,12 @@ public class JspC extends MatchingTask {
     protected WebAppParameter webApp;
 
 
-        
+
     private static final String FAIL_MSG
         = "Compile failed, messages should have been provided.";
     /* ------------------------------------------------------------ */
     /**
-     * Set the source dirs to find the source JSP files.
+     * Path for source JSP files.
      */
     public void setSrcdir(Path srcDir) {
         if (src == null) {
@@ -190,16 +192,18 @@ public class JspC extends MatchingTask {
         return destDir;
     }
     /* ------------------------------------------------------------ */
+
     /**
-     * Set the name of the package the compiled jsp files should be in
+     * Set the name of the package the compiled jsp files should be in.
      */
     public void setPackage(String pkg){
         this.packageName = pkg;
     }
+
     public String getPackage(){
         return packageName;
     }
-    
+
     /* ------------------------------------------------------------ */
     /**
      * Set the verbose level of the compiler
@@ -210,7 +214,7 @@ public class JspC extends MatchingTask {
     public int getVerbose(){
         return verbose;
     }
-    
+
     /* ------------------------------------------------------------ */
     /**
      * should the build halt if compilation fails? default=true
@@ -228,7 +232,9 @@ public class JspC extends MatchingTask {
     public String getIeplugin() {
         return iepluginid;
     }
-    /** Set the ieplugin id */
+    /**
+     * Java Plugin CLASSID for Internet Explorer
+     */
     public void setIeplugin(String iepluginid_) {
         iepluginid = iepluginid_;
     }
@@ -236,16 +242,18 @@ public class JspC extends MatchingTask {
     public boolean isMapped() {
         return mapped;
     }
-    /** set the mapped flag */
+    /**
+     * If true, generate separate write() calls for each HTML line
+     * in the JSP.
+     */
     public void setMapped(boolean mapped_) {
         mapped = mapped_;
     }
-        
+
     /**
-     * The -uribase option. The uri context of relative URI 
-     * references in the JSP pages. If it does not 
-     * exist then it is derived from the location of the file
-     * relative to the declared or derived value of -uriroot. 
+     * The URI context of relative URI references in the JSP pages.
+     * If it does not exist then it is derived from the location
+     * of the file relative to the declared or derived value of uriroot.
      *
      * @param  uribase  The new Uribase value
      */
@@ -258,9 +266,8 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     *  The -uriroot option.
-     * <p>The root directory that uri files should be resolved
-     *  against, (Default is the directory jspc is invoked from)
+     *  The root directory that uri files should be resolved
+     *  against. (Default is the directory jspc is invoked from)
      *
      * @param  uriroot  The new Uribase value
      */
@@ -271,10 +278,12 @@ public class JspC extends MatchingTask {
     public File getUriroot() {
         return uriroot;
     }
-        
-        
+
+
     /* ------------------------------------------------------------ */
-    /** Set the classpath to be used for this compilation */
+    /**
+     * Set the classpath to be used for this compilation.
+     */
     public void setClasspath(Path cp) {
         if (classpath == null) {
             classpath = cp;
@@ -282,14 +291,20 @@ public class JspC extends MatchingTask {
             classpath.append(cp);
         }
     }
-    /** Maybe creates a nested classpath element. */
+
+    /**
+     * Adds a path to the classpath.
+     */
     public Path createClasspath() {
         if (classpath == null) {
             classpath = new Path(project);
         }
         return classpath.createPath();
     }
-    /** Adds a reference to a CLASSPATH defined elsewhere */
+
+    /**
+     * Adds a reference to a classpath defined elsewhere
+     */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
@@ -299,7 +314,7 @@ public class JspC extends MatchingTask {
 
     /* ------------------------------------------------------------ */
     /**
-     * Set the classpath to be used to find this compiler adapter 
+     * Set the classpath to be used to find this compiler adapter
      */
     public void setCompilerclasspath(Path cp) {
         if (compilerClasspath == null) {
@@ -327,7 +342,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
+     *  Filename for web.xml.
      *
      * @param  webxml  The new Webxml value
      */
@@ -338,26 +353,26 @@ public class JspC extends MatchingTask {
     public File getWebxml() {
         return this.webxml;
     }
- 
+
     /**
-     *  name output file for the fraction of web.xml that lists
-     *  servlets
+     *  output filename for the fraction of web.xml that lists
+     *  servlets.
      * @param  webinc  The new Webinc value
      */
     public void setWebinc(File webinc) {
         this.webinc = webinc;
     }
-    
+
     public File getWebinc() {
         return this.webinc;
     }
-    
+
     /**
-     * Web apps parameter. Only one is allowed.
+     * Adds a single webapp.
      *
-     * @param  fs  add a web app fileset
+     * @param  webappParam  add a web app parameter
      */
-    public void addWebApp(WebAppParameter webappParam) 
+    public void addWebApp(WebAppParameter webappParam)
         throws BuildException {
         //demand create vector of filesets
         if (webApp == null) {
@@ -372,7 +387,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     * Sets the compiler to use. Optional: default=jasper
+     * Class name of a JSP compiler adapter.
      */
     public void setCompiler(String compiler) {
         this.compilerName = compiler;
@@ -384,7 +399,7 @@ public class JspC extends MatchingTask {
     public Vector getCompileList(){
         return compileList;
     }
-    
+
     /**
      * execute by building up a list of files that
      * have changed and hand them off to a jsp compiler
@@ -532,7 +547,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     * Test whether or not compilation is needed. A return value of 
+     * Test whether or not compilation is needed. A return value of
      * <code>true<code> means yes, <code>false</code> means
      * our tests do not indicate this, but as the TLDs are
      * not used for dependency checking this is not guaranteed.
@@ -551,20 +566,20 @@ public class JspC extends MatchingTask {
         boolean shouldCompile = false;
         if (!javaFile.exists()) {
             shouldCompile = true;
-            log("Compiling " + srcFile.getPath() 
-                + " because java file " + javaFile.getPath() 
+            log("Compiling " + srcFile.getPath()
+                + " because java file " + javaFile.getPath()
                 + " does not exist", Project.MSG_VERBOSE);
             } else {
                 if (srcFile.lastModified() > javaFile.lastModified()) {
                     shouldCompile = true;
-                    log("Compiling " + srcFile.getPath() 
-                        + " because it is out of date with respect to " 
+                    log("Compiling " + srcFile.getPath()
+                        + " because it is out of date with respect to "
                         + javaFile.getPath(),
                         Project.MSG_VERBOSE);
                 } else {
                     if (javaFile.length() == 0) {
                         shouldCompile = true;
-                        log("Compiling " + srcFile.getPath() 
+                        log("Compiling " + srcFile.getPath()
                             + " because java file " + javaFile.getPath()
                             + " is empty", Project.MSG_VERBOSE);
                     }
@@ -610,7 +625,7 @@ public class JspC extends MatchingTask {
      * static inner class used as a parameter element
      */
     public static class WebAppParameter {
-        
+
         /**
          * the sole option
          */
@@ -619,18 +634,18 @@ public class JspC extends MatchingTask {
         /**
          * query current directory
          */
-         
+
         public File getDirectory() {
             return directory;
         }
-        
+
     /**
      * set directory; alternate syntax
      */
         public void setBaseDir(File directory) {
             this.directory = directory;
         }
-    //end inner class    
+    //end inner class
     }
 
 

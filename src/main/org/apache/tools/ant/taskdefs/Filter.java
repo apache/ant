@@ -61,11 +61,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * Sets a token filter that is used by the file copy methods
- * of the project to do token substitution, or sets mutiple tokens by
+ * Sets a token filter that is used by the file copy tasks
+ * to do token substitution. Sets mutiple tokens by
  * reading these from a file.
  *
- * @author Stefano Mazzocchi 
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
@@ -107,26 +107,26 @@ public class Filter extends Task {
     }
 
     public void execute() throws BuildException {
-        boolean isFiltersFromFile = 
+        boolean isFiltersFromFile =
             filtersFile != null && token == null && value == null;
-        boolean isSingleFilter = 
+        boolean isSingleFilter =
             filtersFile == null && token != null && value != null;
-        
+
         if (!isFiltersFromFile && !isSingleFilter) {
             throw new BuildException("both token and value parameters, or "
                                      + "only a filtersFile parameter is "
                                      + "required", location);
         }
-        
+
         if (isSingleFilter) {
             project.getGlobalFilterSet().addFilter(token, value);
         }
-        
+
         if (isFiltersFromFile) {
             readFilters();
         }
     }
-    
+
     protected void readFilters() throws BuildException {
         log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
         project.getGlobalFilterSet().readFiltersFromFile(filtersFile);

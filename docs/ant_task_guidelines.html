@@ -35,13 +35,13 @@ development, maintenance and code size reasons.
 
 Execute will spawn off separate programs under all the platforms which
 ant supports, dealing with Java version issues as well as platform
-issues. Always use this task to invoke other programs. 
+issues. Always use this task to invoke other programs.
 
 <h4>Java, ExecuteJava</h4>
 
 These classes can be used to spawn Java programs in a separate VM (they
-use execute) or in the same VM -with or without a different classloader. 
-When deriving tasks from this, it often benefits users to permit the 
+use execute) or in the same VM -with or without a different classloader.
+When deriving tasks from this, it often benefits users to permit the
 classpath to be specified, and for forking to be an optional attribute.
 
 
@@ -84,17 +84,16 @@ editors and platforms. Some IDEs (JEdit) can highlight tabs, to stop you
 accidentally inserting them
 
 <h2>Attributes and elements</h2>
-
 Use the Ant introspection based mapping of attributes into Java datatypes,
 rather than implementing all your attributes as setFoo(String) and doing
 the mapping to Int, bool or file yourself. This saves work on your part,
-lets Java callers use you in a typesafe manner, and will let the Xdocs 
-documentation generator work out what the parameters are.   
- 
+lets Java callers use you in a typesafe manner, and will let the Xdocs
+documentation generator work out what the parameters are.
+
 <p>
 The ant1.x tasks are very inconsistent regarding naming of attributes
--some tasks use <tt>source<tt>, others <tt>src</tt>tt>. 
-Here is a list of preferred attribute names. 
+-some tasks use <tt>source</tt>, others <tt>src</tt>.
+Here is a list of preferred attribute names.
 
 <table>
 <tr>
@@ -102,7 +101,7 @@ Here is a list of preferred attribute names.
     failonerror
 </td>
 <td>
-    boolean to control whether failure to execute should throw a 
+    boolean to control whether failure to execute should throw a
     <tt>BuildException</tt> or just print an error.
     Parameter validation failures should always throw an error, regardless
     of this flag
@@ -156,32 +155,32 @@ to their ant system configuration.
 Keep member variables private. If read access by subclasses is required.
 add accessor methods rather than change the accessiblity of the member.
 This enables subclasses to access the contents, yet
-still be decoupled from the actual implementation. 
+still be decoupled from the actual implementation.
 <p>
 
 The other common re-use mechanism in ant is for one task to create and
-configure another. This is fairly simple. 
+configure another. This is fairly simple.
 
 <h2>Do your own Dependency Checking</h2>
 
 Make has the edge over Ant in its integrated dependency checking: the
 command line apps make invokes dont need to do their own work. Ant tasks
-do have to do their own dependency work, but if this can be done then 
+do have to do their own dependency work, but if this can be done then
 it can be done well. A good dependency aware task can work out the dependencies
-without explicit dependency information in the build file, and be smart 
+without explicit dependency information in the build file, and be smart
 enough to work out the real dependencies, perhaps through a bit of file parsing.
 The <tt>depends</tt> task is the best example of this. Some of the zip/jar
 tasks are pretty good too, as they can update the archive when needed.
-Most tasks just compare source and destination timestamps and work from there.    
+Most tasks just compare source and destination timestamps and work from there.
 Tasks which don't do any dependency checking do not help users as much as
 they can, because their needless work can trickle through the entire build, test
-and deploy process. 
+and deploy process.
 
 <h2>Support Java 1.1 through Java 1.4</h2>
 
 Ant is designed to support Java1.1: to build on it, to run on it. Sometimes
 functionality of tasks have to degrade in that environment -&lt;touch&gt;
-is a case in point- this is usually due to library limitations; 
+is a case in point- this is usually due to library limitations;
 such behaviour change must always be noted in the documentation.
 <p>
 What is problematic is code which is dependent on Java1.2 features
@@ -189,20 +188,20 @@ What is problematic is code which is dependent on Java1.2 features
 These can not be used directly by any code and still be able to compile
 and run on a Java 1.1 system. So please stick to the older collection
 classes, and the older IO classes. If a new method in an existing class
-is to be used, it must be used via reflection and the 
-<tt>NoSuchMethodException</tt> handled somehow. 
+is to be used, it must be used via reflection and the
+<tt>NoSuchMethodException</tt> handled somehow.
 <p>
-What if code simply does not work on Java1.1? It can happen. It will 
-probably be OK to have the task as an optional task, with compilation 
-restricted to Java1.2 or later through build.xml modifications. 
+What if code simply does not work on Java1.1? It can happen. It will
+probably be OK to have the task as an optional task, with compilation
+restricted to Java1.2 or later through build.xml modifications.
 Better still, use reflection to link to the classes at run time.
 <p>
-Java 1.4 adds a new optional change to the language itself, the 
+Java 1.4 adds a new optional change to the language itself, the
 <tt>assert</tt> keyword, which is only enabled if the compiler is told
 to compile 1.4 version source. Clearly with the 1.1 compatibility requirement,
 Ant tasks can not use this keyword. They also need to move away from
 using the JUnit <tt>assert()</tt> method and call <tt>assertTrue()</tt>
-instead.    
+instead.
 
 
 
@@ -233,7 +232,7 @@ your task -feel free to do so!
 <p>
 
 A well written set of test cases will break the Ant task while it is in
-development, until the code is actually complete. And every bug which 
+development, until the code is actually complete. And every bug which
 surfaces later should have a test case added to demonstrate the problem,
 and to fix it.
 
@@ -253,7 +252,7 @@ and patches do what they say. If you've got test cases it increases your
 credibility significantly. To be precise, we hate submissions without
 test cases, as it means we have to write them ourselves. This is
 something that only gets done if we need the task or it is perceived as
-utterly essential to many users. 
+utterly essential to many users.
 
 <p>
 
@@ -323,7 +322,7 @@ Tasks calling such code can use the 'exec' or 'java' tasks to run the
 programs, as you are just executing them at this point, not linking to
 them.
 <p>
-Even if we cannot include your task into the Apache codebase, we can 
+Even if we cannot include your task into the Apache codebase, we can
 still point to where you host it -just submit a diff to
 xdocs/external.html pointing to your task.
 
@@ -337,14 +336,14 @@ was already implemented in a small corner of another task, or it has
 been submitted by someone else and not committed. You can avoid this
 by being aware of what is in the latest CVS tree -keep getting the daily
 source updates, look at manual changes and subscribe to the ant-dev
-mailing list. 
+mailing list.
 
 <p>
 
 If you are thinking of writing a task, posting a note on your thoughts
 to the list can be informative -you well get other peoples insight and
 maybe some half written task to do the basics, all without writing a
-line of code. 
+line of code.
 
 
 <h2>Submitting to Ant</h2>
@@ -357,7 +356,7 @@ It helps to be on this list, as you will see other submissions, and
 any debate about your own submission.
 <p>
 
-Patches to existing files should be generated with 
+Patches to existing files should be generated with
 <code>cvs diff -u filename</code>
  and save the output to a file. If you want to get
 the changes made to multiple files in a directory , just use <code>cvs
@@ -376,22 +375,22 @@ made.
 New submissions should be proceeded with [SUBMIT]. The mailer-daemon
 will reject any messages over 100KB, so any large update should be
 zipped up. If your submission is bigger than that, why not break it up
-into separate tasks. 
+into separate tasks.
 <p>
 
-We also like submissions to be added to 
+We also like submissions to be added to
 <a href="http://nagoya.apache.org/bugzilla/">bugzilla</a>, so that they
 dont get lost. Please submit them by first filing the report with a
 meaningful name, then adding files as attachments. Use CVS diff files
 please!
 <p>
 
-If you hear nothing after a couple of weeks, remind the mailing list. 
+If you hear nothing after a couple of weeks, remind the mailing list.
 Sometimes really good submissions get lost in the noise of other issues.
-This is particularly the case just prior to a new point release of 
+This is particularly the case just prior to a new point release of
 the product. At that time anything other than bug fixes will tend
 to be neglected.
- 
+
 <h2>Checklists</h2>
 
 These are the things you should verify before submitting patches and new
@@ -401,14 +400,14 @@ can be addressed in the process. But by the time the code is committed,
 everything including the documentation and some test cases will have
 been done, so by getting them out the way up front can save time.
 The committers look more favourably on patches and submissions with test
-cases, while documentation helps sell the reason for a task. 
+cases, while documentation helps sell the reason for a task.
 
 <h3>Checklist before submitting a patch</h3>
 <ul>
 <li>Added code complies with style guidelines
 <li>Code compiles and runs on Java1.1
 <li>New member variables are private, and provide public accessor methods
-	if access is actually needed. 
+	if access is actually needed.
 <li>Existing test cases succeed.
 <li>New test cases written and succeed.
 <li>Documentation page extended as appropriate.
@@ -417,7 +416,7 @@ cases, while documentation helps sell the reason for a task.
 <li>Message to ant-dev contains [PATCH], task name and patch reason in
 subject.
 <li>Message body contains a rationale for the patch.
-<li>Message attachment contains the patch file(s). 
+<li>Message attachment contains the patch file(s).
 </ul>
 
 <h3>Checklist before submitting a new task</h3>
@@ -427,7 +426,7 @@ subject.
 <li>Source code complies with style guidelines
 <li>Code compiles and runs on Java1.1
 <li>Member variables are private, and provide public accessor methods
-	if access is actually needed. 
+	if access is actually needed.
 <li><i>Maybe</i> Task has failonerror attribute to control failure behaviour
 <li>New test cases written and succeed
 <li>Documentation page written

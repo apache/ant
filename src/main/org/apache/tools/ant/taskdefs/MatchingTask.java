@@ -66,12 +66,12 @@ import java.util.StringTokenizer;
 import java.util.Enumeration;
 
 /**
- * This is an abstract task that should be used by all those tasks that 
+ * This is an abstract task that should be used by all those tasks that
  * require to include or exclude files based on pattern matching.
  *
- * @author Arnout J. Kuiper 
- *         <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a> 
- * @author Stefano Mazzocchi 
+ * @author Arnout J. Kuiper
+ *         <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
@@ -99,14 +99,14 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public PatternSet.NameEntry createInclude() {
         return fileset.createInclude();
     }
-    
+
     /**
      * add a name entry on the include files list
      */
     public PatternSet.NameEntry createIncludesFile() {
         return fileset.createIncludesFile();
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -120,7 +120,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public PatternSet.NameEntry createExcludesFile() {
         return fileset.createExcludesFile();
     }
-    
+
     /**
      * add a set of patterns
      */
@@ -149,7 +149,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
         log("The items attribute is deprecated. " +
             "Please use the includes attribute.",
             Project.MSG_WARN);
-        if (itemString == null || itemString.equals("*") 
+        if (itemString == null || itemString.equals("*")
             || itemString.equals(".")) {
             createInclude().setName("**");
         } else {
@@ -162,7 +162,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
             }
         }
     }
-    
+
     /**
      * Sets the set of exclude patterns. Patterns may be separated by a comma
      * or a space.
@@ -174,7 +174,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     }
 
     /**
-     * List of filenames and directory names to not include. They should be 
+     * List of filenames and directory names to not include. They should be
      * either , or " " (space) separated. The ignored files will be logged.
      *
      * @param ignoreString the string containing the files to ignore.
@@ -230,6 +230,25 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void setExcludesfile(File excludesfile) {
         fileset.setExcludesfile(excludesfile);
+    }
+
+    /**
+     * Sets case sensitivity of the file system
+     *
+     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
+     *                           sensitive, "false"|"off"|"no" when not.
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+        fileset.setCaseSensitive(isCaseSensitive);
+    }
+
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        fileset.setFollowSymlinks(followSymlinks);
     }
 
     /**

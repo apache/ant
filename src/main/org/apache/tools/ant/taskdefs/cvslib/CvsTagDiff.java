@@ -70,8 +70,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
 /**
- * Cvs tag diff.
- * The task will examine the output of cvs rdiff between two tags.
+ * Examines the output of cvs rdiff between two tags.
+ *
  * It produces an XML output representing the list of changes.
  * <PRE>
  * &lt;!-- Root element --&gt;

@@ -214,25 +214,25 @@ public class FTP
                                 if (!isExcluded(name)) {
                                     dirsIncluded.addElement(name);
                                     if (fast) {
-                                        scandir(file.getName(), 
+                                        scandir(file.getName(),
                                                 name + File.separator, fast);
                                     }
                                 } else {
                                     dirsExcluded.addElement(name);
                                     if (fast && couldHoldIncluded(name)) {
-                                        scandir(file.getName(), 
+                                        scandir(file.getName(),
                                                 name + File.separator, fast);
                                     }
                                 }
                             } else {
                                 dirsNotIncluded.addElement(name);
                                 if (fast && couldHoldIncluded(name)) {
-                                    scandir(file.getName(), 
+                                    scandir(file.getName(),
                                             name + File.separator, fast);
                                 }
                             }
                             if (!fast) {
-                                scandir(file.getName(), 
+                                scandir(file.getName(),
                                         name + File.separator, fast);
                             }
                         } else {
@@ -323,8 +323,8 @@ public class FTP
 
 
     /**
-     * Set to true to transmit only files that are new or changed from their
-     * remote counterparts. The default is to transmit all files.
+     * A synonym for <tt>depends</tt>. Set to true to transmit only new or changed
+     * files.
      */
     public void setNewer(boolean newer) {
         this.newerOnly = newer;
@@ -332,8 +332,8 @@ public class FTP
 
 
     /**
-     * A synonym for setnewer. Set to true to transmit only new or changed
-     * files.
+     * Set to true to transmit only files that are new or changed from their
+     * remote counterparts. The default is to transmit all files.
      */
     public void setDepends(boolean depends) {
         this.newerOnly = depends;
@@ -368,7 +368,7 @@ public class FTP
 
 
     /**
-     *  Adds a set of files.
+     *  A set of files to upload or download
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -383,6 +383,7 @@ public class FTP
      *      setAction(FTP.Action) to make Ant's Introspection mechanism do the
      *      work and also to encapsulate operations on the type in its own
      *      class.
+     * @ant.attribute ignore="true"
      */
     public void setAction(String action) throws BuildException {
         log("DEPRECATED - The setAction(String) method has been deprecated."
@@ -893,7 +894,7 @@ public class FTP
      * @param ftp current ftp connection
      * @throws BuildException if this is an error to signal
      */
-    private void handleMkDirFailure(FTPClient ftp) 
+    private void handleMkDirFailure(FTPClient ftp)
             throws BuildException {
         int rc=ftp.getReplyCode();
         if (!(ignoreNoncriticalErrors
@@ -992,6 +993,10 @@ public class FTP
     }
 
 
+    /**
+     * an action to perform, one of
+     * "send", "put", "recv", "get", "del", "delete", "list", "mkdir", "chmod"
+     */
     public static class Action extends EnumeratedAttribute {
 
         private static final String[] validActions = {
