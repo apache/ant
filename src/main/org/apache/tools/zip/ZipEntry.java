@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Creates a new zip entry with the specified name.
-     *
+     * @param name the name of the entry
      * @since 1.1
      */
     public ZipEntry(String name) {
@@ -50,8 +50,9 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Creates a new zip entry with fields taken from the specified zip entry.
-     *
+     * @param entry the entry to get fields from
      * @since 1.1
+     * @throws ZipException on error
      */
     public ZipEntry(java.util.zip.ZipEntry entry) throws ZipException {
         /*
@@ -88,7 +89,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Creates a new zip entry with fields taken from the specified zip entry.
-     *
+     * @param entry the entry to get fields from
+     * @throws ZipException on error
      * @since 1.1
      */
     public ZipEntry(ZipEntry entry) throws ZipException {
@@ -106,8 +108,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
-     * Overwrite clone
-     *
+     * Overwrite clone.
+     * @return a cloned copy of this ZipEntry
      * @since 1.1
      */
     public Object clone() {
@@ -146,7 +148,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the internal file attributes.
-     *
+     * @return the internal file attributes
      * @since 1.1
      */
     public int getInternalAttributes() {
@@ -155,7 +157,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Sets the internal file attributes.
-     *
+     * @param value an <code>int</code> value
      * @since 1.1
      */
     public void setInternalAttributes(int value) {
@@ -164,7 +166,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the external file attributes.
-     *
+     * @return the external file attributes
      * @since 1.1
      */
     public long getExternalAttributes() {
@@ -173,7 +175,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Sets the external file attributes.
-     *
+     * @param value an <code>long</code> value
      * @since 1.1
      */
     public void setExternalAttributes(long value) {
@@ -183,7 +185,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Sets Unix permissions in a way that is understood by Info-Zip's
      * unzip command.
-     *
+     * @param mode an <code>int</code> value
      * @since Ant 1.5.2
      */
     public void setUnixMode(int mode) {
@@ -197,7 +199,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Unix permission.
-     *
+     * @return the unix permissions
      * @since Ant 1.6
      */
     public int getUnixMode() {
@@ -218,6 +220,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
+     * Set the platform (UNIX or FAT).
+     * @param platform an <code>int</code> value - 0 is FAT, 3 is UNIX
      * @since 1.9
      */
     protected void setPlatform(int platform) {
@@ -226,7 +230,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Replaces all currently attached extra fields with the new array.
-     *
+     * @param fields an array of extra fields
      * @since 1.1
      */
     public void setExtraFields(ZipExtraField[] fields) {
@@ -239,7 +243,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves extra fields.
-     *
+     * @return an array of the extra fields
      * @since 1.1
      */
     public ZipExtraField[] getExtraFields() {
@@ -251,7 +255,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Adds an extra fields - replacing an already present extra field
      * of the same type.
-     *
+     * @param ze an extra field
      * @since 1.1
      */
     public void addExtraField(ZipExtraField ze) {
@@ -271,7 +275,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Remove an extra fields.
-     *
+     * @param type the type of extra field to remove
      * @since 1.1
      */
     public void removeExtraField(ZipShort type) {
@@ -290,8 +294,10 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Throws an Exception if extra data cannot be parsed into extra fields.
-     *
+     * @param extra an array of bytes to be parsed into extra fields
+     * @throws RuntimeException if the bytes cannot be parsed
      * @since 1.1
+     * @throws RuntimeException on error
      */
     public void setExtra(byte[] extra) throws RuntimeException {
         try {
@@ -315,7 +321,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the extra data for the local file data.
-     *
+     * @return the extra data for local file
      * @since 1.1
      */
     public byte[] getLocalFileDataExtra() {
@@ -325,7 +331,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Retrieves the extra data for the central directory.
-     *
+     * @return the central directory extra data
      * @since 1.1
      */
     public byte[] getCentralDirectoryExtra() {
@@ -344,7 +350,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      *
      * <p>This either stores the size for later usage or invokes
      * setCompressedSize via reflection.</p>
-     *
+     * @param size the size to use
      * @since 1.2
      */
     public void setComprSize(long size) {
@@ -357,7 +363,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
 
     /**
      * Override to make this class work in JDK 1.1 like a 1.2 class.
-     *
+     * @return the compressed size
      * @since 1.2
      */
     public long getCompressedSize() {
@@ -369,6 +375,8 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
+     * Get the name of the entry.
+     * @return the entry name
      * @since 1.9
      */
     public String getName() {
@@ -376,29 +384,41 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
+     * Is this entry a directory?
+     * @return true if the entry is a directory
      * @since 1.10
      */
     public boolean isDirectory() {
         return getName().endsWith("/");
     }
 
+    /**
+     * Set the name of the entry.
+     * @param name the name to use
+     */
     protected void setName(String name) {
         this.name = name;
     }
 
     /**
+     * Get the hashCode of the entry.
+     * This uses the name as the hashcode.
+     * @return a hashcode.
      * @since Ant 1.7
      */
-    public int hashCode(){
+    public int hashCode() {
         return getName().hashCode();
     }
 
     /**
+     * The equality method.
+     * @param o the object to compare to
+     * @return true if this object has the same name as <code>o</code>
      * @since Ant 1.7
      */
-    public boolean equals(Object o){
-        if (o instanceof ZipEntry){
-            ZipEntry other = (ZipEntry)o;
+    public boolean equals(Object o) {
+        if (o instanceof ZipEntry) {
+            ZipEntry other = (ZipEntry) o;
             return other.getName().equals(getName());
         }
         return false;
@@ -477,6 +497,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
                         java.util.zip.ZipEntry.class.getMethod("setCompressedSize",
                                                                new Class[] {Long.TYPE});
                 } catch (NoSuchMethodException nse) {
+                    // Ignore the exception
                 }
             }
         }
