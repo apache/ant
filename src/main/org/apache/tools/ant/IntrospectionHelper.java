@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -405,15 +406,19 @@ public class IntrospectionHelper implements BuildListener {
      *                           method fails.
      */
     public void setAttribute(Project p, Object element, String attributeName,
-                             String value)
-        throws BuildException {
-        AttributeSetter as 
-            = (AttributeSetter) attributeSetters.get(attributeName);
+                             String value) throws BuildException {
+        AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
-            String msg = p.getElementName(element) +
-            //String msg = "Class " + element.getClass().getName() +
-                " doesn't support the \"" + attributeName + "\" attribute.";
-            throw new BuildException(msg);
+            if (element instanceof DynamicConfigurator) {
+                DynamicConfigurator dc = (DynamicConfigurator) element;
+                dc.setDynamicAttribute(attributeName, value);
+                return;
+            }
+            else {
+                String msg = getElementName(p, element) +
+                    " doesn't support the \"" + attributeName + "\" attribute.";
+                throw new BuildException(msg);
+            }
         }
         try {
             as.set(p, element, value);
@@ -498,6 +503,16 @@ public class IntrospectionHelper implements BuildListener {
     public Object createElement(Project project, Object parent, 
         String elementName) throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
+        if (nc == null && parent instanceof DynamicConfigurator) {
+            DynamicConfigurator dc = (DynamicConfigurator) parent;
+            Object nestedElement = dc.createDynamicElement(elementName);
+            if (nestedElement != null) {
+                if (nestedElement instanceof ProjectComponent) {
+                    ((ProjectComponent) nestedElement).setProject(project);
+                }
+                return nestedElement;
+            }
+        }
         if (nc == null) {
             String msg = project.getElementName(parent) +
                 " doesn't support the nested \"" + elementName + "\" element.";
