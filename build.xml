@@ -30,8 +30,11 @@
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>
-  <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
-  <property name="optional.type.package" value="${ant.package}/types/optional"/>
+  <property name="taskdefs.package" value="${ant.package}/taskdefs"/>
+  <property name="optional.package" value="${taskdefs.package}/optional"/>
+  <property name="optional.condition.package" value="${optional.package}/condition"/>
+  <property name="type.package" value="${ant.package}/types"/>
+  <property name="optional.type.package" value="${type.package}/optional"/>
   <property name="apache.resolver.type.package" value="${ant.package}/types/resolver"/>
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
@@ -154,7 +157,8 @@
 
   <selector id="needs.jdk1.5+">
     <or>
-      <filename name="${ant.package}/taskdefs/optional/condition/IsPingable*"/>
+      <filename name="${optional.condition.package}/IsPingable*"/>
+      <filename name="${taskdefs.package}/AptTest*"/>
     </or>
   </selector>
   
@@ -162,7 +166,7 @@
        but not all of them -->
   <selector id="not.in.kaffe">
     <or>
-      <filename name="${ant.package}/taskdefs/optional/condition/IsPingable*"/>
+      <filename name="${optional.condition.package}/IsPingable*"/>
     </or>
   </selector>
   
@@ -185,7 +189,7 @@
       <filename name="${optional.package}/sitraka/**"/>
       <filename name="${optional.package}/metamata/MMetrics*"/>
       <filename name="${optional.package}/XsltTest*"/>
-      <filename name="${ant.package}/types/XMLCatalogBuildFileTest*"/>
+      <filename name="${type.package}/XMLCatalogBuildFileTest*"/>
     </or>
   </selector>
 
@@ -1507,7 +1511,7 @@
           <include name="**/*Test*"/>
 
           <!-- abstract classes, not testcases -->
-          <exclude name="${ant.package}/taskdefs/TaskdefsTest.java"/>
+          <exclude name="${taskdefs.package}/TaskdefsTest.java"/>
           <exclude name="${ant.package}/BuildFileTest.java"/>
           <exclude name="${regexp.package}/RegexpMatcherTest.java"/>
           <exclude name="${regexp.package}/RegexpTest.java"/>
@@ -1517,10 +1521,10 @@
 
           <!-- helper classes, not testcases -->
           <exclude name="org/example/**"/>
-          <exclude name="${ant.package}/taskdefs/TaskdefTest*Task.java"/>
+          <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
 
           <!-- interactive tests -->
-          <exclude name="${ant.package}/taskdefs/TestProcess.java"/>
+          <exclude name="${taskdefs.package}/TestProcess.java"/>
           <exclude name="${optional.package}/splash/SplashScreenTest.java"/>
 
           <!-- only run these tests if their required libraries are
@@ -1580,7 +1584,7 @@
                    unless="trax.impl.present"/>
           <exclude name="${optional.package}/junit/JUnitReportTest.java"
                    unless="run.junitreport"/>
-          <exclude name="${ant.package}/taskdefs/StyleTest.java"
+          <exclude name="${taskdefs.package}/StyleTest.java"
                    unless="trax.impl.present"/>
 
           <!-- needs BSF to work -->
@@ -1610,9 +1614,9 @@
           IllegalAccessExceptions otherwise.  -->
           <exclude name="${ant.package}/DirectoryScannerTest.java"
                    unless="tests.and.ant.share.classloader"/>
-          <exclude name="${ant.package}/taskdefs/SQLExecTest.java"
+          <exclude name="${taskdefs.package}/SQLExecTest.java"
                    unless="tests.and.ant.share.classloader"/>
-          <exclude name="${ant.package}/taskdefs/cvslib/ChangeLogWriterTest.java"
+          <exclude name="${taskdefs.package}/cvslib/ChangeLogWriterTest.java"
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/sos/SOSTest.java"
                    unless="tests.and.ant.share.classloader"/>
@@ -1622,15 +1626,15 @@
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/metamata/MAuditParserTest.java"
                    unless="tests.and.ant.share.classloader"/>
-          <exclude name="${ant.package}/taskdefs/ProcessDestroyerTest.java"
+          <exclude name="${taskdefs.package}/ProcessDestroyerTest.java"
                    unless="tests.and.ant.share.classloader"/>
-          <exclude name="${ant.package}/taskdefs/ProtectedJarMethodsTest.java"
+          <exclude name="${taskdefs.package}/ProtectedJarMethodsTest.java"
                    unless="tests.and.ant.share.classloader"/>
 
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs
           -->
-          <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
+          <exclude name="${taskdefs.package}/AbstractCvsTaskTest.java"
                    unless="have.cvs"/>
 
           <!-- needs a local ftp server and the entry of a user/password combination -->

@@ -82,6 +82,17 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
+     * Assert that the given substring is in the output messages
+     * @since Ant1.7
+     */
+
+    protected void assertOutputContaining(String substring) {
+        String realOutput = getOutput();
+        assertTrue("expecting output to contain \"" + substring + "\" output was \""
+                + realOutput + "\"",
+                realOutput.indexOf(substring) >= 0);
+    }
+    /**
      * Assert that the given message has been logged with a priority
      * &lt;= INFO when running the given target.
      */
