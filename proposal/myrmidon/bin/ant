@@ -1,0 +1,57 @@
+#! /bin/sh
+
+if [ -f $HOME/.antrc ] ; then 
+  . $HOME/.antrc
+fi
+
+if [ "$ANT_HOME" = "" ] ; then
+  # try to find ANT
+  if [ -d /opt/ant ] ; then 
+    ANT_HOME=/opt/ant
+  fi
+
+  if [ -d ${HOME}/opt/ant ] ; then 
+    ANT_HOME=${HOME}/opt/ant
+  fi
+
+  ## resolve links - $0 may be a link to ant's home
+  PRG=$0
+  progname=`basename $0`
+  
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '.*/.*' > /dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname $PRG`/$link"
+    fi
+  done
+  
+  ANT_HOME=`dirname "$PRG"`/..
+
+fi
+
+# Allow .antrc to specifiy flags to java cmd
+if [ "$JAVACMD" = "" ] ; then 
+  JAVACMD=java
+fi
+
+LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
+
+if [ "$CLASSPATH" != "" ] ; then
+  LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
+fi
+
+if [ "$JAVA_HOME" != "" ] ; then
+  if test -f $JAVA_HOME/lib/tools.jar ; then
+    LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
+  fi
+
+  if test -f $JAVA_HOME/lib/classes.zip ; then
+    LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
+  fi
+fi
+
+$JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
+
