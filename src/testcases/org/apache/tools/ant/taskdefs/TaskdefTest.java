@@ -105,4 +105,15 @@ public class TaskdefTest extends BuildFileTest {
     public void testGlobal() {
         expectLog("testGlobal", "worked");
     }
+
+    public void testOverride() {
+        executeTarget("testOverride");
+        String log = getLog();
+        assertTrue("override warning sent", 
+                   log.indexOf("Trying to override old definition of task copy") > -1);
+        assertTrue("task inside target worked", 
+                   log.indexOf("In target") > -1);
+        assertTrue("task inside target worked", 
+                   log.indexOf("In TaskContainer") > -1);
+    }
 }

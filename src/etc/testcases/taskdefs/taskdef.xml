@@ -62,4 +62,12 @@
     </global>
   </target>
 
+  <target name="testOverride">
+    <taskdef name="copy" classname="org.apache.tools.ant.taskdefs.Echo" />
+    <copy>In target</copy>
+    <sequential>
+      <copy>In TaskContainer</copy>
+    </sequential>
+  </target>
+
 </project>
