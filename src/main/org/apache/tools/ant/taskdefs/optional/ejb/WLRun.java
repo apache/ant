@@ -64,7 +64,8 @@ import java.io.File;
 
 /**
  * Execute a Weblogic server.
- 
+ * A number of parameters are used to control the operation of the weblogic instance. Note that the task,
+ * and hence ant, will not complete until the weblogic instance is stopped.</p>
  *
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
@@ -311,7 +312,10 @@ public class WLRun extends Task {
 
     
     /**
-     * Set the classpath to be used for this execution.
+     * The classpath to be used with the Java Virtual Machine that runs the Weblogic
+     * Server; required. Prior to Weblogic 6.0, this is typically set to the Weblogic
+     * boot classpath. Under Weblogic 6.0 this should include all the
+     * weblogic jars
      *
      * @param s the classpath to use when executing the weblogic server.
      */
@@ -320,7 +324,8 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the weblogic classpath.
+     * Set the weblogic classpath used by the Weblogic Server;
+     * optional, and only applicable to WL4.5.1
      *
      * The weblogic classpath is used by weblogic to support dynamic class loading.
      *
@@ -331,7 +336,9 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the security policy for this invocation of weblogic.
+     * The name of the security policy file within the weblogic home directory that
+     * is to be used. If not specified, the default policy file <code>weblogic.policy</code>
+     * is used.
      *
      * @param securityPolicy the security policy to use.
      */
@@ -341,7 +348,8 @@ public class WLRun extends Task {
     
     /**
      * The location where weblogic lives.
-     *
+     * Required. This is the absolute location, not relative to
+     *  BEA home.
      * @param weblogicHome the home directory of weblogic.
      *
      */
@@ -350,7 +358,8 @@ public class WLRun extends Task {
     }
 
     /**
-     * The location of the BEA Home.
+     * The location of the BEA Home; implicitly 
+     * selects Weblogic 6.0; optional.
      *
      * @param beaHome the BEA Home directory.
      *
@@ -360,7 +369,8 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the name of the server to run
+     * The name of the weblogic server within the weblogic home which is to be run.
+     * Optiona, defaults to &quot;myserver&quot;
      *
      * @param systemName the name of the server.
      */
@@ -369,7 +379,7 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the Domain to run in
+     * Set the Domain to run in; required for WL6.0
      *
      * @param domain the domain
      */
@@ -378,9 +388,10 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the properties file to use.
+     * The name of the server's properties file within the weblogic home directory
+     * used to control the weblogic instance; 
+     * required for WL4.5.1
      *
-     * The location of the properties file is relative to the weblogi system home
      *
      * @param propertiesFilename the properties file name
      */
@@ -397,7 +408,8 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the management username to run the server
+     * Set the management username to run the server; 
+     * optional and only applicable to WL6.0.
      *
      * @param username the management username of the server.
      */
@@ -407,8 +419,8 @@ public class WLRun extends Task {
     
 
     /**
-     * Set the management password of the server
-     *
+     * Set the management password of the server;
+     * optional and only applicable to WL6.0.
      * @param password the management pasword of the server.
      */
     public void setPassword(String password) {
@@ -416,19 +428,25 @@ public class WLRun extends Task {
     }
     
     /**
-     * Set the private key password so the server can decrypt the SSL private key file.
-     *
+     * Set the private key password so the server can decrypt the SSL private key file;
+     * optional and only applicable to WL6.0.
      * @param pkpassword the private key password,
      */
     public void setPKPassword(String pkpassword) {
         this.pkPassword = pkpassword;
     }
     
+    /**
+     * Additional argument string passed to the Weblogic instance;
+     * optional.
+     */
     public void setArgs(String args) {
         additionalArgs = args;
     }
 
-    
+    /**
+     * name of the main class for weblogic; optional.
+     */
     public void setWeblogicMainClass(String c) {
         weblogicMainClass = c;
     }
