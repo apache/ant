@@ -581,7 +581,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 2;
 
         // last mod. time and date
-        writeOut(toDosTime(new Date(ze.getTime())).getBytes());
+        writeOut(toDosTime(ze.getTime()));
         written += 4;
 
         // CRC
@@ -669,7 +669,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 2;
 
         // last mod. time and date
-        writeOut(toDosTime(new Date(ze.getTime())).getBytes());
+        writeOut(toDosTime(ze.getTime()));
         written += 4;
 
         // CRC
@@ -770,13 +770,24 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.1
      */
     protected static ZipLong toDosTime(Date time) {
+        return new ZipLong(toDosTime(time.getTime()));
+    }
+
+    /**
+     * Convert a Date object to a DOS date/time field.
+     *
+     * <p>Stolen from InfoZip's <code>fileio.c</code></p>
+     *
+     * @since 1.26
+     */
+    protected static byte[] toDosTime(long time) {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(time);
+        cal.setTimeInMillis(time);
         int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
         if (year < 1980) {
-            return DOS_TIME_MIN;
+            return DOS_TIME_MIN.getBytes();
         }
+        int month = cal.get(Calendar.MONTH) + 1;
         long value =  ((year - 1980) << 25)
             |         (month << 21)
             |	      (cal.get(Calendar.DAY_OF_MONTH) << 16)
@@ -789,7 +800,7 @@ public class ZipOutputStream extends FilterOutputStream {
         result[1] = (byte) ((value & 0xFF00) >> 8);
         result[2] = (byte) ((value & 0xFF0000) >> 16);
         result[3] = (byte) ((value & 0xFF000000L) >> 24);
-        return new ZipLong(result);
+        return result;
     }
 
     /**
