@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<project name="httptasks" default="all">
+    <description>
+        Build the HTTP tasks into the main ant dir
+        This is not production quality
+
+    </description>
+  <property name="base" location="../../.." />
+  <property name="build.dir" location="${base}/build" />
+  <property name="classes.dir" location="${build.dir}/classes" />
+  <property name="src.dir" location="src/main"/>
+
+  <property name="debug" value="true" />
+  <property name="deprecation" value="false" />
+  <property name="optimize" value="true" />
+
+
+  <target name="init">
+    <mkdir dir="${classes.dir}" />
+  </target>
+
+  <target name="all" depends="compile" />
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           includeantruntime="true"
+           optimize="${optimize}">
+      <include name="**/*.java"/>
+    </javac>
+<!--    <copy toDir="${classes.dir}" preservelastmodified="true" >
+      <fileset dir="${src.dir}">
+        <include name="**/*.xml" />
+      </fileset>
+    </copy>-->
+  </target>
+
+</project>
