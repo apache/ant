@@ -9,7 +9,7 @@ package org.apache.aut.tar;
 
 import java.io.File;
 import java.util.Date;
-import org.apache.aut.nativelib.Os;
+import java.util.Locale;
 
 /**
  * This class represents an entry in a Tar archive. It consists of the entry's
@@ -181,7 +181,9 @@ public class TarEntry
         String name = file.getPath();
 
         // Strip off drive letters!
-        if( Os.isFamily( Os.OS_FAMILY_WINDOWS) )
+        final String osName =
+            System.getProperty( "os.name" ).toLowerCase( Locale.US );
+        if( -1 != osName.indexOf( "netware" ) )
         {
             if( name.length() > 2 )
             {
@@ -196,7 +198,7 @@ public class TarEntry
                 }
             }
         }
-        else if( Os.isFamily( Os.OS_FAMILY_NETWARE) )
+        else if( -1 != osName.indexOf( "netware" ) )
         {
             final int colon = name.indexOf( ':' );
             if( colon != -1 )
