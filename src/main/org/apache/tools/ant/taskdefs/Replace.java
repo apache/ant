@@ -154,17 +154,26 @@ public class Replace extends MatchingTask {
             String val = stringReplace(value.getText(), "\n", linesep);
             String tok = stringReplace(token.getText(), "\n", linesep);
 
-            // for each found token, replace with value and write to the
-            // output file
-            buf = stringReplace(buf, tok, val);
-            bw.write(buf,0,buf.length());
-            bw.flush();
+            // for each found token, replace with value
+            String  newString = stringReplace(buf, tok, val);
+            boolean changes   = !newString.equals(buf);
+
+            if (changes) {
+                bw.write(newString,0,newString.length());
+                bw.flush();
+            }
             
             // cleanup
             bw.close();
             br.close();
-            src.delete();
-            temp.renameTo(src);
+
+            // If there were changes, move the new one to the old one, otherwise, delete the new one
+            if (changes) {
+                src.delete();
+                temp.renameTo(src);
+            } else {
+                temp.delete();
+            }
         } catch (IOException ioe) {
             ioe.printStackTrace();
             throw new BuildException(ioe, location);
