@@ -30,7 +30,8 @@ import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.deployer.TskDeployer;
 
 /**
- * Default implementation of Ant runtime.
+ * Default implementation of Embeddor.
+ * Instantiate this to embed inside other applications.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -41,7 +42,7 @@ public class MyrmidonEmbeddor
     private ConverterEngine          m_converterEngine;
     private DataTypeEngine           m_dataTypeEngine;
     private Executor                 m_executor;
-    private ProjectManager            m_projectEngine;
+    private ProjectManager           m_projectManager;
 
     private ProjectBuilder           m_builder;
     private TskDeployer              m_deployer;
@@ -88,7 +89,7 @@ public class MyrmidonEmbeddor
      */
     public ProjectManager getProjectManager()
     {
-        return m_projectEngine;
+        return m_projectManager;
     }
 
     /**
@@ -136,7 +137,7 @@ public class MyrmidonEmbeddor
         m_converterEngine = null;
         m_dataTypeEngine = null;
         m_executor = null;
-        m_projectEngine = null;
+        m_projectManager = null;
         m_builder = null;
         m_deployer = null;
         m_configurer = null;
@@ -161,24 +162,23 @@ public class MyrmidonEmbeddor
         final Parameters defaults = new Parameters();
 
         //create all the default properties for files/directories
-        defaults.setParameter( "ant.path.bin", "bin" );
-        defaults.setParameter( "ant.path.lib", "lib" );
-        defaults.setParameter( "ant.path.task-lib", "lib" );
+        defaults.setParameter( "myrmidon.bin.path", "bin" );
+        defaults.setParameter( "myrmidon.lib.path", "lib" );
 
         //create all the default properties for components
-        defaults.setParameter( "ant.comp.converter",
+        defaults.setParameter( "myrmidon.comp.converter",
                                "org.apache.ant.convert.engine.DefaultConverterEngine" );
-        defaults.setParameter( "ant.comp.datatype",
+        defaults.setParameter( "myrmidon.comp.datatype",
                                "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
-        defaults.setParameter( "ant.comp.task",
+        defaults.setParameter( "myrmidon.comp.task",
                                "org.apache.myrmidon.components.executor.DefaultExecutor" );
-        defaults.setParameter( "ant.comp.project",
+        defaults.setParameter( "myrmidon.comp.project",
                                "org.apache.myrmidon.components.manager.DefaultProjectManager" );
-        defaults.setParameter( "ant.comp.builder",
+        defaults.setParameter( "myrmidon.comp.builder",
                                "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
-        defaults.setParameter( "ant.comp.deployer",
+        defaults.setParameter( "myrmidon.comp.deployer",
                                "org.apache.myrmidon.components.deployer.DefaultTskDeployer" );
-        defaults.setParameter( "ant.comp.configurer",
+        defaults.setParameter( "myrmidon.comp.configurer",
                                "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
 
         return defaults;
@@ -200,7 +200,7 @@ public class MyrmidonEmbeddor
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
 
         //Following components required when Myrmidon is used as build tool
-        componentManager.put( "org.apache.myrmidon.components.manager.ProjectManager", m_projectEngine );
+        componentManager.put( "org.apache.myrmidon.components.manager.ProjectManager", m_projectManager );
         componentManager.put( "org.apache.myrmidon.components.builder.ProjectBuilder", m_builder );
 
         //Following components required when Myrmidon allows user deployment of tasks etal.
@@ -223,25 +223,25 @@ public class MyrmidonEmbeddor
     {
         String component = null;
 
-        component = getParameter( "ant.comp.converter" );
+        component = getParameter( "myrmidon.comp.converter" );
         m_converterEngine = (ConverterEngine)createComponent( component, ConverterEngine.class );
 
-        component = getParameter( "ant.comp.datatype" );
+        component = getParameter( "myrmidon.comp.datatype" );
         m_dataTypeEngine = (DataTypeEngine)createComponent( component, DataTypeEngine.class );
 
-        component = getParameter( "ant.comp.task" );
+        component = getParameter( "myrmidon.comp.task" );
         m_executor = (Executor)createComponent( component, Executor.class );
 
-        component = getParameter( "ant.comp.project" );
-        m_projectEngine = (ProjectManager)createComponent( component, ProjectManager.class );
+        component = getParameter( "myrmidon.comp.project" );
+        m_projectManager = (ProjectManager)createComponent( component, ProjectManager.class );
 
-        component = getParameter( "ant.comp.builder" );
+        component = getParameter( "myrmidon.comp.builder" );
         m_builder =(ProjectBuilder)createComponent( component, ProjectBuilder.class );
 
-        component = getParameter( "ant.comp.deployer" );
+        component = getParameter( "myrmidon.comp.deployer" );
         m_deployer = (TskDeployer)createComponent( component, TskDeployer.class );
 
-        component = getParameter( "ant.comp.configurer" );
+        component = getParameter( "myrmidon.comp.configurer" );
         m_configurer = (Configurer)createComponent( component, Configurer.class );
     }
 
@@ -257,7 +257,7 @@ public class MyrmidonEmbeddor
         setupComponent( m_converterEngine );
         setupComponent( m_dataTypeEngine );
         setupComponent( m_executor );
-        setupComponent( m_projectEngine );
+        setupComponent( m_projectManager );
         setupComponent( m_builder );
         setupComponent( m_deployer );
         setupComponent( m_configurer );
@@ -293,17 +293,14 @@ public class MyrmidonEmbeddor
     {
         String filepath = null;
 
-        filepath = getParameter( "ant.home" );
+        filepath = getParameter( "myrmidon.home" );
         m_homeDir = (new File( filepath )).getAbsoluteFile();
-        checkDirectory( m_homeDir, "ant-home" );
+        checkDirectory( m_homeDir, "home" );
 
-        filepath = getParameter( "ant.path.bin" );
+        filepath = getParameter( "myrmidon.bin.path" );
         m_binDir = resolveDirectory( filepath, "bin-dir" );
 
-        filepath = getParameter( "ant.path.lib" );
-        m_libDir = resolveDirectory( filepath, "lib-dir" );
-
-        filepath = getParameter( "ant.path.task-lib" );
+        filepath = getParameter( "myrmidon.lib.path" );
         m_taskLibDir = resolveDirectory( filepath, "task-lib-dir" );
     }
 
@@ -363,7 +360,6 @@ public class MyrmidonEmbeddor
 
     /**
      * Helper method to retrieve current JVM version.
-     * Basically stolen from original Ant sources.
      *
      * @return the current JVM version
      */

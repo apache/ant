@@ -46,7 +46,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * The class to kick the tires and light the fires.
- * Starts ant, loads ProjectBuilder, builds project then uses ProjectManager
+ * Starts myrmidon, loads ProjectBuilder, builds project then uses ProjectManager
  * to run project.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
@@ -54,19 +54,6 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class Main
     extends AbstractLoggable
 {
-    //Constants to indicate the build of Ant/Myrmidon
-    public final static String     VERSION                   =
-        "Ant " + Constants.BUILD_VERSION + " compiled on " + Constants.BUILD_DATE;
-
-    //default log level
-    protected final static String  DEFAULT_LOGLEVEL          = "WARN";
-
-    //Some defaults for file locations/names
-    protected final static String  DEFAULT_FILENAME          = "build.ant";
-
-    protected final static String  DEFAULT_LISTENER          =
-        "org.apache.myrmidon.listeners.DefaultProjectListener";
-
     //defines for the Command Line options
     private static final int       HELP_OPT                  = 'h';
     private static final int       QUIET_OPT                 = 'q';
@@ -95,10 +82,10 @@ public class Main
     };
 
     private ProjectListener      m_listener;
-    private File                 m_homeDir;
+    private Parameters           m_parameters  = new Parameters();
 
     /**
-     * Main entry point called to run standard Ant.
+     * Main entry point called to run standard Myrmidon.
      *
      * @param args the args
      */
@@ -108,11 +95,6 @@ public class Main
         main.setLogger( Hierarchy.getDefaultHierarchy().getLoggerFor( "default" ) );
 
         try { main.execute( args ); }
-        catch( final TaskException ae )
-        {
-            main.getLogger().error( "Error: " + ae.getMessage() );
-            main.getLogger().debug( "Exception..." + ExceptionUtil.printStackTrace( ae ) );
-        }
         catch( final Throwable throwable )
         {
             main.getLogger().error( "Error: " + throwable );
@@ -198,10 +180,10 @@ public class Main
                                     INCREMENTAL_OPT,
                                     "Run in incremental mode" );
         options[9] =
-            new CLOptionDescriptor( "ant-home",
+            new CLOptionDescriptor( "myrmidon-home",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     HOME_DIR_OPT,
-                                    "Specify ant home directory" );
+                                    "Specify myrmidon home directory" );
         options[10] =
             new CLOptionDescriptor( "define",
                                     CLOptionDescriptor.ARGUMENTS_REQUIRED_2,
@@ -226,13 +208,15 @@ public class Main
         final List clOptions = parser.getArguments();
         final int size = clOptions.size();
         final ArrayList targets = new ArrayList();
-        String filename = null;
-        String listenerName = null;
-        String logLevel = null;
-        String homeDir = null;
-        String taskLibDir = null;
-        boolean incremental = false;
-        HashMap defines = new HashMap();
+        final HashMap defines = new HashMap();
+
+        m_parameters.setParameter( "filename", "build.ant" );
+        m_parameters.setParameter( "log.level", "WARN" );
+        m_parameters.setParameter( "listener", "org.apache.myrmidon.listeners.DefaultProjectListener" );
+        m_parameters.setParameter( "incremental", "false" );
+
+        //System property set up by launcher
+        m_parameters.setParameter( "myrmidon.home", System.getProperty( "myrmidon.home" ) );
 
         for( int i = 0; i < size; i++ )
         {
@@ -240,48 +224,45 @@ public class Main
 
             switch( option.getId() )
             {
-            case 0: targets.add( option.getArgument() ); break;
             case HELP_OPT: usage( options ); return;
-            case VERSION_OPT: System.out.println( VERSION ); return;
-            case FILE_OPT: filename = option.getArgument(); break;
-            case HOME_DIR_OPT: homeDir = option.getArgument(); break;
-            case TASKLIB_DIR_OPT: taskLibDir = option.getArgument(); break;
-            case VERBOSE_OPT: logLevel = "INFO"; break;
-            case QUIET_OPT: logLevel = "ERROR"; break;
-            case LOG_LEVEL_OPT: logLevel = option.getArgument(); break;
-            case LISTENER_OPT: listenerName = option.getArgument(); break;
-            case INCREMENTAL_OPT: incremental = true; break;
+            case VERSION_OPT: System.out.println( Constants.BUILD_DESCRIPTION ); return;
+
+            case HOME_DIR_OPT: m_parameters.setParameter( "myrmidon.home", option.getArgument() ); break;
+            case TASKLIB_DIR_OPT: 
+                m_parameters.setParameter( "myrmidon.lib.path", option.getArgument() ); 
+                break;
+
+            case LOG_LEVEL_OPT: m_parameters.setParameter( "log.level", option.getArgument() ); break;
+            case VERBOSE_OPT: m_parameters.setParameter( "log.level", "INFO" ); break;
+            case QUIET_OPT: m_parameters.setParameter( "log.level", "ERROR" ); break;
+
+            case INCREMENTAL_OPT: m_parameters.setParameter( "incremental", "true" ); break;
+
+            case FILE_OPT: m_parameters.setParameter( "filename", option.getArgument() ); break;
+            case LISTENER_OPT: m_parameters.setParameter( "listener", option.getArgument() ); break;
 
             case DEFINE_OPT:
                 defines.put( option.getArgument( 0 ), option.getArgument( 1 ) );
                 break;
+
+            case 0: targets.add( option.getArgument() ); break;
             }
         }
 
-        if( null == logLevel ) logLevel = DEFAULT_LOGLEVEL;
-        if( null == listenerName ) listenerName = DEFAULT_LISTENER;
-        if( null == filename ) filename = DEFAULT_FILENAME;
-
         //handle logging...
+        final String logLevel = m_parameters.getParameter( "log.level", null );
         setLogger( createLogger( logLevel ) );
 
-        //if ant home not set then use system property ant.home
-        //that was set up by launcher.
-        if( null == homeDir ) homeDir = System.getProperty( "ant.home" );
-
-        final Parameters parameters = new Parameters();
-        parameters.setParameter( "ant.home", homeDir );
-
-        if( null != taskLibDir ) parameters.setParameter( "ant.path.task-lib", taskLibDir );
-
-        m_homeDir = (new File( homeDir )).getAbsoluteFile();
-        if( !m_homeDir.isDirectory() )
+        final String home = m_parameters.getParameter( "myrmidon.home", null );
+        final File homeDir = (new File( home )).getAbsoluteFile();
+        if( !homeDir.isDirectory() )
         {
-            throw new TaskException( "ant-home (" + m_homeDir + ") is not a directory" );
+            throw new TaskException( "myrmidon-home (" + homeDir + ") is not a directory" );
         }
 
-        final File libDir = new File( m_homeDir, "lib" );
+        final File libDir = new File( homeDir, "lib" );
 
+        final String filename = m_parameters.getParameter( "filename", null );
         final File buildFile = (new File( filename )).getCanonicalFile();
         if( !buildFile.isFile() )
         {
@@ -295,17 +276,23 @@ public class Main
         Thread.currentThread().setContextClassLoader( classLoader );
 
         //handle listener..
+        final String listenerName = m_parameters.getParameter( "listener", null );
         final ProjectListener listener = createListener( listenerName );
 
+        final LogTarget target = new LogTargetToListenerAdapter( listener );
+        getLogger().setLogTargets( new LogTarget[] { target } );
+
+
+
         getLogger().warn( "Ant Build File: " + buildFile );
-        getLogger().info( "Ant Home Directory: " + m_homeDir );
+        getLogger().info( "Ant Home Directory: " + homeDir );
         //getLogger().info( "Ant Bin Directory: " + m_binDir );
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
 
         final Embeddor embeddor = new MyrmidonEmbeddor();
         setupLogger( embeddor );
-        embeddor.parameterize( parameters );
+        embeddor.parameterize( m_parameters );
         embeddor.initialize();
         embeddor.start();
 
@@ -320,15 +307,21 @@ public class Main
         BufferedReader reader = null;
 
         //loop over build if we are in incremental mode..
+        final boolean incremental = m_parameters.getParameterAsBoolean( "incremental", false );
         while( true )
         {
             //actually do the build ...
             final TaskContext context = new DefaultTaskContext();
-            setupContext( context, defines );
+            
+            //Add CLI defines
+            addToContext( context, defines );
+
+            //Add system properties second so that they overide user-defined properties
+            addToContext( context, System.getProperties() );
 
             context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
             context.setProperty( Project.PROJECT_FILE, buildFile );
-            //context.setProperty( Project.PROJECT, projectName );
+            //context.setProperty( Project.PROJECT, project.getName() );
 
             doBuild( manager, project, context, targets );
 
@@ -405,8 +398,7 @@ public class Main
             throw new TaskException( "Unknown log level - " + logLevel );
         }
 
-        final Logger logger =
-            Hierarchy.getDefaultHierarchy().getLoggerFor( "ant" );
+        final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
 
         logger.setPriority( priority );
 
@@ -416,26 +408,18 @@ public class Main
     /**
      * Setup project listener.
      *
-     * @param listenerName the name of project listener
+     * @param listener the classname of project listener
      */
-    protected ProjectListener createListener( final String listenerName )
+    protected ProjectListener createListener( final String listener )
         throws TaskException
     {
-        ProjectListener result = null;
-
-        try { result = (ProjectListener)Class.forName( listenerName ).newInstance(); }
+        try { return (ProjectListener)Class.forName( listener ).newInstance(); }
         catch( final Throwable t )
         {
-            throw new TaskException( "Error creating the listener " + listenerName +
-                                    " due to " + ExceptionUtil.printStackTrace( t, 5, true ),
-                                    t );
+            throw new TaskException( "Error creating the listener " + listener +
+                                     " due to " + ExceptionUtil.printStackTrace( t, 5, true ),
+                                     t );
         }
-
-        final LogTarget target = new LogTargetToListenerAdapter( result );
-
-        getLogger().setLogTargets( new LogTarget[] { target } );
-
-        return result;
     }
 
     /**
@@ -476,32 +460,6 @@ public class Main
         }
 
         return classLoader;
-    }
-
-    /**
-     * Setup the projects context so all the "default" properties are defined.
-     * This also takes a hashmap that is added to context. Usually these are the
-     * ones defined on command line.
-     *
-     * @param project the project
-     * @param defines the defines
-     * @exception TaskException if an error occurs
-     */
-    protected void setupContext( final TaskContext context, final HashMap defines )
-        throws TaskException
-    {
-        //put these values into defines so that they overide
-        //user-defined proeprties
-        //defines.put( AntContextResources.HOME_DIR, m_homeDir );
-        //defines.put( AntContextResources.BIN_DIR, m_binDir );
-        //defines.put( AntContextResources.LIB_DIR, m_libDir );
-        //defines.put( AntContextResources.TASKLIB_DIR, m_taskLibDir );
-        //defines.put( TaskletContext.JAVA_VERSION, getJavaVersion() );
-
-        addToContext( context, defines );
-
-        //Add system properties second so that they overide user-defined properties
-        addToContext( context, System.getProperties() );
     }
 
     /**

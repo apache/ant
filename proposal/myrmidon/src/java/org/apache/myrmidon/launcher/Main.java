@@ -33,9 +33,9 @@ public final class Main
         try
         {
             //actually try to discover the install directory based on where
-            // the ant.jar is
+            // the myrmidon.jar is
             final File installDirectory = findInstallDir();
-            System.setProperty( "ant.home", installDirectory.toString() );
+            System.setProperty( "myrmidon.home", installDirectory.toString() );
 
             //setup classloader appropriately for myrmidon jar
             final File libDir = new File( installDirectory, "lib" );
@@ -90,7 +90,7 @@ public final class Main
     }
 
     /**
-     *  Finds the ant.jar file in the classpath.
+     *  Finds the myrmidon.jar file in the classpath.
      */
     private final static File findInstallDir()
         throws Exception
