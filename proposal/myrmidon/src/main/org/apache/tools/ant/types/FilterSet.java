@@ -15,19 +15,18 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Filter;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * A set of filters to be applied to something. A filter set may have begintoken
  * and endtokens defined.
  *
  * @author <A href="mailto:gholam@xtra.co.nz"> Michael McCallum </A>
- * @created 14 March 2001
  */
 public class FilterSet
-    extends ProjectComponent
+    extends AbstractLogEnabled
     implements Cloneable
 {
     /**

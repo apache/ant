@@ -8,10 +8,10 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Condition;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Condition to wait for a TCP/IP socket to have a listener. Its attribute(s)
@@ -19,10 +19,10 @@ import org.apache.tools.ant.ProjectComponent;
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  *
- * @ant:type type="condition" nam="socket"
+ * @ant:type type="condition" name="socket"
  */
 public class Socket
-    extends ProjectComponent
+    extends AbstractLogEnabled
     implements Condition
 {
     String server = null;

@@ -11,10 +11,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Condition;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are: url -
@@ -22,10 +22,10 @@ import org.apache.tools.ant.ProjectComponent;
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  *
- * @ant:type type="condition" nam="http"
+ * @ant:type type="condition" name="http"
  */
 public class Http
-    extends ProjectComponent
+    extends AbstractLogEnabled
     implements Condition
 {
     String spec = null;

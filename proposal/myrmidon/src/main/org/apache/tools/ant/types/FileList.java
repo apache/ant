@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * FileList represents an explicitly named list of files. FileLists are useful
@@ -23,7 +22,6 @@ import org.apache.tools.ant.ProjectComponent;
  * @version $Revision$ $Date$
  */
 public class FileList
-    extends ProjectComponent
 {
     private final ArrayList m_filenames = new ArrayList();
     private File m_dir;

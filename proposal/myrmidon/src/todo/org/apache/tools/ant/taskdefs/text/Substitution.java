@@ -7,8 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs.text;
 
-import org.apache.tools.ant.ProjectComponent;
-
 /**
  * A regular expression substitution datatype. It is an expression that is meant
  * to replace a regular expression. <pre>
@@ -21,7 +19,6 @@ import org.apache.tools.ant.ProjectComponent;
  * @see org.apache.oro.text.regex.Perl5Substitition
  */
 public class Substitution
-    extends ProjectComponent
 {
     private String m_expression;
 

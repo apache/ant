@@ -22,8 +22,8 @@ import org.apache.myrmidon.LogMessageTracker;
 public class IfTest
     extends AbstractProjectTest
 {
-    private final static Resources REZ
-        = ResourceManager.getPackageResources( IfTest.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( IfTest.class );
 
     public IfTest( String name )
     {

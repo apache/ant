@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.text;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.util.regexp.RegexpFactory;
 
@@ -42,7 +41,6 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * @see org.apache.tools.ant.util.regexp.Regexp
  */
 public class RegularExpression
-    extends ProjectComponent
 {
     // The regular expression factory
     private final static RegexpFactory factory = new RegexpFactory();

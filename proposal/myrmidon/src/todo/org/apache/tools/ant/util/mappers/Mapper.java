@@ -10,7 +10,6 @@ package org.apache.tools.ant.util.mappers;
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 
@@ -20,8 +19,6 @@ import org.apache.tools.ant.types.PathUtil;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Mapper
-    extends ProjectComponent
-    implements Cloneable
 {
     private MapperType m_type;
     private String m_classname;
