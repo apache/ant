@@ -101,16 +101,15 @@ public class Launcher {
         String antHomeProperty = System.getProperty(ANTHOME_PROPERTY);
         File antHome = null;
 
-        URL launchJarURL = Locator.getClassLocationURL(getClass());
-        File jarDir = new File(launchJarURL.getFile()).getParentFile();
+        File sourceJar = Locator.getClassSource(getClass());
+        File jarDir = sourceJar.getParentFile();
 
         if (antHomeProperty != null) {
             antHome = new File(antHomeProperty);
         }
 
         if (antHome == null || !antHome.exists()) {
-            URL antHomeURL = new URL(launchJarURL, "..");
-            antHome = new File(antHomeURL.getFile());
+            antHome = jarDir.getParentFile();
             System.setProperty(ANTHOME_PROPERTY, antHome.getAbsolutePath());
         }
 

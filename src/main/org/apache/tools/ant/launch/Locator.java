@@ -58,6 +58,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 
 /**
  * The Locator is a utility class which is used to find certain items
@@ -67,48 +69,101 @@ import java.io.FilenameFilter;
  * @since Ant 1.6
  */
 public class Locator {
+
     /**
-     * Get the URL for the given class's load location.
+     * Find the directory or jar file the class has been loaded from.
      *
-     * @param theClass the class whose load URL is desired.
-     * @return a URL which identifies the component from which this class
-     *      was loaded.
-     * @throws MalformedURLException if the class' URL cannot be
-     *      constructed.
+     * @return null if we cannot determine the location.
+     *
+     * @since Ant 1.6
      */
-    public static URL getClassLocationURL(Class theClass)
-         throws MalformedURLException {
-        String className = theClass.getName().replace('.', '/') + ".class";
-        URL classRawURL = theClass.getClassLoader().getResource(className);
-
-        String fileComponent = classRawURL.getFile();
-        if (classRawURL.getProtocol().equals("file")) {
-            // Class comes from a directory of class files rather than
-            // from a jar.
-            int classFileIndex = fileComponent.lastIndexOf(className);
-            if (classFileIndex != -1) {
-                fileComponent = fileComponent.substring(0, classFileIndex);
-            }
-
-            return new URL("file:" + fileComponent);
-        } else if (classRawURL.getProtocol().equals("jar")) {
-            // Class is coming from a jar. The file component of the URL
-            // is actually the URL of the jar file
-            int classSeparatorIndex = fileComponent.lastIndexOf("!");
-            if (classSeparatorIndex != -1) {
-                fileComponent = fileComponent.substring(0, classSeparatorIndex);
-            }
-
-            return new URL(fileComponent);
-        } else {
-            // its running out of something besides a jar.
-            // We just return the Raw URL as a best guess
-            return classRawURL;
-        }
+    public static File getClassSource(Class c) {
+        String classResource = c.getName().replace('.', '/') + ".class";
+        return getResourceSource(c.getClassLoader(), classResource);
     }
 
     /**
-     * Get the URL necessary to load the Sun compiler tools. If the classes
+     * Find the directory or a give resource has been loaded from.
+     *
+     * @return null if we cannot determine the location.
+     *
+     * @since Ant 1.6
+     */
+    public static File getResourceSource(ClassLoader c, String resource) {
+        if (c == null) {
+            c = Locator.class.getClassLoader();
+        }
+
+        URL url = c.getResource(resource);
+        if (url != null) {
+            String u = url.toString();
+            if (u.startsWith("jar:file:")) {
+                int pling = u.indexOf("!");
+                String jarName = u.substring(4, pling);
+                return new File(fromURI(jarName));
+            } else if (u.startsWith("file:")) {
+                int tail = u.indexOf(resource);
+                String dirName = u.substring(0, tail);
+                return new File(fromURI(dirName));
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Constructs a file path from a <code>file:</code> URI.
+     *
+     * <p>Will be an absolute path if the given URI is absolute.</p>
+     *
+     * <p>Swallows '%' that are not followed by two characters,
+     * doesn't deal with non-ASCII characters.</p>
+     *
+     * @param uri the URI designating a file in the local filesystem.
+     * @return the local file system path for the file.
+     * @since Ant 1.6
+     */
+    public static String fromURI(String uri) {
+        if (!uri.startsWith("file:")) {
+            throw new IllegalArgumentException("Can only handle file: URIs");
+        }
+        if (uri.startsWith("file://")) {
+            uri = uri.substring(7);
+        } else {
+            uri = uri.substring(5);
+        }
+
+        uri = uri.replace('/', File.separatorChar);
+        if (File.pathSeparatorChar == ';' && uri.startsWith("\\") && uri.length() > 2
+            && Character.isLetter(uri.charAt(1)) && uri.charAt(2) == ':') {
+            uri = uri.substring(1);
+        }
+
+        StringBuffer sb = new StringBuffer();
+        CharacterIterator iter = new StringCharacterIterator(uri);
+        for (char c = iter.first(); c != CharacterIterator.DONE;
+             c = iter.next()) {
+            if (c == '%') {
+                char c1 = iter.next();
+                if (c1 != CharacterIterator.DONE) {
+                    int i1 = Character.digit(c1, 16);
+                    char c2 = iter.next();
+                    if (c2 != CharacterIterator.DONE) {
+                        int i2 = Character.digit(c2, 16);
+                        sb.append((char) ((i1 << 4) + i2));
+                    }
+                }
+            } else {
+                sb.append(c);
+            }
+        }
+
+        String path = sb.toString();
+        return path;
+    }
+
+
+    /**
+     * Get the File necessary to load the Sun compiler tools. If the classes
      * are available to this class, then no additional URL is required and
      * null is returned. This may be because the classes are explcitly in the
      * class path or provided by the JVM directly
@@ -196,7 +251,7 @@ public class Locator {
             urls = new URL[1];
             String path = location.getPath();
             for (int i = 0; i < extensions.length; ++i) {
-                if (path.endsWith(extensions[i])) {
+                if (path.toLowerCase().endsWith(extensions[i])) {
                     urls[0] = location.toURL();
                     break;
                 }
@@ -208,7 +263,7 @@ public class Locator {
             new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     for (int i = 0; i < extensions.length; ++i) {
-                        if (name.endsWith(extensions[i])) {
+                        if (name.toLowerCase().endsWith(extensions[i])) {
                             return true;
                         }
                     }

@@ -83,6 +83,7 @@ import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.launch.Locator;
 
 /**
  * This class also encapsulates methods which allow Files to be
@@ -1258,41 +1259,8 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public String fromURI(String uri) {
-        if (!uri.startsWith("file:")) {
-            throw new IllegalArgumentException("Can only handle file: URIs");
-        }
-        if (uri.startsWith("file://")) {
-            uri = uri.substring(7);
-        } else {
-            uri = uri.substring(5);
-        }
+        String path = Locator.fromURI(uri);
 
-        uri = uri.replace('/', File.separatorChar);
-        if (Os.isFamily("dos") && uri.startsWith("\\") && uri.length() > 2
-            && Character.isLetter(uri.charAt(1)) && uri.charAt(2) == ':') {
-            uri = uri.substring(1);
-        }
-
-        StringBuffer sb = new StringBuffer();
-        CharacterIterator iter = new StringCharacterIterator(uri);
-        for (char c = iter.first(); c != CharacterIterator.DONE;
-             c = iter.next()) {
-            if (c == '%') {
-                char c1 = iter.next();
-                if (c1 != CharacterIterator.DONE) {
-                    int i1 = Character.digit(c1, 16);
-                    char c2 = iter.next();
-                    if (c2 != CharacterIterator.DONE) {
-                        int i2 = Character.digit(c2, 16);
-                        sb.append((char) ((i1 << 4) + i2));
-                    }
-                }
-            } else {
-                sb.append(c);
-            }
-        }
-
-        String path = sb.toString();
         // catch exception if normalize thinks this is not an absolute path
         try {
             path = normalize(path).getAbsolutePath();

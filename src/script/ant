@@ -4,7 +4,7 @@
 #   reserved.
 
 # load system-wide ant configuration
-if [ -f "/etc/ant.conf" ] ; then 
+if [ -f "/etc/ant.conf" ] ; then
   . /etc/ant.conf
 fi
 
@@ -12,12 +12,13 @@ fi
 if [ -z "$rpm_mode" ] ; then
   rpm_mode=false;
 fi
+
 if [ -z "$usejikes" ] ; then
   usejikes=false;
 fi
 
 # load user ant configuration
-if [ -f "$HOME/.antrc" ] ; then 
+if [ -f "$HOME/.antrc" ] ; then
   . "$HOME/.antrc"
 fi
 
@@ -28,18 +29,18 @@ case "`uname`" in
   CYGWIN*) cygwin=true ;;
   Darwin*) darwin=true
            if [ -z "$JAVA_HOME" ] ; then
-             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home   
+             JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
            fi
            ;;
 esac
 
 if [ -z "$ANT_HOME" ] ; then
   # try to find ANT
-  if [ -d /opt/ant ] ; then 
+  if [ -d /opt/ant ] ; then
     ANT_HOME=/opt/ant
   fi
 
-  if [ -d "${HOME}/opt/ant" ] ; then 
+  if [ -d "${HOME}/opt/ant" ] ; then
     ANT_HOME="${HOME}/opt/ant"
   fi
 
@@ -52,17 +53,16 @@ if [ -z "$ANT_HOME" ] ; then
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '/.*' > /dev/null; then
-	PRG="$link"
+    PRG="$link"
     else
-	PRG=`dirname "$PRG"`"/$link"
+    PRG=`dirname "$PRG"`"/$link"
     fi
   done
-  
+
   ANT_HOME=`dirname "$PRG"`/..
 
   # make it fully qualified
   ANT_HOME=`cd "$ANT_HOME" && pwd`
-
 fi
 
 # For Cygwin, ensure paths are in UNIX format before anything is touched
@@ -78,9 +78,9 @@ fi
 # set ANT_LIB location
 ANT_LIB="${ANT_HOME}/lib"
 
-if [ -z "$JAVACMD" ] ; then 
+if [ -z "$JAVACMD" ] ; then
   if [ -n "$JAVA_HOME"  ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then 
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
       # IBM's JDK on AIX uses strange locations for the executables
       JAVACMD="$JAVA_HOME/jre/sh/java"
     else
@@ -88,12 +88,12 @@ if [ -z "$JAVACMD" ] ; then
     fi
   else
     JAVACMD=`which java 2> /dev/null `
-    if [ -z "$JAVACMD" ] ; then 
+    if [ -z "$JAVACMD" ] ; then
         JAVACMD=java
     fi
   fi
 fi
- 
+
 if [ ! -x "$JAVACMD" ] ; then
   echo "Error: JAVA_HOME is not defined correctly."
   echo "  We cannot execute $JAVACMD"
@@ -104,10 +104,10 @@ if [ -n "$CLASSPATH" ] ; then
   LOCALCLASSPATH="$CLASSPATH"
 fi
 
-# in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR 
+# in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR
 if $rpm_mode; then
   JAVALIBDIR=/usr/share/java
-  for i in ant ant-optional jaxp_parser xml_apis 
+  for i in ant ant-optional jaxp_parser xml_apis
   do
     if [ -z "$LOCALCLASSPATH" ] ; then
       LOCALCLASSPATH="$JAVALIBDIR/$i.jar"
@@ -120,29 +120,14 @@ if $rpm_mode; then
   ANT_LIB="${JAVALIBDIR}/ant"
 fi
 
-# add in the dependency .jar files in non-RPM mode (the default)
-for i in "${ANT_LIB}"/*.jar
-do
-  # if the directory is empty, then it will return the input string
-  # this is stupid, so case for it
-  if [ -f "$i" ] ; then
-    if [ -z "$LOCALCLASSPATH" ] ; then
-      LOCALCLASSPATH="$i"
-    else
-      LOCALCLASSPATH="$i:$LOCALCLASSPATH"
-    fi
-  fi
-done
+if [ -z "$LOCALCLASSPATH" ] ; then
+    LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar
+else
+    LOCALCLASSPATH=$ANT_LIB/ant-launcher.jar:$LOCALCLASSPATH
+fi
+
 
 if [ -n "$JAVA_HOME" ] ; then
-  if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
-    LOCALCLASSPATH="$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar"
-  fi
-
-  if [ -f "$JAVA_HOME/lib/classes.zip" ] ; then
-    LOCALCLASSPATH="$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip"
-  fi
-
   # OSX hack to make Ant work with jikes
   if $darwin ; then
     OSXHACK="${JAVA_HOME}/../Classes"
@@ -176,15 +161,14 @@ fi
 
 if [ -n "$CYGHOME" ]; then
   if [ -n "$JIKESPATH" ]; then
-    JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
   else
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.Main $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
   fi
 else
   if [ -n "$JIKESPATH" ]; then
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" org.apache.tools.ant.Main $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
   else
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" org.apache.tools.ant.Main $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
   fi
 fi
