@@ -230,4 +230,8 @@ Legal:
         </try-catch>
     </target>
 
+    <target name="copy-test">
+        <copy file="sample.ant" dest-file="../../dist/bin/sample.ant-copied.txt"/>
+    </target>
+
 </project>
