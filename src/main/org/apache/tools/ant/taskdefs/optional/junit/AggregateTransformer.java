@@ -117,12 +117,29 @@ public class AggregateTransformer {
     protected String format;
 
     /** XML Parser factory */
-    protected final static DocumentBuilderFactory dbfactory = DocumentBuilderFactory.newInstance();
+    private static DocumentBuilderFactory privateDBFactory;
+    
+    /** XML Parser factory accessible to subclasses */
+    protected static DocumentBuilderFactory dbfactory;
+    
+    static {
+       privateDBFactory = DocumentBuilderFactory.newInstance();
+       dbfactory = privateDBFactory;
+    }
 
     public AggregateTransformer(Task task){
         this.task = task;
     }
 
+    /**
+     * Get the Document Builder Factory
+     *
+     * @return the DocumentBuilderFactory instance in use
+     */
+    protected static DocumentBuilderFactory getDocumentBuilderFactory() {
+        return privateDBFactory;
+    }
+    
     public void setFormat(Format format){
         this.format = format.getValue();
     }
@@ -138,7 +155,7 @@ public class AggregateTransformer {
      */
     protected void setXmlfile(File xmlfile) throws BuildException {
         try {
-            DocumentBuilder builder = dbfactory.newDocumentBuilder();
+            DocumentBuilder builder = privateDBFactory.newDocumentBuilder();
             InputStream in = new FileInputStream(xmlfile);
             try {
                 Document doc = builder.parse(in);
