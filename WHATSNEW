@@ -94,6 +94,8 @@ Fixed bugs:
 
 * build.sysclasspath will now be honored by more tasks.
 
+* <jar update="true"> would remove the original manifest.
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.

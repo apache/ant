@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
@@ -95,6 +97,12 @@ public class Jar extends Zip {
 
     /**  merged manifests added through filesets */
     private Manifest filesetManifest;
+
+    /** 
+     * Manifest of original archive, will be set to null if not in
+     * update mode.
+     */
+    private Manifest originalManifest;
 
     /**
      *  whether to merge fileset manifests;
@@ -143,6 +151,36 @@ public class Jar extends Zip {
      */
     public void setJarfile(File jarFile) {
         setDestFile(jarFile);
+    }
+
+    /**
+     * Override to get hold of the original Manifest (if present and
+     * only if updating ...
+     *
+     * @since Ant 1.5.2
+     */
+    public void setDestFile(File jarFile) {
+        super.setDestFile(jarFile);
+        if (jarFile.exists()) {
+            try {
+                ZipFile zf = new ZipFile(jarFile);
+
+                // must not use getEntry as "well behaving" applications
+                // must accept the manifest in any capitalization
+                Enumeration enum = zf.entries();
+                while (enum.hasMoreElements()) {
+                    ZipEntry ze = (ZipEntry) enum.nextElement();
+                    if (ze.getName().equalsIgnoreCase("META-INF/MANIFEST.MF")) {
+                        originalManifest = 
+                            getManifest(new InputStreamReader(zf
+                                                         .getInputStream(ze)));
+                    }
+                }
+            } catch (Throwable t) {
+                log("error while reading original manifest: " + t.getMessage(),
+                    Project.MSG_WARN);
+            }
+        }
     }
 
     /**
@@ -272,6 +310,10 @@ public class Jar extends Zip {
     private Manifest createManifest()
         throws BuildException {
         try {
+            if (!isInUpdateMode()) {
+                originalManifest = null;
+            }
+
             Manifest finalManifest = Manifest.getDefaultManifest();
 
             if (manifest == null) {
@@ -279,24 +321,21 @@ public class Jar extends Zip {
                     // if we haven't got the manifest yet, attempt to
                     // get it now and have manifest be the final merge
                     manifest = getManifest(manifestFile);
-                    finalManifest.merge(filesetManifest);
-                    finalManifest.merge(configuredManifest);
-                    finalManifest.merge(manifest, !mergeManifestsMain);
-                } else if (configuredManifest != null) {
-                    // configuredManifest is the final merge
-                    finalManifest.merge(filesetManifest);
-                    finalManifest.merge(configuredManifest,
-                                        !mergeManifestsMain);
-                } else if (filesetManifest != null) {
-                    // filesetManifest is the final (and only) merge
-                    finalManifest.merge(filesetManifest, !mergeManifestsMain);
                 }
-            } else {
-                // manifest is the final merge
-                finalManifest.merge(filesetManifest);
-                finalManifest.merge(configuredManifest);
-                finalManifest.merge(manifest, !mergeManifestsMain);
             }
+
+            /*
+             * Precedence: manifestFile wins over inline manifest,
+             * over manifests read from the filesets over the original
+             * manifest.
+             *
+             * merge with null argument is a no-op
+             */
+
+            finalManifest.merge(originalManifest);
+            finalManifest.merge(filesetManifest);
+            finalManifest.merge(configuredManifest);
+            finalManifest.merge(manifest, !mergeManifestsMain);
 
             return finalManifest;
 
@@ -307,7 +346,7 @@ public class Jar extends Zip {
     }
 
     private void writeManifest(ZipOutputStream zOut, Manifest manifest)
-         throws IOException {
+        throws IOException {
         for (Enumeration e = manifest.getWarnings();
              e.hasMoreElements();) {
             log("Manifest warning: " + (String) e.nextElement(),
@@ -330,7 +369,7 @@ public class Jar extends Zip {
     }
 
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
-            throws IOException, BuildException {
+        throws IOException, BuildException {
 
         if (index) {
             createIndexList(zOut);
@@ -399,9 +438,9 @@ public class Jar extends Zip {
                            int mode)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
-           if (! doubleFilePass || (doubleFilePass && skipWriting)) {
-               filesetManifest(file, null);
-           }
+            if (! doubleFilePass || (doubleFilePass && skipWriting)) {
+                filesetManifest(file, null);
+            }
         } else {
             super.zipFile(file, zOut, vPath, mode);
         }
@@ -414,9 +453,9 @@ public class Jar extends Zip {
                            long lastModified, File file, int mode)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
-           if (! doubleFilePass || (doubleFilePass && skipWriting)) {
-               filesetManifest(file, is);
-           }
+            if (! doubleFilePass || (doubleFilePass && skipWriting)) {
+                filesetManifest(file, is);
+            }
         } else {
             super.zipFile(is, zOut, vPath, lastModified, null, mode);
         }
@@ -542,11 +581,11 @@ public class Jar extends Zip {
 
         // we want to save this info if we are going to make another pass
         if (! doubleFilePass || (doubleFilePass && ! skipWriting))
-        {
-            manifest = null;
-            configuredManifest = savedConfiguredManifest;
-            filesetManifest = null;
-        }
+            {
+                manifest = null;
+                configuredManifest = savedConfiguredManifest;
+                filesetManifest = null;
+            }
     }
 
     /**

@@ -152,7 +152,7 @@ public class JarTest extends BuildFileTest {
                    jarModifiedDate < jarFile.lastModified());
     }
 
-    public void XtestManifestStaysIntact() 
+    public void testManifestStaysIntact() 
         throws IOException, ManifestException {
         executeTarget("testManifestStaysIntact");
         Manifest mf1 = 
