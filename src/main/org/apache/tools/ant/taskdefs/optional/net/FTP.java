@@ -660,17 +660,32 @@ public class FTP
                 this.client = parent.client;
                 Vector pathElements = SelectorUtils.tokenizePath(path);
                 try {
-                    this.client.changeWorkingDirectory(parent.getAbsolutePath());
+                    boolean result = this.client.changeWorkingDirectory(parent.getAbsolutePath());
+                    //this should not happen, except if parent has been deleted by another process
+                    if (!result) {
+                        return;
+                    }
                     this.curpwd = parent.getAbsolutePath();
                 } catch (IOException ioe) {
                     throw new BuildException("could not change working dir to "
                     + parent.curpwd);
                 }
                 for (int fcount = 0; fcount < pathElements.size() - 1; fcount++) {
+                    String currentPathElement = (String) pathElements.elementAt(fcount);
                     try {
-                        this.client.changeWorkingDirectory((String) pathElements.elementAt(fcount));
+                        boolean result = this.client.changeWorkingDirectory(currentPathElement);
+                        if (!result && !isCaseSensitive()
+                            && (remoteSystemCaseSensitive || !remoteSensitivityChecked)) {
+                           currentPathElement = findPathElementCaseUnsensitive(this.curpwd,
+                               currentPathElement);
+                            if (currentPathElement == null) {
+                                return;
+                            }
+                        } else if (!result) {
+                            return;
+                        }
                         this.curpwd = this.curpwd + remoteFileSep
-                            + (String) pathElements.elementAt(fcount);
+                            + currentPathElement;
                     } catch (IOException ioe) {
                         throw new BuildException("could not change working dir to "
                         + (String) pathElements.elementAt(fcount)
@@ -681,6 +696,27 @@ public class FTP
                 String lastpathelement = (String) pathElements.elementAt(pathElements.size() - 1);
                 FTPFile [] theFiles = listFiles(this.curpwd);
                 this.ftpFile = getFile(theFiles, lastpathelement);
+            }
+            /**
+             * find a file in a directory in case unsensitive way
+             * @param parentPath        where we are
+             * @param soughtPathElement what is being sought
+             * @return                  the first file found or null if not found
+             */
+            private String findPathElementCaseUnsensitive(String parentPath,
+                               String soughtPathElement) {
+                // we are already in the right path, so the second parameter
+                // is false
+                FTPFile[] theFiles = listFiles(parentPath, false);
+                if (theFiles == null) {
+                    return null;
+                }
+                for (int icounter = 0; icounter < theFiles.length; icounter++) {
+                    if (theFiles[icounter].getName().equalsIgnoreCase(soughtPathElement)) {
+                        return theFiles[icounter].getName();
+                    }
+                }
+                return null;
             }
             /**
              * find out if the file exists
