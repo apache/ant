@@ -167,13 +167,17 @@ public class Copy extends Task {
 
         // deal with the single file
         if (file != null) {
-            if (destFile == null) {
-                destFile = new File(destDir, file.getName());
-            }
+            if (file.exists()) {
+                if (destFile == null) {
+                    destFile = new File(destDir, file.getName());
+                }
 
-            if (forceOverwrite || 
-                (file.lastModified() > destFile.lastModified())) {
-                fileCopyMap.put(file.getAbsolutePath(), destFile.getAbsolutePath());
+                if (forceOverwrite || 
+                    (file.lastModified() > destFile.lastModified())) {
+                    fileCopyMap.put(file.getAbsolutePath(), destFile.getAbsolutePath());
+                }
+            } else {
+                log("Could not find file " + file.getAbsolutePath() + " to copy.");
             }
         }
 
@@ -279,8 +283,9 @@ public class Copy extends Task {
      */
     protected void doFileOperations() {
         if (fileCopyMap.size() > 0) {
-            log("Copying " + fileCopyMap.size() + " files to " + 
-                destDir.getAbsolutePath() );
+            log("Copying " + fileCopyMap.size() + 
+                " file" + (fileCopyMap.size() == 1 ? "" : "s") + 
+                " to " + destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
             while (e.hasMoreElements()) {
