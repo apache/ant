@@ -762,8 +762,8 @@ C++.
 <p>
 
 There are two inclusion mechanisms, an ugly one for all parsers and a
-clean one. For now, the ugly
-method is the most portable:-
+clean one. The ugly method is the only one that was available on Ant1.5 and
+earlier:-
 <pre>
     &lt;!DOCTYPE project [
       &lt;!ENTITY propertiesAndPaths SYSTEM &quot;propertiesAndPaths.xml&quot;&gt;
@@ -773,12 +773,26 @@ method is the most portable:-
         &amp;propertiesAndPaths;
         &amp;taskdefs;
 </pre>
-The cleaner method using XInclude/Xpath will let you include named 
-targets from one build file or another, using
-<a href="http://www.w3.org/XML/Linking"> 
-the xpointer syntax</a>. You'll need to wait for the W3C proposals
-to finalise and the java XML parsers to implement it before
-using xpointer references.
+The cleaner method in Ant1.6 is the <tt>&lt;import&gt;</tt> task that imports
+whole build files into other projects. The entity inclusion example
+could <i>almost</i> be replaced by two import statements:-
+<pre>
+ &lt;import file="propertiesAndPaths.xml"&gt;
+ &lt;import file="taskdefs.xml"&gt;
+</pre>
+
+We say almost as top level declarations (properties and taskdefs) 
+do not get inserted into the XML file exactly where the import statement
+goes, but added to the end of the file. This is because the import process
+takes place after the main build file is parsed, during execution, whereas
+XML entity expansion is handled during the parsing process.
+
+<p>
+
+The <tt>&lt;import&gt;</tt> task does powerful things, such as let you override targets,
+and use ant properties to name the location of the file to import. Consult the
+<a href="manual/CoreTasks/import.html">documentation</a> for the specifics of
+these features.  
 
 <p>
 
@@ -1124,9 +1138,8 @@ running a continuous integration/testing proces.
 
 <li><a href="http://manning.com/antbook/"><i>Java Development with
 Ant</i></a>;
-    Erik Hatcher and Steve Loughran. <br>
-    Arguably the only book on Ant worth owning; 
-    certainly it's the only one written by Ant developers.
+    Erik Hatcher and Steve Loughran. 
+
     
 <li>
 <a href="http://www.iseran.com/Steve/papers/when_web_services_go_bad.html">
