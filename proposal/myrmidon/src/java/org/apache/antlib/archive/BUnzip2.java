@@ -9,8 +9,8 @@ package org.apache.antlib.archive;
 
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.bzip2.CBZip2InputStream;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Expands a file that has been compressed with the BZIP2 algorithm. Normally
