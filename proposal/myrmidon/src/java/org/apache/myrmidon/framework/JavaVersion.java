@@ -22,6 +22,7 @@ public final class JavaVersion
     public final static JavaVersion JAVA1_1 = new JavaVersion( "Java 1.1", 110 );
     public final static JavaVersion JAVA1_2 = new JavaVersion( "Java 1.2", 120 );
     public final static JavaVersion JAVA1_3 = new JavaVersion( "Java 1.3", 130 );
+    public final static JavaVersion JAVA1_4 = new JavaVersion( "Java 1.4", 140 );
 
     private final static JavaVersion CURRENT = determineCurrentJavaVersion();
 
@@ -58,11 +59,13 @@ public final class JavaVersion
         try
         {
             Class.forName( "java.lang.Void" );
-            version = JavaVersion.JAVA1_1;
+            version = JAVA1_1;
             Class.forName( "java.lang.ThreadLocal" );
-            version = JavaVersion.JAVA1_2;
+            version = JAVA1_2;
             Class.forName( "java.lang.StrictMath" );
-            version = JavaVersion.JAVA1_3;
+            version = JAVA1_3;
+            Class.forName("java.lang.CharSequence");
+            version = JAVA1_4;
         }
         catch( final ClassNotFoundException cnfe )
         {
