@@ -27,6 +27,11 @@
   <target name="build" depends="main" />
 
   <target name="main" depends="init" >
+   <echo>Embed is no longer supported with ant1.6. It is only used with ant1.5 ! The dynamic properties work with both, use embed-optional target</echo>
+  </target>
+
+  <target name="main-ant15" depends="init" 
+          description="Build hacks into ant1.5 to support some 1.6 features" >
     <javac srcdir="src/java"  
            debug="${debug}"
            destdir="${embed.build}/classes" >
@@ -49,6 +54,7 @@
            debug="${debug}"
            destdir="${embed.build}/classes" >
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
+      <include name="org/apache/tools/ant/taskdefs/XMLDOM**" />
       <classpath>
         <!-- all this will move to their package -->
         <pathelement location="build/classes" />
@@ -66,6 +72,7 @@
 
     <jar file="${embed.build}/optional-dynprop.jar" basedir="${embed.build}/classes">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
+      <include name="org/apache/tools/ant/taskdefs/XMLDOM**" />
     </jar>
         
   </target>
