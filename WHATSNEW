@@ -17,6 +17,8 @@ Fixed bugs:
 * DependScanner.getResource() always returned nonexistent resources,
   even when the resource actually existed.  Bugzilla Report 30558.
 
+* <apply> was broken with classfilesets.  Bugzilla Report 30567.
+
 Other changes:
 --------------
 
