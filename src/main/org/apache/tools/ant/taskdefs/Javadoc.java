@@ -60,18 +60,25 @@ import java.io.*;
 import java.util.*;
 
 /**
- * This Task makes it easy to generate javadocs for a collection of source code.
+ * This task makes it easy to generate Javadoc documentation for a collection
+ * of source code.
  *
- * Current known limitations are:
- *  - multiple source path breaks operation
- *  - patterns must be of the form "xxx.*", every other pattern doesn't work.
- *  - the java comment-stripper reader is horribly slow
- *  - there is no control on arguments sanity since they are left
- *    to the javadoc implementation.
- *  - argument J in javadoc1 is not supported (what is that for anyway?)
+ * <P>Current known limitations are:
  *
- * Note: This task is run on another VM because stupid Javadoc calls
- * System.exit() that would break Ant functionality.
+ * <P><UL>
+ *    <LI>patterns must be of the form "xxx.*", every other pattern doesn't
+ *        work.
+ *    <LI>the java comment-stripper reader is horribly slow
+ *    <LI>there is no control on arguments sanity since they are left
+ *        to the javadoc implementation.
+ *    <LI>argument J in javadoc1 is not supported (what is that for anyway?)
+ * </UL>
+ *
+ * <P>If no <CODE>doclet</CODE> is set, then the <CODE>version</CODE> and
+ * <CODE>author</CODE> are by default <CODE>"yes"</CODE>.
+ *
+ * <P>Note: This task is run on another VM because the Javadoc code calls
+ * <CODE>System.exit()</CODE> which would break Ant functionality.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
@@ -79,6 +86,61 @@ import java.util.*;
  */
 
 public class Javadoc extends Exec {
+
+    public class DocletParam {
+        private String name;
+        private String value;
+        
+        public void setName(String name) {
+            this.name = name;
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public class DocletInfo {
+        private String name;
+        private String path;
+        
+        private Vector params = new Vector();
+        
+        public void setName(String name) {
+            this.name = name;
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public void setPath(String path) {
+            this.path = Project.translatePath(path);
+        }
+
+        public String getPath() {
+            return path;
+        }
+        
+        public Object createParam() {
+            DocletParam param = new DocletParam();
+            params.addElement(param);
+            
+            return param;
+        }
+        
+        public Enumeration getParams() {
+            return params.elements();
+        }
+    }
 
     private String maxmemory = null;
     private String sourcePath = null;
@@ -93,8 +155,7 @@ public class Javadoc extends Exec {
     private boolean priv = false;
     private boolean author = true;
     private boolean version = true;
-    private String doclet = null;
-    private String docletpath = null;
+    private DocletInfo doclet = null;
     private boolean old = false;
     private String classpath = null;
     private String bootclasspath = null;
@@ -118,6 +179,7 @@ public class Javadoc extends Exec {
     private boolean noindex = false;
     private boolean nohelp = false;
     private boolean nonavbar = false;
+    private boolean serialwarn = false;
     private File stylesheetfile = null;
     private File helpfile = null;
     private String docencoding = null;
@@ -125,6 +187,8 @@ public class Javadoc extends Exec {
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
+    private String charset = null;
+
 
     public void setMaxmemory(String src){
         maxmemory = src;
@@ -162,11 +226,24 @@ public class Javadoc extends Exec {
         priv = Project.toBoolean(src);
     }
     public void setDoclet(String src) {
-        doclet = src;
+        if (doclet == null) {
+            doclet = new DocletInfo();
+        }
+        doclet.setName(src);
     }
+    
     public void setDocletPath(String src) {
-        docletpath = project.translatePath(src);
+        if (doclet == null) {
+            doclet = new DocletInfo();
+        }
+        doclet.setPath(src);
     }
+
+    public DocletInfo createDoclet() {
+        doclet = new DocletInfo();
+        return doclet;
+    }
+
     public void setOld(String src) {
         old = Project.toBoolean(src);
     }
@@ -241,6 +318,9 @@ public class Javadoc extends Exec {
     }
     public void setNonavbar(String src) {
         nonavbar = Project.toBoolean(src);
+    }
+    public void setSerialwarn(String src) {
+        serialwarn = Project.toBoolean(src);
     }
     public void setStylesheetfile(String src) {
         stylesheetfile = project.resolveFile(src);
@@ -320,6 +400,10 @@ public class Javadoc extends Exec {
             return packages;
         }
     }
+    
+    public void setCharset(String src) {
+        charset = src;
+    }
 
     public void execute() throws BuildException {
         if (sourcePath == null && destDir == null ) {
@@ -364,11 +448,11 @@ public class Javadoc extends Exec {
             argList.addElement("-d");
             argList.addElement(destDir.getAbsolutePath());
         }
-        if (version)
+        if (version && doclet == null)
             argList.addElement ("-version");
         if (nodeprecated)
             argList.addElement ("-nodeprecated");
-        if (author)
+        if (author && doclet == null)
             argList.addElement ("-author");
         if (noindex)
             argList.addElement ("-noindex");
@@ -414,14 +498,32 @@ public class Javadoc extends Exec {
                 argList.addElement("-nohelp");
             if (nonavbar)
                 argList.addElement("-nonavbar");
+            if (serialwarn)                     
+                argList.addElement("-serialwarn");
             if (doclet != null) {
-                argList.addElement("-doclet");
-                argList.addElement(doclet);
-            }
-            if (docletpath != null) {
-                argList.addElement("-docletpath");
-                argList.addElement(docletpath);
-            }
+                if (doclet.getName() == null) {
+                    throw new BuildException("The doclet name must be specified.");
+                }
+                else {                
+                    argList.addElement("-doclet");
+                    argList.addElement(doclet.getName());
+                    if (doclet.getPath() != null) {
+                        argList.addElement("-docletpath");
+                        argList.addElement(doclet.getPath());
+                    }
+                    for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
+                        DocletParam param = (DocletParam)e.nextElement();
+                        if (param.getName() == null) {
+                            throw new BuildException("Doclet parameters must have a name");
+                        }
+                        
+                        argList.addElement(param.getName());
+                        if (param.getValue() != null) {
+                            argList.addElement(param.getValue());
+                        }
+                    }                        
+                }
+            } 
             if (bootclasspath != null) {
                 argList.addElement("-bootclasspath");
                 argList.addElement(bootclasspath);
@@ -545,6 +647,10 @@ public class Javadoc extends Exec {
             if (helpfile != null) {
                 argList.addElement("-helpfile");
                 argList.addElement(helpfile.getAbsolutePath());
+            }
+            if (charset != null) {
+                argList.addElement("-charset");
+                argList.addElement(charset);
             }
             if (additionalParam != null) {
                 argList.addElement(additionalParam);

@@ -509,7 +509,7 @@ public class Project {
         @returns translated string or empty string if to_process is null or empty
         @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
     */
-    public String translatePath(String to_process) {
+    static public String translatePath(String to_process) {
         if ( to_process == null || to_process.length() == 0 ) return "";
 
         StringBuffer bs = new StringBuffer(to_process.length() + 50);
