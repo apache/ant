@@ -866,6 +866,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 if (t instanceof ClassFormatError) {
                     throw (ClassFormatError)t;
                 }
+                else if (t instanceof NoClassDefFoundError) {
+                    throw (NoClassDefFoundError)t;
+                }
                 else {
                     throw new IOException(t.toString());
                 }
@@ -914,6 +917,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                     }
                 }
                 catch (IOException ioe) {
+                    // ioe.printStackTrace();
                     log("Exception reading component " + pathComponent , Project.MSG_VERBOSE);
                 }
             }

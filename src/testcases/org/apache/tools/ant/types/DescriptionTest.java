@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,32 +54,49 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.TaskdefsTest;
+
+import junit.framework.TestCase;
+import junit.framework.AssertionFailedError;
+
+import java.io.*;
 
 /**
- * Description is used to provide a project-wide description element
- * (that is, a description that applies to a buildfile as a whole).
- * If present, the <description> element is printed out before the
- * target descriptions.
- * 
- * Description has no attributes, only text.  There can only be one
- * project description per project.  A second description element will
- * overwrite the first.
+ * FilterSet testing
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
- * @version $Revision$ $Date$
+ * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
-public class Description extends DataType {
+public class DescriptionTest extends TaskdefsTest {
 
-    /**
-     * Adds descriptive text to the project.
-     */
-    public void addText(String text) {
-        String currentDescription = project.getDescription();
-        if (currentDescription == null) {
-            project.setDescription(text);
-        } else {
-            project.setDescription(currentDescription + text);
-        }
+    public DescriptionTest(String name) {
+        super(name);
+    }
+
+    public void setUp() { 
+    }
+
+    public void tearDown() {
+    }
+
+    public void test1() { 
+        configureProject("src/etc/testcases/types/description1.xml");
+        assertEquals("Single description failed", "Test Project Description", project.getDescription());
+    }
+
+    public void test2() { 
+        configureProject("src/etc/testcases/types/description2.xml");
+        assertEquals("Multi line description failed", "Multi Line\nProject Description", project.getDescription());
+    }
+    
+    public void test3() { 
+        configureProject("src/etc/testcases/types/description3.xml");
+        assertEquals("Multi instance description failed", "Multi Instance Project Description", project.getDescription());
+    }
+    
+    public void test4() { 
+        configureProject("src/etc/testcases/types/description4.xml");
+        assertEquals("Multi instance nested description failed", "Multi Instance Nested Project Description", project.getDescription());
     }
 }

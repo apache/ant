@@ -34,4 +34,10 @@
     <fixcrlf eol="lf" srcdir="." includes="dest3.txt"/>
   </target>
   
+  <target name="cleanup">
+    <delete file="dest1.txt" quiet="true" />
+    <delete file="dest2.txt" quiet="true" />
+    <delete file="dest3.txt" quiet="true" />
+  </target>
+
 </project>

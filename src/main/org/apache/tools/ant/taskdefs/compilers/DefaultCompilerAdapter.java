@@ -67,7 +67,7 @@ import java.util.Random;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
@@ -92,6 +92,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected Location location;
     protected boolean includeAntRuntime;
     protected boolean includeJavaRuntime;
+    protected String memoryInitialSize;
+    protected String memoryMaximumSize;
 
     protected File[] compileList;
     protected static String lSep = System.getProperty("line.separator");
@@ -116,6 +118,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         location = attributes.getLocation();
         includeAntRuntime = attributes.getIncludeantruntime();
         includeJavaRuntime = attributes.getIncludejavaruntime();
+        memoryInitialSize = attributes.getMemoryInitialSize();
+        memoryMaximumSize = attributes.getMemoryMaximumSize();
     }
 
     public Javac getJavac() {
@@ -136,7 +140,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             classpath.setLocation(destDir);
         }
 
-        // Combine the build classpath with the system classpath, in an 
+        // Combine the build classpath with the system classpath, in an
         // order determined by the value of build.classpath
 
         if (compileClasspath == null) {
@@ -166,7 +170,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 classpath.addExisting(new Path(null,
                                                 System.getProperty("java.home")
                                                 + File.separator + "lib"
-                                                + File.separator 
+                                                + File.separator
                                                 + "classes.zip"));
             } else {
                 // JDK > 1.1 seems to set java.home to the JRE directory.
@@ -195,7 +199,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                                                + File.separator + "ui.jar"));
             }
         }
-            
+
         return classpath;
     }
 
@@ -206,10 +210,23 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
         Path classpath = getCompileClasspath();
 
+        // we cannot be using Java 1.0 when forking, so we only have to
+        // distinguish between Java 1.1, and Java 1.2 and higher, as Java 1.1
+        // has its own parameter format
+        boolean usingJava1_1 = Project.getJavaVersion().equals(Project.JAVA_1_1);
+        String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
+        if (memoryInitialSize != null) {
+            cmd.createArgument().setValue(memoryParameterPrefix+"ms"+memoryInitialSize);
+        }
+
+        if (memoryMaximumSize != null) {
+            cmd.createArgument().setValue(memoryParameterPrefix+"mx"+memoryMaximumSize);
+        }
+
         if (attributes.getNowarn()) {
             cmd.createArgument().setValue("-nowarn");
         }
-        
+
         if (deprecation == true) {
             cmd.createArgument().setValue("-deprecation");
         }
@@ -218,7 +235,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             cmd.createArgument().setValue("-d");
             cmd.createArgument().setFile(destDir);
         }
-        
+
         cmd.createArgument().setValue("-classpath");
 
         // Just add "sourcepath" to classpath ( for JDK1.1 )
@@ -298,7 +315,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
-     * Logs the compilation parameters, adds the files to compile and logs the 
+     * Logs the compilation parameters, adds the files to compile and logs the
      * &qout;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
@@ -333,10 +350,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
         try {
             /*
-             * Many system have been reported to get into trouble with 
+             * Many system have been reported to get into trouble with
              * long command lines - no, not only Windows ;-).
              *
-             * POSIX seems to define a lower limit of 4k, so use a temporary 
+             * POSIX seems to define a lower limit of 4k, so use a temporary
              * file if the total length of the command line exceeds this limit.
              */
             if (Commandline.toString(args).length() > 4096) {
@@ -361,9 +378,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else {
                 commandArray = args;
             }
-            
+
             try {
-                Execute exe = new Execute(new LogStreamHandler(attributes, 
+                Execute exe = new Execute(new LogStreamHandler(attributes,
                                                                Project.MSG_INFO,
                                                                Project.MSG_WARN));
                 exe.setAntRun(project);
@@ -372,7 +389,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 exe.execute();
                 return exe.getExitValue();
             } catch (IOException e) {
-                throw new BuildException("Error running " + args[0] 
+                throw new BuildException("Error running " + args[0]
                         + " compiler", e, location);
             }
         } finally {

@@ -161,6 +161,7 @@
     <available property="xalan.envcheck"
                classname="org.apache.xalan.xslt.EnvironmentCheck"
                classpathref="classpath" />
+               
     <condition property="javamail.complete">
       <and>
         <available classname="javax.activation.DataHandler"
@@ -180,6 +181,11 @@
     <tstamp>
       <format property="year" pattern="yyyy" />
     </tstamp>
+    <filterset id="ant.filters">
+      <filter token="VERSION" value="${version}" />
+      <filter token="DATE" value="${TODAY}" />
+      <filter token="TIME" value="${TSTAMP}" />
+    </filterset>
   </target>
 
   <!-- 
@@ -256,12 +262,7 @@
         <include name="**/version.txt" />
         <include name="**/defaultManifest.mf" />
       </fileset>
-      <filterset>
-        <filter token="VERSION" value="${version}" />
-        <filter token="DATE" value="${TODAY}" />
-        <filter token="TIME" value="${TSTAMP}" />
-      </filterset>
-      
+      <filterset refid="ant.filters"/>
     </copy>
 
     <copy todir="${build.classes}/${optional.package}/junit/xsl">
@@ -369,9 +370,9 @@
 
     <copy todir="${dist.lib}" file="${lib.dir}/optional/README"/>
     
-    <copy todir="${dist.docs}"
-          filtering="on">
+    <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}"/>
+      <filterset refid="ant.filters"/>
     </copy>
 
     <copy todir="${dist.dir}">
@@ -655,10 +656,10 @@
     <echo message="file.encoding=${file.encoding}" />
     <echo message="user.language=${user.language}" />
   </target>
-
+  
   <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
   <target name="xml-check" depends="check_for_optional_packages" if="xalan.envcheck">
-    <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
+      <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
   </target>
 
   <!-- 

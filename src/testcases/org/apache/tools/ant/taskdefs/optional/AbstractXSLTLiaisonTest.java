@@ -62,6 +62,7 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 
 /**
@@ -85,8 +86,12 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
     // to override
     protected abstract XSLTLiaison createLiaison() throws Exception ;
 
-    protected File getFile(String name){
+    /** load the file from the caller classloader that loaded this class */
+    protected File getFile(String name) throws FileNotFoundException {
         URL url = getClass().getResource(name);
+        if (url == null){
+          throw new FileNotFoundException("Unable to load '" + name + "' from classpath");
+        }
         return new File(url.getFile());
     }
 

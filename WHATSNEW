@@ -36,7 +36,7 @@ Changes that could break older environments:
   encoding attribute of the task and set it to UTF8 to get the old
   behavior.
 
-* The <pvcs> task has been move to a package of its own.
+* The <pvcs> task has been moved to a package of its own.
 
 * JUnitResultFormater has two additional methods that must be
   implemented by custom formatters.
@@ -93,6 +93,16 @@ Changes that could break older environments:
   </delete>
   will now remove "somedir" as well, unless there are still files left
   in it (matched by the default excludes).
+  
+* The copy task will now fail if the file to be copied is not found. 
+
+* Ant properties defined in properties files now behave the same way as 
+  properties defined in the build file. In particular the $ character needs
+  to be escaped in property values by doubling it to $$. So, to define a 
+  property with the value $hello, you need to define it in a properties file
+  as
+    test.prop=$$hello
+  This was not the case in Ant 1.3
 
 Other changes:
 --------------

@@ -143,7 +143,12 @@ public class DefaultLogger implements BuildLogger {
                 error.printStackTrace(err);
             }
             else {
-                err.println(error.getMessage());
+                if (error instanceof BuildException) {
+                    err.println(error.toString());
+                }
+                else {
+                    err.println(error.getMessage());
+                }
             }
         }
 
