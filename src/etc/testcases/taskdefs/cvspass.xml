@@ -15,6 +15,7 @@
     />
   </target>
  
+  <!-- testPassFile -->
   <target name="test3">
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
@@ -22,7 +23,8 @@
       passfile="testpassfile.tmp"
     />
   </target>
- 
+
+  <!-- testPassFileDuplicateEntry -->
   <target name="test4">
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
@@ -40,7 +42,8 @@
       passfile="testpassfile.tmp"
     />
   </target>
- 
+
+  <!-- testPassFileMultipleEntry -->
   <target name="test5">
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
@@ -58,7 +61,7 @@
       passfile="testpassfile.tmp"
     />
   </target>
- 
+
   <target name="cleanup"> 
     <delete file="testpassfile.tmp"/>
   </target>
