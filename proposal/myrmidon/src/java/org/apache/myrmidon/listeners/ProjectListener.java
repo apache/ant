@@ -14,6 +14,9 @@ package org.apache.myrmidon.listeners;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @ant:role shorthand="listener"
+ * @todo Think about having a way to indicate that a foreign project
+ *       is being referenced, a implicit target is being referenced
+ *       and that a library is being imported.
  */
 public interface ProjectListener
 {
