@@ -307,6 +307,23 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * Does the command line argument processing common to classic and
      * modern and adds the files to compile as well.
      */
+    protected Commandline setupModernJavacCommand() {
+        Commandline cmd = new Commandline();
+        setupJavacCommandlineSwitches(cmd);
+
+        if (attributes.getSource() != null) {
+            cmd.createArgument().setValue("-source");
+            cmd.createArgument().setValue(attributes.getSource());
+        }
+        
+        logAndAddFilesToCompile(cmd);
+        return cmd;
+    }
+
+    /**
+     * Does the command line argument processing common to classic and
+     * modern and adds the files to compile as well.
+     */
     protected Commandline setupJavacCommand() {
         Commandline cmd = new Commandline();
         setupJavacCommandlineSwitches(cmd);

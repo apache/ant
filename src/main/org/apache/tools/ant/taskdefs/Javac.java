@@ -82,6 +82,7 @@ import java.io.File;
  * <li>failonerror
  * <li>includeantruntime
  * <li>includejavaruntime
+ * <li>source
  * </ul>
  * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
  * <p>
@@ -121,6 +122,24 @@ public class Javac extends MatchingTask {
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
+
+    private String source;
+    
+    /**
+     * Get the value of source.
+     * @return value of source.
+     */
+    public String getSource() {
+        return source;
+    }
+    
+    /**
+     * Set the value of source.
+     * @param v  Value to assign to source.
+     */
+    public void setSource(String  v) {
+        this.source = v;
+    }
 
     /**
      * Create a nested <src ...> element for multiple source path

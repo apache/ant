@@ -81,7 +81,7 @@ public class Javac13 extends DefaultCompilerAdapter {
 
     public boolean execute() throws BuildException {
         attributes.log("Using modern compiler", Project.MSG_VERBOSE);
-        Commandline cmd = setupJavacCommand();
+        Commandline cmd = setupModernJavacCommand();
 
         // Use reflection to be able to build on all JDKs >= 1.1:
         try {
