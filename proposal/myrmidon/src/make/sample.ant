@@ -20,11 +20,11 @@ Legal:
 
   <target name="main" depends="property-test" />
 
-  <target name="no-test-target" unless="do-tests">
+  <target name="no-test-target" if="no-do-tests">
     <echo message="No tests done here"/>
   </target>
 
-  <target name="test-target" depends="no-test-target" if="do-tests">
+  <target name="test-target" depends="no-test-target" unless="no-do-tests">
 
     <echo message="Tests away"/>
 
@@ -45,11 +45,13 @@ Legal:
      />
 
     <sub-elements-test>
+<!--
       <create-beep message="Evaluation of ant.install.dir=${ant.install.dir}" />
-      <add-beep message="Evaluation of ant.install.lib=${ant.install.lib}" />
+          <add-beep message="Evaluation of ant.install.lib=${ant.install.lib}" />
+-->
     </sub-elements-test>
 
-    <conf-test message="Test of configuration=${ant.install.lib}" />
+<!--    <conf-test message="Test of configuration=${ant.install.lib}" /> -->
     
     <content-test>123</content-test>
     
