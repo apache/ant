@@ -172,11 +172,11 @@ fi
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
-  ANT_HOME=`cygpath --path --windows "$ANT_HOME"`
-  JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  ANT_HOME=`cygpath --windows "$ANT_HOME"`
+  JAVA_HOME=`cygpath --windows "$JAVA_HOME"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
-  CYGHOME=`cygpath --path --windows "$HOME"`
+  CYGHOME=`cygpath --windows "$HOME"`
 fi
 
 if [ -n "$CYGHOME" ]; then
