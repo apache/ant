@@ -1115,7 +1115,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.4 or higher</td>
+            <td>Ant 1.5.2 or higher</td>
           </tr>
           <tr>
             <th>URL:</th>
