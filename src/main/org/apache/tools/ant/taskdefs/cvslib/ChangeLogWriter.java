@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ public class ChangeLogWriter {
         output.println("\t<entry>");
         output.println("\t\t<date>" + OUTPUT_DATE.format(entry.getDate())
             + "</date>");
-        output.println("\t\t<time>" + OUTPUT_DATE.format(entry.getDate())
+        output.println("\t\t<time>" + OUTPUT_TIME.format(entry.getDate())
             + "</time>");
         output.println("\t\t<author><![CDATA[" + entry.getAuthor()
             + "]]></author>");
