@@ -82,37 +82,11 @@ public class DirectoryScannerTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/directoryscanner.xml");
         getProject().executeTarget("setup");
     }
-    private void compareFiles(DirectoryScanner ds, String[] expectedFiles, String[] expectedDirectories) {
-        String includedFiles[] = ds.getIncludedFiles();
-        String includedDirectories[] = ds.getIncludedDirectories();
-        assertTrue("expecting : " + expectedFiles.length + " files, present : " + includedFiles.length, includedFiles.length == expectedFiles.length);
-        assertTrue("expecting : " + expectedDirectories.length + " directories, present : " + includedDirectories.length, includedDirectories.length == expectedDirectories.length);
-        TreeSet files = new TreeSet();
-        for (int counter=0; counter < includedFiles.length; counter++) {
-            files.add(includedFiles[counter].replace(File.separatorChar,'/'));
-        }
-        TreeSet directories = new TreeSet();
-        for (int counter=0; counter < includedDirectories.length; counter++) {
-            directories.add(includedDirectories[counter].replace(File.separatorChar,'/'));
-        }
-        String currentfile;
-        Iterator i = files.iterator();
-        int counter = 0;
-        while (i.hasNext()) {
-            currentfile = (String) i.next();
-            assertTrue("expecting file " + expectedFiles[counter], currentfile.equals(expectedFiles[counter]));
-            counter++;
-        }
-        String currentdirectory;
-        Iterator dirit = directories.iterator();
-        counter = 0;
-        while (dirit.hasNext()) {
-            currentdirectory = (String) dirit.next();
-            assertTrue("expecting directory " + expectedDirectories[counter], currentdirectory.equals(expectedDirectories[counter]));
-            counter++;
-        }
 
+    public void tearDown() {
+        getProject().executeTarget("cleanup");
     }
+
     public void test1() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -120,22 +94,31 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.scan();
         compareFiles(ds, new String[] {} ,new String[] {"alpha"});
     }
+
     public void test2() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/"});
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"} ,new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
+
     public void test3() {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"} ,new String[] {"", "alpha", "alpha/beta", "alpha/beta/gamma"});
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"", "alpha", "alpha/beta", 
+                                   "alpha/beta/gamma"});
     }
+
     // father and child pattern test
     public void testOrderOfIncludePatternsIrrelevant() {
-        String [] expectedFiles = {"alpha/beta/beta.xml", "alpha/beta/gamma/gamma.xml"};
+        String [] expectedFiles = {"alpha/beta/beta.xml", 
+                                   "alpha/beta/gamma/gamma.xml"};
         String [] expectedDirectories = {"alpha/beta", "alpha/beta/gamma" };
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -149,9 +132,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.scan();
         compareFiles(ds, expectedFiles, expectedDirectories);
     }
-    public void tearDown() {
-        getProject().executeTarget("cleanup");
-    }
+
     /**
      * Test case for setFollowLinks() and associated funtionality.
      * Only supports test on linux, at the moment because Java has
@@ -195,8 +176,9 @@ public class DirectoryScannerTest extends BuildFileTest {
                 for (int i=0; i<included.length; i++) {
                     if (included[i].equals("zip")) {
                         haveZipPackage = true;
-                    } else if (included[i].equals("ThisIsALink"+File.separator+
-                                                  "taskdefs")) {
+                    } else if (included[i].equals("ThisIsALink"
+                                                  + File.separator
+                                                  + "taskdefs")) {
                         haveTaskdefsPackage = true;
                     }
                 }
@@ -222,8 +204,9 @@ public class DirectoryScannerTest extends BuildFileTest {
                 for (int i=0; i<included.length; i++) {
                     if (included[i].equals("zip")) {
                         haveZipPackage = true;
-                    } else if (included[i].equals("ThisIsALink"+File.separator+
-                                                  "taskdefs")) {
+                    } else if (included[i].equals("ThisIsALink" 
+                                                  + File.separator
+                                                  + "taskdefs")) {
                         haveTaskdefsPackage = true;
                     }
                 }
@@ -234,7 +217,7 @@ public class DirectoryScannerTest extends BuildFileTest {
             } finally {
                 File f = new File("src/main/org/apache/tools/ThisIsALink");
                 if (!f.delete()) {
-                    throw new RuntimeException("Failed to delete "+f);
+                    throw new RuntimeException("Failed to delete " + f);
                 }
             }
         }
@@ -278,6 +261,43 @@ public class DirectoryScannerTest extends BuildFileTest {
         }
         assertTrue("(2) zip package included", haveZipPackage);
         assertTrue("(2) taskdefs package included", haveTaskdefsPackage);
+    }
+
+    private void compareFiles(DirectoryScanner ds, String[] expectedFiles, 
+                              String[] expectedDirectories) {
+        String includedFiles[] = ds.getIncludedFiles();
+        String includedDirectories[] = ds.getIncludedDirectories();
+        assertEquals("file present: ", expectedFiles.length,  
+                     includedFiles.length);
+        assertEquals("directories present: ", expectedDirectories.length,  
+                     includedDirectories.length);
+
+        TreeSet files = new TreeSet();
+        for (int counter=0; counter < includedFiles.length; counter++) {
+            files.add(includedFiles[counter].replace(File.separatorChar, '/'));
+        }
+        TreeSet directories = new TreeSet();
+        for (int counter=0; counter < includedDirectories.length; counter++) {
+            directories.add(includedDirectories[counter]
+                            .replace(File.separatorChar, '/'));
+        }
+
+        String currentfile;
+        Iterator i = files.iterator();
+        int counter = 0;
+        while (i.hasNext()) {
+            currentfile = (String) i.next();
+            assertEquals(expectedFiles[counter], currentfile);
+            counter++;
+        }
+        String currentdirectory;
+        Iterator dirit = directories.iterator();
+        counter = 0;
+        while (dirit.hasNext()) {
+            currentdirectory = (String) dirit.next();
+            assertEquals(expectedDirectories[counter], currentdirectory);
+            counter++;
+        }
     }
 
 }
