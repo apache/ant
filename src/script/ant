@@ -49,7 +49,8 @@ if [ -z "$ANT_HOME" ] ; then
   saveddir=`pwd`
 
   # need this for relative symlinks
-  cd `dirname "$PRG"`
+  dirname_prg=`dirname "$PRG"`
+  cd "$dirname_prg"
   
   while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
