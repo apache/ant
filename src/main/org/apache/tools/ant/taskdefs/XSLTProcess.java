@@ -122,11 +122,28 @@ public class XSLTProcess extends MatchingTask {
 	scanner = getDirectoryScanner(baseDir);
 	project.log("Transforming into "+destDir,project.MSG_INFO);
 
+        // if processor wasn't specified, default it to xslp or xalan,
+        // depending on which is in the classpath
+        if (liaison == null) {
+           try {
+               setProcessor("xslp");
+           } catch (Exception e1) {
+               try {
+                   setProcessor("xalan");
+               } catch (Exception e2) {
+                   throw new BuildException(e2);
+               }
+           }
+        }
+
+	project.log("Using "+liaison.getClass().toString(),project.MSG_VERBOSE);
+
 	try {
 	    // Create a new XSL processor with the specified stylesheet
 	    if (xslFile != null) {
-		project.log("Loading stylesheet " + xslFile, project.MSG_INFO);
-                liaison.setStylesheet( new File(baseDir,xslFile.toString()).toString() );
+                String file = new File(baseDir,xslFile.toString()).toString();
+		project.log("Loading stylesheet " + file, project.MSG_INFO);
+                liaison.setStylesheet( file );
 	    }
 	} catch (Exception ex) {
 	    project.log("Failed to read stylesheet " + xslFile,project.MSG_INFO);
@@ -183,14 +200,15 @@ public class XSLTProcess extends MatchingTask {
      * Sets the file to use for styling relative to the base directory.
      */
     public void setProcessor(String processor) throws Exception {
+
 	if (processor.equals("xslp")) {
             liaison = (XSLTLiaison) Class.forName("org.apache.tools.ant.taskdefs.optional.XslpLiaison").newInstance();
-	} if (processor.equals("xalan")) {
+	} else if (processor.equals("xalan")) {
             liaison = (XSLTLiaison) Class.forName("org.apache.tools.ant.taskdefs.optional.XalanLiaison").newInstance();
         } else {
             liaison = (XSLTLiaison) Class.forName(processor).newInstance();
         }
-        
+
     }
 
     /*
@@ -199,20 +217,6 @@ public class XSLTProcess extends MatchingTask {
     {
 
         
-        // if processor wasn't specified, default it to xslp or xalan,
-        // depending on which is in the classpath
-        if (liaison == null)
-           try {
-               setProcessor("xslp");
-           } catch (Exception e) {
-               try {
-                   setProcessor("xalan");
-               } catch (Exception e) {
-                   throw new BuildException(e);
-               }
-           }
-        }
-
         if (!sourceDir.isDirectory()) {
             throw new BuildException(sourceDir.getName() +
                 " is not a directory!");
