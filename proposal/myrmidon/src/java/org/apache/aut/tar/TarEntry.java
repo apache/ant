@@ -457,6 +457,16 @@ public class TarEntry
     }
 
     /**
+     * Get this entry's checksum.
+     *
+     * @return This entry's checksum.
+     */
+    public int getCheckSum()
+    {
+        return m_checkSum;
+    }
+
+    /**
      * Get this entry's user id.
      *
      * @return This entry's user id.
