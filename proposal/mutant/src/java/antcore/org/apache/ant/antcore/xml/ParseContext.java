@@ -128,11 +128,9 @@ public class ParseContext {
             Location location = new Location(e.getSystemId(),
                 e.getLineNumber(), e.getColumnNumber());
             if (e.getException() != null) {
-                throw new XMLParseException("XML Parsing Exception",
-                    e.getException(), location);
+                throw new XMLParseException(e.getException(), location);
             } else {
-                throw new XMLParseException("XML Parsing Exception",
-                    e, location);
+                throw new XMLParseException(e, location);
             }
         } catch (SAXException e) {
             throw new XMLParseException(e);

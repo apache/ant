@@ -64,6 +64,7 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import org.apache.ant.common.util.PropertyUtils;
 
 /**
  * An Element Handler is a handler which handles a single element by
@@ -125,6 +126,16 @@ public abstract class ElementHandler extends DefaultHandler {
         return (String)elementAttributes.get(attributeName);
     }
 
+    /**
+     * Get an attribute as a boolean value
+     *
+     * @param attributeName the name of the attribute
+     * @return the attribute value as a boolean
+     */
+    protected boolean getBooleanAttribute(String attributeName) {
+        return PropertyUtils.toBoolean(getAttribute(attributeName));
+    }
+    
     /**
      * Get an iterator to this elements attributes
      *
@@ -304,7 +315,8 @@ public abstract class ElementHandler extends DefaultHandler {
          throws SAXParseException {
         aspects = new HashMap();
         elementAttributes = new HashMap();
-        for (int i = 0; i < attributes.getLength(); ++i) {
+        int length = attributes.getLength(); 
+        for (int i = 0; i < length; ++i) {
             String attributeName = attributes.getQName(i);
             String attributeValue = attributes.getValue(i);
             if (attributeName.indexOf(":") != -1) {

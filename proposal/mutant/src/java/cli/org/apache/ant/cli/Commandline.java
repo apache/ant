@@ -53,6 +53,7 @@
  */
 package org.apache.ant.cli;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -61,20 +62,23 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.ant.cli.xml.XMLProjectParser;
+import org.apache.ant.antcore.config.AntConfig;
+import org.apache.ant.antcore.config.AntConfigHandler;
+import org.apache.ant.antcore.execution.ExecutionManager;
+import org.apache.ant.antcore.model.Project;
+import org.apache.ant.antcore.model.xmlparser.XMLProjectParser;
+import org.apache.ant.antcore.util.ConfigException;
+import org.apache.ant.antcore.xml.ParseContext;
+import org.apache.ant.antcore.xml.XMLParseException;
+import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.MessageLevel;
-import org.apache.ant.antcore.event.BuildListener;
-import org.apache.ant.antcore.execution.ExecutionManager;
-import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.util.ConfigException;
-import org.apache.ant.antcore.xml.XMLParseException;
-import org.apache.ant.init.InitUtils;
 import org.apache.ant.init.InitConfig;
+import org.apache.ant.init.InitUtils;
 
 /**
- * This is the command line front end to end. It drives the core
+ * This is the command line front end. It drives the core.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 9 January 2002
@@ -112,7 +116,7 @@ public class Commandline {
     private String loggerClassname = null;
 
     /** Our current message output status. Follows MessageLevel values */
-    private int messageOutputLevel = MessageLevel.MSG_VERBOSE;
+    private int messageOutputLevel = MessageLevel.MSG_INFO;
 
     /**
      * Start the command line front end for mutant.
@@ -163,41 +167,98 @@ public class Commandline {
         }
     }
 
+    /**
+     * Get the AntConfig from the given config area if it is available
+     *
+     * @param configArea the config area from which the config may be read
+     * @return the AntConfig instance representing the config info read in
+     *      from the config area. May be null if the AntConfig is not
+     *      present
+     * @exception ConfigException if the URL for the config file cannotbe
+     *      formed.
+     */
+    private AntConfig getAntConfig(File configArea) throws ConfigException {
+        try {
+            File configFile = new File(configArea, "antconfig.xml");
+            URL configFileURL = InitUtils.getFileURL(configFile);
+
+            ParseContext context = new ParseContext();
+            AntConfigHandler configHandler = new AntConfigHandler();
+
+            context.parse(configFileURL, "antconfig", configHandler);
+
+            return configHandler.getAntConfig();
+        } catch (MalformedURLException e) {
+            throw new ConfigException("Unable to form URL to read config from "
+                 + configArea, e);
+        } catch (XMLParseException e) {
+            if (!(e.getCause() instanceof FileNotFoundException)) {
+                throw new ConfigException("Unable to parse config file from "
+                     + configArea, e);
+            }
+            // ignore missing config files
+            return null;
+        }
+    }
+
 
     /**
      * Start the command line front end for mutant.
      *
      * @param args the commandline arguments
-     * @param config the initialisation configuration
+     * @param initConfig Ant's initialization configuration
      */
-    private void process(String[] args, InitConfig config) {
-        this.config = config;
+    private void process(String[] args, InitConfig initConfig) {
+        this.config = initConfig;
+        System.out.println("Ant Home is " + initConfig.getAntHome());
         try {
             parseArguments(args);
+
+            AntConfig userConfig = getAntConfig(initConfig.getUserConfigArea());
+            AntConfig systemConfig
+                 = getAntConfig(initConfig.getSystemConfigArea());
+
+            AntConfig config = systemConfig;
+            if (config == null) {
+                config = userConfig;
+            } else if (userConfig != null) {
+                config.merge(userConfig);
+            }
+
+            if (!buildFileURL.getProtocol().equals("file")
+                 && !config.isRemoteProjectAllowed()) {
+                throw new ConfigException("Remote Projects are not allowed: "
+                     + buildFileURL);
+            }
+
             Project project = parseProject();
 
             // create the execution manager to execute the build
-            ExecutionManager executionManager = new ExecutionManager(config);
+            ExecutionManager executionManager
+                 = new ExecutionManager(initConfig, config);
             addBuildListeners(executionManager);
             executionManager.runBuild(project, targets);
-        } catch (AntException e) {
-            Location location = e.getLocation();
-            Throwable cause = e.getCause();
-            System.out.println(e.getMessage());
-
-            if (cause != null) {
-                System.out.print("Root cause: " + cause.getClass().getName());
-                if (!cause.getMessage().equals(e.getMessage())) {
-                    System.out.print(": " + cause.getMessage());
+        } catch (Throwable t) {
+            if (t instanceof AntException) {
+                AntException e = (AntException)t;
+                Location location = e.getLocation();
+                Throwable cause = e.getCause();
+                if (location != null && location != Location.UNKNOWN_LOCATION) {
+                    System.out.print(location);
                 }
-                System.out.println();
+                System.out.println(e.getMessage());
+
+                if (messageOutputLevel >= MessageLevel.MSG_VERBOSE) {
+                    t.printStackTrace();
+                }
+
+                if (cause != null) {
+                    System.out.println("Root cause: " + cause.toString());
+                }
+            } else {
+                t.printStackTrace(System.err);
             }
 
-            e.printStackTrace();
-
-            System.exit(1);
-        } catch (Throwable t) {
-            t.printStackTrace();
             System.exit(1);
         }
     }
@@ -224,20 +285,21 @@ public class Commandline {
      */
     private void parseArguments(String[] args)
          throws ConfigException {
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
+
+        int i = 0;
+        while (i < args.length) {
+            String arg = args[i++];
 
             if (arg.equals("-buildfile") || arg.equals("-file")
                  || arg.equals("-f")) {
                 try {
-                    String url = args[i + 1];
+                    String url = args[i++];
                     if (url.indexOf(":") == -1) {
                         // We convert any hash characters to their URL escape.
                         buildFileURL = InitUtils.getFileURL(new File(url));
                     } else {
                         buildFileURL = new URL(url);
                     }
-                    i++;
                 } catch (MalformedURLException e) {
                     System.err.println("Buildfile is not valid: " +
                         e.getMessage());
@@ -249,8 +311,7 @@ public class Commandline {
                 }
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
-                    File logFile = new File(args[i + 1]);
-                    i++;
+                    File logFile = new File(args[i++]);
                     out = new PrintStream(new FileOutputStream(logFile));
                     err = out;
                 } catch (IOException ioe) {
@@ -270,8 +331,7 @@ public class Commandline {
                 messageOutputLevel = MessageLevel.MSG_VERBOSE;
             } else if (arg.equals("-listener")) {
                 try {
-                    listeners.add(args[i + 1]);
-                    i++;
+                    listeners.add(args[i++]);
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     System.err.println("You must specify a classname when " +
                         "using the -listener argument");
@@ -284,7 +344,7 @@ public class Commandline {
                     return;
                 }
                 try {
-                    loggerClassname = args[++i];
+                    loggerClassname = args[i++];
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     System.err.println("You must specify a classname when " +
                         "using the -logger argument");

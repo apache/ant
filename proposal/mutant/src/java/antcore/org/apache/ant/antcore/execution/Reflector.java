@@ -56,10 +56,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import org.apache.ant.common.converter.ConversionException;
-import org.apache.ant.common.converter.Converter;
-import org.apache.ant.common.task.TaskException;
+import org.apache.ant.common.antlib.Converter;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
  * A reflector is used to set attributes and add nested elements to an
@@ -90,12 +90,10 @@ public class Reflector {
          * @exception IllegalAccessException if the method cannot be invoked
          * @exception ExecutionException if the conversion of the value
          *      fails
-         * @exception ConversionException if the string value cannot be
-         *      converted to the required type
          */
         void set(Object obj, String value)
              throws InvocationTargetException, IllegalAccessException,
-            ExecutionException, ConversionException;
+            ExecutionException;
     }
 
     /**
@@ -120,6 +118,33 @@ public class Reflector {
              throws InvocationTargetException, IllegalAccessException;
     }
 
+    /**
+     * Element Creator's a factory method provided by an Ant Library
+     * Component for creating its own nested element instances. These
+     * methods are now deprecated. It is better to use the add style methods
+     * and support polymorphic interfaces.
+     *
+     * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+     * @created 31 January 2002
+     */
+    private interface ElementCreator {
+        /**
+         * Create a nested element object for the given container object
+         *
+         * @param container the object in which the nested element is to be
+         *      created.
+         * @return the nested element.
+         * @exception InvocationTargetException if the create method fails
+         * @exception IllegalAccessException if the create method cannot be
+         *      accessed
+         * @exception InstantiationException if the nested element instance
+         *      cannot be created.
+         */
+        Object create(Object container)
+             throws InvocationTargetException, IllegalAccessException,
+            InstantiationException;
+    }
+
 
     /** The method used to add content to the element */
     private Method addTextMethod;
@@ -133,8 +158,11 @@ public class Reflector {
      */
     private Map elementTypes = new HashMap();
 
-    /** the list of element adders indexed by their element names */
+    /** the collection of element adders indexed by their element names */
     private Map elementAdders = new HashMap();
+
+    /** the collection of element creators indexed by their element names */
+    private Map elementCreators = new HashMap();
 
     /**
      * Set an attribute value on an object
@@ -143,30 +171,27 @@ public class Reflector {
      * @param attributeName the name of the attribute
      * @param value the string represenation of the attribute's value
      * @exception ExecutionException if the object does not support the
-     *      attribute
-     * @exception TaskException if the object has a problem setting the
-     *      value
+     *      attribute or the object has a problem setting the value
      */
     public void setAttribute(Object obj, String attributeName,
                              String value)
-         throws ExecutionException, TaskException {
+         throws ExecutionException {
+        String name = attributeName.toLowerCase();
         AttributeSetter as
-             = (AttributeSetter)attributeSetters.get(attributeName);
+             = (AttributeSetter)attributeSetters.get(name);
         if (as == null) {
-            throw new ExecutionException("Class " + obj.getClass().getName() +
-                " doesn't support the \"" + attributeName + "\" attribute");
+            throw new ExecutionException("Class " + obj.getClass().getName()
+                 + " doesn't support the \"" + attributeName + "\" attribute");
         }
         try {
             as.set(obj, value);
         } catch (IllegalAccessException e) {
             // impossible as getMethods should only return public methods
             throw new ExecutionException(e);
-        } catch (ConversionException e) {
-            throw new ExecutionException(e);
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
-            if (t instanceof TaskException) {
-                throw (TaskException)t;
+            if (t instanceof ExecutionException) {
+                throw (ExecutionException)t;
             }
             throw new ExecutionException(t);
         }
@@ -196,12 +221,11 @@ public class Reflector {
      *
      * @param obj the instance whose content is being provided
      * @param text the required content
-     * @exception ExecutionException if the object does not support content
-     * @exception TaskException if the object has a problem setting the
-     *      content
+     * @exception ExecutionException if the object does not support
+     *      contentor the object has a problem setting the content
      */
     public void addText(Object obj, String text)
-         throws ExecutionException, TaskException {
+         throws ExecutionException {
 
         if (addTextMethod == null) {
             throw new ExecutionException("Class " + obj.getClass().getName() +
@@ -214,8 +238,8 @@ public class Reflector {
             throw new ExecutionException(ie);
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
-            if (t instanceof TaskException) {
-                throw (TaskException)t;
+            if (t instanceof ExecutionException) {
+                throw (ExecutionException)t;
             }
             throw new ExecutionException(t);
         }
@@ -228,25 +252,26 @@ public class Reflector {
      * @param elementName the name of the element
      * @param value the object to be added - the nested element
      * @exception ExecutionException if the object does not support content
-     * @exception TaskException if the object has a problem setting the
-     *      content
+     *      or the object has a problem setting the content
      */
     public void addElement(Object obj, String elementName, Object value)
-         throws ExecutionException, TaskException {
-        ElementAdder ea = (ElementAdder)elementAdders.get(elementName);
-        if (ea == null) {
-            throw new ExecutionException("Class " + obj.getClass().getName() +
-                " doesn't support the \"" + elementName + "\" nested element");
+         throws ExecutionException {
+        String name = elementName.toLowerCase();
+        ElementAdder adder = (ElementAdder)elementAdders.get(name);
+        if (adder == null) {
+            throw new ExecutionException("Class " + obj.getClass().getName()
+                 + " doesn't support the \"" + elementName
+                 + "\" nested element");
         }
         try {
-            ea.add(obj, value);
+            adder.add(obj, value);
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new ExecutionException(ie);
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
-            if (t instanceof TaskException) {
-                throw (TaskException)t;
+            if (t instanceof ExecutionException) {
+                throw (ExecutionException)t;
             }
             throw new ExecutionException(t);
         }
@@ -254,14 +279,96 @@ public class Reflector {
     }
 
     /**
+     * Create a nested element using the object's element factory method.
+     *
+     * @param container the object in which the nested element is required.
+     * @param elementName the name of the nested element
+     * @return the new instance of the nested element
+     * @exception ExecutionException if the nested element cannot be
+     *      created.
+     */
+    public Object createElement(Object container, String elementName)
+         throws ExecutionException {
+
+        ElementCreator creator
+             = (ElementCreator)elementCreators.get(elementName.toLowerCase());
+        if (creator == null) {
+            throw new ExecutionException("Class "
+                 + container.getClass().getName()
+                 + " doesn't support the \"" + elementName
+                 + "\" nested element");
+        }
+
+        try {
+            return creator.create(container);
+        } catch (IllegalAccessException e) {
+            // impossible as getMethods should only return public methods
+            throw new ExecutionException(e);
+        } catch (InstantiationException e) {
+            // impossible as getMethods should only return public methods
+            throw new ExecutionException(e);
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            if (t instanceof ExecutionException) {
+                throw (ExecutionException)t;
+            }
+            throw new ExecutionException(t);
+        }
+    }
+
+    /**
+     * Indicate if the class assocated with this reflector supports the
+     * addition of text content.
+     *
+     * @return true if the class supports an addText method
+     */
+    public boolean supportsText() {
+        return addTextMethod != null;
+    }
+
+    /**
+     * Indicate if the class assocated with this reflector supports the
+     * given attribute
+     *
+     * @param attributeName the name of the attribute
+     * @return true if the given attribute is supported
+     */
+    public boolean supportsAttribute(String attributeName) {
+        return attributeSetters.containsKey(attributeName.toLowerCase());
+    }
+
+    /**
      * Determine if the class associated with this reflector supports a
-     * particular nested element
+     * particular nested element via a create factory method
+     *
+     * @param elementName the name of the element
+     * @return true if the class supports creation of that element
+     */
+    public boolean supportsNestedCreator(String elementName) {
+        return elementCreators.containsKey(elementName.toLowerCase());
+    }
+
+    /**
+     * Determine if the class associated with this reflector supports a
+     * particular nested element via an add method
      *
      * @param elementName the name of the element
      * @return true if the class supports addition of that element
      */
+    public boolean supportsNestedAdder(String elementName) {
+        return elementAdders.containsKey(elementName.toLowerCase());
+    }
+
+    /**
+     * Determine if the class associated with this reflector supports a
+     * particular nested element
+     *
+     * @param elementName the name of the element
+     * @return true if the class supports the given type of nested element
+     */
     public boolean supportsNestedElement(String elementName) {
-        return elementAdders.containsKey(elementName);
+        return supportsNestedAdder(elementName)
+             || supportsNestedCreator(elementName);
     }
 
     /**
@@ -279,18 +386,13 @@ public class Reflector {
         if (converters != null && converters.containsKey(type)) {
             // we have a converter to use to convert the String
             // value into something the set method expects.
-            final Converter converter = (Converter)converters.get(type);
-            attributeSetters.put(propertyName,
-                new AttributeSetter() {
-                    public void set(Object obj, String value)
-                         throws InvocationTargetException, ExecutionException,
-                        IllegalAccessException, ConversionException {
-                        Object convertedValue = converter.convert(value, type);
-                        m.invoke(obj, new Object[]{convertedValue});
-                    }
-                });
-        } else if (type.equals(String.class)) {
-            attributeSetters.put(propertyName,
+            Converter converter = (Converter)converters.get(type);
+            addConvertingSetter(m, propertyName, converter, type);
+            return;
+        }
+
+        if (type.equals(String.class)) {
+            attributeSetters.put(propertyName.toLowerCase(),
                 new AttributeSetter() {
                     public void set(Object parent, String value)
                          throws InvocationTargetException,
@@ -298,26 +400,45 @@ public class Reflector {
                         m.invoke(parent, new String[]{value});
                     }
                 });
-        } else {
-            try {
-                final Constructor c =
-                    type.getConstructor(new Class[]{java.lang.String.class});
-                attributeSetters.put(propertyName,
-                    new AttributeSetter() {
-                        public void set(Object parent, String value)
-                             throws InvocationTargetException,
-                            IllegalAccessException, ExecutionException {
-                            try {
-                                Object newValue
-                                     = c.newInstance(new String[]{value});
-                                m.invoke(parent, new Object[]{newValue});
-                            } catch (InstantiationException ie) {
-                                throw new ExecutionException(ie);
-                            }
+            return;
+        }
+
+        try {
+            final Constructor c =
+                type.getConstructor(new Class[]{java.lang.String.class});
+            attributeSetters.put(propertyName.toLowerCase(),
+                new AttributeSetter() {
+                    public void set(Object parent, String value)
+                         throws InvocationTargetException,
+                        IllegalAccessException, ExecutionException {
+                        try {
+                            Object newValue
+                                 = c.newInstance(new String[]{value});
+                            m.invoke(parent, new Object[]{newValue});
+                        } catch (InstantiationException ie) {
+                            throw new ExecutionException(ie);
                         }
-                    });
-            } catch (NoSuchMethodException nme) {
-                // ignore
+                    }
+                });
+            return;
+        } catch (NoSuchMethodException nme) {
+            // ignore
+        }
+
+        if (converters != null) {
+            // desparate by now - try top find a converter which handles a super
+            // class of this type and which supports subclass instantiation
+            for (Iterator i = converters.keySet().iterator(); i.hasNext(); ) {
+                Class converterType = (Class)i.next();
+                if (converterType.isAssignableFrom(type)) {
+                    // could be a candidate
+                    Converter converter
+                         = (Converter)converters.get(converterType);
+                    if (converter.canConvertSubType(type)) {
+                        addConvertingSetter(m, propertyName, converter, type);
+                        return;
+                    }
+                }
             }
         }
     }
@@ -332,11 +453,52 @@ public class Reflector {
     public void addElementMethod(final Method m, String elementName) {
         final Class type = m.getParameterTypes()[0];
         elementTypes.put(elementName, type);
-        elementAdders.put(elementName,
+        elementAdders.put(elementName.toLowerCase(),
             new ElementAdder() {
                 public void add(Object container, Object obj)
                      throws InvocationTargetException, IllegalAccessException {
                     m.invoke(container, new Object[]{obj});
+                }
+            });
+    }
+
+
+    /**
+     * Add a create factory method.
+     *
+     * @param m the create method
+     * @param elementName the name of the nested element the create method
+     *      supports.
+     */
+    public void addCreateMethod(final Method m, String elementName) {
+        elementCreators.put(elementName.toLowerCase(),
+            new ElementCreator() {
+                public Object create(Object container)
+                     throws InvocationTargetException, IllegalAccessException {
+                    return m.invoke(container, new Object[]{});
+                }
+            });
+    }
+
+    /**
+     * Add an attribute setter with an associated converter
+     *
+     * @param m the attribute setter method
+     * @param propertyName the name of the attribute this method supports
+     * @param converter the converter to be used to construct the value
+     *      expected by the method.
+     * @param type the type expected by the method.
+     */
+    private void addConvertingSetter(final Method m, String propertyName,
+                                           final Converter converter,
+                                           final Class type) {
+        attributeSetters.put(propertyName.toLowerCase(),
+            new AttributeSetter() {
+                public void set(Object obj, String value)
+                     throws InvocationTargetException, ExecutionException,
+                    IllegalAccessException {
+                    Object convertedValue = converter.convert(value, type);
+                    m.invoke(obj, new Object[]{convertedValue});
                 }
             });
     }

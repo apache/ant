@@ -81,38 +81,38 @@ public class LoaderUtils {
 
 
     /**
-     * Get the URLs to create class loader from the jars in a given location
+     * Get the URLs of a set of libraries in the given location
      *
-     * @param baseURL the baeURL is the location of the libs directory
+     * @param location the location to be searched
      * @param defaultFile default file if none can be found
      * @return an array of URLs for the relevant jars
      * @exception MalformedURLException the URLs cannot be created
      */
-    public static URL[] getLoaderURLs(URL baseURL, String defaultFile)
+    public static URL[] getLocationURLs(URL location, String defaultFile)
          throws MalformedURLException {
-        return getLoaderURLs(baseURL, defaultFile, new String[]{".jar"});
+        return getLocationURLs(location, defaultFile, new String[]{".jar"});
     }
 
     /**
-     * Get the URLs for a class loader
+     * Get the URLs of a set of libraries in the given location
      *
-     * @param baseURL the baeURL is the location of the libs directory
+     * @param location the location to be searched
      * @param extensions array of allowable file extensions
      * @param defaultFile default file if none can be found
      * @return an array of URLs for the relevant jars
      * @exception MalformedURLException if the URL to the jars could not be
      *      formed
      */
-    public static URL[] getLoaderURLs(URL baseURL, String defaultFile,
-                                      String[] extensions)
+    public static URL[] getLocationURLs(URL location, String defaultFile,
+                                        String[] extensions)
          throws MalformedURLException {
         URL[] urls = null;
-        if (baseURL.getProtocol().equals("file")) {
+        if (location.getProtocol().equals("file")) {
             // URL is local filesystem.
-            urls = getDirectoryURLs(new File(baseURL.getFile()), extensions);
+            urls = getLocalURLs(new File(location.getFile()), extensions);
         } else {
             // URL is remote - try to read a file with the list of jars
-            URL jarListURL = new URL(baseURL, LIST_FILE);
+            URL jarListURL = new URL(location, LIST_FILE);
             BufferedReader reader = null;
             List jarList = new ArrayList();
             try {
@@ -123,7 +123,7 @@ public class LoaderUtils {
                 while ((line = reader.readLine().trim()) != null) {
                     for (int i = 0; i < extensions.length; ++i) {
                         if (line.endsWith(extensions[i])) {
-                            jarList.add(new URL(baseURL, line));
+                            jarList.add(new URL(location, line));
                             break;
                         }
                     }
@@ -132,7 +132,7 @@ public class LoaderUtils {
             } catch (IOException e) {
                 // use the default location
                 if (defaultFile != null) {
-                    urls = new URL[]{new URL(baseURL, defaultFile)};
+                    urls = new URL[]{new URL(location, defaultFile)};
                 }
             } finally {
                 if (reader != null) {
@@ -180,25 +180,40 @@ public class LoaderUtils {
 
 
     /**
-     * Get an array of URLs for each jar file in the directory
+     * Get an array of URLs for each file in the filesystem. If the given
+     * location is a directory, it is searched for files of the given
+     * extension. If it is a file, it is returned as a URL if it matches the
+     * given extension list.
      *
-     * @param directory the local directory
+     * @param location the location within the local filesystem to be
+     *      searched
      * @param extensions an array of file extensions to be considered in the
      *      search
      * @return an array of URLs for the file found in the directory.
      * @exception MalformedURLException if the URLs to the jars cannot be
      *      formed
      */
-    private static URL[] getDirectoryURLs(File directory,
-                                          final String[] extensions)
+    private static URL[] getLocalURLs(File location,
+                                      final String[] extensions)
          throws MalformedURLException {
         URL[] urls = new URL[0];
 
-        if (!directory.exists()) {
+        if (!location.exists()) {
             return urls;
         }
 
-        File[] jars = directory.listFiles(
+        if (!location.isDirectory()) {
+            String path = location.getPath();
+            for (int i = 0; i < extensions.length; ++i) {
+                if (path.endsWith(extensions[i])) {
+                    urls[0] = InitUtils.getFileURL(location);
+                    break;
+                }
+            }
+            return urls;
+        }
+
+        File[] jars = location.listFiles(
             new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     for (int i = 0; i < extensions.length; ++i) {
@@ -212,7 +227,6 @@ public class LoaderUtils {
         urls = new URL[jars.length];
         for (int i = 0; i < jars.length; ++i) {
             urls[i] = InitUtils.getFileURL(jars[i]);
-            // ps.println("Adding URL " + urls[i]);
         }
         return urls;
     }

@@ -54,6 +54,7 @@
 package org.apache.ant.init;
 
 import java.net.URL;
+import java.io.File;
 
 /**
  * InitConfig is the initialization configuration created to start Ant. This
@@ -98,20 +99,20 @@ public class InitConfig {
     private URL libraryURL;
 
     /** The location of the system configuration file */
-    private URL systemConfigArea;
+    private File systemConfigArea;
 
     /** The location of ANT_HOME */
     private URL antHome;
 
     /** The location of the user config file */
-    private URL userConfigArea;
+    private File userConfigArea;
 
     /**
      * Sets the location of the user configuration files
      *
      * @param userConfigArea the new user config area
      */
-    public void setUserConfigArea(URL userConfigArea) {
+    public void setUserConfigArea(File userConfigArea) {
         this.userConfigArea = userConfigArea;
     }
 
@@ -129,7 +130,7 @@ public class InitConfig {
      *
      * @param systemConfigArea the new system config area
      */
-    public void setSystemConfigArea(URL systemConfigArea) {
+    public void setSystemConfigArea(File systemConfigArea) {
         this.systemConfigArea = systemConfigArea;
     }
 
@@ -192,7 +193,7 @@ public class InitConfig {
      *
      * @return the location of the user's Ant config files
      */
-    public URL getUserConfigArea() {
+    public File getUserConfigArea() {
         return userConfigArea;
     }
 
@@ -210,7 +211,7 @@ public class InitConfig {
      *
      * @return the location of the system Ant config files
      */
-    public URL getSystemConfigArea() {
+    public File getSystemConfigArea() {
         return systemConfigArea;
     }
 

@@ -57,7 +57,7 @@ import java.io.PrintStream;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.MessageLevel;
-import org.apache.ant.antcore.event.BuildEvent;
+import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.antcore.model.BuildElement;
 import org.apache.ant.antcore.model.Target;
 
@@ -170,7 +170,7 @@ public class DefaultLogger implements BuildLogger {
             out.println(e.getMessage());
 
             if (messageOutputLevel >= MessageLevel.MSG_VERBOSE) {
-                t.printStackTrace();
+                t.printStackTrace(out);
             }
 
             if (cause != null) {
@@ -207,7 +207,7 @@ public class DefaultLogger implements BuildLogger {
                 break;
             case BuildEvent.TARGET_STARTED:
                 if (MessageLevel.MSG_INFO <= messageOutputLevel) {
-                    Target target = (Target)event.getModelElement();
+                    Target target = (Target)event.getSource();
                     out.println(lSep + target.getName() + ":");
                 }
                 break;
@@ -223,10 +223,10 @@ public class DefaultLogger implements BuildLogger {
 
                 // Filter out messages based on priority
                 if (event.getPriority() <= messageOutputLevel
-                     && event.getModelElement() instanceof BuildElement) {
+                     && event.getSource() instanceof BuildElement) {
                     // Print out the name of the task if we're in one
                     BuildElement buildElement
-                         = (BuildElement)event.getModelElement();
+                         = (BuildElement)event.getSource();
                     String name = buildElement.getType();
 
                     if (!emacsMode) {

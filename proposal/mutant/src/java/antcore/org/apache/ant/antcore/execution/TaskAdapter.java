@@ -54,8 +54,8 @@
 package org.apache.ant.antcore.execution;
 import java.lang.reflect.Method;
 
-import org.apache.ant.common.task.AbstractTask;
-import org.apache.ant.common.task.TaskException;
+import org.apache.ant.common.antlib.AbstractTask;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
  * Use introspection to "adapt" an arbitrary Bean (not extending Task, but
@@ -100,14 +100,13 @@ public class TaskAdapter extends AbstractTask {
      * Standard Task execute method. This invokes the execute method of the
      * worker instance
      *
-     * @exception TaskException if there is an exception in the
-     *      worker's execute method
+     * @exception ExecutionException if the proxied object throws an exception
      */
-    public void execute() throws TaskException {
+    public void execute() throws ExecutionException {
         try {
             executeMethod.invoke(worker, null);
-        } catch (Exception ex) {
-            throw new TaskException(ex);
+        } catch (Throwable t) {
+            throw new ExecutionException(t);
         }
     }
 }

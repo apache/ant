@@ -58,6 +58,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
  * This class represents the Ant library.
@@ -77,6 +79,10 @@ public class AntLibrary {
      * This name is used when importing tasks from this library
      */
     private String libraryId;
+
+    /** THe URL of the antlib.xml library spec which defines this library */
+    private URL definitionURL;
+
     /**
      * The URLs to use when contructing a classloader for the components in
      * this library.
@@ -85,6 +91,9 @@ public class AntLibrary {
 
     /** The list of converter classnames defined in this library */
     private List converterClassNames = new ArrayList();
+
+    /** The class name of this library's factory class, if any */
+    private String factoryClassName;
 
     /** The parent classloader to use when contructing classloaders */
     private ClassLoader parentLoader;
@@ -110,7 +119,9 @@ public class AntLibrary {
         this.libraryId = spec.getLibraryId();
         this.definitions = spec.getDefinitions();
         this.isolated = spec.isIsolated();
-        this.converterClassNames.addAll(spec.getConverterClassNames());
+        this.converterClassNames.addAll(spec.getConverters());
+        this.factoryClassName = spec.getFactory();
+        this.definitionURL = spec.getLibraryURL();
     }
 
     /**
@@ -173,6 +184,54 @@ public class AntLibrary {
     }
 
     /**
+     * Get the URL to where the library was loaded from
+     *
+     * @return the library's URL
+     */
+    public URL getDefinitionURL() {
+        return definitionURL;
+    }
+
+
+    /**
+     * Gat an instance of a factory object for creating objects in this
+     * library.
+     *
+     * @return an instance of the factory, or null if this library does not
+     *      support a factory
+     * @exception ExecutionException if the factory cannot be created
+     */
+    public AntLibFactory getFactory() throws ExecutionException {
+        try {
+            AntLibFactory libFactory = null;
+            if (factoryClassName != null) {
+                Class factoryClass = Class.forName(factoryClassName,
+                    true, getClassLoader());
+                libFactory
+                     = (AntLibFactory)factoryClass.newInstance();
+            }
+            return libFactory;
+        } catch (ClassNotFoundException e) {
+            throw new ExecutionException("Unable to create factory "
+                 + factoryClassName + " for the \"" + libraryId
+                 + "\" Ant library", e);
+        } catch (NoClassDefFoundError e) {
+            throw new ExecutionException("Could not load a dependent class ("
+                 + e.getMessage() + ") to create the factory "
+                 + factoryClassName + " for the \"" + libraryId
+                 + "\" Ant library", e);
+        } catch (InstantiationException e) {
+            throw new ExecutionException("Unable to instantiate factory "
+                 + factoryClassName + " for the \"" + libraryId
+                 + "\" Ant library", e);
+        } catch (IllegalAccessException e) {
+            throw new ExecutionException("Unable to access factory "
+                 + factoryClassName + " for the \"" + libraryId
+                 + "\" Ant library", e);
+        }
+    }
+
+    /**
      * Indicate whether this library has any converters defined
      *
      * @return true if any converters have been defined
@@ -189,6 +248,7 @@ public class AntLibrary {
     public void addLibraryURL(URL libraryURL) {
         libraryURLs.add(libraryURL);
     }
+
 
     /**
      * Create classloader which can be used to load the classes of this ant

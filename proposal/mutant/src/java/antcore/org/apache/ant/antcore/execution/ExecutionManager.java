@@ -52,34 +52,20 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import org.apache.ant.common.util.AntException;
-import org.apache.ant.antcore.antlib.AntLibHandler;
+import org.apache.ant.antcore.antlib.AntLibManager;
 import org.apache.ant.antcore.antlib.AntLibrary;
-import org.apache.ant.antcore.antlib.AntLibrarySpec;
 import org.apache.ant.antcore.config.AntConfig;
-import org.apache.ant.antcore.config.AntConfigHandler;
-import org.apache.ant.antcore.event.BuildEventSupport;
-import org.apache.ant.antcore.event.BuildListener;
 import org.apache.ant.antcore.model.Project;
-import org.apache.ant.antcore.util.CircularDependencyChecker;
-import org.apache.ant.antcore.util.CircularDependencyException;
 import org.apache.ant.antcore.util.ConfigException;
-import org.apache.ant.antcore.xml.ParseContext;
-import org.apache.ant.antcore.xml.XMLParseException;
-import org.apache.ant.init.InitUtils;
+import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.util.AntException;
 import org.apache.ant.init.InitConfig;
-import org.apache.ant.init.LoaderUtils;
 
 /**
  * The ExecutionManager is used to manage the execution of a build. The
@@ -101,69 +87,58 @@ public class ExecutionManager {
     private ExecutionFrame mainFrame;
 
     /**
+     * The configuration to be used in this execution of Ant. It is formed
+     * from the system, user and any runtime configs.
+     */
+    private AntConfig config;
+
+    /**
+     * Ant's initialization configuration with information on the location
+     * of Ant and its libraries.
+     */
+    private InitConfig initConfig;
+
+    /**
      * Create an ExecutionManager. When an ExecutionManager is created, it
      * loads the ant libraries which are installed in the Ant lib/task
      * directory.
      *
      * @param initConfig Ant's configuration - classloaders etc
+     * @param config The user config to use - may be null
      * @exception ConfigException if there is a problem with one of Ant's
      *      tasks
      */
-    public ExecutionManager(InitConfig initConfig)
+    public ExecutionManager(InitConfig initConfig, AntConfig config)
          throws ConfigException {
-        Map librarySpecs = new HashMap();
+        this.config = config;
+        this.initConfig = initConfig;
 
-        AntConfig userConfig = getAntConfig(initConfig.getUserConfigArea());
-        AntConfig systemConfig = getAntConfig(initConfig.getSystemConfigArea());
-
-        AntConfig config = systemConfig;
-        if (config == null) {
-            config = userConfig;
-        } else if (userConfig != null) {
-            config.merge(userConfig);
-        }
-
+        Map librarySpecs = new HashMap(10);
         try {
             // start by loading the task libraries
-            URL taskBaseURL = new URL(initConfig.getLibraryURL(), "antlibs");
-            addAntLibraries(librarySpecs, taskBaseURL);
+            URL standardLibsURL
+                 = new URL(initConfig.getLibraryURL(), "antlibs/");
 
+            AntLibManager libManager
+                 = new AntLibManager(config.isRemoteLibAllowed());
+
+            libManager.addAntLibraries(librarySpecs, standardLibsURL);
+            libManager.configLibraries(initConfig, librarySpecs, antLibraries);
+
+            librarySpecs.clear();
+            // add any additional libraries.
             if (config != null) {
-                // Now add in any found in the dirs specified in
-                // the config files
-                for (Iterator i = config.getTaskDirLocations(); i.hasNext(); ) {
+                for (Iterator i = config.getLibraryLocations(); i.hasNext(); ) {
                     // try file first
-                    String taskDirString = (String)i.next();
-                    File taskDir = new File(taskDirString);
-                    if (!taskDir.exists()) {
-                        URL taskDirURL = new URL(taskDirString);
-                        addAntLibraries(librarySpecs, taskDirURL);
-                    } else {
-                        addAntLibraries(librarySpecs,
-                            InitUtils.getFileURL(taskDir));
-                    }
+                    String libLocation = (String)i.next();
+                    libManager.loadLib(librarySpecs, libLocation);
                 }
             }
+            libManager.configLibraries(initConfig, librarySpecs, antLibraries);
 
-            configLibraries(initConfig, librarySpecs);
+            addConfigLibPaths();
 
-            if (config != null) {
-                // now add any additional library Paths specified by the config
-                for (Iterator i = config.getLibraryIds(); i.hasNext(); ) {
-                    String libraryId = (String)i.next();
-                    if (antLibraries.containsKey(libraryId)) {
-                        AntLibrary antLib 
-                            = (AntLibrary)antLibraries.get(libraryId);
-                        List pathList = config.getLibraryPathList(libraryId);
-                        for (Iterator j = pathList.iterator(); j.hasNext(); ) {
-                            URL pathElementURL = (URL)j.next();
-                            antLib.addLibraryURL(pathElementURL);
-                        }
-                    }
-                }
-            }
-
-            mainFrame = new ExecutionFrame(antLibraries);
+            mainFrame = new ExecutionFrame(antLibraries, initConfig, config);
         } catch (MalformedURLException e) {
             throw new ConfigException("Unable to load Ant libraries", e);
         }
@@ -172,8 +147,8 @@ public class ExecutionManager {
     /**
      * Run a build, executing each of the targets on the given project
      *
-     * @param project The project model on which to run the build
-     * @param targets The list of target names
+     * @param project the project model to be used for the build
+     * @param targets a list of target names to be executed.
      */
     public void runBuild(Project project, List targets) {
         Throwable buildFailureCause = null;
@@ -215,203 +190,35 @@ public class ExecutionManager {
     }
 
     /**
-     * Get the AntConfig from the given config area if it is available
+     * Add the library paths from the AntConfig instance to the Ant
+     * Libraries.
      *
-     * @param configArea the config area from which the config may be read
-     * @return the AntConfig instance representing the config info read in
-     *      from the config area. May be null if the AntConfig is not
-     *      present
-     * @exception ConfigException if the URL for the config file cannotbe
-     *      formed.
+     * @exception ConfigException if remote libraries are not allowed.
      */
-    private AntConfig getAntConfig(URL configArea) throws ConfigException {
-        try {
-            URL configFileURL = new URL(configArea, "antconfig.xml");
-
-            ParseContext context = new ParseContext();
-            AntConfigHandler configHandler = new AntConfigHandler();
-
-            context.parse(configFileURL, "antconfig", configHandler);
-
-            return configHandler.getAntConfig();
-        } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to form URL to read config from "
-                 + configArea, e);
-        } catch (XMLParseException e) {
-            if (!(e.getCause() instanceof FileNotFoundException)) {
-                throw new ConfigException("Unable to parse config file from "
-                     + configArea, e);
-            }
-            // ignore missing config files
-            return null;
-        }
-    }
-
-    /**
-     * Add all the Ant libraries that can be found at the given URL
-     *
-     * @param librarySpecs A map to which additional library specifications
-     *      are added.
-     * @param taskBaseURL the URL from which Ant libraries are to be loaded
-     * @exception MalformedURLException if the URL for the individual
-     *      library components cannot be formed
-     * @exception ConfigException if the library specs cannot be parsed
-     */
-    private void addAntLibraries(Map librarySpecs, URL taskBaseURL)
-         throws MalformedURLException, ConfigException {
-        URL[] taskURLs = LoaderUtils.getLoaderURLs(taskBaseURL, null,
-            new String[]{".tsk", ".jar", ".zip"});
-
-        if (taskURLs == null) {
+    private void addConfigLibPaths()
+         throws ConfigException {
+        if (config == null) {
             return;
         }
 
-        // parse each task library to get its library definition
-        for (int i = 0; i < taskURLs.length; ++i) {
-            URL libURL = new URL("jar:" + taskURLs[i]
-                 + "!/META-INF/antlib.xml");
-            try {
-                AntLibrarySpec antLibrarySpec = parseLibraryDef(libURL);
-                if (antLibrarySpec != null) {
-                    String libraryId = antLibrarySpec.getLibraryId();
-                    if (librarySpecs.containsKey(libraryId)) {
-                        throw new ConfigException("Found more than one "
-                             + "copy of library with id = " + libraryId +
-                            " (" + taskURLs[i] + ")");
-                    }
-                    antLibrarySpec.setLibraryURL(taskURLs[i]);
-                    librarySpecs.put(libraryId, antLibrarySpec);
-                }
-            } catch (XMLParseException e) {
-                Throwable t = e.getCause();
-                // ignore file not found exceptions - means the
-                // jar does not provide META-INF/antlib.xml
-                if (!(t instanceof FileNotFoundException)) {
-                    throw new ConfigException("Unable to parse Ant library "
-                         + taskURLs[i], e);
-                }
-            }
-        }
-    }
-
-    /**
-     * Configures the Ant Libraries. Configuration of an Ant Library
-     * involves resolving any dependencies between libraries and then
-     * creating the class loaders for the library
-     *
-     * @param initConfig the Ant initialized config
-     * @param librarySpecs the loaded specifications of the Ant libraries
-     * @exception ConfigException if a library cannot be configured from the
-     *      given specification
-     */
-    private void configLibraries(InitConfig initConfig, Map librarySpecs)
-         throws ConfigException {
-        Set configured = new HashSet();
-        CircularDependencyChecker configuring
-             = new CircularDependencyChecker("configuring Ant libraries");
-        for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext(); ) {
+        // now add any additional library Paths specified by the config
+        for (Iterator i = config.getLibraryIds(); i.hasNext(); ) {
             String libraryId = (String)i.next();
-            if (!configured.contains(libraryId)) {
-                configLibrary(initConfig, librarySpecs, libraryId,
-                    configured, configuring);
-            }
-        }
-    }
-
-    /**
-     * Configure a library from a specification and the Ant init config.
-     *
-     * @param initConfig Ant's init config passed in from the front end.
-     * @param librarySpecs the library specs from which this library is to
-     *      be configured.
-     * @param libraryId the global identifier for the library
-     * @param configured the set of libraries which have been configured
-     *      already
-     * @param configuring A circualr dependency chcker for library
-     *      dependencies.
-     * @exception ConfigException if the library cannot be configured.
-     */
-    private void configLibrary(InitConfig initConfig, Map librarySpecs,
-                               String libraryId, Set configured,
-                               CircularDependencyChecker configuring)
-         throws ConfigException {
-
-        try {
-
-            configuring.visitNode(libraryId);
-
-            AntLibrarySpec librarySpec
-                 = (AntLibrarySpec)librarySpecs.get(libraryId);
-            String extendsId = librarySpec.getExtendsLibraryId();
-            if (extendsId != null) {
-                if (!configured.contains(extendsId)) {
-                    if (!librarySpecs.containsKey(extendsId)) {
-                        throw new ConfigException("Could not find library, "
-                             + extendsId + ", upon which library "
-                             + libraryId + " depends");
+            if (antLibraries.containsKey(libraryId)) {
+                AntLibrary antLib
+                     = (AntLibrary)antLibraries.get(libraryId);
+                List pathList = config.getLibraryPathList(libraryId);
+                for (Iterator j = pathList.iterator(); j.hasNext(); ) {
+                    URL pathElementURL = (URL)j.next();
+                    if (!pathElementURL.getProtocol().equals("file")
+                         && !config.isRemoteLibAllowed()) {
+                        throw new ConfigException("Remote libpaths are not"
+                             + " allowed: " + pathElementURL);
                     }
-                    configLibrary(initConfig, librarySpecs, extendsId,
-                        configured, configuring);
+                    antLib.addLibraryURL(pathElementURL);
                 }
             }
-
-            // now create the library for the specification
-            AntLibrary antLibrary = new AntLibrary(librarySpec);
-
-            // determine the URLs required for this task. These are the
-            // task URL itself, the XML parser URLs if required, the
-            // tools jar URL if required
-            List urlsList = new ArrayList();
-
-            if (librarySpec.getLibraryURL() != null) {
-                urlsList.add(librarySpec.getLibraryURL());
-            }
-            if (librarySpec.isToolsJarRequired()
-                 && initConfig.getToolsJarURL() != null) {
-                urlsList.add(initConfig.getToolsJarURL());
-            }
-
-            URL[] parserURLs = initConfig.getParserURLs();
-            if (librarySpec.usesAntXML()) {
-                for (int i = 0; i < parserURLs.length; ++i) {
-                    urlsList.add(parserURLs[i]);
-                }
-            }
-
-            for (Iterator i = urlsList.iterator(); i.hasNext(); ) {
-                antLibrary.addLibraryURL((URL)i.next());
-            }
-            if (extendsId != null) {
-                AntLibrary extendsLibrary
-                     = (AntLibrary)antLibraries.get(extendsId);
-                antLibrary.setExtendsLibrary(extendsLibrary);
-            }
-            antLibrary.setParentLoader(initConfig.getCommonLoader());
-            antLibraries.put(libraryId, antLibrary);
-            configuring.leaveNode(libraryId);
-        } catch (CircularDependencyException e) {
-            throw new ConfigException(e);
         }
     }
-
-
-    /**
-     * Read an Ant library definition from a URL
-     *
-     * @param antlibURL the URL of the library definition
-     * @return the AntLibrary specification read from the library XML
-     *      definition
-     * @exception XMLParseException if the library cannot be parsed
-     */
-    private AntLibrarySpec parseLibraryDef(URL antlibURL)
-         throws XMLParseException {
-        ParseContext context = new ParseContext();
-        AntLibHandler libHandler = new AntLibHandler();
-
-        context.parse(antlibURL, "antlib", libHandler);
-
-        return libHandler.getAntLibrarySpec();
-    }
-
 }
 

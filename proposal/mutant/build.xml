@@ -11,6 +11,15 @@
   
   <property name="debug" value="true"/>
 
+  <fileset id="ant1src" dir="../../src/main">
+    <include name="org/apache/tools/**/*.java"/>
+    <exclude name="**/optional/**/*.java"/>
+    <exclude name="org/apache/tools/ant/Project.java"/>
+    <exclude name="org/apache/tools/ant/ProjectHelper.java"/>
+    <exclude name="org/apache/tools/ant/Target.java"/>
+    <exclude name="org/apache/tools/ant/Task.java"/>
+  </fileset>
+  
   <path id="classpath.parser">
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
   </path>
@@ -102,6 +111,25 @@
     </jar>
   </target>
 
+  <target name="ant1compat" depends="common">
+    <ant antfile="ant1compat.xml"/>
+  </target>
+  
+  <target name="remote" depends="init">
+    <mkdir dir="${bin.dir}/remote"/>
+    <depend destdir="${bin.dir}/remote" srcdir="${java.dir}/remote">
+      <classpath refid="classpath.start"/>
+    </depend>
+    <javac destdir="${bin.dir}/remote" srcdir="${java.dir}/remote" debug="${debug}">
+      <classpath refid="classpath.start"/>
+    </javac>
+    <jar basedir="${bin.dir}/remote" jarfile="${distlib.dir}/remote.jar">
+      <manifest>
+        <attribute name="Main-Class" value="org.apache.ant.remote.RemoteMain"/>
+      </manifest>
+    </jar>
+  </target>
+  
   <target name="clean">
     <delete dir="${bin.dir}"/>
     <delete dir="${dist.dir}"/>
@@ -110,6 +138,9 @@
   <target name="antlibs" depends="common">
     <antcall target="build-lib" inheritall="false">
       <param name="libset" value="io"/>
+    </antcall>
+    <antcall target="build-lib" inheritall="false">
+      <param name="libset" value="system"/>
     </antcall>
   </target>
   
@@ -132,7 +163,7 @@
     </jar>
   </target>
 
-  <target name="main" depends="cli, antlibs, checkstyle"/> 
+  <target name="main" depends="cli, antlibs, ant1compat, remote, checkstyle"/> 
   
   <target name="checkstyle" if="checkstyle.available">
     <property name="checkstyle.bin" value="../checkstyle"/>

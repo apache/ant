@@ -81,6 +81,7 @@ public class AntLibHandler extends ElementHandler {
     /** The extends attribute name */
     public final static String ISOLATED_ATTR = "isolated";
 
+    
     /** The list of allowed Attributes */
     public final static String[] ALLOWED_ATTRIBUTES
          = {LIBID_ATTR, HOME_ATTR, REQXML_ATTR, REQTOOLS_ATTR,
@@ -144,12 +145,20 @@ public class AntLibHandler extends ElementHandler {
                 antLibrarySpec.addDefinition(defnHandler.getDefinitionType(),
                     defnHandler.getName(), defnHandler.getClassName());
             } else if (qualifiedName.equals("converter")) {
-                ConverterHandler converterHandler
-                    = new ConverterHandler();
+                ClassNameHandler converterHandler
+                    = new ClassNameHandler();
                 converterHandler.start(getParseContext(), getXMLReader(),
                     this, getLocator(), attributes, getElementSource(),
                     qualifiedName);
                 antLibrarySpec.addConverter(converterHandler.getClassName());
+            } else if (qualifiedName.equals("factory")) {
+                ClassNameHandler factoryHandler
+                    = new ClassNameHandler();
+                factoryHandler.start(getParseContext(), getXMLReader(),
+                    this, getLocator(), attributes, getElementSource(),
+                    qualifiedName);
+                String factoryClass = factoryHandler.getClassName();
+                antLibrarySpec.setFactory(factoryClass);
             }
             else {
                 super.startElement(uri, localName, qualifiedName, attributes);
@@ -179,17 +188,6 @@ public class AntLibHandler extends ElementHandler {
     }
 
 
-    /**
-     * Get an attribute as a boolean value
-     *
-     * @param attributeName the name of the attribute
-     * @return the attribute value as a boolean
-     */
-    private boolean getBooleanAttribute(String attributeName) {
-        String value = getAttribute(attributeName);
-        return value != null && (value.equalsIgnoreCase("true")
-             || value.equalsIgnoreCase("yes"));
-    }
 }
 
 

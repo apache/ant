@@ -103,6 +103,12 @@ public class ClassIntrospector {
                  && !args[0].isArray()
                  && !args[0].isPrimitive()) {
                 reflector.addElementMethod(m, getPropertyName(name, "add"));
+            } else if (name.startsWith("create")
+                 && name.length() > 6
+                 && !returnType.isArray()
+                 && !returnType.isPrimitive()
+                 && args.length == 0) {
+                reflector.addCreateMethod(m, getPropertyName(name, "create"));
             }
         }
     }

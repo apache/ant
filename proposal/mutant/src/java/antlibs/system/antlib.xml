@@ -1,0 +1,13 @@
+<antlib libid="ant.system" 
+        home="http://jakarta.apache.org/ant">
+
+  <taskdef name="import" classname="org.apache.ant.antlib.system.Import"/>
+  <taskdef name="libpath" classname="org.apache.ant.antlib.system.LibPath"/>
+  <taskdef name="taskdef" classname="org.apache.ant.antlib.system.TaskDef"/>
+  <taskdef name="typedef" classname="org.apache.ant.antlib.system.TypeDef"/>
+  <taskdef name="loadlib" classname="org.apache.ant.antlib.system.LoadLib"/>
+
+  <converter classname="org.apache.ant.antlib.system.FileConverter"/>          
+  <converter classname="org.apache.ant.antlib.system.URLConverter"/>          
+  <converter classname="org.apache.ant.antlib.system.PrimitiveConverter"/>          
+</antlib>

@@ -105,13 +105,13 @@ public class AntConfigHandler extends ElementHandler {
          throws SAXParseException {
 
         try {
-            if (qualifiedName.equals("taskdir")) {
-                TaskDirHandler taskDirHandler
-                     = new TaskDirHandler();
-                taskDirHandler.start(getParseContext(), getXMLReader(),
+            if (qualifiedName.equals("loadlib")) {
+                LoadLibHandler loadlibHandler
+                     = new LoadLibHandler();
+                loadlibHandler.start(getParseContext(), getXMLReader(),
                     this, getLocator(), attributes, getElementSource(),
                     qualifiedName);
-                config.addTaskDir(taskDirHandler.getTaskDirLocation());
+                config.addAntLibraryLocation(loadlibHandler.getLibLocation());
             } else if (qualifiedName.equals("libpath")) {
                 LibPathHandler libPathHandler
                      = new LibPathHandler();

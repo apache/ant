@@ -54,7 +54,7 @@
 package org.apache.ant.cli;
 
 import java.io.PrintStream;
-import org.apache.ant.antcore.event.BuildListener;
+import org.apache.ant.common.event.BuildListener;
 
 /**
  * Interface used by Ant to log the build output. A build logger is a build

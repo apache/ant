@@ -53,12 +53,11 @@
  */
 package org.apache.ant.antcore.execution;
 import java.io.File;
-import java.net.URL;
-import org.apache.ant.common.context.AntContext;
-import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.util.FileUtils;
-import org.apache.ant.antcore.event.BuildEventSupport;
 import org.apache.ant.antcore.model.ModelElement;
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.FileUtils;
+import org.apache.ant.common.util.Location;
 
 /**
  * This is the core's implementation of the AntContext for all core objects.
@@ -67,9 +66,10 @@ import org.apache.ant.antcore.model.ModelElement;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 20 January 2002
  */
-public class ExecutionContext extends AntContext {
+public class ExecutionContext implements AntContext {
     /** The ExecutionFrame containing this context */
-    private ExecutionFrame executionFrame;
+    private ExecutionFrame frame;
+
     /** the event support instance used to manage build events */
     private BuildEventSupport eventSupport;
 
@@ -78,6 +78,19 @@ public class ExecutionContext extends AntContext {
 
     /** General file utilities */
     private FileUtils fileUtils = new FileUtils();
+
+    /**
+     * Initilaise this context's environment
+     *
+     * @param frame the frame containing this context
+     * @param eventSupport the event support instance used to send build
+     *      events
+     */
+    public ExecutionContext(ExecutionFrame frame,
+                            BuildEventSupport eventSupport) {
+        this.frame = frame;
+        this.eventSupport = eventSupport;
+    }
 
     /**
      * Set the model element associated with this context
@@ -89,16 +102,38 @@ public class ExecutionContext extends AntContext {
     }
 
     /**
-     * Initilaise this context's environment
+     * Get an implementation of one of the core's service interfaces
      *
-     * @param executionFrame the frame containing this context
-     * @param eventSupport the event support instance used to send build
-     *      events
+     * @param serviceInterfaceClass the interface class for which an
+     *      implementation is required
+     * @return the core's implementation of the interface.
+     * @exception ExecutionException if there is a problem finding the
+     *      interface
      */
-    public void initEnvironment(ExecutionFrame executionFrame,
-                                BuildEventSupport eventSupport) {
-        this.executionFrame = executionFrame;
-        this.eventSupport = eventSupport;
+    public Object getCoreService(Class serviceInterfaceClass)
+         throws ExecutionException {
+        return frame.getCoreService(serviceInterfaceClass);
+    }
+
+    /**
+     * Get the build fiel location with which this context is associated
+     *
+     * @return the associated location object.
+     */
+    public Location getLocation() {
+        if (modelElement != null) {
+            return modelElement.getLocation();
+        }
+        return Location.UNKNOWN_LOCATION;
+    }
+
+    /**
+     * Get the base directory for this execution of this frame
+     *
+     * @return the base directory
+     */
+    public File getBaseDir() {
+        return frame.getBaseDir();
     }
 
     /**
@@ -108,27 +143,11 @@ public class ExecutionContext extends AntContext {
      * @param level the priority level of the message
      */
     public void log(String message, int level) {
-        eventSupport.fireMessageLogged(modelElement, message, level);
-    }
-
-    /**
-     * Resolve a file according to the base directory of the project
-     * associated with this context
-     *
-     * @param fileName the file name to be resolved.
-     * @return the file resolved to the project's base dir
-     * @exception AntException if the file cannot be resolved
-     */
-    public File resolveFile(String fileName) throws AntException {
-        URL baseURL = executionFrame.getBaseURL();
-        if (!baseURL.getProtocol().equals("file")) {
-            throw new ExecutionException("Cannot resolve name " + fileName
-                 + " to a file because the project basedir is not a file: "
-                 + baseURL);
+        ModelElement source = modelElement;
+        if (modelElement == null) {
+            source = frame.getProject();
         }
-
-        return fileUtils.resolveFile(fileUtils.normalize(baseURL.getFile()), 
-            fileName);
+        eventSupport.fireMessageLogged(source, message, level);
     }
 }
 

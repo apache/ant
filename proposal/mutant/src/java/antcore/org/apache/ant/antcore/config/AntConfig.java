@@ -60,8 +60,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.common.util.PathTokenizer;
 import org.apache.ant.antcore.util.ConfigException;
+import org.apache.ant.common.util.PathTokenizer;
 import org.apache.ant.init.InitUtils;
 
 /**
@@ -73,7 +73,7 @@ import org.apache.ant.init.InitUtils;
  */
 public class AntConfig {
     /** The list of additional directories to be searched for Ant libraries */
-    private List taskDirLocations = new ArrayList();
+    private List libraryLocations = new ArrayList();
 
     /**
      * A list of additional paths for each ant library, indexed on the
@@ -81,13 +81,37 @@ public class AntConfig {
      */
     private Map libPaths = new HashMap();
 
+    /** Indicates if remote libraries may be used */
+    private boolean allowRemoteLibs = false;
+
+    /** Indicates if remote projects may be used */
+    private boolean allowRemoteProjects = false;
+
     /**
-     * Get the task dir locations.
+     * Indicate if the use of remote library's is allowe dby this config.
      *
-     * @return an iterator over the task dir locations
+     * @return true if this config allows the use of remote libraries,
      */
-    public Iterator getTaskDirLocations() {
-        return taskDirLocations.iterator();
+    public boolean isRemoteLibAllowed() {
+        return allowRemoteLibs;
+    }
+
+    /**
+     * Indicate if this config allows the execution of a remote project 
+     *
+     * @return true if remote projects are allowed
+     */
+    public boolean isRemoteProjectAllowed() {
+        return allowRemoteProjects;
+    }
+
+    /**
+     * Get the additional locations in which to search for Ant Libraries
+     *
+     * @return an iterator over the library locations
+     */
+    public Iterator getLibraryLocations() {
+        return libraryLocations.iterator();
     }
 
     /**
@@ -169,10 +193,10 @@ public class AntConfig {
      */
     public void merge(AntConfig otherConfig) {
         // merge by
-        List currentTaskDirs = taskDirLocations;
-        taskDirLocations = new ArrayList();
-        taskDirLocations.addAll(otherConfig.taskDirLocations);
-        taskDirLocations.addAll(currentTaskDirs);
+        List currentLibraryLocations = libraryLocations;
+        libraryLocations = new ArrayList();
+        libraryLocations.addAll(otherConfig.libraryLocations);
+        libraryLocations.addAll(currentLibraryLocations);
 
         Iterator i = otherConfig.libPaths.keySet().iterator();
         while (i.hasNext()) {
@@ -188,11 +212,11 @@ public class AntConfig {
     /**
      * Add a new task directory to be searched for additional Ant libraries
      *
-     * @param taskDirLocation the location (can be a file or a URL) where
+     * @param libraryLocation the location (can be a file or a URL) where
      *      the libraries may be loaded from.
      */
-    public void addTaskDir(String taskDirLocation) {
-        taskDirLocations.add(taskDirLocation);
+    public void addAntLibraryLocation(String libraryLocation) {
+        libraryLocations.add(libraryLocation);
     }
 }
 

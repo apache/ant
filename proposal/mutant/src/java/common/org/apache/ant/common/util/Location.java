@@ -97,16 +97,16 @@ public class Location {
     }
 
     /** Creates an "unknown" location. */
-    private Location() {
+    public Location() {
         this(null, 0, 0);
     }
 
     /**
-     * Get the source URL for this location
+     * Get the source for this location
      *
-     * @return a URL string
+     * @return the location's source
      */
-    public String getSourceURL() {
+    public String getSource() {
         return source;
     }
 

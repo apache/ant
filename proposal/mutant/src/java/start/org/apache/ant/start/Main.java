@@ -138,7 +138,8 @@ public class Main {
     private URL getToolsJarURL()
          throws InitException {
         try {
-            Class compilerClass = Class.forName("sun.tools.javac.Main");
+            // just check whether this throws an exception
+            Class.forName("sun.tools.javac.Main");
             // tools jar is on system classpath - no need for URL
             return null;
         } catch (ClassNotFoundException cnfe) {
@@ -195,14 +196,18 @@ public class Main {
             InitConfig config = new InitConfig();
 
             URL libraryURL = getLibraryURL();
+            System.out.println("Library URL is " + libraryURL);
             config.setLibraryURL(libraryURL);
 
             URL antHome = getAntHome();
             config.setAntHome(antHome);
-            config.setSystemConfigArea(new URL(antHome, "conf/"));
+            if (antHome.getProtocol().equals("file")) {
+                File systemConfigArea = new File(antHome.getFile(), "conf");
+                config.setSystemConfigArea(systemConfigArea);
+            }
             File userConfigArea
                  = new File(System.getProperty("user.home"), ".ant/conf");
-            config.setUserConfigArea(InitUtils.getFileURL(userConfigArea));
+            config.setUserConfigArea(userConfigArea);
 
             // set up the class loaders that will be used when running Ant
             ClassLoader systemLoader = getClass().getClassLoader();
@@ -210,20 +215,20 @@ public class Main {
             URL toolsJarURL = getToolsJarURL();
             config.setToolsJarURL(toolsJarURL);
 
-            URL commonJarLib = new URL(libraryURL, "common");
+            URL commonJarLib = new URL(libraryURL, "common/");
             ClassLoader commonLoader
-                 = new URLClassLoader(LoaderUtils.getLoaderURLs(commonJarLib,
+                 = new URLClassLoader(LoaderUtils.getLocationURLs(commonJarLib,
                 "common.jar"), systemLoader);
             config.setCommonLoader(commonLoader);
 
             // core needs XML parser for parsing various XML components.
             URL[] parserURLs
-                 = LoaderUtils.getLoaderURLs(new URL(libraryURL, "parser"),
+                 = LoaderUtils.getLocationURLs(new URL(libraryURL, "parser/"),
                 "crimson.jar");
             config.setParserURLs(parserURLs);
 
             URL[] coreURLs
-                 = LoaderUtils.getLoaderURLs(new URL(libraryURL, "antcore"),
+                 = LoaderUtils.getLocationURLs(new URL(libraryURL, "antcore/"),
                 "antcore.jar");
             URL[] combinedURLs = new URL[parserURLs.length + coreURLs.length];
             System.arraycopy(coreURLs, 0, combinedURLs, 0, coreURLs.length);
@@ -233,9 +238,9 @@ public class Main {
                 commonLoader);
             config.setCoreLoader(coreLoader);
 
-            URL cliJarLib = new URL(libraryURL, "cli");
+            URL cliJarLib = new URL(libraryURL, "cli/");
             ClassLoader frontEndLoader
-                 = new URLClassLoader(LoaderUtils.getLoaderURLs(cliJarLib,
+                 = new URLClassLoader(LoaderUtils.getLocationURLs(cliJarLib,
                 "cli.jar"), coreLoader);
 
             // System.out.println("Front End Loader config");

@@ -78,32 +78,32 @@ public class FileUtils {
      *      null, this call is equivalent to 
      *      <code>new java.io.File(filename)</code>
      *      .
-     * @param filename a file name
+     * @param filename the filename to be resolved
      * @return an absolute file that doesn't contain &quot;./&quot; or
      *      &quot;../&quot; sequences and uses the correct separator for the
      *      current platform.
-     * @exception GeneralAntException if the file cannot be resolved
+     * @exception ExecutionException if the file cannot be resolved
      */
     public File resolveFile(File file, String filename)
-         throws GeneralAntException {
-        filename = filename.replace('/', File.separatorChar)
+         throws ExecutionException {
+        String platformFilename = filename.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
 
         // deal with absolute files
-        if (filename.startsWith(File.separator) ||
-            (filename.length() >= 2 &&
-            Character.isLetter(filename.charAt(0)) &&
-            filename.charAt(1) == ':')
-            ) {
-            return normalize(filename);
+        if (platformFilename.startsWith(File.separator) ||
+            (platformFilename.length() >= 2 &&
+            Character.isLetter(platformFilename.charAt(0)) &&
+            platformFilename.charAt(1) == ':')) {
+            return normalize(platformFilename);
         }
 
         if (file == null) {
-            return new File(filename);
+            return new File(platformFilename);
         }
 
         File helpFile = new File(file.getAbsolutePath());
-        StringTokenizer tok = new StringTokenizer(filename, File.separator);
+        StringTokenizer tok 
+            = new StringTokenizer(platformFilename, File.separator);
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {
@@ -112,7 +112,7 @@ public class FileUtils {
                     String msg = "The file or path you specified ("
                          + filename + ") is invalid relative to "
                          + file.getPath();
-                    throw new GeneralAntException(msg);
+                    throw new ExecutionException(msg);
                 }
             } else if (part.equals(".")) {
                 // Do nothing here
@@ -138,37 +138,35 @@ public class FileUtils {
      *
      *
      * @param path the path to be normalized
-     * @return the normalized path 
-     * @exception GeneralAntException if there is a problem with the path
+     * @return the normalized path
+     * @exception ExecutionException if there is a problem with the path
      * @throws NullPointerException if the file path is equal to null.
      */
-    public File normalize(String path) 
-        throws NullPointerException, GeneralAntException {
-        String orig = path;
+    public File normalize(String path)
+         throws NullPointerException, ExecutionException {
 
-        path = path.replace('/', File.separatorChar)
+        String platformPath = path.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
 
         // make sure we are dealing with an absolute path
-        if (!path.startsWith(File.separator) &&
-            !(path.length() >= 2 &&
-            Character.isLetter(path.charAt(0)) &&
-            path.charAt(1) == ':')
-            ) {
+        if (!platformPath.startsWith(File.separator) &&
+            !(platformPath.length() >= 2 &&
+            Character.isLetter(platformPath.charAt(0)) &&
+            platformPath.charAt(1) == ':')) {
             String msg = path + " is not an absolute path";
-            throw new GeneralAntException(msg);
+            throw new ExecutionException(msg);
         }
 
         boolean dosWithDrive = false;
         String root = null;
         // Eliminate consecutive slashes after the drive spec
-        if (path.length() >= 2 &&
-            Character.isLetter(path.charAt(0)) &&
-            path.charAt(1) == ':') {
+        if (platformPath.length() >= 2 &&
+            Character.isLetter(platformPath.charAt(0)) &&
+            platformPath.charAt(1) == ':') {
 
             dosWithDrive = true;
 
-            char[] ca = path.replace('/', '\\').toCharArray();
+            char[] ca = platformPath.replace('/', '\\').toCharArray();
             StringBuffer sb = new StringBuffer();
             sb.append(Character.toUpperCase(ca[0])).append(':');
 
@@ -180,40 +178,40 @@ public class FileUtils {
                 }
             }
 
-            path = sb.toString().replace('\\', File.separatorChar);
-            if (path.length() == 2) {
-                root = path;
-                path = "";
+            platformPath = sb.toString().replace('\\', File.separatorChar);
+            if (platformPath.length() == 2) {
+                root = platformPath;
+                platformPath = "";
             } else {
-                root = path.substring(0, 3);
-                path = path.substring(3);
+                root = platformPath.substring(0, 3);
+                platformPath = platformPath.substring(3);
             }
 
         } else {
-            if (path.length() == 1) {
+            if (platformPath.length() == 1) {
                 root = File.separator;
-                path = "";
-            } else if (path.charAt(1) == File.separatorChar) {
+                platformPath = "";
+            } else if (platformPath.charAt(1) == File.separatorChar) {
                 // UNC drive
                 root = File.separator + File.separator;
-                path = path.substring(2);
+                platformPath = platformPath.substring(2);
             } else {
                 root = File.separator;
-                path = path.substring(1);
+                platformPath = platformPath.substring(1);
             }
         }
 
         Stack s = new Stack();
         s.push(root);
-        StringTokenizer tok = new StringTokenizer(path, File.separator);
+        StringTokenizer tok = new StringTokenizer(platformPath, File.separator);
         while (tok.hasMoreTokens()) {
             String thisToken = tok.nextToken();
             if (".".equals(thisToken)) {
                 continue;
             } else if ("..".equals(thisToken)) {
                 if (s.size() < 2) {
-                    throw new GeneralAntException("Cannot resolve path " 
-                        + orig);
+                    throw new ExecutionException("Cannot resolve path "
+                         + path);
                 } else {
                     s.pop();
                 }
@@ -232,11 +230,11 @@ public class FileUtils {
             sb.append(s.elementAt(i));
         }
 
-        path = sb.toString();
+        platformPath = sb.toString();
         if (dosWithDrive) {
-            path = path.replace('/', '\\');
+            platformPath = platformPath.replace('/', '\\');
         }
-        return new File(path);
+        return new File(platformPath);
     }
 
 }

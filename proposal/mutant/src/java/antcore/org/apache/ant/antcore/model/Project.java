@@ -373,11 +373,6 @@ public class Project extends ModelElement {
      * @exception ModelException if the element is invalid
      */
     public void validate(String globalName) throws ModelException {
-        if (defaultTarget == null) {
-            throw new ModelException("Project must have a default "
-                 + "attribute", getLocation());
-        }
-
         Set keys = referencedProjects.keySet();
         for (Iterator i = keys.iterator(); i.hasNext(); ) {
             String refName = (String)i.next();
@@ -500,7 +495,6 @@ public class Project extends ModelElement {
         if (flattenedList.contains(fullTargetName)) {
             return;
         }
-        Project containingProject = getRefProject(fullTargetName);
         String fullProjectName = getFullProjectName(fullTargetName);
         Target target = getRefTarget(fullTargetName);
         if (target == null) {

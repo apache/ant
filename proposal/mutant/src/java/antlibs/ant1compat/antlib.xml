@@ -1,0 +1,23 @@
+<antlib libid="ant.ant1compat" 
+        home="http://jakarta.apache.org/ant"
+        reqxml="true" reqtools="true">
+
+  <factory classname="org.apache.tools.ant.Ant1Factory"/>
+          
+  <taskdef name="echo" classname="org.apache.tools.ant.taskdefs.Echo"/>
+  <taskdef name="property" classname="org.apache.tools.ant.taskdefs.Property"/>
+  <typedef name="patternset" classname="org.apache.tools.ant.types.PatternSet"/>
+  <typedef name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
+  <typedef name="path" classname="org.apache.tools.ant.types.Path"/>
+  <taskdef name="available" classname="org.apache.tools.ant.taskdefs.Available"/>
+  <taskdef name="condition" classname="org.apache.tools.ant.taskdefs.ConditionTask"/>
+  <taskdef name="javac" classname="org.apache.tools.ant.taskdefs.Javac"/>
+  <taskdef name="mkdir" classname="org.apache.tools.ant.taskdefs.Mkdir"/>
+  <taskdef name="copy" classname="org.apache.tools.ant.taskdefs.Copy"/>
+  <taskdef name="depend" classname="org.apache.tools.ant.taskdefs.optional.depend.Depend"/>
+  <taskdef name="jar" classname="org.apache.tools.ant.taskdefs.Jar"/>
+  <taskdef name="delete" classname="org.apache.tools.ant.taskdefs.Delete"/>
+
+  <converter classname="org.apache.tools.ant.Ant1Converter"/>          
+
+</antlib>

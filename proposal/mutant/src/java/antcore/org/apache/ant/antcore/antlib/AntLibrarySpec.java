@@ -53,10 +53,10 @@
  */
 package org.apache.ant.antcore.antlib;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.ant.antcore.util.ConfigException;
 
 /**
@@ -85,6 +85,9 @@ public class AntLibrarySpec {
     /** The list of converter classnames defined in this library */
     private List converterClassNames = new ArrayList();
 
+    /** The name of the factory class for this library */
+    private String factoryClassName;
+
     /**
      * This is the optional id of another Ant library upon which this
      * library depends.
@@ -103,6 +106,9 @@ public class AntLibrarySpec {
     /** Flag which indicates if tools.jar is required */
     private boolean toolsJarRequired = false;
 
+    /** Flag which indicates that this library is a system library */
+    private boolean systemLibrary = false;
+
     /**
      * This flag indicates that this task processes XML and wishes to use
      * the XML parser packaged with Ant
@@ -116,6 +122,15 @@ public class AntLibrarySpec {
      */
     public void setExtendsLibraryId(String extendsLibraryId) {
         this.extendsLibraryId = extendsLibraryId;
+    }
+
+    /**
+     * Sets the name of the factory class of the AntLibrarySpec
+     *
+     * @param className the new factory classname
+     */
+    public void setFactory(String className) {
+        this.factoryClassName = className;
     }
 
     /**
@@ -156,7 +171,6 @@ public class AntLibrarySpec {
         this.toolsJarRequired = toolsJarRequired;
     }
 
-
     /**
      * Sets the libraryURL of the AntLibrary
      *
@@ -181,8 +195,17 @@ public class AntLibrarySpec {
      *
      * @return the converter classnames list
      */
-    public List getConverterClassNames() {
+    public List getConverters() {
         return converterClassNames;
+    }
+
+    /**
+     * Gets the factory classname of the AntLibrarySpec
+     *
+     * @return the factory classname
+     */
+    public String getFactory() {
+        return factoryClassName;
     }
 
     /**
@@ -288,5 +311,6 @@ public class AntLibrarySpec {
         definitions.put(name,
             new AntLibDefinition(definitionType, name, classname));
     }
+
 }
 

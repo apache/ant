@@ -52,28 +52,35 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import java.net.MalformedURLException;
+import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.apache.ant.common.converter.Converter;
-import org.apache.ant.common.task.DataType;
-import org.apache.ant.common.task.Task;
-import org.apache.ant.common.task.TaskContainer;
-import org.apache.ant.common.task.TaskException;
-import org.apache.ant.common.util.Location;
 import org.apache.ant.antcore.antlib.AntLibDefinition;
 import org.apache.ant.antcore.antlib.AntLibrary;
-import org.apache.ant.antcore.event.BuildEventSupport;
-import org.apache.ant.antcore.event.BuildListener;
+import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.antcore.model.BuildElement;
 import org.apache.ant.antcore.model.Project;
 import org.apache.ant.antcore.model.Target;
 import org.apache.ant.antcore.util.ConfigException;
+import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.antlib.Converter;
+import org.apache.ant.common.antlib.ExecutionComponent;
+import org.apache.ant.common.antlib.StandardLibFactory;
+import org.apache.ant.common.antlib.Task;
+import org.apache.ant.common.antlib.TaskContainer;
+import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.service.DataService;
+import org.apache.ant.common.service.FileService;
+import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.Location;
+import org.apache.ant.common.util.MessageLevel;
+import org.apache.ant.init.InitConfig;
 
 /**
  * An ExecutionFrame maintains the state of a project during an execution.
@@ -143,11 +150,14 @@ public class ExecutionFrame {
     /** The prefix for library ids that are automatically imported */
     public final static String ANT_LIB_PREFIX = "ant.";
 
-    /** the base dir of the project expressed as a URL */
-    private URL baseURL;
+    /** the base dir of the project */
+    private File baseDir;
 
     /** The Project that this execution frame is processing */
     private Project project = null;
+
+    /** The factory objects for each library, indexed by the library Id */
+    private Map libFactories = new HashMap();
 
     /** The referenced frames corresponding to the referenced projects */
     private Map referencedFrames = new HashMap();
@@ -162,8 +172,20 @@ public class ExecutionFrame {
     private Map dataValues = new HashMap();
 
     /**
-     * The available libraries from which taskdefs, typedefs, etc may be
-     * imported
+     * Ant's initialization configuration with information on the location
+     * of Ant and its libraries.
+     */
+    private InitConfig initConfig;
+
+    /**
+     * These are the standard libraries from which taskdefs, typedefs, etc
+     * may be imported.
+     */
+    private Map standardLibs;
+
+    /**
+     * These are AntLibraries which have been loaded in this
+     * ExecutionFrame's build file.
      */
     private Map antLibraries;
 
@@ -180,71 +202,55 @@ public class ExecutionFrame {
     private Map converters = new HashMap();
 
     /**
+     * The services map is a map of service interface classes to instances
+     * which provide the service.
+     */
+    private Map services = new HashMap();
+
+    /**
+     * The configuration to be used in this execution of Ant. It is formed
+     * from the system, user and any runtime configs.
+     */
+    private AntConfig config;
+
+    /**
+     * The Data Service instance used by the frame for data management
+     */
+    private DataService dataService;
+
+    /**
      * Create an Execution Frame for the given project
      *
-     * @param antLibraries The libraries of tasks and types available to
+     * @param standardLibs The libraries of tasks and types available to
      *      this frame
+     * @param config the user config to use for this execution of Ant
+     * @param initConfig Ant's initialisation config
      * @exception ConfigException if a component of the library cannot be
      *      imported
      */
-    public ExecutionFrame(Map antLibraries) throws ConfigException {
-        this.antLibraries = antLibraries;
+    protected ExecutionFrame(Map standardLibs, InitConfig initConfig,
+                             AntConfig config) throws ConfigException {
+        this.standardLibs = standardLibs;
+        this.config = config;
+        this.initConfig = initConfig;
 
-        // go through the libraries and import all standard ant libraries
-        for (Iterator i = antLibraries.keySet().iterator(); i.hasNext(); ) {
-            String libraryId = (String)i.next();
-            if (libraryId.startsWith(ANT_LIB_PREFIX)) {
-                // standard library - import whole library
-                importLibrary(libraryId);
-            }
-        }
-    }
+        configureServices();
+        
+        antLibraries = new HashMap(standardLibs);
 
-    /**
-     * This method will parse a string containing ${value} style property
-     * values into two lists. The first list is a collection of text
-     * fragments, while the other is a set of string property names. Null
-     * entries in the first list indicate a property reference from the
-     * second list.
-     *
-     * @param value the string to be parsed
-     * @param fragments the fragments parsed out of the string
-     * @param propertyRefs the property refs to be replaced
-     * @exception ExecutionException if there is a problem getting property
-     *      values
-     */
-    public static void parsePropertyString(String value, List fragments,
-                                           List propertyRefs)
-         throws ExecutionException {
-        int prev = 0;
-        int pos;
-        while ((pos = value.indexOf("$", prev)) >= 0) {
-            if (pos > 0) {
-                fragments.add(value.substring(prev, pos));
-            }
-
-            if (pos == (value.length() - 1)) {
-                fragments.add("$");
-                prev = pos + 1;
-            } else if (value.charAt(pos + 1) != '{') {
-                fragments.add(value.substring(pos + 1, pos + 2));
-                prev = pos + 2;
-            } else {
-                int endName = value.indexOf('}', pos);
-                if (endName < 0) {
-                    throw new ExecutionException("Syntax error in property: "
-                         + value);
+        try {
+            // go through the libraries and import all standard ant libraries
+            for (Iterator i = antLibraries.keySet().iterator(); i.hasNext(); ) {
+                String libraryId = (String)i.next();
+                if (libraryId.startsWith(ANT_LIB_PREFIX)) {
+                    // standard library - import whole library
+                    importLibrary(libraryId);
                 }
-                String propertyName = value.substring(pos + 2, endName);
-                fragments.add(null);
-                propertyRefs.add(propertyName);
-                prev = endName + 1;
             }
+        } catch (ExecutionException e) {
+            throw new ConfigException(e);
         }
 
-        if (prev < value.length()) {
-            fragments.add(value.substring(prev));
-        }
     }
 
     /**
@@ -262,19 +268,43 @@ public class ExecutionFrame {
     }
 
     /**
+     * Gets the project model this frame is working with
+     *
+     * @return the project model
+     */
+    public Project getProject() {
+        return project;
+    }
+
+    /**
+     * Log a message as a build event
+     *
+     * @param message the message to be logged
+     * @param level the priority level of the message
+     */
+    public void log(String message, int level) {
+        eventSupport.fireMessageLogged(project, message, level);
+    }
+
+    /**
      * Sets the Project of the ExecutionFrame
      *
      * @param project The new Project value
      * @exception ConfigException if any required sub-frames cannot be
      *      created and configured
      */
-    public void setProject(Project project) throws ConfigException {
-        try {
-            this.project = project;
-            baseURL = new URL(project.getSourceURL(), project.getBase());
-        } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to determine project base dir",
-                e, project.getLocation());
+    protected void setProject(Project project) throws ConfigException {
+        this.project = project;
+        URL projectURL = project.getSourceURL();
+        if (projectURL.getProtocol().equals("file")) {
+            File projectFile = new File(projectURL.getFile());
+            String base = project.getBase();
+            if (base == null) {
+                base = ".";
+            }
+            baseDir = new File(projectFile.getParentFile(), base);
+        } else {
+            baseDir = new File(".");
         }
 
         referencedFrames = new HashMap();
@@ -284,7 +314,7 @@ public class ExecutionFrame {
             Project referencedProject
                  = project.getReferencedProject(referenceName);
             ExecutionFrame referencedFrame
-                 = new ExecutionFrame(antLibraries);
+                 = new ExecutionFrame(standardLibs, initConfig, config);
             referencedFrame.setProject(referencedProject);
             referencedFrames.put(referenceName, referencedFrame);
 
@@ -296,29 +326,82 @@ public class ExecutionFrame {
     }
 
     /**
-     * Set a value in this frame or any of its imported frames
+     * Set a value in this frame or any of its imported frames.
      *
      * @param name the name of the value
      * @param value the actual value
+     * @param mutable if true, existing values can be changed
      * @exception ExecutionException if the value name is invalid
      */
-    public void setDataValue(String name, Object value)
+    protected void setDataValue(String name, Object value, boolean mutable)
          throws ExecutionException {
         ExecutionFrame frame = getContainingFrame(name);
         if (frame == this) {
-            dataValues.put(name, value);
+            if (dataValues.containsKey(name) && !mutable) {
+                log("Ignoring oveeride for data value " + name,
+                    MessageLevel.MSG_VERBOSE);
+            } else {
+                dataValues.put(name, value);
+            }
         } else {
-            frame.setDataValue(getNameInFrame(name), value);
+            frame.setDataValue(getNameInFrame(name), value, mutable);
         }
     }
 
     /**
-     * Gets the baseURL of the ExecutionFrame
+     * Get the collection of Ant Libraries defined for this frame
      *
-     * @return the baseURL value
+     * @return a map of Ant Libraries indexed by thier library Id
      */
-    public URL getBaseURL() {
-        return baseURL;
+    protected Map getAntLibraries() {
+        return antLibraries;
+    }
+
+    /**
+     * Get the Ant initialization configuration for this frame.
+     *
+     * @return Ant's initialization configuration
+     */
+    protected InitConfig getInitConfig() {
+        return initConfig;
+    }
+
+
+    /**
+     * Get the config instance being used by this frame.
+     *
+     * @return the config associated with this frame.
+     */
+    protected AntConfig getConfig() {
+        return config;
+    }
+
+    /**
+     * Get the core's implementation of the given service interface.
+     *
+     * @param serviceInterfaceClass the service interface for which an
+     *      implementation is require
+     * @return the core's implementation of the service interface
+     * @exception ExecutionException if the core does not provide an
+     *      implementatin of the requested interface
+     */
+    protected Object getCoreService(Class serviceInterfaceClass)
+         throws ExecutionException {
+        Object service = services.get(serviceInterfaceClass);
+        if (service == null) {
+            throw new ExecutionException("No service of interface class "
+                 + serviceInterfaceClass);
+        }
+        return service;
+    }
+
+    /**
+     * Gets the baseDir of the ExecutionFrame
+     *
+     * @return the baseDir value
+     */
+    protected File getBaseDir() {
+        return baseDir;
     }
 
     /**
@@ -328,7 +411,7 @@ public class ExecutionFrame {
      * @return the ExecutionFrame asscociated with the given reference name
      *      or null if there is no such project.
      */
-    public ExecutionFrame getReferencedFrame(String referenceName) {
+    protected ExecutionFrame getReferencedFrame(String referenceName) {
         return (ExecutionFrame)referencedFrames.get(referenceName);
     }
 
@@ -337,7 +420,7 @@ public class ExecutionFrame {
      *
      * @return an iterator which returns the referenced ExeuctionFrames..
      */
-    public Iterator getReferencedFrames() {
+    protected Iterator getReferencedFrames() {
         return referencedFrames.values().iterator();
     }
 
@@ -347,7 +430,7 @@ public class ExecutionFrame {
      * @param fullname The name of the object
      * @return the name of the object within its containing frame
      */
-    public String getNameInFrame(String fullname) {
+    protected String getNameInFrame(String fullname) {
         int index = fullname.lastIndexOf(Project.REF_DELIMITER);
         if (index == -1) {
             return fullname;
@@ -363,7 +446,7 @@ public class ExecutionFrame {
      * @return the data value fetched from the appropriate frame
      * @exception ExecutionException if the value is not defined
      */
-    public Object getDataValue(String name) throws ExecutionException {
+    protected Object getDataValue(String name) throws ExecutionException {
         ExecutionFrame frame = getContainingFrame(name);
         if (frame == this) {
             return dataValues.get(name);
@@ -381,9 +464,9 @@ public class ExecutionFrame {
      * @exception ExecutionException if the containing frame for the value
      *      does not exist
      */
-    public boolean isDataValueSet(String name) throws ExecutionException {
+    protected boolean isDataValueSet(String name) throws ExecutionException {
         ExecutionFrame frame = getContainingFrame(name);
-        if (frame == null) {
+        if (frame == this) {
             return dataValues.containsKey(name);
         } else {
             return frame.isDataValueSet(getNameInFrame(name));
@@ -395,7 +478,7 @@ public class ExecutionFrame {
      *
      * @param listener the listener to be added to the frame
      */
-    public void addBuildListener(BuildListener listener) {
+    protected void addBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             ExecutionFrame referencedFrame = (ExecutionFrame)i.next();
             referencedFrame.addBuildListener(listener);
@@ -408,7 +491,7 @@ public class ExecutionFrame {
      *
      * @param listener the listener to be removed
      */
-    public void removeBuildListener(BuildListener listener) {
+    protected void removeBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             ExecutionFrame subFrame = (ExecutionFrame)i.next();
             subFrame.removeBuildListener(listener);
@@ -422,17 +505,23 @@ public class ExecutionFrame {
      * @param targets a list of target names which are to be evaluated
      * @exception ExecutionException if there is a problem in the build
      */
-    public void runBuild(List targets) throws ExecutionException {
+    protected void runBuild(List targets) throws ExecutionException {
+        System.out.println("Initilizing frame");
         initialize();
+        log("Initialized", MessageLevel.MSG_DEBUG);
         if (targets.isEmpty()) {
             // we just execute the default target if any
             String defaultTarget = project.getDefaultTarget();
             if (defaultTarget != null) {
+                log("Executing default target: " + defaultTarget,
+                    MessageLevel.MSG_DEBUG);
                 executeTarget(defaultTarget);
             }
         } else {
             for (Iterator i = targets.iterator(); i.hasNext(); ) {
-                executeTarget((String)i.next());
+                String targetName = (String)i.next();
+                log("Executing target: " + targetName, MessageLevel.MSG_DEBUG);
+                executeTarget(targetName);
             }
         }
     }
@@ -445,7 +534,7 @@ public class ExecutionFrame {
      * @exception ExecutionException if there is a problem executing the
      *      tasks of the target
      */
-    public void executeTarget(String targetName) throws ExecutionException {
+    protected void executeTarget(String targetName) throws ExecutionException {
         // to execute a target we must determine its dependencies and
         // execute them in order.
 
@@ -470,7 +559,8 @@ public class ExecutionFrame {
      * @exception ExecutionException if there is execution problem while
      *      executing tasks
      */
-    public void executeTasks(Iterator taskIterator) throws ExecutionException {
+    protected void executeTasks(Iterator taskIterator)
+         throws ExecutionException {
         while (taskIterator.hasNext()) {
             Throwable failureCause = null;
             BuildElement model = (BuildElement)taskIterator.next();
@@ -478,8 +568,8 @@ public class ExecutionFrame {
             ImportInfo importInfo
                  = (ImportInfo)definitions.get(model.getType());
             if (importInfo == null) {
-                throw new ExecutionException("There is no definition for the "
-                     + model.getType() + " element", model.getLocation());
+                throw new ExecutionException("There is no definition for the <"
+                     + model.getType() + "> element", model.getLocation());
             }
 
             try {
@@ -491,17 +581,16 @@ public class ExecutionFrame {
                          = setContextLoader(taskContext.getLoader());
                     taskContext.execute();
                     setContextLoader(currentLoader);
-                    releaseTaskContext(taskContext);
+                    taskContext.destroy();
                 } else {
                     // typedef
                     String typeId = model.getAspectValue(ANT_ASPECT, "id");
                     Object typeInstance = configureType(model.getType(), model);
                     if (typeId != null) {
-                        setDataValue(typeId, typeInstance);
+                        setDataValue(typeId, typeInstance, true);
                     }
                 }
-
-            } catch (TaskException te) {
+            } catch (AntException te) {
                 ExecutionException e
                      = new ExecutionException(te, te.getLocation());
                 if (e.getLocation() == null
@@ -528,7 +617,7 @@ public class ExecutionFrame {
      *      be executed.
      * @exception ExecutionException if there is a problem executing tasks
      */
-    public void executeTargetTasks(String targetName)
+    protected void executeTargetTasks(String targetName)
          throws ExecutionException {
         Throwable failureCause = null;
         Target target = project.getTarget(targetName);
@@ -537,10 +626,12 @@ public class ExecutionFrame {
             eventSupport.fireTargetStarted(target);
             executeTasks(taskIterator);
         } catch (ExecutionException e) {
+            System.out.println("Exception location is " + e.getLocation());
             if (e.getLocation() == null
                  || e.getLocation() == Location.UNKNOWN_LOCATION) {
                 e.setLocation(target.getLocation());
             }
+            System.out.println("Exception location is now " + e.getLocation());
             failureCause = e;
             throw e;
         } catch (RuntimeException e) {
@@ -558,49 +649,36 @@ public class ExecutionFrame {
      * @exception ExecutionException if the top level tasks of the frame
      *      failed
      */
-    public void initialize() throws ExecutionException {
+    protected void initialize() throws ExecutionException {
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             ExecutionFrame referencedFrame = (ExecutionFrame)i.next();
             referencedFrame.initialize();
         }
-//        Iterator taskIterator = project.getTasks();
-//        executeTopLevelTasks(taskIterator);
+        Iterator taskIterator = project.getTasks();
+        executeTasks(taskIterator);
     }
 
+
     /**
-     * Replace ${} style constructions in the given value with the string
-     * value of the corresponding data types.
+     * Import a complete library into this frame
      *
-     * @param value the string to be scanned for property references.
-     * @return the string with all property references replaced
-     * @exception ExecutionException if any of the properties do not exist
+     * @param libraryId The id of the library to be imported
+     * @exception ExecutionException if the library cannot be imported
      */
-    public String replacePropertyRefs(String value) throws ExecutionException {
-        if (value == null) {
-            return null;
+    protected void importLibrary(String libraryId) throws ExecutionException {
+        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        if (library == null) {
+            throw new ExecutionException("Unable to import library " + libraryId
+                 + " as it has not been loaded");
         }
-
-        List fragments = new ArrayList();
-        List propertyRefs = new ArrayList();
-        parsePropertyString(value, fragments, propertyRefs);
-
-        StringBuffer sb = new StringBuffer();
-        Iterator i = fragments.iterator();
-        Iterator j = propertyRefs.iterator();
-        while (i.hasNext()) {
-            String fragment = (String)i.next();
-            if (fragment == null) {
-                String propertyName = (String)j.next();
-                if (!isDataValueSet(propertyName)) {
-                    throw new ExecutionException("Property " + propertyName
-                         + " has not been set");
-                }
-                fragment = getDataValue(propertyName).toString();
-            }
-            sb.append(fragment);
+        Map libDefs = library.getDefinitions();
+        for (Iterator i = libDefs.keySet().iterator(); i.hasNext(); ) {
+            String defName = (String)i.next();
+            AntLibDefinition libdef
+                 = (AntLibDefinition)libDefs.get(defName);
+            definitions.put(defName, new ImportInfo(library, libdef));
         }
-
-        return sb.toString();
+        addLibraryConverters(library);
     }
 
     /**
@@ -650,34 +728,74 @@ public class ExecutionFrame {
     }
 
     /**
+     * Gets the factory object for the given library
+     *
+     * @param antLibrary the library for which the factory instance is
+     *      required.
+     * @return the library;s factory object
+     * @exception ExecutionException the factory object for the library
+     *      cannot be created.
+     */
+    private AntLibFactory getLibFactory(AntLibrary antLibrary)
+         throws ExecutionException {
+        String libraryId = antLibrary.getLibraryId();
+        if (libFactories.containsKey(libraryId)) {
+            return (AntLibFactory)libFactories.get(libraryId);
+        }
+        AntLibFactory libFactory = antLibrary.getFactory();
+        if (libFactory == null) {
+            libFactory = new StandardLibFactory();
+        }
+        libFactories.put(libraryId, libFactory);
+        libFactory.init(new ExecutionContext(this, eventSupport));
+        return libFactory;
+    }
+
+    /**
+     * Configure the services that the frame makes available to its library
+     * components
+     */
+    private void configureServices() {
+        // create services and make them available in our services map
+        services.put(FileService.class, new ExecutionFileService(this));
+        services.put(ComponentService.class,
+            new ExecutionComponentService(this, config.isRemoteLibAllowed()));
+        dataService = new ExecutionDataService(this);
+        services.put(DataService.class, dataService);
+    }
+
+    /**
      * Add the converters from the given library to those managed by this
      * frame.
      *
      * @param library the library from which the converters are required
-     * @exception ConfigException if a converter defined in the library
+     * @exception ExecutionException if a converter defined in the library
      *      cannot be instantiated
      */
     private void addLibraryConverters(AntLibrary library)
-         throws ConfigException {
+         throws ExecutionException {
         if (!library.hasConverters()) {
             return;
         }
 
         String className = null;
         try {
+            AntLibFactory libFactory = getLibFactory(library);
             ClassLoader converterLoader = library.getClassLoader();
             for (Iterator i = library.getConverterClassNames(); i.hasNext(); ) {
                 className = (String)i.next();
                 Class converterClass
                      = Class.forName(className, true, converterLoader);
                 if (!Converter.class.isAssignableFrom(converterClass)) {
-                    throw new ConfigException("The converter class "
+                    throw new ExecutionException("In Ant library \""
+                         + library.getLibraryId() + "\" the converter class "
                          + converterClass.getName()
                          + " does not implement the Converter interface");
                 }
-                Converter converter = (Converter)converterClass.newInstance();
-                ExecutionContext context = new ExecutionContext();
-                context.initEnvironment(this, eventSupport);
+                Converter converter
+                     = libFactory.createConverter(converterClass);
+                ExecutionContext context
+                     = new ExecutionContext(this, eventSupport);
                 converter.init(context);
                 Class[] converterTypes = converter.getTypes();
                 for (int j = 0; j < converterTypes.length; ++j) {
@@ -685,16 +803,23 @@ public class ExecutionFrame {
                 }
             }
         } catch (ClassNotFoundException e) {
-            throw new ConfigException("Converter Class " + className
-                 + " was not found", e);
+            throw new ExecutionException("In Ant library \""
+                 + library.getLibraryId() + "\" converter class "
+                 + className + " was not found", e);
         } catch (NoClassDefFoundError e) {
-            throw new ConfigException("Could not load a dependent class ("
+            throw new ExecutionException("In Ant library \""
+                 + library.getLibraryId()
+                 + "\" could not load a dependent class ("
                  + e.getMessage() + ") for converter " + className);
         } catch (InstantiationException e) {
-            throw new ConfigException("Unable to instantiate converter class "
+            throw new ExecutionException("In Ant library \""
+                 + library.getLibraryId()
+                 + "\" unable to instantiate converter class "
                  + className, e);
         } catch (IllegalAccessException e) {
-            throw new ConfigException("Unable to access converter class "
+            throw new ExecutionException("In Ant library \""
+                 + library.getLibraryId()
+                 + "\" unable to access converter class "
                  + className, e);
         }
     }
@@ -705,10 +830,9 @@ public class ExecutionFrame {
      * @param element the object to be configured
      * @param model the BuildElement describing the object in the build file
      * @exception ExecutionException if the element cannot be configured
-     * @exception TaskException if a nested task has a problem
      */
     private void configureElement(Object element, BuildElement model)
-         throws ExecutionException, TaskException {
+         throws ExecutionException {
 
         Reflector reflector = getReflector(element.getClass());
 
@@ -716,12 +840,22 @@ public class ExecutionFrame {
         for (Iterator i = model.getAttributeNames(); i.hasNext(); ) {
             String attributeName = (String)i.next();
             String attributeValue = model.getAttributeValue(attributeName);
+            if (!reflector.supportsAttribute(attributeName)) {
+                throw new ExecutionException(model.getType()
+                     + " does not support the \"" + attributeName
+                     + "\" attribute", model.getLocation());
+            }
             reflector.setAttribute(element, attributeName,
-                replacePropertyRefs(attributeValue));
+                dataService.replacePropertyRefs(attributeValue));
         }
         String modelText = model.getText().trim();
         if (modelText.length() != 0) {
-            reflector.addText(element, replacePropertyRefs(modelText));
+            if (!reflector.supportsText()) {
+                throw new ExecutionException(model.getType()
+                     + " does not support content", model.getLocation());
+            }
+            reflector.addText(element,
+                dataService.replacePropertyRefs(modelText));
         }
 
         // now do the nested elements
@@ -742,34 +876,71 @@ public class ExecutionFrame {
                 // method of executing tasks
                 container.addTask(nestedContext.getTask());
             } else {
-                Object nestedElement = createNestedElement(reflector, element,
-                    nestedElementModel);
-                reflector.addElement(element, nestedElementName, nestedElement);
+                if (reflector.supportsNestedAdder(nestedElementName)) {
+                    addNestedElement(reflector, element, nestedElementModel);
+                } else if (reflector.supportsNestedCreator(nestedElementName)) {
+                    createNestedElement(reflector, element, nestedElementModel);
+                } else {
+                    throw new ExecutionException(model.getType()
+                         + " does not support the \"" + nestedElementName
+                         + "\" nested element",
+                        nestedElementModel.getLocation());
+                }
             }
         }
+
     }
 
     /**
-     * Create a nested element
+     * Create a nested element for the given object according to the model.
+     *
+     * @param reflector the reflector instance of the container object
+     * @param element the container object for which a nested element is
+     *      required.
+     * @param model the build model for the nestd element
+     * @exception ExecutionException if the nested element cannot be
+     *      created.
+     */
+    private void createNestedElement(Reflector reflector, Object element,
+                                     BuildElement model)
+         throws ExecutionException {
+        log("The use of create methods is deprecated - class: "
+             + element.getClass().getName(), MessageLevel.MSG_INFO);
+
+        String nestedElementName = model.getType();
+        Object nestedElement
+             = reflector.createElement(element, nestedElementName);
+        if (nestedElement instanceof ExecutionComponent) {
+            ExecutionComponent component = (ExecutionComponent)nestedElement;
+            ExecutionContext context
+                 = new ExecutionContext(this, eventSupport);
+            context.setModelElement(model);
+            component.init(context);
+        }
+
+        try {
+            configureElement(nestedElement, model);
+        } catch (ExecutionException e) {
+            e.setLocation(model.getLocation());
+            throw e;
+        }
+    }
+
+
+    /**
+     * Create and add a nested element
      *
      * @param reflector The reflector instance for the container element
      * @param element the container element in which the nested element will
      *      be created
      * @param model the model of the nested element
-     * @return a configured nested element
      * @exception ExecutionException if the nested element cannot be created
-     * @exception TaskException if the nested element has a problem
      */
-    private Object createNestedElement(Reflector reflector, Object element,
-                                       BuildElement model)
-         throws ExecutionException, TaskException {
+    private void addNestedElement(Reflector reflector, Object element,
+                                  BuildElement model)
+         throws ExecutionException {
 
         String nestedElementName = model.getType();
-        if (!reflector.supportsNestedElement(nestedElementName)) {
-            throw new ExecutionException("The element name " + nestedElementName
-                 + " is not a supported nested element of "
-                 + element.getClass().getName());
-        }
         Class nestedType = reflector.getType(nestedElementName);
 
         // is there a polymorph indicator - look in Ant aspects
@@ -800,8 +971,8 @@ public class ExecutionFrame {
                     model.getLocation());
             }
             if (typeInstance == null) {
-                throw new ExecutionException("The given ant:refid value '" 
-                    + refId + "' is not defined", model.getLocation());
+                throw new ExecutionException("The given ant:refid value '"
+                     + refId + "' is not defined", model.getLocation());
             }
         } else {
             // We need to create an instance of the class expected by the nested
@@ -813,7 +984,7 @@ public class ExecutionFrame {
                     model.getLocation());
             }
 
-            typeInstance = createTypeInstance(nestedType, model);
+            typeInstance = createTypeInstance(nestedType, null, model);
         }
 
         // is the typeInstance compatible with the type expected
@@ -831,7 +1002,7 @@ public class ExecutionFrame {
                     model.getLocation());
             }
         }
-        return typeInstance;
+        reflector.addElement(element, nestedElementName, typeInstance);
     }
 
 
@@ -842,10 +1013,9 @@ public class ExecutionFrame {
      * @return an execution context for managing the task
      * @exception ExecutionException if there is a problem configuring the
      *      task
-     * @exception TaskException if the task or a nested task has a problem
      */
     private TaskContext configureTask(BuildElement model)
-         throws ExecutionException, TaskException {
+         throws ExecutionException {
 
         String taskType = model.getType();
         ImportInfo taskDefInfo = (ImportInfo)definitions.get(taskType);
@@ -862,7 +1032,9 @@ public class ExecutionFrame {
             ClassLoader taskClassLoader = antLibrary.getClassLoader();
             Class elementClass
                  = Class.forName(className, true, taskClassLoader);
-            Object element = elementClass.newInstance();
+            AntLibFactory libFactory = getLibFactory(antLibrary);
+            Object element = libFactory.createTaskInstance(elementClass);
+
             Task task = null;
             if (element instanceof Task) {
                 // create a Task context for the Task
@@ -873,7 +1045,7 @@ public class ExecutionFrame {
 
             // set the context loader while configuring the element
             ClassLoader currentLoader = setContextLoader(taskClassLoader);
-            TaskContext taskContext = allocateTaskContext();
+            TaskContext taskContext = new TaskContext(this, eventSupport);
             taskContext.init(taskClassLoader, task, model);
             configureElement(element, model);
             setContextLoader(currentLoader);
@@ -884,7 +1056,8 @@ public class ExecutionFrame {
                 model.getLocation());
         } catch (NoClassDefFoundError e) {
             throw new ExecutionException("Could not load a dependent class ("
-                 + e.getMessage() + ") for task " + taskType);
+                 + e.getMessage() + ") for task " + taskType,
+                e, model.getLocation());
         } catch (InstantiationException e) {
             throw new ExecutionException("Unable to instantiate task class "
                  + className + " for task <" + taskType + ">",
@@ -893,8 +1066,12 @@ public class ExecutionFrame {
             throw new ExecutionException("Unable to access task class "
                  + className + " for task <" + taskType + ">",
                 e, model.getLocation());
+        } catch (ExecutionException e) {
+            e.setLocation(model.getLocation());
+            throw e;
         }
     }
+
 
     /**
      * Configure a type instance from the given build model. The name given
@@ -905,10 +1082,9 @@ public class ExecutionFrame {
      * @param model the model describing the type
      * @return an instance of the type, configured from the model
      * @exception ExecutionException if the type could not be created
-     * @exception TaskException there was a problem within the type
      */
     private Object configureType(String typeName, BuildElement model)
-         throws ExecutionException, TaskException {
+         throws ExecutionException {
         ImportInfo typeDefInfo = (ImportInfo)definitions.get(typeName);
         if (typeDefInfo == null
              || typeDefInfo.getDefinitionType() != AntLibrary.TYPEDEF) {
@@ -925,7 +1101,9 @@ public class ExecutionFrame {
                  = Class.forName(className, true, typeClassLoader);
 
             ClassLoader currentLoader = setContextLoader(typeClassLoader);
-            Object typeInstance = createTypeInstance(typeClass, model);
+            AntLibFactory libFactory = getLibFactory(antLibrary);
+            Object typeInstance
+                 = createTypeInstance(typeClass, libFactory, model);
             setContextLoader(currentLoader);
 
             return typeInstance;
@@ -945,22 +1123,30 @@ public class ExecutionFrame {
      * @param typeClass the class from which the instance should be created
      * @param model the model describing the required configuration of the
      *      instance
+     * @param libFactory the factory object of the typeClass's Ant library
      * @return an instance of the given class appropriately configured
      * @exception ExecutionException if there is a problem creating the type
      *      instance
-     * @exception TaskException if there is a problem configuring the type
-     *      instance.
      */
-    private Object createTypeInstance(Class typeClass, BuildElement model)
-         throws ExecutionException, TaskException {
+    private Object createTypeInstance(Class typeClass, AntLibFactory libFactory,
+                                      BuildElement model)
+         throws ExecutionException {
         try {
-            Object typeInstance = typeClass.newInstance();
-            if (typeInstance instanceof DataType) {
-                DataType dataType = (DataType)typeInstance;
-                TypeContext typeContext = new TypeContext();
-                typeContext.initEnvironment(this, eventSupport);
-                typeContext.init(dataType, model);
+            Object typeInstance = null;
+            if (libFactory == null) {
+                typeInstance = typeClass.newInstance();
+            } else {
+                typeInstance = libFactory.createTypeInstance(typeClass);
             }
+
+            if (typeInstance instanceof ExecutionComponent) {
+                ExecutionComponent component = (ExecutionComponent)typeInstance;
+                ExecutionContext context
+                     = new ExecutionContext(this, eventSupport);
+                context.setModelElement(model);
+                component.init(context);
+            }
+
             configureElement(typeInstance, model);
             return typeInstance;
         } catch (InstantiationException e) {
@@ -971,47 +1157,11 @@ public class ExecutionFrame {
             throw new ExecutionException("Unable to access type class "
                  + typeClass.getName() + " for type <" + model.getType() + ">",
                 e, model.getLocation());
+        } catch (ExecutionException e) {
+            e.setLocation(model.getLocation());
+            throw e;
         }
     }
 
-
-    /**
-     * Allocate a context for use
-     *
-     * @return ExecutionContext for use
-     */
-    private TaskContext allocateTaskContext() {
-        TaskContext context = new TaskContext();
-        context.initEnvironment(this, eventSupport);
-        return context;
-    }
-
-    /**
-     * Release a context. Any associated tasks are destroyed.
-     *
-     * @param context the cotext to be released
-     */
-    private void releaseTaskContext(TaskContext context) {
-        context.destroy();
-    }
-
-
-    /**
-     * Import a complete library into this frame
-     *
-     * @param libraryId The id of the library to be imported
-     * @exception ConfigException if the library cannot be imported
-     */
-    private void importLibrary(String libraryId) throws ConfigException {
-        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
-        Map libDefs = library.getDefinitions();
-        for (Iterator i = libDefs.keySet().iterator(); i.hasNext(); ) {
-            String defName = (String)i.next();
-            AntLibDefinition libdef
-                 = (AntLibDefinition)libDefs.get(defName);
-            definitions.put(defName, new ImportInfo(library, libdef));
-        }
-        addLibraryConverters(library);
-    }
 }
 
