@@ -15,7 +15,7 @@ Note: This document was created in the context of releasing Ant 1.5.
     the first beta will be cut and there will be then a period of beta testing,
     usually 1 month but this should be flexible.
 
-2.  Note that any mention of a deadline causes a flood of bug fixes, new tasks, 
+2.  Note that any mention of a deadline causes a flood of bug fixes, new tasks,
     etc.  This needs to be managed as best it can. Some fixes will be applied, 
     others held over. Make this clear in the release plan. The committers and 
     particularly the release manager will need to make judgement calls here. 
@@ -82,6 +82,9 @@ Note: This document was created in the context of releasing Ant 1.5.
     something like v1.5Beta1, push the release and README files into this 
     directory.
 
+    The files should go to /www/jakarta.apache.org/builds/jakarta-ant/release
+    on daedalus.
+
 11. Address the available release tags in BugZilla. Create a new tag 1.5Beta1 
     and a 1.6alpha. Assign all existing 1.5 alpha bugs to one of these release 
     labels.
@@ -106,7 +109,7 @@ Note: This document was created in the context of releasing Ant 1.5.
     Generate the html files by invoking ant on docs.xml - you need
     jakarta-site2 checked out for this.  Commit the modified/generated
     files and also perform a cvs update on files in daedalus'
-    www/jakarta.apache.org/ant.
+    /www/jakarta.apache.org/ant.
 
     Announce beta releases at freshmeat.net (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
@@ -128,10 +131,38 @@ Note: This document was created in the context of releasing Ant 1.5.
     (it usually does,) this would be labelled ANT_15 and built in a similar 
     fashion to the above process.
 
-16. Now and perhaps during previous betas any changes on the branch must 
+16. BUT
+
+    This time the directory you upload the files to is different and
+    you'll have to do some house-keeping for the old release:
+
+    * create a directory for the old release in 
+      /www/jakarta.apache.org/builds/jakarta-ant/release on daedalus.
+
+    * Move the release notes, .zip files and corresponding signatures
+      and md5 hashes of the old release from /www/www.apache.org/dist/ant
+      to a matching directory structure in
+      /www/jakarta.apache.org/builds/jakarta-ant/release.
+
+    * remove the remaining files except for the KEYS file from
+      /www/www.apache.org/dist/ant.
+
+    * upload the new release files to 
+      /www/www.apache.org/dist/ant/[source|binary].
+
+    * Create proper -current symlinks in /www/www.apache.org/dist/ant/
+
+17. Change the links in /xdocs/bindownload.xml and /xdocs/srcdownload.xml,
+    regenerate the HTML files, commit and update the site.
+
+    As the mirrors may need some days to pick up the new release, you
+    may want to add a note to that effect to the pages and remove it a few
+    days later.
+
+18. Now and perhaps during previous betas any changes on the branch must 
     be merged back into the tree.
 
-17. At this point in time, the release is done and announcements are made. 
+19. At this point in time, the release is done and announcements are made. 
 
     [[TODO: Identify the mailing lists where announcements are to be made.
       Also identify the webpages to which the announcements must go. ]]
@@ -146,5 +177,5 @@ Note: This document was created in the context of releasing Ant 1.5.
     Announce release in the usenet groups comp.lang.java.softwaretools
     and comp.lang.java.announce.
 
-18. You can now reacquaint yourself with your family and friends.
+20. You can now reacquaint yourself with your family and friends.
 
