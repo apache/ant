@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import org.apache.avalon.framework.camelot.Registry;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskContext;
@@ -22,14 +21,6 @@ public interface Executor
     extends Component
 {
     String ROLE = "org.apache.myrmidon.components.executor.Executor";
-
-    /**
-     * Retrieve locator registry associated with engine.
-     * TODO: Remove this as it violates IOC
-     *
-     * @return the LocatorRegistry
-     */
-    Registry getRegistry();
 
     /**
      * execute a task.

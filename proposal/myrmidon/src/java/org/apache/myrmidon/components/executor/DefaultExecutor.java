@@ -10,13 +10,6 @@ package org.apache.myrmidon.components.executor;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.camelot.DefaultFactory;
-import org.apache.avalon.framework.camelot.DefaultRegistry;
-import org.apache.avalon.framework.camelot.Factory;
-import org.apache.avalon.framework.camelot.FactoryException;
-import org.apache.avalon.framework.camelot.Locator;
-import org.apache.avalon.framework.camelot.Registry;
-import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -41,17 +34,10 @@ public class DefaultExecutor
     extends AbstractLoggable
     implements Executor, Composable
 {
-    //private Factory              m_factory;
-    //private Registry             m_registry   = new DefaultRegistry( Locator.class );
     private Configurer           m_configurer;
     private ComponentSelector    m_selector;
 
     private ComponentManager     m_componentManager;
-
-    public Registry getRegistry()
-    {
-        return null;//m_registry;
-    }
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -105,19 +91,11 @@ public class DefaultExecutor
         try
         {
             return (Task)m_selector.select( name );
-            //final Locator locator = (Locator)m_registry.getInfo( name, Locator.class );
-            //return (Task)m_factory.create( locator, Task.class );
         }
         catch( final ComponentException ce )
         {
             throw new TaskException( "Unable to create task " + name, ce );
         }
-/*        catch( final RegistryException re )
-        {
-            throw new TaskException( "Unable to locate task " + name, re );
-        }
-        catch( final FactoryException fe )
-*/
     }
 
     private void doConfigure( final Task task,

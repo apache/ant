@@ -10,8 +10,6 @@ package org.apache.ant.modules.core;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.ant.tasklet.engine.DataTypeEngine;
-import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -19,31 +17,28 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.components.deployer.TskDeployer;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.components.type.TypeManager;
 
 /**
- * Method to register a single tasklet.
+ * Method to register a a typeet.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public abstract class AbstractResourceRegisterer
+public abstract class AbstractTypeDefinition
     extends AbstractTask
     implements Composable
 {
-    protected String              m_lib;
-    protected String              m_name;
-    protected String              m_classname;
-    protected TskDeployer         m_tskDeployer;
-    protected DataTypeEngine      m_dataTypeEngine;
-    protected Executor            m_engine;
+    private String              m_lib;
+    private String              m_name;
+    private String              m_classname;
+    private TskDeployer         m_tskDeployer;
+    private TypeManager         m_typeManager;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_engine = (Executor)componentManager.lookup( Executor.ROLE );
+        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
-
-        m_dataTypeEngine = (DataTypeEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
     }
 
     public void setLib( final String lib )
@@ -76,17 +71,20 @@ public abstract class AbstractResourceRegisterer
 
         final URL url = getURL( m_lib );
 
-        try
-        {
-            registerResource( m_name, m_classname, url );
-        }
-        catch( final RegistryException re )
-        {
-            throw new TaskException( "Error registering resource", re );
-        }
+        registerResource( m_name, m_classname, url );
     }
 
-    protected URL getURL( final String libName )
+    protected final TskDeployer getDeployer()
+    {
+        return m_tskDeployer;
+    }
+
+    protected final TypeManager getTypeManager()
+    {
+        return m_typeManager;
+    }
+
+    private final URL getURL( final String libName )
         throws TaskException
     {
         if( null != libName )
@@ -105,5 +103,5 @@ public abstract class AbstractResourceRegisterer
     }
 
     protected abstract void registerResource( String name, String classname, URL url )
-        throws TaskException, RegistryException;
+        throws TaskException;
 }

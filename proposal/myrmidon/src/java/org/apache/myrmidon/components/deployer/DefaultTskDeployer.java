@@ -18,7 +18,6 @@ import java.util.zip.ZipFile;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.ConverterRegistry;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
-import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.framework.camelot.AbstractDeployer;
 import org.apache.avalon.framework.camelot.DefaultLocator;
 import org.apache.avalon.framework.camelot.DefaultRegistry;

@@ -9,7 +9,6 @@ package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
 import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.camelot.CamelotUtil;
@@ -44,7 +43,6 @@ public class MyrmidonEmbeddor
     private ProjectBuilder           m_builder;
     private TskDeployer              m_deployer;
 
-    private DataTypeEngine           m_dataTypeEngine;
     private TypeManager              m_typeManager;
     private ConverterEngine          m_converterEngine;
 
@@ -139,7 +137,6 @@ public class MyrmidonEmbeddor
         throws Exception
     {
         m_converterEngine = null;
-        m_dataTypeEngine = null;
         m_executor = null;
         m_projectManager = null;
         m_builder = null;
@@ -172,8 +169,6 @@ public class MyrmidonEmbeddor
         //create all the default properties for components
         defaults.setParameter( "org.apache.ant.convert.engine.ConverterEngine",
                                "org.apache.ant.convert.engine.DefaultConverterEngine" );
-        defaults.setParameter( "org.apache.ant.tasklet.engine.DataTypeEngine",
-                               "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
 
         defaults.setParameter( TypeManager.ROLE,
                                "org.apache.myrmidon.components.type.DefaultTypeManager" );
@@ -203,7 +198,6 @@ public class MyrmidonEmbeddor
         componentManager.put( "org.apache.ant.convert.engine.ConverterEngine",
                               m_converterEngine );
         componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
-        componentManager.put( "org.apache.ant.tasklet.engine.DataTypeEngine", m_dataTypeEngine );
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
 
         //Following components required when Myrmidon is used as build tool
@@ -239,9 +233,6 @@ public class MyrmidonEmbeddor
         component = getParameter( Configurer.ROLE );
         m_configurer = (Configurer)createComponent( component, Configurer.class );
 
-        component = getParameter( "org.apache.ant.tasklet.engine.DataTypeEngine" );
-        m_dataTypeEngine = (DataTypeEngine)createComponent( component, DataTypeEngine.class );
-
         component = getParameter( TypeManager.ROLE );
         m_typeManager = (TypeManager)createComponent( component, TypeManager.class );
 
@@ -268,7 +259,6 @@ public class MyrmidonEmbeddor
     {
         setupComponent( m_factory );
         setupComponent( m_converterEngine );
-        setupComponent( m_dataTypeEngine );
         setupComponent( m_executor );
         setupComponent( m_projectManager );
         setupComponent( m_builder );
