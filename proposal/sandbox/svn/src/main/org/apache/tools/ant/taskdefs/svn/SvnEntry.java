@@ -147,6 +147,14 @@ public class SvnEntry {
             }
         }
 
+        public Path(final String name, final int action) {
+            this.name = name;
+            if (action != ADDED && action != DELETED && action != MODIFIED) {
+                throw new IllegalArgumentException("Unkown action; " + action);
+            }
+            this.action = action;
+        }
+
         public String getName() {
             return name;
         }

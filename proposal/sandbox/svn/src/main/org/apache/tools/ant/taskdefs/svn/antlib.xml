@@ -23,4 +23,8 @@
     name="changelog"
     classname="org.apache.tools.ant.taskdefs.svn.SvnChangeLogTask"
     />
+  <taskdef
+    name="revisiondiff"
+    classname="org.apache.tools.ant.taskdefs.svn.SvnRevisionDiff"
+    />
 </antlib>
