@@ -55,31 +55,35 @@ public class DefaultExecutor
     public void execute( final Configuration taskModel, final ExecutionFrame frame )
         throws TaskException
     {
-        debug( "creating.notice" );
-        final Task task = createTask( taskModel.getName(), frame );
+        final String taskName = taskModel.getName();
+        debug( "creating.notice", taskName );
+        final Task task = createTask( taskName, frame );
 
-        debug( "logger.notice" );
+        debug( "logger.notice", taskName );
         doLogEnabled( task, taskModel, frame.getLogger() );
 
-        debug( "contextualizing.notice" );
+        debug( "contextualizing.notice", taskName );
         doContextualize( task, taskModel, frame.getContext() );
 
-        debug( "configuring.notice" );
+        debug( "configuring.notice", taskName );
         doConfigure( task, taskModel, frame.getContext() );
 
-        debug( "executing.notice" );
+        debug( "executing.notice", taskName );
         task.execute();
     }
 
-    protected final void debug( final String key )
+    protected final void debug( final String key, final String taskName )
     {
         if( getLogger().isDebugEnabled() )
         {
-            final String message = REZ.getString( key );
+            final String message = REZ.getString( key, taskName );
             getLogger().debug( message );
         }
     }
 
+    /**
+     * Creates a task instance.
+     */
     protected final Task createTask( final String name, final ExecutionFrame frame )
         throws TaskException
     {
@@ -95,6 +99,9 @@ public class DefaultExecutor
         }
     }
 
+    /**
+     * Configures a task instance.
+     */
     protected final void doConfigure( final Task task,
                                       final Configuration taskModel,
                                       final TaskContext taskContext )
@@ -109,12 +116,14 @@ public class DefaultExecutor
             final String message =
                 REZ.getString( "config.error",
                                taskModel.getName(),
-                               taskModel.getLocation(),
-                               throwable.getMessage() );
+                               taskModel.getLocation() );
             throw new TaskException( message, throwable );
         }
     }
 
+    /**
+     * Sets the context for a task.
+     */
     protected final void doContextualize( final Task task,
                                           final Configuration taskModel,
                                           final TaskContext context )
@@ -129,12 +138,14 @@ public class DefaultExecutor
             final String message =
                 REZ.getString( "contextualize.error",
                                taskModel.getName(),
-                               taskModel.getLocation(),
-                               throwable.getMessage() );
+                               taskModel.getLocation() );
             throw new TaskException( message, throwable );
         }
     }
 
+    /**
+     * Sets the logger for a task.
+     */
     protected final void doLogEnabled( final Task task,
                                        final Configuration taskModel,
                                        final Logger logger )
@@ -151,8 +162,7 @@ public class DefaultExecutor
                 final String message =
                     REZ.getString( "logger.error",
                                    taskModel.getName(),
-                                   taskModel.getLocation(),
-                                   throwable.getMessage() );
+                                   taskModel.getLocation() );
                 throw new TaskException( message, throwable );
             }
         }

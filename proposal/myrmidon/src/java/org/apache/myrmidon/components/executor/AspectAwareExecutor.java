@@ -78,23 +78,24 @@ public class AspectAwareExecutor
         Configuration taskModel = getAspectManager().preCreate( model );
         taskModel = prepareAspects( taskModel );
 
-        debug( "creating.notice" );
-        final Task task = createTask( taskModel.getName(), frame );
+        final String taskName = taskModel.getName();
+        debug( "creating.notice", taskName );
+        final Task task = createTask( taskName, frame );
         getAspectManager().postCreate( task );
 
-        debug( "logger.notice" );
+        debug( "logger.notice", taskName );
         final Logger logger = frame.getLogger();
         getAspectManager().preLogEnabled( logger );
         doLogEnabled( task, taskModel, logger );
 
-        debug( "contextualizing.notice" );
+        debug( "contextualizing.notice", taskName );
         doContextualize( task, taskModel, frame.getContext() );
 
-        debug( "configuring.notice" );
+        debug( "configuring.notice", taskName );
         getAspectManager().preConfigure( taskModel );
         doConfigure( task, taskModel, frame.getContext() );
 
-        debug( "executing.notice" );
+        debug( "executing.notice", taskName );
         getAspectManager().preExecute();
         doExecute( taskModel, task );
         getAspectManager().preDestroy();
