@@ -365,9 +365,7 @@ public class Ant extends Task {
                 .equals(getProject().getProperty("ant.file"))
                 && getOwningTarget() != null) {
 
-                String owningTargetName = getOwningTarget().getName();
-
-                if (owningTargetName.equals("")) {
+                if (getOwningTarget().getName().equals("")) {
                     if (getTaskName().equals("antcall")) {
                         throw new BuildException("antcall must not be used at"
                                                  + " the top level.");
@@ -376,7 +374,22 @@ public class Ant extends Task {
                                                  + " top level must not invoke"
                                                  + " its own build file.");
                     }
-                } else if (owningTargetName.equals(target)) {
+                }
+            }
+
+            ProjectHelper.configureProject(newProject, new File(antFile));
+
+            if (target == null) {
+                target = newProject.getDefaultTarget();
+            }
+
+            if (newProject.getProperty("ant.file")
+                .equals(getProject().getProperty("ant.file"))
+                && getOwningTarget() != null) {
+
+                String owningTargetName = getOwningTarget().getName();
+
+                if (owningTargetName.equals(target)) {
                     throw new BuildException(getTaskName() + " task calling "
                                              + "its own parent target.");
                 } else {
@@ -391,12 +404,6 @@ public class Ant extends Task {
                                                  + "\'.");
                     }
                 }
-            }
-
-            ProjectHelper.configureProject(newProject, new File(antFile));
-
-            if (target == null) {
-                target = newProject.getDefaultTarget();
             }
 
             addReferences();
