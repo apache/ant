@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ExecTask extends Task {
 
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private String os;
 
     private File dir;
@@ -51,6 +53,7 @@ public class ExecTask extends Task {
     private boolean failIfExecFails = true;
     private String executable;
     private boolean resolveExecutable = false;
+    private boolean searchPath = false;
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
 
@@ -70,19 +73,19 @@ public class ExecTask extends Task {
     private boolean vmLauncher = true;
 
     /**
-     * set whether or not you want the process to be spawned
-     * default is not spawned
-     * @param spawn if true you do not want ant to wait for the end of the process
-     * @since ant 1.6
+     * Set whether or not you want the process to be spawned.
+     * Default is false.
+     * @param spawn if true you do not want Ant to wait for the end of the process.
+     * @since Ant 1.6
      */
     public void setSpawn(boolean spawn) {
         this.spawn = spawn;
     }
 
     /**
-     * Timeout in milliseconds after which the process will be killed.
+     * Set the timeout in milliseconds after which the process will be killed.
      *
-     * @param value timeout in milliseconds
+     * @param value timeout in milliseconds.
      *
      * @since Ant 1.5
      */
@@ -92,22 +95,18 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Timeout in milliseconds after which the process will be killed.
+     * Set the timeout in milliseconds after which the process will be killed.
      *
-     * @param value timeout in milliseconds
+     * @param value timeout in milliseconds.
      */
     public void setTimeout(Integer value) {
-        if (value == null) {
-            timeout = null;
-        } else {
-            setTimeout(new Long(value.intValue()));
-        }
-        incompatibleWithSpawn = true;
+        setTimeout(
+            (Long) ((value == null) ? null : new Long(value.intValue())));
     }
 
     /**
      * Set the name of the executable program.
-     * @param value the name of the executable program
+     * @param value the name of the executable program.
      */
     public void setExecutable(String value) {
         this.executable = value;
@@ -116,7 +115,7 @@ public class ExecTask extends Task {
 
     /**
      * Set the working directory of the process.
-     * @param d the working directory of the process
+     * @param d the working directory of the process.
      */
     public void setDir(File d) {
         this.dir = d;
@@ -124,15 +123,15 @@ public class ExecTask extends Task {
 
     /**
      * List of operating systems on which the command may be executed.
-     * @param os list of operating systems on which the command may be executed
+     * @param os list of operating systems on which the command may be executed.
      */
     public void setOs(String os) {
         this.os = os;
     }
 
     /**
-     * Sets a command line
-     * @param cmdl command line
+     * Sets a command line.
+     * @param cmdl command line.
      * @ant.attribute ignore="true"
      */
     public void setCommand(Commandline cmdl) {
@@ -144,9 +143,9 @@ public class ExecTask extends Task {
 
     /**
      * File the output of the process is redirected to. If error is not
-     * redirected, it too will appear in the output
+     * redirected, it too will appear in the output.
      *
-     * @param out name of a file to which send output to
+     * @param out name of a file to which output should be sent.
      */
     public void setOutput(File out) {
         this.output = out;
@@ -154,9 +153,9 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Set the input to use for the task
+     * Set the input file to use for the task.
      *
-     * @param input name of a file to get input from
+     * @param input name of a file from which to get input.
      */
     public void setInput(File input) {
         if (inputString != null) {
@@ -168,9 +167,9 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Set the string to use as input
+     * Set the string to use as input.
      *
-     * @param inputString the string which is used as the input source
+     * @param inputString the string which is used as the input source.
      */
     public void setInputString(String inputString) {
         if (input != null) {
@@ -182,11 +181,10 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Controls whether error output of exec is logged. This is only useful
-     * when output is being redirected and error output is desired in the
-     * Ant log
+     * Controls whether error output of exec is logged. This is only useful when
+     * output is being redirected and error output is desired in the Ant log.
      *
-     * @param logError set to true to log error output in the normal ant log
+     * @param logError set to true to log error output in the normal ant log.
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
@@ -194,11 +192,11 @@ public class ExecTask extends Task {
     }
 
     /**
-     * File the error stream of the process is redirected to.
+     * Set the File to which the error stream of the process should be redirected.
      *
-     * @param error a file to which send stderr to
+     * @param error a file to which stderr should be sent.
      *
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     public void setError(File error) {
         this.error = error;
@@ -209,7 +207,7 @@ public class ExecTask extends Task {
      * Sets the property name whose value should be set to the output of
      * the process.
      *
-     * @param outputProp name of property
+     * @param outputProp name of property.
      */
     public void setOutputproperty(String outputProp) {
         redirector.setOutputProperty(outputProp);
@@ -220,9 +218,9 @@ public class ExecTask extends Task {
      * Sets the name of the property whose value should be set to the error of
      * the process.
      *
-     * @param errorProperty name of property
+     * @param errorProperty name of property.
      *
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     public void setErrorProperty(String errorProperty) {
         redirector.setErrorProperty(errorProperty);
@@ -250,19 +248,28 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Sets a flag indicating whether to attempt to resolve the executable
-     * to a file
+     * Set whether to attempt to resolve the executable to a file.
      *
      * @param resolveExecutable if true, attempt to resolve the
-     * path of the executable
+     * path of the executable.
      */
     public void setResolveExecutable(boolean resolveExecutable) {
         this.resolveExecutable = resolveExecutable;
     }
 
     /**
+     * Set whether to search nested, then
+     * system PATH environment variables for the executable.
+     *
+     * @param searchPath if true, search PATHs.
+     */
+    public void setSearchPath(boolean searchPath) {
+        this.searchPath = searchPath;
+    }
+
+    /**
      * Indicates whether to attempt to resolve the executable to a
-     * file
+     * file.
      *
      * @since Ant 1.6
      */
@@ -273,7 +280,7 @@ public class ExecTask extends Task {
     /**
      * Add an environment variable to the launched process.
      *
-     * @param var new environment variable
+     * @param var new environment variable.
      */
     public void addEnv(Environment.Variable var) {
         env.addVariable(var);
@@ -282,7 +289,7 @@ public class ExecTask extends Task {
     /**
      * Adds a command-line argument.
      *
-     * @return new command line argument created
+     * @return new command line argument created.
      */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
@@ -294,7 +301,7 @@ public class ExecTask extends Task {
      *
      * @since Ant 1.5
      *
-     * @param resultProperty name of property
+     * @param resultProperty name of property.
      */
     public void setResultProperty(String resultProperty) {
         this.resultProperty = resultProperty;
@@ -302,10 +309,10 @@ public class ExecTask extends Task {
     }
 
     /**
-     * helper method to set result property to the
-     * passed in value if appropriate
+     * Helper method to set result property to the
+     * passed in value if appropriate.
      *
-     * @param result value desired for the result property value
+     * @param result value desired for the result property value.
      */
     protected void maybeSetResultPropertyValue(int result) {
         if (resultProperty != null) {
@@ -315,10 +322,10 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Sets a flag to stop the build if program cannot be started.
+     * Set whether to stop the build if program cannot be started.
      * Defaults to true.
      *
-     * @param flag stop the build if program cannot be started
+     * @param flag stop the build if program cannot be started.
      *
      * @since Ant 1.5
      */
@@ -328,10 +335,10 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Sets whether output should be appended to or overwrite an existing file.
+     * Set whether output should be appended to or overwrite an existing file.
      * Defaults to false.
      *
-     * @param append if true append is desired
+     * @param append if true append is desired.
      *
      * @since 1.30, Ant 1.5
      */
@@ -340,81 +347,85 @@ public class ExecTask extends Task {
         incompatibleWithSpawn = true;
     }
 
-
     /**
-     * Add a <CODE>RedirectorElement</CODE> to this task.
+     * Add a <code>RedirectorElement</code> to this task.
      *
-     * @param redirectorElement   <CODE>RedirectorElement</CODE>.
+     * @param redirectorElement   <code>RedirectorElement</code>.
+     * @since Ant 1.6.2
      */
     public void addConfiguredRedirector(RedirectorElement redirectorElement) {
         if (this.redirectorElement != null) {
             throw new BuildException("cannot have > 1 nested <redirector>s");
-        } else {
-            this.redirectorElement = redirectorElement;
-            incompatibleWithSpawn = true;
         }
+        this.redirectorElement = redirectorElement;
+        incompatibleWithSpawn = true;
     }
 
 
     /**
      * The method attempts to figure out where the executable is so that we can feed
      * the full path. We first try basedir, then the exec dir, and then
-     * fallback to the straight executable name (i.e. on ther path).
+     * fallback to the straight executable name (i.e. on the path).
      *
-     * @param exec the name of the executable
-     * @param searchPath if true, the excutable will be looked up in
+     * @param exec the name of the executable.
+     * @param mustSearchPath if true, the executable will be looked up in
      * the PATH environment and the absolute path is returned.
      *
      * @return the executable as a full path if it can be determined.
      *
      * @since Ant 1.6
      */
-    protected String resolveExecutable(String exec, boolean searchPath) {
+    protected String resolveExecutable(String exec, boolean mustSearchPath) {
         if (!resolveExecutable) {
             return exec;
         }
-
         // try to find the executable
         File executableFile = getProject().resolveFile(exec);
         if (executableFile.exists()) {
             return executableFile.getAbsolutePath();
         }
-
-        FileUtils fileUtils = FileUtils.newFileUtils();
         // now try to resolve against the dir if given
         if (dir != null) {
-            executableFile = fileUtils.resolveFile(dir, exec);
+            executableFile = FILE_UTILS.resolveFile(dir, exec);
             if (executableFile.exists()) {
                 return executableFile.getAbsolutePath();
             }
         }
-
         // couldn't find it - must be on path
-        if (searchPath) {
-            Vector env = Execute.getProcEnvironment();
-            Enumeration e = env.elements();
+        if (mustSearchPath) {
             Path p = null;
-            while (e.hasMoreElements()) {
-                String line = (String) e.nextElement();
-                if (line.startsWith("PATH=") || line.startsWith("Path=")) {
-                    p = new Path(getProject(), line.substring(5));
-                    break;
+            String[] environment = env.getVariables();
+            if (environment != null) {
+                for (int i = 0; i < environment.length; i++) {
+                    if (isPath(environment[i])) {
+                        p = new Path(getProject(), environment[i].substring(5));
+                        break;
+                    }
                 }
             }
-
+            if (p == null) {
+                Vector envVars = Execute.getProcEnvironment();
+                Enumeration e = envVars.elements();
+                while (e.hasMoreElements()) {
+                    String line = (String) e.nextElement();
+                    if (isPath(line)) {
+                        p = new Path(getProject(), line.substring(5));
+                        break;
+                    }
+                }
+            }
             if (p != null) {
                 String[] dirs = p.list();
                 for (int i = 0; i < dirs.length; i++) {
-                    executableFile = fileUtils.resolveFile(new File(dirs[i]),
-                                                           exec);
+                    executableFile
+                        = FILE_UTILS.resolveFile(new File(dirs[i]), exec);
                     if (executableFile.exists()) {
                         return executableFile.getAbsolutePath();
                     }
                 }
             }
         }
-
-        // searchPath is false, or no PATH or not found - keep our
+        // mustSearchPath is false, or no PATH or not found - keep our
         // fingers crossed.
         return exec;
     }
@@ -422,7 +433,7 @@ public class ExecTask extends Task {
     /**
      * Do the work.
      *
-     * @throws BuildException in a number of circumstances :
+     * @throws BuildException in a number of circumstances:
      * <ul>
      * <li>if failIfExecFails is set to true and the process cannot be started</li>
      * <li>the java13command launcher can send build exceptions</li>
@@ -435,7 +446,7 @@ public class ExecTask extends Task {
             return;
         }
         File savedDir = dir; // possibly altered in prepareExec
-        cmdl.setExecutable(resolveExecutable(executable, false));
+        cmdl.setExecutable(resolveExecutable(executable, searchPath));
         checkConfiguration();
         try {
             runExec(prepareExec());
@@ -446,7 +457,7 @@ public class ExecTask extends Task {
 
     /**
      * Has the user set all necessary attributes?
-     * @throws BuildException if there are missing required parameters
+     * @throws BuildException if there are missing required parameters.
      */
     protected void checkConfiguration() throws BuildException {
         if (cmdl.getExecutable() == null) {
@@ -464,7 +475,7 @@ public class ExecTask extends Task {
             getProject().log("spawn does not allow attributes related to input, "
             + "output, error, result", Project.MSG_ERR);
             getProject().log("spawn also does not allow timeout", Project.MSG_ERR);
-            getProject().log( "finally, spawn is not compatible "
+            getProject().log("finally, spawn is not compatible "
                 + "with a nested I/O <redirector>", Project.MSG_ERR);
             throw new BuildException("You have used an attribute "
                 + "or nested element which is not compatible with spawn");
@@ -484,10 +495,10 @@ public class ExecTask extends Task {
 
     /**
      * Is this the OS the user wanted?
-     * @return boolean
+     * @return boolean.
      * <ul>
      * <li>
-     * <code>true</code> if the os under which ant is running is
+     * <code>true</code> if the os under which Ant is running is
      * matches one os in the os attribute
      * or if the os attribute is null</li>
      * <li><code>false</code> otherwise.</li>
@@ -508,9 +519,8 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Sets a flag indicating if we want to launch new process with VM,
-     * otherwise use the OS's shell.
-     * Default value of the flag is true.
+     * Set whether to launch new process with VM, otherwise use the OS's shell.
+     * Default value is true.
      * @param vmLauncher true if we want to launch new process with VM,
      * false if we want to use the OS's shell.
      */
@@ -521,7 +531,7 @@ public class ExecTask extends Task {
     /**
      * Create an Execute instance with the correct working directory set.
      *
-     * @return an instance of the Execute class
+     * @return an instance of the Execute class.
      *
      * @throws BuildException under unknown circumstances.
      */
@@ -554,10 +564,10 @@ public class ExecTask extends Task {
      * A Utility method for this classes and subclasses to run an
      * Execute instance (an external command).
      *
-     * @param exe instance of the execute class
+     * @param exe instance of the execute class.
      *
      * @throws IOException in case of problem to attach to the stdin/stdout/stderr
-     * streams of the process
+     * streams of the process.
      */
     protected final void runExecute(Execute exe) throws IOException {
         int returnCode = -1; // assume the worst
@@ -591,12 +601,12 @@ public class ExecTask extends Task {
 
     /**
      * Run the command using the given Execute instance. This may be
-     * overridden by subclasses
+     * overridden by subclasses.
      *
-     * @param exe instance of Execute to run
+     * @param exe instance of Execute to run.
      *
      * @throws BuildException if the new process could not be started
-     * only if failIfExecFails is set to true (the default)
+     * only if failIfExecFails is set to true (the default).
      */
     protected void runExec(Execute exe) throws BuildException {
         // show the command
@@ -621,9 +631,9 @@ public class ExecTask extends Task {
     /**
      * Create the StreamHandler to use with our Execute instance.
      *
-     * @return instance of ExecuteStreamHandler
+     * @return instance of ExecuteStreamHandler.
      *
-     * @throws BuildException under unknown circumstances
+     * @throws BuildException under unknown circumstances.
      */
     protected ExecuteStreamHandler createHandler() throws BuildException {
         return redirector.createHandler();
@@ -632,21 +642,23 @@ public class ExecTask extends Task {
     /**
      * Create the Watchdog to kill a runaway process.
      *
-     * @return instance of ExecuteWatchdog
+     * @return instance of ExecuteWatchdog.
      *
-     * @throws BuildException under unknown circumstances
+     * @throws BuildException under unknown circumstances.
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
-        if (timeout == null) {
-            return null;
-        }
-        return new ExecuteWatchdog(timeout.longValue());
+        return (timeout == null)
+            ? null : new ExecuteWatchdog(timeout.longValue());
     }
 
     /**
      * Flush the output stream - if there is one.
      */
     protected void logFlush() {
+    }
+
+    private boolean isPath(String line) {
+        return line.startsWith("PATH=") || line.startsWith("Path=");
     }
 
 }

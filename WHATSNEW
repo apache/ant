@@ -62,6 +62,9 @@ Other changes:
 
 * Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
+* Added searchpath attribute to <exec> for searching path variable(s)
+  when resolveexecutable = true.
+
 Fixed bugs:
 -----------
 
