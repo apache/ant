@@ -72,12 +72,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.SrcFile;
 
 /**
  * This task can be used to create checksums for files.
  * It can also be used to verify checksums.
  *
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class Checksum extends MatchingTask implements Condition {
     /**
@@ -129,8 +130,8 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the file for which the checksum is to be calculated.
      */
-    public void setFile(File file) {
-        this.file = file;
+    public void setFile(SrcFile file) {
+        this.file = file.getFile();
     }
 
     /**
@@ -217,11 +218,6 @@ public class Checksum extends MatchingTask implements Condition {
         if (file == null && filesets.size() == 0) {
             throw new BuildException(
                 "Specify at least one source - a file or a fileset.");
-        }
-
-        if (file != null && file.exists() && file.isDirectory()) {
-            throw new BuildException(
-                "Checksum cannot be generated for directories");
         }
 
         if (property != null && fileext != null) {
