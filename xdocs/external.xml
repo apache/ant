@@ -2259,14 +2259,19 @@
 
       <subsection name="SQLC">
 
-        <p>SQLC generates Java classes from SQL statements. Introduction
-        to SQLC: <a href="http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html">
+        <p>SQLC generates Java classes from SQL statements obviating JDBC API
+        in your code. Introduction to SQLC:
+        <a href="http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html">
         http://www.pavelvlasov.com/pv/content/Articles/sqlc/sqlc.html</a></p>
 
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Tested with Ant 1.5.2 and Java 1.4. Shall work on Java 1.3+</td>
+            <td>Tested with Ant 1.5.2. Compilation requires Java 1.4 and database
+              driver shall implement getParameterMetadata(). "Introduction to SQLC"
+              (see above) contains compatibility list. Generated classes work on
+              Java 1.3+
+            </td>
           </tr>
           <tr>
             <th>URL:</th>
