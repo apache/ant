@@ -445,6 +445,9 @@ Other changes:
 
 * <checksum> has two new properties: totalproperty and todir.
 
+* FileUtils#createTempFile will now create temporary files in the 
+  directory pointed to by the property java.io.tmpdir
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

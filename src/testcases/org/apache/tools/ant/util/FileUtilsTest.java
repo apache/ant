@@ -64,8 +64,8 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * Tests for org.apache.tools.ant.util.FileUtils.
  *
- * @author Stefan Bodewig 
- * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
+ * @author Stefan Bodewig
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
  */
 public class FileUtilsTest extends TestCase {
 
@@ -117,7 +117,7 @@ public class FileUtilsTest extends TestCase {
             // JDK 1.1
             assertEquals(modTime, secondModTime);
         }
-        
+
 
         // number of milliseconds in a day
         final int millisperday=24 * 3600 * 1000;
@@ -145,30 +145,30 @@ public class FileUtilsTest extends TestCase {
         /*
          * Start with simple absolute file names.
          */
-        assertEquals(File.separator, 
+        assertEquals(File.separator,
                      fu.resolveFile(null, "/").getPath());
-        assertEquals(File.separator, 
+        assertEquals(File.separator,
                      fu.resolveFile(null, "\\").getPath());
 
         /*
          * throw in drive letters
          */
         String driveSpec = "C:";
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpec + "/").getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpec + "\\").getPath());
         String driveSpecLower = "c:";
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpecLower + "/").getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpecLower + "\\").getPath());
         /*
          * promised to eliminate consecutive slashes after drive letter.
          */
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpec + "/////").getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
 
         if (Os.isFamily("netware")) {
@@ -176,21 +176,21 @@ public class FileUtilsTest extends TestCase {
              * throw in NetWare volume names
              */
             driveSpec = "SYS:";
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpec + "/").getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpec + "\\").getPath());
             driveSpecLower = "sys:";
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpecLower + "/").getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpecLower + "\\").getPath());
             /*
              * promised to eliminate consecutive slashes after drive letter.
              */
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpec + "/////").getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
         }
 
@@ -227,60 +227,60 @@ public class FileUtilsTest extends TestCase {
         /*
          * Start with simple absolute file names.
          */
-        assertEquals(File.separator, 
+        assertEquals(File.separator,
                      fu.normalize("/").getPath());
-        assertEquals(File.separator, 
+        assertEquals(File.separator,
                      fu.normalize("\\").getPath());
 
         /*
          * throw in drive letters
          */
         String driveSpec = "C:";
-        assertEquals(driveSpec, 
+        assertEquals(driveSpec,
                      fu.normalize(driveSpec).getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpec + "/").getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpec + "\\").getPath());
         String driveSpecLower = "c:";
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpecLower + "/").getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpecLower + "\\").getPath());
         /*
          * promised to eliminate consecutive slashes after drive letter.
          */
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpec + "/////").getPath());
-        assertEquals(driveSpec + "\\", 
+        assertEquals(driveSpec + "\\",
                      fu.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
 
         if (Os.isFamily("netware")) {
             /*
-             * throw in NetWare volume names 
+             * throw in NetWare volume names
              */
             driveSpec = "SYS:";
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpec).getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpec + "/").getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpec + "\\").getPath());
             driveSpecLower = "sys:";
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpecLower).getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpecLower + "/").getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpecLower + "\\").getPath());
-            assertEquals(driveSpec + "\\junk", 
+            assertEquals(driveSpec + "\\junk",
                          fu.normalize(driveSpecLower + "\\junk").getPath());
             /*
              * promised to eliminate consecutive slashes after drive letter.
              */
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpec + "/////").getPath());
-            assertEquals(driveSpec, 
+            assertEquals(driveSpec,
                          fu.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
         }
 
@@ -310,7 +310,7 @@ public class FileUtilsTest extends TestCase {
         } catch (BuildException e) {
             // Expected exception caught
         }
-        
+
         try {
             fu.normalize(localize("/1/../../b"));
             fail("successfully crawled beyond the filesystem root");
@@ -329,7 +329,7 @@ public class FileUtilsTest extends TestCase {
         } catch (NullPointerException npe) {
             // Expected exception caught
         }
-        
+
         File f = fu.resolveFile(null, "a");
         assertEquals(f, new File("a"));
     }
@@ -345,17 +345,18 @@ public class FileUtilsTest extends TestCase {
         String name = tmp1.getName();
         assertTrue("starts with pre", name.startsWith("pre"));
         assertTrue("ends with .suf", name.endsWith(".suf"));
-        assertEquals("is inside parent dir", 
+        assertEquals("is inside parent dir",
                      parent.getAbsolutePath(),
                      tmp1.getParent());
 
         File tmp2 = fu.createTempFile("pre", ".suf", parent);
-        assertTrue("files are different", 
+        assertTrue("files are different",
                    !tmp1.getAbsolutePath().equals(tmp2.getAbsolutePath()));
 
         // null parent dir
         File tmp3 = fu.createTempFile("pre", ".suf", null);
-        assertEquals((new File(tmp3.getName())).getAbsolutePath(),
+        String  tmploc = System.getProperty("java.io.tmpdir");
+        assertEquals((new File(tmploc, tmp3.getName())).getAbsolutePath(),
                      tmp3.getAbsolutePath());
     }
 
@@ -363,17 +364,17 @@ public class FileUtilsTest extends TestCase {
      * Test contentEquals
      */
     public void testContentEquals() throws IOException {
-        assertTrue("Non existing files", fu.contentEquals(new File("foo"), 
+        assertTrue("Non existing files", fu.contentEquals(new File("foo"),
                                                           new File("bar")));
-        assertTrue("One exists, the other one doesn\'t", 
+        assertTrue("One exists, the other one doesn\'t",
                    !fu.contentEquals(new File("foo"), new File("build.xml")));
         assertTrue("Don\'t compare directories",
                    !fu.contentEquals(new File("src"), new File("src")));
         assertTrue("File equals itself",
-                   fu.contentEquals(new File("build.xml"), 
+                   fu.contentEquals(new File("build.xml"),
                                     new File("build.xml")));
         assertTrue("Files are different",
-                   !fu.contentEquals(new File("build.xml"), 
+                   !fu.contentEquals(new File("build.xml"),
                                      new File("docs.xml")));
     }
 
@@ -391,34 +392,34 @@ public class FileUtilsTest extends TestCase {
      * Test removeLeadingPath.
      */
     public void testRemoveLeadingPath() {
-        assertEquals("bar", fu.removeLeadingPath(new File("/foo"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("/foo"),
                                                  new File("/foo/bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("/foo/"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("/foo/"),
                                                  new File("/foo/bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("\\foo"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("\\foo"),
                                                  new File("\\foo\\bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("\\foo\\"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("\\foo\\"),
                                                  new File("\\foo\\bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("c:/foo"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("c:/foo"),
                                                  new File("c:/foo/bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("c:/foo/"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("c:/foo/"),
                                                  new File("c:/foo/bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo"),
                                                  new File("c:\\foo\\bar")));
-        assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo\\"), 
+        assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo\\"),
                                                  new File("c:\\foo\\bar")));
-        assertEquals(fu.normalize("/bar").getAbsolutePath(), 
+        assertEquals(fu.normalize("/bar").getAbsolutePath(),
                      fu.removeLeadingPath(new File("/foo"), new File("/bar")));
-        assertEquals(fu.normalize("/foobar").getAbsolutePath(), 
+        assertEquals(fu.normalize("/foobar").getAbsolutePath(),
                      fu.removeLeadingPath(new File("/foo"), new File("/foobar")));
         // bugzilla report 19979
-        assertEquals("", fu.removeLeadingPath(new File("/foo/bar"), 
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar"),
                                               new File("/foo/bar")));
-        assertEquals("", fu.removeLeadingPath(new File("/foo/bar"), 
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar"),
                                               new File("/foo/bar/")));
-        assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"), 
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"),
                                               new File("/foo/bar/")));
-        assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"), 
+        assertEquals("", fu.removeLeadingPath(new File("/foo/bar/"),
                                               new File("/foo/bar")));
     }
 
@@ -455,7 +456,7 @@ public class FileUtilsTest extends TestCase {
             assertEquals("C:\\foo", fu.fromURI("file:///c:/foo"));
         }
         assertEquals(localize("/foo"), fu.fromURI("file:///foo"));
-        assertEquals("." + File.separator + "foo", 
+        assertEquals("." + File.separator + "foo",
                      fu.fromURI("file:./foo"));
         assertEquals(localize("/foo bar"), fu.fromURI("file:///foo%20bar"));
         assertEquals(localize("/foo#bar"), fu.fromURI("file:///foo%23bar"));

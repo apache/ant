@@ -783,20 +783,21 @@ public class FileUtils {
      * of this method will yield a different file name.</p>
      *
      * <p>This method is different to File.createTempFile of JDK 1.2
-     * as it doesn't create the file itself and doesn't use platform
-     * specific temporary directory when the parentDir attribute is
+     * as it doesn't create the file itself.
+     * It uses the location pointed to by java.io.tmpdir
+     * when the parentDir attribute is
      * null.</p>
      *
      * @param parentDir Directory to create the temporary file in -
      * current working directory will be assumed if this parameter is
      * null.
      *
-     * @since 1.8
+     * @since ant 1.5
      */
     public File createTempFile(String prefix, String suffix, File parentDir) {
 
         File result = null;
-        String parent = null;
+        String parent = System.getProperty("java.io.tmpdir");
         if (parentDir != null) {
             parent = parentDir.getPath();
         }
