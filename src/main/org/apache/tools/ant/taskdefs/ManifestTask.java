@@ -97,6 +97,11 @@ public class ManifestTask extends Task {
      */
     private Mode mode;
 
+    /** 
+     * The encoding of the manifest file
+     */
+    private String encoding;
+    
     /**
      * Helper class for Manifest's mode attribute.
      */
@@ -150,6 +155,14 @@ public class ManifestTask extends Task {
     }
 
     /**
+     * The encoding to use for reading in an existing manifest file
+     * @param encoding the maniofets file encoding.
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
      * Update policy: either "update" or "replace"; default is "replace".
      * @param m the mode value - update or replace.
      */
@@ -176,7 +189,11 @@ public class ManifestTask extends Task {
             InputStreamReader isr = null;
             try {
                 fis = new FileInputStream(manifestFile);
-                isr = new InputStreamReader(fis, "UTF-8");
+                if (encoding == null) {
+                    isr = new InputStreamReader(fis, "UTF-8");
+                } else {
+                    isr = new InputStreamReader(fis, encoding);
+                }
                 current = new Manifest(isr);
             } catch (ManifestException m) {
                 error = new BuildException("Existing manifest " + manifestFile

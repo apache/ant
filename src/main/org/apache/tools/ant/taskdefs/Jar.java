@@ -61,6 +61,7 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -129,6 +130,9 @@ public class Jar extends Zip {
     /** the manifest specified by the 'manifest' attribute **/
     private Manifest manifest;
 
+    /** The encoding to use when reading in a manifest file */
+    private String manifestEncoding;
+    
     /**
      * The file found from the 'manifest' attribute.  This can be
      * either the location of a manifest, or the name of a jar added
@@ -178,6 +182,14 @@ public class Jar extends Zip {
     }
 
     /**
+     * Set whether or not to create an index list for classes.
+     * This may speed up classloading in some cases.
+     */
+    public void setManifestEncoding(String manifestEncoding) {
+        this.manifestEncoding = manifestEncoding;
+    }
+
+    /**
      * Allows the manifest for the archive file to be provided inline
      * in the build file rather than in an external file.
      *
@@ -217,8 +229,15 @@ public class Jar extends Zip {
         InputStreamReader isr = null;
         try {
             fis = new FileInputStream(manifestFile);
-            isr = new InputStreamReader(fis, "UTF-8");
+            if (manifestEncoding == null) {
+                isr = new InputStreamReader(fis);
+            } else {
+                isr = new InputStreamReader(fis, manifestEncoding);
+            }
             newManifest = getManifest(isr);
+        } catch (UnsupportedEncodingException e) {
+            throw new BuildException("Unsupported encoding while reading manifest: "
+                                     + e.getMessage(), e);
         } catch (IOException e) {
             throw new BuildException("Unable to read manifest file: "
                                      + manifestFile
@@ -470,10 +489,21 @@ public class Jar extends Zip {
             // If this is the same name specified in 'manifest', this
             // is the manifest to use
             log("Found manifest " + file, Project.MSG_VERBOSE);
-            if (is != null) {
-                manifest = getManifest(new InputStreamReader(is, "UTF-8"));
-            } else {
-                manifest = getManifest(file);
+            try {
+                if (is != null) {
+                    InputStreamReader isr;
+                    if (manifestEncoding == null) {
+                        isr = new InputStreamReader(is);
+                    } else {
+                        isr = new InputStreamReader(is, manifestEncoding);
+                    }
+                    manifest = getManifest(isr);
+                } else {
+                    manifest = getManifest(file);
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new BuildException("Unsupported encoding while reading " 
+                    + "manifest: " + e.getMessage(), e);
             }
         } else if (filesetManifestConfig != null &&
                    !filesetManifestConfig.getValue().equals("skip")) {
@@ -484,8 +514,13 @@ public class Jar extends Zip {
             try {
                 Manifest newManifest = null;
                 if (is != null) {
-                    newManifest 
-                        = getManifest(new InputStreamReader(is, "UTF-8"));
+                    InputStreamReader isr;
+                    if (manifestEncoding == null) {
+                        isr = new InputStreamReader(is);
+                    } else {
+                        isr = new InputStreamReader(is, manifestEncoding);
+                    }
+                    newManifest = getManifest(isr);
                 } else {
                     newManifest = getManifest(file);
                 }
@@ -495,6 +530,9 @@ public class Jar extends Zip {
                 } else {
                     filesetManifest.merge(newManifest);
                 }
+            } catch (UnsupportedEncodingException e) {
+                throw new BuildException("Unsupported encoding while reading " 
+                    + "manifest: " + e.getMessage(), e);
             } catch (ManifestException e) {
                 log("Manifest in file " + file + " is invalid: "
                     + e.getMessage(), Project.MSG_ERR);
