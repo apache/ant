@@ -1705,8 +1705,7 @@ directly. More FileSets can be specified using nested
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;
-  /&gt;</code></p>
+  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;</code></p>
 </blockquote>
 <p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
 UNIX system.</p>
@@ -1719,8 +1718,8 @@ UNIX system.</p>
 readable and executable for anyone on a UNIX system.</p>
 <blockquote>
 <pre>
-&lt;chmod perm=&quot;g+w&quot;/&gt;
-  &lt;fileset dir=&quot;shared/sources1&quot; &gt;
+&lt;chmod perm=&quot;g+w&quot;&gt;
+  &lt;fileset dir=&quot;shared/sources1&quot;&gt;
     &lt;exclude name=&quot;**/trial/**&quot;/&gt;
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
@@ -2860,7 +2859,7 @@ NB: This timestamp facility only works on downloads using the HTTP protocol.
 <pre>  &lt;get src=&quot;http://jakarta.apache.org/builds/tomcat/nightly/ant.zip&quot; 
 	dest=&quot;optional.jar&quot; 
 	verbose=&quot;true&quot;
-	usetimestamps=&quot;true&quot;/&gt;</pre>
+	usetimestamp=&quot;true&quot;/&gt;</pre>
 <p>
 Gets the nightly ant build from the tomcat distribution, if the local copy
 is missing or out of date. Uses the verbose option 
