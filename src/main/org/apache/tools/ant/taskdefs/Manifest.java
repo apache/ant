@@ -637,7 +637,7 @@ public class Manifest {
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
                 Attribute attribute = getAttribute(key);
-                cloned.storeAttribute(new Attribute(attribute.getName(), 
+                cloned.storeAttribute(new Attribute(attribute.getName(),
                                                     attribute.getValue()));
             }
             return cloned;
@@ -729,9 +729,9 @@ public class Manifest {
                     + defManifest);
             }
             try {
-                Manifest defaultManifest 
+                Manifest defaultManifest
                     = new Manifest(new InputStreamReader(in, "UTF-8"));
-                Attribute createdBy = new Attribute("Created-By", 
+                Attribute createdBy = new Attribute("Created-By",
                     System.getProperty("java.vm.version") + " ("
                     + System.getProperty("java.vm.vendor") + ")" );
                 defaultManifest.getMainSection().storeAttribute(createdBy);

@@ -99,8 +99,8 @@ public class Ear extends Jar {
     public void setAppxml(File descr) {
         deploymentDescriptor = descr;
         if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: " 
-                                     + deploymentDescriptor 
+            throw new BuildException("Deployment descriptor: "
+                                     + deploymentDescriptor
                                      + " does not exist.");
         }
 
@@ -138,7 +138,7 @@ public class Ear extends Jar {
     /**
      * Overriden from Zip class to deal with application.xml
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath, 
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
         throws IOException {
         // If the file being added is META-INF/application.xml, we
@@ -147,7 +147,7 @@ public class Ear extends Jar {
         // file is specified by the "appxml" attribute and in a
         // <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
-            if (deploymentDescriptor == null 
+            if (deploymentDescriptor == null
                 || !fu.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType

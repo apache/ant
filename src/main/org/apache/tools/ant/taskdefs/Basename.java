@@ -130,7 +130,7 @@ public class Basename extends Task {
           // char preceding the suffix is a '.', we assume the user
           // wants to remove the '.' as well (see docs)
           int pos = value.length() - suffix.length();
-          if (pos > 0 && suffix.charAt(0) != '.' 
+          if (pos > 0 && suffix.charAt(0) != '.'
               && value.charAt(pos - 1) == '.') {
               pos--;
           }

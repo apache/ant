@@ -77,7 +77,7 @@ public class Copyfile extends Task {
     private File destFile;
     private boolean filtering = false;
     private boolean forceOverwrite = false;
- 
+
     public void setSrc(File src) {
         srcFile = src;
     }
@@ -98,17 +98,17 @@ public class Copyfile extends Task {
         log("DEPRECATED - The copyfile task is deprecated.  Use copy instead.");
 
         if (srcFile == null) {
-            throw new BuildException("The src attribute must be present.", 
+            throw new BuildException("The src attribute must be present.",
                                      getLocation());
         }
-        
+
         if (!srcFile.exists()) {
             throw new BuildException("src " + srcFile.toString()
                                      + " does not exist.", getLocation());
         }
 
         if (destFile == null) {
-            throw new BuildException("The dest attribute must be present.", 
+            throw new BuildException("The dest attribute must be present.",
                                      getLocation());
         }
 
@@ -116,7 +116,7 @@ public class Copyfile extends Task {
             log("Warning: src == dest", Project.MSG_WARN);
         }
 
-        if (forceOverwrite 
+        if (forceOverwrite
             || srcFile.lastModified() > destFile.lastModified()) {
             try {
                 getProject().copyFile(srcFile, destFile, filtering, forceOverwrite);

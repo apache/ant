@@ -65,14 +65,14 @@ import java.util.EventObject;
  * @author Matt Foemmel
  */
 public class BuildEvent extends EventObject {
-    
+
     /** Project which emitted the event. */
     private Project project;
     /** Target which emitted the event, if specified. */
     private Target target;
     /** Task which emitted the event, if specified. */
     private Task task;
-    /** 
+    /**
      * Message associated with the event. This is only used for
      * "messageLogged" events.
      */
@@ -83,7 +83,7 @@ public class BuildEvent extends EventObject {
     private int priority = Project.MSG_VERBOSE;
     /**
      * The exception associated with this event, if any.
-     * This is only used for "taskFinished", "targetFinished", 
+     * This is only used for "taskFinished", "targetFinished",
      * and "buildFinished" events.
      */
     private Throwable exception;
@@ -100,7 +100,7 @@ public class BuildEvent extends EventObject {
         this.target = null;
         this.task = null;
     }
-    
+
     /**
      * Construct a BuildEvent for a target level event.
      * The project associated with the event is derived
@@ -115,10 +115,10 @@ public class BuildEvent extends EventObject {
         this.target = target;
         this.task = null;
     }
-    
+
     /**
      * Construct a BuildEvent for a task level event.
-     * The project and target associated with the event 
+     * The project and target associated with the event
      * are derived from the given task.
      *
      * @param task the task that emitted the event.
@@ -134,7 +134,7 @@ public class BuildEvent extends EventObject {
     /**
      * Sets the message and priority associated with this event.
      * This is used for "messageLogged" events.
-     * 
+     *
      * @param message the message to be associated with this event.
      *                Should not be <code>null</code>.
      * @param priority the priority to be associated with this event,
@@ -146,12 +146,12 @@ public class BuildEvent extends EventObject {
         this.message = message;
         this.priority = priority;
     }
-    
+
     /**
-     * Sets the exception associated with this event. This is used 
-     * for "taskFinished", "targetFinished", and "buildFinished" 
+     * Sets the exception associated with this event. This is used
+     * for "taskFinished", "targetFinished", and "buildFinished"
      * events.
-     * 
+     *
      * @param exception The exception to be associated with this event.
      *                  May be <code>null</code>.
      *
@@ -165,7 +165,7 @@ public class BuildEvent extends EventObject {
 
     /**
      * Returns the project that fired this event.
-     * 
+     *
      * @return the project that fired this event
      */
     public Project getProject() {
@@ -174,18 +174,18 @@ public class BuildEvent extends EventObject {
 
     /**
      * Returns the target that fired this event.
-     * 
+     *
      * @return the project that fired this event, or <code>null</code>
      *          if this event is a project level event.
      */
     public Target getTarget() {
-        
+
         return target;
     }
 
     /**
      * Returns the task that fired this event.
-     * 
+     *
      * @return the task that fired this event, or <code>null</code>
      *         if this event is a project or target level event.
      */
@@ -199,7 +199,7 @@ public class BuildEvent extends EventObject {
      *
      * @return the message associated with this event, or <code>null</code>
      *         if no message has been set.
-     * 
+     *
      * @see BuildListener#messageLogged(BuildEvent)
      */
     public String getMessage() {
@@ -210,12 +210,12 @@ public class BuildEvent extends EventObject {
      * Returns the priority of the logging message. This field will only
      * be set for "messageLogged" events. The meaning of this priority
      * is as specified by the constants in the {@link Project Project} class.
-     * 
+     *
      * @return the priority associated with this event.
      *
      * @see BuildListener#messageLogged(BuildEvent)
      */
-    public int getPriority(){
+    public int getPriority() {
         return priority;
     }
 
@@ -223,8 +223,8 @@ public class BuildEvent extends EventObject {
      * Returns the exception that was thrown, if any. This field will only
      * be set for "taskFinished", "targetFinished", and "buildFinished"
      * events.
-     * 
-     * @return the exception associated with this exception, or 
+     *
+     * @return the exception associated with this exception, or
      *         <code>null</code> if no exception has been set.
      *
      * @see BuildListener#taskFinished(BuildEvent)

@@ -105,8 +105,8 @@ public class ComponentHelper  {
      */
     private Hashtable createdTasks = new Hashtable();
 
-    protected ComponentHelper next;
-    protected Project project;
+    private ComponentHelper next;
+    private Project project;
 
     /**
      * find a project component for a specific project, creating

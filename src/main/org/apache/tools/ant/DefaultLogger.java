@@ -69,7 +69,7 @@ import org.apache.tools.ant.util.StringUtils;
  * @author Matt Foemmel
  */
 public class DefaultLogger implements BuildLogger {
-    /** 
+    /**
      * Size of left-hand column for right-justified task name.
      * @see #messageLogged(BuildEvent)
      */
@@ -77,16 +77,19 @@ public class DefaultLogger implements BuildLogger {
 
     /** PrintStream to write non-error messages to */
     protected PrintStream out;
+
     /** PrintStream to write error messages to */
     protected PrintStream err;
+
     /** Lowest level of message to write out */
     protected int msgOutputLevel = Project.MSG_ERR;
+
     /** Time of the start of the build */
     private long startTime = System.currentTimeMillis();
 
     /** Line separator */
     protected static final String lSep = StringUtils.LINE_SEP;
-    
+
     /** Whether or not to use emacs-style output */
     protected boolean emacsMode = false;
 
@@ -99,17 +102,17 @@ public class DefaultLogger implements BuildLogger {
     /**
      * Sets the highest level of message this logger should respond to.
      *
-     * Only messages with a message level lower than or equal to the 
+     * Only messages with a message level lower than or equal to the
      * given level should be written to the log.
      * <P>
-     * Constants for the message levels are in the 
-     * {@link Project Project} class. The order of the levels, from least 
-     * to most verbose, is <code>MSG_ERR</code>, <code>MSG_WARN</code>, 
-     * <code>MSG_INFO</code>, <code>MSG_VERBOSE</code>, 
+     * Constants for the message levels are in the
+     * {@link Project Project} class. The order of the levels, from least
+     * to most verbose, is <code>MSG_ERR</code>, <code>MSG_WARN</code>,
+     * <code>MSG_INFO</code>, <code>MSG_VERBOSE</code>,
      * <code>MSG_DEBUG</code>.
      * <P>
      * The default message level for DefaultLogger is Project.MSG_ERR.
-     * 
+     *
      * @param level the logging level for the logger.
      */
     public void setMessageOutputLevel(int level) {
@@ -148,7 +151,7 @@ public class DefaultLogger implements BuildLogger {
 
     /**
      * Responds to a build being started by just remembering the current time.
-     * 
+     *
      * @param event Ignored.
      */
     public void buildStarted(BuildEvent event) {
@@ -159,7 +162,7 @@ public class DefaultLogger implements BuildLogger {
      * Prints whether the build succeeded or failed,
      * any errors the occured during the build, and
      * how long the build took.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      */
@@ -175,8 +178,8 @@ public class DefaultLogger implements BuildLogger {
             message.append("BUILD FAILED");
             message.append(StringUtils.LINE_SEP);
 
-            if (Project.MSG_VERBOSE <= msgOutputLevel ||
-                !(error instanceof BuildException)) {
+            if (Project.MSG_VERBOSE <= msgOutputLevel
+                || !(error instanceof BuildException)) {
                 message.append(StringUtils.getStackTrace(error));
             } else {
                 if (error instanceof BuildException) {
@@ -202,14 +205,14 @@ public class DefaultLogger implements BuildLogger {
     /**
      * Logs a message to say that the target has started if this
      * logger allows information-level messages.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
       */
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel
             && !event.getTarget().getName().equals("")) {
-            String msg = StringUtils.LINE_SEP 
+            String msg = StringUtils.LINE_SEP
                 + event.getTarget().getName() + ":";
             printMessage(msg, out, event.getPriority());
             log(msg);
@@ -218,30 +221,33 @@ public class DefaultLogger implements BuildLogger {
 
     /**
      * No-op implementation.
-     * 
+     *
      * @param event Ignored.
      */
-    public void targetFinished(BuildEvent event) {}
+    public void targetFinished(BuildEvent event) {
+    }
 
     /**
      * No-op implementation.
-     * 
+     *
      * @param event Ignored.
      */
-    public void taskStarted(BuildEvent event) {}
+    public void taskStarted(BuildEvent event) {
+    }
 
     /**
      * No-op implementation.
-     * 
+     *
      * @param event Ignored.
      */
-    public void taskFinished(BuildEvent event) {}
+    public void taskFinished(BuildEvent event) {
+    }
 
     /**
      * Logs a message, if the priority is suitable.
      * In non-emacs mode, task level messages are prefixed by the
      * task name which is right-justified.
-     * 
+     *
      * @param event A BuildEvent containing message information.
      *              Must not be <code>null</code>.
      */
@@ -264,7 +270,7 @@ public class DefaultLogger implements BuildLogger {
                 label = tmp.toString();
 
                 try {
-                    BufferedReader r = 
+                    BufferedReader r =
                         new BufferedReader(
                             new StringReader(event.getMessage()));
                     String line = r.readLine();
@@ -297,9 +303,9 @@ public class DefaultLogger implements BuildLogger {
 
     /**
      * Convenience method to format a specified length of time.
-     * 
+     *
      * @param millis Length of time to format, in milliseonds.
-     * 
+     *
      * @return the time as a formatted string.
      *
      * @see DateUtils#formatElapsedTime(long)
@@ -310,12 +316,12 @@ public class DefaultLogger implements BuildLogger {
 
     /**
      * Prints a message to a PrintStream.
-     * 
-     * @param message  The message to print. 
+     *
+     * @param message  The message to print.
      *                 Should not be <code>null</code>.
-     * @param stream   A PrintStream to print the message to. 
+     * @param stream   A PrintStream to print the message to.
      *                 Must not be <code>null</code>.
-     * @param priority The priority of the message. 
+     * @param priority The priority of the message.
      *                 (Ignored in this implementation.)
      */
     protected void printMessage(final String message,
@@ -327,8 +333,9 @@ public class DefaultLogger implements BuildLogger {
     /**
      * Empty implementation which allows subclasses to receive the
      * same output that is generated here.
-     * 
+     *
      * @param message Message being logged. Should not be <code>null</code>.
      */
-    protected void log(String message) {}
+    protected void log(String message) {
+    }
 }

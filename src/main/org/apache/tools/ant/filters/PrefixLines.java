@@ -85,7 +85,7 @@ public final class PrefixLines
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public PrefixLines() {
@@ -107,12 +107,12 @@ public final class PrefixLines
      * from the original input, and the prefix added. The resulting
      * line is then used until it ends, at which point the next original line
      * is read, etc.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -148,7 +148,7 @@ public final class PrefixLines
 
     /**
      * Sets the prefix to add at the start of each input line.
-     * 
+     *
      * @param prefix The prefix to add at the start of each input line.
      *               May be <code>null</code>, in which case no prefix
      *               is added.
@@ -159,7 +159,7 @@ public final class PrefixLines
 
     /**
      * Returns the prefix which will be added at the start of each input line.
-     * 
+     *
      * @return the prefix which will be added at the start of each input line
      */
     private final String getPrefix() {
@@ -169,10 +169,10 @@ public final class PrefixLines
     /**
      * Creates a new PrefixLines filter using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

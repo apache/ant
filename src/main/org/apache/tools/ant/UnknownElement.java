@@ -75,10 +75,10 @@ public class UnknownElement extends Task {
      * been redefined since original creation.
      */
     private String elementName;
-    
-    /** 
+
+    /**
      * Holds the namespace of the element.
-     */ 
+     */
     private String namespace;
 
     /**
@@ -113,18 +113,18 @@ public class UnknownElement extends Task {
     }
 
     /** Return the namespace of the XML element associated with this component.
-     * 
+     *
      * @return Namespace URI used in the xmlns declaration.
-     */ 
+     */
     public String getNamespace() {
         return namespace;
     }
 
     /** Set the namespace of the XML element associated with this component.
      * This method is typically called by the XML processor.
-     * 
+     *
      * @param namespace URI used in the xmlns declaration.
-     */ 
+     */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
@@ -163,7 +163,7 @@ public class UnknownElement extends Task {
      */
     public void configure(Object realObject) {
         realThing = realObject;
-    
+
         getWrapper().setProxy(realThing);
         Task task = null;
         if (realThing instanceof Task) {
@@ -181,7 +181,7 @@ public class UnknownElement extends Task {
         // configure attributes of the object and it's children. If it is
         // a task container, defer the configuration till the task container
         // attempts to use the task
-        
+
         if (task != null) {
             task.maybeConfigure();
         } else {
@@ -204,17 +204,17 @@ public class UnknownElement extends Task {
 
     /**
      * @see Task#handleInput(byte[], int, int)
-     * 
+     *
      * @since Ant 1.6
      */
-    protected int handleInput(byte[] buffer, int offset, int length) 
+    protected int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (realThing instanceof Task) {
             return ((Task) realThing).handleInput(buffer, offset, length);
         } else {
             return super.handleInput(buffer, offset, length);
         }
-            
+
     }
     /**
      * Handles output sent to System.out by this task or its real task.
@@ -255,7 +255,7 @@ public class UnknownElement extends Task {
             super.handleErrorOutput(line);
         }
     }
-    
+
     /**
      * Executes the real object if it's a task. If it's not a task
      * (e.g. a data type) then this method does nothing.
@@ -317,18 +317,18 @@ public class UnknownElement extends Task {
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = (UnknownElement) it.next();
-                
+
                 // backwards compatibility - element names of nested
                 // elements have been all lower-case in Ant, except for
                 // TaskContainers
-                if (!handleChild(ih, parent, child, 
-                                 child.getTag().toLowerCase(Locale.US), 
+                if (!handleChild(ih, parent, child,
+                                 child.getTag().toLowerCase(Locale.US),
                                  childWrapper)) {
                     if (!(parent instanceof TaskContainer)) {
-                        ih.throwNotSupported(getProject(), parent, 
+                        ih.throwNotSupported(getProject(), parent,
                                              child.getTag());
                     } else {
-                        // a task container - anything could happen - just add the 
+                        // a task container - anything could happen - just add the
                         // child to the container
                         TaskContainer container = (TaskContainer) parent;
                         container.addTask(child);
@@ -466,8 +466,8 @@ public class UnknownElement extends Task {
                                 Object parent, UnknownElement child,
                                 String childTag,
                                 RuntimeConfigurable childWrapper) {
-        if (ih.supportsNestedElement(childTag)) { 
-            Object realChild 
+        if (ih.supportsNestedElement(childTag)) {
+            Object realChild
                 = ih.createElement(getProject(), parent, childTag);
             childWrapper.setProxy(realChild);
             if (realChild instanceof Task) {

@@ -63,8 +63,9 @@ import org.apache.tools.ant.Project;
  * Example:<br>
  * <pre>&lt;expandproperties/&gt;</pre>
  * Or:
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;</pre>
- * 
+ * <pre>&lt;filterreader
+ *    classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;</pre>
+ *
  * @author Magesh Umasankar
  */
 public final class ExpandProperties
@@ -75,7 +76,7 @@ public final class ExpandProperties
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public ExpandProperties() {
@@ -97,12 +98,12 @@ public final class ExpandProperties
      * stream is first read in fully, and the Ant properties are expanded.
      * The results of this expansion are then queued so they can be read
      * character-by-character.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
 
@@ -134,10 +135,10 @@ public final class ExpandProperties
     /**
      * Creates a new ExpandProperties filter using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

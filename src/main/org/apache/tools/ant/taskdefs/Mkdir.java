@@ -87,14 +87,14 @@ public class Mkdir extends Task {
 
         if (dir.isFile()) {
             throw new BuildException("Unable to create directory as a file "
-                                     + "already exists with that name: " 
+                                     + "already exists with that name: "
                                      + dir.getAbsolutePath());
         }
 
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
             if (!result) {
-                String msg = "Directory " + dir.getAbsolutePath() 
+                String msg = "Directory " + dir.getAbsolutePath()
                     + " creation was not successful for an unknown reason";
                 throw new BuildException(msg, getLocation());
             }

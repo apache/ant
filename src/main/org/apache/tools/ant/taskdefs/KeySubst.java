@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ import org.apache.tools.ant.Task;
 /**
  * Keyword substitution. Input file is written to output file.
  * Do not make input file same as output file.
- * Keywords in input files look like this: @foo@. See the docs for the 
+ * Keywords in input files look like this: @foo@. See the docs for the
  * setKeys method to understand how to do the substitutions.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
@@ -81,7 +81,7 @@ public class KeySubst extends Task {
     private File dest = null;
     private String sep = "*";
     private Hashtable replacements = new Hashtable();
-    
+
     /**
         Do the execution.
     */
@@ -90,7 +90,7 @@ public class KeySubst extends Task {
         log("Performing Substitions");
         if (source == null || dest == null) {
             log("Source and destinations must not be null");
-            return;            
+            return;
         }
         BufferedReader br = null;
         BufferedWriter bw = null;
@@ -152,7 +152,7 @@ public class KeySubst extends Task {
     }
     /**
      * Sets the keys.
-     * 
+     *
         Format string is like this:
         <p>
         name=value*name2=value
@@ -170,21 +170,21 @@ public class KeySubst extends Task {
                 String token = tok.nextToken().trim();
                 StringTokenizer itok =
                 new StringTokenizer(token, "=", false);
-                
+
                 String name = itok.nextToken();
                 String value = itok.nextToken();
                 replacements.put(name, value);
             }
         }
     }
-        
+
 
     public static void main(String[] args) {
         try {
             Hashtable hash = new Hashtable();
             hash.put("VERSION", "1.0.3");
             hash.put("b", "ffff");
-            System.out.println(KeySubst.replace("$f ${VERSION} f ${b} jj $", 
+            System.out.println(KeySubst.replace("$f ${VERSION} f ${b} jj $",
                                                 hash));
         } catch (Exception e) {
             e.printStackTrace();
@@ -193,7 +193,7 @@ public class KeySubst extends Task {
 
     /**
         Does replacement on text using the hashtable of keys.
-        
+
         @return the string with the replacements in it.
     */
     public static String replace(String origString, Hashtable keys)
@@ -203,7 +203,7 @@ public class KeySubst extends Task {
         int i = 0;
         String key = null;
         while ((index = origString.indexOf("${", i)) > -1) {
-            key = origString.substring(index + 2, origString.indexOf("}", 
+            key = origString.substring(index + 2, origString.indexOf("}",
                                        index + 3));
             finalString.append (origString.substring(i, index));
             if (keys.containsKey(key)) {

@@ -273,10 +273,10 @@ public class Ant extends Task {
 
     /**
      * @see Task#handleInput(byte[], int, int)
-     * 
+     *
      * @since Ant 1.6
      */
-    public int handleInput(byte[] buffer, int offset, int length) 
+    public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (newProject != null) {
             return newProject.demuxInput(buffer, offset, length);
@@ -284,7 +284,7 @@ public class Ant extends Task {
             return super.handleInput(buffer, offset, length);
         }
     }
-    
+
     /**
      * Pass output sent to System.out to the new project.
      *
@@ -371,7 +371,7 @@ public class Ant extends Task {
                 target = newProject.getDefaultTarget();
             }
 
-            // Are we trying to call the target in which we are defined (or 
+            // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
             if (newProject.getBaseDir().equals(getProject().getBaseDir()) &&
                 newProject.getProperty("ant.file").equals(getProject().getProperty("ant.file"))
@@ -432,7 +432,7 @@ public class Ant extends Task {
      * requested.
      */
     private void addReferences() throws BuildException {
-        Hashtable thisReferences 
+        Hashtable thisReferences
             = (Hashtable) getProject().getReferences().clone();
         Hashtable newReferences = newProject.getReferences();
         Enumeration e;
@@ -484,8 +484,8 @@ public class Ant extends Task {
     private void copyReference(String oldKey, String newKey) {
         Object orig = getProject().getReference(oldKey);
         if (orig == null) {
-            log("No object referenced by " + oldKey + ". Can't copy to " 
-                + newKey, 
+            log("No object referenced by " + oldKey + ". Can't copy to "
+                + newKey,
                 Project.MSG_WARN);
             return;
         }
@@ -579,7 +579,7 @@ public class Ant extends Task {
         if (s.equals("")) {
             throw new BuildException("target attribute must not be empty");
         }
-        
+
         this.target = s;
     }
 

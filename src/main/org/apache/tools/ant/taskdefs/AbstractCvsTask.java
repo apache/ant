@@ -77,17 +77,17 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
- * @author Wolfgang Werner 
+ * @author Wolfgang Werner
  *         <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
- * @author Kevin Ross 
+ * @author Kevin Ross
  *         <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  *
  * @since Ant 1.5
  */
 public abstract class AbstractCvsTask extends Task {
-    /** 
+    /**
      * Default compression level to use, if compression is enabled via
-     * setCompression( true ). 
+     * setCompression( true ).
      */
     public static final int DEFAULT_COMPRESSION_LEVEL = 3;
 
@@ -189,7 +189,7 @@ public abstract class AbstractCvsTask extends Task {
     protected ExecuteStreamHandler getExecuteStreamHandler() {
 
         if (this.executeStreamHandler == null) {
-            setExecuteStreamHandler(new PumpStreamHandler(getOutputStream(), 
+            setExecuteStreamHandler(new PumpStreamHandler(getOutputStream(),
                                                           getErrorStream()));
         }
 
@@ -211,7 +211,7 @@ public abstract class AbstractCvsTask extends Task {
                     setOutputStream(new PrintStream(
                                         new BufferedOutputStream(
                                             new FileOutputStream(output
-                                                                 .getPath(), 
+                                                                 .getPath(),
                                                                  append))));
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());
@@ -280,7 +280,7 @@ public abstract class AbstractCvsTask extends Task {
 
             File defaultPassFile = new File(
                 System.getProperty("cygwin.user.home",
-                    System.getProperty("user.home")) 
+                    System.getProperty("user.home"))
                 + File.separatorChar + ".cvspass");
 
             if(defaultPassFile.exists()) {
@@ -294,7 +294,7 @@ public abstract class AbstractCvsTask extends Task {
                 var.setKey("CVS_PASSFILE");
                 var.setValue(String.valueOf(passFile));
                 env.addVariable(var);
-                log("Using cvs passfile: " + String.valueOf(passFile), 
+                log("Using cvs passfile: " + String.valueOf(passFile),
                     Project.MSG_INFO);
             } else if (!passFile.canRead()) {
                 log("cvs passfile: " + String.valueOf(passFile)
@@ -341,7 +341,7 @@ public abstract class AbstractCvsTask extends Task {
             /*Throw an exception if cvs exited with error. (Iulian)*/
             if (failOnError && retCode != 0) {
                 throw new BuildException("cvs exited with error code "
-                                         + retCode 
+                                         + retCode
                                          + StringUtils.LINE_SEP
                                          + "Command line was ["
                                          + actualCommandLine + "]", getLocation());
@@ -413,7 +413,7 @@ public abstract class AbstractCvsTask extends Task {
 
     private String executeToString(Execute execute){
 
-        StringBuffer stringBuffer = 
+        StringBuffer stringBuffer =
             new StringBuffer(Commandline.describeCommand(execute
                                                          .getCommandline()));
 
@@ -674,10 +674,10 @@ public abstract class AbstractCvsTask extends Task {
     * Configures and adds the given Commandline.
     * @param insertAtStart If true, c is
     */
-    public void addConfiguredCommandline(Commandline c, 
+    public void addConfiguredCommandline(Commandline c,
                                          boolean insertAtStart) {
         if (c == null) {
-            return; 
+            return;
         }
         this.configureCommandline(c);
         if (insertAtStart) {
@@ -702,7 +702,7 @@ public abstract class AbstractCvsTask extends Task {
      * level, AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL.
      */
     public void setCompression(boolean usecomp) {
-        setCompressionLevel(usecomp ? 
+        setCompressionLevel(usecomp ?
                             AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL : 0);
     }
 

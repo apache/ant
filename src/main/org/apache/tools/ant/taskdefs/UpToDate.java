@@ -72,9 +72,9 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * Sets the given property if the specified target has a timestamp
  * greater than all of the source files.
  *
- * @author William Ferguson 
- *         <a href="mailto:williamf@mincom.com">williamf@mincom.com</a> 
- * @author Hiroaki Nakamura 
+ * @author William Ferguson
+ *         <a href="mailto:williamf@mincom.com">williamf@mincom.com</a>
+ * @author Hiroaki Nakamura
  *         <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
  * @author Stefan Bodewig
  * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
@@ -119,7 +119,7 @@ public class UpToDate extends Task implements Condition {
      */
     private String getValue() {
         return (_value != null) ? _value : "true";
-    } 
+    }
 
     /**
      * The file which must be more up-to-date than (each of) the source file(s)
@@ -183,14 +183,14 @@ public class UpToDate extends Task implements Condition {
 
         // if the target file is not there, then it can't be up-to-date
         if (_targetFile != null && !_targetFile.exists()) {
-            log("The targetfile \"" + _targetFile.getAbsolutePath() 
+            log("The targetfile \"" + _targetFile.getAbsolutePath()
                     + "\" does not exist.", Project.MSG_VERBOSE);
             return false;
-        } 
+        }
 
         // if the source file isn't there, throw an exception
         if (_sourceFile != null && !_sourceFile.exists()) {
-            throw new BuildException(_sourceFile.getAbsolutePath() 
+            throw new BuildException(_sourceFile.getAbsolutePath()
                                      + " not found.");
         }
 
@@ -226,14 +226,14 @@ public class UpToDate extends Task implements Condition {
      */
     public void execute() throws BuildException {
         if (_property == null) {
-            throw new BuildException("property attribute is required.", 
+            throw new BuildException("property attribute is required.",
                                      getLocation());
         }
         boolean upToDate = eval();
         if (upToDate) {
             this.getProject().setNewProperty(_property, getValue());
             if (mapperElement == null) {
-                log("File \"" + _targetFile.getAbsolutePath() 
+                log("File \"" + _targetFile.getAbsolutePath()
                     + "\" is up-to-date.", Project.MSG_VERBOSE);
             } else {
                 log("All target files are up-to-date.",

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,7 +58,7 @@ import java.lang.reflect.Method;
 
 /**
  * Uses introspection to "adapt" an arbitrary Bean which doesn't
- * itself extend Task, but still contains an execute method and optionally 
+ * itself extend Task, but still contains an execute method and optionally
  * a setProject method.
  *
  * @author costin@dnt.ro
@@ -67,26 +67,26 @@ public class TaskAdapter extends Task implements TypeAdapter {
 
     /** Object to act as a proxy for. */
     private Object proxy;
-    
+
     /**
      * Checks whether or not a class is suitable to be adapted by TaskAdapter.
      *
-     * This only checks conditions which are additionally required for 
+     * This only checks conditions which are additionally required for
      * tasks adapted by TaskAdapter. Thus, this method should be called by
      * Project.checkTaskClass.
      *
      * Throws a BuildException and logs as Project.MSG_ERR for
      * conditions that will cause the task execution to fail.
      * Logs other suspicious conditions with Project.MSG_WARN.
-     * 
-     * @param taskClass Class to test for suitability. 
+     *
+     * @param taskClass Class to test for suitability.
      *                  Must not be <code>null</code>.
-     * @param project   Project to log warnings/errors to. 
+     * @param project   Project to log warnings/errors to.
      *                  Must not be <code>null</code>.
-     * 
+     *
      * @see Project#checkTaskClass(Class)
      */
-    public static void checkTaskClass(final Class taskClass, 
+    public static void checkTaskClass(final Class taskClass,
                                       final Project project) {
         // don't have to check for interface, since then
         // taskClass would be abstract too.
@@ -97,8 +97,8 @@ public class TaskAdapter extends Task implements TypeAdapter {
             // don't have to check for abstract, since then
             // taskClass would be abstract too.
             if (!Void.TYPE.equals(executeM.getReturnType())) {
-                final String message = "return type of execute() should be " 
-                    + "void but was \"" + executeM.getReturnType() + "\" in " 
+                final String message = "return type of execute() should be "
+                    + "void but was \"" + executeM.getReturnType() + "\" in "
                     + taskClass;
                 project.log(message, Project.MSG_WARN);
             }
@@ -116,10 +116,10 @@ public class TaskAdapter extends Task implements TypeAdapter {
     public void checkProxyClass(Class proxyClass) {
         checkTaskClass(proxyClass, getProject());
     }
-    
+
     /**
      * Executes the proxied task.
-     * 
+     *
      * @exception BuildException if the project could not be set
      * or the method could not be executed.
      */
@@ -127,7 +127,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
         Method setProjectM = null;
         try {
             Class c = proxy.getClass();
-            setProjectM = 
+            setProjectM =
                 c.getMethod("setProject", new Class[] {Project.class});
             if (setProjectM != null) {
                 setProjectM.invoke(proxy, new Object[] {getProject()});
@@ -136,7 +136,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
             // ignore this if the class being used as a task does not have
             // a set project method.
         } catch (Exception ex) {
-            log("Error setting project in " + proxy.getClass(), 
+            log("Error setting project in " + proxy.getClass(),
                 Project.MSG_ERR);
             throw new BuildException(ex);
         }
@@ -147,13 +147,13 @@ public class TaskAdapter extends Task implements TypeAdapter {
             Class c = proxy.getClass();
             executeM = c.getMethod("execute", new Class[0]);
             if (executeM == null) {
-                log("No public execute() in " + proxy.getClass(), 
+                log("No public execute() in " + proxy.getClass(),
                     Project.MSG_ERR);
-                throw new BuildException("No public execute() in " 
+                throw new BuildException("No public execute() in "
                     + proxy.getClass());
             }
             executeM.invoke(proxy, null);
-            return; 
+            return;
         } catch (java.lang.reflect.InvocationTargetException ie) {
             log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
             Throwable t = ie.getTargetException();
@@ -168,10 +168,10 @@ public class TaskAdapter extends Task implements TypeAdapter {
         }
 
     }
-    
+
     /**
      * Sets the target object to proxy for.
-     * 
+     *
      * @param o The target object. Must not be <code>null</code>.
      */
     public void setProxy(Object o) {
@@ -180,7 +180,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
 
     /**
      * Returns the target object being proxied.
-     * 
+     *
      * @return the target proxy object
      */
     public Object getProxy() {

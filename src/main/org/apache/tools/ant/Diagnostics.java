@@ -77,11 +77,11 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class Diagnostics {
 
-    private static final String TEST_CLASS 
+    private static final String TEST_CLASS
         = "org.apache.tools.ant.taskdefs.optional.Test";
-    
+
     /** utility class */
-    private Diagnostics(){
+    private Diagnostics() {
     }
 
     /**
@@ -92,7 +92,7 @@ public final class Diagnostics {
     public static boolean isOptionalAvailable() {
         try {
             Class.forName(TEST_CLASS);
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             return false;
         }
         return true;
@@ -105,19 +105,19 @@ public final class Diagnostics {
      */
     public static void validateVersion() throws BuildException {
         try {
-            Class optional 
+            Class optional
                 = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
             String coreVersion = getImplementationVersion(Main.class);
             String optionalVersion = getImplementationVersion(optional);
-            
+
             if (coreVersion != null && !coreVersion.equals(optionalVersion)) {
-                throw new BuildException(
-                        "Invalid implementation version between Ant core and " 
-                        + "Ant optional tasks.\n" +
-                        " core    : " + coreVersion + "\n" +
-                        " optional: " + optionalVersion);
+                throw new BuildException("Invalid implementation version "
+                    + "between Ant core and Ant optional tasks.\n"
+                    + " core    : " + coreVersion + "\n"
+                    + " optional: " + optionalVersion);
             }
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
+            // ignore
         }
     }
 
@@ -144,7 +144,7 @@ public final class Diagnostics {
             return null;
         }
         File[] files = new File[filenames.length];
-        for (int i = 0; i < filenames.length; i++){
+        for (int i = 0; i < filenames.length; i++) {
             files[i] = new File(libDir, filenames[i]);
         }
         return files;
@@ -154,7 +154,7 @@ public final class Diagnostics {
      * main entry point for command line
      * @param args command line arguments.
      */
-    public static void main(String[] args){
+    public static void main(String[] args) {
         doReport(System.out);
     }
 
@@ -165,18 +165,18 @@ public final class Diagnostics {
      * @return null if there is no package or implementation version.
      * '?.?' for JDK 1.0 or 1.1.
      */
-    private static String getImplementationVersion(Class clazz){
+    private static String getImplementationVersion(Class clazz) {
         try {
-          // Package pkg = clazz.getPackage();        
+          // Package pkg = clazz.getPackage();
           Method method = Class.class.getMethod("getPackage", new Class[0]);
           Object pkg = method.invoke(clazz, null);
           if (pkg != null) {
               // pkg.getImplementationVersion();
               method = pkg.getClass().getMethod("getImplementationVersion", new Class[0]);
-              Object version = method.invoke(pkg, null);          
+              Object version = method.invoke(pkg, null);
               return (String) version;
           }
-        } catch (Exception e){
+        } catch (Exception e) {
           // JDK < 1.2 should land here because the methods above don't exist.
           return "?.?";
         }
@@ -211,6 +211,7 @@ public final class Diagnostics {
         try {
             saxParser = saxParserFactory.newSAXParser();
         } catch (Exception e) {
+            // ignore
         }
         return saxParser;
     }
@@ -245,7 +246,7 @@ public final class Diagnostics {
      * Print a report to the given stream.
      * @param out the stream to print the report to.
      */
-    public static void doReport(PrintStream out){
+    public static void doReport(PrintStream out) {
         out.println("------- Ant diagnostics report -------");
         out.println(Main.getAntVersion());
         out.println();
@@ -258,9 +259,9 @@ public final class Diagnostics {
         try {
             optional = Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.Test");
-            out.println("optional tasks : " 
+            out.println("optional tasks : "
                 + getImplementationVersion(optional));
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             out.println("optional tasks : not available");
         }
 
@@ -302,7 +303,7 @@ public final class Diagnostics {
      * Report a listing of system properties existing in the current vm.
      * @param out the stream to print the properties to.
      */
-    private static void doReportSystemProperties(PrintStream out){
+    private static void doReportSystemProperties(PrintStream out) {
         for (Enumeration keys = System.getProperties().keys();
             keys.hasMoreElements();) {
             String key = (String) keys.nextElement();
@@ -315,14 +316,14 @@ public final class Diagnostics {
      * Report the content of ANT_HOME/lib directory
      * @param out the stream to print the content to
      */
-    private static void doReportLibraries(PrintStream out){
+    private static void doReportLibraries(PrintStream out) {
         out.println("ant.home: " + System.getProperty("ant.home"));
         File[] libs = listLibraries();
         if (libs == null) {
             out.println("Unable to list libraries.");
             return;
         }
-        for (int i = 0; i < libs.length; i++){
+        for (int i = 0; i < libs.length; i++) {
             out.println(libs[i].getName()
                     + " (" + libs[i].length() + " bytes)");
         }
@@ -333,12 +334,12 @@ public final class Diagnostics {
      * Call org.apache.env.Which if available
      * @param out the stream to print the content to.
      */
-    private static void doReportWhich(PrintStream out){
+    private static void doReportWhich(PrintStream out) {
         Throwable error = null;
         try {
             Class which = Class.forName("org.apache.env.Which");
-            Method method 
-                = which.getMethod("main", new Class[]{ String[].class });
+            Method method
+                = which.getMethod("main", new Class[]{String[].class});
             method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");
@@ -363,7 +364,7 @@ public final class Diagnostics {
      * @param out the stream to print the tasks report to
      * <tt>null</tt> for a missing stream (ie mapping).
      */
-    private static void doReportTasksAvailability(PrintStream out){
+    private static void doReportTasksAvailability(PrintStream out) {
         InputStream is = Main.class.getResourceAsStream(
                 "/org/apache/tools/ant/taskdefs/defaults.properties");
         if (is == null) {
@@ -372,13 +373,13 @@ public final class Diagnostics {
             Properties props = new Properties();
             try {
                 props.load(is);
-                for (Enumeration keys = props.keys(); keys.hasMoreElements();){
+                for (Enumeration keys = props.keys(); keys.hasMoreElements();) {
                     String key = (String) keys.nextElement();
                     String classname = props.getProperty(key);
                     try {
                         Class.forName(classname);
                         props.remove(key);
-                    } catch (ClassNotFoundException e){
+                    } catch (ClassNotFoundException e) {
                         out.println(key + " : Not Available");
                     } catch (NoClassDefFoundError e) {
                         String pkg = e.getMessage().replace('/', '.');
@@ -387,10 +388,10 @@ public final class Diagnostics {
                         out.println(key + " : Initialization error");
                     }
                 }
-                if (props.size() == 0){
+                if (props.size() == 0) {
                     out.println("All defined tasks are available");
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 out.println(e.getMessage());
             }
         }

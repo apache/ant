@@ -104,7 +104,7 @@ public class Jar extends Zip {
     /**  merged manifests added through filesets */
     private Manifest filesetManifest;
 
-    /** 
+    /**
      * Manifest of original archive, will be set to null if not in
      * update mode.
      */
@@ -127,7 +127,7 @@ public class Jar extends Zip {
 
     /** The encoding to use when reading in a manifest file */
     private String manifestEncoding;
-    
+
     /**
      * The file found from the 'manifest' attribute.  This can be
      * either the location of a manifest, or the name of a jar added
@@ -139,7 +139,7 @@ public class Jar extends Zip {
     /** jar index is JDK 1.3+ only */
     private boolean index = false;
 
-    /** 
+    /**
      * whether to really create the archive in createEmptyZip, will
      * get set in getResourcesToAdd.
      */
@@ -270,7 +270,7 @@ public class Jar extends Zip {
         ZipFile zf = null;
         try {
             zf = new ZipFile(jarFile);
-            
+
             // must not use getEntry as "well behaving" applications
             // must accept the manifest in any capitalization
             Enumeration enum = zf.entries();
@@ -522,7 +522,7 @@ public class Jar extends Zip {
                     manifest = getManifest(file);
                 }
             } catch (UnsupportedEncodingException e) {
-                throw new BuildException("Unsupported encoding while reading " 
+                throw new BuildException("Unsupported encoding while reading "
                     + "manifest: " + e.getMessage(), e);
             }
         } else if (filesetManifestConfig != null &&
@@ -551,7 +551,7 @@ public class Jar extends Zip {
                     filesetManifest.merge(newManifest);
                 }
             } catch (UnsupportedEncodingException e) {
-                throw new BuildException("Unsupported encoding while reading " 
+                throw new BuildException("Unsupported encoding while reading "
                     + "manifest: " + e.getMessage(), e);
             } catch (ManifestException e) {
                 log("Manifest in file " + file + " is invalid: "
@@ -617,7 +617,7 @@ public class Jar extends Zip {
                 } else {
                     Manifest mf = createManifest();
                     if (!mf.equals(originalManifest)) {
-                        log("Updating jar since jar manifest has changed", 
+                        log("Updating jar since jar manifest has changed",
                             Project.MSG_VERBOSE);
                         needsUpdate = true;
                     }
@@ -641,10 +641,10 @@ public class Jar extends Zip {
         if (!createEmpty) {
             return true;
         }
-        
+
         ZipOutputStream zOut = null;
         try {
-            log("Building MANIFEST-only jar: " 
+            log("Building MANIFEST-only jar: "
                 + getDestFile().getAbsolutePath());
             zOut = new ZipOutputStream(new FileOutputStream(getDestFile()));
 

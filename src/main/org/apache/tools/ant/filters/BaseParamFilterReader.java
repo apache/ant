@@ -70,7 +70,7 @@ public abstract class BaseParamFilterReader
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public BaseParamFilterReader() {
@@ -90,7 +90,7 @@ public abstract class BaseParamFilterReader
     /**
      * Sets the parameters used by this filter, and sets
      * the filter to an uninitialized status.
-     * 
+     *
      * @param parameters The parameters to be used by this filter.
      *                   Should not be <code>null</code>.
      */
@@ -101,7 +101,7 @@ public abstract class BaseParamFilterReader
 
     /**
      * Returns the parameters to be used by this filter.
-     * 
+     *
      * @return the parameters to be used by this filter
      */
     protected final Parameter[] getParameters() {

@@ -57,7 +57,7 @@ package org.apache.tools.ant;
 import java.util.EventListener;
 
 /**
- * Instances of classes that implement this interface can register 
+ * Instances of classes that implement this interface can register
  * to be notified when things happened during a build.
  *
  * @see BuildEvent
@@ -70,7 +70,7 @@ public interface BuildListener extends EventListener {
     /**
      * Signals that a build has started. This event
      * is fired before any targets have started.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      */
@@ -79,7 +79,7 @@ public interface BuildListener extends EventListener {
     /**
      * Signals that the last target has finished. This event
      * will still be fired if an error occurred during the build.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      *
@@ -89,7 +89,7 @@ public interface BuildListener extends EventListener {
 
     /**
      * Signals that a target is starting.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      *
@@ -100,7 +100,7 @@ public interface BuildListener extends EventListener {
     /**
      * Signals that a target has finished. This event will
      * still be fired if an error occurred during the build.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      *
@@ -110,7 +110,7 @@ public interface BuildListener extends EventListener {
 
     /**
      * Signals that a task is starting.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      *
@@ -131,7 +131,7 @@ public interface BuildListener extends EventListener {
 
     /**
      * Signals a message logging event.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Must not be <code>null</code>.
      *

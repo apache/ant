@@ -96,11 +96,11 @@ public class ManifestTask extends Task {
      */
     private Mode mode;
 
-    /** 
+    /**
      * The encoding of the manifest file
      */
     private String encoding;
-    
+
     /**
      * Helper class for Manifest's mode attribute.
      */

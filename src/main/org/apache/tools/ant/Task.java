@@ -303,7 +303,7 @@ public abstract class Task extends ProjectComponent {
             wrapper.reconfigure(getProject());
         }
     }
-    
+
     /**
      * Handles a line of output by logging it with the INFO priority.
      *
@@ -332,15 +332,15 @@ public abstract class Task extends ProjectComponent {
      * @param length the amount of data to read
      *
      * @return the number of bytes read
-     * 
+     *
      * @exception IOException if the data cannot be read
      * @since Ant 1.6
      */
-    protected int handleInput(byte[] buffer, int offset, int length) 
+    protected int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         return getProject().defaultInput(buffer, offset, length);
     }
-    
+
     /**
      * Handles an error line by logging it with the INFO priority.
      *
@@ -426,7 +426,7 @@ public abstract class Task extends ProjectComponent {
     /**
      * Has this task been marked invalid?
      *
-     * @return true if this task is no longer valid. A new task should be 
+     * @return true if this task is no longer valid. A new task should be
      * configured in this case.
      *
      * @since Ant 1.5

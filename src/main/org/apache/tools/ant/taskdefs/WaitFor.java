@@ -172,7 +172,7 @@ public class WaitFor extends ConditionBase {
     }
 
     /**
-     * The enumeration of units: 
+     * The enumeration of units:
      * millisecond, second, minute, hour, day, week
      * @todo we use timestamps in many places, why not factor this out
      */

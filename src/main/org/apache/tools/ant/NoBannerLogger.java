@@ -63,11 +63,11 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class NoBannerLogger extends DefaultLogger {
 
-    /** 
+    /**
      * Name of the current target, if it should
      * be displayed on the next message. This is
      * set when a target starts building, and reset
-     * to <code>null</code> after the first message for 
+     * to <code>null</code> after the first message for
      * the target is logged.
      */
     protected String targetName;
@@ -79,7 +79,7 @@ public class NoBannerLogger extends DefaultLogger {
     /**
      * Notes the name of the target so it can be logged
      * if it generates any messages.
-     * 
+     *
      * @param event A BuildEvent containing target information.
      *              Must not be <code>null</code>.
      */
@@ -87,9 +87,9 @@ public class NoBannerLogger extends DefaultLogger {
         targetName = event.getTarget().getName();
     }
 
-    /** 
+    /**
      * Resets the current target name to <code>null</code>.
-     * 
+     *
      * @param event Ignored in this implementation.
      */
     public void targetFinished(BuildEvent event) {
@@ -101,14 +101,14 @@ public class NoBannerLogger extends DefaultLogger {
      * priority, also logging the name of the target if this
      * is the first message which needs to be logged for the
      * target.
-     * 
+     *
      * @param event A BuildEvent containing message information.
      *              Must not be <code>null</code>.
      */
     public void messageLogged(BuildEvent event) {
 
-        if (event.getPriority() > msgOutputLevel 
-            || null == event.getMessage() 
+        if (event.getPriority() > msgOutputLevel
+            || null == event.getMessage()
             || "".equals(event.getMessage().trim())) {
                 return;
         }

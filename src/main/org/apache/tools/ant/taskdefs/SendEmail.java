@@ -57,12 +57,12 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.taskdefs.email.EmailTask;
 
 /**
- * A task to send SMTP email. 
+ * A task to send SMTP email.
  * This task can send mail using either plain
  * text, UU encoding or Mime format mail depending on what is available.
  * Attachments may be sent using nested FileSet
  * elements.
- 
+
  * @author glenn_twiggs@bmc.com
  * @author Magesh Umasankar
  *

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,25 +86,25 @@ import java.sql.ResultSetMetaData;
  * Executes a series of SQL statements on a database using JDBC.
  *
  * <p>Statements can
- * either be read in from a text file using the <i>src</i> attribute or from 
+ * either be read in from a text file using the <i>src</i> attribute or from
  * between the enclosing SQL tags.</p>
- * 
- * <p>Multiple statements can be provided, separated by semicolons (or the 
- * defined <i>delimiter</i>). Individual lines within the statements can be 
+ *
+ * <p>Multiple statements can be provided, separated by semicolons (or the
+ * defined <i>delimiter</i>). Individual lines within the statements can be
  * commented using either --, // or REM at the start of the line.</p>
- * 
- * <p>The <i>autocommit</i> attribute specifies whether auto-commit should be 
- * turned on or off whilst executing the statements. If auto-commit is turned 
- * on each statement will be executed and committed. If it is turned off the 
+ *
+ * <p>The <i>autocommit</i> attribute specifies whether auto-commit should be
+ * turned on or off whilst executing the statements. If auto-commit is turned
+ * on each statement will be executed and committed. If it is turned off the
  * statements will all be executed as one transaction.</p>
- * 
- * <p>The <i>onerror</i> attribute specifies how to proceed when an error occurs 
- * during the execution of one of the statements. 
+ *
+ * <p>The <i>onerror</i> attribute specifies how to proceed when an error occurs
+ * during the execution of one of the statements.
  * The possible values are: <b>continue</b> execution, only show the error;
  * <b>stop</b> execution and commit transaction;
  * and <b>abort</b> execution and transaction and fail task.</p>
 
- * 
+ *
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
  * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
@@ -126,8 +126,8 @@ public class SQLExec extends JDBCTask {
         }
     }
 
-    
-    
+
+
     private int goodSql = 0;
 
     private int totalSql = 0;
@@ -166,13 +166,13 @@ public class SQLExec extends JDBCTask {
      * SQL Statement delimiter
      */
     private String delimiter = ";";
-    
+
     /**
      * The delimiter type indicating whether the delimiter will
      * only be recognized on a line by itself
      */
     private String delimiterType = DelimiterType.NORMAL;
-    
+
     /**
      * Print SQL results.
      */
@@ -188,12 +188,12 @@ public class SQLExec extends JDBCTask {
      */
     private File output = null;
 
-    
+
     /**
      * Action to perform if an error is found
      **/
     private String onError = "abort";
-    
+
     /**
      * Encoding to use when reading SQL statements from a file
      */
@@ -203,7 +203,7 @@ public class SQLExec extends JDBCTask {
      * Append to an existing file or overwrite it?
      */
     private boolean append = false;
- 
+
     /**
      * Keep the format of a sql block?
      */
@@ -223,15 +223,15 @@ public class SQLExec extends JDBCTask {
     public void setSrc(File srcFile) {
         this.srcFile = srcFile;
     }
-    
+
     /**
-     * Set an inline SQL command to execute. 
+     * Set an inline SQL command to execute.
      * NB: Properties are not expanded in this text.
      */
     public void addText(String sql) {
         this.sqlCommand += sql;
     }
-    
+
     /**
      * Adds a set of files (nested fileset attribute).
      */
@@ -248,7 +248,7 @@ public class SQLExec extends JDBCTask {
         transactions.addElement(t);
         return t;
     }
-    
+
     /**
      * Set the file encoding to use on the SQL files read in
      *
@@ -257,9 +257,9 @@ public class SQLExec extends JDBCTask {
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
-    
+
     /**
-     * Set the delimiter that separates SQL statements. Defaults to &quot;;&quot;; 
+     * Set the delimiter that separates SQL statements. Defaults to &quot;;&quot;;
      * optional
      *
      * <p>For example, set this to "go" and delimitertype to "ROW" for
@@ -280,7 +280,7 @@ public class SQLExec extends JDBCTask {
     public void setDelimiterType(DelimiterType delimiterType) {
         this.delimiterType = delimiterType.getValue();
     }
-    
+
     /**
      * Print result sets from the statements;
      * optional, default false
@@ -288,9 +288,9 @@ public class SQLExec extends JDBCTask {
     public void setPrint(boolean print) {
         this.print = print;
     }
-    
+
     /**
-     * Print headers for result sets from the 
+     * Print headers for result sets from the
      * statements; optional, default true.
      */
     public void setShowheaders(boolean showheaders) {
@@ -298,7 +298,7 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * Set the output file; 
+     * Set the output file;
      * optional, defaults to the Ant log.
      */
     public void setOutput(File output) {
@@ -315,7 +315,7 @@ public class SQLExec extends JDBCTask {
         this.append = append;
     }
 
-    
+
     /**
      * Action to perform when statement fails: continue, stop, or abort
      * optional; default &quot;abort&quot;
@@ -327,13 +327,13 @@ public class SQLExec extends JDBCTask {
     /**
      * whether or not format should be preserved.
      * Defaults to false.
-     * 
+     *
      * @param keepformat The keepformat to set
      */
     public void setKeepformat(boolean keepformat) {
         this.keepformat = keepformat;
     }
-    
+
     /**
      * Set escape processing for statements.
      *
@@ -353,15 +353,15 @@ public class SQLExec extends JDBCTask {
         sqlCommand = sqlCommand.trim();
 
         try {
-            if (srcFile == null && sqlCommand.length() == 0 
-                && filesets.isEmpty()) { 
+            if (srcFile == null && sqlCommand.length() == 0
+                && filesets.isEmpty()) {
                 if (transactions.size() == 0) {
                     throw new BuildException("Source file or fileset, "
                                              + "transactions or sql statement "
                                              + "must be set!", location);
                 }
             }
-        
+
             if (srcFile != null && !srcFile.exists()) {
                 throw new BuildException("Source file does not exist!", location);
             }
@@ -371,16 +371,16 @@ public class SQLExec extends JDBCTask {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 File srcDir = fs.getDir(project);
-                
+
                 String[] srcFiles = ds.getIncludedFiles();
-                
+
                 // Make a transaction for each file
                 for (int j = 0 ; j < srcFiles.length ; j++) {
                     Transaction t = createTransaction();
                     t.setSrc(new File(srcDir, srcFiles[j]));
                 }
             }
-            
+
             // Make a transaction group for the outer command
             Transaction t = createTransaction();
             t.setSrc(srcFile);
@@ -392,11 +392,11 @@ public class SQLExec extends JDBCTask {
             try {
                 statement = conn.createStatement();
                 statement.setEscapeProcessing(escapeProcessing);
-            
+
                 PrintStream out = System.out;
                 try {
                     if (output != null) {
-                        log("Opening PrintStream to output file " + output, 
+                        log("Opening PrintStream to output file " + output,
                             Project.MSG_VERBOSE);
                         out = new PrintStream(
                                   new BufferedOutputStream(
@@ -404,11 +404,11 @@ public class SQLExec extends JDBCTask {
                                                            .getAbsolutePath(),
                                                            append)));
                     }
-                    
+
                     // Process all transactions
-                    for (Enumeration e = transactions.elements(); 
+                    for (Enumeration e = transactions.elements();
                          e.hasMoreElements();) {
-                       
+
                         ((Transaction) e.nextElement()).runTransaction(out);
                         if (!isAutocommit()) {
                             log("Commiting transaction", Project.MSG_VERBOSE);
@@ -419,7 +419,7 @@ public class SQLExec extends JDBCTask {
                     if (out != null && out != System.out) {
                         out.close();
                     }
-                } 
+                }
             } catch (IOException e){
                 if (!isAutocommit() && conn != null && onError.equals("abort")) {
                     try {
@@ -444,8 +444,8 @@ public class SQLExec extends JDBCTask {
                     }
                 } catch (SQLException e) {}
             }
-            
-            log(goodSql + " of " + totalSql + 
+
+            log(goodSql + " of " + totalSql +
                 " SQL statements executed successfully");
         } finally {
             transactions = savedTransaction;
@@ -456,13 +456,13 @@ public class SQLExec extends JDBCTask {
     /**
      * read in lines and execute them
      */
-    protected void runStatements(Reader reader, PrintStream out) 
+    protected void runStatements(Reader reader, PrintStream out)
         throws SQLException, IOException {
         StringBuffer sql = new StringBuffer();
         String line = "";
- 
+
         BufferedReader in = new BufferedReader(reader);
- 
+
         while ((line = in.readLine()) != null){
             if (!keepformat) {
                 line = line.trim();
@@ -483,13 +483,13 @@ public class SQLExec extends JDBCTask {
                     }
                 }
             }
-            
+
             if (!keepformat) {
                 sql.append(" " + line);
             } else {
                 sql.append("\n" + line);
             }
-            
+
             // SQL defines "--" as a comment to EOL
             // and in Oracle it may contain a hint
             // so we cannot just remove it, instead we must end it
@@ -498,12 +498,12 @@ public class SQLExec extends JDBCTask {
                     sql.append("\n");
                 }
             }
-            if ((delimiterType.equals(DelimiterType.NORMAL) 
-                 && sql.toString().endsWith(delimiter)) 
+            if ((delimiterType.equals(DelimiterType.NORMAL)
+                 && sql.toString().endsWith(delimiter))
                 ||
-                (delimiterType.equals(DelimiterType.ROW) 
+                (delimiterType.equals(DelimiterType.ROW)
                  && line.equals(delimiter))) {
-                execSQL(sql.substring(0, sql.length() - delimiter.length()), 
+                execSQL(sql.substring(0, sql.length() - delimiter.length()),
                         out);
                 sql.replace(0, sql.length(), "");
             }
@@ -513,8 +513,8 @@ public class SQLExec extends JDBCTask {
             execSQL(sql.toString(), out);
         }
     }
- 
-        
+
+
     /**
      * Exec the sql statement.
      */
@@ -523,19 +523,19 @@ public class SQLExec extends JDBCTask {
         if ("".equals(sql.trim())) {
             return;
         }
-        
-        try {  
+
+        try {
             totalSql++;
             log("SQL: " + sql, Project.MSG_VERBOSE);
             if (!statement.execute(sql)) {
-                log(statement.getUpdateCount() + " rows affected", 
+                log(statement.getUpdateCount() + " rows affected",
                     Project.MSG_VERBOSE);
             } else {
                 if (print) {
                     printResults(out);
                 }
             }
-            
+
             SQLWarning warning = conn.getWarnings();
             while (warning != null){
                 log(warning + " sql warning", Project.MSG_VERBOSE);
@@ -551,7 +551,7 @@ public class SQLExec extends JDBCTask {
             log(e.toString(), Project.MSG_ERR);
         }
     }
-    
+
     /**
      * print any results in the statement.
      */
@@ -580,7 +580,7 @@ public class SQLExec extends JDBCTask {
                         if (columnValue != null) {
                             columnValue = columnValue.trim();
                         }
-                         
+
                         if (first) {
                             first = false;
                         } else {
@@ -634,20 +634,20 @@ public class SQLExec extends JDBCTask {
         /**
          *
          */
-        private void runTransaction(PrintStream out) 
+        private void runTransaction(PrintStream out)
             throws IOException, SQLException {
             if (tSqlCommand.length() != 0) {
                 log("Executing commands", Project.MSG_INFO);
                 runStatements(new StringReader(tSqlCommand), out);
             }
-      
+
             if (tSrcFile != null) {
-                log("Executing file: " + tSrcFile.getAbsolutePath(), 
+                log("Executing file: " + tSrcFile.getAbsolutePath(),
                     Project.MSG_INFO);
-                Reader reader = 
+                Reader reader =
                     (encoding == null) ? new FileReader(tSrcFile)
                                        : new InputStreamReader(
-                                             new FileInputStream(tSrcFile), 
+                                             new FileInputStream(tSrcFile),
                                              encoding);
                 try {
                     runStatements(reader, out);

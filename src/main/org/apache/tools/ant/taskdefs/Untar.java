@@ -118,7 +118,7 @@ public class Untar extends Expand {
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
-        throw new BuildException("The " + getTaskName() 
+        throw new BuildException("The " + getTaskName()
                                  + " task doesn't support the encoding"
                                  + " attribute", getLocation());
     }

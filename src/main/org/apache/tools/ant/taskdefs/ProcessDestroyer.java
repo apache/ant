@@ -74,14 +74,14 @@ class ProcessDestroyer
     private Method addShutdownHookMethod;
     private Method removeShutdownHookMethod;
     private ProcessDestroyerImpl destroyProcessThread = null;
-    
+
     // whether or not this ProcessDestroyer has been registered as a
     // shutdown hook
     private boolean added = false;
-    
+
     private class ProcessDestroyerImpl extends Thread{
         private boolean shouldDestroy = true;
-        
+
         public ProcessDestroyerImpl(){
             super("ProcessDestroyer Shutdown Hook");
         }
@@ -90,30 +90,30 @@ class ProcessDestroyer
                 ProcessDestroyer.this.run();
             }
         }
-        
+
         public void setShouldDestroy(boolean shouldDestroy){
             this.shouldDestroy = shouldDestroy;
         }
     }
-    
+
     /**
-     * Constructs a <code>ProcessDestroyer</code> and obtains 
-     * <code>Runtime.addShutdownHook()</code> and 
-     * <code>Runtime.removeShutdownHook()</code> through reflection. The 
-     * ProcessDestroyer manages a list of processes to be destroyed when the 
-     * VM exits. If a process is added when the list is empty, 
-     * this <code>ProcessDestroyer</code> is registered as a shutdown hook. If 
+     * Constructs a <code>ProcessDestroyer</code> and obtains
+     * <code>Runtime.addShutdownHook()</code> and
+     * <code>Runtime.removeShutdownHook()</code> through reflection. The
+     * ProcessDestroyer manages a list of processes to be destroyed when the
+     * VM exits. If a process is added when the list is empty,
+     * this <code>ProcessDestroyer</code> is registered as a shutdown hook. If
      * removing a process results in an empty list, the
      * <code>ProcessDestroyer</code> is removed as a shutdown hook.
      */
     public ProcessDestroyer() {
         try {
-            // check to see if the shutdown hook methods exists 
+            // check to see if the shutdown hook methods exists
             // (support pre-JDK 1.3 VMs)
             Class[] paramTypes = {Thread.class};
             addShutdownHookMethod =
                 Runtime.class.getMethod("addShutdownHook", paramTypes);
-            
+
             removeShutdownHookMethod =
                 Runtime.class.getMethod("removeShutdownHook", paramTypes);
             // wait to add shutdown hook as needed
@@ -121,9 +121,9 @@ class ProcessDestroyer
             // it just won't be added as a shutdown hook... :(
         }
     }
-    
+
     /**
-     * Registers this <code>ProcessDestroyer</code> as a shutdown hook, 
+     * Registers this <code>ProcessDestroyer</code> as a shutdown hook,
      * uses reflection to ensure pre-JDK 1.3 compatibility.
      */
     private void addShutdownHook(){
@@ -140,7 +140,7 @@ class ProcessDestroyer
             }
         }
     }
-    
+
     /**
      * Registers this <code>ProcessDestroyer</code> as a shutdown hook,
      * uses reflection to ensure pre-JDK 1.3 compatibility
@@ -161,7 +161,7 @@ class ProcessDestroyer
                 destroyProcessThread.setShouldDestroy(false);
                 destroyProcessThread.start();
                 // this should return quickly, since Process.destroy()
-                try{ 
+                try{
                     destroyProcessThread.join(20000);
                 }catch(InterruptedException ie){
                     // the thread didn't die in time
@@ -174,27 +174,27 @@ class ProcessDestroyer
             }
         }
     }
-    
+
     /**
-     * Returns whether or not the ProcessDestroyer is registered as 
+     * Returns whether or not the ProcessDestroyer is registered as
      * as shutdown hook
      * @return true if this is currently added as shutdown hook
      */
     public boolean isAddedAsShutdownHook(){
         return added;
     }
-    
+
     /**
      * Returns <code>true</code> if the specified <code>Process</code> was
      * successfully added to the list of processes to destroy upon VM exit.
-     * 
+     *
      * @param   process the process to add
      * @return  <code>true</code> if the specified <code>Process</code> was
      *          successfully added
      */
     public boolean add(Process process) {
         synchronized(processes){
-            // if this list is empty, register the shutdown hook 
+            // if this list is empty, register the shutdown hook
             if(processes.size() == 0){
                 addShutdownHook();
             }

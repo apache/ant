@@ -66,14 +66,14 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * of either '/' or '\'.
  *
  * @author Conor MacNeill
- * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
- */ 
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
+ */
 public class PathTokenizer {
     /**
      * A tokenizer to break the string up based on the ':' or ';' separators.
      */
     private StringTokenizer tokenizer;
-    
+
     /**
      * A String which stores any path components which have been read ahead
      * due to DOS filesystem compensation.
@@ -95,12 +95,12 @@ public class PathTokenizer {
 
     /**
      * Constructs a path tokenizer for the specified path.
-     * 
+     *
      * @param path The path to tokenize. Must not be <code>null</code>.
      */
     public PathTokenizer(String path) {
         if (onNetWare) {
-            // For NetWare, use the boolean=true mode, so we can use delimiter 
+            // For NetWare, use the boolean=true mode, so we can use delimiter
             // information to make a better decision later.
             tokenizer = new StringTokenizer(path, ":;", true);
         } else {
@@ -108,31 +108,31 @@ public class PathTokenizer {
             // enough information to tokenize correctly.
             tokenizer = new StringTokenizer(path, ":;", false);
         }
-        dosStyleFilesystem = File.pathSeparatorChar == ';'; 
+        dosStyleFilesystem = File.pathSeparatorChar == ';';
     }
 
     /**
      * Tests if there are more path elements available from this tokenizer's
-     * path. If this method returns <code>true</code>, then a subsequent call 
+     * path. If this method returns <code>true</code>, then a subsequent call
      * to nextToken will successfully return a token.
-     * 
-     * @return <code>true</code> if and only if there is at least one token 
+     *
+     * @return <code>true</code> if and only if there is at least one token
      * in the string after the current position; <code>false</code> otherwise.
      */
     public boolean hasMoreTokens() {
         if (lookahead != null) {
             return true;
         }
-        
+
         return tokenizer.hasMoreTokens();
     }
-    
+
     /**
      * Returns the next path element from this tokenizer.
-     * 
+     *
      * @return the next path element from this tokenizer.
-     * 
-     * @exception NoSuchElementException if there are no more elements in this 
+     *
+     * @exception NoSuchElementException if there are no more elements in this
      *            tokenizer's path.
      */
     public String nextToken() throws NoSuchElementException {
@@ -142,8 +142,8 @@ public class PathTokenizer {
             lookahead = null;
         } else {
             token = tokenizer.nextToken().trim();
-        }            
-            
+        }
+
         if (!onNetWare) {
             if (token.length() == 1 && Character.isLetter(token.charAt(0))
                                     && dosStyleFilesystem
@@ -153,7 +153,7 @@ public class PathTokenizer {
                 String nextToken = tokenizer.nextToken().trim();
                 if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
                     // we know we are on a DOS style platform and the next path
-                    // starts with a slash or backslash, so we know this is a 
+                    // starts with a slash or backslash, so we know this is a
                     // drive spec
                     token += ":" + nextToken;
                 } else {
@@ -168,15 +168,15 @@ public class PathTokenizer {
                 // ignore ";" and get the next token
                 token = tokenizer.nextToken().trim();
             }
-            
+
             if (tokenizer.hasMoreTokens()) {
                 // this path could be a drive spec, so look at the next token
                 String nextToken = tokenizer.nextToken().trim();
-                
+
                 // make sure we aren't going to get the path separator next
                 if (!nextToken.equals(File.pathSeparator)) {
                     if (nextToken.equals(":")) {
-                        if (!token.startsWith("/") && !token.startsWith("\\")){ 
+                        if (!token.startsWith("/") && !token.startsWith("\\")){
                             // it indeed is a drive spec, get the next bit
                             String oneMore = tokenizer.nextToken().trim();
                             if (!oneMore.equals(File.pathSeparator)) {
@@ -198,4 +198,4 @@ public class PathTokenizer {
         return token;
     }
 }
-          
+

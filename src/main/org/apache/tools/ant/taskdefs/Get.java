@@ -148,7 +148,7 @@ public class Get extends Task {
                 try {
                     Object encoder =
                             Class.forName("sun.misc.BASE64Encoder").newInstance();
-                    encoding = (String) 
+                    encoding = (String)
                             encoder.getClass().getMethod("encode", new Class[] {byte[].class})
                             .invoke(encoder, new Object[] {up.getBytes()});
 

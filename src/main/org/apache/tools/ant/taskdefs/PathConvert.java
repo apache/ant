@@ -237,7 +237,7 @@ public class PathConvert extends Task {
     /**
      * Set targetos to a platform to one of
      * "windows", "unix", "netware", or "os/2".
-     * 
+     *
      * Required unless unless pathsep and/or dirsep are specified.
      *
      * @deprecated use the method taking a TargetOs argument instead

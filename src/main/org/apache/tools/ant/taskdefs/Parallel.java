@@ -66,14 +66,14 @@ import org.apache.tools.ant.util.StringUtils;
  * Executes the contained tasks in separate threads, continuing
  * once all are completed.
  * <p>
- * New behavior allows for the ant script to specify a maximum number of 
+ * New behavior allows for the ant script to specify a maximum number of
  * threads that will be executed in parallel.  One should be very careful about
  * using the <code>waitFor</code> task when specifying <code>threadCount</code>
- * as it can cause deadlocks if the number of threads is too small or if one of 
- * the nested tasks fails to execute completely.  The task selection algorithm 
- * will insure that the tasks listed before a task have started before that 
- * task is started, but it will not insure a successful completion of those 
- * tasks or that those tasks will finish first (i.e. it's a classic race 
+ * as it can cause deadlocks if the number of threads is too small or if one of
+ * the nested tasks fails to execute completely.  The task selection algorithm
+ * will insure that the tasks listed before a task have started before that
+ * task is started, but it will not insure a successful completion of those
+ * tasks or that those tasks will finish first (i.e. it's a classic race
  * condition).
  * </p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
@@ -91,13 +91,13 @@ public class Parallel extends Task
 
     /** Semaphore to notify of completed threads */
     private final Object semaphore = new Object();
-    
+
     /** Total number of threads to run */
     private int numThreads = 0;
-    
+
     /** Total number of threads per processor to run.  */
     private int numThreadsPerProcessor = 0;
-    
+
     /** Interval (in ms) to poll for finished threads. */
     private int pollInterval = 1000; // default is once a second
 
@@ -108,28 +108,28 @@ public class Parallel extends Task
     public void addTask(Task nestedTask) {
         nestedTasks.addElement(nestedTask);
     }
-    
-    /** 
-     * Dynamically generates the number of threads to execute based on the 
-     * number of available processors (via 
-     * <code>java.lang.Runtime.availableProcessors()</code>). Requires a J2SE 
-     * 1.4 VM, and it will overwrite the value set in threadCount.  
-     * If used in a 1.1, 1.2, or 1.3 VM then the task will defer to 
+
+    /**
+     * Dynamically generates the number of threads to execute based on the
+     * number of available processors (via
+     * <code>java.lang.Runtime.availableProcessors()</code>). Requires a J2SE
+     * 1.4 VM, and it will overwrite the value set in threadCount.
+     * If used in a 1.1, 1.2, or 1.3 VM then the task will defer to
      * <code>threadCount</code>.; optional
-     * @param numThreadsPerProcessor Number of threads to create per available 
+     * @param numThreadsPerProcessor Number of threads to create per available
      *        processor.
      *
      */
     public void setThreadsPerProcessor(int numThreadsPerProcessor) {
         this.numThreadsPerProcessor = numThreadsPerProcessor;
     }
-    
-    /** 
-     * Statically determine the maximum number of tasks to execute 
-     * simultaneously.  If there are less tasks than threads then all will be 
-     * executed at once, if there are more then only <code>threadCount</code> 
-     * tasks will be executed at one time.  If <code>threadsPerProcessor</code> 
-     * is set and the JVM is at least a 1.4 VM then this value is 
+
+    /**
+     * Statically determine the maximum number of tasks to execute
+     * simultaneously.  If there are less tasks than threads then all will be
+     * executed at once, if there are more then only <code>threadCount</code>
+     * tasks will be executed at one time.  If <code>threadsPerProcessor</code>
+     * is set and the JVM is at least a 1.4 VM then this value is
      * ignored.; optional
      *
      * @param numThreads total number of therads.
@@ -139,8 +139,8 @@ public class Parallel extends Task
         this.numThreads = numThreads;
     }
 
-    /** 
-     * Interval to poll for completed threads when threadCount or 
+    /**
+     * Interval to poll for completed threads when threadCount or
      * threadsPerProcessor is specified.  Integer in milliseconds.; optional
      *
      * @param pollInterval New value of property pollInterval.
@@ -148,7 +148,7 @@ public class Parallel extends Task
     public void setPollInterval(int pollInterval) {
         this.pollInterval = pollInterval;
     }
-    
+
     /**
      * Execute the parallel tasks
      *
@@ -161,7 +161,7 @@ public class Parallel extends Task
         }
         spinThreads();
     }
-    
+
     /**
      * Determine the number of threads based on the number of processors
      */
@@ -173,7 +173,7 @@ public class Parallel extends Task
             }
         }
     }
-        
+
     /**
      * Spin up required threads with a maximum number active at any given time.
      *
@@ -184,11 +184,11 @@ public class Parallel extends Task
         Thread[] threads = new Thread[numTasks];
         TaskRunnable[] runnables = new TaskRunnable[numTasks];
         int threadNumber = 0;
-        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); 
+        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();
              threadNumber++) {
             Task nestedTask = (Task) e.nextElement();
             ThreadGroup group = new ThreadGroup("parallel");
-            TaskRunnable taskRunnable 
+            TaskRunnable taskRunnable
                 = new TaskRunnable(threadNumber, nestedTask);
             runnables[threadNumber] = taskRunnable;
             threads[threadNumber] = new Thread(group, taskRunnable);
@@ -197,7 +197,7 @@ public class Parallel extends Task
         final int maxRunning = numThreads;
         Thread[] running = new Thread[maxRunning];
         threadNumber = 0;
-        
+
         // now run them in limited numbers...
         outer:
         while (threadNumber < numTasks) {
@@ -206,7 +206,7 @@ public class Parallel extends Task
                     if (running[i] == null || !running[i].isAlive()) {
                         running[i] = threads[threadNumber++];
                         running[i].start();
-                        // countinue on outer while loop in case we 
+                        // countinue on outer while loop in case we
                         // used our last thread
                         continue outer;
                     }
@@ -221,8 +221,8 @@ public class Parallel extends Task
                 }
             }
         }
-            
-        // now join to all the threads 
+
+        // now join to all the threads
         for (int i = 0; i < maxRunning; ++i) {
             try {
                 if (running[i] != null) {
@@ -232,7 +232,7 @@ public class Parallel extends Task
                 // who would interrupt me at a time like this?
             }
         }
-        
+
         // now did any of the threads throw an exception
         StringBuffer exceptionMessage = new StringBuffer();
         int numExceptions = 0;
@@ -245,7 +245,7 @@ public class Parallel extends Task
                 if (firstException == null) {
                     firstException = t;
                 }
-                if (t instanceof BuildException && 
+                if (t instanceof BuildException &&
                         firstLocation == Location.UNKNOWN_LOCATION) {
                     firstLocation = ((BuildException) t).getLocation();
                 }
@@ -253,7 +253,7 @@ public class Parallel extends Task
                 exceptionMessage.append(t.getMessage());
             }
         }
-        
+
         if (numExceptions == 1) {
             if (firstException instanceof BuildException) {
                 throw (BuildException) firstException;
@@ -261,11 +261,11 @@ public class Parallel extends Task
                 throw new BuildException(firstException);
             }
         } else if (numExceptions > 1) {
-            throw new BuildException(exceptionMessage.toString(), 
+            throw new BuildException(exceptionMessage.toString(),
                                      firstLocation);
         }
     }
-     
+
     /**
      * Determine the number of processors. Only effective on later VMs
      *
@@ -328,5 +328,5 @@ public class Parallel extends Task
             return exception;
         }
     }
-    
+
 }

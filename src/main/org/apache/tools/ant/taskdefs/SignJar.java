@@ -245,7 +245,7 @@ public class SignJar extends Task {
                 log("nested filesets will be ignored if the jar attribute has"
                     + " been specified.", Project.MSG_WARN);
             }
-            
+
             doOneJar(jar, signedjar);
             return;
         } else {

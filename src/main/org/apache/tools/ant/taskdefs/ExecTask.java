@@ -79,7 +79,7 @@ import org.apache.tools.ant.util.FileUtils;
 public class ExecTask extends Task {
 
     private String os;
-    
+
     private File dir;
     protected boolean failOnError = false;
     protected boolean newEnvironment = false;
@@ -92,7 +92,7 @@ public class ExecTask extends Task {
     private boolean resolveExecutable = false;
 
     private Redirector redirector = new Redirector(this);
-    
+
     /**
      * Controls whether the VM (1.3 and above) is used to execute the
      * command
@@ -152,7 +152,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * File the output of the process is redirected to. If error is not 
+     * File the output of the process is redirected to. If error is not
      * redirected, it too will appear in the output
      */
     public void setOutput(File out) {
@@ -174,7 +174,7 @@ public class ExecTask extends Task {
     public void setInputString(String inputString) {
         redirector.setInputString(inputString);
     }
-    
+
     /**
      * Controls whether error output of exec is logged. This is only useful
      * when output is being redirected and error output is desired in the
@@ -183,7 +183,7 @@ public class ExecTask extends Task {
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
     }
-    
+
     /**
      * File the error stream of the process is redirected to.
      *
@@ -231,7 +231,7 @@ public class ExecTask extends Task {
     public void setResolveExecutable(boolean resolveExecutable) {
         this.resolveExecutable = resolveExecutable;
     }
-    
+
     /**
      * Add an environment variable to the launched process.
      */
@@ -286,10 +286,10 @@ public class ExecTask extends Task {
         redirector.setAppend(append);
     }
 
-    
-    
+
+
     /**
-     * Attempt to figure out where the executable is so that we can feed 
+     * Attempt to figure out where the executable is so that we can feed
      * the full path - first try basedir, then the exec dir and then
      * fallback to the straight executable name (i.e. on ther path)
      *
@@ -299,13 +299,13 @@ public class ExecTask extends Task {
         if (!resolveExecutable) {
             return executable;
         }
-        
+
         // try to find the executable
         File executableFile = getProject().resolveFile(executable);
         if (executableFile.exists()) {
             return executableFile.getAbsolutePath();
         }
-        
+
         // now try to resolve against the dir if given
         if (dir != null) {
             FileUtils fileUtils = FileUtils.newFileUtils();
@@ -316,9 +316,9 @@ public class ExecTask extends Task {
         }
 
         // couldn't find it - must be on path
-        return executable;            
+        return executable;
     }
-    
+
     /**
      * Do the work.
      */
@@ -372,7 +372,7 @@ public class ExecTask extends Task {
     /**
      * If true, launch new process with VM, otherwise use the OS's shell.
      */
-    public void setVMLauncher(boolean vmLauncher) {    
+    public void setVMLauncher(boolean vmLauncher) {
         this.vmLauncher = vmLauncher;
     }
 
@@ -415,7 +415,7 @@ public class ExecTask extends Task {
         maybeSetResultPropertyValue(returnCode);
         if (returnCode != 0) {
             if (failOnError) {
-                throw new BuildException(getTaskType() + " returned: " 
+                throw new BuildException(getTaskType() + " returned: "
                     + returnCode, getLocation());
             } else {
                 log("Result: " + returnCode, Project.MSG_ERR);

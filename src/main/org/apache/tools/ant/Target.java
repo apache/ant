@@ -86,11 +86,11 @@ public class Target implements TaskContainer {
     /** Sole constructor. */
     public Target() {
     }
-    
-    /** 
-     * Sets the project this target belongs to. 
-     * 
-     * @param project The project this target belongs to. 
+
+    /**
+     * Sets the project this target belongs to.
+     *
+     * @param project The project this target belongs to.
      *                Must not be <code>null</code>.
      */
     public void setProject(Project project) {
@@ -99,8 +99,8 @@ public class Target implements TaskContainer {
 
     /**
      * Returns the project this target belongs to.
-     * 
-     * @return The project this target belongs to, or <code>null</code> if 
+     *
+     * @return The project this target belongs to, or <code>null</code> if
      *         the project has not been set yet.
      */
     public Project getProject() {
@@ -110,7 +110,7 @@ public class Target implements TaskContainer {
     /**
      * Sets the list of targets this target is dependent on.
      * The targets themselves are not resolved at this time.
-     * 
+     *
      * @param depS A comma-separated list of targets this target
      *             depends on. Must not be <code>null</code>.
      */
@@ -124,19 +124,19 @@ public class Target implements TaskContainer {
                 // Make sure the dependency is not empty string
                 if (token.equals("") || token.equals(",")) {
                     throw new BuildException("Syntax Error: Depend "
-                        + "attribute for target \"" + getName() 
+                        + "attribute for target \"" + getName()
                         + "\" has an empty string for dependency.");
                 }
 
                 addDependency(token);
-                
+
                 // Make sure that depends attribute does not
                 // end in a ,
                 if (tok.hasMoreTokens()) {
                     token = tok.nextToken();
                     if (!tok.hasMoreTokens() || !token.equals(",")) {
-                        throw new BuildException("Syntax Error: Depend " 
-                            + "attribute for target \"" + getName() 
+                        throw new BuildException("Syntax Error: Depend "
+                            + "attribute for target \"" + getName()
                             + "\" ends with a , character");
                     }
                 }
@@ -146,7 +146,7 @@ public class Target implements TaskContainer {
 
     /**
      * Sets the name of this target.
-     * 
+     *
      * @param name The name of this target. Should not be <code>null</code>.
      */
     public void setName(String name) {
@@ -155,7 +155,7 @@ public class Target implements TaskContainer {
 
     /**
      * Returns the name of this target.
-     * 
+     *
      * @return the name of this target, or <code>null</code> if the
      *         name has not been set yet.
      */
@@ -165,7 +165,7 @@ public class Target implements TaskContainer {
 
     /**
      * Adds a task to this target.
-     * 
+     *
      * @param task The task to be added. Must not be <code>null</code>.
      */
     public void addTask(Task task) {
@@ -174,17 +174,17 @@ public class Target implements TaskContainer {
 
     /**
      * Adds the wrapper for a data type element to this target.
-     * 
-     * @param r The wrapper for the data type element to be added. 
+     *
+     * @param r The wrapper for the data type element to be added.
      *          Must not be <code>null</code>.
      */
     public void addDataType(RuntimeConfigurable r) {
         children.add(r);
     }
 
-    /** 
+    /**
      * Returns the current set of tasks to be executed by this target.
-     * 
+     *
      * @return an array of the tasks currently within this target
      */
     public Task[] getTasks() {
@@ -196,13 +196,13 @@ public class Target implements TaskContainer {
                 tasks.add(o);
             }
         }
-        
+
         return (Task[])tasks.toArray(new Task[tasks.size()]);
     }
 
     /**
      * Adds a dependency to this target.
-     * 
+     *
      * @param dependency The name of a target this target is dependent on.
      *                   Must not be <code>null</code>.
      */
@@ -215,7 +215,7 @@ public class Target implements TaskContainer {
 
     /**
      * Returns an enumeration of the dependencies of this target.
-     * 
+     *
      * @return an enumeration of the dependencies of this target
      */
     public Enumeration getDependencies() {
@@ -234,7 +234,7 @@ public class Target implements TaskContainer {
      * property <code>foo</code> has value <code>bar</code>, setting
      * the "if" condition to <code>${foo}_x</code> will mean that the
      * task will only execute if property <code>bar_x</code> is set.
-     * 
+     *
      * @param property The property condition to test on execution.
      *                 May be <code>null</code>, in which case
      *                 no "if" test is performed.
@@ -242,7 +242,7 @@ public class Target implements TaskContainer {
     public void setIf(String property) {
         this.ifCondition = (property == null) ? "" : property;
     }
- 
+
     /**
      * Sets the "unless" condition to test on execution. This is the
      * name of a property to test for existence - if the property
@@ -251,7 +251,7 @@ public class Target implements TaskContainer {
      * property <code>foo</code> has value <code>bar</code>, setting
      * the "unless" condition to <code>${foo}_x</code> will mean that the
      * task will only execute if property <code>bar_x</code> isn't set.
-     * 
+     *
      * @param property The property condition to test on execution.
      *                 May be <code>null</code>, in which case
      *                 no "unless" test is performed.
@@ -262,9 +262,9 @@ public class Target implements TaskContainer {
 
     /**
      * Sets the description of this target.
-     * 
-     * @param description The description for this target. 
-     *                    May be <code>null</code>, indicating that no 
+     *
+     * @param description The description for this target.
+     *                    May be <code>null</code>, indicating that no
      *                    description is available.
      */
     public void setDescription(String description) {
@@ -273,7 +273,7 @@ public class Target implements TaskContainer {
 
     /**
      * Returns the description of this target.
-     * 
+     *
      * @return the description of this target, or <code>null</code> if no
      *         description is available.
      */
@@ -283,7 +283,7 @@ public class Target implements TaskContainer {
 
     /**
      * Returns the name of this target.
-     * 
+     *
      * @return the name of this target, or <code>null</code> if the
      *         name has not been set yet.
      */
@@ -297,12 +297,12 @@ public class Target implements TaskContainer {
      * method, as it does no checking of its own. If either the "if"
      * or "unless" test prevents this target from being executed, a verbose
      * message is logged giving the reason. It is recommended that clients
-     * of this class call performTasks rather than this method so that 
+     * of this class call performTasks rather than this method so that
      * appropriate build events are fired.
-     * 
+     *
      * @exception BuildException if any of the tasks fail or if a data type
      *                           configuration fails.
-     * 
+     *
      * @see #performTasks()
      * @see #setIf(String)
      * @see #setUnless(String)
@@ -321,21 +321,21 @@ public class Target implements TaskContainer {
                 }
             }
         } else if (!testIfCondition()) {
-            project.log(this, "Skipped because property '" 
-                        + project.replaceProperties(this.ifCondition) 
+            project.log(this, "Skipped because property '"
+                        + project.replaceProperties(this.ifCondition)
                         + "' not set.", Project.MSG_VERBOSE);
         } else {
-            project.log(this, "Skipped because property '" 
-                        + project.replaceProperties(this.unlessCondition) 
+            project.log(this, "Skipped because property '"
+                        + project.replaceProperties(this.unlessCondition)
                         + "' set.", Project.MSG_VERBOSE);
         }
     }
 
     /**
      * Performs the tasks within this target (if the conditions are met),
-     * firing target started/target finished messages around a call to 
+     * firing target started/target finished messages around a call to
      * execute.
-     * 
+     *
      * @see #execute()
      */
     public final void performTasks() {
@@ -348,11 +348,11 @@ public class Target implements TaskContainer {
             throw exc;
         }
     }
-    
+
     /**
      * Replaces all occurrences of the given task in the list
      * of children with the replacement data type wrapper.
-     * 
+     *
      * @param el The task to replace.
      *           Must not be <code>null</code>.
      * @param o  The data type wrapper to replace <code>el</code> with.
@@ -367,7 +367,7 @@ public class Target implements TaskContainer {
     /**
      * Replaces all occurrences of the given task in the list
      * of children with the replacement task.
-     * 
+     *
      * @param el The task to replace.
      *           Must not be <code>null</code>.
      * @param o  The task to replace <code>el</code> with.
@@ -381,7 +381,7 @@ public class Target implements TaskContainer {
 
     /**
      * Tests whether or not the "if" condition is satisfied.
-     * 
+     *
      * @return whether or not the "if" condition is satisfied. If no
      *         condition (or an empty condition) has been set,
      *         <code>true</code> is returned.
@@ -392,14 +392,14 @@ public class Target implements TaskContainer {
         if ("".equals(ifCondition)) {
             return true;
         }
-        
+
         String test = project.replaceProperties(ifCondition);
         return project.getProperty(test) != null;
     }
 
     /**
      * Tests whether or not the "unless" condition is satisfied.
-     * 
+     *
      * @return whether or not the "unless" condition is satisfied. If no
      *         condition (or an empty condition) has been set,
      *         <code>true</code> is returned.

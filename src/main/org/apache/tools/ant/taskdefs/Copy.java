@@ -378,7 +378,7 @@ public class Copy extends Task {
                 try {
                     ds = fs.getDirectoryScanner(getProject());
                 } catch (BuildException e) {
-                    if (failonerror 
+                    if (failonerror
                         || !e.getMessage().endsWith(" not found.")) {
                         throw e;
                     } else {
@@ -386,7 +386,7 @@ public class Copy extends Task {
                         continue;
                     }
                 }
-                
+
                 File fromDir = fs.getDir(getProject());
 
                 String[] srcFiles = ds.getIncludedFiles();
@@ -440,20 +440,20 @@ public class Copy extends Task {
             throw new BuildException("Specify at least one source "
                                      + "- a file or a fileset.");
         }
-        
+
         if (destFile != null && destDir != null) {
             throw new BuildException("Only one of tofile and todir "
                                      + "may be set.");
         }
-        
+
         if (destFile == null && destDir == null) {
             throw new BuildException("One of tofile or todir must be set.");
         }
-        
+
         if (file != null && file.exists() && file.isDirectory()) {
             throw new BuildException("Use a fileset to copy directories.");
         }
-        
+
         if (destFile != null && filesets.size() > 0) {
             if (filesets.size() > 1) {
                 throw new BuildException(

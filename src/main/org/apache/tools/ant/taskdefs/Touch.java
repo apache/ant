@@ -77,7 +77,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <p>Note: Setting the modification time of files is not supported in
  * JDK 1.1.</p>
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
  * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
  *
@@ -87,7 +87,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 public class Touch extends Task {
 
-    private File file;              
+    private File file;
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
@@ -116,7 +116,7 @@ public class Touch extends Task {
 
     /**
      * the new modification time of the file
-     * in the format &quot;MM/DD/YYYY HH:MM AM <i>or</i> PM&quot; 
+     * in the format &quot;MM/DD/YYYY HH:MM AM <i>or</i> PM&quot;
      * or &quot;MM/DD/YYYY HH:MM:SS AM <i>or</i> PM&quot;.
      * Optional, default=now
      */
@@ -138,7 +138,7 @@ public class Touch extends Task {
         long savedMillis = millis;
 
         if (file == null && filesets.size() == 0) {
-            throw 
+            throw
                 new BuildException("Specify at least one source - a file or "
                                    + "a fileset.");
         }
@@ -159,21 +159,21 @@ public class Touch extends Task {
                  * that fails with MEDIUM - throw an exception if both
                  * fail.
                  */
-                DateFormat df = 
+                DateFormat df =
                     DateFormat.getDateTimeInstance(DateFormat.SHORT,
                                                    DateFormat.SHORT,
                                                    Locale.US);
                 try {
                     setMillis(df.parse(dateTime).getTime());
                 } catch (ParseException pe) {
-                    df = 
+                    df =
                         DateFormat.getDateTimeInstance(DateFormat.SHORT,
                                                        DateFormat.MEDIUM,
                                                        Locale.US);
                     try {
                         setMillis(df.parse(dateTime).getTime());
                     } catch (ParseException pe2) {
-                        throw new BuildException(pe2.getMessage(), pe, 
+                        throw new BuildException(pe2.getMessage(), pe,
                                                  getLocation());
                     }
                 }
@@ -204,18 +204,18 @@ public class Touch extends Task {
                 try {
                     fileUtils.createNewFile(file);
                 } catch (IOException ioe) {
-                    throw new BuildException("Could not create " + file, ioe, 
+                    throw new BuildException("Could not create " + file, ioe,
                                              getLocation());
                 }
             }
         }
 
-        if (millis >= 0 && 
+        if (millis >= 0 &&
             JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             log("modification time of files cannot be set in JDK 1.1",
                 Project.MSG_WARN);
             return;
-        } 
+        }
 
         boolean resetMillis = false;
         if (millis < 0) {
@@ -239,7 +239,7 @@ public class Touch extends Task {
             for (int j = 0; j < srcFiles.length ; j++) {
                 touch(new File(fromDir, srcFiles[j]));
             }
-         
+
             for (int j = 0; j < srcDirs.length ; j++) {
                 touch(new File(fromDir, srcDirs[j]));
             }

@@ -67,7 +67,7 @@ import java.util.Vector;
  * Task to import another build file into the current project.
  * <p>
  * It must be 'top level'. On execution it will read another Ant file
- * into the same Project. 
+ * into the same Project.
  * <p>
  * <b>Important</b>: there is one limitation related to the top level
  * elements in the imported files. The current implementation will
@@ -77,7 +77,7 @@ import java.util.Vector;
  * <b>Important</b>: we have not finalized how relative file references
  * will be resolved in deep/complex build hierarchies -such as what happens
  * when an imported file imports another file. Use absolute references for
- * enhanced build file stability, especially in the imported files. 
+ * enhanced build file stability, especially in the imported files.
  *
  * Examples
  * <pre>
@@ -109,7 +109,7 @@ public class ImportTask extends Task {
         // for relative paths.
         this.file=file;
     }
-    
+
     /**
      *  This relies on the task order model.
      *

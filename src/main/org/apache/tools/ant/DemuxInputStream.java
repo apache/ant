@@ -59,7 +59,7 @@ import java.io.InputStream;
 
 /**
  *
- * Passes input requests tot he project objetc for demuxing into 
+ * Passes input requests tot he project objetc for demuxing into
  * individual tasks and threads.
  *
  * @since Ant 1.6
@@ -71,7 +71,7 @@ public class DemuxInputStream extends InputStream {
      * The project to from which to get input.
      */
     private Project project;
-    
+
     /**
      * Create a DemuxInputStream for the given project
      *
@@ -91,7 +91,7 @@ public class DemuxInputStream extends InputStream {
         }
         return buffer[0];
     }
-    
+
 
     /**
      * @see InputStream.read(byte[], int, int)

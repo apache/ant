@@ -152,7 +152,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
-public class DirectoryScanner 
+public class DirectoryScanner
        implements FileScanner, SelectorScanner, ResourceFactory {
 
 
@@ -174,7 +174,7 @@ public class DirectoryScanner
         "**/.#*",
         "**/%*%",
         "**/._*",
-        
+
         // CVS
         "**/CVS",
         "**/CVS/**",
@@ -200,7 +200,7 @@ public class DirectoryScanner
      *
      * @see #addDefaultExcludes()
      */
-    private static Vector defaultExcludes = new Vector();  
+    private static Vector defaultExcludes = new Vector();
 
     static {
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
@@ -405,8 +405,8 @@ public class DirectoryScanner
     /**
      * Get the list of patterns that should be excluded by default.
      *
-     * @return An array of <code>String</code> based on the current 
-     *         contents of the <code>defaultExcludes</code> 
+     * @return An array of <code>String</code> based on the current
+     *         contents of the <code>defaultExcludes</code>
      *         <code>Vector</code>.
      *
      * @since Ant 1.6
@@ -417,17 +417,17 @@ public class DirectoryScanner
     }
 
     /**
-     * Add a pattern to the default excludes unless it is already a 
+     * Add a pattern to the default excludes unless it is already a
      * default exclude.
      *
      * @param s   A string to add as an exclude pattern.
-     * @return    <code>true</code> if the string was added 
+     * @return    <code>true</code> if the string was added
      *            <code>false</code> if it already
      *            existed.
      *
      * @since Ant 1.6
      */
-    public static boolean addDefaultExclude(String s){
+    public static boolean addDefaultExclude(String s) {
         if (defaultExcludes.indexOf(s) == -1) {
             defaultExcludes.add(s);
             return true;
@@ -439,7 +439,7 @@ public class DirectoryScanner
      * Remove a string if it is a default exclude.
      *
      * @param s   The string to attempt to remove.
-     * @return    <code>true</code> if <code>s</code> was a default 
+     * @return    <code>true</code> if <code>s</code> was a default
      *            exclude (and thus was removed),
      *            <code>false</code> if <code>s</code> was not
      *            in the default excludes list to begin with
@@ -859,7 +859,7 @@ public class DirectoryScanner
     protected boolean isSelected(String name, File file) {
         if (selectors != null) {
             for (int i = 0; i < selectors.length; i++) {
-                if ((selectors[i].isSelected(basedir, name, file)) == false) {
+                if (!selectors[i].isSelected(basedir, name, file)) {
                     return false;
                 }
             }
@@ -1013,7 +1013,7 @@ public class DirectoryScanner
         }
         String[] defaultExcludesTemp = getDefaultExcludes();
         for (int i = 0; i < defaultExcludesTemp.length; i++) {
-            newExcludes[i + excludesLength] = 
+            newExcludes[i + excludesLength] =
                 defaultExcludesTemp[i].replace('/', File.separatorChar)
                 .replace('\\', File.separatorChar);
         }
@@ -1029,7 +1029,7 @@ public class DirectoryScanner
      */
     public Resource getResource(String name) {
         File f = fileUtils.resolveFile(basedir, name);
-        return new Resource(name, f.exists(), f.lastModified(), 
+        return new Resource(name, f.exists(), f.lastModified(),
                             f.isDirectory());
     }
 

@@ -61,14 +61,14 @@ package org.apache.tools.ant;
  * @since Ant 1.5
  */
 public interface DynamicConfigurator {
-    
+
     /**
      * Set a named attribute to the given value
-     * 
+     *
      * @param name the name of the attribute
      * @param value the new value of the attribute
      * @throws BuildException when any error occurs
-     */    
+     */
     void setDynamicAttribute(String name, String value)
             throws BuildException;
 
@@ -78,6 +78,6 @@ public interface DynamicConfigurator {
      * @param name the element nbame
      * @throws BuildException when any error occurs
      * @return the element created
-     */    
+     */
     Object createDynamicElement(String name) throws BuildException;
 }

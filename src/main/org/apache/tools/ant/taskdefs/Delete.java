@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,18 +80,18 @@ import org.apache.tools.ant.types.selectors.FileSelector;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
- * The original delete task would delete a file, or a set of files 
- * using the include/exclude syntax.  The deltree task would delete a 
+ * The original delete task would delete a file, or a set of files
+ * using the include/exclude syntax.  The deltree task would delete a
  * directory tree.  This task combines the functionality of these two
  * originally distinct tasks.
  * <p>Currently Delete extends MatchingTask.  This is intend <i>only</i>
  * to provide backwards compatibility for a release.  The future position
  * is to use nested filesets exclusively.</p>
- * 
- * @author Stefano Mazzocchi 
+ *
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Tom Dimock <a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>
- * @author Glenn McAllister 
+ * @author Glenn McAllister
  *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
  *
@@ -197,7 +197,7 @@ public class Delete extends MatchingTask {
         usedMatchingTask = true;
         return super.createIncludesFile();
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -213,7 +213,7 @@ public class Delete extends MatchingTask {
         usedMatchingTask = true;
         return super.createExcludesFile();
     }
-    
+
     /**
      * add a set of patterns
      */
@@ -410,7 +410,7 @@ public class Delete extends MatchingTask {
         usedMatchingTask = true;
         super.addDepend(selector);
     }
-    
+
     /**
      * add a regular expression selector entry on the selector list
      */
@@ -447,38 +447,38 @@ public class Delete extends MatchingTask {
             throw new BuildException("quiet and failonerror cannot both be "
                                      + "set to true", getLocation());
         }
-        
+
 
         // delete the single file
         if (file != null) {
             if (file.exists()) {
                 if (file.isDirectory()) {
-                    log("Directory " + file.getAbsolutePath() 
+                    log("Directory " + file.getAbsolutePath()
                         + " cannot be removed using the file attribute.  "
                         + "Use dir instead.");
                 } else {
                     log("Deleting: " + file.getAbsolutePath());
 
                     if (!file.delete()) {
-                        String message = "Unable to delete file " 
+                        String message = "Unable to delete file "
                             + file.getAbsolutePath();
                         if (failonerror) {
                             throw new BuildException(message);
-                        } else { 
-                            log(message, quiet ? Project.MSG_VERBOSE 
+                        } else {
+                            log(message, quiet ? Project.MSG_VERBOSE
                                                : Project.MSG_WARN);
                         }
                     }
                 }
             } else {
-                log("Could not find file " + file.getAbsolutePath() 
-                    + " to delete.", 
+                log("Could not find file " + file.getAbsolutePath()
+                    + " to delete.",
                     Project.MSG_VERBOSE);
             }
         }
 
         // delete the directory
-        if (dir != null && dir.exists() && dir.isDirectory() && 
+        if (dir != null && dir.exists() && dir.isDirectory() &&
             !usedMatchingTask) {
             /*
                If verbosity is MSG_VERBOSE, that mean we are doing
@@ -506,7 +506,7 @@ public class Delete extends MatchingTask {
                 if (failonerror) {
                     throw be;
                 } else {
-                    log(be.getMessage(), 
+                    log(be.getMessage(),
                         quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
@@ -524,7 +524,7 @@ public class Delete extends MatchingTask {
                 if (failonerror) {
                     throw be;
                 } else {
-                    log(be.getMessage(), 
+                    log(be.getMessage(),
                         quiet ? Project.MSG_VERBOSE : Project.MSG_WARN);
                 }
             }
@@ -548,7 +548,7 @@ public class Delete extends MatchingTask {
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!f.delete()) {
-                    String message = "Unable to delete file " 
+                    String message = "Unable to delete file "
                         + f.getAbsolutePath();
                     if (failonerror) {
                         throw new BuildException(message);
@@ -561,7 +561,7 @@ public class Delete extends MatchingTask {
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-            String message = "Unable to delete directory " 
+            String message = "Unable to delete directory "
                 + dir.getAbsolutePath();
             if (failonerror) {
                 throw new BuildException(message);
@@ -581,13 +581,13 @@ public class Delete extends MatchingTask {
      */
     protected void removeFiles(File d, String[] files, String[] dirs) {
         if (files.length > 0) {
-            log("Deleting " + files.length + " files from " 
+            log("Deleting " + files.length + " files from "
                 + d.getAbsolutePath());
             for (int j = 0; j < files.length; j++) {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!f.delete()) {
-                    String message = "Unable to delete file " 
+                    String message = "Unable to delete file "
                         + f.getAbsolutePath();
                     if (failonerror) {
                         throw new BuildException(message);

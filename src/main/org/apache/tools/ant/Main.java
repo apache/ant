@@ -112,7 +112,7 @@ public class Main implements AntMain {
 
     /** Indicates whether this build is to support interactive input */
     private boolean allowInput = true;
-    
+
     /**
      * The Ant logger class. There may be only one logger. It will have
      * the right to use the 'out' PrintStream. The class must implements the
@@ -180,7 +180,7 @@ public class Main implements AntMain {
         Main m = new Main();
         m.startAnt(args, additionalUserProperties, coreLoader);
     }
-    
+
     /**
      * Start Ant
      * @param args command line args
@@ -189,7 +189,7 @@ public class Main implements AntMain {
      * @param coreLoader - not used
      *
      * @since Ant 1.6
-     */     
+     */
     public void startAnt(String[] args, Properties additionalUserProperties,
                          ClassLoader coreLoader) {
 
@@ -270,7 +270,7 @@ public class Main implements AntMain {
      */
     public Main() {
     }
-    
+
     /**
      * Sole constructor, which parses and deals with command line
      * arguments.
@@ -283,7 +283,7 @@ public class Main implements AntMain {
     protected Main(String[] args) throws BuildException {
         processArgs(args);
     }
-    
+
     /**
      * Process command line arguments
      *
@@ -610,7 +610,7 @@ public class Main implements AntMain {
                 //System.setSecurityManager(new NoExitSecurityManager());
             }
             try {
-                if (allowInput) { 
+                if (allowInput) {
                     project.setDefaultInputStream(System.in);
                 }
                 System.setIn(new DemuxInputStream(project));

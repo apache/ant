@@ -111,7 +111,7 @@ public class Concat extends Task {
     private File destinationFile = null;
 
     /**
-     * Whether or not the stream should be appended if the destination file 
+     * Whether or not the stream should be appended if the destination file
      * exists.
      * Defaults to <code>false</code>.
      */
@@ -311,11 +311,11 @@ public class Concat extends Task {
     public void setWriter(Writer outputWriter) {
         this.outputWriter = outputWriter;
     }
-    
+
     /**
      * This method performs the concatenation.
      */
-    public void execute() 
+    public void execute()
         throws BuildException {
 
         // treat empty nested text as no text
@@ -325,12 +325,12 @@ public class Concat extends Task {
             throw new BuildException(
                 "Cannot specify both a destination file and an output writer");
         }
-        
+
         // Sanity check our inputs.
         if (sources.size() == 0 && textBuffer == null) {
             // Nothing to concatenate!
-            throw new BuildException("At least one file " + 
-                                     "must be provided, or " + 
+            throw new BuildException("At least one file " +
+                                     "must be provided, or " +
                                      "some text.");
         }
 
@@ -338,7 +338,7 @@ public class Concat extends Task {
         // using GNU 'cat' with file arguments -- stdin is simply
         // ignored.
         if (sources.size() > 0 && textBuffer != null) {
-            throw new BuildException("Cannot include inline text " + 
+            throw new BuildException("Cannot include inline text " +
                                      "when using filesets.");
         }
 
@@ -382,9 +382,9 @@ public class Concat extends Task {
 
         // Do nothing if all the sources are not present
         // And textBuffer is null
-        if (textBuffer == null && sourceFiles.size() == 0 
+        if (textBuffer == null && sourceFiles.size() == 0
             && header == null && footer == null) {
-            log("No existing files and no nested text, doing nothing", 
+            log("No existing files and no nested text, doing nothing",
                 Project.MSG_INFO);
             return;
         }
@@ -416,16 +416,16 @@ public class Concat extends Task {
                 log("File " + file + " does not exist.", Project.MSG_ERR);
                 continue;
             }
-            if (destinationFile != null 
+            if (destinationFile != null
                 && fileUtils.fileNameEquals(destinationFile, file)) {
-                throw new BuildException("Input file \"" 
+                throw new BuildException("Input file \""
                                          + file + "\" "
                                          + "is the same as the output file.");
             }
             sourceFiles.addElement(file);
         }
     }
-    
+
     /** perform the concatenation */
     private void cat() {
         OutputStream os = null;
@@ -479,7 +479,7 @@ public class Concat extends Task {
             } else {
                 reader =  new MultiReader();
             }
-            
+
             concatenate(buffer, writer, reader);
 
             if (footer != null) {
@@ -521,7 +521,7 @@ public class Concat extends Task {
             helper.setProject(getProject());
             in = new BufferedReader(helper.getAssembledReader());
         }
-        
+
         while (true) {
             int nRead = in.read(buffer, 0, buffer.length);
             if (nRead == -1) {
@@ -529,7 +529,7 @@ public class Concat extends Task {
             }
             writer.write(buffer, 0, nRead);
         }
-        
+
         writer.flush();
     }
 
@@ -567,7 +567,7 @@ public class Concat extends Task {
         public void setFiltering(boolean filtering) {
             this.filtering = filtering;
         }
-        
+
         /** return the filtering attribute */
         private boolean getFiltering() {
             return filtering;
@@ -576,7 +576,7 @@ public class Concat extends Task {
         public void setEncoding(String encoding) {
             this.encoding = encoding;
         }
-        
+
         /**
          * set the text using a file
          * @param file the file to use
@@ -681,7 +681,7 @@ public class Concat extends Task {
         private int    lastPos = 0;
         private char[] lastChars = new char[eolString.length()];
         private boolean needAddSeparator = false;
-        
+
         private Reader getReader() throws IOException {
             if (reader == null) {
                 if (encoding == null) {
@@ -718,7 +718,7 @@ public class Concat extends Task {
                 }
                 return ret;
             }
-            
+
             while (pos < sourceFiles.size()) {
                 int ch = getReader().read();
                 if (ch == -1) {
@@ -732,7 +732,7 @@ public class Concat extends Task {
                     addLastChar((char) ch);
                     return ch;
                 }
-                pos++; 
+                pos++;
             }
             return -1;
         }

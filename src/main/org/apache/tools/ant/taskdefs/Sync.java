@@ -163,7 +163,7 @@ public class Sync extends Task {
             log("Removed " + count + " " + what + " from " + toDir,
                 Project.MSG_INFO);
         } else {
-            log("NO " + what + " to remove from " + toDir, 
+            log("NO " + what + " to remove from " + toDir,
                 Project.MSG_VERBOSE);
         }
     }

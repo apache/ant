@@ -90,7 +90,7 @@ public class Patch extends Task {
      */
     public void setPatchfile(File file) {
         if (!file.exists()) {
-            throw new BuildException("patchfile " + file + " doesn\'t exist", 
+            throw new BuildException("patchfile " + file + " doesn\'t exist",
                                      getLocation());
         }
         cmd.createArgument().setValue("-i");
@@ -165,9 +165,9 @@ public class Patch extends Task {
      */
     public void execute() throws BuildException {
         if (!havePatchfile) {
-            throw new BuildException("patchfile argument is required", 
+            throw new BuildException("patchfile argument is required",
                                      getLocation());
-        } 
+        }
         Commandline toExecute = (Commandline) cmd.clone();
         toExecute.setExecutable("patch");
 
@@ -176,7 +176,7 @@ public class Patch extends Task {
         }
 
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
-                                                       Project.MSG_WARN), 
+                                                       Project.MSG_WARN),
                                   null);
         exe.setCommandline(toExecute.getCommandline());
 

@@ -105,7 +105,7 @@ public class Copydir extends MatchingTask {
         log("DEPRECATED - The copydir task is deprecated.  Use copy instead.");
 
         if (srcDir == null) {
-            throw new BuildException("src attribute must be set!", 
+            throw new BuildException("src attribute must be set!",
                                      getLocation());
         }
 
@@ -115,7 +115,7 @@ public class Copydir extends MatchingTask {
         }
 
         if (destDir == null) {
-            throw new BuildException("The dest attribute must be set.", 
+            throw new BuildException("The dest attribute must be set.",
                                      getLocation());
         }
 
@@ -140,7 +140,7 @@ public class Copydir extends MatchingTask {
                         getProject().copyFile(fromFile, toFile, filtering,
                                          forceOverwrite);
                     } catch (IOException ioe) {
-                        String msg = "Failed to copy " + fromFile + " to " 
+                        String msg = "Failed to copy " + fromFile + " to "
                             + toFile + " due to " + ioe.getMessage();
                         throw new BuildException(msg, ioe, getLocation());
                     }

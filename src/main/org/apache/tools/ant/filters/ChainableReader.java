@@ -64,11 +64,11 @@ public interface ChainableReader {
     /**
      * Returns a reader with the same configuration as this one,
      * but filtering input from the specified reader.
-     * 
+     *
      * @param rdr the reader which the returned reader should be filtering
-     * 
+     *
      * @return a reader with the same configuration as this one, but
      *         filtering input from the specified reader
      */
-    public Reader chain(Reader rdr);
+    Reader chain(Reader rdr);
 }

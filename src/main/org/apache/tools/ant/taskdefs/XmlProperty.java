@@ -264,7 +264,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
         try {
             log("Loading " + src.getAbsolutePath(), Project.MSG_VERBOSE);
-           
+
             if (src.exists()) {
 
               configurationStream =
@@ -297,7 +297,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                 log("Unable to find property file: " + src.getAbsolutePath(),
                     Project.MSG_VERBOSE);
             }
-            
+
         } catch (SAXException sxe) {
             // Error generated during parsing
             Exception x = sxe;
@@ -322,7 +322,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
     }
 
     /** Iterate through all nodes in the tree. */
-    private void addNodeRecursively(Node node, String prefix, 
+    private void addNodeRecursively(Node node, String prefix,
                                     Object container) {
 
         // Set the prefix for this node to include its tag name.
@@ -347,7 +347,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                 // For each child, pass the object added by
                 // processNode to its children -- in other word, each
                 // object can pass information along to its children.
-                addNodeRecursively(nodeChildren.item(i), nodePrefix, 
+                addNodeRecursively(nodeChildren.item(i), nodePrefix,
                                    nodeObject);
             }
         }
@@ -389,7 +389,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
 
             // Is there an id attribute?
             Node idNode = nodeAttributes.getNamedItem(ID);
-            id = (semanticAttributes && idNode != null 
+            id = (semanticAttributes && idNode != null
                   ? idNode.getNodeValue() : null);
 
             // Now, iterate through the attributes adding them.
@@ -406,8 +406,8 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                     String nodeName = attributeNode.getNodeName();
                     String attributeValue = getAttributeValue(attributeNode);
 
-                    Path containingPath = 
-                        (container != null && container instanceof Path 
+                    Path containingPath =
+                        (container != null && container instanceof Path
                          ? (Path) container : null );
 
                     /*
@@ -419,15 +419,15 @@ public class XmlProperty extends org.apache.tools.ant.Task {
                     if (nodeName.equals(ID)) {
                         // ID has already been found above.
                         continue;
-                    } else if (containingPath != null 
+                    } else if (containingPath != null
                                && nodeName.equals(PATH)) {
                         // A "path" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
-                    } else if (container instanceof Path 
+                    } else if (container instanceof Path
                                && nodeName.equals(REF_ID)) {
                         // A "refid" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
-                    } else if (container instanceof Path 
+                    } else if (container instanceof Path
                                && nodeName.equals(LOCATION)) {
                         // A "location" attribute for a node within a
                         // Path object.
@@ -454,16 +454,16 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         if (node.getNodeType() == Node.TEXT_NODE) {
             // For the text node, add a property.
             nodeText = getAttributeValue(node);
-        } else if ((node.getNodeType() == Node.ELEMENT_NODE) 
+        } else if ((node.getNodeType() == Node.ELEMENT_NODE)
             && (node.getChildNodes().getLength() == 1)
             && (node.getFirstChild().getNodeType() == Node.CDATA_SECTION_NODE)) {
 
             nodeText = node.getFirstChild().getNodeValue();
         }
-        
+
         if (nodeText != null) {
             // If the containing object was a String, then use it as the ID.
-            if (semanticAttributes && id == null 
+            if (semanticAttributes && id == null
                 && container instanceof String) {
                 id = (String) container;
                 System.out.println("Setting id = " + id);
@@ -528,7 +528,7 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             if (attributeName.equals(REF_ID)) {
                 return "";
             // Otherwise, return it appended unless property to hide it is set.
-            } else if (!isSemanticAttribute(attributeName) 
+            } else if (!isSemanticAttribute(attributeName)
                        || includeSemanticAttribute) {
                 return "." + attributeName;
             } else {

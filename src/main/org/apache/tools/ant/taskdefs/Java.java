@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.Reference;
  * the same JVM for the called application thus resulting in much
  * faster operation.
  *
- * @author Stefano Mazzocchi 
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Stefan Bodewig
  * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
@@ -102,7 +102,7 @@ public class Java extends Task {
 
         int err = -1;
         try {
-            if ((err = executeJava()) != 0) { 
+            if ((err = executeJava()) != 0) {
                 if (failOnError) {
                     throw new BuildException("Java returned: " + err, getLocation());
                 } else {
@@ -136,11 +136,11 @@ public class Java extends Task {
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         } else {
             if (cmdl.getVmCommand().size() > 1) {
-                log("JVM args ignored when same JVM is used.", 
+                log("JVM args ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
             if (dir != null) {
-                log("Working directory ignored when same JVM is used.", 
+                log("Working directory ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
 
@@ -150,14 +150,14 @@ public class Java extends Task {
             }
 
             if (cmdl.getBootclasspath() != null) {
-                log("bootclasspath ignored when same JVM is used.", 
+                log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
 
-            log("Running in same VM " + cmdl.describeJavaCommand(), 
+            log("Running in same VM " + cmdl.describeJavaCommand(),
                 Project.MSG_VERBOSE);
         }
-        
+
         try {
             if (fork) {
                 return run(cmdl.getCommandline());
@@ -188,13 +188,13 @@ public class Java extends Task {
 
     /**
      * Set the classpath to be used when running the Java class
-     * 
+     *
      * @param s an Ant Path object containing the classpath.
      */
     public void setClasspath(Path s) {
         createClasspath().append(s);
     }
-    
+
     /**
      * Adds a path to the classpath.
      */
@@ -267,9 +267,9 @@ public class Java extends Task {
     public void setResultProperty(String resultProperty) {
         this.resultProperty = resultProperty;
     }
-    
+
     /**
-     * helper method to set result property to the 
+     * helper method to set result property to the
      * passed in value if appropriate
      */
     protected void maybeSetResultPropertyValue(int result) {
@@ -278,7 +278,7 @@ public class Java extends Task {
             project.setNewProperty(resultProperty, res);
         }
     }
-    
+
     /**
      * If true, execute in a new VM.
      */
@@ -295,7 +295,7 @@ public class Java extends Task {
             Project.MSG_WARN);
         cmdl.createVmArgument().setLine(s);
     }
-        
+
     /**
      * Adds a JVM argument.
      */
@@ -309,7 +309,7 @@ public class Java extends Task {
     public void setJvm(String s) {
         cmdl.setVm(s);
     }
-        
+
     /**
      * Adds a system property.
      */
@@ -363,7 +363,7 @@ public class Java extends Task {
     public void setInputString(String inputString) {
         redirector.setInputString(inputString);
     }
-    
+
     /**
      * Controls whether error output of exec is logged. This is only useful
      * when output is being redirected and error output is desired in the
@@ -372,7 +372,7 @@ public class Java extends Task {
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
     }
-    
+
     /**
      * File the error stream of the process is redirected to.
      *
@@ -414,7 +414,7 @@ public class Java extends Task {
     public void setJVMVersion(String value) {
         cmdl.setVmversion(value);
     }
-    
+
     /**
      * Adds an environment variable.
      *
@@ -467,8 +467,8 @@ public class Java extends Task {
             super.handleOutput(line);
         }
     }
-    
-    public int handleInput(byte[] buffer, int offset, int length) 
+
+    public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (redirector.getInputStream() != null) {
             return redirector.handleInput(buffer, offset, length);
@@ -489,7 +489,7 @@ public class Java extends Task {
             super.handleFlush(line);
         }
     }
-    
+
     /**
      * Pass output sent to System.err to specified output file.
      *
@@ -502,7 +502,7 @@ public class Java extends Task {
             super.handleErrorOutput(line);
         }
     }
-    
+
     /**
      * Pass output sent to System.err to specified output file.
      *
@@ -515,7 +515,7 @@ public class Java extends Task {
             super.handleErrorOutput(line);
         }
     }
-    
+
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.
@@ -539,11 +539,11 @@ public class Java extends Task {
      * Executes the given classname with the given arguments in a separate VM.
      */
     private int run(String[] command) throws BuildException {
-            
-            Execute exe 
+
+            Execute exe
                 = new Execute(redirector.createHandler(), createWatchdog());
             exe.setAntRun(getProject());
-            
+
             if (dir == null) {
                 dir = getProject().getBaseDir();
             } else if (!dir.exists() || !dir.isDirectory()) {
@@ -551,9 +551,9 @@ public class Java extends Task {
                                          + " is not a valid directory",
                                          getLocation());
             }
-            
+
             exe.setWorkingDirectory(dir);
-            
+
             String[] environment = env.getVariables();
             if (environment != null) {
                 for (int i = 0; i < environment.length; i++) {
@@ -568,7 +568,7 @@ public class Java extends Task {
             try {
                 int rc = exe.execute();
                 if (exe.killedProcess()) {
-                    log("Timeout: killed the sub-process", Project.MSG_WARN); 
+                    log("Timeout: killed the sub-process", Project.MSG_WARN);
                 }
                 redirector.complete();
                 return rc;

@@ -66,7 +66,7 @@ import org.xml.sax.Locator;
  * @author Matt Foemmel
  */
 public class Location implements Serializable {
-    
+
     /** Name of the file. */
     private String fileName;
     /** Line number within the file. */
@@ -87,7 +87,7 @@ public class Location implements Serializable {
     /**
      * Creates a location consisting of a file name but no line number or
      * column number.
-     * 
+     *
      * @param fileName The name of the file. May be <code>null</code>,
      *                 in which case the location is equivalent to
      *                 {@link #UNKNOWN_LOCATION UNKNOWN_LOCATION}.
@@ -99,7 +99,7 @@ public class Location implements Serializable {
     /**
      * Creates a location from the SAX locator using the system ID as
      * the filename.
-     * 
+     *
      * @param loc Must not be <code>null</code>.
      *
      * @since Ant 1.6
@@ -111,11 +111,11 @@ public class Location implements Serializable {
     /**
      * Creates a location consisting of a file name, line number and
      * column number.
-     * 
+     *
      * @param fileName The name of the file. May be <code>null</code>,
      *                 in which case the location is equivalent to
      *                 {@link #UNKNOWN_LOCATION UNKNOWN_LOCATION}.
-     * 
+     *
      * @param lineNumber Line number within the file. Use 0 for unknown
      *                   positions within a file.
      * @param columnNumber Column number within the line.
@@ -125,16 +125,16 @@ public class Location implements Serializable {
             this.fileName = FileUtils.newFileUtils().fromURI(fileName);
         } else {
             this.fileName = fileName;
-        }        
+        }
         this.lineNumber = lineNumber;
         this.columnNumber = columnNumber;
     }
 
     /**
-     * Returns the file name, line number, a colon and a trailing space. 
-     * An error message can be appended easily. For unknown locations, an 
+     * Returns the file name, line number, a colon and a trailing space.
+     * An error message can be appended easily. For unknown locations, an
      * empty string is returned.
-     * 
+     *
      * @return a String of the form <code>"fileName: lineNumber: "</code>
      *         if both file name and line number are known,
      *         <code>"fileName: "</code> if only the file name is known,

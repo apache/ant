@@ -112,8 +112,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /** Classpath to use when trying to load the XSL processor */
     private Path classpath = null;
-    
-    /** The Liason implementation to use to communicate with the XSL 
+
+    /** The Liason implementation to use to communicate with the XSL
      *  processor */
     private XSLTLiaison liaison;
 

@@ -410,7 +410,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public void addDepend(DependSelector selector) {
         fileset.addDepend(selector);
     }
-    
+
     /**
      * add a regular expression selector entry on the selector list
      */

@@ -189,7 +189,7 @@ public final class LoadFile extends Task {
                 crh.setFilterChains(filterChains);
                 crh.setProject(getProject());
                 instream = crh.getAssembledReader();
-    
+
                 text = crh.readFully(instream);
             }
 

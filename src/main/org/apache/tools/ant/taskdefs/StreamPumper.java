@@ -83,13 +83,13 @@ public class StreamPumper implements Runnable {
      * @param closeWhenExhausted if true, the output stream will be closed when
      *        the input is exhausted.
      */
-    public StreamPumper(InputStream is, OutputStream os, 
+    public StreamPumper(InputStream is, OutputStream os,
                         boolean closeWhenExhausted) {
         this.is = is;
         this.os = os;
-        this.closeWhenExhausted = closeWhenExhausted;        
+        this.closeWhenExhausted = closeWhenExhausted;
     }
-    
+
     /**
      * Create a new stream pumper.
      *

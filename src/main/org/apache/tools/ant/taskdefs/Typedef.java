@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,7 +74,7 @@ package org.apache.tools.ant.taskdefs;
  * types are things likepaths or filesets that can be defined at
  * the project level and referenced via their ID attribute.</p>
  * <p>Custom data types usually need custom tasks to put them to good use.</p>
- *  
+ *
  * @author Stefan Bodewig
  * @since Ant 1.4
  * @ant.task category="internal"

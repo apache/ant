@@ -289,7 +289,7 @@ public class XmlLogger implements BuildLogger {
                 TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != targetElement) {
                     throw new RuntimeException("Mismatch - popped element = "
-                            + poppedStack.element 
+                            + poppedStack.element
                             + " finished target element = "
                             + targetElement.element);
                 }
@@ -480,7 +480,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Ignore emacs mode, as it has no meaning in XML format
      *
-     * @param emacsMode true if logger should produce emacs compatible 
+     * @param emacsMode true if logger should produce emacs compatible
      *        output
      */
     public void setEmacsMode(boolean emacsMode) {

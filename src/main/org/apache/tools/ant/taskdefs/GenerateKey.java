@@ -62,7 +62,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Generates a key in a keystore.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  *
  * @since Ant 1.2
@@ -74,15 +74,15 @@ public class GenerateKey extends Task {
     public static class DnameParam {
         private String name;
         private String value;
-        
+
         public void setName(String name) {
             this.name = name;
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
         public void setValue(String value) {
             this.value = value;
         }
@@ -94,14 +94,14 @@ public class GenerateKey extends Task {
 
     public static class DistinguishedName {
         private Vector params = new Vector();
-        
+
         public Object createParam() {
             DnameParam param = new DnameParam();
             params.addElement(param);
-            
+
             return param;
         }
-        
+
         public Enumeration getParams() {
             return params.elements();
         }
@@ -122,7 +122,7 @@ public class GenerateKey extends Task {
                 sb.append('=');
                 sb.append(encode(param.getValue()));
             }
-                        
+
             return sb.toString();
         }
 
@@ -132,9 +132,9 @@ public class GenerateKey extends Task {
             if (-1 == end) {
               return string;
             }
-                
+
             final StringBuffer sb = new StringBuffer();
-                
+
             int start = 0;
 
             while (-1 != end) {
@@ -145,8 +145,8 @@ public class GenerateKey extends Task {
             }
 
             sb.append(string.substring(start));
-                
-            return sb.toString();                
+
+            return sb.toString();
         }
     }
 
@@ -276,8 +276,8 @@ public class GenerateKey extends Task {
      * @todo Could convert this to a plain Integer setter.
      */
     public void setKeysize(final String keysize) throws BuildException {
-        try { 
-            this.keysize = Integer.parseInt(keysize); 
+        try {
+            this.keysize = Integer.parseInt(keysize);
         } catch (final NumberFormatException nfe) {
             throw new BuildException("KeySize attribute should be a integer");
         }
@@ -290,8 +290,8 @@ public class GenerateKey extends Task {
      * @throws BuildException If not an Integer
      */
     public void setValidity(final String validity) throws BuildException {
-        try { 
-            this.validity = Integer.parseInt(validity); 
+        try {
+            this.validity = Integer.parseInt(validity);
         } catch (final NumberFormatException nfe) {
             throw new BuildException("Validity attribute should be a integer");
         }
@@ -303,7 +303,7 @@ public class GenerateKey extends Task {
      */
     public void setVerbose(final boolean verbose) {
         this.verbose = verbose;
-    } 
+    }
 
     public void execute() throws BuildException {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
@@ -313,15 +313,15 @@ public class GenerateKey extends Task {
 
         if (null == alias) {
             throw new BuildException("alias attribute must be set");
-        } 
+        }
 
         if (null == storepass) {
             throw new BuildException("storepass attribute must be set");
-        } 
+        }
 
         if (null == dname && null == expandedDname) {
             throw new BuildException("dname must be set");
-        } 
+        }
 
         final StringBuffer sb = new StringBuffer();
 
@@ -329,7 +329,7 @@ public class GenerateKey extends Task {
 
         if (verbose) {
             sb.append("-v ");
-        } 
+        }
 
         sb.append("-alias \"");
         sb.append(alias);
@@ -339,13 +339,13 @@ public class GenerateKey extends Task {
             sb.append("-dname \"");
             sb.append(dname);
             sb.append("\" ");
-        } 
+        }
 
         if (null != expandedDname) {
             sb.append("-dname \"");
             sb.append(expandedDname);
             sb.append("\" ");
-        } 
+        }
 
         if (null != keystore) {
             sb.append("-keystore \"");
@@ -357,13 +357,13 @@ public class GenerateKey extends Task {
             sb.append("-storepass \"");
             sb.append(storepass);
             sb.append("\" ");
-        } 
+        }
 
         if (null != storetype) {
             sb.append("-storetype \"");
             sb.append(storetype);
             sb.append("\" ");
-        } 
+        }
 
         sb.append("-keypass \"");
         if (null != keypass) {
@@ -377,26 +377,26 @@ public class GenerateKey extends Task {
             sb.append("-sigalg \"");
             sb.append(sigalg);
             sb.append("\" ");
-        } 
+        }
 
         if (null != keyalg) {
             sb.append("-keyalg \"");
             sb.append(keyalg);
             sb.append("\" ");
-        } 
+        }
 
 
         if (0 < keysize) {
             sb.append("-keysize \"");
             sb.append(keysize);
             sb.append("\" ");
-        } 
+        }
 
         if (0 < validity) {
             sb.append("-validity \"");
             sb.append(validity);
             sb.append("\" ");
-        } 
+        }
 
         log("Generating Key for " + alias);
         final ExecTask cmd = (ExecTask) getProject().createTask("exec");
@@ -406,6 +406,6 @@ public class GenerateKey extends Task {
         cmd.setFailonerror(true);
         cmd.setTaskName(getTaskName());
         cmd.execute();
-    } 
+    }
 }
 

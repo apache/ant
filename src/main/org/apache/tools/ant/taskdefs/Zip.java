@@ -436,7 +436,7 @@ public class Zip extends MatchingTask {
                         addResources(fss[i], addThem[i], zOut);
                     }
                 }
-                
+
                 if (doUpdate) {
                     addingNewFiles = false;
                     ZipFileSet oldFiles = new ZipFileSet();
@@ -447,7 +447,7 @@ public class Zip extends MatchingTask {
                         PatternSet.NameEntry ne = oldFiles.createExclude();
                         ne.setName((String) addedFiles.elementAt(i));
                     }
-                    DirectoryScanner ds = 
+                    DirectoryScanner ds =
                         oldFiles.getDirectoryScanner(getProject());
                     ((ZipScanner) ds).setEncoding(encoding);
                     String[] f = ds.getIncludedFiles();
@@ -455,7 +455,7 @@ public class Zip extends MatchingTask {
                     for (int i = 0; i < f.length; i++) {
                         r[i] = ds.getResource(f[i]);
                     }
-                    
+
                     addResources(oldFiles, r, zOut);
                 }
                 finalizeZipOutputStream(zOut);
@@ -580,7 +580,7 @@ public class Zip extends MatchingTask {
             } else {
                 zf = new ZipFile(zfs.getSrc(getProject()), encoding);
             }
-            
+
             for (int i = 0; i < resources.length; i++) {
                 String name = null;
                 if (fullpath.length() > 0) {
@@ -589,26 +589,26 @@ public class Zip extends MatchingTask {
                     name = resources[i].getName();
                 }
                 name = name.replace(File.separatorChar, '/');
-                
+
                 if ("".equals(name)) {
                     continue;
                 }
                 if (resources[i].isDirectory() && ! name.endsWith("/")) {
                     name = name + "/";
                 }
-                
+
                 addParentDirs(base, name, zOut, prefix, dirMode);
 
                 if (!resources[i].isDirectory() && dealingWithFiles) {
-                    File f = fileUtils.resolveFile(base, 
+                    File f = fileUtils.resolveFile(base,
                                                    resources[i].getName());
                     zipFile(f, zOut, prefix + name, fileMode);
                 } else if (!resources[i].isDirectory()) {
                     ZipEntry ze = zf.getEntry(resources[i].getName());
                     if (ze != null) {
-                        zipFile(zf.getInputStream(ze), zOut, prefix + name, 
-                                ze.getTime(), zfs.getSrc(getProject()), 
-                                zfs.hasFileModeBeenSet() ? fileMode 
+                        zipFile(zf.getInputStream(ze), zOut, prefix + name,
+                                ze.getTime(), zfs.getSrc(getProject()),
+                                zfs.hasFileModeBeenSet() ? fileMode
                                                          : ze.getUnixMode());
                     }
                 }
@@ -734,18 +734,18 @@ public class Zip extends MatchingTask {
 
             if (emptyBehavior.equals("skip")) {
                 if (doUpdate) {
-                    log(archiveType + " archive " + zipFile 
-                        + " not updated because no new files were included.", 
+                    log(archiveType + " archive " + zipFile
+                        + " not updated because no new files were included.",
                         Project.MSG_VERBOSE);
                 } else {
-                    log("Warning: skipping " + archiveType + " archive " 
-                        + zipFile + " because no files were included.", 
+                    log("Warning: skipping " + archiveType + " archive "
+                        + zipFile + " because no files were included.",
                         Project.MSG_WARN);
                 }
             } else if (emptyBehavior.equals("fail")) {
                 throw new BuildException("Cannot create " + archiveType
                                          + " archive " + zipFile +
-                                         ": no files were included.", 
+                                         ": no files were included.",
                                          getLocation());
             } else {
                 // Create.
@@ -768,13 +768,13 @@ public class Zip extends MatchingTask {
         Resource[][] newerResources = new Resource[filesets.length][];
 
         for (int i = 0; i < filesets.length; i++) {
-            if (!(fileset instanceof ZipFileSet) 
+            if (!(fileset instanceof ZipFileSet)
                 || ((ZipFileSet) fileset).getSrc(getProject()) == null) {
                 File base = filesets[i].getDir(getProject());
-            
+
                 for (int j = 0; j < initialResources[i].length; j++) {
-                    File resourceAsFile = 
-                        fileUtils.resolveFile(base, 
+                    File resourceAsFile =
+                        fileUtils.resolveFile(base,
                                               initialResources[i][j].getName());
                     if (resourceAsFile.equals(zipFile)) {
                         throw new BuildException("A zip file cannot include "
@@ -789,7 +789,7 @@ public class Zip extends MatchingTask {
                 newerResources[i] = new Resource[] {};
                 continue;
             }
-            
+
             FileNameMapper myMapper = new IdentityMapper();
             if (filesets[i] instanceof ZipFileSet) {
                 ZipFileSet zfs = (ZipFileSet) filesets[i];
@@ -819,8 +819,8 @@ public class Zip extends MatchingTask {
             if (doFilesonly) {
                 resources = selectFileResources(resources);
             }
-            
-            newerResources[i] = 
+
+            newerResources[i] =
                 ResourceUtils.selectOutOfDateSources(this,
                                                      resources,
                                                      myMapper,
@@ -838,21 +838,21 @@ public class Zip extends MatchingTask {
             // we are recreating the archive, need all resources
             return new ArchiveState(true, initialResources);
         }
-        
+
         return new ArchiveState(needsUpdate, newerResources);
     }
 
     /**
      * Fetch all included and not excluded resources from the sets.
      *
-     * <p>Included directories will preceede included files.</p> 
+     * <p>Included directories will preceede included files.</p>
      *
      * @since Ant 1.5.2
      */
     protected Resource[][] grabResources(FileSet[] filesets) {
         Resource[][] result = new Resource[filesets.length][];
         for (int i = 0; i < filesets.length; i++) {
-            DirectoryScanner rs = 
+            DirectoryScanner rs =
                 filesets[i].getDirectoryScanner(getProject());
             if (rs instanceof ZipScanner) {
                 ((ZipScanner) rs).setEncoding(encoding);
@@ -866,7 +866,7 @@ public class Zip extends MatchingTask {
             for (int j = 0; j < files.length; j++) {
                 resources.addElement(rs.getResource(files[j]));
             }
-            
+
             result[i] = new Resource[resources.size()];
             resources.copyInto(result[i]);
         }
@@ -1017,7 +1017,7 @@ public class Zip extends MatchingTask {
      *
      * @since Ant 1.5.2
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath, 
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
         throws IOException {
         if (file.equals(zipFile)) {
@@ -1120,7 +1120,7 @@ public class Zip extends MatchingTask {
 
     /**
      * @return true if all individual arrays are empty
-     * 
+     *
      * @since Ant 1.5.2
      */
     protected final static boolean isEmpty(Resource[][] r) {
@@ -1141,13 +1141,13 @@ public class Zip extends MatchingTask {
         if (orig.length == 0) {
             return orig;
         }
-        
+
         Vector v = new Vector(orig.length);
         for (int i = 0; i < orig.length; i++) {
             if (!orig[i].isDirectory()) {
                 v.addElement(orig[i]);
             } else {
-                log("Ignoring directory " + orig[i].getName() 
+                log("Ignoring directory " + orig[i].getName()
                     + " as only files will be added.", Project.MSG_VERBOSE);
             }
         }

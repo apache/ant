@@ -155,8 +155,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
          */
         private void findNextResource() {
             URL url = null;
-            while ((pathElementsIndex < pathComponents.size()) &&
-                   (url == null)) {
+            while ((pathElementsIndex < pathComponents.size())
+                    && (url == null)) {
                 try {
                     File pathComponent
                         = (File) pathComponents.elementAt(pathElementsIndex);
@@ -266,7 +266,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
 
 
     /**
-     * Create an Ant Class Loader 
+     * Create an Ant Class Loader
      */
     public AntClassLoader() {
         setParent(null);
@@ -353,7 +353,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     }
 
     /**
-     * Set the project associated with this class loader 
+     * Set the project associated with this class loader
      *
      * @param project the project instance
      */
@@ -366,7 +366,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
 
     /**
      * Set the classpath to search for classes to load. This should not be
-     * changed once the classloader starts to server classes 
+     * changed once the classloader starts to server classes
      *
      * @param classpath the serahc classpath consisting of directories and
      *        jar/zip files.
@@ -403,7 +403,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
 
     /**
      * Control whether class lookup is delegated to the parent loader first
-     * or after this loader. Use with extreme caution. Setting this to 
+     * or after this loader. Use with extreme caution. Setting this to
      * false violates the class loader hierarchy and can lead to Linkage errors
      *
      * @param parentFirst if true, delegate initial class search to the parent
@@ -483,7 +483,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             throw new BuildException(e);
         }
     }
-    
+
     /**
      * Add a file to the path
      *
@@ -492,7 +492,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @throws IOException if data needed from the file cannot be read.
      */
-    protected void addPathFile(File pathComponent) throws IOException { 
+    protected void addPathFile(File pathComponent) throws IOException {
         pathComponents.addElement(pathComponent);
     }
 
@@ -986,11 +986,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (isParentFirst(classname)) {
             try {
                 theClass = findBaseClass(classname);
-                log("Class " + classname + " loaded from parent loader " 
+                log("Class " + classname + " loaded from parent loader "
                     + "(parentFirst)", Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 theClass = findClass(classname);
-                log("Class " + classname + " loaded from ant loader " 
+                log("Class " + classname + " loaded from ant loader "
                     + "(parentFirst)", Project.MSG_DEBUG);
             }
         } else {
@@ -1073,7 +1073,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             return defineClass(classname, classData, 0, classData.length);
         }
     }
-    
+
     /**
      * Reads a class definition from a stream.
      *
@@ -1122,7 +1122,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         return findClassInComponents(name);
     }
 
-    /** 
+    /**
      * Indicate if the given file is in this loader's path
      *
      * @param component the file which is to be checked
@@ -1138,7 +1138,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         }
         return false;
     }
-    
+
 
     /**
      * Finds a class on the given classpath.
@@ -1164,7 +1164,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
-                        log("Loaded from " + pathComponent + " " 
+                        log("Loaded from " + pathComponent + " "
                             + classFilename, Project.MSG_DEBUG);
                         return getClassFromStream(stream, name, pathComponent);
                     }
@@ -1184,7 +1184,9 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 if (stream != null) {
                     stream.close();
                 }
-            } catch (IOException e) {}
+            } catch (IOException e) {
+                //ignore
+            }
         }
     }
 

@@ -79,18 +79,18 @@ public class RuntimeConfigurable implements Serializable {
 
     /** Name of the element to configure. */
     private String elementTag = null;
-    
+
     /** List of child element wrappers. */
     private List/*<RuntimeConfigurable>*/ children = null;
-    
+
     /** The element to configure. It is only used during
      * maybeConfigure.
      */
     private transient Object wrappedObject = null;
 
-    /** 
+    /**
      * @deprecated
-     * XML attributes for the element. 
+     * XML attributes for the element.
      */
     private transient AttributeList attributes;
 
@@ -102,13 +102,13 @@ public class RuntimeConfigurable implements Serializable {
      *  XXX under JDK 1.4 you can just use a LinkedHashMap for this purpose -jglick
      */
     private List/*<String>*/ attributeNames = null;
-    
+
     /** Map of attribute names to values */
     private Map/*<String,String>*/ attributeMap = null;
 
     /** Text appearing within the element. */
     private StringBuffer characters = null;
-    
+
     /** Indicates if the wrapped object has been configured */
     private boolean proxyConfigured = false;
 
@@ -239,7 +239,7 @@ public class RuntimeConfigurable implements Serializable {
             return new EmptyEnumeration();
         }
     }
-    
+
     static final class EmptyEnumeration implements Enumeration {
         public EmptyEnumeration() {}
         public boolean hasMoreElements() {
@@ -370,7 +370,7 @@ public class RuntimeConfigurable implements Serializable {
             for (int i = 0; i < attributeNames.size(); i++) {
                 String name = (String) attributeNames.get(i);
                 String value = (String) attributeMap.get(name);
-                
+
                 // reflect these into the target
                 value = p.replaceProperties(value);
                 try {
@@ -420,7 +420,7 @@ public class RuntimeConfigurable implements Serializable {
         }
         proxyConfigured = true;
     }
-    
+
     /**
      * Reconfigure the element, even if it has already been configured.
      *

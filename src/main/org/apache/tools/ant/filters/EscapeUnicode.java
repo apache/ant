@@ -66,7 +66,7 @@ import org.apache.tools.ant.types.Parameter;
  *
  * Or:
  *
- * <pre>&lt;filterreader 
+ * <pre>&lt;filterreader
         classname=&quot;org.apache.tools.ant.filters.EscapeUnicode&quot;/&gt;
  *  </pre>
  *
@@ -161,11 +161,6 @@ public class EscapeUnicode
      * Parses the parameters (currently unused)
      */
     private final void initialize() {
-        Parameter[] params = getParameters();
-        if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-            }
-        }
     }
 }
 

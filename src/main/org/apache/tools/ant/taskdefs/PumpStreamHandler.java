@@ -76,8 +76,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     private OutputStream out;
     private OutputStream err;
     private InputStream input;
-    
-    public PumpStreamHandler(OutputStream out, OutputStream err, 
+
+    public PumpStreamHandler(OutputStream out, OutputStream err,
                              InputStream input) {
         this.out = out;
         this.err = err;
@@ -116,7 +116,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
             } catch (IOException e) {
                 //ignore
             }
-        }            
+        }
     }
 
     public void start() {
@@ -144,7 +144,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
                 inputThread.join();
             } catch (InterruptedException e) {
                 // ignore
-            } 
+            }
         }
 
         try {
@@ -188,9 +188,9 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Creates a stream pumper to copy the given input stream to the
      * given output stream.
      */
-    protected Thread createPump(InputStream is, OutputStream os, 
+    protected Thread createPump(InputStream is, OutputStream os,
                                 boolean closeWhenExhausted) {
-        final Thread result 
+        final Thread result
             = new Thread(new StreamPumper(is, os, closeWhenExhausted));
         result.setDaemon(true);
         return result;

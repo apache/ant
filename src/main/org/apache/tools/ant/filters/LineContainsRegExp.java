@@ -118,7 +118,7 @@ public final class LineContainsRegExp
      * Returns the next character in the filtered stream, only including
      * lines from the original stream which match all of the specified
      * regular expressions.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
      *
@@ -174,8 +174,8 @@ public final class LineContainsRegExp
 
     /**
      * Adds a <code>regexp</code> element.
-     * 
-     * @param regExp The <code>regexp</code> element to add. 
+     *
+     * @param regExp The <code>regexp</code> element to add.
      *               Must not be <code>null</code>.
      */
     public final void addConfiguredRegexp(final RegularExpression regExp) {
@@ -183,12 +183,12 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Sets the vector of regular expressions which must be contained within 
-     * a line read from the original stream in order for it to match this 
+     * Sets the vector of regular expressions which must be contained within
+     * a line read from the original stream in order for it to match this
      * filter.
-     * 
-     * @param regexps A vector of regular expressions which must be contained 
-     * within a line in order for it to match in this filter. Must not be 
+     *
+     * @param regexps A vector of regular expressions which must be contained
+     * within a line in order for it to match in this filter. Must not be
      * <code>null</code>.
      */
     private void setRegexps(final Vector regexps) {
@@ -196,13 +196,13 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Returns the vector of regular expressions which must be contained within 
-     * a line read from the original stream in order for it to match this 
+     * Returns the vector of regular expressions which must be contained within
+     * a line read from the original stream in order for it to match this
      * filter.
-     * 
-     * @return the vector of regular expressions which must be contained within 
-     * a line read from the original stream in order for it to match this 
-     * filter. The returned object is "live" - in other words, changes made to 
+     *
+     * @return the vector of regular expressions which must be contained within
+     * a line read from the original stream in order for it to match this
+     * filter. The returned object is "live" - in other words, changes made to
      * the returned object are mirrored in the filter.
      */
     private final Vector getRegexps() {
@@ -212,10 +212,10 @@ public final class LineContainsRegExp
     /**
      * Creates a new LineContainsRegExp using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

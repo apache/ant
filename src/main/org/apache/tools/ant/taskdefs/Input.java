@@ -137,7 +137,7 @@ public class Input extends Task {
      * @exception BuildException
      */
     public void execute () throws BuildException {
-        if (addproperty != null 
+        if (addproperty != null
             && getProject().getProperty(addproperty) != null) {
             log("skipping " + getTaskName() + " as property " + addproperty
                 + " has already been set.");
@@ -154,7 +154,7 @@ public class Input extends Task {
         getProject().getInputHandler().handleInput(request);
 
         String value = request.getInput();
-        if ((value == null || value.trim().length() == 0) 
+        if ((value == null || value.trim().length() == 0)
             && defaultvalue != null) {
             value = defaultvalue;
         }

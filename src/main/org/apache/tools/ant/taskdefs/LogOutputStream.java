@@ -110,12 +110,12 @@ public class LogOutputStream extends OutputStream {
     }
 
     /**
-     * Flush this log stream 
+     * Flush this log stream
      */
     public void flush() {
        processBuffer();
     }
-    
+
 
     /**
      * Converts the buffer to a string and sends it to <code>processLine</code>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,10 +74,10 @@ public class Echo extends Task {
     protected String message = ""; // required
     protected File file = null;
     protected boolean append = false;
-    
+
     // by default, messages are always displayed
-    protected int logLevel = Project.MSG_WARN;   
-    
+    protected int logLevel = Project.MSG_WARN;
+
     /**
      * Does the work.
      *
@@ -166,7 +166,7 @@ public class Echo extends Task {
          * @see EnumeratedAttribute#getValues
          */
         public String[] getValues() {
-            return new String[] {"error", "warning", "info", 
+            return new String[] {"error", "warning", "info",
                                  "verbose", "debug"};
         }
     }

@@ -59,7 +59,7 @@ import org.apache.tools.ant.types.Parameter;
 
 /**
  * Filter to flatten the stream to a single line.
- * 
+ *
  * Example:
  *
  * <pre>&lt;striplinebreaks/&gt;</pre>
@@ -88,7 +88,7 @@ public final class StripLineBreaks
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public StripLineBreaks() {
@@ -108,12 +108,12 @@ public final class StripLineBreaks
     /**
      * Returns the next character in the filtered stream, only including
      * characters not in the set of line-breaking characters.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -134,7 +134,7 @@ public final class StripLineBreaks
 
     /**
      * Sets the line-breaking characters.
-     * 
+     *
      * @param lineBreaks A String containing all the characters to be
      *                   considered as line-breaking.
      */
@@ -144,8 +144,8 @@ public final class StripLineBreaks
 
     /**
      * Returns the line-breaking characters as a String.
-     * 
-     * @return a String containing all the characters considered as 
+     *
+     * @return a String containing all the characters considered as
      *         line-breaking
      */
     private final String getLineBreaks() {
@@ -155,10 +155,10 @@ public final class StripLineBreaks
     /**
      * Creates a new StripLineBreaks using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

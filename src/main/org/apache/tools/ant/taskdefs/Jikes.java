@@ -86,9 +86,9 @@ public class Jikes {
     protected Jikes(JikesOutputParser jop, String command, Project project) {
         super();
 
-        System.err.println("As of Ant 1.2 released in October 2000, " 
+        System.err.println("As of Ant 1.2 released in October 2000, "
             + "the Jikes class");
-        System.err.println("is considered to be dead code by the Ant " 
+        System.err.println("is considered to be dead code by the Ant "
             + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
 
@@ -113,7 +113,7 @@ public class Jikes {
 
             // There have been reports that 300 files could be compiled
             // so 250 is a conservative approach
-            if (myos.toLowerCase().indexOf("windows") >= 0 
+            if (myos.toLowerCase().indexOf("windows") >= 0
                 && args.length > 250) {
                 PrintWriter out = null;
                 try {
@@ -123,10 +123,10 @@ public class Jikes {
                         out.println(args[i]);
                     }
                     out.flush();
-                    commandArray = new String[] { command, 
+                    commandArray = new String[] { command,
                                                   "@" + tmpFile.getAbsolutePath()};
                 } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file", 
+                    throw new BuildException("Error creating temporary file",
                                              e);
                 } finally {
                     if (out != null) {
@@ -138,7 +138,7 @@ public class Jikes {
                 commandArray[0] = command;
                 System.arraycopy(args, 0, commandArray, 1, args.length);
             }
-            
+
             // We assume, that everything jikes writes goes to
             // standard output, not to standard error. The option
             // -Xstdout that is given to Jikes in Javac.doJikesCompile()

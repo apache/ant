@@ -1523,7 +1523,7 @@ public class Javadoc extends Task {
             log ("-linksource option not supported on JavaDoc < 1.4",
                  Project.MSG_VERBOSE);
         }
-        this.linksource = b;       
+        this.linksource = b;
     }
 
     /**
@@ -1537,7 +1537,7 @@ public class Javadoc extends Task {
             log ("-breakiterator option not supported on JavaDoc < 1.4",
                  Project.MSG_VERBOSE);
         }
-        this.breakiterator = b;       
+        this.breakiterator = b;
     }
 
     /**
@@ -1845,7 +1845,7 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue("-source");
                     toExecute.createArgument().setValue(source);
                 }
-                
+
                 if (linksource && doclet == null) {
                     toExecute.createArgument().setValue("-linksource");
                 }

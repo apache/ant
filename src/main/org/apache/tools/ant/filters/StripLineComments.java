@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.Parameter;
  *
  * Or:
  *
- * <pre>&lt;filterreader 
+ * <pre>&lt;filterreader
  *      classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
  *   &lt;param type=&quot;comment&quot; value="#&quot;/&gt;
  *   &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
@@ -98,7 +98,7 @@ public final class StripLineComments
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public StripLineComments() {
@@ -117,14 +117,14 @@ public final class StripLineComments
 
     /**
      * Returns the next character in the filtered stream, only including
-     * lines from the original stream which don't start with any of the 
+     * lines from the original stream which don't start with any of the
      * specified comment prefixes.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -172,7 +172,7 @@ public final class StripLineComments
 
     /**
      * Adds a <code>comment</code> element to the list of prefixes.
-     * 
+     *
      * @param comment The <code>comment</code> element to add to the
      * list of comment prefixes to strip. Must not be <code>null</code>.
      */
@@ -182,7 +182,7 @@ public final class StripLineComments
 
     /**
      * Sets the list of comment prefixes to strip.
-     * 
+     *
      * @param comments A list of strings, each of which is a prefix
      * for a comment line. Must not be <code>null</code>.
      */
@@ -192,7 +192,7 @@ public final class StripLineComments
 
     /**
      * Returns the list of comment prefixes to strip.
-     * 
+     *
      * @return the list of comment prefixes to strip.
      */
     private final Vector getComments() {
@@ -202,10 +202,10 @@ public final class StripLineComments
     /**
      * Creates a new StripLineComments using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
@@ -240,7 +240,7 @@ public final class StripLineComments
 
         /**
          * Sets the prefix for this type of line comment.
-         * 
+         *
          * @param comment The prefix for a line comment of this type.
          * Must not be <code>null</code>.
          */
@@ -250,7 +250,7 @@ public final class StripLineComments
 
         /**
          * Returns the prefix for this type of line comment.
-         * 
+         *
          * @return the prefix for this type of line comment.
          */
         public final String getValue() {

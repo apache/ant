@@ -78,18 +78,18 @@ public class DemuxOutputStream extends OutputStream {
          * The per-thread output stream.
          */
         private ByteArrayOutputStream buffer;
-        
-        /** 
+
+        /**
          * Whether or not the next line-terminator should be skipped in terms
          * of processing the buffer. Used to avoid \r\n invoking
          * processBuffer twice.
          */
          private boolean skip = false;
     }
-    
+
     /** Maximum buffer size. */
     private static final int MAX_SIZE = 1024;
-    
+
     /** Mapping from thread to buffer (Thread to BufferInfo). */
     private Hashtable buffers = new Hashtable();
 
@@ -102,14 +102,14 @@ public class DemuxOutputStream extends OutputStream {
      * Whether or not this stream represents an error stream.
      */
     private boolean isErrorStream;
-    
+
     /**
      * Creates a new instance of this class.
      *
-     * @param project The project instance for which output is being 
+     * @param project The project instance for which output is being
      *                demultiplexed. Must not be <code>null</code>.
-     * @param isErrorStream <code>true</code> if this is the error string, 
-     *                      otherwise a normal output stream. This is 
+     * @param isErrorStream <code>true</code> if this is the error string,
+     *                      otherwise a normal output stream. This is
      *                      passed to the project so it knows
      *                      which stream it is receiving.
      */
@@ -120,7 +120,7 @@ public class DemuxOutputStream extends OutputStream {
 
     /**
      * Returns the buffer associated with the current thread.
-     * 
+     *
      * @return a BufferInfo for the current thread to write data to
      */
     private BufferInfo getBufferInfo() {
@@ -138,7 +138,7 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Resets the buffer for the current thread.
      */
-    private void resetBufferInfo() {    
+    private void resetBufferInfo() {
         Thread current = Thread.currentThread();
         BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
         try {
@@ -149,11 +149,11 @@ public class DemuxOutputStream extends OutputStream {
         bufferInfo.buffer = new ByteArrayOutputStream();
         bufferInfo.skip = false;
     }
-    
+
     /**
      * Removes the buffer for the current thread.
      */
-    private void removeBuffer() {    
+    private void removeBuffer() {
         Thread current = Thread.currentThread();
         buffers.remove (current);
     }
@@ -187,7 +187,7 @@ public class DemuxOutputStream extends OutputStream {
      *
      * @param buffer the ByteArrayOutputStream used to collect the output
      * until a line separator is seen.
-     * 
+     *
      * @see Project#demuxOutput(String,boolean)
      */
     protected void processBuffer(ByteArrayOutputStream buffer) {
@@ -201,7 +201,7 @@ public class DemuxOutputStream extends OutputStream {
      *
      * @param buffer the ByteArrayOutputStream used to collect the output
      * until a line separator is seen.
-     * 
+     *
      * @see Project#demuxOutput(String,boolean)
      */
     protected void processFlush(ByteArrayOutputStream buffer) {
@@ -214,7 +214,7 @@ public class DemuxOutputStream extends OutputStream {
      * Equivalent to flushing the stream.
      *
      * @exception IOException if there is a problem closing the stream.
-     * 
+     *
      * @see #flush
      */
     public void close() throws IOException {

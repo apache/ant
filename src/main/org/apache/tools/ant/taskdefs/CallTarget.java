@@ -78,7 +78,7 @@ import java.io.IOException;
  * defined in the project itself.
  *
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  *
  * @since Ant 1.2
  *
@@ -131,12 +131,12 @@ public class CallTarget extends Task {
         if (callee == null) {
             init();
         }
-        
+
         if (subTarget == null) {
-            throw new BuildException("Attribute target is required.", 
+            throw new BuildException("Attribute target is required.",
                                      getLocation());
         }
-        
+
         callee.setAntfile(getProject().getProperty("ant.file"));
         callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);
@@ -197,13 +197,13 @@ public class CallTarget extends Task {
             super.handleOutput(line);
         }
     }
-    
+
     /**
      * @see Task#handleInput(byte[], int, int)
-     * 
+     *
      * @since Ant 1.6
      */
-    public int handleInput(byte[] buffer, int offset, int length) 
+    public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (callee != null) {
             return callee.handleInput(buffer, offset, length);
@@ -224,7 +224,7 @@ public class CallTarget extends Task {
             super.handleFlush(line);
         }
     }
-    
+
     /**
      * Pass output sent to System.err to the new project.
      *
@@ -237,7 +237,7 @@ public class CallTarget extends Task {
             super.handleErrorOutput(line);
         }
     }
-    
+
     /**
      * Pass output sent to System.err to the new project.
      *

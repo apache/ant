@@ -80,7 +80,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     protected int warnings;
     protected boolean error = false;
     protected boolean emacsMode;
-    
+
     protected BufferedReader br;
 
     /**
@@ -119,9 +119,9 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     protected JikesOutputParser(Task task, boolean emacsMode) {
         super();
 
-        System.err.println("As of Ant 1.2 released in October 2000, the " 
+        System.err.println("As of Ant 1.2 released in October 2000, the "
             + "JikesOutputParser class");
-        System.err.println("is considered to be dead code by the Ant " 
+        System.err.println("is considered to be dead code by the Ant "
             + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
 
@@ -145,9 +145,9 @@ public class JikesOutputParser implements ExecuteStreamHandler {
         String line;
         String lower;
         // We assume, that every output, jike does, stands for an error/warning
-        // XXX 
+        // XXX
         // Is this correct?
-        
+
         // TODO:
         // A warning line, that shows code, which contains a variable
         // error will cause some trouble. The parser should definitely

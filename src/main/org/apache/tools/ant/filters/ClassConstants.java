@@ -76,7 +76,8 @@ import java.lang.reflect.Method;
  * Example:<br>
  * <pre>&lt;classconstants/&gt;</pre>
  * Or:
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;</pre>
+ * <pre>&lt;filterreader
+ *    classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;</pre>
  * @author Magesh Umasankar
  */
 public final class ClassConstants
@@ -91,7 +92,7 @@ public final class ClassConstants
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public ClassConstants() {
@@ -100,7 +101,7 @@ public final class ClassConstants
 
     /**
      * Creates a new filtered reader. The contents of the passed-in reader
-     * are expected to be the name of the class from which to produce a 
+     * are expected to be the name of the class from which to produce a
      * list of constants.
      *
      * @param in A Reader object providing the underlying stream.
@@ -112,10 +113,10 @@ public final class ClassConstants
 
     /**
      * Reads and assembles the constants declared in a class file.
-     * 
+     *
      * @return the next character in the list of constants, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
      * during reading, or if the constants for the specified class cannot
      * be read (for example due to the class not being found).
@@ -144,7 +145,7 @@ public final class ClassConstants
                     final Class javaClassHelper =
                         Class.forName(JAVA_CLASS_HELPER);
                     if (javaClassHelper != null) {
-                        final Class params[] = {
+                        final Class[] params = {
                             byte[].class
                         };
                         final Method getConstants =
@@ -180,10 +181,10 @@ public final class ClassConstants
     /**
      * Creates a new ClassConstants using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

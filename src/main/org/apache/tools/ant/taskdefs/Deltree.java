@@ -135,13 +135,13 @@ public class Deltree extends Task {
                 removeDir(f);
             } else {
                 if (!f.delete()) {
-                    throw new BuildException("Unable to delete file " 
+                    throw new BuildException("Unable to delete file "
                                              + f.getAbsolutePath());
                 }
             }
         }
         if (!dir.delete()) {
-            throw new BuildException("Unable to delete directory " 
+            throw new BuildException("Unable to delete directory "
                                      + dir.getAbsolutePath());
         }
     }

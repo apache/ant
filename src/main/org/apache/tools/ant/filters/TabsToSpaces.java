@@ -89,7 +89,7 @@ public final class TabsToSpaces
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public TabsToSpaces() {
@@ -109,12 +109,12 @@ public final class TabsToSpaces
     /**
      * Returns the next character in the filtered stream, converting tabs
      * to the specified number of spaces.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -139,7 +139,7 @@ public final class TabsToSpaces
 
     /**
      * Sets the tab length.
-     * 
+     *
      * @param tabLength the number of spaces to be used when converting a tab.
      */
     public final void setTablength(final int tabLength) {
@@ -148,7 +148,7 @@ public final class TabsToSpaces
 
     /**
      * Returns the tab length.
-     * 
+     *
      * @return the number of spaces used when converting a tab
      */
     private final int getTablength() {
@@ -158,10 +158,10 @@ public final class TabsToSpaces
     /**
      * Creates a new TabsToSpaces using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */

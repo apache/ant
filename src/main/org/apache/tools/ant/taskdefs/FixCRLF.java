@@ -1025,7 +1025,7 @@ public class FixCRLF extends MatchingTask {
          * @see EnumeratedAttribute#getValues
          */
         public String[] getValues() {
-            return new String[] {"asis", "cr", "lf", "crlf", 
+            return new String[] {"asis", "cr", "lf", "crlf",
                                  "mac", "unix", "dos"};
         }
     }

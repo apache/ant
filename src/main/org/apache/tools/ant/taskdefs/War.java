@@ -174,7 +174,7 @@ public class War extends Jar {
     /**
      * Overriden from Zip class to deal with web.xml
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath, 
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
         throws IOException {
         // If the file being added is WEB-INF/web.xml, we warn if it's

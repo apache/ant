@@ -95,7 +95,7 @@ public abstract class BaseFilterReader
      *
      * @param in A Reader object providing the underlying stream.
      *           Must not be <code>null</code>.
-     *           
+     *
      */
     public BaseFilterReader(final Reader in) {
         super(in);
@@ -106,7 +106,7 @@ public abstract class BaseFilterReader
      * until some input is available, an I/O error occurs, or the end of the
      * stream is reached.
      *
-     * @param      cbuf  Destination buffer to write characters to. 
+     * @param      cbuf  Destination buffer to write characters to.
      *                   Must not be <code>null</code>.
      * @param      off   Offset at which to start storing characters.
      * @param      len   Maximum number of characters to read.
@@ -143,7 +143,7 @@ public abstract class BaseFilterReader
      * @exception  IllegalArgumentException  If <code>n</code> is negative.
      * @exception  IOException  If an I/O error occurs
      */
-    public final long skip(final long n) 
+    public final long skip(final long n)
         throws IOException, IllegalArgumentException {
         if (n < 0L) {
             throw new IllegalArgumentException("skip value is negative");
@@ -159,7 +159,7 @@ public abstract class BaseFilterReader
 
     /**
      * Sets the initialized status.
-     * 
+     *
      * @param initialized Whether or not the filter is initialized.
      */
     protected final void setInitialized(final boolean initialized) {
@@ -168,7 +168,7 @@ public abstract class BaseFilterReader
 
     /**
      * Returns the initialized status.
-     * 
+     *
      * @return whether or not the filter is initialized
      */
     protected final boolean getInitialized() {
@@ -177,8 +177,8 @@ public abstract class BaseFilterReader
 
     /**
      * Sets the project to work with.
-     * 
-     * @param project The project this filter is part of. 
+     *
+     * @param project The project this filter is part of.
      *                Should not be <code>null</code>.
      */
     public final void setProject(final Project project) {
@@ -187,7 +187,7 @@ public abstract class BaseFilterReader
 
     /**
      * Returns the project this filter is part of.
-     * 
+     *
      * @return the project this filter is part of
      */
     protected final Project getProject() {
@@ -197,22 +197,22 @@ public abstract class BaseFilterReader
     /**
      * Reads a line of text ending with '\n' (or until the end of the stream).
      * The returned String retains the '\n'.
-     * 
+     *
      * @return the line read, or <code>null</code> if the end of the stream
      * has already been reached
-     * 
-     * @exception IOException if the underlying reader throws one during 
+     *
+     * @exception IOException if the underlying reader throws one during
      *                        reading
      */
     protected final String readLine() throws IOException {
         int ch = in.read();
-        
+
         if (ch == -1) {
             return null;
         }
-            
+
         StringBuffer line = new StringBuffer();
-                
+
         while (ch != -1) {
             line.append ((char) ch);
             if (ch == '\n') {
@@ -225,10 +225,10 @@ public abstract class BaseFilterReader
 
     /**
      * Reads to the end of the stream, returning the contents as a String.
-     * 
+     *
      * @return the remaining contents of the reader, as a String
-     * 
-     * @exception IOException if the underlying reader throws one during 
+     *
+     * @exception IOException if the underlying reader throws one during
      *            reading
      */
     protected final String readFully() throws IOException {

@@ -1073,7 +1073,7 @@ public class IntrospectionHelper implements BuildListener {
         }
         addTypeMethods.add(method);
     }
-    
+
 
     /**
      * Search the list of methods to find the first method
@@ -1082,7 +1082,7 @@ public class IntrospectionHelper implements BuildListener {
     private Method findMatchingMethod(Class paramClass, List methods) {
         Class matchedClass = null;
         Method matchedMethod = null;
-        
+
         for (int i = 0; i < methods.size(); ++i) {
             Method method = (Method) methods.get(i);
             Class  methodClass = method.getParameterTypes()[0];

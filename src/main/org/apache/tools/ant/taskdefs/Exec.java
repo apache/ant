@@ -76,7 +76,7 @@ import org.apache.tools.ant.Task;
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
  *
- * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute} 
+ * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute}
  *             instead.
  */
 public class Exec extends Task {
@@ -88,9 +88,9 @@ public class Exec extends Task {
     private boolean failOnError = false;
 
     public Exec() {
-        System.err.println("As of Ant 1.2 released in October 2000, " 
+        System.err.println("As of Ant 1.2 released in October 2000, "
             + "the Exec class");
-        System.err.println("is considered to be dead code by the Ant " 
+        System.err.println("is considered to be dead code by the Ant "
             + "developers and is unmaintained.");
         System.err.println("Don\'t use it!");
     }
@@ -124,10 +124,10 @@ public class Exec extends Task {
                 } else {
                     String ant = getProject().getProperty("ant.home");
                     if (ant == null) {
-                        throw new BuildException("Property 'ant.home' not " 
+                        throw new BuildException("Property 'ant.home' not "
                             + "found", getLocation());
                     }
-                
+
                     String antRun = getProject().resolveFile(ant + "/bin/antRun.bat").toString();
                     command = antRun + " " + dir + " " + command;
                 }
@@ -212,7 +212,7 @@ public class Exec extends Task {
 
     protected void outputLog(String line, int messageLevel) {
         if (fos == null) {
-            log(line, messageLevel); 
+            log(line, messageLevel);
         } else {
             fos.println(line);
         }

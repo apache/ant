@@ -82,15 +82,18 @@ public final class HeadFilter
     /** Number of lines currently read in. */
     private long linesRead = 0;
 
+    /** Default number of lines to show */
+    private static int DEFAULT_NUM_LINES = 10;
+
     /** Number of lines to be returned in the filtered stream. */
-    private long lines = 10;
+    private long lines = DEFAULT_NUM_LINES;
 
     /** Number of lines to be skipped. */
     private long skip = 0;
 
     /** A line tokenizer */
     private TokenFilter.LineTokenizer lineTokenizer = null;
-    
+
     /** the current line from the input stream */
     private String    line      = null;
     /** the position in the current line */
@@ -137,16 +140,18 @@ public final class HeadFilter
 
         while (line == null || line.length() == 0) {
             line = lineTokenizer.getToken(in);
-            if (line == null)
+            if (line == null) {
                 return -1;
+            }
             line = headFilter(line);
             linePos = 0;
         }
 
         int ch = line.charAt(linePos);
         linePos++;
-        if (linePos == line.length())
+        if (linePos == line.length()) {
             line = null;
+        }
         return ch;
     }
 
@@ -171,7 +176,7 @@ public final class HeadFilter
     /**
      * Sets the number of lines to be skipped in the filtered stream.
      *
-     * @param lines the number of lines to be skipped in the filtered stream
+     * @param skip the number of lines to be skipped in the filtered stream
      */
     public final void setSkip(final long skip) {
         this.skip = skip;

@@ -219,7 +219,7 @@ public class Tar extends MatchingTask {
     public void setCompression(TarCompressionMethod mode) {
         this.compression = mode;
     }
-    
+
     /**
      * do the business
      */
@@ -336,7 +336,7 @@ public class Tar extends MatchingTask {
             filesets = savedFileSets;
         }
     }
-    
+
     /**
      * tar a file
      */
@@ -489,12 +489,12 @@ public class Tar extends MatchingTask {
         }
 
         /**
-         * A 3 digit octal string, specify the user, group and 
-         * other modes in the standard Unix fashion; 
+         * A 3 digit octal string, specify the user, group and
+         * other modes in the standard Unix fashion;
          * optional, default=0644
          */
         public void setMode(String octalString) {
-            this.fileMode = 
+            this.fileMode =
                 UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
         }
 
@@ -503,14 +503,14 @@ public class Tar extends MatchingTask {
         }
 
         /**
-         * A 3 digit octal string, specify the user, group and 
-         * other modes in the standard Unix fashion; 
+         * A 3 digit octal string, specify the user, group and
+         * other modes in the standard Unix fashion;
          * optional, default=0755
          *
          * @since Ant 1.6
          */
         public void setDirMode(String octalString) {
-            this.dirMode = 
+            this.dirMode =
                 UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
         }
 
@@ -522,7 +522,7 @@ public class Tar extends MatchingTask {
         }
 
         /**
-         * The username for the tar entry 
+         * The username for the tar entry
          * This is not the same as the UID, which is
          * not currently set by the task.
          */
@@ -589,7 +589,7 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Set of options for long file handling in the task. 
+     * Set of options for long file handling in the task.
      *
      * @author Magesh Umasankar
      */

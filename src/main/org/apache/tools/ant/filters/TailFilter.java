@@ -99,14 +99,14 @@ public final class TailFilter
 
     /** A line tokenizer */
     private TokenFilter.LineTokenizer lineTokenizer = null;
-    
+
     /** the current line from the input stream */
     private String    line      = null;
     /** the position in the current line */
     private int       linePos   = 0;
 
     private LinkedList lineList = new LinkedList();
-    
+
     /**
      * Constructor for "dummy" instances.
      *
