@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<project name="available-test" basedir="." default="test1">
+<project name="immutable-test" basedir="." default="test1">
 
   <target name="test1">
     <property name="test" value="original"/>
     <available file="immutable.xml" property="test" value="override"/>
   </target>
-  
+
   <target name="test2">
     <tstamp/>
     <tstamp prefix="start"/>
@@ -28,7 +28,7 @@
     <property name="test" value="original"/>
     <checksum file="immutable.xml" verifyProperty="test"/>
   </target>
-  
+
   <target name="test6">
     <property name="test1" value="original"/>
     <property name="test2" value="original"/>
