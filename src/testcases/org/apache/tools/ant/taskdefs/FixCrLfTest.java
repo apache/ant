@@ -201,6 +201,42 @@ public class FixCrLfTest extends BuildFileTest {
         executeTarget("testPreserveLastModified");
     }
 
+    public void testFilter1() {
+        executeTarget("testFilter1");
+    }
+
+    public void testFilter2() {
+        executeTarget("testFilter2");
+    }
+
+    public void testFilter3() {
+        executeTarget("testFilter3");
+    }
+
+    public void testFilter4() {
+        executeTarget("testFilter4");
+    }
+
+    public void testFilter5() {
+        executeTarget("testFilter5");
+    }
+
+    public void testFilter6() {
+        executeTarget("testFilter6");
+    }
+
+    public void testFilter7() {
+        executeTarget("testFilter7");
+    }
+
+    public void testFilter8() {
+        executeTarget("testFilter8");
+    }
+
+    public void testFilter9() {
+        executeTarget("testFilter9");
+    }
+
     public void assertEqualContent(File expect, File result)
         throws AssertionFailedError, IOException {
         if (!result.exists()) {

@@ -194,4 +194,100 @@
     <fail unless="fs" />
   </target>
 
+  <macrodef name="testjunk">
+    <attribute name="n" />
+    <sequential>
+      <fail>
+        <condition>
+          <not>
+            <filesmatch file1="result/Junk@{n}.java"
+                        file2="expected/Junk@{n}.java" />
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <target name="testFilter1" depends="init">
+    <copy file="input/Junk1.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="add"
+                 eol="crlf" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="1" />
+  </target>
+
+  <target name="testFilter2" depends="init">
+    <copy file="input/Junk2.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="add" cr="add" eol="crlf" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="2" />
+  </target>
+
+  <target name="testFilter3" depends="init">
+    <copy file="input/Junk3.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="remove" eol="lf" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="3" />
+  </target>
+
+  <target name="testFilter4" depends="init">
+    <copy file="input/Junk4.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="remove" eol="lf" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="4" />
+  </target>
+
+  <target name="testFilter5" depends="init">
+    <copy file="input/Junk5.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf tab="remove" eol="lf" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="5" />
+  </target>
+
+  <target name="testFilter6" depends="init">
+    <copy file="input/Junk6.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf tab="add" cr="remove" eol="crlf" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="6" />
+  </target>
+
+  <target name="testFilter7" depends="init">
+    <copy file="input/Junk7.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf tab="add" cr="add" eof="asis" />
+      </filterchain>
+    </copy>
+    <testjunk n="7" />
+  </target>
+
+  <target name="testFilter8" depends="init">
+    <copy file="input/Junk8.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="add" cr="add" eof="add" />
+      </filterchain>
+    </copy>
+    <testjunk n="8" />
+  </target>
+
+  <target name="testFilter9" depends="init">
+    <copy file="input/Junk9.java" todir="result" overwrite="true">
+      <filterchain>
+        <fixcrlf javafiles="true" tab="remove" cr="remove" eof="remove" />
+      </filterchain>
+    </copy>
+    <testjunk n="9" />
+  </target>
+
 </project>
