@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 
@@ -130,6 +131,10 @@ public class Ilasm
      */
     protected Vector referenceFilesets = new Vector();
 
+    /**
+     * @since Ant 1.7
+     */
+    private boolean isMono = !Os.isFamily("windows");
 
     /**
      *  constructor inits everything and set up the search pattern
@@ -262,7 +267,10 @@ public class Ilasm
      *@return    the appropriate string from the state of the listing flag
      */
     protected String getListingParameter() {
-        return listing ? "/listing" : "/nolisting";
+        if (!isMono) {
+            return listing ? "/listing" : "/nolisting";
+        }
+        return null;
     }
 
 
@@ -427,6 +435,17 @@ public class Ilasm
      */
     public void setTargetType(TargetTypes targetType) {
         this.targetType = targetType.getValue();
+    }
+
+    /**
+     * Explicitly override the Mono auto-detection.
+     *
+     * <p>Defaults to false on Windows and true on any other platform.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void setMono(boolean b) {
+        isMono = b;
     }
 
     /**

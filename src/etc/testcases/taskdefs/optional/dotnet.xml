@@ -272,7 +272,12 @@
     </exec>
   </target>
 
-  <target name="testILASM"  depends="validate_ilasm"  if="ilasm.found">
+  <target name="testILASM"
+    depends="testILASM-Mono,testILASM-MS"
+    if="ilasm.found"/>
+
+  <target name="ilasm" depends="validate_ilasm" 
+      if="ilasm.found">
     <property name="testILASM.exe"
       location="${build.dir}/ExampleIlasm.exe" />
     <ilasm
@@ -283,8 +288,21 @@
     </ilasm>
     <available property="ilasm.created" file="${testILASM.exe}"/>
     <fail unless="ilasm.created">No app ${testILASM.exe} created</fail>
-    <exec executable="${testILASM.exe}" failonerror="true" />
   </target>
+
+    <target name="testILASM-MS" depends="ilasm" 
+      if="ilasm.found" unless="mono.ilasm.found">
+      <exec executable="${testILASM.exe}"
+        failonerror="true"/>
+    </target>
+
+    <target name="testILASM-Mono" depends="ilasm" 
+      if="mono.ilasm.found">
+      <exec executable="${mono.executable}"
+        failonerror="true">
+        <arg value="${testILASM.exe}"/>
+      </exec>
+    </target>
 
   <!-- not including this in the test as it creates an exe in the src dir -->
 
