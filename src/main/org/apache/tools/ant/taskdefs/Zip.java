@@ -140,7 +140,7 @@ public class Zip extends MatchingTask {
     /**
      * Adds a set of files (nested fileset attribute).
      */
-    public void addFileset(ZipFileSet set) {
+    public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
