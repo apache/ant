@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -23,6 +24,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
@@ -413,7 +415,8 @@ public class WebsphereDeploymentTool
         {
             lookupPath.append( classpath );
         }
-        return new URLClassLoader( lookupPath.toURLs() );
+        final URL[] urls = PathUtil.toURLs( lookupPath );
+        return new URLClassLoader( urls );
     }
 
     protected DescriptorHandler getDescriptorHandler( File srcDir )

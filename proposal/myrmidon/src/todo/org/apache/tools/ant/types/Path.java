@@ -7,15 +7,14 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.DataType;
-import org.apache.tools.ant.util.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.DataType;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -130,55 +129,6 @@ public class Path
     public void addFileset( final FileSet fileSet )
     {
         m_elements.add( fileSet );
-    }
-
-    /**
-     * Add the Java Runtime classes to this Path instance.
-     */
-    public void addJavaRuntime()
-        throws TaskException
-    {
-        if( System.getProperty( "java.vendor" ).toLowerCase( Locale.US ).indexOf( "microsoft" ) >= 0 )
-        {
-            // Pull in *.zip from packages directory
-            FileSet msZipFiles = new FileSet();
-            msZipFiles.setDir( new File( System.getProperty( "java.home" ) + File.separator + "Packages" ) );
-            msZipFiles.setIncludes( "*.ZIP" );
-            addFileset( msZipFiles );
-        }
-        else if( "Kaffe".equals( System.getProperty( "java.vm.name" ) ) )
-        {
-            FileSet kaffeJarFiles = new FileSet();
-            kaffeJarFiles.setDir( new File( System.getProperty( "java.home" )
-                                            + File.separator + "share"
-                                            + File.separator + "kaffe" ) );
-
-            kaffeJarFiles.setIncludes( "*.jar" );
-            addFileset( kaffeJarFiles );
-        }
-        else
-        {
-            // JDK > 1.1 seems to set java.home to the JRE directory.
-            final String rt = System.getProperty( "java.home" ) +
-                File.separator + "lib" + File.separator + "rt.jar";
-            addExisting( new Path( rt ) );
-            // Just keep the old version as well and let addExisting
-            // sort it out.
-            final String rt2 = System.getProperty( "java.home" ) +
-                File.separator + "jre" + File.separator + "lib" +
-                File.separator + "rt.jar";
-            addExisting( new Path( rt2 ) );
-
-            // Added for MacOS X
-            final String classes = System.getProperty( "java.home" ) +
-                File.separator + ".." + File.separator + "Classes" +
-                File.separator + "classes.jar";
-            addExisting( new Path( classes ) );
-            final String ui = System.getProperty( "java.home" ) +
-                File.separator + ".." + File.separator + "Classes" +
-                File.separator + "ui.jar";
-            addExisting( new Path( ui ) );
-        }
     }
 
     /**
@@ -309,32 +259,4 @@ public class Path
             throw new Error( te.toString() );
         }
     }
-
-    /**
-     * Returns an array of URLs - useful for building a ClassLoader.
-     */
-    public URL[] toURLs()
-        throws TaskException
-    {
-        try
-        {
-            final String[] list = list();
-
-            final URL[] result = new URL[ list.length ];
-
-            // path containing one or more elements
-            for( int i = 0; i < list.length; i++ )
-            {
-                result[ i ] = new File( list[ i ] ).toURL();
-            }
-
-            return result;
-        }
-        catch( final IOException ioe )
-        {
-            final String message = "Malformed path entry. Reason:" + ioe;
-            throw new TaskException( message, ioe );
-        }
-    }
-
 }

@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -334,7 +335,8 @@ public class XMLValidateTask
             Class readerClass = null;
             if( m_classpath != null )
             {
-                final ClassLoader classLoader = new URLClassLoader( m_classpath.toURLs() );
+                final URL[] urls = PathUtil.toURLs( m_classpath );
+                final ClassLoader classLoader = new URLClassLoader( urls );
                 readerClass = classLoader.loadClass( m_readerClassName );
             }
             else

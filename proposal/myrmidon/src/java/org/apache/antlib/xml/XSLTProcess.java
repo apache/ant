@@ -9,12 +9,14 @@ package org.apache.antlib.xml;
 
 import java.io.File;
 import java.net.URLClassLoader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * A Task to process via XSLT a set of XML documents. This is useful for
@@ -381,7 +383,8 @@ public class XSLTProcess
         }
         else
         {
-            final ClassLoader classLoader = new URLClassLoader( m_classpath.toURLs() );
+            final URL[] urls = PathUtil.toURLs( m_classpath );
+            final ClassLoader classLoader = new URLClassLoader( urls );
             return classLoader.loadClass( classname );
         }
     }

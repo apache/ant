@@ -24,6 +24,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Generate a dependency file for a given set of classes
@@ -570,7 +571,8 @@ public class Depend extends MatchingTask
         {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
-            final ClassLoader classLoader = new URLClassLoader( dependClasspath.toURLs() );
+            final URL[] urls = PathUtil.toURLs( dependClasspath );
+            final ClassLoader classLoader = new URLClassLoader( urls );
 
             Hashtable classpathFileCache = new Hashtable();
             Object nullFileMarker = new Object();

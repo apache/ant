@@ -29,6 +29,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SysProperties;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -696,7 +697,8 @@ public class JUnitTask extends Task
             if( classpath != null )
             {
                 getLogger().debug( "Using CLASSPATH " + classpath );
-                classLoader = new URLClassLoader( classpath.toURLs() );
+                final URL[] urls = PathUtil.toURLs( classpath );
+                classLoader = new URLClassLoader( urls );
             }
             runner = new JUnitTestRunner( test,
                                           test.getHaltonerror(),

@@ -11,6 +11,7 @@ import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 
 // ====================================================================
 
@@ -93,9 +94,8 @@ import org.apache.tools.ant.types.Path;
  * @version 0.3
  */
 public class CSharp
-    extends org.apache.tools.ant.taskdefs.MatchingTask
+    extends MatchingTask
 {
-
     /**
      * name of the executable. the .exe suffix is deliberately not included in
      * anticipation of the unix version
@@ -958,6 +958,5 @@ public class CSharp
     protected boolean notEmpty( String s )
     {
         return s != null && s.length() != 0;
-    }// end execute
-
-}//end class
+    }
+}

@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -33,6 +34,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.util.depend.Dependencies;
 import org.apache.tools.ant.util.depend.Filter;
 import org.xml.sax.InputSource;
@@ -332,7 +334,8 @@ public class GenericDeploymentTool
         }
         else
         {
-            classpathLoader = new URLClassLoader( combinedClasspath.toURLs() );
+            final URL[] urls = PathUtil.toURLs( combinedClasspath );
+            classpathLoader = new URLClassLoader( urls );
         }
 
         return classpathLoader;

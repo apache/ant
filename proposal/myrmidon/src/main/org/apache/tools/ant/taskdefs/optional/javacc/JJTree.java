@@ -17,6 +17,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 
 /**
  * Taskdef for the JJTree compiler compiler.
@@ -174,7 +175,7 @@ public class JJTree extends Task
         }
         final Path classpath = cmdl.createClasspath();
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
-        classpath.addJavaRuntime();
+        PathUtil.addJavaRuntime( classpath );
 
         cmdl.addVmArgument( "-mx140M" );
         cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );

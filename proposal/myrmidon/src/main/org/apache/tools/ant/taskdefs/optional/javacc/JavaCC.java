@@ -18,6 +18,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
@@ -228,7 +229,7 @@ public class JavaCC extends Task
         }
         final Path classpath = cmdl.createClasspath();
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
-        classpath.addJavaRuntime();
+        PathUtil.addJavaRuntime( classpath );
 
         cmdl.addVmArgument( "-mx140M" );
         cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );

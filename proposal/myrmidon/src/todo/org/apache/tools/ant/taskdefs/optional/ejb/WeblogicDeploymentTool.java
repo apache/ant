@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -24,6 +25,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathUtil;
 import org.xml.sax.InputSource;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool
@@ -335,7 +337,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
             lookupPath.append( classpath );
         }
 
-        return new URLClassLoader( lookupPath.toURLs() );
+        final URL[] urls = PathUtil.toURLs( lookupPath );
+        return new URLClassLoader( urls );
     }
 
     protected DescriptorHandler getWeblogicDescriptorHandler( final File srcDir )
