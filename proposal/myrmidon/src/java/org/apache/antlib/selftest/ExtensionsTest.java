@@ -5,11 +5,11 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.selftest;
+package org.apache.antlib.selftest;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.libs.selftest.extension1.ExtensionsLoadedClass;
+import org.apache.antlib.selftest.extension1.ExtensionsLoadedClass;
 
 /**
  * This is to test whether extension is loaded.

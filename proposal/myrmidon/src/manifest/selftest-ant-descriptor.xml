@@ -1,11 +1,11 @@
-<ant-lib> 
+<ant-lib>
   <types>
     <!-- tasks to test operation of engine -->
-    <task name="prim-test" classname="org.apache.myrmidon.libs.selftest.PrimitiveTypesTest" />
-    <task name="sub-elements-test" classname="org.apache.myrmidon.libs.selftest.SubElementTest" />
-    <task name="conf-test" classname="org.apache.myrmidon.libs.selftest.ConfigurationTest" />
-    <task name="content-test" classname="org.apache.myrmidon.libs.selftest.ContentTest" />
-    <task name="file-manip-test" classname="org.apache.myrmidon.libs.selftest.FileManipulationTest" />
-    <task name="extensions-test" classname="org.apache.myrmidon.libs.selftest.ExtensionsTest" />
+    <task name="prim-test" classname="org.apache.antlib.selftest.PrimitiveTypesTest" />
+    <task name="sub-elements-test" classname="org.apache.antlib.selftest.SubElementTest" />
+    <task name="conf-test" classname="org.apache.antlib.selftest.ConfigurationTest" />
+    <task name="content-test" classname="org.apache.antlib.selftest.ContentTest" />
+    <task name="file-manip-test" classname="org.apache.antlib.selftest.FileManipulationTest" />
+    <task name="extensions-test" classname="org.apache.antlib.selftest.ExtensionsTest" />
   </types>
 </ant-lib>
