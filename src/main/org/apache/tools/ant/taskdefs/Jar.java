@@ -84,7 +84,7 @@ public class Jar extends Zip {
 
     public void setJarfile(File jarFile) {
         log("DEPRECATED - The jarfile attribute is deprecated. Use file attribute instead.");
-        super.setFile(jarFile);
+        setFile(jarFile);
     }
 
     public void addConfiguredManifest(Manifest newManifest) throws ManifestException {
