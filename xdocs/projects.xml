@@ -267,6 +267,35 @@
         </table>
       </subsection>
 
+      <subsection name="JAM - JavaGen Ant Modules">
+
+        <p>JAM is a modular Ant toolkit for developing and testing Java/J2EE
+        applications. JAM supports EJB and Servlet/JSP development using XDoclet,
+        JUnit, Cactus, Maven, Castor and MDA/UML code generation on various J2EE
+        servers including JBoss.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.javagen.com/jam.jsp">http://www.javagen.com/jam.jsp</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.javagen.com/feedback.do">Feedback</a> <br/>
+                <a href="http://www.javagen.com/bugs.do">Bug Reports</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Krysalis Centipede">
         <p>The Centipede admin told us, that that project
            "is no more" and that "Antworks has taken it place."
