@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import org.apache.tools.ant.types.Path;
  */
 public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
 
-    private Project project;
     private Commandline commandline;
 
     private static final String VSS_SERVER_PATH = "\\\\server\\vss\\srcsafe.ini";
@@ -52,7 +51,7 @@ public class MSVSSTest extends BuildFileTest implements MSVSSConstants {
     private static final String DATE = "00-00-00";
     private static final String DATE2 = "01-01-01";
     private static final String OUTPUT = "output.log";
-    private static final String SS_DIR = "c:/winnt";
+    private static final String SS_DIR = "c:/winnt".replace('/', File.separatorChar);
 
     /**
      *  Constructor for the MSVSSTest object
