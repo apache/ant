@@ -378,6 +378,8 @@ public class Tar extends MatchingTask {
             }
             te.setUserName(tarFileSet.getUserName());
             te.setGroupName(tarFileSet.getGroup());
+            te.setUserId(tarFileSet.getUid());
+            te.setGroupId(tarFileSet.getGid());
 
             tOut.putNextEntry(te);
 
@@ -436,6 +438,8 @@ public class Tar extends MatchingTask {
 
         private String userName = "";
         private String groupName = "";
+        private int    uid;
+        private int    gid;
         private String prefix = "";
         private String fullpath = "";
         private boolean preserveLeadingSlashes = false;
@@ -519,8 +523,7 @@ public class Tar extends MatchingTask {
 
         /**
          * The username for the tar entry
-         * This is not the same as the UID, which is
-         * not currently set by the task.
+         * This is not the same as the UID.
          * @param userName the user name for the tar entry.
          */
         public void setUserName(String userName) {
@@ -535,9 +538,24 @@ public class Tar extends MatchingTask {
         }
 
         /**
+         * The uid for the tar entry
+         * This is not the same as the User name.
+         * @param userName the user name for the tar entry.
+         */
+        public void setUid(int uid) {
+            this.uid = uid;
+        }
+
+        /**
+         * @return the uid for the tar entry
+         */
+        public int getUid() {
+            return uid;
+        }
+
+        /**
          * The groupname for the tar entry; optional, default=""
-         * This is not the same as the GID, which is
-         * not currently set by the task.
+         * This is not the same as the GID.
          * @param groupName the group name string.
          */
         public void setGroup(String groupName) {
@@ -549,6 +567,22 @@ public class Tar extends MatchingTask {
          */
         public String getGroup() {
             return groupName;
+        }
+
+        /**
+         * The GID for the tar entry; optional, default="0"
+         * This is not the same as the group name.
+         * @param groupName the group name string.
+         */
+        public void setGid(int gid) {
+            this.gid = gid;
+        }
+
+        /**
+         * @return the group identifier.
+         */
+        public int getGid() {
+            return gid;
         }
 
         /**
