@@ -9,28 +9,23 @@ package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import org.apache.avalon.framework.camelot.AbstractDeployer;
-import org.apache.avalon.framework.camelot.DefaultLocator;
-import org.apache.avalon.framework.camelot.DeployerUtil;
-import org.apache.avalon.framework.camelot.DeploymentException;
-import org.apache.avalon.framework.camelot.Loader;
-import org.apache.avalon.framework.camelot.Registry;
-import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.api.Task;
+import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.components.converter.ConverterInfo;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.executor.Executor;
@@ -38,6 +33,7 @@ import org.apache.myrmidon.components.type.ComponentFactory;
 import org.apache.myrmidon.components.type.DefaultComponentFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
+import org.xml.sax.SAXException;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -45,21 +41,22 @@ import org.apache.myrmidon.converter.Converter;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultTskDeployer
-    extends AbstractDeployer
-    implements Composable, TskDeployer, Loggable
+    extends AbstractLoggable
+    implements Composable, TskDeployer
 {
     private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
-    private ConverterRegistry     m_converterInfoRegistry;
-    private TypeManager           m_typeManager;
+    private DefaultConfigurationBuilder  m_configurationBuilder;
+    private ConverterRegistry            m_converterInfoRegistry;
+    private TypeManager                  m_typeManager;
 
     /**
      * Default constructor.
      */
     public DefaultTskDeployer()
     {
-        m_autoUndeploy = true;
-        m_type = "Task";
+        //m_autoUndeploy = true;
+        //m_type = "Task";
     }
 
     /**
@@ -75,6 +72,16 @@ public class DefaultTskDeployer
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
+    public void deploy( final String location, final URL url )
+        throws DeploymentException
+    {
+        //checkDeployment( location, url );
+        final File file = getFileFor( url );
+
+        getLogger().info( "Deploying AntLib file (" + file + ") as " + location );
+        deployFromFile( location, file );
+    }
+
     /**
      * Deploy a file.
      * Eventually this should be cached for performance reasons.
@@ -86,7 +93,7 @@ public class DefaultTskDeployer
     protected void deployFromFile( final String location, final File file )
         throws DeploymentException
     {
-        final ZipFile zipFile = DeployerUtil.getZipFileFor( file );
+        final ZipFile zipFile = getZipFileFor( file );
 
         URL url = null;
 
@@ -109,7 +116,7 @@ public class DefaultTskDeployer
     private void loadResources( final ZipFile zipFile, final String location, final URL url )
         throws DeploymentException
     {
-        final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
+        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
 
         final DefaultComponentFactory factory =
             new DefaultComponentFactory( new URL[] { url } );
@@ -147,9 +154,9 @@ public class DefaultTskDeployer
     public void deployConverter( String name, String location, URL url )
         throws DeploymentException
     {
-        checkDeployment( location, url );
-        final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
-        final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
+        //checkDeployment( location, url );
+        final ZipFile zipFile = getZipFileFor( getFileFor( url ) );
+        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
 
         try
         {
@@ -178,10 +185,10 @@ public class DefaultTskDeployer
     public void deployDataType( final String name, final String location, final URL url )
         throws DeploymentException
     {
-        checkDeployment( location, url );
-        final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
+        //checkDeployment( location, url );
+        final ZipFile zipFile = getZipFileFor( getFileFor( url ) );
         final Configuration datatypedefs =
-            DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
+            loadConfiguration( zipFile, TSKDEF_FILE );
 
         try
         {
@@ -210,9 +217,9 @@ public class DefaultTskDeployer
     public void deployTask( final String name, final String location, final URL url )
         throws DeploymentException
     {
-        checkDeployment( location, url );
-        final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
-        final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
+        //checkDeployment( location, url );
+        final ZipFile zipFile = getZipFileFor( getFileFor( url ) );
+        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
 
         try
         {
@@ -236,6 +243,106 @@ public class DefaultTskDeployer
         {
             throw new DeploymentException( "Failed to deploy " + name, e );
         }
+    }
+
+    private DefaultConfigurationBuilder getBuilder()
+    {
+        if( null == m_configurationBuilder )
+        {
+            m_configurationBuilder = new DefaultConfigurationBuilder();
+        }
+
+        return m_configurationBuilder;
+    }
+
+    /**
+     * Retrieve zip file for file.
+     *
+     * @param file the file
+     * @return the zipFile
+     * @exception DeploymentException if an error occurs
+     */
+    private ZipFile getZipFileFor( final File file )
+        throws DeploymentException
+    {
+        try { return new ZipFile( file ); }
+        catch( final IOException ioe )
+        {
+            throw new DeploymentException( "Error opening " + file +
+                                           " due to " + ioe.getMessage(),
+                                           ioe );
+        }
+    }
+
+    /**
+     * Utility method to load configuration from zip.
+     *
+     * @param zipFile the zip file
+     * @param filename the property filename
+     * @return the Configuration
+     * @exception DeploymentException if an error occurs
+     */
+    private Configuration loadConfiguration( final ZipFile zipFile, final String filename )
+        throws DeploymentException
+    {
+        return buildConfiguration( loadResourceStream( zipFile, filename ) );
+    }
+
+    /**
+     * Build a configuration tree based on input stream.
+     *
+     * @param input the InputStream
+     * @return the Configuration tree
+     * @exception DeploymentException if an error occurs
+     */
+    private Configuration buildConfiguration( final InputStream input )
+        throws DeploymentException
+    {
+        try { return getBuilder().build( input ); }
+        catch( final SAXException se )
+        {
+            throw new DeploymentException( "Malformed configuration data", se );
+        }
+        catch( final ConfigurationException ce )
+        {
+            throw new DeploymentException( "Error building configuration", ce );
+        }
+        catch( final IOException ioe )
+        {
+            throw new DeploymentException( "Error reading configuration", ioe );
+        }
+    }
+
+    private File getFileFor( final URL url )
+        throws DeploymentException
+    {
+        File file = null;
+
+        if( url.getProtocol().equals( "file" ) )
+        {
+            file = new File( url.getFile() );
+        }
+        else
+        {
+            throw new DeploymentException( "Currently unable to deploy non-local " +
+                                           "archives (" + url + ")" );
+        }
+
+        file = file.getAbsoluteFile();
+
+        if( !file.exists() )
+        {
+            throw new DeploymentException( "Could not find application archive at " +
+                                           file );
+        }
+
+        if( file.isDirectory() )
+        {
+            throw new DeploymentException( "Could not find application archive at " +
+                                           file + " as it is a directory." );
+        }
+
+        return file;
     }
 
     private void handleConverter( final Configuration converter,
@@ -281,8 +388,37 @@ public class DefaultTskDeployer
         final String className = datatype.getAttribute( "classname" );
 
         factory.addNameClassMapping( name, className );
-        m_typeManager.registerType( "org.apache.ant.tasklet.DataType", name, factory );
+        m_typeManager.registerType( DataType.ROLE, name, factory );
 
         getLogger().debug( "Registered datatype " + name + " as " + className );
+    }
+
+
+    /**
+     * Load a resource from a zip file.
+     *
+     * @param zipFile the ZipFile
+     * @param filename the filename
+     * @return the InputStream
+     * @exception DeploymentException if an error occurs
+     */
+    private InputStream loadResourceStream( final ZipFile zipFile, final String filename )
+        throws DeploymentException
+    {
+        final ZipEntry entry = zipFile.getEntry( filename );
+
+        if( null == entry )
+        {
+            throw new DeploymentException( "Unable to locate " + filename +
+                                           " in " + zipFile.getName() );
+        }
+
+        try { return zipFile.getInputStream( entry ); }
+        catch( final IOException ioe )
+        {
+            throw new DeploymentException( "Error reading " + filename +
+                                           " from " + zipFile.getName(),
+                                           ioe );
+        }
     }
 }

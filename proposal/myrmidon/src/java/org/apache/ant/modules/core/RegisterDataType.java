@@ -8,8 +8,9 @@
 package org.apache.ant.modules.core;
 
 import java.net.URL;
-import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.type.DefaultComponentFactory;
 
 /**
@@ -35,10 +36,10 @@ public class RegisterDataType
         }
         else
         {
-            final DefaultComponentFactory factory = 
+            final DefaultComponentFactory factory =
                 new DefaultComponentFactory( new URL[] { url } );
             factory.addNameClassMapping( name, className );
-            try { getTypeManager().registerType( "org.apache.ant.tasklet.DataType", name, factory ); }
+            try { getTypeManager().registerType( DataType.ROLE, name, factory ); }
             catch( final Exception e )
             {
                 throw new TaskException( "Failed registering " + name + " from " + url, e );

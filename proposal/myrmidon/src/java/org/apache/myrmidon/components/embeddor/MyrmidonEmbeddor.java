@@ -7,15 +7,13 @@
  */
 package org.apache.myrmidon.components.embeddor;
 
+import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import java.io.File;
+import java.io.FilenameFilter;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.camelot.CamelotUtil;
-import org.apache.avalon.framework.camelot.DefaultFactory;
-import org.apache.avalon.framework.camelot.Deployer;
-import org.apache.avalon.framework.camelot.Factory;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
@@ -26,6 +24,7 @@ import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.type.TypeManager;
@@ -119,7 +118,8 @@ public class MyrmidonEmbeddor
     public void start()
         throws Exception
     {
-        CamelotUtil.deployFromDirectory( m_deployer, m_taskLibDir, ".tsk" );
+        final ExtensionFileFilter filter = new ExtensionFileFilter( ".tsk" );
+        deployFromDirectory( m_deployer, m_taskLibDir, filter );
     }
 
     public void stop()
@@ -228,7 +228,7 @@ public class MyrmidonEmbeddor
         component = getParameter( ConverterRegistry.ROLE );
         m_converterRegistry = (ConverterRegistry)createComponent( component, ConverterRegistry.class );
 
-        component = getParameter( "org.apache.myrmidon.components.converter.MasterConverter" );
+        component = getParameter( MasterConverter.ROLE );
         m_converter = (MasterConverter)createComponent( component, MasterConverter.class );
 
         component = getParameter( Configurer.ROLE );
@@ -420,6 +420,49 @@ public class MyrmidonEmbeddor
         {
             throw new Exception( "Could not find the class for " + clazz +
                                  " (" + component + ")" );
+        }
+    }
+
+
+    private void deployFromDirectory( final TskDeployer deployer, 
+                                      final File directory,
+                                      final FilenameFilter filter )
+        throws DeploymentException                                         
+    {
+        final File[] files = directory.listFiles( filter );
+
+        if( null != files )
+        {
+            deployFiles( deployer, files );
+        }
+    }
+
+    private void deployFiles( final TskDeployer deployer, final File[] files )
+        throws DeploymentException
+    {
+        for( int i = 0; i < files.length; i++ )
+        {
+            final String filename = files[ i ].getName();
+
+            int index = filename.lastIndexOf( '.' );
+            if( -1 == index ) index = filename.length();
+
+            final String name = filename.substring( 0, index );
+
+            try
+            {
+                final File file = files[ i ].getCanonicalFile();
+                deployer.deploy( name, file.toURL() );
+            }
+            catch( final DeploymentException de )
+            {
+                throw de;
+            }
+            catch( final Exception e )
+            {
+                throw new DeploymentException( "Unable to retrieve filename for file " + 
+                                               files[ i ], e );
+            }
         }
     }
 }

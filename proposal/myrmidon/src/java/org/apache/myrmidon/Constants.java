@@ -12,7 +12,7 @@ package org.apache.myrmidon;
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-interface Constants
+public interface Constants
 {
     //Constants to indicate the build of Ant/Myrmidon
     String  BUILD_DATE         = "@@DATE@@";

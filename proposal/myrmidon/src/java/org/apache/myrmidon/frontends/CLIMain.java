@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon;
+package org.apache.myrmidon.frontends;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +32,7 @@ import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
 import org.apache.log.Logger;
 import org.apache.log.Priority;
+import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -50,7 +51,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class Main
+public class CLIMain
     extends AbstractLoggable
 {
     //defines for the Command Line options
@@ -98,7 +99,7 @@ public class Main
      */
     public static void main( final String[] args )
     {
-        final Main main = new Main();
+        final CLIMain main = new CLIMain();
 
         try { main.execute( args ); }
         catch( final Throwable throwable )
@@ -225,8 +226,8 @@ public class Main
             case VERSION_OPT: System.out.println( Constants.BUILD_DESCRIPTION ); return false;
 
             case HOME_DIR_OPT: m_parameters.setParameter( "myrmidon.home", option.getArgument() ); break;
-            case TASKLIB_DIR_OPT: 
-                m_parameters.setParameter( "myrmidon.lib.path", option.getArgument() ); 
+            case TASKLIB_DIR_OPT:
+                m_parameters.setParameter( "myrmidon.lib.path", option.getArgument() );
                 break;
 
             case LOG_LEVEL_OPT: m_parameters.setParameter( "log.level", option.getArgument() ); break;
@@ -323,7 +324,7 @@ public class Main
         {
             //actually do the build ...
             final TaskContext context = new DefaultTaskContext();
-            
+
             //Add CLI m_defines
             addToContext( context, m_defines );
 

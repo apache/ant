@@ -8,8 +8,7 @@
 package org.apache.myrmidon.components.deployer;
 
 import java.net.URL;
-import org.apache.avalon.framework.camelot.Deployer;
-import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -17,9 +16,19 @@ import org.apache.avalon.framework.camelot.DeploymentException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TskDeployer
-    extends Deployer
+    extends Component
 {
     String ROLE = "org.apache.myrmidon.components.deployer.TskDeployer";
+
+    /**
+     * Deploy a resource indicate by url to location.
+     *
+     * @param location the location to deploy to
+     * @param url the url of deployment
+     * @exception DeploymentException if an error occurs
+     */
+    void deploy( String location, URL url )
+        throws DeploymentException;
 
     void deployConverter( String name, String location, URL url )
         throws DeploymentException;

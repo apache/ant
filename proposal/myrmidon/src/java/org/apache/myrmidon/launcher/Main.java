@@ -45,7 +45,7 @@ public final class Main
             final URLClassLoader classLoader = new URLClassLoader( urls );
 
             //load class and retrieve appropriate main method.
-            final Class clazz = classLoader.loadClass( "org.apache.myrmidon.Main" );
+            final Class clazz = classLoader.loadClass( "org.apache.myrmidon.frontends.CLIMain" );
             final Method method = clazz.getMethod( "main", new Class[] { args.getClass() } );
 
             Thread.currentThread().setContextClassLoader( classLoader );

@@ -8,9 +8,9 @@
 package org.apache.ant.modules.core;
 
 import java.net.URL;
-import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.type.DefaultComponentFactory;
 
 /**
@@ -36,7 +36,7 @@ public class RegisterTasklet
         }
         else
         {
-            final DefaultComponentFactory factory = 
+            final DefaultComponentFactory factory =
                 new DefaultComponentFactory( new URL[] { url } );
             factory.addNameClassMapping( name, className );
             try { getTypeManager().registerType( Task.ROLE, name, factory ); }
