@@ -59,53 +59,6 @@ import org.apache.tools.ant.types.Commandline;
 
 /**
  * Creates a new project in Microsoft Visual SourceSafe.
- * <p>
- * The following attributes are interpreted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *      <td>login</td>
- *      <td>username,password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vsspath</td>
- *      <td>SourceSafe path of project to be created</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>ssdir</td>
- *      <td>directory where <code>ss.exe</code> resides. By default the task
- *      expects it to be in the PATH.</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>quiet</td>
- *      <td>suppress output (off by default)</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>failOnError</td>
- *      <td>fail if there is an error creating the project (true by default)</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>autoresponse</td>
- *      <td>What to respond with (sets the -I option). By default, -I- is
- *      used; values of Y or N will be appended to this.</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>comment</td>
- *      <td>The comment to use for this label. Empty or '-' for no comment.</td>
- *      <td>No</td>
- *   </tr>
- *
- * </table>
  *
  * @author Gary S. Weaver
  * @author Jesse Stockall
@@ -149,10 +102,8 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets the comment to apply in SourceSafe.; optional.
-     * <p>
-     * If this is null or empty, it will be replaced with "-" which
-     * is what SourceSafe uses for an empty comment.
+     * Comment to apply to the project created in SourceSafe.
+     *
      * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
@@ -160,7 +111,8 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets/clears quiet mode; optional, default false.
+     * Enable quiet mode. Defaults to false.
+     *
      * @param   quiet The boolean value for quiet.
      */
     public final void setQuiet (boolean quiet) {
@@ -168,9 +120,8 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
+     * Autoresponce behaviour. Valid options are Y and N.
+     *
      * @param response The auto response value.
      */
     public void setAutoresponse(String response) {

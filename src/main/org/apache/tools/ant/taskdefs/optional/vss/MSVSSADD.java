@@ -60,7 +60,6 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * Performs Add commands to Microsoft Visual SourceSafe.
- * Based on the VSS Checkin code by Martin Poeschl
  *
  * @author Nigel Magnay
  * @author Jesse Stockall
@@ -116,8 +115,8 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Flag to tell the task to recurse down the tree;
-     * optional, default false.
+     * Add files recursively. Defaults to false.
+     *
      * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
@@ -125,8 +124,8 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Sets behaviour, unset the READ-ONLY flag on files added to VSS.;
-     * optional, default false
+     * Unset the READ-ONLY flag on local copies of files added to VSS. Defaults to false.
+     *
      * @param   writable The boolean value for writable.
      */
     public final void setWritable(boolean writable) {
@@ -134,9 +133,8 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Set the autoresponce behaviour; optional.
-     * <p>
-     * Valid options are Y and N.
+     * Autoresponce behaviour. Valid options are Y and N.
+     *
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
@@ -144,10 +142,8 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Set the comment to apply; optional.
-     * <p>
-     * If this is null or empty, it will be replaced with "-" which
-     * is what SourceSafe uses for an empty comment.
+     * Comment to apply to files added to SourceSafe.
+     *
      * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
@@ -155,10 +151,8 @@ public class MSVSSADD extends MSVSS {
     }
 
     /**
-     * Set the local path; optional.
-     * <p>
-     * This is the path to override the project
-     * working directory.
+     * Override the project working directory.
+     *
      * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {

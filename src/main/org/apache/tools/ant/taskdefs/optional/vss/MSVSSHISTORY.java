@@ -112,8 +112,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Flag to tell the task to recurse down the tree;
-     * optional, default false.
+     * Retrieve history recursively. Defaults to false.
+     *
      * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
@@ -121,7 +121,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Sets the username of the user whose changes we would like to see.; optional
+     * Name of the user whose change history is generated.
+     *
      * @param   user The username.
      */
     public void setUser(String user) {
@@ -129,8 +130,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the Start Date for the comparison of two versions in SourceSafe
-     * history.; optional
+     * Date representing the 'start' of the range.
+     *
      * @param   fromDate    The start date.
      */
     public void setFromDate(String fromDate) {
@@ -138,7 +139,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the End Date for the Comparison of two versions; optional.
+     * Date representing the 'end' of the range.
+     *
      * @param   toDate    The end date.
      */
     public void setToDate(String toDate) {
@@ -146,7 +148,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the Start Label; optional.
+     * Label representing the 'start' of the range.
+     *
      * @param   fromLabel    The start label.
      */
     public void setFromLabel(String fromLabel) {
@@ -154,7 +157,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the End label; optional.
+     * Label representing the 'end' of the range.
+     *
      * @param   toLabel    The end label.
      */
     public void setToLabel(String toLabel) {
@@ -162,10 +166,9 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the number of days for comparison;
-     * optional.
-     * <p>
-     * The default value is 2 days. (maybe)
+     * Number of days for comparison.
+     * Defaults to 2 days.
+     *
      * @param   numd    The number of days.
      */
     public void setNumdays(int numd) {
@@ -173,7 +176,8 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Set the output file name for the history; optional.
+     * Output file name for the history.
+     *
      * @param   outfile The output file name.
      */
     public void setOutput(File outfile) {
@@ -183,11 +187,11 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
     /**
-     * Format of dates in fromDate and toDate; optional.
-     * Used when calculating dates with
-     * the numdays attribute.
-     * This string uses the formatting rules of SimpleDateFormat.
-     *  Defaults to DateFormat.SHORT.
+     * Format of dates in <code>fromDate</code and <code>toDate</code>.
+     * Used when calculating dates with the numdays attribute.
+     * This string uses the formatting rules of <code>SimpleDateFormat</code>.
+     * Defaults to <code>DateFormat.SHORT</code>.
+     *
      * @param   dateFormat  The date format.
      */
     public void setDateFormat(String dateFormat) {
@@ -195,15 +199,15 @@ public class MSVSSHISTORY extends MSVSS {
     }
 
    /**
-     * Specify the output style; optional.
-     *
-     * @param attr valid values:
+     * Output style. Valid options are:
      * <ul>
      * <li>brief:    -B Display a brief history.
      * <li>codediff: -D Display line-by-line file changes.
      * <li>nofile:   -F- Do not display individual file updates in the project history.
      * <li>default:  No option specified. Display in Source Safe's default format.
      * </ul>
+     *
+     * @param attr The history style:
      */
     public void setStyle(BriefCodediffNofile attr) {
         String option = attr.getValue();

@@ -60,54 +60,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Performs Label commands to Microsoft Visual SourceSafe.
  *
- * <p>
- * The following attributes are interpreted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *      <td>login</td>
- *      <td>username,password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vsspath</td>
- *      <td>SourceSafe path</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>ssdir</td>
- *      <td>directory where <code>ss.exe</code> resides. By default the task
- *      expects it to be in the PATH.</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>label</td>
- *      <td>A label to apply to the hierarchy</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>version</td>
- *      <td>An existing file or project version to label</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>autoresponse</td>
- *      <td>What to respond with (sets the -I option). By default, -I- is
- *      used; values of Y or N will be appended to this.</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>comment</td>
- *      <td>The comment to use for this label. Empty or '-' for no comment.</td>
- *      <td>No</td>
- *   </tr>
- *
- * </table>
- *
  * @author Phillip Wells
  * @author Jesse Stockall
  *
@@ -156,15 +108,19 @@ public class MSVSSLABEL extends MSVSS {
     }
 
     /**
-     * Set the label to apply in SourceSafe.; required.
+     * Label to apply in SourceSafe.
+     *
      * @param  label The label to apply.
+     *
+     * @ant.attribute group="required"
      */
     public void setLabel(String label) {
         super.setInternalLabel(label);
     }
 
     /**
-     * Set the stored version string.; optional.
+     * Version to label.
+     *
      * @param  version The version to label.
      */
     public void setVersion(String version) {
@@ -172,8 +128,8 @@ public class MSVSSLABEL extends MSVSS {
     }
 
     /**
-     * The comment to use for this label.; optional.
-     * Empty or '-' for no comment.
+     * Comment to apply to files labeled in SourceSafe.
+     *
      * @param comment The comment to apply in SourceSafe
      */
     public void setComment(String comment) {
@@ -181,9 +137,8 @@ public class MSVSSLABEL extends MSVSS {
     }
 
     /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
+     * Autoresponce behaviour. Valid options are Y and N.
+     *
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){

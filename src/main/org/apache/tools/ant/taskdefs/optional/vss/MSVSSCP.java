@@ -60,7 +60,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Performs CP (Change Project) commands to Microsoft Visual SourceSafe.
  * <p>This task is typically used before a VssAdd in order to set the target project</p>
- * Based on the VSS Checkin code by Martin Poeschl
  *
  * @author Nigel Magnay
  * @author Jesse Stockall
@@ -99,9 +98,8 @@ public class MSVSSCP extends MSVSS {
     }
 
     /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
+     * Autoresponce behaviour. Valid options are Y and N.
+     *
      * @param response The auto response value.
      */
     public void setAutoresponse(String response) {

@@ -59,74 +59,14 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Perform Get commands to Microsoft Visual SourceSafe.
- * <p>
- * The following attributes are interpreted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *      <td>login</td>
- *      <td>username,password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vsspath</td>
- *      <td>SourceSafe path</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>localpath</td>
- *      <td>Override the working directory and get to the specified path</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>writable</td>
- *      <td>true or false</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>recursive</td>
- *      <td>true or false</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>version</td>
- *      <td>a version number to get</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>date</td>
- *      <td>a date stamp to get at</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>label</td>
- *      <td>a label to get for</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>quiet</td>
- *      <td>suppress output (off by default)</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>autoresponse</td>
- *      <td>What to respond with (sets the -I option). By default, -I- is
- *      used; values of Y or N will be appended to this.</td>
- *      <td>No</td>
- *   </tr>
- * </table>
- * <p>Note that only one of version, date or label should be specified</p>
+ * Perform Get commands from Microsoft Visual SourceSafe.
  *
  * @author Craig Cottingham
  * @author Andrew Everitt
  * @author Jesse Stockall
  *
  * @ant.task name="vssget" category="scm"
+ * @ant.attribute.group name="vdl" description="Only one of version, date or label"
  */
 public class MSVSSGET extends MSVSS {
 
@@ -171,10 +111,8 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the local path; optional.
-     * <p>
-     * This is the path to override the project
-     * working directory.
+     * Override the project working directory.
+     *
      * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {
@@ -182,8 +120,8 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Flag to tell the task to recurse down the tree;
-     * optional, default false.
+     * Get files recursively. Defaults to false.
+     *
      * @param recursive  The boolean value for recursive.
      */
     public final void setRecursive(boolean recursive) {
@@ -191,7 +129,8 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Sets/clears quiet mode; optional, default false.
+     * Enable quiet mode. Defaults to false.
+     *
      * @param   quiet The boolean value for quiet.
      */
     public final void setQuiet (boolean quiet) {
@@ -199,7 +138,8 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Sets behaviour, unset the READ-ONLY flag on files retrieved from VSS.; optional, default false
+     * Unset the READ-ONLY flag on files retrieved from VSS. Defaults to false.
+     *
      * @param   writable The boolean value for writable.
      */
     public final void setWritable(boolean writable) {
@@ -207,33 +147,41 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Sets the stored version string.; optional.
+     * Version to get.
+     *
      * @param  version The version to get.
+     *
+     * @ant.attribute group="vdl"
      */
     public void setVersion(String version) {
         super.setInternalVersion(version);
     }
 
     /**
-     * Sets the stored date string.; optional.
-     * @param  date The date to checkout.
+     * Date to get.
+     *
+     * @param  date The date to get.
+     *
+     * @ant.attribute group="vdl"
      */
     public void setDate(String date) {
         super.setInternalDate(date);
     }
 
     /**
-     * Sets the label to apply in SourceSafe.; optional.
-     * @param  label The label to apply.
+     * Label to get.
+     *
+     * @param  label The label to get.
+     *
+     * @ant.attribute group="vdl"
      */
     public void setLabel(String label) {
         super.setInternalLabel(label);
     }
 
     /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
+     * Autoresponce behaviour. Valid options are Y and N.
+     *
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
@@ -241,10 +189,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the behavior for timestamps of local files.; optional
-     *
-     * Valid options are <code>current</code>, <code>modified</code>, or
-     * <code>updated</code>. Defaults to <code>current</code>.
+     * Date and time stamp given to the local copy. Defaults to <code>current</code>.
      *
      * @param timestamp     The file time stamping behaviour.
      */
@@ -253,14 +198,11 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the behavior when local files are writable.; optional
-     *
-     * Valid options are <code>replace</code>, <code>skip</code> and <code>fail</code>.
-     * Defaults to <code>fail</code>
-     *
+     * Action taken when local files are writable. Defaults to <code>fail</code>.
+     * <p>
      * Due to ss.exe returning with an exit code of '100' for both errors and when
      * a file has been skipped, <code>failonerror</code> is set to false when using
-     * the <code>skip</code> option
+     * the <code>skip</code> option.
      *
      * @param files
      */

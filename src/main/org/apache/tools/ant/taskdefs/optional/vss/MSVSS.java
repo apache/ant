@@ -148,7 +148,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     abstract Commandline buildCmdLine();
 
     /**
-     * Directory where <code>ss.exe</code> resides; optional.
+     * Directory where <code>ss.exe</code> resides.
      * By default the task expects it to be in the PATH.
      *
      * @param  dir  The directory containing ss.exe.
@@ -158,11 +158,10 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * The login to use when accessing VSS, formatted as "username,password";
-     * optional.
+     * Login to use when accessing VSS, formatted as "username,password".
      * <p>
      * You can omit the password if your database is not password protected.
-     *  if you have a password and omit it, Ant/VSS will hang.
+     * If you have a password and omit it, Ant will hang.
      *
      * @param  login  The login string to use.
      */
@@ -172,12 +171,13 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     /**
      * SourceSafe path which specifies the project/file(s) you wish to perform
-     * the action on; required.<p>
-     *
-     * Also we strip off any 'vss://' prefix which is an XMS special and should
-     * probably be removed!
+     * the action on.
+     * <p>
+     * A prefix of 'vss://' will be removed if specified.
      *
      * @param  vssPath  The VSS project path.
+     *
+     * @ant.attribute group="required"
      */
     public final void setVsspath(String vssPath) {
         String projectPath;
@@ -195,7 +195,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * Set the directory where <code>srssafe.ini</code> resides; optional.
+     * Directory where <code>srssafe.ini</code> resides.
      *
      * @param  serverPath  The path to the VSS server.
      */
@@ -204,8 +204,8 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * Sets behaviour, whether task should fail if there is an error creating
-     * the project.; optional, default true
+     * Indicates if the build should fail if the Sourcesafe command does. Defaults to true.
+     *
      * @param failOnError True if task should fail on any error.
      */
     public final void setFailOnError (boolean failOnError) {
@@ -597,7 +597,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     *  Gets the value of the fail on error flag.
+     * Gets the value of the fail on error flag.
      *
      * @return    True if the FailOnError flag has been set or if 'writablefiles=skip'.
      */

@@ -60,13 +60,12 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * Performs CheckOut commands to Microsoft Visual SourceSafe.
- * <p>If you specify two or more attributes from version, date and
- * label only one will be used in the order version, date, label.</p>
  *
  * @author Martin Poeschl
  * @author Jesse Stockall
  *
  * @ant.task name="vsscheckout" category="scm"
+ * @ant.attribute.group name="vdl" description="Only one of version, date or label"
  */
 public class MSVSSCHECKOUT extends MSVSS {
 
@@ -112,10 +111,8 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the local path; optional.
-     * <p>
-     * This is the path to override the project
-     * working directory.
+     * Override the project working directory.
+     *
      * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {
@@ -123,8 +120,8 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Flag to tell the task to recurse down the tree;
-     * optional, default false.
+     * Check-out files recursively. Defaults to false.
+     *
      * @param recursive  The boolean value for recursive.
      */
     public void setRecursive(boolean recursive) {
@@ -132,33 +129,41 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Sets the stored version string.; optional.
-     * @param  version The version to checkout.
+     * Version to check-out.
+     *
+     * @param  version The version to check-out.
+     *
+     * @ant.attribute group="vdl"
      */
     public void setVersion(String version) {
         super.setInternalVersion(version);
     }
 
     /**
-     * Sets the stored date string.; optional.
-     * @param  date The date to checkout.
+     * Date to check-out.
+     *
+     * @param  date The date to check-out.
+     *
+     * @ant.attribute group="vdl"
      */
     public void setDate(String date) {
         super.setInternalDate(date);
     }
 
     /**
-     * Sets the label to apply in SourceSafe.; optional.
-     * @param  label The label to apply.
+     * Label to check-out.
+     *
+     * @param  label The label to check-out.
+     *
+     * @ant.attribute group="vdl"
      */
     public void setLabel(String label) {
         super.setInternalLabel(label);
     }
 
     /**
-     * Sets the autoresponce behaviour.; optional.
-     * <p>
-     * Valid options are Y and N.
+     * Autoresponce behaviour. Valid options are Y and N.
+     *
      * @param response The auto response value.
      */
     public void setAutoresponse(String response){
@@ -166,10 +171,7 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the option to the date and time given to the local copy.; optional
-     *
-     * Valid options are <code>current</code>, <code>modified</code>, or
-     * <code>updated</code>. Defaults to <code>current</code>.
+     * Date and time stamp given to the local copy. Defaults to <code>current</code>.
      *
      * @param timestamp     The file time stamping behaviour.
      */
@@ -178,14 +180,12 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the behaviour when local files are writable.; optional
-     *
-     * Valid options are <code>replace</code>, <code>skip</code> and <code>fail</code>.
-     * The default is <code>fail</code>
-     *
+     * Action taken when local files are writable. Defaults to <code>fail</code>.
+     * <p>
      * Due to ss.exe returning with an exit code of '100' for both errors and when
      * a file has been skipped, <code>failonerror</code> is set to false when using
-     * the <code>skip</code> option
+     * the <code>skip</code> option.
+     * </p>
      *
      * @param files     The writable files behaviour
      */
@@ -194,7 +194,7 @@ public class MSVSSCHECKOUT extends MSVSS {
     }
 
     /**
-     * Set the behaviour to retrieve local copies during a checkout.; optional, Defaults to true.
+     * Retrieve a local copy during a checkout. Defaults to true.
      *
      * @param get   The get local copy behaviour
      */
