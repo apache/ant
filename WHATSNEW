@@ -44,6 +44,8 @@ Fixed bugs:
 * Filter readers were not handling line endings properly.  Bugzilla
   Report 18476.
 
+* Filtersets were also not handling line endings properly.
+
 * Expand tasks did not behave as expected with PatternSets.
 
 * <property environment=... /> now works on OS/400.

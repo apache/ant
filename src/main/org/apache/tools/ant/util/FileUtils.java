@@ -80,6 +80,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FilterSetCollection;
 
@@ -432,21 +433,19 @@ public class FileUtils {
                         in = new BufferedReader(rdr);
                     }
 
+                    TokenFilter.LineTokenizer lineTokenizer = new TokenFilter.LineTokenizer();
+                    lineTokenizer.setIncludeDelims(true);
                     String newline = null;
-                    String line = in.readLine();
+                    String line = lineTokenizer.getToken(in);
                     while (line != null) {
                         if (line.length() == 0) {
+                            // this should not happen, because the lines are returned with the end of line delimiter
                             out.newLine();
                         } else {
-                            if (filterSetsAvailable) {
-                                newline = filters.replaceTokens(line);
-                            } else {
-                                newline = line;
-                            }
+                            newline = filters.replaceTokens(line);
                             out.write(newline);
-                            out.newLine();
                         }
-                        line = in.readLine();
+                        line = lineTokenizer.getToken(in);
                     }
                 } finally {
                     if (out != null) {
