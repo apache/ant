@@ -79,8 +79,12 @@ public class FormatterElement {
         if ("xml".equals(type.getValue())) {
             setClassname("org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter");
             setExtension(".xml");
-        } else { // must be plain, ensured by TypeAttribute
-            setClassname("org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter");
+        } else {
+            if ("brief".equals(type.getValue())) {
+                setClassname("org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter");
+            } else { // must be plain, ensured by TypeAttribute
+                setClassname("org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter");
+            }
             setExtension(".txt");
         }
     }
@@ -160,7 +164,7 @@ public class FormatterElement {
      */
     public static class TypeAttribute extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[] {"plain", "xml"};
+            return new String[] {"plain", "xml", "brief"};
         }
     }
 }

@@ -25,7 +25,11 @@ elements</a>.</p>
 </tr>
   <tr>
     <td valign="top">printsummary</td> 
-    <td valign="top">Print one line statistics for each testcase.</td>
+    <td valign="top">Print one line statistics for each testcase. Can
+      take the values &quot;on&quot;, &quot;off&quot; and
+      &quot;withOutAndErr&quot; - &quot;withOutAndErr&quot; is the same
+      as &quot;on&quot; but also includes the test&apos;s output
+      (written to System.out and System.err).</td>
     <td align="center" valign="top">No, default is "off"</td>
   </tr>
   <tr>
@@ -122,9 +126,11 @@ usefile attribute to false, the name of the file is determined by the
 name of the test and can be set by the <code>outfile</code> attribute
 of <code>&lt;test&gt;</code>.
 
-<p>There are two predefined formatters, one prints the test results in
-XML format, the other emits plain text. Custom formatters that need to
-implement
+<p>There are three predefined formatters, one prints the test results
+in XML format, the other emit plain text.  The formatter named
+&quot;brief&quot; will only print detailed information for testcases
+that failed, while &quot;plain&quot; gives a little statistics line
+for all test cases.  Custom formatters that need to implement
 <code>org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter</code>
 can be specified.</p>
 
@@ -136,7 +142,8 @@ can be specified.</p>
 </tr>
   <tr>
     <td valign="top">type</td> 
-    <td valign="top">Use a predefined formatter (either "xml" or "plain").</td>
+    <td valign="top">Use a predefined formatter (either
+      &quot;xml&quot;, &quot;plain&quot; or &quot;brief&quot;).</td>
     <td align="center" rowspan="2">Exactly one of these.</td>
   </tr>
   <tr>

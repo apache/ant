@@ -15,6 +15,9 @@ Changes that could break older environments:
 
 * The <pvcs> task has been move to a package of its own.
 
+* JUnitResultFormater has two additional methods that must be
+  implemented by custom formatters.
+
 Other changes:
 --------------
 
@@ -50,6 +53,8 @@ Other changes:
   with the "file" attribute to specify whether the "file" you're
   looking for is a file or a directory.
 
+* New <junit> formatter named "brief"
+
 Fixed bugs:
 -----------
 
@@ -79,6 +84,9 @@ Fixed bugs:
 
 * If the quiet attribute has been set, <delete> will handle <fileset>s
   with non-existing directories gracefully.
+
+* Output written by testcases will now be captured by the <junit> task
+  and passed to the formatters.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================

@@ -615,7 +615,7 @@
 
       <sysproperty key="build.tests" value="${build.tests}"/>
 
-      <formatter type="plain" usefile="false" />
+      <formatter type="brief" usefile="false" />
 
       <batchtest>
         <fileset dir="${tests.dir}">
