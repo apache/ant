@@ -124,7 +124,7 @@ public class ExecuteOn extends ExecTask {
     }
 
     /**
-     * Shall the command work only on files, directories or both?
+     * Whether the command works only on files, directories or both?
      */
     public void setType(FileDirBoth type) {
         this.type = type.getValue();

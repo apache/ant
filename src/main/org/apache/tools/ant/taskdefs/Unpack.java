@@ -96,10 +96,18 @@ public abstract class Unpack extends Task {
         setDest(project.resolveFile(dest));
     }
 
+    /**
+     * The file to expand.
+     * @param src file to expand
+     */
     public void setSrc(File src) {
         source = src;
     }
 
+    /**
+     * The destination file or directory.
+     * @param dest destination file or directory
+     */
     public void setDest(File dest) {
         this.dest = dest;
     }

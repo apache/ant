@@ -95,21 +95,21 @@ public class Basename extends Task {
   private String suffix;
 
   /**
-   * File or directory to get base name from
+   * File or directory to get base name from.
    */
   public void setFile(File file) {
     this.file = file;
   }
 
   /**
-   * Property to set base name to
+   * Property to set base name to.
    */
   public void setProperty(String property) {
     this.property  = property ;
   }
 
   /**
-   * Optional suffix to remove from base name
+   * Optional suffix to remove from base name.
    */
   public void setSuffix(String suffix) {
     this.suffix = suffix;

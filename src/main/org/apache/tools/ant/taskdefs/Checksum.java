@@ -73,8 +73,7 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- * This task can be used to create checksums for files.
- * It can also be used to verify checksums.
+ * Used to create or verify file checksums.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
@@ -142,8 +141,8 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Sets the MessageDigest algorithm to be used
-     * to calculate the checksum.
+     * Specifies the algorithm to be used to compute the checksum.
+     * Defaults to "MD5". Other popular algorithms like "SHA" may be used as well.
      */
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;
@@ -158,22 +157,22 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Sets the File Extension that is be to used to
-     * create or identify destination file
+     * Sets the file extension that is be to used to
+     * create or identify destination file.
      */
     public void setFileext(String fileext) {
         this.fileext = fileext;
     }
 
     /**
-     * Sets the property to hold the generated checksum
+     * Sets the property to hold the generated checksum.
      */
     public void setProperty(String property) {
         this.property = property;
     }
 
     /**
-     * Sets verify property.  This project property holds
+     * Sets the verify property.  This project property holds
      * the result of a checksum verification - "true" or "false"
      */
     public void setVerifyproperty(String verifyProperty) {
@@ -197,7 +196,7 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Files to generate checksums for.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
