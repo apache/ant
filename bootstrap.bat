@@ -18,29 +18,34 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-SET CLASSDIR=build\classes
+if exist lib\ant.jar erase lib\ant.jar
+if exist lib\optional.jar erase lib\optional.jar
+
 SET LOCALCLASSPATH=lib\parser.jar;lib\jaxp.jar
 
 if exist %JAVA_HOME%\lib\tools.jar call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist %JAVA_HOME%\lib\classes.zip call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
 
+set TOOLS=src\main\org\apache\tools
+set CLASSDIR=classes
+
+SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;
+
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
 echo JAVAC=%JAVAC%
-echo CLASSPATH=%LOCALCLASSPATH%
+echo CLASSPATH=%CLASSPATH%
 
-if     "%OS%" == "Windows_NT" if exist build rmdir/s/q build
-if not "%OS%" == "Windows_NT" deltree/y build
+if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
+if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
 
+mkdir %CLASSDIR%
 mkdir build
-mkdir build\classes
 
 echo.
 echo ... Compiling Ant Classes
 
-SET TOOLS=src\main\org\apache\tools
-
-%JAVAC% -classpath %LOCALCLASSPATH%;src\main -d build\classes %TOOLS%\tar\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java
+%JAVAC% -d %CLASSDIR% %TOOLS%\tar\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java
 
 echo.
 echo ... Copying Required Files
@@ -51,8 +56,15 @@ copy %TOOLS%\ant\types\*.properties %CLASSDIR%\org\apache\tools\ant\types
 echo.
 echo ... Building Ant Distribution
 
-SET CLASSPATH=%LOCALCLASSPATH%;build\classes
-call build.bat %1 %2 %3 %4 %5 %6 %7 %8
+xcopy /s/q %CLASSDIR% build
+
+%JAVA% %ANT_OPTS% org.apache.tools.ant.Main bootstrap
+
+echo.
+echo ... Cleaning Up Build Directories
+
+if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
+if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
 
 echo.
 echo ... Done Bootstrapping Ant Distribution
@@ -64,9 +76,7 @@ set ANT_HOME=%OLDANTHOME%
 set OLDJAVA=
 set OLDJAVAC=
 set OLDCLASSPATH=
-set CLASSPATH=
 set LOCALCLASSPATH=
 set OLDANTHOME=
 set TOOLS=
-SET CLASSDIR=
 

@@ -16,48 +16,41 @@
   <property name="name" value="ant"/>
   <property name="version" value="1.3alpha"/>
 
+  <property name="debug" value="false" />
+  <property name="deprecation" value="false" />
+  <property name="optimize" value="true" />
+  <property name="junit.fork" value="false" />
+
   <!-- 
        ===================================================================
-       Set the properties for source directories
+       Set the properties related to the source tree
        =================================================================== 
   -->
   <property name="src.dir" value="src"/>
-  <property name="manifest.dir" value="${src.dir}/manifest"/>
   <property name="java.dir" value="${src.dir}/main"/>
   <property name="script.dir" value="${src.dir}/script"/>
   <property name="lib.dir" value="lib"/>
+  <property name="docs.dir" value="docs"/>
+  <property name="tests.dir" value="src/testcases"/>
+  
+  <property name="ant.package" value="org/apache/tools/ant"/>
+  <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
+
+  <property name="manifest" value="src/etc/manifest"/>
+
 
   <!-- 
        ===================================================================
-       Set the properties for intermediate directory
+       Set the properties for the build area
        =================================================================== 
   -->
   <property name="build.dir" value="build"/>
-  <property name="build.lib" value="${build.dir}/lib"/>
-  <property name="build.src" value="${build.dir}/src"/>
   <property name="build.classes" value="${build.dir}/classes"/>
+  <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
-  <property name="build.docs" value="${build.dir}/docs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
 
-  <!-- 
-       ===================================================================
-       Set the properties related dist target
-       =================================================================== 
-  -->
-  <property name="dist.name" value="jakarta-${name}-${version}"/>
-  <property name="dist.base" value="."/>
-
-  <property name="java.dir" value="src/main"/>
-  <property name="docs.dir" value="docs"/>
-  <property name="tests.dir" value="src/testcases"/>
-
   <path id="classpath">
-    <pathelement path="${java.class.path}"/>
-    <fileset dir="lib/optional">
-      <include name="*.jar"/>
-      <include name="*.zip"/>
-    </fileset>
   </path>
 
   <path id="tests-classpath">
@@ -66,41 +59,15 @@
     <path refid="classpath" />
   </path>
 
-  <property name="ant.package" value="org/apache/tools/ant"/>
-  <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
-  <property name="packages" value="org.apache.tools.*"/>
-  <property name="manifest" value="src/etc/manifest"/>
-
-  <property name="constants.file" value="org/apache/tools/ant/Constants.java" />
-
-  <!-- 
-       ===================================================================
-       Set some the defaults the user can override in .ant.properties     
-       =================================================================== 
-  -->
-  <property name="build.compiler.emacs" value="on"/>
-  <property name="build.compiler.warnings" value="true"/>
-  <property name="build.compiler.depend" value="true"/>
-  <property name="build.compiler.fulldepend" value="true"/>
-
-  <property name="debug" value="false" />
-  <property name="deprecation" value="false" />
-  <property name="optimize" value="true" />
-  <property name="junit.fork" value="false" />
-
-  <!--
-       ===================================================================
-                                  Main target
-       ===================================================================
-  -->
-  <target name="main" depends="dist-lite" />
-
  <!-- 
        ===================================================================
-       Set up dist properties
+       Set up properties for the distribution area
        =================================================================== 
   -->
-  <target name="setup-properties">
+  <property name="dist.name" value="jakarta-${name}-${version}"/>
+  <property name="dist.base" value="distribution"/>
+
+  <target name="setup-distproperties">
 
     <property name="dist.dir" value="dist"/>
     <property name="dist.bin" value="${dist.dir}/bin"/>
@@ -119,7 +86,7 @@
        Check to see what optional dependencies are available              
        =================================================================== 
   -->
-  <target name="check_for_optional_packages" depends="setup-properties">
+  <target name="check_for_optional_packages">
     <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
     <available property="bsf.present" 
@@ -175,55 +142,24 @@
                classpathref="classpath"/>
   </target>
 
- <!--
-       ===================================================================
-                         Prepares the build
-       ===================================================================
-  -->
-  <target name="prepare" depends="check_for_optional_packages">
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare">
     <tstamp />
-
-    <property name="version" value="${version}"/>
-    <property name="date" value="${TODAY}"/>
-
-    <mkdir dir="${build.dir}"/>
-    <mkdir dir="${build.src}"/>
-    <mkdir dir="${build.lib}"/>
-    <mkdir dir="${build.classes}"/>
-
-    <copy todir="${build.src}">
-      <fileset dir="${java.dir}">
-        <include name="${constants.file}" />
-        <include name="org/apache/tools/ant/defaultManifest.mf" />
-      </fileset>
-    </copy>
-
-    <replace file="${build.src}/${constants.file}" token="@VERSION@" value="${version}"/>
-    <replace file="${build.src}/${constants.file}" token="@DATE@" value="${date}"/>
-    
-    <replace file="${build.src}/org/apache/tools/ant/defaultManifest.mf" 
-             token="@VERSION@" 
-             value="${version}"/>
-
   </target>
 
-  <!-- 
-       ===================================================================
-       Compiles the source code
-       =================================================================== 
-  -->
-  <target name="compile" depends="prepare">
-
+  <target name="build" depends="prepare, check_for_optional_packages">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.classes}"/>
+    <mkdir dir="${build.lib}"/>
+    
     <javac srcdir="${java.dir}"
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
            optimize="${optimize}" >
       <classpath refid="classpath" />
-
-      <src path="${build.src}" />
-
-      <exclude name="${constants.file}" />
       <exclude name="${ant.package}/util/regexp/JakartaRegexpMatcher.java" 
                unless="jakarta.regexp.present" />
       <exclude name="${ant.package}/util/regexp/JakartaOroMatcher.java" 
@@ -249,31 +185,43 @@
       <exclude name="${optional.package}/perforce/*.java" unless="jakarta.oro.present" />
       <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
     </javac>
+    
+    <copy todir="${build.classes}">
+      <fileset dir="${java.dir}">
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
 
-    <copy file="${build.src}/${ant.package}/defaultManifest.mf"
-          todir="${build.classes}/${ant.package}" />
-          
-    <copy file="${java.dir}/${ant.package}/taskdefs/defaults.properties"
-          todir="${build.classes}/${ant.package}/taskdefs" />
-
-    <copy file="${java.dir}/${ant.package}/types/defaults.properties"
-          todir="${build.classes}/${ant.package}/types" />
-
+    <filter token="VERSION" value="${version}" />
+    <filter token="DATE" value="${TODAY}" />
+    <filter token="TIME" value="${TSTAMP}" />
+    <copy    todir="${build.classes}" 
+             overwrite="true"
+             filtering="on">
+      <fileset dir="${java.dir}">
+        <include name="**/version.txt" />
+        <include name="**/defaultManifest.mf" />
+      </fileset>
+    </copy>
   </target>
-
+  
   <!-- 
        =================================================================== 
        Creates the lib directory including the ant jars, ant.jar and       
        optional.jar                                                        
        =================================================================== 
   -->
-  <target name="jars" depends="compile">
+  <target name="jars" depends="build">
 
-    <jar jarfile="${build.lib}/${name}.jar" basedir="${build.classes}" manifest="${manifest}">
+    <jar jarfile="${build.lib}/${name}.jar" 
+         basedir="${build.classes}" 
+         manifest="${manifest}">
       <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
     </jar>
 
-    <jar jarfile="${build.lib}/optional.jar" basedir="${build.classes}" manifest="${manifest}">
+    <jar jarfile="${build.lib}/optional.jar" 
+         basedir="${build.classes}" 
+         manifest="${manifest}">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
     </jar>
 
@@ -281,10 +229,10 @@
 
   <!--
        ===================================================================
-                         Create the test build
+                         Create the essential distribution
        ===================================================================
   -->
-  <target name="dist-lite" depends="jars">
+  <target name="dist-lite" depends="jars, setup-distproperties">
 
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.bin}"/>
@@ -309,31 +257,11 @@
     <fixcrlf srcdir="${dist.bin}" cr="add" includes="*.bat" />
     <fixcrlf srcdir="${dist.bin}" cr="remove" includes="*.sh" />
     <fixcrlf srcdir="${dist.bin}" cr="remove" includes="ant" />
-
-  </target>
-
-  <!-- =================================================================== -->
-  <!-- Creates the API documentation                                       -->
-  <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare" description="Creates the API documentation" unless="foo">
-    <mkdir dir="${build.javadocs}"/>
-    <javadoc packagenames="org.apache.*"
-             sourcepath="${java.dir}"
-             destdir="${build.javadocs}"
-             author="true"
-             version="true"
-             windowtitle="${Name} API"
-             doctitle="${Name}"
-             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
-      <group title="Ant Core" packages="org.apache.tools.ant*" />
-      <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
-      <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
-    </javadoc>
   </target>
 
  <!--
        ===================================================================
-                            Create the distribution
+                         Create the complete distribution
        ===================================================================
   -->
   <target name="dist" depends="dist-lite,javadocs">
@@ -344,6 +272,8 @@
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
         <include name="*.zip" />
+        <exclude name="ant.jar"/>
+        <exclude name="optional.jar"/>
       </fileset>
     </copy>
 
@@ -351,11 +281,9 @@
       <fileset dir="${docs.dir}"/>
     </copy>
 
-    <!--
     <copy todir="${dist.javadocs}">
       <fileset dir="${build.javadocs}"/>
     </copy>
-    -->
 
     <copy todir="${dist.dir}">
       <fileset dir=".">
@@ -370,31 +298,28 @@
 
   </target>
 
-  <target name="bin-dist" depends="dist">
-    <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
-         basedir="${dist.dir}/.." 
-         includes="${dist.dir}/**"/>
-    <tar tarfile="${dist.base}/${dist.name}-bin.tar" 
-         basedir="${dist.dir}/.." 
-         includes="${dist.dir}/**"/>
-    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
-          src="${dist.base}/${dist.name}-bin.tar"/>
-    <delete file="${dist.base}/${dist.name}-bin.tar"/>
+
+  <!--
+       ===================================================================
+                Target to create bootstrap libraries
+       ===================================================================
+  -->
+  <target name="bootstrap">
+    <antcall target="dist-lite">
+      <param name="dist.dir" value="." />
+    </antcall>
   </target>
+
 
   <!--
        ===================================================================
                             Create the source distribution
        ===================================================================
   -->
-  <target name="src-dist" depends="setup-properties">
+  <target name="src-dist" depends="setup-distproperties">
 
     <mkdir dir="${src.dist.dir}" />
-<!--
-    <mkdir dir="${src.dist.lib}" />
-    <mkdir dir="${src.dist.src}" />
-    <mkdir dir="${src.dist.docs}" />
--->
+ 
     <copy todir="${src.dist.lib}">
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
@@ -433,47 +358,51 @@
 
     <fixcrlf srcdir="${src.dist.src}" includes="**/*.java" cr="remove"/>
     
+  </target>
+
+  <!--
+       ===================================================================
+                 Create the binary distribution
+       ===================================================================
+  -->
+  <target name="distribution">
+    <mkdir dir="${dist.base}"/>
+
+    <antcall target="dist">
+      <param name="dist.dir" value="${dist.name}" />
+    </antcall>
+    <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
+         basedir="${dist.name}/.." 
+         includes="${dist.name}/**"
+         excludes="${dist.name}/lib/optional.jar"/>
+    <!--
+    <tar tarfile="${dist.base}/${dist.name}-bin.tar" 
+         basedir="${dist.name}/.." 
+         includes="${dist.name}/**"/
+         excludes="${dist.name}/lib/optional.jar">
+    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
+          src="${dist.base}/${dist.name}-bin.tar"/>
+    -->
+    <copy file="${dist.name}/lib/optional.jar" tofile="${dist.base}/${dist.name}-optional.jar"/>
+    <delete dir="${dist.name}" />
+
+
+    <antcall target="src-dist">
+      <param name="src.dist.dir" value="${dist.name}" />
+    </antcall>
     <zip zipfile="${dist.base}/${dist.name}-src.zip" 
-         basedir="${src.dist.dir}/.." 
-         includes="${src.dist.dir}/**"/>
+         basedir="${dist.name}/.." 
+         includes="${dist.name}/**"/>
     <!--
     <tar tarfile="${dist.base}/${dist.name}-src.tar" 
          basedir="${src.dist.dir}/.." 
          includes="${src.dist.dir}/**"/>
     <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>
-    <delete file="${dist.base}/${dist.name}-src.tar"/>
     -->
-    <delete dir="${src.dist.dir}" />    
-  </target>
-
-  <!--
-       ===================================================================
-                 Completely build all dists
-       ===================================================================
-  -->
-  <target name="full-dist">
-    <antcall target="src-dist">
-      <param name="src.dist.dir" value="${dist.name}" />
-    </antcall>
-
-    <antcall target="bin-dist">
-      <param name="dist.dir" value="${dist.name}" />
-    </antcall>
     <delete dir="${dist.name}" />
-  </target> 
-
-  <target name="install">
-    <antcall target="dist">
-      <param name="dist.dir" value="${ant.home}" />
-    </antcall>
   </target>
 
-  <target name="install-lite">
-    <antcall target="dist-lite">
-      <param name="dist.dir" value="${ant.home}" />
-    </antcall>
-  </target>
   <!--
        ===================================================================
                  Cleans up build and distribution directories
@@ -489,20 +418,57 @@
 
   <!--
        ===================================================================
-                      Cleans absolutely everything up
+                 Installs ant
        ===================================================================
   -->
-  <target name="real-clean" depends="clean">
-    <delete file="${dist.name}.tar.gz" />
-    <delete file="${dist.name}.zip" />
+  <target name="install" if="ant.install">
+    <antcall target="dist">
+      <param name="dist.dir" value="${ant.install}" />
+    </antcall>
   </target>
 
+  <target name="install-lite" if="ant.install">
+    <antcall target="dist-lite">
+      <param name="dist.dir" value="${ant.install}" />
+    </antcall>
+  </target>
+
+  <!-- 
+       ===================================================================
+                Creates the API documentation                             
+       =================================================================== 
+  -->
+  
+  <target name="javadoc_check">
+    <uptodate property="javadoc.notrequired" targetfile="${build.javadocs}/packages.html" >
+        <srcfiles dir= "${java.dir}" includes="**/*.java"/>
+    </uptodate>
+  </target>
+
+  <target name="javadocs" depends="prepare, javadoc_check" 
+          unless="javadoc.notrequired"
+          description="Creates the API documentation">
+    <mkdir dir="${build.javadocs}"/>
+    <javadoc packagenames="org.apache.*"
+             sourcepath="${java.dir}"
+             destdir="${build.javadocs}"
+             author="true"
+             version="true"
+             windowtitle="${Name} API"
+             doctitle="${Name}"
+             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
+      <group title="Ant Core" packages="org.apache.tools.ant*" />
+      <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
+      <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
+    </javadoc>
+  </target>
+  
   <!-- 
        =================================================================== 
        Compile testcases                                                   
        =================================================================== 
   -->
-  <target name="compile-tests" depends="compile" if="junit.present">
+  <target name="compile-tests" depends="build" if="junit.present">
     <mkdir dir="${build.tests}"/>
 
     <javac srcdir="${tests.dir}"
@@ -521,22 +487,11 @@
   </target>
 
   <!-- 
-      =================================================================== 
-      Run testcase                                                        
-      =================================================================== 
-  -->
-  <target name="define-junit" if="junit.present">
-    <taskdef name="junit" 
-             classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"
-             classpath="tests-classpath" />
-  </target>
-  
-  <!-- 
        =================================================================== 
        Run testcase                                                        
        =================================================================== 
   -->
-  <target name="run-tests" depends="compile-tests, define-junit" if="junit.present">
+  <target name="run-tests" depends="compile-tests" if="junit.present">
 
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
       <jvmarg value="-classic"/>
@@ -576,7 +531,7 @@
     <delete file="${tests.dir}/taskdefs/tmp.jar" />
   </target>
 
-  <target name="run-single-test" if="testcase" depends="compile-tests, define-junit">
+  <target name="run-single-test" if="testcase" depends="compile-tests">
 
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}">
       <jvmarg value="-classic"/>
@@ -586,5 +541,6 @@
     </junit>
   </target>
 
-</project>
+  <target name="main" depends="dist-lite"/>
 
+</project>

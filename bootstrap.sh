@@ -1,35 +1,17 @@
-#!/bin/bash
+#!/bin/sh
 
-# Cygwin support.  $cygwin _must_ be set to either true or false.
-case "`uname`" in
-  CYGWIN*) cygwin=true ;;
-  *) cygwin=false ;;
-esac
-
-# For Cygwin, ensure paths are in UNIX format before anything is touched
-if $cygwin; then
-  [ -n "$JAVA_HOME" ] &&
-    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-  [ -n "$CLASSPATH" ] &&
-    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
-fi
-
-LOCALCLASSPATH=lib/parser.jar:lib/jaxp.jar
-
-if [ "$CLASSPATH" != "" ] ; then
-  LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
-fi
+# You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
 if [ "$JAVA_HOME" != "" ] ; then
-  if test -f $JAVA_HOME/lib/tools.jar ; then
-    LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
+  if [ -f $JAVA_HOME/lib/tools.jar ] ; then
+    CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
   fi
-
-  if test -f $JAVA_HOME/lib/classes.zip ; then
-    LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
+ 
+  if [ -f "$JAVA_HOME/lib/classes.zip" ] ; then
+    CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
 else
-  echo "Warning: JAVA_HOME environment variable is not set."
+  echo "Warning: JAVA_HOME environment variable not set."
   echo "  If build fails because sun.* classes could not be found"
   echo "  you will need to set the JAVA_HOME environment variable"
   echo "  to the installation directory of java."
@@ -41,28 +23,44 @@ if [ ! -x "$JAVA_HOME/bin/java" ] ; then
   exit
 fi
 
+# More Cygwin support
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+  CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
+
+ANT_HOME=.
+export ANT_HOME
+
 if [ -z "$JAVAC" ] ; then
   JAVAC=${JAVA_HOME}/bin/javac;
 fi
 
 echo ... Bootstrapping Ant Distribution
 
-rm -rf build
+if [ -f "lib/ant.jar" ] ; then
+  rm lib/ant.jar
+fi
+if [ -f "lib/optional.jar" ] ; then
+  rm lib/optional.jar
+fi
+
+CLASSPATH=lib/parser.jar:lib/jaxp.jar:${CLASSPATH}
 
 TOOLS=src/main/org/apache/tools
-CLASSDIR=build/classes
+CLASSDIR=classes
 
-mkdir -p build
+CLASSPATH=${CLASSDIR}:src/main:${CLASSPATH}
+
+# convert the unix path to windows
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+fi
+
+export CLASSPATH
+
 mkdir -p ${CLASSDIR}
 
 echo ... Compiling Ant Classes
-
-export CLASSPATH=$LOCALCLASSPATH:src/main
-
-# For Cygwin, switch paths to Windows format before running javac
-if $cygwin; then
-  CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
-fi
 
 ${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
@@ -79,13 +77,13 @@ cp src/main/org/apache/tools/ant/types/defaults.properties \
 
 echo ... Building Ant Distribution
 
-export CLASSPATH=$LOCALCLASSPATH:build/classes
+${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
+                      -buildfile build.xml clean main bootstrap
 
-# For Cygwin, switch paths to Windows format before running javac
-if $cygwin; then
-  CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
-fi
+echo ... Cleaning Up Build Directories
 
-${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main $*
+chmod +x bin/ant bin/antRun
+
+rm -rf ${CLASSDIR}
 
 echo ... Done Bootstrapping Ant Distribution
