@@ -149,7 +149,7 @@ public class DefaultLogger implements BuildLogger {
     }
 
     public void targetStarted(BuildEvent event) {
-        if (msgOutputLevel <= Project.MSG_INFO) {
+        if (Project.MSG_INFO <= msgOutputLevel) {
             out.println(lSep + event.getTarget().getName() + ":");
         }
     }
