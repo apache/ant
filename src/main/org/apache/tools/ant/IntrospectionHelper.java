@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,45 +75,104 @@ import java.util.Locale;
 public class IntrospectionHelper implements BuildListener {
 
     /**
-     * holds the types of the attributes that could be set.
+     * Map from attribute names to attribute types 
+     * (String to Class).
      */
     private Hashtable attributeTypes;
 
     /**
-     * holds the attribute setter methods.
+     * Map from attribute names to attribute setter methods 
+     * (String to AttributeSetter).
      */
     private Hashtable attributeSetters;
 
     /**
-     * Holds the types of nested elements that could be created.
+     * Map from attribute names to nested types 
+     * (String to Class).
      */
     private Hashtable nestedTypes;
 
     /**
-     * Holds methods to create nested elements.
+     * Map from attribute names to methods to create nested types 
+     * (String to NestedCreator).
      */
     private Hashtable nestedCreators;
 
     /**
-     * Holds methods to store configured nested elements.
+     * Map from attribute names to methods to store configured nested types 
+     * (String to NestedStorer).
      */
     private Hashtable nestedStorers;
 
     /**
-     * The method to add PCDATA stuff.
+     * The method to invoke to add PCDATA.
      */
     private Method addText = null;
 
     /**
-     * The Class that's been introspected.
+     * The class introspected by this instance.
      */
     private Class bean;
 
     /**
-     * instances we've already created
+     * Helper instances we've already created (Class to IntrospectionHelper).
      */
     private static Hashtable helpers = new Hashtable();
 
+    // XXX: (Jon Skeet) The documentation below doesn't draw a clear 
+    // distinction between addConfigured and add. It's obvious what the
+    // code *here* does (addConfigured sets both a creator method which
+    // calls a no-arg constructor and a storer method which calls the
+    // method we're looking at, whlie add just sets a creator method
+    // which calls the method we're looking at) but it's not at all
+    // obvious what the difference in actual *effect* will be later
+    // on. I can't see any mention of addConfiguredXXX in "Developing
+    // with Ant" (at least in the version on the web site). Someone
+    // who understands should update this documentation 
+    // (and preferably the manual too) at some stage.
+    /**
+     * Sole constructor, which is private to ensure that all 
+     * IntrospectionHelpers are created via {@link #getHelper(Class) getHelper}.
+     * Introspects the given class for bean-like methods.
+     * Each method is examined in turn, and the following rules are applied:
+     * <p>
+     * <ul>
+     * <li>If the method is <code>Task.setLocation(Location)</code>, 
+     * <code>Task.setTaskType(String)</code>
+     * or <code>TaskContainer.addTask(Task)</code>, it is ignored. These 
+     * methods are handled differently elsewhere.
+     * <li><code>void addText(String)</code> is recognised as the method for
+     * adding PCDATA to a bean.
+     * <li><code>void setFoo(Bar)</code> is recognised as a method for 
+     * setting the value of attribute <code>foo</code>, so long as 
+     * <code>Bar</code> is non-void and is not an array type. Non-String 
+     * parameter types always overload String parameter types, but that is
+     * the only guarantee made in terms of priority.
+     * <li><code>Foo createBar()</code> is recognised as a method for
+     * creating a nested element called <code>bar</code> of type 
+     * <code>Foo</code>, so long as <code>Foo</code> is not a primitive or
+     * array type.
+     * <li><code>void addConfiguredFoo(Bar)</code> is recognised as a
+     * method for storing a pre-configured element called 
+     * <code>foo</code> and of type <code>Bar</code>, so long as
+     * <code>Bar</code> is not an array, primitive or String type. 
+     * <code>Bar</code> must have an accessible constructor taking no 
+     * arguments.
+     * <li><code>void addFoo(Bar)</code> is recognised as a
+     * method for storing an element called <code>foobar</code> 
+     * and of type <code>Baz</code>, so long as
+     * <code>Baz</code> is not an array, primitive or String type. 
+     * <code>Baz</code> must have an accessible constructor taking no 
+     * arguments.
+     * </ul>
+     * Note that only one method is retained to create/set/addConfigured/add 
+     * any element or attribute.
+     * 
+     * @param bean The bean type to introspect. 
+     *             Must not be <code>null</code>.
+     * 
+     * @see #getHelper(Class)
+     */
     private IntrospectionHelper(final Class bean) {
         attributeTypes = new Hashtable();
         attributeSetters = new Hashtable();
@@ -274,7 +333,13 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Factory method for helper objects.
+     * Returns a helper for the given class, either from the cache
+     * or by creating a new instance.
+     * 
+     * @param c The class for which a helper is required.
+     *          Must not be <code>null</code>.
+     * 
+     * @return a helper for the specified class
      */
     public static synchronized IntrospectionHelper getHelper(Class c) {
         IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
@@ -286,7 +351,18 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Sets the named attribute.
+     * Sets the named attribute in the given element, which is part of the 
+     * given project.
+     * 
+     * @param p The project containing the element. This is used when files 
+     *          need to be resolved. Must not be <code>null</code>.
+     * @param element The element to set the attribute in. Must not be 
+     *                <code>null</code>.
+     * @param attributeName The name of the attribute to set. Must not be
+     *                      <code>null</code>.
+     * @param value The value to set the attribute to. This may be interpreted
+     *              or converted to the necessary type if the setter method
+     *              doesn't just take a string. Must not be <code>null</code>.
      */
     public void setAttribute(Project p, Object element, String attributeName,
                              String value)
@@ -313,7 +389,21 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Adds PCDATA areas.
+     * Adds PCDATA to an element, using the element's 
+     * <code>void addText(String)</code> method, if it has one. If no
+     * such method is present, a BuildException is thrown if the 
+     * given text contains non-whitespace.
+     * 
+     * @param project The project which the element is part of. 
+     *                Must not be <code>null</code>.
+     * @param element The element to add the text to. 
+     *                Must not be <code>null</code>.
+     * @param text    The text to add.
+     *                Must not be <code>null</code>.
+     * 
+     * @throws BuildException if non-whitespace text is provided and no
+     *                        method is available to handle it, or if
+     *                        the handling method fails.
      */
     public void addText(Project project, Object element, String text) {
         if (addText == null) {
@@ -344,18 +434,36 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Creates a named nested element.
+     * Creates a named nested element. Depending on the results of the
+     * initial introspection, either a method in the given parent instance
+     * or a simple no-arg constructor is used to create an instance of the
+     * specified element type.
+     * 
+     * @param project Project to which the parent object belongs.
+     *                Must not be <code>null</code>. If the resulting
+     *                object is an instance of ProjectComponent, its
+     *                Project reference is set to this parameter value.
+     * @param parent  Parent object used to create the instance.
+     *                Must not be <code>null</code>.
+     * @param elementName Name of the element to create an instance of.
+     *                    Must not be <code>null</code>.
+     * 
+     * @return an instance of the specified element type
+     * 
+     * @throws BuildException if no method is available to create the 
+     *                        element instance, or if the creating method
+     *                        fails.
      */
-    public Object createElement(Project project, Object element, String elementName)
+    public Object createElement(Project project, Object parent, String elementName)
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
-            String msg = getElementName(project, element) +
+            String msg = getElementName(project, parent) +
                 " doesn't support the nested \"" + elementName + "\" element.";
             throw new BuildException(msg);
         }
         try {
-            Object nestedElement = nc.create(element);
+            Object nestedElement = nc.create(parent);
             if (nestedElement instanceof ProjectComponent) {
                 ((ProjectComponent) nestedElement).setProject(project);
             }
@@ -376,9 +484,26 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Creates a named nested element.
+     * Stores a named nested element using a storage method determined
+     * by the initial introspection. If no appropriate storage method
+     * is available, this method returns immediately.
+     * 
+     * @param project Ignored in this implementation. 
+     *                May be <code>null</code>.
+     * 
+     * @param parent  Parent instance to store the child in. 
+     *                Must not be <code>null</code>.
+     * 
+     * @param child   Child instance to store in the parent.
+     *                Should not be <code>null</code>.
+     * 
+     * @param elementName  Name of the child element to store. 
+     *                     May be <code>null</code>, in which case
+     *                     this method returns immediately.
+     * 
+     * @throws BuildException if the storage method fails.
      */
-    public void storeElement(Project project, Object element, Object child, String elementName)
+    public void storeElement(Project project, Object parent, Object child, String elementName)
         throws BuildException {
         if (elementName == null) {
             return;
@@ -388,7 +513,7 @@ public class IntrospectionHelper implements BuildListener {
             return;
         }
         try {
-            ns.store(element, child);
+            ns.store(parent, child);
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
@@ -405,7 +530,16 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * returns the type of a named nested element.
+     * Returns the type of a named nested element.
+     * 
+     * @param elementName The name of the element to find the type of.
+     *                    Must not be <code>null</code>.
+     * 
+     * @return the type of the nested element with the specified name.
+     *         This will never be <code>null</code>.
+     * 
+     * @throws BuildException if the introspected class does not
+     *                        support the named nested element.
      */
     public Class getElementType(String elementName)
         throws BuildException {
@@ -419,7 +553,16 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * returns the type of a named attribute.
+     * Returns the type of a named attribute.
+     * 
+     * @param attributeName The name of the attribute to find the type of.
+     *                      Must not be <code>null</code>.
+     * 
+     * @return the type of the attribute with the specified name.
+     *         This will never be <code>null</code>.
+     * 
+     * @throws BuildException if the introspected class does not
+     *                        support the named attribute.
      */
     public Class getAttributeType(String attributeName)
         throws BuildException {
@@ -433,29 +576,72 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Does the introspected class support PCDATA?
+     * Returns whether or not the introspected class supports PCDATA.
+     * 
+     * @return whether or not the introspected class supports PCDATA.
      */
     public boolean supportsCharacters() {
         return addText != null;
     }
 
     /**
-     * Return all attribues supported by the introspected class.
+     * Returns an enumeration of the names of the attributes supported 
+     * by the introspected class.
+     * 
+     * @return an enumeration of the names of the attributes supported
+     *         by the introspected class.
      */
     public Enumeration getAttributes() {
         return attributeSetters.keys();
     }
 
     /**
-     * Return all nested elements supported by the introspected class.
+     * Returns an enumeration of the names of the nested elements supported 
+     * by the introspected class.
+     * 
+     * @return an enumeration of the names of the nested elements supported
+     *         by the introspected class.
      */
     public Enumeration getNestedElements() {
         return nestedTypes.keys();
     }
 
     /**
-     * Create a proper implementation of AttributeSetter for the given
-     * attribute type.
+    // XXX: (Jon Skeet) This method implementation could be made much simpler
+    // using a mapping from Integer.TYPE to Integer.class etc, so
+    // that when a primitive type is given, the wrapper is just
+    // automatically used. This would then fall through to the "worst case"
+    // where a string constructor is used - but this is what happens
+    // for Integer etc anyway. There would be a slight speed difference (due
+    // to using reflection where it's currently not being used), but the
+    // size of the code for this method would be reduced by 50 lines :)
+     * Creates an implementation of AttributeSetter for the given
+     * attribute type. Conversions (where necessary) are automatically
+     * made for the following types:
+     * <ul>
+     * <li>String (left as it is)
+     * <li>Character/char (first character is used)
+     * <li>Boolean/boolean 
+     * ({@link Project#toBoolean(String) Project.toBoolean(String)} is used)
+     * <li>Class (Class.forName is used)
+     * <li>File (resolved relative to the appropriate project)
+     * <li>Path (resolve relative to the appropriate project)
+     * <li>EnumeratedAttribute (uses its own 
+     * {@link EnumeratedAttribute#setValue(String) setValue} method)
+     * <li>Other primitive types (wrapper classes are used with constructors 
+     * taking String)
+     * </ul>
+     * 
+     * If none of the above covers the given parameters, a constructor for the 
+     * appropriate class taking a String parameter is used if it is available.
+     * 
+     * @param m The method to invoke on the bean when the setter is invoked.
+     *          Must not be <code>null</code>.
+     * @param arg The type of the single argument passed to the bean's method 
+     *            when the returned setter is invoked.
+     * 
+     * @return an appropriate AttributeSetter instance, or <code>null</code>
+     *         if no appropriate conversion is available.
      */
     private AttributeSetter createAttributeSetter(final Method m,
                                                   final Class arg) {
@@ -619,6 +805,20 @@ public class IntrospectionHelper implements BuildListener {
         return null;
     }
 
+    /**
+     * Returns a description of the type of the given element in
+     * relation to a given project. This is used for logging purposes
+     * when the element is asked to cope with some data it has no
+     * way of handling.
+     * 
+     * @param project The project the element is defined in. 
+     *                Must not be <code>null</code>.
+     * 
+     * @param element The element to describe.
+     *                Must not be <code>null</code>.
+     * 
+     * @return a description of the element type
+     */
     protected String getElementName(Project project, Object element)
     {
         Hashtable elements = project.getTaskDefinitions();
@@ -651,31 +851,55 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * extract the name of a property from a method name - subtracting
-     * a given prefix.
+     * Extracts the name of a property from a method name by subtracting
+     * a given prefix and converting into lower case. It is up to calling
+     * code to make sure the method name does actually begin with the
+     * specified prefix - no checking is done in this method.
+     * 
+     * @param methodName The name of the method in question.
+     *                   Must not be <code>null</code>.
+     * @param prefix     The prefix to remove.
+     *                   Must not be <code>null</code>.
+     * 
+     * @return the lower-cased method name with the prefix removed.
      */
     private String getPropertyName(String methodName, String prefix) {
         int start = prefix.length();
         return methodName.substring(start).toLowerCase(Locale.US);
     }
 
+    /**
+     * Internal interface used to create nested elements. Not documented 
+     * in detail for reasons of source code readability.
+     */
     private interface NestedCreator {
         Object create(Object parent)
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
 
+    /**
+     * Internal interface used to storing nested elements. Not documented 
+     * in detail for reasons of source code readability.
+     */
     private interface NestedStorer {
         void store(Object parent, Object child)
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
 
+    /**
+     * Internal interface used to setting element attributes. Not documented 
+     * in detail for reasons of source code readability.
+     */
     private interface AttributeSetter {
         void set(Project p, Object parent, String value)
             throws InvocationTargetException, IllegalAccessException,
                    BuildException;
     }
 
-    public void buildStarted(BuildEvent event) {}
+    /**
+     * Clears all storage used by this class, including the static cache of 
+     * helpers.
+     */
     public void buildFinished(BuildEvent event) {
         attributeTypes.clear();
         attributeSetters.clear();
@@ -685,9 +909,16 @@ public class IntrospectionHelper implements BuildListener {
         helpers.clear();
     }
 
+    /** Empty implementation to satisfy the BuildListener interface. */
+    public void buildStarted(BuildEvent event) {}
+    /** Empty implementation to satisfy the BuildListener interface. */
     public void targetStarted(BuildEvent event) {}
+    /** Empty implementation to satisfy the BuildListener interface. */
     public void targetFinished(BuildEvent event) {}
+    /** Empty implementation to satisfy the BuildListener interface. */
     public void taskStarted(BuildEvent event) {}
+    /** Empty implementation to satisfy the BuildListener interface. */
     public void taskFinished(BuildEvent event) {}
+    /** Empty implementation to satisfy the BuildListener interface. */
     public void messageLogged(BuildEvent event) {}
 }
