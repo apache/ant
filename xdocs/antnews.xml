@@ -9,51 +9,39 @@
   </properties>
 
 <body>
-   <section name="Ant 1.6beta3">
-    <h3>December 5, 2003 - Ant 1.6beta3 Available</h3>
-    <p>Apache Ant 1.6beta3 is now available for <a
-    href="http://cvs.apache.org/dist/ant/v1.6beta3/">download</a>.  As
+  <section name="Ant 1.6.1beta1">
+    <h3>January 29, 2004 - Ant 1.6.1beta1 Available</h3>
+    <p>Apache Ant 1.6.1beta1 is now available for <a
+      href="http://cvs.apache.org/dist/ant/v1.6.1beta1/">download</a>.</p>
+    <p>The ASF Board has approved the new Apache License 2.0.
+    For a copy of that license, please see
+    <a href="http://www.apache.org/licenses/">
+    http://www.apache.org/licenses/</a>.</p>
+    <p>The Ant 1.6.1 final release will probably be delivered with the
+    Apache License 2.0, pending the result of a vote.</p>
+    <p>Ant 1.6.1beta1 fixes several bugs, most notably the handling
+    of the default namespace for nested elements.</p>
+    <p>Ant 1.6.1beta1 also introduces initial support for compiling with
+    Java 1.5.</p>
+  </section>
+   <section name="Ant 1.6.0">
+    <h3>December 18, 2003 - Ant 1.6.0 Available</h3>
+    <p>Apache Ant 1.6.0 is now available for <a
+    href="http://ant.apache.org/bindownload.cgi">download</a>.  As
     we've already said in the announcements of Ant 1.5.4, this release
     requires JDK 1.2 or later to run.</p>
 
-    <p>We encourage user to give this beta a release a try and report
-    any bugs found so that we get a chance to fix them before we make
-    the final release of Ant 1.6.</p>
-
-    <p>Ant 1.6 adds a lot of new features, most prominently support
+    <p>Ant 1.6.0 adds a lot of new features, most prominently support
     for XML namespaces as well as a new concept of Ant libraries that
     makes use of namespaces to avoid name clashes of custom tasks.
     For a longer list of fixed bugs and new features see the release
     notes.</p>
-    
-    <p>The manual of Ant 1.6 is available on line 
-    <a href="manual-1.6beta/"> here</a>.</p>
 
     <p>If you find anything that hasn't been covered in the manual (I bet you
 did) or could be explained better, feel free to help us out in the
 <a href="http://nagoya.apache.org/wiki/apachewiki.cgi?NewAntFeaturesInDetail">Wiki </a>.</p>
 
    </section>
-
-  <section name="Ant 1.5.4">
-    <h3>August 12, 2003 - Ant 1.5.4 Available</h3>
-    <p>Apache Ant 1.5.4 is now available for 
-     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
-    </p>
-    
-    <p>This is a minor bugfix release that fixes a problem with the
-    <code>javah</code> task on JDK 1.4.2 and a couple of bugs in the
-    Visual Age for Java intergration tasks.  If you don't use javah or
-    VAJ, there is no reason to upgrade.</p>
-
-    <div class="warning">
-    <div class="label">Note</div>
-    <div class="content">Ant 1.5.4 will be the last release that supports
-      JDK 1.1. The next major release of Ant, Ant 1.6, will require JDK 1.2 or
-      later.
-    </div>
-    </div>
-  </section>
 
   <section name="Java Pro 2003 Readers Choice Award">
     <a href="http://www.ftponline.com/javapro/">
@@ -72,6 +60,26 @@ did) or could be explained better, feel free to help us out in the
       <a href="http://www.ftponline.com/reports/javaone/2003/awards/">awards</a>
       at the Java Pro website.
     </p>
+  </section>
+
+  <section name="Ant 1.5.4">
+    <h3>August 12, 2003 - Ant 1.5.4 Available</h3>
+    <p>Apache Ant 1.5.4 is still available for
+     <a href="http://archive.apache.org/dist/ant">download</a>.
+    </p>
+
+    <p>This is a minor bugfix release that fixes a problem with the
+    <code>javah</code> task on JDK 1.4.2 and a couple of bugs in the
+    Visual Age for Java intergration tasks.  If you don't use javah or
+    VAJ, there is no reason to upgrade.</p>
+
+    <div class="warning">
+    <div class="label">Note</div>
+    <div class="content">Ant 1.5.4 is the last release that supports
+      JDK 1.1. Ant 1.6.0 requires JDK 1.2 or
+      later.
+    </div>
+    </div>
   </section>
 
   <section name="JDJ Editors Choice Award">
