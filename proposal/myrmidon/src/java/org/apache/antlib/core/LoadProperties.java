@@ -14,8 +14,8 @@ import java.util.Properties;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.AbstractContainerTask;
 
 /**
  * This task loads properties from a property file and places them in the context.
@@ -24,7 +24,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
  * @ant:task name="load-properties"
  */
 public class LoadProperties
-    extends AbstractContainerTask
+    extends AbstractTask
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( LoadProperties.class );
