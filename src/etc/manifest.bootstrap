@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: org.apache.tools.ant.Main
+Class-Path: ant.jar xml-apis.jar xercesImpl.jar optional.jar xalan.jar
+
+

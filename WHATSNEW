@@ -6,6 +6,14 @@ Changes that could break older environments:
 
 * Targets cannot have the empty string as their name any longer.
 
+* ant.jar's manifest does no longer include a Class-Path entry, so it
+  is no longer possible to run Ant via "java -jar ant.jar" without
+  manually altering the CLASSPATH.  Instead of that a file
+  ant-bootstrap.jar is included in the etc directory of the binary
+  distribution, copy this to the lib directory and use 
+  "java -jar ant-bootstrap.jar" instead if you want to run Ant without
+  the wrapper script (not recommended).
+
 Fixed bugs:
 -----------
 

@@ -22,6 +22,7 @@
   <property name="name" value="ant"/>
   <property name="version" value="1.6alpha"/>
   <property name="manifest-version" value="1.5.9"/>
+  <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
 
   <property name="debug" value="true"/>
   <property name="chmod.fail" value="true"/>
@@ -737,6 +738,13 @@
       </manifest>
     </jar>
 
+    <jar destfile="${build.lib}/${bootstrap.jar}"
+         basedir="${build.classes}"
+         manifest="${manifest}.bootstrap">
+      <include name="${ant.package}/Main.class"/>
+      <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+    </jar>
+
   </target>
 
   <!--   Creates jar of test utility classes -->
@@ -764,7 +772,9 @@
     <mkdir dir="${dist.lib}"/>
 
     <copy todir="${dist.lib}">
-      <fileset dir="${build.lib}"/>
+      <fileset dir="${build.lib}">
+        <exclude name="${bootstrap.jar}"/>
+      </fileset>
     </copy>
 
     <copy todir="${dist.bin}">
@@ -876,6 +886,9 @@
             <include name="log.xsl"/>
             <include name="tagdiff.xsl"/>
         </fileset>
+      <fileset dir="${build.lib}">
+        <include name="${bootstrap.jar}"/>
+      </fileset>
     </copy>
 
   </target>
