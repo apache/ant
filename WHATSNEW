@@ -172,6 +172,8 @@ Other changes:
 * <cab>'s basedir attribute is now optional if you specify nested
   filesets.  Bugzilla Report 18046.
 
+* New task <sync> that synchronizes two directory trees.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
