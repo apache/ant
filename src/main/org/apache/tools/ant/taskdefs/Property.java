@@ -101,17 +101,16 @@ public class Property extends Task {
     public void init() throws BuildException {
         try {
             if ((name != null) && (value != null)) {
-                String v = ProjectHelper.replaceProperties(value, project.getProperties());
 		if( userProperty )
                     if (project.getUserProperty(name) == null) {
-		        project.setUserProperty(name, v);
+		        project.setUserProperty(name, value);
                     } else {
                         project.log("Override ignored for " + name, 
                                     project.MSG_VERBOSE);
                     }
 		else
                     if (project.getProperty(name) == null) {
-		        project.setProperty(name, v);
+		        project.setProperty(name, value);
                     } else {
                         project.log("Override ignored for " + name, 
                                     project.MSG_VERBOSE);

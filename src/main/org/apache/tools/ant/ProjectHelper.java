@@ -484,9 +484,14 @@ public class ProjectHelper {
         // assert value!=nil
         int pos;
         while( (pos=value.indexOf( "$", prev )) >= 0 ) {
-            if(pos>0)
+            if(pos>0) {
                 sb.append( value.substring( prev, pos ) );
-            if( value.charAt( pos + 1 ) != '{' ) {
+            }
+            if( pos == (value.length() - 1)) {
+                sb.append('$');
+                prev = pos + 1;
+            }
+            else if (value.charAt( pos + 1 ) != '{' ) {
                 sb.append( value.charAt( pos + 1 ) );
                 prev=pos+2; // XXX
             } else {
