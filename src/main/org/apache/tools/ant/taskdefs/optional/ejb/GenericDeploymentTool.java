@@ -556,46 +556,15 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                             log("looking at interface " + c.getName(),  Project.MSG_VERBOSE);
                             Class[] interfaces = c.getInterfaces();
                             for (int i = 0; i < interfaces.length; i++){
-
                                 log("     implements " + interfaces[i].getName(),  Project.MSG_VERBOSE);
-                                if (!interfaces[i].getName().equals("javax.ejb.EJBObject")) // do not add home interfaces
-                                { 
-                                    File superClassFile = new File(srcDir.getAbsolutePath() 
-                                                                    + File.separatorChar 
-                                                                    + interfaces[i].getName().replace('.',File.separatorChar)
-                                                                    + ".class"
-                                                                    );
-                                    if (superClassFile.exists() && superClassFile.isFile())
-                                    {
-                                        if (checkInterfaceClasses(interfaces[i].getName().replace('.',File.separatorChar)+".class", 
-                                              superClassFile, checkEntries))
-                                        {
-                                            checkEntries.put(interfaces[i].getName().replace('.',File.separatorChar)+".class",
-                                                 superClassFile);
-                                        }
-                                    }
-                                }
+                                addInterface(interfaces[i], checkEntries);
                             }
                         }
                         else  // get as a class
                         {
                             log("looking at class " + c.getName(),  Project.MSG_VERBOSE);
                             Class s = c.getSuperclass();
-                            if (!s.getName().equals("java.lang.Object"))
-                            {
-                                File superClassFile = new File(srcDir.getAbsolutePath() 
-                                + File.separatorChar 
-                                + s.getName().replace('.',File.separatorChar)
-                                + ".class"
-                                );
-                                if (superClassFile.exists() && superClassFile.isFile())
-                                {
-                                    checkSuperClasses(s.getName().replace('.',File.separatorChar) + ".class", 
-                                    superClassFile, checkEntries);
-                                    checkEntries.put(s.getName().replace('.',File.separatorChar) + ".class", 
-                                    superClassFile);
-                                }               
-                            }
+                            addSuperClass(c.getSuperclass(), checkEntries);
                         }
                     } //if primative
                 }
@@ -606,7 +575,51 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             } //if 
         } // while 
     }
+
+    private void addInterface(Class theInterface, Hashtable checkEntries) {
+        if (!theInterface.getName().startsWith("java")) // do not add system interfaces
+        { 
+            File interfaceFile = new File(srcDir.getAbsolutePath() 
+                                        + File.separatorChar 
+                                        + theInterface.getName().replace('.',File.separatorChar)
+                                        + ".class"
+                                        );
+            if (interfaceFile.exists() && interfaceFile.isFile())
+            {
+                checkEntries.put(theInterface.getName().replace('.',File.separatorChar)+".class",
+                                 interfaceFile);
+                Class[] superInterfaces = theInterface.getInterfaces();
+                for (int i = 0; i < superInterfaces.length; i++) {
+                    addInterface(superInterfaces[i], checkEntries);
+                }
+            }
+        }
+    }
      
+    private void addSuperClass(Class superClass, Hashtable checkEntries) {
+    
+        if (!superClass.getName().startsWith("java"))
+        {
+            File superClassFile = new File(srcDir.getAbsolutePath() 
+                                            + File.separatorChar 
+                                            + superClass.getName().replace('.',File.separatorChar)
+                                            + ".class");
+            if (superClassFile.exists() && superClassFile.isFile())
+            {
+                checkEntries.put(superClass.getName().replace('.',File.separatorChar) + ".class", 
+                                 superClassFile);
+                
+                // now need to get super classes and interfaces for this class
+                Class[] superInterfaces = superClass.getInterfaces();
+                for (int i = 0; i < superInterfaces.length; i++) {
+                    addInterface(superInterfaces[i], checkEntries);
+                }
+                
+                addSuperClass(superClass.getSuperclass(), checkEntries);
+            }               
+        }
+    }
+    
     /**
      * Returns a Classloader object which parses the passed in generic EjbJar classpath.
      * The loader is used to dynamically load classes from javax.ejb.* and the classes 
@@ -630,100 +643,6 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         return classpathLoader;
     }
  
-    /**
-     * Checks to see if a Superclass of an Object needs to be included in the EJB Jar.
-     * This is done my checking the class and if it inherits from a superclass and that
-     * superclass is available then it includes that in the Hashtable of entries to be added
-     * to the Jar. 
-     *
-     */
-    protected void checkSuperClasses(String entryName, File entryFile, Hashtable checkEntries)
-    {
-        try
-        {
-            if (entryName.endsWith(".class")) //sanity check
-            {
-                // Load class to check superclass and interfaces
-                ClassLoader loader = getClassLoaderForBuild();
-                String classname = entryName.substring(0,entryName.lastIndexOf(".class")).replace(File.separatorChar,'.');
-                Class c = loader.loadClass(classname);
-
-                Class s = c.getSuperclass();
-                if (!s.getName().equals("java.lang.Object"))
-                {
-                    File superClassFile = new File(srcDir.getAbsolutePath() 
-                                    + File.separatorChar 
-                                    + s.getName().replace('.',File.separatorChar)
-                                    + ".class"
-                                    );
-                    if (superClassFile.exists() && superClassFile.isFile()){
-                        checkSuperClasses(s.getName().replace('.',File.separatorChar) + ".class", superClassFile, checkEntries);
-                        checkEntries.put(s.getName().replace('.',File.separatorChar) + ".class", superClassFile);
-                    }               
-                }
-            }
-        }
-        catch(ClassNotFoundException cnfe){
-            String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
-                        + ". Details: "
-                + cnfe.getMessage();
-            throw new BuildException(cnfmsg, cnfe);
-        }
-    }
-
-    /**
-     * Checks to see if an interface extends another interface and if the final interface on the 
-     * chain implements javax.ejb.EJBObject the it includes all interfaces in that chain in the Jar.
-     *
-     */
-    protected boolean checkInterfaceClasses(String entryName, File entryFile, Hashtable checkEntries)
-    {
-        boolean addit = false;
-        try
-        {
-            if (entryName.endsWith(".class")) //sanity check
-            {
-                // Load class to check superclass and interfaces
-                ClassLoader loader = getClassLoaderForBuild();
-                String classname = entryName.substring(0,entryName.lastIndexOf(".class")).replace(File.separatorChar,'.');
-                Class c = loader.loadClass(classname);
-
-                Class[] interfaces = c.getInterfaces();
-                for (int i = 0; i < interfaces.length; i++){
-                    if (!interfaces[i].getName().equals("javax.ejb.EJBObject")){ // do not add home interfaces  
-                        File superClassFile = new File(srcDir.getAbsolutePath() 
-                                    + File.separatorChar 
-                                    + interfaces[i].getName().replace('.',File.separatorChar)
-                                    + ".class"
-                                    );
-                        if (superClassFile.exists() && superClassFile.isFile()){
-                            log("looking at interface " + interfaces[i].getName(),  Project.MSG_VERBOSE);
-                        
-                            addit = checkInterfaceClasses(interfaces[i].getName().replace('.',File.separatorChar)+".class", 
-                                          superClassFile, checkEntries);
-                            if (addit)
-                            {
-                                log("adding at interface " + interfaces[i].getName(),  Project.MSG_VERBOSE);
-                                checkEntries.put(interfaces[i].getName().replace('.',File.separatorChar)+".class",
-                                         superClassFile);
-                            }
-                        }
-                    }
-                    else {
-                        addit = true;
-                    }
-                }
-            }
-        }
-        catch(ClassNotFoundException cnfe){
-            String cnfmsg = "ClassNotFoundException while processing ejb-jar file"
-                            + ". Details: "
-                            + cnfe.getMessage();
-            throw new BuildException(cnfmsg, cnfe);
-        }
-        return addit;
-    }
-    
     /**
      * Called to validate that the tool parameters have been configured.
      *
