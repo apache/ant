@@ -667,7 +667,7 @@ public class FTP
             String cwd = ftp.printWorkingDirectory();
             String parent = dir.getParent();
             if (parent != null) {
-                if (!ftp.changeWorkingDirectory(parent)) {
+                if (!ftp.changeWorkingDirectory(resolveFile(parent))) {
                     throw new BuildException("could not change to " 
                         + "directory: " + ftp.getReplyString());
                 }
