@@ -111,7 +111,7 @@ import java.util.Vector;
 public class Javac extends MatchingTask {
 
     private final static String FAIL_MSG
-        = "Compile failed, messages should have been provided.";
+        = "Compile failed; see the compiler error output for details.";
 
     private Path src;
     private File destDir;

@@ -105,7 +105,7 @@ import java.util.Vector;
 public class Rmic extends MatchingTask {
 
     private final static String FAIL_MSG 
-        = "Rmic failed, messages should have been provided.";
+        = "Rmic failed; see the compiler error output for details.";
 
     private File baseDir;
     private String classname;
