@@ -101,6 +101,7 @@ import java.util.Vector;
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"
+ * @todo Why doesn't this task extend from AbstractCvsTask?
  */
 public class CvsTagDiff extends Task {
 
@@ -171,6 +172,9 @@ public class CvsTagDiff extends Task {
     }
 
     /**
+     * If set to a value 1-9 it adds -zN to the cvs command line, else
+     * it disables compression.
+     *
      * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCompressionLevel(int)
      */
     public void setCompressionLevel(int level) {
@@ -178,56 +182,58 @@ public class CvsTagDiff extends Task {
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCompression(boolean)
+     * If true, this is the same as compressionlevel="3".
      */
     public void setCompression(boolean usecomp) {
         m_cvs.setCompression(usecomp);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCvsRoot
+     * The CVSROOT variable.
      */
     public void setCvsRoot(String cvsRoot) {
         m_cvs.setCvsRoot(cvsRoot);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCvsRsh
+     * The CVS_RSH variable.
      */
     public void setCvsRsh(String rsh) {
         m_cvs.setCvsRsh(rsh);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setPackage
+     * The package/module to analyze.
      */
     public void setPackage(String p) {
         m_package = p;
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setQuiet
+     * If true, suppress informational messages.
      */
     public void setQuiet(boolean quiet) {
         m_cvs.setQuiet(quiet);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setPort
+     * Port used by CVS to communicate with the server.
      */
     public void setPort(int port) {
         m_cvs.setPort(port);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setPassfile
+     * Password file to read passwords from.
      */
     public void setPassfile(File f) {
         m_cvs.setPassfile(f);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setFailOnError
+     * Stop the build process if the command exits with
+     * a return code other than 0.
+     * Defaults to false.
      */
     public void setFailOnError(boolean b) {
         m_cvs.setFailOnError(b);
