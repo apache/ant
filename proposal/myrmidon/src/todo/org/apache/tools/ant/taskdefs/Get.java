@@ -17,7 +17,6 @@ import java.net.URLConnection;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.file.Touch;
 
 /**
  * Get a particular file from a URL source. Options include verbose reporting,
@@ -270,8 +269,11 @@ public class Get extends Task
                     getLogger().info( "last modified = " + t.toString()
                                       + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
                 }
+
                 if( remoteTimestamp != 0 )
-                    touchFile( dest, remoteTimestamp );
+                {
+                    dest.setLastModified( remoteTimestamp );
+                }
             }
         }
         catch( IOException ioe )
@@ -281,26 +283,6 @@ public class Get extends Task
                 return;
             throw new TaskException( "Error", ioe );
         }
-    }
-
-    /**
-     * set the timestamp of a named file to a specified time.
-     *
-     * @param file Description of Parameter
-     * @param timemillis Description of Parameter
-     * @return true if it succeeded. False means that this is a java1.1 system
-     *      and that file times can not be set
-     * @exception TaskException Thrown in unrecoverable error. Likely this
-     *      comes from file access failures.
-     */
-    protected void touchFile( File file, long timemillis )
-        throws TaskException
-    {
-
-        Touch touch = (Touch)getProject().createTask( "touch" );
-        touch.setFile( file );
-        touch.setMillis( timemillis );
-        touch.touch();
     }
 
     /**
