@@ -1118,26 +1118,38 @@ public class JUnitTask extends Task {
             if (outFile != null && formatter != null) {
                 try {
                     OutputStream out = new FileOutputStream(outFile);
-                    formatter.setOutput(out);
-                    formatter.startTestSuite(test);
-                    test.setCounts(0, 0, 1);
-                    Test t = new Test() {
-                        public int countTestCases() { return 0; }
-                        public void run(TestResult r) {
-                            throw new AssertionFailedError("Timeout occurred");
-                        }
-                    };
-                    formatter.startTest(t);
-                    formatter
-                        .addError(t,
-                                  new AssertionFailedError("Timeout occurred"));
-
-                    formatter.endTestSuite(test);
+                    addTimeout(test, formatter, out);
                 } catch (IOException e) {
                     // ignore
                 }
             }
         }
+        if (summary) {
+            SummaryJUnitResultFormatter f = new SummaryJUnitResultFormatter();
+            f.setWithOutAndErr("withoutanderr".equalsIgnoreCase(summaryValue));
+            addTimeout(test, f, getDefaultOutput());
+        }
+    }
+
+    /**
+     * Adds the actual timeout to the formatter. 
+     * Only used from the logTimeout method.
+     * @since Ant 1.6
+     */
+    private void addTimeout(JUnitTest test, JUnitResultFormatter formatter, 
+                            OutputStream out) {
+        formatter.setOutput(out);
+        formatter.startTestSuite(test);
+        test.setCounts(0, 0, 1);
+        Test t = new Test() {
+            public int countTestCases() { return 0; }
+            public void run(TestResult r) {
+                throw new AssertionFailedError("Timeout occurred");
+            }
+        };
+        formatter.startTest(t);
+        formatter.addError(t, new AssertionFailedError("Timeout occurred"));
+        formatter.endTestSuite(test);
     }
 
     /**
