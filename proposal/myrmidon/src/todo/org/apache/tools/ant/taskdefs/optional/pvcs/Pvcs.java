@@ -19,11 +19,11 @@ import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -44,6 +44,7 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class Pvcs
     extends AbstractTask
+    implements ExecOutputHandler
 {
     /**
      * Constant for the thing to execute
@@ -72,6 +73,7 @@ public class Pvcs
     private String m_repository;
     private boolean m_updateOnly;
     private String m_workspace;
+    private FileOutputStream m_output;
 
     /**
      * Creates a Pvcs object
@@ -269,9 +271,10 @@ public class Pvcs
             tmp = File.createTempFile( "pvcs_ant_", ".log" );
             final File fileList = File.createTempFile( "pvcs_ant_", ".log" );
 
-            final Execute exe = new Execute();
-            exe.setOutput( new FileOutputStream( tmp ) );
-            exe.setError( new LogOutputStream( getLogger(), true ) );
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
+            exe.setExecOutputHandler( this );
+            m_output = new FileOutputStream( tmp );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             final int result = exe.execute();
@@ -306,11 +309,38 @@ public class Pvcs
         }
         finally
         {
+            IOUtil.shutdownStream( m_output );
             if( null != tmp )
             {
                 tmp.delete();
             }
         }
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard output.
+     */
+    public void stdout( final String line )
+    {
+        try
+        {
+            m_output.write( line.getBytes() );
+        }
+        catch( final IOException ioe )
+        {
+            final String message = "Failed to write to output stream";
+            getLogger().error( message );
+        }
+    }
+
+    /**
+     * Receive notification about the process writing
+     * to standard error.
+     */
+    public void stderr( final String line )
+    {
+        getLogger().warn( line );
     }
 
     private Commandline buildPCLICommand()
