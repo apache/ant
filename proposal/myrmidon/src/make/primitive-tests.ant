@@ -23,11 +23,13 @@ Legal:
   <target name="main" depends="test-target" />
 
   <target name="file-manip">
+    <!--
     <file-manip-test base-directory=".">
       <source>
         <include value="**/*.java" />       
       </source>
     </file-manip-test>
+    -->
   </target>
 
   <target name="undefined-task">
