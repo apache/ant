@@ -56,12 +56,11 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://sourceforge.net/projects/ant-contrib/">http://sourcefoge.net/projects/ant-contrib/</a></td>
+            <td><a href="http://ant-contrib.sourceforge.net/">http://ant-contrib.sourceforge.net/</a></td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href
-                   ="http://sourceforge.net/mail/?group_id=36177">project mailing list</a></td>
+            <td><a href="http://sourceforge.net/mail/?group_id=36177">project mailing list</a></td>
           </tr>
           <tr>
             <th>License:</th>
