@@ -1,0 +1,415 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+        <html>
+    <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
+    <head>
+      <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Apache Ant - Design Overview</title>
+        <link type="text/css" href="../../page.css" rel="stylesheet">
+          <meta name="author" content="Simeon H. K. Fitch">
+  <meta name="email" content="simeon@fitch.net">
+        <meta name="author" content="Christoph Wilhelms">
+  <meta name="email" content="christoph.wilhelms@t-online.de">
+      </head>
+
+    <body text="#000000" bgcolor="#ffffff">
+      <table summary="navigation path" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td nowrap="nowrap" valign="middle" bgcolor="#CFDCED" height="20"><img height="1" width="5" alt="" border="0" src="../../images/spacer.gif"><font size="2" face="Arial, Helvetica, Sans-serif"><script src="../../breadcrumbs.js" language="JavaScript" type="text/javascript"></script></font></td>
+        </tr>
+        <tr>
+          <td bgcolor="#4C6C8F" height="2"><img height="2" width="2" alt="" border="0" src="../../images/spacer.gif"></td>
+        </tr>
+      </table>
+
+      <table summary="header with logos" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td bgcolor="#294563"><a href="http://ant.apache.org/"><img border="0" alt="Apache Ant site" src="../../images/group-logo.gif"></a></td><td width="100%" align="center" bgcolor="#294563"><a href="http://ant.apache.org/"><img alt="Apache Ant logo" border="0" src="../../images/project-logo.gif"></a></td><td valign="top" rowspan="2" bgcolor="#294563">
+            <form target="_blank" onsubmit="q.value = query.value + ' site:ant.apache.org'" action="http://www.google.com/search" method="get">
+              <table summary="search" border="0" cellspacing="0" cellpadding="0" bgcolor="#4C6C8F">
+                <tr>
+                  <td colspan="3"><img height="10" width="1" alt="" src="../../images/spacer.gif"></td>
+                </tr>
+                <tr>
+                  <td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td><td nowrap="nowrap"><input name="q" type="hidden"><input size="15" id="query" type="text"><img height="1" width="5" alt="" src="../../images/spacer.gif"><input name="Search" value="Search" type="submit">
+                  <br>
+                  <font face="Arial, Helvetica, Sans-serif" size="2" color="white">
+                                    the Apache Ant site
+
+
+                                    </font></td><td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td>
+                </tr>
+                <tr>
+                  <td><img alt="" border="0" height="10" width="9" src="../../images/search-left.gif"></td><td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td><td><img alt="" border="0" height="10" width="9" src="../../images/search-right.gif"></td>
+                </tr>
+              </table>
+            </form>
+          </td><td bgcolor="#294563"><img height="10" width="10" alt="" src="../../images/spacer.gif"></td>
+        </tr>
+        <tr>
+          <td valign="bottom" bgcolor="#294563" colspan="2">
+              <div class="tab">
+              <table summary="tab bar" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                                  <td width="5"><img alt="" height="8" width="8" src="../../images/spacer.gif"></td><td valign="bottom">
+                      <table summary="non selected tab" style="height: 1.4em" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-left.gif"></td><td valign="middle" bgcolor="#B2C4E0"><a href="../../index.html"><font size="2" face="Arial, Helvetica, Sans-serif">Home</font></a></td><td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-right.gif"></td>
+                        </tr>
+                      </table>
+                    </td>
+                                    <td width="8"><img alt="" height="5" width="8" src="images/spacer.gif"></td><td valign="bottom">
+                      <table summary="selected tab" style="height: 1.5em" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                        <td valign="top" width="5" bgcolor="#4C6C8F"><img height="5" width="5" alt="" src="../../images/tabSel-left.gif"></td><td valign="middle" bgcolor="#4C6C8F"><font color="#ffffff" size="2" face="Arial, Helvetica, Sans-serif"><b>Projects</b></font></td><td valign="top" width="5" bgcolor="#4C6C8F"><img height="5" width="5" alt="" src="../../images/tabSel-right.gif"></td>
+                        </tr>
+                      </table>
+                    </td>
+                            </tr>
+              </table>
+            </div>
+
+          </td><td bgcolor="#294563"><img alt="" width="1" height="1" src="../../images/spacer.gif"></td>
+        </tr>
+        <tr>
+          <td bgcolor="#4C6C8F" colspan="4"><img width="1" height="10" alt="" src="../../images/spacer.gif"></td>
+        </tr>
+      </table>
+      <table summary="page content" bgcolor="#ffffff" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td valign="top">
+            <table summary="menu" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td rowspan="3" valign="top">
+                  <table summary="blue line" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#CFDCED"><font color="#4C6C8F" size="4" face="Arial, Helvetica, Sans-serif">&nbsp;</font></td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+                    </tr>
+                  </table>
+                </td><td bgcolor="#294563"><img width="1" height="1" alt="" src="../../images/spacer.gif"></td><td valign="bottom" bgcolor="#4C6C8F"><img width="10" height="10" alt="" src="../../images/spacer.gif"></td><td nowrap="nowrap" valign="top" bgcolor="#4C6C8F">
+                                                            <div class="menu"><ul>
+      <li><font color="#CFDCED">Projects</font>
+      <ul>
+            <li>
+                    <a href="../../projects/index.html">Welcome</a>
+                </li>
+          </ul>
+    </li>
+      <li><font color="#CFDCED">Antidote</font>
+      <ul>
+            <li>
+                    <a href="../../projects/antidote/index.html">About Antidote</a>
+                </li>
+            <li>
+              <span class="sel"><font color="#ffcc00">Design Overview</font></span>
+              </li>
+            <li>
+                    <a href="../../projects/antidote/module.html">Module HOW-TO</a>
+                </li>
+          </ul>
+    </li>
+    </ul></div>
+                </td><td valign="bottom" bgcolor="#4C6C8F"><img width="10" height="10" alt="" src="../../images/spacer.gif"></td><td bgcolor="#294563"><img width="1" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td valign="bottom" align="left" colspan="2" rowspan="2" bgcolor="#4C6C8F"><img height="10" width="10" border="0" alt="" src="../../images/menu-left.gif"></td><td bgcolor="#4C6C8F"><img height="10" width="10" border="0" alt="" src="../../images/spacer.gif"></td><td valign="bottom" align="right" colspan="2" rowspan="2" bgcolor="#4C6C8F"><img height="10" width="10" border="0" alt="" src="../../images/menu-right.gif"></td>
+              </tr>
+              <tr>
+                <td height="1" bgcolor="#294563"><img width="1" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+            </table>
+          </td><td valign="top" width="100%">
+            <table summary="content" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td colspan="4" bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td align="left" width="10" bgcolor="#CFDCED"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td><td align="left" width="50%" bgcolor="#CFDCED"><font color="#4C6C8F" size="3" face="Arial, Helvetica, Sans-serif">
+                &nbsp;
+                </font><img width="10" height="8" alt="" src="../../images/spacer.gif"></td><td align="right" width="50%" bgcolor="#CFDCED"><font color="#4C6C8F" size="3" face="Arial, Helvetica, Sans-serif">
+                &nbsp;
+                </font><img width="10" height="8" alt="" src="../../images/spacer.gif"></td><td width="10" bgcolor="#CFDCED"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td colspan="4" bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td align="left" width="10"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td><td align="left" width="100%">
+                  <div class="content">
+      <table class="title">
+        <tr>
+          <td valign="middle">
+            <h1>Design Overview</h1>
+          </td>
+        </tr>
+      </table>
+          <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Introduction"><strong>Introduction</strong></a></font></td></tr>
+  </table>
+                        <p>The purpose of this document is to communicate the overall
+    structure and design patters used in Antidote, the GUI for
+    Ant. This document is a work in progress, as well as a living
+    document, and it is most likely not be in full synchronization with
+    the source code. Therefore, if there is any doubt, view the source
+    ;-)
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Overview"><strong>Overview</strong></a></font></td></tr>
+  </table>
+                        <p>The Antidote architecture design aims to provide a high level
+    of modularity and extensibility. Ideally the components of
+    Antidote will be able to be assembled in different configurations
+    to provide the type of application or plug-in desired.
+    </p>
+                                <p>To achieve this modularity, a high level of decoupling is
+    necessary. The standard UI design approach of providing separation
+    of view (presentation) from model (data) is applied, leveraging
+    the built-in Ant data model where possible, as well as the
+    predefined Swing model interfaces. Furthermore, the architecture
+    is highly event driven, whereby modules communicate via a shared
+    communications channel.
+    </p>
+                                <p>To a large extent, the configuration of application modules is
+    driven by localized configuration files, allowing new modules or
+    data views to be added, as well as providing multi-language
+    support.
+    </p>
+                                <p>The diagram below conveys a high altitude view of the
+    application's structure. As the application grows, new components
+    will be plugged in to what will be described as the <code>EventBus</code>
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Antidote Component Architecture/Event Bus"><strong>Antidote Component Architecture/Event Bus</strong></a></font></td></tr>
+  </table>
+                        <pre class="code">
+   +---------------+ +----------------+ +-------------+ +-------------+
+   |               | |                | |             | |             |
+   | ActionManager | | EventResponder | |  AntModule  | |  AntModule  |
+   |               | |                | |(ProjectNav) | |(SourceEdit) |
+   +---------------+ +----------------+ +-------------+ +-------------+
+           |                  ^               ^               ^
+           |                  |               |               |
+      ActionEvent         EventObject      AntEvent       AntEvent
+           |                  |               |               |
+           v                  v               v               v
+  /---------------------------------------------------------------------\
+ /                                                                       \
+&lt;                                   EventBus                              &gt;
+ \                                                                       /
+  \---------------------------------------------------------------------/
+           |                  ^               ^               ^
+           |                  |               |               |
+      EventObject         ChangeEvent      BuildEvent     EventObject
+           |                  |               |               |
+           v                  |               |               v
+   +---------------+ +----------------+ +-------------+ +--------------+
+   |               | |                | |             | |              |
+   |   Console     | |  ProjectProxy  | |    Ant      | | (Your Module)|
+   |               | |                | |             | |              |
+   +---------------+ +----------------+ +-------------+ +--------------+
+    </pre>
+                                <p>The backbone of the application is the <TT>EventBus</TT>. Any
+    component of the application can post events to the
+    <code>EventBus</code>. Components that wish to receive events are
+    called <code>BusMember</code>s.
+    </p>
+                                <p>The <code>EventBus</code> will dispatch any object of type
+    <code>java.util.Event</code>, which means that Ant <code>BuildEvent</code>
+    objects, as well as <code>AWTEvent</code> objects can be posted (if desired). A
+    new class of events called <code>AntEvent</code> is defined for Antidote
+    specific events, which have the additional capability of being
+    canceled mid-dispatch.
+    </p>
+                                <p>Each <code>BusMember</code> must provide a <code>BusFilter</code> instance,
+    which is the members' means of telling the bus which
+    events it is interested in. This allows a <code>BusMember</code> to,
+    say, only receive <code>AntEvent</code> objects.
+    </p>
+                                <p>When a <code>BusMember</code> registers itself with the
+    <code>EventBus</code>, it must provide a (so called) <i>interrupt
+    level</i> which is a integer value defining a relative ordering
+    for dispatching <code>EventObject</code>s to <code>BusMember</code>s. The
+    purpose of this is to allow certain <code>BusMember</code> instances
+    to see an event before others, and in the case of <code>AntEvent</code>
+    objects, keep the event from propagating onward. The
+    <code>EventBus</code> class defines the interrupt level constants
+    <code>VETOING=1</code>, <code>MONITORING=5</code>, and <code>RESPONDING=10</code> to
+    help define categories of members. The implied purpose being that:
+    </p>
+                                <ul>
+
+      <li><code>VETOING</code>: Listens for certain types of events, and
+        may process them in a non-default manner to determine if the
+        event should be canceled before being dispatched to the
+        <code>RESPONDING</code> group.
+      </li>
+
+      <li><code>MONITORING</code>: Just listens for events, like a logger
+        or status monitor.
+      </li>
+
+      <li><code>RESPONDING</code>: Process events in a default manner,
+        knowing that the event has passed any <code>VETOING</code> members.
+      </li>
+
+    </ul>
+                                <p>Within a specific interrupt level, the order in which members will
+    receive events is undefined. A <code>BusMember</code> may be registered
+    at a level that is +/- of one of the defined levels, as long as it
+    follows the constraint <code>MONITORING &lt;= interruptLevel &lt;=
+    MAX_INTERRUPT</code>.
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Actions and ActionManager"><strong>Actions and ActionManager</strong></a></font></td></tr>
+  </table>
+                        <p>Extensive use of the <code>javax.swing.Action</code> interface is
+    made for defining the set of menu and tool bar options that are
+    available. The configuration file <code>action.properties</code>
+    exists to define what should appear in the menu and toolbar, how
+    it is displayed, and the <code>Action</code> command name that is
+    dispatched when the user invokes that action. A class called
+    <code>ActionManager</code> exists for not only processing the
+    configuration file, but also for dispatching invoked action events
+    to the <code>EventBus</code>, and for controlling the enabled state of
+    an <code>Action</code>. When a new menu item or toolbar button is
+    desired, first it is added to the <code>action.properties</code> file,
+    and then the code to respond to it is added to the
+    <code>EventResponder</code> (see below).
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Commands and EventResponder"><strong>Commands and EventResponder</strong></a></font></td></tr>
+  </table>
+                        <p>At some point in the stages of event processing, an event may
+    require the data model to be modified, or some other task be
+    performed. The <code>Command</code> interface is defined to classify
+    code which performs some task or operation. This is distinct from
+    an <code>Action</code>, which is a user request for an operation. A
+    <code>Command</code> class is the encapsulation of the operation
+    itself.
+    </p>
+                                <p>When an <code>Action</code> generates an <code>ActionEvent</code>, the
+    event is posted to the <code>EventBus</code> which delivers the event
+    to all interested <code>BusMember</code>s. It eventually makes it to
+    the <code>EventResponder</code> instance (registered at the
+    <code>RESPONDING</code> interrupt level), which is responsible for
+    translating specific events into <code>Command</code> objects, and
+    then executing the <code>Command</code> object. For example, when the
+    user selects the "Open..." menu option, an <code>ActionEvent</code> is
+    generated by the Swing <code>MenuItem</code> class, which is then
+    posted to the <code>EventBus</code> by the <code>ActionManager</code>. The
+    <code>ActionEvent</code> is delivered to the <code>EventResponder</code>,
+    which converts the <code>ActionEvent</code> into a <code>Command</code>
+    instance. The <code>EventResponder</code> then calls the method
+    <code>Command.execute()</code> to invoke the command (which displays a
+    dialog for selecting a file to open).
+    </p>
+                                <p>When adding new <code>Action</code>s or general tasks to the
+    application, a <code>Command</code> object should be created to
+    encapsulate the behavior. This includes most operations which
+    modify the state of the data model.
+    </p>
+                                <p>The purpose of this encapsulation is to allow the clean
+    separation of making a request, and servicing a request. Due to
+    various conditions in the application state, the actually response
+    to a request may change, as well as who services it. This
+    design approach facilitates that.
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Data Model and Views"><strong>Data Model and Views</strong></a></font></td></tr>
+  </table>
+                        <p><i>NB: This part of the architecture is not fleshed out very well. There
+    needs to be a discussion of the degree to which the Antidote development
+    should be able to impose changes on the Ant data model, and to what level
+    that model should be mirrored in the Antidote code base. The coupling
+    between them should be kept low, and at the same time changes to one should
+    affect the other minimally. Still, features like property change events and
+    bean introspection (or BeanInfo) may be needed to be added to the Ant data
+    model. Right now the data model is encapsulated in the package
+    <code>org.apache.tools.ant.gui.acs</code> (where "<code>acs</code>" stands for "Ant Construction Set").</i>
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Application Context"><strong>Application Context</strong></a></font></td></tr>
+  </table>
+                        <p>In order to keep the coupling among application modules to a
+    minimum, a single point of reference is needed for coordination
+    and data sharing. The class <code>AppContext</code> is the catch-all
+    class for containing the application state. Most modules and
+    <code>Command</code> classes require an instance of the
+    <code>AppContext</code> class. Because all state information in
+    contained in an <code>AppContext</code> instance, multiple instances
+    of Antidote can run inside the same JVM as long as each has it's
+    own <code>AppContext</code>. (Interestingly, two instances of the
+    Antidote could conceivably share an <code>AppContext</code> instance
+    through RMI, allowing remote interaction/collaboration.)
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Configuration and ResourceManager"><strong>Configuration and ResourceManager</strong></a></font></td></tr>
+  </table>
+                        <p>Full "i18n" support should be assumed in modern applications,
+    and all user viewable strings should be defined in a configuration
+    file. For Antidote this configuration file is
+    <code>antidote.properties</code>, which is located (with other UI
+    resources) in the sub-package "resources".
+    </p>
+                                <p>To aid in the lookup of text properties, as well as other
+    resources like icons, a class called <code>ResourceManager</code> is
+    defined. There are various convenience methods attached to this
+    class, which will likely grow to make looking up configuration
+    values as easy as possible.
+    </p>
+                                <p>The organization of configuration properties is based on the
+    fully qualified path of the class that requires the property. For
+    example, the "about" box contains a messages, so it looks for the
+    property "<code>org.apache.tools.ant.gui.About.message</code>" for the text
+    message it should display. Therefore, the <code>ResourceManager</code>
+    method <code>getString()</code> takes a <code>Class</code> instance as
+    well as a <code>String</code> key. Please see the
+    <code>ResourceManager</code> documentation for more information. Given
+    this support, no user visible strings should appear in the source
+    code itself.
+    </p>
+                
+  
+                    </div>
+                </td><td width="10"><img width="10" height="4" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table summary="footer" cellspacing="0" cellpadding="0" width="100%" border="0">
+        <tr>
+          <td colspan="2" height="1" bgcolor="#4C6C8F"><img height="1" width="1" alt="" src="../../images/spacer.gif"><a href="../../images/label.gif"></a><a href="../../images/page.gif"></a><a href="../../images/chapter.gif"></a><a href="../../images/chapter_open.gif"></a><a href="../../images/current.gif"></a><a href="/favicon.ico"></a></td>
+        </tr>
+        <tr>
+          <td colspan="2" bgcolor="#CFDCED" class="copyright" align="center"><font size="2" face="Arial, Helvetica, Sans-Serif">Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.<script type="text/javascript" language="JavaScript"><!--
+                        document.write(" - "+"Last Published: " + document.lastModified);
+                      //  --></script></font></td>
+        </tr>
+      </table>
+    </body>
+  </html>
+
+
+
+
+
+
+
+
+

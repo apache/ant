@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+        <html>
+    <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
+    <head>
+      <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Apache Ant - Module HOW-TO</title>
+        <link type="text/css" href="../../page.css" rel="stylesheet">
+          <meta name="author" content="Simeon H. K. Fitch">
+  <meta name="email" content="simeon@fitch.net">
+        <meta name="author" content="Christoph Wilhelms">
+  <meta name="email" content="christoph.wilhelms@t-online.de">
+      </head>
+
+    <body text="#000000" bgcolor="#ffffff">
+      <table summary="navigation path" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td nowrap="nowrap" valign="middle" bgcolor="#CFDCED" height="20"><img height="1" width="5" alt="" border="0" src="../../images/spacer.gif"><font size="2" face="Arial, Helvetica, Sans-serif"><script src="../../breadcrumbs.js" language="JavaScript" type="text/javascript"></script></font></td>
+        </tr>
+        <tr>
+          <td bgcolor="#4C6C8F" height="2"><img height="2" width="2" alt="" border="0" src="../../images/spacer.gif"></td>
+        </tr>
+      </table>
+
+      <table summary="header with logos" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td bgcolor="#294563"><a href="http://ant.apache.org/"><img border="0" alt="Apache Ant site" src="../../images/group-logo.gif"></a></td><td width="100%" align="center" bgcolor="#294563"><a href="http://ant.apache.org/"><img alt="Apache Ant logo" border="0" src="../../images/project-logo.gif"></a></td><td valign="top" rowspan="2" bgcolor="#294563">
+            <form target="_blank" onsubmit="q.value = query.value + ' site:ant.apache.org'" action="http://www.google.com/search" method="get">
+              <table summary="search" border="0" cellspacing="0" cellpadding="0" bgcolor="#4C6C8F">
+                <tr>
+                  <td colspan="3"><img height="10" width="1" alt="" src="../../images/spacer.gif"></td>
+                </tr>
+                <tr>
+                  <td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td><td nowrap="nowrap"><input name="q" type="hidden"><input size="15" id="query" type="text"><img height="1" width="5" alt="" src="../../images/spacer.gif"><input name="Search" value="Search" type="submit">
+                  <br>
+                  <font face="Arial, Helvetica, Sans-serif" size="2" color="white">
+                                    the Apache Ant site
+
+
+                                    </font></td><td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td>
+                </tr>
+                <tr>
+                  <td><img alt="" border="0" height="10" width="9" src="../../images/search-left.gif"></td><td><img height="1" width="1" alt="" src="../../images/spacer.gif"></td><td><img alt="" border="0" height="10" width="9" src="../../images/search-right.gif"></td>
+                </tr>
+              </table>
+            </form>
+          </td><td bgcolor="#294563"><img height="10" width="10" alt="" src="../../images/spacer.gif"></td>
+        </tr>
+        <tr>
+          <td valign="bottom" bgcolor="#294563" colspan="2">
+              <div class="tab">
+              <table summary="tab bar" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                                  <td width="5"><img alt="" height="8" width="8" src="../../images/spacer.gif"></td><td valign="bottom">
+                      <table summary="non selected tab" style="height: 1.4em" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-left.gif"></td><td valign="middle" bgcolor="#B2C4E0"><a href="../../index.html"><font size="2" face="Arial, Helvetica, Sans-serif">Home</font></a></td><td valign="top" width="5" bgcolor="#B2C4E0"><img height="5" width="5" alt="" src="../../images/tab-right.gif"></td>
+                        </tr>
+                      </table>
+                    </td>
+                                    <td width="8"><img alt="" height="5" width="8" src="images/spacer.gif"></td><td valign="bottom">
+                      <table summary="selected tab" style="height: 1.5em" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                        <td valign="top" width="5" bgcolor="#4C6C8F"><img height="5" width="5" alt="" src="../../images/tabSel-left.gif"></td><td valign="middle" bgcolor="#4C6C8F"><font color="#ffffff" size="2" face="Arial, Helvetica, Sans-serif"><b>Projects</b></font></td><td valign="top" width="5" bgcolor="#4C6C8F"><img height="5" width="5" alt="" src="../../images/tabSel-right.gif"></td>
+                        </tr>
+                      </table>
+                    </td>
+                            </tr>
+              </table>
+            </div>
+
+          </td><td bgcolor="#294563"><img alt="" width="1" height="1" src="../../images/spacer.gif"></td>
+        </tr>
+        <tr>
+          <td bgcolor="#4C6C8F" colspan="4"><img width="1" height="10" alt="" src="../../images/spacer.gif"></td>
+        </tr>
+      </table>
+      <table summary="page content" bgcolor="#ffffff" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td valign="top">
+            <table summary="menu" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td rowspan="3" valign="top">
+                  <table summary="blue line" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#CFDCED"><font color="#4C6C8F" size="4" face="Arial, Helvetica, Sans-serif">&nbsp;</font></td>
+                    </tr>
+                    <tr>
+                      <td bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+                    </tr>
+                  </table>
+                </td><td bgcolor="#294563"><img width="1" height="1" alt="" src="../../images/spacer.gif"></td><td valign="bottom" bgcolor="#4C6C8F"><img width="10" height="10" alt="" src="../../images/spacer.gif"></td><td nowrap="nowrap" valign="top" bgcolor="#4C6C8F">
+                                                            <div class="menu"><ul>
+      <li><font color="#CFDCED">Projects</font>
+      <ul>
+            <li>
+                    <a href="../../projects/index.html">Welcome</a>
+                </li>
+          </ul>
+    </li>
+      <li><font color="#CFDCED">Antidote</font>
+      <ul>
+            <li>
+                    <a href="../../projects/antidote/index.html">About Antidote</a>
+                </li>
+            <li>
+                    <a href="../../projects/antidote/design.html">Design Overview</a>
+                </li>
+            <li>
+              <span class="sel"><font color="#ffcc00">Module HOW-TO</font></span>
+              </li>
+          </ul>
+    </li>
+    </ul></div>
+                </td><td valign="bottom" bgcolor="#4C6C8F"><img width="10" height="10" alt="" src="../../images/spacer.gif"></td><td bgcolor="#294563"><img width="1" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td valign="bottom" align="left" colspan="2" rowspan="2" bgcolor="#4C6C8F"><img height="10" width="10" border="0" alt="" src="../../images/menu-left.gif"></td><td bgcolor="#4C6C8F"><img height="10" width="10" border="0" alt="" src="../../images/spacer.gif"></td><td valign="bottom" align="right" colspan="2" rowspan="2" bgcolor="#4C6C8F"><img height="10" width="10" border="0" alt="" src="../../images/menu-right.gif"></td>
+              </tr>
+              <tr>
+                <td height="1" bgcolor="#294563"><img width="1" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+            </table>
+          </td><td valign="top" width="100%">
+            <table summary="content" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td colspan="4" bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td align="left" width="10" bgcolor="#CFDCED"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td><td align="left" width="50%" bgcolor="#CFDCED"><font color="#4C6C8F" size="3" face="Arial, Helvetica, Sans-serif">
+                &nbsp;
+                </font><img width="10" height="8" alt="" src="../../images/spacer.gif"></td><td align="right" width="50%" bgcolor="#CFDCED"><font color="#4C6C8F" size="3" face="Arial, Helvetica, Sans-serif">
+                &nbsp;
+                </font><img width="10" height="8" alt="" src="../../images/spacer.gif"></td><td width="10" bgcolor="#CFDCED"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td colspan="4" bgcolor="#294563"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+              <tr>
+                <td align="left" width="10"><img width="10" height="1" alt="" src="../../images/spacer.gif"></td><td align="left" width="100%">
+                  <div class="content">
+      <table class="title">
+        <tr>
+          <td valign="middle">
+            <h1>Module HOW-TO</h1>
+          </td>
+        </tr>
+      </table>
+          <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Introduction"><strong>Introduction</strong></a></font></td></tr>
+  </table>
+                        <p>The purpose of this document is to provide an overview of the
+    basic steps one must undertake to add a new module to
+    Antidote. Please see <a href="./design.html">The Antidote
+    Design Overview</a> for information on what a module is and how it
+    fits into Antidote. If you've already got all that, then read
+    on!
+    </p>
+                                <p>NB: <i>Please submit updates and criticisms to this, particularly
+    areas that were unclear, missing, or difficult to follow.</i>
+    </p>
+                      <br/>
+  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Step by step"><strong>Step by step</strong></a></font></td></tr>
+  </table>
+                        <h2>1) Specialize <code>org.apache.tools.ant.gui.core.AntModule</code></h2>
+                                <p>All modules must inherit from the <code>AntModule</code>
+    class. This will probably irritate some of you, but it essentially
+    enforces inheritance from <code>javax.swing.JComponent</code> and
+    provides encapsulated handling of the <code>AppContext</code> instance
+    that is so important to this class.
+    </p>
+                                <p>Your module is required to implement the
+    <code>AntModule.contextualize(AppContext)</code> method. The first
+    thing this method should do is call
+    <code>AntModule.setContext(AppContext)</code>, and then it is safe for
+    it to begin constructing its display, using whatever resources it
+    needs from the given <code>AppContext</code> instance. Think of this
+    in a similar manner to <code>Applet.init()</code> or
+    <code>Servlet.init()</code>.
+    </p>
+                                <h2>2) Update
+       <code>org/apache/tools/ant/gui/resources/antidote.properties</code></h2>
+                                <h3>2a) Externalize All Displayable Strings</h3>
+                                <p>All displayable strings must be externalized to the
+    <code>antidote.properties</code> file, and looked up via the
+    <code>AppContext.getResources()</code> method after the
+    <code>AntModule.contextualize()</code> method has been called. Follow
+    the naming convention currently used in the properties file and
+    you should have to problems. This task should be done
+    <b>during</b> development of your module. Under no circumstances
+    should your module be submitted or committed without this task
+    being completed. Remember that Antidote has an international
+    audience.
+    </p>
+                                <h3>2b) Add Module to List of Auto-Loaded Modules</h3>
+                                <p>Look for the properties with the format
+    <code>org.apache.tools.ant.gui.Antidote.xxx.modules</code> where
+    <code>xxx</code> is one of {left | right | top | bottom}. Depending on
+    where you want your module to appear, and the order that you want
+    it to appear in relationship to the other modules, add the class
+    name of your module appropriately. If multiple modules are listed
+    for a single property (via a comma delimited list), then each
+    module will have it's own tab in a <code>javax.swing.JTabbedPane</code>.
+    </p>
+                                <p>NB:<i>This goofy way of constructing the main screen will probably
+    change to something much more general (but not as general as, say
+    <a href="http://www.alphaworks.ibm.com/tech/bml">BML</a>).</i>
+    </p>
+                                <h2>Run it!</h2>
+                                <p>That should be all you need to do, at least to get your module
+    plugged in. Check out the source code for
+    <code>ProjectNavigator</code> and <code>PropertyEditor</code> for module
+    examples that use the various facilities of the Antidote
+    framework.
+    </p>
+                
+  
+                    </div>
+                </td><td width="10"><img width="10" height="4" alt="" src="../../images/spacer.gif"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <table summary="footer" cellspacing="0" cellpadding="0" width="100%" border="0">
+        <tr>
+          <td colspan="2" height="1" bgcolor="#4C6C8F"><img height="1" width="1" alt="" src="../../images/spacer.gif"><a href="../../images/label.gif"></a><a href="../../images/page.gif"></a><a href="../../images/chapter.gif"></a><a href="../../images/chapter_open.gif"></a><a href="../../images/current.gif"></a><a href="/favicon.ico"></a></td>
+        </tr>
+        <tr>
+          <td colspan="2" bgcolor="#CFDCED" class="copyright" align="center"><font size="2" face="Arial, Helvetica, Sans-Serif">Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.<script type="text/javascript" language="JavaScript"><!--
+                        document.write(" - "+"Last Published: " + document.lastModified);
+                      //  --></script></font></td>
+        </tr>
+      </table>
+    </body>
+  </html>
+
+
+
+
+
+
+
+
+
