@@ -182,7 +182,7 @@ public abstract class JDBCTask extends Task {
     private String version = null;
 
     /**
-     * Sets the classpath.
+     * Sets the classpath for loading the driver.
      * @param classpath The classpath to set
      */
     public void setClasspath(Path classpath) {
@@ -200,7 +200,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Add the classpath for loading the driver; 
+     * Add a path to the classpath for loading the driver.
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -218,7 +218,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Class name of the jdbc driver; required.
+     * Class name of the JDBC driver; required.
      * @param driver The driver to set
      */
     public void setDriver(String driver) {
@@ -226,18 +226,11 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the database connection url; required.
+     * Sets the database connection URL; required.
      * @param url The url to set
      */
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    /**
-     * Set the user name for the connection; required.
-     */
-    public void setUserid(String userId) {
-        this.userId = userId;
     }
 
     /**
@@ -460,10 +453,10 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the userId.
+     * Set the user name for the connection; required.
      * @param userId The userId to set
      */
-    public void setUserId(String userId) {
+    public void setUserid(String userId) {
         this.userId = userId;
     }
 
