@@ -394,7 +394,7 @@ public class AntClassLoader  extends ClassLoader {
                 File pathComponent = project.resolveFile((String)pathElements[i]);
                 stream = getResourceStream(pathComponent, name);
             }
-            catch {BuildException e) {
+            catch (BuildException e) {
                 // ignore path elements which are invalid relative to the project
             }
         }
@@ -525,8 +525,13 @@ public class AntClassLoader  extends ClassLoader {
         if (url == null) {
             String[] pathElements = classpath.list();
             for (int i = 0; i < pathElements.length && url == null; ++i) {
-                File pathComponent = project.resolveFile((String)pathElements[i]);
-                url = getResourceURL(pathComponent, name);
+                try {
+                    File pathComponent = project.resolveFile((String)pathElements[i]);
+                    url = getResourceURL(pathComponent, name);
+                }
+                catch (BuildException e) {
+                    // ignore path elements which ar einvalid relative to the project
+                }
             }
         }
         
@@ -757,8 +762,13 @@ public class AntClassLoader  extends ClassLoader {
         try {
             String[] pathElements = path.list();
             for (int i = 0; i < pathElements.length && stream == null; ++i) {
-                File pathComponent = project.resolveFile((String)pathElements[i]);
-                stream = getResourceStream(pathComponent, classFilename);
+                try {
+                    File pathComponent = project.resolveFile((String)pathElements[i]);
+                    stream = getResourceStream(pathComponent, classFilename);
+                }
+                catch (BuildException e) {
+                    // ignore invalid paths 
+                }
             }
         
             if (stream == null) {
