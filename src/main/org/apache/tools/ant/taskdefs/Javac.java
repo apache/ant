@@ -533,8 +533,8 @@ public class Javac extends MatchingTask {
                 throw new BuildException("Error starting modern compiler", ex, location);
             }
         } finally {
-            System.setOut(err);
-            System.setErr(out);
+            System.setErr(err);
+            System.setOut(out);
         }
     }
 
