@@ -1861,31 +1861,34 @@ public class FTP
      * @throws BuildException in unknown circumstances
      */
     protected void listFile(FTPClient ftp, BufferedWriter bw, String filename)
-         throws IOException, BuildException {
+            throws IOException, BuildException {
         if (verbose) {
             log("listing " + filename);
         }
+        FTPFile[] ftpfiles = ftp.listFiles(resolveFile(filename));
 
-        FTPFile ftpfile = ftp.listFiles(resolveFile(filename))[0];
-
-        bw.write(ftpfile.toString());
-        bw.newLine();
-
-        transferred++;
+        if (ftpfiles != null && ftpfiles.length > 0) {
+            bw.write(ftpfiles[0].toString());
+            bw.newLine();
+            transferred++;
+        }
     }
 
 
     /**
      * Create the specified directory on the remote host.
-     *
-     * @param ftp The FTP client connection
-     * @param dir The directory to create (format must be correct for host
-     *      type)
-     * @throws IOException  in unknown circumstances
-     * @throws BuildException if ignoreNoncriticalErrors has not been set to true
-     *         and a directory could not be created, for instance because it was
-     *         already existing. Precisely, the codes 521, 550 and 553 will trigger
-     *         a BuildException
+     * 
+     * @param ftp
+     *            The FTP client connection
+     * @param dir
+     *            The directory to create (format must be correct for host type)
+     * @throws IOException
+     *             in unknown circumstances
+     * @throws BuildException
+     *             if ignoreNoncriticalErrors has not been set to true and a
+     *             directory could not be created, for instance because it was
+     *             already existing. Precisely, the codes 521, 550 and 553 will
+     *             trigger a BuildException
      */
     protected void makeRemoteDir(FTPClient ftp, String dir)
          throws IOException, BuildException {
