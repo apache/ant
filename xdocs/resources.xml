@@ -302,6 +302,23 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="Developing with JAXB and Ant">
+        <p>Series of articles that shows how to use Ant together with
+        the Java API for XML Binding (JAXB).</p>
+
+        <table>
+          <tr>
+            <th>Author:</th>
+            <td>Joseph Shelby</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.onjava.com/pub/a/onjava/2002/03/06/jaxant1.html">http://www.onjava.com/pub/a/onjava/2002/03/06/jaxant1.html</a><br/>
+                <a href="http://www.onjava.com/pub/a/onjava/2002/03/13/jaxbant2.html">http://www.onjava.com/pub/a/onjava/2002/03/13/jaxbant2.html</a></td>
+          </tr>
+        </table>
+      </subsection>
     </section>
 
     <section name="Presentations">
