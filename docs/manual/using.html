@@ -490,11 +490,12 @@ is very different from what you expect under some circumstances.</p>
 <blockquote><pre>
   &lt;arg value=&quot;-l -a&quot;/&gt;
 </pre></blockquote>
-<p>is a single command-line argument containing a space character.</p>
+<p>is a single command-line argument containing a space character,
+<i>not</i> separate commands "-l" and "-a".</p>
 <blockquote><pre>
   &lt;arg line=&quot;-l -a&quot;/&gt;
 </pre></blockquote>
-<p>represents two separate command-line arguments.</p>
+<p>This is a command line with two separate arguments, "-l" and "-a".</p>
 <blockquote><pre>
   &lt;arg path=&quot;/dir;/dir2:\dir3&quot;/&gt;
 </pre></blockquote>
