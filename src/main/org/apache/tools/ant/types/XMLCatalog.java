@@ -679,7 +679,7 @@ public class XMLCatalog extends DataType
         }
 
         if (url != null) {
-            String fileName = url.getFile();
+            String fileName = fileUtils.fromURI(url.toString());
             if (fileName != null) {
                 log("fileName " + fileName, Project.MSG_DEBUG);
                 File resFile = new File(fileName);
