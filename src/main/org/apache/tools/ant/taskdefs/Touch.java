@@ -180,7 +180,11 @@ public class Touch extends Task {
             log("modification time of files cannot be set in JDK 1.1",
                 Project.MSG_WARN);
             return;
-        } else {
+        } 
+
+        boolean resetMillis = false;
+        if (millis < 0) {
+            resetMillis = true;
             millis = System.currentTimeMillis();
         }
 
@@ -204,6 +208,10 @@ public class Touch extends Task {
             for(int j=0; j < srcDirs.length ; j++) {
                 touch(new File(fromDir, srcDirs[j]));
             }
+        }
+
+        if (resetMillis) {
+            millis = -1;
         }
     }
 
