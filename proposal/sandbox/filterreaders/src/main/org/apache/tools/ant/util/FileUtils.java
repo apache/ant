@@ -73,9 +73,11 @@ import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.types.FilterSetCollection;
 
 /**
@@ -87,6 +89,7 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * @author duncan@x180.com
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
  * @version $Revision$
  */
@@ -179,6 +182,28 @@ public class FileUtils {
     }
 
     /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @throws IOException
+     *
+     * @since 1.15, Ant 1.5
+     */
+    public void copyFile(String sourceFile, String destFile,
+                         FilterSetCollection filters, Vector filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         String encoding, Project project)
+        throws IOException {
+        copyFile(new File(sourceFile), new File(destFile), filters,
+                 filterChains, overwrite, preserveLastModified,
+                 encoding, project);
+    }
+
+    /**
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
      *
@@ -243,6 +268,27 @@ public class FileUtils {
                          FilterSetCollection filters, boolean overwrite,
                          boolean preserveLastModified, String encoding)
         throws IOException {
+        copyFile(sourceFile, destFile, filters, null, overwrite,
+                 preserveLastModified, encoding, null);
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @throws IOException
+     *
+     * @since 1.15, Ant 1.5
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         String encoding, Project project)
+        throws IOException {
 
         if (overwrite || !destFile.exists() ||
             destFile.lastModified() < sourceFile.lastModified()) {
@@ -258,7 +304,12 @@ public class FileUtils {
                 parent.mkdirs();
             }
 
-            if (filters != null && filters.hasFilters()) {
+            final boolean filterSetsAvailable = (filters != null
+                                                 && filters.hasFilters());
+            final boolean filterChainsAvailable = (filterChains != null
+                                                   && filterChains.size() > 0);
+
+            if (filterSetsAvailable || filterChainsAvailable) {
                 BufferedReader in = null;
                 BufferedWriter out = null;
 
@@ -266,8 +317,20 @@ public class FileUtils {
                     in = new BufferedReader(new FileReader(sourceFile));
                     out = new BufferedWriter(new FileWriter(destFile));
                 } else {
-                    in = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile), encoding));
-                    out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destFile), encoding));
+                    in = new BufferedReader(new InputStreamReader(
+                            new FileInputStream(sourceFile), encoding));
+                    out = new BufferedWriter(new OutputStreamWriter(
+                            new FileOutputStream(destFile), encoding));
+                }
+
+                if (filterChainsAvailable) {
+                    ChainReaderHelper crh = new ChainReaderHelper();
+                    crh.setBufferSize(8192);
+                    crh.setPrimaryReader(in);
+                    crh.setFilterChains(filterChains);
+                    crh.setProject(project);
+                    Reader rdr = crh.getAssembledReader();
+                    in = new BufferedReader(rdr);
                 }
 
                 int length;
@@ -277,7 +340,11 @@ public class FileUtils {
                     if (line.length() == 0) {
                         out.newLine();
                     } else {
-                        newline = filters.replaceTokens(line);
+                        if (filterSetsAvailable) {
+                            newline = filters.replaceTokens(line);
+                        } else {
+                            newline = line;
+                        }
                         out.write(newline);
                         out.newLine();
                     }
