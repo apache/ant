@@ -1,5 +1,4 @@
 <project name="ant1compat-test"
-         description="Basic tests for the Ant1 Compatibility layer."
          default="echo-test">
 
     <property name="prop-1" value="value-1"/>

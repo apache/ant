@@ -27,7 +27,6 @@ import org.apache.myrmidon.api.TaskException;
 public class Task extends OriginalAnt1Task
     implements org.apache.myrmidon.api.Task, Configurable
 {
-    private static final String ANT1_PROJECT_PROP = "ant1.project";
     protected TaskContext m_context;
 
     /**
@@ -45,11 +44,11 @@ public class Task extends OriginalAnt1Task
 
         // Create/recontextualise the Ant1 Project.
         Ant1CompatProject project =
-            (Ant1CompatProject)context.getProperty( ANT1_PROJECT_PROP );
+            (Ant1CompatProject)context.getProperty( Ant1CompatProject.ANT1_PROJECT_PROP );
         if( project == null )
         {
             project = createProject();
-            m_context.setProperty( ANT1_PROJECT_PROP, project );
+            m_context.setProperty( Ant1CompatProject.ANT1_PROJECT_PROP, project );
         }
         else
         {

@@ -37,6 +37,11 @@ public abstract class AbstractAntTask extends AbstractTask
      * will use default in specified build file.
      */
     private String m_target;
+
+    /**
+     * The parameters/properties which will be passed to the workspace
+     * for the target execution.
+     */
     private final ArrayList m_parameters = new ArrayList();
 
     /**

@@ -96,8 +96,31 @@ public class Ant1CompatTestCase
                                     "test-prop = [set in calling task]" );
         tracker.addExpectedMessage( "property-test",
                                     "test-prop = [set in calling target]" );
-        //        executeTarget( projectFile, "ant-setprops-test", tracker );
+        tracker.addExpectedMessage( "property-test",
+                                       "test-prop = [test-value]" );
+           //        executeTarget( projectFile, "ant-setprops-test", tracker );
         executeTarget( projectFile, "ant-setprops-test" );
+    }
+
+    public void testAntcallTask() throws Exception
+    {
+        final File projectFile = getTestResource( "antcall-task-test.xml" );
+
+        // TODO - Get the <ant> project listeners working, so we can test log messages.
+
+        LogMessageTracker tracker = new LogMessageTracker();
+        tracker.addExpectedMessage( "default-target",
+                                    "In default target." );
+        tracker.addExpectedMessage( "antcall-target",
+                                    "In antcall-target:  test-prop = [test-value]" );
+        tracker.addExpectedMessage( "antcall-target",
+                                    "In antcall-target:  test-prop = [set in calling task]" );
+        tracker.addExpectedMessage( "antcall-target",
+                                    "In antcall-target:  test-prop = [set in calling target]" );
+        tracker.addExpectedMessage( "antcall-target",
+                                    "In antcall-target:  test-prop = [test-value]" );
+        //        executeTarget( projectFile, "ant-samefile-test", tracker );
+        executeTarget( projectFile, "antcall-test" );
     }
 
 }

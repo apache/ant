@@ -306,7 +306,7 @@ Legal:
         <property name="regexp.package" value="${util.package}/regexp"/>
 
         <patternset id="ant1.todo.include">
-            <include name="org/apache/tools/**" />
+            <include name="org/apache/tools/todo/**" />
             <exclude name="${regexp.package}/JakartaRegexp*.java"
                 unless="jakarta.regexp.present" />
             <exclude name="${regexp.package}/JakartaOro*.java"

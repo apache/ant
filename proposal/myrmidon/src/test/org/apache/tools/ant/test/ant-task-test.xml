@@ -1,5 +1,4 @@
 <project name="ant-task-test"
-         description="Tests for the &lt;ant&gt; task in the Ant1 Compatibility layer."
          default="default-target">
 
     <target name="default-target">
@@ -47,6 +46,10 @@
         <!-- Override property in containing project -->
         <property name="test-prop" value="set in calling target"/>
         <ant antfile="subdir/build.xml" target="property-test"/>
+
+        <!-- Test inherit-all = false -->
+        <ant antfile="subdir/build.xml" target="property-test"
+             inheritall="false"/>
     </target>
 
 </project>

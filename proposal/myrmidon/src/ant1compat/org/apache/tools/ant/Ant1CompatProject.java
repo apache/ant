@@ -10,7 +10,7 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.security.CodeSource;
 import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.api.TaskContext;
@@ -41,6 +40,7 @@ public class Ant1CompatProject extends Project
     public static final String ANT1_TASK_PREFIX = "ant1.";
     public static final String MYRMIDON_PROJECT_PROP =
         org.apache.myrmidon.interfaces.model.Project.PROJECT;
+    public static final String ANT1_PROJECT_PROP = "ant1.project";
 
     private static String javaclasspath;
 
@@ -74,7 +74,7 @@ public class Ant1CompatProject extends Project
 
         setBaseDir( m_context.getBaseDirectory() );
         String projectName =
-            (String) m_context.getProperty( MYRMIDON_PROJECT_PROP );
+            (String)m_context.getProperty( MYRMIDON_PROJECT_PROP );
         if( projectName != null )
         {
             setName( projectName );

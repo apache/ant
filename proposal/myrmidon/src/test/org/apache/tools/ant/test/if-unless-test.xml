@@ -1,5 +1,4 @@
 <project name="if-unless-test"
-         description="Tests for if/unless functionality of the Ant1 Compatibility layer."
          default="if-unless-tests">
 
     <target name="if-unless-tests"
