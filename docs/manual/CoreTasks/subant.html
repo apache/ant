@@ -34,7 +34,7 @@
   <tr>
     <td  valign="top" align="left">
 
-          <!-- Applying task/long-description -->
+          <!-- Applying task/description -->
     <!-- Start Description -->
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
@@ -46,7 +46,15 @@
       </td></tr>
 
       <tr><td><blockquote>
-        <i>EXPERIMENTAL:</i> This task is experimental and may be under continual change till Ant1.6 ships; it may even be omitted from the product. <p> Calls a given target for all defined sub-builds. This is an extension of ant for bulk project execution.
+<p>
+            <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
+            change till Ant1.6 ships; it may even be omitted from the product.
+        </p>
+<p>
+        Calls a given target for all defined sub-builds. This is an extension
+        of ant for bulk project execution.
+        </p>
+
       </blockquote></td></tr>
 
     </table>
@@ -55,13 +63,11 @@
     <!-- Start Attributes -->
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
-
       <tr><td bgcolor="#525D76">
         <font color="#ffffff" face="arial,helvetica.sanserif">
           <a name="attributes">
           <strong>Parameters</strong></a></font>
       </td></tr>
-
       <tr><td><blockquote>
         <table>
           <tr>
@@ -74,19 +80,26 @@
         <td bgcolor="#cccccc" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
         </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
+        </td>
           </tr>
-    <!-- Attribute -->
+    <!-- Attribute Group -->    
+    
+    <!-- Attribute Group -->    
+        <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">antfile</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Sets the default build file name to append to directory names found in the build path -default "build.xml"
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the default build file name to append to directory names found in the build path -default "build.xml"</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="7">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -95,9 +108,7 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">buildpath</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Set the buildpath to be used to find sub-projects.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Set the buildpath to be used to find sub-projects.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">Path</font>
@@ -109,9 +120,7 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">buildpathref</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Buildpath to use, by reference.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Buildpath to use, by reference.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">Reference</font>
@@ -123,9 +132,7 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">failonerror</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Sets whether to fail with a build exception on error, or go on.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets whether to fail with a build exception on error, or go on.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
@@ -137,9 +144,7 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">inheritall</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Corresponds to <code>&lt;ant&gt;</code>'s <code>inheritall</code> attribute.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Corresponds to <code>&lt;ant&gt;</code>'s <code>inheritall</code> attribute.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
@@ -151,9 +156,7 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">inheritrefs</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Corresponds to <code>&lt;ant&gt;</code>'s <code>inheritrefs</code> attribute.
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Corresponds to <code>&lt;ant&gt;</code>'s <code>inheritrefs</code> attribute.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
@@ -165,13 +168,13 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">target</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"></font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
         </td>
     </tr>
+
 
         </table>
       </blockquote></td></tr>
@@ -201,8 +204,8 @@
         Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
 <short-description><![CDATA[Adds a directory set to the implicit build path.]]></short-description>
 <description>
-          <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
-        </description>
+            <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -218,8 +221,8 @@
         Adds an ordered file list to the implicit build path. <p> <em>Note that contrary to file and directory sets, file lists can reference non-existent files or directories!</em>
 <short-description><![CDATA[Adds an ordered file list to the implicit build path.]]></short-description>
 <description>
-          <![CDATA[Adds an ordered file list to the implicit build path. <p> <em>Note that contrary to file and directory sets, file lists can reference non-existen]]><![CDATA[t files or directories!</em>]]>
-        </description>
+            <![CDATA[Adds an ordered file list to the implicit build path. <p> <em>Note that contrary to file and directory sets, file lists can reference non-existent files or directories!</em>]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -235,8 +238,8 @@
         Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
 <short-description><![CDATA[Adds a file set to the implicit build path.]]></short-description>
 <description>
-          <![CDATA[Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
-        </description>
+            <![CDATA[Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -252,8 +255,25 @@
         Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.
 <short-description><![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.]]></short-description>
 <description>
-          <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.]]>
-        </description>
+            <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.]]>
+          </description>
+
+      </blockquote></td></tr>
+    </table>
+    <!-- End Element -->
+    <!-- Start Element -->
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+      <tr><td bgcolor="#828DA6">
+        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
+          <strong>propertyset</strong> (org.apache.tools.ant.types.PropertySet)</font>
+      </td></tr>
+      <tr><td><blockquote>
+        Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.
+<short-description><![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.]]></short-description>
+<description>
+            <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -269,8 +289,8 @@
         Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.
 <short-description><![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.]]></short-description>
 <description>
-          <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.]]>
-        </description>
+            <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -286,8 +306,8 @@
         Creates a nested build path, and add it to the implicit build path.
 <short-description><![CDATA[Creates a nested build path, and add it to the implicit build path.]]></short-description>
 <description>
-          <![CDATA[Creates a nested build path, and add it to the implicit build path.]]>
-        </description>
+            <![CDATA[Creates a nested build path, and add it to the implicit build path.]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -303,8 +323,8 @@
         Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.
 <short-description><![CDATA[Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.]]></short-description>
 <description>
-          <![CDATA[Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.]]>
-        </description>
+            <![CDATA[Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.]]>
+          </description>
 
       </blockquote></td></tr>
     </table>
@@ -315,6 +335,36 @@
     </table>
     <!-- End Elements -->
 
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <tr><td>&nbsp;</td></tr>
+
+      <tr><td bgcolor="#525D76">
+          <font color="#ffffff" face="arial,helvetica.sanserif">
+                              <a name="examples">
+          <strong>Example</strong></a></font>
+      </td></tr>
+
+      <tr><td><blockquote>
+        <pre>
+        &lt;project name="subant" default="subant1"&gt;
+        &lt;property name="build.dir" value="subant.build"/&gt;
+        &lt;target name="subant1"&gt;
+              &lt;subant failonerror="false" target=""&gt;
+                  &lt;property name="build.dir" value="subant1.build"/&gt;
+                  &lt;property name="not.overloaded" value="not.overloaded"/&gt;
+                  &lt;dirset dir="." includes="*"/&gt;
+              &lt;/subant&gt;
+        &lt;/target&gt;
+        &lt;/project&gt;
+        </pre>
+<p>
+            this snippet build file will run ant in each subdirectory of the project directory,
+            where a file called build.xml can be found.
+        </p>
+
+      </blockquote></td></tr>
+
+    </table>
 
     </td>
   </tr>

@@ -1,0 +1,30 @@
+<external>
+    <description>
+        <p>
+            <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
+            change till Ant1.6 ships; it may even be omitted from the product.
+        </p>
+        <p>
+        Calls a given target for all defined sub-builds. This is an extension
+        of ant for bulk project execution.
+        </p>
+    </description>
+    <section anchor="examples" name="Example">
+        <pre>
+        &lt;project name="subant" default="subant1"&gt;
+        &lt;property name="build.dir" value="subant.build"/&gt;
+        &lt;target name="subant1"&gt;
+              &lt;subant failonerror="false" target=""&gt;
+                  &lt;property name="build.dir" value="subant1.build"/&gt;
+                  &lt;property name="not.overloaded" value="not.overloaded"/&gt;
+                  &lt;dirset dir="." includes="*"/&gt;
+              &lt;/subant&gt;
+        &lt;/target&gt;
+        &lt;/project&gt;
+        </pre>
+        <p>
+            this snippet build file will run ant in each subdirectory of the project directory,
+            where a file called build.xml can be found.
+        </p>
+    </section>
+</external>
