@@ -401,7 +401,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             if (Commandline.toString(args).length() > 4096) {
                 PrintWriter out = null;
                 try {
-                    tmpFile = fileUtils.createTempFile("jikes", "", null);
+                    String userDirName = System.getProperty("user.dir");
+                    File userDir = new File(userDirName);
+                    tmpFile = fileUtils.createTempFile("jikes", "", userDir);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         out.println(args[i]);
@@ -409,7 +411,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                     out.flush();
                     commandArray = new String[firstFileName+1];
                     System.arraycopy(args, 0, commandArray, 0, firstFileName);
-                    commandArray[firstFileName] = "@" + tmpFile.getAbsolutePath();
+                    commandArray[firstFileName] = "@" + tmpFile;
                 } catch (IOException e) {
                     throw new BuildException("Error creating temporary file", e, location);
                 } finally {
