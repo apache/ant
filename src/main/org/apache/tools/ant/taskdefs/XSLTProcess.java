@@ -94,7 +94,7 @@ public class XSLTProcess extends MatchingTask {
 
     private File xslFile = null;
 
-    private String targetExtension = "html";
+    private String targetExtension = ".html";
 
     private XSLTLiaison liaison;
 

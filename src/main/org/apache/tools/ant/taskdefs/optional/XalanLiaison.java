@@ -68,6 +68,8 @@ import org.apache.xalan.xslt.XSLTResultTarget;
  */
 public class XalanLiaison implements XSLTLiaison {
 
+    protected final static String FILEURL = "file:";
+
     XSLTProcessor processor;
     XSLTInputSource xslSheet;
 
@@ -76,12 +78,18 @@ public class XalanLiaison implements XSLTLiaison {
     }
 
     public void setStylesheet(String fileName) throws Exception {
-      xslSheet = new XSLTInputSource (fileName);
+        xslSheet = new XSLTInputSource (normalize(fileName));
     };
 
     public void transform(String infile, String outfile) throws Exception {
-      processor.process(new XSLTInputSource(infile), xslSheet,
+        processor.process(new XSLTInputSource(normalize(infile)), xslSheet,
                         new XSLTResultTarget(outfile));
     }
 
+    protected String normalize(String fileName) {
+        if(fileName != null && !fileName.startsWith(FILEURL)) {
+            return FILEURL + fileName;
+        }
+        return fileName;
+    }
 } //-- XalanLiaison
