@@ -60,6 +60,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Enumeration;
+
+import junit.runner.TestCollector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -73,6 +76,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
+ * The core JUnit task.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
@@ -86,6 +90,9 @@ public class JUnitTask extends Task {
 
     /** formatters that write the tests results */
     private Vector formatters = new Vector();
+
+    /** test collector elements */
+    private Vector testCollectors = new Vector();
 
     /** stop the test run if a failure occurs */
     private boolean haltOnFailure = false;
@@ -126,13 +133,14 @@ public class JUnitTask extends Task {
         props.setProperty("debug", "true");
         props.setProperty("host", "127.0.0.1");
         props.setProperty("port", String.valueOf(port));
-        StringBuffer classnames = new StringBuffer();
-        //@fixme get all test classes to run...
-        final int testcount = 0;
-        for (int i = 0; i < testcount; i++) {
-            classnames.append("<classname>").append("\n");
+        // get all test classes to run...
+        StringBuffer buf = new StringBuffer(10240);
+        Enumeration classnames = collectTests();
+        while ( classnames.hasMoreElements() ){
+            String classname = (String)classnames.nextElement();
+            buf.append(classname).append(" ");
         }
-        props.setProperty("classnames", classnames.toString());
+        props.setProperty("classnames", buf.toString());
 
         // dump the properties to a temporary file.
         FileUtils futils = FileUtils.newFileUtils();
@@ -159,6 +167,18 @@ public class JUnitTask extends Task {
         return f;
     }
 
+    /**
+     * @return all collected tests specified with test elements.
+     */
+    protected Enumeration collectTests(){
+        Enumeration[] tests = new Enumeration[testCollectors.size()];
+        for (int i = 0; i < testCollectors.size(); i++){
+            TestCollector te = (TestCollector)testCollectors.elementAt(i);
+            tests[i] = te.collectTests();
+        }
+        return Enumerations.fromCompound(tests);
+    }
+
 // Ant bean accessors
 
     public void setPort(int port) {
@@ -181,6 +201,16 @@ public class JUnitTask extends Task {
     public void addFormatter(FormatterElement fe) {
         Formatter f = fe.createFormatter();
         this.formatters.addElement(f);
+    }
+
+    /** add a single test element */
+    public void addTest(TestElement te) {
+        this.testCollectors.addElement(te);
+    }
+
+    /** add a batch test element */
+    public void addBatchTest(BatchTestElement bte) {
+        this.testCollectors.addElement(bte);
     }
 
     /**
