@@ -537,8 +537,8 @@ Legal:
                debug="${debug}"
                deprecation="${deprecation}">
             <classpath refid="project.class.path"/>
-            <exclude name="**/SmbFileSystemTest.java" unless="jcifs.present"/>
-            <exclude name="**/FtpFileSystemTest.java" unless="netcomp.present"/>
+            <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
+            <exclude name="**/FtpFileSystemTestCase.java" unless="netcomp.present"/>
         </javac>
 
         <!-- Prepare test files -->
@@ -552,8 +552,15 @@ Legal:
             <fileset dir="${dist.dir}"/>
         </copy>
 
+        <!-- Copy the resources from source tree into working test dir -->
+        <copy todir="${test.working.dir}">
+            <fileset dir="src/testcases">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+
         <!-- Prepare the VFS tests -->
-        <property name="test.vfs.dir" location="${test.working.dir}/org/apache/aut/vfs"/>
+        <property name="test.vfs.dir" location="${test.working.dir}/org/apache/aut/vfs/test"/>
         <mkdir dir="${test.vfs.dir}/write-tests"/>
         <mkdir dir="${test.vfs.dir}/basedir/emptydir"/>
         <zip zipfile="${test.vfs.dir}/test.zip">
@@ -565,27 +572,27 @@ Legal:
 
         <!-- Prepare deployer tests -->
         <property name="test.deployer.dir"
-                  value="${test.working.dir}/org/apache/myrmidon/components/deployer"/>
+                  value="${test.working.dir}/org/apache/myrmidon/components/deployer/test"/>
         <mkdir dir="${test.deployer.dir}"/>
         <jar jarfile="${test.deployer.dir}/test.atl">
-            <zipfileset dir="etc/testcases/org/apache/myrmidon/components/deployer"
-                        prefix="META-INF"
-                        includes="*.xml"/>
+            <zipfileset dir="${test.deployer.dir}" prefix="META-INF" includes="*.xml"/>
         </jar>
 
         <!-- Prepare type factory tests -->
-        <mkdir dir="${test.working.dir}/org/apache/myrmidon/interfaces/type"/>
-        <jar jarfile="${test.working.dir}/org/apache/myrmidon/interfaces/type/types.jar">
-            <fileset dir="${test.classes}" includes="org/apache/myrmidon/interfaces/type/MyType1.class"/>
+        <property name="test.type.dir"
+                  value="${test.working.dir}/org/apache/myrmidon/interfaces/type/test"/>
+        <mkdir dir="${test.type.dir}"/>
+        <jar jarfile="${test.type.dir}/types.jar">
+            <fileset dir="${test.classes}" includes="org/apache/myrmidon/interfaces/type/test/MyType1.class"/>
         </jar>
 
         <!-- Prepare the project tests -->
         <copy file="src/manifest/testcases-ant-descriptor.xml" tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
 
         <!-- Run all the tests -->
-        <junit printsummary="on"
-               fork="false">
+        <junit printsummary="on" fork="false">
             <formatter type="brief" usefile="false"/>
+            <classpath location="${build.classes}"/>
             <classpath>
                 <fileset dir="${test.working.dir}/dist/bin/lib" includes="**/*.jar"/>
                 <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl" excludes="crimson.jar"/>
@@ -599,12 +606,12 @@ Legal:
 
             <batchtest>
                 <fileset dir="${test.classes}">
-                    <include name="**/*Test.class" unless="single.test"/>
-                    <exclude name="**/Abstract*Test.class"/>
-                    <include name="**/${single.test}Test.class" if="single.test"/>
-                    <exclude name="**/BzipTest.class" unless="test.bzip"/>
-                    <exclude name="**/SmbFileSystemTest.class" unless="test.smb"/>
-                    <exclude name="**/FtpFileSystemTest.class" unless="test.ftp"/>
+                    <include name="**/*TestCase.class" unless="single.test"/>
+                    <exclude name="**/Abstract*TestCase.class"/>
+                    <include name="**/${single.test}TestCase.class" if="single.test"/>
+                    <exclude name="**/BzipTestCase.class" unless="test.bzip"/>
+                    <exclude name="**/SmbFileSystemTestCase.class" unless="test.smb"/>
+                    <exclude name="**/FtpFileSystemTestCase.class" unless="test.ftp"/>
                 </fileset>
             </batchtest>
         </junit>
