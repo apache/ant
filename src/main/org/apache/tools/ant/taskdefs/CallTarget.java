@@ -61,10 +61,10 @@ import org.apache.tools.ant.*;
  *
  *  <pre>
  *    <target name="foo">
- *      <calltarget target="bar">
- *        <property name="property1" value="aaaaa" />
- *        <property name="foo" value="baz" />
- *       </calltarget>
+ *      <antcall target="bar">
+ *        <param name="property1" value="aaaaa" />
+ *        <param name="foo" value="baz" />
+ *       </antcall>
  *    </target>
  *
  *    <target name="bar" depends="init">
