@@ -62,7 +62,7 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunListener;
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
 
 /**
@@ -72,11 +72,7 @@ import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
  */
 public class MessageReaderTest extends TestCase {
 
-    protected ByteArrayOutputStream out;
-
-    protected MessageReader reader;
-
-    protected MessageWriter writer;
+    private EventDispatcher dispatcher;
 
     protected TestRunRecorder recorder;
 
@@ -85,65 +81,57 @@ public class MessageReaderTest extends TestCase {
     }
 
     protected void setUp() {
-        out = new ByteArrayOutputStream();
-        writer = new MessageWriter(out);
-        reader = new MessageReader();
+        dispatcher = new EventDispatcher();
         recorder = new TestRunRecorder();
-        reader.addListener( recorder );
+        dispatcher.addListener( recorder );
     }
 
     public void testTestRunStarted() throws Exception {
-        writer.notifyTestRunStarted(9999);
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        assertEquals(new Integer(9999), recorder.runStarted.elementAt(0));
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.RUN_STARTED);
+        dispatcher.fireRunStarted( evt );
+        assertEquals(evt, recorder.runStarted.elementAt(0));
     }
 
     public void testTestStarted() throws Exception {
-        writer.notifyTestStarted("xxxxxx");
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        assertEquals("xxxxxx", recorder.testStarted.elementAt(0));
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.TEST_STARTED, "xxxx");
+        dispatcher.fireTestStarted( evt );
+        assertEquals(evt, recorder.testStarted.elementAt(0));
     }
 
     public void testTestEnded() throws Exception {
-        writer.notifyTestEnded("xxxxxx");
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        assertEquals("xxxxxx", recorder.testEnded.elementAt(0));
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.TEST_ENDED, "xxxx");
+        dispatcher.fireTestEnded( evt );
+        assertEquals(evt, recorder.testEnded.elementAt(0));
     }
 
     public void testTestFailedError() throws Exception {
-        writer.notifyTestFailed(TestRunListener.STATUS_ERROR, "xxxxxx", "1\n2\n3\n4\n5");
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        TestRunRecorder.TestFailedInfo info = (TestRunRecorder.TestFailedInfo)recorder.testFailed.elementAt(0);
-        assertEquals("xxxxxx", info.testname);
-        assertEquals(TestRunListener.STATUS_ERROR, info.status);
-        assertEquals("1\n2\n3\n4\n5", info.trace);
+        Exception e = new Exception("error");
+        e.fillInStackTrace();
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.TEST_ERROR, "xxxx", e);
+        dispatcher.fireTestError( evt );
+        assertEquals(evt, recorder.testError.elementAt(0));
     }
 
     public void testTestFailedFailure() throws Exception {
-        writer.notifyTestFailed(TestRunListener.STATUS_FAILURE, "xxxxxx", "1\n2\n3\n4\n5");
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        TestRunRecorder.TestFailedInfo info = (TestRunRecorder.TestFailedInfo)recorder.testFailed.elementAt(0);
-        assertEquals("xxxxxx", info.testname);
-        assertEquals(TestRunListener.STATUS_FAILURE, info.status);
-        assertEquals("1\n2\n3\n4\n5", info.trace);
+        Exception e = new Exception("error");
+        e.fillInStackTrace();
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.TEST_FAILURE, "xxxx", e);
+        dispatcher.fireTestFailure( evt );
+        assertEquals(evt, recorder.testFailed.elementAt(0));
     }
 
     public void testTestRunEnded() throws Exception {
-        writer.notifyTestRunEnded(999999);
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        assertEquals(new Long(999999), recorder.runEnded.elementAt(0));
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.RUN_ENDED);
+        dispatcher.fireRunEnded( evt );
+        assertEquals(evt, recorder.runEnded.elementAt(0));
     }
 
     public void testTestRunStopped() throws Exception {
-        writer.notifyTestRunStopped(999999);
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        assertEquals(new Long(999999), recorder.runStopped.elementAt(0));
+        TestRunEvent evt = new TestRunEvent(new Integer(99), TestRunEvent.RUN_STOPPED);
+        dispatcher.fireRunStopped( evt );
+        assertEquals(evt, recorder.runStopped.elementAt(0));
     }
 
-    public void testTestRunSystemProperties() throws Exception {
-        writer.notifySystemProperties();
-        reader.process( new ByteArrayInputStream(out.toByteArray()) );
-        assertEquals(System.getProperties(), recorder.sysprops.elementAt(0));
-    }
+
 
 }

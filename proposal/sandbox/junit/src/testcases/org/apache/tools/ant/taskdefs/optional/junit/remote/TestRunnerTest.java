@@ -61,7 +61,7 @@ import junit.framework.TestSuite;
 import junit.framework.TestListener;
 
 import org.apache.tools.ant.taskdefs.optional.junit.formatter.PlainFormatter;
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunListener;
 import org.apache.tools.ant.taskdefs.optional.junit.TestRunRecorder;
 
 /**
@@ -117,7 +117,7 @@ public class TestRunnerTest extends TestCase
 //        server.addListener( new PlainFormatter() );
         runner.run();
         synchronized(this){ while (!done){ wait(); } }
-        assertEquals(new Integer(3), recorder.runStarted.elementAt(0));
+        assertEquals(1, recorder.runStarted.size());
         /*
         assertTrue(recorder.runStarted.elementAt(0).toSt("testSuccess"));
         assertTrue(started.contains("testFailure"));
@@ -148,32 +148,33 @@ public class TestRunnerTest extends TestCase
     }
 
 // TestRunListener implementation
-    public void onTestStarted(String testname) {
+    public void onTestStarted(TestRunEvent evt) {
     }
-    public void onTestEnded(String testname) {
+    public void onTestEnded(TestRunEvent evt) {
     }
-    public void onTestFailed(int status, String testname, String trace) {
+    public void onTestFailure(TestRunEvent evt) {
     }
-    public void onTestRunStarted(int count) {
+    public void onRunStarted(TestRunEvent count) {
     }
-    public void onTestRunEnded(long elapsedtime) {
+    public void onRunEnded(TestRunEvent evt) {
         synchronized(this){
             done = true;
             notify();
         }
     }
-    public void onTestRunStopped(long elapsedtime) {
+    public void onRunStopped(TestRunEvent evt) {
         synchronized(this){
             done = true;
             notify();
         }
     }
-    public void onTestRunSystemProperties(Properties props) {
+
+    public void onSuiteStarted(TestRunEvent evt) {
     }
 
-    public void onTestStdOutLine(String testname, String line) {
+    public void onSuiteEnded(TestRunEvent evt) {
     }
 
-    public void onTestStdErrLine(String testname, String line) {
+    public void onTestError(TestRunEvent evt) {
     }
 }

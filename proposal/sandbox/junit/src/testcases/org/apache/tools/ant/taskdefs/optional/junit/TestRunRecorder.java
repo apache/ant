@@ -56,6 +56,9 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunEvent;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunListener;
+
 /**
  * A TestRunListener that stores all events for later check.
  *
@@ -68,73 +71,46 @@ import java.util.Vector;
  */
 public class TestRunRecorder implements TestRunListener {
 
-    /** wrapper around failure info */
-    public static class TestFailedInfo {
-        public int status;
-        public String testname;
-        public String trace;
-    }
-
-    /** wrapper around output info */
-    public static class TestOutputInfo {
-        public String testname;
-        public String line;
-    }
-
 // all these are public in order for testcases to have access quickly
     public Vector testStarted = new Vector();
     public Vector testEnded = new Vector();
     public Vector testFailed = new Vector();
-    public Vector testStdout = new Vector();
-    public Vector testStderr = new Vector();
-    public Vector sysprops = new Vector();
+    public Vector testError = new Vector();
     public Vector runStarted = new Vector();
     public Vector runEnded = new Vector();
     public Vector runStopped = new Vector();
 
-    public void onTestStarted(String testname) {
-        testStarted.addElement(testname);
+    public void onTestStarted(TestRunEvent evt) {
+        testStarted.addElement(evt);
     }
 
-    public void onTestEnded(String testname) {
-        testEnded.addElement(testname);
+    public void onTestEnded(TestRunEvent evt) {
+        testEnded.addElement(evt);
     }
 
-    public void onTestFailed(int status, String testname, String trace) {
-        TestFailedInfo info = new TestFailedInfo();
-        info.status = status;
-        info.testname = testname;
-        info.trace = trace;
-        testFailed.addElement(info);
+    public void onTestFailure(TestRunEvent evt) {
+        testFailed.addElement(evt);
     }
 
-    public void onTestStdOutLine(String testname, String line) {
-        TestOutputInfo info = new TestOutputInfo();
-        info.testname = testname;
-        info.line = line;
-        testStdout.addElement(info);
+    public void onRunStarted(TestRunEvent evt) {
+        runStarted.addElement(evt);
     }
 
-    public void onTestStdErrLine(String testname, String line) {
-        TestOutputInfo info = new TestOutputInfo();
-        info.testname = testname;
-        info.line = line;
-        testStderr.addElement(info);
+    public void onRunEnded(TestRunEvent evt) {
+        runEnded.addElement(evt);
     }
 
-    public void onTestRunSystemProperties(Properties props) {
-        sysprops.addElement(props);
+    public void onRunStopped(TestRunEvent evt) {
+        runStopped.addElement(evt);
     }
 
-    public void onTestRunStarted(int testcount) {
-        runStarted.addElement(new Integer(testcount));
+    public void onSuiteStarted(TestRunEvent evt) {
     }
 
-    public void onTestRunEnded(long elapsedtime) {
-        runEnded.addElement(new Long(elapsedtime));
+    public void onSuiteEnded(TestRunEvent evt) {
     }
 
-    public void onTestRunStopped(long elapsedtime) {
-        runStopped.addElement(new Long(elapsedtime));
+    public void onTestError(TestRunEvent evt) {
+        testError.addElement( evt );
     }
 }
