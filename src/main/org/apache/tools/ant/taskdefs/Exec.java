@@ -76,7 +76,9 @@ public class Exec extends Task {
         run(command);
     }
 
-    protected void run(String command) throws BuildException {
+    protected int run(String command) throws BuildException {
+
+        int err = -1; // assume the worst
 
         // test if os match
         String myos = System.getProperty("os.name");
@@ -84,7 +86,7 @@ public class Exec extends Task {
         if ((os != null) && (os.indexOf(myos) < 0)){
             // this command will be executed only on the specified OS
             project.log("Not found in " + os, Project.MSG_VERBOSE);
-            return;
+            return 0;
         }
 
         if (myos.toLowerCase().indexOf("windows") >= 0) {
@@ -131,13 +133,15 @@ public class Exec extends Task {
             if (fos != null) fos.close();
 
             // check its exit value
-            int err = proc.exitValue();
+            err = proc.exitValue();
             if (err != 0) {
                 project.log("Result: " + err, "exec", Project.MSG_ERR);
             }
         } catch (IOException ioe) {
             throw new BuildException("Error exec: " + command );
         } catch (InterruptedException ex) {}
+
+        return err;
     }
 
     public void setDir(String d) {

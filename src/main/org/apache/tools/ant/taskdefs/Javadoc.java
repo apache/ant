@@ -74,7 +74,7 @@ import java.util.*;
  * System.exit() that would break Ant functionality.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@pache.org">stefano@apache.org</a>
+ * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 
 public class Javadoc extends Exec {
@@ -571,9 +571,9 @@ public class Javadoc extends Exec {
             if (c == '/') {
                 c = in.read();
                 if (c == '/') {
-                    while (c != '\n') c = in.read();
+                    while (c != '\n' && c != -1) c = in.read();
                 } else if (c == '*') {
-                    while (true) {
+                    while (c != -1) {
                         c = in.read();
                         if (c == '*') {
                             c = in.read();
@@ -586,10 +586,11 @@ public class Javadoc extends Exec {
                 }
             }
             if (c == '"') {
-                while (true) {
+                while (c != -1) {
                     c = in.read();
-                    if (c == '\\') c = in.read();
-                    if (c == '"') {
+                    if (c == '\\') {
+                        c = in.read();
+                    } else if (c == '"') {
                         c = read();
                         break;
                     }
