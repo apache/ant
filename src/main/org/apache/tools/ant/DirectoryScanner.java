@@ -825,7 +825,6 @@ public class DirectoryScanner
         if (fast && hasBeenScanned(vpath)) {
             return;
         }
-
         String[] newfiles = dir.list();
 
         if (newfiles == null) {
@@ -980,12 +979,48 @@ public class DirectoryScanner
     protected boolean couldHoldIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
             if (matchPatternStart(includes[i], name, isCaseSensitive)) {
-                return true;
+                if (isMorePowerfulThanExcludes(name, includes[i])) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
+    /**
+     *  find out whether one particular include pattern is more powerful
+     *  than all the excludes
+     *  note : the power comparison is based on the length of the include pattern
+     *  and of the exclude patterns without the wildcards
+     *  ideally the comparison should be done based on the depth
+     *  of the match, that is to say how many file separators have been matched
+     *  before the first ** or the end of the pattern
+     *
+     *  IMPORTANT : this function should return false "with care"
+     *
+     *  @param name the relative path that one want to test
+     *  @param includepattern  one include pattern
+     *  @return true if there is no exclude pattern more powerful than this include pattern
+     *  @since ant1.6
+     */
+    private boolean isMorePowerfulThanExcludes(String name, String includepattern) {
+        String shortpattern = SelectorUtils.rtrimWildcardTokens(includepattern);
+        for (int counter=0; counter <excludes.length; counter++) {
+            String shortexclude = SelectorUtils.rtrimWildcardTokens(excludes[counter]);
+            // here we are checking that the trimmed exclude pattern is not a plain directory
+            // <exclude name="foo"/> means exclude only the directory foo, but not its subdirs
+            if (shortexclude.length() < excludes[counter].length()) {
+                if (excludes[counter].charAt(shortexclude.length()) == File.separatorChar) {
+                    if (matchPath(shortexclude, name, isCaseSensitive)) {
+                        if (shortexclude.length() > shortpattern.length()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
     /**
      * Tests whether or not a name matches against at least one exclude
      * pattern.
