@@ -290,6 +290,13 @@ public abstract class BaseSelectorContainer extends BaseSelector
     public void addDifferent(DifferentSelector selector) {
         appendSelector(selector);
     }
+    
+    /**
+     * add a regular expression selector entry on the selector list
+     */
+    public void addContainsRegexp(ContainsRegexpSelector selector) {
+        appendSelector(selector);
+    }
 
 }
 

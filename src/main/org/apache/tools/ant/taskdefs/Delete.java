@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.AndSelector;
+import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.ContainsSelector;
 import org.apache.tools.ant.types.selectors.DateSelector;
 import org.apache.tools.ant.types.selectors.DependSelector;
@@ -409,6 +410,14 @@ public class Delete extends MatchingTask {
     public void addDepend(DependSelector selector) {
         usedMatchingTask = true;
         super.addDepend(selector);
+    }
+    
+    /**
+     * add a regular expression selector entry on the selector list
+     */
+    public void addContainsRegexp(ContainsRegexpSelector selector) {
+        usedMatchingTask = true;
+        super.addContainsRegexp(selector);
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -172,6 +172,11 @@ public interface SelectorContainer {
      * add a depends selector entry on the selector list
      */
     public void addDepend(DependSelector selector);
+    
+    /**
+     * add a regular expression selector entry on the selector list
+     */
+    public void addContainsRegexp(ContainsRegexpSelector selector);
 
 }
 

@@ -63,6 +63,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.AndSelector;
+import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.ContainsSelector;
 import org.apache.tools.ant.types.selectors.DateSelector;
 import org.apache.tools.ant.types.selectors.DependSelector;
@@ -406,6 +407,13 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void addDepend(DependSelector selector) {
         fileset.addDepend(selector);
+    }
+    
+    /**
+     * add a regular expression selector entry on the selector list
+     */
+    public void addContainsRegexp(ContainsRegexpSelector selector) {
+        fileset.addContainsRegexp(selector);
     }
 
     /**

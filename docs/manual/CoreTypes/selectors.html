@@ -56,6 +56,8 @@
         the include and exclude elements of a patternset.
       <li><a href="#presentselect">&lt;present&gt;</a> - Select
         files that either do or do not exist in some other location
+      <li><a href="#regexpselect">&lt;containsregexp&gt;</a> - Select
+        files that match a regular expression
       <li><a href="#sizeselect">&lt;size&gt;</a> - Select files
         that are larger or smaller than a particular number of bytes.
     </ul>
@@ -445,7 +447,40 @@
       1.5 release.
     </p>
 
+    <a name="regexpselect"></a>
+    <h4>Regular Expression Selector</h4>
 
+    <p>The <code>&lt;containsregexp&gt;</code> tag in a FileSet limits
+    the files defined by that fileset to only those which contain a
+    match to the regular expression specified by the <code>expression</code> attribute.
+    </p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">expression</td>
+        <td valign="top">Specifies the regular expression that must 
+        match true in every file</td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+    </table>
+
+    <p>Here is an example of how to use the regular expression Selector:</p>
+
+    <blockquote><pre>
+&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;*.txt&quot;&gt;
+    &lt;containsregexp expression=&quot;[4-6]\.[0-9]&quot;/&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+
+    <p>Selects all the text files that match the regular expression 
+    (have a 4,5 or 6 followed by a period and a number from 0 to 9).
+
+    
     <a name="sizeselect"></a>
     <h4>Size Selector</h4>
 

@@ -234,6 +234,9 @@ Other changes:
 
 * <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
 
+* A new <containsregexp> selector has been added, that selects files
+  if their content matches a certain regular expression.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

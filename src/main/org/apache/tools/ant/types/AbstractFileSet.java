@@ -76,6 +76,7 @@ import org.apache.tools.ant.types.selectors.NoneSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
 import org.apache.tools.ant.types.selectors.OrSelector;
 import org.apache.tools.ant.types.selectors.PresentSelector;
+import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
 import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SelectorContainer;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
@@ -622,6 +623,13 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * add a depends selector entry on the selector list
      */
     public void addDepend(DependSelector selector) {
+        appendSelector(selector);
+    }
+    
+    /**
+     * add a regular expression selector entry on the selector list
+     */
+    public void addContainsRegexp(ContainsRegexpSelector selector) {
         appendSelector(selector);
     }
 
