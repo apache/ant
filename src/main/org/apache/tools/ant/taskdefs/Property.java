@@ -99,6 +99,9 @@ import org.apache.tools.ant.types.Reference;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  * @since Ant 1.1
+ *
+ * @ant.attribute.group name="name"      description="One of these, when using the name attribute"
+ * @ant.attribute.group name="noname"    description="One of these, when not using the name attribute"
  */
 public class Property extends Task {
 
@@ -134,7 +137,7 @@ public class Property extends Task {
     }
 
     /**
-     * sets the name of the property to set.
+     * The name of the property to set.
      * @param name property name
      */
     public void setName(String name) {
@@ -152,14 +155,18 @@ public class Property extends Task {
      * current platforms conventions). Otherwise it is taken as a path
      * relative to the project's basedir and expanded.
      * @param location path to set
+     *
+     * @ant.attribute group="name"
      */
     public void setLocation(File location) {
         setValue(location.getAbsolutePath());
     }
 
     /**
-     * Sets the value of the property.
+     * The value of the property.
      * @param value value to assign
+     *
+     * @ant.attribute group="name"
      */
     public void setValue(String value) {
         this.value = value;
@@ -170,8 +177,10 @@ public class Property extends Task {
     }
 
     /**
-     * the filename of a property file to load.
-     *@param file filename
+     * Filename of a property file to load.
+     * @param file filename
+     *
+     * @ant.attribute group="noname"
      */
     public void setFile(File file) {
         this.file = file;
@@ -208,6 +217,8 @@ public class Property extends Task {
      * Only yields reasonable results for references
      * PATH like structures or properties.
      * @param ref reference
+     *
+     * @ant.attribute group="name"
      */
     public void setRefid(Reference ref) {
         this.ref = ref;
@@ -218,8 +229,10 @@ public class Property extends Task {
     }
 
     /**
-     * the resource name of a property file to load
+     * The resource name of a property file to load
      * @param resource resource on classpath
+     *
+     * @ant.attribute group="noname"
      */
     public void setResource(String resource) {
         this.resource = resource;
@@ -230,23 +243,25 @@ public class Property extends Task {
     }
 
     /**
-    * the prefix to use when retrieving environment variables.
-    * Thus if you specify environment=&quot;myenv&quot;
-    * you will be able to access OS-specific
-    * environment variables via property names &quot;myenv.PATH&quot; or
-    * &quot;myenv.TERM&quot;.
-    * <p>
-    * Note that if you supply a property name with a final
-    * &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still
-    * allow access of environment variables through &quot;myenv.PATH&quot; and
-    * &quot;myenv.TERM&quot;. This functionality is currently only implemented
-    * on select platforms. Feel free to send patches to increase the number of platforms
-    * this functionality is supported on ;).<br>
-    * Note also that properties are case sensitive, even if the
-    * environment variables on your operating system are not, e.g. it
-    * will be ${env.Path} not ${env.PATH} on Windows 2000.
-    * @param env prefix
-    */
+     * Prefix to use when retrieving environment variables.
+     * Thus if you specify environment=&quot;myenv&quot;
+     * you will be able to access OS-specific
+     * environment variables via property names &quot;myenv.PATH&quot; or
+     * &quot;myenv.TERM&quot;.
+     * <p>
+     * Note that if you supply a property name with a final
+     * &quot;.&quot; it will not be doubled. ie environment=&quot;myenv.&quot; will still
+     * allow access of environment variables through &quot;myenv.PATH&quot; and
+     * &quot;myenv.TERM&quot;. This functionality is currently only implemented
+     * on select platforms. Feel free to send patches to increase the number of platforms
+     * this functionality is supported on ;).<br>
+     * Note also that properties are case sensitive, even if the
+     * environment variables on your operating system are not, e.g. it
+     * will be ${env.Path} not ${env.PATH} on Windows 2000.
+     * @param env prefix
+     *
+     * @ant.attribute group="noname"
+     */
     public void setEnvironment(String env) {
         this.env = env;
     }
@@ -298,7 +313,7 @@ public class Property extends Task {
     /**
      * @deprecated This was never a supported feature and has been
      * deprecated without replacement
-     * @ant.setter skip="true"
+     * @ant.attribute ignore="true"
      */
     public void setUserProperty(boolean userProperty) {
         log("DEPRECATED: Ignoring request to set user property in Property"
