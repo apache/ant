@@ -123,7 +123,7 @@
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
         </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="10">
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="9">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
         </td>
     </tr>
@@ -173,18 +173,6 @@
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">ignoremissingbuildfile</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets whether to continue or fail with a build exception if the build file is missing, false by default.</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -299,7 +287,7 @@
         Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
 <short-description><![CDATA[Adds a file set to the implicit build path.]]></short-description>
 <description>
-            <![CDATA[Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
+            <![CDATA[Adds a file set to the implicit]]><![CDATA[ build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
           </description>
 
       </blockquote></td></tr>
@@ -402,7 +390,7 @@
       <tr><td bgcolor="#525D76">
           <font color="#ffffff" face="arial,helvetica.sanserif">
                               <a name="examples">
-          <strong>Example</strong></a></font>
+          <strong>Examples</strong></a></font>
       </td></tr>
 
       <tr><td><blockquote>
@@ -436,6 +424,16 @@
             this snippet build file will run ant in each subdirectory of the project directory,
             where a file called build.xml can be found.
             All properties whose name starts with "foo" are passed, their names are changed to start with "bar" instead
+        </p>
+<pre>
+          &lt;subant target="compile" genericantfile="/opt/project/build1.xml"&gt;
+             &lt;dirset dir="." includes="projects*"/&gt;
+          &lt;/subant&gt;
+        </pre>
+<p>
+            assuming the subdirs of the project dir are called projects1, projects2, projects3
+            this snippet will execute the compile target of /opt/project/build1.xml,
+            setting the basedir to projects1, projects2, projects3
         </p>
 
       </blockquote></td></tr>

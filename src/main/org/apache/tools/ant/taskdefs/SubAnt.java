@@ -112,7 +112,6 @@ public class SubAnt
     private boolean inheritAll = false;
     private boolean inheritRefs = false;
     private boolean failOnError = true;
-    private boolean ignoreMissingBuildFile = false;
     private String output  = null;
 
     private Vector properties = new Vector();
@@ -140,7 +139,6 @@ public class SubAnt
         }
 */
         for (int i=0; i<count; ++i) {
-            boolean doit=true;
             File directory=null;
             File file = new File(filenames[i]);
             if (file.isDirectory()) {
@@ -150,17 +148,9 @@ public class SubAnt
                 }
                 else {
                     file = new File(file, antfile);
-                    boolean fileFound=file.exists();
-                    if(ignoreMissingBuildFile && !fileFound) {
-                        log("Build file '" + file + "' not found.", Project.MSG_INFO);
-                        doit=false;
-                    }
-
                 }
             }
-            if (doit) {
-                execute(file, directory);
-            }
+            execute(file, directory);
         }
     }
 
@@ -235,16 +225,6 @@ public class SubAnt
      */
     public void setFailonerror(boolean failOnError) {
         this.failOnError = failOnError;
-    }
-
-    /**
-     * Sets whether to continue or fail with a build exception if the build
-     * file  is missing, false by default.
-     *
-     * @param  ignoreMissingBuildFile the new value for this boolean flag.
-     */
-    public void setIgnoreMissingBuildFile(boolean ignoreMissingBuildFile) {
-        this.ignoreMissingBuildFile = ignoreMissingBuildFile;
     }
 
     /**

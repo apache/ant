@@ -24,7 +24,7 @@
             </ul>
         </subsection>
      </description>
-    <section anchor="examples" name="Example">
+    <section anchor="examples" name="Examples">
         <pre>
         &lt;project name="subant" default="subant1"&gt;
         &lt;property name="build.dir" value="subant.build"/&gt;
