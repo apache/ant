@@ -1,7 +1,14 @@
 <?xml version="1.0" ?>
 <project name="XDoclet" default="main">
 
-  <property name="log4j.jar" location="../../lib/optional/log4j.jar"/>
+  <!--
+    Give user a chance to override without editing this file
+    (and without typing -D each time he compiles it)
+  -->
+  <property file=".ant.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+
+  <property name="log4j.jar" location="../myrmidon/lib/log4j-core.jar"/>
   <property name="xdoclet.jar" location="lib/xdoclet.jar"/>
 
   <property name="src.dir"
@@ -114,7 +121,7 @@
     </document>
   </target>
 
-  <target name="docs" depends="gen">
+  <target name="docs"> <!-- depends=gen -->
     <mkdir dir="${build.dir}/docs" />
     <!-- Copy stuff so things are in the correct relative location. -->
     <copy todir="${build.dir}/docs">
