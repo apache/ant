@@ -69,7 +69,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.SAXException;
 import org.xml.sax.DocumentHandler;
 import org.xml.sax.AttributeList;
-
+import org.xml.sax.helpers.XMLReaderAdapter;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -117,7 +117,11 @@ public class ProjectHelper {
         
         try {
             SAXParser saxParser = getParserFactory().newSAXParser();
-            parser = saxParser.getParser();
+            try {
+                parser = saxParser.getParser();
+            } catch (SAXException exc) {
+                parser = new XMLReaderAdapter(saxParser.getXMLReader());
+            }
 
             String uri = "file:" + buildFile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
@@ -128,7 +132,12 @@ public class ProjectHelper {
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
             project.log("parsing buildfile " + buildFile + " with URI = " + uri, Project.MSG_VERBOSE);
-            saxParser.parse(inputSource, new RootHandler());
+            HandlerBase hb = new RootHandler();
+            parser.setDocumentHandler(hb);
+            parser.setEntityResolver(hb);
+            parser.setErrorHandler(hb);
+            parser.setDTDHandler(hb);
+            parser.parse(inputSource);
         }
         catch(ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
