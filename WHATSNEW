@@ -55,6 +55,9 @@ Fixed bugs:
   be a single empty argument.  Use <arg value="''"/> if you need the
   quotes literally.
 
+* <replaceregexp> could append a newline character at the end of the
+  file.
+
 Other changes:
 --------------
 
