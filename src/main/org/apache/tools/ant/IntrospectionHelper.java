@@ -386,6 +386,30 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     /**
+     * Returns a helper for the given class, either from the cache
+     * or by creating a new instance.
+     *
+     * The method will make sure the helper will be cleaned up at the end of
+     * the project, and only one instance will be created for each class.
+     *
+     * @param c The class for which a helper is required.
+     *          Must not be <code>null</code>.
+     *
+     * @return a helper for the specified class
+     */
+    public static synchronized IntrospectionHelper getHelper(Project p, Class c)
+    {
+        IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
+        if (ih == null) {
+            ih = new IntrospectionHelper(c);
+            helpers.put(c, ih);
+            // Cleanup at end of project
+            p.addBuildListener(ih);
+        }
+        return ih;
+    }
+
+    /**
      * Sets the named attribute in the given element, which is part of the 
      * given project.
      * 
