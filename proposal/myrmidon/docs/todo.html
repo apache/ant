@@ -317,12 +317,6 @@
                     <li>Fire ProjectListener events projectStarted() and projectFinished()
                     events on start and finish of referenced projects, adding indicator methods
                     to ProjectEvent.</li>
-                    <li>Validate project and target names in DefaultProjectBuilder - reject dodgy
-                    names like "," or "", or "  ".  Probably want to reject names that start or
-                    end with white-space (though internal whitespace is probably fine).  We also
-                    want to reserve certain punctuation characters like , : ? $ [ ] { } &lt; &gt;, etc for
-                    future use.</li>
-                    <li>Similarly, validate property names, using the same rules.</li>
                     <li>Detect duplicate type names.</li>
                     <li>Add fully qualified type names, based on antlib name and type shorthand name.
                     Allow these to be used in build files in addition to the shorthand names.</li>
@@ -333,6 +327,10 @@
                     <li>Split up <code>&lt;is-set&gt;</code> condition into is-set and is-true conditions.</li>
                     <li>Allow the <code>&lt;if&gt;</code> task to take any condition implementation.</li>
                     <li>Add an else block to the <code>&lt;if&gt;</code> task.</li>
+                    <li>Split the <code>&lt;available&gt;</code> condition into separate conditions
+                    that test for the availability of a class, or a resource.</li>
+                    <li>Move <code>crimson.jar</code> to <code>bin/lib</code> in the distribution,
+                    and make to other jars via the extension mechanism.</li>
                     <li>Unit tests.</li>
                 </ul>
                     </blockquote>

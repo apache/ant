@@ -168,9 +168,9 @@ Implicit tasks can be used to initialise the project.  For example:</p>
 
 <subsection name="Targets">
 
-<p>Targets have the same format as in Ant 1.x, though some of the behaviour
-is different.  A <code>&lt;target&gt;</code> element takes the following
-attributes:</p>
+<p>Targets have a similar format to targets in Ant 1.x, though some of the
+behaviour is different.  A <code>&lt;target&gt;</code> element takes the
+following attributes:</p>
 
 <table>
     <tr><th>Attribute</th><th>Description</th><th>Default Value</th></tr>
@@ -183,18 +183,6 @@ attributes:</p>
         <td>depends</td>
         <td>A comma-separated list of targets that this target depends on.
         This list can contain targets from referenced projects.</td>
-        <td>None</td>
-    </tr>
-    <tr>
-        <td>if</td>
-        <td>Only execute this target if the specified property is set, and not
-        equal to <code>false</code>.</td>
-        <td>None</td>
-    </tr>
-    <tr>
-        <td>unless</td>
-        <td>Do not execute this target if the specified property is set, and not
-        equal to <code>false</code>.</td>
         <td>None</td>
     </tr>
 </table>

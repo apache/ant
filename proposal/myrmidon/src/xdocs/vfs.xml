@@ -31,9 +31,8 @@
                 <tr>
                     <td>Zip Files</td>
                     <td>The contents of Zip files (and Jar, War, and Ear files).
-                    Currently, the VFS supports read-only access to Zip file contents,
-                    and only for local Zip files.</td>
-                    <td><code>zip://</code> <i>zip-file-path</i> [<code>!</code><i>absolute-path</i>]</td>
+                    Currently, the VFS supports read-only access to Zip file contents.</td>
+                    <td><code>zip:</code> <i>zip-file-uri</i> [<code>!</code><i>absolute-path</i>]</td>
                 </tr>
                 <tr>
                     <td>FTP</td>
@@ -47,13 +46,16 @@
                 </tr>
             </table>
 
+            <p>Both forward or backward slashes can be used to separate the elements of
+            a URL.</p>
+
             <p>Here are some example URLs:</p>
 
             <ul>
                 <li><code>build/classes</code></li>
                 <li><code>c:\program files\ant\bin</code></li>
                 <li><code>file://C:/program files/ant</code></li>
-                <li><code>zip://build/lib/ant.jar!/org/apache/tools</code></li>
+                <li><code>zip:build/lib/ant.jar!/org/apache/tools</code></li>
                 <li><code>ftp://adam@somehost/pub/downloads</code></li>
                 <li><code>smb://password:adam@somehost/home/adam</code></li>
             </ul>

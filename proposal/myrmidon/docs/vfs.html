@@ -136,14 +136,13 @@
       valign="top" align="left">
     <font color="#000000" size="-1" face="arial,helvetica,sanserif">
           The contents of Zip files (and Jar, War, and Ear files).
-                    Currently, the VFS supports read-only access to Zip file contents,
-                    and only for local Zip files.
+                    Currently, the VFS supports read-only access to Zip file contents.
         </font>
   </td>
                       <td bgcolor="#a0ddf0" colspan="" rowspan="" 
       valign="top" align="left">
     <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          <code>zip://</code> <i>zip-file-path</i> [<code>!</code><i>absolute-path</i>]
+          <code>zip:</code> <i>zip-file-uri</i> [<code>!</code><i>absolute-path</i>]
         </font>
   </td>
       </tr>
@@ -188,12 +187,14 @@
   </td>
       </tr>
         </table>
+                                <p>Both forward or backward slashes can be used to separate the elements of
+            a URL.</p>
                                 <p>Here are some example URLs:</p>
                                 <ul>
                 <li><code>build/classes</code></li>
                 <li><code>c:\program files\ant\bin</code></li>
                 <li><code>file://C:/program files/ant</code></li>
-                <li><code>zip://build/lib/ant.jar!/org/apache/tools</code></li>
+                <li><code>zip:build/lib/ant.jar!/org/apache/tools</code></li>
                 <li><code>ftp://adam@somehost/pub/downloads</code></li>
                 <li><code>smb://password:adam@somehost/home/adam</code></li>
             </ul>
