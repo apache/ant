@@ -76,6 +76,8 @@ Fixed bugs:
 * MacroInstance did not clean up nested elements correctly in the execute method, causing
   multiple use of the same macro instance with nested elements to fail.
 
+* checksum fileext property doc wrong. Bugzilla 30787.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
