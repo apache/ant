@@ -135,7 +135,7 @@ public class ExecuteOn extends ExecTask
     {
         if( srcFilePos != null )
         {
-            throw new TaskException( taskType + " doesn\'t support multiple srcfile elements." );
+            throw new TaskException( getName() + " doesn\'t support multiple srcfile elements." );
         }
         srcFilePos = cmdl.createMarker();
         return srcFilePos;
@@ -152,7 +152,7 @@ public class ExecuteOn extends ExecTask
     {
         if( targetFilePos != null )
         {
-            throw new TaskException( taskType + " doesn\'t support multiple targetfile elements." );
+            throw new TaskException( getName() + " doesn\'t support multiple targetfile elements." );
         }
         targetFilePos = cmdl.createMarker();
         srcIsFirst = ( srcFilePos != null );

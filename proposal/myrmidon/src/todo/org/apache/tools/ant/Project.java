@@ -840,7 +840,7 @@ public class Project
                 task = taskA;
             }
             task.setProject( this );
-            task.setTaskType( taskType );
+            //task.setTaskType( taskType );
 
             String msg = "   +Task: " + taskType;
             log( msg, MSG_DEBUG );

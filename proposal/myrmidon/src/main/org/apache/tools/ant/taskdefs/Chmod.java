@@ -74,7 +74,7 @@ public class Chmod extends ExecuteOn
     public void setExecutable( String e )
         throws TaskException
     {
-        throw new TaskException( taskType + " doesn\'t support the executable attribute" );
+        throw new TaskException( getName() + " doesn\'t support the executable attribute" );
     }
 
     public void setFile( File src )
@@ -108,7 +108,7 @@ public class Chmod extends ExecuteOn
     public void setSkipEmptyFilesets( boolean skip )
         throws TaskException
     {
-        throw new TaskException( taskType + " doesn\'t support the skipemptyfileset attribute" );
+        throw new TaskException( getName() + " doesn\'t support the skipemptyfileset attribute" );
     }
 
     /**

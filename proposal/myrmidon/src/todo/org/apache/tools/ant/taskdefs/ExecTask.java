@@ -246,7 +246,7 @@ public class ExecTask extends Task
         {
             if( failOnError )
             {
-                throw new TaskException( taskType + " returned: " + err );
+                throw new TaskException( getName() + " returned: " + err );
             }
             else
             {

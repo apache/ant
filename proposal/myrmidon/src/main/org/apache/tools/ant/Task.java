@@ -14,7 +14,6 @@ public abstract class Task
     implements org.apache.myrmidon.api.Task
 {
     protected String description;
-    protected String taskType;
 
     /**
      * Sets a description of the current action. It will be usefull in
@@ -120,16 +119,6 @@ public abstract class Task
     protected void handleOutput( String line )
     {
         log( line, Project.MSG_INFO );
-    }
-
-    /**
-     * Set the name with which the task has been invoked.
-     *
-     * @param type the name the task has been invoked as.
-     */
-    void setTaskType( String type )
-    {
-        this.taskType = type;
     }
 }
 
