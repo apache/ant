@@ -835,26 +835,8 @@ public class JUnitTask extends Task {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
             Path userClasspath = commandline.getClasspath();
-            Path classpath = userClasspath == null
-                                              ? null
-                                              : (Path) userClasspath.clone();
-            if (classpath != null) {
-                if (includeAntRuntime) {
-                    log("Implicitly adding " + antRuntimeClasses
-                        + " to CLASSPATH", Project.MSG_VERBOSE);
-                    classpath.append(antRuntimeClasses);
-                }
-
-                cl = getProject().createClassLoader(classpath);
-                cl.setParentFirst(false);
-                cl.addJavaLibraries();
-                log("Using CLASSPATH " + cl.getClasspath(),
-                    Project.MSG_VERBOSE);
-
-                // make sure the test will be accepted as a TestCase
-                cl.addSystemPackageRoot("junit");
-                // will cause trouble in JDK 1.1 if omitted
-                cl.addSystemPackageRoot("org.apache.tools.ant");
+            if (userClasspath != null) {
+                cl = createClassLoader();
                 cl.setThreadContextLoader();
             }
             runner = new JUnitTestRunner(test, test.getHaltonerror(),
@@ -880,7 +862,7 @@ public class JUnitTask extends Task {
                 } else {
                     fe.setOutput(getDefaultOutput());
                 }
-                runner.addFormatter(fe.createFormatter());
+                runner.addFormatter(fe.createFormatter(cl));
             }
 
             runner.run();
@@ -1013,10 +995,11 @@ public class JUnitTask extends Task {
      */
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
+        AntClassLoader cl = createClassLoader();
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
             File outFile = getOutput(fe, test);
-            JUnitResultFormatter formatter = fe.createFormatter();
+            JUnitResultFormatter formatter = fe.createFormatter(cl);
             if (outFile != null && formatter != null) {
                 try {
                     OutputStream out = new FileOutputStream(outFile);
@@ -1040,4 +1023,35 @@ public class JUnitTask extends Task {
         }
     }
 
+    /**
+     * Creates and configures an AntClassLoader instance from the
+     * nested classpath element.
+     *
+     * @return null if there is no user-specified classpath.
+     *
+     * @since Ant 1.6
+     */
+    private AntClassLoader createClassLoader() {
+        AntClassLoader cl = null;
+        Path userClasspath = commandline.getClasspath();
+        if (userClasspath != null) {
+            Path classpath = (Path) userClasspath.clone();
+            if (includeAntRuntime) {
+                log("Implicitly adding " + antRuntimeClasses 
+                    + " to CLASSPATH", Project.MSG_VERBOSE);
+                classpath.append(antRuntimeClasses);
+            }
+
+            cl = getProject().createClassLoader(classpath);
+            cl.setParentFirst(false);
+            cl.addJavaLibraries();
+            log("Using CLASSPATH " + cl.getClasspath(), Project.MSG_VERBOSE);
+
+            // make sure the test will be accepted as a TestCase
+            cl.addSystemPackageRoot("junit");
+            // will cause trouble in JDK 1.1 if omitted
+            cl.addSystemPackageRoot("org.apache.tools.ant");
+        }
+        return cl;
+    }
 }

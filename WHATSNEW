@@ -132,6 +132,10 @@ Fixed bugs:
 * file names that include spaces need to be quoted inside the @argfile
   argument using <javadoc> and JDK 1.4.  Bugzilla Report 16871.
 
+* <junit> didn't work with custom formatters that were only available
+  on the user specified classpath when a timeout occured.  Bugzilla
+  Report 19953.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.

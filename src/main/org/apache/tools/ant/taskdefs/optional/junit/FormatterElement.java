@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -172,14 +173,31 @@ public class FormatterElement {
         return useFile;
     }
 
+    /**
+     * @since Ant 1.2
+     */
     JUnitResultFormatter createFormatter() throws BuildException {
+        return createFormatter(null);
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    JUnitResultFormatter createFormatter(ClassLoader loader) 
+        throws BuildException {
+
         if (classname == null) {
             throw new BuildException("you must specify type or classname");
         }
         
         Class f = null;
         try {
-            f = Class.forName(classname);
+            if (loader == null) {
+                f = Class.forName(classname);
+            } else {
+                f = loader.loadClass(classname);
+                AntClassLoader.initializeClass(f);
+            }
         } catch (ClassNotFoundException e) {
             throw new BuildException(e);
         }
