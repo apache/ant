@@ -69,11 +69,6 @@ import java.util.Vector;
  * It must be 'top level'. On execution it will read another Ant file
  * into the same Project.
  * <p>
- * <b>Important</b>: there is one limitation related to the top level
- * elements in the imported files. The current implementation will
- * add them at the end of the top-level ( instead of replacing the
- * import element - which would be more intuitive ).
- * <p>
  * <b>Important</b>: we have not finalized how relative file references
  * will be resolved in deep/complex build hierarchies -such as what happens
  * when an imported file imports another file. Use absolute references for

@@ -74,6 +74,11 @@ public class ImportTest extends BuildFileTest {
 
     public void testSimpleImport() {
         configureProject("src/etc/testcases/taskdefs/import/import.xml");
+        String logMessage = getLog();
+        String expect = "Before importIn imported topAfter import";
+        assertTrue("expecting log to contain \"" + expect + "\" log was \""
+                   + logMessage + "\"",
+                   logMessage.indexOf(expect) >= 0);
     }
 
     public void testUnnamedNesting() {

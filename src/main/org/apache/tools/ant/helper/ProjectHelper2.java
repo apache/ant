@@ -119,7 +119,9 @@ public class ProjectHelper2 extends ProjectHelper {
         if (this.getImportStack().size() > 1) {
             // we are in an imported file.
             context.setIgnoreProjectTag(true);
+            context.getCurrentTarget().startImportedTasks();
             parse(project, source, new RootHandler(context));
+            context.getCurrentTarget().endImportedTasks();
         } else {
             // top level file
             parse(project, source, new RootHandler(context));
@@ -468,6 +470,7 @@ public class ProjectHelper2 extends ProjectHelper {
             throws SAXParseException {
             String id = null;
             String baseDir = null;
+            boolean nameAttributeSet = false;
 
             Project project = context.getProject();
 
@@ -495,7 +498,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 } else if (key.equals("name")) {
                     if (value != null) {
                         context.setCurrentProjectName(value);
-
+                        nameAttributeSet = true;
                         if (!context.isIgnoringProjectTag()) {
                             project.setName(value);
                             project.addReference(value, project);
@@ -522,7 +525,7 @@ public class ProjectHelper2 extends ProjectHelper {
             // XXX Move to Project ( so it is shared by all helpers )
             String antFileProp = "ant.file." + context.getCurrentProjectName();
             String dup = project.getProperty(antFileProp);
-            if (dup != null) {
+            if (dup != null && nameAttributeSet) {
                 File dupFile = new File(dup);
                 if (context.isIgnoringProjectTag() &&
                     !dupFile.equals(context.getBuildFile())) {

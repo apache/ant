@@ -80,10 +80,17 @@ public class Target implements TaskContainer {
     private List/*<String>*/ dependencies = null;
     /** Children of this target (tasks and data types). */
     private List/*<Task|RuntimeConfigurable>*/ children = new ArrayList(5);
+    /** Position in task list */
+    private int taskPosition = 0;
+    
     /** Project this target belongs to. */
     private Project project;
     /** Description of this target, if any. */
     private String description = null;
+    /** If adding top-level imported tasks */
+    private boolean addingImportedTasks;
+    /** Imported tasks/types being added */
+    private List importedTasks = null;
 
     /** Sole constructor. */
     public Target() {
@@ -166,12 +173,34 @@ public class Target implements TaskContainer {
     }
 
     /**
+     * This method called when an import file is being processed.
+     * The top-level tasks/types are placed in the importedTasks array.
+     *
+     */
+    public void startImportedTasks() {
+        importedTasks = new ArrayList();
+    }
+    
+    /**
      * Adds a task to this target.
      *
      * @param task The task to be added. Must not be <code>null</code>.
      */
     public void addTask(Task task) {
-        children.add(task);
+        if (importedTasks != null) {
+            importedTasks.add(task);
+        } else {
+            children.add(task);
+        }
+    }
+
+    /**
+     * This method called when an import file is being processed.
+     * The top-level tasks/types are placed in the importedTasks array.
+     *
+     */
+    public void endImportedTasks() {
+        children.addAll(taskPosition + 1, importedTasks);
     }
 
     /**
@@ -311,8 +340,10 @@ public class Target implements TaskContainer {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            for (int i = 0; i < children.size(); ++i) {
-                Object o = children.get(i);
+            for (taskPosition = 0;
+                 taskPosition < children.size();
+                 ++taskPosition) {
+                Object o = children.get(taskPosition);
                 if (o instanceof Task) {
                     Task task = (Task) o;
                     task.perform();
