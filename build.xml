@@ -16,6 +16,7 @@
 
   <property name="ant.home" value="."/>
   <property name="src.bin.dir" value="src/bin"/>
+  <property name="src.etc.dir" value="src/bin"/>
   <property name="src.dir" value="src/main"/>
   <property name="src.tests.dir" value="src/testcases"/>
   <property name="docs.dir" value="docs"/>
@@ -440,6 +441,8 @@
 
     <mkdir dir="${ant.bindist.dir}"/>
     <mkdir dir="${ant.bindist.dir}/bin"/>
+    <mkdir dir="${ant.bindist.dir}/src"/>
+    <mkdir dir="${ant.bindist.dir}/etc"/>
     <mkdir dir="${ant.bindist.dir}/lib"/>
     <mkdir dir="${ant.bindist.dir}/docs/api"/>
 
@@ -466,12 +469,12 @@
       <fileset dir="${src.dir}"/>
     </copy>
 
-    <copy todir="${ant.bindist.dir}/src">
-      <fileset dir="${src.dir}"/>
+    <copy todir="${ant.bindist.dir}/etc">
+      <fileset dir="${src.etc.dir}"/>
     </copy>
 
     <copy todir="${ant.bindist.dir}/bin">
-      <fileset dir="src/bin"/>
+      <fileset dir="${src.bin.dir}"/>
     </copy>
     <fixcrlf srcdir="${ant.bindist.dir}/bin" includes="ant,antRun" cr="remove"/>
     <fixcrlf srcdir="${ant.bindist.dir}/bin" includes="*.bat" cr="add"/>
