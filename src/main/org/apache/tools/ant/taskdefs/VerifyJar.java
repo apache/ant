@@ -17,6 +17,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.filters.ChainableReader;
@@ -134,10 +135,25 @@ public class VerifyJar extends AbstractJarSignerTask {
         log("Verifying JAR: " +
                 jar.getAbsolutePath());
         outputCache.clear();
-        cmd.execute();
-        String results=outputCache.toString();
-        if(results.indexOf(VERIFIED_TEXT)<0) {
-            throw new BuildException(ERROR_NO_VERIFY+jar);
+        BuildException ex = null;
+        try {
+            cmd.execute();
+        } catch (BuildException e) {
+            ex = e;
+        }
+        String results = outputCache.toString();
+        //deal with jdk1.4.2 bug:
+        if (ex != null) {
+            if (results.indexOf("zip file closed") >= 0) {
+                log("You are running " + JARSIGNER_COMMAND + " against a JVM with"
+                    + " a known bug that manifests as an IllegalStateException.",
+                    Project.MSG_WARN);
+            } else {
+                throw ex;
+            }
+        }
+        if (results.indexOf(VERIFIED_TEXT) < 0) {
+            throw new BuildException(ERROR_NO_VERIFY + jar);
         }
     }
 
