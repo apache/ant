@@ -56,11 +56,6 @@ public class TelnetTask extends Task {
     private int port = 23;
 
     /**
-     *  The Object which handles the telnet session.
-     */
-    private AntTelnetClient telnet = null;
-
-    /**
      *  The list of read/write commands for this session
      */
     private Vector telnetTasks = new Vector();
@@ -97,7 +92,7 @@ public class TelnetTask extends Task {
        }
 
        /**  Create the telnet client object */
-       telnet = new AntTelnetClient();
+       AntTelnetClient telnet = new AntTelnetClient();
        try {
            telnet.connect(server, port);
        } catch (IOException e) {
@@ -105,7 +100,7 @@ public class TelnetTask extends Task {
        }
        /**  Login if userid and password were specified */
        if (userid != null && password != null) {
-          login();
+          login(telnet);
        }
        /**  Process each sub command */
        Enumeration tasksToRun = telnetTasks.elements();
@@ -122,7 +117,7 @@ public class TelnetTask extends Task {
      *  Process a 'typical' login.  If it differs, use the read
      *  and write tasks explicitely
      */
-    private void login() {
+    private void login(AntTelnetClient telnet) {
        if (addCarriageReturn) {
           telnet.sendString("\n", true);
        }
