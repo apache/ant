@@ -118,7 +118,7 @@ public class Scp extends Task implements LogListener {
      * Sets the path to the file that has the identities of
      * all known hosts.  This is used by SSH protocol to validate
      * the identity of the host.  The default is
-     * <i>{$user.dir}/.ssh/known_hosts</i>.
+     * <i>${user.home}/.ssh/known_hosts</i>.
 
      * @param knownHosts a path to the known hosts file.
      */
@@ -161,7 +161,7 @@ public class Scp extends Task implements LogListener {
         super.init();
         this.toUri = null;
         this.fromUri = null;
-        this.knownHosts = System.getProperty("user.dir") + "/.ssh/known_hosts";
+        this.knownHosts = System.getProperty("user.home") + "/.ssh/known_hosts";
         this.trust = false;
         this.port = 22;
         this.fileSets = null;
