@@ -54,26 +54,25 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FlatFileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
 
 /**
  * Copies a file or directory to a new file

@@ -55,16 +55,15 @@
 package org.apache.tools.ant.taskdefs.optional.net;
 
 import com.oroinc.net.telnet.TelnetClient;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * Automates the telnet protocol.

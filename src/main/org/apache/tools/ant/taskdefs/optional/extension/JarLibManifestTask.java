@@ -61,8 +61,8 @@ import java.util.Iterator;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * Generates a manifest that declares all the dependencies.

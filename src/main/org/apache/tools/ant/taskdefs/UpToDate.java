@@ -54,20 +54,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.MergingMapper;
-import java.io.File;
-import java.util.Enumeration;
-
-import java.util.Vector;
+import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
  * Sets the given property if the specified target has a timestamp

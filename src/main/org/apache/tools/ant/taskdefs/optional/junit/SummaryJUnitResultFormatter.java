@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.text.NumberFormat;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.NumberFormat;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-
 import org.apache.tools.ant.BuildException;
 
 /**

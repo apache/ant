@@ -54,15 +54,14 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.io.File;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Selector that filters files based on whether they contain a

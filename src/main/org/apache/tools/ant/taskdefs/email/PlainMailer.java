@@ -59,7 +59,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.mail.MailMessage;
 

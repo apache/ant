@@ -55,7 +55,6 @@ package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.AttributeInfo;
 

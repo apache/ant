@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.types.optional.depend;
 
-import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;

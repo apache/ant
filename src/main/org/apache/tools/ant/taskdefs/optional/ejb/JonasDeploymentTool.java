@@ -53,19 +53,16 @@
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.taskdefs.Java;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.Enumeration;
-
+import java.util.Hashtable;
 import javax.xml.parsers.SAXParser;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Path;
 
 /**
  * The deployment tool to add the jonas specific deployment descriptors to the

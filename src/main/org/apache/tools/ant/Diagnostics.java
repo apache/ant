@@ -55,13 +55,13 @@ package org.apache.tools.ant;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.PrintStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * A little diagnostic helper that output some information that may help

@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.util;
 
+import java.io.File;
+import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
-
-import java.io.File;
-import java.util.Vector;
 
 /**
  * Utility class that collects the functionality of the various

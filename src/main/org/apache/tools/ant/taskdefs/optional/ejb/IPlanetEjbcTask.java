@@ -56,15 +56,13 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 import java.io.IOException;
-
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
-
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.BuildException;
+import org.xml.sax.SAXException;
 
 /**
  * Compiles EJB stubs and skeletons for the iPlanet Application Server.

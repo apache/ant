@@ -55,45 +55,43 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 
-import java.util.Vector;
-import java.awt.Frame;
-import java.awt.Dialog;
-import java.awt.Panel;
-import java.awt.MenuBar;
-import java.awt.Menu;
-import java.awt.MenuItem;
-import java.awt.Label;
-import java.awt.TextField;
-import java.awt.TextArea;
-import java.awt.List;
-import java.awt.Choice;
+import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Choice;
+import java.awt.Dialog;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Label;
+import java.awt.List;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
+import java.awt.Panel;
 import java.awt.SystemColor;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
-import java.awt.event.TextListener;
-import java.awt.event.WindowListener;
+import java.awt.TextArea;
+import java.awt.TextField;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 import java.awt.event.WindowEvent;
-
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
-
+import java.util.Vector;
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a simple grafical user interface to provide the information needed

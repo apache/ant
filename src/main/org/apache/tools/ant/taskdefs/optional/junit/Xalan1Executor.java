@@ -54,10 +54,9 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.OutputStream;
-
-import org.apache.xalan.xslt.XSLTProcessorFactory;
-import org.apache.xalan.xslt.XSLTProcessor;
 import org.apache.xalan.xslt.XSLTInputSource;
+import org.apache.xalan.xslt.XSLTProcessor;
+import org.apache.xalan.xslt.XSLTProcessorFactory;
 import org.apache.xalan.xslt.XSLTResultTarget;
 
 /**

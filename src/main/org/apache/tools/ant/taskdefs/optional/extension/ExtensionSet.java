@@ -58,8 +58,8 @@ import java.util.Arrays;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
-import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Reference;
 
 /**
  * The Extension set lists a set of "Optional Packages" /

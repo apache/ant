@@ -55,7 +55,6 @@ package org.apache.tools.ant.filters.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;

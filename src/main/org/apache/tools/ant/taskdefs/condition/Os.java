@@ -54,9 +54,8 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildException;
-
 import java.util.Locale;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Condition that tests the OS type.

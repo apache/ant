@@ -54,11 +54,10 @@
 
 package org.apache.tools.ant.input;
 
-import org.apache.tools.ant.BuildException;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Reads input from a property file, the file name is read from the

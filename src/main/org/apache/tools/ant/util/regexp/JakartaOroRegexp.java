@@ -53,10 +53,10 @@
  */
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Substitution;
 import org.apache.oro.text.regex.Util;
+import org.apache.tools.ant.BuildException;
 
 
 

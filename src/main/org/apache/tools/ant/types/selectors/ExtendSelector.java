@@ -56,12 +56,10 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.Vector;
-
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.types.DataType;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 /**

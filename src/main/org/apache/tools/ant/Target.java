@@ -55,8 +55,8 @@
 package org.apache.tools.ant;
 
 import java.util.Enumeration;
-import java.util.Vector;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * Class to implement a target object with required parameters.

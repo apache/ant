@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Expands a file that has been compressed with the GZIP

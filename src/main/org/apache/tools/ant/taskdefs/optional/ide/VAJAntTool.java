@@ -57,7 +57,6 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 import com.ibm.ivj.util.base.Project;
 import com.ibm.ivj.util.base.ToolData;
-
 import org.apache.tools.ant.BuildException;
 
 

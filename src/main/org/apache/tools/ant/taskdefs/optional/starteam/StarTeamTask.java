@@ -53,13 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import java.util.StringTokenizer;
-
 import com.starbase.starteam.Server;
 import com.starbase.starteam.StarTeamFinder;
 import com.starbase.starteam.User;
 import com.starbase.starteam.View;
-
+import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 

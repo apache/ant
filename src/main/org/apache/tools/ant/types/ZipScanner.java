@@ -54,8 +54,8 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.DirectoryScanner;
 import java.io.File;
+import org.apache.tools.ant.DirectoryScanner;
 
 /**
  * ZipScanner accesses the pattern matching algorithm in DirectoryScanner,

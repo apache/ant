@@ -53,10 +53,10 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import java.io.IOException;
 import java.io.ByteArrayOutputStream;
-import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import java.io.IOException;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 
 /**
  * A dummy stream handler that just passes stuff to the parser.

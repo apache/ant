@@ -53,12 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
-import java.util.Vector;
 import java.io.File;
-
+import java.util.Vector;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Parser that will parse an output line of MAudit and return an

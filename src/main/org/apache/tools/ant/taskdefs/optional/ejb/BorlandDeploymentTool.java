@@ -56,26 +56,23 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.InputStream;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
+import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
-
-
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.taskdefs.ExecTask;
 
 
 /**

@@ -57,12 +57,10 @@ package org.apache.tools.ant.taskdefs.optional;
 import com.kvisco.xsl.XSLProcessor;
 import com.kvisco.xsl.XSLReader;
 import com.kvisco.xsl.XSLStylesheet;
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.apache.tools.ant.BuildException;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import org.apache.tools.ant.taskdefs.XSLTLiaison;
 
 /**
  * Concrete liaison for XSLP

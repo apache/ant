@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.util;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * A facade that makes logging nicers to use.

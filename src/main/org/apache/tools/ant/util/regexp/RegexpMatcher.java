@@ -54,8 +54,8 @@
 
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.tools.ant.BuildException;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Interface describing a regular expression matcher.

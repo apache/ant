@@ -53,9 +53,8 @@
  */
 package org.apache.tools.ant.util.optional;
 
-import org.apache.tools.ant.ExitException;
-
 import java.security.Permission;
+import org.apache.tools.ant.ExitException;
 
 /**
  * This is intended as a replacement for the default system manager.

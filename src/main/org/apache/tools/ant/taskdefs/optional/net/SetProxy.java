@@ -54,11 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.lang.reflect.*;
-import org.apache.tools.ant.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Properties;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**

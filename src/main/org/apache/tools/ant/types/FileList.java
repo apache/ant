@@ -54,15 +54,12 @@
 
 package org.apache.tools.ant.types;
 
+import java.io.File;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-
-import java.io.File;
-
-import java.util.StringTokenizer;
-
-import java.util.Stack;
-import java.util.Vector;
 
 /**
  * FileList represents an explicitly named list of files.  FileLists
@@ -70,12 +67,12 @@ import java.util.Vector;
  * whether they currently exist.  By contrast, FileSet operates as a
  * filter, only returning the name of a matched file if it currently
  * exists in the file system.
- * 
+ *
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Revision$ $Date$
  */
 public class FileList extends DataType {
-    
+
     private Vector filenames = new Vector();
     private File dir;
 
@@ -94,7 +91,7 @@ public class FileList extends DataType {
      * instance.
      *
      * <p>You must not set another attribute or nest elements inside
-     * this element if you make it a reference.</p> 
+     * this element if you make it a reference.</p>
      */
     public void setRefid(Reference r) throws BuildException {
         if ((dir != null) || (filenames.size() != 0)) {
@@ -149,10 +146,10 @@ public class FileList extends DataType {
         filenames.copyInto(result);
         return result;
     }
-    
+
     /**
      * Performs the check for circular references and returns the
-     * referenced FileList.  
+     * referenced FileList.
      */
     protected FileList getRef(Project p) {
         if (!isChecked()) {
@@ -160,7 +157,7 @@ public class FileList extends DataType {
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
-        
+
         Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof FileList)) {
             String msg = getRefid().getRefId() + " doesn\'t denote a filelist";

@@ -54,14 +54,6 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,6 +62,13 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.util.Hashtable;
 import java.util.Stack;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 /**
  * Generates a file in the current directory with

@@ -54,11 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-
-import java.io.IOException;
 
 /**
  * Condition to wait for a TCP/IP socket to have a listener. Its attribute(s) are:

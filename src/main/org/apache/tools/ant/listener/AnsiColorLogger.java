@@ -54,11 +54,10 @@
 package org.apache.tools.ant.listener;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Properties;
-
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 

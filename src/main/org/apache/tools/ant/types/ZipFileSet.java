@@ -54,11 +54,10 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-
+import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import java.util.Stack;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of

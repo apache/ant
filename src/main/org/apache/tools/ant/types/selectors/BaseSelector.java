@@ -55,9 +55,8 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import  org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.types.DataType;
 
 /**
  * A convenience base class that you can subclass Selectors from. It

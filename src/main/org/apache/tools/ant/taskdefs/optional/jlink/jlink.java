@@ -61,20 +61,20 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 
-import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
 import java.util.Enumeration;
 import java.util.Vector;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.CRC32;
 import java.util.zip.Deflater;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.zip.CRC32;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class jlink extends Object {
 

@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;

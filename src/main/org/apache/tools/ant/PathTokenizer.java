@@ -53,11 +53,10 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.taskdefs.condition.Os;
-
+import java.io.File;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import java.io.File;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * A Path tokenizer takes a path and returns the components that make up

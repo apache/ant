@@ -53,20 +53,18 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.Document;
+import java.util.Vector;
+import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Attr;
-
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.DOMException;
-
-import java.util.Vector;
 
 /**
  * Some utilities that might be useful when manipulating DOM trees.

@@ -58,11 +58,10 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
-
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Selector that chooses files based on their last modified date.

@@ -54,20 +54,18 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.util.Hashtable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-
+import java.util.Hashtable;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.xml.sax.AttributeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.AttributeList;
-
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 
 /**
  * Inner class used by EjbJar to facilitate the parsing of deployment

@@ -54,13 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.sound;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
-
 import java.io.File;
 import java.util.Random;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * Plays a sound file at the end of the build, according to whether the build failed or succeeded.

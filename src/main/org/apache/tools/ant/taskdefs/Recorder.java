@@ -53,18 +53,14 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
-import org.apache.tools.ant.Task;
-
-import java.io.PrintStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.io.PrintStream;
 import java.util.Hashtable;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Adds a listener to the current build process that records the

@@ -54,14 +54,8 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
-import  org.apache.tools.ant.types.Reference;
-
-import java.io.File;
 import java.util.Enumeration;
-import java.util.Stack;
-import java.util.Vector;
+import org.apache.tools.ant.Project;
 
 /**
  * This is the interface for selectors that can contain other selectors.

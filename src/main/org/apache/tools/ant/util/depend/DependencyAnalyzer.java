@@ -55,7 +55,6 @@ package org.apache.tools.ant.util.depend;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-
 import org.apache.tools.ant.types.Path;
 
 /**

@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * <p> A wrapper for the implementations of <code>JUnitResultFormatter</code>.

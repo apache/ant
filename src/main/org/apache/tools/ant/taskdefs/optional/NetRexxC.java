@@ -53,18 +53,17 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.io.BufferedReader;
-
-import java.util.Vector;
-import java.util.Hashtable;
+import java.io.StringWriter;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import netrexx.lang.Rexx;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;

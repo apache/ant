@@ -54,10 +54,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
-
-import java.io.IOException;
 
 /**
  * Logs standard output and error of a subprocess to the log system of ant.

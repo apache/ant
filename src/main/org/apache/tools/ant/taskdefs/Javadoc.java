@@ -54,16 +54,16 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.FilenameFilter;
-import java.net.URL;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.util.Locale;
-import java.util.Vector;
+import java.net.URL;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;

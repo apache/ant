@@ -54,11 +54,11 @@
 
 package org.apache.tools.ant.types;
 
+import java.io.File;
+import java.util.StringTokenizer;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.StringUtils;
-import java.io.File;
-import java.util.Vector;
-import java.util.StringTokenizer;
 
 
 /**

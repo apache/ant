@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant;
 
-import java.io.PrintWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 /**
  * Signals an error condition during a build

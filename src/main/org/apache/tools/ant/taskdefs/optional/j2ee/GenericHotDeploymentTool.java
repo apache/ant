@@ -55,8 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  *  A generic tool for J2EE server hot deployment.

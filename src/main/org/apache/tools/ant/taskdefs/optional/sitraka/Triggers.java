@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.util.Hashtable;
 import java.util.Vector;
-
 import org.apache.tools.ant.BuildException;
 
 /**

@@ -54,11 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-
-import java.io.File;
 
 /**
  * Performs CheckOut commands to Microsoft Visual SourceSafe.

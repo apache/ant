@@ -54,13 +54,12 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
-
+import java.io.PrintWriter;
 import java.util.Random;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Encapsulates a Jikes compiler, by directly executing an external

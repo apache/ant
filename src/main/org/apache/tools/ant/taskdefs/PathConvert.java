@@ -53,6 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.util.StringTokenizer;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -63,10 +66,6 @@ import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.io.File;
 
 /**
  * Converts path and classpath information to a specific target OS

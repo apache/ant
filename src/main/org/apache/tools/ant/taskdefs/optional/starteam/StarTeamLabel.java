@@ -53,15 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.starbase.starteam.Label;
 import com.starbase.starteam.View;
 import com.starbase.starteam.ViewConfiguration;
 import com.starbase.util.OLEDate;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.tools.ant.BuildException;
 
 /**

@@ -53,21 +53,20 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.FilterChain;
-import org.apache.tools.ant.filters.util.ChainReaderHelper;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.FilterChain;
 
 /**
  * Load a file's contents as Ant properties.

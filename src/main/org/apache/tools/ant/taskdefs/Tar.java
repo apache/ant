@@ -54,26 +54,26 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.FileInputStream;
 import java.io.BufferedOutputStream;
-import java.util.Vector;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.Vector;
+import java.util.zip.GZIPOutputStream;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.MergingMapper;
-import org.apache.tools.tar.TarOutputStream;
+import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.bzip2.CBZip2OutputStream;
 import org.apache.tools.tar.TarConstants;
 import org.apache.tools.tar.TarEntry;
-import java.util.zip.GZIPOutputStream;
-import org.apache.tools.bzip2.CBZip2OutputStream;
+import org.apache.tools.tar.TarOutputStream;
 
 
 

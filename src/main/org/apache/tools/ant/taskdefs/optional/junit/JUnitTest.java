@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.Project;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
+import org.apache.tools.ant.Project;
 
 /**
  * <p> Run a single JUnit test.

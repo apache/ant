@@ -55,8 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.OutputStream;
-import org.apache.tools.ant.BuildException;
 import junit.framework.TestListener;
+import org.apache.tools.ant.BuildException;
 
 /**
  * This Interface describes classes that format the results of a JUnit

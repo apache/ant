@@ -54,20 +54,18 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
-import java.util.Enumeration;
-import java.io.File;
-
-import com.ibm.ivj.util.base.Package;
-import com.ibm.ivj.util.base.IvjException;
-import com.ibm.ivj.util.base.Workspace;
-import com.ibm.ivj.util.base.ToolEnv;
 import com.ibm.ivj.util.base.ExportCodeSpec;
-import com.ibm.ivj.util.base.ProjectEdition;
 import com.ibm.ivj.util.base.ImportCodeSpec;
-import com.ibm.ivj.util.base.Type;
+import com.ibm.ivj.util.base.IvjException;
+import com.ibm.ivj.util.base.Package;
 import com.ibm.ivj.util.base.Project;
-
+import com.ibm.ivj.util.base.ProjectEdition;
+import com.ibm.ivj.util.base.ToolEnv;
+import com.ibm.ivj.util.base.Type;
+import com.ibm.ivj.util.base.Workspace;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 

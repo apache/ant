@@ -57,7 +57,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
-
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPoolEntry;

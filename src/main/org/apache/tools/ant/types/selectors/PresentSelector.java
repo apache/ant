@@ -55,12 +55,11 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-
-import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.util.IdentityMapper;
-import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.IdentityMapper;
 
 /**
  * Selector that filters files based on whether they appear in another

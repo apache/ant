@@ -54,29 +54,27 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.jar.JarEntry;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Enumeration;
 import java.util.Vector;
-
-import javax.xml.parsers.SAXParserFactory;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 import javax.xml.parsers.SAXParser;
-import org.xml.sax.InputSource;
-
+import javax.xml.parsers.SAXParserFactory;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.xml.sax.InputSource;
 
 /**
     The weblogic element is used to control the weblogic.ejbc compiler for

@@ -53,9 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
-import java.util.Vector;
 
 /**
  * This is a primitive task to execute a unit test in the org.apache.testlet framework.

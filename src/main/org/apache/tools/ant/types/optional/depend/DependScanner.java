@@ -54,13 +54,13 @@
 package org.apache.tools.ant.types.optional.depend;
 
 import java.io.File;
-import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.tools.ant.util.depend.DependencyAnalyzer;
-import org.apache.tools.ant.DirectoryScanner;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 
 
 /**

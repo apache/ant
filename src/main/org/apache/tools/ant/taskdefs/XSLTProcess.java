@@ -57,16 +57,16 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.TraXLiaison;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Processes a set of XML documents via XSLT. This is

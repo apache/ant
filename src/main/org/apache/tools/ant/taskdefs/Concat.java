@@ -53,17 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.BuildException;
-
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.FileList;
-
-import org.apache.tools.ant.util.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,9 +65,16 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
-
-import java.util.Vector; // 1.1
-import java.util.Enumeration; // 1.1
+import java.util.Enumeration;
+import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.StringUtils; // 1.1
 
 /**
  * This class contains the 'concat' task, used to concatenate a series

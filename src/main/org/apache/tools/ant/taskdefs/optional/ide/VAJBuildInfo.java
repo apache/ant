@@ -55,19 +55,18 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 
-import java.util.Vector;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
-import java.io.File;
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeListener;
-
+import java.util.Vector;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Target;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.BuildEvent;
 
 /**
  * This class wraps the Ant project information needed to

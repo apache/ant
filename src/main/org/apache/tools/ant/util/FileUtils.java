@@ -67,21 +67,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.net.URL;
-import java.net.MalformedURLException;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
-import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.FilterSetCollection;
 
 /**
  * This class also encapsulates methods which allow Files to be

@@ -56,19 +56,15 @@ package org.apache.tools.ant.taskdefs.optional.jsp;
 
 import java.io.File;
 import java.util.Date;
-
-import java.util.Vector;
 import java.util.Enumeration;
-
+import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFactory;
-
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 

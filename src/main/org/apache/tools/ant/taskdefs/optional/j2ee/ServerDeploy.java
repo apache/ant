@@ -55,9 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import java.io.File;
-import java.util.Vector;
 import java.util.Enumeration;
-
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 

@@ -54,12 +54,10 @@
 
 package org.apache.tools.ant.util;
 
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-
-
-import java.util.Vector;
 
 /**
  * Implementation of FileNameMapper that does regular expression

@@ -54,13 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.rmic;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-
-import org.apache.tools.ant.types.Commandline;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * The implementation of the rmic for Kaffe

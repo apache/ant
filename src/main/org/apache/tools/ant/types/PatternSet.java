@@ -54,18 +54,16 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.Project;
-
-import org.apache.tools.ant.BuildException;
-
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Named collection of include/exclude tags.

@@ -53,9 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
 import java.io.File;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
  * Converts a WSDL file or URL resource into a .NET language.

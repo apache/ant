@@ -54,20 +54,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
-
-import java.util.Hashtable;
-import java.util.Vector;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Executes a given command, supplying a set of files as arguments. 

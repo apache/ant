@@ -53,13 +53,12 @@
  */
 package org.apache.tools.ant.taskdefs.email;
 
-import org.apache.tools.ant.ProjectComponent;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Class representing an email message.

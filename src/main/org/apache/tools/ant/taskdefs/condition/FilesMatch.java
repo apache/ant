@@ -53,10 +53,10 @@
  */
  package org.apache.tools.ant.taskdefs.condition;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Compares two files for bitwise equality based on size and

@@ -54,40 +54,34 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.BufferedOutputStream;
-import java.io.BufferedInputStream;
-import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Vector;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
-import org.apache.tools.ant.taskdefs.XSLTLogger;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.XMLReader;
-
 import javax.xml.parsers.SAXParserFactory;
-
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.Source;
+import javax.xml.transform.SourceLocator;
+import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.Templates;
-
-import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.Source;
-import javax.xml.transform.URIResolver;
-import javax.xml.transform.SourceLocator;
-
-import javax.xml.transform.sax.SAXSource;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.taskdefs.XSLTLogger;
+import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 /**
  * Concrete liaison for XSLT processor implementing TraX. (ie JAXP 1.1)

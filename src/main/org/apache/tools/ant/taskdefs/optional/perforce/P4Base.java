@@ -60,7 +60,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.IOException;
-
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

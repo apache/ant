@@ -53,23 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.CollectionUtils;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -79,9 +62,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.CollectionUtils;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  *  Displays all the current properties in the build. The output can be sent to

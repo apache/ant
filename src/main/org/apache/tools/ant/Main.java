@@ -54,19 +54,18 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.input.DefaultInputHandler;
-import org.apache.tools.ant.input.InputHandler;
-import org.apache.tools.ant.util.JavaEnvUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.PrintStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
-import java.util.Properties;
+import java.io.PrintStream;
 import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Command line entry point into Ant. This class is entered via the

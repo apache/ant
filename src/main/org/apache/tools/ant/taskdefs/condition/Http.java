@@ -54,15 +54,13 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
-
-
-import java.net.MalformedURLException;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
-import java.net.URL;
 
 /**
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are:

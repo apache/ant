@@ -53,15 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.BuildException;
-
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-
 import java.lang.reflect.Field;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Command class that encapsulate specific behavior for each

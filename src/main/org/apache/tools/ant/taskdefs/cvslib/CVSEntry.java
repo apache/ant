@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import java.util.Vector;
 import java.util.Date;
+import java.util.Vector;
 
 /**
  * CVS Entry.

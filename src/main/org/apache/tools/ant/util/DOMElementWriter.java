@@ -55,15 +55,14 @@
 package org.apache.tools.ant.util;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-
+import java.io.Writer;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Attr;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**

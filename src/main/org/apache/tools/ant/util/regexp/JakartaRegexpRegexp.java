@@ -54,9 +54,9 @@
 package org.apache.tools.ant.util.regexp;
 
 
-import org.apache.tools.ant.BuildException;
-import org.apache.regexp.RE;
 import java.util.Vector;
+import org.apache.regexp.RE;
+import org.apache.tools.ant.BuildException;
 
 /***
  * Regular expression implementation using the Jakarta Regexp package

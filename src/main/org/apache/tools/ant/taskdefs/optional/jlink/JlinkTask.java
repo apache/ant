@@ -53,11 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
-import java.io.File;
 
 /**
  * This class defines objects that can link together various jar and

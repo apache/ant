@@ -57,14 +57,10 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 
 import java.io.IOException;
-
-
-
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.StringUtils;
 

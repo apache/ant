@@ -53,14 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskContainer;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.util.StringUtils;
-
-import java.util.Vector;
-import java.util.Enumeration;
 
 
 

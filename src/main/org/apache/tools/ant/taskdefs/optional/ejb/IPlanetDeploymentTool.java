@@ -57,12 +57,10 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
-
 import javax.xml.parsers.SAXParser;
-import org.xml.sax.SAXException;
-
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.xml.sax.SAXException;
 
 /**
  * This class is used to generate iPlanet Application Server (iAS) 6.0 stubs and

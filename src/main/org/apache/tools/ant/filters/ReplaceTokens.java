@@ -56,7 +56,6 @@ package org.apache.tools.ant.filters;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Hashtable;
-
 import org.apache.tools.ant.types.Parameter;
 
 /**

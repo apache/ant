@@ -54,19 +54,16 @@
 package org.apache.tools.ant.taskdefs.optional.jsp;
 
 //apache/ant imports
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.Project;
-
-
-//java imports
 import java.io.File;
-import java.util.Vector;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Precompiles JSP's using WebLogic's JSP compiler (weblogic.jspc).

@@ -54,7 +54,6 @@
 package org.apache.tools.ant.util;
 
 import java.lang.reflect.InvocationTargetException;
-
 import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 

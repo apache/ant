@@ -54,8 +54,8 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Class to hold a reference to another object in the project.

@@ -54,18 +54,16 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.PathTokenizer;
-import org.apache.tools.ant.util.JavaEnvUtils;
-
 import java.io.File;
-
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.PathTokenizer;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 
 

@@ -54,8 +54,7 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.io.File;
-import java.util.Enumeration;
+
 
 /**
  * This selector has one other selectors whose meaning it inverts. It

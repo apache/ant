@@ -54,10 +54,6 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.DynamicConfigurator;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Path;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -65,6 +61,8 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Helper class that collects the methods a task or nested element

@@ -54,10 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.splash;
 
-import java.io.InputStream;
-import java.io.DataInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import javax.swing.ImageIcon;

@@ -54,20 +54,19 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.StringUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.io.FileNotFoundException;
 
 /**
  * Executes a given command if the os platform is appropriate.

@@ -54,22 +54,21 @@
 
 package org.apache.tools.ant.taskdefs.optional.splash;
 
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildListener;
-
-import javax.swing.JWindow;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JWindow;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildListener;
 
 class SplashScreen extends JWindow implements ActionListener, BuildListener {
 

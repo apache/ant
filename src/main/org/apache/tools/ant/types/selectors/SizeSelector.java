@@ -55,10 +55,8 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Selector that filters files based on their size.

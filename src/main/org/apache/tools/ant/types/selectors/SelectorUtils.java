@@ -58,8 +58,6 @@ import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.apache.tools.ant.BuildException;
-
 /**
  * <p>This is a utility class used by selectors and DirectoryScanner. The
  * functionality more properly belongs just to selectors, but unfortunately

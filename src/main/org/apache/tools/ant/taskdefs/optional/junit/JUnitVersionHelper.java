@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.lang.reflect.Method;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 

@@ -54,12 +54,8 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.io.File;
 import java.util.Enumeration;
-
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
-import  org.apache.tools.ant.types.Reference;
 
 /**
  * This selector just holds one other selector and forwards all

@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.util;
 
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Vector;
 
 /**

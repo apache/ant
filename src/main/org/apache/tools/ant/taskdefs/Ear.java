@@ -53,13 +53,12 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Creates a EAR archive. Based on WAR task

@@ -56,24 +56,20 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 // Standard java imports
 import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-// XML imports
+import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
-
-// Apache/Ant imports
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
+import org.xml.sax.SAXException;
 
 /**
  * Provides automated EJB JAR file creation.

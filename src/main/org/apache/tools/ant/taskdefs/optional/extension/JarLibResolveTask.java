@@ -59,9 +59,9 @@ import java.util.jar.Manifest;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.optional.extension.resolvers.AntResolver;
 import org.apache.tools.ant.taskdefs.optional.extension.resolvers.LocationResolver;
 import org.apache.tools.ant.taskdefs.optional.extension.resolvers.URLResolver;
-import org.apache.tools.ant.taskdefs.optional.extension.resolvers.AntResolver;
 
 /**
  * Tries to locate a JAR to satisfy an extension and place

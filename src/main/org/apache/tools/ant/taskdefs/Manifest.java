@@ -54,9 +54,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +62,9 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.CollectionUtils;
 

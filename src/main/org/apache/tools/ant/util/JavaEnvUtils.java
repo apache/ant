@@ -53,9 +53,9 @@
  */
 package org.apache.tools.ant.util;
 
-import org.apache.tools.ant.taskdefs.condition.Os;
 import java.io.File;
 import java.util.Vector;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * A set of helper methods related to locating executables or checking

@@ -54,15 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-
-
-
-import java.lang.reflect.Method;
 
 /**
  * The implementation of the Java compiler for KJC.

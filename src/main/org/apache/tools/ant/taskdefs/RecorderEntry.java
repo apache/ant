@@ -53,13 +53,12 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.PrintStream;
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.util.StringUtils;
-
-import java.io.PrintStream;
 
 /**
  * This is a class that represents a recorder. This is the listener to the

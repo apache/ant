@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.condition.ConditionBase;
-import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
 import java.util.Hashtable;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Wait for an external event to occur.

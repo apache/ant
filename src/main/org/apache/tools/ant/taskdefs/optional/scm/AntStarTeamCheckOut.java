@@ -53,8 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.scm;
 
-import java.util.StringTokenizer;
-
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Item;
 import com.starbase.starteam.Property;
@@ -63,7 +61,7 @@ import com.starbase.starteam.StarTeamFinder;
 import com.starbase.starteam.Type;
 import com.starbase.starteam.View;
 import com.starbase.util.Platform;
-
+import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;

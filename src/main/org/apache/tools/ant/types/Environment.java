@@ -54,8 +54,8 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Wrapper for environment variables.

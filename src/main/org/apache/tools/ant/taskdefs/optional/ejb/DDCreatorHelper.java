@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
 import javax.ejb.deployment.DeploymentDescriptor;
 
 /**

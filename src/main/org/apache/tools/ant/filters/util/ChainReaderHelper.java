@@ -53,6 +53,12 @@
  */
 package org.apache.tools.ant.filters.util;
 
+import java.io.FilterReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -60,17 +66,10 @@ import org.apache.tools.ant.filters.BaseFilterReader;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterChain;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.io.FilterReader;
-import java.io.Reader;
-import java.io.IOException;
-import java.util.Vector;
 
 /**
  * Process a FilterReader chain.

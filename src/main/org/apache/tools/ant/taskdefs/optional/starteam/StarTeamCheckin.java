@@ -53,18 +53,16 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
 import com.starbase.starteam.File;
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Item;
 import com.starbase.starteam.Status;
 import com.starbase.starteam.View;
 import com.starbase.starteam.ViewConfiguration;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 

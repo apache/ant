@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 
 /**

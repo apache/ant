@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 
 import java.io.File;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.PatternSet;
 

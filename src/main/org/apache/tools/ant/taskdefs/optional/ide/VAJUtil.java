@@ -54,8 +54,8 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
 import java.io.File;
+import java.util.Vector;
 
 /**
  * Helper interface for VAJ tasks. Encapsulates

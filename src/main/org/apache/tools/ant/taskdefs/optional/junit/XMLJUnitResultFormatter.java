@@ -54,27 +54,22 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.io.OutputStream;
-import java.io.Writer;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
-
-
-
-
-import java.util.Properties;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import junit.framework.AssertionFailedError;
+import junit.framework.Test;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.DOMElementWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.DOMElementWriter;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.Test;
 
 
 /**

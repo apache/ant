@@ -57,10 +57,8 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
-import java.util.StringTokenizer;
-
-import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
 

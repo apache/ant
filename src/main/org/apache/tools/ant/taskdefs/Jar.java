@@ -54,24 +54,23 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
-
-import java.io.IOException;
-import java.io.File;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.FileReader;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-import java.io.ByteArrayInputStream;
-import java.io.OutputStreamWriter;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
 
 
 /**

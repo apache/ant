@@ -53,10 +53,10 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
 
-import java.io.IOException;
 import java.io.DataInput;
-import java.io.InputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Reads just enough of a class file to determine the class' full name.

@@ -55,7 +55,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 

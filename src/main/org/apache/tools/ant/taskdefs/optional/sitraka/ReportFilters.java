@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 import java.util.Vector;
-
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 

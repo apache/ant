@@ -55,21 +55,20 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Properties;
-import java.util.Enumeration;
-import java.util.Stack;
+import java.io.InputStream;
 import java.lang.reflect.Modifier;
-
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Stack;
+import java.util.Vector;
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.input.DefaultInputHandler;
-import org.apache.tools.ant.input.InputHandler;
 
 /**
  * Central representation of an Ant project. This class defines an

@@ -60,8 +60,6 @@ package org.apache.tools.ant.types;
 
 // java util classes
 import java.util.Enumeration;
-
-
 import java.util.Vector;
 
 // ant classes

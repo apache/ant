@@ -59,10 +59,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
-
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-
 import org.apache.tools.ant.BuildException;
 
 /**

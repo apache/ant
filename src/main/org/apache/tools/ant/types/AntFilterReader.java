@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
 
 /**
  * An AntFileReader is a wrapper class that encloses the classname

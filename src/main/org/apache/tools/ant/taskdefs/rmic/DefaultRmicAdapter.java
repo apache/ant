@@ -54,17 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.rmic;
 
+import java.io.File;
+import java.util.Random;
+import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.JavaEnvUtils;
-
-import java.io.File;
-import java.util.Random;
-import java.util.Vector;
 
 /**
  * This is the default implementation for the RmicAdapter interface.

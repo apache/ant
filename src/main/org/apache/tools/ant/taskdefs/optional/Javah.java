@@ -54,21 +54,17 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
-
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.Commandline;
-
 import org.apache.tools.ant.util.JavaEnvUtils;
-
-import java.io.File;
-import java.util.Vector;
-import java.util.StringTokenizer;
-import java.util.Enumeration;
 
 /**
  * Generates JNI header files using javah.

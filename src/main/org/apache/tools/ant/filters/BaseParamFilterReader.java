@@ -54,7 +54,6 @@
 package org.apache.tools.ant.filters;
 
 import java.io.Reader;
-
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 

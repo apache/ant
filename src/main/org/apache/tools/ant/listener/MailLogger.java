@@ -53,12 +53,6 @@
  */
 package org.apache.tools.ant.listener;
 
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
-import org.apache.tools.mail.MailMessage;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +61,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.mail.MailMessage;
 
 /**
  *  Buffers log messages from DefaultLogger, and sends an e-mail with the

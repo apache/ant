@@ -54,11 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-
-import java.io.IOException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
+import org.apache.tools.ant.BuildException;
 
 /**
  * Compresses a file with the GZIP algorithm. Normally used to compress

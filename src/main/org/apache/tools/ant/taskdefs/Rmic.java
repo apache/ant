@@ -54,6 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
+import java.rmi.Remote;
+import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -67,11 +71,6 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.facade.FacadeTaskHelper;
-
-import java.io.File;
-import java.io.IOException;
-import java.rmi.Remote;
-import java.util.Vector;
 
 /**
  * Runs the rmic compiler against classes.</p>

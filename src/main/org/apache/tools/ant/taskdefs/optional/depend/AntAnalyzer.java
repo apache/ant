@@ -55,14 +55,14 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tools.ant.util.depend.AbstractAnalyzer;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import org.apache.tools.ant.util.depend.AbstractAnalyzer;
 
 /**
  * An analyzer which uses the depend task's bytecode classes to analyze

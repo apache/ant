@@ -56,10 +56,8 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.util.StringTokenizer;
-
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Parameter;
 
 /**
  * Selector that filters files based on the how deep in the directory

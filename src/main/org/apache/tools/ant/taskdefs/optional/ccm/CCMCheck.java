@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.File;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;

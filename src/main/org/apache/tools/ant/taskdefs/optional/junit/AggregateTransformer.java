@@ -53,24 +53,18 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
 import java.io.File;
-import java.io.InputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.FileNotFoundException;
-
-
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
 
 /**
