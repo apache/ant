@@ -1,0 +1,26 @@
+This library provides Ant task(s) as wrapper(s) over the svn command
+line utility.
+
+Alternative approaches like JNI or even a native Java SVN client exist
+and have been taken by other teams.  In particular we know (this list
+is certainly incomplete):
+
+* <http://subclipse.tigris.org/svnant.html> using javahl JNI bindings
+  of subversion
+
+* <http://tmate.org/svn/ant.html> using a pure Java SVN client
+
+each of which provides Ant tasks.
+
+The task(s) of this library only provides very rudimentary support for
+SVN, matching what the traditional Ant task(s) vor CVS could do.
+
+If you need more than what this libary provides, we encourage you to
+check out the existing alternatives.
+
+===============
+
+The first cut will mimic the implementation of the <cvs> task, it will
+even be split into an abstract task and a very thin real task - it may
+be possible to base tasks similar to the optional CVS tasks on the
+abstract task as well.
