@@ -41,6 +41,11 @@ Other changes:
   a granularity of two seconds).  The default remains to round up.
   Bugzilla Report 17934.
 
+* Nested file mappers and a container mapper implementation have been
+  introduced.  Additionally, the <mapper> element now accepts "defined"
+  nested FileNameMapper implementations directly, allowing a usage
+  comparable to those of <condition>, <filter>, and <selector>.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =============================================
 

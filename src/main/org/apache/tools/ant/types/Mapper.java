@@ -23,6 +23,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.ContainerMapper;
 
 /**
  * Element to define a FileNameMapper.
@@ -30,7 +31,9 @@ import org.apache.tools.ant.util.FileNameMapper;
  */
 public class Mapper extends DataType implements Cloneable {
 
-    protected MapperType type = null;
+    protected MapperType      type = null;
+    private   ContainerMapper container = null;
+    private   Boolean         chained = null;
 
     public Mapper(Project p) {
         setProject(p);
@@ -48,6 +51,34 @@ public class Mapper extends DataType implements Cloneable {
 
     protected String classname = null;
 
+    /**
+     * Add a nested filename mapper
+     * @param fileNameMapper the mapper to add
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        if (container == null) {
+            container = new ContainerMapper();
+        }
+        container.add(fileNameMapper);
+    }
+
+    /**
+     * Add a Mapper
+     * @param mapper the mapper to add
+     */
+    public void addConfiguredMapper(Mapper mapper) {
+        add(mapper.getImplementation());
+    }
+                    
+    /**
+     * Set the chained attribute of the nested mapper container
+     * @param chained the setting for the chained attribute of the
+     *        nested mapper container.
+     */
+    public void setChained(Boolean chained) {
+        this.chained = chained;
+    }
+    
     /**
      * Set the class name of the FileNameMapper to use.
      */
@@ -143,12 +174,28 @@ public class Mapper extends DataType implements Cloneable {
             return getRef().getImplementation();
         }
 
-        if (type == null && classname == null) {
-            throw new BuildException("one of the attributes type or classname is required");
+        if (type == null && classname == null && container == null) {
+            throw new BuildException(
+                "nested mapper or "
+                + "one of the attributes type or classname is required");
+        }
+
+        if (container != null) {
+            if (type != null || classname != null ||
+                to != null || from != null) {
+                throw new BuildException(
+                    "for nested mappers, type, classname, to and from" +
+                    " attributes are not allowed");
+            }
+            if (chained != null) {
+                container.setChained(chained.booleanValue());
+            }
+            return container;
         }
 
         if (type != null && classname != null) {
-            throw new BuildException("must not specify both type and classname attribute");
+            throw new BuildException(
+                "must not specify both type and classname attribute");
         }
 
         try {
