@@ -336,7 +336,7 @@ public class JUnitTask extends Task
      */
     public BatchTest createBatchTest()
     {
-        BatchTest test = new BatchTest( getProject() );
+        BatchTest test = new BatchTest();
         batchTests.add( test );
         return test;
     }
@@ -384,7 +384,7 @@ public class JUnitTask extends Task
         while( list.hasNext() )
         {
             JUnitTest test = (JUnitTest)list.next();
-            if( test.shouldRun( getProject() ) )
+            if( test.shouldRun( null ) )
             {
                 execute( test );
             }

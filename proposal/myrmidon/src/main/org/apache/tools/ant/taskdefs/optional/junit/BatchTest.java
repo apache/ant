@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
@@ -38,21 +38,6 @@ public final class BatchTest extends BaseTest
      * the list of filesets containing the testcase filename rules
      */
     private ArrayList filesets = new ArrayList();
-
-    /**
-     * the reference to the project
-     */
-    private Project project;
-
-    /**
-     * create a new batchtest instance
-     *
-     * @param project the project it depends on.
-     */
-    public BatchTest( Project project )
-    {
-        this.project = project;
-    }
 
     /**
      * Convenient method to convert a pathname without extension to a fully
