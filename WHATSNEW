@@ -5,6 +5,9 @@ Changes from Ant 1.5 to current CVS version
 Fixed bugs:
 -----------
 
+* The ExpandProperties filter threw NPEs when defined using
+  the <filterreader> format.
+
 * The sh wrapper script didn't work under Cygwin if ANT_HOME wasn't
   set with a Unix style filename.
 
