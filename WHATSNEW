@@ -342,6 +342,9 @@ Other changes:
 
   For more details see docs/manual/inputhandler.html.
 
+* <patch> has a new attribute that selects the directory in which to
+  run the command.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -73,6 +73,7 @@ import java.io.IOException;
 public class Patch extends Task {
 
     private File originalFile;
+    private File directory;
     private boolean havePatchfile = false;
     private Commandline cmd = new Commandline();
 
@@ -145,12 +146,21 @@ public class Patch extends Task {
         }
     }
 
+    /**
+     * The directory to run the patch command in, defaults to the
+     * project's base directory.
+     *
+     * @since Ant 1.5
+     */
+    public void setDir(File directory) throws BuildException {
+        this.directory = directory;
+    }
+
     public void execute() throws BuildException {
         if (!havePatchfile) {
             throw new BuildException("patchfile argument is required", 
                                      location);
         } 
-        
         Commandline toExecute = (Commandline) cmd.clone();
         toExecute.setExecutable("patch");
 
@@ -161,7 +171,21 @@ public class Patch extends Task {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
                                   null);
-        exe.setCommandline(toExecute.getCommandline());
+
+        if (directory != null) {
+            if (directory.exists() && directory.isDirectory()) {
+                exe.setWorkingDirectory(directory);
+            } else if (!directory.isDirectory()) {
+                throw new BuildException(directory + " is not a directory.",
+                                         location);
+            } else {
+                throw new BuildException("directory " + directory
+                                         + " doesn\'t exist", location);
+            }
+        } else {
+            exe.setWorkingDirectory(getProject().getBaseDir());
+        }
+
         try {
             exe.execute();
         } catch (IOException e) {
