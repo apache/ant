@@ -92,7 +92,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class XSLTProcess extends MatchingTask {
+
+public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     private File destDir = null;
 
@@ -143,6 +144,12 @@ public class XSLTProcess extends MatchingTask {
         }
 
         liaison = getLiaison();
+
+        // check if liaison wants to log errors using us as logger
+        if(liaison instanceof XSLTLoggerAware) {
+            ((XSLTLoggerAware)liaison).setLogger(this);
+        }
+
         log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
         File stylesheet = project.resolveFile(xslFile);

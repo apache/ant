@@ -60,11 +60,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
+import org.apache.tools.ant.taskdefs.XSLTLogger;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.Templates;
-
+import javax.xml.transform.Source;
+import javax.xml.transform.ErrorListener;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.OutputKeys;
@@ -76,7 +80,7 @@ import javax.xml.transform.OutputKeys;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class TraXLiaison implements XSLTLiaison {
+public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware {
 
     /** The trax TransformerFactory */
     private TransformerFactory tfactory = null;
@@ -90,9 +94,13 @@ public class TraXLiaison implements XSLTLiaison {
     /** transformer */
     private Transformer transformer = null;
 
+    private XSLTLogger logger;
+
     public TraXLiaison() throws Exception {
         tfactory = TransformerFactory.newInstance();
+        tfactory.setErrorListener(this);
     }
+
 //------------------- IMPORTANT
     // 1) Don't use the StreamSource(File) ctor. It won't work with
     // xalan prior to 2.2 because of systemid bugs.
@@ -111,6 +119,7 @@ public class TraXLiaison implements XSLTLiaison {
         src.setSystemId(getSystemId(stylesheet));
         templates = tfactory.newTemplates(src);
         transformer = templates.newTransformer();
+        transformer.setErrorListener(this);
     }
 
     public void transform(File infile, File outfile) throws Exception {
@@ -165,4 +174,47 @@ public class TraXLiaison implements XSLTLiaison {
     public void setOutputtype(String type) throws Exception {
         transformer.setOutputProperty(OutputKeys.METHOD, type);
     }
+
+    public void setLogger(XSLTLogger l) {
+        logger = l;
+    }
+    
+    public void error(TransformerException e)  {
+        logError(e, "Error");
+    }
+    
+    public void fatalError(TransformerException e)  {
+        logError(e, "Fatal Error");
+    }
+    
+    public void warning(TransformerException e)  {
+        logError(e, "Warning");
+    }
+    
+    private void logError(TransformerException e, String type) {
+        StringBuffer msg = new StringBuffer();
+        if(e.getLocator() != null) {
+            if(e.getLocator().getSystemId() != null) {
+                String url = e.getLocator().getSystemId();
+                if(url.startsWith("file:///")) url = url.substring(8);
+                msg.append(url);
+            } else {
+                msg.append("Unknown file");
+            }
+            if(e.getLocator().getLineNumber() != -1) {                          
+                msg.append(":"+e.getLocator().getLineNumber());
+                if(e.getLocator().getColumnNumber() != -1) {
+                    msg.append(":"+e.getLocator().getColumnNumber());
+                }
+            }
+        }
+        msg.append(": "+type+"! ");
+        msg.append(e.getMessage());
+        if(e.getCause() != null) {
+            msg.append(" Cause: "+e.getCause());
+        }
+
+        logger.log(msg.toString());
+    }
+
 } //-- TraXLiaison
