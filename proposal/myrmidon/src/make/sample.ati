@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 
+<?xsl-param name="foo" value="bar"?>
+<?xsl-stylesheet href="template-simple.xsl"?>
+
+<!-- next is ignored -->
+<?xsl-params-old location="foo.properties"?>
 <!--
 ==============================================================================
 
@@ -14,8 +19,12 @@ Legal:
 ==============================================================================
 -->
 
-<project name="MySample" default="main" basedir=".">
+<project name="MySample" default="main" basedir="."
+    xmlns:ant="http://jakarta.apache.org/2001/Ant/ant"
+    xmlns:doc="http://jakarta.apache.org/2001/Ant/doc"
+    xmlns:blee="http://jakarta.apache.org/2001/Ant/blee" >
 
+  <?xsl-params ignored="true"?>
   <projectref name="prim" location="primitive-tests.ant" />
   <import library="core.atl" />
 

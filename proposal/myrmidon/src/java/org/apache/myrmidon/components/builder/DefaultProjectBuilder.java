@@ -7,6 +7,7 @@
  */
 package org.apache.myrmidon.components.builder;
 
+import java.net.URL;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,8 +62,8 @@ public class DefaultProjectBuilder
     private Project build( final File file, final HashMap projects )
         throws Exception
     {
-        final String systemID = file.toURL().toString();
-        final Project result = (Project)projects.get( systemID );
+        final URL systemID = file.toURL();
+        final Project result = (Project)projects.get( systemID.toString() );
         if( null != result )
         {
             return result;
@@ -73,9 +74,10 @@ public class DefaultProjectBuilder
         process( systemID, handler );
 
         final Configuration configuration = handler.getConfiguration();
+
         final DefaultProject project = buildProject( file, configuration );
 
-        projects.put( systemID, project );
+        projects.put( systemID.toString(), project );
 
         //build using all top-level attributes
         buildTopLevelProject( project, configuration, projects );
@@ -83,7 +85,7 @@ public class DefaultProjectBuilder
         return project;
     }
 
-    protected void process( final String systemID, 
+    protected void process( final URL systemID, 
                             final SAXConfigurationHandler handler )
         throws Exception
     {
@@ -96,19 +98,7 @@ public class DefaultProjectBuilder
 
         parser.setContentHandler( handler );
         parser.setErrorHandler( handler );
-        parser.parse( systemID );
-/*
-        // Create a transform factory instance.
-        final TransformerFactory factory = TransformerFactory.newInstance();
-    
-        // Create a transformer for the stylesheet.
-        final Transformer transformer = factory.newTransformer( new StreamSource(xslID) );
-
-        final Result result = new SAXResult( handler );
-
-        // Transform the source XML to System.out.
-        transformer.transform( new StreamSource(sourceID), result );
-*/
+        parser.parse( systemID.toString() );
     }
 
     /**

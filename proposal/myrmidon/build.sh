@@ -1,8 +1,8 @@
 #!/bin/sh
 
 echo
-echo "Ant Build System"
-echo "----------------"
+echo "Myrmidon Build System"
+echo "---------------------"
 
 export MYRMIDON_HOME=tools
 

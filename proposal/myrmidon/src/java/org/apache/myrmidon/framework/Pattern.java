@@ -80,7 +80,9 @@ public class Pattern
 
     public String toString()
     {
-        return "Pattern['" + m_name + "'," + m_condition + "]" ;
+        String result = "Pattern['" + m_name + "',";
+        if( null != m_condition ) result = result + m_condition;
+        return result + "]";
     }
 
     /**

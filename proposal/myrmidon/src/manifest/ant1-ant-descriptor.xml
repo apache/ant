@@ -1,9 +1,5 @@
 <ant-lib>
-
   <types>
-
     <task name="ant1-tasklib" classname="org.apache.myrmidon.libs.ant1.Ant1Tasklib" />
-
   </types>
-
 </ant-lib>

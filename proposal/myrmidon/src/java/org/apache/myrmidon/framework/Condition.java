@@ -76,6 +76,18 @@ public class Condition
 
         return result;
     }
+
+    public String toString()
+    {
+        if( isIfCondition() )
+        {
+            return "if='" + getCondition() + "'";
+        }
+        else
+        {
+            return "unless='" + getCondition() + "'";
+        }
+    }
 }
 
 
