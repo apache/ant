@@ -87,7 +87,7 @@ Fixed bugs:
 * <uptodate> now works when using attributes (i.e. not filesets) and pointing 
   to the same file
 
-* Java task (and output system) now stores output which doos not end
+* Java task (and output system) now stores output which does not end
   with a line feed.
 
 * splash screen wouldn't disappear when build was finished.

@@ -214,4 +214,9 @@ public class JarTest extends BuildFileTest {
                      "testRecreateZipfilesetWithUpdateNewerFile");
     }
 
+    public void testCreateWithEmptyFileset() {
+        executeTarget("testCreateWithEmptyFilesetSetUp");
+        executeTarget("testCreateWithEmptyFileset");
+        executeTarget("testCreateWithEmptyFileset");
+    }
 }
