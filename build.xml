@@ -310,7 +310,6 @@
       <fileset dir="${script.dir}/" />
     </copy>
 
-    <!--
     <fixcrlf srcdir="${dist.bin}" eol="crlf" includes="*.bat" />
     <fixcrlf srcdir="${dist.bin}" eol="lf">
       <include name="ant" />
@@ -327,8 +326,6 @@
          <include name="**/runant.pl" />
        </fileset>
     </chmod>
-    --> 
-    
   </target>
 
  <!--
