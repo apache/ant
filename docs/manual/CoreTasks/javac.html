@@ -13,6 +13,10 @@
 <p>The source and destination directory will be recursively scanned for Java
 source files to compile. Only Java files that have no corresponding class file
 or where the class file is older than the java file will be compiled.</p>
+<p>Note: Ant uses only the names of the source and class files to find
+the classes that need a rebuild. It will not scan the source and therefor
+will have no knowledge about nested classes, classes that are named different
+from the source file and so on.</p>
 <p>The directory structure of the source tree should follow the package
 hierarchy.</p>
 <p>It is possible to refine the set of files that are being compiled/copied.
