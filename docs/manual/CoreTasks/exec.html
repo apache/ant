@@ -20,20 +20,27 @@ Windows executable and is not aware of Cygwin conventions.
 </p>
  
 <h4>OpenVMS Users</h4>
-
 <p>The command specified using <code>executable</code> and
 <code>&lt;arg&gt;</code> elements is executed exactly as specified
-inside a temporary DCL script.  This means that paths have to be
-written in VMS style.  It is also required that the logical
-<code>JAVA$FORK_SUPPORT_CHDIR</code> is set to <code>TRUE</code> (see
-the <i>JDK Release Notes</i>).</p>
- 
+inside a temporary DCL script.  This has some implications:
+<ul>
+<li>paths have to be written in VMS style</li>
+<li>if your <code>executable</code> points to a DCL script remember to
+prefix it with an <code>@</code>-sign
+(e.g. <code>executable="@[FOO]BAR.COM"</code>), just as you would in a
+DCL script</li>
+</ul>
+For <code>&lt;exec&gt;</code> to work in an environment with a Java VM
+older than version 1.4.1-2 it is also <i>required</i> that the logical
+<code>JAVA$FORK_SUPPORT_CHDIR</code> is set to <code>TRUE</code> in
+the job table (see the <i>JDK Release Notes</i>).</p>
+
 <p>Please note that the Java VM provided by HP doesn't follow OpenVMS'
 conventions of exit codes.  If you run a Java VM with this task, the
 task may falsely claim that an error occured (or silently ignore an
 error).  Don't use this task to run <code>JAVA.EXE</code>, use a
 <code>&lt;java&gt;</code> task with the <code>fork</code> attribute
-set ti <code>true</code> instead as this task will follow the VM's
+set to <code>true</code> instead as this task will follow the VM's
 interpretation of exit codes.</p>
 
 <h3>Parameters</h3>
