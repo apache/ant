@@ -273,15 +273,16 @@ public class UnknownElement extends Task {
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
             UnknownElement child = (UnknownElement) children.elementAt(i);
             Object realChild = null;
-
-            if (handleChild(ih, parent, child, 
-                            child.getTag().toLowerCase(Locale.US), 
-                            childWrapper)) {
-            } else if (!(parent instanceof TaskContainer)) {
-                ih.throwNotSupported(getProject(), parent, child.getTag());
-            } else {
-                if (!handleChild(ih, parent, child, child.getTag(), 
-                                 childWrapper)) {
+            
+            // backwards compatibility - element names of nested
+            // elements have been all lower-case in Ant, except for
+            // TaskContainers
+            if (!handleChild(ih, parent, child, 
+                             child.getTag().toLowerCase(Locale.US), 
+                             childWrapper)) {
+                if (!(parent instanceof TaskContainer)) {
+                    ih.throwNotSupported(getProject(), parent, child.getTag());
+                } else {
                     // a task container - anything could happen - just add the 
                     // child to the container
                     TaskContainer container = (TaskContainer) parent;

@@ -348,26 +348,16 @@ public class RuntimeConfigurable implements Serializable {
                 childTask.setRuntimeConfigurableWrapper(child);
             }
 
-            if (configureChildren) {
-                /*
-                 * backwards compatibility - element names of nested
-                 * elements have been all lower-case in Ant, except for
-                 * TaskContainers
-                 */
-
-                /* XXX
-                 *
-                 * For some reason we don't throw an exception here if
-                 * we find the nested element is unsupported, probably
-                 * because this will happen somewhere else.
-                 */
-                String tag = child.getElementTag();
-                if (ih.supportsNestedElement(tag.toLowerCase(Locale.US))) {
-                    tag = tag.toLowerCase(Locale.US);
-                } else if (!ih.supportsNestedElement(tag)) {
-                    continue;
-                }
-                
+            /*
+             * backwards compatibility - element names of nested
+             * elements have been all lower-case in Ant, except for
+             * tasks in TaskContainers.
+             *
+             * For TaskContainers, we simply skip configuration here.
+             */
+            String tag = child.getElementTag().toLowerCase(Locale.US);
+            if (configureChildren
+                && ih.supportsNestedElement(tag)) {
                 child.maybeConfigure(p);
                 ProjectHelper.storeChild(p, target, child.wrappedObject,
                                          tag);
