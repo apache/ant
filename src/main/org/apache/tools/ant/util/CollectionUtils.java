@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.util;
 
+import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -60,6 +61,7 @@ import java.util.Vector;
  * A set of helper methods related to collection manipulation.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:stein@xtramind.com">Ingmar Stein</a>
  *
  * @since Ant 1.5
  */
@@ -92,5 +94,17 @@ public class CollectionUtils {
         }
         
         return true;
+    }
+
+    /**
+     * JDK 1.1 does not know the putAll method for hash tables.
+     *
+     * @since Ant 1.6
+     */
+    public static void putAll(Dictionary m1, Dictionary m2) {
+        for(Enumeration it = m2.keys(); it.hasMoreElements();) {
+            Object key = it.nextElement();
+            m1.put(key, m2.get(key));
+        }
     }
 }

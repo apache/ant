@@ -56,13 +56,20 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.BuildFileTest;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.File;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.util.Properties;
 
 /**
  * Tests the EchoProperties task.
  *
  * @author    Matt Albrecht <a href="mailto:groboclown@users.sourceforge.net">groboclown@users.sourceforge.net</a>
+ * @author    Ingmar Stein <a href="mailto:stein@xtramind.com">stein@xtramind.com</a>
  * @created   17-Jan-2002
  * @since     Ant 1.5
  */
@@ -70,64 +77,119 @@ public class EchoPropertiesTest extends BuildFileTest {
 
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
     private static final String GOOD_OUTFILE = "test.properties";
+    private static final String GOOD_OUTFILE_XML = "test.xml";
     private static final String PREFIX_OUTFILE = "test-prefix.properties";
-    private static final String BAD_OUTFILE = ".";
+    private static final String TEST_VALUE = "isSet";
 
     public EchoPropertiesTest(String name) {
         super(name);
     }
 
+
     public void setUp() {
         configureProject(TASKDEFS_DIR + "echoproperties.xml");
-        project.setProperty( "test.property", "is set" );
+        project.setProperty( "test.property", TEST_VALUE );
     }
+
 
     public void tearDown() {
         executeTarget("cleanup");
     }
-    
-    
+
+
     public void testEchoToLog() {
-        executeTarget( "testEchoToLog" );
+        expectLogContaining("testEchoToLog", "test.property="+TEST_VALUE);
+    }
+
+
+    public void testEchoToLogXml() {
+        executeTarget( "testEchoToLogXml" );
+        String out = getLog();
+        assertTrue(
+            "Did not output testEchoToLogXml.",
+            out.indexOf( "<property name=\"test.property\" value=\""+TEST_VALUE+"\"></property>" ) >= 0 );
+    }
+
+
+    public void testReadAndEchoToLog() {
+        executeTarget( "testReadAndEchoToLog" );
         String out = getLog();
         assertTrue(
             "Did not output testEchoToLog.",
-            out.indexOf( "test.property=is set" ) >= 0 );
+            out.indexOf( "test.infile=true" ) >= 0 );
     }
-    
-    
+
+
+    public void testReadBadFile() {
+        expectBuildExceptionContaining( "testReadBadFile",
+            "srcfile is a directory", "srcfile is a directory!" );
+    }
+
+
+    public void testReadBadFileFail() {
+        expectBuildExceptionContaining( "testReadBadFile",
+            "srcfile is a directory", "srcfile is a directory!" );
+    }
+
+
+    public void testReadBadFileNoFail() {
+        expectLog( "testReadBadFileNoFail", "srcfile is a directory!" );
+    }
+
+
     public void testEchoToBadFile() {
         expectBuildExceptionContaining( "testEchoToBadFile",
-            "outfile is not writeable",
-            "Destfile "+toAbsolute(BAD_OUTFILE)+" could not be written to." );
+            "destfile is a directory", "destfile is a directory!" );
     }
-    
-    
+
+
     public void testEchoToBadFileFail() {
         expectBuildExceptionContaining( "testEchoToBadFileFail",
-            "outfile is not writeable",
-            "Destfile "+toAbsolute(BAD_OUTFILE)+" could not be written to." );
+            "destfile is a directory", "destfile is a directory!" );
     }
-    
-    
+
+
     public void testEchoToBadFileNoFail() {
-        expectLog( "testEchoToBadFileNoFail",
-            "Destfile "+toAbsolute(BAD_OUTFILE)+" could not be written to." );
+        expectLog( "testEchoToBadFileNoFail", "destfile is a directory!");
     }
-    
-    
+
+
     public void testEchoToGoodFile() throws Exception {
         executeTarget( "testEchoToGoodFile" );
         assertGoodFile();
     }
-    
-    
+
+
+    public void testEchoToGoodFileXml() throws Exception {
+        executeTarget( "testEchoToGoodFileXml" );
+
+        // read in the file
+        File f = createRelativeFile( GOOD_OUTFILE_XML );
+        FileReader fr = new FileReader( f );
+        try {
+            BufferedReader br = new BufferedReader( fr );
+            String read = null;
+            while ( (read = br.readLine()) != null) {
+                if (read.indexOf("<property name=\"test.property\" value=\""+TEST_VALUE+"\"></property>") >= 0) {
+                    // found the property we set - it's good.
+                    return;
+                }
+            }
+            fail( "did not encounter set property in generated file." );
+        } finally {
+            try {
+                fr.close();
+            } catch(IOException e) {}
+        }
+    }
+
+
     public void testEchoToGoodFileFail() throws Exception {
         executeTarget( "testEchoToGoodFileFail" );
         assertGoodFile();
     }
-    
-    
+
+
     public void testEchoToGoodFileNoFail() throws Exception {
         executeTarget( "testEchoToGoodFileNoFail" );
         assertGoodFile();
@@ -167,26 +229,7 @@ public class EchoPropertiesTest extends BuildFileTest {
         Properties props=loadPropFile(GOOD_OUTFILE);
         props.list(System.out);
         assertEquals("test property not found ",
-                     "is set",props.getProperty("test.property"));
-/*
-        // read in the file
-        FileReader fr = new FileReader( f );
-        try {
-            BufferedReader br = new BufferedReader( fr );
-            String read = null;
-            while ( (read = br.readLine()) != null)
-            {
-                if (read.indexOf("test.property=is set") >= 0)
-                {
-                    // found the property we set - it's good.
-                    return;
-                }
-            }
-            fail( "did not encounter set property in generated file." );
-        } finally {
-            try { fr.close(); } catch(IOException e) {}
-        }
-*/
+                     TEST_VALUE, props.getProperty("test.property"));
     }
 
 

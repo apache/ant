@@ -56,16 +56,29 @@ package org.apache.tools.ant.taskdefs.optional;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.CollectionUtils;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
-import java.util.Properties;
-import java.util.Hashtable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  *  Displays all the current properties in the build. The output can be sent to
@@ -100,9 +113,36 @@ import java.io.FileOutputStream;
  *
  *@author     Matt Albrecht <a href="mailto:groboclown@users.sourceforge.net">
  *      groboclown@users.sourceforge.net</a>
+ *@author     Ingmar Stein <a href="mailto:stein@xtramind.com">
+        stein@xtramind.com</a>
  *@since      Ant 1.5
  */
 public class EchoProperties extends Task {
+
+    /**
+     * the properties element.
+     */
+    private static final String PROPERTIES = "properties";
+
+    /**
+     * the property element.
+     */
+    private static final String PROPERTY = "property";
+
+    /**
+     * name attribute for property, testcase and testsuite elements.
+     */
+    private static final String ATTR_NAME = "name";
+
+    /**
+     * value attribute for property elements.
+     */
+    private static final String ATTR_VALUE = "value";
+
+    /**
+     * the input file.
+     */
+    private File inFile = null;
 
     /**
      *  File object pointing to the output file. If this is null, then we output
@@ -122,6 +162,17 @@ public class EchoProperties extends Task {
      */
     private String prefix = null;
 
+
+    private String format = "text";
+
+    /**
+     * Sets the input file.
+     *
+     * @param file  the input file
+     */
+    public void setSrcfile( File file ) {
+        inFile = file;
+    }
 
     /**
      *  Set a file to store the property output.  If this is never specified,
@@ -163,6 +214,18 @@ public class EchoProperties extends Task {
     }
 
 
+    public void setFormat(FormatAttribute ea) {
+        format = ea.getValue();
+    }
+
+    public static class FormatAttribute extends EnumeratedAttribute {
+        private String [] formats = new String[]{"xml", "text"};
+
+        public String[] getValues() {
+            return formats;
+        }
+    }
+
     /**
      *  Run the task.
      *
@@ -170,25 +233,109 @@ public class EchoProperties extends Task {
      */
     public void execute() throws BuildException {
         //copy the properties file
-        Hashtable allProps = project.getProperties();
+        Hashtable allProps = new Hashtable();
 
+        /* load properties from file if specified, otherwise
+        use Ant's properties */
+        if(inFile == null) {
+            // add ant properties
+            CollectionUtils.putAll(allProps, project.getProperties());
+        } else {
+            if (inFile.exists() && inFile.isDirectory()) {
+                String message = "srcfile is a directory!";
+                if (failonerror) {
+                    throw new BuildException(message, location);
+                } else {
+                    log(message, Project.MSG_ERR);
+                }
+                return;
+            }
+
+            if (inFile.exists() && !inFile.canRead()) {
+                String message = "Can not read from the specified srcfile!";
+                if (failonerror) {
+                    throw new BuildException( message, location );
+                } else {
+                    log( message, Project.MSG_ERR );
+                }
+                return;
+            }
+
+            FileInputStream in = null;
+            try {
+                in = new FileInputStream( inFile );
+                Properties props = new Properties();
+                props.load(in);
+                CollectionUtils.putAll(allProps, props);
+            } catch(FileNotFoundException fnfe) {
+                String message =
+                    "Could not find file " + inFile.getAbsolutePath();
+                if (failonerror) {
+                    throw new BuildException(message, fnfe, location);
+                } else {
+                    log( message, Project.MSG_WARN );
+                }
+                return;
+            } catch( IOException ioe ) {
+                String message =
+                    "Could not read file " + inFile.getAbsolutePath();
+                if (failonerror) {
+                    throw new BuildException(message, ioe, location);
+                } else {
+                    log( message, Project.MSG_WARN );
+                }
+                return;
+            } finally {
+                try {
+                    if( null != in ) {
+                        in.close();
+                    }
+                } catch(IOException ioe) {}
+            }
+        }
+
+        OutputStream os = null;
         try {
             if (destfile == null) {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                saveProperties(allProps, baos);
-                log(baos.toString(), Project.MSG_INFO);
+                os = new ByteArrayOutputStream();
+                saveProperties(allProps, os);
+                log(os.toString(), Project.MSG_INFO);
             } else {
-                OutputStream os = new FileOutputStream(this.destfile);
+                if (destfile.exists() && destfile.isDirectory()) {
+                    String message = "destfile is a directory!";
+                    if (failonerror) {
+                        throw new BuildException(message, location);
+                    } else {
+                        log(message, Project.MSG_ERR);
+                    }
+                    return;
+                }
+                
+                if (destfile.exists() && !destfile.canWrite()) {
+                    String message = 
+                        "Can not write to the specified destfile!";
+                    if (failonerror) {
+                        throw new BuildException(message, location);
+                    } else {
+                        log(message, Project.MSG_ERR);
+                    }
+                    return;
+                }
+                os = new FileOutputStream(this.destfile);
                 saveProperties(allProps, os);
             }
         } catch (IOException ioe) {
-            String message =
-                    "Destfile " + destfile + " could not be written to.";
             if (failonerror) {
-                throw new BuildException(message, ioe,
-                        location);
+                throw new BuildException(ioe, location);
             } else {
-                log(message, Project.MSG_INFO);
+                log(ioe.getMessage(), Project.MSG_INFO);
+            }
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();                    
+                } catch (IOException e) {
+                }
             }
         }
     }
@@ -209,20 +356,52 @@ public class EchoProperties extends Task {
         Properties props = new Properties();
         Enumeration enum = allProps.keys();
         while (enum.hasMoreElements()) {
-            String name = (String) enum.nextElement();
-                String value = (String) allProps.get(name);
+            String name = enum.nextElement().toString();
+            String value = allProps.get(name).toString();
             if (prefix == null || name.indexOf(prefix) == 0) {
                 props.put(name, value);
             }
         }
-        try {
+
+        if ("text".equals(format)) {
             jdkSaveProperties(props, os, "Ant properties");
-        } finally {
-            os.close();
+        } else if ("xml".equals(format)) {
+            xmlSaveProperties(props, os );
         }
     }
-    
-    
+
+    protected void xmlSaveProperties(Properties props,
+                                     OutputStream os) throws IOException {
+        // create XML document
+        Document doc = getDocumentBuilder().newDocument();
+        Element rootElement = doc.createElement( PROPERTIES );
+
+        // output properties
+        String name;
+        Enumeration e = props.propertyNames();
+        while( e.hasMoreElements() ) {
+            name = (String)e.nextElement();
+            Element propElement = doc.createElement( PROPERTY );
+            propElement.setAttribute( ATTR_NAME, name );
+            propElement.setAttribute( ATTR_VALUE, props.getProperty( name ) );
+            rootElement.appendChild( propElement );
+        }
+
+        Writer wri = null;
+        try {
+            wri = new OutputStreamWriter( os, "UTF8" );
+            wri.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
+            ( new DOMElementWriter() ).write( rootElement, wri, 0, "\t" );
+            wri.flush();
+        } catch( IOException ioe ) {
+            throw new BuildException( "Unable to write XML file", ioe );
+        } finally {
+            if( wri != null ) {
+                wri.close();
+            }
+        }
+    }
+
     /**
      *  JDK 1.2 allows for the safer method
      *  <tt>Properties.store( OutputStream, String )</tt>, which throws an
@@ -251,7 +430,7 @@ public class EchoProperties extends Task {
             if (t instanceof RuntimeException) {
                 throw (RuntimeException) t;
             }
-            
+
             // not an expected exception.  Resort to JDK 1.0 to execute
             // this method
             jdk10SaveProperties(props, os, header);
@@ -264,8 +443,8 @@ public class EchoProperties extends Task {
             jdk10SaveProperties(props, os, header);
         }
     }
-    
-    
+
+
     /**
      * Save the properties to the output stream using the JDK 1.0 compatible
      * method.  This won't throw an <tt>IOException</tt> on an output error.
@@ -275,8 +454,21 @@ public class EchoProperties extends Task {
      *@param header prepend this header to the property output
      */
     protected void jdk10SaveProperties(Properties props, OutputStream os,
-            String header) {
+                                       String header) {
         props.save(os, header);
+    }
+
+    /**
+     * Uses the DocumentBuilderFactory to get a DocumentBuilder instance.
+     *
+     * @return   The DocumentBuilder instance
+     */
+    private static DocumentBuilder getDocumentBuilder() {
+        try {
+            return DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        } catch( Exception e ) {
+            throw new ExceptionInInitializerError( e );
+        }
     }
 }
 
