@@ -7,6 +7,11 @@ Fixed bugs:
 * <zip> and friends would always update existing archive if you set
   the update attribute to true.
 
+* To support backward compatibility with older versions, <pathconvert>
+  will once again set the property, even if the result is the empty
+  string, unless the new 'setonempty' attribute is set to false|no|off
+  (default is "true").
+
 Changes from Ant 1.5beta2 to Ant 1.5beta3
 =========================================
 
@@ -25,6 +30,8 @@ Changes that could break older environments:
 * Some messages that are printed during startup will not be
   written to the logfile specified via -logfile as they might destroy
   the format of the file for special BuildLoggers (like XmlLogger).
+
+* <pathconvert> won't set the property if the result is the empty string.
 
 Fixed bugs:
 -----------

@@ -101,6 +101,10 @@ public class PathConvert extends Task {
      */
     private boolean onWindows = false;
     /**
+     * Set if we should create a new property even if the result is empty
+     */
+    private boolean setonempty = true;
+    /**
      * The property to receive the conversion
      */
     private String property = null;//
@@ -268,6 +272,17 @@ public class PathConvert extends Task {
         targetWindows = !targetOS.equals("unix");
     }
 
+    /**
+     * Set setonempty
+     *
+     * If false, don't set the new property if the result is the empty string.
+     * @param setonempty true or false
+     *
+     * @since Ant 1.5
+     */
+     public void setSetonempty(boolean setonempty) {
+         this.setonempty = setonempty;
+     }
 
     /**
      * The property into which the converted path will be placed.
@@ -401,13 +416,20 @@ public class PathConvert extends Task {
                 }
             }
 
-            // Place the result into the specified property
-            if( rslt.length() > 0 ) {
-              String value = rslt.toString();
-              log("Set property " + property + " = " + value,
-                  Project.MSG_VERBOSE);
-              getProject().setNewProperty(property, value);
-            } 
+            // Place the result into the specified property,
+            // unless setonempty == false
+            String value = rslt.toString();
+            if(setonempty) {
+                log("Set property " + property + " = " + value,
+                    Project.MSG_VERBOSE);
+                getProject().setNewProperty(property, value);
+            } else {
+                if(rslt.length() > 0) {
+                    log("Set property " + property + " = " + value,
+                        Project.MSG_VERBOSE);
+                    getProject().setNewProperty(property, value);
+                }
+            }
         } finally {
             path = savedPath;
             dirSep = savedDirSep;
