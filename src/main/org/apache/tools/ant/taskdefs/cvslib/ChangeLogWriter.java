@@ -26,18 +26,18 @@ import java.util.TimeZone;
  *
  * @version $Revision$ $Date$
  */
-class ChangeLogWriter {
+public class ChangeLogWriter {
     /** output format for dates written to xml file */
-    private static final SimpleDateFormat c_outputDate
+    private static final SimpleDateFormat OUTPUT_DATE
         = new SimpleDateFormat("yyyy-MM-dd");
     /** output format for times written to xml file */
-    private static final SimpleDateFormat c_outputTime
+    private static final SimpleDateFormat OUTPUT_TIME
         = new SimpleDateFormat("HH:mm");
 
     static {
         TimeZone utc = TimeZone.getTimeZone("UTC");
-        c_outputDate.setTimeZone(utc);
-        c_outputTime.setTimeZone(utc);
+        OUTPUT_DATE.setTimeZone(utc);
+        OUTPUT_TIME.setTimeZone(utc);
     }
 
     /**
@@ -69,9 +69,9 @@ class ChangeLogWriter {
      */
     private void printEntry(final PrintWriter output, final CVSEntry entry) {
         output.println("\t<entry>");
-        output.println("\t\t<date>" + c_outputDate.format(entry.getDate())
+        output.println("\t\t<date>" + OUTPUT_DATE.format(entry.getDate())
             + "</date>");
-        output.println("\t\t<time>" + c_outputTime.format(entry.getDate())
+        output.println("\t\t<time>" + OUTPUT_DATE.format(entry.getDate())
             + "</time>");
         output.println("\t\t<author><![CDATA[" + entry.getAuthor()
             + "]]></author>");
