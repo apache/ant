@@ -382,10 +382,10 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Recursively adds an UnknownElement instances for each child
+     * Recursively adds an UnknownElement instance for each child
      * element of replacement.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.1
      */
     private void replaceChildren(RuntimeConfigurable wrapper,
                                  UnknownElement parentElement) {

@@ -151,7 +151,7 @@ public class RuntimeConfigurable {
     /**
      * Returns an enumeration of all child wrappers.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.1
      */
     Enumeration getChildren() {
         return children.elements();
