@@ -290,7 +290,7 @@ public class Sync extends Task {
      *
      * <p>Default is 0 milliseconds, or 2 seconds on DOS systems.</p>
      *
-     * @since Ant 1.6
+     * @since Ant 1.6.2
      */
     public void setGranularity(long granularity) {
         _copy.setGranularity(granularity);
