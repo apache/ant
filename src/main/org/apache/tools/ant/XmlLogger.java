@@ -116,6 +116,9 @@ public class XmlLogger implements BuildLogger {
         private long startTime;
         /** Element created at the start time. */
         private Element element;
+        public String toString() {
+            return element.getTagName() + ":" + element.getAttribute("name");
+        }
     }
 
     /**
@@ -178,7 +181,7 @@ public class XmlLogger implements BuildLogger {
                 stream = new FileOutputStream(outFilename);
             }
             out = new OutputStreamWriter(stream, "UTF8");
-            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
+            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             if (xslUri.length() > 0) {
                 out.write("<?xml-stylesheet type=\"text/xsl\" href=\""
                         + xslUri + "\"?>\n\n");
@@ -209,6 +212,10 @@ public class XmlLogger implements BuildLogger {
             threadStack = new Stack();
             threadStacks.put(Thread.currentThread(), threadStack);
         }
+        /* For debugging purposes uncomment:
+        org.w3c.dom.Comment s = doc.createComment("stack=" + threadStack);
+        buildElement.element.appendChild(s);
+         */
         return threadStack;
     }
 
@@ -252,9 +259,9 @@ public class XmlLogger implements BuildLogger {
                 TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != targetElement) {
                     throw new RuntimeException("Mismatch - popped element = "
-                            + poppedStack.element
+                            + poppedStack
                             + " finished target element = "
-                            + targetElement.element);
+                            + targetElement);
                 }
                 if (!threadStack.empty()) {
                     parentElement = (TimedElement) threadStack.peek();
@@ -320,11 +327,13 @@ public class XmlLogger implements BuildLogger {
                 TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != taskElement) {
                     throw new RuntimeException("Mismatch - popped element = "
-                            + poppedStack.element + " finished task element = "
-                            + taskElement.element);
+                            + poppedStack + " finished task element = "
+                            + taskElement);
                 }
             }
             tasks.remove(task);
+        } else {
+            throw new RuntimeException("Unknown task " + task + " not in " + tasks);
         }
     }
 
