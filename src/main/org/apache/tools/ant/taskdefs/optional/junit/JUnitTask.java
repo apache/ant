@@ -1156,9 +1156,9 @@ public class JUnitTask extends Task {
                             OutputStream out) {
         formatter.setOutput(out);
         formatter.startTestSuite(test);
-        test.setCounts(0, 0, 1);
+        test.setCounts(1, 0, 1);
         Test t = new Test() {
-            public int countTestCases() { return 0; }
+            public int countTestCases() { return 1; }
             public void run(TestResult r) {
                 throw new AssertionFailedError("Timeout occurred");
             }
