@@ -124,7 +124,7 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
   <tr>
     <td>
       <div align="center"><font color="$body-link" size="-1"><em>
-        Copyright &#169; 2000-2002, Apache Software Foundation
+        Copyright &#169; 2000-2003, Apache Software Foundation
       </em></font></div>
     </td>
   </tr>
