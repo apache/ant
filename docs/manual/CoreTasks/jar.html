@@ -168,6 +168,20 @@ being wrapped and continued on the next line.
     <td valign="top">The encoding used to read the JAR manifest, when a manifest file is specified.</td>
     <td valign="top" align="center">No, defaults to the platform encoding.</td>
   </tr>
+  <tr>
+    <td valign="top">roundup</td>
+    <td valign="top">Whether the file modification times will be
+    rounded up to the next even number of seconds.<br>
+    Zip archives store file modification times with a granularity of
+    two seconds, so the times will either be rounded up or down.  If
+    you round down, the archive will always seem out-of-date when you
+    rerun the task, so the default is to round up.  Rounding up may
+    lead to a different type of problems like JSPs inside a web
+    archive that seem to be slightly more recent than precompiled
+    pages, rendering precompilation useless.<br>
+    Defaults to true.  <em>Since Ant 1.7</em></td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h3>Nested elements</h3>

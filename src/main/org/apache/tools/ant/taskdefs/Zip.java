@@ -112,6 +112,14 @@ public class Zip extends MatchingTask {
     private boolean keepCompression = false;
 
     /**
+     * Whether the file modification times will be rounded up to the
+     * next even number of seconds.
+     *
+     * @since Ant 1.7
+     */
+    private boolean roundUp = true;
+
+    /**
      * This is the name/location of where to
      * create the .zip file.
      *
@@ -286,6 +294,24 @@ public class Zip extends MatchingTask {
      */
     public void setKeepCompression(boolean keep) {
         keepCompression = keep;
+    }
+
+    /**
+     * Whether the file modification times will be rounded up to the
+     * next even number of seconds.
+     *
+     * <p>Zip archives store file modification times with a
+     * granularity of two seconds, so the times will either be rounded
+     * up or down.  If you round down, the archive will always seem
+     * out-of-date when you rerun the task, so the default is to round
+     * up.  Rounding up may lead to a different type of problems like
+     * JSPs inside a web archive that seem to be slightly more recent
+     * than precompiled pages, rendering precompilation useless.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void setRoundUp(boolean r) {
+        roundUp = r;
     }
 
     /**
@@ -914,10 +940,10 @@ public class Zip extends MatchingTask {
             ZipEntry ze = new ZipEntry (vPath);
             if (dir != null && dir.exists()) {
                 // ZIPs store time with a granularity of 2 seconds, round up
-                ze.setTime(dir.lastModified() + 1999);
+                ze.setTime(dir.lastModified() + (roundUp ? 1999 : 0));
             } else {
                 // ZIPs store time with a granularity of 2 seconds, round up
-                ze.setTime(System.currentTimeMillis() + 1999);
+                ze.setTime(System.currentTimeMillis() + (roundUp ? 1999 : 0));
             }
             ze.setSize (0);
             ze.setMethod (ZipEntry.STORED);
@@ -1047,7 +1073,9 @@ public class Zip extends MatchingTask {
         FileInputStream fIn = new FileInputStream(file);
         try {
             // ZIPs store time with a granularity of 2 seconds, round up
-            zipFile(fIn, zOut, vPath, file.lastModified() + 1999, null, mode);
+            zipFile(fIn, zOut, vPath, 
+                    file.lastModified() + (roundUp ? 1999 : 0),
+                    null, mode);
         } finally {
             fIn.close();
         }
