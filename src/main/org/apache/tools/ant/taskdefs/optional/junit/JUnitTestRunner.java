@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
@@ -153,6 +154,9 @@ public class JUnitTestRunner implements TestListener {
 
     /** is this runner running in forked mode? */
     private boolean forked = false;
+
+    /** Running more than one test suite? */
+    private static boolean multipleTests = false;
 
     /**
      * Constructor for fork=true or when the user hasn't specified a
@@ -478,6 +482,11 @@ public class JUnitTestRunner implements TestListener {
             System.exit(ERRORS);
         }
 
+        if (args[0].startsWith("testsfile=")) {
+            multipleTests = true;
+            args[0] = args[0].substring(10 /* "testsfile=".length() */);
+        }
+
         for (int i = 1; i < args.length; i++) {
             if (args[i].startsWith("haltOnError=")) {
                 haltError = Project.toBoolean(args[i].substring(12));
@@ -502,30 +511,70 @@ public class JUnitTestRunner implements TestListener {
             }
         }
 
-        JUnitTest t = new JUnitTest(args[0]);
-
         // Add/overlay system properties on the properties from the Ant project
         Hashtable p = System.getProperties();
         for (Enumeration e = p.keys(); e.hasMoreElements();) {
             Object key = e.nextElement();
             props.put(key, p.get(key));
         }
-        t.setProperties(props);
 
-        JUnitTestRunner runner = new JUnitTestRunner(t, haltError, stackfilter,
-                                                     haltFail, showOut);
-        runner.forked = true;
-        transferFormatters(runner);
-        runner.run();
-        System.exit(runner.getRetCode());
+        int returnCode = SUCCESS;
+        if (multipleTests) {
+            try {
+                java.io.BufferedReader reader = 
+                    new java.io.BufferedReader(new java.io.FileReader(args[0]));
+                String testCaseName;
+                int code = 0;
+                boolean errorOccured = false;
+                boolean failureOccured = false;
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    StringTokenizer st = new StringTokenizer(line, ",");
+                    testCaseName = st.nextToken();
+                    JUnitTest t = new JUnitTest(testCaseName);
+                    t.setTodir(new File(st.nextToken()));
+                    t.setOutfile(st.nextToken());
+                    code = launch(t, haltError, stackfilter, haltFail, 
+                                  showOut, props);
+                    errorOccured = (code == ERRORS);
+                    failureOccured = (code != SUCCESS);
+                    if (errorOccured || failureOccured ) {
+                        if ((errorOccured && haltError) 
+                            || (failureOccured && haltFail)) {
+                            System.exit(code);
+                        } else {
+                            if (code > returnCode) {
+                                returnCode = code;
+                            }
+                            System.out.println("TEST " + t.getName() 
+                                               + " FAILED");
+                        }
+                    }
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            returnCode = launch(new JUnitTest(args[0]), haltError,
+                                stackfilter, haltFail, showOut, props);
+        }
+
+        System.exit(returnCode);
     }
 
     private static Vector fromCmdLine = new Vector();
 
-    private static void transferFormatters(JUnitTestRunner runner) {
+    private static void transferFormatters(JUnitTestRunner runner,
+                                           JUnitTest test) {
         for (int i = 0; i < fromCmdLine.size(); i++) {
-            runner.addFormatter((JUnitResultFormatter) fromCmdLine
-                                .elementAt(i));
+            FormatterElement fe = (FormatterElement) fromCmdLine.elementAt(i);
+            if (multipleTests && fe.getUseFile()) {
+                File destFile = 
+                    new File(test.getTodir(), 
+                             test.getOutfile() + fe.getExtension());
+                fe.setOutfile(destFile);
+            }
+            runner.addFormatter(fe.createFormatter());
         }
     }
 
@@ -538,17 +587,20 @@ public class JUnitTestRunner implements TestListener {
         int pos = line.indexOf(',');
         if (pos == -1) {
             fe.setClassname(line);
+            fe.setUseFile(false);
         } else {
             fe.setClassname(line.substring(0, pos));
-            fe.setOutfile(new File(line.substring(pos + 1)));
+            fe.setUseFile(true);
+            if (!multipleTests) {
+                fe.setOutfile(new File(line.substring(pos + 1)));
+            }
         }
-        fromCmdLine.addElement(fe.createFormatter());
+        fromCmdLine.addElement(fe);
     }
 
     /**
      * Returns a filtered stack trace.
      * This is ripped out of junit.runner.BaseTestRunner.
-     * Scott M. Stirling.
      */
     public static String getFilteredTrace(Throwable t) {
         String trace = StringUtils.getStackTrace(t);
@@ -589,4 +641,19 @@ public class JUnitTestRunner implements TestListener {
         return false;
     }
 
+    /**
+     * @since Ant 1.6.2
+     */
+    private static int launch(JUnitTest t, boolean haltError,
+                              boolean stackfilter, boolean haltFail, 
+                              boolean showOut, Properties props) {
+        t.setProperties(props);
+        JUnitTestRunner runner = 
+            new JUnitTestRunner(t, haltError, stackfilter, haltFail, showOut);
+        runner.forked = true;
+        transferFormatters(runner, t);
+
+        runner.run();
+        return runner.getRetCode();
+     }
 } // JUnitTestRunner

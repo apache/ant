@@ -17,12 +17,21 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
@@ -116,7 +125,7 @@ import junit.framework.TestResult;
  */
 public class JUnitTask extends Task {
 
-    private CommandlineJava commandline = new CommandlineJava();
+    private CommandlineJava commandline;
     private Vector tests = new Vector();
     private Vector batchTests = new Vector();
     private Vector formatters = new Vector();
@@ -138,13 +147,15 @@ public class JUnitTask extends Task {
     private File tmpDir;
     private AntClassLoader classLoader = null;
     private Permissions perm = null;
+    private ForkStyle forkStyle = new ForkStyle("perTest");
 
     private static final int STRING_BUFFER_SIZE = 128;
+
     /**
-    * If true, force ant to re-classload all classes for each JUnit TestCase
-    *
-    * @param value force class reloading for each test case
-    */
+     * If true, force ant to re-classload all classes for each JUnit TestCase
+     *
+     * @param value force class reloading for each test case
+     */
     public void setReloading(boolean value) {
         reloading = value;
     }
@@ -266,6 +277,29 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Set the bahvior when {@link #setFork fork} fork has been enabled.
+     *
+     * <p>Possible values are "once", "perTest" and "perBatch".  If
+     * set to "once", only a single Java VM will be forked for all
+     * tests, with "perTest" (the default) each test will run in a
+     * fresh Java VM and "perBatch" will run all tests from the same
+     * &lt;batchtest&gt; in the same Java VM.</p>
+     *
+     * <p>This attribute will be ignored if tests run in the same VM
+     * as Ant.</p>
+     *
+     * <p>Only tests with the same configuration of haltonerror,
+     * haltonfailure, errorproperty, failureproperty and filtertrace
+     * can share a forked Java VM, so even if you set the value to
+     * "once", Ant may need to fork mutliple VMs.</p>
+     *
+     * @since Ant 1.6.2
+     */
+    public void setForkStyle(ForkStyle style) {
+        this.forkStyle = style;
+    }
+
+    /**
      * If true, print one-line statistics for each test, or "withOutAndErr"
      * to also show standard output and error.
      *
@@ -331,7 +365,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setMaxmemory(String max) {
-        commandline.setMaxmemory(max);
+        getCommandline().setMaxmemory(max);
     }
 
     /**
@@ -345,7 +379,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void setJvm(String value) {
-        commandline.setVm(value);
+        getCommandline().setVm(value);
     }
 
     /**
@@ -358,7 +392,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public Commandline.Argument createJvmarg() {
-        return commandline.createVmArgument();
+        return getCommandline().createVmArgument();
     }
 
     /**
@@ -383,7 +417,7 @@ public class JUnitTask extends Task {
      */
     public void addSysproperty(Environment.Variable sysp) {
 
-        commandline.addSysproperty(sysp);
+        getCommandline().addSysproperty(sysp);
     }
 
     /**
@@ -398,7 +432,7 @@ public class JUnitTask extends Task {
         // see bugzilla report 21684
         String testString = sysp.getContent();
         getProject().log("sysproperty added : " + testString, Project.MSG_DEBUG);
-        commandline.addSysproperty(sysp);
+        getCommandline().addSysproperty(sysp);
     }
 
     /**
@@ -412,7 +446,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public void addSyspropertyset(PropertySet sysp) {
-        commandline.addSyspropertyset(sysp);
+        getCommandline().addSyspropertyset(sysp);
     }
 
     /**
@@ -422,7 +456,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public Path createClasspath() {
-        return commandline.createClasspath(getProject()).createPath();
+        return getCommandline().createClasspath(getProject()).createPath();
     }
 
     /**
@@ -431,7 +465,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public Path createBootclasspath() {
-        return commandline.createBootclasspath(getProject()).createPath();
+        return getCommandline().createBootclasspath(getProject()).createPath();
     }
 
     /**
@@ -525,10 +559,10 @@ public class JUnitTask extends Task {
      * @param asserts assertion set
      */
     public void addAssertions(Assertions asserts) {
-        if (commandline.getAssertions() != null) {
+        if (getCommandline().getAssertions() != null) {
             throw new BuildException("Only one assertion declaration is allowed");
         }
-        commandline.setAssertions(asserts);
+        getCommandline().setAssertions(asserts);
     }
 
     /**
@@ -550,7 +584,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public JUnitTask() throws Exception {
-        commandline
+        getCommandline()
             .setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
     }
 
@@ -586,12 +620,29 @@ public class JUnitTask extends Task {
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
-        Enumeration list = getIndividualTests();
-        while (list.hasMoreElements()) {
-            JUnitTest test = (JUnitTest) list.nextElement();
-            if (test.shouldRun(getProject())) {
-                execute(test);
+        List testLists = new ArrayList();
+
+        boolean forkPerTest = forkStyle.getValue().equals(ForkStyle.PER_TEST);
+        if (forkPerTest || forkStyle.getValue().equals(ForkStyle.ONCE)) {
+            testLists.addAll(executeOrQueue(getIndividualTests(),
+                                            forkPerTest));
+        } else { /* forkStyle.getValue().equals(ForkStyle.PER_BATCH) */
+            final int count = batchTests.size();
+            for (int i = 0; i < count; i++) {
+                BatchTest batchtest = (BatchTest) batchTests.elementAt(i);
+                testLists.addAll(executeOrQueue(batchtest.elements(), false));
             }
+            testLists.addAll(executeOrQueue(tests.elements(), forkPerTest));
+        }
+
+        Iterator iter = testLists.iterator();
+        while (iter.hasNext()) {
+            List l = (List) iter.next();
+            if (l.size() == 1) {
+                execute((JUnitTest) l.get(0));
+            } else {
+                execute(l);
+            }            
         }
     }
 
@@ -619,33 +670,74 @@ public class JUnitTask extends Task {
             exitValue = executeInVM(test);
         } else {
             ExecuteWatchdog watchdog = createWatchdog();
-            exitValue = executeAsForked(test, watchdog);
+            exitValue = executeAsForked(test, watchdog, null);
             // null watchdog means no timeout, you'd better not check with null
             if (watchdog != null) {
                 wasKilled = watchdog.killedProcess();
             }
         }
+        actOnTestResult(exitValue, wasKilled, test, "Test " + test.getName());
+    }
 
-        // if there is an error/failure and that it should halt, stop
-        // everything otherwise just log a statement
-        boolean errorOccurredHere =
-            exitValue == JUnitTestRunner.ERRORS || wasKilled;
-        boolean failureOccurredHere =
-            exitValue != JUnitTestRunner.SUCCESS || wasKilled;
-        if (errorOccurredHere || failureOccurredHere) {
-            if ((errorOccurredHere && test.getHaltonerror())
-                || (failureOccurredHere && test.getHaltonfailure())) {
-                throw new BuildException("Test " + test.getName() + " failed"
-                    + (wasKilled ? " (timeout)" : ""), getLocation());
-            } else {
-                log("TEST " + test.getName() + " FAILED"
-                    + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
-                if (errorOccurredHere && test.getErrorProperty() != null) {
-                    getProject().setNewProperty(test.getErrorProperty(), "true");
+    /**
+     * Execute a list of tests in a single forked Java VM.
+     */
+    protected void execute(List tests) throws BuildException {
+        JUnitTest test = null;
+        // Create a temporary file to pass the test cases to run to 
+        // the runner (one test case per line)
+        File casesFile = 
+            FileUtils.newFileUtils().createTempFile("junittestcases", 
+                                                    ".properties",
+                                                    getProject().getBaseDir());
+        casesFile.deleteOnExit();
+        PrintWriter writer = null;
+        try {
+            writer = 
+                new PrintWriter(new BufferedWriter(new FileWriter(casesFile)));
+            Iterator iter = tests.iterator();
+            while (iter.hasNext()) {
+                test = (JUnitTest) iter.next();
+                writer.print(test.getName()); 
+                if (test.getTodir() == null) {
+                    writer.print("," + getProject().resolveFile("."));
+                } else {
+                    writer.print("," + test.getTodir());
                 }
-                if (failureOccurredHere && test.getFailureProperty() != null) {
-                    getProject().setNewProperty(test.getFailureProperty(), "true");
+
+                if (test.getOutfile() == null) {
+                    writer.println("," + "TEST-" + test.getName());
+                } else {
+                    writer.println("," + test.getOutfile());
                 }
+            }
+            writer.flush();
+            writer.close();
+            writer = null;
+
+            // execute the test and get the return code
+            int exitValue = JUnitTestRunner.ERRORS;
+            boolean wasKilled = false;
+            ExecuteWatchdog watchdog = createWatchdog();
+            exitValue = executeAsForked(test, watchdog, casesFile);
+            // null watchdog means no timeout, you'd better not check
+            // with null
+            if (watchdog != null) {
+                wasKilled = watchdog.killedProcess();
+            }
+            actOnTestResult(exitValue, wasKilled, test, "Tests");
+        } catch(IOException e) {
+            log(e.toString(), Project.MSG_ERR);
+            throw new BuildException(e);
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+            
+            try {
+                casesFile.delete();
+            } catch (Exception e) {
+                log(e.toString(), Project.MSG_ERR);
             }
         }
     }
@@ -661,17 +753,25 @@ public class JUnitTask extends Task {
      * @throws BuildException in case of error creating a temporary property file,
      * or if the junit process can not be forked
      */
-    private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog)
+    private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog, 
+                                File casesFile)
         throws BuildException {
 
-        if(perm != null) {
-            log("Permissions ignored when running in forked mode!", Project.MSG_WARN);
+        if (perm != null) {
+            log("Permissions ignored when running in forked mode!",
+                Project.MSG_WARN);
         }
 
-        CommandlineJava cmd = (CommandlineJava) commandline.clone();
+        CommandlineJava cmd = (CommandlineJava) getCommandline().clone();
 
         cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
-        cmd.createArgument().setValue(test.getName());
+        if (casesFile == null) {
+            cmd.createArgument().setValue(test.getName());
+        } else {
+            log("Running multiple tests in the same VM", Project.MSG_VERBOSE);
+            cmd.createArgument().setValue("testsfile=" + casesFile);
+        }
+        
         cmd.createArgument().setValue("filtertrace=" + test.getFiltertrace());
         cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
         cmd.createArgument().setValue("haltOnFailure="
@@ -896,13 +996,13 @@ public class JUnitTask extends Task {
                 + "the same VM.", Project.MSG_WARN);
         }
 
-        if (commandline.getBootclasspath() != null) {
+        if (getCommandline().getBootclasspath() != null) {
             log("bootclasspath is ignored if running in the same VM.",
                 Project.MSG_WARN);
         }
 
         CommandlineJava.SysProperties sysProperties =
-            commandline.getSystemProperties();
+                getCommandline().getSystemProperties();
         if (sysProperties != null) {
             sysProperties.setSystem();
         }
@@ -1134,7 +1234,7 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     private void createClassLoader() {
-        Path userClasspath = commandline.getClasspath();
+        Path userClasspath = getCommandline().getClasspath();
         if (userClasspath != null) {
             if (reloading || classLoader == null) {
                 Path classpath = (Path) userClasspath.clone();
@@ -1156,4 +1256,150 @@ public class JUnitTask extends Task {
             }
         }
     }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    protected CommandlineJava getCommandline() {
+        if (commandline == null) {
+            commandline = new CommandlineJava();
+        }
+        return commandline;
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    private final class ForkedTestConfiguration {
+        private boolean filterTrace;
+        private boolean haltOnError;
+        private boolean haltOnFailure;
+        private String errorProperty;
+        private String failureProperty;
+        ForkedTestConfiguration(boolean filterTrace, boolean haltOnError,
+                                boolean haltOnFailure, String errorProperty,
+                                String failureProperty) {
+            this.filterTrace = filterTrace;
+            this.haltOnError = haltOnError;
+            this.haltOnFailure = haltOnFailure;
+            this.errorProperty = errorProperty;
+            this.failureProperty = failureProperty;
+        }
+
+        public boolean equals(Object other) {
+            if (other == null 
+                || other.getClass() != ForkedTestConfiguration.class) {
+                return false;
+            }
+            ForkedTestConfiguration o = (ForkedTestConfiguration) other;
+            return filterTrace == o.filterTrace 
+                && haltOnError == o.haltOnError
+                && haltOnFailure == o.haltOnFailure
+                && ((errorProperty == null && o.errorProperty == null)
+                    || 
+                    (errorProperty != null 
+                     && errorProperty.equals(o.errorProperty)))
+                && ((failureProperty == null && o.failureProperty == null)
+                    || 
+                    (failureProperty != null 
+                     && failureProperty.equals(o.failureProperty)));
+        }
+
+        public int hashCode() {
+            return (filterTrace ? 1 : 0) 
+                + (haltOnError ? 2 : 0)
+                + (haltOnFailure ? 4 : 0);
+        }
+    }
+
+    /**
+     * @since 1.6.2
+     */
+    public static final class ForkStyle extends EnumeratedAttribute {
+        public static final String ONCE = "once";
+        public static final String PER_TEST = "perTest";
+        public static final String PER_BATCH = "perBatch";
+
+        public ForkStyle() {
+            super();
+        }
+
+        public ForkStyle(String value) {
+            super();
+            setValue(value);
+        }
+
+        public String[] getValues() {
+            return new String[] {ONCE, PER_TEST, PER_BATCH};
+        }
+    }
+
+    /**
+     * Executes all tests that don't need to be forked (or all tests
+     * if the runIndividual argument is true.  Returns a collection of
+     * lists of tests that share the same VM configuration and haven't
+     * been executed yet.
+     *
+     * @since 1.6.2
+     */
+    protected Collection executeOrQueue(Enumeration testList,
+                                        boolean runIndividual) {
+        Map testConfigurations = new HashMap();
+        while (testList.hasMoreElements()) {
+            JUnitTest test = (JUnitTest) testList.nextElement();
+            if (test.shouldRun(getProject())) {
+                if (runIndividual || !test.getFork()) {
+                    execute(test);
+                } else {
+                    ForkedTestConfiguration c =
+                        new ForkedTestConfiguration(test.getFiltertrace(),
+                                                    test.getHaltonerror(),
+                                                    test.getHaltonfailure(),
+                                                    test.getErrorProperty(),
+                                                    test.getFailureProperty());
+                    List l = (List) testConfigurations.get(c);
+                    if (l == null) {
+                        l = new ArrayList();
+                        testConfigurations.put(c, l);
+                    }
+                    l.add(test);
+                }
+            }
+        }
+        return testConfigurations.values();
+    }
+
+    /**
+     * Logs information about failed tests, potentially stops
+     * processing (by throwing a BuildException) if a failure/error
+     * occured or sets a property.
+     *
+     * @since Ant 1.6.2
+     */
+    protected void actOnTestResult(int exitValue, boolean wasKilled,
+                                   JUnitTest test, String name) {
+        // if there is an error/failure and that it should halt, stop
+        // everything otherwise just log a statement
+        boolean errorOccurredHere =
+            exitValue == JUnitTestRunner.ERRORS || wasKilled;
+        boolean failureOccurredHere =
+            exitValue != JUnitTestRunner.SUCCESS || wasKilled;
+        if (errorOccurredHere || failureOccurredHere) {
+            if ((errorOccurredHere && test.getHaltonerror())
+                || (failureOccurredHere && test.getHaltonfailure())) {
+                throw new BuildException(name + " failed"
+                    + (wasKilled ? " (timeout)" : ""), getLocation());
+            } else {
+                log(name + " FAILED"
+                    + (wasKilled ? " (timeout)" : ""), Project.MSG_ERR);
+                if (errorOccurredHere && test.getErrorProperty() != null) {
+                    getProject().setNewProperty(test.getErrorProperty(), "true");
+                }
+                if (failureOccurredHere && test.getFailureProperty() != null) {
+                    getProject().setNewProperty(test.getFailureProperty(), "true");
+                }
+            }
+        }
+    }
+
 }

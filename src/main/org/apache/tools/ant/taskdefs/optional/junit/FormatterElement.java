@@ -56,6 +56,13 @@ public class FormatterElement {
     private String ifProperty;
     private String unlessProperty;
 
+    public static final String XML_FORMATTER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter";
+    public static final String BRIEF_FORMATTER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter";
+    public static final String PLAIN_FORMATTER_CLASS_NAME =
+        "org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter";
+
     /**
      * <p> Quick way to use a standard formatter.
      *
@@ -71,15 +78,13 @@ public class FormatterElement {
      */
     public void setType(TypeAttribute type) {
         if ("xml".equals(type.getValue())) {
-            setClassname("org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter");
-            setExtension(".xml");
+            setClassname(XML_FORMATTER_CLASS_NAME);
         } else {
             if ("brief".equals(type.getValue())) {
-                setClassname("org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter");
+                setClassname(BRIEF_FORMATTER_CLASS_NAME);
             } else { // must be plain, ensured by TypeAttribute
-                setClassname("org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter");
+                setClassname(PLAIN_FORMATTER_CLASS_NAME);
             }
-            setExtension(".txt");
         }
     }
 
@@ -90,6 +95,13 @@ public class FormatterElement {
      */
     public void setClassname(String classname) {
         this.classname = classname;
+        if (XML_FORMATTER_CLASS_NAME.equals(classname)) {
+           setExtension(".xml");
+        } else if (PLAIN_FORMATTER_CLASS_NAME.equals(classname)) {
+           setExtension(".txt");
+        } else if (BRIEF_FORMATTER_CLASS_NAME.equals(classname)) {
+           setExtension(".txt");
+        }
     }
 
     /**
