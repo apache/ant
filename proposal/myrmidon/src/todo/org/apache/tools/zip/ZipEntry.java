@@ -19,9 +19,9 @@ import java.util.zip.ZipException;
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class ZipEntry extends java.util.zip.ZipEntry
+public class ZipEntry
+    extends java.util.zip.ZipEntry
 {
-
     /**
      * Helper for JDK 1.1
      *

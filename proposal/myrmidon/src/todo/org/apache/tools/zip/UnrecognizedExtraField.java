@@ -16,9 +16,9 @@ package org.apache.tools.zip;
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class UnrecognizedExtraField implements ZipExtraField
+public class UnrecognizedExtraField
+    implements ZipExtraField
 {
-
     /**
      * Extra field data in central directory - without Header-ID or length
      * specifier.

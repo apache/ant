@@ -15,7 +15,6 @@ package org.apache.tools.zip;
  */
 public interface UnixStat
 {
-
     /**
      * Bits used for permissions (and sticky bit)
      *

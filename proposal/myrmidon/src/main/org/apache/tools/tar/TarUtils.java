@@ -16,7 +16,6 @@ package org.apache.tools.tar;
  */
 public class TarUtils
 {
-
     /**
      * Parse the checksum octal integer from a header buffer.
      *
