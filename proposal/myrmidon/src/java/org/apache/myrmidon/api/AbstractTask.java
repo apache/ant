@@ -95,7 +95,8 @@ public abstract class AbstractTask
         return getContext().getName();
     }
 
-    protected final File getBaseDirectory()
+    //Needs to be made protected
+    public final File getBaseDirectory()
     {
         return getContext().getBaseDirectory();
     }
