@@ -32,6 +32,25 @@ $Id$
 <hr>
 <h2><a name="introduction">Introduction</a></h2>
 <p>Ant provides a number of optional tasks for developing 
+<a href="http://java.sun.com/products/ejb" target="_top">Enterprise Java Beans (EJBs)</a>
+. In general these tasks are specific to the particular vendor's EJB Server.</p>
+
+<p> At present the tasks support:<br>
+</p>
+
+<ul>
+  <li><a href="http://www.borland.com">Borland </a>
+  Application Server 4.5</li>
+  <li><a href="http://www.iplanet.com">iPlanet </a>
+  Application Server 6.0</li>
+  <li><a href="http://www.jboss.org/" target="_top">
+  jboss 2.1</a> and above EJB servers</li>
+  <li><a href="http://www.bea.com" target="_top">Weblogic</a>
+   4.5.1, 5.1, and 6.0 EJB servers</li>
+</ul>
+  Over time we expect further optional tasks  to support additional EJB Servers.
+
+<p>Ant provides a number of optional tasks for developing 
 <a href="http://java.sun.com/products/ejb" target="_top">Enterprise Java Beans (EJBs)</a>. 
 In general these tasks are specific to the particular vendor's EJB Server. At present the tasks support
 <a href="http://www.bea.com" target="_top">Weblogic</a> 4.5.1 and 5.1 EJB servers. Over time we expect further optional tasks 
@@ -44,7 +63,7 @@ to support additional EJB Servers.
  <tr><td><a href="BorlandGenerateClient.html">blgenclient</a></td><td colspan="2">Borland Application Server 4.5</td></tr>
  <tr><td><a href="#ddcreator">ddcreator</a></td><td colspan="2">Weblogic 4.5.1</td></tr>
  <tr><td><a href="#ejbc">ejbc</a></td><td colspan="2">Weblogic 4.5.1</td></tr>
- <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td>iPlanet Application Server 6.0</td></tr>
+ <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td colspan="2">iPlanet Application Server 6.0</td></tr>
  <tr><td rowspan="5"><a href="#ejbjar">ejbjar</a></td><td colspan="2" align="center"><b>Nested Elements</b></td></tr>
  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5</td></tr>
  <tr><td><a href="#ejbjar_jboss">jBoss</a></td><td>jBoss</td></tr>
@@ -497,6 +516,7 @@ specify the BEA Home to have this task work correctly under 6.0</p>
 </pre>
 
 <hr>
+
 <h2><a name="ejbjar">ejbjar</a></h2>
 <h3><b>Description:</b></h3>
 
@@ -506,10 +526,11 @@ the user generated class files and the standard deployment descriptor. Nested
 elements provide support for vendor specific deployment tools. These currently
 include: </p>
 <ul>
-  <li>an element or building Weblogic 5.1/6.0 session/entity beans using the 
-      weblogic.ejbc tool.</li>
-  <li>an element for building TOPLink for WebLogic 2.5.1-enabled entity beans.</li>
-  <li>an element for adding Jboss deployment descriptors.</li>
+  <li>Borland Application Server 4.5</li>
+  <li>iPlanet Application Server 6.0</li>
+  <li>Jboss 2.1 and above</li>
+  <li>Weblogic 5.1/6.0 session/entity beans using the weblogic.ejbc tool
+  <li>TOPLink for WebLogic 2.5.1-enabled entity beans</li>
 </ul>
 
 <p>This task supports two approaches to creating ejb jar files. The first 
@@ -534,7 +555,7 @@ server descriptors are found. For each descriptor found, ejbjar will parse the
 deployment descriptor to determine the necessary class files which implement the 
 bean. These files are assembled along with the deployment descriptors into a 
 well formed EJB jar file. Any support files which need to be included in the 
-generated jarcan be added with the &lt;support&gt; nested element. For each 
+generated jar can be added with the &lt;support&gt; nested element. For each 
 class included in the jar, ejbjar will scan for any super classes or super
 interfaces. These will be added to the generated jar.</p>
 
@@ -643,8 +664,8 @@ three nested elements. </p>
 <h4>Classpath</h4>
 
 <p>The &lt;classpath&gt; nested element allows the classpath 
-to be set. It is useful when setting the classpath from a reference path. IN all 
-othe rrespects the behaviour is the same as the classpath attribute.</p>
+to be set. It is useful when setting the classpath from a reference path. In all 
+other respects the behaviour is the same as the classpath attribute.</p>
 
 <h4>dtd</h4>
 
@@ -682,8 +703,8 @@ requiring the vendor classes in the classpath, you would need to use a
 
 <p>The &lt;support&gt; nested element is used to supply additional classes 
 (files) to be included in the generated jars. The &lt;support&gt; element is a 
-FileSet, so it can either reference a fileset declared elsewehere or it can be 
-defined in-place with the approrpiate &lt;include&gt; and &lt;exclude&gt; nested 
+FileSet, so it can either reference a fileset declared elsewhere or it can be 
+defined in-place with the appropriate &lt;include&gt; and &lt;exclude&gt; nested 
 elements. The files in the support fileset are added into the generated EJB jar 
 in the same relative location as their location within the support fileset. Note 
 that when ejbjar generates more than one jar file, the support files are added 
@@ -894,7 +915,7 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
   </tr>
   <tr>
     <td valign="top">newCMP</td>
-    <td valign="top">If this is set to true, the ne wmethod for locating
+    <td valign="top">If this is set to true, the new method for locating
                      CMP descriptors will be used.</td>
     <td valign="top" align="center">No. Defaults to false</td>
   </tr>
@@ -1187,13 +1208,14 @@ JAR files don't overwrite each other.
             &lt;include name="**/*-ejb-jar.xml"/>
             &lt;exclude name="**/*ias-*.xml"/>
     &lt;/ejbjar></pre>
-This example demonstrates the use of the dtd nested element.  If the
-[iAS-install-directory]/APPS directory is included in the classpath, these
-local  DTDs will be automatically referenced even without the nested
-elements.
+This example demonstrates the use of the dtd nested element. If the local 
+copies of the DTDs are included in the classpath, they will be automatically 
+referenced without the nested elements.  In iAS 6.0 SP2, these local DTDs are 
+found in the [iAS-install-directory]/APPS directory.  In iAS 6.0 SP3, these 
+local DTDs are found in the [iAS-install-directory]/dtd directory. 
 <pre>    &lt;ejbjar srcdir="${build.classesdir}"
-            descriptordir="${src}" > 
-            &lt;iplanet destdir="${assemble.ejbjar}"            >
+            descriptordir="${src}"> 
+            &lt;iplanet destdir="${assemble.ejbjar}">
                      classpath="${ias.ejbc.cpath}" />
             &lt;include name="**/*-ejb-jar.xml"/>
             &lt;exclude name="**/*ias-*.xml"/>
