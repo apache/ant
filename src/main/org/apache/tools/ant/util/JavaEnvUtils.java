@@ -303,7 +303,7 @@ public class JavaEnvUtils {
             case 11:
             default:
                 //things like sun.reflection, sun.misc, sun.net
-                jrePackages.addElement("sun.");
+                jrePackages.addElement("sun");
                 jrePackages.addElement("java");
                 jrePackages.addElement("javax");
                 break;
