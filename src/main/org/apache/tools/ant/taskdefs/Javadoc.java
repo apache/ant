@@ -54,7 +54,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *    <li>patterns must be of the form "xxx.*", every other pattern doesn't
  *        work.
  *    <li>there is no control on arguments sanity since they are left
- *        to the javadoc implementation.
+ *        to the Javadoc implementation.
  * </ul>
  *
  * <p>If no <code>doclet</code> is set, then the <code>version</code> and
@@ -301,9 +301,9 @@ public class Javadoc extends Task {
     }
 
     /**
-     * An HTML element in the javadoc.
+     * An HTML element in the Javadoc.
      *
-     * This class is used for those javadoc elements which contain HTML such as
+     * This class is used for those Javadoc elements which contain HTML such as
      * footers, headers, etc.
      */
     public static class Html {
@@ -330,7 +330,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * EnumeratedAttribute implementation supporting the javadoc scoping
+     * EnumeratedAttribute implementation supporting the Javadoc scoping
      * values.
      */
     public static class AccessType extends EnumeratedAttribute {
@@ -363,7 +363,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Utility method to add a javadoc argument.
+     * Utility method to add a Javadoc argument.
      *
      * @param key the argument name.
      * @param value the argument value.
@@ -380,7 +380,7 @@ public class Javadoc extends Task {
 
     /**
      * Flag which indicates if the task should fail if there is a
-     * javadoc error.
+     * Javadoc error.
      */
     private boolean failOnError = false;
     private Path sourcePath = null;
@@ -581,7 +581,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Add a package to be excluded from the javadoc run.
+     * Add a package to be excluded from the Javadoc run.
      *
      * @param pn the name of the package (wildcards are not permitted).
      */
@@ -724,7 +724,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Set the classpath to be used for this javadoc run.
+     * Set the classpath to be used for this Javadoc run.
      *
      * @param path an Ant Path object containing the compilation
      *        classpath.
@@ -828,7 +828,7 @@ public class Javadoc extends Task {
      * @param locale the locale to use.
      */
     public void setLocale(String locale) {
-        // createArgument(true) is necessary to make sure, -locale
+        // createArgument(true) is necessary to make sure -locale
         // is the first argument (required in 1.3+).
         cmd.createArgument(true).setValue(locale);
         cmd.createArgument(true).setValue("-locale");
@@ -1007,7 +1007,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Create links to javadoc output at the given URL.
+     * Create links to Javadoc output at the given URL.
      * @param src the URL to link to
      */
     public void setLink(String src) {
@@ -1117,7 +1117,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Create link to javadoc output at the given URL.
+     * Create link to Javadoc output at the given URL.
      *
      * @return link argument to configure
      */
@@ -1211,7 +1211,7 @@ public class Javadoc extends Task {
 
     /**
      * Creates and adds a -tag argument. This is used to specify
-     * custom tags. This argument is only available for JavaDoc 1.4,
+     * custom tags. This argument is only available for Javadoc 1.4,
      * and will generate a verbose message (and then be ignored)
      * when run on Java versions below 1.4.
      * @return tag argument to be configured
@@ -1417,7 +1417,7 @@ public class Javadoc extends Task {
         }
 
         /**
-         * Set the packages to javadoc on.
+         * Set the packages to Javadoc on.
          * @param src a comma separated list of packages
          */
         public void setPackages(String src) {
@@ -1462,7 +1462,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Should the build process fail if javadoc fails (as indicated by
+     * Should the build process fail if Javadoc fails (as indicated by
      * a non zero return code)?
      *
      * <p>Default is false.</p>
@@ -1473,7 +1473,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Enables the -source switch, will be ignored if javadoc is not
+     * Enables the -source switch, will be ignored if Javadoc is not
      * the 1.4 version.
      * @param source a <code>String</code> value
      * @since Ant 1.5
@@ -1485,7 +1485,7 @@ public class Javadoc extends Task {
     /**
      * Sets the actual executable command to invoke, instead of the binary
      * <code>javadoc</code> found in Ant's JDK.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public void setExecutable(String executable) {
         this.executable = executable;
@@ -1518,7 +1518,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Enables the -linksource switch, will be ignored if javadoc is not
+     * Enables the -linksource switch, will be ignored if Javadoc is not
      * the 1.4 version. Default is false
      * @param b a <code>String</code> value
      * @since Ant 1.6
@@ -1528,7 +1528,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Enables the -linksource switch, will be ignored if javadoc is not
+     * Enables the -linksource switch, will be ignored if Javadoc is not
      * the 1.4 version. Default is false
      * @param b a <code>String</code> value
      * @since Ant 1.6
@@ -1538,7 +1538,7 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Enables the -noqualifier switch, will be ignored if javadoc is not
+     * Enables the -noqualifier switch, will be ignored if Javadoc is not
      * the 1.4 version.
      * @param noqualifier the parameter to the -noqualifier switch
      * @since Ant 1.6
@@ -1609,7 +1609,7 @@ public class Javadoc extends Task {
             toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
         }
 
-        // ------------------------------------------ general javadoc arguments
+        // ------------------------------------------ general Javadoc arguments
         if (doctitle != null) {
             toExecute.createArgument().setValue("-doctitle");
             toExecute.createArgument().setValue(expand(doctitle.getText()));
@@ -1819,7 +1819,7 @@ public class Javadoc extends Task {
             }
         }
 
-        // JavaDoc 1.4 parameters
+        // Javadoc 1.4 parameters
         if (javadoc4 || executable != null) {
             for (Enumeration e = tags.elements(); e.hasMoreElements();) {
                 Object element = e.nextElement();
@@ -1900,19 +1900,19 @@ public class Javadoc extends Task {
                      Project.MSG_VERBOSE);
             }
             if (source != null) {
-                log("-source option not supported on JavaDoc < 1.4",
+                log("-source option not supported on Javadoc < 1.4",
                      Project.MSG_VERBOSE);
             }
             if (linksource) {
-                log("-linksource option not supported on JavaDoc < 1.4",
+                log("-linksource option not supported on Javadoc < 1.4",
                      Project.MSG_VERBOSE);
             }
             if (breakiterator) {
-                log("-breakiterator option not supported on JavaDoc < 1.4",
+                log("-breakiterator option not supported on Javadoc < 1.4",
                      Project.MSG_VERBOSE);
             }
             if (noqualifier != null) {
-                log("-noqualifier option not supported on JavaDoc < 1.4",
+                log("-noqualifier option not supported on Javadoc < 1.4",
                      Project.MSG_VERBOSE);
             }
         }

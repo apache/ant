@@ -84,8 +84,6 @@ Other changes:
 
 * Log fine-grained events at verbose level from JUnit. Bugzilla report 31885.
 
-* <javadoc> can now take an attribute 'executable'. Bugzilla report 30606.
-
 * <WsdlToDotnet> and <style> are now deprecated in favor of <wsdltodotnet> and
   <xslt>, respectively. Bugzilla report 25832.
 
@@ -193,6 +191,8 @@ Changes that could break older environments:
 
 Other changes:
 --------------
+
+* <javadoc> can now take an attribute 'executable'. Bugzilla report 30606.
 
 * New attribute ignorecontents for <different> selector
 
@@ -982,7 +982,7 @@ Fixed bugs:
   argument using <javadoc> and JDK 1.4.  Bugzilla Report 16871.
 
 * <junit> didn't work with custom formatters that were only available
-  on the user specified classpath when a timeout occured.  Bugzilla
+  on the user specified classpath when a timeout occurred.  Bugzilla
   Report 19953.
 
 * <different> selector : make ignoreFileTimes effectively default to true
@@ -1580,7 +1580,7 @@ Fixed bugs:
   again (like Ant 1.5 did).
 
 * The "plain" <junit> <formatter> could throw a NullPointerException
-  if an error occured in setUp.
+  if an error occurred in setUp.
 
 * <junit> will now produce output when a test times out as well.
 
