@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<!--
+ Copyright  2005 The Apache Software Foundation
+ 
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="abstractsvntask-test" basedir="../../../" 
+         default="all" xmlns:svn="antlib:org.apache.tools.ant.taskdefs.svn">
+
+  <property name="tmpdir" value="tmpdir"/>
+  <property name="tpfdir" value="${tmpdir}/tpf"/>
+  <property name="file" value="ebcdic.h"/>
+
+  <target name="setup">
+    <mkdir dir="${tmpdir}"/>
+    <svn:svn
+      svnURL="http://svn.apache.org/repos/asf/httpd/httpd/trunk/os/tpf/"
+      dest="${tmpdir}"/>
+  </target>
+
+  <target name="all" depends="setup">
+    <svn:svn failonerror="true" subcommand="status ${file}" dest="${tpfdir}"/>
+    <svn:svn failonerror="true" dest="${tpfdir}">
+      <commandline>
+        <argument value="up"/>
+        <argument value="-r"/>
+        <argument value="83750"/>
+        <argument value="${file}"/>
+      </commandline>
+    </svn:svn>
+    <svn:svn failonerror="true" subcommand="status ${file}" dest="${tpfdir}"/>
+    <svn:svn failonerror="true" dest="${tpfdir}">
+      <commandline>
+        <argument line="up -r HEAD ${file}" />
+      </commandline>
+    </svn:svn>
+    <svn:svn failonerror="true" subcommand="status ${file}" dest="${tpfdir}"/>
+  </target>
+
+  <target name="revision-attribute">
+    <mkdir dir="${tmpdir}" />
+    <svn:svn
+      svnURL="http://svn.apache.org/repos/asf/httpd/httpd/trunk/os/tpf"
+      dest="${tmpdir}"
+      quiet="false"
+      revision="83750"/>
+  </target>
+
+  <target name="cleanup">
+    <delete dir="${tmpdir}" />
+  </target>
+</project>
