@@ -281,10 +281,31 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         if( proxyConfigured ) {
             return;
         }
-        PropertyHelper2 ph=PropertyHelper2.getPropertyHelper(p);
+        PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
+
+        Object target=(wrappedObject instanceof TaskAdapter) ?
+                ((TaskAdapter)wrappedObject).getProxy() : wrappedObject;
 
         if (attributes != null) {
-            ph.configure(wrappedObject, attributes, p);
+            IntrospectionHelper ih =
+                    IntrospectionHelper.getHelper(p, target.getClass());
+
+            for (int i = 0; i < attributes.getLength(); i++) {
+                String name= attributes.getQName(i);
+                String value= attributes.getValue(i);
+
+                // reflect these into the target
+                value = ph.replaceProperties(null, value, null);
+                try {
+                    ih.setAttribute(p, target,
+                            name.toLowerCase(Locale.US), value);
+                } catch (BuildException be) {
+                    // id attribute must be set externally
+                    if (!name.equals("id")) {
+                        throw be;
+                    }
+                }
+            }
             id = attributes.getValue("id");
             // No way - this will be used on future calls ( if the task is used
             // multiple times: attributes = null;
