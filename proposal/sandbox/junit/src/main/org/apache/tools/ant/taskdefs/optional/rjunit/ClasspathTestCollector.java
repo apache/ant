@@ -137,8 +137,8 @@ public final class ClasspathTestCollector extends ProjectComponent
     protected ArrayList gatherFromArchive(File zip) {
         ZipScanner zs = new ZipScanner();
         zs.setBasedir(zip);
-        zs.setIncludes(patterns.getIncludePatterns(project));
-        zs.setExcludes(patterns.getExcludePatterns(project));
+        zs.setIncludes(patterns.getIncludePatterns(getProject()));
+        zs.setExcludes(patterns.getExcludePatterns(getProject()));
         zs.scan();
         String[] included = zs.getIncludedFiles();
         return testClassNameFromFile(included);
