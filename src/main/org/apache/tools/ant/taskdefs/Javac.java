@@ -372,9 +372,6 @@ public class Javac extends MatchingTask {
         }
     }
 
-    // XXX
-    // we need a way to not use the current classpath.
-
     /**
      * Builds the compilation classpath.
      *
@@ -391,15 +388,38 @@ public class Javac extends MatchingTask {
             classpath.setLocation(destDir);
         }
 
-        // add our classpath to the mix
+        // Compine the build classpath with the system classpath, in an 
+        // order determined by the value of build.classpath
 
-        if (compileClasspath != null) {
-            classpath.addExisting(compileClasspath);
+        if (compileClasspath == null) {
+            classpath.addExisting(Path.systemClasspath);
+        } else {
+            String order = project.getProperty("build.sysclasspath");
+            if (order == null) order="first";
+
+            if (order.equals("only")) {
+                // only: the developer knows what (s)he is doing
+                classpath.addExisting(Path.systemClasspath);
+
+            } else if (order.equals("last")) {
+                // last: don't trust the developer
+                classpath.addExisting(compileClasspath);
+                classpath.addExisting(Path.systemClasspath);
+
+            } else if (order.equals("ignore")) {
+                // ignore: don't trust anyone
+                classpath.addExisting(compileClasspath);
+                addRuntime = true;
+
+            } else {
+                // first: developer could use a little help
+                classpath.addExisting(Path.systemClasspath);
+                classpath.addExisting(compileClasspath);
+            }
         }
 
-        // add the system classpath
+        // optionally add the runtime classes
 
-        classpath.addExisting(Path.systemClasspath);
         if (addRuntime) {
             if (System.getProperty("java.vendor").toLowerCase().indexOf("microsoft") >= 0) {
                 // Pull in *.zip from packages directory
