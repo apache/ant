@@ -74,6 +74,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
      */
+    private static final String EJB_REF   = "ejb-ref";
     private static final String HOME_INTERFACE   = "home";
     private static final String REMOTE_INTERFACE = "remote";
     private static final String BEAN_CLASS       = "ejb-class";
@@ -101,6 +102,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     private Hashtable fileDTDs = new Hashtable();
     
     private Hashtable resourceDTDs = new Hashtable();
+
+    private boolean inEJBRef = false;
 
     /**
      * The directory containing the bean classes and interfaces. This is 
@@ -160,6 +163,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     public void startDocument() throws SAXException {
         this.ejbFiles = new Hashtable(10, 1);
         this.currentElement = null;
+        inEJBRef = false;
     }
 
 
@@ -173,7 +177,10 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     public void startElement(String name, AttributeList attrs) 
         throws SAXException {
         this.currentElement = name;
-        currentText = "";            
+        currentText = "";
+        if (name.equals(EJB_REF)) {
+            inEJBRef = true;
+        }
     }
 
 
@@ -190,6 +197,9 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         processElement();
         currentText = "";
         this.currentElement = "";
+        if (name.equals(EJB_REF)) {
+            inEJBRef = false;
+        }
     }
 
     /**
@@ -215,6 +225,10 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     
     
     protected void processElement() {
+        if (inEJBRef) {
+            return;
+        }
+        
         if (currentElement.equals(HOME_INTERFACE)   ||
             currentElement.equals(REMOTE_INTERFACE) ||
             currentElement.equals(BEAN_CLASS)       ||
