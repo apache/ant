@@ -10,9 +10,6 @@ package org.apache.ant.project;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.api.DefaultTaskContext;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.components.executor.Executor;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -24,6 +21,11 @@ import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.api.DefaultTaskContext;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.model.Project;
+import org.apache.myrmidon.model.Target;
 
 /**
  * This is the default implementation of ProjectEngine.
@@ -34,9 +36,9 @@ public class DefaultProjectEngine
     extends AbstractLoggable
     implements ProjectEngine, Composable
 {
-    protected Executor                 m_executor;
-    protected ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
-    protected DefaultComponentManager  m_componentManager;
+    private Executor                 m_executor;
+    private ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
+    private DefaultComponentManager  m_componentManager;
 
     /**
      * Add a listener to project events.
@@ -118,10 +120,10 @@ public class DefaultProjectEngine
      * @param done the list of targets already executed in current run
      * @exception AntException if an error occurs
      */
-    protected void execute( final Project project,
-                            final String targetName,
-                            final TaskContext context,
-                            final ArrayList done )
+    private void execute( final Project project,
+                          final String targetName,
+                          final TaskContext context,
+                          final ArrayList done )
         throws AntException
     {
         final Target target = project.getTarget( targetName );
@@ -156,9 +158,9 @@ public class DefaultProjectEngine
      * @param context the context in which to execute
      * @exception AntException if an error occurs
      */
-    protected void executeTarget( final String targetName,
-                                  final Target target,
-                                  final TaskContext context )
+    private void executeTarget( final String targetName,
+                                final Target target,
+                                final TaskContext context )
         throws AntException
     {
         //is this necessary ? I think not but ....
@@ -187,9 +189,9 @@ public class DefaultProjectEngine
      * @param target the target
      * @param context the context
      */
-    protected void executeTargetWork( final String name,
-                                      final Target target,
-                                      final TaskContext context )
+    private void executeTargetWork( final String name,
+                                    final Target target,
+                                    final TaskContext context )
     {
         //check the condition associated with target.
         //if it is not satisfied then skip target
@@ -222,7 +224,7 @@ public class DefaultProjectEngine
      * @param context the context
      * @exception AntException if an error occurs
      */
-    protected void executeTask( final Configuration task, final TaskContext context )
+    private void executeTask( final Configuration task, final TaskContext context )
         throws AntException
     {
         final String name = task.getName();

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.ant.AntException;
 import org.apache.avalon.framework.component.Component;
+import org.apache.myrmidon.model.Project;
 
 /**
  * Interface implemented by components that build projects from sources.

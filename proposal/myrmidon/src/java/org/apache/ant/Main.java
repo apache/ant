@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.ant.project.LogTargetToListenerAdapter;
-import org.apache.ant.project.Project;
+import org.apache.myrmidon.model.Project;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.project.ProjectListener;

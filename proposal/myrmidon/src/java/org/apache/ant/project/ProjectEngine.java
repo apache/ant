@@ -10,6 +10,7 @@ package org.apache.ant.project;
 import org.apache.ant.AntException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.avalon.framework.component.Component;
+import org.apache.myrmidon.model.Project;
 
 /**
  * This is the interface between ProjectEngine and rest of the system.

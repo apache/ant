@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,10 +45,10 @@ public class DefaultProject
     {
         return m_baseDirectory;
     }
-    
+
     /**
-     * Retrieve implicit target. 
-     * The implicit target contains all the top level tasks. 
+     * Retrieve implicit target.
+     * The implicit target contains all the top level tasks.
      *
      * @return the Target
      */
@@ -66,7 +66,7 @@ public class DefaultProject
     {
         m_implicitTarget = target;
     }
-    
+
     /**
      * Retrieve a target by name.
      *
@@ -77,7 +77,7 @@ public class DefaultProject
     {
         return (Target)m_targets.get( targetName );
     }
-    
+
     /**
      * Get name of default target.
      *
@@ -87,7 +87,7 @@ public class DefaultProject
     {
         return m_defaultTarget;
     }
-    
+
     /**
      * Retrieve names of all targets in project.
      *

@@ -7,18 +7,23 @@
  */
 package org.apache.ant.project;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.model.DefaultProject;
+import org.apache.myrmidon.model.DefaultTarget;
+import org.apache.myrmidon.model.Project;
+import org.apache.myrmidon.model.Target;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

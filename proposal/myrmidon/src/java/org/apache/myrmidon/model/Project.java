@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.model;
 
 import java.io.File;
 import org.apache.avalon.framework.component.Component;
@@ -14,19 +14,22 @@ import org.apache.avalon.framework.component.Component;
  * Abstraction used to interact with projects.
  * Implementations may choose to structure it anyway they choose. 
  *
+ * TODO: Determine if projects should carry their own name. Breaks IOC but
+ * Can be useful as project files embed own name (or should that be description).
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Project
     extends Component
 {
     // the name of currently executing project
-    String PROJECT          = "ant.project.name"; 
+    String PROJECT          = "ant.project.name";
 
     // the name of currently executing project
-    String PROJECT_FILE     = "ant.project.file"; 
+    String PROJECT_FILE     = "ant.project.file";
 
     // the name of currently executing target
-    String TARGET           = "ant.target.name"; 
+    String TARGET           = "ant.target.name";
 
     /**
      * Get name of default target.
@@ -36,8 +39,8 @@ public interface Project
     String getDefaultTargetName();
 
     /**
-     * Retrieve implicit target. 
-     * The implicit target is top level tasks. 
+     * Retrieve implicit target.
+     * The implicit target is top level tasks.
      * Currently restricted to property tasks.
      *
      * @return the Target
