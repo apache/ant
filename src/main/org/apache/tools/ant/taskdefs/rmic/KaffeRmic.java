@@ -17,10 +17,9 @@
 
 package org.apache.tools.ant.taskdefs.rmic;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -57,27 +56,14 @@ public class KaffeRmic extends DefaultRmicAdapter {
                                      getRmic().getLocation());
         }
 
+        cmd.setExecutable(c.getName());
         if (c.getName().equals(RMIC_CLASSNAME)) {
             cmd.createArgument().setValue("-verbose");
+            getRmic().log(Commandline.describeCommand(cmd));
         }
-        getRmic().log("Using: " + c.getName());
-        getRmic().log(Commandline.describeCommand(cmd));
-
-        try {
-            Constructor cons = c.getConstructor(new Class[] {String[].class});
-            Object rmic = cons.newInstance(new Object[] {cmd.getArguments()});
-            Method doRmic = c.getMethod("run", (Class[]) null);
-            Boolean ok = (Boolean) doRmic.invoke(rmic, (Object[]) null);
-
-            return ok.booleanValue();
-        } catch (BuildException ex) {
-            //rethrow
-            throw ex;
-        } catch (Exception ex) {
-            //wrap
-           throw new BuildException("Error starting Kaffe rmic: ",
-                                    ex, getRmic().getLocation());
-        }
+        ExecuteJava ej = new ExecuteJava();
+        ej.setJavaCommand(cmd);
+        return ej.fork(getRmic()) == 0;
     }
 
     /**
