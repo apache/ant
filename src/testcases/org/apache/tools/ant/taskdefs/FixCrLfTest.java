@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -200,6 +200,16 @@ public class FixCrLfTest extends BuildFileTest {
         executeTarget("testCrCrLfSequence-mac");
         assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.mac"),
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+    }
+
+    /**
+     * Bugzilla Report 20840
+     *
+     * Will fail with an exception if the parent directories do not
+     * get created.
+     */
+    public void testCreateParentDirs() { 
+        executeTarget("createParentDirs");
     }
 
     public void assertEqualContent(File expect, File result) 

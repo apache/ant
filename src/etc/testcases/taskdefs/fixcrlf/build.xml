@@ -142,4 +142,9 @@
              />
   </target>
 
+  <!-- Bugzilla Report 20840 -->
+  <target name="createParentDirs" depends="init">
+    <fixcrlf srcdir="." destdir="result" includes="input/Junk1.java"/>
+  </target>
+
 </project>
