@@ -163,8 +163,9 @@ public final class ClientElement extends ProjectComponent {
      * @return all collected tests specified with test elements.
      */
     protected Enumeration collectTests() {
-        Enumeration[] tests = new Enumeration[testCollectors.size()];
-        for (int i = 0; i < testCollectors.size(); i++) {
+        final int count = testCollectors.size();
+        final Enumeration[] tests = new Enumeration[count];
+        for (int i = 0; i < count; i++) {
             TestCollector te = (TestCollector) testCollectors.get(i);
             tests[i] = te.collectTests();
         }
@@ -241,7 +242,7 @@ public final class ClientElement extends ProjectComponent {
 
     /** classpath to be set for running tests */
     public Path createClasspath() {
-        return cmd.createClasspath(project);
+        return cmd.createClasspath(getProject());
     }
 
     /** add a single test element */

@@ -53,17 +53,14 @@
  */
 package org.apache.tools.ant.taskdefs.optional.rjunit;
 
-import java.io.OutputStream;
 import java.io.File;
+import java.io.OutputStream;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.BriefFormatter;
 import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.Formatter;
-import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.XMLFormatter;
-import org.apache.tools.ant.taskdefs.optional.rjunit.formatter.PlainFormatter;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -178,8 +175,8 @@ public class ResultFormatterElement {
 
         // create properties from parameters
         Properties props = new Properties();
-        for (int i = 0; i < params.size(); i++){
-            Parameter param = (Parameter)params.elementAt(i);
+        for (int i = 0; i < params.size(); i++) {
+            Parameter param = (Parameter) params.elementAt(i);
             props.put(param.getName(), param.getValue());
         }
         // it is assumed here that the filters are chaining til the
@@ -194,7 +191,11 @@ public class ResultFormatterElement {
      */
     public final static class TypeAttribute extends EnumeratedAttribute {
         private final static String[] VALUES = {"plain", "xml", "brief"};
-        private final static String[] CLASSNAMES = {PlainFormatter.class.getName(), XMLFormatter.class.getName(), BriefFormatter.class.getName()};
+        private final static String[] CLASSNAMES = {
+            "org.apache.tools.ant.taskdefs.optional.rjunit.formatter.PlainFormatter",
+            "org.apache.tools.ant.taskdefs.optional.rjunit.formatter.XMLFormatter",
+            "org.apache.tools.ant.taskdefs.optional.rjunit.formatter.BriefFormatter"
+        };
 
         public String[] getValues() {
             return VALUES;

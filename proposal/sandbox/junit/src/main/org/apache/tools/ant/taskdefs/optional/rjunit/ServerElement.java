@@ -110,9 +110,10 @@ public final class ServerElement extends ProjectComponent {
         // and run it. It will stop once a client has finished.
         try {
             server.start(false); // do not loop
-            server.shutdown();
         } catch (IOException e) {
             throw new BuildException(e);
+        } finally {
+            server.shutdown();
         }
     }
 
