@@ -58,7 +58,6 @@ import java.io.Reader;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * Replace tokens with user supplied values
@@ -81,8 +80,8 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class ReplaceTokens
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /** Default begin token character. */
     private static final char DEFAULT_BEGIN_TOKEN = '@';
@@ -93,14 +92,8 @@ public final class ReplaceTokens
     /** Data that must be read from, if not null. */
     private String queuedData = null;
 
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
     /** Hashtable to hold the replacee-replacer pairs. */
     private Hashtable hash = new Hashtable();
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized;
 
     /** Begin token. */
     private char beginToken = DEFAULT_BEGIN_TOKEN;
@@ -226,20 +219,6 @@ public final class ReplaceTokens
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new ReplaceTokens using the passed in
      * Reader for instantiation.
      */
@@ -253,31 +232,24 @@ public final class ReplaceTokens
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
      * Initialize tokens and load the replacee-replacer hashtable.
      */
     private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (parameters[i] != null) {
-                    final String type = parameters[i].getType();
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (params[i] != null) {
+                    final String type = params[i].getType();
                     if ("tokenchar".equals(type)) {
-                        final String name = parameters[i].getName();
+                        final String name = params[i].getName();
                         if ("begintoken".equals(name)) {
-                            beginToken = parameters[i].getValue().charAt(0);
+                            beginToken = params[i].getValue().charAt(0);
                         } else if ("endtoken".equals(name)) {
-                            endToken = parameters[i].getValue().charAt(0);
+                            endToken = params[i].getValue().charAt(0);
                         }
                     } else if ("token".equals(type)) {
-                        final String name = parameters[i].getName();
-                        final String value = parameters[i].getValue();
+                        final String name = params[i].getName();
+                        final String value = params[i].getValue();
                         hash.put(name, value);
                     }
                 }

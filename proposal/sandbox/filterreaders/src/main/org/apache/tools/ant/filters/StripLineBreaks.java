@@ -57,7 +57,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * Filter to flatten the stream to a single line.
@@ -72,8 +71,8 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class StripLineBreaks
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /**
      * Linebreaks. What do to on funny IBM mainframes with odd line endings?
@@ -86,14 +85,9 @@ public final class StripLineBreaks
      */
     private static final String LINE_BREAKS_KEY = "linebreaks";
 
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
 
     /** Holds the characters that are recognized as line breaks. */
     private String lineBreaks = DEFAULT_LINE_BREAKS;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized = false;
 
     /**
      * This constructor is a dummy constructor and is
@@ -120,7 +114,7 @@ public final class StripLineBreaks
      * next one.
      */
     public final int read() throws IOException {
-        if (!initialized) {
+        if (!getInitialized()) {
             initialize();
             setInitialized(true);
         }
@@ -151,20 +145,6 @@ public final class StripLineBreaks
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new StripLineBreaks object using the passed in
      * Reader for instantiation.
      */
@@ -176,22 +156,15 @@ public final class StripLineBreaks
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
      * Line break characters set using the param element.
      */
     private final void initialize() {
         String userDefinedLineBreaks = null;
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (LINE_BREAKS_KEY.equals(parameters[i].getName())) {
-                    userDefinedLineBreaks = parameters[i].getValue();
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (LINE_BREAKS_KEY.equals(params[i].getName())) {
+                    userDefinedLineBreaks = params[i].getValue();
                     break;
                 }
             }

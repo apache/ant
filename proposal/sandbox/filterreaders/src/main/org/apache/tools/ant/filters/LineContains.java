@@ -58,7 +58,6 @@ import java.io.Reader;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * Filter Reader to fetch only those lines that contain user specified
@@ -84,17 +83,11 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class LineContains
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /** contains key */
     private static final String CONTAINS_KEY = "contains";
-
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized = false;
 
     /** Vector that holds the strings that input lines must contain. */
     private Vector contains = new Vector();
@@ -126,9 +119,9 @@ public final class LineContains
      * user defined values.
      */
     public final int read() throws IOException {
-        if (!initialized) {
+        if (!getInitialized()) {
             initialize();
-            initialized = true;
+            setInitialized(true);
         }
 
         int ch = -1;
@@ -141,19 +134,10 @@ public final class LineContains
                 line = line.substring(1);
             }
         } else {
-            ch = in.read();
-            while (ch != -1) {
-                if (line == null) {
-                    line = "";
-                }
-                line = line + (char) ch;
-                if (ch == '\n') {
-                    break;
-                }
-                ch = in.read();
-            }
-
-            if (line != null) {
+            line = readLine();
+            if (line == null) {
+                ch = -1;
+            } else {
                 int containsSize = contains.size();
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
@@ -192,20 +176,6 @@ public final class LineContains
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new LineContains using the passed in
      * Reader for instantiation.
      */
@@ -217,21 +187,14 @@ public final class LineContains
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        initialized = false;
-    }
-
-    /**
      * Parse params to add user defined contains strings.
      */
     private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (CONTAINS_KEY.equals(parameters[i].getType())) {
-                    contains.addElement(parameters[i].getValue());
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (CONTAINS_KEY.equals(params[i].getType())) {
+                    contains.addElement(params[i].getValue());
                 }
             }
         }

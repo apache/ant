@@ -51,7 +51,7 @@
  *  information on the Apache Software Foundation, please see
  *  <http://www.apache.org/>.
  */
-package org.apache.tools.ant.util;
+package org.apache.tools.ant.filters.util;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;

@@ -57,7 +57,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * Read the first n lines (Default is first 10 lines)
@@ -76,26 +75,17 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class HeadFilter
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /** Lines key to represent the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
-
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized = false;
 
     /** Number of lines currently read in. */
     private long linesRead = 0;
 
     /** Default number of lines returned. */
     private long lines = 10;
-
-    /** If the next character being read is a linefeed, must it be ignored? */
-    private boolean ignoreLineFeed = false;
 
     /**
      * This constructor is a dummy constructor and is
@@ -131,21 +121,8 @@ public final class HeadFilter
 
             ch = in.read();
 
-            if (ignoreLineFeed) {
-                if (ch == '\n') {
-                    ch = in.read();
-                }
-                ignoreLineFeed = false;
-            }
-
-            switch (ch) {
-                case '\r':
-                    ch = '\n';
-                    ignoreLineFeed = true;
-                    //fall through
-                case '\n':
-                    linesRead++;
-                    break;
+            if (ch == '\n') {
+                linesRead++;
             }
         }
 
@@ -167,20 +144,6 @@ public final class HeadFilter
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new HeadFilter using the passed in
      * Reader for instantiation.
      */
@@ -192,21 +155,14 @@ public final class HeadFilter
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
      * Scan for the lines parameter.
      */
     private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (LINES_KEY.equals(parameters[i].getName())) {
-                    lines = new Long(parameters[i].getValue()).longValue();
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (LINES_KEY.equals(params[i].getName())) {
+                    lines = new Long(params[i].getValue()).longValue();
                     break;
                 }
             }

@@ -58,7 +58,6 @@ import java.io.Reader;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * This is a line comment stripper reader
@@ -87,17 +86,11 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class StripLineComments
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /** The type that param recognizes to set the comments. */
     private static final String COMMENTS_KEY = "comment";
-
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized = false;
 
     /** Vector that holds comments. */
     private Vector comments = new Vector();
@@ -144,19 +137,10 @@ public final class StripLineComments
                 line = line.substring(1);
             }
         } else {
-            ch = in.read();
-            while (ch != -1) {
-                if (line == null) {
-                    line = "";
-                }
-                line = line + (char) ch;
-                if (ch == '\n') {
-                    break;
-                }
-                ch = in.read();
-            }
-
-            if (line != null) {
+            line = readLine();
+            if (line == null) {
+                ch = -1;
+            } else {
                 int commentsSize = comments.size();
                 for (int i = 0; i < commentsSize; i++) {
                     String comment = (String) comments.elementAt(i);
@@ -194,20 +178,6 @@ public final class StripLineComments
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new StripLineComments object using the passed in
      * Reader for instantiation.
      */
@@ -219,21 +189,14 @@ public final class StripLineComments
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
      * Comments set using the param element.
      */
     private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (COMMENTS_KEY.equals(parameters[i].getType())) {
-                    comments.addElement(parameters[i].getValue());
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (COMMENTS_KEY.equals(params[i].getType())) {
+                    comments.addElement(params[i].getValue());
                 }
             }
         }

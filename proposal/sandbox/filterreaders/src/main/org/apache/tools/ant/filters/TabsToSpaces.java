@@ -57,7 +57,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * Converts tabs to spaces.
@@ -76,20 +75,14 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class TabsToSpaces
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /** The default tab length is 8 */
     private static final int DEFAULT_TAB_LENGTH = 8;
 
     /** The name that param recognizes to set the tablength. */
     private static final String TAB_LENGTH_KEY = "tablength";
-
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized;
 
     /** Default tab length. */
     private int tabLength = DEFAULT_TAB_LENGTH;
@@ -155,20 +148,6 @@ public final class TabsToSpaces
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new TabsToSpaces object using the passed in
      * Reader for instantiation.
      */
@@ -180,23 +159,16 @@ public final class TabsToSpaces
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
      * Initialize tokens
      */
     private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (parameters[i] != null) {
-                    if (TAB_LENGTH_KEY.equals(parameters[i].getName())) {
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (params[i] != null) {
+                    if (TAB_LENGTH_KEY.equals(params[i].getName())) {
                         tabLength =
-                            new Integer(parameters[i].getValue()).intValue();
+                            new Integer(params[i].getValue()).intValue();
                         break;
                     }
                 }

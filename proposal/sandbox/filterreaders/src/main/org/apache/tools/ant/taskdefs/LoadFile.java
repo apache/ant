@@ -57,7 +57,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FilterChain;
-import org.apache.tools.ant.util.ChainReaderHelper;
+import org.apache.tools.ant.filters.util.ChainReaderHelper;
 
 import java.io.*;
 import java.util.Vector;
@@ -197,12 +197,14 @@ public final class LoadFile extends Task {
 
             String text = crh.processStream();
 
-            if(evaluateProperties) {
-                text = project.replaceProperties(text);
+            if (text != null) {
+                if(evaluateProperties) {
+                    text = project.replaceProperties(text);
+                }
+                project.setNewProperty(property, text);
+                log("loaded " + text.length() + " characters",Project.MSG_VERBOSE);
+                log(property+" := "+text,Project.MSG_DEBUG);
             }
-            project.setNewProperty(property, text);
-            log("loaded " + text.length() + " characters",Project.MSG_VERBOSE);
-            log(property+" := "+text,Project.MSG_DEBUG);
 
         } catch (final IOException ioe) {
             final String message = "Unable to load file: " + ioe.toString();

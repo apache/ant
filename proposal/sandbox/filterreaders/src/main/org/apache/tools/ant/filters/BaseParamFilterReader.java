@@ -53,39 +53,25 @@
  */
 package org.apache.tools.ant.filters;
 
+import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
+import org.apache.tools.ant.types.Parameterizable;
 
 /**
- * Attach a prefix to every line
- *
- * Example:
- * =======
- *
- * &lt;prefixlines prefix=&quot;Foo&quot;/&gt;
- *
- * Or:
- *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
- *    &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
- * &lt;/filterreader&gt;
+ * Parameterized Base class for core filter readers.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class PrefixLines
-    extends BaseParamFilterReader
-    implements ChainableReader
+public abstract class BaseParamFilterReader
+    extends BaseFilterReader
+    implements Parameterizable
 {
-    /** prefix key */
-    private static final String PREFIX_KEY = "prefix";
-
-    /** The prefix to be used. */
-    private String prefix = null;
-
-    /** Data that must be read from, if not null. */
-    private String queuedData = null;
+    /** The passed in parameter array. */
+    private Parameter[] parameters;
 
     /**
      * This constructor is a dummy constructor and is
@@ -93,7 +79,7 @@ public final class PrefixLines
      * introspection mechanism. This will close the filter
      * that is created making it useless for further operations.
      */
-    public PrefixLines() {
+    public BaseParamFilterReader() {
         super();
     }
 
@@ -102,82 +88,19 @@ public final class PrefixLines
      *
      * @param in  a Reader object providing the underlying stream.
      */
-    public PrefixLines(final Reader in) {
+    public BaseParamFilterReader(final Reader in) {
         super(in);
     }
 
     /**
-     * Prefix lines with user defined prefix.
+     * Set Parameters
      */
-    public final int read() throws IOException {
-        if (!getInitialized()) {
-            initialize();
-            setInitialized(true);
-        }
-
-        int ch = -1;
-
-        if (queuedData != null && queuedData.length() == 0) {
-            queuedData = null;
-        }
-
-        if (queuedData != null) {
-            ch = queuedData.charAt(0);
-            queuedData = queuedData.substring(1);
-            if (queuedData.length() == 0) {
-                queuedData = null;
-            }
-        } else {
-            queuedData = readLine();
-            if (queuedData == null) {
-                ch = -1;
-            } else {
-                if (prefix != null) {
-                    queuedData = prefix + queuedData;
-                }
-                return read();
-            }
-        }
-        return ch;
+    public final void setParameters(final Parameter[] parameters) {
+        this.parameters = parameters;
+        setInitialized(false);
     }
 
-    /**
-     * Set the prefix
-     */
-    public final void setPrefix(final String prefix) {
-        this.prefix = prefix;
-    }
-
-    /**
-     * Get the prefix
-     */
-    private final String getPrefix() {
-        return prefix;
-    }
-
-    /**
-     * Create a new PrefixLines using the passed in
-     * Reader for instantiation.
-     */
-    public final Reader chain(final Reader rdr) {
-        PrefixLines newFilter = new PrefixLines(rdr);
-        newFilter.setPrefix(getPrefix());
-        newFilter.setInitialized(true);
-        return newFilter;
-    }
-
-    /**
-     * Initialize prefix if available from the param element.
-     */
-    private final void initialize() {
-        Parameter[] params = getParameters();
-        if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (PREFIX_KEY.equals(params[i].getName())) {
-                    prefix = params[i].getValue();
-                    break;
-                }
-            }
-        }
+    protected final Parameter[] getParameters() {
+        return parameters;
     }
 }

@@ -66,6 +66,9 @@ import java.io.StringReader;
 public abstract class BaseFilterReader
     extends FilterReader
 {
+    /** Have the parameters passed been interpreted? */
+    private boolean initialized = false;
+
     /**
      * This constructor is a dummy constructor and is
      * not meant to be used by any class other than Ant's
@@ -132,7 +135,7 @@ public abstract class BaseFilterReader
      * @exception  IllegalArgumentException  If <code>n</code> is negative.
      * @exception  IOException  If an I/O error occurs
      */
-    public final long skip(long n) throws IOException {
+    public final long skip(final long n) throws IOException {
         if (n < 0L) {
             throw new IllegalArgumentException("skip value is negative");
         }
@@ -143,5 +146,35 @@ public abstract class BaseFilterReader
             }
         }
         return n;
+    }
+
+    /**
+     * Set the initialized status.
+     */
+    protected final void setInitialized(final boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    /**
+     * Get the initialized status.
+     */
+    protected final boolean getInitialized() {
+        return initialized;
+    }
+
+    /**
+     * Read till EOL
+     */
+    protected final String readLine() throws IOException {
+        int ch = in.read();
+        String line = (ch == -1) ? null : "";
+        while (ch != -1) {
+            line += (char) ch;
+            if (ch == '\n') {
+                break;
+            }
+            ch = in.read();
+        }
+        return line;
     }
 }

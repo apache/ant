@@ -57,7 +57,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 
 /**
  * Read the last n lines.  Default is last 10 lines.
@@ -76,26 +75,17 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class TailFilter
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+    extends BaseParamFilterReader
+    implements ChainableReader
 {
     /** The name that param recognizes to set the number of lines. */
     private static final String LINES_KEY = "lines";
-
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized = false;
 
     /** Number of lines currently read in. */
     private long linesRead = 0;
 
     /** Default number of lines returned. */
     private long lines = 10;
-
-    /** If the next character being read is a linefeed, must it be ignored? */
-    private boolean ignoreLineFeed = false;
 
     /** Buffer to hold in characters read ahead. */
     private char[] buffer = new char[4096];
@@ -156,31 +146,17 @@ public final class TailFilter
                     }
                 }
 
-                if (ignoreLineFeed) {
-                    if (ch == '\n') {
-                        ch = in.read();
-                    }
-                    ignoreLineFeed = false;
-                }
+                if (ch == '\n') {
+                    ++linesRead;
 
-                switch (ch) {
-                    case '\r':
-                        ch = '\n';
-                        ignoreLineFeed = true;
-                        //fall through
-                    case '\n':
-                        linesRead++;
-
-                        if (linesRead == lines + 1) {
-                            int i = 0;
-                            for (i = returnedCharPos + 1; buffer[i] != '\n'; i++) {
-                            }
-                            returnedCharPos = i;
-                            linesRead--;
+                    if (linesRead == lines) {
+                        int i = 0;
+                        for (i = returnedCharPos + 1; buffer[i] != '\n'; i++) {
                         }
-                        break;
-                }
-                if (ch == -1) {
+                        returnedCharPos = i;
+                        --linesRead;
+                    }
+                } else if (ch == -1) {
                     break;
                 }
 
@@ -213,20 +189,6 @@ public final class TailFilter
     }
 
     /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
      * Create a new TailFilter using the passed in
      * Reader for instantiation.
      */
@@ -238,21 +200,14 @@ public final class TailFilter
     }
 
     /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
      * Scan for the lines parameter.
      */
     private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (LINES_KEY.equals(parameters[i].getName())) {
-                    setLines(new Long(parameters[i].getValue()).longValue());
+        Parameter[] params = getParameters();
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                if (LINES_KEY.equals(params[i].getName())) {
+                    setLines(new Long(params[i].getValue()).longValue());
                     break;
                 }
             }
