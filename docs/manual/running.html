@@ -78,20 +78,21 @@ those without a <code>description</code> are listed as
 <h3><a name="options">Command-line Options Summary</a></h3>
 <pre>ant [options] [target [target2 [target3] ...]]
 Options:
-  -help                  print this message
-  -projecthelp           print project help information
+  -help, -h              print this message
+  -projecthelp, -p       print project help information
   -version               print the version information and exit
   -diagnostics           print information that might be helpful to
                          diagnose or report problems.
   -quiet, -q             be extra quiet
   -verbose, -v           be extra verbose
-  -debug                 print debugging information
-  -emacs                 produce logging information without adornments
-  -lib <path>            specifies a path to search for jars and classes
+  -debug, -d             print debugging information
+  -emacs, -e             produce logging information without adornments
+  -lib &lt;path&gt;            specifies a path to search for jars and classes
   -logfile &lt;file&gt;        use given file for log
     -l     &lt;file&gt;                ''
   -logger &lt;classname&gt;    the class which is to perform logging
   -listener &lt;classname&gt;  add an instance of class as a project listener
+  -noinput               do not allow interactive input
   -buildfile &lt;file&gt;      use given buildfile
     -file    &lt;file&gt;              ''
     -f       &lt;file&gt;              ''
@@ -101,8 +102,8 @@ Options:
   -propertyfile &lt;name&gt;   load all properties from file with -D
                          properties taking precedence
   -inputhandler &lt;class&gt;  the class which will handle input requests
-  -find &lt;file&gt;           search for buildfile towards the root of the
-                         filesystem and use it
+  -find &lt;file&gt;           (s)earch for buildfile towards the root of
+    -s  &lt;file&gt;           the filesystem and use it
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
