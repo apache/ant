@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -51,36 +51,50 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 package org.apache.tools.ant.util.regexp;
 
-import org.apache.tools.ant.BuildException;
-
-/***
- * Interface which represents a regular expression, and the operations
- * that can be performed on it.
+/**
+ * Tests for all implementations of the Regexp interface.
  *
- * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public interface Regexp extends RegexpMatcher
-{
+public abstract class RegexpTest extends RegexpMatcherTest {
 
-    /**
-     * Replace only the first occurance of the regular expression
-     */
-    int REPLACE_FIRST          = 0x00000001;
+    private static final String test = "abcdefg-abcdefg";
+    private static final String pattern = "ab([^d]*)d([^f]*)f";
 
-    /**
-     * Replace all occurances of the regular expression
-     */
-    int REPLACE_ALL            = 0x00000010;
+    public RegexpTest(String name) {
+        super(name);
+    }
 
-    /**
-     * Perform a substitution on the regular expression.
-     * @param input The string to substitute on
-     * @param argument The string which defines the substitution
-     * @param options The list of options for the match and replace. See the
-     *                MATCH_ and REPLACE_ constants above.
-     */
-    String substitute(String input, String argument, int options)
-        throws BuildException;
+    public final RegexpMatcher getImplementation() {
+        return getRegexpImplementation();
+    }
+
+    public abstract Regexp getRegexpImplementation();
+
+    public void testSubstitution() {
+        Regexp reg = (Regexp) getReg();
+        reg.setPattern(pattern);
+        assertTrue(reg.matches(test));
+        assertEquals("abedcfg-abcdefg", reg.substitute(test, "ab\\2d\\1f", 
+                                                       Regexp.MATCH_DEFAULT));
+    }
+
+    public void testReplaceFirstSubstitution() {
+        Regexp reg = (Regexp) getReg();
+        reg.setPattern(pattern);
+        assertTrue(reg.matches(test));
+        assertEquals("abedcfg-abcdefg", reg.substitute(test, "ab\\2d\\1f", 
+                                                       Regexp.REPLACE_FIRST));
+    }
+
+    public void testReplaceAllSubstitution() {
+        Regexp reg = (Regexp) getReg();
+        reg.setPattern(pattern);
+        assertTrue(reg.matches(test));
+        assertEquals("abedcfg-abedcfg", reg.substitute(test, "ab\\2d\\1f", 
+                                                       Regexp.REPLACE_ALL));
+    }
 }

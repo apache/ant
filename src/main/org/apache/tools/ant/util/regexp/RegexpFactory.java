@@ -90,24 +90,33 @@ public class RegexpFactory extends RegexpMatcherFactory
         }
         
         if (systemDefault != null) {
-            return (Regexp)createInstance(systemDefault);
+            return createRegexpInstance(systemDefault);
             // XXX     should we silently catch possible exceptions and try to 
             //         load a different implementation?
         }
 
         try {
-            return (Regexp)createInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
+            return createRegexpInstance("org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp");
         } catch (BuildException be) {}
         
         try {
-            return (Regexp)createInstance("org.apache.tools.ant.util.regexp.JakartaOroRegexp");
+            return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaOroRegexp");
         } catch (BuildException be) {}
         
         try {
-            return (Regexp)createInstance("org.apache.tools.ant.util.regexp.JakartaRegexpRegexp");
+            return createRegexpInstance("org.apache.tools.ant.util.regexp.JakartaRegexpRegexp");
         } catch (BuildException be) {}
 
         throw new BuildException("No supported regular expression matcher found");
+    }
+
+    protected Regexp createRegexpInstance(String classname) {
+        RegexpMatcher m = createInstance(classname);
+        if (m instanceof Regexp) {
+            return (Regexp) m;
+        } else {
+            return new MatcherWrappedAsRegexp(m);
+        }
     }
 
 }

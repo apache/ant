@@ -55,24 +55,74 @@ package org.apache.tools.ant.util.regexp;
 
 import org.apache.tools.ant.BuildException;
 
-/***
- * Interface which represents a regular expression, and the operations
- * that can be performed on it.
+import java.util.Vector;
+
+/**
+ * Helper class that adapts a RegexpMatcher to a Regexp.
  *
- * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @version $Revision$
  */
-public interface Regexp extends RegexpMatcher
-{
+public class MatcherWrappedAsRegexp implements Regexp {
+    
+    private RegexpMatcher matcher;
+
+    public MatcherWrappedAsRegexp(RegexpMatcher matcher) {
+        this.matcher = matcher;
+    }
 
     /**
-     * Replace only the first occurance of the regular expression
+     * Set the regexp pattern from the String description.
      */
-    int REPLACE_FIRST          = 0x00000001;
+    public void setPattern(String pattern) throws BuildException {
+        matcher.setPattern(pattern);
+    }
 
     /**
-     * Replace all occurances of the regular expression
+     * Get a String representation of the regexp pattern
      */
-    int REPLACE_ALL            = 0x00000010;
+    public String getPattern() throws BuildException {
+        return matcher.getPattern();
+    }
+
+    /**
+     * Does the given argument match the pattern?
+     */
+    public boolean matches(String argument) throws BuildException {
+        return matcher.matches(argument);
+    }
+
+    /**
+     * Returns a Vector of matched groups found in the argument.
+     *
+     * <p>Group 0 will be the full match, the rest are the
+     * parenthesized subexpressions</p>.
+     */
+    public Vector getGroups(String argument) throws BuildException {
+        return matcher.getGroups(argument);
+    }
+
+    /**
+     * Does this regular expression match the input, given
+     * certain options
+     * @param input The string to check for a match
+     * @param options The list of options for the match. See the
+     *                MATCH_ constants above.
+     */
+    public boolean matches(String input, int options) throws BuildException {
+        return matcher.matches(input, options);
+    }
+
+    /**
+     * Get the match groups from this regular expression.  The return
+     * type of the elements is always String.
+     * @param input The string to check for a match
+     * @param options The list of options for the match. See the
+     *                MATCH_ constants above.
+     */
+    public Vector getGroups(String input, int options) throws BuildException {
+        return matcher.getGroups(input, options);
+    }
 
     /**
      * Perform a substitution on the regular expression.
@@ -80,7 +130,31 @@ public interface Regexp extends RegexpMatcher
      * @param argument The string which defines the substitution
      * @param options The list of options for the match and replace. See the
      *                MATCH_ and REPLACE_ constants above.
+     *                REPLACE_ constants will be ignored.
      */
-    String substitute(String input, String argument, int options)
-        throws BuildException;
+    public String substitute(String input, String argument, int options)
+        throws BuildException {
+        Vector v = matcher.getGroups(input, options);
+        
+        StringBuffer result = new StringBuffer();
+        char[] to = argument.toCharArray();
+        for (int i=0; i<to.length; i++) {
+            if (to[i] == '\\') {
+                if (++i < to.length) {
+                    int value = Character.digit(to[i], 10);
+                    if (value > -1) {
+                        result.append((String) v.elementAt(value));
+                    } else {
+                        result.append(to[i]);
+                    }
+                } else {
+                    // XXX - should throw an exception instead?
+                    result.append('\\');
+                }
+            } else {
+                result.append(to[i]);
+            }
+        }
+        return result.toString();
+    }
 }

@@ -72,6 +72,8 @@ public abstract class RegexpMatcherTest extends TestCase {
 
     public abstract RegexpMatcher getImplementation();
 
+    protected final RegexpMatcher getReg() {return reg;}
+
     public RegexpMatcherTest(String name) {
         super(name);
     }

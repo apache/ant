@@ -66,16 +66,6 @@ import java.util.Vector;
 public interface RegexpMatcher {
 
     /***
-     * Replace only the first occurance of the regular expression
-     */
-    int REPLACE_FIRST          = 0x00000001;
-
-    /***
-     * Replace all occurances of the regular expression
-     */
-    int REPLACE_ALL            = 0x00000010;
-
-    /***
      * Default Mask (case insensitive, neither multiline nor
      * singleline specified).
      */

@@ -36,6 +36,7 @@
   
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
+  <property name="regexp.package" value="${ant.package}/util/regexp"/>
 
   <property name="manifest" value="src/etc/manifest"/>
 
@@ -218,11 +219,11 @@
            deprecation="${deprecation}"
            optimize="${optimize}" >
       <classpath refid="classpath" />
-      <exclude name="${ant.package}/util/regexp/JakartaRegexp*.java" 
+      <exclude name="${regexp.package}/JakartaRegexp*.java" 
                unless="jakarta.regexp.present" />
-      <exclude name="${ant.package}/util/regexp/JakartaOro*.java" 
+      <exclude name="${regexp.package}/JakartaOro*.java" 
                unless="jakarta.oro.present" />
-      <exclude name="${ant.package}/util/regexp/Jdk14Regexp*.java" 
+      <exclude name="${regexp.package}/Jdk14Regexp*.java" 
                unless="jdk1.4+" />
       <exclude name="${ant.package}/AntSecurityManager.java"
                unless="jdk1.2+" />
@@ -650,11 +651,11 @@
 
       <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" 
                unless="antlr.present" />
-      <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexp*Test.java" 
+      <exclude name="${regexp.package}/JakartaRegexp*Test.java" 
                unless="jakarta.regexp.present" />
-      <exclude name="org/apache/tools/ant/util/regexp/JakartaOro*Test.java" 
+      <exclude name="${regexp.package}/JakartaOro*Test.java" 
                unless="jakarta.oro.present" />
-      <exclude name="org/apache/tools/ant/util/regexp/Jdk14Regexp*Test.java" 
+      <exclude name="${regexp.package}/Jdk14Regexp*Test.java" 
                unless="jdk1.4+" />
       <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
       				 unless="jakarta.oro.present" />
@@ -705,7 +706,8 @@
           <include name="**/*Test*" />
           <!-- abstract class, not a testcase -->
           <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
-          <exclude name="org/apache/tools/ant/util/regexp/RegexpMatcherTest.java" />
+          <exclude name="${regexp.package}/RegexpMatcherTest.java" />
+          <exclude name="${regexp.package}/RegexpTest.java" />
 
           <!-- helper classes, not testcases -->
           <exclude name="org/apache/tools/ant/taskdefs/TaskdefTest*Task.java" />
@@ -720,14 +722,20 @@
           <!-- only run these tests if their required libraries are installed -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" 
                    unless="antlr.present" />
-          <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexp*Test.java" 
+          <exclude name="${regexp.package}/JakartaRegexp*Test.java" 
                    unless="jakarta.regexp.present" />
-          <exclude name="org/apache/tools/ant/util/regexp/JakartaOro*Test.java" 
+          <exclude name="${regexp.package}/JakartaOro*Test.java" 
                    unless="jakarta.oro.present" />
-          <exclude name="org/apache/tools/ant/util/regexp/Jdk14Regexp*Test.java" 
+          <exclude name="${regexp.package}/Jdk14Regexp*Test.java" 
                    unless="jdk1.4+" />
           <exclude name="${optional.package}/ide/VAJExportTest.java" unless="vaj.present" />
           <exclude name="${optional.package}/sitraka/*.java" unless="jakarta.oro.present" />
+          <exclude name="${optional.package}/ReplaceRegExpTest.java"
+                   unless="some.regexp.support" />
+
+          <!-- defer for now -->
+          <exclude name="${regexp.package}/MatcherWrappedAsRegexpTest.java" 
+                   unless="invalid-some.regexp.support" />
                    
            <!-- run when you have the environment setup to support them -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/net/FtpTest.java" />

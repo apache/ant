@@ -81,8 +81,33 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
     public String substitute(String input, String argument, int options)
         throws BuildException
     {
-        int sOptions = getSubsOptions(options);
+        Vector v = getGroups(input, options);
+
+        // replace \1 with the corresponding group
+        StringBuffer result = new StringBuffer();
+        for (int i=0; i<argument.length(); i++) {
+            char c = argument.charAt(i);
+            if (c == '\\') {
+                if (++i < argument.length()) {
+                    c = argument.charAt(i);
+                    int value = Character.digit(c, 10);
+                    if (value > -1) {
+                        result.append((String) v.elementAt(value));
+                    } else {
+                        result.append(c);
+                    }
+                } else {
+                    // XXX - should throw an exception instead?
+                    result.append('\\');
+                }
+            } else {
+                result.append(c);
+            }
+        }
+        argument = result.toString();
+
         RE reg = getCompiledPattern(options);
+        int sOptions = getSubsOptions(options);
         return reg.subst(input, argument, sOptions);
     }    
 }

@@ -4,6 +4,12 @@ Changes from Ant 1.4.1 to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* the RegexpMatcher interface has been extended to support case
+  insensitive matches and other options - custom implementations of
+  this interface won't work any longer.  We recommend to use the new
+  Regexp interface that also supports substitution instead of the
+  RegexpMatcher interface in the future.
+
 Fixed bugs:
 -----------
 

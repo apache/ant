@@ -83,6 +83,29 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
     public String substitute(String input, String argument, int options)
         throws BuildException
     {
+        // translate \1 to $(1) so that the Matcher will work
+        StringBuffer subst = new StringBuffer();
+        for (int i=0; i<argument.length(); i++) {
+            char c = argument.charAt(i);
+            if (c == '\\') {
+                if (++i < argument.length()) {
+                    c = argument.charAt(i);
+                    int value = Character.digit(c, 10);
+                    if (value > -1) {
+                        subst.append("$(").append(value).append(")");
+                    } else {
+                        subst.append(c);
+                    }
+                } else {
+                    // XXX - should throw an exception instead?
+                    subst.append('\\');
+                }
+            } else {
+                subst.append(c);
+            }
+        }
+        argument = subst.toString();
+        
         int sOptions = getSubsOptions(options);
         Pattern p = getCompiledPattern(options);
         StringBuffer sb = new StringBuffer();
@@ -95,10 +118,12 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
         else
         {
             boolean res = m.find();
-            if (res)
+            if (res) {
                 m.appendReplacement(sb, argument);
-            else
+                m.appendTail(sb);
+            } else {
                 sb.append(input);
+            }
         }
 
         return sb.toString();
