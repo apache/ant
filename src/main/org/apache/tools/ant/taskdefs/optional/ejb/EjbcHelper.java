@@ -131,14 +131,14 @@ public class EjbcHelper {
     private String[] getCommandLine(boolean debug, File descriptorFile) {
         Vector v = new Vector();
         if (!debug) {
-            v.add("-noexit");
+            v.addElement("-noexit");
         }
         if (keepGenerated) {
-            v.add("-keepgenerated");        
+            v.addElement("-keepgenerated");        
         }
-        v.add("-d");
-        v.add(generatedFilesDirectory.getPath());
-        v.add(descriptorFile.getPath());
+        v.addElement("-d");
+        v.addElement(generatedFilesDirectory.getPath());
+        v.addElement(descriptorFile.getPath());
     
         String[] args = new String[v.size()];
         v.copyInto(args);
