@@ -142,7 +142,7 @@ public class PermissionsTest extends TestCase {
             if (e.getStatus() != 3) {
                 fail("Received wrong exit status in Exit Exception.");
             }
-            System.out.println("testExit successfull.");
+            System.out.println("testExit successful.");
         } finally {
             perms.restoreSecurityManager();
         }
