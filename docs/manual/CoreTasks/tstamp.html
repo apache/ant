@@ -8,14 +8,19 @@
 <body>
 
 <h2><a name="tstamp">Tstamp</a></h2>
+
 <h3>Description</h3>
-<p>Sets the DSTAMP, TSTAMP and TODAY properties in the current project. The
-DSTAMP is in the &quot;yyyymmdd&quot; format, the TSTAMP is in the &quot;hhmm&quot;
-format and TODAY is &quot;month day year&quot;.</p>
-<p>These properties can be used in the buildfile, for instance, to create
-timestamped filenames or used to replace placeholder tags inside documents to
-indicate, for example, the release date. The best place for this task is in your
-initialization target.</p>
+<p>Sets the <code>DSTAMP</code>, <code>TSTAMP</code>, and <code>TODAY</code>
+properties in the current project. The <code>DSTAMP</code> property is in the
+format &quot;yyyymmdd&quot;, <code>TSTAMP</code> is in the
+format &quot;hhmm&quot;, and <code>TODAY</code> is in the
+format &quot;month day year&quot;.
+
+<p>These properties can be used in the build-file, for instance, to create
+time-stamped filenames, or used to replace placeholder tags inside documents
+to indicate, for example, the release date. The best place for this task is
+probably in an initialization target.
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -28,9 +33,10 @@ initialization target.</p>
 </table>
 
 <h3>Nested Elements</h3>
-The tstamp task supports a format nested element which allows a property to be
-given the current date and time in a given format. The date/time patterns are as defined in the Java 
-SimpleDateFormat class. 
+The Tstamp task supports a <code>&lt;format&gt;</code> nested element that
+allows a property to be set to the current date and time in a given format.
+The date/time patterns are as defined in the Java 
+<a href=http://java.sun.com/products/jdk/1.2/docs/api/java/text/SimpleDateFormat.html>SimpleDateFormat</a> class. 
 
 
 <table width="60%" border="1" cellpadding="2" cellspacing="0">
@@ -42,33 +48,38 @@ SimpleDateFormat class.
   <tr>
     <td valign="top">property</td>
     <td valign="top">
-        The property which is to receive the date/time string in the given pattern
+        The property to receive the date/time string in the given pattern.
     </td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">pattern</td>
-    <td valign="top">The date/time pattern to be used. The values are defined by the Java
-                     SimpleDateFormat class</td>
+    <td valign="top">The date/time pattern to be used. The values are as defined by the Java SimpleDateFormat class.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
 
 <h3>Examples</h3>
-<p> Set the standard DSTAMP, TSTAMP and TODAY properties according to the formats above</p>
-<pre>  &lt;tstamp/&gt;</pre>
 
-<p> As for the above example, set the standard properties and also set the property 
-&quot;TODAY_UK&quot; with the date/time pattern &quot;d MMM yyyy&quot;</p>
-
-<pre>  &lt;tstamp&gt;
-    &lt;format property=&quot;TODAY_UK&quot; pattern=&quot;d MMMM yyyy&quot;/&gt;
-  &lt;/tstamp&gt;
+<pre>
+  &lt;tstamp/&gt;
 </pre>
 
+<p>
+sets the standard <code>DSTAMP</code>, <code>TSTAMP</code>,
+and <code>TODAY</code> properties according to the default formats.</p>
+<pre>
+  &lt;tstamp&gt;
+    &lt;format property=&quot;TODAY_UK&quot; pattern=&quot;d-MMMM-yyyy&quot;/&gt;
+  &lt;/tstamp&gt;
+</pre>
+<p>
+sets the standard properties as well as the property
+<code>TODAY_UK</code> with the date/time pattern &quot;d-MMMM-yyyy&quot;
+(eg., 21-May-2001).
+
 <hr>
-<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
-Reserved.</p>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights Reserved.</p>
 
 </body>
 </html>
