@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Parameter;
@@ -89,17 +87,22 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class StripLineComments
-    extends FilterReader
+    extends BaseFilterReader
     implements Parameterizable, ChainableReader
 {
+    /** The type that param recognizes to set the comments. */
     private static final String COMMENTS_KEY = "comment";
 
+    /** The passed in parameter array. */
     private Parameter[] parameters;
 
+    /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
+    /** Vector that holds comments. */
     private Vector comments = new Vector();
 
+    /** The line that has been read ahead. */
     private String line = null;
 
     /**
@@ -109,13 +112,7 @@ public final class StripLineComments
      * that is created making it useless for further operations.
      */
     public StripLineComments() {
-        // Dummy constructor to be invoked by Ant's Introspector
-        super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        super();
     }
 
     /**
@@ -127,6 +124,10 @@ public final class StripLineComments
         super(in);
     }
 
+    /**
+     * Read in line by line; Ignore line if it
+     * begins with a comment string.
+     */
     public final int read() throws IOException {
         if (!getInitialized()) {
             initialize();
@@ -171,49 +172,45 @@ public final class StripLineComments
         return ch;
     }
 
-    public final int read(final char cbuf[], final int off,
-                          final int len) throws IOException {
-        for (int i = 0; i < len; i++) {
-            final int ch = read();
-            if (ch == -1) {
-                if (i == 0) {
-                    return -1;
-                } else {
-                    return i;
-                }
-            }
-            cbuf[off + i] = (char) ch;
-        }
-        return len;
-    }
-
-    public final long skip(final long n) throws IOException {
-        for (long i = 0; i < n; i++) {
-            if (in.read() == -1) return i;
-        }
-        return n;
-    }
-
+    /**
+     * Add the Comment element.
+     */
     public final void addConfiguredComment(final Comment comment) {
         comments.addElement(comment.getValue());
     }
 
+    /**
+     * Set the comments vector.
+     */
     private void setComments(final Vector comments) {
         this.comments = comments;
     }
 
+    /**
+     * Get the comments vector.
+     */
     private final Vector getComments() {
         return comments;
     }
 
+    /**
+     * Set the initialized status.
+     */
     private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
+    /**
+     * Get the initialized status.
+     */
     private final boolean getInitialized() {
         return initialized;
     }
 
+    /**
+     * Create a new StripLineComments object using the passed in
+     * Reader for instantiation.
+     */
     public final Reader chain(final Reader rdr) {
         StripLineComments newFilter = new StripLineComments(rdr);
         newFilter.setComments(getComments());
@@ -229,6 +226,9 @@ public final class StripLineComments
         setInitialized(false);
     }
 
+    /**
+     * Comments set using the param element.
+     */
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -239,13 +239,24 @@ public final class StripLineComments
         }
     }
 
+    /**
+     * The class that holds a comment.
+     */
     public static class Comment {
+
+        /** The comment*/
         private String value;
 
+        /**
+         * Set the comment.
+         */
         public final void setValue(String comment) {
             value = comment;
         }
 
+        /**
+         * Get the comment.
+         */
         public final String getValue() {
             return value;
         }

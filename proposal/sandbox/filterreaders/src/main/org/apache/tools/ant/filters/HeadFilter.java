@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -78,19 +76,25 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class HeadFilter
-    extends FilterReader
+    extends BaseFilterReader
     implements Parameterizable, ChainableReader
 {
+    /** Lines key to represent the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
 
+    /** The passed in parameter array. */
     private Parameter[] parameters;
 
+    /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
+    /** Number of lines currently read in. */
     private long linesRead = 0;
 
+    /** Default number of lines returned. */
     private long lines = 10;
 
+    /** If the next character being read is a linefeed, must it be ignored? */
     private boolean ignoreLineFeed = false;
 
     /**
@@ -100,13 +104,7 @@ public final class HeadFilter
      * that is created making it useless for further operations.
      */
     public HeadFilter() {
-        // Dummy constructor to be invoked by Ant's Introspector
-        super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        super();
     }
 
     /**
@@ -118,6 +116,9 @@ public final class HeadFilter
         super(in);
     }
 
+    /**
+     * Read the first n lines.
+     */
     public final int read() throws IOException {
         if (!getInitialized()) {
             initialize();
@@ -151,47 +152,38 @@ public final class HeadFilter
         return ch;
     }
 
-    public final int read(final char cbuf[], final int off,
-                          final int len) throws IOException {
-        for (int i = 0; i < len; i++) {
-            final int ch = read();
-            if (ch == -1) {
-                if (i == 0) {
-                    return -1;
-                } else {
-                    return i;
-                }
-            }
-            cbuf[off + i] = (char) ch;
-        }
-        return len;
-    }
-
-    public final long skip(long n) throws IOException {
-        for (long i = 0; i < n; i++) {
-            if (in.read() == -1) {
-                return i;
-            }
-        }
-        return n;
-    }
-
+    /**
+     * Set number of lines to be returned.
+     */
     public final void setLines(final long lines) {
         this.lines = lines;
     }
 
+    /**
+     * Get number of lines to be returned.
+     */
     private final long getLines() {
         return lines;
     }
 
+    /**
+     * Set the initialized status.
+     */
     private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
+    /**
+     * Get the initialized status.
+     */
     private final boolean getInitialized() {
         return initialized;
     }
 
+    /**
+     * Create a new HeadFilter using the passed in
+     * Reader for instantiation.
+     */
     public final Reader chain(final Reader rdr) {
         HeadFilter newFilter = new HeadFilter(rdr);
         newFilter.setLines(getLines());
@@ -207,6 +199,9 @@ public final class HeadFilter
         setInitialized(false);
     }
 
+    /**
+     * Scan for the lines parameter.
+     */
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {

@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Parameter;
@@ -86,17 +84,22 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class LineContains
-    extends FilterReader
+    extends BaseFilterReader
     implements Parameterizable, ChainableReader
 {
+    /** contains key */
     private static final String CONTAINS_KEY = "contains";
 
+    /** The passed in parameter array. */
     private Parameter[] parameters;
 
+    /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
+    /** Vector that holds the strings that input lines must contain. */
     private Vector contains = new Vector();
 
+    /** Currently read in line. */
     private String line = null;
 
     /**
@@ -106,13 +109,7 @@ public final class LineContains
      * that is created making it useless for further operations.
      */
     public LineContains() {
-        // Dummy constructor to be invoked by Ant's Introspector
-        super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        super();
     }
 
     /**
@@ -124,6 +121,10 @@ public final class LineContains
         super(in);
     }
 
+    /**
+     * Choose only those lines that contains
+     * user defined values.
+     */
     public final int read() throws IOException {
         if (!initialized) {
             initialize();
@@ -169,49 +170,45 @@ public final class LineContains
         return ch;
     }
 
-    public final int read(final char cbuf[], final int off,
-                          final int len) throws IOException {
-        for (int i = 0; i < len; i++) {
-            final int ch = read();
-            if (ch == -1) {
-                if (i == 0) {
-                    return -1;
-                } else {
-                    return i;
-                }
-            }
-            cbuf[off + i] = (char) ch;
-        }
-        return len;
-    }
-
-    public final long skip(final long n) throws IOException {
-        for (long i = 0; i < n; i++) {
-            if (in.read() == -1) return i;
-        }
-        return n;
-    }
-
+    /**
+     * Add a contains element.
+     */
     public final void addConfiguredContains(final Contains contains) {
         this.contains.addElement(contains.getValue());
     }
 
+    /**
+     * Set contains vector.
+     */
     private void setContains(final Vector contains) {
         this.contains = contains;
     }
 
+    /**
+     * Get contains vector.
+     */
     private final Vector getContains() {
         return contains;
     }
 
+    /**
+     * Set the initialized status.
+     */
     private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
+    /**
+     * Get the initialized status.
+     */
     private final boolean getInitialized() {
         return initialized;
     }
 
+    /**
+     * Create a new LineContains using the passed in
+     * Reader for instantiation.
+     */
     public final Reader chain(final Reader rdr) {
         LineContains newFilter = new LineContains(rdr);
         newFilter.setContains(getContains());
@@ -227,6 +224,9 @@ public final class LineContains
         initialized = false;
     }
 
+    /**
+     * Parse params to add user defined contains strings.
+     */
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
@@ -237,13 +237,24 @@ public final class LineContains
         }
     }
 
+    /**
+     * Holds a contains element
+     */
     public static class Contains {
+
+        /** User defined contains string */
         private String value;
 
+        /**
+         * Set the contains string
+         */
         public final void setValue(String contains) {
             value = contains;
         }
 
+        /**
+         * Get the contains string
+         */
         public final String getValue() {
             return value;
         }

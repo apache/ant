@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Hashtable;
 
 import org.apache.tools.ant.types.Parameter;
@@ -83,23 +81,31 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class ReplaceTokens
-    extends FilterReader
+    extends BaseFilterReader
     implements Parameterizable, ChainableReader
 {
+    /** Default begin token character. */
     private static final char DEFAULT_BEGIN_TOKEN = '@';
 
+    /** Default end token character. */
     private static final char DEFAULT_END_TOKEN = '@';
 
+    /** Data that must be read from, if not null. */
     private String queuedData = null;
 
+    /** The passed in parameter array. */
     private Parameter[] parameters;
 
+    /** Hashtable to hold the replacee-replacer pairs. */
     private Hashtable hash = new Hashtable();
 
+    /** Have the parameters passed been interpreted? */
     private boolean initialized;
 
+    /** Begin token. */
     private char beginToken = DEFAULT_BEGIN_TOKEN;
 
+    /** End token. */
     private char endToken = DEFAULT_END_TOKEN;
 
     /**
@@ -109,13 +115,7 @@ public final class ReplaceTokens
      * that is created making it useless for further operations.
      */
     public ReplaceTokens() {
-        // Dummy constructor to be invoked by Ant's Introspector
-        super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        super();
     }
 
     /**
@@ -176,67 +176,73 @@ public final class ReplaceTokens
         return ch;
     }
 
-    public final int read(final char cbuf[], final int off,
-                          final int len) throws IOException {
-        for (int i = 0; i < len; i++) {
-            final int ch = read();
-            if (ch == -1) {
-                if (i == 0) {
-                    return -1;
-                } else {
-                    return i;
-                }
-            }
-            cbuf[off + i] = (char) ch;
-        }
-        return len;
-    }
-
-    public final long skip(long n) throws IOException {
-        for (long i = 0; i < n; i++) {
-            if (in.read() == -1) {
-                return i;
-            }
-        }
-        return n;
-    }
-
+    /**
+     * Set begin token.
+     */
     public final void setBeginToken(final char beginToken) {
         this.beginToken = beginToken;
     }
 
+    /**
+     * Get begin token.
+     */
     private final char getBeginToken() {
         return beginToken;
     }
 
+    /**
+     * Set end token.
+     */
     public final void setEndToken(final char endToken) {
         this.endToken = endToken;
     }
 
+    /**
+     * Get begin token.
+     */
     private final char getEndToken() {
         return endToken;
     }
 
+    /**
+     * Add a token element.
+     */
     public final void addConfiguredToken(final Token token) {
         hash.put(token.getKey(), token.getValue());
     }
 
+    /**
+     * Set the tokens.
+     */
     private void setTokens(final Hashtable hash) {
         this.hash = hash;
     }
 
+    /**
+     * Get the tokens.
+     */
     private final Hashtable getTokens() {
         return hash;
     }
 
+    /**
+     * Set the initialized status.
+     */
     private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
+    /**
+     * Get the initialized status.
+     */
     private final boolean getInitialized() {
         return initialized;
     }
 
+    /**
+     * Create a new ReplaceTokens using the passed in
+     * Reader for instantiation.
+     */
     public final Reader chain(final Reader rdr) {
         ReplaceTokens newFilter = new ReplaceTokens(rdr);
         newFilter.setBeginToken(getBeginToken());
@@ -279,23 +285,41 @@ public final class ReplaceTokens
         }
     }
 
+    /**
+     * Holds a token
+     */
     public static class Token {
+
+        /** token key */
         private String key;
 
+        /** token value */
         private String value;
 
+        /**
+         * Set the token key
+         */
         public final void setKey(String key) {
             this.key = key;
         }
 
+        /**
+         * Set the token value
+         */
         public final void setValue(String value) {
             this.value = value;
         }
 
+        /**
+         * Get the token key
+         */
         public final String getKey() {
             return key;
         }
 
+        /**
+         * Get the token value
+         */
         public final String getValue() {
             return value;
         }

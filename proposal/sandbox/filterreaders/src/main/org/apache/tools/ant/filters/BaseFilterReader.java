@@ -53,58 +53,33 @@
  */
 package org.apache.tools.ant.filters;
 
+import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-
-import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
+import java.io.StringReader;
 
 /**
- * Converts tabs to spaces.
- *
- * Example Usage:
- * =============
- *
- * &lt;tabtospaces tablength=&quot;8&quot;/&gt;
- *
- * Or:
- *
- * <filterreader classname=&quot;org.apache.tools.ant.filters.TabsToSpaces&quot;>
- *    <param name=&quot;tablength&quot; value=&quot;8&quot;/>
- * </filterreader>
+ * Base class for core filter readers.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class TabsToSpaces
-    extends BaseFilterReader
-    implements Parameterizable, ChainableReader
+public abstract class BaseFilterReader
+    extends FilterReader
 {
-    /** The default tab length is 8 */
-    private static final int DEFAULT_TAB_LENGTH = 8;
-
-    /** The name that param recognizes to set the tablength. */
-    private static final String TAB_LENGTH_KEY = "tablength";
-
-    /** The passed in parameter array. */
-    private Parameter[] parameters;
-
-    /** Have the parameters passed been interpreted? */
-    private boolean initialized;
-
-    /** Default tab length. */
-    private int tabLength = DEFAULT_TAB_LENGTH;
-
-    /** How many more spaces must be returned to replace a tab? */
-    private int spacesRemaining = 0;
-
     /**
      * This constructor is a dummy constructor and is
      * not meant to be used by any class other than Ant's
      * introspection mechanism. This will close the filter
      * that is created making it useless for further operations.
      */
-    public TabsToSpaces() {
-        super();
+    public BaseFilterReader() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
     }
 
     /**
@@ -112,95 +87,61 @@ public final class TabsToSpaces
      *
      * @param in  a Reader object providing the underlying stream.
      */
-    public TabsToSpaces(final Reader in) {
+    public BaseFilterReader(final Reader in) {
         super(in);
     }
 
     /**
-     * Convert tabs with spaces
+     * Read characters into a portion of an array.  This method will block
+     * until some input is available, an I/O error occurs, or the end of the
+     * stream is reached.
+     *
+     * @param      cbuf  Destination buffer
+     * @param      off   Offset at which to start storing characters
+     * @param      len   Maximum number of characters to read
+     *
+     * @return     The number of characters read, or -1 if the end of the
+     *             stream has been reached
+     *
+     * @exception  IOException  If an I/O error occurs
      */
-    public final int read() throws IOException {
-        if (!getInitialized()) {
-            initialize();
-            setInitialized(true);
-        }
-
-        int ch = -1;
-
-        if (spacesRemaining > 0) {
-            spacesRemaining--;
-            ch = ' ';
-        } else {
-            ch = in.read();
-            if (ch == '\t') {
-                spacesRemaining = tabLength - 1;
-                ch = ' ';
-            }
-        }
-        return ch;
-    }
-
-    /**
-     * Set the tab length.
-     */
-    public final void setTablength(final int tabLength) {
-        this.tabLength = tabLength;
-    }
-
-    /**
-     * Get the tab length
-     */
-    private final int getTablength() {
-        return tabLength;
-    }
-
-    /**
-     * Set the initialized status.
-     */
-    private final void setInitialized(final boolean initialized) {
-        this.initialized = initialized;
-    }
-
-    /**
-     * Get the initialized status.
-     */
-    private final boolean getInitialized() {
-        return initialized;
-    }
-
-    /**
-     * Create a new TabsToSpaces object using the passed in
-     * Reader for instantiation.
-     */
-    public final Reader chain(final Reader rdr) {
-        TabsToSpaces newFilter = new TabsToSpaces(rdr);
-        newFilter.setTablength(getTablength());
-        newFilter.setInitialized(true);
-        return newFilter;
-    }
-
-    /**
-     * Set Parameters
-     */
-    public final void setParameters(final Parameter[] parameters) {
-        this.parameters = parameters;
-        setInitialized(false);
-    }
-
-    /**
-     * Initialize tokens
-     */
-    private final void initialize() {
-        if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                if (parameters[i] != null) {
-                    if (TAB_LENGTH_KEY.equals(parameters[i].getName())) {
-                        tabLength =
-                            new Integer(parameters[i].getValue()).intValue();
-                        break;
-                    }
+    public final int read(final char cbuf[], final int off,
+                          final int len) throws IOException {
+        for (int i = 0; i < len; i++) {
+            final int ch = read();
+            if (ch == -1) {
+                if (i == 0) {
+                    return -1;
+                } else {
+                    return i;
                 }
             }
+            cbuf[off + i] = (char) ch;
         }
+        return len;
+    }
+
+    /**
+     * Skip characters.  This method will block until some characters are
+     * available, an I/O error occurs, or the end of the stream is reached.
+     *
+     * @param  n  The number of characters to skip
+     *
+     * @return    The number of characters actually skipped
+     *
+     * @exception  IllegalArgumentException  If <code>n</code> is negative.
+     * @exception  IOException  If an I/O error occurs
+     */
+    public final long skip(long n) throws IOException {
+        if (n < 0L) {
+            throw new IllegalArgumentException("skip value is negative");
+        }
+
+        for (long i = 0; i < n; i++) {
+            if (in.read() == -1) {
+                return i;
+            }
+        }
+        return n;
     }
 }

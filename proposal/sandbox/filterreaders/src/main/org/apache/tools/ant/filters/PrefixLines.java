@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -78,20 +76,22 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class PrefixLines
-    extends FilterReader
+    extends BaseFilterReader
     implements Parameterizable, ChainableReader
 {
-    /**
-     * prefix key
-     */
+    /** prefix key */
     private static final String PREFIX_KEY = "prefix";
 
+    /** The passed in parameter array. */
     private Parameter[] parameters;
 
+    /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
+    /** The prefix to be used. */
     private String prefix = null;
 
+    /** Data that must be read from, if not null. */
     private String queuedData = null;
 
     /**
@@ -101,13 +101,7 @@ public final class PrefixLines
      * that is created making it useless for further operations.
      */
     public PrefixLines() {
-        // Dummy constructor to be invoked by Ant's Introspector
-        super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        super();
     }
 
     /**
@@ -119,6 +113,9 @@ public final class PrefixLines
         super(in);
     }
 
+    /**
+     * Prefix lines with user defined prefix.
+     */
     public final int read() throws IOException {
         if (!getInitialized()) {
             initialize();
@@ -160,47 +157,38 @@ public final class PrefixLines
         return ch;
     }
 
-    public final int read(final char cbuf[], final int off,
-                          final int len) throws IOException {
-        for (int i = 0; i < len; i++) {
-            final int ch = read();
-            if (ch == -1) {
-                if (i == 0) {
-                    return -1;
-                } else {
-                    return i;
-                }
-            }
-            cbuf[off + i] = (char) ch;
-        }
-        return len;
-    }
-
-    public final long skip(long n) throws IOException {
-        for (long i = 0; i < n; i++) {
-            if (in.read() == -1) {
-                return i;
-            }
-        }
-        return n;
-    }
-
+    /**
+     * Set the prefix
+     */
     public final void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Get the prefix
+     */
     private final String getPrefix() {
         return prefix;
     }
 
+    /**
+     * Set the initialized status.
+     */
     private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
+    /**
+     * Get the initialized status.
+     */
     private final boolean getInitialized() {
         return initialized;
     }
 
+    /**
+     * Create a new PrefixLines using the passed in
+     * Reader for instantiation.
+     */
     public final Reader chain(final Reader rdr) {
         PrefixLines newFilter = new PrefixLines(rdr);
         newFilter.setPrefix(getPrefix());
@@ -216,6 +204,9 @@ public final class PrefixLines
         setInitialized(false);
     }
 
+    /**
+     * Initialize prefix if available from the param element.
+     */
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {

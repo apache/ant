@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -74,7 +72,7 @@ import org.apache.tools.ant.types.Parameterizable;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class StripLineBreaks
-    extends FilterReader
+    extends BaseFilterReader
     implements Parameterizable, ChainableReader
 {
     /**
@@ -88,10 +86,13 @@ public final class StripLineBreaks
      */
     private static final String LINE_BREAKS_KEY = "linebreaks";
 
+    /** The passed in parameter array. */
     private Parameter[] parameters;
 
+    /** Holds the characters that are recognized as line breaks. */
     private String lineBreaks = DEFAULT_LINE_BREAKS;
 
+    /** Have the parameters passed been interpreted? */
     private boolean initialized = false;
 
     /**
@@ -101,13 +102,7 @@ public final class StripLineBreaks
      * that is created making it useless for further operations.
      */
     public StripLineBreaks() {
-        // Dummy constructor to be invoked by Ant's Introspector
-        super(new StringReader(new String()));
-        try {
-            close();
-        } catch (IOException  ioe) {
-            // Ignore
-        }
+        super();
     }
 
     /**
@@ -119,6 +114,11 @@ public final class StripLineBreaks
         super(in);
     }
 
+    /**
+     * If the character that is being read in is a
+     * line break character, ignore it and move on to the
+     * next one.
+     */
     public final int read() throws IOException {
         if (!initialized) {
             initialize();
@@ -136,47 +136,38 @@ public final class StripLineBreaks
         return ch;
     }
 
-    public final int read(final char cbuf[], final int off,
-                          final int len) throws IOException {
-        for (int i = 0; i < len; i++) {
-            final int ch = read();
-            if (ch == -1) {
-                if (i == 0) {
-                    return -1;
-                } else {
-                    return i;
-                }
-            }
-            cbuf[off + i] = (char) ch;
-        }
-        return len;
-    }
-
-    public final long skip(long n) throws IOException {
-        for (long i = 0; i < n; i++) {
-            if (in.read() == -1) {
-                return i;
-            }
-        }
-        return n;
-    }
-
+    /**
+     * Set the line break characters.
+     */
     public final void setLineBreaks(final String lineBreaks) {
         this.lineBreaks = lineBreaks;
     }
 
+    /**
+     * Get the line breaks characters
+     */
     private final String getLineBreaks() {
         return lineBreaks;
     }
 
+    /**
+     * Set the initialized status.
+     */
     private final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
     }
 
+    /**
+     * Get the initialized status.
+     */
     private final boolean getInitialized() {
         return initialized;
     }
 
+    /**
+     * Create a new StripLineBreaks object using the passed in
+     * Reader for instantiation.
+     */
     public final Reader chain(final Reader rdr) {
         StripLineBreaks newFilter = new StripLineBreaks(rdr);
         newFilter.setLineBreaks(getLineBreaks());
@@ -192,6 +183,9 @@ public final class StripLineBreaks
         setInitialized(false);
     }
 
+    /**
+     * Line break characters set using the param element.
+     */
     private final void initialize() {
         String userDefinedLineBreaks = null;
         if (parameters != null) {
