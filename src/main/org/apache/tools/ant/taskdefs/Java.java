@@ -76,7 +76,16 @@ public class Java extends Exec {
      * Do the execution.
      */
     public void execute() throws BuildException {
-        
+        executeJava();
+    }
+
+    /**
+     * Do the execution and return a return code.
+     *
+     * @return the return code from the execute java cklass if it was executed in 
+     * a separate VM (fork = "yes").
+     */
+    public int executeJava() throws BuildException {
         project.log("Calling " + classname, "java", project.MSG_VERBOSE);
 
         if (classname == null) {
@@ -101,12 +110,13 @@ public class Java extends Exec {
                 b.append(args);
             }
             
-            run(b.toString());
+            return run(b.toString());
         } else {
             Vector argList = tokenize(args);
             if (jvmargs != null) project.log("JVM args and classpath ignored when same JVM is used.", "java", project.MSG_VERBOSE);
             project.log("Java args: " + argList.toString(), "java", project.MSG_VERBOSE);
             run(classname, argList);
+            return 0;
         }
     }
 
