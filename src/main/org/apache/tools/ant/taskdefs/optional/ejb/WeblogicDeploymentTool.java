@@ -435,7 +435,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             else {
                 if (!compiler.equals(DEFAULT_COMPILER)) {
                     javaTask.createArg().setValue("-compiler");
-                    javaTask.createArg().setValue(compiler);
+                    javaTask.createArg().setLine(compiler);
                 }
             }
             javaTask.createArg().setValue(sourceJar.getPath());
