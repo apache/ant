@@ -53,18 +53,19 @@ echo ANT_HOME is set incorrectly or ant could not be located. Please set ANT_HOM
 goto end
 
 :checkJava
+set _JAVACMD=%JAVACMD%
 set LOCALCLASSPATH=%CLASSPATH%
 for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" %%i
 
 if "%JAVA_HOME%" == "" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
-set _JAVACMD=%JAVA_HOME%\bin\java.exe
+if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java.exe
 if exist "%JAVA_HOME%\lib\tools.jar" call "%ANT_HOME%\bin\lcp.bat" "%JAVA_HOME%\lib\tools.jar"
 if exist "%JAVA_HOME%\lib\classes.zip" call "%ANT_HOME%\bin\lcp.bat" "%JAVA_HOME%\lib\classes.zip"
 goto checkJikes
 
 :noJavaHome
-set _JAVACMD=java.exe
+if "%_JAVACMD%" == "" set _JAVACMD=java.exe
 echo.
 echo Warning: JAVA_HOME environment variable is not set.
 echo   If build fails because sun.* classes could not be found
