@@ -203,7 +203,7 @@ public abstract class BuildFileTest extends TestCase {
     /**
      *  set up to run the named project
      *
-     *@param  filename name of project file to run
+     * @param  filename name of project file to run
      */    
     protected void configureProject(String filename) { 
         logBuffer = new StringBuffer();
@@ -217,8 +217,8 @@ public abstract class BuildFileTest extends TestCase {
     
     /**
      *  execute a target we have set up
-     *@pre configureProject has been called
-     *@param  targetName  target to run
+     * @pre configureProject has been called
+     * @param  targetName  target to run
      */    
     protected void executeTarget(String targetName) { 
         PrintStream sysOut = System.out;
@@ -251,7 +251,11 @@ public abstract class BuildFileTest extends TestCase {
     protected Project getProject() {
         return project;
     }
-    
+
+    /**
+     * get the directory of the project
+     * @return the base dir of the project
+     */
     protected File getProjectDir() {
         return project.getBaseDir();
     }
@@ -269,7 +273,9 @@ public abstract class BuildFileTest extends TestCase {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
             if ((null != msg) && (!ex.getMessage().equals(msg))) {
-                fail("Should throw BuildException because '" + cause + "' with message '" + msg + "' (actual message '" + ex.getMessage() + "' instead)");
+                fail("Should throw BuildException because '" + cause
+                        + "' with message '" + msg
+                        + "' (actual message '" + ex.getMessage() + "' instead)");
             }
             return;
         }
@@ -308,13 +314,22 @@ public abstract class BuildFileTest extends TestCase {
 
     protected void expectPropertySet(String target, String property, String value) {
         executeTarget(target);
+        assertPropertyEquals(property, value);
+    }
+
+    /**
+     * assert that a property equals a value; comparison is case sensitive.
+     * @param property property name
+     * @param value expected value
+     */
+    protected void assertPropertyEquals(String property, String value) {
         String result = project.getProperty(property);
         assertEquals("property " + property,value,result);
     }
 
 
     /**
-     * call a target, verify property is "true"
+     * call a target, verify named property is "true".
      *
      * @param target build file target
      * @param property property name
@@ -346,13 +361,19 @@ public abstract class BuildFileTest extends TestCase {
         return url;
     }
 
+    /**
+     * an output stream which saves stuff to our buffer.
+     */
     private class AntOutputStream extends java.io.OutputStream {
         public void write(int b) { 
             outBuffer.append((char)b);
         }
     }
-    
-    private class AntTestListener implements BuildListener { 
+
+    /**
+     * our own personal build listener
+     */
+    private class AntTestListener implements BuildListener {
         /**
          *  Fired before any targets are started.
          */
@@ -415,8 +436,7 @@ public abstract class BuildFileTest extends TestCase {
         public void messageLogged(BuildEvent event) {
             if (event.getPriority() == Project.MSG_INFO ||
                 event.getPriority() == Project.MSG_WARN ||
-                event.getPriority() == Project.MSG_ERR)
-            {
+                event.getPriority() == Project.MSG_ERR) {
                 logBuffer.append(event.getMessage());
             }
             fullLogBuffer.append(event.getMessage());
