@@ -390,6 +390,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     /**
      * Set the parent for this class loader. This is the class loader to which
      * this class loader will delegate to load classes
+     *
+     * @param parent the parent class loader.
      */
     public void setParent(ClassLoader parent) {
         if (parent == null) {
@@ -400,9 +402,12 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     }
 
     /**
-     * Control whether class ookup is delegated to the parent loader first
+     * Control whether class lookup is delegated to the parent loader first
      * or after this loader. Use with extreme caution. Setting this to 
      * false violates the class loader hierarchy and can lead to Linkage errors
+     *
+     * @param parentFirst if true, delegate initial class search to the parent
+     *                    classloader.
      */
     public void setParentFirst(boolean parentFirst) {
         this.parentFirst = parentFirst;
@@ -472,6 +477,22 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         File pathComponent
             = project != null ? project.resolveFile(pathElement)
                               : new File(pathElement);
+        try {
+            addPathFile(pathComponent);
+        } catch (IOException e) {
+            throw new BuildException(e);
+        }
+    }
+    
+    /**
+     * Add a file to the path
+     *
+     * @param pathComponent the file which is to be added to the path for
+     *                      this class loader
+     *
+     * @throws IOException if data needed from the file cannot be read.
+     */
+    protected void addPathFile(File pathComponent) throws IOException { 
         pathComponents.addElement(pathComponent);
     }
 
@@ -965,12 +986,12 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (isParentFirst(classname)) {
             try {
                 theClass = findBaseClass(classname);
-                log("Class " + classname + " loaded from parent loader ( parentFirst )",
-                    Project.MSG_DEBUG);
+                log("Class " + classname + " loaded from parent loader " 
+                    + "(parentFirst)", Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 theClass = findClass(classname);
-                log("Class " + classname + " loaded from ant loader ( parentFirst )",
-                    Project.MSG_DEBUG);
+                log("Class " + classname + " loaded from ant loader " 
+                    + "(parentFirst)", Project.MSG_DEBUG);
             }
         } else {
             try {
@@ -1015,6 +1036,10 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @param classData the bytecode data for the class
      * @param classname the name of the class
+     *
+     * @return the Class instance created from the given data
+     *
+     * @throws IOException if the class data cannot be read.
      */
     protected Class defineClassFromData(File container, byte[] classData,
                                         String classname) throws IOException {
@@ -1056,6 +1081,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *               Must not be <code>null</code>.
      * @param classname The name of the class in the stream.
      *                  Must not be <code>null</code>.
+     * @param container the file or directory containing the class.
      *
      * @return the Class object read from the stream.
      *
@@ -1096,6 +1122,23 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         return findClassInComponents(name);
     }
 
+    /** 
+     * Indicate if the given file is in this loader's path
+     *
+     * @param component the file which is to be checked
+     *
+     * @return true if the file is in the class path
+     */
+    protected boolean isInPath(File component) {
+        for (Enumeration e = pathComponents.elements(); e.hasMoreElements();) {
+            File pathComponent = (File) e.nextElement();
+            if (pathComponent.equals(component)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 
     /**
      * Finds a class on the given classpath.
@@ -1121,8 +1164,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
-                        log("Loaded from " + pathComponent + " " + classFilename,
-                                Project.MSG_DEBUG );
+                        log("Loaded from " + pathComponent + " " 
+                            + classFilename, Project.MSG_DEBUG);
                         return getClassFromStream(stream, name, pathComponent);
                     }
                 } catch (SecurityException se) {
@@ -1173,7 +1216,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      */
     public synchronized void cleanup() {
         for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
-            ZipFile zipFile = (ZipFile)e.nextElement();
+            ZipFile zipFile = (ZipFile) e.nextElement();
             try {
                 zipFile.close();
             } catch (IOException ioe) {
@@ -1248,10 +1291,10 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * here
      */
     public void addJavaLibraries() {
-        Vector packages=JavaEnvUtils.getJrePackages();
-        Enumeration e=packages.elements();
-        while(e.hasMoreElements()) {
-            String packageName=(String)e.nextElement();
+        Vector packages = JavaEnvUtils.getJrePackages();
+        Enumeration e = packages.elements();
+        while (e.hasMoreElements()) {
+            String packageName = (String) e.nextElement();
             addSystemPackageRoot(packageName);
         }
     }
