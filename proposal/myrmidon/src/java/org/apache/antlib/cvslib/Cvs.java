@@ -55,12 +55,6 @@ public class Cvs
     private File m_passwordFile;
 
     /**
-     * If true it will stop the build if cvs exits with error. Default is false.
-     * (Iulian)
-     */
-    private boolean m_failOnError;
-
-    /**
      * the CVSROOT variable.
      */
     private String m_cvsRoot;
