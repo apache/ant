@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -52,7 +53,7 @@ import org.apache.tools.ant.types.Path;
  */
 
 public class Javah
-    extends AbstractLogEnabled
+    extends AbstractTask
 {
     private final static String FAIL_MSG = "Compile failed, messages should have been provided.";
 
@@ -67,8 +68,10 @@ public class Javah
     private String m_cls;
     private File m_destDir;
 
-    public void setBootclasspath( final Path bootclasspath )
-        throws TaskException
+    /**
+     * Adds an element to the bootclasspath.
+     */
+    public void addBootclasspath( final Path bootclasspath )
     {
         if( m_bootclasspath == null )
         {
@@ -76,7 +79,7 @@ public class Javah
         }
         else
         {
-            m_bootclasspath.append( bootclasspath );
+            m_bootclasspath.addPath( bootclasspath );
         }
     }
 
@@ -85,7 +88,10 @@ public class Javah
         m_cls = cls;
     }
 
-    public void setClasspath( final Path classpath )
+    /**
+     * Adds an element to the classpath.
+     */
+    public void addClasspath( final Path classpath )
         throws TaskException
     {
         if( m_classpath == null )
@@ -94,7 +100,7 @@ public class Javah
         }
         else
         {
-            m_classpath.append( classpath );
+            m_classpath.addPath( classpath );
         }
     }
 
@@ -149,36 +155,12 @@ public class Javah
         m_verbose = verbose;
     }
 
-    public Path createBootclasspath()
-    {
-        if( m_bootclasspath == null )
-        {
-            m_bootclasspath = new Path();
-        }
-        Path path1 = m_bootclasspath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
-    }
-
     public ClassArgument createClass()
     {
         final ClassArgument ga = new ClassArgument();
         setupLogger( ga );
         m_classes.add( ga );
         return ga;
-    }
-
-    public Path createClasspath()
-    {
-        if( m_classpath == null )
-        {
-            m_classpath = new Path();
-        }
-        Path path1 = m_classpath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
     }
 
     /**
@@ -188,12 +170,6 @@ public class Javah
         throws TaskException
     {
         validate();
-
-        if( m_classpath == null )
-        {
-            m_classpath = Path.systemClasspath;
-        }
-
         doClassicCompile();
     }
 

@@ -387,14 +387,12 @@ Legal:
       </zipfileset>
     </jar>
 
-    <!--
     <jar jarfile="${build.lib}/ant1.atl" basedir="${build.classes}">
       <include name="org/apache/antlib/ant1/**"/>
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="ant1-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
-    -->
 
   </target>
 

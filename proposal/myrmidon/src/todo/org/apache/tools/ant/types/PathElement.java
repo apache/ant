@@ -10,17 +10,19 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.myrmidon.api.TaskException;
 
 /**
- * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
+ * Helper class, holds <code>&lt;&gt;</code> values.
  */
-public class PathElement
+class PathElement
 {
+    private String m_location;
     private String m_path;
 
     public void setLocation( final File location )
     {
-        m_path = FileUtils.translateFile( location.getAbsolutePath() );
+        m_location = location.getAbsolutePath();
     }
 
     public void setPath( String path )
@@ -28,8 +30,13 @@ public class PathElement
         m_path = path;
     }
 
-    protected String[] getParts( final File baseDirectory, final Logger logger )
+    protected String[] getParts( final File baseDirectory )
+            throws TaskException
     {
-        return FileUtils.translatePath( baseDirectory, m_path, logger );
+        if ( m_location != null )
+        {
+            return new String[] { m_location };
+        }
+        return FileUtils.translatePath( baseDirectory, m_path );
     }
 }

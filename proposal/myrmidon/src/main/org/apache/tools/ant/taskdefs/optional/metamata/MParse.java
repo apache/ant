@@ -19,7 +19,6 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PathElement;
 
 /**
  * Simple Metamata MParse task based on the original written by <a
@@ -204,9 +203,7 @@ public class MParse
         final Path classPath = m_cmdl.createClasspath();
         for( int i = 0; i < jars.length; i++ )
         {
-            final PathElement pathElement = new PathElement();
-            classPath.addPathElement( pathElement );
-            pathElement.setLocation( jars[ i ] );
+            classPath.addLocation( jars[ i ] );
         }
 
         // set the metamata.home property

@@ -14,10 +14,12 @@ import java.io.PrintWriter;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -77,8 +79,6 @@ public abstract class DefaultCompilerAdapter
         m_compileList = attributes.getFileList();
         m_compileClasspath = attributes.getClasspath();
         m_baseDir = attributes.getBaseDirectory();
-        m_includeAntRuntime = attributes.getIncludeantruntime();
-        m_includeJavaRuntime = attributes.getIncludejavaruntime();
         m_memoryInitialSize = attributes.getMemoryInitialSize();
         m_memoryMaximumSize = attributes.getMemoryMaximumSize();
     }
@@ -283,34 +283,13 @@ public abstract class DefaultCompilerAdapter
 
         if( m_destDir != null )
         {
-            classpath.setLocation( m_destDir );
+            classpath.addLocation( m_destDir );
         }
 
-        // Combine the build classpath with the system classpath, in an
-        // order determined by the value of build.classpath
-
-        if( m_compileClasspath == null )
+        // add the classpath
+        if ( m_compileClasspath != null )
         {
-            if( m_includeAntRuntime )
-            {
-                classpath.addExisting( Path.systemClasspath );
-            }
-        }
-        else
-        {
-            if( m_includeAntRuntime )
-            {
-                classpath.addExisting( m_compileClasspath.concatSystemClasspath( "last" ) );
-            }
-            else
-            {
-                classpath.addExisting( m_compileClasspath.concatSystemClasspath( "ignore" ) );
-            }
-        }
-
-        if( m_includeJavaRuntime )
-        {
-            classpath.addJavaRuntime();
+            classpath.addExisting( m_compileClasspath );
         }
 
         return classpath;
@@ -437,5 +416,41 @@ public abstract class DefaultCompilerAdapter
 
         getLogger().debug( niceSourceList.toString() );
     }
+
+    /**
+     * Emulation of extdirs feature in java >= 1.2. This method adds all files
+     * in the given directories (but not in sub-directories!) to the classpath,
+     * so that you don't have to specify them all one by one.
+     */
+    protected void addExtdirs( Path path )
+        throws TaskException
+    {
+        if( m_extdirs == null )
+        {
+            String extProp = System.getProperty( "java.ext.dirs" );
+            if( extProp != null )
+            {
+                m_extdirs = new Path( extProp );
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        final String[] dirs = m_extdirs.list();
+        for( int i = 0; i < dirs.length; i++ )
+        {
+            final File dir = new File( dirs[ i ] );
+            if( dir.exists() && dir.isDirectory() )
+            {
+                final FileSet fileSet = new FileSet();
+                fileSet.setDir( dir );
+                fileSet.setIncludes( "*" );
+                path.addFileset( fileSet );
+            }
+        }
+    }
+
 }
 

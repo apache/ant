@@ -390,11 +390,7 @@ public class FileUtils
             return "";
 
         final StringBuffer result = new StringBuffer( source );
-        for( int i = 0; i < result.length(); i++ )
-        {
-            translateFileSep( result, i );
-        }
-
+        translateFileSep( result );
         return result.toString();
     }
 
@@ -406,22 +402,25 @@ public class FileUtils
      * @param pos Description of Parameter
      * @return Description of the Returned Value
      */
-    public static boolean translateFileSep( StringBuffer buffer, int pos )
+    public static void translateFileSep( StringBuffer buffer )
     {
-        if( buffer.charAt( pos ) == '/' || buffer.charAt( pos ) == '\\' )
+        int len = buffer.length();
+        for ( int pos = 0; pos < len; pos++ )
         {
-            buffer.setCharAt( pos, File.separatorChar );
-            return true;
+            char ch = buffer.charAt( pos );
+            if( ch == '/' || ch == '\\' )
+            {
+                buffer.setCharAt( pos, File.separatorChar );
+            }
         }
-        return false;
     }
 
     /**
      * Splits a PATH (with : or ; as separators) into its parts.
      */
     public static String[] translatePath( final File baseDirectory,
-                                          String source,
-                                          final Logger logger )
+                                          String source )
+        throws TaskException
     {
         final ArrayList result = new ArrayList();
         if( source == null )
@@ -431,23 +430,13 @@ public class FileUtils
         StringBuffer element = new StringBuffer();
         for( int i = 0; i < elements.length; i++ )
         {
+            // Resolve the file relative to the base directory
             element.setLength( 0 );
             final String pathElement = elements[ i ];
-            try
-            {
-                element.append( resolveFile( baseDirectory, pathElement ) );
-            }
-            catch( TaskException e )
-            {
-                final String message =
-                    "Dropping path element " + pathElement + " as it is not valid relative to the project";
-                logger.debug( message );
-            }
+            element.append( resolveFile( baseDirectory, pathElement ) );
 
-            for( int j = 0; j < element.length(); j++ )
-            {
-                translateFileSep( element, j );
-            }
+            // Tidy up the separators
+            translateFileSep( element );
             result.add( element.toString() );
         }
 

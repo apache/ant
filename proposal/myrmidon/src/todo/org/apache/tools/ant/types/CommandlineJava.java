@@ -132,11 +132,10 @@ public class CommandlineJava
             pos += sysProperties.size();
         }
         // classpath is a vm option too..
-        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath( "ignore" ) : null;
-        if( fullClasspath != null && fullClasspath.toString().trim().length() > 0 )
+        if( classpath != null && classpath.toString().trim().length() > 0 )
         {
             result[ pos++ ] = "-classpath";
-            result[ pos++ ] = fullClasspath.toString();
+            result[ pos++ ] = classpath.toString();
         }
         // this is the classname to run as well as its arguments.
         // in case of 'executeJar', the executable is a jar file.
@@ -215,8 +214,7 @@ public class CommandlineJava
     {
         int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
-        Path fullClasspath = classpath != null ? classpath.concatSystemClasspath( "ignore" ) : null;
-        if( fullClasspath != null && fullClasspath.toString().trim().length() > 0 )
+        if( classpath != null && classpath.toString().trim().length() > 0 )
         {
             size += 2;
         }

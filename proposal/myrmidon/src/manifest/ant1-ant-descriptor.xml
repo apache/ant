@@ -1,5 +1,17 @@
 <ant-lib>
+
   <types>
     <task name="ant1-tasklib" classname="org.apache.myrmidon.libs.ant1.Ant1Tasklib" />
+
+    <data-type name="path" classname="org.apache.tools.ant.types.Path" />
+    <task name="path" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
   </types>
+
+  <converters>
+    <converter
+      classname="org.apache.tools.ant.types.converters.StringToPathConverter"
+      source="java.lang.String"
+      destination="org.apache.tools.ant.types.Path"
+      />
+  </converters>
 </ant-lib>

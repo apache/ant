@@ -17,7 +17,6 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PathElement;
 
 /**
  * Taskdef for the JJTree compiler compiler.
@@ -175,10 +174,7 @@ public class JJTree extends Task
             throw new TaskException( "Javacchome not set." );
         }
         final Path classpath = cmdl.createClasspath();
-        final PathElement pathElement = new PathElement();
-        classpath.addPathElement( pathElement );
-        pathElement.setPath( javaccHome.getAbsolutePath() +
-                                               "/JavaCC.zip" );
+        classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
         classpath.addJavaRuntime();
 
         final Argument arg = cmdl.createVmArgument();

@@ -463,14 +463,14 @@ public class JUnitTask extends Task
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
                 getLogger().debug( "Implicitly adding " + jarName + " to classpath" );
-                createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
+                createClasspath().addLocation( new File( jarName ) );
             }
             else if( u.startsWith( "file:" ) )
             {
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
                 getLogger().debug( "Implicitly adding " + dirName + " to classpath" );
-                createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
+                createClasspath().addLocation( new File( dirName ) );
             }
             else
             {

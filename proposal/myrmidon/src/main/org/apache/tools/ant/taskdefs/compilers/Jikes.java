@@ -52,7 +52,7 @@ public class Jikes
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
-        classpath.addExtdirs( m_extdirs );
+        addExtdirs( classpath );
 
         if( ( m_bootclasspath == null ) || ( m_bootclasspath.size() == 0 ) )
         {

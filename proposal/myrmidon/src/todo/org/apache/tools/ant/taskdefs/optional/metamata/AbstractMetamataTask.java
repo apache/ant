@@ -23,7 +23,6 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.PathElement;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks. This
@@ -198,9 +197,7 @@ public abstract class AbstractMetamataTask
         // set the classpath as the jar file
         File jar = getMetamataJar( m_metamataHome );
         final Path classPath = m_cmdl.createClasspath();
-        final PathElement pathElement = new PathElement();
-        classPath.addPathElement( pathElement );
-        pathElement.setLocation( jar );
+        classPath.addLocation( jar );
 
         // set the metamata.home property
         final Argument vmArgs = m_cmdl.createVmArgument();

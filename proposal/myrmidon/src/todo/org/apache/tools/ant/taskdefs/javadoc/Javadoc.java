@@ -559,14 +559,16 @@ public class Javadoc
         cmd.setExecutable( getJavadocExecutableName() );
 
         // ------------------------------------------------ general javadoc arguments
-        if( m_classpath == null )
-            m_classpath = Path.systemClasspath;
-        else
-            m_classpath = m_classpath.concatSystemClasspath( "ignore" );
 
+        // Build the classpath to pass to Javadoc
+        Path classpath = new Path();
+        classpath.addPath( m_sourcePath );
+        if ( m_classpath != null )
+        {
+            classpath.addPath( m_classpath );
+        }
         cmd.createArgument().setValue( "-classpath" );
-        cmd.createArgument().setValue( m_sourcePath.toString() +
-                                       System.getProperty( "path.separator" ) + m_classpath.toString() );
+        cmd.createArgument().setValue( classpath.toString() );
 
         if( m_version && m_doclet == null )
             cmd.createArgument().setValue( "-version" );

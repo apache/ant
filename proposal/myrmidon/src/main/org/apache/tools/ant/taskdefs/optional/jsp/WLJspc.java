@@ -163,7 +163,9 @@ public class WLJspc extends MatchingTask
             compileClasspath = new Path();
         }
 
-        compileClasspath.append( Path.systemClasspath );
+        // TODO - make sure tools.jar ends up in the classpath
+        //compileClasspath.append( Path.systemClasspath );
+
         String[] files = ds.getIncludedFiles();
 
         //Weblogic.jspc calls System.exit() ... have to fork

@@ -7,16 +7,15 @@
  */
 package org.apache.tools.ant.types;
 
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.DataType;
+import org.apache.tools.ant.util.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -50,41 +49,24 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Path
-    extends ProjectComponent
-    implements Cloneable
+    implements DataType
 {
-    public final static Path systemClasspath = createSystemClasspath();
-
-    private ArrayList m_elements;
-
-    private static Path createSystemClasspath()
-    {
-        try
-        {
-            return new Path( System.getProperty( "java.class.path" ) );
-        }
-        catch( final TaskException te )
-        {
-            throw new Error( te.toString() );
-        }
-    }
+    private ArrayList m_elements = new ArrayList();
+    private File m_baseDirectory;
 
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code> attribute
      * setters.
      */
     public Path( final String path )
-        throws TaskException
     {
-        this();
         final PathElement pathElement = new PathElement();
-        addPathElement( pathElement );
+        m_elements.add( pathElement );
         pathElement.setPath( path );
     }
 
     public Path()
     {
-        m_elements = new ArrayList();
     }
 
     /**
@@ -99,28 +81,24 @@ public class Path
     }
 
     /**
+     * Sets the base directory for this path.
+     */
+    public void setBaseDirectory( final File baseDir )
+    {
+        m_baseDirectory = baseDir;
+    }
+
+    /**
      * Adds a element definition to the path.
      *
      * @param location the location of the element to add (must not be <code>null</code>
      *      nor empty.
      */
-    public void setLocation( final File location )
+    public void addLocation( final File location )
     {
         final PathElement pathElement = new PathElement();
-        addPathElement( pathElement );
+        m_elements.add( pathElement );
         pathElement.setLocation( location );
-    }
-
-    /**
-     * Parses a path definition and creates single PathElements.
-     *
-     * @param path the path definition.
-     */
-    public void setPath( String path )
-    {
-        final PathElement pathElement = new PathElement();
-        addPathElement( pathElement );
-        pathElement.setPath( path );
     }
 
     /**
@@ -138,42 +116,7 @@ public class Path
             final File file = new File( list[ i ] );
             if( file.exists() )
             {
-                setLocation( file );
-            }
-        }
-    }
-
-    /**
-     * Emulation of extdirs feature in java >= 1.2. This method adds all files
-     * in the given directories (but not in sub-directories!) to the classpath,
-     * so that you don't have to specify them all one by one.
-     */
-    public void addExtdirs( Path extdirs )
-        throws TaskException
-    {
-        if( extdirs == null )
-        {
-            String extProp = System.getProperty( "java.ext.dirs" );
-            if( extProp != null )
-            {
-                extdirs = new Path( extProp );
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        final String[] dirs = extdirs.list();
-        for( int i = 0; i < dirs.length; i++ )
-        {
-            final File dir = resolveFile( dirs[ i ] );
-            if( dir.exists() && dir.isDirectory() )
-            {
-                final FileSet fileSet = new FileSet();
-                fileSet.setDir( dir );
-                fileSet.setIncludes( "*" );
-                addFileset( fileSet );
+                addLocation( file );
             }
         }
     }
@@ -261,73 +204,6 @@ public class Path
     }
 
     /**
-     * Concatenates the system class path in the order specified by the
-     * ${build.sysclasspath} property - using &quot;last&quot; as default value.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path concatSystemClasspath()
-        throws TaskException
-    {
-        return concatSystemClasspath( "last" );
-    }
-
-    /**
-     * Concatenates the system class path in the order specified by the
-     * ${build.sysclasspath} property - using the supplied value if
-     * ${build.sysclasspath} has not been set.
-     *
-     * @param defValue Description of Parameter
-     * @return Description of the Returned Value
-     */
-    public Path concatSystemClasspath( String defValue )
-        throws TaskException
-    {
-        Path result = new Path();
-
-        String order = defValue;
-        if( getProject() != null )
-        {
-            String o = getProject().getProperty( "build.sysclasspath" );
-            if( o != null )
-            {
-                order = o;
-            }
-        }
-
-        if( order.equals( "only" ) )
-        {
-            // only: the developer knows what (s)he is doing
-            result.addExisting( Path.systemClasspath );
-        }
-        else if( order.equals( "first" ) )
-        {
-            // first: developer could use a little help
-            result.addExisting( Path.systemClasspath );
-            result.addExisting( this );
-        }
-        else if( order.equals( "ignore" ) )
-        {
-            // ignore: don't trust anyone
-            result.addExisting( this );
-        }
-        else
-        {
-            // last: don't trust the developer
-            if( !order.equals( "last" ) )
-            {
-                final String message = "invalid value for build.sysclasspath: " + order;
-                getLogger().warn( message );
-            }
-
-            result.addExisting( this );
-            result.addExisting( Path.systemClasspath );
-        }
-
-        return result;
-    }
-
-    /**
      * Creates a nested <code>&lt;path&gt;</code> element.
      *
      * @return Description of the Returned Value
@@ -339,15 +215,8 @@ public class Path
     }
 
     /**
-     * Creates the nested <code>&lt;pathelement&gt;</code> element.
-     */
-    public void addPathElement( final PathElement pathElement )
-    {
-        m_elements.add( pathElement );
-    }
-
-    /**
      * Returns all path elements defined by this and nested path objects.
+     * The paths returned by this method are absolute.
      */
     public String[] list()
         throws TaskException
@@ -363,9 +232,8 @@ public class Path
             }
             else if( o instanceof PathElement )
             {
-                final File baseDirectory = getBaseDirectory();
                 final PathElement element = (PathElement)o;
-                final String[] parts = element.getParts( baseDirectory, getLogger() );
+                final String[] parts = element.getParts( m_baseDirectory );
                 if( parts == null )
                 {
                     throw new NullPointerException( "You must either set location or path on <pathelement>" );

@@ -198,22 +198,6 @@ public class IPlanetEjbcTask extends Task
     }
 
     /**
-     * Returns the CLASSPATH to be used when calling EJBc. If no user CLASSPATH
-     * is specified, the System classpath is returned instead.
-     *
-     * @return Path The classpath to be used for EJBc.
-     */
-    private Path getClasspath()
-    {
-        if( classpath == null )
-        {
-            classpath = Path.systemClasspath;
-        }
-
-        return classpath;
-    }
-
-    /**
      * Returns a SAXParser that may be used to process the XML descriptors.
      *
      * @return Parser which may be used to process the EJB descriptors.
@@ -311,10 +295,16 @@ public class IPlanetEjbcTask extends Task
     private void executeEjbc( SAXParser saxParser )
         throws TaskException
     {
+        String classpath = null;
+        if( classpath != null )
+        {
+            classpath = this.classpath.toString();
+        }
+
         IPlanetEjbc ejbc = new IPlanetEjbc( ejbdescriptor,
                                             iasdescriptor,
                                             dest,
-                                            getClasspath().toString(),
+                                            classpath,
                                             saxParser );
         ejbc.setRetainSource( keepgenerated );
         ejbc.setDebugOutput( debug );
