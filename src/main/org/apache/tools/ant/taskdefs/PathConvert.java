@@ -402,12 +402,12 @@ public class PathConvert extends Task {
             }
 
             // Place the result into the specified property
-            String value = rslt.toString();
-
-            log("Set property " + property + " = " + value,
-                Project.MSG_VERBOSE);
-
-            getProject().setNewProperty(property, value);
+            if( rslt.length() > 0 ) {
+              String value = rslt.toString();
+              log("Set property " + property + " = " + value,
+                  Project.MSG_VERBOSE);
+              getProject().setNewProperty(property, value);
+            } 
         } finally {
             path = savedPath;
             dirSep = savedDirSep;
