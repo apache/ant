@@ -9,6 +9,10 @@ package org.apache.myrmidon.components.extensions;
 
 import java.io.File;
 import org.apache.avalon.excalibur.extension.DefaultPackageRepository;
+import org.apache.avalon.excalibur.extension.Extension;
+import org.apache.avalon.excalibur.extension.OptionalPackage;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -29,6 +33,11 @@ public class DefaultExtensionManager
     extends DefaultPackageRepository
     implements LogEnabled, Parameterizable, Initializable, Disposable, ExtensionManager
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultExtensionManager.class );
+
+    private static final String TOOLS_JAR = File.separator + "lib" + File.separator + "tools.jar";
+
     private Logger m_logger;
 
     private String m_path;
@@ -65,6 +74,13 @@ public class DefaultExtensionManager
         setPath( dirs );
 
         scanPath();
+
+        final Extension extension = createToolsExtension();
+        final File jar = getToolsJar();
+        final Extension[] available = new Extension[]{extension};
+        final Extension[] required = new Extension[ 0 ];
+        final OptionalPackage toolsPackage = new OptionalPackage( jar, available, required );
+        cacheOptionalPackage( toolsPackage );
     }
 
     public void dispose()
@@ -75,5 +91,40 @@ public class DefaultExtensionManager
     protected void debug( final String message )
     {
         m_logger.debug( message );
+    }
+
+    private File getToolsJar()
+        throws Exception
+    {
+        final String javaHome = System.getProperty( "java.home" );
+        String jdkHome;
+        if( javaHome.endsWith( "jre" ) )
+        {
+            jdkHome = javaHome.substring( 0, javaHome.length() - 4 );
+        }
+        else
+        {
+            jdkHome = javaHome;
+        }
+
+        final File tools = new File( jdkHome + TOOLS_JAR );
+        if( !tools.exists() )
+        {
+            final String message = REZ.getString( "extension.missing-tools.error" );
+            throw new Exception( message );
+        }
+
+        return tools;
+    }
+
+    private Extension createToolsExtension()
+    {
+        return new Extension( "com.sun.tools",
+                              "1.0",
+                              "com.sun",
+                              "1.0",
+                              "com.sun",
+                              "com.sun",
+                              null );
     }
 }
