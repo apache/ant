@@ -201,7 +201,7 @@ public class ScriptRunner {
      * @param component to become <code>self</code>
      */
     public void bindToComponent(ProjectComponent component) {
-        Project project=component.getProject();
+        Project project = component.getProject();
         addBeans(project.getProperties());
         addBeans(project.getUserProperties());
         addBeans(project.getTargets());
