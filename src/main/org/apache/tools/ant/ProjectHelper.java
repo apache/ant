@@ -563,7 +563,7 @@ public class ProjectHelper {
 
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
-            String value=replaceProperties(attrs.getValue(i), 
+            String value=replaceProperties(project, attrs.getValue(i), 
                                            project.getProperties() );
             try {
                 ih.setAttribute(project, target, 
@@ -605,7 +605,7 @@ public class ProjectHelper {
 
     /** Replace ${NAME} with the property value
      */
-    public static String replaceProperties( String value, Hashtable keys )
+    public static String replaceProperties(Project project, String value, Hashtable keys )
         throws BuildException
     {
         // XXX use Map instead of proj, it's too heavy
@@ -635,10 +635,10 @@ public class ProjectHelper {
                 }
                 String n=value.substring( pos+2, endName );
                 if (!keys.containsKey(n)) {
-                    throw new BuildException("Property ${" + n + "} has not been set");
+                    project.log("Property ${" + n + "} has not been set", Project.MSG_WARN);
                 }
                 
-                String v = (String) keys.get(n);
+                String v = (keys.containsKey(n)) ? (String) keys.get(n) : "${"+n+"}"; 
                 
                 //System.out.println("N: " + n + " " + " V:" + v);
                 sb.append( v );

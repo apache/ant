@@ -204,7 +204,7 @@ public class Property extends Task {
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             String value = (String) props.getProperty(name);
-            String v = ProjectHelper.replaceProperties(value, project.getProperties());
+            String v = ProjectHelper.replaceProperties(project, value, project.getProperties());
             addProperty(name, value);
         }
     }
@@ -261,9 +261,9 @@ public class Property extends Task {
                 }
     
                 if (!resolved) {
-                    value = ProjectHelper.replaceProperties(value,
+                    value = ProjectHelper.replaceProperties(project, value,
                                                                project.getProperties());
-                    value = ProjectHelper.replaceProperties(value, props);
+                    value = ProjectHelper.replaceProperties(project, value, props);
                     props.put(name, value);
                 }    
             }

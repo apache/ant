@@ -123,7 +123,7 @@ public class Echo extends Task {
      */
     public void addText(String msg) {
         message += 
-            ProjectHelper.replaceProperties(msg, project.getProperties());
+            ProjectHelper.replaceProperties(project, msg, project.getProperties());
     }
 
     /**
