@@ -167,7 +167,7 @@ public class XMLFormatter extends BaseStreamFormatter {
     }
 
     public void onTestFailure(TestRunEvent evt) {
-        String type = evt == evt.getType() == TestRunEvent.TEST_FAILURE ? FAILURE : ERROR;
+        String type = evt.getType() == TestRunEvent.TEST_FAILURE ? FAILURE : ERROR;
         Element nested = doc.createElement(type);
         Element currentTest = (Element) testElements.get(evt.getName());
         currentTest.appendChild(nested);
