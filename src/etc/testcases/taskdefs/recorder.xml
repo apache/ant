@@ -8,26 +8,20 @@
 
     <target name="prepare">
       <mkdir dir="${recdir}"/>
-      <copy toDir="${recdir}">
-        <fileset dir="${recin}"/>
-      </copy>
-      <fixcrlf srcdir="${recdir}"/>
     </target>
 
     <target name="noappend">
-        <copy file="${recdir}/rectest2.result" tofile="${recdir}/rectest1.log"/>
+        <copy file="${recin}/rectest2.result" tofile="${recdir}/rectest1.log"/>
         <record name="${recdir}/rectest1.log" action="start" />
         <echo message="some message1"/>
         <record name="${recdir}/rectest1.log" action="stop" />
-        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
     <target name="append">
-        <copy file="${recdir}/rectest1.result" tofile="${recdir}/rectest2.log"/>
+        <copy file="${recin}/rectest1.result" tofile="${recdir}/rectest2.log"/>
         <record name="${recdir}/rectest2.log" append="true" action="start"/>
         <echo message="some message2"/>
         <record name="${recdir}/rectest2.log" action="stop"/>
-        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
     <target name="restart">
@@ -38,7 +32,6 @@
         <record name="${recdir}/rectest3.log" action="start"/>
         <echo message="some message3"/>
         <record name="${recdir}/rectest3.log" action="stop"/>
-        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
     <target name="deleterestart">
@@ -50,12 +43,11 @@
         <record name="${recdir}/rectest4.log" action="start"/>
         <echo message="some message3"/>
         <record name="${recdir}/rectest4.log" action="stop"/>
-        <fixcrlf srcdir="${recdir}" includes="*.log"/>
     </target>
 
 
     <target name="cleanup">
-        <delete dir="${recdir}"/>
+       <delete dir="${recdir}"/>
     </target>
 
 </project>

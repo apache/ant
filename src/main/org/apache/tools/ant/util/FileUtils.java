@@ -971,21 +971,31 @@ public class FileUtils {
     /**
      * Compares the contents of two files.
      *
-     * <p>simple but sub-optimal comparision algorithm.  written for
-     * working rather than fast. Better would be a block read into
-     * buffers followed by long comparisions apart from the final 1-7
-     * bytes.</p>
-     *
      * @param f1 the file whose content is to be compared.
      * @param f2 the other file whose content is to be compared.
      *
      * @return true if the content of the files is the same.
      *
      * @throws IOException if the files cannot be read.
-     *
-     * @since 1.9
      */
     public boolean contentEquals(File f1, File f2) throws IOException {
+        return contentEquals(f1, f2, false);
+    }
+
+    /**
+     * Compares the contents of two files.
+     *
+     * @param f1 the file whose content is to be compared.
+     * @param f2 the other file whose content is to be compared.
+     * @param textfile true if the file is to be treated as a text file and
+     *        differences in kind of line break are to be ignored.
+     *
+     * @return true if the content of the files is the same.
+     *
+     * @throws IOException if the files cannot be read.
+     * @since ant 1.7
+     */
+    public boolean contentEquals(File f1, File f2, boolean textfile) throws IOException {
         if (f1.exists() != f2.exists()) {
             return false;
         }
@@ -1005,6 +1015,27 @@ public class FileUtils {
             return true;
         }
 
+        if (textfile) {
+            return textEquals(f1, f2);
+        } else {
+            return binaryEquals(f1, f2);
+        }
+    }
+
+    /**
+     * Binary compares the contents of two files.
+     * <p>
+     * simple but sub-optimal comparision algorithm. written for working
+     * rather than fast. Better would be a block read into buffers followed
+     * by long comparisions apart from the final 1-7 bytes.
+     * </p>
+     *
+     * @param f1 the file whose content is to be compared.
+     * @param f2 the other file whose content is to be compared.
+     * @return true if the content of the files is the same.
+     * @throws IOException if the files cannot be read.
+     */
+    private boolean binaryEquals(File f1, File f2) throws IOException {
         if (f1.length() != f2.length()) {
             // different size =>false
             return false;
@@ -1024,6 +1055,40 @@ public class FileUtils {
                 expectedByte = in1.read();
             }
             if (in2.read() != -1) {
+                return false;
+            }
+            return true;
+        } finally {
+            close(in1);
+            close(in2);
+        }
+    }
+
+    /**
+     * Text compares the contents of two files.
+     *
+     * Ignores different kinds of line endings.
+     *
+     * @param f1 the file whose content is to be compared.
+     * @param f2 the other file whose content is to be compared.
+     * @return true if the content of the files is the same.
+     * @throws IOException if the files cannot be read.
+     */
+    private boolean textEquals(File f1, File f2) throws IOException {
+        BufferedReader in1 = null;
+        BufferedReader in2 = null;
+        try {
+            in1 = new BufferedReader(new FileReader(f1));
+            in2 = new BufferedReader(new FileReader(f2));
+
+            String expected = in1.readLine();
+            while (expected != null) {
+                if (!expected.equals(in2.readLine())) {
+                    return false;
+                }
+                expected = in1.readLine();
+            }
+            if (in2.readLine() != null) {
                 return false;
             }
             return true;
