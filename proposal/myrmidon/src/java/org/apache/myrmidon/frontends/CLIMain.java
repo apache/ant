@@ -21,14 +21,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.log.Hierarchy;
-import org.apache.log.LogTarget;
-import org.apache.log.Logger;
-import org.apache.log.Priority;
-import org.apache.log.format.PatternFormatter;
-import org.apache.log.output.io.StreamTarget;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
@@ -52,7 +45,6 @@ public class CLIMain
         ResourceManager.getPackageResources( CLIMain.class );
 
     private final String DEFAULT_EMBEDDOR_CLASS = "org.apache.myrmidon.components.embeddor.DefaultEmbeddor";
-    private final static String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
 
     //defines for the Command Line options
     private final static int HELP_OPT = 'h';
@@ -107,7 +99,8 @@ public class CLIMain
     private boolean m_dryRun = false;
 
     ///Log level to use
-    private static Priority m_priority = Priority.WARN;
+    //private static Priority m_priority = Priority.WARN;
+    private static int m_priority = BasicLogger.LEVEL_WARN;
 
     /**
      * Main entry point called to run standard Myrmidon.
@@ -259,10 +252,10 @@ public class CLIMain
                     m_priority = mapLogLevel( option.getArgument() );
                     break;
                 case VERBOSE_OPT:
-                    m_priority = Priority.INFO;
+                    m_priority = BasicLogger.LEVEL_INFO;
                     break;
                 case QUIET_OPT:
-                    m_priority = Priority.ERROR;
+                    m_priority = BasicLogger.LEVEL_ERROR;
                     break;
 
                 case INCREMENTAL_OPT:
@@ -401,7 +394,6 @@ public class CLIMain
             {
                 break;
             }
-
         }
     }
 
@@ -412,7 +404,7 @@ public class CLIMain
     {
         // Build the message
         final String message;
-        if( m_priority.isLowerOrEqual( Priority.INFO ) )
+        if( m_priority <= BasicLogger.LEVEL_INFO )
         {
             // Verbose mode - include the stack traces
             message = ExceptionUtil.printStackTrace( throwable, 5, true, true );
@@ -494,7 +486,8 @@ public class CLIMain
     private void prepareLogging() throws Exception
     {
         //handle logging...
-        enableLogging( new LogKitLogger( createLogger( m_priority ) ) );
+        final BasicLogger logger = new BasicLogger( "myrmidon", m_priority );
+        enableLogging( logger );
     }
 
     private void shutdownEmbeddor( final Embeddor embeddor )
@@ -562,36 +555,30 @@ public class CLIMain
     /**
      * Sets the log level.
      */
-    private Priority mapLogLevel( final String logLevel ) throws Exception
+    private int mapLogLevel( final String logLevel )
+        throws Exception
     {
         final String logLevelCapitalized = logLevel.toUpperCase();
-        final Priority priority = Priority.getPriorityForName( logLevelCapitalized );
-        if( !priority.getName().equals( logLevelCapitalized ) )
+        if( "DEBUG".equals( logLevelCapitalized ) )
+        {
+            return BasicLogger.LEVEL_DEBUG;
+        }
+        else if( "INFO".equals( logLevelCapitalized ) )
+        {
+            return BasicLogger.LEVEL_INFO;
+        }
+        else if( "WARN".equals( logLevelCapitalized ) )
+        {
+            return BasicLogger.LEVEL_WARN;
+        }
+        else if( "ERROR".equals( logLevelCapitalized ) )
+        {
+            return BasicLogger.LEVEL_ERROR;
+        }
+        else
         {
             final String message = REZ.getString( "bad-loglevel.error", logLevel );
             throw new Exception( message );
         }
-        return priority;
-    }
-
-    /**
-     * Create Logger of appropriate log-level.
-     *
-     * @param priority the log-level
-     * @return the logger
-     * @exception Exception if an error occurs
-     */
-    private Logger createLogger( final Priority priority )
-        throws Exception
-    {
-        final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
-
-        final PatternFormatter formatter = new PatternFormatter( PATTERN );
-        final StreamTarget target = new StreamTarget( System.out, formatter );
-        logger.setLogTargets( new LogTarget[]{target} );
-
-        logger.setPriority( priority );
-
-        return logger;
     }
 }
