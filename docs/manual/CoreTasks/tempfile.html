@@ -1,195 +1,66 @@
-    
 <html>
+
 <head>
-  <meta http-equiv="Content-Language" content="en-us">
-  <title>Tempfile
- Task</title>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Tempfile Task</title>
 </head>
 
-<body bgcolor="#ffffff" text="#000000" link="#525D76"
-      alink="#525D76" vlink="#525D76">
+<body>
 
-<table border="0" width="100%" cellspacing="4">
-
-  <!-- PAGE HEADER -->
+<h2><a name="echo">Tempfile</a></h2>
+<h3>Description</h3>
+<p>
+This task sets a property to the name of a temporary file.  Unlike the
+Java1.2 method to create a temporary file, this task does work with Java1.1.
+It does not actually create the temporary file, but it does guarantee
+that the file did not exist when the task was executed.
+</p>
+<p> 
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td>
-      <table border="0" width="100%"><tr>
-          <td valign="bottom">
-            <font size="+3" face="arial,helvetica,sanserif"><strong>Tempfile
- Task</strong></font>
-            <br><font face="arial,helvetica,sanserif">This task sets a property to  the name of a temporary file.</font>
-          </td>
-          <td>
-            <!-- PROJECT LOGO -->
-            <a href="http://jakarta.apache.org/ant/">
-              <img src="../../images/ant_logo_large.gif" align="right" alt="Apache Ant" border="0"/>
-            </a>
-          </td>
-      </tr></table>
-    </td>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
   </tr>
-
-  <!-- START RIGHT SIDE MAIN BODY -->
   <tr>
-    <td  valign="top" align="left">
-
-          <!-- Applying task/long-description -->
-    <!-- Start Description -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="description">
-          <strong>Description</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
-        This task sets a property to  the name of a temporary file. 
-  Unlike the Java1.2 method to create a temporary file, this task
-  does work on Java1.1. Also, it does not actually create the
-  temporary file, but it does guarantee that the file did not
-  exist when the task was executed. 
- <p>  
- Examples
- <pre>&lt;tempfile property="temp.file" /&gt;</pre>
- create a temporary file
- <pre>&lt;tempfile property="temp.file" suffix=".xml" /&gt;</pre>
- create a temporary file with the .xml suffix.
- <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
- create a temp file in the build subdir
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Description -->
-
-    <!-- Start Attributes -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="attributes">
-          <strong>Parameters</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
-        <table>
-          <tr>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Attribute</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Description</b></font>
-        </td>
-        <td bgcolor="#cccccc" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
-        </td>
-          </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">destDir</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          destination directory. If null, 
-the parent directory is used instead
-        </font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">prefix</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          optional prefix string
-        </font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">property</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          The property you wish to assign the temporary file to
-        </font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">suffix</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Suffix string for the temp file (optional)
-        </font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-
-        </table>
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Attributes -->
-
-    <!-- Start Elements -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-
-      <tr><td bgcolor="#525D76">
-        <font color="#ffffff" face="arial,helvetica.sanserif">
-          <a name="elements">
-          <strong>Parameters as nested elements</strong></a></font>
-      </td></tr>
-
-      <tr><td><blockquote>
-
-      </blockquote></td></tr>
-
-    </table>
-    <!-- End Elements -->
-
-
-    </td>
+    <td valign="top">destdir</td>
+    <td valign="top">The directory the temporary file should
+      be located in. If not set, the current directory is used.</td>
+    <td valign="top" align="center">No</td>
   </tr>
-  <!-- END RIGHT SIDE MAIN BODY -->
-
-  <!-- FOOTER SEPARATOR -->
   <tr>
-    <td>
-      <hr noshade="" size="1"/>
-    </td>
+    <td valign="top">prefix</td>
+    <td valign="top">A prefix for the temporary file name.</td>
+    <td valign="top" align="center">No</td>
   </tr>
-
-  <!-- PAGE FOOTER -->
   <tr>
-    <td>
-      <div align="center"><font color="#525D76" size="-1"><em>
-        Copyright &#169; 2000-2002, Apache Software Foundation
-      </em></font></div>
-    </td>
+    <td valign="top">property</td>
+    <td valign="top">The name of the property to set with the
+      value of the temporary file name.</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
-
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">A suffix for the temporary file name.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
+
+<h3>Examples</h3>
+<pre>  &lt;tempfile property=&quot;temp.file&quot;/&gt;</pre>
+will set <code>temp.file</code> to the name of a new
+temporary file.
+<pre>  &lt;tempfile property=&quot;temp.file&quot; suffix=&quot;.xml&quot;/&gt;</pre>
+will set <code>temp.file</code> to the name of a new
+temporary file with a suffix of <code>.xml</code>.
+<pre>  &lt;tempfile property=&quot;temp.file&quot; destdir=&quot;build&quot;/&gt;</pre>
+will set <code>temp.file</code> to the name of a new
+temporary file located in the <code>build</code> sub-directory.
+<hr>
+<p align="center">Copyright &copy; 2002 Apache Software Foundation.
+All rights Reserved.</p>
 
 </body>
 </html>
+
