@@ -641,7 +641,7 @@ public class ProjectHelper {
                 }
                 String n=value.substring( pos+2, endName );
                 if (!keys.containsKey(n)) {
-                    project.log("Property ${" + n + "} has not been set", Project.MSG_WARN);
+                    project.log("Property ${" + n + "} has not been set", Project.MSG_VERBOSE);
                 }
                 
                 String v = (keys.containsKey(n)) ? (String) keys.get(n) : "${"+n+"}"; 
