@@ -54,46 +54,47 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
+
 import org.apache.tools.ant.BuildException;
-
-public abstract class P4HandlerAdapter implements P4Handler {
-
-    public abstract void process(String line);
-
+import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+/**
+ *    base class to manage streams around the execution of the Perforce
+ *    command line client
+ */
+public abstract class P4HandlerAdapter  implements P4Handler {
 
     String p4input = "";
-
-    //set any data to be written to P4's stdin - messy, needs work
+    private PumpStreamHandler myHandler = null;
+    /**
+     *  set any data to be written to P4's stdin
+     *  @param p4Input the text to write to P4's stdin
+     */
     public void setOutput(String p4Input) {
         this.p4input = p4Input;
     }
-
+    /**
+     * subclasses of P4HandlerAdapter must implement this routine
+     * processing of one line of stdout or of stderr
+     * @param line
+     */
+    public abstract void process(String line);
 
     public void start() throws BuildException {
-
-        try {
-            //First write any output to P4
-            if (p4input != null && p4input.length() > 0 && os != null) {
-                os.write(p4input.getBytes());
-                os.flush();
-                os.close();
-            }
-
-            //Now read any input and process
-            Thread output = new Thread(new Reader(is));
-            Thread error = new Thread(new Reader(es));
-            output.start();
-            error.start();
-            output.join();
-            error.join();
-        } catch (Exception e) {
-            throw new BuildException(e);
+        if (p4input != null && p4input.length() > 0) {
+            myHandler = new PumpStreamHandler(new P4OutputStream(this),new P4OutputStream(this), new ByteArrayInputStream(p4input.getBytes()));
         }
+        else {
+            myHandler = new PumpStreamHandler(new P4OutputStream(this), new P4OutputStream(this));
+        }
+        myHandler.setProcessInputStream(os);
+        myHandler.setProcessErrorStream(es);
+        myHandler.setProcessOutputStream(is);
+        myHandler.start();
+    }
+
+    public void stop() {
+        myHandler.stop();
     }
 
     OutputStream os;    //OUtput
@@ -111,36 +112,4 @@ public abstract class P4HandlerAdapter implements P4Handler {
     public void setProcessOutputStream(InputStream is) throws IOException {
         this.is = is;
     }
-
-    public void stop() {
-    }
-
-    public class Reader implements Runnable {
-        protected InputStream mystream;
-        public Reader(InputStream is)
-        {
-            mystream=is;
-        }
-        public void setStream(InputStream is) {
-            mystream=is;
-        }
-        public void run() {
-            BufferedReader input = new BufferedReader(
-                    new InputStreamReader(mystream));
-
-            String line;
-            try {
-                while ((line = input.readLine()) != null) {
-                    synchronized (this){
-                        process(line);
-                    }
-                }
-            }
-            catch (Exception e) {
-                throw new BuildException(e);
-            }
-        }
-
-    }
 }
-

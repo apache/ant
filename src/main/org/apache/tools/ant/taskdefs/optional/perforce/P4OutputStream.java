@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,25 +54,65 @@
 
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
-/** Interface for p4 job output stream handler. Classes implementing this interface
- * can be called back by P4Base.execP4Command();
- *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
+/**
+ * heavily inspired from LogOutputStream
+ * this stream class calls back the P4Handler on each line of stdout or stderr read
+ * @author : <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
-public interface P4Handler extends ExecuteStreamHandler {
+public class P4OutputStream extends OutputStream {
+    private P4Handler handler;
+    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private boolean skip = false;
 
-  /**
-   * processing of one line of stdout or of stderr
-   * @param line
-   */
-    public void process(String line) throws BuildException;
+    /**
+     * creates a new P4OutputStream for a P4Handler
+     * @param handler
+     */
+    public P4OutputStream(P4Handler handler) {
+        this.handler = handler;
+    }
 
-  /**
-   *  set any data to be written to P4's stdin
-   *  @param line the text to write to P4's stdin
-   */
-    public void setOutput(String line) throws BuildException;
+    /**
+     * Write the data to the buffer and flush the buffer, if a line
+     * separator is detected.
+     *
+     * @param cc data to log (byte).
+     */
+    public void write(int cc) throws IOException {
+        final byte c = (byte) cc;
+        if ((c == '\n') || (c == '\r')) {
+            if (!skip) {
+                processBuffer();
+            }
+        } else {
+            buffer.write(cc);
+        }
+        skip = (c == '\r');
+    }
+
+
+    /**
+     * Converts the buffer to a string and sends it to <code>processLine</code>
+     */
+    protected void processBuffer() {
+        handler.process(buffer.toString());
+        buffer.reset();
+    }
+
+    /**
+     * Writes all remaining
+     */
+    public void close() throws IOException {
+        if (buffer.size() > 0) {
+            processBuffer();
+        }
+        super.close();
+    }
+
 }
+
+
