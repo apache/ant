@@ -21,7 +21,7 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.myrmidon.api.Context;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.role.RoleInfo;
@@ -79,7 +79,7 @@ public class DefaultConfigurer
      */
     public void configure( final Object object,
                            final Configuration configuration,
-                           final Context context )
+                           final TaskContext context )
         throws ConfigurationException
     {
         try
@@ -110,7 +110,7 @@ public class DefaultConfigurer
      */
     private void configureObject( final Object object,
                                   final Configuration configuration,
-                                  final Context context )
+                                  final TaskContext context )
         throws Exception
     {
         if( object instanceof Configurable )
@@ -220,7 +220,7 @@ public class DefaultConfigurer
     public void configure( final Object object,
                            final String name,
                            final String value,
-                           final Context context )
+                           final TaskContext context )
         throws ConfigurationException
     {
         // Locate the configurer for this object
@@ -252,7 +252,7 @@ public class DefaultConfigurer
      */
     private void setContent( final ConfigurationState state,
                              final String content,
-                             final Context context )
+                             final TaskContext context )
         throws Exception
     {
         // Locate the content configurer
@@ -271,7 +271,7 @@ public class DefaultConfigurer
      */
     private void configureElement( final ConfigurationState state,
                                    final Configuration element,
-                                   final Context context )
+                                   final TaskContext context )
         throws Exception
     {
         final String elementName = element.getName();
@@ -292,7 +292,7 @@ public class DefaultConfigurer
      */
     private void configureInline( final ConfigurationState state,
                                   final Configuration element,
-                                  final Context context )
+                                  final TaskContext context )
         throws Exception
     {
         final String name = element.getName();
@@ -314,7 +314,7 @@ public class DefaultConfigurer
      */
     private void configureReference( final ConfigurationState state,
                                      final Configuration element,
-                                     final Context context )
+                                     final TaskContext context )
         throws Exception
     {
 
@@ -338,7 +338,7 @@ public class DefaultConfigurer
     private void setReference( final ConfigurationState state,
                                final String refName,
                                final String unresolvedId,
-                               final Context context )
+                               final TaskContext context )
         throws Exception
     {
         // Adjust the name
@@ -384,7 +384,7 @@ public class DefaultConfigurer
     private void setAttribute( final ConfigurationState state,
                                final String name,
                                final String value,
-                               final Context context )
+                               final TaskContext context )
         throws Exception
     {
         if( name.toLowerCase().endsWith( "-ref" ) )
@@ -407,7 +407,7 @@ public class DefaultConfigurer
     private void setValue( final PropertyConfigurer setter,
                            final ConfigurationState state,
                            final String value,
-                           final Context context )
+                           final TaskContext context )
         throws Exception
     {
         // Resolve property references in the attribute value
@@ -445,7 +445,7 @@ public class DefaultConfigurer
      */
     private Object setupChild( final ConfigurationState state,
                                final Configuration element,
-                               final Context context,
+                               final TaskContext context,
                                final PropertyConfigurer childConfigurer )
         throws Exception
     {

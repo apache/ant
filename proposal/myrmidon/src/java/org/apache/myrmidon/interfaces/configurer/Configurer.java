@@ -9,7 +9,7 @@ package org.apache.myrmidon.interfaces.configurer;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.myrmidon.api.Context;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Class used to configure tasks.
@@ -32,7 +32,7 @@ public interface Configurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    void configure( Object object, Configuration configuration, Context context )
+    void configure( Object object, Configuration configuration, TaskContext context )
         throws ConfigurationException;
 
     /**
@@ -46,6 +46,6 @@ public interface Configurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    void configure( Object object, String name, String value, Context context )
+    void configure( Object object, String name, String value, TaskContext context )
         throws ConfigurationException;
 }

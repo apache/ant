@@ -8,6 +8,7 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * This interface represents the <em>Context</em> in which Task is executed.
@@ -19,7 +20,6 @@ import java.io.File;
  * @version $Revision$ $Date$
  */
 public interface TaskContext
-    extends Context
 {
     //these are the names of properties that every TaskContext must contain
     String BASE_DIRECTORY = "myrmidon.base.directory";
@@ -31,6 +31,32 @@ public interface TaskContext
      * @return the name
      */
     String getName();
+
+    /**
+     * Resolve a value according to the context.
+     * This involves evaluating the string and replacing
+     * ${} sequences with property values.
+     *
+     * @param value the value to resolve
+     * @return the resolved value
+     */
+    Object resolveValue( String value )
+        throws TaskException;
+
+    /**
+     * Retrieve property for name.
+     *
+     * @param name the name of property
+     * @return the value of property, or null if the property has no value.
+     */
+    Object getProperty( String name );
+
+    /**
+     * Retrieve a copy of all the properties accessible via context.
+     *
+     * @return the map of all property names to values
+     */
+    Map getProperties();
 
     /**
      * Retrieve a service that is offered by the runtime.

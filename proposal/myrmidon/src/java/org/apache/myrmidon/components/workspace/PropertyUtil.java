@@ -9,7 +9,7 @@ package org.apache.myrmidon.components.workspace;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.api.Context;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -38,7 +38,7 @@ public final class PropertyUtil
      * @exception TaskException if an error occurs
      */
     public static Object resolveProperty( final String property,
-                                          final Context context,
+                                          final TaskContext context,
                                           final boolean ignoreUndefined )
         throws TaskException
     {
@@ -99,7 +99,7 @@ public final class PropertyUtil
      * @exception TaskException if an error occurs
      */
     public static Object recursiveResolveProperty( final String property,
-                                                   final Context context,
+                                                   final TaskContext context,
                                                    final boolean ignoreUndefined )
         throws TaskException
     {
@@ -219,7 +219,7 @@ public final class PropertyUtil
      * @exception TaskException if an error occurs
      */
     private static Object resolveValue( final String key,
-                                        final Context context,
+                                        final TaskContext context,
                                         final boolean ignoreUndefined )
         throws TaskException
     {

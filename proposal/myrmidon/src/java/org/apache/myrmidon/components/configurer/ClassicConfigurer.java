@@ -22,7 +22,7 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.myrmidon.api.Context;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 
@@ -66,7 +66,7 @@ public class ClassicConfigurer
      */
     public void configure( final Object object,
                            final Configuration configuration,
-                           final Context context )
+                           final TaskContext context )
         throws ConfigurationException
     {
         if( DEBUG )
@@ -157,7 +157,7 @@ public class ClassicConfigurer
     public void configure( final Object object,
                            final String name,
                            final String value,
-                           final Context context )
+                           final TaskContext context )
         throws ConfigurationException
     {
         configureAttribute( object, name, value, context );
@@ -173,7 +173,7 @@ public class ClassicConfigurer
      */
     private void configureContent( final Object object,
                                    final String content,
-                                   final Context context )
+                                   final TaskContext context )
         throws ConfigurationException
     {
         setValue( object, "addContent", content, context );
@@ -182,7 +182,7 @@ public class ClassicConfigurer
     private void configureAttribute( final Object object,
                                      final String name,
                                      final String value,
-                                     final Context context )
+                                     final TaskContext context )
         throws ConfigurationException
     {
         final String methodName = getMethodNameFor( name );
@@ -192,7 +192,7 @@ public class ClassicConfigurer
     private void setValue( final Object object,
                            final String methodName,
                            final String value,
-                           final Context context )
+                           final TaskContext context )
         throws ConfigurationException
     {
         // OMFG the rest of this is soooooooooooooooooooooooooooooooo
@@ -212,7 +212,7 @@ public class ClassicConfigurer
 
     private void setValue( final Object object,
                            final String value,
-                           final Context context,
+                           final TaskContext context,
                            final Method[] methods )
         throws ConfigurationException
     {
@@ -232,7 +232,7 @@ public class ClassicConfigurer
     private void setValue( final Object object,
                            Object value,
                            final Method[] methods,
-                           final Context context )
+                           final TaskContext context )
         throws ConfigurationException
     {
         final Class sourceClass = value.getClass();
@@ -254,7 +254,7 @@ public class ClassicConfigurer
     private boolean setValue( final Object object,
                               final Object originalValue,
                               final Method method,
-                              final Context context )
+                              final TaskContext context )
         throws ConfigurationException
     {
         Class parameterType = method.getParameterTypes()[ 0 ];
@@ -433,7 +433,7 @@ public class ClassicConfigurer
 
     private void configureElement( final Object object,
                                    final Configuration configuration,
-                                   final Context context )
+                                   final TaskContext context )
         throws ConfigurationException
     {
         final String name = configuration.getName();
@@ -468,7 +468,7 @@ public class ClassicConfigurer
     private void createElement( final Object object,
                                 final Method method,
                                 final Configuration configuration,
-                                final Context context )
+                                final TaskContext context )
         throws ConfigurationException
     {
         try
@@ -490,7 +490,7 @@ public class ClassicConfigurer
     private void addElement( final Object object,
                              final Method method,
                              final Configuration configuration,
-                             final Context context )
+                             final TaskContext context )
         throws ConfigurationException
     {
         try
