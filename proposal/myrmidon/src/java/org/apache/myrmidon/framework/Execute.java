@@ -189,16 +189,17 @@ public class Execute
                                  final TaskContext context )
         throws TaskException
     {
-        if( ! context.isDebugEnabled() )
+        if( context.isInfoEnabled() )
         {
-            return;
+            final String cmdline = FileUtils.formatCommandLine( metaData.getCommand() );
+            final String message = REZ.getString( "execute.command.notice", cmdline );
+            context.info( message );
         }
-
-        String cmdline = FileUtils.buildCommandLine( metaData.getCommand() );
-        String message = REZ.getString( "execute.command.notice", cmdline );
-        context.debug( message );
-        message = REZ.getString( "execute.env-vars.notice", metaData.getEnvironment() );
-        context.debug( message );
+        if( context.isDebugEnabled() )
+        {
+            final String message = REZ.getString( "execute.env-vars.notice", metaData.getEnvironment() );
+            context.debug( message );
+        }
     }
 
     /**
