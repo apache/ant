@@ -564,7 +564,8 @@ public class UnknownElement extends Task {
             child.getNamespace(), child.getTag());
         if (ih.supportsNestedElement(parentUri, childName)) {
             IntrospectionHelper.Creator creator =
-                ih.getElementCreator(getProject(), parentUri, parent, childName);
+                ih.getElementCreator(
+                    getProject(), parentUri, parent, childName, child);
             creator.setPolyType(childWrapper.getPolyType());
             Object realChild = creator.create();
             if (realChild instanceof PreSetDef.PreSetDefinition) {

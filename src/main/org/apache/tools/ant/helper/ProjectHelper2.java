@@ -272,7 +272,7 @@ public class ProjectHelper2 extends ProjectHelper {
                                        + buildFileName + " is invalid.",
                                        exc);
         } catch (IOException exc) {
-            throw new BuildException("Error reading project file " 
+            throw new BuildException("Error reading project file "
                                      + buildFileName + ": " + exc.getMessage(),
                                      exc);
         } finally {
@@ -484,9 +484,6 @@ public class ProjectHelper2 extends ProjectHelper {
          */
         public void startElement(String uri, String tag, String qname, Attributes attrs)
             throws SAXParseException {
-            if (uri.equals(ANT_CORE_URI)) {
-                uri = "";
-            }
             AntHandler next
                 = currentHandler.onStartChild(uri, tag, qname, attrs, context);
             antHandlers.push(currentHandler);
@@ -519,9 +516,6 @@ public class ProjectHelper2 extends ProjectHelper {
          *
          */
         public void endElement(String uri, String name, String qName) throws SAXException {
-            if (uri.equals(ANT_CORE_URI)) {
-                uri = "";
-            }
             currentHandler.onEndElement(uri, name, context);
             AntHandler prev = (AntHandler) antHandlers.pop();
             currentHandler = prev;
@@ -585,7 +579,8 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            if (name.equals("project") && uri.equals("")) {
+            if (name.equals("project")
+                && (uri.equals("") || uri.equals(ANT_CORE_URI))) {
                 return ProjectHelper2.projectHandler;
             } else {
 //                 if (context.importlevel > 0) {
@@ -653,7 +648,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
- 
+
                 if (key.equals("default")) {
                     if (value != null && !value.equals("")) {
                         if (!context.isIgnoringProjectTag()) {
@@ -756,7 +751,8 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            if (name.equals("target") && uri.equals("")) {
+            if (name.equals("target")
+                && (uri.equals("") || uri.equals(ANT_CORE_URI))) {
                 return ProjectHelper2.targetHandler;
             } else {
                 return ProjectHelper2.elementHandler;

@@ -603,45 +603,6 @@ public final class IntrospectionHelper implements BuildListener {
         throw new BuildException(msg);
     }
 
-    private NestedCreator getNestedCreator(Project project, Object parent,
-        String elementName) throws BuildException {
-
-        NestedCreator nc = (NestedCreator) nestedCreators.get(
-            elementName.toLowerCase(Locale.US));
-        if (nc == null) {
-            nc = createAddTypeCreator(project, parent, elementName);
-        }
-        if (nc == null && parent instanceof DynamicConfigurator) {
-            DynamicConfigurator dc = (DynamicConfigurator) parent;
-            final Object nestedElement = dc.createDynamicElement(elementName);
-            if (nestedElement != null) {
-                nc = new NestedCreator() {
-                    public boolean isPolyMorphic() {
-                        return false;
-                    }
-                    public Class getElementClass() {
-                        return null;
-                    }
-
-                    public Object getRealObject() {
-                        return null;
-                    }
-
-                    public Object create(
-                        Project project, Object parent, Object ignore) {
-                        return nestedElement;
-                    }
-                    public void store(Object parent, Object child) {
-                    }
-                };
-            }
-        }
-        if (nc == null) {
-            throwNotSupported(project, parent, elementName);
-        }
-        return nc;
-    }
-
     private NestedCreator getNestedCreator(
         Project project, String parentUri, Object parent,
         String elementName) throws BuildException {
@@ -705,6 +666,7 @@ public final class IntrospectionHelper implements BuildListener {
      *                    Must not be <code>null</code>.
      *
      * @return an instance of the specified element type
+     * @deprecated This is not a namespace aware method.
      *
      * @exception BuildException if no method is available to create the
      *                           element instance, or if the creating method
@@ -712,7 +674,7 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public Object createElement(Project project, Object parent,
         String elementName) throws BuildException {
-        NestedCreator nc = getNestedCreator(project, parent, elementName);
+        NestedCreator nc = getNestedCreator(project, "", parent, elementName);
         try {
             Object nestedElement = nc.create(project, parent, null);
             if (project != null) {
@@ -743,11 +705,13 @@ public final class IntrospectionHelper implements BuildListener {
      * @param parent       Parent object used to create the creator object to
      *                     create and store and instance of a subelement.
      * @param elementName  Name of the element to create an instance of.
+     * @param ue           The unknown element associated with the element.
      * @return a creator object to create and store the element instance.
      */
 
     public Creator getElementCreator(
-        Project project, String parentUri, Object parent, String elementName) {
+        Project project, String parentUri, Object parent, String elementName,
+        UnknownElement ue) {
         NestedCreator nc = getNestedCreator(
             project, parentUri, parent, elementName);
         return new Creator(project, parent, nc);
