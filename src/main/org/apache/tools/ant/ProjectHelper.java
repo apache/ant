@@ -490,8 +490,9 @@ public class ProjectHelper {
                 task.init();
                 wrapper = task.getRuntimeConfigurableWrapper();
                 wrapper.setAttributes(attrs);
-                if (parentWrapper != null)
-                  parentWrapper.addChild(wrapper);
+                if (parentWrapper != null) {
+                    parentWrapper.addChild(wrapper);
+                }
             } else {
                 task.init();
                 configure(task, attrs, project);
