@@ -286,6 +286,22 @@
         </table>
       </subsection>
 
+      <subsection name="Build a Better Robot with Ant">
+        <p>This article describes the gory details of writing custom
+           Ant tasks.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Erik Hatcher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.fawcette.com/javapro/2003_02/magazine/features/ehatcher/">http://www.fawcette.com/javapro/2003_02/magazine/features/ehatcher/l</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Automating the build and test process">
         <p>This article demonstrates an approach to the automated build and test process. Working with Ant 1.3 and the JUnit test framework, it shows how to automate a process that captures pertinent information about each test suite run, generates an attractive report, and e-mails the report.</p>
 
@@ -486,21 +502,6 @@
     </section>
 
     <section name="Presentations">
-
-      <subsection name="Ant - presented to the Tucson Java Users Group">
-        <p>A PowerPoint technical overview presentation on Ant.  Comes complete with a straightforward example demonstrating code compilation, JAR'ing, JUnit testing, JUnit reporting, and Zipping a distribution.  A few advanced topics are touched upon like property immutabality and using &lt;antcall&gt; to get around it, build listeners, and writing custom tasks.</p>
-
-        <table class="externals">
-          <tr>
-            <th>Author:</th>
-            <td><a href="mailto:ehatcher@apache.org">Erik Hatcher</a></td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://erik.hatcher.net/ant-jug.zip">http://erik.hatcher.net/ant-jug.zip</a></td>
-          </tr>
-        </table>
-      </subsection>
 
       <subsection name="Ant Build Tool">
         <p>A PowerPoint presentation on Ant 1.2.  It provides a basic overview
