@@ -701,9 +701,15 @@ public class Zip extends MatchingTask {
         Resource[][] initialResources = grabResources(filesets);
         if (isEmpty(initialResources)) {
             if (emptyBehavior.equals("skip")) {
-                log("Warning: skipping " + archiveType + " archive " 
-                    + zipFile + " because no files were included.", 
-                    Project.MSG_WARN);
+                if (doUpdate) {
+                    log(archiveType + " archive " + zipFile 
+                        + " not updated because no new files were included.", 
+                        Project.MSG_VERBOSE);
+                } else {
+                    log("Warning: skipping " + archiveType + " archive " 
+                        + zipFile + " because no files were included.", 
+                        Project.MSG_WARN);
+                }
             } else if (emptyBehavior.equals("fail")) {
                 throw new BuildException("Cannot create " + archiveType
                                          + " archive " + zipFile +
