@@ -1668,11 +1668,21 @@ public class Javadoc extends Task {
                         File packageListFile = 
                             new File(packageListLocation, "package-list");
                         if (packageListFile.exists()) {
-                            toExecute.createArgument().setValue("-linkoffline");
-                            toExecute.createArgument().setValue(la.getHref());
-                            toExecute.createArgument()
-                                .setValue(packageListLocation
-                                          .getAbsolutePath());
+                            try {
+                                String packageListURL =
+                                    fileUtils.getFileURL(packageListLocation)
+                                    .toExternalForm();
+                                toExecute.createArgument()
+                                    .setValue("-linkoffline");
+                                toExecute.createArgument()
+                                    .setValue(la.getHref());
+                                toExecute.createArgument()
+                                    .setValue(packageListURL);
+                            } catch (MalformedURLException ex) {
+                                log("Warning: Package list location was "
+                                    + "invalid " + packageListLocation,
+                                    Project.MSG_WARN);
+                            }
                         } else {
                             log("Warning: No package list was found at " 
                                 + packageListLocation, Project.MSG_VERBOSE);
