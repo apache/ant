@@ -53,15 +53,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
 
-import java.io.IOException;
 import java.io.DataInputStream;
+import java.io.IOException;
 
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.Code;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.Exceptions;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.AttributeInfoList;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.AttributeInfo;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.LineNumberTable;
 
 /**
  * Method info structure.
@@ -69,104 +65,119 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.LineNu
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class MethodInfo {
-	protected ConstantPool constantPool;
-	protected int access_flags;
-	protected int name_index;
-	protected int descriptor_index;
-	protected Code code;
-	protected boolean deprecated;
-	protected boolean synthetic;
-	protected Exceptions exceptions;
-	public MethodInfo(ConstantPool pool){
-		constantPool = pool;
-	}
-	
-	public void read(DataInputStream dis) throws IOException {
-		access_flags = dis.readShort();
-		name_index = dis.readShort();
-		descriptor_index = dis.readShort();
-		AttributeInfoList attrlist = new AttributeInfoList(constantPool);
-		attrlist.read(dis);
-		code = (Code)attrlist.getAttribute(AttributeInfo.CODE);
-		synthetic = attrlist.getAttribute(AttributeInfo.SYNTHETIC) != null;
-		deprecated = attrlist.getAttribute(AttributeInfo.DEPRECATED) != null;
-		exceptions = (Exceptions)attrlist.getAttribute(AttributeInfo.EXCEPTIONS);
-	}
-	
-	public int getAccessFlags(){
-		return access_flags;
-	}
-	
-	public String getName(){
-		return Utils.getUTF8Value(constantPool, name_index);
-	}
-	
-	public String getDescriptor(){
-		return Utils.getUTF8Value(constantPool, descriptor_index);
-	}
-	
-	public String getFullSignature(){
-		return getReturnType() + " " + getShortSignature();
-	}
-	
-	public String getShortSignature(){
-		StringBuffer buf = new StringBuffer(getName());
-		buf.append("(");
-		String[] params = getParametersType();
-		for (int i = 0; i < params.length; i++){
-			buf.append(params[i]);
-			if (i != params.length - 1){
-				buf.append(", ");
-			}
-		}
-		buf.append(")");
-		return buf.toString();
-	}
-	
-	public String getReturnType(){
-		return Utils.getMethodReturnType(getDescriptor());
-	}
-	
-	public String[] getParametersType(){
-		return Utils.getMethodParams(getDescriptor());
-	}
-	
-	public Code getCode(){
-		return code;
-	}
-	
-	public int getNumberOfLines(){
-		int len = -1;
-		if (code != null){
-			LineNumberTable lnt = code.getLineNumberTable();
-			if (lnt != null){
-				len = lnt.length();
-			}
-		}
-		return len;
-	}
-	
-	public boolean isDeprecated(){
-		return deprecated;
-	}
-	
-	public boolean isSynthetic(){
-		return synthetic;
-	}
-    
-	public String getAccess(){
-		return Utils.getMethodAccess(access_flags);
-	}
-	
-	public String toString(){
-		StringBuffer sb = new StringBuffer();
-		sb.append("Method: ").append(getAccess()).append(" ");
-		sb.append(getFullSignature());
-		sb.append(" synthetic:").append(synthetic);
-		sb.append(" deprecated:").append(deprecated);
-		return sb.toString();
-	}
+public final class MethodInfo {
+    private int access_flags;
+    private int loc = -1;
+    private String name;
+    private String descriptor;
+
+    public MethodInfo() {
+    }
+
+    public void read(ConstantPool constantPool, DataInputStream dis) throws IOException {
+        access_flags = dis.readShort();
+
+        int name_index = dis.readShort();
+        name =  Utils.getUTF8Value(constantPool, name_index);
+
+        int descriptor_index = dis.readShort();
+        descriptor = Utils.getUTF8Value(constantPool, descriptor_index);
+
+        int attributes_count = dis.readUnsignedShort();
+        for (int i = 0; i < attributes_count; i++) {
+            int attr_id = dis.readShort();
+            String attr_name = Utils.getUTF8Value(constantPool, attr_id);
+            int len = dis.readInt();
+            if (AttributeInfo.CODE.equals(attr_name)) {
+                readCode(constantPool, dis);
+            } else {
+                dis.skipBytes(len);
+            }
+        }
+
+    }
+
+    protected void readCode(ConstantPool constantPool, DataInputStream dis) throws IOException {
+        // skip max_stack (short), max_local (short)
+        dis.skipBytes(2*2);
+
+        // skip bytecode...
+        int bytecode_len = dis.readInt();
+        dis.skip(bytecode_len);
+
+        // skip exceptions... 1 exception = 4 short.
+        int exception_count = dis.readShort();
+        dis.skipBytes(exception_count * 4 * 2);
+
+        // read attributes...
+        int attributes_count = dis.readUnsignedShort();
+        for (int i = 0; i < attributes_count; i++) {
+            int attr_id = dis.readShort();
+            String attr_name = Utils.getUTF8Value(constantPool, attr_id);
+            int len = dis.readInt();
+            if (AttributeInfo.LINE_NUMBER_TABLE.equals(attr_name)) {
+                // we're only interested in lines of code...
+                loc = dis.readShort();
+                // skip the table which is 2*loc*short
+                dis.skip(loc * 2 * 2);
+            } else {
+                dis.skipBytes(len);
+            }
+        }
+    }
+
+    public int getAccessFlags() {
+        return access_flags;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescriptor() {
+        return descriptor;
+    }
+
+    public String getFullSignature() {
+        return getReturnType() + " " + getShortSignature();
+    }
+
+    public String getShortSignature() {
+        StringBuffer buf = new StringBuffer(getName());
+        buf.append("(");
+        String[] params = getParametersType();
+        for (int i = 0; i < params.length; i++) {
+            buf.append(params[i]);
+            if (i != params.length - 1) {
+                buf.append(", ");
+            }
+        }
+        buf.append(")");
+        return buf.toString();
+    }
+
+    public String getReturnType() {
+        return Utils.getMethodReturnType(getDescriptor());
+    }
+
+    public String[] getParametersType() {
+        return Utils.getMethodParams(getDescriptor());
+    }
+
+    public int getNumberOfLines() {
+        return loc;
+    }
+
+    public String getAccess() {
+        return Utils.getMethodAccess(access_flags);
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Method: ").append(getAccess()).append(" ");
+        sb.append(getFullSignature());
+        return sb.toString();
+    }
 }
 
 
