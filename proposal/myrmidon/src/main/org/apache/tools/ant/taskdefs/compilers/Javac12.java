@@ -34,7 +34,7 @@ public class Javac12 extends DefaultCompilerAdapter
         getLogger().debug( "Using classic compiler" );
         Commandline cmd = setupJavacCommand( true );
 
-        OutputStream logstr = new LogOutputStream( m_attributes.hackGetLogger(), true );
+        OutputStream logstr = new LogOutputStream( getLogger(), true );
         try
         {
             // Create an instance of the compiler, redirecting output to
