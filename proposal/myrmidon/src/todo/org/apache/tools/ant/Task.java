@@ -15,13 +15,9 @@ public abstract class Task
 {
     protected Target target;
     protected String description;
-    protected Location location = Location.UNKNOWN_LOCATION;
     protected String taskName;
     protected String taskType;
-    private boolean invalid;
     protected RuntimeConfigurable wrapper;
-
-    private UnknownElement replacement;
 
     /**
      * Sets a description of the current action. It will be usefull in
@@ -32,16 +28,6 @@ public abstract class Task
     public void setDescription( String desc )
     {
         description = desc;
-    }
-
-    /**
-     * Sets the file location where this task was defined.
-     *
-     * @param location The new Location value
-     */
-    public void setLocation( Location location )
-    {
-        this.location = location;
     }
 
     /**
@@ -67,16 +53,6 @@ public abstract class Task
     public String getDescription()
     {
         return description;
-    }
-
-    /**
-     * Returns the file location where this task was defined.
-     *
-     * @return The Location value
-     */
-    public Location getLocation()
-    {
-        return location;
     }
 
     /**
@@ -119,39 +95,22 @@ public abstract class Task
     public final void perform()
         throws TaskException
     {
-        if( !invalid )
+        try
         {
-            try
-            {
-                project.fireTaskStarted( this );
-                maybeConfigure();
-                execute();
-                project.fireTaskFinished( this, null );
-            }
-            catch( TaskException te )
-            {
-                if( te instanceof BuildException )
-                {
-                    BuildException be = (BuildException)te;
-                    if( be.getLocation() == Location.UNKNOWN_LOCATION )
-                    {
-                        be.setLocation( getLocation() );
-                    }
-                }
-                project.fireTaskFinished( this, te );
-                throw te;
-            }
-            catch( RuntimeException re )
-            {
-                project.fireTaskFinished( this, re );
-                throw re;
-            }
+            project.fireTaskStarted( this );
+            maybeConfigure();
+            execute();
+            project.fireTaskFinished( this, null );
         }
-        else
+        catch( TaskException te )
         {
-            UnknownElement ue = getReplacement();
-            Task task = ue.getTask();
-            task.perform();
+            project.fireTaskFinished( this, te );
+            throw te;
+        }
+        catch( RuntimeException re )
+        {
+            project.fireTaskFinished( this, re );
+            throw re;
         }
     }
 
@@ -208,16 +167,9 @@ public abstract class Task
     public void maybeConfigure()
         throws TaskException
     {
-        if( !invalid )
+        if( wrapper != null )
         {
-            if( wrapper != null )
-            {
-                wrapper.maybeConfigure( project );
-            }
-        }
-        else
-        {
-            getReplacement();
+            wrapper.maybeConfigure( project );
         }
     }
 
@@ -244,38 +196,6 @@ public abstract class Task
     void setTaskType( String type )
     {
         this.taskType = type;
-    }
-
-    /**
-     * Mark this task as invalid.
-     */
-    final void markInvalid()
-    {
-        invalid = true;
-    }
-
-    /**
-     * Create an UnknownElement that can be used to replace this task.
-     *
-     * @return The Replacement value
-     */
-    private UnknownElement getReplacement()
-        throws TaskException
-    {
-        if( replacement == null )
-        {
-            replacement = new UnknownElement( taskType );
-            replacement.setProject( project );
-            replacement.setTaskType( taskType );
-            replacement.setTaskName( taskName );
-            replacement.setLocation( location );
-            replacement.setOwningTarget( target );
-            replacement.setRuntimeConfigurableWrapper( wrapper );
-            wrapper.setProxy( replacement );
-            target.replaceChild( this, replacement );
-            replacement.maybeConfigure();
-        }
-        return replacement;
     }
 }
 
