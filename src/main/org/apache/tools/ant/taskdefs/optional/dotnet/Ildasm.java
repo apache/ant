@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
@@ -352,16 +353,26 @@ public class Ildasm extends Task {
     }
 
     /**
-     *
-     * @return
+     * Test for disassembly being needed; use existence and granularity
+     * correct date stamps
+     * @return true iff a rebuild is required.
      */
     private boolean isDisassemblyNeeded() {
         if (!destFile.exists()) {
+            log("Destination file does not exist: a build is required",
+                    Project.MSG_VERBOSE);
             return true;
         }
         long sourceTime = sourceFile.lastModified();
         long destTime = destFile.lastModified();
-        return sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity());
+        if(sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity())) {
+            log("Source file is newer than the dest file: a rebuild is required",
+                    Project.MSG_VERBOSE);
+            return true;
+        } else {
+            log("The .il file is up to date", Project.MSG_VERBOSE);
+            return false;
+        }
 
     }
     /**
@@ -370,6 +381,9 @@ public class Ildasm extends Task {
      */
     public void execute() throws BuildException {
         validate();
+        if(!isDisassemblyNeeded()) {
+            return;
+        }
         NetCommand command = new NetCommand(this, "ildasm", executable);
         command.setFailOnError(true);
         //fill in args
@@ -423,6 +437,7 @@ public class Ildasm extends Task {
         } catch (BuildException e) {
             //forcibly delete the output file in case of trouble
             if (destFile.exists()) {
+                log("Deleting destination file as it may be corrupt");
                 destFile.delete();
             }
             //then rethrow the exception

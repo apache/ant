@@ -69,9 +69,11 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 
 /**
- *  Assembles .NET Intermediate Language files. The task will only work
- *  on win2K until other platforms support csc.exe or an equivalent. ilasm.exe
- *  must be on the execute path too. <p>
+ * Assembles .NET Intermediate Language files.
+ * ilasm.exe must be on the execute path, unless another executable
+ * or the full path to that executable is specified in the <tt>executable</tt>
+ * parameter
+ *  <p>
  *
  *  <p>
  *
@@ -86,9 +88,9 @@ import org.apache.tools.ant.types.FileSet;
  *  The task is a directory based task, so attributes like <b>includes="*.il"
  *  </b> and <b>excludes="broken.il"</b> can be used to control the files pulled
  *  in. You can also use nested &lt;src&gt filesets to refer to source.
- *
- * @author     Steve Loughran steve_l@iseran.com
- * @version    0.6
+ * <p>
+ * 
+ * @author     Steve Loughran
  * @ant.task    name="ilasm" category="dotnet"
  */
 
