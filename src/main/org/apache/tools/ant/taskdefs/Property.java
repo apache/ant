@@ -287,8 +287,9 @@ public class Property extends Task {
     }
 
     /**
-     * the classpath to use when lookingup a resource,
+     * the classpath to use when looking up a resource,
      * given as reference to a &lt;path&gt; defined elsewhere
+     */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
