@@ -100,7 +100,7 @@ public abstract class Task {
      *
      * @param the task's target.
      */
-    public Target getTarget() {
+    public Target getOwningTarget() {
         return target;
     }
     
