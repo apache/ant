@@ -137,6 +137,7 @@
     <csc
       destFile="${testCSC.exe}"
       targetType="exe"
+      srcDir="${src.dir}"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
@@ -152,6 +153,7 @@
       destFile="${testCSC.exe}"
       targetType="exe"
       includedefaultreferences="true"
+      srcDir="${src.dir}"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
@@ -171,7 +173,8 @@
     <csc
       destFile="${testCSC.exe}"
       targetType="exe"
-      srcDir="."
+      srcDir="${src.dir}"
+      includes="**/*.cs"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
@@ -186,7 +189,8 @@
     <csc
       destFile="${testCSC.exe}"
       targetType="exe"
-      srcDir="."
+      srcDir="${src.dir}"
+      includes="**/*.cs"
       includedefaultreferences="true"
       >
     </csc>
@@ -348,7 +352,7 @@
         destFile="${jsharp.exe}"
         targetType="exe"
         >
-      <src dir="dotnet" includes="*.java"/>
+      <src dir="${src.dir}" includes="*.java"/>
     </jsharpc>
     <exec executable="${jsharp.exe}" failonerror="true" />
   </target>
@@ -361,6 +365,7 @@
       targetType="exe"
       executable="${cs.compiler}"
       useResponseFile="true"
+      srcDir="${src.dir}"
       >
     </csc>
     <available property="app.created" file="${testCSCresponseFile.exe}"/>
