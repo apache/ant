@@ -71,6 +71,9 @@ public class ExecuteWatchdogTest extends TestCase {
 
 	private final static String TEST_CLASSPATH = getTestClassPath();
 
+    private final static int CLOCK_ERROR=200;
+    private final static int TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
+    
 	private ExecuteWatchdog watchdog;
 
 	public ExecuteWatchdogTest(String name) {
@@ -151,8 +154,8 @@ public class ExecuteWatchdogTest extends TestCase {
 		long elapsed = System.currentTimeMillis() - now;
 		assertTrue("process should have been killed", watchdog.killedProcess());
                 //		assertTrue("return code is invalid: " + retCode, retCode!=0);
-		assertTrue("elapse time is less than timeout value", elapsed > TIME_OUT);
-		assertTrue("elapse time is greater than run value", elapsed < TIME_OUT*2);
+		assertTrue("elapse time of "+elapsed+" ms is less than timeout value of "+TIME_OUT_TEST+" ms", elapsed >= TIME_OUT_TEST);
+		assertTrue("elapse time of "+elapsed+" ms is greater than run value of "+(TIME_OUT*2)+" ms", elapsed < TIME_OUT*2);
 	}
 
 	// test a process that runs and failed
