@@ -22,6 +22,9 @@ Fixed bugs:
 * <antstructure> should create a valid DTD for propertyfile.operation.entry 
   and omit tasks it fails to load.
 
+* <style>'s style attribute will be resolved as relative to the
+  projects basedir.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
