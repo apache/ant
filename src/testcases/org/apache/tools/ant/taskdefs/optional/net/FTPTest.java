@@ -570,7 +570,12 @@ public class FTPTest extends BuildFileTest{
                      new String[] {"alpha/beta", "alpha/beta/gamma", "delta"});
 
     }
-
+    /**
+     *  this test is inspired by a user reporting that deletions of directories with the ftp task do not work
+     */
+    public void testFTPDelete() {
+        getProject().executeTarget("ftp-delete");
+    }
     private void compareFiles(DirectoryScanner ds, String[] expectedFiles,
                               String[] expectedDirectories) {
         String includedFiles[] = ds.getIncludedFiles();
