@@ -31,6 +31,9 @@ Changes that could break older environments:
   
 * The pattern definition **/._* has been included into the Default 
   Excludes list.
+  
+* <propertyfile>'s <entry> element was modified to remove "never" as a value
+  as its behavior was undocumented and flakey.
 
 
 Fixed bugs:
@@ -166,6 +169,9 @@ Other changes:
 * The compiler implementation for javac can now be chosen on a task by
   task basis.  Use the new compiler attribute of <javac> to override
   the build.compiler property.
+  
+* <propertyfile>'s <entry> now has a 'unit' attribute to specify the
+  increment/decrement unit on date operations.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
