@@ -62,8 +62,8 @@
   <xsl:param name="cvsweb"/>
 
   <xsl:output method="html" indent="yes" encoding="US-ASCII"
-              doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
-              doctype-system="http://www.w3.org/TR/html401/loose.dtd"/>
+              doctype-public="-//W3C//DTD HTML 4.01//EN"
+              doctype-system="http://www.w3.org/TR/html401/strict.dtd"/>
 
   <!-- Copy standard document elements.  Elements that
        should be ignored must be filtered by apply-templates
@@ -112,8 +112,8 @@
         <h1>
           <a name="top"><xsl:value-of select="$title"/></a>
         </h1>
-        <p align="right">Designed for use with <a href="http://jakarta.apache.org/ant/">Ant</a>.</p>
-        <hr size="2"/>
+        <p style="text-align: right">Designed for use with <a href="http://jakarta.apache.org/ant/">Ant</a>.</p>
+        <hr/>
         <table border="0" width="100%" cellspacing="1">
           
           <xsl:apply-templates select=".//entry">
@@ -165,10 +165,10 @@
       <a>
         <xsl:choose>
           <xsl:when test="string-length(prevrevision) = 0 ">
-            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?rev=<xsl:value-of select="revision" />&amp;amp;content-type=text/x-cvsweb-markup</xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?rev=<xsl:value-of select="revision" />&amp;content-type=text/x-cvsweb-markup</xsl:attribute>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?r1=<xsl:value-of select="revision" />&amp;amp;r2=<xsl:value-of select="prevrevision"/></xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?r1=<xsl:value-of select="revision" />&amp;r2=<xsl:value-of select="prevrevision"/></xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:value-of select="name" /> (<xsl:value-of select="revision"/>)</a>
