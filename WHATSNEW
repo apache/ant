@@ -6,6 +6,10 @@ Other changes:
 
 * Shipped XML parser is now Xerces 2.1.0
 
+* Filesets now support a 'file' attribute, allowing a single-file
+  fileset to be constructed without having to specify its parent
+  directory separately.
+
 Changes from Ant 1.5 to 1.5.1Beta1
 ==================================
 

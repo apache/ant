@@ -58,6 +58,7 @@ import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.selectors.*;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 import java.util.Stack;
@@ -188,6 +189,20 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         return defaultPatterns.createExclude();
     }
 
+    /**
+     * Creates a single file fileset.
+     */
+    public void setFile(File file) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        setDir(fileUtils.getParentFile(file));
+
+        PatternSet.NameEntry include = createInclude();
+        include.setName(file.getName());
+    }
+    
     /**
      * add a name entry on the include files list
      */
