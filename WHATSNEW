@@ -305,6 +305,9 @@ Other changes:
 * Users can now modify the list of default excludes using the new
   defaultexcludes task.  Bugzilla Report 12700.
 
+* There is a new data type <propertyset> that can be used to collect
+  properties.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
