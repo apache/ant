@@ -63,7 +63,6 @@ import java.io.*;
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
  */
-
 public class Exec extends Task {
     private String os;
     private String out;
@@ -95,8 +94,20 @@ public class Exec extends Task {
         if (dir == null) dir = project.getBaseDir();
 
         if (myos.toLowerCase().indexOf("windows") >= 0) {
-            if (!dir.equals(project.resolveFile(".")))
-                command = "cmd /c cd " + dir + " && " + command;
+            if (!dir.equals(project.resolveFile("."))) {
+                if (myos.toLowerCase().indexOf("nt") >= 0) {
+                    command = "cmd /c cd " + dir + " && " + command;
+                }
+                else {
+                    String ant = project.getProperty("ant.home");
+                    if (ant == null) {
+                        throw new BuildException("Property 'ant.home' not found", location);
+                    }
+                
+                    String antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
+                    command = antRun + " " + dir + " " + command;
+                }
+            }
         } else {
             String ant = project.getProperty("ant.home");
             if (ant == null) throw new BuildException("Property 'ant.home' not found", location);
