@@ -1,0 +1,3 @@
+<!ELEMENT skinconfig (foo, bar?)>
+<!ELEMENT foo (#PCDATA)>
+<!ELEMENT bar (#PCDATA)>

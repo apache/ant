@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+ Copyright  2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="nunit" basedir="." default="echo"
+  xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet">
+
+  <property name="build.dir" value="build"/>
+  <property name="src.dir" location="src"/>
+
+  <taskdef 
+    uri="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+    resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml">
+    <classpath>
+      <pathelement location="../../../build/lib/dotnet.jar"/>
+    </classpath>
+  </taskdef>
+
+  <property environment="env"/>
+  <condition property="nunit.found">
+    <or>
+      <available file="nunit-console.exe" filepath="${env.PATH}"/>
+      <available file="nunit-console.exe" filepath="${env.Path}"/>
+      <available file="nunit-console.exe"/>
+    </or>
+  </condition>
+
+  <target name="no-assembly">
+    <dn:nunit/>
+  </target>
+
+  <target name="compile-pass">
+    <mkdir dir="${build.dir}"/>
+    <csc destFile="${build.dir}/Pass.dll"
+      targetType="library" references="nunit.framework.dll">
+      <src dir="${src.dir}" includes="pass.cs"/>
+    </csc>
+  </target>
+
+  <target name="compile-fail">
+    <mkdir dir="${build.dir}"/>
+    <csc destFile="${build.dir}/Fail.dll" 
+      targetType="library" references="nunit.framework.dll">
+      <src dir="${src.dir}" includes="fail.cs"/>
+    </csc>
+  </target>
+
+  <target name="passing-test" depends="compile-pass">
+    <dn:nunit>
+      <testassembly name="${build.dir}/Pass.dll"/>
+    </dn:nunit>
+  </target>
+
+  <target name="failing-test" depends="compile-fail">
+    <dn:nunit>
+      <testassembly name="${build.dir}/Fail.dll"/>
+    </dn:nunit>
+  </target>
+
+  <target name="failing-test-with-fail" depends="compile-fail">
+    <dn:nunit failonerror="true">
+      <testassembly name="${build.dir}/Fail.dll"/>
+    </dn:nunit>
+  </target>
+
+  <target name="teardown">
+    <delete dir="${build.dir}"/>
+  </target>
+</project>
