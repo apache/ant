@@ -107,12 +107,6 @@ public final class IntrospectionHelper implements BuildListener {
     private List   addTypeMethods;
 
     /**
-     * Map from attribute names to methods to store configured nested types
-     * (String to NestedStorer).
-     */
-    private Hashtable nestedStorers;
-
-    /**
      * The method to invoke to add PCDATA.
      */
     private Method addText = null;
