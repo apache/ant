@@ -42,7 +42,7 @@ public class IfTestCase
         executeTarget( projectFile, "true-prop", listener );
 
         // Test when property is set to a value other than 'true' or 'false'
-        executeTargetExpectError( projectFile, "set-prop", new String[0] );
+        executeTargetExpectError( projectFile, "set-prop", new String[ 0 ] );
 
         // Test when property is set to 'false'
         listener = new LogMessageTracker();
@@ -53,6 +53,24 @@ public class IfTestCase
         listener = new LogMessageTracker();
         listener.addExpectedMessage( "not-set-prop", "test-prop is not set" );
         executeTarget( projectFile, "not-set-prop", listener );
+    }
+
+    /**
+     * Test nested <condition> elements.
+     */
+    public void testNestedConditions()
+        throws Exception
+    {
+        final File projectFile = getTestResource( "if.ant" );
+
+        // Test when property is set to 'true'
+        LogMessageTracker listener = new LogMessageTracker();
+        listener.addExpectedMessage( "nested-conditions", "prop-true is set" );
+        listener.addExpectedMessage( "nested-conditions", "prop-false is set" );
+        listener.addExpectedMessage( "nested-conditions", "prop-true is true" );
+        listener.addExpectedMessage( "nested-conditions",
+                                     "prop-true is true and prop-false is not true" );
+        executeTarget( projectFile, "nested-conditions", listener );
     }
 
     /**
@@ -92,7 +110,15 @@ public class IfTestCase
             null,
             REZ.getString( "if.ifelse-duplicate.error" )
         };
+        // 2 condition attributes.
         executeTargetExpectError( projectFile, "too-many-conditions", messages );
+
+        // attribute condition + nested condition
+        executeTargetExpectError( projectFile, "attribute-plus-nested-condition",
+                                  messages );
+
+        // 2 nested conditions
+        executeTargetExpectError( projectFile, "2-nested-conditions", messages );
     }
 
 }

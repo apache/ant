@@ -188,10 +188,10 @@ Legal:
 
     <!-- Compiles and installs the custom build tasks -->
     <target name="custom-tasks">
-        <property name="custom-tasks-dir" value="${build.dir}/tasks"/>
-        <property name="custom-package-dir" value="${custom-tasks-dir}/org/apache/myrmidon/build"/>
-        <mkdir dir="${custom-tasks-dir}"/>
-        <javac srcdir="src/make" destdir="${custom-tasks-dir}">
+        <property name="build.custom-tasks" value="${build.dir}/tasks"/>
+        <property name="custom-package-dir" value="${build.custom-tasks}/org/apache/myrmidon/build"/>
+        <mkdir dir="${build.custom-tasks}"/>
+        <javac srcdir="src/make" destdir="${build.custom-tasks}">
             <classpath refid="project.class.path"/>
         </javac>
 
@@ -200,13 +200,13 @@ Legal:
         <!-- <copy file="${manifest.dir}/type.j" todir="${custom-package-dir}"/> -->
 
         <taskdef name="antlib-jar" classname="org.apache.myrmidon.build.AntlibJarTask">
-            <classpath location="${custom-tasks-dir}"/>
+            <classpath location="${build.custom-tasks}"/>
         </taskdef>
 
         <taskdef name="antlib-descriptor"
             classname="org.apache.myrmidon.build.AntlibDescriptorTask">
             <classpath>
-                <pathelement location="${custom-tasks-dir}"/>
+                <pathelement location="${build.custom-tasks}"/>
                 <path refid="project.class.path"/>
             </classpath>
         </taskdef>
@@ -527,6 +527,9 @@ Legal:
         <ant antfile="antlib.xml">
             <property name="antlib.name" value="build"/>
         </ant>
+
+        <!-- Create the Ant1 compatibility layer -->
+        <ant antfile="ant1compat.xml"/>
     </target>
 
     <!-- Compiles and runs the unit tests -->
@@ -619,6 +622,12 @@ Legal:
                     <exclude name="**/BzipTestCase.class" unless="test.bzip"/>
                     <exclude name="**/SmbFileSystemTestCase.class" unless="test.smb"/>
                     <exclude name="**/FtpFileSystemTestCase.class" unless="test.ftp"/>
+
+                    <!-- Need Ant1.5+ to run Ant1Compat tests, because of fixes to JUnit -->                                                                  
+                    <exclude name="**/Ant1CompatTestCase.class" unless="single.test"/>
+                    
+                    <!-- This test fails, as it has no test methods -->
+                    <exclude name="**/SimpleConvertersTestCase.class" unless="single.test"/>
                 </fileset>
             </batchtest>
         </junit>

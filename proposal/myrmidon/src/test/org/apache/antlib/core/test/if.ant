@@ -38,6 +38,57 @@
         </if>
     </target>
 
+    <target name="nested-conditions">
+        <property name="prop-true" value="true"/>
+        <property name="prop-false" value="false"/>
+
+        <if>
+            <condition>
+                <is-set property="prop-true"/>
+            </condition>
+            <log message="prop-true is set"/>
+        </if>
+
+        <if>
+            <condition>
+                <is-set property="prop-false"/>
+            </condition>
+            <log message="prop-false is set"/>
+        </if>
+
+        <if>
+            <condition>
+                <is-set property="prop-unset"/>
+            </condition>
+            <log message="prop-unset is set (shouldn't be here)"/>
+        </if>
+
+        <if>
+            <condition>
+                <is-true property="prop-true"/>
+            </condition>
+            <log message="prop-true is true"/>
+        </if>
+
+        <if>
+            <condition>
+                <is-true property="prop-false"/>
+            </condition>
+            <log message="prop-false is true (shouldn't be here)"/>
+        </if>
+
+        <!-- Compound condition -->
+        <if>
+            <condition>
+                <is-true property="prop-true"/>
+                <not>
+                    <is-true property="prop-false"/>
+                </not>
+            </condition>
+            <log message="prop-true is true and prop-false is not true"/>
+        </if>
+    </target>
+
     <target name="multiple-nested-tasks">
         <property name="test-prop" value="true"/>
         <if test="test-prop">
@@ -57,6 +108,29 @@
     <target name="too-many-conditions">
         <if test="test-prop" not-test="test-prop">
             <log>no go</log>
+        </if>
+    </target>
+
+    <target name="attribute-plus-nested-condition">
+        <property name="test-prop" value="true"/>
+        <if test="test-prop">
+            <condition>
+                <is-set property="test-prop"/>
+            </condition>
+            <log>Double trouble.</log>
+        </if>
+    </target>
+
+    <target name="2-nested-conditions">
+        <property name="test-prop" value="true"/>
+        <if>
+            <condition>
+                <is-set property="test-prop"/>
+            </condition>
+            <condition>
+                <is-true property="test-prop"/>
+            </condition>
+            <log>2 conditions not permitted.</log>
         </if>
     </target>
 

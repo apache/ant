@@ -1,0 +1,22 @@
+<project name="ant1compat-test"
+         description="Basic tests for the Ant1 Compatibility layer."
+         default="echo-test">
+
+    <property name="prop-1" value="value-1"/>
+
+    <target name="main" depends="echo-test, property-test"/>
+
+    <target name="echo-test">
+        <echo message="Hello, hello, hello"/>
+    </target>
+
+    <target name="property-test">
+        <property name="prop-2" value="value-2"/>
+
+        <echo message="prop-1 = [${prop-1}]"/>
+        <echo message="prop-2 = [${prop-2}]"/>
+        <echo message="prop-undefined = [${prop-undefined}]"/>
+        <echo message="Omit$, replace$$, but keep ${} and $"/>
+    </target>
+
+</project>

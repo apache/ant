@@ -22,10 +22,7 @@ import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeException;
-import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
@@ -49,12 +46,10 @@ public class Ant1CompatProject extends Project
         URL ant1jar =
             Ant1CompatProject.class.getProtectionDomain().getCodeSource().getLocation();
         String ant1classpath = ant1jar.getFile().toString();
-        javaclasspath = System.getProperty( "java.class.path" ) +
-            File.pathSeparator +
-            ant1classpath;
+        javaclasspath = System.getProperty( "java.class.path" );
+        javaclasspath = javaclasspath + File.pathSeparator + ant1classpath;
     }
 
-    private final PropertyResolver m_ant1PropertyResolver;
     private final Converter m_converter;
 
     private Set m_userProperties = new HashSet();
@@ -80,17 +75,6 @@ public class Ant1CompatProject extends Project
         }
 
         m_converter = (Converter)m_context.getService( Converter.class );
-
-        TypeManager typeManager = (TypeManager)m_context.getService( TypeManager.class );
-        try
-        {
-            TypeFactory factory = typeManager.getFactory( PropertyResolver.ROLE );
-            m_ant1PropertyResolver = (PropertyResolver)factory.create( "classic" );
-        }
-        catch( TypeException e )
-        {
-            throw new TaskException( "Failed to create PropertyResolver.", e );
-        }
     }
 
     /**
@@ -519,15 +503,8 @@ public class Ant1CompatProject extends Project
     public String replaceProperties( String value )
         throws BuildException
     {
-        try
-        {
-            return (String)m_ant1PropertyResolver.resolveProperties( value,
-                                                                     m_context );
-        }
-        catch( TaskException e )
-        {
-            throw new BuildException( "Error resolving value: '" + value + "'", e );
-        }
+        return ProjectHelper.replaceProperties( this, value,
+                                                this.getProperties() );
     }
 
     /**

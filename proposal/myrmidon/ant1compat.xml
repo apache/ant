@@ -5,11 +5,11 @@
     <property name="manifest.dir" value="src/manifest"/>
     <property name="java.dir" value="src/java"/>
 
-    <property name="build.dir" value="build/ant1compat"/>
+    <property name="build.dir" value="build"/>
     <property name="build.lib" value="${build.dir}/lib"/>
     <property name="build.classes" value="${build.dir}/classes"/>
 
-    <property name="custom-tasks-dir" value="build/tasks"/>
+    <property name="build.custom-tasks" value="build/tasks"/>
 
     <path id="project.class.path">
         <pathelement location="build/classes"/>
@@ -20,7 +20,7 @@
 
     <taskdef name="antlib-jar"
              classname="org.apache.myrmidon.build.AntlibJarTask">
-        <classpath location="${custom-tasks-dir}"/>
+        <classpath location="${build.custom-tasks}"/>
     </taskdef>
 
     <target name="main" depends="antlib"/>
@@ -83,8 +83,6 @@
                 <include name="${ant1.package}/**"/>
             </fileset>
         </antlib-jar>
-
-        <copy todir="dist/lib" file="${antlib.file}"/>
     </target>
 
     <!-- Runs the supplied build file through the XSL converter -->

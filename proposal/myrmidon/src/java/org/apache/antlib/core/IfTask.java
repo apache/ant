@@ -13,6 +13,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractContainerTask;
+import org.apache.myrmidon.framework.conditions.AndCondition;
 import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.framework.conditions.IsTrueCondition;
 import org.apache.myrmidon.framework.conditions.NotCondition;
@@ -58,6 +59,19 @@ public class IfTask
     {
         verifyConditionNull();
         m_condition = new NotCondition( new IsTrueCondition( condition ) );
+    }
+
+    /**
+     * Add a nested "condition" element, which provides an AndCondition
+     * container for any type of condition.
+     * @param andCondition The configured Condition
+     * @throws TaskException If a condition has already been set.
+     */
+    public void addCondition( final AndCondition andCondition )
+        throws TaskException
+    {
+        verifyConditionNull();
+        m_condition = andCondition;
     }
 
     public void add( final Configuration task )
