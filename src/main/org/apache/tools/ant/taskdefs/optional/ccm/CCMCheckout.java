@@ -59,8 +59,8 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMCheckout extends CCMCheck {
-    
-    public CCMCheckout(){
+
+    public CCMCheckout() {
         super();
         setCcmAction(COMMAND_CHECKOUT);
     }

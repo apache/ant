@@ -54,12 +54,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-
-
-import java.io.File;
 
 /**
  * Class common to all check commands (checkout, checkin,checkin default task);
@@ -67,9 +66,9 @@ import java.io.File;
  */
 public class CCMCheck extends Continuus {
 
-    private File   _file    = null;
-    private String _comment = null;
-    private String _task    = null;
+    private File file = null;
+    private String comment = null;
+    private String task = null;
 
     public CCMCheck() {
         super();
@@ -80,51 +79,51 @@ public class CCMCheck extends Continuus {
      * @return value of file.
      */
     public File getFile() {
-        return _file;
+        return file;
     }
-    
+
     /**
      * Set the value of file.
      * @param v  Value to assign to file.
      */
-    public void setFile(File  v) {
-        this._file = v;
+    public void setFile(File v) {
+        this.file = v;
     }
-    
+
     /**
      * Get the value of comment.
      * @return value of comment.
      */
     public String getComment() {
-        return _comment;
+        return comment;
     }
-    
+
     /**
      * Set the value of comment.
      * @param v  Value to assign to comment.
      */
-    public void setComment(String  v) {
-        this._comment = v;
+    public void setComment(String v) {
+        this.comment = v;
     }
 
-    
+
     /**
      * Get the value of task.
      * @return value of task.
      */
     public String getTask() {
-        return _task;
+        return task;
     }
-    
+
     /**
      * Set the value of task.
      * @param v  Value to assign to task.
      */
-    public void setTask(String  v) {
-        this._task = v;
+    public void setTask(String v) {
+        this.task = v;
     }
-    
-    
+
+
     /**
      * Executes the task.
      * <p>
@@ -142,11 +141,11 @@ public class CCMCheck extends Continuus {
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable(getCcmCommand());
         commandLine.createArgument().setValue(getCcmAction());
-        
+
         checkOptions(commandLine);
 
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }
@@ -156,30 +155,30 @@ public class CCMCheck extends Continuus {
     /**
      * Check the command line options.
      */
-    private void checkOptions(Commandline cmd) {        
+    private void checkOptions(Commandline cmd) {
         if (getComment() != null) {
             cmd.createArgument().setValue(FLAG_COMMENT);
             cmd.createArgument().setValue(getComment());
         }
 
-        if ( getTask() != null) {
+        if (getTask() != null) {
             cmd.createArgument().setValue(FLAG_TASK);
-            cmd.createArgument().setValue(getTask());            
-        } // end of if ()        
-        
-        if ( getFile() != null ) {
-            cmd.createArgument().setValue(_file.getAbsolutePath());       
-        } // end of if ()        
+            cmd.createArgument().setValue(getTask());
+        } // end of if ()
+
+        if (getFile() != null) {
+            cmd.createArgument().setValue(file.getAbsolutePath());
+        } // end of if ()
     }
-    
+
     /**
      * -comment flag -- comment to attach to the file
      */
     public final static String FLAG_COMMENT = "/comment";
-    
+
     /**
      *  -task flag -- associate checckout task with task
      */
-    public final static String FLAG_TASK = "/task";   
+    public final static String FLAG_TASK = "/task";
 }
 

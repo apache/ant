@@ -61,11 +61,11 @@ import java.util.Date;
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMCheckin extends CCMCheck {
-    
+
     public CCMCheckin() {
         super();
         setCcmAction(COMMAND_CHECKIN);
-        setComment("Checkin "+ new Date());
+        setComment("Checkin " + new Date());
     }
 
 }
