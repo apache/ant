@@ -175,7 +175,7 @@ public class SOSCheckin extends SOS {
     }
 
     /**
-     * Build the command line <p>
+     * Build the command line. <p>
      *
      * CheckInFile required parameters: -server -name -password -database -project
      *  -file<br>
