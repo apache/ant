@@ -144,7 +144,7 @@ public class P4Change extends P4Base {
      * @return the backslashed string
      * @see < a href="http://jakarta.apache.org/oro/api/org/apache/oro/text/perl/Perl5Util.html#substitute(java.lang.String,%20java.lang.String)">Oro</a>
      */
-    protected String backslash(String value){
+    public static final String backslash(String value){
         final StringBuffer buf = new StringBuffer(value.length());
         final int len = value.length();
         for (int i = 0; i < len; i++){
