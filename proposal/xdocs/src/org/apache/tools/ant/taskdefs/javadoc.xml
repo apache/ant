@@ -1,0 +1,59 @@
+<!-- javadoc task -->
+<external>
+<description>
+
+<p>Generates code documentation using the javadoc tool.</p>
+
+<p>The source directory will be recursively scanned for Java source files to process
+but only those matching the inclusion rules, and not matching the exclusions rules
+will be passed to the javadoc tool. This
+allows wildcards to be used to choose between package names, reducing verbosity
+and management costs over time. This task, however, has no notion of
+&quot;changed&quot; files, unlike the <a href="javac.html">javac</a> task. This means
+all packages will be processed each time this task is run. In general, however,
+this task is used much less frequently.</p>
+
+<p>This task works seamlessly between different javadoc versions (1.1 and 1.2),
+with the obvious restriction that the 1.2 attributes will be ignored if run in a
+1.1 VM.</p>
+
+<p>NOTE: since javadoc calls System.exit(), javadoc cannot be run inside the
+same VM as ant without breaking functionality. For this reason, this task
+always forks the VM. This overhead is not significant since javadoc is normally a heavy
+application and will be called infrequently.</p>
+
+<p>NOTE: the packagelist attribute allows you to specify the list of packages to
+document outside of the Ant file. It's a much better practice to include everything
+inside the build.xml file. This option was added in order to make it easier to
+migrate from regular makefiles, where you would use this option of javadoc.
+The packages listed in packagelist are not checked, so the task performs even
+if some packages are missing or broken. Use this option if you wish to convert from
+an existing makefile. Once things are running you should then switch to the regular
+notation. </p>
+
+<p><i><b>DEPRECATION:</b> the javadoc2 task simply points to the javadoc task and it's
+there for back compatibility reasons. Since this task will be removed in future
+versions, you are strongly encouraged to use <a href="javadoc.html">javadoc</a>
+instead.</i></p>
+</description>
+
+<section anchor="examples" name="Example">
+<pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
+           sourcepath=&quot;src&quot;
+           excludepackagenames=&quot;com.dummy.test.doc-files.*&quot;
+           defaultexcludes=&quot;yes&quot;
+           destdir=&quot;docs/api&quot;
+           author=&quot;true&quot;
+           version=&quot;true&quot;
+           use=&quot;true&quot;
+           windowtitle=&quot;Test API&quot;&gt;
+    &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
+    &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;]]&gt;&lt;/bottom&gt;
+    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot; /&gt;
+    &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
+    &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
+    &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
+    &lt;link href=&quot;http://developer.java.sun.com/developer/products/xml/docs/api/&quot;/&gt;
+  &lt;/javadoc&gt;</pre>
+</section>
+</external>

@@ -24,13 +24,20 @@
         <path refid="classpath"/>
       </classpath>
     </taskdef>
+    <!-- Make stuff available relative to current location -->
+    <mkdir dir="${basedir}/xdocs" />
+    <copy todir="${basedir}/xdocs">
+      <fileset dir="${docs.src}" includes="stylesheets/project.xml" />
+    </copy>
   </target>
 
   <target name="taskdocs" depends="init"
           description="Generate Task Documentation">
     <dvsl basedir="${taskdocs.src}" destdir="${manual.dest}"
-          style="task.dvsl" extension=".html" 
-          includes="**/*.xml" />
+          style="task.dvsl" extension=".html"
+          includes="**/*.xml">
+      <velconfig name="velocimacro.library" value="" />
+    </dvsl>
   </target>
 
 </project>

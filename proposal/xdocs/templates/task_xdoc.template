@@ -1,7 +1,8 @@
 <XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.AntTagsHandler"/>
-
 <task name="<XDtAnt:taskName/>" category="<XDtAnt:categoryName/>"
       classname="<XDtClass:fullClassName/>">
+
+  <XDtMerge:merge file="{0}.xml" generateMergedFile="false"></XDtMerge:merge>
 
   <short-description><![CDATA[<XDtClass:firstSentenceDescription/>]]></short-description>
   <long-description>
@@ -11,23 +12,37 @@
   <structure>
 
     <attributes>
-      <XDtAnt:forAllAttributes>
-        <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
-          <description><![CDATA[
-            <XDtMethod:methodComment no-comment-signs="true"/>
-          ]]></description>
-        </attribute>
-      </XDtAnt:forAllAttributes>
+    <XDtAnt:forAllAttributes>
+      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+        <description><![CDATA[
+          <XDtMethod:methodComment no-comment-signs="true"/>
+        ]]></description>
+      </attribute>
+    </XDtAnt:forAllAttributes>
     </attributes>
 
     <elements>
-      <XDtAnt:forAllElements>
-        <element name="<XDtAnt:elementName/>">
-          <description><![CDATA[
-            <XDtMethod:methodComment no-comment-signs="true"/>
-          ]]></description>
-        </element>
-      </XDtAnt:forAllElements>
+    <XDtAnt:forAllElements>
+      <element name="<XDtAnt:elementName/>" type="<XDtAnt:elementType/>">
+        <description>
+          <![CDATA[<XDtMethod:methodComment no-comment-signs="true"/>]]>
+        </description>
+        <XDtClass:pushClass value="<XDtAnt:elementType/>">
+        <XDtAnt:ifHasAttributes>
+        <attributes>
+          <XDtAnt:forAllAttributes>
+          <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+            <description><![CDATA[
+              <XDtMethod:methodComment no-comment-signs="true"/>
+            ]]></description>
+          </attribute>
+          </XDtAnt:forAllAttributes>
+        </attributes>
+        </XDtAnt:ifHasAttributes>
+        </XDtClass:pushClass>
+      </element>
+
+    </XDtAnt:forAllElements>
     </elements>
 
     <!-- @todo: wrap setCurrentMethod inside AntTagsHandler -->
@@ -41,7 +56,6 @@
 
   </structure>
 
-    <!-- merge point for samples? -->
 </task>
 
 

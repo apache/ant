@@ -1,0 +1,195 @@
+<!-- javac task -->
+<external>
+<description>
+
+<p>Compiles a Java source tree.</p>
+
+<p>The source and destination directory will be recursively scanned for Java
+source files to compile. Only Java files that have no corresponding class file
+or where the class file is older than the java file will be compiled.</p>
+
+<p>Note: Ant uses only the names of the source and class files to find
+the classes that need a rebuild. It will not scan the source and therefor
+will have no knowledge about nested classes, classes that are named different
+from the source file and so on.</p>
+
+<p>The directory structure of the source tree should follow the package
+hierarchy.</p>
+
+<p>It is possible to refine the set of files that are being compiled/copied.
+This can be done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="../dirtasks.html#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns.</p>
+
+<p>It is possible to use different compilers. This can be selected with the
+&quot;build.compiler&quot; property or the compiler attribute. Here are the choices:-</p>
+<ul>
+  <li>classic (the standard compiler of JDK 1.1/1.2) - javac1.1 and
+     javac1.2 can be used as aliases</li>
+  <li>modern (the standard compiler of JDK 1.3/1.4) - javac1.3 and
+     javac1.4 can be used as aliases</li>
+  <li>jikes (the <a
+    href="http://oss.software.ibm.com/developerworks/opensource/jikes/project" target="_top">Jikes</a>
+    compiler)</li>
+  <li>jvc (the Command-Line Compiler from Microsoft's SDK for Java /
+    Visual J++) - microsoft can be used as an alias</li>
+  <li>kjc (the <a href="http://www.dms.at/kopi/" target="_top">kopi</a>
+    compiler)</li>
+  <li>gcj (the gcj compiler from gcc)</li>
+  <li>sj (Symantec java compiler) - symantec can be used as an alias</li>
+  <li>extJavac (run either modern or classic in a JVM of its own)</li>
+</ul>
+<p>For JDK 1.1/1.2, classic is the default. For JDK 1.3/1.4, modern is the default.
+If you wish to use a different compiler interface than those
+supplied, write a class that implements the CompilerAdapter interface
+(package org.apache.tools.ant.taskdefs.compilers). Supply the full
+classname in the &quot;build.compiler&quot; property.</p>
+
+<p>The fork attribute overrides the build.compiler setting and expects
+a JDK1.1 or higher to be set in java.home.</p>
+
+<p>This task will drop all entries that point to non-existent
+files/directories from the CLASSPATH it passes to the compiler.</p>
+
+<p><strong>Windows Note:</strong>When the modern compiler is used
+in unforked mode on Windows, it locks up the files present in the
+classpath of the &lt;javac&gt; task, and does not release them.  The side
+effect of this is that you will not be able to delete or move
+those files later on in the build.  The workaround is to fork when
+invoking the compiler.</p>
+
+</description>
+
+<section anchor="examples" name="Examples">
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         classpath=&quot;xyz.jar&quot;
+         debug=&quot;on&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files under the <code>${src}</code>
+directory, and stores
+the <code>.class</code> files in the <code>${build}</code> directory.
+The classpath used contains <code>xyz.jar</code>, and debug information is on.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         fork=&quot;true&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files under the <code>${src}</code>
+directory, and stores the <code>.class</code> files in the
+<code>${build}</code> directory.  This will fork off the javac
+compiler using the default javac executable.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         fork=&quot;java$$javac.exe&quot;
+  /&gt;</pre>
+<p>compiles all <code>.java</code> files under the <code>${src}</code>
+directory, and stores the <code>.class</code> files in the
+<code>${build}</code> directory.  This will fork off the javac
+compiler using the executable named <code>java$javac.exe</code>.  Note
+that the <code>$</code> sign needs to be escaped by a second one.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot;
+         includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
+         excludes=&quot;mypackage/p1/testpackage/**&quot;
+         classpath=&quot;xyz.jar&quot;
+         debug=&quot;on&quot;
+  /&gt;</pre>
+<p>compiles <code>.java</code> files under the <code>${src}</code>
+directory, and stores the
+<code>.class</code> files in the <code>${build}</code> directory.
+The classpath used contains <code>xyz.jar</code>, and debug information is on.
+Only files under <code>mypackage/p1</code> and <code>mypackage/p2</code> are
+used. Files in the <code>mypackage/p1/testpackage</code> directory are excluded
+from compilation.</p>
+
+<pre>  &lt;javac srcdir=&quot;${src}:${src2}&quot;
+         destdir=&quot;${build}&quot;
+         includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
+         excludes=&quot;mypackage/p1/testpackage/**&quot;
+         classpath=&quot;xyz.jar&quot;
+         debug=&quot;on&quot;
+  /&gt;</pre>
+
+<p>is the same as the previous example, with the addition of a second
+source path, defined by
+the property <code>src2</code>. This can also be represented using nested
+<code>&lt;src&gt;</code> elements as follows:</p>
+
+<pre>  &lt;javac destdir=&quot;${build}&quot;
+         classpath=&quot;xyz.jar&quot;
+         debug=&quot;on&quot;&gt;
+    &lt;src path=&quot;${src}&quot;/&gt;
+    &lt;src path=&quot;${src2}&quot;/&gt;
+    &lt;include name=&quot;mypackage/p1/**&quot;/&gt;
+    &lt;include name=&quot;mypackage/p2/**&quot;/&gt;
+    &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
+  &lt;/javac&gt;</pre>
+
+<p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
+for every use of an external compiler, this may be a problem of the JDK you are using.
+This problem may occur with all JDKs &lt; 1.2.</p>
+
+<p><b>Note:</b> If you wish to compile only source-files located in some packages below a
+common root you should not include these packages in the srcdir-attribute. Use include/exclude-attributes
+or elements to filter for these packages. If you include part of your package-structure inside the srcdir-attribute
+(or nested src-elements) Ant will start to recompile your sources every time you call it.</p>
+
+</section>
+
+<section anchor="jikes" name="Jikes Notes">
+
+<p>Jikes supports some extra options, which can be set be defining
+properties prior to invoking the task. The ant developers are aware that
+this is ugly and inflexible -expect a better solution in the future. All
+the options are boolean, and must be set to &quot;true&quot; or &quot;yes&quot; to be
+interpreted as anything other than false; by default
+build.compiler.warnings is &quot;true&quot; while all others are &quot;false&quot;</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top">
+	build.compiler.emacs
+	</td>
+	<td valign="top">
+	Enable emacs compatible error messages
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.warnings<br />
+        <b>This property has been deprecated, use the nowarn attribute
+          instead</b>
+	</td>
+	<td valign="top">
+	don't disable warning messages
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.pedantic
+	</td>
+	<td valign="top">
+	enable pedantic warnings
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+	build.compiler.fulldepend
+	</td>
+	<td valign="top">
+	enable full dependency checking,<br />
+	&quot;+F&quot; in the jikes manual.
+    </td>
+  </tr>
+</table>
+
+</section>
+</external>

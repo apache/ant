@@ -55,6 +55,9 @@ package org.apache.tools.ant.xdoclet;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Parameter;
+import com.sun.javadoc.Type;
+
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
 import xdoclet.tags.AbstractProgramElementTagsHandler;
@@ -123,6 +126,25 @@ public class AntTagsHandler extends XDocletTagSupport {
     }
 
     /**
+     * Determines if there's at least one Ant attribute.
+     *
+     *@param  template              XDoclet template
+     *@param  attributes            Tag parameters
+     *@exception  XDocletException  Oops!
+     */
+    public void ifHasAttributes(String template, Properties attributes) throws XDocletException {
+        // throw exception if not an Ant task
+
+        ClassDoc cur_class = getCurrentClass();
+
+        MethodDoc[] methods = getAttributeMethods(cur_class);
+
+        if (methods.length > 0) {
+            generate(template);
+        }
+    }
+
+    /**
      *  Iterates over all Ant nested element methods (addXXX, addConfiguredXXX, addXXX)
      *
      *@param  template              XDoclet template
@@ -161,11 +183,43 @@ public class AntTagsHandler extends XDocletTagSupport {
         return elementName.toLowerCase();
     }
 
+    /**
+     * Provides the element type for the current method
+     */
+    public String elementType() throws XDocletException {
+        ClassDoc classDoc = elementClassDoc();
+        if (classDoc == null) {
+            throw new XDocletException("Method is not an Ant element!");
+        }
+        return classDoc.qualifiedName();
+    }
+
+    /**
+     * Provides the element type for the current method.  If the return type
+     * is null, the first parameter is used.
+     */
+    private ClassDoc elementClassDoc() throws XDocletException {
+        ClassDoc classDoc = null;
+        String methodName = getCurrentMethod().name();
+        if (methodName.startsWith("addConfigured") ||
+            methodName.startsWith("add") ||
+            methodName.startsWith("create"))
+        {
+            classDoc = getCurrentMethod().returnType().asClassDoc();
+            if (classDoc == null) {
+                Parameter[] params = getCurrentMethod().parameters();
+                if (params.length == 1) {
+                    classDoc = params[0].type().asClassDoc();
+                }
+            }
+        }
+        return classDoc;
+    }
 
     /**
      * Provides the Ant task name.
      *
-     * @see getTaskName
+     * @see #getTaskName(ClassDoc)
 	 * @doc:tag      type="content"
      */
     public String taskName() throws XDocletException {
@@ -204,7 +258,7 @@ public class AntTagsHandler extends XDocletTagSupport {
     /**
      * Provides the Ant category name.
      *
-     * @see getCategoryName
+     * @see #getCategoryName(ClassDoc)
      */
     public String categoryName() throws XDocletException {
         return getCategoryName(getCurrentClass());
@@ -273,6 +327,12 @@ public class AntTagsHandler extends XDocletTagSupport {
                 continue;
             }
 
+            // ensure method only has one parameter
+            Parameter[] params = methods[i].parameters();
+            if (params.length != 1) {
+                continue;
+            }
+
             attributeMethods.add(methods[i]);
         }
 
@@ -290,6 +350,18 @@ public class AntTagsHandler extends XDocletTagSupport {
 
         for (int i = 0; i < methods.length; i++) {
             String name = methods[i].name();
+
+            // ensure if there are no parameters, there is a return type,
+            // otherwise ensure there's only one parameter.
+            Parameter[] params = methods[i].parameters();
+            if (params.length == 0) {
+                if (methods[i].returnType().asClassDoc() == null) {
+                    continue;
+                }
+            }
+            else if (params.length != 1) {
+                continue;
+            }
 
             if ((name.startsWith("add") && !name.equals("addTask")) ||
                     name.startsWith("create")) {
