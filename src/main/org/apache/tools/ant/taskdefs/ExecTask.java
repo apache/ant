@@ -74,6 +74,7 @@ public class ExecTask extends Task {
     private File out;
     private File dir;
     protected boolean failOnError = false;
+    protected boolean newEnvironment = false;
     private Integer timeout = null;
     private Environment env = new Environment();
     protected Commandline cmdl = new Commandline();
@@ -129,6 +130,13 @@ public class ExecTask extends Task {
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
+    }
+
+    /**
+     * Use a completely new environment
+     */
+    public void setNewenvironment(boolean newenv) {
+        newEnvironment = newenv;
     }
 
     /**
@@ -198,6 +206,7 @@ public class ExecTask extends Task {
                     Project.MSG_VERBOSE);
             }
         }
+        exe.setNewenvironment(newEnvironment);
         exe.setEnvironment(environment);
         return exe;
     }

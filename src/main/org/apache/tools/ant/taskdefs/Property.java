@@ -73,6 +73,7 @@ public class Property extends Task {
     protected String value;
     protected File file;
     protected String resource;
+    protected String env;
     protected Reference ref = null;
 
     protected boolean userProperty=false; // set read-only properties
@@ -121,6 +122,14 @@ public class Property extends Task {
         return resource;
     }
 
+    public void setEnvironment(String env) {
+        this.env = env;
+    }
+
+    public String getEnvironment() {
+        return env;
+    }
+
     public void setUserProperty(boolean userProperty) {
         this.userProperty = userProperty;
     }
@@ -138,6 +147,8 @@ public class Property extends Task {
             if (file != null) loadFile(file);
 
             if (resource != null) loadResource(resource);
+
+            if (env != null) loadEnvironment(env);
 
             if ((name != null) && (ref != null)) {
                 Object obj = ref.getReferencedObject(getProject());
@@ -193,6 +204,24 @@ public class Property extends Task {
             } else {
                 log("Unable to find resource " + name, Project.MSG_WARN);
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected void loadEnvironment( String prefix ) {
+        Properties props = new Properties();
+        if (!prefix.endsWith(".")) prefix += ".";
+        log("Loading Environment " + prefix, Project.MSG_VERBOSE);
+        try {
+            Vector osEnv = Execute.getProcEnvironment();
+            for (Enumeration e = osEnv.elements(); e.hasMoreElements(); ) {
+                String entry = (String)e.nextElement();
+                int pos = entry.indexOf('=');
+                props.put(prefix + entry.substring(0, pos), 
+                          entry.substring(pos + 1));
+            }
+            addProperties(props);
         } catch (Exception ex) {
             throw new BuildException(ex, location);
         }

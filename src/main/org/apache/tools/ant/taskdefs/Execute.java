@@ -63,9 +63,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
+import java.util.Vector;
 
 /**
  * Runs an external program.
@@ -84,9 +87,11 @@ public class Execute {
     private ExecuteWatchdog watchdog;
     private File workingDirectory = null;
     private Project project = null;
+    private boolean newEnvironment = false;
 
     private static String antWorkingDirectory = System.getProperty("user.dir");
     private static CommandLauncher launcher = createCommandLauncher();
+    private static Vector procEnvironment = null;
 
     /** 
      * Builds a command launcher for the OS and JVM we are running under
@@ -135,6 +140,73 @@ public class Execute {
         else {
             // Generic
             return new ScriptCommandLauncher("bin/antRun", new CommandLauncher());
+        }
+    }
+
+    /**
+     * Find the list of environment variables for this process.
+     */
+    public static synchronized Vector getProcEnvironment() {
+        if (procEnvironment != null) return procEnvironment;
+
+        procEnvironment = new Vector();
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Execute exe = new Execute(new PumpStreamHandler(out));
+            exe.setCommandline(getProcEnvCommand());
+            // Make sure we do not recurse forever
+            exe.setNewenvironment(true);
+            int retval = exe.execute();
+            if ( retval != 0 ) {
+                // Just try to use what we got
+            }
+
+            BufferedReader in = 
+                new BufferedReader(new StringReader(out.toString()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                procEnvironment.addElement(line);
+            }
+        } 
+        catch (java.io.IOException exc) {
+            exc.printStackTrace();
+            // Just try to see how much we got
+        }
+        return procEnvironment;
+    }
+
+    private static String[] getProcEnvCommand() {
+        String osname = System.getProperty("os.name").toLowerCase();
+        if ( osname.indexOf("mac os") >= 0 ) {
+            // Mac
+            // TODO: I have no idea how to get it, someone must fix it
+            String[] cmd = null;
+            return cmd;
+        }
+        else if ( osname.indexOf("os/2") >= 0 ) {
+            // OS/2 - use same mechanism as Windows 2000
+            // Not sure
+            String[] cmd = {"cmd", "/c", "set" };
+            return cmd;
+        }
+        else if ( osname.indexOf("indows") >= 0 ) {
+            // Determine if we're running under 2000/NT or 98/95
+            if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
+                // Windows 2000/NT
+                String[] cmd = {"cmd", "/c", "set" };
+                return cmd;
+            }
+            else {
+                // Windows 98/95 - need to use an auxiliary script
+                String[] cmd = {"command.com", "/c", "set" };
+                return cmd;
+            }
+        }
+        else {
+            // Generic UNIX
+            // Alternatively one could use: /bin/sh -c env
+            String[] cmd = {"/usr/bin/env"};
+            return cmd;
         }
     }
 
@@ -191,12 +263,22 @@ public class Execute {
     }
 
     /**
-     * Returns the commandline used to create a subprocess.
+     * Set whether to propagate the default environment or not.
      *
-     * @return the commandline used to create a subprocess
+     * @param newenv whether to propagate the process environment.
+     */
+    public void setNewenvironment(boolean newenv) {
+        newEnvironment = newenv;
+    }
+
+    /**
+     * Returns the environment used to create a subprocess.
+     *
+     * @return the environment used to create a subprocess
      */
     public String[] getEnvironment() {
-        return env;
+        if (env == null || newEnvironment) return env;
+        return patchEnvironment();
     }
 
 
@@ -275,6 +357,30 @@ public class Execute {
 
     protected int getExitValue() {
         return exitValue;
+    }
+
+    /**
+     * Patch the current environment with the new values from the user.
+     * @return the patched environment
+     */
+    private String[] patchEnvironment() {
+        Vector osEnv = (Vector) getProcEnvironment().clone();
+        for (int i = 0; i < env.length; i++) {
+            int pos = env[i].indexOf('=');
+            // Get key including "="
+            String key = env[i].substring(0, pos+1);
+            int size = osEnv.size();
+            for (int j = 0; j < size; j++) {
+                if (((String)osEnv.elementAt(j)).startsWith(key)) {
+                    osEnv.removeElementAt(j);
+                    break;
+                }
+            }
+            osEnv.addElement(env[i]);
+        }
+        String[] result = new String[osEnv.size()];
+        osEnv.copyInto(result);
+        return result;
     }
 
     /**
