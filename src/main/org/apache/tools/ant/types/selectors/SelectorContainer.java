@@ -55,8 +55,8 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.util.Enumeration;
-
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
  * This is the interface for selectors that can contain other selectors.
@@ -208,10 +208,16 @@ public interface SelectorContainer {
     void addDifferent(DifferentSelector selector);
 
     /**
+     * add the modified selector
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    void addModified(ModifiedSelector selector);
+
+    /**
      * add an arbitary selector
      * @param selector the selector to add
      * @since Ant 1.6
      */
     void add(FileSelector selector);
 }
-

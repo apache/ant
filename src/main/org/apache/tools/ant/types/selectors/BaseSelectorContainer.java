@@ -60,6 +60,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
  * This is the base class for selectors that can contain other selectors.
@@ -328,6 +329,14 @@ public abstract class BaseSelectorContainer extends BaseSelector
         appendSelector(selector);
     }
 
+    /**
+     * add the modified selector
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    public void addModified(ModifiedSelector selector) {
+        appendSelector(selector);
+    }
 
     /**
      * add an arbitary selector
@@ -339,4 +348,3 @@ public abstract class BaseSelectorContainer extends BaseSelector
     }
 
 }
-

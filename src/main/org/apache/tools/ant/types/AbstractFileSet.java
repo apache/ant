@@ -82,6 +82,7 @@ import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SelectorContainer;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SizeSelector;
+import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
  * Class that holds an implicit patternset and supports nested
@@ -677,6 +678,15 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @param selector the selector to add
      */
     public void addContainsRegexp(ContainsRegexpSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add the modified selector
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    public void addModified(ModifiedSelector selector) {
         appendSelector(selector);
     }
 

@@ -18,7 +18,7 @@
     <ol>
       <li>Custom Selectors
 
-        <p>This is the category that Ant provides specifically for youto
+        <p>This is the category that Ant provides specifically for you to
         define your own Selectors. Anywhere you want to use your selector
         you use the <code>&lt;custom&gt;</code> element and specify
         the class name of your selector within it. See the
@@ -86,7 +86,8 @@
             <code>org.apache.tools.ant.types.selectors.SelectorContainer</code>.
             This is an interface, so you will also have to add an implementation
             for the method in the classes which implement it, namely
-            <code>org.apache.tools.ant.types.AbstractFileSet</code> and
+            <code>org.apache.tools.ant.types.AbstractFileSet</code>,
+            <code>org.apache.tools.ant.taskdefs.MatchingTask</code> and
             <code>org.apache.tools.ant.types.selectors.BaseSelectorContainer</code>.
             Once it is in there, it will be available everywhere that core
             selectors are appropriate.</p>
@@ -118,10 +119,131 @@
         </ul>
     </ol>
 
-    <hr>
-    <p align="center">Copyright &copy; 2002 Apache Software
-    Foundation. All rights Reserved.</p>
+    <h3>Testing Selectors</h3>
 
+    <p>For a robust component (and selectors are (Project)Component´s) tests are
+    necessary. For testing Tasks we use JUnit TestCases - more specific
+    <tt>org.apache.tools.ant.BuildFileTest extends junit.framework.TestCase</tt>.
+    Some of its features like configure the (test) project by reading its buildfile and
+    execute targets we need for selector tests also. Therefore we use that BuildFileTest.
+    But testing selectors requires some more work: having a set of files, instantiate
+    and configure the selector, check the selection work and more. Because we usually
+    extend <tt>BaseExtendSelector</tt> its features have to be tested also (e.g. setError()).
+    </p>
+
+    <p>That´s why we have a base class for doing our selector tests:
+    <tt>org.apache.tools.ant.types.selectors.BaseSelectorTest</tt>.</p>
+
+    <p>This class extends TestCase and therefore can included in the set of Ant´s
+    unit tests. It holds an instance of preconfigured BuildFileTest. Configuration
+    is done by parsing the src/etc/testcases/types/selectors.xml. BaseSelectorTest
+    then gives us helper methods for handling multiple selections. </p>
+
+    <p>Because the term "testcase" or "testenvironment" are so often used, this
+    special testenvironment got a new name: <i>bed</i>. Like you initialize the
+    test environment by calling setUp() and cleaning by calling tearDown() (<i>or like
+    to make your bed before go sleeping</i>) you have to do that work with your
+    <i>bed</i> by calling <tt>makeBed()</tt> respecitive <tt>cleanupBed()</tt>.</p>
+
+    <p>A usual test scenario is<ol>
+       <li>make the bed</li>
+       <li>instantiate the selector</li>
+       <li>configure the selector</li>
+       <li>let the selector do some work</li>
+       <li>verify the work</li>
+       <li>clean the bed</li>
+       </ol>
+    </p>
+
+    <p>For common way of instantiation you have to override the <tt>getInstance()</tt>
+    simply by returning a new object of your selector. For easier "selection and verification work"
+    BaseSelectorTest provides the method <tt>performTests()</tt> which
+    iterates over all files (and directories) in the String array <tt>filenames</tt>
+    and checks whether the given selector returns the expected result. If an error
+    occured (especially the selector does not return the expected result) the test
+    fails and the failing filenames are logged.</p>
+
+    <p>An example test would be:<pre>
+package org.apache.tools.ant.types.selectors;
+
+public class MySelectorTest extends BaseSelectorTest {
+
+    public MySelectorTest(String name) {
+        super(name);
+    }
+
+    public BaseSelector getInstance() {
+        return new MySelector();
+    }
+
+    public void testCase1() {
+        try {
+            // initialize test environment 'bed'
+            makeBed();
+
+            // Configure the selector
+            MySelector s = (MySelector)getSelector();
+            s.addParam("key1", "value1");
+            s.addParam("key2", "value2");
+            s.setXX(true);
+            s.setYY("a value");
+
+            // do the tests
+            performTests(s, "FTTTTTTTTTTT");  // First is not selected - rest is
+
+        } finally {
+            // cleanup the environment
+            cleanupBed();
+        }
+    }
+}
+    </pre>
+    As an example of an error JUnit could log<pre>
+    [junit]     FAILED
+    [junit] Error for files: <font color=blue>.;copy.filterset.filtered;tar/gz/asf-logo.gif.tar.gz</font>
+    [junit] expected:&lt;<font color=blue>FTTTFTTTF...</font>> but was:&lt;TTTTTTTTT...>
+    [junit] junit.framework.ComparisonFailure: Error for files: .;copy.filterset.filtered;tar/gz/asf-logo.gif.tar.gz
+    [junit] expected:&lt;FTTTFTTTF...> but was:&lt;TTTTTTTTT...>
+    [junit]     at junit.framework.Assert.assertEquals(Assert.java:81)
+    [junit]     at org.apache.tools.ant.types.selectors.BaseSelectorTest.performTest(BaseSelectorTest.java:194)
+    </pre></p>
+
+    <p>Described above the test class should provide a <tt>getInstance()</tt>
+    method. But that isn´t used here. The used <tt>getSelector()</tt> method is
+    implemented in the base class and gives an instance of an Ant Project to
+    the selector. This is usually done inside normal build file runs, but not
+    inside this special environment, so this method gives the selector the
+    ability to use its own Project object (<tt>getProject()</tt>), for example
+    for logging.</p>
+
+
+    <h3>Logging</h3>
+
+    <p>During development and maybe later you sometimes need the output of information.
+    Therefore Logging is needed. Because the selector extends BaseExtendSelector or directly
+    BaseSelector it is an Ant <tt>DataType</tt> and therefore a <tt>ProjectComponent</tt>. <br>
+    That means that you have access to the project object and its logging capability.
+    <tt>ProjectComponent</tt> itself provides <i>log</i> methods which will do the
+    access to the project instance. Logging is therefore done simply with:
+    <pre>
+        log( "message" );
+    </pre>
+    or
+    <pre>
+        log( "message" , loglevel );
+    </pre>
+    where the <tt>loglevel</tt> is one of the values <ul>
+    <li> org.apache.tools.ant.Project.MSG_ERR </li>
+    <li> org.apache.tools.ant.Project.MSG_WARN </li>
+    <li> org.apache.tools.ant.Project.MSG_INFO  (= default) </li>
+    <li> org.apache.tools.ant.Project.MSG_VERBOSE </li>
+    <li> org.apache.tools.ant.Project.MSG_DEBUG </li>
+    </ul>
+    </p>
+
+    <hr>
+    <p align="center">Copyright &copy; 2002-2003 Apache Software
+    Foundation. All rights Reserved.</p>
   </body>
 
 </html>

@@ -81,6 +81,7 @@ import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SelectorContainer;
 import org.apache.tools.ant.types.selectors.SizeSelector;
 import org.apache.tools.ant.types.selectors.TypeSelector;
+import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
  * This is an abstract task that should be used by all those tasks that
@@ -452,6 +453,15 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void addType(TypeSelector selector) {
         fileset.addType(selector);
+    }
+
+    /**
+     * add the modified selector
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    public void addModified(ModifiedSelector selector) {
+        fileset.addModified(selector);
     }
 
     /**

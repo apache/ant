@@ -108,6 +108,18 @@ public abstract class BaseSelectorTest extends TestCase {
     public abstract BaseSelector getInstance();
 
 
+    /**
+     * Return a preconfigured selector (with a set reference to
+     * project instance).
+     * @return the selector
+     */
+    public BaseSelector getSelector() {
+        BaseSelector selector = getInstance();
+        selector.setProject( getProject() );
+        return selector;
+    }
+
+
     public Project getProject() {
         return project;
     }
@@ -170,6 +182,66 @@ public abstract class BaseSelectorTest extends TestCase {
         }
         return buf.toString();
     }
+
+    /**
+     * Does the selection test for a given selector and prints the
+     * filenames of the differing files (selected but shouldn´t,
+     * not selected but should).
+     * @param selector  The selector to test
+     * @param expected  The expected result
+     */
+    public void performTests(FileSelector selector, String expected) {
+        String result = selectionString(selector);
+        String diff = diff(expected, result);
+        String resolved = resolve(diff);
+        assertEquals("Differing files: " + resolved, result, expected);
+    }
+
+    /**
+     *  Checks which files are selected and shouldn´t be or which
+     *  are not selected but should.
+     *  @param expected    String containing 'F's and 'T's
+     *  @param result      String containing 'F's and 'T's
+     *  @return Difference as String containing '-' (equal) and
+     *          'X' (difference).
+     */
+    public String diff(String expected, String result) {
+        int length1 = expected.length();
+        int length2 = result.length();
+        int min = (length1 > length2) ? length2 : length1;
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i<min; i++) {
+            sb.append(
+                  (expected.charAt(i) == result.charAt(i))
+                ? "-"
+                : "X"
+            );
+        }
+        return sb.toString();
+    }
+
+
+    /**
+     * Resolves a diff-String (@see diff()) against the (inherited) filenames-
+     * and files arrays.
+     * @param filelist    Diff-String
+     * @return String containing the filenames for all differing files,
+     *         separated with semicolons ';'
+     */
+    public String resolve(String filelist) {
+        StringBuffer sb = new StringBuffer();
+        int min = (filenames.length > filelist.length())
+                ? filelist.length()
+                : filenames.length;
+        for (int i=0; i<min; i++) {
+            if ('X'==filelist.charAt(i)) {
+                sb.append(filenames[i]);
+                sb.append(";");
+            }
+        }
+        return sb.toString();
+    }
+
 
     /**
      * <p>Creates a testbed. We avoid the dreaded "test" word so that we

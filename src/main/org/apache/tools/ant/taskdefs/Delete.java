@@ -77,6 +77,7 @@ import org.apache.tools.ant.types.selectors.PresentSelector;
 import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SizeSelector;
 import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -444,6 +445,16 @@ public class Delete extends MatchingTask {
     }
 
     /**
+     * add the modified selector
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    public void addModified(ModifiedSelector selector) {
+        usedMatchingTask = true;
+        super.addModified(selector);
+    }
+
+    /**
      * add an arbitrary selector
      * @param selector the selector to be added
      * @since Ant 1.6
@@ -676,4 +687,3 @@ public class Delete extends MatchingTask {
         }
     }
 }
-

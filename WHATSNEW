@@ -597,6 +597,9 @@ Other changes:
 * additional shortcuts for ant options (-d --> -debug, -e --> -emacs,
   -h --> -help, -p --> -projecthelp, -s --> -find).
 
+* new selector <modified>. "cache" was renamed to "modified".
+  Bugzilla Report 20474.
+
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
 

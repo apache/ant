@@ -40,28 +40,31 @@
 
     <ul>
       <li><a href="#containsselect">&lt;contains&gt;</a> - Select
-        files that contain a particular text string
+        files that contain a particular text string</li>
       <li><a href="#dateselect">&lt;date&gt;</a> - Select files
         that have been modified either before or after a particular date
-        and time
+        and time</li>
       <li><a href="#dependselect">&lt;depend&gt;</a> - Select files
         that have been modified more recently than equivalent files
-        elsewhere
+        elsewhere</li>
       <li><a href="#depthselect">&lt;depth&gt;</a> - Select files
-        that appear so many directories down in a directory tree
+        that appear so many directories down in a directory tree</li>
       <li><a href="#differentselect">&lt;different&gt;</a> - Select files
-        that are different from those elsewhere
+        that are different from those elsewhere</li>
       <li><a href="#filenameselect">&lt;filename&gt;</a> - Select
         files whose name matches a particular pattern. Equivalent to
-        the include and exclude elements of a patternset.
+        the include and exclude elements of a patternset.</li>
       <li><a href="#presentselect">&lt;present&gt;</a> - Select
-        files that either do or do not exist in some other location
+        files that either do or do not exist in some other location</li>
       <li><a href="#regexpselect">&lt;containsregexp&gt;</a> - Select
-        files that match a regular expression
+        files that match a regular expression</li>
       <li><a href="#sizeselect">&lt;size&gt;</a> - Select files
-        that are larger or smaller than a particular number of bytes.
+        that are larger or smaller than a particular number of bytes.</li>
       <li><a href="#typeselect">&lt;type&gt;</a> - Select files
-        that are either regular files or directories.
+        that are either regular files or directories.</li>
+      <li><a href="#modified">&lt;modified&gt;</a> - Select files if
+        the return value of the configured algorithm is different from that
+        stored in a cache.</li>
     </ul>
 
     <a name="containsselect"></a>
@@ -465,7 +468,7 @@
       </tr>
       <tr>
         <td valign="top">expression</td>
-        <td valign="top">Specifies the regular expression that must 
+        <td valign="top">Specifies the regular expression that must
         match true in every file</td>
         <td valign="top" align="center">Yes</td>
       </tr>
@@ -479,10 +482,10 @@
 &lt;/fileset&gt;
 </pre></blockquote>
 
-    <p>Selects all the text files that match the regular expression 
+    <p>Selects all the text files that match the regular expression
     (have a 4,5 or 6 followed by a period and a number from 0 to 9).
 
-    
+
     <a name="sizeselect"></a>
     <h4>Size Selector</h4>
 
@@ -590,6 +593,193 @@
     &lt;/and>
 &lt;/fileset>
 </pre></blockquote>
+
+
+    <a name="modified"></a>
+    <h4>Modified Selector</h4>
+    <p>The &lt;modified&gt; computes a value for a file, compares that
+    to the value stored in a cache and select the file, if these two values
+    differ.</p>
+    <p>Because this selector is highly configurable the order in which the selection is done
+    is: <ol>
+        <li> get the absolute path for the file </li>
+        <li> get the cached value from the configured cache (absolute path as key) </li>
+        <li> get the new value from the configured algorithm </li>
+        <li> compare these two values with the configured comparator </li>
+        <li> update the cache if needed and wished </li>
+        <li> do the selection according to the comparison result </li>
+        </ol>
+    The comparison, computing of the hashvalue and the store is done by implementation
+    of special interfaces. Therefore they may provide additional parameters.</p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top"> algorithm </td>
+        <td valign="top"> The type of algorithm should be used.
+            Acceptable values are (further information see later):
+            <ul>
+                <li> hashvalue - HashvalueAlgorithm </li>
+                <li> digest - DigestAlgorithm </li>
+            </ul>
+        </td>
+        <td valign="top" align="center"> No, defaults to <i>digest</i> </td>
+      </tr>
+      <tr>
+        <td valign="top"> cache </td>
+        <td valign="top"> The type of cache should be used.
+            Acceptable values are (further information see later):
+            <ul>
+                <li> propertyfile - PropertyfileCache </li>
+            </ul>
+        </td>
+        <td valign="top" align="center"> No, defaults to <i>propertyfile</i> </td>
+      </tr>
+      <tr>
+        <td valign="top"> comparator </td>
+        <td valign="top"> The type of comparator should be used.
+            Acceptable values are (further information see later):
+            <ul>
+                <li> equal - EqualComparator </li>
+                <li> rule - java.text.RuleBasedCollator </li>
+            </ul>
+        </td>
+        <td valign="top" align="center"> No, defaults to <i>equal</i> </td>
+      </tr>
+      <tr>
+        <td valign="top"> update </td>
+        <td valign="top"> Should the cache be updated when values differ? (boolean) </td>
+        <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+      </tr>
+      <tr>
+        <td valign="top"> seldirs </td>
+        <td valign="top"> Should directories be selected? (boolean) </td>
+        <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+      </tr>
+    </table>
+
+    <p>These attributes can be set with nested &lt;param/&gt; tags. With &lt;param/&gt;
+    tags you can set other values too - as long as they are named according to
+    the following rules: <ul>
+        <li> <b> algorithm </b>: same as attribute algorithm </li>
+        <li> <b> cache </b>: same as attribute cache </li>
+        <li> <b> comparator </b>: same as attribute cache </li>
+        <li> <b> update </b>: same as attribute comparator </li>
+        <li> <b> seldirs </b>: same as attribute seldirs </li>
+        <li> <b> algorithm.* </b>: Value is transfered to the algorithm via its
+                                   <i>set</i>XX-methods </li>
+        <li> <b> cache.* </b>: Value is transfered to the cache via its
+                                   <i>set</i>XX-methods </li>
+        <li> <b> comparator.* </b>: Value is transfered to the comparator via its
+                                   <i>set</i>XX-methods </li>
+    </ul></p>
+
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr><td colspan="2"><font size="+1"><b> Algorithm´s </b></font></td></tr>
+      <tr>
+        <td valign="top"><b>Name</b></td>
+        <td valign="top"><b>Description</b></td>
+      </tr>
+      <tr>
+        <td valign="top"> hashvalue </td>
+        <td valign="top"> Reads the content of a file into a java.lang.String
+          and use thats hashValue(). No additional configuration required.
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"> digest </td>
+        <td valign="top"> Uses java.security.MessageDigest. This Algorithm supports
+          the following attributes:
+          <ul>
+            <li><i>algorithm.algorithm</i> (optional): Name of the Digest algorithm
+                (e.g. 'MD5' or 'SHA', default = <i>MD5</i>) </li>
+            <li><i>algorithm.provider</i> (optional): Name of the Digest provider
+                (default = <i>null</i>) </li>
+          </ul>
+        </td>
+      </tr>
+      <tr><td colspan="2"><font size="+1"><b> Cache´s </b></font></td></tr>
+      <tr>
+        <td valign="top"> propertyfile </td>
+        <td valign="top"> Use the java.util.Properties class and its possibility
+          to load and store to file.
+          This Cache implementation supports the following attributes:
+          <ul>
+            <li><i>cache.cachefile</i> (optional): Name of the properties-file
+                (default = <i>cache.properties</i>) </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+
+    <p>Here are some examples of how to use the Modified Selector:</p>
+
+    <blockquote><pre>
+    &lt;copy todir="dest">
+        &lt;filelist dir="src">
+            &lt;modified/>
+        &lt;/filelist>
+    &lt;/copy
+    </pre></blockquote>
+    <p>This will copy all files from <i>src</i> to <i>dest</i> which content has changed.
+    Using an updating PropertyfileCache with cache.properties and
+    MD5-DigestAlgorithm.</p>
+
+    <blockquote><pre>
+    &lt;copy todir="dest">
+        &lt;filelist dir="src">
+            &lt;modified update="true"
+                      seldirs="true"
+                      cache="propertyfile"
+                      algorithm="digest"
+                      comparator="equal">
+                &lt;param name="cache.cachefile"     value="cache.properties"/>
+                &lt;param name="algorithm.algorithm" value="MD5"/>
+            &lt;/modified>
+        &lt;/filelist>
+    &lt;/copy>
+    </pre></blockquote>
+  <p>This is the same example rewritten as CoreSelector with setting the all the values
+  (same as defaults are).</p>
+
+    <blockquote><pre>
+    &lt;copy todir="dest">
+        &lt;filelist dir="src">
+            &lt;custom class="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector">
+                &lt;param name="update"     value="true"/>
+                &lt;param name="seldirs"    value="true"/>
+                &lt;param name="cache"      value="propertyfile"/>
+                &lt;param name="algorithm"  value="digest"/>
+                &lt;param name="comparator" value="equal"/>
+                &lt;param name="cache.cachefile"     value="cache.properties"/>
+                &lt;param name="algorithm.algorithm" value="MD5"/>
+            &lt;/custom>
+        &lt;/filelist>
+    &lt;/copy>
+    </pre></blockquote>
+  <p>And this is the same rewritten as CustomSelector.</p>
+
+    <blockquote><pre>
+  &lt;target name="generate-and-upload-site">
+      &lt;echo> generate the site using forrest &lt;/echo>
+      &lt;antcall target="site"/>
+
+      &lt;echo> upload the changed file &lt;/echo>
+      &lt;ftp server="${ftp.server}" userid="${ftp.user}" password="${ftp.pwd}">
+          &lt;fileset dir="htdocs/manual">
+              &lt;modified/>
+          &lt;/fileset>
+      &lt;/ftp>
+  &lt;/target>
+    </pre></blockquote>
+  <p>A useful scenario for this selector inside a build environment
+  for homepage generation (e.g. with <a href="http://xml.apache.org/forrest/">
+  Apache Forrest</a>). Here all <b>changed</b> files are uploaded to the server. The
+  CacheSelector saves therefore much upload time.</p>
 
 
     <a name="selectcontainers"></a>
@@ -989,7 +1179,6 @@
   </body>
 
 </html>
-
 
 
 
