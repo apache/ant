@@ -94,7 +94,7 @@ public abstract class DefBase extends Task implements AntlibInterface {
             uri = "";
         }
         if (uri.startsWith("ant:") && !uri.startsWith("antlib:")) {
-            throw new BuildException("Attempt to use use a reserved URI " + uri);
+            throw new BuildException("Attempt to use a reserved URI " + uri);
         }
         this.uri = uri;
     }

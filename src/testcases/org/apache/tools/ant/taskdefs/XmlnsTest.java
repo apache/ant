@@ -85,7 +85,7 @@ public class XmlnsTest extends BuildFileTest {
     public void testExcluded() {
         expectBuildExceptionContaining(
             "excluded", "excluded uri",
-            "Attempt to use use a reserved URI ant:notallowed");
+            "Attempt to use a reserved URI ant:notallowed");
     }
 
     public static class MyTask extends Task {
