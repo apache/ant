@@ -394,16 +394,16 @@
 
       <subsection name="Dependency Finder">
         <p>Dependency Finder extracts dependencies and OO metrics from
-	Java class files produced by most Java compilers. It can compute
-	API differences between versions;  no sources needed. It includes
-	Ant tasks, web, Swing, and command-line interfaces, with XSL
-	stylesheets for formatting output.</p>
+        Java class files produced by most Java compilers. It can compute
+        API differences between versions;  no sources needed. It includes
+        Ant tasks, web, Swing, and command-line interfaces, with XSL
+        stylesheets for formatting output.</p>
 
-	<p>You can use it to extract dependencies between packages, classes,
-	or even methods, or any combination thereof.  You can use Perl
-	regular expressions to filter the information and pinpoint only
-	what you need.  There is even a Web Application version (WAR file)
-	so a whole group of developers can share a common view.</p>
+        <p>You can use it to extract dependencies between packages, classes,
+        or even methods, or any combination thereof.  You can use Perl
+        regular expressions to filter the information and pinpoint only
+        what you need.  There is even a Web Application version (WAR file)
+        so a whole group of developers can share a common view.</p>
 
         <table class="externals">
           <tr>
@@ -1402,32 +1402,32 @@
         stays OS independent (because Kanaputs uses Java) and is
         completely integrated with Ant as you can give Ant properties
         to the Kanaputs code and get back the results in other
-        properties.</p> 
+        properties.</p>
 
         <p>Moreover, as you can invoke any kind of Java code with
         Kanaputs, you can popup windows from your Ant file to ask the
         user to do a choice.</p>
         <table class="externals">
           <tr>
-            <th>Compatibility:</th> 
-            <td>Ant 1.2 and above</td> 
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and above</td>
           </tr>
           <tr>
-            <th>URL:</th> 
+            <th>URL:</th>
             <td>
-              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a> 
-              <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a> 
+              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a>
+              <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a>
             </td>
           </tr>
           <tr>
-            <th>Contact:</th> 
+            <th>Contact:</th>
             <td>
-              <a href="mailto:kfra@kanaputs.org">kfra@kanaputs.org</a> 
+              <a href="mailto:kfra@kanaputs.org">kfra@kanaputs.org</a>
             </td>
           </tr>
           <tr>
-            <th>License:</th> 
-            <td>Freeware</td> 
+            <th>License:</th>
+            <td>Freeware</td>
           </tr>
         </table>
       </subsection>
@@ -1484,6 +1484,29 @@
           <tr>
             <th>License:</th>
             <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="PCT">
+        <p>PCT is a task to compile Progress code, and in a more general
+        way, to deal with Progress procedures and databases.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://pct.sourceforge.net">http://pct.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:justus_phenix@users.sourceforge.net">Gilles QUERRET</a></td>
+          </tr>
+          <tr>
+            <th>Licence:</th>
+            <td>Apache Software Foundation License</td>
           </tr>
         </table>
       </subsection>
@@ -1980,6 +2003,36 @@
           <tr>
             <th>License:</th>
             <td>Apache license</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="WSDLValidate">
+        <p>WSDLValidate is, as it sounds, a tool to validate WSDL files.
+        <a href="http://dev.eclipse.org/viewcvs/indextech.cgi/~checkout~/wsvt-home/docs/articles/wsdl20Validator/wsdlvalidateant.html">WSDLValidate</a>
+        is similar in configuration to the optional Ant task <a href="http://ant.apache.org/manual/OptionalTasks/xmlvalidate.html">XMLValidate</a>.
+        WSDLValidate can optionally validate a WSDL document against the <a href="http://www.ws-i.org">WS-I Basic Profile</a>.
+        </p>
+        <p>WSDLValidate is available as an Ant task, an Eclipse plug-in and a
+        command line utility.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.eclipse.org/wsvt">http://www.eclipse.org/wsvt</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.eclipse.org/wsvt">Project newsgroup and
+            mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="http://www-124.ibm.com/developerworks/oss/CPLv1.0.htm">Common Public
+            License (CPL)</a></td>
           </tr>
         </table>
       </subsection>
