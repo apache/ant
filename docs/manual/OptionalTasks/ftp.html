@@ -12,7 +12,7 @@
 <p><b>Note:</b> The ftp-task uses the NetComponents-Package which you will need to download from
 <a href="http://www.savarese.org" target="_top">http://www.savarese.org</a> and add to your classpath.</p>
 <p>The ftp task implements a basic FTP client that can send, receive,
-list, and delete files.  See below for descriptions and examples of how
+list, delete files, and create directories.  See below for descriptions and examples of how
 to perform each task.</p>
 <p>The ftp task makes no attempt to determine what file system syntax is
 required by the remote server, and defaults to Unix standards.
@@ -61,7 +61,7 @@ write patterns.</p>
     <td valign="top">action</td>
     <td valign="top">the ftp action to perform, defaulting to &quot;send&quot;.  
                      Currently supports &quot;put&quot;, &quot;get&quot;,
-                     &quot;del&quot;, and &quot;list&quot;.</td>
+                     &quot;del&quot;, &quot;list&quot; and &quot;mkdir&quot;.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -218,7 +218,7 @@ If you don't have permission to delete a file, a BuildException is thrown.</p>
 <pre>
   &lt;ftp action=&quot;list&quot;
        server=&quot;ftp.apache.org&quot;
-       userid=quot;anonymous&quot;
+       userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot; 
        listing=&quot;data/ftp.listing&quot; &gt;
     &lt;fileset&gt;
@@ -229,6 +229,20 @@ If you don't have permission to delete a file, a BuildException is thrown.</p>
 <p>This provides a file listing in <code>data/ftp.listing</code> of all the files on
 the FTP server relative to the default directory of the <code>anonymous</code>
 user. The listing is in whatever format the FTP server normally lists files.</p>
+
+<h3>Creating Directories</h3>
+<p>Note that with the mkdir action, the directory to create is specified using the
+remotedir attribute.</p>
+<pre>
+  &lt;ftp action=&quot;mkdir&quot;
+       server=&quot;ftp.apache.org&quot;
+       userid=&quot;anonymous&quot;
+       password=&quot;me@myorg.com&quot; 
+       remotedir=&quot;some/remote/dir&quot; /&gt;
+</pre>
+<p>This creates the directory <code>some/remote/dir</code> beneath the default root
+directory.  As with all other actions, the directory separator character must be correct
+according to the desires of the FTP server.</p>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
