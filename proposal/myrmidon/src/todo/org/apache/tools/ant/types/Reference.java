@@ -17,19 +17,7 @@ import org.apache.tools.ant.Project;
  */
 public class Reference
 {
-
     private String refid;
-
-    public Reference()
-    {
-        super();
-    }
-
-    public Reference( String id )
-    {
-        this();
-        setRefId( id );
-    }
 
     public void setRefId( String id )
     {

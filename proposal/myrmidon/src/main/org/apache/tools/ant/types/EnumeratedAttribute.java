@@ -19,7 +19,6 @@ import org.apache.myrmidon.api.TaskException;
  */
 public abstract class EnumeratedAttribute
 {
-
     protected String value;
 
     public EnumeratedAttribute()

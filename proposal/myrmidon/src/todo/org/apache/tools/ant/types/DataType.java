@@ -27,11 +27,6 @@ public abstract class DataType
     extends ProjectComponent
 {
     /**
-     * The descriptin the user has set.
-     */
-    protected String description;
-
-    /**
      * Value to the refid attribute.
      */
     protected Reference ref;
@@ -44,17 +39,6 @@ public abstract class DataType
      * added that is a subclass of DataType).</p>
      */
     protected boolean checked = true;
-
-    /**
-     * Sets a description of the current data type. It will be useful in
-     * commenting what we are doing.
-     *
-     * @param desc The new Description value
-     */
-    public void setDescription( String desc )
-    {
-        description = desc;
-    }
 
     /**
      * Set the value of the refid attribute. <p>
@@ -70,16 +54,6 @@ public abstract class DataType
     {
         this.ref = ref;
         checked = false;
-    }
-
-    /**
-     * Return the description for the current data type.
-     *
-     * @return The Description value
-     */
-    public String getDescription()
-    {
-        return description;
     }
 
     /**
