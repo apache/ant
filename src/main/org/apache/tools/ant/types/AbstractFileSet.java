@@ -124,7 +124,7 @@ public abstract class AbstractFileSet extends DataType
      * Retrieves the base-directory for this instance.
      * @return <code>File</code>.
      */
-    public synchronized File getDir() {
+    public File getDir() {
         return getDir(getProject());
     }
 
@@ -423,6 +423,15 @@ public abstract class AbstractFileSet extends DataType
         ds.setFollowSymlinks(followSymlinks);
         ds.scan();
         return ds;
+    }
+
+    /**
+     * Set up the specified directory scanner against this
+     * AbstractFileSet's Project.
+     * @param ds a <code>FileScanner</code> instance.
+     */
+    public void setupDirectoryScanner(FileScanner ds) {
+        setupDirectoryScanner(ds, getProject());
     }
 
     /**
