@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1161,19 +1161,29 @@ public class Javadoc extends Task {
         // nothing for *nix.
         String extension =  Os.isFamily("dos") ? ".exe" : "";
 
-        // Look for javadoc in the java.home/../bin directory.  Unfortunately
-        // on Windows java.home doesn't always refer to the correct location,
-        // so we need to fall back to assuming javadoc is somewhere on the
-        // PATH.
-        File jdocExecutable = new File( System.getProperty("java.home") +
-                                        "/../bin/javadoc" + extension );
+        File jdocExecutable = null;
 
-        if (jdocExecutable.exists() && !Os.isFamily("netware"))
-        {
-            return jdocExecutable.getAbsolutePath();
+        // On AIX using IBM's JDK 1.2 the javadoc executable is in
+        // the java.home/../sh directory
+        if (Os.isName("aix")) {
+            jdocExecutable = new File(System.getProperty("java.home") +
+                                      "/../sh/javadoc" + extension);
         }
-        else
-        {
+        
+        if (jdocExecutable == null || !jdocExecutable.exists()) {
+            // Look for javadoc in the java.home/../bin directory.  
+            jdocExecutable = new File(System.getProperty("java.home") +
+                                      "/../bin/javadoc" + extension);
+        }
+
+        // Unfortunately
+        // on Windows java.home doesn't always refer to the correct location, 
+        // so we need to fall back to assuming java is somewhere on the
+        // PATH.
+
+        if (jdocExecutable.exists() && !Os.isFamily("netware")) {
+            return jdocExecutable.getAbsolutePath();
+        } else {
             if (!Os.isFamily("netware")) {
                 log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
                      ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );

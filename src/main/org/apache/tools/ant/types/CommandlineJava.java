@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.types;
 
+import java.io.File;
 import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -352,13 +353,25 @@ public class CommandlineJava implements Cloneable {
         // nothing for *nix.
         String extension =  Os.isFamily("dos") ? ".exe" : "";
 
-        // Look for java in the java.home/../bin directory.  Unfortunately
+        File jExecutable = null;
+
+        // On AIX using IBM's JDK 1.2 the java executable is in
+        // the java.home/../sh directory
+        if (Os.isName("aix")) {
+            jExecutable = new File(System.getProperty("java.home") +
+                                   "/../sh/java" + extension);
+        }
+        
+        if (jExecutable == null || !jExecutable.exists()) {
+            // Look for java in the java.home/../bin directory.  
+            jExecutable = new File(System.getProperty("java.home") +
+                                   "/../bin/java" + extension);
+        }
+
+        // Unfortunately
         // on Windows java.home doesn't always refer to the correct location, 
         // so we need to fall back to assuming java is somewhere on the
         // PATH.
-        java.io.File jExecutable = 
-            new java.io.File(System.getProperty("java.home") +
-                             "/../bin/java" + extension );
 
         if (jExecutable.exists() && !Os.isFamily("netware")) {
             // NetWare may have a "java" in that directory, but 99% of
