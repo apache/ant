@@ -1004,16 +1004,19 @@ public class FileUtils {
      * <p>The file denoted by the returned abstract pathname did not
      * exist before this method was invoked, any subsequent invocation
      * of this method will yield a different file name.</p>
-     *
+     * <p>
+     * The filename is prefixNNNNNsuffix where NNNN is a random number
+     * </p>
      * <p>This method is different to File.createTempFile of JDK 1.2
      * as it doesn't create the file itself.
      * It uses the location pointed to by java.io.tmpdir
      * when the parentDir attribute is
      * null.</p>
      *
+     * @param prefix prefix before the random number
+     * @param suffix file extension; include the '.'
      * @param parentDir Directory to create the temporary file in -
-     * current working directory will be assumed if this parameter is
-     * null.
+     * java.io.tmpdir used if not specificed
      *
      * @return a File reference to the new temporary file.
      * @since ant 1.5
