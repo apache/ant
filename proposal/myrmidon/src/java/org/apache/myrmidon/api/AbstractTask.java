@@ -84,7 +84,8 @@ public abstract class AbstractTask
         return getContext().getProperty( name );
     }
 
-    protected final Object getService( final Class serviceClass )
+    ///HACK: Make this protected
+    public final Object getService( final Class serviceClass )
         throws TaskException
     {
         return getContext().getService( serviceClass );
