@@ -253,7 +253,7 @@ public class SubAnt
         }
 
         ant = createAntTask(directory);
-        String antfilename = file.getAbsolutePath()
+        String antfilename = file.getAbsolutePath();
         ant.setAntfile(antfilename);
         try {
             ant.execute();
