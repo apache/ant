@@ -385,8 +385,8 @@ public class ExecuteOn extends ExecTask
             for( int i = 0; i < filesets.size(); i++ )
             {
                 FileSet fs = (FileSet)filesets.get( i );
-                File base = fs.getDir( getProject() );
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                File base = fs.getDir();
+                DirectoryScanner ds = fs.getDirectoryScanner();
 
                 if( !"dir".equals( type ) )
                 {

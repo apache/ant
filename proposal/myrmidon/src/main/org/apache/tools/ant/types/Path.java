@@ -588,9 +588,9 @@ public class Path
             else if( o instanceof FileSet )
             {
                 FileSet fs = (FileSet)o;
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                DirectoryScanner ds = fs.getDirectoryScanner();
                 String[] s = ds.getIncludedFiles();
-                File dir = fs.getDir( getProject() );
+                File dir = fs.getDir();
                 for( int j = 0; j < s.length; j++ )
                 {
                     File f = new File( dir, s[ j ] );

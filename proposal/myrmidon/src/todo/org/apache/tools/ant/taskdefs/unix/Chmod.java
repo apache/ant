@@ -152,14 +152,14 @@ public class Chmod extends ExecuteOn
     public void execute()
         throws TaskException
     {
-        if( defaultSetDefined || defaultSet.getDir( getProject() ) == null )
+        if( defaultSetDefined || defaultSet.getDir() == null )
         {
             super.execute();
         }
         else if( isValidOs() )
         {
             // we are chmodding the given directory
-            createArg().setValue( defaultSet.getDir( getProject() ).getPath() );
+            createArg().setValue( defaultSet.getDir().getPath() );
             Execute execute = prepareExec();
             try
             {
@@ -191,7 +191,7 @@ public class Chmod extends ExecuteOn
             throw new TaskException( "Required attribute perm not set in chmod" );
         }
 
-        if( defaultSetDefined && defaultSet.getDir( getProject() ) != null )
+        if( defaultSetDefined && defaultSet.getDir() != null )
         {
             addFileset( defaultSet );
         }

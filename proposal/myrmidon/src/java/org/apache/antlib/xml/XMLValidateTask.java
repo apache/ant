@@ -259,12 +259,12 @@ public class XMLValidateTask
         {
 
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            DirectoryScanner ds = fs.getDirectoryScanner();
             String[] files = ds.getIncludedFiles();
 
             for( int j = 0; j < files.length; j++ )
             {
-                File srcFile = new File( fs.getDir( getProject() ), files[ j ] );
+                File srcFile = new File( fs.getDir(), files[ j ] );
                 doValidate( srcFile );
                 fileProcessed++;
             }

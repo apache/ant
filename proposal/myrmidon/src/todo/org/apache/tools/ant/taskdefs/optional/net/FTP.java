@@ -792,12 +792,12 @@ public class FTP
 
         if( action == SEND_FILES )
         {
-            ds = fs.getDirectoryScanner( getProject() );
+            ds = fs.getDirectoryScanner();
         }
         else
         {
             ds = new FTPDirectoryScanner( ftp );
-            fs.setupDirectoryScanner( ds, getProject() );
+            fs.setupDirectoryScanner( ds );
             ds.scan();
         }
 

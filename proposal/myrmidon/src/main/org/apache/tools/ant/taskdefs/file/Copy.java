@@ -229,8 +229,8 @@ public class Copy
         for( int i = 0; i < m_filesets.size(); i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.get( i );
-            final DirectoryScanner scanner = fileSet.getDirectoryScanner( getProject() );
-            final File fromDir = fileSet.getDir( getProject() );
+            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final File fromDir = fileSet.getDir();
 
             final String[] srcFiles = scanner.getIncludedFiles();
             final String[] srcDirs = scanner.getIncludedDirectories();
@@ -486,7 +486,7 @@ public class Copy
             else
             {
                 FileSet fs = (FileSet)m_filesets.get( 0 );
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                DirectoryScanner ds = fs.getDirectoryScanner();
                 String[] srcFiles = ds.getIncludedFiles();
 
                 if( srcFiles.length > 0 )

@@ -205,7 +205,7 @@ public class Move
             while( e.hasNext() )
             {
                 FileSet fs = (FileSet)e.next();
-                File dir = fs.getDir( getProject() );
+                File dir = fs.getDir();
 
                 if( okToDelete( dir ) )
                 {

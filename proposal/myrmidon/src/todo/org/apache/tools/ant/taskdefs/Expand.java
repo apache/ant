@@ -131,8 +131,8 @@ public class Expand extends MatchingTask
             for( int j = 0; j < filesets.size(); j++ )
             {
                 FileSet fs = (FileSet)filesets.get( j );
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
-                File fromDir = fs.getDir( getProject() );
+                DirectoryScanner ds = fs.getDirectoryScanner();
+                File fromDir = fs.getDir();
 
                 String[] files = ds.getIncludedFiles();
                 for( int i = 0; i < files.length; ++i )

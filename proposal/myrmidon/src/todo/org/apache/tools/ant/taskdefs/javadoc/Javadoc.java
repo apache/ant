@@ -1022,7 +1022,7 @@ public class Javadoc
                 final File source = resolveFile( list[ j ] );
                 fs.setDir( source );
 
-                final DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                final DirectoryScanner ds = fs.getDirectoryScanner();
                 final String[] packageDirs = ds.getIncludedDirectories();
 
                 for( int i = 0; i < packageDirs.length; i++ )

@@ -154,13 +154,13 @@ public class DependSet extends MatchingTask
         {
 
             FileSet targetFS = (FileSet)enumTargetSets.next();
-            DirectoryScanner targetDS = targetFS.getDirectoryScanner( getProject() );
+            DirectoryScanner targetDS = targetFS.getDirectoryScanner();
             String[] targetFiles = targetDS.getIncludedFiles();
 
             for( int i = 0; i < targetFiles.length; i++ )
             {
 
-                File dest = new File( targetFS.getDir( getProject() ), targetFiles[ i ] );
+                File dest = new File( targetFS.getDir(), targetFiles[ i ] );
                 allTargets.add( dest );
 
                 if( dest.lastModified() > now )
@@ -212,12 +212,12 @@ public class DependSet extends MatchingTask
             {
 
                 FileSet sourceFS = (FileSet)enumSourceSets.next();
-                DirectoryScanner sourceDS = sourceFS.getDirectoryScanner( getProject() );
+                DirectoryScanner sourceDS = sourceFS.getDirectoryScanner();
                 String[] sourceFiles = sourceDS.getIncludedFiles();
 
                 for( int i = 0; upToDate && i < sourceFiles.length; i++ )
                 {
-                    File src = new File( sourceFS.getDir( getProject() ), sourceFiles[ i ] );
+                    File src = new File( sourceFS.getDir(), sourceFiles[ i ] );
 
                     if( src.lastModified() > now )
                     {

@@ -157,8 +157,8 @@ public class Touch
         for( int i = 0; i < size; i++ )
         {
             final FileSet fs = (FileSet)m_filesets.get( i );
-            final DirectoryScanner ds = fs.getDirectoryScanner( null );
-            final File fromDir = fs.getDir( null );
+            final DirectoryScanner ds = fs.getDirectoryScanner();
+            final File fromDir = fs.getDir();
 
             final String[] srcFiles = ds.getIncludedFiles();
             final String[] srcDirs = ds.getIncludedDirectories();

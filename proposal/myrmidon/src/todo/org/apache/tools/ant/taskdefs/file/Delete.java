@@ -44,7 +44,7 @@ public class Delete
      *
      * @param dir the directory path.
      */
-    public void setDir( File dir )
+    public void setDir( final File dir )
     {
         m_dir = dir;
     }
@@ -54,7 +54,7 @@ public class Delete
      *
      * @param file the file to be deleted
      */
-    public void setFile( File file )
+    public void setFile( final File file )
     {
         m_file = file;
     }
@@ -100,14 +100,16 @@ public class Delete
                     getLogger().info( "Deleting: " + m_file.getAbsolutePath() );
                     if( !m_file.delete() )
                     {
-                        String message = "Unable to delete file " + m_file.getAbsolutePath();
+                        final String message = "Unable to delete file " + m_file.getAbsolutePath();
                         throw new TaskException( message );
                     }
                 }
             }
             else
             {
-                getLogger().debug( "Could not find file " + m_file.getAbsolutePath() + " to delete." );
+                final String message =
+                    "Could not find file " + m_file.getAbsolutePath() + " to delete.";
+                getLogger().debug( message );
             }
         }
 
@@ -124,10 +126,10 @@ public class Delete
             FileSet fs = (FileSet)filesets.get( i );
             try
             {
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                DirectoryScanner ds = fs.getDirectoryScanner();
                 String[] files = ds.getIncludedFiles();
                 String[] dirs = ds.getIncludedDirectories();
-                removeFiles( fs.getDir( getProject() ), files, dirs );
+                removeFiles( fs.getDir(), files, dirs );
             }
             catch( TaskException be )
             {

@@ -129,7 +129,7 @@ public class Tar
             }
 
             // add the main fileset to the list of filesets to process.
-            TarFileSet mainFileSet = new TarFileSet( fileset );
+            TarFileSet mainFileSet = new TarFileSet( /*fileset*/ );
             mainFileSet.setDir( baseDir );
             filesets.add( mainFileSet );
         }
@@ -154,7 +154,7 @@ public class Tar
 
             for( int i = 0; i < files.length; ++i )
             {
-                if( tarFile.equals( new File( fs.getDir( getProject() ), files[ i ] ) ) )
+                if( tarFile.equals( new File( fs.getDir(), files[ i ] ) ) )
                 {
                     throw new TaskException( "A tar file cannot include itself" );
                 }
@@ -196,7 +196,7 @@ public class Tar
                 String[] files = fs.getFiles( getProject() );
                 for( int i = 0; i < files.length; i++ )
                 {
-                    File f = new File( fs.getDir( getProject() ), files[ i ] );
+                    File f = new File( fs.getDir(), files[ i ] );
                     String name = files[ i ].replace( File.separatorChar, '/' );
                     tarFile( f, tOut, name, fs );
                 }
@@ -322,16 +322,6 @@ public class Tar
         private String userName = "";
         private String groupName = "";
 
-        public TarFileSet( FileSet fileset )
-        {
-            super( fileset );
-        }
-
-        public TarFileSet()
-        {
-            super();
-        }
-
         public void setGroup( String groupName )
         {
             this.groupName = groupName;
@@ -359,7 +349,7 @@ public class Tar
         {
             if( files == null )
             {
-                DirectoryScanner ds = getDirectoryScanner( p );
+                DirectoryScanner ds = getDirectoryScanner();
                 String[] directories = ds.getIncludedDirectories();
                 String[] filesPerSe = ds.getIncludedFiles();
                 files = new String[ directories.length + filesPerSe.length ];

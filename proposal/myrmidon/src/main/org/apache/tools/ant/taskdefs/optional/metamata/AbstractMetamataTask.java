@@ -365,7 +365,7 @@ public abstract class AbstractMetamataTask extends Task
         for( int i = 0; i < fileSets.size(); i++ )
         {
             FileSet fs = (FileSet)fileSets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            DirectoryScanner ds = fs.getDirectoryScanner();
             ds.scan();
             String[] f = ds.getIncludedFiles();
             getLogger().debug( i + ") Adding " + f.length + " files from directory " + ds.getBasedir() );

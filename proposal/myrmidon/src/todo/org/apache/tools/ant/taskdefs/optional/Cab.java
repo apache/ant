@@ -204,7 +204,7 @@ public class Cab extends MatchingTask
                 FileSet fs = (FileSet)filesets.get( i );
                 if( fs != null )
                 {
-                    appendFiles( files, fs.getDirectoryScanner( getProject() ) );
+                    appendFiles( files, fs.getDirectoryScanner() );
                 }
             }
         }

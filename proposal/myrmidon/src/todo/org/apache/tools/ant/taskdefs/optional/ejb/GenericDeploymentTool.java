@@ -559,8 +559,8 @@ public class GenericDeploymentTool
         for( Iterator i = config.supportFileSets.iterator(); i.hasNext(); )
         {
             FileSet supportFileSet = (FileSet)i.next();
-            File supportBaseDir = supportFileSet.getDir( project );
-            DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner( project );
+            File supportBaseDir = supportFileSet.getDir();
+            DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner();
             supportScanner.scan();
             String[] supportFiles = supportScanner.getIncludedFiles();
             for( int j = 0; j < supportFiles.length; ++j )

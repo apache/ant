@@ -9,11 +9,9 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.Project;
 
 /**
  * Moved out of MatchingTask to make it a standalone object that could be
@@ -31,64 +29,36 @@ public class FileSet
     extends DataType
     implements Cloneable
 {
-    private PatternSet defaultPatterns = new PatternSet();
-    private ArrayList additionalPatterns = new ArrayList();
-    private boolean useDefaultExcludes = true;
-    private boolean isCaseSensitive = true;
-
-    private File dir;
+    private PatternSet m_defaultPatterns = new PatternSet();
+    private ArrayList m_additionalPatterns = new ArrayList();
+    private boolean m_useDefaultExcludes = true;
+    private boolean m_isCaseSensitive = true;
+    private File m_dir;
 
     public FileSet()
     {
-        super();
-    }
-
-    protected FileSet( FileSet fileset )
-    {
-        this.dir = fileset.dir;
-        this.defaultPatterns = fileset.defaultPatterns;
-        this.additionalPatterns = fileset.additionalPatterns;
-        this.useDefaultExcludes = fileset.useDefaultExcludes;
-        this.isCaseSensitive = fileset.isCaseSensitive;
     }
 
     /**
      * Sets case sensitivity of the file system
-     *
-     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
-     *      sensitive, "false"|"off"|"no" when not.
      */
-    public void setCaseSensitive( boolean isCaseSensitive )
+    public void setCaseSensitive( final boolean isCaseSensitive )
     {
-        this.isCaseSensitive = isCaseSensitive;
+        m_isCaseSensitive = isCaseSensitive;
     }
 
     /**
      * Sets whether default exclusions should be used or not.
-     *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
-     *      should be used, "false"|"off"|"no" when they shouldn't be used.
      */
-    public void setDefaultexcludes( boolean useDefaultExcludes )
-        throws TaskException
+    public void setDefaultexcludes( final boolean useDefaultExcludes )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
-        this.useDefaultExcludes = useDefaultExcludes;
+        m_useDefaultExcludes = useDefaultExcludes;
     }
 
-    public void setDir( File dir )
+    public void setDir( final File dir )
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
-        this.dir = dir;
+        m_dir = dir;
     }
 
     /**
@@ -97,32 +67,19 @@ public class FileSet
      *
      * @param excludes the string containing the exclude patterns
      */
-    public void setExcludes( String excludes )
-        throws TaskException
+    public void setExcludes( final String excludes )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
-        defaultPatterns.setExcludes( excludes );
+        m_defaultPatterns.setExcludes( excludes );
     }
 
     /**
      * Sets the name of the file containing the includes patterns.
      *
      * @param excl The file to fetch the exclude patterns from.
-     * @exception TaskException Description of Exception
      */
-    public void setExcludesfile( File excl )
-        throws TaskException
+    public void setExcludesfile( final File excl )
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
-        defaultPatterns.setExcludesfile( excl );
+        m_defaultPatterns.setExcludesfile( excl );
     }
 
     /**
@@ -132,250 +89,118 @@ public class FileSet
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
-        defaultPatterns.setIncludes( includes );
+        m_defaultPatterns.setIncludes( includes );
     }
 
     /**
      * Sets the name of the file containing the includes patterns.
      *
      * @param incl The file to fetch the include patterns from.
-     * @exception TaskException Description of Exception
      */
     public void setIncludesfile( File incl )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
-
-        defaultPatterns.setIncludesfile( incl );
+        m_defaultPatterns.setIncludesfile( incl );
     }
 
-    /**
-     * Makes this instance in effect a reference to another PatternSet instance.
-     * <p>
-     *
-     * You must not set another attribute or nest elements inside this element
-     * if you make it a reference.</p>
-     *
-     * @param r The new Refid value
-     * @exception TaskException Description of Exception
-     */
-    public void setRefid( Reference r )
+    public void setupDirectoryScanner( final FileScanner ds )
         throws TaskException
     {
-        if( dir != null || defaultPatterns.hasPatterns() )
+        if( null == ds )
         {
-            throw tooManyAttributes();
-        }
-        if( !additionalPatterns.isEmpty() )
-        {
-            throw noChildrenAllowed();
-        }
-        super.setRefid( r );
-    }
-
-    public void setupDirectoryScanner( FileScanner ds, Project p )
-        throws TaskException
-    {
-        if( ds == null )
-        {
-            throw new IllegalArgumentException( "ds cannot be null" );
+            final String message = "ds cannot be null";
+            throw new IllegalArgumentException( message );
         }
 
-        ds.setBasedir( dir );
+        ds.setBasedir( m_dir );
 
-        for( int i = 0; i < additionalPatterns.size(); i++ )
+        final int size = m_additionalPatterns.size();
+        for( int i = 0; i < size; i++ )
         {
-            Object o = additionalPatterns.get( i );
-            defaultPatterns.append( (PatternSet)o, p );
+            final Object o = m_additionalPatterns.get( i );
+            m_defaultPatterns.append( (PatternSet)o );
         }
 
-        getLogger().debug( "FileSet: Setup file scanner in dir " + dir + " with " + defaultPatterns );
+        final String message = "FileSet: Setup file scanner in dir " +
+            m_dir + " with " + m_defaultPatterns;
+        getLogger().debug( message );
 
-        ds.setIncludes( defaultPatterns.getIncludePatterns( p ) );
-        ds.setExcludes( defaultPatterns.getExcludePatterns( p ) );
-        if( useDefaultExcludes )
+        ds.setIncludes( m_defaultPatterns.getIncludePatterns( null ) );
+        ds.setExcludes( m_defaultPatterns.getExcludePatterns( null ) );
+        if( m_useDefaultExcludes )
+        {
             ds.addDefaultExcludes();
-        ds.setCaseSensitive( isCaseSensitive );
+        }
+        ds.setCaseSensitive( m_isCaseSensitive );
     }
 
-    public File getDir( Project p )
-        throws TaskException
+    public File getDir()
     {
-        if( isReference() )
-        {
-            return getRef( p ).getDir( p );
-        }
-        return dir;
+        return m_dir;
     }
 
     /**
      * Returns the directory scanner needed to access the files to process.
-     *
-     * @param p Description of Parameter
-     * @return The DirectoryScanner value
      */
-    public DirectoryScanner getDirectoryScanner( Project p )
+    public DirectoryScanner getDirectoryScanner()
         throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef( p ).getDirectoryScanner( p );
-        }
-
-        if( dir == null )
+        if( m_dir == null )
         {
             throw new TaskException( "No directory specified for fileset." );
         }
 
-        if( !dir.exists() )
+        if( !m_dir.exists() )
         {
-            throw new TaskException( dir.getAbsolutePath() + " not found." );
+            throw new TaskException( m_dir.getAbsolutePath() + " not found." );
         }
-        if( !dir.isDirectory() )
+        if( !m_dir.isDirectory() )
         {
-            throw new TaskException( dir.getAbsolutePath() + " is not a directory." );
+            throw new TaskException( m_dir.getAbsolutePath() + " is not a directory." );
         }
 
-        DirectoryScanner ds = new DirectoryScanner();
-        setupDirectoryScanner( ds, p );
-        ds.scan();
-        return ds;
-    }
-
-    /**
-     * Return a FileSet that has the same basedir and same patternsets as this
-     * one.
-     *
-     * @return Description of the Returned Value
-     */
-    public Object clone()
-    {
-        try
-        {
-            if( isReference() )
-            {
-                return new FileSet( getRef( getProject() ) );
-            }
-            else
-            {
-                return new FileSet( this );
-            }
-        }
-        catch( TaskException e )
-        {
-            throw new IllegalStateException( e.getMessage() );
-        }
+        final DirectoryScanner scanner = new DirectoryScanner();
+        setupDirectoryScanner( scanner );
+        scanner.scan();
+        return scanner;
     }
 
     /**
      * add a name entry on the exclude list
-     *
-     * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExclude()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createExclude();
+        return m_defaultPatterns.createExclude();
     }
 
     /**
      * add a name entry on the include files list
-     *
-     * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createExcludesFile()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createExcludesFile();
+        return m_defaultPatterns.createExcludesFile();
     }
 
     /**
      * add a name entry on the include list
-     *
-     * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createInclude()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createInclude();
+        return m_defaultPatterns.createInclude();
     }
 
     /**
      * add a name entry on the include files list
-     *
-     * @return Description of the Returned Value
      */
     public PatternSet.NameEntry createIncludesFile()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return defaultPatterns.createIncludesFile();
+        return m_defaultPatterns.createIncludesFile();
     }
 
     public PatternSet createPatternSet()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        PatternSet patterns = new PatternSet();
-        additionalPatterns.add( patterns );
+        final PatternSet patterns = new PatternSet();
+        m_additionalPatterns.add( patterns );
         return patterns;
     }
-
-    /**
-     * Performs the check for circular references and returns the referenced
-     * FileSet.
-     *
-     * @param p Description of Parameter
-     * @return The Ref value
-     */
-    protected FileSet getRef( Project p )
-        throws TaskException
-    {
-        if( !checked )
-        {
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, p );
-        }
-
-        Object o = ref.getReferencedObject( p );
-        if( !( o instanceof FileSet ) )
-        {
-            String msg = ref.getRefId() + " doesn\'t denote a fileset";
-            throw new TaskException( msg );
-        }
-        else
-        {
-            return (FileSet)o;
-        }
-    }
-
 }

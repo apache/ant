@@ -47,7 +47,7 @@ public class ClassfileSet extends FileSet
     public DirectoryScanner getDirectoryScanner( Project p )
     {
         DependScanner scanner = new DependScanner();
-        scanner.setBasedir( getDir( p ) );
+        scanner.setBasedir( getDir() );
         scanner.setRootClasses( rootClasses );
         scanner.scan();
         return scanner;

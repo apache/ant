@@ -264,7 +264,7 @@ public class Zip extends MatchingTask
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            dss.add( fs.getDirectoryScanner( getProject() ) );
+            dss.add( fs.getDirectoryScanner() );
         }
         int dssSize = dss.size();
         FileScanner[] scanners = new FileScanner[ dssSize ];
@@ -541,7 +541,7 @@ public class Zip extends MatchingTask
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            DirectoryScanner ds = fs.getDirectoryScanner();
 
             String prefix = "";
             String fullpath = "";

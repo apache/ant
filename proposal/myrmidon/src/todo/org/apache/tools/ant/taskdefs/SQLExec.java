@@ -407,8 +407,8 @@ public class SQLExec
             for( int i = 0; i < filesets.size(); i++ )
             {
                 FileSet fs = (FileSet)filesets.get( i );
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
-                File srcDir = fs.getDir( getProject() );
+                DirectoryScanner ds = fs.getDirectoryScanner();
+                File srcDir = fs.getDir();
 
                 String[] srcFiles = ds.getIncludedFiles();
 

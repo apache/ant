@@ -38,16 +38,14 @@ public class ZipFileSet
     /**
      * Set the directory for the fileset. Prevents both "dir" and "src" from
      * being specified.
-     *
-     * @param dir The new Dir value
-     * @exception TaskException Description of Exception
      */
-    public void setDir( File dir )
+    public void setDir( final File dir )
         throws TaskException
     {
         if( srcFile != null )
         {
-            throw new TaskException( "Cannot set both dir and src attributes" );
+            final String message = "Cannot set both dir and src attributes";
+            throw new TaskException( message );
         }
         else
         {
@@ -104,22 +102,18 @@ public class ZipFileSet
     public DirectoryScanner getDirectoryScanner( Project p )
         throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef( p ).getDirectoryScanner( p );
-        }
         if( srcFile != null )
         {
             ZipScanner zs = new ZipScanner();
             zs.setSrc( srcFile );
             super.setDir( p.getBaseDir() );
-            setupDirectoryScanner( zs, p );
+            setupDirectoryScanner( zs );
             zs.init();
             return zs;
         }
         else
         {
-            return super.getDirectoryScanner( p );
+            return super.getDirectoryScanner();
         }
     }
 

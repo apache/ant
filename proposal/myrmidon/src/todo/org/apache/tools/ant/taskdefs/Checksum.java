@@ -473,11 +473,11 @@ public class Checksum extends MatchingTask implements Condition
         for( int i = 0; i < sizeofFileSet; i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            DirectoryScanner ds = fs.getDirectoryScanner();
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {
-                File src = new File( fs.getDir( getProject() ), srcFiles[ j ] );
+                File src = new File( fs.getDir(), srcFiles[ j ] );
                 addToIncludeFileMap( src );
             }
         }

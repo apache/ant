@@ -518,7 +518,7 @@ public class Translate
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            DirectoryScanner ds = fs.getDirectoryScanner();
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {

@@ -127,8 +127,8 @@ public class UpToDate extends MatchingTask implements Condition
         while( upToDate && enum.hasNext() )
         {
             FileSet fs = (FileSet)enum.next();
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
-            upToDate = upToDate && scanDir( fs.getDir( getProject() ),
+            DirectoryScanner ds = fs.getDirectoryScanner();
+            upToDate = upToDate && scanDir( fs.getDir(),
                                             ds.getIncludedFiles() );
         }
         return upToDate;

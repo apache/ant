@@ -13,7 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
@@ -31,12 +30,13 @@ import org.apache.tools.ant.Project;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class PatternSet extends DataType
+public class PatternSet
+    extends DataType
 {
-    private ArrayList includeList = new ArrayList();
-    private ArrayList excludeList = new ArrayList();
-    private ArrayList includesFileList = new ArrayList();
-    private ArrayList excludesFileList = new ArrayList();
+    private ArrayList m_includeList = new ArrayList();
+    private ArrayList m_excludeList = new ArrayList();
+    private ArrayList m_includesFileList = new ArrayList();
+    private ArrayList m_excludesFileList = new ArrayList();
 
     public PatternSet()
     {
@@ -50,12 +50,7 @@ public class PatternSet extends DataType
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( String excludes )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         if( excludes != null && excludes.length() > 0 )
         {
             StringTokenizer tok = new StringTokenizer( excludes, ", ", false );
@@ -73,12 +68,7 @@ public class PatternSet extends DataType
      * @exception TaskException Description of Exception
      */
     public void setExcludesfile( File excludesFile )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         createExcludesFile().setName( excludesFile.getAbsolutePath() );
     }
 
@@ -89,12 +79,7 @@ public class PatternSet extends DataType
      * @param includes the string containing the include patterns
      */
     public void setIncludes( String includes )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         if( includes != null && includes.length() > 0 )
         {
             StringTokenizer tok = new StringTokenizer( includes, ", ", false );
@@ -112,53 +97,18 @@ public class PatternSet extends DataType
      * @exception TaskException Description of Exception
      */
     public void setIncludesfile( File includesFile )
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw tooManyAttributes();
-        }
         createIncludesFile().setName( includesFile.getAbsolutePath() );
     }
 
     /**
-     * Makes this instance in effect a reference to another PatternSet instance.
-     * <p>
-     *
-     * You must not set another attribute or nest elements inside this element
-     * if you make it a reference.</p>
-     *
-     * @param r The new Refid value
-     * @exception TaskException Description of Exception
-     */
-    public void setRefid( Reference r )
-        throws TaskException
-    {
-        if( !includeList.isEmpty() || !excludeList.isEmpty() )
-        {
-            throw tooManyAttributes();
-        }
-        super.setRefid( r );
-    }
-
-    /**
      * Returns the filtered include patterns.
-     *
-     * @param p Description of Parameter
-     * @return The ExcludePatterns value
      */
     public String[] getExcludePatterns( Project p )
         throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef( p ).getExcludePatterns( p );
-        }
-        else
-        {
-            readFiles( p );
-            return makeArray( excludeList, p );
-        }
+        readFiles( p );
+        return makeArray( m_excludeList );
     }
 
     /**
@@ -170,32 +120,17 @@ public class PatternSet extends DataType
     public String[] getIncludePatterns( Project p )
         throws TaskException
     {
-        if( isReference() )
-        {
-            return getRef( p ).getIncludePatterns( p );
-        }
-        else
-        {
-            readFiles( p );
-            return makeArray( includeList, p );
-        }
+        readFiles( p );
+        return makeArray( m_includeList );
     }
 
     /**
      * Adds the patterns of the other instance to this set.
-     *
-     * @param other Description of Parameter
-     * @param p Description of Parameter
      */
-    public void append( PatternSet other, Project p )
+    protected void append( PatternSet other )
         throws TaskException
     {
-        if( isReference() )
-        {
-            throw new TaskException( "Cannot append to a reference" );
-        }
-
-        String[] incl = other.getIncludePatterns( p );
+        String[] incl = other.getIncludePatterns( null );
         if( incl != null )
         {
             for( int i = 0; i < incl.length; i++ )
@@ -204,7 +139,7 @@ public class PatternSet extends DataType
             }
         }
 
-        String[] excl = other.getExcludePatterns( p );
+        String[] excl = other.getExcludePatterns( null );
         if( excl != null )
         {
             for( int i = 0; i < excl.length; i++ )
@@ -220,13 +155,8 @@ public class PatternSet extends DataType
      * @return Description of the Returned Value
      */
     public NameEntry createExclude()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return addPatternToList( excludeList );
+        return addPatternToList( m_excludeList );
     }
 
     /**
@@ -235,121 +165,66 @@ public class PatternSet extends DataType
      * @return Description of the Returned Value
      */
     public NameEntry createExcludesFile()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return addPatternToList( excludesFileList );
+        return addPatternToList( m_excludesFileList );
     }
 
     /**
      * add a name entry on the include list
-     *
-     * @return Description of the Returned Value
      */
     public NameEntry createInclude()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return addPatternToList( includeList );
+        return addPatternToList( m_includeList );
     }
 
     /**
      * add a name entry on the include files list
-     *
-     * @return Description of the Returned Value
      */
     public NameEntry createIncludesFile()
-        throws TaskException
     {
-        if( isReference() )
-        {
-            throw noChildrenAllowed();
-        }
-        return addPatternToList( includesFileList );
+        return addPatternToList( m_includesFileList );
     }
 
     public String toString()
     {
-        return "patternSet{ includes: " + includeList +
-            " excludes: " + excludeList + " }";
+        return "patternSet{ includes: " + m_includeList +
+            " excludes: " + m_excludeList + " }";
     }
 
     /**
      * helper for FileSet.
-     *
-     * @return Description of the Returned Value
      */
     boolean hasPatterns()
     {
-        return includesFileList.size() > 0 || excludesFileList.size() > 0
-            || includeList.size() > 0 || excludeList.size() > 0;
-    }
-
-    /**
-     * Performs the check for circular references and returns the referenced
-     * PatternSet.
-     *
-     * @param p Description of Parameter
-     * @return The Ref value
-     */
-    private PatternSet getRef( Project p )
-        throws TaskException
-    {
-        if( !checked )
-        {
-            Stack stk = new Stack();
-            stk.push( this );
-            dieOnCircularReference( stk, p );
-        }
-
-        Object o = ref.getReferencedObject( p );
-        if( !( o instanceof PatternSet ) )
-        {
-            String msg = ref.getRefId() + " doesn\'t denote a patternset";
-            throw new TaskException( msg );
-        }
-        else
-        {
-            return (PatternSet)o;
-        }
+        return m_includesFileList.size() > 0 || m_excludesFileList.size() > 0 ||
+            m_includeList.size() > 0 || m_excludeList.size() > 0;
     }
 
     /**
      * add a name entry to the given list
-     *
-     * @param list The feature to be added to the PatternToList attribute
-     * @return Description of the Returned Value
      */
-    private NameEntry addPatternToList( ArrayList list )
+    private NameEntry addPatternToList( final ArrayList list )
     {
-        NameEntry result = new NameEntry();
+        final NameEntry result = new NameEntry();
         list.add( result );
         return result;
     }
 
     /**
      * Convert a vector of NameEntry elements into an array of Strings.
-     *
-     * @param list Description of Parameter
-     * @param p Description of Parameter
-     * @return Description of the Returned Value
      */
-    private String[] makeArray( ArrayList list, Project p )
+    private String[] makeArray( final ArrayList list )
     {
         if( list.size() == 0 )
+        {
             return null;
+        }
 
-        ArrayList tmpNames = new ArrayList();
+        final ArrayList tmpNames = new ArrayList();
         for( Iterator e = list.iterator(); e.hasNext(); )
         {
-            NameEntry ne = (NameEntry)e.next();
-            String pattern = ne.evalName( p );
+            final NameEntry ne = (NameEntry)e.next();
+            final String pattern = ne.evalName( null );
             if( pattern != null && pattern.length() > 0 )
             {
                 tmpNames.add( pattern );
@@ -362,15 +237,13 @@ public class PatternSet extends DataType
 
     /**
      * Read includesfile ot excludesfile if not already done so.
-     *
-     * @param p Description of Parameter
      */
     private void readFiles( Project p )
         throws TaskException
     {
-        if( includesFileList.size() > 0 )
+        if( m_includesFileList.size() > 0 )
         {
-            Iterator e = includesFileList.iterator();
+            Iterator e = m_includesFileList.iterator();
             while( e.hasNext() )
             {
                 NameEntry ne = (NameEntry)e.next();
@@ -382,15 +255,15 @@ public class PatternSet extends DataType
                         throw new TaskException( "Includesfile "
                                                  + inclFile.getAbsolutePath()
                                                  + " not found." );
-                    readPatterns( inclFile, includeList, p );
+                    readPatterns( inclFile, m_includeList, p );
                 }
             }
-            includesFileList.clear();
+            m_includesFileList.clear();
         }
 
-        if( excludesFileList.size() > 0 )
+        if( m_excludesFileList.size() > 0 )
         {
-            Iterator e = excludesFileList.iterator();
+            Iterator e = m_excludesFileList.iterator();
             while( e.hasNext() )
             {
                 NameEntry ne = (NameEntry)e.next();
@@ -402,10 +275,10 @@ public class PatternSet extends DataType
                         throw new TaskException( "Excludesfile "
                                                  + exclFile.getAbsolutePath()
                                                  + " not found." );
-                    readPatterns( exclFile, excludeList, p );
+                    readPatterns( exclFile, m_excludeList, p );
                 }
             }
-            excludesFileList.clear();
+            m_excludesFileList.clear();
         }
     }
 
@@ -538,5 +411,4 @@ public class PatternSet extends DataType
             return true;
         }
     }
-
 }

@@ -200,7 +200,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         for( int i = 0; i < size; i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            DirectoryScanner ds = fs.getDirectoryScanner();
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int j = 0; j < f.length; j++ )
