@@ -722,14 +722,17 @@ public class JUnitTask extends Task {
         try {
             log("Using System properties " + System.getProperties(), 
                 Project.MSG_VERBOSE);
-            Path classpath = (Path) commandline.getClasspath().clone();
-            if (includeAntRuntime) {
-                log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH", 
-                    Project.MSG_VERBOSE);
-                classpath.append(antRuntimeClasses);
-            }
-
+            Path userClasspath = commandline.getClasspath();
+            Path classpath = userClasspath == null 
+                                              ? null 
+                                              : (Path) userClasspath.clone();
             if (classpath != null) {
+                if (includeAntRuntime) {
+                    log("Implicitly adding " + antRuntimeClasses 
+                        + " to CLASSPATH", Project.MSG_VERBOSE);
+                    classpath.append(antRuntimeClasses);
+                }
+
                 cl = new AntClassLoader(null, project, classpath, false);
                 log("Using CLASSPATH " + cl.getClasspath(),
                     Project.MSG_VERBOSE);
@@ -772,7 +775,9 @@ public class JUnitTask extends Task {
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }
-            cl.resetThreadContextLoader();
+            if (cl != null) {
+                cl.resetThreadContextLoader();
+            }
         }
     }
 
