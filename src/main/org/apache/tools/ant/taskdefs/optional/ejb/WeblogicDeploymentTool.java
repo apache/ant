@@ -79,7 +79,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     private Path classpath;
 
     /** Instance variable that determines whether generic ejb jars are kept. */
+
+    private boolean keepgenerated = false;
+
+    private String additionalArgs = "";
+
     private boolean keepGeneric = false;
+
+    private String compiler = null;
     
     /**
      * Set the classpath to be used for this compilation.
@@ -87,6 +94,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     public void setClasspath(Path classpath) {
         this.classpath = classpath;
     }
+
+    /**
+     * The compiler (switch <code>-compiler</code>) to use
+     */
+    public void setCompiler(String compiler) 
+    {
+        this.compiler = compiler;
+    }
+    
 
     /**
      * Setter used to store the suffix for the generated weblogic jar file.
@@ -103,6 +119,25 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     public void setKeepgeneric(boolean inValue) {
         this.keepGeneric = inValue;
     }
+
+    /**
+     * Sets whether -keepgenerated is passed to ejbc (that is,
+     * the .java source files are kept).
+     * @param inValue either 'true' or 'false'
+     */
+    public void setKeepgenerated(String inValue) 
+    {
+        this.keepgenerated = Boolean.valueOf(inValue).booleanValue();
+    }
+
+    /**
+     * sets some additional args to send to ejbc.
+     */
+    public void setArgs(String args) 
+    {
+        this.additionalArgs = args;
+    }
+    
     
     /**
      * Setter used to store the location of the weblogic DTD. This can be a file on the system 
@@ -176,7 +211,16 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
         
         try {
-            String args = "-noexit " + sourceJar.getPath() + " " + destJar.getPath();
+            String args = additionalArgs;
+            if (keepgenerated) {
+                args += " -keepgenerated";
+            }
+            
+            if (compiler != null) {
+                args += " -compiler " + compiler;
+            }
+            
+            args += " -noexit " + sourceJar.getPath() + " " + destJar.getPath();
             
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setClassname("weblogic.ejbc");
