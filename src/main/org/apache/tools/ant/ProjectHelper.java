@@ -225,23 +225,67 @@ public class ProjectHelper {
                     // into the task
 
                     NamedNodeMap nodeMap = element.getAttributes();
-                    configureTask(project, task, nodeMap);
+                    configure(project, task, nodeMap);
                     task.init();
                     task.setTarget(target);
                     target.addTask(task);
+
+                    processNestedProperties(project, task, element);
                 }
             }
         }
     }
 
-    private static void configureTask(Project project,
-                                      Task taskInst,
-                                      NamedNodeMap nodeMap)
+    private static void processNestedProperties(Project project,
+                                                Object target,
+                                                Element targetElement)
         throws BuildException
     {
-        Object task=taskInst;
-        if( task instanceof TaskAdapter )
-            task=((TaskAdapter)task).getProxy();
+        Class targetClass = target.getClass();
+        NodeList list = targetElement.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            Node node = list.item(i);
+
+            // right now, all we are interested in is element nodes
+            // not quite sure what to do with others except drop 'em
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element)node;
+                String propType = element.getTagName();
+                String methodName = "add" +
+		    Character.toUpperCase(propType.charAt(0)) +
+                    propType.substring(1);
+
+                try {
+                    Method addProp =
+                        targetClass.getMethod(methodName, new Class[]{});
+                    Object child = addProp.invoke(target, new Object[] {});
+
+                    NamedNodeMap nodeMap = element.getAttributes();
+                    configure(project, child, nodeMap);
+
+                    processNestedProperties(project, child, element);
+                } catch (NoSuchMethodException nsme) {
+                    throw new BuildException(targetClass + 
+                        " does not support nested " + propType + " properties");
+                } catch (InvocationTargetException ite) {
+                    throw new BuildException(ite.getMessage());
+                } catch (IllegalAccessException iae) {
+                    throw new BuildException(iae.getMessage());
+                }
+
+            }
+        }
+    }
+
+    private static void configure(Project project,
+                                  Object target,
+                                  NamedNodeMap nodeMap)
+        throws BuildException
+    {
+        if( target instanceof TaskAdapter )
+            target=((TaskAdapter)target).getProxy();
 
         // XXX
         // instead of doing this introspection each time around, I
@@ -251,9 +295,9 @@ public class ProjectHelper {
         Hashtable propertySetters = new Hashtable();
         BeanInfo beanInfo;
         try {
-            beanInfo = Introspector.getBeanInfo(task.getClass());
+            beanInfo = Introspector.getBeanInfo(target.getClass());
         } catch (IntrospectionException ie) {
-            String msg = "Can't introspect task class: " + task.getClass();
+            String msg = "Can't introspect class: " + target.getClass();
             throw new BuildException(msg);
         }
 
@@ -287,18 +331,18 @@ public class ProjectHelper {
             if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
                 Attr attr = (Attr)node;
 
-                // reflect these into the task
+                // reflect these into the target
 
                 Method setMethod = (Method)propertySetters.get(attr.getName());
                 if (setMethod == null) {
                     String msg = "Configuration property \"" + attr.getName() +
-                        "\" does not have a setMethod in " + task.getClass();
+                        "\" does not have a setMethod in " + target.getClass();
                     throw new BuildException(msg);
                 }
 
                 String value=replaceProperties(  attr.getValue(), project.getProperties() );
                 try {
-                    setMethod.invoke(task, new String[] {value});
+                    setMethod.invoke(target, new String[] {value});
                 } catch (IllegalAccessException iae) {
                     String msg = "Error setting value for attrib: " +
                         attr.getName();
@@ -306,7 +350,7 @@ public class ProjectHelper {
                     throw new BuildException(msg);
                 } catch (InvocationTargetException ie) {
                     String msg = "Error setting value for attrib: " +
-                        attr.getName() + " in " + task.getClass().getName();
+                        attr.getName() + " in " + target.getClass().getName();
                     ie.printStackTrace();
                     ie.getTargetException().printStackTrace();
                     throw new BuildException(msg);
