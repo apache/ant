@@ -3,18 +3,16 @@
  *
  * This software is published under the terms of the Apache Software License
  * version 1.1, a copy of which has been included with this distribution in
- * the LICENSE file.
+ * the LICENSE.txt file.
  */
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.IOException;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 

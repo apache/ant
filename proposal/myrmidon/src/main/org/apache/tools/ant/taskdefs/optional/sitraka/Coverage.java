@@ -3,7 +3,7 @@
  *
  * This software is published under the terms of the Apache Software License
  * version 1.1, a copy of which has been included with this distribution in
- * the LICENSE file.
+ * the LICENSE.txt file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
@@ -20,12 +20,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Argument;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant. Options are pretty

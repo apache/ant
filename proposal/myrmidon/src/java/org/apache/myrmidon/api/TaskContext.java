@@ -25,14 +25,14 @@ public interface TaskContext
 {
     //these values are used when setting properties to indicate the scope at
     //which properties are set
-    ScopeEnum       CURRENT            = new ScopeEnum( "Current" );
-    ScopeEnum       PARENT             = new ScopeEnum( "Parent" );
-    ScopeEnum       TOP_LEVEL          = new ScopeEnum( "TopLevel" );
+    ScopeEnum CURRENT = new ScopeEnum( "Current" );
+    ScopeEnum PARENT = new ScopeEnum( "Parent" );
+    ScopeEnum TOP_LEVEL = new ScopeEnum( "TopLevel" );
 
     //these are the names of properties that every TaskContext must contain
-    String          JAVA_VERSION       = "myrmidon.java.version";
-    String          BASE_DIRECTORY     = "myrmidon.base.directory";
-    String          NAME               = "myrmidon.task.name";
+    String JAVA_VERSION = "myrmidon.java.version";
+    String BASE_DIRECTORY = "myrmidon.base.directory";
+    String NAME = "myrmidon.task.name";
 
     /**
      * Retrieve JavaVersion running under.

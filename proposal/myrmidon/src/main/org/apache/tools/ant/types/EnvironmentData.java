@@ -3,13 +3,12 @@
  *
  * This software is published under the terms of the Apache Software License
  * version 1.1, a copy of which has been included with this distribution in
- * the LICENSE file.
+ * the LICENSE.txt file.
  */
 package org.apache.tools.ant.types;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 
 /**
