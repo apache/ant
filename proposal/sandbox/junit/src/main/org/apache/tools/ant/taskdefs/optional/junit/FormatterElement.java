@@ -53,8 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -79,42 +77,27 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  *
- * @see JUnitTask,
+ * @see JUnitTask
  * @see Formatter
  */
 public class FormatterElement {
 
+    /** output stream for the formatter */
     private OutputStream out = new KeepAliveOutputStream(System.out);
+
+    /** formatter classname */
     private String classname;
-
-    /**
-     * @fixme we can remove this and use a specific attribute
-     * to denote a filepathname and stdout as a reserved word.
-     */
-    private String extension;
-
-    /** are we using a file ? */
-    private File outFile;
-    private boolean useFile = true;
 
     /** the filters to apply to this formatter */
     private Vector filters = new Vector();
 
     /**
-     * <p> Quick way to use a standard formatter.
-     *
-     * <p> At the moment, there are three supported standard formatters.
-     * <ul>
-     * <li> The <code>xml</code> type uses a <code>XMLJUnitResultFormatter</code>.
-     * <li> The <code>brief</code> type uses a <code>BriefJUnitResultFormatter</code>.
-     * <li> The <code>plain</code> type (the default) uses a <code>PlainJUnitResultFormatter</code>.
-     * </ul>
-     *
-     * <p> Sets <code>classname</code> attribute - so you can't use that attribute if you use this one.
+     * set an existing type of formatter.
+     * @see TypeAttribute
+     * @see #setClassname(String)
      */
     public void setType(TypeAttribute type) {
         setClassname(type.getClassName());
-        setExtension(type.getExtension());
     }
 
     /**
@@ -124,21 +107,6 @@ public class FormatterElement {
      */
     public void setClassname(String classname) {
         this.classname = classname;
-    }
-
-    /**
-     * Get name of class to be used as the formatter.
-     */
-    public String getClassname() {
-        return classname;
-    }
-
-    public void setExtension(String ext) {
-        this.extension = ext;
-    }
-
-    public String getExtension() {
-        return extension;
     }
 
     /**
@@ -165,35 +133,10 @@ public class FormatterElement {
     }
 
     /**
-     * <p> Set the file which the formatte should log to.
-     *
-     * <p> Note that logging to file must be enabled .
-     */
-    void setOutfile(File out) {
-        this.outFile = out;
-    }
-
-    /**
-     * <p> Set output stream for formatter to use.
-     *
-     * <p> Defaults to standard out.
-     */
-    public void setOutput(OutputStream out) {
-        this.out = out;
-    }
-
-    /**
      * Set whether the formatter should log to file.
      */
-    public void setUseFile(boolean useFile) {
-        this.useFile = useFile;
-    }
-
-    /**
-     * Get whether the formatter should log to file.
-     */
-    boolean getUseFile() {
-        return useFile;
+    public void setOutput(OutputAttribute output) {
+        this.out = output.getOutputStream();
     }
 
     /**
@@ -207,14 +150,9 @@ public class FormatterElement {
         try {
             Class clazz = Class.forName(classname);
             if (!Formatter.class.isAssignableFrom(clazz)) {
-                throw new BuildException(clazz + " is not a JUnitResultFormatter");
+                throw new BuildException(clazz + " is not a Formatter");
             }
             f = (Formatter) clazz.newInstance();
-
-            // create the stream if necessary
-            if (useFile && outFile != null) {
-                out = new FileOutputStream(outFile);
-            }
         } catch (BuildException e) {
             throw e;
         } catch (Exception e) {
@@ -234,12 +172,11 @@ public class FormatterElement {
 
     /**
      * <p> Enumerated attribute with the values "plain", "xml" and "brief".
-     * <p> Use to enumerate options for <code>type</code> attribute.
+     * <p> Use to enumerate options for <tt>type</tt> attribute.
      */
     public static class TypeAttribute extends EnumeratedAttribute {
         private final static String[] VALUES = {"plain", "xml", "brief"};
         private final static String[] CLASSNAMES = {"xxx", XMLFormatter.class.getName(), BriefFormatter.class.getName()};
-        private final static String[] EXTENSIONS = {".txt", ".xml", ".txt"};
 
         public String[] getValues() {
             return VALUES;
@@ -247,10 +184,6 @@ public class FormatterElement {
 
         public String getClassName() {
             return CLASSNAMES[index];
-        }
-
-        public String getExtension() {
-            return EXTENSIONS[index];
         }
     }
 

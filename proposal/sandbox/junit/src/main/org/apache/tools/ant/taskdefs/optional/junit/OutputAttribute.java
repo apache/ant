@@ -53,84 +53,59 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.lang.reflect.Constructor;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.FilterFormatter;
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.FilterStackFormatter;
-import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.taskdefs.optional.junit.formatter.KeepAliveOutputStream;
 
 /**
- * A filter element that can be use inside a FormatterElement to denote
- * a filtering. Note that the filtering order correspond to the element
- * order. The first element being the top filter, the last element
- * being the bottom filter.
- *
- * <pre>
- * <!ELEMENT filter>
- * <!ATTLIST filter type (stack) required>
- * <!ATTLIST filter classname CDATA required>
- * </pre>
+ * Attempt to create an output specific attribute.
+ * <p>
+ * The possible output values are 'stdout' and 'stderr', otherwise
+ * it is assumed that the value represent a file.
+ * </p>
+ * Note that stdout and stderr are wrapped by a <tt>KeepAliveOutputStream</tt>
+ * so that the stream cannot be closed.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ * @see KeepAliveOutputStream
  */
-public class FilterElement {
+public class OutputAttribute extends ProjectComponent {
 
-    /** filter classname, is should inherit from FilterFormatter */
-    private String classname;
+    /** keyword to represent stdout output */
+    public final static String STDOUT = "stdout";
+
+    /** keyword to represent stderr output */
+    public final static String STDERR = "stderr";
+
+    /** the selected value for output, either stdout,stderr or filepath */
+    protected String value;
 
     /**
-     * Called by introspection on <tt>type</tt> attribute.
-     * @see FilterAttribute
+     * Create a new output attribute from a value.
      */
-    public void setType(FilterAttribute fa) {
-        setClassName(fa.getClassName());
+    public OutputAttribute(String value) {
+        this.value = value;
     }
 
     /**
-     * Called by introspection on <tt>classname</tt> attribute.
-     * It must inherit from <tt>FilterFormatter</tt>
-     * @see FilterFormatter
+     * @return the outputstream corresponding to the selected attribute.
      */
-    public void setClassName(String name) {
-        classname = name;
-    }
-
-    /**
-     * Wrap this filter around a given formatter.
-     * @throws BuildException if any error happens when creating this filter.
-     */
-    public Formatter createFilterFormatter(Formatter f) throws BuildException {
+    public OutputStream getOutputStream() {
+        if (STDOUT.equals(value)) {
+            return new KeepAliveOutputStream(System.out);
+        } else if (STDERR.equals(value)) {
+            return new KeepAliveOutputStream(System.err);
+        }
+        File f = project.resolveFile(value);
         try {
-            Class clazz = Class.forName(classname);
-            if (!FilterFormatter.class.isAssignableFrom(clazz)) {
-                throw new BuildException( clazz + " must be a FilterFormatter.");
-            }
-            Constructor ctor = clazz.getConstructor(new Class[]{Formatter.class});
-            return (Formatter) ctor.newInstance(new Object[]{f});
-        } catch (BuildException e) {
-            throw e;
-        } catch (Exception e) {
+            return new FileOutputStream(f);
+        } catch (IOException e) {
             throw new BuildException(e);
-        }
-    }
-
-    /** a predefined set of filters w/ their class mapping */
-    public static class FilterAttribute extends EnumeratedAttribute {
-        /** the predefined alias for filters */
-        private final static String[] VALUES = {"stack"};
-
-        /** the class corresponding to the alias (in the same order) */
-        private final static String[] CLASSNAMES = {FilterStackFormatter.class.getName()};
-
-        public String[] getValues() {
-            return VALUES;
-        }
-
-        /** get the classname matching the alias */
-        public String getClassName() {
-            return CLASSNAMES[index];
         }
     }
 

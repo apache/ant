@@ -65,7 +65,7 @@ import junit.framework.TestSuite;
  */
 public final class JUnitHelper {
 
-    private static final String SUITE_METHODNAME = "suite";
+    private final static String SUITE_METHODNAME = "suite";
 
     /**
      * This method parse the output of the method <tt>toString()</tt>
