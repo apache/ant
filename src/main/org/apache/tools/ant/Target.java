@@ -80,6 +80,7 @@ public class Target implements TaskContainer {
      * Sets the location of this target's definition.
      *
      * @param location   <CODE>Location</CODE>
+     * @since 1.6.2
      */
     public void setLocation(Location location) {
         this.location = location;
@@ -89,6 +90,7 @@ public class Target implements TaskContainer {
      * Get the location of this target's definition.
      *
      * @return <CODE>Location</CODE>
+     * @since 1.6.2
      */
     public Location getLocation() {
         return location;
@@ -247,6 +249,7 @@ public class Target implements TaskContainer {
      *
      * @return the "if" property condition or <code>null</code> if no
      *         "if" condition had been defined.
+     * @since 1.6.2
      */
     public String getIf() {
         return ("".equals(ifCondition) ? null : ifCondition);
@@ -274,6 +277,7 @@ public class Target implements TaskContainer {
      *
      * @return the "unless" property condition or <code>null</code>
      *         if no "unless" condition had been defined.
+     * @since 1.6.2
      */
     public String getUnless() {
         return ("".equals(unlessCondition) ? null : unlessCondition);
