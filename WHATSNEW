@@ -81,18 +81,6 @@ Other changes:
 
 * Added isfileselected condition.
 
-* Added support to the touch task for a mkdirs attribute to create
-  nonexistent parent directories before touching new files.
-
-* Added support to the touch task for a pattern attribute to allow
-  alternate datetime formats.
-
-* Added support to the touch task to map touched files using a nested
-  mapper element.
-
-* Added support to the touch task for a verbose attribute to suppress
-  logging of new file creation.
-
 * Added length task to get strings' and files' lengths.
 
 * Added clone task. Bugzilla report 32631.
@@ -173,6 +161,18 @@ Other changes:
   when resolveexecutable = true.
 
 * Added revision and userid attributes to <pvcs> documentation.
+
+* Added support to the touch task for a mkdirs attribute to create
+  nonexistent parent directories before touching new files.
+
+* Added support to the touch task for a pattern attribute to allow
+  alternate datetime formats.
+
+* Added support to the touch task to map touched files using a nested
+  mapper element.
+
+* Added support to the touch task for a verbose attribute to suppress
+  logging of new file creation.
 
 Fixed bugs:
 -----------
