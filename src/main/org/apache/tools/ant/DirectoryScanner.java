@@ -58,8 +58,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.types.Resource;
@@ -777,7 +779,7 @@ public class DirectoryScanner
                 }
             }
         }
-        fileListMap.clear();
+        clearCaches();
     }
 
     /**
@@ -837,6 +839,11 @@ public class DirectoryScanner
      * @see #slowScan
      */
     protected void scandir(File dir, String vpath, boolean fast) {
+        // avoid double scanning of directories, can only happen in fast mode
+        if (fast && hasBeenScanned(vpath)) {
+            return;
+        }
+
         String[] newfiles = dir.list();
 
         if (newfiles == null) {
@@ -1354,5 +1361,34 @@ public class DirectoryScanner
             }
         }
         return false;
+    }
+
+    /**
+     * List of all scanned directories.
+     *
+     * @since Ant 1.6
+     */
+    private Set scannedDirs = new HashSet();
+
+    /**
+     * Has the directorty with the given path relative to the base
+     * directory allready been scanned?
+     *
+     * <p>Registers the given directory as scanned as a side effect.</p>
+     *
+     * @since Ant 1.6
+     */
+    private boolean hasBeenScanned(String vpath) {
+        return !scannedDirs.add(vpath);
+    }
+
+    /**
+     * Clear internal caches.
+     *
+     * @since Ant 1.6
+     */
+    private void clearCaches() {
+        fileListMap.clear();
+        scannedDirs.clear();
     }
 }
