@@ -54,7 +54,7 @@
   <property name="regexp.package" value="${util.package}/regexp"/>
 
   <property name="manifest" value="src/etc/manifest"/>
-  
+
   <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf"/>
 
 
@@ -123,7 +123,7 @@
   -->
   <!-- depends on JDK version -->
   <patternset id="needs.jdk1.2+">
-    <exclude name="${ant.package}/util/WeakishReference12.java"
+    <exclude name="{util.package}/optional/WeakishReference12.java"
              unless="jdk1.2+"/>
     <exclude name="${optional.package}/extension/**/*.java"
              unless="jdk1.2+"/>
@@ -318,7 +318,7 @@
   <patternset id="teststhatfail">
     <exclude name="${ant.package}/types/XMLCatalogTest.java"/>
   </patternset>
-  
+
   <!--
        ===================================================================
          Set up a patternsets that matches the parts of our JUnit testsuite
@@ -332,7 +332,7 @@
     <include name="${optional.package}/AbstractXSLTLiaisonTest*"/>
     <include name="${ant.package}/types/AbstractFileSetTest*"/>
   </patternset>
-  
+
   <!--
        ===================================================================
          Check to see what optional dependencies are available
