@@ -573,19 +573,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     private void buildWebsphereJar(File sourceJar, File destJar) {
         try {
             if (ejbdeploy) {
-                String args =
-                    " " + sourceJar.getPath() +
-                    " " + tempdir +
-                    " " + destJar.getPath() +
-                    " " + getOptions();
-
-                if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0) {
-                    args += " -cp " + getCombinedClasspath();
-                }
-
-                // Why do my ""'s get stripped away???
-                log("EJB Deploy Options: " + args, Project.MSG_VERBOSE);
-
                 Java javaTask = (Java) getTask().getProject().createTask("java");
                 // Set the JvmArgs
                 javaTask.createJvmarg().setValue("-Xms64m");
@@ -606,9 +593,14 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 javaTask.setTaskName("ejbdeploy");
                 javaTask.setClassname("com.ibm.etools.ejbdeploy.EJBDeploy");
 
-                Commandline.Argument arguments = javaTask.createArg();
-
-                arguments.setLine(args);
+                javaTask.createArg().setValue(sourceJar.getPath());
+                javaTask.createArg().setValue(tempdir);
+                javaTask.createArg().setValue(destJar.getPath());
+                javaTask.createArg().setLine(getOptions());
+                if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0) {
+                    javaTask.createArg().setValue("-cp");
+                    javaTask.createArg().setValue(getCombinedClasspath().toString());
+                }
 
                 Path classpath = wasClasspath;
 
