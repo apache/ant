@@ -342,7 +342,7 @@ Legal:
       <include name="org/apache/aut/**" />
       <include name="org/apache/tools/**" />
     </patternset>
-    
+
     <patternset id="myrmidon-container.include">
       <include name="org/apache/myrmidon/components/**" />
       <include name="org/apache/myrmidon/frontends/*" />
@@ -388,6 +388,13 @@ Legal:
     </antlib-descriptor>
 
   </target>
+
+    <target name="test-xdocs" depends="antlib-descriptors" description="Generate documentation for antlibs">
+        <!-- start to test xdocs generation -->
+        <ant antfile="antlib.xml" target="antlib-docs">
+            <property name="antlib.name" value="core"/>
+        </ant>
+    </target>
 
   <!-- Package the jar files -->
   <target name="jars" depends="antlib-descriptors">
@@ -544,7 +551,7 @@ Legal:
   </target>
 
   <!-- Creates the distribution -->
-  <target name="dist-lite" 
+  <target name="dist-lite"
           depends="jars"
           description="Generates a minimal working distribution.">
 
@@ -588,7 +595,7 @@ Legal:
 
   </target>
 
-  <target name="dist-extralite" 
+  <target name="dist-extralite"
           description="A faster version of dist-lite (no XDoclet).">
       <property name="antlib-descriptors.omit" value="true"/>
       <antcall target="dist-lite"/>
