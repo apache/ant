@@ -21,7 +21,7 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.components.model.Condition;
+import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.components.model.DefaultProject;
 import org.apache.myrmidon.components.model.Import;
 import org.apache.myrmidon.components.model.Project;
@@ -364,7 +364,6 @@ public class DefaultProjectBuilder
 
                 getLogger().debug( "Target dependency: " + dependency );
                 dependsList.add( dependency );
-                //defaultTarget.addDependency( dependency );
             }
 
             dependencies = (String[])dependsList.toArray( new String[ 0 ] );
