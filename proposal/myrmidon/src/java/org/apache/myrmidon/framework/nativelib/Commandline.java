@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types;
+package org.apache.myrmidon.framework.nativelib;
 
 
 
@@ -42,8 +42,20 @@ public class Commandline
         m_executable = executable;
     }
 
+    /**
+     * Returns the executable to run.
+     */
     public String getExecutable()
     {
         return m_executable;
+    }
+
+    /**
+     * Sets the commandline, replacing its current value.
+     */
+    public void setCommandline( final Commandline command )
+    {
+        m_executable = command.getExecutable();
+        setArguments( command );
     }
 }

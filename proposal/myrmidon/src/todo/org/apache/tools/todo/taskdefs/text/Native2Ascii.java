@@ -13,7 +13,7 @@ import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.SourceFileScanner;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 import org.apache.tools.todo.util.mappers.IdentityMapper;
 
 /**

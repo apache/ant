@@ -7,7 +7,7 @@
  */
 package org.apache.tools.todo.taskdefs.javac;
 
-import org.apache.tools.todo.types.Argument;
+import org.apache.myrmidon.framework.nativelib.Argument;
 
 /**
  * Adds an "implementation" attribute to Commandline$Attribute used to

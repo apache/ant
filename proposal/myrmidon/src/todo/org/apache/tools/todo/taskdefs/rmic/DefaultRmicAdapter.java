@@ -15,7 +15,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 import org.apache.tools.todo.util.FileUtils;
 
 /**

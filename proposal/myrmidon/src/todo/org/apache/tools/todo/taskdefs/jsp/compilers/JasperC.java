@@ -10,8 +10,8 @@ package org.apache.tools.todo.taskdefs.jsp.compilers;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Commandline;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 
 /**
  * The implementation of the jasper compiler. This is a cut-and-paste of the

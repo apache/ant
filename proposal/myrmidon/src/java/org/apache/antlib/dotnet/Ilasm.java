@@ -9,9 +9,9 @@ package org.apache.antlib.dotnet;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 import org.apache.tools.todo.types.DirectoryScanner;
 
 /**

@@ -16,12 +16,12 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
-import org.apache.tools.todo.types.EnvironmentData;
+import org.apache.myrmidon.framework.nativelib.EnvironmentData;
 import org.apache.tools.todo.types.SysProperties;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 import org.apache.tools.todo.util.FileUtils;
 
 /**

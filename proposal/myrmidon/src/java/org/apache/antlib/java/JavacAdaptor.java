@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.myrmidon.framework.file.Path;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 
 /**
  * An adaptor for the in-process Javac compiler.

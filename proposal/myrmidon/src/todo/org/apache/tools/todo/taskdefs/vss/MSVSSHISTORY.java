@@ -15,9 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Commandline;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.tools.todo.types.EnumeratedAttribute;
-import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * Task to perform HISTORY commands to Microsoft Visual Source Safe.
@@ -222,7 +222,7 @@ public class MSVSSHISTORY extends MSVSS
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
+        Execute exe = new Execute();
 
         // first off, make sure that we've got a command and a vssdir and a label ...
         if( getVsspath() == null )
@@ -236,41 +236,39 @@ public class MSVSSHISTORY extends MSVSS
         // build the command line from what we got the format is
         // ss History elements [-H] [-L] [-N] [-O] [-V] [-Y] [-#] [-?]
         // as specified in the SS.EXE help
-        commandLine.setExecutable( getSSCommand() );
-        commandLine.addArgument( COMMAND_HISTORY );
+        exe.setExecutable( getSSCommand() );
+        exe.addArgument( COMMAND_HISTORY );
 
         // VSS items
-        commandLine.addArgument( getVsspath() );
+        exe.addArgument( getVsspath() );
 
         // -I-
-        commandLine.addArgument( "-I-" );// ignore all errors
+        exe.addArgument( "-I-" );// ignore all errors
 
         // -V
         // Label an existing file or project version
-        getVersionDateCommand( commandLine );
-        getVersionLabelCommand( commandLine );
+        getVersionDateCommand( exe );
+        getVersionLabelCommand( exe );
 
         // -R
         if( m_Recursive )
         {
-            commandLine.addArgument( FLAG_RECURSION );
+            exe.addArgument( FLAG_RECURSION );
         }
 
         // -B / -D / -F-
         if( m_Style.length() > 0 )
         {
-            commandLine.addArgument( m_Style );
+            exe.addArgument( m_Style );
         }
 
         // -Y
-        getLoginCommand( commandLine );
+        getLoginCommand( exe );
 
         // -O
-        getOutputCommand( commandLine );
+        getOutputCommand( exe );
 
-        System.out.println( "***: " + commandLine );
-
-        run( commandLine );
+        run( exe );
     }
 
     /**
@@ -283,34 +281,6 @@ public class MSVSSHISTORY extends MSVSS
         if( m_OutputFileName != null )
         {
             cmd.addArgument( FLAG_OUTPUT + m_OutputFileName );
-        }
-    }
-
-    /**
-     * @param cmd Description of Parameter
-     */
-    private void getRecursiveCommand( ArgumentList cmd )
-    {
-        if( !m_Recursive )
-        {
-            return;
-        }
-        else
-        {
-            cmd.addArgument( FLAG_RECURSION );
-        }
-    }
-
-    /**
-     * Builds the User command.
-     *
-     * @param cmd the commandline the command is to be added to
-     */
-    private void getUserCommand( ArgumentList cmd )
-    {
-        if( m_User != null )
-        {
-            cmd.addArgument( FLAG_USER + m_User );
         }
     }
 

@@ -11,8 +11,8 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.java.ExecuteJava;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Commandline;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 import org.apache.tools.todo.taskdefs.rmic.DefaultRmicAdapter;
 
 /**

@@ -9,8 +9,8 @@ package org.apache.tools.todo.taskdefs.vss;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Execute;
 
 /**
  * Task to perform CheckOut commands to Microsoft Visual Source Safe.
@@ -209,7 +209,7 @@ public class MSVSSCHECKOUT
     public void execute()
         throws TaskException
     {
-        final Commandline commandLine = new Commandline();
+        final Execute exe = new Execute();
 
         // first off, make sure that we've got a command and a vssdir ...
         final String vsspath = getVsspath();
@@ -224,23 +224,23 @@ public class MSVSSCHECKOUT
         // build the command line from what we got the format is
         // ss Checkout VSS items [-G] [-C] [-H] [-I-] [-N] [-O] [-R] [-V] [-Y] [-?]
         // as specified in the SS.EXE help
-        commandLine.setExecutable( getSSCommand() );
-        commandLine.addArgument( COMMAND_CHECKOUT );
+        exe.setExecutable( getSSCommand() );
+        exe.addArgument( COMMAND_CHECKOUT );
 
         // VSS items
-        commandLine.addArgument( vsspath );
+        exe.addArgument( vsspath );
         // -GL
-        getLocalpathCommand( commandLine );
+        getLocalpathCommand( exe );
         // -I- or -I-Y or -I-N
-        getAutoresponse( commandLine );
+        getAutoresponse( exe );
         // -R
-        getRecursiveCommand( commandLine );
+        getRecursiveCommand( exe );
         // -V
-        getVersionCommand( commandLine );
+        getVersionCommand( exe );
         // -Y
-        getLoginCommand( commandLine );
+        getLoginCommand( exe );
 
-        run( commandLine );
+        run( exe );
     }
 }
 

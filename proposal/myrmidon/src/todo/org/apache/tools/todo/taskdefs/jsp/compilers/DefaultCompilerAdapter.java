@@ -13,8 +13,8 @@ import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Commandline;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 import org.apache.tools.todo.util.FileUtils;
 
 /**

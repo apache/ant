@@ -21,13 +21,13 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
 import org.apache.myrmidon.framework.java.ExecuteJava;
-import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
+import org.apache.myrmidon.framework.nativelib.Argument;
+import org.apache.myrmidon.framework.nativelib.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
-import org.apache.tools.todo.types.EnvironmentData;
-import org.apache.tools.todo.types.EnvironmentVariable;
+import org.apache.myrmidon.framework.nativelib.EnvironmentData;
+import org.apache.myrmidon.framework.nativelib.EnvironmentVariable;
 import org.apache.tools.todo.types.SysProperties;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 
 /**
  * Ant task to run JUnit tests. <p>

@@ -9,7 +9,7 @@ package org.apache.antlib.java;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.myrmidon.framework.java.JavaRuntimeClassPath;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;

@@ -5,14 +5,14 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework;
+package org.apache.myrmidon.framework.nativelib;
 
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskContext;
 
 /**
- * An {@link ExecOutputHandler} adaptor, that writes output to the logging
- * methods of a {@link TaskContext}.
+ * An {@link org.apache.aut.nativelib.ExecOutputHandler} adaptor, that writes output to the logging
+ * methods of a {@link org.apache.myrmidon.api.TaskContext}.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$

@@ -12,10 +12,10 @@ import java.util.Properties;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.EnvironmentData;
-import org.apache.tools.todo.types.EnvironmentVariable;
+import org.apache.myrmidon.framework.nativelib.Execute;
+import org.apache.myrmidon.framework.nativelib.Argument;
+import org.apache.myrmidon.framework.nativelib.EnvironmentData;
+import org.apache.myrmidon.framework.nativelib.EnvironmentVariable;
 
 /**
  * Executes a native command.

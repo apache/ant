@@ -19,15 +19,14 @@ import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.myrmidon.framework.Pattern;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.myrmidon.framework.FileSet;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.Pattern;
 import org.apache.myrmidon.framework.file.FileListUtil;
+import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
+import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.ScannerUtil;
-import org.apache.tools.todo.types.ArgumentList;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -66,7 +65,7 @@ public class Javadoc
     extends AbstractTask
     implements ExecOutputHandler
 {
-    private ArgumentList m_command = new ArgumentList();
+    private Execute m_command = new Execute();
 
     private Path m_sourcePath;
     private File m_destDir;
@@ -83,10 +82,6 @@ public class Javadoc
     private ArrayList m_links = new ArrayList( 2 );
     private ArrayList m_groups = new ArrayList( 2 );
     private boolean m_useDefaultExcludes = true;
-    private Html m_doctitle;
-    private Html m_header;
-    private Html m_footer;
-    private Html m_bottom;
     private boolean m_useExternalFile;
     private File m_tmpList;
 
@@ -158,8 +153,6 @@ public class Javadoc
     public void setDestdir( File dir )
     {
         m_destDir = dir;
-        m_command.addArgument( "-d" );
-        m_command.addArgument( m_destDir );
     }
 
     public void setDocencoding( String enc )
@@ -433,12 +426,14 @@ public class Javadoc
 
     public void addBottom( Html text )
     {
-        m_bottom = text;
+        m_command.addArgument( "-bottom" );
+        m_command.addArgument( text.getText() );
     }
 
     public void addDoctitle( Html text )
     {
-        m_doctitle = text;
+        m_command.addArgument( "-doctitle" );
+        m_command.addArgument( text.getText() );
     }
 
     public void addExcludePackage( PackageName pn )
@@ -448,12 +443,14 @@ public class Javadoc
 
     public void addFooter( Html text )
     {
-        m_footer = text;
+        m_command.addArgument( "-footer" );
+        m_command.addArgument( text.getText() );
     }
 
     public void addHeader( Html text )
     {
-        m_header = text;
+        m_command.addArgument( "-header" );
+        m_command.addArgument( text.getText() );
     }
 
     public void addPackage( PackageName pn )
@@ -537,29 +534,7 @@ public class Javadoc
 
         getContext().info( "Generating Javadoc" );
 
-        if( m_doctitle != null )
-        {
-            m_command.addArgument( "-doctitle" );
-            m_command.addArgument( m_doctitle.getText() );
-        }
-        if( m_header != null )
-        {
-            m_command.addArgument( "-header" );
-            m_command.addArgument( m_header.getText() );
-        }
-        if( m_footer != null )
-        {
-            m_command.addArgument( "-footer" );
-            m_command.addArgument( m_footer.getText() );
-        }
-        if( m_bottom != null )
-        {
-            m_command.addArgument( "-bottom" );
-            m_command.addArgument( m_bottom.getText() );
-        }
-
-        Commandline cmd = new Commandline();//(Commandline)m_command.clone();
-        cmd.setExecutable( getJavadocExecutableName() );
+        m_command.setExecutable( getJavadocExecutableName() );
 
         // ------------------------------------------------ general javadoc arguments
 
@@ -570,16 +545,16 @@ public class Javadoc
         {
             classpath.add( m_classpath );
         }
-        cmd.addArgument( "-classpath" );
-        cmd.addArgument( FileListUtil.formatPath( classpath, getContext() ) );
+        m_command.addArgument( "-classpath" );
+        m_command.addArgument( FileListUtil.formatPath( classpath, getContext() ) );
 
         if( m_version && m_doclet == null )
         {
-            cmd.addArgument( "-version" );
+            m_command.addArgument( "-version" );
         }
         if( m_author && m_doclet == null )
         {
-            cmd.addArgument( "-author" );
+            m_command.addArgument( "-author" );
         }
 
         if( m_doclet == null )
@@ -589,6 +564,11 @@ public class Javadoc
                 String msg = "destDir attribute must be set!";
                 throw new TaskException( msg );
             }
+        }
+        if( m_destDir != null )
+        {
+            m_command.addArgument( "-d" );
+            m_command.addArgument( m_destDir );
         }
 
         // --------------------------------- javadoc2 arguments for default doclet
@@ -603,12 +583,12 @@ public class Javadoc
             }
             else
             {
-                cmd.addArgument( "-doclet" );
-                cmd.addArgument( m_doclet.getName() );
+                m_command.addArgument( "-doclet" );
+                m_command.addArgument( m_doclet.getName() );
                 if( m_doclet.getPath() != null )
                 {
-                    cmd.addArgument( "-docletpath" );
-                    cmd.addArgument( FileListUtil.formatPath( m_doclet.getPath(), getContext() ) );
+                    m_command.addArgument( "-docletpath" );
+                    m_command.addArgument( FileListUtil.formatPath( m_doclet.getPath(), getContext() ) );
                 }
                 for( Iterator e = m_doclet.getParams(); e.hasNext(); )
                 {
@@ -618,18 +598,18 @@ public class Javadoc
                         throw new TaskException( "Doclet parameters must have a name" );
                     }
 
-                    cmd.addArgument( param.getName() );
+                    m_command.addArgument( param.getName() );
                     if( param.getValue() != null )
                     {
-                        cmd.addArgument( param.getValue() );
+                        m_command.addArgument( param.getValue() );
                     }
                 }
             }
 
             if( m_bootclasspath != null )
             {
-                cmd.addArgument( "-bootclasspath" );
-                cmd.addArgument( FileListUtil.formatPath( m_bootclasspath, getContext() ) );
+                m_command.addArgument( "-bootclasspath" );
+                m_command.addArgument( FileListUtil.formatPath( m_bootclasspath, getContext() ) );
             }
 
             // add the links arguments
@@ -655,9 +635,9 @@ public class Javadoc
                         File packageList = new File( packageListLocation, "package-list" );
                         if( packageList.exists() )
                         {
-                            cmd.addArgument( "-linkoffline" );
-                            cmd.addArgument( la.getHref() );
-                            cmd.addArgument( packageListLocation.getAbsolutePath() );
+                            m_command.addArgument( "-linkoffline" );
+                            m_command.addArgument( la.getHref() );
+                            m_command.addArgument( packageListLocation.getAbsolutePath() );
                         }
                         else
                         {
@@ -666,8 +646,8 @@ public class Javadoc
                     }
                     else
                     {
-                        cmd.addArgument( "-link" );
-                        cmd.addArgument( la.getHref() );
+                        m_command.addArgument( "-link" );
+                        m_command.addArgument( la.getHref() );
                     }
                 }
             }
@@ -694,9 +674,9 @@ public class Javadoc
                     {
                         String name = grp.substring( 0, space );
                         String pkgList = grp.substring( space + 1 );
-                        cmd.addArgument( "-group" );
-                        cmd.addArgument( name );
-                        cmd.addArgument( pkgList );
+                        m_command.addArgument( "-group" );
+                        m_command.addArgument( name );
+                        m_command.addArgument( pkgList );
                     }
                 }
             }
@@ -713,9 +693,9 @@ public class Javadoc
                     {
                         throw new TaskException( "The title and packages must be specified for group elements." );
                     }
-                    cmd.addArgument( "-group" );
-                    cmd.addArgument( title );
-                    cmd.addArgument( packages );
+                    m_command.addArgument( "-group" );
+                    m_command.addArgument( title );
+                    m_command.addArgument( packages );
                 }
             }
 
@@ -736,7 +716,7 @@ public class Javadoc
                 }
                 else
                 {
-                    cmd.addArgument( name );
+                    m_command.addArgument( name );
                 }
             }
 
@@ -752,7 +732,7 @@ public class Javadoc
             }
             if( packages.size() > 0 )
             {
-                evaluatePackages( cmd, m_sourcePath, packages, excludePackages );
+                evaluatePackages( m_command, m_sourcePath, packages, excludePackages );
             }
         }
 
@@ -770,7 +750,7 @@ public class Javadoc
                     if( m_tmpList == null )
                     {
                         m_tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
-                        cmd.addArgument( "@" + m_tmpList.getAbsolutePath() );
+                        m_command.addArgument( "@" + m_tmpList.getAbsolutePath() );
                     }
                     srcListWriter = new PrintWriter( new FileWriter( m_tmpList.getAbsolutePath(),
                                                                      true ) );
@@ -787,7 +767,7 @@ public class Javadoc
                     }
                     else
                     {
-                        cmd.addArgument( sourceFileName );
+                        m_command.addArgument( sourceFileName );
                     }
                 }
 
@@ -807,17 +787,14 @@ public class Javadoc
 
         if( m_packageList != null )
         {
-            cmd.addArgument( "@" + m_packageList );
+            m_command.addArgument( "@" + m_packageList );
         }
-        getContext().debug( "Javadoc args: " + cmd );
+        getContext().debug( "Javadoc args: " + m_command );
 
-        final Execute exe = new Execute();
-        exe.setExecOutputHandler( this );
-
-        exe.setCommandline( cmd );
+        m_command.setExecOutputHandler( this );
         try
         {
-            exe.execute( getContext() );
+            m_command.execute( getContext() );
         }
         finally
         {

@@ -14,7 +14,7 @@ import java.net.URL;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.java.ExecuteJava;
-import org.apache.tools.todo.types.Argument;
+import org.apache.myrmidon.framework.nativelib.Argument;
 import org.apache.myrmidon.framework.file.Path;
 
 /**

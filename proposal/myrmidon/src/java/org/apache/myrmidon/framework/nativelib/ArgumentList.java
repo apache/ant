@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types;
+package org.apache.myrmidon.framework.nativelib;
 
 import java.util.ArrayList;
 import java.io.File;
@@ -46,6 +46,15 @@ public class ArgumentList
 
         final String[] res = new String[ result.size() ];
         return (String[])result.toArray( res );
+    }
+
+    /**
+     * Sets the arguments, replacing the current value of this list.
+     */
+    public void setArguments( final ArgumentList list )
+    {
+        m_arguments.clear();
+        addArguments( list );
     }
 
     public void addArguments( final String[] args )

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework;
+package org.apache.myrmidon.framework.nativelib;
 
 import java.io.File;
 import java.util.Properties;
@@ -17,7 +17,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.util.FileUtils;
 
 /**
@@ -67,17 +66,6 @@ public class Execute
     public void setExecOutputHandler( final ExecOutputHandler handler )
     {
         m_handler = handler;
-    }
-
-    /**
-     * Sets the commandline of the process to launch.
-     *
-     * @param command the commandline of the process to launch
-     */
-    public void setCommandline( final Commandline command )
-    {
-        setExecutable( command.getExecutable() );
-        addArguments( command );
     }
 
     /**

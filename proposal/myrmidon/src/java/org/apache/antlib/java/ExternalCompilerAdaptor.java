@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.nativelib.Execute;
 
 /**
  * An abstract compiler adaptor, that forks an external compiler.

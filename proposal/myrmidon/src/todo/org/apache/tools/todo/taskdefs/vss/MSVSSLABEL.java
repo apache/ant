@@ -8,8 +8,8 @@
 package org.apache.tools.todo.taskdefs.vss;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Execute;
 
 /**
  * Task to perform LABEL commands to Microsoft Visual Source Safe. <p>
@@ -323,7 +323,7 @@ public class MSVSSLABEL extends MSVSS
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
+        Execute exe = new Execute();
 
         // first off, make sure that we've got a command and a vssdir and a label ...
         if( getVsspath() == null )
@@ -342,29 +342,29 @@ public class MSVSSLABEL extends MSVSS
         // build the command line from what we got the format is
         // ss Label VSS items [-C]      [-H] [-I-] [-Llabel] [-N] [-O]      [-V]      [-Y] [-?]
         // as specified in the SS.EXE help
-        commandLine.setExecutable( getSSCommand() );
-        commandLine.addArgument( COMMAND_LABEL );
+        exe.setExecutable( getSSCommand() );
+        exe.addArgument( COMMAND_LABEL );
 
         // VSS items
-        commandLine.addArgument( getVsspath() );
+        exe.addArgument( getVsspath() );
 
         // -C
-        commandLine.addArgument( "-C" + getComment() );
+        exe.addArgument( "-C" + getComment() );
 
         // -I- or -I-Y or -I-N
-        getAutoresponse( commandLine );
+        getAutoresponse( exe );
 
         // -L
         // Specify the new label on the command line (instead of being prompted)
-        getLabelCommand( commandLine );
+        getLabelCommand( exe );
 
         // -V
         // Label an existing file or project version
-        getVersionCommand( commandLine );
+        getVersionCommand( exe );
 
         // -Y
-        getLoginCommand( commandLine );
+        getLoginCommand( exe );
 
-        run( commandLine );
+        run( exe );
     }
 }

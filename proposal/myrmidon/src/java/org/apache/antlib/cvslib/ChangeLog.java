@@ -25,9 +25,9 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.myrmidon.framework.FileSet;
-import org.apache.tools.todo.types.Commandline;
+import org.apache.myrmidon.framework.nativelib.Commandline;
 
 /**
  * Change log task.

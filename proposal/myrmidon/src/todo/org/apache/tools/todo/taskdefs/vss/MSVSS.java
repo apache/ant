@@ -12,9 +12,9 @@ import java.util.Properties;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Execute;
+import org.apache.myrmidon.framework.nativelib.Commandline;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
 
 /**
  * A base class for creating tasks for executing commands on Visual SourceSafe.
@@ -200,11 +200,9 @@ public abstract class MSVSS
         return m_vssPath;
     }
 
-    protected void run( final Commandline cmd )
+    protected void run( final Execute exe )
         throws TaskException
     {
-        final Execute exe = new Execute();
-
         // If location of ss.ini is specified we need to set the
         // environment-variable SSDIR to this value
         if( m_serverPath != null )
@@ -214,7 +212,6 @@ public abstract class MSVSS
             exe.setEnvironment( env );
         }
 
-        exe.setCommandline( cmd );
         exe.execute( getContext() );
     }
 }

@@ -11,8 +11,8 @@ import java.io.File;
 import java.util.Properties;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.types.Commandline;
+import org.apache.myrmidon.framework.nativelib.Execute;
+import org.apache.myrmidon.framework.nativelib.Commandline;
 import org.apache.tools.todo.util.FileUtils;
 
 /**

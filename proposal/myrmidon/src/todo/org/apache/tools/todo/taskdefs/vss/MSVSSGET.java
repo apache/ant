@@ -9,9 +9,8 @@ package org.apache.tools.todo.taskdefs.vss;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.ArgumentList;
-import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.nativelib.ArgumentList;
+import org.apache.myrmidon.framework.nativelib.Execute;
 
 /**
  * Task to perform GET commands to Microsoft Visual Source Safe. <p>
@@ -468,7 +467,7 @@ public class MSVSSGET extends MSVSS
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
+        Execute exe = new Execute();
 
         // first off, make sure that we've got a command and a vssdir ...
         if( getVsspath() == null )
@@ -482,27 +481,27 @@ public class MSVSSGET extends MSVSS
         // build the command line from what we got the format is
         // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
         // as specified in the SS.EXE help
-        commandLine.setExecutable( getSSCommand() );
-        commandLine.addArgument( COMMAND_GET );
+        exe.setExecutable( getSSCommand() );
+        exe.addArgument( COMMAND_GET );
 
         // VSS items
-        commandLine.addArgument( getVsspath() );
+        exe.addArgument( getVsspath() );
         // -GL
-        getLocalpathCommand( commandLine );
+        getLocalpathCommand( exe );
         // -I- or -I-Y or -I-N
-        getAutoresponse( commandLine );
+        getAutoresponse( exe );
         // -O-
-        getQuietCommand( commandLine );
+        getQuietCommand( exe );
         // -R
-        getRecursiveCommand( commandLine );
+        getRecursiveCommand( exe );
         // -V
-        getVersionCommand( commandLine );
+        getVersionCommand( exe );
         // -W
-        getWritableCommand( commandLine );
+        getWritableCommand( exe );
         // -Y
-        getLoginCommand( commandLine );
+        getLoginCommand( exe );
 
-        run( commandLine );
+        run( exe );
     }
 
 }

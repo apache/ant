@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Map;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.nativelib.EnvironmentData;
 
 /**
  * A utility class for handling System properties

@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.nativelib.Execute;
 import org.apache.myrmidon.framework.FileSet;
-import org.apache.tools.todo.types.Commandline;
+import org.apache.myrmidon.framework.nativelib.Commandline;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.ScannerUtil;
 

@@ -10,7 +10,7 @@ package org.apache.tools.todo.taskdefs.stylebook;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.antlib.java.JavaTask;
-import org.apache.tools.todo.types.Argument;
+import org.apache.myrmidon.framework.nativelib.Argument;
 
 /**
  * Basic task for apache stylebook.
