@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
 /**
  * Ant facade over system version of Ant
