@@ -56,6 +56,10 @@
     a build file snippet instead and Ant will wrap the necessary NAnt
     <code>&lt;project&gt; around it.</code></p>
 
+    <p><b>Note:</b> Ant will turn all element and attribute names into
+    lower case characters, this causes problems if your NAnt task is
+    case-sensitive.</p>
+
     <h3>Examples</h3>
 
     <p>Let NAnt search for a *.build file in the (Ant) project's base
