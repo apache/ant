@@ -427,7 +427,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 // try to use the compiler specified by build.compiler. Right now we are just going
                 // to allow Jikes
                 String buildCompiler = getTask().getProject().getProperty("build.compiler");
-                if (buildCompiler.equals("jikes")) {
+                if (buildCompiler != null && buildCompiler.equals("jikes")) {
                     javaTask.createArg().setValue("-compiler");
                     javaTask.createArg().setValue("jikes");
                 }
