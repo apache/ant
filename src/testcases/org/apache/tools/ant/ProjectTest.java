@@ -93,6 +93,9 @@ public class ProjectTest extends TestCase {
         assert("Path", p.createDataType("path") instanceof Path);
     }
 
+    /**
+     * This test has been a starting point for moving the code to FileUtils.
+     */
     public void testResolveFile() {
         /*
          * Start with simple absolute file names.

@@ -63,6 +63,7 @@ import java.util.Vector;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.FileUtils;
 
 
 /**
@@ -111,10 +112,13 @@ public class XSLTProcess extends MatchingTask {
 
     private boolean force = false;
 
+    private FileUtils fileUtils;
+
     /**
      * Creates a new XSLTProcess Task.
      **/
     public XSLTProcess() {
+        fileUtils = FileUtils.newFileUtils();
     } //-- XSLTProcess
 
     /**
@@ -137,9 +141,9 @@ public class XSLTProcess extends MatchingTask {
         liaison = getLiaison();
         log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
-        File stylesheet = project.resolveFile(xslFile, project.getBaseDir());
+        File stylesheet = project.resolveFile(xslFile);
         if (!stylesheet.exists()) {
-            stylesheet = project.resolveFile(xslFile, baseDir);
+            stylesheet = fileUtils.resolveFile(baseDir, xslFile);
             /*
              * shouldn't throw out deprecation warnings before we know,
              * the wrong version has been used.

@@ -339,11 +339,12 @@ public class Project {
     }
 
     public void setBaseDir(File baseDir) throws BuildException {
+        baseDir = fileUtils.normalize(baseDir.getAbsolutePath());
         if (!baseDir.exists()) 
             throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " does not exist");
         if (!baseDir.isDirectory()) 
             throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " is not a directory");
-        this.baseDir = new File(baseDir.getAbsolutePath());
+        this.baseDir = baseDir;
         setProperty( "basedir", this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
         log(msg, MSG_VERBOSE);
@@ -594,66 +595,15 @@ public class Project {
      *
      * <p>If fileName is a relative file name, resolve it relative to
      * rootDir.</p>
+     *
+     * @deprecated
      */
     public File resolveFile(String fileName, File rootDir) {
-        fileName = fileName.replace('/', File.separatorChar).replace('\\', File.separatorChar);
-
-        // deal with absolute files
-        if (fileName.startsWith(File.separator)) {
-            return new File(fileName);
-        }
-
-        // Eliminate consecutive slashes after the drive spec
-        if (fileName.length() >= 2 &&
-            Character.isLetter(fileName.charAt(0)) &&
-            fileName.charAt(1) == ':') {
-            char[] ca = fileName.replace('/', '\\').toCharArray();
-            char c;
-            StringBuffer sb = new StringBuffer();
-
-            for (int i = 0; i < ca.length; i++) {
-                if ((ca[i] != '\\') ||
-                    (ca[i] == '\\' &&
-                        i > 0 &&
-                        ca[i - 1] != '\\')) {
-                    if (i == 0 &&
-                        Character.isLetter(ca[i]) &&
-                        i < ca.length - 1 &&
-                        ca[i + 1] == ':') {
-                        c = Character.toUpperCase(ca[i]);
-                    } else {
-                        c = ca[i];
-                    }
-
-                    sb.append(c);
-                }
-            }
-
-            return new File(sb.toString());
-        }
-
-        File file = new File(rootDir.getAbsolutePath());
-        StringTokenizer tok = new StringTokenizer(fileName, File.separator, false);
-        while (tok.hasMoreTokens()) {
-            String part = tok.nextToken();
-            if (part.equals("..")) {
-                String parentFile = file.getParent();
-                if (parentFile == null) {
-                    throw new BuildException("The file or path you specified (" + fileName + ") is invalid relative to " + rootDir.getAbsolutePath());
-                }
-                file = new File(parentFile);
-            } else if (part.equals(".")) {
-                // Do nothing here
-            } else {
-                file = new File(file, part);
-            }
-        }
-
-        return new File(file.getAbsolutePath());
+        return fileUtils.resolveFile(rootDir, fileName);
     }
 
     public File resolveFile(String fileName) {
-        return resolveFile(fileName, baseDir);
+        return fileUtils.resolveFile(baseDir, fileName);
     }
 
     /**

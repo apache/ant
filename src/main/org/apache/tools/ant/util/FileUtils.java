@@ -56,22 +56,22 @@ package org.apache.tools.ant.util;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.util.StringTokenizer;
+import java.util.Stack;
 
 import org.apache.tools.ant.BuildException; 
 import org.apache.tools.ant.Project; 
 import org.apache.tools.ant.types.FilterSet; 
 
 /**
- * Central representation of an Ant project. This class defines a
- * Ant project with all of it's targets and tasks. It also provides
- * the mechanism to kick off a build using a particular target name.
- * <p>
- * This class also encapsulates methods which allow Files to be refered
- * to using abstract path names which are translated to native system
- * file paths at runtime as well as defining various project properties.
+ * This class also encapsulates methods which allow Files to be
+ * refered to using abstract path names which are translated to native
+ * system file paths at runtime as well as copying files or setting
+ * there last modification time.
  *
  * @author duncan@x180.com
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
  
 public class FileUtils {
@@ -292,5 +292,170 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Interpret the filename as a file relative to the given file -
+     * unless the filename already represents an absolute filename.
+     *
+     * @param file the "reference" file for relative paths. This
+     * instance must be an absolute file and must not contain
+     * &quot;./&quot; or &quot;../&quot; sequences (same for \ instead
+     * of /).
+     * @param filename a file name
+     *
+     * @return an absolute file that doesn't contain &quot;./&quot; or
+     * &quot;../&quot; sequences and uses the correct separator for
+     * the current platform.
+     */
+    public File resolveFile(File file, String filename) {
+        filename = filename.replace('/', File.separatorChar)
+            .replace('\\', File.separatorChar);
+
+        // deal with absolute files
+        if (filename.startsWith(File.separator) ||
+
+            (filename.length() >= 2 &&
+             Character.isLetter(filename.charAt(0)) &&
+             filename.charAt(1) == ':')
+
+            ) {
+            return normalize(filename);
+        }
+
+        if (filename.length() >= 2 &&
+            Character.isLetter(filename.charAt(0)) &&
+            filename.charAt(1) == ':') {
+            return normalize(filename);
+        }
+
+        File helpFile = new File(file.getAbsolutePath());
+        StringTokenizer tok = new StringTokenizer(filename, File.separator);
+        while (tok.hasMoreTokens()) {
+            String part = tok.nextToken();
+            if (part.equals("..")) {
+                String parentFile = helpFile.getParent();
+                if (parentFile == null) {
+                    String msg = "The file or path you specified ("
+                        + filename + ") is invalid relative to " 
+                        + file.getPath();
+                    throw new BuildException(msg);
+                }
+                helpFile = new File(parentFile);
+            } else if (part.equals(".")) {
+                // Do nothing here
+            } else {
+                helpFile = new File(helpFile, part);
+            }
+        }
+
+        return new File(helpFile.getAbsolutePath());
+    }
+
+    /**
+     * &quot;normalize&quot; the given absolute path.
+     *
+     * <p>This includes:
+     * <ul>
+     *   <li>Uppercase the drive letter if there is one.</li>
+     *   <li>Remove redundant slashes after the drive spec.</li>
+     *   <li>resolve all ./, .\, ../ and ..\ sequences.</li>
+     *   <li>DOS style paths that start with a drive letter will have
+     *     \ as the separator.</li> 
+     * </ul>
+     */
+    public File normalize(String path) {
+        String orig = path;
+
+        path = path.replace('/', File.separatorChar)
+            .replace('\\', File.separatorChar);
+
+        // make sure we are dealing with an absolute path
+        if (!path.startsWith(File.separator) &&
+            ! (path.length() >= 2 &&
+               Character.isLetter(path.charAt(0)) &&
+               path.charAt(1) == ':')
+            ) {             
+            String msg = path + " is not an absolute path";
+            throw new BuildException(msg);
+        }
+            
+        boolean dosWithDrive = false;
+        String root = null;
+        // Eliminate consecutive slashes after the drive spec
+        if (path.length() >= 2 &&
+            Character.isLetter(path.charAt(0)) &&
+            path.charAt(1) == ':') {
+
+            dosWithDrive = true;
+
+            char[] ca = path.replace('/', '\\').toCharArray();
+            StringBuffer sb = new StringBuffer();
+            sb.append(Character.toUpperCase(ca[0])).append(':');
+
+            for (int i = 2; i < ca.length; i++) {
+                if ((ca[i] != '\\') ||
+                    (ca[i] == '\\' && ca[i - 1] != '\\')
+                    ) {
+                    sb.append(ca[i]);
+                }
+            }
+
+            path = sb.toString().replace('\\', File.separatorChar);
+            if (path.length() == 2) {
+                root = path;
+                path = "";
+            } else {
+                root = path.substring(0, 3);
+                path = path.substring(3);
+            }
+            
+        } else {
+            if (path.length() == 1) {
+                root = File.separator;
+                path = "";
+            } else if (path.charAt(1) == File.separatorChar) {
+                // UNC drive
+                root = File.separator+File.separator;
+                path = path.substring(2);
+            } else {
+                root = File.separator;
+                path = path.substring(1);
+            }
+        }
+
+        Stack s = new Stack();
+        s.push(root);
+        StringTokenizer tok = new StringTokenizer(path, File.separator);
+        while (tok.hasMoreTokens()) {
+            String thisToken = tok.nextToken();
+            if (".".equals(thisToken)) {
+                continue;
+            } else if ("..".equals(thisToken)) {
+                if (s.size() < 2) {
+                    throw new BuildException("Cannot resolve path "+orig);
+                } else {
+                    s.pop();
+                }
+            } else { // plain component
+                s.push(thisToken);
+            }
+        }
+
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i<s.size(); i++) {
+            if (i > 1) {
+                // not before the filesystem root and not after it, since root
+                // already contains one
+                sb.append(File.separatorChar);
+            }
+            sb.append(s.elementAt(i));
+        }
+        
+
+        path = sb.toString();
+        if (dosWithDrive) {
+            path = path.replace('/', '\\');
+        }
+        return new File(path);
+    }
 }
 

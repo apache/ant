@@ -58,6 +58,8 @@ import java.io.*;
 
 import junit.framework.TestCase;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * Tests for org.apache.tools.ant.util.FileUtils.
  *
@@ -65,10 +67,17 @@ import junit.framework.TestCase;
  */
 public class FileUtilsTest extends TestCase {
 
+    private FileUtils fu;
     private File removeThis;
+    private String root;
 
     public FileUtilsTest(String name) {
         super(name);
+    }
+
+    public void setUp() {
+        fu = FileUtils.newFileUtils();
+        root = new File(File.separator).getAbsolutePath();
     }
 
     public void tearDown() {
@@ -78,7 +87,6 @@ public class FileUtilsTest extends TestCase {
     }
 
     public void testSetLastModified() throws IOException {
-        FileUtils fu = FileUtils.newFileUtils();
         removeThis = new File("dummy");
         FileOutputStream fos = new FileOutputStream(removeThis);
         fos.write(new byte[0]);
@@ -125,4 +133,135 @@ public class FileUtilsTest extends TestCase {
         }
     }
 
+    public void testResolveFile() {
+        /*
+         * Start with simple absolute file names.
+         */
+        assertEquals(File.separator, 
+                     fu.resolveFile(null, "/").getPath());
+        assertEquals(File.separator, 
+                     fu.resolveFile(null, "\\").getPath());
+
+        /*
+         * throw in drive letters
+         */
+        String driveSpec = "C:";
+        assertEquals(driveSpec + "\\", 
+                     fu.resolveFile(null, driveSpec + "/").getPath());
+        assertEquals(driveSpec + "\\", 
+                     fu.resolveFile(null, driveSpec + "\\").getPath());
+        String driveSpecLower = "c:";
+        assertEquals(driveSpec + "\\", 
+                     fu.resolveFile(null, driveSpecLower + "/").getPath());
+        assertEquals(driveSpec + "\\", 
+                     fu.resolveFile(null, driveSpecLower + "\\").getPath());
+        /*
+         * promised to eliminate consecutive slashes after drive letter.
+         */
+        assertEquals(driveSpec + "\\", 
+                     fu.resolveFile(null, driveSpec + "/////").getPath());
+        assertEquals(driveSpec + "\\", 
+                     fu.resolveFile(null, driveSpec + "\\\\\\\\\\\\").getPath());
+
+        /*
+         * Now test some relative file name magic.
+         */
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "./4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), ".\\4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "./.\\4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "../3/4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "..\\3\\4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "../../5/.././2/./3/6/../4").getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.resolveFile(new File(localize("/1/2/3")), "..\\../5/..\\./2/./3/6\\../4").getPath());
+
+        try {
+            fu.resolveFile(new File(localize("/1")), "../../b");
+            fail("successfully crawled beyond the filesystem root");
+        } catch (BuildException e) {
+            // Expected Exception caught
+        }
+
+    }
+
+    public void testNormalize() {
+        /*
+         * Start with simple absolute file names.
+         */
+        assertEquals(File.separator, 
+                     fu.normalize("/").getPath());
+        assertEquals(File.separator, 
+                     fu.normalize("\\").getPath());
+
+        /*
+         * throw in drive letters
+         */
+        String driveSpec = "C:";
+        assertEquals(driveSpec + "\\", 
+                     fu.normalize(driveSpec + "/").getPath());
+        assertEquals(driveSpec + "\\", 
+                     fu.normalize(driveSpec + "\\").getPath());
+        String driveSpecLower = "c:";
+        assertEquals(driveSpec + "\\", 
+                     fu.normalize(driveSpecLower + "/").getPath());
+        assertEquals(driveSpec + "\\", 
+                     fu.normalize(driveSpecLower + "\\").getPath());
+        /*
+         * promised to eliminate consecutive slashes after drive letter.
+         */
+        assertEquals(driveSpec + "\\", 
+                     fu.normalize(driveSpec + "/////").getPath());
+        assertEquals(driveSpec + "\\", 
+                     fu.normalize(driveSpec + "\\\\\\\\\\\\").getPath());
+
+        /*
+         * Now test some relative file name magic.
+         */
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/./4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/.\\4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/./.\\4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/../3/4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/..\\3\\4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/../../5/.././2/./3/6/../4")).getPath());
+        assertEquals(localize("/1/2/3/4"),
+                     fu.normalize(localize("/1/2/3/..\\../5/..\\./2/./3/6\\../4")).getPath());
+
+        try {
+            fu.normalize("foo");
+            fail("foo is not an absolute path");
+        } catch (BuildException e) {
+            // Expected exception caught
+        }
+        
+        try {
+            fu.normalize(localize("/1/../../b"));
+            fail("successfully crawled beyond the filesystem root");
+        } catch (BuildException e) {
+            // Expected exception caught
+        }
+    }
+
+    /**
+     * adapt file separators to local conventions
+     */
+    private String localize(String path) {
+        path = root + path.substring(1);
+        return path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
+    }
 }
