@@ -149,12 +149,12 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
 
     public void testIllegalCustomAlgorithm() {
         try {
-            String algo = getAlgoName("javax.swing.JFrame");
+            String algo = getAlgoName("java.lang.Object");
             fail("Illegal classname used.");
         } catch (Exception e) {
             assertTrue("Wrong exception type: " + e.getClass().getName(), e instanceof BuildException);
             assertEquals("Wrong exception message.",
-                         "Specified class (javax.swing.JFrame) is not an Algorithm.",
+                         "Specified class (java.lang.Object) is not an Algorithm.",
                          e.getMessage());
 
         }
