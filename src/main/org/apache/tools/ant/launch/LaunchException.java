@@ -16,9 +16,6 @@
  */
 package org.apache.tools.ant.launch;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 /**
  * Signals an error condition during launching
  *
