@@ -76,7 +76,7 @@ import java.io.InputStreamReader;
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
  *
- * @deprecated delegate to {@link * org.apache.tools.ant.taskdefs.Execute Execute} instead.
+ * @deprecated delegate to {@link org.apache.tools.ant.taskdefs.Execute Execute} instead.
  */
 public class Exec extends Task {
     private String os;
