@@ -117,7 +117,7 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.2 to 1.4.1</td>
+            <td>Ant 1.4.1 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
