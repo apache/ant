@@ -104,6 +104,17 @@ public class TelnetTask extends Task {
     private Vector telnetTasks = new Vector();
 
     /** 
+     *  If true, adds a CR to beginning of login script
+     */
+    private boolean addCarriageReturn = false;
+
+    /**
+     *  Default time allowed for waiting for a valid response
+     *  for all child reads.  A value of 0 means no limit.
+     */
+    private Integer defaultTimeout = null;
+
+    /** 
      *  Verify that all parameters are included. 
      *  Connect and possibly login
      *  Iterate through the list of Reads and writes 
@@ -136,6 +147,8 @@ public class TelnetTask extends Task {
        while (tasksToRun!=null && tasksToRun.hasMoreElements())
        {
            TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
+           if (task instanceof TelnetRead && defaultTimeout != null)
+               ((TelnetRead)task).setDefaultTimeout(defaultTimeout);
            task.execute(telnet);
        }
     }
@@ -146,28 +159,50 @@ public class TelnetTask extends Task {
      */
     private void login()
     {
+       if (addCarriageReturn)
+          telnet.sendString("\n", true);
        telnet.waitForString("ogin:");
-       telnet.sendString(userid);
+       telnet.sendString(userid, true);
        telnet.waitForString("assword:");
-       telnet.sendString(password);
+       telnet.sendString(password, false);
     }
 
     /**
      *  Set the userid attribute 
      */
     public void setUserid(String u) { this.userid = u; }
+
     /**
      *  Set the password attribute 
      */
     public void setPassword(String p) { this.password = p; }
+
     /**
      *  Set the server address attribute 
      */
     public void setServer(String m) { this.server = m; }
+
     /**
      *  Set the tcp port to connect to attribute 
      */
     public void setPort(int p) { this.port = p; }
+
+    /**
+     *  Set the tcp port to connect to attribute 
+     */
+    public void setInitialCR(boolean b)
+    {
+       this.addCarriageReturn = b;
+    }
+
+    /**
+     *  Change the default timeout to wait for 
+     *  valid responses
+     */
+    public void setTimeout(Integer i)
+    {
+       this.defaultTimeout = i;
+    }
 
     /**
      *  A subTask <read> tag was found.  Create the object, 
@@ -215,10 +250,16 @@ public class TelnetTask extends Task {
      */
     public class TelnetWrite extends TelnetSubTask
     {
+        private boolean echoString = true;
         public void execute(AntTelnetClient telnet) 
                throws BuildException
         {
-            telnet.sendString(taskString);
+           telnet.sendString(taskString, echoString);
+        }
+        
+        public void setEcho(boolean b)
+        {
+           echoString = b;
         }
     }
     /**
@@ -227,11 +268,27 @@ public class TelnetTask extends Task {
      */
     public class TelnetRead extends TelnetSubTask
     {
+        private Integer timeout = null;
         public void execute(AntTelnetClient telnet) 
                throws BuildException
         {
-            telnet.waitForString(taskString);
+            telnet.waitForString(taskString, timeout);
         }
+        /**
+         *  Override any default timeouts
+         */
+        public void setTimeout(Integer i)
+        {
+           this.timeout = i;
+        }
+        /**
+         *  Sets the default timeout if none has been set already
+         */
+        public void setDefaultTimeout(Integer defaultTimeout)
+        {
+           if (timeout == null)
+              timeout = defaultTimeout;
+    }
     }
     /**
      *  This class handles the abstraction of the telnet protocol.
@@ -240,31 +297,71 @@ public class TelnetTask extends Task {
      */
     public class AntTelnetClient extends TelnetClient
     {
+      /**
+       * Read from the telnet session until the string we are 
+       * waiting for is found 
+       * @parm s The string to wait on 
+       */
       public void waitForString(String s)
+      {
+           waitForString(s, null);
+      }
+
+      /**
+       * Read from the telnet session until the string we are 
+       * waiting for is found or the timeout has been reached
+       * @parm s The string to wait on 
+       * @parm timeout The maximum number of seconds to wait
+       */
+      public void waitForString(String s, Integer timeout)
       {
         InputStream is =this.getInputStream();
         try {
           StringBuffer sb = new StringBuffer();
-          while (sb.toString().indexOf(s) == -1)
+          if (timeout == null || timeout.intValue() == 0)
           {
-              while (is.available() == 0);
-              int iC = is.read();
-              Character c = new Character((char)iC);
-              sb.append(c);
+              while (sb.toString().indexOf(s) == -1)
+                  {
+                      sb.append((char) is.read());
+                  }
+          }
+          else
+          {
+              Calendar endTime = Calendar.getInstance(); 
+              endTime.add(Calendar.SECOND,timeout.intValue());
+              while ( sb.toString().indexOf(s) == -1)
+              {
+                  while (Calendar.getInstance().before(endTime) &&
+                         is.available() == 0) {
+                      Thread.sleep(250);
+                  }
+                  if (is.available() == 0)
+                      throw new BuildException("Response Timed-Out", getLocation());
+                  sb.append((char) is.read());
+              }
           }
           log(sb.toString(), Project.MSG_INFO);
+        } catch (BuildException be)
+        { 
+            throw be;
         } catch (Exception e)
         { 
             throw new BuildException(e, getLocation());
         }
       }
+
     
-      public void sendString(String s)
+      /**
+       * Write this string to the telnet session.
+       * @parm echoString  Logs string sent
+       */
+      public void sendString(String s, boolean echoString)
       {
         OutputStream os =this.getOutputStream();
         try {
           os.write((s + "\n").getBytes());
-          log(s, Project.MSG_INFO);
+          if (echoString)
+              log(s, Project.MSG_INFO);
           os.flush();
         } catch (Exception e)
         { 
