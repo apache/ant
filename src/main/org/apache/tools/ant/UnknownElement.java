@@ -57,7 +57,6 @@ package org.apache.tools.ant;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
 import java.io.IOException;
 
@@ -107,31 +106,6 @@ public class UnknownElement extends Task {
         this.elementName = elementName;
     }
 
-    /**
-     * Makes a new unknown element based on this unknownelement
-     * does not copy the children
-     */
-    public UnknownElement copyItem() {
-        UnknownElement ret = new UnknownElement(getTag());
-        ret.setNamespace(getNamespace());
-        ret.setProject(getProject());
-        ret.setQName(getQName());
-        ret.setTaskName(getTaskName());
-        ret.setLocation(getLocation());
-        ret.setOwningTarget(getOwningTarget());
-        RuntimeConfigurable rc = new RuntimeConfigurable(
-            ret, getTaskName());
-        rc.setPolyType(getWrapper().getPolyType());
-        Map map = getWrapper().getAttributeMap();
-        for (Iterator i = map.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            rc.setAttribute(
-                (String) entry.getKey(),(String) entry.getValue());
-        }
-        rc.addText(getWrapper().getText().toString());
-        return ret;
-    }
-    
     /**
      * Returns the name of the XML element which generated this unknown
      * element.
