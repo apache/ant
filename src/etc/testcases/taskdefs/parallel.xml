@@ -41,24 +41,6 @@
       </sequential>
     </parallel>
     <parallel threadCount='2' pollInterval="30">
-      <!-- expected start 1, end 1, start 2, end 2, start 3, end 3 -->
-      <sequential>
-        <echo message="+1"/>
-        <sleep seconds="1"/>
-        <echo message="-1"/>
-      </sequential>
-      <sequential>
-        <echo message="+2"/>
-        <sleep seconds="2"/>
-        <echo message="-2"/>
-      </sequential>
-      <sequential>
-        <echo message="+3"/>
-        <sleep seconds="3"/>
-        <echo message="-3"/>
-      </sequential>
-    </parallel>
-    <parallel threadCount='3' pollInterval="30">
       <!-- expected start 1, start 2, end 1, start 3, end 2, end 3 -->
       <sequential>
         <echo message="+1"/>
@@ -66,11 +48,33 @@
         <echo message="-1"/>
       </sequential>
       <sequential>
+        <sleep milliseconds="200"/>
         <echo message="+2"/>
         <sleep seconds="2"/>
         <echo message="-2"/>
       </sequential>
       <sequential>
+        <sleep milliseconds="300"/>
+        <echo message="+3"/>
+        <sleep seconds="3"/>
+        <echo message="-3"/>
+      </sequential>
+    </parallel>
+    <parallel threadCount='3' pollInterval="30">
+      <!-- expected start 1, start 2, start 3, end 1, end 2, end 3 -->
+      <sequential>
+        <echo message="+1"/>
+        <sleep seconds="1"/>
+        <echo message="-1"/>
+      </sequential>
+      <sequential>
+        <sleep milliseconds="200"/>
+        <echo message="+2"/>
+        <sleep seconds="2"/>
+        <echo message="-2"/>
+      </sequential>
+      <sequential>
+        <sleep milliseconds="300"/>
         <echo message="+3"/>
         <sleep seconds="3"/>
         <echo message="-3"/>
@@ -84,11 +88,13 @@
         <echo message="-1"/>
       </sequential>
       <sequential>
+        <sleep milliseconds="200"/>
         <echo message="+2"/>
         <sleep seconds="2"/>
         <echo message="-2"/>
       </sequential>
       <sequential>
+        <sleep milliseconds="300"/>
         <echo message="+3"/>
         <sleep seconds="3"/>
         <echo message="-3"/>
