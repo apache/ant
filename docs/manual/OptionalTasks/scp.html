@@ -33,7 +33,7 @@ jsch-0.1.14.</p>
     <td valign="top">file</td>
     <td valign="top">The file to copy.  This can be a local path or a
     remote path of the form <i>user[:password]@host:/directory/path</i>.
-    <i>:password</i> can be ommitted if you use key based
+    <i>:password</i> can be omitted if you use key based
     authentication or specify the password attribute.  The way remote
     path is recognized is whether it contains @ character or not. This
     will not work if your localPath contains @ character.</td>
@@ -59,7 +59,7 @@ jsch-0.1.14.</p>
     <td valign="top">todir</td>
     <td valign="top">The directory to copy to.  This can be a local path
     or a remote path of the form <i>user[:password]@host:/directory/path</i>.
-    <i>:password</i> can be ommitted if you use key based
+    <i>:password</i> can be omitted if you use key based
     authentication or specify the password attribute.  The way remote
     path is recognized is whether it contains @ character or not. This
     will not work if your localPath contains @ character.</td>
@@ -209,7 +209,7 @@ authentication.</b></p>
 
 <p><strong>Security Note:</strong>  Hard coding passwords and/or usernames
 in scp task can be a serious security hole.  Consider using variable
-substituion and include the password on the command line.  For example:<br>
+substitution and include the password on the command line.  For example:<br>
 <pre>
     &lt;scp todir=&quot;${username}:${password}@host:/dir&quot; ...&gt;
 </pre>
