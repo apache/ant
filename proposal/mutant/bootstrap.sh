@@ -4,7 +4,7 @@
 #   reserved.
 
 # cleanup curretn boot area
-rm -rf bin bootstrap
+rm -rf bin bootstrap dist
 
 # compile init jar
 mkdir -p bin/init

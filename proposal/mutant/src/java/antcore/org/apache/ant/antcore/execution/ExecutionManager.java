@@ -129,7 +129,7 @@ public class ExecutionManager {
             AntLibManager libManager
                  = new AntLibManager(config.isRemoteLibAllowed());
 
-            libManager.addAntLibraries(librarySpecs, standardLibsURL);
+            libManager.loadLibs(librarySpecs, standardLibsURL);
             libManager.configLibraries(initConfig, librarySpecs, antLibraries,
                 config.getLibraryPathsMap());
 
@@ -161,6 +161,8 @@ public class ExecutionManager {
          throws AntException {
         Throwable buildFailureCause = null;
         try {
+            init();
+            
             // start by validating the project we have been given.
             project.validate();
 

@@ -311,7 +311,6 @@ public class Commandline {
         }
 
         try {
-            executionManager.init();
             executionManager.runBuild(project, targets, definedProperties);
             System.exit(0);
         } catch (Throwable t) {

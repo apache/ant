@@ -122,9 +122,12 @@ public class AntLibManager {
                 if (antLibrarySpec != null) {
                     String libraryId = antLibrarySpec.getLibraryId();
                     if (librarySpecs.containsKey(libraryId)) {
+                        AntLibrarySpec currentSpec 
+                            = (AntLibrarySpec)librarySpecs.get(libraryId);
                         throw new ExecutionException("Found more than one "
-                             + "copy of library with id = " + libraryId +
-                            " (" + libURLs[i] + ")");
+                             + "copy of library with id = " + libraryId 
+                             + " (" + libURLs[i] + ") + existing library at ("
+                             + currentSpec.getLibraryURL() + ")");
                     }
                     antLibrarySpec.setLibraryURL(libURLs[i]);
                     librarySpecs.put(libraryId, antLibrarySpec);
@@ -183,6 +186,28 @@ public class AntLibManager {
     /**
      * Load either a set of libraries or a single library.
      *
+     * @param libLocationURL URL where libraries can be found
+     * @param librarySpecs A collection of library specs which will be
+     *      populated with the libraries found
+     * @exception ExecutionException if the libraries cannot be loaded
+     * @exception MalformedURLException if the library's location cannot be
+     *      formed
+     */
+    public void loadLibs(Map librarySpecs, URL libLocationURL)
+         throws ExecutionException, MalformedURLException {
+        if (!libLocationURL.getProtocol().equals("file")
+             && !remoteAllowed) {
+            throw new ExecutionException("The config library "
+                 + "location \"" + libLocationURL
+                 + "\" cannot be used because config does "
+                 + "not allow remote libraries");
+        }
+        addAntLibraries(librarySpecs, libLocationURL);
+    }
+    
+    /**
+     * Load either a set of libraries or a single library.
+     *
      * @param libLocationString URL or file where libraries can be found
      * @param librarySpecs A collection of library specs which will be
      *      populated with the libraries found
@@ -196,15 +221,7 @@ public class AntLibManager {
         File libLocation = new File(libLocationString);
         if (!libLocation.exists()) {
             try {
-                URL libLocationURL = new URL(libLocationString);
-                if (!libLocationURL.getProtocol().equals("file")
-                     && !remoteAllowed) {
-                    throw new ExecutionException("The config library "
-                         + "location \"" + libLocationString
-                         + "\" cannot be used because config does "
-                         + "not allow remote libraries");
-                }
-                addAntLibraries(librarySpecs, libLocationURL);
+                loadLibs(librarySpecs, new URL(libLocationString));
             } catch (MalformedURLException e) {
                 // XXX
             }

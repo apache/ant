@@ -142,6 +142,7 @@ public class Builder {
         files.add(new File(TASKDEFS_ROOT, "Available.java"));
         files.add(new File(TASKDEFS_ROOT, "Mkdir.java"));
         files.add(new File(TASKDEFS_ROOT, "Copy.java"));
+        files.add(new File(TASKDEFS_ROOT, "Echo.java"));
         files.add(new File(TASKDEFS_ROOT, "MatchingTask.java"));
         files.add(new File(DEPEND_ROOT, "Depend.java"));
         files.add(new File(DEPEND_ROOT, "ClassFile.java"));
