@@ -1,3 +1,13 @@
+Changes from Ant 1.6.B3 to CVS
+=====================================
+
+Changes that could break older environments:
+--------------------------------------------
+* Attempts to read input in <java> and <exec> tasks will now receive an EOF
+  rather than blocking. If you run such a process and rely on it blocking, as
+  it would do in Ant 1.5, you may have problem.
+
+
 Changes from Ant 1.6.B2 to Ant 1.6.B3
 =====================================
 
@@ -10,10 +20,6 @@ Changes that could break older environments:
   of ant 1.6b1 and ant 1.6b2.
 
 * <csc>'s executable attribute defaults to mcs on non-Windows platforms.
-
-* Attempts to read input in <java> and <exec> tasks will now receive an EOF
-  rather than blocking. If you run such a process and rely on it blocking, as
-  it would do in Ant 1.5, you may have problem.
 
 Fixed bugs:
 -----------
