@@ -20,7 +20,7 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 Other changes:
 --------------
 
-* New tasks: sql, genkey, cab.
+* New tasks: sql, genkey, cab, ftp.
 
 * New tasks junit, mparse, execon. All pending documentation, most of
 them pending review.

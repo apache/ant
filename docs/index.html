@@ -21,6 +21,7 @@
   <li>Conor MacNeill (<a href="mailto:conor@cortexebusiness.com.au">conor@cortexebusiness.com.au</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:stefano@apache.org">stefano@apache.org</a>)</li>
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
+  <li>Roger Vaughn (<a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>)</li>
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
@@ -3303,6 +3304,7 @@ and <code>todo.html</code> are excluded.</p>
 <h2><a name="optionaltasks">Optional tasks</a></h2>
 <ul>
   <li><a href="#cab">Cab</a></li>
+  <li><a href="#ftp">FTP</a></li>
   <li><a href="#netrexxc">NetRexxC</a></li>
   <li><a href="#renameexts">RenameExtensions</a></li>
   <li><a href="#script">Script</a></li>
@@ -3418,6 +3420,148 @@ manual.cab in the ${dist} directory. Only html files under the
 directory api are archived, and files with the name todo.html are
 excluded. Output from the cabarc tool is displayed in the build
 output.</p>
+<hr>
+<h2><a name="ftp">FTP</a></h2>
+<h3><b>Description:</b></h3>
+<p>Copies files from the local system to a remote ftp server.</p>
+<p>The <code>fileset</code> syntax must be used for specifying the local
+files to copy.  All filesets will be copied into the single remote directory
+specified by <i>remotedir</i>.</p>
+<p>The ftp task makes no attempt to determine what file system syntax is
+required by the remote server, and defaults to Unix standards.
+<i>remotedir</i> must be specified in the exact syntax required by the ftp
+server. If the usual Unix conventions are not supported by the server,
+<i>separator</i> can be used to set the file separator that should be used
+instead.</p>
+<p>See the section on <a href="#directorybasedtasks">directory based
+tasks</a>, on how the inclusion/exclusion of files works, and how to
+write patterns.</p>
+<h3>Parameters:</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">server</td>
+    <td valign="top">the address of the remote ftp server.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">port</td>
+    <td valign="top">the port number of the remote ftp server.
+                     Defaults to port 21.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">userid</td>
+    <td valign="top">the login id to use on the ftp server.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">the login password to use on the ftp server.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">remotedir</td>
+    <td valign="top">the directory to which to upload files on the 
+                     ftp server.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">action</td>
+    <td valign="top">the ftp action to perform.  
+                     Current only supports&quot;put&quot;</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">binary</td>
+    <td valign="top">selects binary-mode (&quot;yes&quot;) or text-mode 
+                     (&quot;no&quot;) transfers.  
+                     Defaults to &quot;yes&quot;</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">displays information on each file transferred if set 
+                     to &quot;yes&quot;. Defaults to &quot;no&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">depends</td>
+    <td valign="top">transfers only new or changed files if set to 
+                     &quot;yes&quot;. Defaults to &quot;no&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">newer</td>
+    <td valign="top">a synonym for <i>depends</i>.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">separator</td>
+    <td valign="top">sets the file separator used on the ftp server.
+                     Defaults to &quot;/&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;ftp server=&quot;ftp.apache.org&quot;
+       userid=&quot;anonymous&quot;
+       password=&quot;me@myorg.com&quot;
+  &gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot; /&gt;
+  &lt;/ftp&gt;</pre>
+<p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
+uploads all files in the <code>htdocs/manual</code> directory 
+to the default directory for that user.</p>
+<pre>  &lt;ftp server=&quot;ftp.apache.org&quot;
+       remotedir=&quot;incoming&quot;
+       userid=&quot;anonymous&quot;
+       password=&quot;me@myorg.com&quot;
+       depends=&quot;yes&quot;
+  &gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot; /&gt;
+  &lt;/ftp&gt;</pre>
+<p>Logs in to <code>ftp.apache.org</code> as <code>anonymous</code> and 
+uploads all new or changed files in the <code>htdocs/manual</code> directory 
+to the <code>incoming</code> directory relative to the default directory
+for <code>anonymous</code>.</p>
+<pre>  &lt;ftp server=&quot;ftp.apache.org&quot;
+       port=&quot;2121&quot;
+       remotedir=&quot;/pub/incoming&quot;
+       userid=&quot;coder&quot;
+       password=&quot;java1&quot;
+       depends=&quot;yes&quot;
+       binary=&quot;no&quot;
+  &gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
+      &lt;include name=&quot;**/*.html&quot; /&gt;
+    &lt;/fileset&gt;
+  &lt;/ftp&gt;</pre>
+<p>Logs in to <code>ftp.apache.org</code> at port <code>2121</code> as 
+<code>coder</code> with password <code>java1</code> and uploads all new or 
+changed HTML files in the <code>htdocs/manual</code> directory to the 
+<code>/pub/incoming</code> directory.  The files are transferred in text
+mode.</p>
+<pre>  &lt;ftp server=&quot;ftp.nt.org&quot;
+       remotedir=&quot;c:\uploads&quot;
+       userid=&quot;coder&quot;
+       password=&quot;java1&quot;
+       separator=&quot;\&quot;
+       verbose=&quot;yes&quot;
+  &gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
+      &lt;include name=&quot;**/*.html&quot; /&gt;
+    &lt;/fileset&gt;
+  &lt;/ftp&gt;</pre>
+<p>Logs in to the Windows-based <code>ftp.nt.org</code> as 
+<code>coder</code> with password <code>java1</code> and uploads all 
+HTML files in the <code>htdocs/manual</code> directory to the 
+<code>c:\uploads</code> directory.  Progress messages are displayed as each
+file is uploaded.</p>
 <hr>
 <h2><a name="netrexxc">NetRexxC</a></h2>
 <h3><b>Description:</b></h3>

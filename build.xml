@@ -50,6 +50,7 @@
     <available property="ejb.DDCreator.present" classname="weblogic.ejb.utils.DDCreator" />
     <available property="ejb.wls.present" classname="weblogic.Server" />
     <available property="junit.present" classname="junit.framework.TestCase" />
+    <available property="ftp.present" classname="com.oroinc.net.ftp.FTPClient" />
   </target>
 
   <!-- =================================================================== -->
@@ -83,6 +84,7 @@
       <exclude name="**/EjbJar.java" unless="jdk1.2+" />
       <exclude name="**/*DeploymentTool.java" unless="jdk1.2+" />
       <exclude name="**/junit/*" unless="junit.present" />
+      <exclude name="**/FTP*.java" unless="ftp.present" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
