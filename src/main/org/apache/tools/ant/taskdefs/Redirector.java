@@ -461,7 +461,7 @@ public class Redirector {
      * This opertaion will close any streams and create any specified
      * property values.
      *
-     * @throws IOException if the outptu properties cannot be read from their
+     * @throws IOException if the output properties cannot be read from their
      * output streams.
      */
     public void complete() throws IOException {

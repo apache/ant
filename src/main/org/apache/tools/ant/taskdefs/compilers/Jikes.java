@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.Path;
 public class Jikes extends DefaultCompilerAdapter {
 
     /**
-     * Performs a compile using the Jikes compiler from IBM..
+     * Performs a compile using the Jikes compiler from IBM.
      * Mostly of this code is identical to doClassicCompile()
      * However, it does not support all options like
      * bootclasspath, extdirs, deprecation and so on, because
