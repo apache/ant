@@ -45,11 +45,16 @@ if [ "$ANT_HOME" = "" ] ; then
 
 fi
 
-# Allow .antrc to specifiy flags to java cmd
-if [ "$JAVACMD" = "" ] ; then 
-  JAVACMD=${JAVA_HOME}/bin/java
+if [ "$JAVA_HOME" != "" ] ; then
+  if [ "$JAVACMD" = "" ] ; then 
+    JAVACMD=$JAVA_HOME/bin/java
+  fi
+else
+  if [ "$JAVACMD" = "" ] ; then 
+    JAVACMD=java
+  fi
 fi
-
+ 
 # add in the dependency .jar files
 DIRLIBS=${ANT_HOME}/lib/*.jar
 for i in ${DIRLIBS}
