@@ -527,13 +527,43 @@ public class SQLExec extends JDBCTask {
         try {
             totalSql++;
             log("SQL: " + sql, Project.MSG_VERBOSE);
-            if (!statement.execute(sql)) {
-                log(statement.getUpdateCount() + " rows affected",
-                    Project.MSG_VERBOSE);
-            } else {
-                if (print) {
-                    printResults(out);
+
+            boolean ret;
+            int updateCount = 0, updateCountTotal = 0;
+            ResultSet resultSet = null;
+
+            ret = statement.execute(sql);
+            updateCount = statement.getUpdateCount();
+            resultSet = statement.getResultSet();
+            do
+            {
+                if (!ret)
+                {
+                    if (updateCount != -1)
+                    {
+                        updateCountTotal += updateCount;
+                    }
                 }
+                else
+                {
+                    if (print)
+                    {
+                        printResults(out);
+                    }
+                }
+                ret = statement.getMoreResults();
+                updateCount = statement.getUpdateCount();
+                resultSet = statement.getResultSet();
+            } while ((resultSet != null) || (updateCount != -1));
+
+            log(updateCountTotal + " rows affected",
+                Project.MSG_VERBOSE);
+
+            if (print)
+            {
+                StringBuffer line = new StringBuffer();
+                line.append(updateCountTotal + " rows affected");
+                out.println(line);
             }
 
             SQLWarning warning = conn.getWarnings();
@@ -557,43 +587,40 @@ public class SQLExec extends JDBCTask {
      */
     protected void printResults(PrintStream out) throws java.sql.SQLException {
         ResultSet rs = null;
-        do {
-            rs = statement.getResultSet();
-            if (rs != null) {
-                log("Processing new result set.", Project.MSG_VERBOSE);
-                ResultSetMetaData md = rs.getMetaData();
-                int columnCount = md.getColumnCount();
-                StringBuffer line = new StringBuffer();
-                if (showheaders) {
-                    for (int col = 1; col < columnCount; col++) {
-                         line.append(md.getColumnName(col));
-                         line.append(",");
-                    }
-                    line.append(md.getColumnName(columnCount));
-                    out.println(line);
-                    line = new StringBuffer();
+        rs = statement.getResultSet();
+        if (rs != null) {
+            log("Processing new result set.", Project.MSG_VERBOSE);
+            ResultSetMetaData md = rs.getMetaData();
+            int columnCount = md.getColumnCount();
+            StringBuffer line = new StringBuffer();
+            if (showheaders) {
+                for (int col = 1; col < columnCount; col++) {
+                     line.append(md.getColumnName(col));
+                     line.append(",");
                 }
-                while (rs.next()) {
-                    boolean first = true;
-                    for (int col = 1; col <= columnCount; col++) {
-                        String columnValue = rs.getString(col);
-                        if (columnValue != null) {
-                            columnValue = columnValue.trim();
-                        }
+                line.append(md.getColumnName(columnCount));
+                out.println(line);
+                line = new StringBuffer();
+            }
+            while (rs.next()) {
+                boolean first = true;
+                for (int col = 1; col <= columnCount; col++) {
+                    String columnValue = rs.getString(col);
+                    if (columnValue != null) {
+                        columnValue = columnValue.trim();
+                    }
 
-                        if (first) {
-                            first = false;
-                        } else {
-                            line.append(",");
-                        }
-                        line.append(columnValue);
+                    if (first) {
+                        first = false;
+                    } else {
+                        line.append(",");
                     }
-                    out.println(line);
-                    line = new StringBuffer();
+                    line.append(columnValue);
                 }
+                out.println(line);
+                line = new StringBuffer();
             }
         }
-        while (statement.getMoreResults());
         out.println();
     }
 

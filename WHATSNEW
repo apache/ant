@@ -356,6 +356,9 @@ Other changes:
 
 * <sql> has a new attribute to control escape processing.
 
+* <sql> is able to display properly several resultsets if you are
+  running a compound sql statement. Bugzilla Report 21594.
+
 * <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
 
 * A new <containsregexp> selector has been added, that selects files
