@@ -524,6 +524,7 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#rename">Rename</a></li>
   <li><a href="#replace">Replace</a></li>
   <li><a href="#rmic">Rmic</a></li>
+  <li><a href="#signjar">SignJar</a></li>
   <li><a href="#tar">Tar</a></li>
   <li><a href="#taskdef">Taskdef</a></li>
   <li><a href="#touch">Touch</a></li>
@@ -2597,6 +2598,83 @@ compiled files will be stored in the directory <code>${build}/classes</code>.</p
 files below <code>${build}/classes</code> whose classname starts with
 <i>Remote</i>. The compiled files will be stored in the directory
 <code>${build}/classes</code>.</p>
+
+<hr>
+<h2><a name="signjar">SignJar</a></h2>
+<h3>Description</h3>
+<p>Signs a jar or zip file with the javasign command line tool.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">jar</td>
+    <td valign="top">the jar file to sign</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">alias</td>
+    <td valign="top">the alias to sign under</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">storepass</td>
+    <td valign="top">password for keystore integrity.</td>
+    <td valign="top" align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">keystore</td>
+    <td valign="top">keystore location</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">storetype</td>
+    <td valign="top">keystore type</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">keypass</td>
+    <td valign="top">password for private key (if different)</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">sigfile</td>
+    <td valign="top">name of .SF/.DSA file</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">signedjar</td>
+    <td valign="top">name of signed JAR file</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">(true | false) verbose output when signing</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">internalsf</td>
+    <td valign="top">(true | false) include the .SF file inside the signature
+block</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">sectionsonly</td>
+    <td valign="top">(true | false) don't compute hash of entire manifest</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;signjar jar=&quot;${dist}/lib/ant.jar&quot;
+alias=&quot;apache-group&quot; storepass=&quot;secret&quot; /&gt;</code></p>
+</blockquote>
+<p>signs the ant.jar with alias &quot;apache-group&quot; accessing the
+keystore and private key via &quot;secret&quot; password.</p>
 <hr>
 <h2><a name="tar">Tar</a></h2>
 <h3>Description</h3>
