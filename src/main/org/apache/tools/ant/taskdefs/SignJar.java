@@ -100,20 +100,52 @@ public class SignJar extends Task {
      */
     private Mapper mapper;
 
+    /** error string for unit test verification: {@value} */
     public static final String ERROR_SIGNEDJAR_AND_FILESET =
             "The signedjar attribute is not supported with filesets";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_TODIR_AND_SIGNEDJAR
             = "'destdir' and 'signedjar' cannot both be set";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_TOO_MANY_MAPPERS = "Too many mappers";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_SIGNEDJAR_AND_FILESETS = "You cannot specify the signed JAR when using filesets";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String WARN_JAR_AND_FILESET = "nested filesets will be ignored if the jar attribute has"
             + " been specified.";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_BAD_MAP = "Cannot map source file to anything sensible: ";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_MAPPER_WITHOUT_DEST = "The destDir attribute is required if a mapper is set";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_NO_SOURCE = "jar must be set through jar attribute "
             + "or nested filesets";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_NO_ALIAS = "alias attribute must be set";
+    /**
+     * error string for unit test verification: {@value}
+     */
     public static final String ERROR_NO_STOREPASS = "storepass attribute must be set";
+
+    /**
+     * name of JDK program we are looking for
+     */
     protected static final String JARSIGNER_COMMAND = "jarsigner";
 
     /**
