@@ -118,7 +118,7 @@ echo ... Compiling Ant Classes
 "${JAVAC}" $BOOTJAVAC_OPTS -d ${CLASSDIR} ${TOOLS}/bzip2/*.java ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
-    ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java \
+    ${TOOLS}/ant/types/*.java \
     ${TOOLS}/ant/*.java ${TOOLS}/ant/taskdefs/*.java \
     ${TOOLS}/ant/taskdefs/compilers/*.java \
     ${TOOLS}/ant/taskdefs/condition/*.java
