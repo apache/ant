@@ -101,6 +101,9 @@
     <available property="netrexx.present" 
                classname="netrexx.lang.Rexx"
                classpathref="classpath" />
+    <available property="trax.present" 
+               classname="javax.xml.transform.Transformer" 
+               classpathref="classpath" />
     <available property="xslp.present" 
                classname="com.kvisco.xsl.XSLProcessor" 
                classpathref="classpath" />
@@ -241,6 +244,8 @@
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
       <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
       <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
+      <exclude name="${optional.package}/TraXLiaison.java" 
+               unless="trax.present" />
       <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
       <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
       <exclude name="${optional.package}/AdaptxLiaison.java" unless="adaptx.present" />
@@ -270,6 +275,8 @@
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
       <exclude name="${optional.package}/sitraka/**" unless="jakarta.oro.present"/>
       <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
+      <exclude name="${optional.package}/metamata/MMetrics*" 
+               unless="trax.present"/>
       <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
     </javac>
     
@@ -310,15 +317,12 @@
          basedir="${build.classes}" 
          manifest="${manifest}">
       <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
-      <fileset dir="${build.classes}" 
-               includes="org/apache/tools/ant/taskdefs/optional/TraXLiaison.class" />
     </jar>
 
     <jar file="${build.lib}/optional.jar" 
          basedir="${build.classes}" 
          manifest="${manifest}">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
-      <exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaison.class" />
     </jar>
 
   </target>
@@ -666,7 +670,7 @@
       <exclude name="${regexp.package}/Jdk14Regexp*Test.java" 
                unless="jdk1.4+" />
       <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
-      				 unless="jakarta.oro.present" />
+               unless="jakarta.oro.present" />
       <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" 
                unless="xslp.present"/>
       <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
