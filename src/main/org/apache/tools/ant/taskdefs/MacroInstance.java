@@ -129,13 +129,10 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     private Map getNsElements() {
         if (nsElements == null) {
             nsElements = new HashMap();
-            String myUri = ProjectHelper.extractUriFromComponentName(
-                getTaskType());
             for (Iterator i = macroDef.getElements().entrySet().iterator();
                  i.hasNext();) {
                 Map.Entry entry = (Map.Entry) i.next();
-                nsElements.put(ProjectHelper.genComponentName(
-                                   myUri, (String) entry.getKey()),
+                nsElements.put((String) entry.getKey(),
                                entry.getValue());
             }
         }
