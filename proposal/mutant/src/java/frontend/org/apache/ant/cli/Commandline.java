@@ -79,6 +79,7 @@ import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.DemuxOutputStream;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
+import org.apache.ant.frontend.FrontendUtils;
 
 /**
  * This is the command line front end. It drives the core.
@@ -87,12 +88,6 @@ import org.apache.ant.init.InitUtils;
  * @created 9 January 2002
  */
 public class Commandline {
-    /** The default build file name */
-    public static final String DEFAULT_BUILD_FILENAME = "build.ant";
-
-    /** The default build file name */
-    public static final String DEFAULT_ANT1_FILENAME = "build.xml";
-
     /** The initialisation configuration for Ant */
     private InitConfig initConfig;
 
@@ -183,58 +178,6 @@ public class Commandline {
     }
 
     /**
-     * Get the AntConfig from the given config area if it is available
-     *
-     * @param configArea the config area from which the config may be read
-     * @return the AntConfig instance representing the config info read in
-     *      from the config area. May be null if the AntConfig is not
-     *      present
-     * @exception ConfigException if the URL for the config file cannotbe
-     *      formed.
-     */
-    private AntConfig getAntConfig(File configArea) throws ConfigException {
-        File configFile = new File(configArea, "antconfig.xml");
-        try {
-            return getAntConfigFile(configFile);
-        } catch (FileNotFoundException e) {
-            // ignore if files are not present
-            return null;
-        }
-    }
-
-    /**
-     * Read in a config file
-     *
-     * @param configFile the file containing the XML config
-     * @return the parsed config object
-     * @exception ConfigException if the config cannot be parsed
-     * @exception FileNotFoundException if the file cannot be found.
-     */
-    private AntConfig getAntConfigFile(File configFile)
-         throws ConfigException, FileNotFoundException {
-        try {
-            URL configFileURL = InitUtils.getFileURL(configFile);
-
-            ParseContext context = new ParseContext();
-            AntConfigHandler configHandler = new AntConfigHandler();
-
-            context.parse(configFileURL, "antconfig", configHandler);
-
-            return configHandler.getAntConfig();
-        } catch (MalformedURLException e) {
-            throw new ConfigException("Unable to form URL to read config from "
-                 + configFile, e);
-        } catch (XMLParseException e) {
-            if (e.getCause() instanceof FileNotFoundException) {
-                throw (FileNotFoundException) e.getCause();
-            }
-
-            throw new ConfigException("Unable to parse config file from "
-                 + configFile, e);
-        }
-    }
-
-    /**
      * Get an option value
      *
      * @param args the full list of command line arguments
@@ -273,9 +216,10 @@ public class Commandline {
             determineBuildFile();
 
             AntConfig config = new AntConfig();
-            AntConfig userConfig = getAntConfig(initConfig.getUserConfigArea());
+            AntConfig userConfig = 
+                FrontendUtils.getAntConfig(initConfig.getUserConfigArea());
             AntConfig systemConfig
-                 = getAntConfig(initConfig.getSystemConfigArea());
+                 = FrontendUtils.getAntConfig(initConfig.getSystemConfigArea());
 
             if (systemConfig != null) {
                 config.merge(systemConfig);
@@ -286,7 +230,8 @@ public class Commandline {
 
             for (Iterator i = configFiles.iterator(); i.hasNext();) {
                 File configFile = (File) i.next();
-                AntConfig runConfig = getAntConfigFile(configFile);
+                AntConfig runConfig 
+                    = FrontendUtils.getAntConfigFile(configFile);
                 config.merge(runConfig);
             }
 
@@ -398,9 +343,11 @@ public class Commandline {
      */
     private void determineBuildFile() throws ConfigException {
         if (buildFileURL == null) {
-            File defaultBuildFile = new File(DEFAULT_BUILD_FILENAME);
+            File defaultBuildFile 
+                = new File(FrontendUtils.DEFAULT_BUILD_FILENAME);
             if (!defaultBuildFile.exists()) {
-                File ant1BuildFile = new File(DEFAULT_ANT1_FILENAME);
+                File ant1BuildFile 
+                    = new File(FrontendUtils.DEFAULT_ANT1_FILENAME);
                 if (ant1BuildFile.exists()) {
                     defaultBuildFile = ant1BuildFile;
                 }

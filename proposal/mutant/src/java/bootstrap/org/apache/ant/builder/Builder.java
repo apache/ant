@@ -141,6 +141,7 @@ public class Builder {
         addJavaFiles(files, UTIL_ROOT);
         addJavaFiles(files, new File(UTIL_ROOT, "depend"));
         addJavaFiles(files, ZIP_ROOT);
+        addJavaFiles(files, new File(UTIL_ROOT, "facade"));
 
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));
@@ -163,7 +164,7 @@ public class Builder {
         files.add(new File(UTIL_ROOT, "regexp/RegexpMatcherFactory.java"));
         files.add(new File(FILTERS_ROOT, "util/ChainReaderHelper.java"));
         
-        // these shouyld not be included
+        // these should not be included
         files.remove(new File(TYPES_ROOT, "DataType.java"));
         files.remove(new File(TASKDEFS_ROOT, "Ant.java"));
         files.remove(new File(TASKDEFS_ROOT, "CallTarget.java"));
@@ -200,7 +201,7 @@ public class Builder {
         mutantBuilder.common(mainBuild);
         mutantBuilder.antcore(mainBuild);
         mutantBuilder.start(mainBuild);
-        mutantBuilder.cli(mainBuild);
+        mutantBuilder.frontend(mainBuild);
 
         BuildHelper systemBuild = new BuildHelper();
         systemBuild.setProperty("libset", "system");

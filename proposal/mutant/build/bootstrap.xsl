@@ -23,11 +23,15 @@
     <xsl:text>&quot;);&#10;</xsl:text>
   </xsl:template>
 
+  <xsl:template match="echo">
+  </xsl:template>
+  
   <xsl:template match="path">
     <xsl:text>        helper.createPath(&quot;</xsl:text>
     <xsl:variable name="pathName" select="attribute::id"/>
     <xsl:value-of select="$pathName"/>
     <xsl:text>&quot;);&#10;</xsl:text>
+    
     <xsl:for-each select="fileset">
       <xsl:text>        </xsl:text>
       <xsl:text>helper.addFileSetToPath(&quot;</xsl:text>
@@ -48,6 +52,7 @@
       </xsl:choose>
       <xsl:text>);&#10;</xsl:text>
     </xsl:for-each>
+    
     <xsl:for-each select="pathelement">
       <xsl:text>        </xsl:text>
       <xsl:text>helper.addPathElementToPath(&quot;</xsl:text>
@@ -56,6 +61,7 @@
       <xsl:value-of select="attribute::location"/>
       <xsl:text>&quot;);&#10;</xsl:text>
     </xsl:for-each>
+    
     <xsl:for-each select="path">
       <xsl:text>        </xsl:text>
       <xsl:text>helper.addPathToPath(&quot;</xsl:text>
@@ -114,16 +120,32 @@
           <xsl:when test="metainf/attribute::includes">
             <xsl:text>&quot;</xsl:text>
             <xsl:value-of select="metainf/attribute::includes"/>
-            <xsl:text>&quot;</xsl:text>
+            <xsl:text>&quot;, </xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>null</xsl:text>
+            <xsl:text>null, </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>null, null</xsl:text>
+        <xsl:text>null, null, </xsl:text>
       </xsl:otherwise>
+    </xsl:choose>
+    <xsl:choose>
+      <xsl:when test="manifest/attribute[attribute::name='Class-Path']">
+        <xsl:text>&quot;</xsl:text>
+        <xsl:value-of select="manifest/attribute[attribute::name='Class-Path']/attribute::value"/>
+        <xsl:text>&quot;, </xsl:text>
+      </xsl:when>
+      <xsl:otherwise>null, </xsl:otherwise>
+    </xsl:choose>
+    <xsl:choose>
+      <xsl:when test="manifest/attribute[attribute::name='Main-Class']">
+        <xsl:text>&quot;</xsl:text>
+        <xsl:value-of select="manifest/attribute[attribute::name='Main-Class']/attribute::value"/>
+        <xsl:text>&quot;</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>null</xsl:otherwise>
     </xsl:choose>
     <xsl:text>);&#10;</xsl:text>
   </xsl:template>

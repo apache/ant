@@ -25,7 +25,7 @@
     <path refid="classpath.parser"/>
   </path>
 
-  <path id="classpath.cli">
+  <path id="classpath.frontend">
     <path refid="classpath.antcore"/>
     <pathelement location="${distlib.dir}/antcore/antcore.jar"/>
   </path>
@@ -75,18 +75,23 @@
     <jar basedir="${bin.dir}/antcore" jarfile="${distlib.dir}/antcore/antcore.jar"/>
   </target>
 
-  <target name="cli" depends="antcore, start">
-    <mkdir dir="${bin.dir}/cli"/>
+  <target name="frontend" depends="antcore, start">
+    <mkdir dir="${bin.dir}/frontend"/>
     <mkdir dir="${distlib.dir}/frontend"/>
-    <depend destdir="${bin.dir}/cli" srcdir="${java.dir}/cli">
-      <classpath refid="classpath.cli"/>
+    <depend destdir="${bin.dir}/frontend" srcdir="${java.dir}/frontend">
+      <classpath refid="classpath.frontend"/>
     </depend>
-    <javac destdir="${bin.dir}/cli" srcdir="${java.dir}/cli" debug="${debug}">
-      <classpath refid="classpath.cli"/>
+    <javac destdir="${bin.dir}/frontend" srcdir="${java.dir}/frontend" debug="${debug}">
+      <classpath refid="classpath.frontend"/>
     </javac>
-    <jar basedir="${bin.dir}/cli" jarfile="${distlib.dir}/frontend/cli.jar">
+    <jar basedir="${bin.dir}/frontend" jarfile="${distlib.dir}/frontend/frontend.jar">
+      <include name="**/frontend/*.class"/>
+    </jar>
+    <jar basedir="${bin.dir}/frontend" jarfile="${distlib.dir}/frontend/cli.jar">
+      <include name="**/cli/*.class"/>
       <manifest>
         <attribute name="Main-Class" value="org.apache.ant.cli.Commandline"/>
+        <attribute name="Class-Path" value="frontend.jar"/>
       </manifest>
     </jar>
   </target>
@@ -165,7 +170,7 @@
     </jar>
   </target>
 
-  <target name="main" depends="cli, antlibs, ant1compat, remote, checkstyle"/> 
+  <target name="main" depends="frontend, antlibs, ant1compat, remote, checkstyle"/> 
   
   <target name="checkstyle" if="checkstyle.available">
     <taskdef name="checkstyle"
@@ -197,7 +202,7 @@
     <mkdir dir="${javadocs.dir}"/>
     <javadoc packagenames="org.apache.*"
              useexternalfile="yes"
-             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/cli:${java.dir}/start"
+             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/frontend:${java.dir}/start"
              destdir="${javadocs.dir}"
              author="true" 
              private ="true"

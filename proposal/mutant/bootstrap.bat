@@ -23,10 +23,10 @@ REM run bootstrap
 java -classpath bin\init;bin\bootstrap org.apache.ant.bootstrap.Bootstrap
 
 REM run full build using bootstrapped version
-java -classpath bootstrap\lib\start.jar;bootstrap\lib\init.jar org.apache.ant.start.Main %*
+java -jar bootstrap\lib\start.jar %*
 
 REM Use the full build as the build used by the build script
 xcopy /s dist bootstrap
 
 REM clean up after bootstrap
-java -classpath bootstrap\lib\start.jar:bootstrap\lib\init.jar org.apache.ant.start.Main clean
+java -jar bootstrap\lib\start.jar clean

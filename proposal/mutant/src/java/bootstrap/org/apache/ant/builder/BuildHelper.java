@@ -64,7 +64,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 /**
@@ -90,6 +92,7 @@ public class BuildHelper {
 
     }
 
+
     /** The properties which have been defined in the build */
     private Map properties = new HashMap();
 
@@ -98,6 +101,7 @@ public class BuildHelper {
 
     /** Filesets created in the build */
     private Map filesets = new HashMap();
+
 
     /**
      * Set a property for the build
@@ -108,9 +112,11 @@ public class BuildHelper {
     protected void setProperty(String propertyName, String propertyValue) {
         if (!properties.containsKey(propertyName)) {
             String value = resolve(propertyValue);
+
             properties.put(propertyName, value);
         }
     }
+
 
     /**
      * Create a Jar
@@ -118,20 +124,37 @@ public class BuildHelper {
      * @param basedir the base directpory from which files are added to the
      *      jar
      * @param metaInfDir the directory containing the META-INF for the jar
-     * @param metaInfIncludes the files to be included in the META-INF area
-     *      of the jar
+     * @param metaInfIncludes the files to be included in the META-INF area of
+     *      the jar
      * @param jarFile the file in which the Jar is created
+     * @param classpath Class-Path attribute in manifest
+     * @param mainClass Main-Class attribute in manifest
      */
     protected void jar(String basedir, String jarFile, String metaInfDir,
-                       String metaInfIncludes) {
+                       String metaInfIncludes,
+                       String classpath, String mainClass) {
         try {
             File base = new File(resolve(basedir));
             File jar = new File(resolve(jarFile));
+            Manifest manifest = new Manifest();
+            Attributes attributes = manifest.getMainAttributes();
+            attributes.putValue("Manifest-Version", "1.0");
+            attributes.putValue("Created-By", "Mutant Bootstrap");
+
+            if (classpath != null) {
+                attributes.putValue("Class-Path", classpath);
+            }
+            if (mainClass != null) {
+                attributes.putValue("Main-Class", mainClass);
+            }
+
             JarOutputStream jos
-                 = new JarOutputStream(new FileOutputStream(jar));
+                 = new JarOutputStream(new FileOutputStream(jar), manifest);
+
             addToJar(jos, base, null);
             if (metaInfDir != null) {
                 File[] metaFileSet = buildFileSet(metaInfDir, metaInfIncludes);
+
                 addFilesToJar(jos, new File(resolve(metaInfDir)),
                     metaFileSet, "META-INF");
             }
@@ -142,38 +165,44 @@ public class BuildHelper {
         }
     }
 
+
     /**
      * Compile a set of files
      *
      * @param srcDir the source directory
      * @param destDir where the compiled classes will go
-     * @param classpathRef the id of a path object with the classpath for
-     *      the build
+     * @param classpathRef the id of a path object with the classpath for the
+     *      build
      */
     protected void javac(String srcDir, String destDir, String classpathRef) {
         List javaFiles = new ArrayList();
         String src = resolve(srcDir);
         StringTokenizer tokenizer = new StringTokenizer(src, ":");
+
         while (tokenizer.hasMoreTokens()) {
             File srcLocation = new File(tokenizer.nextToken());
+
             getJavaFiles(srcLocation, javaFiles);
         }
 
         File dest = new File(resolve(destDir));
         int numArgs = javaFiles.size() + 2;
+
         if (classpathRef != null) {
             numArgs += 2;
         }
         String[] args = new String[numArgs];
         int index = 0;
+
         args[index++] = "-d";
         args[index++] = dest.getPath();
         if (classpathRef != null) {
             String path = (String) paths.get(resolve(classpathRef));
+
             args[index++] = "-classpath";
             args[index++] = path;
         }
-        for (Iterator i = javaFiles.iterator(); i.hasNext();) {
+        for (Iterator i = javaFiles.iterator(); i.hasNext(); ) {
             args[index++] = ((File) i.next()).getPath();
         }
 
@@ -182,12 +211,14 @@ public class BuildHelper {
             Object compiler = c.newInstance();
             Method compile = c.getMethod("compile",
                 new Class[]{(new String[]{}).getClass()});
+
             compile.invoke(compiler, new Object[]{args});
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Compile failed");
         }
     }
+
 
     /**
      * Copy a directory
@@ -198,8 +229,10 @@ public class BuildHelper {
     protected void copyFileset(String fromDir, String toDir) {
         File from = new File(resolve(fromDir));
         File to = new File(resolve(toDir));
+
         copyDir(from, to);
     }
+
 
     /**
      * Add a fileset to this build helper
@@ -210,10 +243,12 @@ public class BuildHelper {
      */
     protected void addFileSet(String name, File root, File[] files) {
         FileSetInfo info = new FileSetInfo();
+
         info.root = root;
         info.files = files;
         filesets.put(name, info);
     }
+
 
     /**
      * Copy a fileset given a reference to the source fileset
@@ -223,11 +258,14 @@ public class BuildHelper {
      */
     protected void copyFilesetRef(String fileSetRef, String toDir) {
         FileSetInfo fileset = (FileSetInfo) filesets.get(resolve(fileSetRef));
+
         if (fileset != null) {
             File to = new File(resolve(toDir));
+
             copyFileList(fileset.root, fileset.files, to);
         }
     }
+
 
     /**
      * Make a directory
@@ -236,8 +274,10 @@ public class BuildHelper {
      */
     protected void mkdir(String dirName) {
         File dir = new File(resolve(dirName));
+
         dir.mkdirs();
     }
+
 
     /**
      * Create a path object
@@ -246,8 +286,10 @@ public class BuildHelper {
      */
     protected void createPath(String pathName) {
         String path = "";
+
         paths.put(pathName, path);
     }
+
 
     /**
      * Add a fileset to a path
@@ -260,6 +302,7 @@ public class BuildHelper {
                                     String filesetIncludes) {
         File[] files = buildFileSet(filesetDir, filesetIncludes);
         String currentPath = (String) paths.get(pathName);
+
         for (int i = 0; i < files.length; ++i) {
             if (currentPath == null || currentPath.length() == 0) {
                 currentPath = files[i].getPath();
@@ -271,6 +314,7 @@ public class BuildHelper {
         paths.put(pathName, currentPath);
     }
 
+
     /**
      * Add a new element to a path
      *
@@ -280,6 +324,7 @@ public class BuildHelper {
     protected void addPathElementToPath(String pathName, String location) {
         String pathElement = resolve(location).replace('/', File.separatorChar);
         String currentPath = (String) paths.get(pathName);
+
         if (currentPath == null || currentPath.length() == 0) {
             currentPath = pathElement;
         } else {
@@ -287,6 +332,7 @@ public class BuildHelper {
         }
         paths.put(pathName, currentPath);
     }
+
 
     /**
      * Add an existing path to another path
@@ -296,11 +342,13 @@ public class BuildHelper {
      */
     protected void addPathToPath(String pathName, String pathNameToAdd) {
         String pathToAdd = (String) paths.get(pathNameToAdd);
+
         if (pathToAdd == null || pathToAdd.length() == 0) {
             return;
         }
 
         String currentPath = (String) paths.get(pathName);
+
         if (currentPath == null || currentPath.length() == 0) {
             currentPath = pathToAdd;
         } else {
@@ -308,6 +356,7 @@ public class BuildHelper {
         }
         paths.put(pathName, currentPath);
     }
+
 
     /**
      * Get the set of Java files to be compiled
@@ -317,6 +366,7 @@ public class BuildHelper {
      */
     private void getJavaFiles(File srcDir, List javaFiles) {
         File[] files = srcDir.listFiles();
+
         for (int i = 0; i < files.length; ++i) {
             if (files[i].isDirectory()) {
                 getJavaFiles(files[i], javaFiles);
@@ -325,6 +375,7 @@ public class BuildHelper {
             }
         }
     }
+
 
     /**
      * Copy a file
@@ -340,6 +391,7 @@ public class BuildHelper {
                 FileOutputStream out = new FileOutputStream(dest);
                 byte[] buf = new byte[1024 * 16];
                 int count = 0;
+
                 count = in.read(buf, 0, buf.length);
                 while (count != -1) {
                     out.write(buf, 0, count);
@@ -354,6 +406,7 @@ public class BuildHelper {
             }
         }
     }
+
 
     /**
      * Copy a list of files from one directory to another, preserving the
@@ -371,6 +424,7 @@ public class BuildHelper {
             String name
                  = files[i].getPath().substring(root.getPath().length() + 1);
             File dest = new File(to, name);
+
             if (files[i].isDirectory()) {
                 copyDir(files[i], dest);
             } else {
@@ -378,6 +432,7 @@ public class BuildHelper {
             }
         }
     }
+
 
     /**
      * Copy a directory
@@ -387,9 +442,12 @@ public class BuildHelper {
      */
     private void copyDir(File from, File to) {
         to.mkdirs();
+
         File[] files = from.listFiles();
+
         copyFileList(from, files, to);
     }
+
 
     /**
      * Add a directory to a Jar
@@ -403,8 +461,10 @@ public class BuildHelper {
     private void addToJar(JarOutputStream jos, File dir, String prefix)
          throws IOException {
         File[] files = dir.listFiles();
+
         addFilesToJar(jos, dir, files, prefix);
     }
+
 
     /**
      * Add a set of files to a jar
@@ -420,11 +480,13 @@ public class BuildHelper {
                                File[] files, String prefix) throws IOException {
         for (int i = 0; i < files.length; i++) {
             String name = files[i].getPath().replace('\\', '/');
+
             name = name.substring(dir.getPath().length() + 1);
             if (prefix != null) {
                 name = prefix + "/" + name;
             }
             ZipEntry ze = new ZipEntry(name);
+
             jos.putNextEntry(ze);
             if (files[i].isDirectory()) {
                 addToJar(jos, files[i], name);
@@ -432,6 +494,7 @@ public class BuildHelper {
                 FileInputStream fis = new FileInputStream(files[i]);
                 int count = 0;
                 byte[] buf = new byte[8 * 1024];
+
                 count = fis.read(buf, 0, buf.length);
                 while (count != -1) {
                     jos.write(buf, 0, count);
@@ -442,9 +505,10 @@ public class BuildHelper {
         }
     }
 
+
     /**
-     * Build a simple fileset. Only simple inclusion filtering is supported
-     * - no complicated patterns.
+     * Build a simple fileset. Only simple inclusion filtering is supported -
+     * no complicated patterns.
      *
      * @param filesetDir the base directory of the fileset
      * @param filesetIncludes the simple includes spec for the fileset
@@ -455,11 +519,13 @@ public class BuildHelper {
             return new File[0];
         }
         final String includes = resolve(filesetIncludes);
+
         if (includes.indexOf("**") != -1) {
             throw new RuntimeException("Simple fileset cannot handle ** "
                  + "style includes");
         }
         int index = 0;
+
         if (includes.charAt(0) == '*') {
             index = 1;
         }
@@ -469,6 +535,7 @@ public class BuildHelper {
         }
 
         File base = new File(resolve(filesetDir));
+
         return base.listFiles(
             new FilenameFilter() {
                 public boolean accept(File dir, String name) {
@@ -481,6 +548,7 @@ public class BuildHelper {
             });
     }
 
+
     /**
      * Resolve the property references in a string
      *
@@ -490,11 +558,13 @@ public class BuildHelper {
      */
     private String resolve(String propertyValue) {
         String newValue = propertyValue;
+
         while (newValue.indexOf("${") != -1) {
             int index = newValue.indexOf("${");
             int endIndex = newValue.indexOf("}", index);
             String propertyName = newValue.substring(index + 2, endIndex);
             String repValue = (String) properties.get(propertyName);
+
             newValue = newValue.substring(0, index) +
                 repValue + newValue.substring(endIndex + 1);
         }

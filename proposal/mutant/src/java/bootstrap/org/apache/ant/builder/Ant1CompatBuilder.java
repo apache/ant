@@ -37,7 +37,7 @@ public class Ant1CompatBuilder {
         helper.copyFileset("${bin.dir}/ant1src_copy", "${bin.dir}/ant1compat");
         helper.copyFileset("${ant1etc.dir}", "${bin.dir}/ant1compat/${optional.package}/junit/xsl");
         helper.jar("${bin.dir}/ant1compat", "${distlib.dir}/antlibs/ant1compat.jar",
-                   "${java.dir}/antlibs/ant1compat", "antlib.xml");
+                   "${java.dir}/antlibs/ant1compat", "antlib.xml", null, null);
     }
     protected void clean(BuildHelper helper) {
     }

@@ -22,10 +22,10 @@ javac -classpath bin/init:bin/bootstrap -d bin/builder src/java/bootstrap/org/ap
 java -classpath bin/init:bin/bootstrap org.apache.ant.bootstrap.Bootstrap
 
 # run full build using bootstrapped version
-java -classpath bootstrap/lib/start.jar:bootstrap/lib/init.jar org.apache.ant.start.Main $*
+java -jar bootstrap/lib/start.jar $*
 
 # Use the full build as the build used by the build script
 cp -r dist/lib bootstrap
 
 #clean up after bootstrap
-java -classpath bootstrap/lib/start.jar:bootstrap/lib/init.jar org.apache.ant.start.Main clean
+java -jar bootstrap/lib/start.jar clean

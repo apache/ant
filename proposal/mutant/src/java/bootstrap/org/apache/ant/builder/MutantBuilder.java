@@ -18,9 +18,9 @@ public class MutantBuilder {
         helper.addPathElementToPath("classpath.antcore", "${distlib.dir}/common/common.jar");
         helper.addPathToPath("classpath.antcore", "classpath.common");
         helper.addPathToPath("classpath.antcore", "classpath.parser");
-        helper.createPath("classpath.cli");
-        helper.addPathElementToPath("classpath.cli", "${distlib.dir}/antcore/antcore.jar");
-        helper.addPathToPath("classpath.cli", "classpath.antcore");
+        helper.createPath("classpath.frontend");
+        helper.addPathElementToPath("classpath.frontend", "${distlib.dir}/antcore/antcore.jar");
+        helper.addPathToPath("classpath.frontend", "classpath.antcore");
         helper.createPath("classpath.start");
         helper.addPathElementToPath("classpath.start", "${distlib.dir}/init.jar");
     }
@@ -33,36 +33,38 @@ public class MutantBuilder {
         helper.mkdir("${bin.dir}/init");
         helper.javac("${java.dir}/init", "${bin.dir}/init", null);
         helper.jar("${bin.dir}/init", "${distlib.dir}/init.jar",
-                   null, null);
+                   null, null, null, null);
     }
     protected void common(BuildHelper helper) {
         helper.mkdir("${bin.dir}/common");
         helper.mkdir("${distlib.dir}/common");
         helper.javac("${java.dir}/common", "${bin.dir}/common", "classpath.common");
         helper.jar("${bin.dir}/common", "${distlib.dir}/common/common.jar",
-                   null, null);
+                   null, null, null, null);
     }
     protected void antcore(BuildHelper helper) {
         helper.mkdir("${bin.dir}/antcore");
         helper.mkdir("${distlib.dir}/antcore");
         helper.javac("${java.dir}/antcore", "${bin.dir}/antcore", "classpath.antcore");
         helper.jar("${bin.dir}/antcore", "${distlib.dir}/antcore/antcore.jar",
-                   null, null);
+                   null, null, null, null);
     }
-    protected void cli(BuildHelper helper) {
-        helper.mkdir("${bin.dir}/cli");
+    protected void frontend(BuildHelper helper) {
+        helper.mkdir("${bin.dir}/frontend");
         helper.mkdir("${distlib.dir}/frontend");
-        helper.javac("${java.dir}/cli", "${bin.dir}/cli", "classpath.cli");
-        helper.jar("${bin.dir}/cli", "${distlib.dir}/frontend/cli.jar",
-                   null, null);
+        helper.javac("${java.dir}/frontend", "${bin.dir}/frontend", "classpath.frontend");
+        helper.jar("${bin.dir}/frontend", "${distlib.dir}/frontend/frontend.jar",
+                   null, null, null, null);
+        helper.jar("${bin.dir}/frontend", "${distlib.dir}/frontend/cli.jar",
+                   null, null, "frontend.jar", "org.apache.ant.cli.Commandline");
     }
     protected void start(BuildHelper helper) {
         helper.mkdir("${bin.dir}/start");
         helper.javac("${java.dir}/start", "${bin.dir}/start", "classpath.start");
         helper.jar("${bin.dir}/start", "${distlib.dir}/start.jar",
-                   null, null);
+                   null, null, "init.jar", "org.apache.ant.start.Main");
         helper.jar("${bin.dir}/start", "${distlib.dir}/ant.jar",
-                   null, null);
+                   null, null, "start.jar", "org.apache.tools.ant.Main");
     }
     protected void ant1compat(BuildHelper helper) {
     }
@@ -70,7 +72,7 @@ public class MutantBuilder {
         helper.mkdir("${bin.dir}/remote");
         helper.javac("${java.dir}/remote", "${bin.dir}/remote", "classpath.start");
         helper.jar("${bin.dir}/remote", "${distlib.dir}/remote.jar",
-                   null, null);
+                   null, null, null, "org.apache.ant.remote.RemoteMain");
     }
     protected void clean(BuildHelper helper) {
     }
@@ -84,7 +86,7 @@ public class MutantBuilder {
         helper.addPathToPath("classpath.antlibs", "classpath.common");
         helper.javac("${java.dir}/antlibs/${libset}", "${bin.dir}/antlibs/${libset}", "classpath.antlibs");
         helper.jar("${bin.dir}/antlibs/${libset}", "${distlib.dir}/antlibs/${libset}.jar",
-                   "${java.dir}/antlibs/${libset}", "antlib.xml");
+                   "${java.dir}/antlibs/${libset}", "antlib.xml", null, null);
     }
     protected void main(BuildHelper helper) {
     }
