@@ -366,6 +366,9 @@ public class Rmic extends MatchingTask {
 
         String compiler = project.getProperty("build.rmic");
         RmicAdapter adapter = RmicAdapterFactory.getRmic(compiler, this );
+            
+        // now we need to populate the compiler adapter
+        adapter.setRmic( this );
 
         Path classpath = adapter.getClasspath();
         loader = new AntClassLoader(project, classpath);
@@ -388,9 +391,6 @@ public class Rmic extends MatchingTask {
             log("RMI Compiling " + fileCount +
                 " class"+ (fileCount > 1 ? "es" : "")+" to " + baseDir, 
                 Project.MSG_INFO);
-            
-            // now we need to populate the compiler adapter
-            adapter.setRmic( this );
 
             // finally, lets execute the compiler!!
             if (!adapter.execute()) {
