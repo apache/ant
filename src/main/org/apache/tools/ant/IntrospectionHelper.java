@@ -659,7 +659,8 @@ public final class IntrospectionHelper implements BuildListener {
         }
         if (nc == null && parent instanceof DynamicConfigurator) {
             DynamicConfigurator dc = (DynamicConfigurator) parent;
-            final Object nestedElement = dc.createDynamicElement(elementName);
+            final Object nestedElement =
+                dc.createDynamicElement(name.toLowerCase(Locale.US));
             if (nestedElement != null) {
                 nc = new NestedCreator() {
                     public boolean isPolyMorphic() {
