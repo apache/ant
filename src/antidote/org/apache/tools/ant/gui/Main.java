@@ -55,6 +55,7 @@ package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.util.XMLHelper;
 import org.apache.tools.ant.gui.wizard.Wizard;
+import org.apache.tools.ant.gui.wizard.build.BuildData;
 import org.apache.tools.ant.gui.wizard.WizardListener;
 import org.apache.tools.ant.gui.command.LoadFileCmd;
 import org.apache.tools.ant.gui.event.EventBus;
@@ -115,10 +116,7 @@ public class Main {
             }
             else {
                 // We are in wizard mode. Create it.
-                ResourceManager resources = new ResourceManager(
-                    "org.apache.tools.ant.gui.resources.buildFileWizard");
-                Wizard wiz = new Wizard(
-                    resources, ACSFactory.getInstance().createProject());
+                Wizard wiz = new Wizard(new BuildData());
                 // XXX this is temporary for testing. Eventually
                 // it will launch the regular antidote screen with the
                 // results of the wizard.

@@ -70,9 +70,8 @@ import java.util.*;
  * @author Simeon Fitch 
  */
 public class Wizard extends JComponent {
-    /** Resources defining the wizard contents. Separate from the
-     *  application context resources. */
-    private ResourceManager _resources = null;
+    /** The data model to pass on to each step. */
+    private WizardData _data = null;
     /** Container for the step editors. */
     private JPanel _stepContainer = null;
     /** Layout manager for all the step panels. */
@@ -87,8 +86,6 @@ public class Wizard extends JComponent {
     private JProgressBar _progress = null;
     /** Widget for navigating through steps. */
     private WizardNavigator _nav = null;
-    /** The data model to pass on to each step. */
-    private Object _model = null;
     /** The current Wizard step. */
     private WizardStep _curr = null;
     /** The set of wizard listeners. */
@@ -97,17 +94,15 @@ public class Wizard extends JComponent {
     /** 
      * Standard ctor.
      * 
-     * @param resources Wizard definition resources
-     * @param dataModel Initial data model.
+     * @param data Data for the wizard.
      */
-    public Wizard(ResourceManager resources, Object dataModel) {
+    public Wizard(WizardData data) {
         setLayout(new BorderLayout());
-        _resources = resources;
-        _model = dataModel;
+        _data = data;
 
         _progress = new JProgressBar();
         _progress.setBorder(BorderFactory.createTitledBorder(
-            _resources.getString("progress")));
+            _data.getResources().getString("progress")));
         _progress.setStringPainted(true);
         add(_progress, BorderLayout.NORTH);
 
@@ -126,7 +121,7 @@ public class Wizard extends JComponent {
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
 
         scroller.setBorder(BorderFactory.createTitledBorder(
-            _resources.getString("help")));
+            _data.getResources().getString("help")));
         add(scroller, BorderLayout.WEST);
 
         _stepContainer = new JPanel(_layout = new CardLayout());
@@ -136,30 +131,23 @@ public class Wizard extends JComponent {
 
         add(_stepContainer, BorderLayout.CENTER);
 
-        _nav = new ButtonNavigator(_resources);
+        _nav = new ButtonNavigator(_data.getResources());
         _nav.addNavigatorListener(new NavHandler());
         ((ButtonNavigator)_nav).setBorder(BorderFactory.createEtchedBorder());
         add((ButtonNavigator)_nav, BorderLayout.SOUTH);
 
-        String[] steps = _resources.getStringArray("steps");
+        String[] steps = _data.getResources().getStringArray("steps");
         _progress.setMaximum(steps.length - 1);
         try {
             for(int i = 0; i < steps.length; i++) {
-                Class type = _resources.getClass(steps[i] + ".editor");
+                Class type = _data.getResources().getClass(steps[i] + ".editor");
                 WizardStep step = (WizardStep) type.newInstance();
-                step.setResources(_resources);
+                step.setResources(_data.getResources());
                 step.setID(steps[i]);
-                step.setTitle(_resources.getString(steps[i]+ ".title"));
+                step.setTitle(
+                    _data.getResources().getString(steps[i]+ ".title"));
                 step.setDescription(
-                    _resources.getString(steps[i]+ ".description"));
-
-                String id = _resources.getString(steps[i] + ".next");
-                id = (id == null && i < steps.length - 1) ? steps[i + 1] : id;
-                step.setNext(id);
-
-                id = _resources.getString(steps[i] + ".prev");
-                id = (id == null && i > 0) ? steps[i - 1] : id;
-                step.setPrevious(id);
+                    _data.getResources().getString(steps[i]+ ".description"));
 
                 _steps.put(steps[i], step);
                 _stepOrdering.add(step);
@@ -168,7 +156,7 @@ public class Wizard extends JComponent {
             // Initialize the first screen with the data model.
             if(steps.length > 0) {
                 WizardStep first = (WizardStep)_steps.get(steps[0]);
-                first.setDataModel(_model);
+                first.setDataModel(_data);
                 _curr = first;
                 showStep(first);
             }
@@ -207,13 +195,13 @@ public class Wizard extends JComponent {
     private void showStep(WizardStep step) {
         if(step == null) return;
 
-        // Transfer data model (in case step wants to create a new one.
-        _curr.updateDataModel();
         step.setDataModel(_curr.getDataModel());
         
         // Update the title and description.
         _stepContainer.setBorder(
-            BorderFactory.createTitledBorder(step.getTitle()));
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(step.getTitle()),
+                BorderFactory.createEmptyBorder(5, 15, 5, 15))); 
         _description.setText(step.getDescription());
 
         _nav.setBackEnabled(step.getPrevious() != null);
@@ -233,21 +221,28 @@ public class Wizard extends JComponent {
     /** Handler for actions invoked by wizard. */
     private class NavHandler implements NavigatorListener {
         public void nextStep() {
+            // Called to give data model chance to make changes to what is next.
+            _curr.updateDataModel();
             String nextID = _curr.getNext();
             if(nextID != null) {
                 showStep((WizardStep)_steps.get(nextID));
             }
         }
         public void backStep() {
+            // Called to give data model chance to make changes to what is 
+            // before.
+            _curr.updateDataModel();
             String prevID = _curr.getPrevious();
             if(prevID != null) {
                 showStep((WizardStep)_steps.get(prevID));
             }
         }
         public void gotoStep(String stepID){
+            _curr.updateDataModel();
             showStep((WizardStep) _steps.get(stepID));
         }
         public void cancel() {
+            _curr.updateDataModel();
             Iterator it = _listeners.iterator();
             while(it.hasNext()) {
                 WizardListener l = (WizardListener) it.next();
@@ -255,6 +250,7 @@ public class Wizard extends JComponent {
             }
         }
         public void finish() {
+            _curr.updateDataModel();
             Iterator it = _listeners.iterator();
             while(it.hasNext()) {
                 WizardListener l = (WizardListener) it.next();

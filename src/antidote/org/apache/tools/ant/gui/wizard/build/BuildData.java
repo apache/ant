@@ -51,115 +51,109 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizard;
-import org.apache.tools.ant.gui.core.ResourceManager;
-import javax.swing.JComponent;
+package org.apache.tools.ant.gui.wizard.build;
 
+import org.apache.tools.ant.gui.wizard.*;
+import org.apache.tools.ant.gui.core.ResourceManager;
+import org.apache.tools.ant.gui.acs.*;
+import java.util.*;
 
 /**
- * Interface for classes defining a step in a wizard.
+ * Data model for the build wizard.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizardStep {
-    /** 
-     * Set the step's resources.
-     * 
-     */
-    void setResources(ResourceManager resources);
+public class BuildData implements WizardData {
+    /** Wizard resources. */
+    private ResourceManager _resources = new ResourceManager(
+        "org.apache.tools.ant.gui.resources.buildFileWizard");
+
+    private StateMachine _stateMachine = new BuildStateMachine();
+    private String _name = null;
+    private boolean _isNewProject = true;
+    private List _optionalSteps = null;
 
     /** 
-     * Set the step id. The id must be unique among steps within the wizard.
+     * Default ctor.
      * 
-     * @param id Wizard id.
      */
-    void setID(String id);
+    public BuildData() {
+        //_project = ACSFactory.getInstance().createProject();
+        _optionalSteps = Arrays.asList(ProjectSetupStep.OPTIONS);
+    }
 
     /** 
-     * Get the step id.
+     * Get access to the resources for the wizard.
      * 
-     * @return Step id.
+     * @return Wizard resources.
      */
-    String getID();
+    public ResourceManager getResources() {
+        return _resources;
+    }
+    
+    /** 
+     * Get the class the determines what the next step should be.
+     * 
+     * @return State machine.
+     */
+    public StateMachine getStateMachine() {
+        return _stateMachine;
+    }
 
     /** 
-     * Set the step title.
+     * Get the project name.
      * 
-     * @param title Step title.
+     * @param name Project name.
      */
-    void setTitle(String title);
-    /** 
-     * Get the step title.
-     * 
-     * @return Step title.
-     */
-    String getTitle();
+    public void setProjectName(String name) {
+        _name = name;
+    }
 
     /** 
-     * Set the step description.
+     * Set the project name.
      * 
-     * @param desc Step description.
+     * @return Project name.
      */
-    void setDescription(String desc);
-    /** 
-     * Get the step description.
-     * 
-     * @return Step description.
-     */
-    String getDescription();
+    public String getProjectName() {
+        return _name;
+    }
 
     /** 
-     * Set the data model object that the step will edit. It is assumed 
-     * that all steps initialized within a single wizard agree on the
-     * data model type.
+     * Set whether or not a new project is being created.
      * 
-     * @param model Data model to edit.
+     * @param isNew True if new project, false if importing a project.
      */
-    void setDataModel(WizardData model);
+    public void setNewProject(boolean isNew) {
+        _isNewProject = isNew;
+    }
 
     /** 
-     * Get the data model that should be passeed on to the next step.
+     * Determine if we are creating a new project.
      * 
-     * @return Current data model.
+     * @return True if new project, false if importing a project.
      */
-    WizardData getDataModel();
+    public boolean isNewProject() {
+        return _isNewProject;
+    }
 
     /** 
-     * Get the component that should be displayed to the user for
-     * editing the model. This component should <b>not</b> include the
-     * title and text display, which is handled by the wizard container.
+     * Set the set of optional steps (as IDs) that should be executed.
      * 
-     * @return Editing component.
+     * @param steps Set of optional step IDs.
      */
-    JComponent getEditorComponent();
+    public void setOptionalSteps(List steps) {
+        _optionalSteps = steps;
+    }
 
     /** 
-     * Called when the step should refresh its display based on the 
-     * current model setting.
+     * Get the set of optional steps (as IDs) that should be executed.
      * 
+     * @return Set of optional step IDs.
      */
-    void updateDisplay();
+    public List getOptionalSteps() {
+        return _optionalSteps;
 
-    /** 
-     * Called when the step should update the data model based on the
-     * settings of its widgets.
-     * 
-     */
-    void updateDataModel();
-
-    /** 
-     * Get the id of the next step.
-     * 
-     * @return ID of next step.
-     */
-    String getNext();
-
-    /** 
-     * Get the id of the previous step.
-     * 
-     * @return Previous step.
-     */
-    String getPrevious();
+    }
 
 }

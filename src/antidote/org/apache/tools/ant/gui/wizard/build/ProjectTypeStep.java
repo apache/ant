@@ -55,70 +55,42 @@ package org.apache.tools.ant.gui.wizard.build;
 
 import org.apache.tools.ant.gui.wizard.AbstractWizardStep;
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import org.apache.tools.ant.gui.acs.*;
 import java.util.*;
 
 /**
- * Build file wizard step for naming the project and 
- * selecting what features are desired.
+ * Step for selecting whether a new project is being created, or
+ * if an existing one is being imported.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ProjectSetupStep extends AbstractWizardStep {
+public class ProjectTypeStep extends AbstractWizardStep {
 
-    /** ID for compile option. */
-    public static final String COMPILE_OPTION = "compile"; 
-    /** ID for JAR option. */
-    public static final String JAR_OPTION = "jar"; 
-    /** ID for JavaDoc option. */
-    public static final String JAVADOC_OPTION = "javadoc"; 
-
-    /** Available options as an array. */
-    public static final String[] OPTIONS = { 
-        COMPILE_OPTION,
-        JAR_OPTION,
-        JAVADOC_OPTION
-    };
-
-    /** Array of the option selections. */
-    private JCheckBox[] _selections = null;
-
-
-    /** Name of the project. */
-    private JTextField _name = null;
+    private JRadioButton _isNew = null;
+    private JRadioButton _isImport = null;
 
     /** 
-     * Initialize the screen widgets.
+     * Initialize the display.
      * 
      */
     protected void init() {
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        add(p, BorderLayout.NORTH);
-
-        _name = new JTextField(10);
-        p.add(new JLabel(getResources().getString(getID() + ".nameLabel")));
-        p.add(_name);
-
-        p = new JPanel(null);
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createTitledBorder(
-                getResources().getString(getID() + ".optionsLabel")),
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-        add(p, BorderLayout.CENTER);
-
-        _selections = new JCheckBox[OPTIONS.length];
-        for(int i = 0; i < OPTIONS.length; i++) {
-            _selections[i] = new JCheckBox(
-                getResources().getString(getID() + "." + OPTIONS[i] + ".label"));
-            _selections[i].setSelected(true);
-            p.add(_selections[i]);
-        }
+        ButtonGroup group = new ButtonGroup();
+        _isNew = new JRadioButton(
+            getResources().getString(getID() + ".isNewLabel"));
+        group.add(_isNew);
+        add(_isNew);
+        _isImport = new JRadioButton(
+            getResources().getString(getID() + ".isImportLabel"));
+        group.add(_isImport);
+        add(_isImport);
+        // XXX Not implemented yet.
+        _isImport.setEnabled(false);
+        _isImport.setToolTipText("Not implemented yet.");
     }
 
     /** 
@@ -127,17 +99,8 @@ public class ProjectSetupStep extends AbstractWizardStep {
      * 
      */
     public void updateDisplay() {
-        // Name.
         BuildData data = (BuildData) getDataModel();
-        _name.setText(data.getProjectName());
-
-        // Steps.
-        List steps = data.getOptionalSteps();
-        if(steps != null) {
-            for(int i = 0; i < _selections.length; i++) {
-                _selections[i].setSelected(steps.contains(OPTIONS[i]));
-            }
-        }
+        _isNew.setSelected(data.isNewProject());
     }
 
     /** 
@@ -146,39 +109,7 @@ public class ProjectSetupStep extends AbstractWizardStep {
      * 
      */
     public void updateDataModel() {
-        // Name.
         BuildData data = (BuildData) getDataModel();
-        data.setProjectName(_name.getText());
-
-        // Steps.
-        List steps = new ArrayList();
-        for(int i = 0; i < _selections.length; i++) {
-            if(_selections[i].isSelected()) {
-                steps.add(OPTIONS[i]);
-            }
-        }
-
-        data.setOptionalSteps(steps);
-    }
-
-    /** 
-     * Get the id of the next step.
-     * 
-     * @return ID of next step.
-     */
-    public String getNext() {
-        return ((BuildStateMachine)getDataModel().getStateMachine()).
-            getNext(this, getDataModel());
-    }
-
-    /** 
-     * Get the id of the previous step.
-     * 
-     * @return Previous step.
-     */
-    public String getPrevious() {
-        return ((BuildStateMachine)getDataModel().getStateMachine()).
-            getPrevious(this, getDataModel());
+        data.setNewProject(_isNew.isSelected());
     }
 }
-

@@ -52,114 +52,31 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.wizard;
-import org.apache.tools.ant.gui.core.ResourceManager;
-import javax.swing.JComponent;
-
 
 /**
- * Interface for classes defining a step in a wizard.
+ * Interface for the wizard state machine, responsible for determining the
+ * next step in the wizard.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizardStep {
-    /** 
-     * Set the step's resources.
-     * 
-     */
-    void setResources(ResourceManager resources);
+public interface StateMachine {
 
     /** 
-     * Set the step id. The id must be unique among steps within the wizard.
+     * Get the next step.
      * 
-     * @param id Wizard id.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The next step, or null if there currently isn't one.
      */
-    void setID(String id);
+    String getNext(WizardStep curr, WizardData data);
 
     /** 
-     * Get the step id.
+     * Get the previous step.
      * 
-     * @return Step id.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The previous step, or null if there currently isn't one.
      */
-    String getID();
-
-    /** 
-     * Set the step title.
-     * 
-     * @param title Step title.
-     */
-    void setTitle(String title);
-    /** 
-     * Get the step title.
-     * 
-     * @return Step title.
-     */
-    String getTitle();
-
-    /** 
-     * Set the step description.
-     * 
-     * @param desc Step description.
-     */
-    void setDescription(String desc);
-    /** 
-     * Get the step description.
-     * 
-     * @return Step description.
-     */
-    String getDescription();
-
-    /** 
-     * Set the data model object that the step will edit. It is assumed 
-     * that all steps initialized within a single wizard agree on the
-     * data model type.
-     * 
-     * @param model Data model to edit.
-     */
-    void setDataModel(WizardData model);
-
-    /** 
-     * Get the data model that should be passeed on to the next step.
-     * 
-     * @return Current data model.
-     */
-    WizardData getDataModel();
-
-    /** 
-     * Get the component that should be displayed to the user for
-     * editing the model. This component should <b>not</b> include the
-     * title and text display, which is handled by the wizard container.
-     * 
-     * @return Editing component.
-     */
-    JComponent getEditorComponent();
-
-    /** 
-     * Called when the step should refresh its display based on the 
-     * current model setting.
-     * 
-     */
-    void updateDisplay();
-
-    /** 
-     * Called when the step should update the data model based on the
-     * settings of its widgets.
-     * 
-     */
-    void updateDataModel();
-
-    /** 
-     * Get the id of the next step.
-     * 
-     * @return ID of next step.
-     */
-    String getNext();
-
-    /** 
-     * Get the id of the previous step.
-     * 
-     * @return Previous step.
-     */
-    String getPrevious();
-
+    String getPrevious(WizardStep curr, WizardData data);
 }

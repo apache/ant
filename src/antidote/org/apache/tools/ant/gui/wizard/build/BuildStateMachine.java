@@ -51,115 +51,91 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizard;
+package org.apache.tools.ant.gui.wizard.build;
+import org.apache.tools.ant.gui.wizard.*;
 import org.apache.tools.ant.gui.core.ResourceManager;
-import javax.swing.JComponent;
-
+import java.util.*;
 
 /**
- * Interface for classes defining a step in a wizard.
+ * State machine defining the step ordering for the build wizard.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizardStep {
-    /** 
-     * Set the step's resources.
-     * 
-     */
-    void setResources(ResourceManager resources);
+public class BuildStateMachine extends DefaultStateMachine {
+    private List _optionals = Arrays.asList(ProjectSetupStep.OPTIONS);
+
 
     /** 
-     * Set the step id. The id must be unique among steps within the wizard.
+     * Get the next step.
      * 
-     * @param id Wizard id.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The ID of next step, or null if there currently isn't one.
      */
-    void setID(String id);
+    public String getNext(ProjectSetupStep curr, WizardData data) {
+        return getFollowingID(super.getNext(curr, data), data, +1);
+    }
 
     /** 
-     * Get the step id.
+     * Get the next step.
      * 
-     * @return Step id.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The ID of next step, or null if there currently isn't one.
      */
-    String getID();
+    public String getNext(OptionalStep curr, WizardData data) {
+        return getFollowingID(super.getNext(curr, data), data, +1);
+    }
 
     /** 
-     * Set the step title.
+     * Get the previous step.
      * 
-     * @param title Step title.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The ID of previous step, or null if there currently isn't one.
      */
-    void setTitle(String title);
-    /** 
-     * Get the step title.
-     * 
-     * @return Step title.
-     */
-    String getTitle();
+    public String getPrevious(OptionalStep curr, WizardData data) {
+        return getFollowingID(super.getPrevious(curr, data), data, -1);
+    }
 
     /** 
-     * Set the step description.
+     * Get the previous step.
      * 
-     * @param desc Step description.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The ID of previous step, or null if there currently isn't one.
      */
-    void setDescription(String desc);
-    /** 
-     * Get the step description.
-     * 
-     * @return Step description.
-     */
-    String getDescription();
+    public String getPrevious(FinishStep curr, WizardData data) {
+        return getFollowingID(super.getPrevious(curr, data), data, -1);
+    }
 
     /** 
-     * Set the data model object that the step will edit. It is assumed 
-     * that all steps initialized within a single wizard agree on the
-     * data model type.
+     * Figure out which ID should follow the given one based on the current
+     * state setting of the optional steps.
      * 
-     * @param model Data model to edit.
+     * @param curr ID of the current step.
+     * @param data State data.
+     * @param direction +1 for next, -1 for previous.
+     * @return The ID to follow, or null if none.
      */
-    void setDataModel(WizardData model);
+    private String getFollowingID(String curr, WizardData data, int direction) {
+        String follow = curr;
+        List steps = getStepList(data);
+        List setting = ((BuildData)data).getOptionalSteps();
 
-    /** 
-     * Get the data model that should be passeed on to the next step.
-     * 
-     * @return Current data model.
-     */
-    WizardData getDataModel();
+        while(follow != null && _optionals.contains(follow) && 
+              !setting.contains(follow)) {
 
-    /** 
-     * Get the component that should be displayed to the user for
-     * editing the model. This component should <b>not</b> include the
-     * title and text display, which is handled by the wizard container.
-     * 
-     * @return Editing component.
-     */
-    JComponent getEditorComponent();
+            int index = steps.indexOf(follow) + direction;
+            if(index >= 0 && index < steps.size()) {
+                follow = (String) steps.get(index);
+            }
+            else {
+                follow = null;
+            }
+        }
 
-    /** 
-     * Called when the step should refresh its display based on the 
-     * current model setting.
-     * 
-     */
-    void updateDisplay();
-
-    /** 
-     * Called when the step should update the data model based on the
-     * settings of its widgets.
-     * 
-     */
-    void updateDataModel();
-
-    /** 
-     * Get the id of the next step.
-     * 
-     * @return ID of next step.
-     */
-    String getNext();
-
-    /** 
-     * Get the id of the previous step.
-     * 
-     * @return Previous step.
-     */
-    String getPrevious();
-
+        return follow;
+    }
 }

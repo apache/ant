@@ -76,11 +76,7 @@ public abstract class  AbstractWizardStep extends JComponent
     /** Description of the step. */
     private String _description = null;
     /** Data model. */
-    private Object _model = null;
-    /** ID of next step. */
-    private String _nextID = null;
-    /** ID of previous step. */
-    private String _prevID = null;
+    private WizardData _model = null;
 
     /** 
      * Called when the instance should initialize its contents, e.g.
@@ -161,41 +157,6 @@ public abstract class  AbstractWizardStep extends JComponent
         return _description;
     }
 
-    /** 
-     * Set the default id of the next step.
-     * 
-     * @param nextID ID of next step.
-     */
-    public void setNext(String nextID) {
-        _nextID = nextID;
-    }
-
-    /** 
-     * Get the id of the next step.
-     * 
-     * @return ID of next step.
-     */
-    public String getNext() {
-        return _nextID;
-    }
-
-    /** 
-     * Set the default id of the previous step.
-     * 
-     * @param prevID ID of previous step.
-     */
-    public void setPrevious(String prevID) {
-        _prevID = prevID;
-    }
-
-    /** 
-     * Get the id of the previous step.
-     * 
-     * @return Previous step.
-     */
-    public String getPrevious() {
-        return _prevID;
-    }
 
     /** 
      * Set the data model object that the step will edit. It is assumed 
@@ -204,7 +165,7 @@ public abstract class  AbstractWizardStep extends JComponent
      * 
      * @param model Data model to edit.
      */
-    public void setDataModel(Object model) {
+    public void setDataModel(WizardData model) {
         _model = model;
     }
 
@@ -213,7 +174,7 @@ public abstract class  AbstractWizardStep extends JComponent
      * 
      * @return Current data model.
      */
-    public Object getDataModel() {
+    public WizardData getDataModel() {
         return _model;
     }
 
@@ -234,6 +195,26 @@ public abstract class  AbstractWizardStep extends JComponent
     }
 
     /** 
+     * Get the id of the next step.
+     * 
+     * @return ID of next step.
+     */
+    public String getNext() {
+        return getDataModel().getStateMachine().getNext(
+            this, getDataModel());
+    }
+
+    /** 
+     * Get the id of the previous step.
+     * 
+     * @return Previous step.
+     */
+    public String getPrevious() {
+        return getDataModel().getStateMachine().getPrevious(
+            this, getDataModel());
+    }
+
+    /** 
      * Get a string representation of this.
      * 
      * @return String representation.
@@ -242,10 +223,6 @@ public abstract class  AbstractWizardStep extends JComponent
         StringBuffer buf = new StringBuffer(getClass().getName());
         buf.append("[id=");
         buf.append(getID());
-        buf.append(",prev=");
-        buf.append(getPrevious());
-        buf.append(",next=");
-        buf.append(getNext());
         buf.append("]");
         return buf.toString();
     }

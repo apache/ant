@@ -53,113 +53,56 @@
  */
 package org.apache.tools.ant.gui.wizard;
 import org.apache.tools.ant.gui.core.ResourceManager;
-import javax.swing.JComponent;
-
+import java.util.*;
 
 /**
- * Interface for classes defining a step in a wizard.
+ * A simple state machine based on the defined ordering of steps
+ * in the resources.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizardStep {
-    /** 
-     * Set the step's resources.
-     * 
-     */
-    void setResources(ResourceManager resources);
+public class DefaultStateMachine implements StateMachine {
 
     /** 
-     * Set the step id. The id must be unique among steps within the wizard.
+     * Get the list of step IDs defined in the resources as a list.
      * 
-     * @param id Wizard id.
+     * @param data Current wizard state.
+     * @return List of step IDs
      */
-    void setID(String id);
+    protected List getStepList(WizardData data) {
+        return Arrays.asList(data.getResources().getStringArray("steps"));
+    }
 
     /** 
-     * Get the step id.
+     * Get the next step.
      * 
-     * @return Step id.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The ID of next step, or null if there currently isn't one.
      */
-    String getID();
+    public String getNext(WizardStep curr, WizardData data) {
+        List steps = getStepList(data);
+        int nextIndex = steps.indexOf(curr.getID()) + 1;
+        if(nextIndex > 0 && nextIndex < steps.size()) {
+            return (String) steps.get(nextIndex);
+        }
+        return null;
+    }
 
     /** 
-     * Set the step title.
+     * Get the previous step.
      * 
-     * @param title Step title.
+     * @param curr The current step.
+     * @param data The current state of the wizard.
+     * @return The ID of previous step, or null if there currently isn't one.
      */
-    void setTitle(String title);
-    /** 
-     * Get the step title.
-     * 
-     * @return Step title.
-     */
-    String getTitle();
-
-    /** 
-     * Set the step description.
-     * 
-     * @param desc Step description.
-     */
-    void setDescription(String desc);
-    /** 
-     * Get the step description.
-     * 
-     * @return Step description.
-     */
-    String getDescription();
-
-    /** 
-     * Set the data model object that the step will edit. It is assumed 
-     * that all steps initialized within a single wizard agree on the
-     * data model type.
-     * 
-     * @param model Data model to edit.
-     */
-    void setDataModel(WizardData model);
-
-    /** 
-     * Get the data model that should be passeed on to the next step.
-     * 
-     * @return Current data model.
-     */
-    WizardData getDataModel();
-
-    /** 
-     * Get the component that should be displayed to the user for
-     * editing the model. This component should <b>not</b> include the
-     * title and text display, which is handled by the wizard container.
-     * 
-     * @return Editing component.
-     */
-    JComponent getEditorComponent();
-
-    /** 
-     * Called when the step should refresh its display based on the 
-     * current model setting.
-     * 
-     */
-    void updateDisplay();
-
-    /** 
-     * Called when the step should update the data model based on the
-     * settings of its widgets.
-     * 
-     */
-    void updateDataModel();
-
-    /** 
-     * Get the id of the next step.
-     * 
-     * @return ID of next step.
-     */
-    String getNext();
-
-    /** 
-     * Get the id of the previous step.
-     * 
-     * @return Previous step.
-     */
-    String getPrevious();
-
+    public String getPrevious(WizardStep curr, WizardData data) {
+        List steps = getStepList(data);
+        int nextIndex = steps.indexOf(curr.getID()) - 1;
+        if(nextIndex > 0 && nextIndex < steps.size()) {
+            return (String) steps.get(nextIndex);
+        }
+        return null;
+    }
 }
