@@ -460,12 +460,17 @@ public class Jar extends Zip {
             // assuming 'skip' otherwise
             // don't warn if skip has been requested explicitly, warn if user
             // didn't set the attribute
-            int logLevel = filesetManifestConfig == null ?
-                Project.MSG_WARN : Project.MSG_VERBOSE;
-            log("File " + file
-                + " includes a META-INF/MANIFEST.MF which will be ignored. "
-                + "To include this file, set filesetManifest to a value other "
-                + "than 'skip'.", logLevel);
+
+            // Hide warning also as it makes no sense since
+            // the filesetmanifest attribute itself has been
+            // hidden
+
+            //int logLevel = filesetManifestConfig == null ?
+            //    Project.MSG_WARN : Project.MSG_VERBOSE;
+            //log("File " + file
+            //    + " includes a META-INF/MANIFEST.MF which will be ignored. "
+            //    + "To include this file, set filesetManifest to a value other "
+            //    + "than 'skip'.", logLevel);
         }
     }
 
