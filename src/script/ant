@@ -12,16 +12,6 @@ case "`uname`" in
   Darwin*) darwin=true ;;
 esac
 
-# For Cygwin, ensure paths are in UNIX format before anything is touched
-if $cygwin ; then
-  [ -n "$ANT_HOME" ] &&
-    ANT_HOME=`cygpath --unix "$ANT_HOME"`
-  [ -n "$JAVA_HOME" ] &&
-    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
-  [ -n "$CLASSPATH" ] &&
-    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
-fi
-
 if [ -z "$ANT_HOME" ] ; then
   # try to find ANT
   if [ -d /opt/ant ] ; then 
@@ -48,6 +38,16 @@ if [ -z "$ANT_HOME" ] ; then
   
   ANT_HOME=`dirname "$PRG"`/..
 
+fi
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$ANT_HOME" ] &&
+    ANT_HOME=`cygpath --unix "$ANT_HOME"`
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] &&
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
 if [ -z "$JAVACMD" ] ; then 
