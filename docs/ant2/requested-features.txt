@@ -210,6 +210,10 @@ decide between several possible options.
 
   Beware of problems with spawned processes.
 
+* better subproject handling
+
+  Whatever that means in detail.
+
 V. Things we probably don't agree on. 
 ======================================================================
 
