@@ -73,12 +73,12 @@ import org.apache.tools.ant.types.PatternSet;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class ClasspathTestCollector extends ProjectComponent
+public final class ClasspathTestCollector extends ProjectComponent
         implements TestCollector {
 
     private final static int SUFFIX_LENGTH = ".class".length();
 
-    private PatternSet patterns = new PatternSet();
+    private final PatternSet patterns = new PatternSet();
 
     private Path path = null;
 
@@ -101,11 +101,13 @@ public class ClasspathTestCollector extends ProjectComponent
             }
             // add tests to the already collected one
             final int includedCount = included.size();
+            log("Adding " + includedCount + " testcases from " + f, Project.MSG_VERBOSE);
             for (int j = 0; j < includedCount; j++) {
-                String testname = (String) included.elementAt(i);
+                String testname = (String) included.elementAt(j);
                 collected.put(testname, "");
             }
         }
+        log("Collected " + collected.size() + " testcases from " + paths.length + " paths.");
         return collected.keys();
     }
 
@@ -114,8 +116,8 @@ public class ClasspathTestCollector extends ProjectComponent
         Project project = getProject();
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(dir);
-        ds.setIncludes(patterns.getIncludePatterns(project));
-        ds.setExcludes(patterns.getExcludePatterns(project));
+        ds.setIncludes(patterns.getIncludePatterns(getProject()));
+        ds.setExcludes(patterns.getExcludePatterns(getProject()));
         ds.scan();
         String[] included = ds.getIncludedFiles();
         return testClassNameFromFile(included);
@@ -161,6 +163,10 @@ public class ClasspathTestCollector extends ProjectComponent
 
     public void setPath(Path path) {
         this.path = path;
+    }
+
+    public Path getPath(){
+        return this.path;
     }
 
     public PatternSet.NameEntry createInclude() {

@@ -59,6 +59,8 @@ import junit.runner.TestCollector;
 
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * A test element where tests files are specified by include/exclude
@@ -72,9 +74,14 @@ import org.apache.tools.ant.types.PatternSet;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class BatchTestElement implements TestCollector {
+public class BatchTestElement extends ProjectComponent implements TestCollector {
 
     private ClasspathTestCollector collector = new ClasspathTestCollector();
+
+    public void setProject(Project p){
+        collector.setProject(p);
+        super.setProject(p);
+    }
 
 // Test collector implementation
 
@@ -86,6 +93,10 @@ public class BatchTestElement implements TestCollector {
 
     public void setPath(Path path) {
         collector.setPath(path);
+    }
+
+    public Path getPath(){
+        return collector.getPath();
     }
 
     public PatternSet.NameEntry createInclude() {

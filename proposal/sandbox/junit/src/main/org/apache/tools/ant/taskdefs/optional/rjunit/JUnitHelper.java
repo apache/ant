@@ -144,7 +144,7 @@ public final class JUnitHelper {
      */
     public static File getResourceEntry(String resource) {
         URL url = JUnitHelper.class.getResource(resource);
-        if (url != null) {
+        if (url == null) {
             // can't find the resource...
             return null;
         }

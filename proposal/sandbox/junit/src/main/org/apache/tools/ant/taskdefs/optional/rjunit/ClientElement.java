@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
@@ -110,7 +111,7 @@ public final class ClientElement extends ProjectComponent {
     /** create a new client */
     public ClientElement(RJUnitTask value) {
         parent = value;
-        cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.remote.TestRunner");
+        cmd.setClassname("org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunner");
     }
 
     /** core entry point */
@@ -127,7 +128,7 @@ public final class ClientElement extends ProjectComponent {
         // must appended to classpath to avoid conflicts.
         JUnitHelper.addClasspathEntry(createClasspath(), "/junit/framework/TestCase.class");
         JUnitHelper.addClasspathEntry(createClasspath(), "/org/apache/tools/ant/Task.class");
-        JUnitHelper.addClasspathEntry(createClasspath(), "/org/apache/tools/ant/taskdefs/optional/junit/remote/TestRunner.class");
+        JUnitHelper.addClasspathEntry(createClasspath(), "/org/apache/tools/ant/taskdefs/optional/rjunit/remote/TestRunner.class");
     }
 
     protected void doExecute() throws BuildException {
@@ -162,6 +163,13 @@ public final class ClientElement extends ProjectComponent {
         Enumeration[] tests = new Enumeration[testCollectors.size()];
         for (int i = 0; i < testCollectors.size(); i++) {
             TestCollector te = (TestCollector) testCollectors.elementAt(i);
+            //@fixme I'm forced to append the classpath from batchtests
+            // here to make sure it will be included as part of the
+            // testrunner classpath. Need a better design ?
+            if (te instanceof BatchTestElement){
+                Path path = ((BatchTestElement)te).getPath();
+                cmd.getClasspath().append(path);
+            }
             tests[i] = te.collectTests();
         }
         return new CompoundEnumeration(tests);
@@ -191,8 +199,11 @@ public final class ClientElement extends ProjectComponent {
         File f = futils.createTempFile("junit-antrunner", "tmp", new File("."));
         OutputStream os = null;
         try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             os = new BufferedOutputStream(new FileOutputStream(f));
-            props.store(os, "JUnit Ant Runner configuration file");
+            props.store(baos, "JUnit Ant Runner configuration file");
+            log(baos.toString(), Project.MSG_VERBOSE);
+            os.write(baos.toByteArray());
         } catch (IOException e) {
             throw new BuildException(e);
         } finally {
