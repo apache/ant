@@ -55,9 +55,11 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.ant.taskdefs.optional.pvcs;
 
 import java.io.*;
+import java.util.Enumeration;
+import java.util.Vector;
 import java.text.*;
 import java.util.Random;
 import org.apache.tools.ant.BuildException;
@@ -78,6 +80,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;
     private String repository;
     private String pvcsProject;
+    private Vector pvcsProjects;
     private String workspace;
     private String force;
     private String promotiongroup;
@@ -148,8 +151,22 @@ public class Pvcs extends org.apache.tools.ant.Task {
         if(getWorkspace()!=null)
             commandLine.createArgument().setValue("-sp"+getWorkspace());
         commandLine.createArgument().setValue("-pr"+getRepository());
+
+        // default pvcs project is "/"
+        if(getPvcsproject() == null && getPvcsprojects().isEmpty())
+            pvcsProject = "/";
+
         if(getPvcsproject()!=null)
             commandLine.createArgument().setValue(getPvcsproject());
+        if(!getPvcsprojects().isEmpty()) {
+            Enumeration e = getPvcsprojects().elements();
+            while (e.hasMoreElements()) {
+                String projectName = ((PvcsProject)e.nextElement()).getName();
+                if (projectName == null || (projectName.trim()).equals(""))
+                    throw new BuildException("name is a required attribute of pvcsproject");
+                commandLine.createArgument().setValue(projectName);
+            }
+        }
 
         File tmp = null;
         try {
@@ -163,10 +180,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
             if(!tmp.exists())
                 throw new BuildException("Communication between ant and pvcs failed");
                                 
-                                // Create foldes in workspace
+            // Create foldes in workspace
             createFolders(tmp);
 
-                                // Launch get on output captured from PCLI lvf
+            // Launch get on output captured from PCLI lvf
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
 
@@ -254,6 +271,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     public void setPvcsproject(String prj) {
         pvcsProject = prj;
+    }
+
+    /**
+     * Get name of the project in the PVCS repository
+     * @return Vector
+     */
+    public Vector getPvcsprojects() {
+        return pvcsProjects;
     }
 
     /**
@@ -363,12 +388,20 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
+     * handles &lt;pvcsproject&gt; subelements
+     * @param PvcsProject
+     */
+    public void addPvcsproject(PvcsProject p) {
+        pvcsProjects.addElement(p);
+    }
+
+    /**
      * Creates a Pvcs object
-     * Default PVCS project is "/"
      */
     public Pvcs() {
         super();
-        pvcsProject = "/";
+        pvcsProject = null;
+        pvcsProjects = new Vector();
         workspace = null;
         repository = null;
         pvcsbin = null;

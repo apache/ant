@@ -13,10 +13,12 @@ Changes that could break older environments:
 * several Zip methods have changed their signature as we now use a Zip
   package of our own that handles Unix permissions for directories.
 
+* The <pvcs> task has been move to a package of its own.
+
 Other changes:
 --------------
 
-* New tasks: ear, p4counter, record
+* New tasks: ear, p4counter, record, cvspass
 
 * Ant now uses JAXP 1.1
 
@@ -41,6 +43,8 @@ Other changes:
 
 * <jar> now has a nested <metainf> element following the same idea as
   <war>'s <webinf>.
+
+* <pvcs> can now handle multiple projects.
 
 Fixed bugs:
 -----------
