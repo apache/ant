@@ -1537,9 +1537,9 @@
                    unless="bsf.present"/>
           <exclude name="${optional.package}/BeanShellScriptTest.java"
                    unless="beanshell.present"/>
-          <exclude name="${optional.type.package}/Script/*.java"
+          <exclude name="${optional.type.package}/Script*.java"
                    unless="bsf.present"/>
-          <exclude name="${optional.type.package}/Script/*.java"
+          <exclude name="${optional.type.package}/Script*.java"
                    unless="rhino.present"/>
 
           <!-- fail if testcases can be loaded from the system classloader -->
