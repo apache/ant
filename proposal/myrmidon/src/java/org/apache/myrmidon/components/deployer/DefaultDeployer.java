@@ -17,23 +17,22 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
+import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
-import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
-import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
  * This class deploys roles, types and services from a typelib.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
 public class DefaultDeployer
@@ -137,56 +136,9 @@ public class DefaultDeployer
     }
 
     /**
-     * Creates a type definition.
-     */
-    public TypeDefinition createTypeDefinition( final Configuration configuration )
-        throws ConfigurationException
-    {
-        final String converterShorthand = m_roleManager.getNameForRole( Converter.ROLE );
-        final String roleShorthand = configuration.getName();
-        if( roleShorthand.equals( converterShorthand ) )
-        {
-            // A converter definition
-            final String className = configuration.getAttribute( "classname" );
-            final String source = configuration.getAttribute( "source" );
-            final String destination = configuration.getAttribute( "destination" );
-            return new ConverterDefinition( className, source, destination );
-        }
-        else
-        {
-            // A type definition
-            final String typeName = configuration.getAttribute( "name" );
-            final String className = configuration.getAttribute( "classname" );
-            return new TypeDefinition( typeName, roleShorthand, className );
-        }
-    }
-
-    /**
-     * Handles a converter definition.
-     */
-    private void handleConverter( final Deployment deployment,
-                                  final String className,
-                                  final String source,
-                                  final String destination )
-        throws Exception
-    {
-        m_converterRegistry.registerConverter( className, source, destination );
-        final DefaultTypeFactory factory = deployment.getFactory( Converter.class );
-        factory.addNameClassMapping( className, className );
-        m_typeManager.registerType( Converter.class, className, factory );
-
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message =
-                REZ.getString( "register-converter.notice", source, destination );
-            getLogger().debug( message );
-        }
-    }
-
-    /**
      * Handles a type definition.
      */
-    public void handleType( final Deployment deployment,
+    public void deployType( final Deployment deployment,
                             final TypeDefinition typeDef )
         throws Exception
     {
@@ -264,9 +216,31 @@ public class DefaultDeployer
     }
 
     /**
+     * Handles a converter definition.
+     */
+    private void handleConverter( final Deployment deployment,
+                                  final String className,
+                                  final String source,
+                                  final String destination )
+        throws Exception
+    {
+        m_converterRegistry.registerConverter( className, source, destination );
+        final DefaultTypeFactory factory = deployment.getFactory( Converter.class );
+        factory.addNameClassMapping( className, className );
+        m_typeManager.registerType( Converter.class, className, factory );
+
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message =
+                REZ.getString( "register-converter.notice", source, destination );
+            getLogger().debug( message );
+        }
+    }
+
+    /**
      * Handles a role definition.
      */
-    public void handleRole( final Deployment deployment,
+    public void deployRole( final Deployment deployment,
                             final RoleDefinition roleDef )
     {
         final String name = roleDef.getShortHand();

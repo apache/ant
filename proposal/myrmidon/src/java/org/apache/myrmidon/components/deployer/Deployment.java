@@ -12,34 +12,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
-import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.xml.sax.XMLReader;
 
 /**
  * This class deploys type libraries from a ClassLoader into a registry.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
 class Deployment
@@ -49,13 +39,19 @@ class Deployment
     private final static Resources REZ =
         ResourceManager.getPackageResources( Deployment.class );
 
-    private final static String DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";
+    private final static String TYPE_DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";
     private final static String ROLE_DESCRIPTOR_NAME = "META-INF/ant-roles.xml";
+    private final static String SERVICE_DESCRIPTOR_NAME = "META-INF/ant-services.xml";
 
     private ClassLoader m_classLoader;
     private DefaultDeployer m_deployer;
-    private String[] m_descriptorUrls;
-    private Configuration[] m_descriptors;
+    private TypeDescriptor[] m_descriptors;
+    private ServiceDescriptor[] m_services;
+
+    // TODO - create and configure these in DefaultDeployer
+    private DescriptorBuilder m_roleBuilder = new RoleDescriptorBuilder();
+    private DescriptorBuilder m_typeBuilder = new TypeDescriptorBuilder();
+    private DescriptorBuilder m_serviceBuilder = new ServiceDescriptorBuilder();
 
     /** Map from role Class -> DefaultTypeFactory for that role. */
     private Map m_factories = new HashMap();
@@ -69,12 +65,13 @@ class Deployment
     /**
      * Load the descriptors.  Deploys all roles, then loads the descriptors
      * for, but does not deploy, all the types.
+     *
+     * @param jarUrl The URL for the typelib, used to locate the descriptors.
+     *               If null, the resources from the classloader are used.
      */
     public void loadDescriptors( final URL jarUrl )
         throws Exception
     {
-        final ArrayList descriptors = new ArrayList();
-
         // Create a SAX parser to assemble the descriptors into Configuration
         // objects
         final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
@@ -86,184 +83,27 @@ class Deployment
         parser.setContentHandler( handler );
         parser.setErrorHandler( handler );
 
-        // Load the role descriptors, and deploy all roles
-        final List roleUrls = locateResources( ROLE_DESCRIPTOR_NAME, jarUrl );
-        for( Iterator iterator = roleUrls.iterator(); iterator.hasNext(); )
-        {
-            String url = (String)iterator.next();
-            try
-            {
-                parser.parse( url );
-            }
-            catch( FileNotFoundException e )
-            {
-                // Ignore - this happens when jarUrl != null and the Jar does
-                // not contain a role descriptor.
-                continue;
-            }
+        // Build the role descriptors
+        final ArrayList roleUrls = locateResources( ROLE_DESCRIPTOR_NAME, jarUrl );
+        final ArrayList roleDescriptors = buildDescriptors( roleUrls, m_roleBuilder, parser, handler );
 
-            handleRoleDescriptor( handler.getConfiguration(), url );
+        // Deploy the roles
+        // TODO - need to defer this
+        for( int i = 0; i < roleDescriptors.size(); i++ )
+        {
+            final RoleDescriptor descriptor = (RoleDescriptor)roleDescriptors.get( i );
+            deployRoles( descriptor );
         }
 
-        // Load type descriptors
-        final List typeUrls = locateResources( DESCRIPTOR_NAME, jarUrl );
-        for( Iterator iterator = typeUrls.iterator(); iterator.hasNext(); )
-        {
-            String url = (String)iterator.next();
-            try
-            {
-                parser.parse( url.toString() );
-            }
-            catch( FileNotFoundException e )
-            {
-                // Ignore - this happens when jarUrl != null and the Jar does
-                // not contain a type descriptor
-                continue;
-            }
+        // Build the type descriptors
+        final ArrayList typeUrls = locateResources( TYPE_DESCRIPTOR_NAME, jarUrl );
+        final ArrayList typeDescriptors = buildDescriptors( typeUrls, m_typeBuilder, parser, handler );
+        m_descriptors = (TypeDescriptor[])typeDescriptors.toArray( new TypeDescriptor[ typeDescriptors.size() ] );
 
-            descriptors.add( handler.getConfiguration() );
-        }
-        m_descriptorUrls = (String[])typeUrls.toArray( new String[ typeUrls.size() ] );
-        m_descriptors = (Configuration[])descriptors.toArray( new Configuration[ descriptors.size() ] );
-    }
-
-    /**
-     * Deploys everything in the type library.
-     */
-    public void deployAll()
-        throws DeploymentException
-    {
-        for( int i = 0; i < m_descriptors.length; i++ )
-        {
-            Configuration descriptor = m_descriptors[ i ];
-            deployFromDescriptor( descriptor, m_descriptorUrls[ i ] );
-        }
-    }
-
-    /**
-     * Deploys a single type in the type library.
-     */
-    public void deployType( final String roleShorthand, final String typeName )
-        throws DeploymentException
-    {
-        try
-        {
-            // Locate the entry for the type
-            for( int i = 0; i < m_descriptors.length; i++ )
-            {
-                Configuration descriptor = m_descriptors[ i ];
-                final Configuration[] datatypes =
-                    descriptor.getChild( "types" ).getChildren( roleShorthand );
-                for( int j = 0; j < datatypes.length; j++ )
-                {
-                    Configuration datatype = datatypes[ j ];
-                    if( datatype.getAttribute( "name" ).equals( typeName ) )
-                    {
-                        final TypeDefinition typeDef = m_deployer.createTypeDefinition( datatype );
-                        m_deployer.handleType( this, typeDef );
-                    }
-                }
-            }
-        }
-        catch( Exception e )
-        {
-            final String message = REZ.getString( "deploy-type.error", roleShorthand, typeName );
-            throw new DeploymentException( message, e );
-        }
-    }
-
-    /**
-     * Deploys a single type from the type library.
-     */
-    public void deployType( final TypeDefinition typeDef )
-        throws DeploymentException
-    {
-        final String typeName = typeDef.getName();
-        final String roleShorthand = typeDef.getRole();
-        try
-        {
-            m_deployer.handleType( this, typeDef );
-        }
-        catch( Exception e )
-        {
-            final String message = REZ.getString( "deploy-type.error", roleShorthand, typeName );
-            throw new DeploymentException( message, e );
-        }
-    }
-
-    /**
-     * Locates all resources of a particular name.
-     */
-    private List locateResources( final String resource, final URL jarUrl )
-        throws Exception
-    {
-        final ArrayList urls = new ArrayList();
-        if( null != jarUrl )
-        {
-            final String systemID = "jar:" + jarUrl + "!/" + resource;
-            urls.add( systemID );
-        }
-        else
-        {
-            final Enumeration enum = m_classLoader.getResources( resource );
-            while( enum.hasMoreElements() )
-            {
-                urls.add( enum.nextElement().toString() );
-            }
-        }
-
-        return urls;
-    }
-
-    /**
-     * Configure RoleManager based on contents of single descriptor.
-     *
-     * @param descriptor the descriptor
-     * @exception ConfigurationException if an error occurs
-     */
-    private void handleRoleDescriptor( final Configuration descriptor,
-                                       final String url )
-        throws ConfigurationException
-    {
-        final String message = REZ.getString( "url-deploy-roles.notice", url );
-        getLogger().info( message );
-
-        final Configuration[] types = descriptor.getChildren( "role" );
-        for( int i = 0; i < types.length; i++ )
-        {
-            final String name = types[ i ].getAttribute( "shorthand" );
-            final String role = types[ i ].getAttribute( "name" );
-            final RoleDefinition roleDef = new RoleDefinition( role, name );
-            m_deployer.handleRole( this, roleDef );
-        }
-    }
-
-    /**
-     * Deploys all types from a typelib descriptor.
-     */
-    private void deployFromDescriptor( final Configuration descriptor,
-                                       final String url )
-        throws DeploymentException
-    {
-        try
-        {
-            final String message = REZ.getString( "url-deploy-types.notice", url );
-            getLogger().info( message );
-
-            // Deploy all the types
-            final Configuration[] typeEntries = descriptor.getChild( "types" ).getChildren();
-            for( int i = 0; i < typeEntries.length; i++ )
-            {
-                final Configuration typeEntry = typeEntries[ i ];
-                final TypeDefinition typeDef = m_deployer.createTypeDefinition( typeEntry );
-                m_deployer.handleType( this, typeDef );
-            }
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "deploy-lib.error", url );
-            throw new DeploymentException( message, e );
-        }
+        // Build the service descriptors
+        final ArrayList serviceUrls = locateResources( SERVICE_DESCRIPTOR_NAME, jarUrl );
+        final ArrayList serviceDescriptors = buildDescriptors( serviceUrls, m_serviceBuilder, parser, handler );
+        m_services = (ServiceDescriptor[])serviceDescriptors.toArray( new ServiceDescriptor[ serviceDescriptors.size() ] );
     }
 
     /**
@@ -289,4 +129,170 @@ class Deployment
     {
         return m_classLoader;
     }
+
+    /**
+     * Deploys everything in the type library.
+     */
+    public void deployAll()
+        throws DeploymentException
+    {
+        for( int i = 0; i < m_descriptors.length; i++ )
+        {
+            TypeDescriptor descriptor = m_descriptors[ i ];
+            deployTypes( descriptor );
+        }
+    }
+
+    /**
+     * Deploys a single type in the type library.
+     */
+    public void deployType( final String roleShorthand, final String typeName )
+        throws DeploymentException
+    {
+        try
+        {
+            // Locate the definition for the type
+            for( int i = 0; i < m_descriptors.length; i++ )
+            {
+                final TypeDescriptor descriptor = m_descriptors[ i ];
+                final TypeDefinition[] definitions = descriptor.getDefinitions();
+                for( int j = 0; j < definitions.length; j++ )
+                {
+                    TypeDefinition definition = definitions[ j ];
+                    if( definition.getRole().equals( roleShorthand )
+                        && definition.getName().equals( typeName ) )
+                    {
+                        // Found the definition - deploy it.  Note that we
+                        // keep looking for matching types, and let the deployer
+                        // deal with duplicates
+                        m_deployer.deployType( this, definition );
+                    }
+                }
+            }
+        }
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "deploy-type.error", roleShorthand, typeName );
+            throw new DeploymentException( message, e );
+        }
+    }
+
+    /**
+     * Deploys a single type from the type library.
+     */
+    public void deployType( final TypeDefinition typeDef )
+        throws DeploymentException
+    {
+        try
+        {
+            m_deployer.deployType( this, typeDef );
+        }
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "deploy-type.error", typeDef.getRole(), typeDef.getName() );
+            throw new DeploymentException( message, e );
+        }
+    }
+
+    /**
+     * Builds descriptors.
+     */
+    private ArrayList buildDescriptors( final ArrayList urls,
+                                        final DescriptorBuilder builder,
+                                        final XMLReader parser,
+                                        final SAXConfigurationHandler handler )
+        throws Exception
+    {
+        final ArrayList descriptors = new ArrayList();
+        for( int i = 0; i < urls.size(); i++ )
+        {
+            final String url = (String)urls.get( i );
+
+            // Parse the file
+            parser.parse( url );
+            final TypelibDescriptor descriptor = builder.createDescriptor( handler.getConfiguration(), url );
+            descriptors.add( descriptor );
+        }
+
+        return descriptors;
+    }
+
+    /**
+     * Locates all resources of a particular name.
+     */
+    private ArrayList locateResources( final String resource, final URL jarUrl )
+        throws Exception
+    {
+        final ArrayList urls = new ArrayList();
+        if( null != jarUrl )
+        {
+            final String systemID = "jar:" + jarUrl + "!/" + resource;
+            try
+            {
+                // Probe the resource
+                final URL url = new URL( systemID );
+                url.openStream().close();
+
+                // Add to the list
+                urls.add( systemID );
+            }
+            catch( FileNotFoundException e )
+            {
+                // Ignore
+            }
+        }
+        else
+        {
+            final Enumeration enum = m_classLoader.getResources( resource );
+            while( enum.hasMoreElements() )
+            {
+                urls.add( enum.nextElement().toString() );
+            }
+        }
+
+        return urls;
+    }
+
+    /**
+     * Deploys the roles from a role descriptor.
+     */
+    private void deployRoles( final RoleDescriptor descriptor )
+    {
+        final String message = REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
+        getLogger().info( message );
+
+        final RoleDefinition[] definitions = descriptor.getDefinitions();
+        for( int i = 0; i < definitions.length; i++ )
+        {
+            final RoleDefinition definition = definitions[ i ];
+            m_deployer.deployRole( this, definition );
+        }
+    }
+
+    /**
+     * Deploys all types from a typelib descriptor.
+     */
+    private void deployTypes( final TypeDescriptor descriptor )
+        throws DeploymentException
+    {
+        try
+        {
+            final String message = REZ.getString( "url-deploy-types.notice", descriptor.getUrl() );
+            getLogger().info( message );
+
+            // Deploy all the types
+            final TypeDefinition[] definitions = descriptor.getDefinitions();
+            for( int i = 0; i < definitions.length; i++ )
+            {
+                final TypeDefinition definition = definitions[ i ];
+                m_deployer.deployType( this, definition );
+            }
+        }
+        catch( final Exception e )
+        {
+            final String message = REZ.getString( "deploy-types.error", descriptor.getUrl() );
+            throw new DeploymentException( message, e );
+        }
+    }
+
 }

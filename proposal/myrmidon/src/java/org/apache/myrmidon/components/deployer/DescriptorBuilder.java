@@ -7,22 +7,21 @@
  */
 package org.apache.myrmidon.components.deployer;
 
-import java.io.File;
-import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 
 /**
- * Manages a classloader hierarchy.
+ * Builds a descriptor.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
-public interface ClassLoaderManager
-    extends Component
+interface DescriptorBuilder
 {
-    String ROLE = ClassLoaderManager.class.getName();
-
     /**
-     * Builds the ClassLoader for a Jar file.
+     * Builds a descriptor from a set of configuration.
      */
-    ClassLoader createClassLoader( File jar ) throws DeploymentException;
+    TypelibDescriptor createDescriptor( Configuration config,
+                                        String descriptorUrl )
+        throws DeploymentException;
 }
