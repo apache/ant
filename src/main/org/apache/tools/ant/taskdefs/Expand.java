@@ -72,6 +72,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -213,7 +214,8 @@ public class Expand extends Task {
                                throws IOException {
 
         if (patternsets != null && patternsets.size() > 0) {
-            String name = entryName;
+            String name = entryName.replace('/', File.separatorChar)
+                .replace('\\', File.separatorChar);
             boolean included = false;
             for (int v = 0; v < patternsets.size(); v++) {
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
@@ -224,7 +226,13 @@ public class Expand extends Task {
                 }
                     
                 for (int w = 0; w < incls.length; w++) {
-                    included = DirectoryScanner.match(incls[w], name);
+                    String pattern = incls[w].replace('/', File.separatorChar)
+                        .replace('\\', File.separatorChar);
+                    if (pattern.endsWith(File.separator)) {
+                        pattern += "**";
+                    }
+                    
+                    included = SelectorUtils.matchPath(pattern, name);
                     if (included) {
                         break;
                     }
@@ -238,7 +246,13 @@ public class Expand extends Task {
                 String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {
                     for (int w = 0; w < excls.length; w++) {
-                        included = !(DirectoryScanner.match(excls[w], name));
+                        String pattern = excls[w]
+                            .replace('/', File.separatorChar)
+                            .replace('\\', File.separatorChar);
+                        if (pattern.endsWith(File.separator)) {
+                            pattern += "**";
+                        }
+                        included = !(SelectorUtils.matchPath(pattern, name));
                         if (!included) {
                             break;
                         }

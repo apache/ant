@@ -165,6 +165,9 @@ Fixed bugs:
   Prevent the task from being blocked by error messages coming from java2iiop.
   Bugzilla Report 19385.
 
+* <unzip>'s and <untar>'s nested patternsets didn't work as documented
+  when the pattern ended in a slash or backslash.  Bugzilla Report 20969.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
