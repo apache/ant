@@ -81,7 +81,7 @@ public class FilesMatch implements Condition {
     private FileUtils fu = FileUtils.newFileUtils();
 
     /**
-     * Sets the File1 attribute 
+     * Sets the File1 attribute
      *
      * @param file1 The new File1 value
      */
@@ -112,13 +112,7 @@ public class FilesMatch implements Condition {
         if (file1 == null || file2 == null) {
             throw new BuildException("both file1 and file2 are required in fileequals");
         }
-        if (!file1.exists()) {
-            throw new BuildException("file " + file1 + " not found");
-        }
-        if (!file2.exists()) {
-            throw new BuildException("file " + file2 + " not found");
-        }
-        
+
         //#now match the files
         boolean matches=false;
         try {

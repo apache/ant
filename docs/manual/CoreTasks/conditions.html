@@ -10,7 +10,7 @@
 <h2><a name="Conditions">Conditions</a></h2>
 
 <p>These are the nested elements that can be used as conditions in the
-<a href="condition.html"><code>&lt;condition&gt;</code></a> and 
+<a href="condition.html"><code>&lt;condition&gt;</code></a> and
 <a href="waitfor.html"><code>&lt;waitfor&gt;</code></a> tasks.</p>
 
 <h4>not</h4>
@@ -143,7 +143,7 @@ the tests succeed.
 </table>
 
 <h4>checksum</h4>
-<p>This condition is identical to the <a href="checksum.html">Checksum</a> 
+<p>This condition is identical to the <a href="checksum.html">Checksum</a>
 task, all attributes and nested elements of that task are supported,
 the property and overwrite attributes are redundant and will be
 ignored.</p>
@@ -152,14 +152,14 @@ ignored.</p>
 <p>The <code>http</code> condition checks for a valid response from a
 web server of the specified url.</p>
 <table border="1" cellpadding="2" cellspacing="0">
-  <tr> 
+  <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
     <td width="10%" valign="top"><b>Required</b></td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">url</td>
-    <td valign="top">The full URL of the page to request. The web server must 
+    <td valign="top">The full URL of the page to request. The web server must
       return a status code of &lt;500..</td>
     <td align="center">Yes.</td>
   </tr>
@@ -169,17 +169,17 @@ web server of the specified url.</p>
 <p>The <code>socket</code> condition checks for the existence of a
 TCP/IP listener at the specified host and port.</p>
 <table border="1" cellpadding="2" cellspacing="0">
-  <tr> 
+  <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
     <td width="10%" valign="top"><b>Required</b></td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">server</td>
     <td valign="top">The DNS name or IP address of the server.</td>
     <td align="center">Yes.</td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">port</td>
     <td valign="top">The port number to connect to.</td>
     <td align="center">Yes.</td>
@@ -187,24 +187,25 @@ TCP/IP listener at the specified host and port.</p>
 </table>
 
 <h4>filesmatch</h4>
-<p>Test two files for matching. Both files must exist first.
+<p>Test two files for matching. Nonexistence of either file results in "false".
 This test does a byte for byte comparision, so test time scales with
-byte size. NB: if the files are different sizes or the filenames match
-the slower test is shortcutted.
- 
+byte size. NB: if the files are different sizes , one of them is missing
+or the filenames match the answer is so obvious the detailed test is omitted.
+
+
 </p>
 <table border="1" cellpadding="2" cellspacing="0">
-  <tr> 
+  <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
     <td width="78%" valign="top"><b>Description</b></td>
     <td width="10%" valign="top"><b>Required</b></td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">file1</td>
     <td valign="top">First file to test</td>
     <td align="center">Yes.</td>
   </tr>
-  <tr> 
+  <tr>
     <td valign="top">file2</td>
     <td valign="top">Second file to test</td>
     <td align="center">Yes.</td>
