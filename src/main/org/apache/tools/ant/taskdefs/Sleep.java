@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -144,7 +144,7 @@ public class Sleep extends Task {
      */
     public void doSleep(long millis) {
         try {
-            Thread.currentThread().sleep(millis);
+            Thread.sleep(millis);
         }
         catch (InterruptedException ie) {
         }
@@ -179,7 +179,6 @@ public class Sleep extends Task {
      */
     public void validate() 
         throws BuildException {
-        long sleepTime = getSleepTime();
         if (getSleepTime() < 0) {
             throw new BuildException("Negative sleep periods are not supported");
         }
