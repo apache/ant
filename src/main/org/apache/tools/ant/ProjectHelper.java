@@ -124,34 +124,7 @@ public class ProjectHelper {
         //      configureTaskDefs(project, root);
 
         // set up the targets into the project
-        init(project, root );
         configureTargets(project, root);
-    }
-
-    /** Read and execute init - all other targets will be loaded after ( to
-     * make sure all properties are set ).
-     *
-     */
-    private static void init(Project project, Element root)
-        throws BuildException
-    {
-        // Hack - all tasks outside init target will be added to init
-        // ( will be removed when / if build.xml will start using init )
-        Target initTarget = new Target();
-        initTarget.setProject(project);
-        initTarget.setName( "init" );
-        project.addTarget( "init", initTarget );
-        configureTasks( project, initTarget, root );
-
-        NodeList list = root.getElementsByTagName("target");
-        for (int i = 0; i < list.getLength(); i++) {
-            Element element = (Element)list.item(i);
-            String targetName = element.getAttribute("name");
-
-            if( targetName.equals("init") )
-                configureTasks(project, initTarget, element);
-        }
-        initTarget.execute();
     }
 
     private static void configureTargets(Project project, Element root)
@@ -170,10 +143,6 @@ public class ProjectHelper {
                 String msg = "target element appears without a name attribute";
                 throw new BuildException(msg);
             }
-
-            // init is done already
-            if( targetName.equals("init") )
-                continue;
 
             Target target = new Target();
             target.setName(targetName);
@@ -212,26 +181,21 @@ public class ProjectHelper {
                 Element element = (Element)node;
                 String taskType = element.getTagName();
 
-                // special case - no target in a target.
-                // hack to allow this method to set "init" target
-                // using root element
-                if( ! taskType.equals( "target" ) ) {
-                    // XXX
-                    // put in some sanity checking
+                // XXX
+                // put in some sanity checking
 
-                    Task task = project.createTask(taskType);
+                Task task = project.createTask(taskType);
 
-                    // get the attributes of this element and reflect them
-                    // into the task
+                // get the attributes of this element and reflect them
+                // into the task
 
-                    NamedNodeMap nodeMap = element.getAttributes();
-                    configure(project, task, nodeMap);
-                    task.init();
-                    task.setTarget(target);
-                    target.addTask(task);
+                NamedNodeMap nodeMap = element.getAttributes();
+                configure(project, task, nodeMap);
+                task.init();
+                task.setTarget(target);
+                target.addTask(task);
 
-                    processNestedProperties(project, task, element);
-                }
+                processNestedProperties(project, task, element);
             }
         }
     }
