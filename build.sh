@@ -1,5 +1,10 @@
 #!/bin/sh
 
+cygwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+esac
+
 REALANTHOME=$ANT_HOME
 ANT_HOME=bootstrap
 export ANT_HOME
@@ -23,7 +28,18 @@ do
     fi
 done
 
+# make sure the classpath is in unix format
+if $cygwin ; then
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`    
+fi
+
 CLASSPATH=$LOCALCLASSPATH:$CLASSPATH
+
+# switch back to Windows format
+if $cygwin ; then
+    CLASSPATH=`cygpath --path --windows "$CLASSPATH"`    
+fi
+
 export CLASSPATH
 
 
