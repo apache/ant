@@ -13,7 +13,7 @@ is certainly incomplete):
 each of which provides Ant tasks.
 
 The task(s) of this library only provides very rudimentary support for
-SVN, matching what the traditional Ant task(s) vor CVS could do.
+SVN, matching what the traditional Ant task(s) for CVS could do.
 
 If you need more than what this libary provides, we encourage you to
 check out the existing alternatives.
