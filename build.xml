@@ -534,6 +534,7 @@
         <!-- absolute paths in CLASSPATH -->
         <contains string="${java.class.path}"
                   substring="${build.tests.resolved}"/>
+        <istrue value="${junit.fork}"/>
       </or>
     </condition>
 
