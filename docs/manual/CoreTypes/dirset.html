@@ -21,6 +21,10 @@ an implicit PatternSet and supports the nested
 <code>&lt;exclude&gt;</code> and <code>&lt;excludesfile&gt;</code>
 elements of <code>&lt;patternset&gt;</code> directly, as well as
 <code>&lt;patternset&gt;</code>'s attributes.</p>
+<p>Selectors are available as nested elements within the DirSet.
+If any of the selectors within the DirSet do not select the directory, it
+is not considered part of the DirSet. This makes a DirSet
+equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top"><b>Attribute</b></td>
