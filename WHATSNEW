@@ -89,6 +89,9 @@ Other changes:
 
 * Added length task to get strings' and files' lengths.
 
+* Recursive token expansion in a filterset can now be disabled by
+  setting its recurse attribute to false.
+
 Fixed bugs:
 -----------
 
