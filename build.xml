@@ -289,7 +289,6 @@
     <exclude name="${optional.package}/splash/*.java" unless="swing.present" />
   </patternset>
   <patternset id="teststhatfail">
-    <exclude name="${optional.package}/XmlValidateTest.java" unless="run.failing.tests" />
   </patternset>
 
   <!--

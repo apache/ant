@@ -490,7 +490,7 @@ public class XMLValidateTask extends Task {
                 return;
             }
 
-            File fileDTD = new File(location);
+            File fileDTD = project.resolveFile(location);
             if (fileDTD.exists()) {
                 if (publicId != null) {
                     fileDTDs.put(publicId, fileDTD);
