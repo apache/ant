@@ -54,7 +54,11 @@
 
 package org.apache.tools.ant.util;
 
-import java.lang.ref.WeakReference;
+import org.apache.tools.ant.BuildException;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 
 /**
  * this is a weak reference on java1.2 and up, a hard
@@ -63,6 +67,9 @@ import java.lang.ref.WeakReference;
  */
 public abstract class WeakishReference  {
 
+    private static Constructor referenceConstructor;
+
+    private final static String WEAK_REFERENCE_NAME= "org,apache.tools.ant.util.WeakishReference12";
 
     /**
      * create the appropriate type of reference for the java version
@@ -70,12 +77,39 @@ public abstract class WeakishReference  {
      * @return
      */
     public static WeakishReference createReference(Object object) {
-        if(JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            return new HardReference(object);
-        } else {
-            return new SoftReference(object);
+        if(referenceConstructor==null) {
+            createReferenceConstructor();
+        }
+        try {
+            return (WeakishReference)referenceConstructor
+                        .newInstance(new Object[]{object});
+        } catch (Exception e) {
+            throw new BuildException("while creating a weakish reference",e);
         }
     }
+
+    /**
+     * create the appropriate constructor method for the
+     */
+    private static void createReferenceConstructor() {
+        Class[] ctor=new Class[]{Object.class};
+        try {
+            referenceConstructor=HardReference.class.getConstructor(ctor);
+        } catch (NoSuchMethodException e) {
+            //deep trouble here
+            throw new BuildException("when creating a Hard Reference constructor",e);
+        }
+        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            //create a weak ref constructor. If this fails we have that hard one anyway
+            try {
+                Class clazz=Class.forName(WEAK_REFERENCE_NAME);
+                referenceConstructor=clazz.getConstructor(ctor);
+            } catch (ClassNotFoundException e) {
+            } catch (NoSuchMethodException e) {
+            }
+        }
+    }
+
 
     /**
      * Returns this reference object's referent.  If this reference object has
@@ -108,27 +142,4 @@ public abstract class WeakishReference  {
         }
     }
 
-    /**
-     * a soft reference for Java 1.2 or later
-     */
-    private static class SoftReference extends WeakishReference {
-        private WeakReference weakref;
-
-        /**
-         * create a new soft reference, which is bound to a
-         * Weak reference inside
-         * @param reference
-         * @see java.lang.ref.WeakReference
-         */
-        public SoftReference(Object reference) {
-            this.weakref = new WeakReference(reference);
-        }
-
-        /**
-         * Returns this reference object's referent.
-         */
-        public Object get() {
-            return weakref.get();
-        }
-    }
 }
