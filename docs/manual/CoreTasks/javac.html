@@ -499,6 +499,20 @@ source files every time you run your compile target. See the
 <a href="http://ant.apache.org/faq.html#always-recompiles">Ant FAQ</a>
 for additional information.</p>
 
+<p>
+If you wish to compile only files explicitly specified and disable
+javac's default searching mechanism then you can unset the sourcepath
+attribute:
+<pre>  &lt;javac sourcepath=&quot;&quot; srcdir=&quot;${src}&quot;
+         destdir=&quot;${build}&quot; &gt;
+    &lt;include name="**/*.java" /&gt;
+    &lt;exclude name="**/Example.java" /&gt;
+  &lt;/javac&gt;</pre>
+That way the javac will compile all java source files under &quot;${src}&quot;
+directory but skip the examples. The compiler will even produce errors if some of
+the non-example files refers to them.
+</p>
+
 <p><b>Note:</b> If you are using Ant on Windows and a new DOS window pops up
 for every use of an external compiler, this may be a problem of the JDK you are
 using.  This problem may occur with all JDKs &lt; 1.2.</p>
