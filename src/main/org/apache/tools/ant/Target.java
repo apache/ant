@@ -247,6 +247,16 @@ public class Target implements TaskContainer {
     }
 
     /**
+     * Returns the "if" property condition of this target.
+     *
+     * @return the "if" property condition or <code>null</code> if no
+     *         "if" condition had been defined.
+     */
+    public String getIf() {
+        return ("".equals(ifCondition) ? null : ifCondition);
+    }
+
+    /**
      * Sets the "unless" condition to test on execution. This is the
      * name of a property to test for existence - if the property
      * is set, the task will not execute. The property goes
@@ -261,6 +271,16 @@ public class Target implements TaskContainer {
      */
     public void setUnless(String property) {
         this.unlessCondition = (property == null) ? "" : property;
+    }
+
+    /**
+     * Returns the "unless" property condition of this target.
+     *
+     * @return the "unless" property condition or <code>null</code>
+     *         if no "unless" condition had been defined.
+     */
+    public String getUnless() {
+        return ("".equals(unlessCondition) ? null : unlessCondition);
     }
 
     /**
