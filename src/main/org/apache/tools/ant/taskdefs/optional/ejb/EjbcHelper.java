@@ -89,12 +89,6 @@ public class EjbcHelper {
     private File manifestFile;
     
     /**
-     * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
-     * classes <b>and</b> the implementation classes of the home and remote interfaces.
-     */
-    private String classpath;
-    
-    /**
      * The source directory for the home and remote interfaces. This is used to determine if
      * the generated deployment classes are out of date.
      */

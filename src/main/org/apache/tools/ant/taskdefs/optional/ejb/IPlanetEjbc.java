@@ -1320,8 +1320,6 @@ public class IPlanetEjbc {
             final String implFullClass = implementation.getQualifiedWithUnderscores();
             int index = 0;
 
-            String fullPath;
-
             classnames[index++] = implPkg + "ejb_fac_" + implFullClass;
             classnames[index++] = implPkg + "ejb_home_" + implFullClass;
             classnames[index++] = implPkg + "ejb_skel_" + implFullClass;

@@ -271,7 +271,7 @@ public class StarTeamCheckin extends TreeBasedTask {
             for (int i = 0, size = stFiles.length; i < size; i++) {
                 com.starbase.starteam.File stFile = 
                     (com.starbase.starteam.File) stFiles[i];
-                processFile( stFile, targetFolder);
+                processFile(stFile);
                 
                 ufm.removeControlledItem(
                     new java.io.File(targetFolder, stFile.getName()));
@@ -310,10 +310,8 @@ public class StarTeamCheckin extends TreeBasedTask {
      * @param targetFolder a java.io.File (Folder) to work
      * @throws IOException when StarTeam API fails to work with files
      */
-    private void processFile(com.starbase.starteam.File eachFile, 
-                             java.io.File targetFolder )
-    throws IOException 
-    {
+    private void processFile(com.starbase.starteam.File eachFile)
+        throws IOException {
         String filename = eachFile.getName();
 
         // If the file doesn't pass the include/exclude tests, skip it.

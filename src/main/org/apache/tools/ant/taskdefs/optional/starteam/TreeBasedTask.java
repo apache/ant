@@ -154,13 +154,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     private Label labelInUse = null;
 
-    /**
-     * holds a list of local files against which files in the repository
-     * will be compared for addition on checkins or deletion on checkouts if 
-     * the proper options have been set.
-     */
-    private Hashtable localFileList = new Hashtable();
-
     ///////////////////////////////////////////////////////////////
     // GET/SET methods.
     // Setters, of course are where ant user passes in values.
@@ -439,22 +432,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
             }
         }
         return false;
-    }
-
-    /**
-     * gets a url representing the root of the view.
-     * 
-     * @return a url corresponding to the root of the starteam view tree, useful for
-     *         starteam lookups
-     */
-    private final String getRootStarteamURL()  {
-        StringBuffer buf = new StringBuffer(getViewURL());
-        if (!this.rootStarteamFolder.startsWith("/")) {
-            buf.append("/");
-        }
-        buf.append(this.rootStarteamFolder);
-        return buf.toString();
-
     }
 
     /**

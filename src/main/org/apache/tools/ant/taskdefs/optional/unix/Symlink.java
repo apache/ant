@@ -443,8 +443,6 @@ public class Symlink extends Task {
                                       "UNIX system?)");
             }
         } finally {
-            File old = new File(canstr);
-
             // return the resource to its original name.
             if (!temp.renameTo(canfil)) {
                 throw new IOException("Couldn't return resource " + temp +
@@ -631,9 +629,8 @@ public class Symlink extends Task {
             FileSet fsTemp = (FileSet) fileSets.elementAt(i);
             String workingDir = null;
             Vector links = new Vector();
-            Vector nolinks = new Vector();
             Vector linksFiles = new Vector();
-            Enumeration enumNoLinks, enumLinks;
+            Enumeration enumLinks;
 
             DirectoryScanner ds;
 

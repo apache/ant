@@ -542,7 +542,6 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      
         Java genicTask = null;	// GenIC task 
 	String genicClass = null; // GenIC class (3 GenIC classes for various versions of JOnAS are supported)
-	boolean error = false;	// true if an error occurs during the GenIC call
 
         if ( nogenic ) {
 	    return;

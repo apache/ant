@@ -391,9 +391,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      * Generate stubs & sketelton for each home found into the DD
      * Add all the generate class file into the ejb files
      * @param ithomes : iterator on home class
-     * @param files   : file list , updated by the adding generated files
      */
-    private void buildBorlandStubs(Iterator ithomes, Hashtable files) {
+    private void buildBorlandStubs(Iterator ithomes) {
         Execute execTask = null;
 
         execTask = new Execute(this);
@@ -460,7 +459,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             } // end of if ()
         } // end of while ()
 
-        buildBorlandStubs(homes.iterator(), files);
+        buildBorlandStubs(homes.iterator());
 
         //add the gen files to the collection
         files.putAll(_genfiles);

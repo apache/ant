@@ -133,7 +133,6 @@ public class VAJAntToolGUI extends Frame {
     private Panel iContentsPane = null;
     private Panel iOptionenPanel = null;
     private Panel iCommandButtonPanel = null;
-    private FlowLayout iCommandButtonPanelFlowLayout = null;
     // Project name
     private Label iProjectLabel = null;
     private Label iProjectText = null;
