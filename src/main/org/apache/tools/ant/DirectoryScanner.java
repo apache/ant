@@ -248,6 +248,20 @@ public class DirectoryScanner
     protected boolean everythingIncluded = true;
 
     /**
+     * Temporary table to speed up the various scanning methods.
+     *
+     * @since Ant 1.6
+     */
+    private Map fileListMap = new HashMap();
+
+    /**
+     * List of all scanned directories.
+     *
+     * @since Ant 1.6
+     */
+    private Set scannedDirs = new HashSet();
+
+    /**
      * Set of all include patterns that are full file names and don't
      * contain any wildcards.
      *
@@ -1353,13 +1367,6 @@ public class DirectoryScanner
     }
 
     /**
-     * temporary table to speed up the various scanning methods below
-     *
-     * @since Ant 1.6
-     */
-    private Map fileListMap = new HashMap();
-
-    /**
      * Returns a cached result of list performed on file, if
      * available.  Invokes the method and caches the result otherwise.
      *
@@ -1508,13 +1515,6 @@ public class DirectoryScanner
         }
         return false;
     }
-
-    /**
-     * List of all scanned directories.
-     *
-     * @since Ant 1.6
-     */
-    private Set scannedDirs = new HashSet();
 
     /**
      * Has the directory with the given path relative to the base
