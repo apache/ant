@@ -83,11 +83,14 @@ public class IfTest
         final File projectFile = getTestResource( "if.ant" );
 
         // Check for missing condition
-        String message = REZ.getString( "if.no-condition.error" );
-        executeTargetExpectError( projectFile, "no-condition", message );
+        String[] messages = {
+            null,
+            REZ.getString( "if.no-condition.error" )
+        };
+        executeTargetExpectError( projectFile, "no-condition", messages );
 
         // Check for too many conditions
-        String[] messages =
+        messages = new String[]
         {
             null,
             null,

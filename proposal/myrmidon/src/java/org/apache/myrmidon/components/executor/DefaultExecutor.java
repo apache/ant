@@ -10,6 +10,7 @@ package org.apache.myrmidon.components.executor;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
@@ -52,24 +53,36 @@ public class DefaultExecutor
         m_configurer = (Configurer)serviceManager.lookup( Configurer.ROLE );
     }
 
+    /**
+     * Executes a task.
+     */
     public void execute( final Configuration taskModel, final ExecutionFrame frame )
         throws TaskException
     {
         final String taskName = taskModel.getName();
-        debug( "creating.notice", taskName );
-        final Task task = createTask( taskName, frame );
+        try
+        {
+            debug( "creating.notice", taskName );
+            final Task task = doCreateTask( taskName, frame );
 
-        debug( "logger.notice", taskName );
-        doLogEnabled( task, taskModel, frame.getLogger() );
+            debug( "logger.notice", taskName );
+            doLogEnabled( task, taskModel, frame.getLogger() );
 
-        debug( "contextualizing.notice", taskName );
-        doContextualize( task, taskModel, frame.getContext() );
+            debug( "contextualizing.notice", taskName );
+            doContextualize( task, taskModel, frame.getContext() );
 
-        debug( "configuring.notice", taskName );
-        doConfigure( task, taskModel, frame.getContext() );
+            debug( "configuring.notice", taskName );
+            doConfigure( task, taskModel, frame.getContext() );
 
-        debug( "executing.notice", taskName );
-        task.execute();
+            debug( "executing.notice", taskName );
+            task.execute();
+        }
+        catch( Exception e )
+        {
+            // Wrap in generic error message
+            final String message = REZ.getString( "execute.error", taskName, taskModel.getLocation() );
+            throw new TaskException( message, e );
+        }
     }
 
     protected final void debug( final String key, final String taskName )
@@ -84,7 +97,7 @@ public class DefaultExecutor
     /**
      * Creates a task instance.
      */
-    protected final Task createTask( final String name, final ExecutionFrame frame )
+    protected final Task doCreateTask( final String name, final ExecutionFrame frame )
         throws TaskException
     {
         try
@@ -94,7 +107,7 @@ public class DefaultExecutor
         }
         catch( final TypeException te )
         {
-            final String message = REZ.getString( "no-create.error", name );
+            final String message = REZ.getString( "create.error", name );
             throw new TaskException( message, te );
         }
     }
@@ -105,20 +118,9 @@ public class DefaultExecutor
     protected final void doConfigure( final Task task,
                                       final Configuration taskModel,
                                       final TaskContext taskContext )
-        throws TaskException
+        throws ConfigurationException
     {
-        try
-        {
-            m_configurer.configure( task, taskModel, taskContext );
-        }
-        catch( final Throwable throwable )
-        {
-            final String message =
-                REZ.getString( "config.error",
-                               taskModel.getName(),
-                               taskModel.getLocation() );
-            throw new TaskException( message, throwable );
-        }
+        m_configurer.configure( task, taskModel, taskContext );
     }
 
     /**
@@ -136,9 +138,7 @@ public class DefaultExecutor
         catch( final Throwable throwable )
         {
             final String message =
-                REZ.getString( "contextualize.error",
-                               taskModel.getName(),
-                               taskModel.getLocation() );
+                REZ.getString( "contextualize.error", taskModel.getName() );
             throw new TaskException( message, throwable );
         }
     }
@@ -160,9 +160,7 @@ public class DefaultExecutor
             catch( final Throwable throwable )
             {
                 final String message =
-                    REZ.getString( "logger.error",
-                                   taskModel.getName(),
-                                   taskModel.getLocation() );
+                    REZ.getString( "logger.error", taskModel.getName() );
                 throw new TaskException( message, throwable );
             }
         }

@@ -18,6 +18,7 @@ import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
 import org.apache.avalon.excalibur.cli.CLUtil;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
@@ -105,6 +106,9 @@ public class CLIMain
     ///Determine whether tasks are actually executed
     private boolean m_dryRun = false;
 
+    ///Log level to use
+    private static Priority m_priority = Priority.WARN;
+
     /**
      * Main entry point called to run standard Myrmidon.
      *
@@ -120,9 +124,7 @@ public class CLIMain
         }
         catch( final Throwable throwable )
         {
-            final String message =
-                REZ.getString( "error-message", ExceptionUtil.printStackTrace( throwable ) );
-            System.err.println( message );
+            main.reportError( throwable );
             exitCode = -1;
         }
         finally
@@ -219,6 +221,7 @@ public class CLIMain
     }
 
     private boolean parseCommandLineOptions( final String[] args )
+        throws Exception
     {
         final CLOptionDescriptor[] options = createCLOptions();
         final CLArgsParser parser = new CLArgsParser( args, options );
@@ -226,8 +229,7 @@ public class CLIMain
         if( null != parser.getErrorString() )
         {
             final String message = REZ.getString( "error-message", parser.getErrorString() );
-            System.err.println( message );
-            return false;
+            throw new Exception( message );
         }
 
         final List clOptions = parser.getArguments();
@@ -254,13 +256,13 @@ public class CLIMain
                     break;
 
                 case LOG_LEVEL_OPT:
-                    m_parameters.setParameter( "log.level", option.getArgument() );
+                    m_priority = mapLogLevel( option.getArgument() );
                     break;
                 case VERBOSE_OPT:
-                    m_parameters.setParameter( "log.level", "INFO" );
+                    m_priority = Priority.INFO;
                     break;
                 case QUIET_OPT:
-                    m_parameters.setParameter( "log.level", "ERROR" );
+                    m_priority = Priority.ERROR;
                     break;
 
                 case INCREMENTAL_OPT:
@@ -322,7 +324,7 @@ public class CLIMain
 
         prepareLogging();
 
-        final File homeDir = getHomeDir();
+        checkHomeDir();
         final File buildFile = getBuildFile();
 
         //getLogger().debug( "Ant Bin Directory: " + m_binDir );
@@ -336,24 +338,35 @@ public class CLIMain
         }
 
         final Embeddor embeddor = prepareEmbeddor();
-        final ProjectListener listener = prepareListener( embeddor );
 
-        //create the project
-        final Project project =
-            embeddor.createProject( buildFile.toString(), null, m_builderParameters );
-
-        //loop over build if we are in incremental mode..
-        final boolean incremental = m_parameters.getParameterAsBoolean( "incremental", false );
-        if( !incremental )
+        try
         {
-            executeBuild( embeddor, project, listener );
-        }
-        else
-        {
-            executeIncrementalBuild( embeddor, project, listener );
-        }
+            final ProjectListener listener = prepareListener( embeddor );
 
-        shutdownEmbeddor( embeddor );
+            //create the project
+            final Project project =
+                embeddor.createProject( buildFile.toString(), null, m_builderParameters );
+
+            //loop over build if we are in incremental mode..
+            final boolean incremental = m_parameters.getParameterAsBoolean( "incremental", false );
+            if( !incremental )
+            {
+                executeBuild( embeddor, project, listener );
+            }
+            else
+            {
+                executeIncrementalBuild( embeddor, project, listener );
+            }
+        }
+        catch( final Exception e )
+        {
+            final String message = REZ.getString( "build-failed.error" );
+            throw new CascadingException( message, e );
+        }
+        finally
+        {
+            shutdownEmbeddor( embeddor );
+        }
     }
 
     private void executeIncrementalBuild( final Embeddor embeddor,
@@ -365,7 +378,14 @@ public class CLIMain
 
         while( true )
         {
-            executeBuild( embeddor, project, listener );
+            try
+            {
+                executeBuild( embeddor, project, listener );
+            }
+            catch( final TaskException te )
+            {
+                reportError( te );
+            }
 
             final String message = REZ.getString( "repeat.notice" );
             System.out.println( message );
@@ -382,6 +402,44 @@ public class CLIMain
                 break;
             }
 
+        }
+    }
+
+    /**
+     * Builds the error message for an exception
+     */
+    private void reportError( final Throwable throwable )
+    {
+        // Build the message
+        final String message;
+        if( m_priority.isLowerOrEqual( Priority.INFO ) )
+        {
+            // Verbose mode - include the stack traces
+            message = ExceptionUtil.printStackTrace( throwable, 5, true, true );
+        }
+        else
+        {
+            // Build the message
+            final StringBuffer buffer = new StringBuffer();
+            buffer.append( throwable.getMessage() );
+            for( Throwable current = ExceptionUtil.getCause( throwable, true );
+                 current != null;
+                 current = ExceptionUtil.getCause( current, true ) )
+            {
+                final String causeMessage = REZ.getString( "cause.error", current.getMessage() );
+                buffer.append( causeMessage );
+            }
+            message = buffer.toString();
+        }
+
+        // Write the message out
+        if( getLogger() == null )
+        {
+            System.err.println( message );
+        }
+        else
+        {
+            getLogger().error( message );
         }
     }
 
@@ -416,9 +474,9 @@ public class CLIMain
         return buildFile;
     }
 
-    private File getHomeDir() throws Exception
+    private void checkHomeDir() throws Exception
     {
-        final String home = m_parameters.getParameter( "myrmidon.home", null );
+        final String home = m_parameters.getParameter( "myrmidon.home" );
         final File homeDir = ( new File( home ) ).getAbsoluteFile();
         if( !homeDir.isDirectory() )
         {
@@ -431,15 +489,12 @@ public class CLIMain
             final String message = REZ.getString( "homedir.notice", homeDir );
             getLogger().info( message );
         }
-
-        return homeDir;
     }
 
     private void prepareLogging() throws Exception
     {
         //handle logging...
-        final String logLevel = m_parameters.getParameter( "log.level", null );
-        enableLogging( new LogKitLogger( createLogger( logLevel ) ) );
+        enableLogging( new LogKitLogger( createLogger( m_priority ) ) );
     }
 
     private void shutdownEmbeddor( final Embeddor embeddor )
@@ -486,51 +541,49 @@ public class CLIMain
     private void doBuild( final Workspace workspace,
                           final Project project,
                           final ArrayList targets )
+        throws TaskException
     {
-        try
-        {
-            final int targetCount = targets.size();
+        final int targetCount = targets.size();
 
-            //if we didn't specify a target on CLI then choose default
-            if( 0 == targetCount )
-            {
-                workspace.executeProject( project, project.getDefaultTargetName() );
-            }
-            else
-            {
-                for( int i = 0; i < targetCount; i++ )
-                {
-                    workspace.executeProject( project, (String)targets.get( i ) );
-                }
-            }
-        }
-        catch( final TaskException ae )
+        //if we didn't specify a target on CLI then choose default
+        if( 0 == targetCount )
         {
-            final String message =
-                REZ.getString( "build-failed.error", ExceptionUtil.printStackTrace( ae, 5, true ) );
-            getLogger().error( message );
+            workspace.executeProject( project, project.getDefaultTargetName() );
+        }
+        else
+        {
+            for( int i = 0; i < targetCount; i++ )
+            {
+                workspace.executeProject( project, (String)targets.get( i ) );
+            }
         }
     }
 
     /**
-     * Create Logger of appropriate log-level.
-     *
-     * @param logLevel the log-level
-     * @return the logger
-     * @exception Exception if an error occurs
+     * Sets the log level.
      */
-    private Logger createLogger( final String logLevel )
-        throws Exception
+    private Priority mapLogLevel( final String logLevel ) throws Exception
     {
         final String logLevelCapitalized = logLevel.toUpperCase();
         final Priority priority = Priority.getPriorityForName( logLevelCapitalized );
-
         if( !priority.getName().equals( logLevelCapitalized ) )
         {
             final String message = REZ.getString( "bad-loglevel.error", logLevel );
             throw new Exception( message );
         }
+        return priority;
+    }
 
+    /**
+     * Create Logger of appropriate log-level.
+     *
+     * @param priority the log-level
+     * @return the logger
+     * @exception Exception if an error occurs
+     */
+    private Logger createLogger( final Priority priority )
+        throws Exception
+    {
         final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
 
         final PatternFormatter formatter = new PatternFormatter( PATTERN );

@@ -41,4 +41,13 @@
             <property-test-type value="value 2"/>
         </property>
     </target>
+
+    <!-- Test setting the value more than once -->
+    <target name="too-many-values3">
+        <property name="some-prop">
+            <property-test-type value="value 1"/>
+            <property-test-type value="value 2"/>
+            <property-test-type value="value 3"/>
+        </property>
+    </target>
 </project>

@@ -64,21 +64,31 @@ public class PropertyTest
         final File projectFile = getTestResource( "property.ant" );
 
         // Missing name
-        String message = REZ.getString( "property.no-name.error" );
-        executeTargetExpectError( projectFile, "missing-name", message );
+        String[] messages =
+        {
+            null,
+            REZ.getString( "property.no-name.error" )
+        };
+        executeTargetExpectError( projectFile, "missing-name", messages );
 
         // Missing value
-        message = REZ.getString( "property.no-value.error" );
-        executeTargetExpectError( projectFile, "missing-value", message );
+        messages = new String[]
+        {
+            null,
+            REZ.getString( "property.no-value.error" )
+        };
+        executeTargetExpectError( projectFile, "missing-value", messages );
 
         // Too many values
-        String[] messages = {
+        messages = new String[]
+        {
             null,
             null,
             REZ.getString( "property.multi-set.error" )
         };
         executeTargetExpectError( projectFile, "too-many-values1", messages );
         executeTargetExpectError( projectFile, "too-many-values2", messages );
+        executeTargetExpectError( projectFile, "too-many-values3", messages );
     }
 
 }

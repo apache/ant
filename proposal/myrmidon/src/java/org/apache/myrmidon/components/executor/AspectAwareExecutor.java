@@ -75,30 +75,41 @@ public class AspectAwareExecutor
                               final ExecutionFrame frame )
         throws TaskException
     {
-        Configuration taskModel = getAspectManager().preCreate( model );
-        taskModel = prepareAspects( taskModel );
+        try
+        {
+            Configuration taskModel = getAspectManager().preCreate( model );
+            taskModel = prepareAspects( taskModel );
 
-        final String taskName = taskModel.getName();
-        debug( "creating.notice", taskName );
-        final Task task = createTask( taskName, frame );
-        getAspectManager().postCreate( task );
+            final String taskName = taskModel.getName();
+            debug( "creating.notice", taskName );
+            final Task task = doCreateTask( taskName, frame );
+            getAspectManager().postCreate( task );
 
-        debug( "logger.notice", taskName );
-        final Logger logger = frame.getLogger();
-        getAspectManager().preLogEnabled( logger );
-        doLogEnabled( task, taskModel, logger );
+            debug( "logger.notice", taskName );
+            final Logger logger = frame.getLogger();
+            getAspectManager().preLogEnabled( logger );
+            doLogEnabled( task, taskModel, logger );
 
-        debug( "contextualizing.notice", taskName );
-        doContextualize( task, taskModel, frame.getContext() );
+            debug( "contextualizing.notice", taskName );
+            doContextualize( task, taskModel, frame.getContext() );
 
-        debug( "configuring.notice", taskName );
-        getAspectManager().preConfigure( taskModel );
-        doConfigure( task, taskModel, frame.getContext() );
+            debug( "configuring.notice", taskName );
+            getAspectManager().preConfigure( taskModel );
+            doConfigure( task, taskModel, frame.getContext() );
 
-        debug( "executing.notice", taskName );
-        getAspectManager().preExecute();
-        doExecute( taskModel, task );
-        getAspectManager().preDestroy();
+            debug( "executing.notice", taskName );
+            getAspectManager().preExecute();
+            doExecute( taskModel, task );
+            getAspectManager().preDestroy();
+        }
+        catch( Exception e )
+        {
+            // Wrap in generic error message
+            final String message = REZ.getString( "execute.error",
+                                                  model.getName(),
+                                                  model.getLocation() );
+            throw new TaskException( message, e );
+        }
     }
 
     protected void doExecute( final Configuration taskModel, final Task task )
