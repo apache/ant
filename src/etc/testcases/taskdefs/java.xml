@@ -7,7 +7,7 @@
   <property name="timeToWait" value="4"/>
   <!-- this property gets overridden programmatically-->
   <property name="logFile" value="spawn.log"/>
-  <property name="tmp" value="${java.io.tmpdir}"/>
+  <property name="tmp" location="${java.io.tmpdir}"/>
   <property name="app"
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
 
@@ -169,105 +169,162 @@
 
     <!--redirection testcases don't want to run under junit unless forked-->
     <target name="redirect1">
+        <property name="outfile" location="${tmp}/redirect.out" />
+
         <java classname="${pipeapp}"
               classpath="${tests-classpath.value}"
               inputstring="foo"
               fork="true"
-              output="${tmp}/redirect.out"
+              output="${outfile}"
               errorproperty="redirect.err">
             <arg value="out" />
         </java>
+
         <!-- let dumb Windows catch up -->
-        <sleep seconds="2" />
-        <loadfile property="redirect.out.contents" srcfile="${tmp}/redirect.out" />
-        <condition property="r1pass">
-            <and>
-                <equals arg1="${redirect.out.contents}" arg2="foo" />
-                <equals arg1="${redirect.err}" arg2="" />
-            </and>
+        <waitfor>
+            <available file="${outfile}" />
+        </waitfor>
+
+        <loadfile property="redirect.out.contents" srcfile="${outfile}" />
+
+        <condition property="r1file">
+            <equals arg1="${redirect.out.contents}" arg2="foo" />
         </condition>
-        <fail unless="r1pass" />
+
+        <fail unless="r1file">${outfile}:
+&quot;${redirect.out.contents}&quot; expected &quot;foo&quot;</fail>
+
+        <condition property="r1prop">
+            <equals arg1="${redirect.err}" arg2="" />
+        </condition>
+
+        <fail unless="r1prop">
+redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
+
     </target>
 
     <target name="redirect2" depends="redirect1">
+        <property name="outfile" location="${tmp}/redirect.out" />
+
         <java classname="${pipeapp}"
               classpath="${tests-classpath.value}"
               inputstring="bar"
               append="true"
               fork="true"
-              output="${tmp}/redirect.out"
+              output="${outfile}"
               errorproperty="redirect.err">
             <arg value="both" />
         </java>
+
         <!-- let dumb Windows catch up -->
-        <sleep seconds="2" />
-        <loadfile property="redirect.out.contents2" srcfile="${tmp}/redirect.out" />
-        <condition property="r2pass">
-            <and>
-                <equals arg1="${redirect.out.contents2}" arg2="foobar" />
-                <!-- property should not be reset -->
-                <equals arg1="${redirect.err}" arg2="" />
-            </and>
+        <waitfor>
+            <available file="${outfile}" />
+        </waitfor>
+
+        <loadfile property="redirect.out.contents2" srcfile="${outfile}" />
+
+        <condition property="r2file">
+            <equals arg1="${redirect.out.contents2}" arg2="foobar" />
         </condition>
-        <fail unless="r2pass" />
+
+        <fail unless="r2file">${outfile}:
+&quot;${redirect.out.contents2}&quot; expected &quot;foobar&quot;</fail>
+
+        <condition property="r2prop">
+            <!-- property should not change -->
+            <equals arg1="${redirect.err}" arg2="" />
+        </condition>
+
+        <fail unless="r2prop">
+redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
+
     </target>
 
     <target name="redirect3">
+        <property name="outfile" location="${tmp}/redirect.out" />
+        <property name="errfile" location="${tmp}/redirect.err" />
+
         <java classname="${pipeapp}"
               classpath="${tests-classpath.value}"
               inputstring="foo"
               fork="true"
-              output="${tmp}/redirect.out"
-              error="${tmp}/redirect.err">
+              output="${outfile}"
+              error="${errfile}">
             <arg value="both" />
         </java>
+
         <!-- let dumb Windows catch up -->
-        <sleep seconds="2" />
-        <loadfile property="redirect.out.contents"
-                  srcfile="${tmp}/redirect.out" />
-        <condition property="r3pass">
+        <waitfor>
             <and>
-                <equals arg1="${redirect.out.contents}" arg2="foo" />
-                <filesmatch file1="${tmp}/redirect.out"
-                            file2="${tmp}/redirect.err" />
+                <available file="${outfile}" />
+                <available file="${errfile}" />
             </and>
+        </waitfor>
+
+        <loadfile property="redirect.out.contents" srcfile="${outfile}" />
+
+        <condition property="r3file">
+            <equals arg1="${redirect.out.contents}" arg2="foo" />
         </condition>
-        <fail unless="r3pass" />
+
+        <fail unless="r3file">${outfile}:
+&quot;${redirect.out.contents}&quot; expected &quot;foo&quot;</fail>
+
+        <condition property="r3match">
+            <filesmatch file1="${outfile}" file2="${errfile}" />
+        </condition>
+
+        <fail unless="r3file">${errfile} differs from ${outfile}</fail>
+
     </target>
 
     <target name="redirector1">
+        <property name="outfile" location="${tmp}/redirector.out" />
+        <property name="errfile" location="${tmp}/redirector.err" />
+
         <java taskname="foo" classname="${pipeapp}" fork="true"
               classpath="${tests-classpath.value}">
             <redirector inputstring="foo"
-                        output="${tmp}/redirector.out"
-                        error="${tmp}/redirector.err"
+                        output="${outfile}"
+                        error="${errfile}"
                         createemptyfiles="false" />
             <arg value="out" />
         </java>
+
         <!-- let dumb Windows catch up -->
-        <sleep seconds="2" />
-        <loadfile property="redirector.out.contents"
-                  srcfile="${tmp}/redirector.out" />
-        <condition property="ror1pass">
-            <and>
-                <equals arg1="${redirector.out.contents}" arg2="foo" />
-                <not>
-                    <available file="${tmp}/redirector.err" />
-                </not>
-            </and>
+        <waitfor>
+            <available file="${outfile}" />
+        </waitfor>
+
+        <loadfile property="redirector.out.contents" srcfile="${outfile}" />
+
+        <condition property="ror1out">
+            <equals arg1="${redirector.out.contents}" arg2="foo" />
         </condition>
-        <fail unless="ror1pass" />
+
+        <fail unless="ror1out">${outfile}:
+&quot;${redirector.out.contents}&quot; expected &quot;foo&quot;</fail>
+
+        <condition property="ror1noerr">
+            <not>
+                <available file="${errfile}" />
+            </not>
+        </condition>
+        <fail unless="ror1noerr">${errfile} exists but should not</fail>
     </target>
 
     <target name="redirector2" depends="redirector1">
-        <!-- fork here, some VMs can be ill-behaved with files,
+        <property name="outfile" location="${tmp}/redirector.out" />
+        <property name="errfile" location="${tmp}/redirector.err" />
+
+        <!-- fork here; some VMs can be ill-behaved with files,
             such as W!nd0ws -->
         <java taskname="foo" classname="${pipeapp}" fork="true"
               classpath="${tests-classpath.value}">
             <redirector inputstring="foo"
                         append="true"
-                        output="${tmp}/redirector.out"
-                        error="${tmp}/redirector.err"
+                        output="${outfile}"
+                        error="${errfile}"
                         createemptyfiles="false">
                 <errorfilterchain>
                     <replacestring from="foo" to="bar" />
@@ -275,26 +332,41 @@
             </redirector>
             <arg value="both" />
         </java>
+
         <!-- let dumb Windows catch up -->
-        <sleep seconds="2" />
-        <loadfile property="redirector.out.contents2"
-                  srcfile="${tmp}/redirector.out" />
-        <loadfile property="redirector.err.contents"
-                  srcfile="${tmp}/redirector.err" />
-        <condition property="ror2pass">
+        <waitfor>
             <and>
-                <equals arg1="${redirector.out.contents2}" arg2="foofoo" />
-                <equals arg1="${redirector.err.contents}" arg2="bar" />
+                <available file="${outfile}" />
+                <available file="${errfile}" />
             </and>
+        </waitfor>
+
+        <loadfile property="redirector.out.contents2"
+                  srcfile="${outfile}" />
+
+        <loadfile property="redirector.err.contents"
+                  srcfile="${errfile}" />
+
+        <condition property="ror2out">
+            <equals arg1="${redirector.out.contents2}" arg2="foofoo" />
         </condition>
-        <fail unless="ror2pass" />
+
+        <fail unless="ror1out">${outfile}:
+&quot;${redirector.out.contents}&quot; expected &quot;foofoo&quot;</fail>
+
+        <condition property="ror2err">
+            <equals arg1="${redirector.err.contents}" arg2="bar" />
+        </condition>
+
+        <fail unless="ror1out">${errfile}:
+&quot;${redirector.err.contents}&quot; expected &quot;bar&quot;</fail>
+
     </target>
 
     <target name="cleanup">
         <delete>
             <fileset file="${logFile}" />
             <fileset dir="${tmp}" includes="redirect*" />
-            <fileset dir="${tmp}" includes="redirector*" />
         </delete>
     </target>
 
