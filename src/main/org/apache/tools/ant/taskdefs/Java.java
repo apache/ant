@@ -98,7 +98,8 @@ public class Java extends Task {
      */
     public void execute() throws BuildException {
         int err = -1;
-        if ((err = executeJava()) != 0) {
+
+        if ((err = executeJava()) != 0) { 
             if (failOnError) {
                 throw new BuildException("Java returned: "+err, location);
             } else {
@@ -110,43 +111,65 @@ public class Java extends Task {
     /**
      * Do the execution and return a return code.
      *
-     * @return the return code from the execute java class if it was executed in 
-     * a separate VM (fork = "yes").
+     * @return the return code from the execute java class if it was
+     * executed in a separate VM (fork = "yes").
      */
     public int executeJava() throws BuildException {
         String classname = cmdl.getClassname();
         if (classname == null && cmdl.getJar() == null) {
             throw new BuildException("Classname must not be null.");
         }
+
         if (!fork && cmdl.getJar() != null){
-            throw new BuildException("Cannot execute a jar in non-forked mode. Please set fork='true'. ");
+            throw new BuildException("Cannot execute a jar in non-forked mode."
+                                     + " Please set fork='true'. ");
         }
 
         if (fork) {
             log("Forking " + cmdl.toString(), Project.MSG_VERBOSE);
-        
-            return run(cmdl.getCommandline());
         } else {
             if (cmdl.getVmCommand().size() > 1) {
-                log("JVM args ignored when same JVM is used.", Project.MSG_WARN);
+                log("JVM args ignored when same JVM is used.", 
+                    Project.MSG_WARN);
             }
             if (dir != null) {
-                log("Working directory ignored when same JVM is used.", Project.MSG_WARN);
+                log("Working directory ignored when same JVM is used.", 
+                    Project.MSG_WARN);
             }
 
             if (newEnvironment || null != env.getVariables()) {
-                log("Changes to environment variables are ignored when same JVM is used.", 
-                    Project.MSG_WARN);
+                log("Changes to environment variables are ignored when same "
+                    + "JVM is used.", Project.MSG_WARN);
             }
 
             log("Running in same VM " + cmdl.getJavaCommand().toString(), 
                 Project.MSG_VERBOSE);
-            try {
-                run(cmdl);
+        }
+        
+        try {
+            if (fork) {
+                return run(cmdl.getCommandline());
+            } else {
+                try {
+                    run(cmdl);
+                    return 0;
+                } catch (ExitException ex) {
+                    return ex.getStatus();
+                }
+            }
+        } catch (BuildException e) {
+            if (failOnError) {
+                throw e;
+            } else {
+                log(e.getMessage(), Project.MSG_ERR);
                 return 0;
             }
-            catch (ExitException ex) {
-                return ex.getStatus();
+        } catch (Throwable t) {
+            if (failOnError) {
+                throw new BuildException(t);
+            } else {
+                log(t.getMessage(), Project.MSG_ERR);
+                return 0;
             }
         }
     }

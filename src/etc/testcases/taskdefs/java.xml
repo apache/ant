@@ -67,6 +67,13 @@
     </java>
   </target>
 
+  <target name="testExceptingFork">
+    <java classname="${app2}"
+          classpath="${tests-classpath.value}"
+          fork="true">
+    </java>
+  </target>
+
   <target name="testExceptingFoe">
     <java classname="${app2}"
         classpath="${tests-classpath.value}"

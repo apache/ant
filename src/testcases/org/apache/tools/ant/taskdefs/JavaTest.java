@@ -144,13 +144,19 @@ public class JavaTest extends BuildFileTest {
     }
 
     public void testExcepting() {
-        executeTarget("testExcepting");
+        expectLogContaining("testExcepting", 
+                            "Exception raised inside called program");
+    }
+    
+    public void testExceptingFork() {
+        expectLogContaining("testExceptingFork", 
+                            "Java Result:");
     }
     
     public void testExceptingFoe() {
-        //if(runFatalTests) {
-            executeTarget("testExceptingFoe");
-        //}
+        expectBuildExceptionContaining("testExceptingFoe",
+            "passes exception through",
+            "Exception raised inside called program");
     }
     
     public void testExceptingFoeFork() {

@@ -134,6 +134,10 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 AntClassLoader.initializeClass(target);
             }
             main = target.getMethod("main", param);
+            if (main == null) {
+                throw new BuildException("Could not find main() method in " 
+                                         + classname);
+            }
 
             if (timeout == null) {
                 run();
@@ -169,10 +173,10 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 throw caught;
             }
 
-        } catch (NullPointerException e) {
-            throw new BuildException("Could not find main() method in " + classname);
         } catch (ClassNotFoundException e) {
-            throw new BuildException("Could not find " + classname + ". Make sure you have it in your classpath");
+            throw new BuildException("Could not find " + classname + "."
+                                     + " Make sure you have it in your"
+                                     + " classpath");
         } catch (SecurityException e) {
             throw e;
         } catch (Throwable e) {
