@@ -510,7 +510,7 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
-     * The package/module to check out.
+     * The package/module to operate upon.
      *
      * @param p
      */
@@ -524,7 +524,7 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
-     * The tag of the package/module to check out.
+     * The tag of the package/module to operate upon.
      * @param p
      */
     public void setTag(String p) {

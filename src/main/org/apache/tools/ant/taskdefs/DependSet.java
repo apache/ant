@@ -127,28 +127,28 @@ public class DependSet extends MatchingTask {
     } //-- DependSet
 
     /**
-     * Nested &lt;srcfileset&gt; element.
+     * Add a set of source files.
      */
     public void addSrcfileset(FileSet fs) {
         sourceFileSets.addElement(fs);
     }
 
     /**
-     * Nested &lt;srcfilelist&gt; element.
+     * Add a list of source files.
      */
     public void addSrcfilelist(FileList fl) {
         sourceFileLists.addElement(fl);
     }
 
     /**
-     * Nested &lt;targetfileset&gt; element.
+     * Add a set of target files.
      */
     public void addTargetfileset(FileSet fs) {
         targetFileSets.addElement(fs);
     }
 
     /**
-     * Nested &lt;targetfilelist&gt; element.
+     * Add a list of target files.
      */
     public void addTargetfilelist(FileList fl) {
         targetFileLists.addElement(fl);

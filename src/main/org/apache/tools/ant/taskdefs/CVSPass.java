@@ -181,21 +181,21 @@ public class CVSPass extends Task {
     }
 
     /**
-     * Sets cvs root to be added to the password file
+     * The CVS repository to add an entry for.
      */
     public void setCvsroot(String cvsRoot) {
         this.cvsRoot = cvsRoot;
     }
 
     /**
-     * Sets the password file attribute.
+     * Password file to add the entry to.
      */
     public void setPassfile(File passFile) {
         this.passFile = passFile;
     }
 
     /**
-     * Sets the password attribute.
+     * Password to be added to the password file.
      */
     public void setPassword(String password) {
         this.password = password;
