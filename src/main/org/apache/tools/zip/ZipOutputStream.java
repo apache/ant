@@ -89,7 +89,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    private int method = DEFLATED;
+    private int method = java.util.zip.ZipEntry.DEFLATED;
 
     /**
      * List of ZipEntries written so far.
@@ -209,14 +209,14 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    public static final int DEFLATED = ZipEntry.DEFLATED;
+    public static final int DEFLATED = java.util.zip.ZipEntry.DEFLATED;
 
     /**
-     * Compression method for deflated entries.
+     * Compression method for stored entries.
      *
      * @since 1.1
      */
-    public static final int STORED = ZipEntry.STORED;
+    public static final int STORED = java.util.zip.ZipEntry.STORED;
 
     /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
@@ -299,7 +299,7 @@ public class ZipOutputStream extends FilterOutputStream {
     public void finish() throws IOException {
         closeEntry();
         cdOffset = written;
-        for (int i = 0; i < entries.size(); i++) {
+        for (int i = 0, entriesSize = entries.size(); i < entriesSize; i++) {
             writeCentralFileHeader((ZipEntry) entries.elementAt(i));
         }
         cdLength = written - cdOffset;
@@ -561,9 +561,12 @@ public class ZipOutputStream extends FilterOutputStream {
         writeOut(LFH_SIG);
         written += 4;
 
+        //store method in local variable to prevent multiple method calls
+        final int zipMethod = ze.getMethod();
+        
         // version needed to extract
         // general purpose bit flag
-        if (ze.getMethod() == DEFLATED && raf == null) {
+        if (zipMethod == DEFLATED && raf == null) {
             // requires version 2 as we are going to store length info
             // in the data descriptor
             writeOut(ZipShort.getBytes(20));
@@ -577,7 +580,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 4;
 
         // compression method
-        writeOut(ZipShort.getBytes(ze.getMethod()));
+        writeOut(ZipShort.getBytes(zipMethod));
         written += 2;
 
         // last mod. time and date
@@ -588,7 +591,7 @@ public class ZipOutputStream extends FilterOutputStream {
         // compressed length
         // uncompressed length
         localDataStart = written;
-        if (ze.getMethod() == DEFLATED || raf != null) {
+        if (zipMethod == DEFLATED || raf != null) {
             writeOut(LZERO);
             writeOut(LZERO);
             writeOut(LZERO);

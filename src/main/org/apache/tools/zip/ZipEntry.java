@@ -20,8 +20,6 @@ package org.apache.tools.zip;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Vector;
-import java.util.Date;
-import java.util.Calendar;
 import java.util.zip.ZipException;
 
 /**
@@ -259,7 +257,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     public void addExtraField(ZipExtraField ze) {
         ZipShort type = ze.getHeaderId();
         boolean done = false;
-        for (int i = 0; !done && i < extraFields.size(); i++) {
+        for (int i = 0, fieldsSize = extraFields.size(); !done && i < fieldsSize; i++) {
             if (((ZipExtraField) extraFields.elementAt(i)).getHeaderId().equals(type)) {
                 extraFields.setElementAt(ze, i);
                 done = true;
@@ -278,7 +276,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void removeExtraField(ZipShort type) {
         boolean done = false;
-        for (int i = 0; !done && i < extraFields.size(); i++) {
+        for (int i = 0, fieldsSize = extraFields.size(); !done && i < fieldsSize; i++) {
             if (((ZipExtraField) extraFields.elementAt(i)).getHeaderId().equals(type)) {
                 extraFields.removeElementAt(i);
                 done = true;
