@@ -30,7 +30,7 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * This is a filenamemaper based on a FilterChain.
+ * This is a FileNameMapper based on a FilterChain.
  */
 public class FilterMapper extends FilterChain implements FileNameMapper {
     /**
@@ -40,7 +40,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
      */
     public void setFrom(String from) {
         throw new UnsupportedAttributeException(
-            "filtermapper does'nt support the \"from\" attribute.", "from");
+            "filtermapper doesn't support the \"from\" attribute.", "from");
     }
 
     /**
@@ -50,7 +50,7 @@ public class FilterMapper extends FilterChain implements FileNameMapper {
      */
     public void setTo(String to) {
         throw new UnsupportedAttributeException(
-            "filtermapper does'nt support the \"to\" attribute.", "to");
+            "filtermapper doesn't support the \"to\" attribute.", "to");
     }
 
     /**
