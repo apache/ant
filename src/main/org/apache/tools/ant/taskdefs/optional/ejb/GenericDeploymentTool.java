@@ -574,8 +574,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
             if (endBaseName != -1) {
                 baseName = descriptorFileName.substring(0, endBaseName);
+            } else {
+                throw new BuildException("Unable to determine jar name " 
+                    + "from descriptor \"" + descriptorFileName + "\"");
             }
-            baseName = descriptorFileName.substring(0, endBaseName);
         } else if (config.namingScheme.getValue().equals(EjbJar.NamingScheme.DIRECTORY)) {
             File descriptorFile = new File(config.descriptorDir, descriptorFileName);
             String path = descriptorFile.getAbsolutePath();
