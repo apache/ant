@@ -56,11 +56,6 @@ package org.apache.tools.ant;
 public interface RoleAdapter {
 
     /**
-     * Obtain the id in case it is needed.
-     */
-    public void setId(String id);
-
-    /**
      * Set the object being adapted.
      * @param o the object being adapted
      */

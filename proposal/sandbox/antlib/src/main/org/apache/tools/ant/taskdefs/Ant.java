@@ -138,8 +138,10 @@ public class Ant extends Task {
     }
 
     public void init() {
-        newProject = project.createSubProject();
+        newProject = new Project(project);
         newProject.setJavaVersionProperty();
+//          newProject.addTaskDefinition("property", 
+//                               (Class)project.getTaskDefinitions().get("property"));
     }
 
     private void reinit() {
@@ -182,6 +184,26 @@ public class Ant extends Task {
                 log( "Ant: Can't set output to " + output );
             }
         }
+
+//          Hashtable taskdefs = project.getTaskDefinitions();
+//          Enumeration et = taskdefs.keys();
+//          while (et.hasMoreElements()) {
+//              String taskName = (String) et.nextElement();
+//              if (taskName.equals("property")) {
+//                  // we have already added this taskdef in #init
+//                  continue;
+//              }
+//              Class taskClass = (Class) taskdefs.get(taskName);
+//              newProject.addTaskDefinition(taskName, taskClass);
+//          }
+
+//          Hashtable typedefs = project.getDataTypeDefinitions();
+//          Enumeration e = typedefs.keys();
+//          while (e.hasMoreElements()) {
+//              String typeName = (String) e.nextElement();
+//              Class typeClass = (Class) typedefs.get(typeName);
+//              newProject.addDataTypeDefinition(typeName, typeClass);
+//          }
 
         // set user-defined or all properties from calling project
         Hashtable prop1;
