@@ -4733,7 +4733,7 @@ public class MyVeryOwnTask extends Task {
 <ol>
   <li>Make sure the class that implements your task is in the classpath when
     starting Ant.</li>
-  <li>In your initialization target, add a <i>taskdef</i> task. This actually adds
+  <li>Add a <i>taskdef</i> element to your project. This actually adds
     your task to the system.</li>
   <li>Use your task in the rest of the buildfile.</li>
 </ol>
@@ -4742,11 +4742,9 @@ public class MyVeryOwnTask extends Task {
   <pre>&lt;?xml version=&quot;1.0&quot;?&gt;
 
 &lt;project name=&quot;OwnTaskExample&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
-  &lt;target name=&quot;init&quot;&gt;
-    &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
-  &lt;/target&gt;
+  &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
 
-  &lt;target name=&quot;main&quot; depends=&quot;init&quot;&gt;
+  &lt;target name=&quot;main&quot;&gt;
     &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot; /&gt;
   &lt;/target&gt;
 &lt;/project&gt;
