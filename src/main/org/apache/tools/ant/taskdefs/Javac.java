@@ -571,11 +571,11 @@ public class Javac extends MatchingTask {
             classpath.append(bootclasspath);
         }
 
-        classpath.append(getCompileClasspath(true));
-
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirsToClasspath(classpath);
+
+        classpath.append(getCompileClasspath(true));
 
         // Jikes has no option for source-path so we
         // will add it to classpath.
@@ -765,11 +765,11 @@ public class Javac extends MatchingTask {
             classpath.append(bootclasspath);
         }
 
-        classpath.append(getCompileClasspath(true));
-
         // jvc doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
         addExtdirsToClasspath(classpath);
+
+        classpath.append(getCompileClasspath(true));
 
         // jvc has no option for source-path so we
         // will add it to classpath.
