@@ -382,7 +382,7 @@ name of the operating system.</p>
 <p>In addition Ant knows some built in properties:</p>
 <ul>
   <li>basedir - the absolute path of the project's basedir (as set
-    with the basedir attribute of &lt;project&gt;.</li>
+    with the basedir attribute of &lt;project&gt;).</li>
   <li>ant.file - the absolute path of the build file.</li>
   <li>ant.java.version - the JVM version Ant detected. Currently it
     can hold the values &quot;1.1&quot;, &quot;1.2&quot; and
@@ -3092,6 +3092,13 @@ instead.</p>
     <td valign="top">additionalparam</td>
     <td valign="top">Lets you add additional parameters to the javadoc command line. Useful for doclets</td>
     <td align="center" valign="top">1.2</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      returncode other than 0.</td>
+    <td align="center" valign="top">all</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>

@@ -65,7 +65,7 @@ import java.io.*;
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
  * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a> 
  */
 public class ExecTask extends Task {

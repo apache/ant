@@ -90,6 +90,7 @@ import java.util.*;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Patrick Chanezon <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class Javadoc extends Task {
@@ -191,6 +192,7 @@ public class Javadoc extends Task {
     }
 
     private boolean foundJavaFile = false;
+    private boolean failOnError = false;
     private Path sourcePath = null;
     private File destDir = null;
     private String sourceFiles = null;
@@ -543,6 +545,16 @@ public class Javadoc extends Task {
         }
     }
 
+    /**
+     * Should the build process fail if javadoc fails (as indicated by
+     * a non zero return code)?
+     *
+     * <p>Default is false.</p>
+     */
+    public void setFailonerror(boolean b) {
+        failOnError = b;
+    }
+
     public void execute() throws BuildException {
         if ("javadoc2".equals(taskType)) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
@@ -726,7 +738,10 @@ public class Javadoc extends Task {
         exe.setWorkingDirectory(project.getBaseDir());
         try {
             exe.setCommandline(toExecute.getCommandline());
-            exe.execute();
+            int ret = exe.execute();
+            if (ret != 0 && failOnError) {
+                throw new BuildException("Javadoc returned "+ret, location);
+            }
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, location);
         } finally {
