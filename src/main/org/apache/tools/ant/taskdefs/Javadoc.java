@@ -65,7 +65,7 @@ import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -128,12 +128,9 @@ public class Javadoc extends Task {
         }
     }
 
-    public class DocletInfo {
+    static public class ExtensionInfo extends ProjectComponent {
         private String name;
         private Path path;
-
-        private Vector params = new Vector();
-
         public void setName(String name) {
             this.name = name;
         }
@@ -167,6 +164,11 @@ public class Javadoc extends Task {
         public void setPathRef(Reference r) {
             createPath().setRefid(r);
         }
+    }
+        
+    public class DocletInfo extends ExtensionInfo {
+
+        private Vector params = new Vector();
 
         public DocletParam createParam() {
             DocletParam param = new DocletParam();
@@ -270,7 +272,8 @@ public class Javadoc extends Task {
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
-    private Vector tags = new Vector(1);
+    private Vector tags = new Vector(5);
+    private Vector taglets = new Vector(2);
     private boolean useDefaultExcludes = true;
     private Html doctitle = null;
     private Html header = null;
@@ -424,6 +427,10 @@ public class Javadoc extends Task {
         return doclet;
     }
 
+    public void addTaglet(ExtensionInfo tagletInfo) {
+        taglets.addElement(tagletInfo);
+    }
+    
     public void setOld(boolean b) {
         add12ArgIf(b, "-1.1");
     }
@@ -971,8 +978,12 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue("-doclet");
                     toExecute.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
-                        toExecute.createArgument().setValue("-docletpath");
-                        toExecute.createArgument().setPath(doclet.getPath().concatSystemClasspath("ignore"));
+                        Path docletPath 
+                            = doclet.getPath().concatSystemClasspath("ignore");
+                        if (docletPath.size() != 0) {
+                            toExecute.createArgument().setValue("-docletpath");
+                            toExecute.createArgument().setPath(docletPath);
+                        }
                     }
                     for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
@@ -1068,6 +1079,21 @@ public class Javadoc extends Task {
             
             // JavaDoc 1.4 parameters
             if (javadoc4) {
+                for (Enumeration e = taglets.elements(); e.hasMoreElements(); ) {
+                    ExtensionInfo tagletInfo 
+                        = (ExtensionInfo) e.nextElement();
+                    toExecute.createArgument().setValue("-taglet");
+                    toExecute.createArgument().setValue(tagletInfo.getName());
+                    if (tagletInfo.getPath() != null) {
+                        System.out.println("Taglet base path is " + tagletInfo.getPath());
+                        Path tagletPath 
+                            = tagletInfo.getPath().concatSystemClasspath("ignore");
+                        if (tagletPath.size() != 0) {
+                            toExecute.createArgument().setValue("-tagletpath");
+                            toExecute.createArgument().setPath(tagletPath);
+                        }
+                    }
+                }
                 for (Enumeration e = tags.elements(); e.hasMoreElements(); ) {
                     TagArgument ta = (TagArgument) e.nextElement();
                     toExecute.createArgument().setValue ("-tag");

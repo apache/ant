@@ -347,13 +347,6 @@ instead.</i></p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">tag</td>
-    <td valign="top">Specifies how custom tags should be handled. See
-      <a href="#tagelement">below</a> for details.</td>
-    <td align="center" valign="top">1.4</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
     <td valign="top">additionalparam</td>
     <td valign="top">Lets you add additional parameters to the javadoc
             command line. Useful for doclets. Parameters containing
@@ -582,6 +575,32 @@ with Java 1.4.</p>
     is a comma separated list of some of the elements: <code>overview</code>, 
     <code>packages</code>, <code>types</code>, <code>constructors</code>, 
     <code>methods</code>, <code>fields</code> or the default, <code>all</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h4><a name="tagletelement">taglet</a></h4> 
+<p>The taglet nested element is used to specify custom taglets. This option is 
+only available with Java 1.4.</p>
+
+<h5>Parameters</h5>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the taglet class 
+              (e.g. <code>com.sun.tools.doclets.ToDoTaglet</code>)</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">path</td>
+    <td valign="top">A path specifying the search path for the taglet class
+            (e.g. <code>/home/taglets</code>).
+            The path may also be specified by a nested &lt;path&gt; element</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
