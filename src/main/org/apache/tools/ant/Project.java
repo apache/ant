@@ -89,6 +89,7 @@ public class Project {
     public static final String JAVA_1_1 = "1.1";
     public static final String JAVA_1_2 = "1.2";
     public static final String JAVA_1_3 = "1.3";
+    public static final String JAVA_1_4 = "1.4";
 
     public static final String TOKEN_START = "@";
     public static final String TOKEN_END = "@";
@@ -126,6 +127,8 @@ public class Project {
             javaVersion = JAVA_1_2;
             Class.forName("java.lang.StrictMath");
             javaVersion = JAVA_1_3;
+            Class.forName("java.lang.CharSequence");
+            javaVersion = JAVA_1_4;
         } catch (ClassNotFoundException cnfe) {
             // swallow as we've hit the max class version that
             // we have
@@ -348,7 +351,7 @@ public class Project {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
 
-        log("Detected Java Version: " + javaVersion, MSG_VERBOSE);
+        log("Detected Java version: " + javaVersion + " in: " + System.getProperty("java.home"), MSG_VERBOSE);
 
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }

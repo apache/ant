@@ -106,7 +106,7 @@ public class Path extends DataType implements Cloneable {
 
 
     /**
-     * Helper class, holds the nested <pathelement> values.
+     * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
      */
     public class PathElement {
         private String[] parts;
@@ -186,7 +186,7 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Creates the nested <pathelement> element.
+     * Creates the nested <code>&lt;pathelement&gt;</code> element.
      */
     public PathElement createPathElement() throws BuildException {
         if (isReference()) {
@@ -198,7 +198,7 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Adds a nested <fileset> element.
+     * Adds a nested <code>&lt;fileset&gt;</code> element.
      */
     public void addFileset(FileSet fs) throws BuildException {
         if (isReference()) {
@@ -209,7 +209,7 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Creates a nested <path> element.
+     * Creates a nested <code>&lt;path&gt;</code> element.
      */
     public Path createPath() throws BuildException {
         if (isReference()) {

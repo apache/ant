@@ -330,6 +330,8 @@ public class XSLTProcess extends MatchingTask {
                     try {
                         setProcessor("xalan");
                     } catch (Throwable e3) {
+                        e2.printStackTrace();
+                        e3.printStackTrace();
                         throw new BuildException(e1);
                     }
                 }

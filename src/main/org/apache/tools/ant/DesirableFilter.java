@@ -103,6 +103,16 @@ public class DesirableFilter implements FilenameFilter {
         if (name.equals(".cvsignore")){
             return false;
         }
+
+        // CVS merge autosaves.
+        if (name.startsWith(".#")) {
+            return false;
+        }
+
+        // SCCS/CSSC/TeamWare:
+        if (name.equals("SCCS")) {
+            return false;
+        }
     
         // default
         return true;
