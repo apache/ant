@@ -122,6 +122,13 @@ public class Zip extends MatchingTask {
     }
 
 
+    /** Possible behaviors when there are no matching files for the task. */
+    public static class WhenEmpty extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"fail", "skip", "create"};
+        }
+    }
+
     /**
      * Sets behavior of the task when no files match.
      * Possible values are: <code>fail</code> (throw an exception
@@ -131,12 +138,8 @@ public class Zip extends MatchingTask {
      * Default for zip tasks is <code>skip</code>;
      * for jar tasks, <code>create</code>.
      */
-    public void setWhenempty(String we) throws BuildException {
-        we = we.toLowerCase();
-        // XXX could instead be using EnumeratedAttribute, but this works
-        if (!"fail".equals(we) && !"skip".equals(we) && !"create".equals(we))
-            throw new BuildException("Unrecognized whenempty attribute: " + we);
-        emptyBehavior = we;
+    public void setWhenempty(WhenEmpty we) {
+        emptyBehavior = we.getValue();
     }
 
     public void execute() throws BuildException {
