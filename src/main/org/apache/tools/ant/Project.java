@@ -452,7 +452,7 @@ public class Project {
      * @param value The new value of the property.
      *              Must not be <code>null</code>.
      */
-    public synchronized void setProperty(String name, String value) {
+    public void setProperty(String name, String value) {
         PropertyHelper.getPropertyHelper(this).
                 setProperty(null, name, value, true);
     }
@@ -468,7 +468,7 @@ public class Project {
      *              Must not be <code>null</code>.
      * @since 1.5
      */
-    public synchronized void setNewProperty(String name, String value) {
+    public void setNewProperty(String name, String value) {
         PropertyHelper.getPropertyHelper(this).setNewProperty(null, name,
                                                               value);
     }
@@ -482,7 +482,7 @@ public class Project {
      *              Must not be <code>null</code>.
      * @see #setProperty(String,String)
      */
-    public synchronized void setUserProperty(String name, String value) {
+    public void setUserProperty(String name, String value) {
         PropertyHelper.getPropertyHelper(this).setUserProperty(null, name,
                                                                value);
     }
@@ -499,7 +499,7 @@ public class Project {
      *              Must not be <code>null</code>.
      * @see #setProperty(String,String)
      */
-    public synchronized void setInheritedProperty(String name, String value) {
+    public void setInheritedProperty(String name, String value) {
         PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
         ph.setInheritedProperty(null, name, value);
     }

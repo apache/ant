@@ -156,7 +156,8 @@ public class PropertyHelper {
      *
      * @return the project's property helper.
      */
-    public static PropertyHelper getPropertyHelper(Project project) {
+    public synchronized static 
+        PropertyHelper getPropertyHelper(Project project) {
         PropertyHelper helper
             = (PropertyHelper) project.getReference("ant.PropertyHelper");
         if (helper != null) {
@@ -451,7 +452,7 @@ public class PropertyHelper {
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
      */
-    public Object getProperty(String ns, String name) {
+    public synchronized Object getProperty(String ns, String name) {
         if (name == null) {
             return null;
         }
@@ -472,7 +473,7 @@ public class PropertyHelper {
      * @return the property value, or <code>null</code> for no match
      *         or if a <code>null</code> name is provided.
      */
-    public Object getUserProperty(String ns, String name) {
+    public synchronized Object getUserProperty(String ns, String name) {
         if (name == null) {
             return null;
         }
