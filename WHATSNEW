@@ -19,6 +19,7 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Expand tasks did not behave as expected with PatternSets.
 
 * <property environment=... /> now works on OS/400.
 
