@@ -431,3 +431,6 @@ V. Things we probably don't agree on.
 * Allow a target to depend on a target which is in another buildfile.  
 
 * Allow a target to reference properties defined in another buildfile.
+
+* targets should be like methods including a return value
+
