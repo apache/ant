@@ -106,6 +106,9 @@
     <available property="xalan.present" 
                classname="org.apache.xalan.xslt.XSLTProcessorFactory" 
                classpathref="classpath" />
+    <available property="xalan2.present" 
+               classname="org.apache.xalan.transformer.TransformerImpl" 
+               classpathref="classpath" />
     <available property="ejb.ejbc.present" 
                classname="weblogic.ejbc" 
                classpathref="classpath" />
@@ -150,6 +153,10 @@
                classpathref="classpath"/>
     <available property="log4j.present"
                classname="org.apache.log4j.Category"
+               classpathref="classpath"/>
+    <!-- this is just a way to check for a TraX implementation -->
+    <available property="trax.impl.present"
+               resource="META-INF/services/javax.xml.transform.TransformerFactory"
                classpathref="classpath"/>
                
     <condition property="javamail.complete">
@@ -702,8 +709,8 @@
           <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" unless="xslp.present"/>
           <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" unless="xalan.present"/>
           
-          <!-- uncomment if you are not using Xalan2 as the TraX transformer..-->
-          <!-- exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaisonTest.java"/-->
+          <!-- ehm, this is not really a TraX test but rather a xalan2 test..-->
+          <exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaisonTest.java" unless="xalan2.present"/>
 
         </fileset>
       </batchtest>
