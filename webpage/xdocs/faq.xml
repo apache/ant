@@ -338,7 +338,7 @@ build.succeeded.email.subject=Nightly build succeeded!
         invoke Ant like</p>
         
         <source><![CDATA[
-ant -logger BuildMonitor
+ant -listener BuildMonitor
 ]]></source>
       </answer>
     </faq>
