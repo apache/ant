@@ -14,6 +14,14 @@
 <p><b>Important:</b> This task needs &quot;<code>cvs</code>&quot; on the path. If it isn't, you will get
 an error (such as error <code>2</code> on windows). If <code>&lt;cvs&gt;</code> doesn't work, try to execute <code>cvs.exe</code>
 from the command line in the target directory in which you are working.
+
+<p><b>CVSNT Note</b>: CVSNT prefers users to store the passwords
+inside the registry.  If the <a href="cvspass.html">cvspass task</a>
+and the passfile attribute don't seem to work for you, the most likely
+reason is that CVSNT ignores your .cvspass file completely.  See <a
+href="http://issues.apache.org/bugzilla/show_bug.cgi?id=21657#c5">bug
+zilla report 21657</a> for recommended workarounds.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -169,7 +177,7 @@ before the command, and any command options should appear after the command as i
 above. See <a href="http://www.cvshome.org/docs/manual/cvs-1.11.13/cvs.html" target="_top">the cvs manual</a> for details,
 specifically the <a href="http://www.cvshome.org/docs/manual/cvs-1.11.13/cvs_16.html" target="_top">Guide to CVS commands</a></p>
 <hr>
-<p align="center">Copyright &copy; 2000-2004 The Apache Software
+<p align="center">Copyright &copy; 2000-2005 The Apache Software
 Foundation.  All rights Reserved.</p>
 
 </body>
