@@ -113,6 +113,19 @@ block</td>
       time as the original jar files.</td>
     <td valign="top" align="center">No; default false.</td>
   </tr>
+  <tr>
+    <td valign="top">tsaurl</td>
+    <td valign="top">URL for a timestamp authority for timestamped
+    JAR files in Java1.5+</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">tsacert</td>
+    <td valign="top">alias in the keystore for a timestamp authority for 
+    timestamped JAR files in Java1.5+</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  
 </table>
 <h3>Parameters as nested elements</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -141,6 +154,20 @@ alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;
   signs the ant.jar with alias &quot;apache-group&quot; accessing the
   keystore and private key via &quot;secret&quot; password.
 </p>
+
+<h3>About timestamp signing</h3>
+
+<p>
+Timestamped JAR files are a new feature in Java1.5; a feature supported in Ant since
+Ant 1.7. Ant does not yet support proxy setup for this singing process, and
+the whole TSA feature is not tested yet. Furthermore, the 
+<a href="http://java.sun.com/j2se/1.5.0/docs/guide/security/time-of-signing-beta1.html">
+official TSA documentation</a>
+warns that the API is subject to change. If a future version of Java changes the
+API, Ant will break. It may be possible to hide changes if and when they occur,
+but this can not be guaranteed. 
+</p>
+
 <hr>
 <p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>

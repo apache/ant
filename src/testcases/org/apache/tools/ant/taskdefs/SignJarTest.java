@@ -143,7 +143,13 @@ public class SignJarTest extends BuildFileTest {
 
     public void testNoStorePass() {
         expectBuildExceptionContaining("testNoStorePass",
-                "no files",
+                "no password",
                 SignJar.ERROR_NO_STOREPASS);
     }
- }
+
+    public void testTsaLocalhost() {
+        expectBuildException("testTsaLocalhost",
+            "no TSA at localhost:0");
+        assertLogContaining("java.net.ConnectException");
+    }
+}

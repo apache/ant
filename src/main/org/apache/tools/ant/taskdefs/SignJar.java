@@ -41,6 +41,10 @@ import org.apache.tools.ant.util.FileNameMapper;
  * exists then its modification date is used as a cue as to whether to resign
  * any JAR file.
  *
+ * Timestamp driven signing is based on the unstable and inadequately documented
+ * information in the Java1.5 docs
+ * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/security/time-of-signing-beta1.html">
+ * beta documentation</a>
  * @ant.task category="java"
  * @since Ant 1.1
  */
@@ -94,11 +98,23 @@ public class SignJar extends Task {
     protected boolean verbose;
 
     /**
-     * flag for
+     * flag for internal sf signing
      */
     protected boolean internalsf;
+
+    /**
+     * sign sections only?
+     */
     protected boolean sectionsonly;
+
+    /**
+     * flag to preserve timestamp on modified files
+     */
     private boolean preserveLastModified;
+
+    /**
+     * redirector used to talk to the jarsigner program
+     */
     private RedirectorElement redirector;
 
     /**
@@ -126,6 +142,16 @@ public class SignJar extends Task {
      * mapper for todir work
      */
     private FileNameMapper mapper;
+
+    /**
+     * URL for a tsa; null implies no tsa support
+     */
+    protected String tsaurl;
+
+    /**
+     * alias for the TSA in the keystore
+     */
+    protected String tsacert;
 
     /**
      * error string for unit test verification: {@value}
@@ -327,8 +353,48 @@ public class SignJar extends Task {
         mapper = newMapper;
     }
 
+    /**
+     * get the active mapper; may be null
+     * @return mapper or null
+     * @since Ant 1.7
+     */
     public FileNameMapper getMapper() {
         return mapper;
+    }
+
+    /**
+     * get the -tsaurl url
+     * @return url or null
+     * @since Ant 1.7
+     */
+    public String getTsaurl() {
+        return tsaurl;
+    }
+
+    /**
+     *
+     * @param tsaurl
+     * @since Ant 1.7
+     */
+    public void setTsaurl(String tsaurl) {
+        this.tsaurl = tsaurl;
+    }
+
+    /**
+     * get the -tsacert option
+     * @since Ant 1.7
+     * @return a certificate alias or null
+     */
+    public String getTsacert() {
+        return tsacert;
+    }
+
+    /**
+     * set the alias in the keystore of the TSA to use;
+     * @param tsacert
+     */
+    public void setTsacert(String tsacert) {
+        this.tsacert = tsacert;
     }
 
     /**
@@ -523,6 +589,9 @@ public class SignJar extends Task {
             cmd.createArg().setValue("-sectionsonly");
         }
 
+        //add -tsa operations if declared
+        addTimestampAuthorityCommands(cmd);
+
         //JAR source is required
         cmd.createArg().setValue(jarSource.getPath());
 
@@ -545,6 +614,23 @@ public class SignJar extends Task {
     }
 
     /**
+     * If the tsa parameters are set, this passes them to the command.
+     * There is no validation of java version, as third party JDKs
+     * may implement this on earlier/later jarsigner implementations.
+     * @param cmd
+     */
+    private void addTimestampAuthorityCommands(final ExecTask cmd) {
+        if(tsaurl!=null) {
+            cmd.createArg().setValue("-tsa");
+            cmd.createArg().setValue(tsaurl);
+        }
+        if (tsacert != null) {
+            cmd.createArg().setValue("-tsacert");
+            cmd.createArg().setValue(tsacert);
+        }
+    }
+
+    /**
      * Compare a jar file with its corresponding signed jar. The logic for this
      * is complex, and best explained in the source itself. Essentially if
      * either file doesnt exist, or the destfile has an out of date timestamp,
@@ -559,7 +645,7 @@ public class SignJar extends Task {
      */
     protected boolean isUpToDate(File jarFile, File signedjarFile) {
         if (null == jarFile && !jarFile.exists()) {
-            //these are pathological case, but retained in case somebody
+            //these are pathological cases, but retained in case somebody
             //subclassed us.
             return false;
         }

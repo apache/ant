@@ -5,6 +5,7 @@
   <property name="subdir" location="${sign.dir}/subdir" />
   <property name="test.jar" location="${sign.dir}/signtest.jar" />
   <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
+  
   <mkdir dir="${sign.dir}" />
   <mkdir dir="${subdir}" />
   
@@ -167,6 +168,10 @@
     <signjar keystore="testkeystore"
        alias="testonly"
        jar="${test.jar}"/>
+  </target>
+
+  <target name="testTsaLocalhost" depends="jar">
+    <sign tsaurl="http://localhost:0/" />
   </target>
   
 </project>
