@@ -201,7 +201,8 @@
              useexternalfile="yes"
              sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/cli:${java.dir}/start"
              destdir="${javadocs.dir}"
-             author="true" private ="true"
+             author="true" 
+             private ="true"
              version="true"
              windowtitle="Mutant API"
              doctitle="Mutant">

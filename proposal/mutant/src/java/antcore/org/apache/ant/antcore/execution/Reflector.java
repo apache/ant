@@ -72,31 +72,6 @@ import org.apache.ant.common.util.ExecutionException;
 public class Reflector implements Setter {
 
     /**
-     * AttributeSetter classes are created at introspection time for each
-     * setter method a class provides and for which a conversion from a
-     * String value is available.
-     *
-     * @author Conor MacNeill
-     * @created 19 January 2002
-     */
-    private interface AttributeSetter {
-        /**
-         * Set the attribute value on an object
-         *
-         * @param obj the object on which the set method is to be invoked
-         * @param value the string representation of the value
-         * @exception InvocationTargetException if the method cannot be
-         *      invoked
-         * @exception IllegalAccessException if the method cannot be invoked
-         * @exception ExecutionException if the conversion of the value
-         *      fails
-         */
-        void set(Object obj, String value)
-             throws InvocationTargetException, IllegalAccessException,
-            ExecutionException;
-    }
-
-    /**
      * An element adder is used to add an instance of an element to an of an
      * object. The object being added will have been fully configured by Ant
      * prior to calling this method.
@@ -360,6 +335,36 @@ public class Reflector implements Setter {
     }
 
     /**
+     * Add an attribute setter for the given property. The setter will only
+     * be added if it does not override a higher priorty setter
+     *
+     * @param attributeName the name of the attribute that the setter operates 
+     *        upon.
+     * @param setter the AttribnuteSetter instance to use.
+     */
+    private void addAttributeSetter(String attributeName, 
+                                    AttributeSetter setter) {
+        String name = attributeName.toLowerCase();
+        AttributeSetter currentSetter 
+            = (AttributeSetter)attributeSetters.get(name);
+        if (currentSetter != null) {
+            // there is a setter, is it lower down in the class hierarchy
+            int currentDepth = currentSetter.getDepth();
+            if (currentDepth < setter.getDepth()) {
+                return;
+            } else if (currentDepth == setter.getDepth()) {
+                // now check the types
+                Class currentType = currentSetter.getType();
+                if (currentType != String.class) {
+                    return;
+                }
+            }
+        }                                         
+        attributeSetters.put(name, setter);
+    }
+    
+    
+    /**
      * Determine if the class associated with this reflector supports a
      * particular nested element
      *
@@ -375,51 +380,33 @@ public class Reflector implements Setter {
      * Add a method to the reflector for setting an attribute value
      *
      * @param m the method, obtained by introspection.
+     * @param depth the depth of this method's declaration in the class 
+     *        hierarchy
      * @param propertyName the property name the method will set.
      * @param converters A map of converter classes used to convert strings
      *      to different types.
      */
-    public void addAttributeMethod(final Method m, String propertyName,
-                                         Map converters) {
-        final Class type = m.getParameterTypes()[0];
+    public void addAttributeMethod(Method m, int depth, 
+                                   String propertyName, Map converters) {
+        Class type = m.getParameterTypes()[0];
 
         if (converters != null && converters.containsKey(type)) {
             // we have a converter to use to convert the String
             // value into something the set method expects.
             Converter converter = (Converter)converters.get(type);
-            addConvertingSetter(m, propertyName, converter, type);
+            addConvertingSetter(m, depth, propertyName, converter);
             return;
         }
 
         if (type.equals(String.class)) {
-            attributeSetters.put(propertyName.toLowerCase(),
-                new AttributeSetter() {
-                    public void set(Object parent, String value)
-                         throws InvocationTargetException,
-                        IllegalAccessException {
-                        m.invoke(parent, new String[]{value});
-                    }
-                });
+            addAttributeSetter(propertyName, new AttributeSetter(m, depth));
             return;
         }
 
         try {
             final Constructor c =
                 type.getConstructor(new Class[]{java.lang.String.class});
-            attributeSetters.put(propertyName.toLowerCase(),
-                new AttributeSetter() {
-                    public void set(Object parent, String value)
-                         throws InvocationTargetException,
-                        IllegalAccessException, ExecutionException {
-                        try {
-                            Object newValue
-                                 = c.newInstance(new String[]{value});
-                            m.invoke(parent, new Object[]{newValue});
-                        } catch (InstantiationException ie) {
-                            throw new ExecutionException(ie);
-                        }
-                    }
-                });
+            addAttributeSetter(propertyName, new AttributeSetter(m, depth, c));
             return;
         } catch (NoSuchMethodException nme) {
             // ignore
@@ -435,7 +422,7 @@ public class Reflector implements Setter {
                     Converter converter
                          = (Converter)converters.get(converterType);
                     if (converter.canConvertSubType(type)) {
-                        addConvertingSetter(m, propertyName, converter, type);
+                        addConvertingSetter(m, depth, propertyName, converter);
                         return;
                     }
                 }
@@ -484,23 +471,16 @@ public class Reflector implements Setter {
      * Add an attribute setter with an associated converter
      *
      * @param m the attribute setter method
+     * @param depth the depth of this method's declaration in the class 
+     *        hierarchy
      * @param propertyName the name of the attribute this method supports
      * @param converter the converter to be used to construct the value
      *      expected by the method.
-     * @param type the type expected by the method.
      */
-    private void addConvertingSetter(final Method m, String propertyName,
-                                           final Converter converter,
-                                           final Class type) {
-        attributeSetters.put(propertyName.toLowerCase(),
-            new AttributeSetter() {
-                public void set(Object obj, String value)
-                     throws InvocationTargetException, ExecutionException,
-                    IllegalAccessException {
-                    Object convertedValue = converter.convert(value, type);
-                    m.invoke(obj, new Object[]{convertedValue});
-                }
-            });
+    private void addConvertingSetter(Method m, int depth,
+                                     String propertyName, Converter converter) {
+        addAttributeSetter(propertyName, 
+            new AttributeSetter(m, depth, converter));
     }
 }
 

@@ -54,6 +54,7 @@
 package org.apache.ant.antcore.execution;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Introspects a class and builds a reflector for setting values on
@@ -67,6 +68,27 @@ public class ClassIntrospector {
     private Reflector reflector;
 
     /**
+     * A Map which maps the classnames to their depth in the class hiearchy,
+     * with the current class being depth=0
+     */
+    private Map classDepth = new HashMap();
+
+    /**
+     * Determine the class hierarchy depths for the given class.
+     *
+     * @param bean the class for which the class depths will be determined.
+     */
+    private void getDepths(Class bean) {
+        Class currentClass = bean;
+        int index = 0;
+        while (currentClass != null) {
+            classDepth.put(currentClass, new Integer(index++));
+            currentClass = currentClass.getSuperclass();
+        }
+    }
+            
+    
+    /**
      * Create a introspector for the bean
      *
      * @param bean the class which is introspected
@@ -75,6 +97,7 @@ public class ClassIntrospector {
      */
     public ClassIntrospector(final Class bean, Map converters) {
         reflector = new Reflector();
+        getDepths(bean);
 
         Method[] methods = bean.getMethods();
         for (int i = 0; i < methods.length; i++) {
@@ -93,8 +116,9 @@ public class ClassIntrospector {
                  && returnType.equals(Void.TYPE)
                  && args.length == 1
                  && !args[0].isArray()) {
-                reflector.addAttributeMethod(m, getPropertyName(name, "set"),
-                    converters);
+                Integer depth = (Integer)classDepth.get(m.getDeclaringClass());
+                reflector.addAttributeMethod(m, depth.intValue(), 
+                    getPropertyName(name, "set"), converters);
             } else if (name.startsWith("addConfigured")
                  && name.length() > 13
                  && returnType.equals(Void.TYPE)

@@ -885,8 +885,10 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      *
      * @param taskType the name of the task to be created.
      * @return the created task instance
+     *
+     * @exception BuildException if there is a build problem
      */
-    public Task createTask(String taskType) {
+    public Task createTask(String taskType) throws BuildException {
         Task task = null;
         Class taskClass = (Class)taskClassDefinitions.get(taskType);
 
