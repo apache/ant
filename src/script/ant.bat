@@ -31,9 +31,9 @@ rem find ANT_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
 if exist "%ANT_HOME%\lib\ant.jar" goto checkJava
 
-rem check for ant in Program Files on system drive
-if not exist "%SystemDrive%\Program Files\ant" goto checkSystemDrive
-set ANT_HOME=%SystemDrive%\Program Files\ant
+rem check for ant in Program Files
+if not exist "%ProgramFiles%\ant" goto checkSystemDrive
+set ANT_HOME=%ProgramFiles%\ant
 goto checkJava
 
 :checkSystemDrive
