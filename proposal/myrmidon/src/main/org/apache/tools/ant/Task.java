@@ -22,7 +22,6 @@ public abstract class Task
         try
         {
             project.fireTaskStarted( this );
-            maybeConfigure();
             execute();
             project.fireTaskFinished( this, null );
         }
@@ -81,16 +80,6 @@ public abstract class Task
     public void log( String msg, int msgLevel )
     {
         project.log( this, msg, msgLevel );
-    }
-
-    /**
-     * Configure this task - if it hasn't been done already.
-     *
-     * @exception BuildException Description of Exception
-     */
-    public void maybeConfigure()
-        throws TaskException
-    {
     }
 
     protected void handleErrorOutput( String line )
