@@ -69,8 +69,12 @@ public class AppContext {
     private EventBus _eventBus = new EventBus();
     /** Application resources. */
     private ResourceManager _resources = new ResourceManager();
+    /** The project manager. */
+    private ProjectManager _projectManager = new ProjectManager();
     /** Application actions. */
-    private ActionManager _actions = new ActionManager(_eventBus);
+    private ActionManager _actions = 
+        new ActionManager(_eventBus, new ResourceManager(
+            "org.apache.tools.ant.gui.resources.action"));
     /** List of build listeners to register when build starts. */
     private List _buildListeners = new LinkedList();
 
@@ -123,6 +127,15 @@ public class AppContext {
 	 */
     public Frame getParentFrame() {
         return _parentFrame;
+    }
+
+    /** 
+     * Get the project manager.
+     * 
+     * @return Project manager.
+     */
+    public ProjectManager getProjectManager() {
+        return _projectManager;
     }
 
 	/** 

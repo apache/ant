@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.modules;
+package org.apache.tools.ant.gui.modules.console;
 
 import org.apache.tools.ant.gui.core.AntModule;
 import org.apache.tools.ant.gui.core.AppContext;

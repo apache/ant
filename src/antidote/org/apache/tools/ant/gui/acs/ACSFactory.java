@@ -54,8 +54,9 @@
 package org.apache.tools.ant.gui.acs;
 
 import javax.xml.parsers.*;
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
+import java.net.URL;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import com.sun.xml.parser.Parser;
@@ -113,14 +114,26 @@ public class ACSFactory {
 
     }
 
+
 	/** 
 	 * Load a project from the given XML file.
      * XXX fix me.
 	 * 
-	 * @param f File to load.
-	 * @return 
+	 * @param location Location of the file.
+	 * @return Loaded project.
 	 */
-    public ACSProjectElement load(File f) throws IOException, SAXException {
+    public ACSProjectElement load(File location) throws IOException {
+        return load(new URL("file", null, location.getPath()));
+    }
+
+	/** 
+	 * Load a project from the given XML file.
+     * XXX fix me.
+	 * 
+	 * @param location Location of the file.
+	 * @return Loaded project.
+	 */
+    public ACSProjectElement load(URL location) throws IOException {
         XmlDocument doc = null;
 
         try {
@@ -137,12 +150,16 @@ public class ACSFactory {
             parser.setEntityResolver(new Resolver());
             //parser.setErrorHandler();
 
-            sax.parse(f, null);
+            sax.parse(location.openStream(), null);
 
             doc = builder.getDocument();
 
         }
         catch(ParserConfigurationException ex) {
+            ex.printStackTrace();
+            throw new IOException(ex.getMessage());
+        }
+        catch(SAXException ex) {
             ex.printStackTrace();
             throw new IOException(ex.getMessage());
         }

@@ -70,9 +70,8 @@ public class ActionManager {
     /** Parameters for the Command constructor. */
     private static final Class[] COMMAND_CTOR_PARAMS = { AppContext.class };
 
-    private  ResourceBundle _resources = 
-        ResourceBundle.getBundle(
-            "org.apache.tools.ant.gui.resources.action");
+    /** Externalized resources. */
+    private ResourceManager _resources = null;
 
     /** Array of action identifiers. */
     private String[] _actionIDs = null;
@@ -91,22 +90,22 @@ public class ActionManager {
 	 * Standard ctor.
 	 * 
 	 * @param bus Event bus to post events to.
+     * @param resources Location of resources.
 	 */
-    public ActionManager(EventBus bus) {
+    public ActionManager(EventBus bus, ResourceManager resources) {
         _bus = bus;
+        _resources = resources;
         bus.addMember(EventBus.RESPONDING, new Enabler());
 
         _mapper = new EventToActionMapper();
 
         // Configure the set of actions.
-        String toTok = _resources.getString("actions");
-        StringTokenizer tok = new StringTokenizer(toTok, ", ");
-        _actionIDs = new String[tok.countTokens()];
+        String[] names = _resources.getStringArray("actions");
+        _actionIDs = new String[names.length];
         for(int i = 0; i < _actionIDs.length; i++) {
-            _actionIDs[i] = tok.nextToken();
+            _actionIDs[i] = names[i];
             AntAction action = new AntAction(_resources, _bus, _actionIDs[i]);
             _actions.put(_actionIDs[i], action);
-                         
 
             // For each action we need to add the reverse event trigger
             // lookup.

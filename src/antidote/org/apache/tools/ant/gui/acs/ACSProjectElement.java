@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui.acs;
 
 import com.sun.xml.tree.ElementNode;
+import java.net.URL;
 
 /**
  * Class representing a project element in the build file.
@@ -66,7 +67,10 @@ public class ACSProjectElement extends ACSNamedElement {
     public static final String DEFAULT = "default";
     /** The 'basdir' property name. */
     public static final String BASEDIR = "basedir";
-
+    /** Property name of the persistence location. */
+    public static final String LOCATION = "location";
+    /** The location where this project is persisted. */
+    private URL _location = null;
 
 	/** 
 	 * Default ctor.
@@ -123,5 +127,26 @@ public class ACSProjectElement extends ACSNamedElement {
         setAttribute(BASEDIR, baseDir);
         firePropertyChange(BASEDIR, old, baseDir);
     }
+
+    /** 
+     * Get the location where this project is persisted.
+     * 
+     * @return Saved location, or null if not persisted.
+     */
+    public URL getLocation() {
+        return _location;
+    }
+
+    /** 
+     * Set the loction where the project is persisted.
+     * 
+     * @param location Location of project.
+     */
+    public void setLocation(URL location) {
+        URL old = _location;
+        _location = location;
+        firePropertyChange(LOCATION, old, _location);
+    }
+
 
 }

@@ -77,7 +77,7 @@ public class ResourceManager {
 
     /** Image path. */
     private static final String IMG_PATH = 
-        "/" + RESOURCE_PKG.replace('.', '/');
+        File.separator + RESOURCE_PKG.replace('.', File.separatorChar);
 
     /** Resources to reference. */
     private ResourceBundle _resources = null;
@@ -100,6 +100,16 @@ public class ResourceManager {
     }
 
     /** 
+     * Get non-qualified String resource.
+     * 
+     * @param name Name of the resource.
+     * @return Value of the resource.
+     */
+    public String getString(String name) {
+        return getString(null, name);
+    }
+
+    /** 
      * Get a string resource for the given class.
      * 
      * @param clazz Class to get resource for.
@@ -107,13 +117,22 @@ public class ResourceManager {
      * @return String resource for the given class.
      */
     public String getString(Class clazz, String name) {
-        if(clazz == null || name == null) {
+        if(name == null) {
             return null;
         }
 
         return _resources.getString(getKey(clazz, name));
     }
 
+    /** 
+     * Get a non-qualified array of string resources for the given class.
+     * 
+     * @param name Name of the string resource.
+     * @return Array of string resources for the given class.
+     */
+    public String[] getStringArray(String name) {
+        return getStringArray(null, name);
+    }
     /** 
      * Get an array of string resources for the given class.
      * 
@@ -122,7 +141,7 @@ public class ResourceManager {
      * @return Array of string resources for the given class.
      */
     public String[] getStringArray(Class clazz, String name) {
-        if(clazz == null || name == null) {
+        if(name == null) {
             return null;
         }
 
@@ -157,7 +176,21 @@ public class ResourceManager {
      * @return Composite key.
      */
     private String getKey(Class clazz, String name) {
-        return clazz.getName() + "." + name;
+        name = name == null ? "" : name;
+
+        return clazz == null ? name : clazz.getName() + "." + name;
+    }
+
+    /** 
+     * Generate a localized message using the given set of arguments to 
+     * format the message with.
+     * 
+     * @param name Name of the message.
+     * @param arguments Arguments to the message.
+     * @return The formatted message.
+     */
+    public String getMessage(String name, Object[] arguments) {
+        return getMessage(null, name, arguments);
     }
 
     /** 
@@ -165,9 +198,9 @@ public class ResourceManager {
      * format the message with.
      * 
      * @param clazz Class to get message resource for.
-     * @param name 
-     * @param arguments 
-     * @return 
+     * @param name Name of the message.
+     * @param arguments Arguments to the message.
+     * @return The formatted message.
      */
     public String getMessage(Class clazz, String name, Object[] arguments) {
         String format = getString(clazz, name);
@@ -183,7 +216,7 @@ public class ResourceManager {
      * @return Image as an ImageIcon, or null if not found.
      */
     public ImageIcon getImageIcon(Class clazz, String key) {
-        return getImageIcon(getString(clazz, key));
+        return loadImageIcon(getString(clazz, key));
     }
 
     /** 
@@ -193,7 +226,7 @@ public class ResourceManager {
      * @param fileName Image file to load.
      * @return Image as an ImageIcon, or null if not found.
      */
-    public ImageIcon getImageIcon(String fileName) {
+    public ImageIcon loadImageIcon(String fileName) {
         if(fileName == null) return null;
 
         ImageIcon icon = null;

@@ -79,7 +79,7 @@ public class AntAction extends AbstractAction {
     public static final String COMMAND = "command";
 
     /** Property resources. */
-    private  ResourceBundle _resources =  null;
+    private  ResourceManager _resources =  null;
     /** Event bus. */
     private EventBus _bus = null;
     /** Unique id. */
@@ -100,7 +100,7 @@ public class AntAction extends AbstractAction {
      * 
      * @param id Unique id for the action
      */
-    public AntAction(ResourceBundle resources, EventBus bus, String id) {
+    public AntAction(ResourceManager resources, EventBus bus, String id) {
         _resources = resources;
         _bus = bus;
         _id = id;
@@ -144,17 +144,7 @@ public class AntAction extends AbstractAction {
         // Add an icon if any (which means it'll show up on the tool bar).
         String iconName = getString("icon");
         if(iconName != null) {
-            try {
-                URL imageLoc = 
-                    AntAction.class.getResource("resources/" + iconName);
-                if(imageLoc != null) {
-                    putValue(SMALL_ICON, new ImageIcon(imageLoc));
-                }
-            }
-            catch(Exception ex) {
-                // XXX log me.
-                ex.printStackTrace();
-            }
+            putValue(SMALL_ICON, _resources.loadImageIcon(iconName));
         }
 
         _enableOn = resolveClasses(getString(ENABLE_ON));
