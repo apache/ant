@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.apache.tools.ant.util.CollectionUtils;
  * Holds the data of a jar manifest.
  *
  * Manifests are processed according to the
- * {@link <a href="http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html">Jar
+ * {@link <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html">Jar
  * file specification.</a>}.
  * Specifically, a manifest element consists of
  * a set of attributes and sections. These sections in turn may contain
