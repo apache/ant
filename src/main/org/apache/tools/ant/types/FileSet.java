@@ -75,10 +75,6 @@ public class FileSet extends AbstractFileSet {
         super(fileset);
     }
 
-    protected String getDataTypeName() {
-        return "fileset";
-    }
-
     /**
      * Return a FileSet that has the same basedir and same patternsets
      * as this one.

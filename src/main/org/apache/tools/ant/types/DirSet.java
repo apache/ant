@@ -70,10 +70,6 @@ public class DirSet extends AbstractFileSet {
         super(dirset);
     }
 
-    protected String getDataTypeName() {
-        return "dirset";
-    }
-
     /**
      * Return a DirSet that has the same basedir and same patternsets
      * as this one.

@@ -80,6 +80,14 @@ public abstract class MatchingTask extends Task {
     protected FileSet fileset = new FileSet();
 
     /**
+     * @see ProjectComponent#setProject
+     */
+    public void setProject(Project project) {
+        super.setProject(project);
+        fileset.setProject(project);
+    }
+
+    /**
      * add a name entry on the include list
      */
     public PatternSet.NameEntry createInclude() {

@@ -62,6 +62,8 @@ import org.apache.tools.ant.Project;
 import java.io.File;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
 /**
  * Class that holds an implicit patternset and supports nested
@@ -85,6 +87,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
     private boolean useDefaultExcludes = true;
     private boolean isCaseSensitive = true;
 
+   
     public AbstractFileSet() {
         super();
     }
@@ -95,7 +98,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         this.additionalPatterns = fileset.additionalPatterns;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.isCaseSensitive = fileset.isCaseSensitive;
-        setProject(getProject());
+        setProject(fileset.getProject());
     }
 
     /**
@@ -270,10 +273,33 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         this.isCaseSensitive = isCaseSensitive;
     }
 
+    
+    
     /**
      * sets the name used for this datatype instance.
      */
-    protected abstract String getDataTypeName();
+    protected String getDataTypeName() {
+        // look up the types in project and see if they match this class
+        Project project = getProject();
+        if (project != null) {
+            Hashtable typedefs = project.getDataTypeDefinitions();
+            for (Enumeration e = typedefs.keys(); e.hasMoreElements();) {
+                String typeName = (String)e.nextElement();
+                Class typeClass = (Class)typedefs.get(typeName);
+                if (typeClass == getClass()) {
+                    return typeName;
+                }
+            }
+        }
+            
+        String classname = getClass().getName();
+        
+        int dotIndex = classname.lastIndexOf(".");
+        if (dotIndex == -1) {
+            return classname;
+        }
+        return classname.substring(dotIndex + 1); 
+    }
 
     /**
      * Returns the directory scanner needed to access the files to process.
