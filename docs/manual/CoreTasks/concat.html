@@ -12,58 +12,58 @@
       <h3>Description</h3>
 
       <p>
-	Concatenates a file, or a series of files, to a single file or
-	the console. The destination file will be created if it does
-	not exist.
+        Concatenates a file, or a series of files, to a single file or
+        the console. The destination file will be created if it does
+        not exist.
       </p>
 
       <p>
           <a href="../using.html#path">Path</a>s and/or
-	<a href="../CoreTypes/fileset.html">FileSet</a>s and/or <a
-	href="../CoreTypes/filelist.html">FileList</a>s are used to
-	select which files are to be concatenated. There is no
-	singular 'file' attribute to specify a single file to cat.
+        <a href="../CoreTypes/fileset.html">FileSet</a>s and/or <a
+        href="../CoreTypes/filelist.html">FileList</a>s are used to
+        select which files are to be concatenated. There is no
+        singular 'file' attribute to specify a single file to cat.
       </p>
 
       <h3>Parameters</h3>
 
       <table border="1" cellpadding="2" cellspacing="0">
 
-	<tr>
-	  <td valign="top"><b>Attribute</b></td>
-	  <td valign="top"><b>Description</b></td>
-	  <td align="center" valign="top"><b>Required</b></td>
-	</tr>
+        <tr>
+          <td valign="top"><b>Attribute</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td align="center" valign="top"><b>Required</b></td>
+        </tr>
 
-	<tr>
-	  <td valign="top">destfile</td>
-	  <td valign="top">
-	    The destination file for the concatenated stream.
-        If not specified the console will be used instead.
-	  </td>
-	  <td valign="top" align="center">
-	    No
-	  </td>
-	</tr>
-
-	<tr>
-	  <td valign="top">append</td>
-	  <td valign="top">
-	    Specifies whether or not the file specified by 'destfile'
-	    should be appended. Defaults to &quot;no&quot;.
-	  </td>
-	  <td valign="top" align="center">No</td>
-	</tr>
-	<tr>
-	  <td valign="top">force</td>
+        <tr>
+          <td valign="top">destfile</td>
           <td valign="top">
-	    Specifies whether or not the file specified by 'destfile'
-	    should be written to even if it is newer than all source files.
+            The destination file for the concatenated stream.
+        If not specified the console will be used instead.
+          </td>
+          <td valign="top" align="center">
+            No
+          </td>
+        </tr>
+
+        <tr>
+          <td valign="top">append</td>
+          <td valign="top">
+            Specifies whether or not the file specified by 'destfile'
+            should be appended. Defaults to &quot;no&quot;.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
+        <tr>
+          <td valign="top">force</td>
+          <td valign="top">
+            Specifies whether or not the file specified by 'destfile'
+            should be written to even if it is newer than all source files.
             <em>since Ant 1.6</em>.
             Defaults to &quot;yes&quot;.
-	  </td>
-	  <td valign="top" align="center">No</td>
-	</tr>
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
 
         <tr>
           <td valign="top">encoding</td>
@@ -89,7 +89,7 @@
         <tr>
           <td valign="top">fixlastline</td>
           <td valign="top">
- 	        Specifies whether or not to check if
+                 Specifies whether or not to check if
             each file concatenated is terminated by
             a new line. If this attribute is &quot;yes&quot;
             a new line will be appended to the stream if
@@ -108,17 +108,17 @@
             <em>since Ant 1.6</em>
             Valid values for this property are:
             <ul>
-	      <li>cr: a single CR</li>
-	      <li>lf: a single LF</li>
-	      <li>crlf: the pair CRLF</li>
-	      <li>mac: a single CR</li>
-	      <li>unix: a single LF</li>
-	      <li>dos: the pair CRLF</li>
-	    </ul>
+              <li>cr: a single CR</li>
+              <li>lf: a single LF</li>
+              <li>crlf: the pair CRLF</li>
+              <li>mac: a single CR</li>
+              <li>unix: a single LF</li>
+              <li>dos: the pair CRLF</li>
+            </ul>
             The default is platform dependent.
             For Unix platforms, the default is &quot;lf&quot;.
-	    For DOS based systems (including Windows),
-            the default is &quot;crlf&quot;. 
+            For DOS based systems (including Windows),
+            the default is &quot;crlf&quot;.
             For Mac OS, the default is &quot;cr&quot;.
           </td>
           <td valign="top" align="center">No</td>
@@ -131,7 +131,7 @@
         <p><em>since Ant 1.6</em>.</p>
 
       <p>
-        This is a <a href="../CoreTypes/path.html">Path</a>. This is
+        This is a <a href="../using.html#path">Path</a>. This is
         used to select file files to be concatenated. Note that
         a file can only appear once in a path. If this is
         an issue consider using multiple paths.
@@ -140,11 +140,11 @@
       <h4>fileset</h4>
 
       <p>
-	<a href="../CoreTypes/fileset.html">FileSet</a>s are used to
-	select files to be concatenated. Note that the order in which
-	the files selected from a fileset are concatenated is
-	<i>not</i> guaranteed. If this is an issue, use multiple
-	filesets or consider using filelists.
+        <a href="../CoreTypes/fileset.html">FileSet</a>s are used to
+        select files to be concatenated. Note that the order in which
+        the files selected from a fileset are concatenated is
+        <i>not</i> guaranteed. If this is an issue, use multiple
+        filesets or consider using filelists.
       </p>
       <h4>filelist</h4>
 
@@ -156,7 +156,7 @@
       </p>
       <h4>filterchain</h4>
         <p><em>since Ant 1.6</em>.</p>
-      <p>The concat task supports nested 
+      <p>The concat task supports nested
         <a href="../CoreTypes/filterchain.html"> FilterChain</a>s.</p>
 
       <h4>header,footer</h4>
@@ -226,10 +226,10 @@
       <pre>
   &lt;concat destfile=&quot;${docbook.dir}/all-sections.xml&quot;
           force=&quot;no&quot;&gt;
-    &lt;filelist dir=&quot;${docbook.dir}/sections&quot; 
+    &lt;filelist dir=&quot;${docbook.dir}/sections&quot;
          files=&quot;introduction.xml,overview.xml&quot;/&gt;
-    &lt;fileset dir=&quot;${docbook.dir}&quot; 
-         includes=&quot;sections/*.xml&quot; 
+    &lt;fileset dir=&quot;${docbook.dir}&quot;
+         includes=&quot;sections/*.xml&quot;
          excludes=&quot;introduction.xml,overview.xml&quot;/&gt;
   &lt;/concat&gt;
       </pre>
@@ -267,8 +267,8 @@
       <hr>
 
       <p align="center">
-	Copyright &copy; 2002-2004 The Apache Software Foundation. All
-	Rights Reserved.
+        Copyright &copy; 2002-2004 The Apache Software Foundation. All
+        Rights Reserved.
       </p>
 
     </body>
