@@ -42,6 +42,14 @@
     </condition>
    <echo> mcs.found=${mcs.found}</echo>
 
+   <!-- any C# compiler -->
+   <condition property="c#.found">
+      <or>
+        <isset property="csc.found"/>
+        <isset property="mcs.found"/>
+      </or>
+   </condition>
+
    <!-- Mono's ilasm -->
    <condition property="mono.ilasm.found">
       <available file="ilasm"     filepath="${env.PATH}" />
@@ -55,7 +63,7 @@
         <available file="ildasm.exe" filepath="${env.Path}" />
       </or>
     </condition>
-   <echo> ilasm.found=${ildasm.found}</echo>
+   <echo> ildasm.found=${ildasm.found}</echo>
    
    <condition property="dotnetapps.found">
       <or>
@@ -81,12 +89,7 @@
    <property name="mono.executable" value="mint"/>
   </target>
     
-  <target name="validate" depends="probe_for_apps">
-    <fail unless="dotnetapps.found">Needed .net apps are missing</fail>
-  </target>  
-    
-    
-  <target name="init" depends="validate">
+  <target name="init" depends="probe_for_apps">
     <mkdir dir="${build.dir}"/>
   </target>
 
@@ -94,9 +97,17 @@
     <delete dir="${build.dir}"/>
   </target>    
     
+  <target name="validate_csc" depends="init">
+    <fail unless="c#.found">Needed C# compiler is missing</fail>
+  </target>  
+    
+  <target name="validate_ilasm" depends="init">
+    <fail unless="ilasm.found">Needed ilasm is missing</fail>
+  </target>  
+    
   <target name="testCSC" depends="testCSC-Mono,testCSC-MS"/>
 
-  <target name="testCSC-MS" depends="init" if="csc.found">
+  <target name="testCSC-MS" depends="validate_csc" if="csc.found">
     <property name="testCSC.exe" 
       location="${build.dir}/ExampleCsc.exe" />
     <csc 
@@ -110,7 +121,7 @@
     <delete file="${testCSC.exe}"/>
   </target>
 
-  <target name="testCSC-Mono" depends="init" if="mcs.found">
+  <target name="testCSC-Mono" depends="validate_csc" if="mcs.found">
     <property name="testCSC.exe" 
       location="${build.dir}/ExampleCsc.exe" />
     <csc 
@@ -132,7 +143,7 @@
   <target name="testCSCintrinsicFileset" 
           depends="testCSCintrinsicFileset-MS,testCSCintrinsicFileset-Mono"/>
 
-  <target name="testCSCintrinsicFileset-MS" depends="init" if="csc.found">
+  <target name="testCSCintrinsicFileset-MS" depends="validate_csc" if="csc.found">
     <property name="testCSC.exe"
       location="${build.dir}/ExampleCsc.exe"/>
     <csc
@@ -147,7 +158,7 @@
     <delete file="${testCSC.exe}"/>
   </target>
 
-  <target name="testCSCintrinsicFileset-Mono" depends="init" if="mcs.found">
+  <target name="testCSCintrinsicFileset-Mono" depends="validate_csc" if="mcs.found">
     <property name="testCSC.exe"
       location="${build.dir}/ExampleCsc.exe"/>
     <csc
@@ -169,7 +180,7 @@
 
   <target name="testCSCdll" depends="testCSCdll-MS,testCSCdll-Mono"/>
 
-  <target name="testCSCdll-MS" depends="init" if="csc.found">
+  <target name="testCSCdll-MS" depends="validate_csc" if="csc.found">
     <property name="testCSC.dll"
       location="${build.dir}/Example2.dll" />
     <csc 
@@ -183,7 +194,7 @@
     <fail unless="dll.created">No file ${testCSC.dll} created</fail>
   </target>
   
-  <target name="testCSCdll-Mono" depends="init" if="mcs.found">
+  <target name="testCSCdll-Mono" depends="validate_csc" if="mcs.found">
     <property name="testCSC.dll"
       location="${build.dir}/Example2.dll" />
     <csc 
@@ -202,7 +213,7 @@
   <target name="testCscReferences"
     depends="testCscReferences-MS,testCscReferences-Mono"/>
 
-  <target name="testCscReferences-MS" depends="init,testCSCdll-MS"
+  <target name="testCscReferences-MS" depends="validate_csc,testCSCdll-MS"
           if="csc.found">
     <property name="testCscReferences.exe" 
       location="${build.dir}/ExampleCsc2.exe" />
@@ -221,7 +232,7 @@
     <exec executable="${testCscReferences.exe}" failonerror="true" />
   </target>
   
-  <target name="testCscReferences-Mono" depends="init,testCSCdll-Mono"
+  <target name="testCscReferences-Mono" depends="validate_csc,testCSCdll-Mono"
           if="mcs.found">
     <property name="testCscReferences.exe" 
       location="${build.dir}/ExampleCsc2.exe" />
@@ -245,7 +256,7 @@
     </exec> 
   </target>
 
-  <target name="testILASM"  depends="init"  if="ilasm.found">
+  <target name="testILASM"  depends="validate_ilasm"  if="ilasm.found">
     <property name="testILASM.exe" 
       location="${build.dir}/ExampleIlasm.exe" />
     <ilasm 
@@ -261,7 +272,7 @@
 
   <!-- not including this in the test as it creates an exe in the src dir -->
   
-  <target name="testIlasmNoDestFile"  depends="init">
+  <target name="testIlasmNoDestFile"  depends="validate_ilasm">
     <ilasm 
       targetType="exe" 
       >
@@ -292,10 +303,10 @@
   </target>  
 
   <!-- this is an error -->
-  <target name="testILDASM_empty"   depends="init" >
+  <target name="testILDASM_empty"   depends="validate_ilasm" >
     <ildasm/> 
   </target>  
-  <target name="testILDASM_empty"   depends="init" >
+  <target name="testILDASM_empty"   depends="validate_ilasm" >
     <ildasm/> 
   </target>  
   
