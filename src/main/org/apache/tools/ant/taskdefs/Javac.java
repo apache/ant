@@ -117,7 +117,7 @@ public class Javac extends MatchingTask {
      * @return a nexted src element.
      */
     public Path createSrc() {
-        if (src != null) {
+        if (src == null) {
             src = new Path(project);
         }
         return src;
