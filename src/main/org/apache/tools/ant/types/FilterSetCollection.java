@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,14 +39,26 @@ public class FilterSetCollection {
 
     private Vector filterSets = new Vector();
 
+    /**
+     * Constructor for a FilterSetCollection.
+     */
     public FilterSetCollection() {
     }
 
+    /**
+     * Constructor for a FilterSetCollection.
+     * @param filterSet a filterset to start the collection with
+     */
     public FilterSetCollection(FilterSet filterSet) {
         addFilterSet(filterSet);
     }
 
 
+    /**
+     * Add a filterset to the collection.
+     *
+     * @param filterSet a <code>FilterSet</code> value
+     */
     public void addFilterSet(FilterSet filterSet) {
         filterSets.addElement(filterSet);
     }
