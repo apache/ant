@@ -161,7 +161,7 @@
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
-    <exec executable="${mono.execuatble}" failonerror="true">
+    <exec executable="${mono.executable}" failonerror="true">
       <arg value="${testCSC.exe}"/>
     </exec> 
     <delete file="${testCSC.exe}"/>
