@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,18 +54,9 @@
 
 package org.apache.tools.ant;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.Stack;
-import java.text.StringCharacterIterator;
-import java.text.CharacterIterator;
+import java.io.*;
+import java.util.*;
+import java.text.*;
 
 /**
  * Central representation of an Ant project. This class defines a
@@ -86,11 +77,17 @@ public class Project {
     public static final int MSG_INFO = 2;
     public static final int MSG_VERBOSE = 3;
 
-    private static String javaVersion;
     // private set of constants to represent the state
     // of a DFS of the Target dependencies
     private static final String VISITING = "VISITING";
     private static final String VISITED = "VISITED";
+
+    private static String javaVersion;
+    
+    public static final String JAVA_1_0 = "1.0";
+    public static final String JAVA_1_1 = "1.1";
+    public static final String JAVA_1_2 = "1.2";
+    public static final String JAVA_1_3 = "1.3";
 
     private String name;
     private PrintStream out = System.out;
@@ -105,139 +102,137 @@ public class Project {
 
     public Project() {
         detectJavaVersion();
-	String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
-	try {
-	    Properties props = new Properties();
-	    InputStream in = this.getClass()
-		.getResourceAsStream(defs);
-	    props.load(in);
-	    in.close();
-	    Enumeration enum = props.propertyNames();
-	    while (enum.hasMoreElements()) {
-		String key = (String)enum.nextElement();
-		String value = props.getProperty(key);
-		try {
-		    Class taskClass = Class.forName(value);
-		    addTaskDefinition(key, taskClass);
-		} catch (ClassNotFoundException cnfe) {
-		    // ignore...
-		}
-	    }
+        String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
+        try {
+            Properties props = new Properties();
+            InputStream in = this.getClass().getResourceAsStream(defs);
+            props.load(in);
+            in.close();
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String key = (String)enum.nextElement();
+                String value = props.getProperty(key);
+                try {
+                    Class taskClass = Class.forName(value);
+                    addTaskDefinition(key, taskClass);
+                } catch (ClassNotFoundException cnfe) {
+                    // ignore...
+                }
+            }
 
-	    Properties systemP=System.getProperties();
-	    Enumeration e=systemP.keys();
-	    while( e.hasMoreElements() ) {
-		String n=(String) e.nextElement();
-		properties.put( n, systemP.get(n));
-	    }
-       	} catch (IOException ioe) {
-	    String msg = "Can't load default task list";
-	    System.out.println(msg);
-	    System.exit(1);
-	}
+            Properties systemP=System.getProperties();
+            Enumeration e=systemP.keys();
+            while( e.hasMoreElements() ) {
+                String n=(String) e.nextElement();
+                properties.put( n, systemP.get(n));
+            }
+        } catch (IOException ioe) {
+            String msg = "Can't load default task list";
+            System.out.println(msg);
+            System.exit(1);
+        }
     }
-    
+
     public void setOutput(PrintStream out) {
-	this.out = out;
+        this.out = out;
     }
 
     public void setOutputLevel(int msgOutputLevel) {
-	this.msgOutputLevel = msgOutputLevel;
-    }
-    public int getOutputLevel() {
-	return this.msgOutputLevel;
+        this.msgOutputLevel = msgOutputLevel;
     }
     
+    public int getOutputLevel() {
+        return this.msgOutputLevel;
+    }
+
     public void log(String msg) {
-	log(msg, MSG_INFO);
+        log(msg, MSG_INFO);
     }
 
     public void log(String msg, int msgLevel) {
-	if (msgLevel <= msgOutputLevel) {
-	    out.println(msg);
-	}
+        if (msgLevel <= msgOutputLevel) {
+            out.println(msg);
+        }
     }
 
     public void log(String msg, String tag, int msgLevel) {
-	if (msgLevel <= msgOutputLevel) {
-	    out.println("[" + tag + "]" + msg);
-	}
+        if (msgLevel <= msgOutputLevel) {
+            out.println("[" + tag + "]" + msg);
+        }
     }
 
     public void setProperty(String name, String value) {
-	// command line properties take precedence
-	if( null!= userProperties.get(name))
-	    return;
+        // command line properties take precedence
+        if( null!= userProperties.get(name))
+            return;
         log("Setting project property: " + name + " to " +
             value, MSG_VERBOSE);
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     public void setUserProperty(String name, String value) {
         log("Setting project property: " + name + " to " +
             value, MSG_VERBOSE);
-	userProperties.put(name, value);
-	properties.put( name,value);
+        userProperties.put(name, value);
+        properties.put( name,value);
     }
 
     public String getProperty(String name) {
-	String property = (String)properties.get(name);
-	return property;
+        String property = (String)properties.get(name);
+        return property;
     }
 
     public Hashtable getProperties() {
-	return properties;
+        return properties;
     }
-    
+
     public void setDefaultTarget(String defaultTarget) {
-	this.defaultTarget = defaultTarget;
+        this.defaultTarget = defaultTarget;
     }
 
     // deprecated, use setDefault
     public String getDefaultTarget() {
-	return defaultTarget;
+        return defaultTarget;
     }
 
     // match the attribute name
     public void setDefault(String defaultTarget) {
-	this.defaultTarget = defaultTarget;
+        this.defaultTarget = defaultTarget;
     }
-    
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     // match basedir attribute in xml
     public void setBasedir( String baseD ) throws BuildException {
-	try {
-	    setBaseDir(new File( new File(baseD).getCanonicalPath()));
-	} catch (IOException ioe) {
-	    String msg = "Can't set basedir " + baseDir + " due to " +
-		ioe.getMessage();
-	    throw new BuildException(msg);
-	}
+        try {
+            setBaseDir(new File( new File(baseD).getCanonicalPath()));
+        } catch (IOException ioe) {
+            String msg = "Can't set basedir " + baseDir + " due to " +
+                ioe.getMessage();
+            throw new BuildException(msg);
+        }
     }
-    
+
     public void setBaseDir(File baseDir) {
-	this.baseDir = baseDir;
-	String msg = "Project base dir set to: " + baseDir;
-	log(msg, MSG_INFO);
+        this.baseDir = baseDir;
+        String msg = "Project base dir set to: " + baseDir;
+        log(msg, MSG_INFO);
     }
 
     public File getBaseDir() {
-	if(baseDir==null) {
-	    try {
-		setBasedir(".");
-	    } catch(BuildException ex) {ex.printStackTrace();}
-	}
-	return baseDir;
+        if(baseDir==null) {
+            try {
+                setBasedir(".");
+            } catch(BuildException ex) {ex.printStackTrace();}
+        }
+        return baseDir;
     }
-    
 
     public static String getJavaVersion() {
         return javaVersion;
@@ -252,26 +247,31 @@ public class Project {
         // Count up version until a NoClassDefFoundError ends the try
 
         try {
-            javaVersion = "1.0";
+            javaVersion = JAVA_1_0;
             Class.forName("java.lang.Void");
-            javaVersion = "1.1";
-            Class.forName("java.lang.ThreadLocal");  
-            javaVersion = "1.2";
+            javaVersion = JAVA_1_1;
+            Class.forName("java.lang.ThreadLocal");
+            javaVersion = JAVA_1_2;
             Class.forName("java.lang.StrictMath");
-            javaVersion = "1.3";
-	    setProperty("ant.java.version", javaVersion);
-        }
-        catch (ClassNotFoundException cnfe) {
+            javaVersion = JAVA_1_3;
+            setProperty("ant.java.version", javaVersion);
+        } catch (ClassNotFoundException cnfe) {
             // swallow as we've hit the max class version that
             // we have
         }
+        
+        // sanity check
+        if (javaVersion == JAVA_1_0) {
+            throw new BuildException("Ant cannot work on Java 1.0");
+        }
+        
         log("Detected Java Version: " + javaVersion);
     }
 
     public void addTaskDefinition(String taskName, Class taskClass) {
-	String msg = " +User task: " + taskName + "     " + taskClass.getName();
-	log(msg, MSG_VERBOSE);
-	taskClassDefinitions.put(taskName, taskClass);
+        String msg = " +User task: " + taskName + "     " + taskClass.getName();
+        log(msg, MSG_VERBOSE);
+        taskClassDefinitions.put(taskName, taskClass);
     }
 
     /**
@@ -281,13 +281,13 @@ public class Project {
      * @exception BuildException if the Target already exists
      * in the project.
      * @see Project#addOrReplaceTarget to replace existing Targets.
-     */      
+     */
     public void addTarget(Target target) {
-	String name = target.getName();
-	if (targets.get(name) != null) {
-	    throw new BuildException("Duplicate target: `"+name+"'");
-	}
-	addOrReplaceTarget(name, target);
+        String name = target.getName();
+        if (targets.get(name) != null) {
+            throw new BuildException("Duplicate target: `"+name+"'");
+        }
+        addOrReplaceTarget(name, target);
     }
 
     /**
@@ -312,44 +312,44 @@ public class Project {
      * the current Project.
      */
     public void addOrReplaceTarget(Target target) {
-	addOrReplaceTarget(target.getName(), target);
+        addOrReplaceTarget(target.getName(), target);
     }
-    
+
     /**
      * @param target is the Target to be added/replaced in
      * the current Project.
      * @param targetName is the name to use for the Target
      */
     public void addOrReplaceTarget(String targetName, Target target) {
-	String msg = " +Target: " + targetName;
-	log(msg, MSG_VERBOSE);
-	targets.put(targetName, target);
+        String msg = " +Target: " + targetName;
+        log(msg, MSG_VERBOSE);
+        targets.put(targetName, target);
     }
-    
+
     public Task createTask(String taskType) throws BuildException {
-	Class c = (Class)taskClassDefinitions.get(taskType);
+        Class c = (Class)taskClassDefinitions.get(taskType);
 
-	// XXX
-	// check for nulls, other sanity
+        // XXX
+        // check for nulls, other sanity
 
-	try {
-	    Task task = (Task)c.newInstance();
-	    task.setProject(this);
-	    String msg = "   +Task: " + taskType;
-	    log (msg, MSG_VERBOSE);
-	    return task;
-	} catch (Exception e) {
-	    String msg = "Could not create task of type: "
-		 + taskType + " due to " + e;
-	    throw new BuildException(msg);
-    }	
+        try {
+            Task task = (Task)c.newInstance();
+            task.setProject(this);
+            String msg = "   +Task: " + taskType;
+            log (msg, MSG_VERBOSE);
+            return task;
+        } catch (Exception e) {
+            String msg = "Could not create task of type: "
+                 + taskType + " due to " + e;
+            throw new BuildException(msg);
     }
-    
+    }
+
     public void executeTarget(String targetName) throws BuildException {
 
         // sanity check ourselves, if we've been asked to build nothing
         // then we should complain
-        
+
         if (targetName == null) {
             String msg = "No target specified";
             throw new BuildException(msg);
@@ -364,7 +364,7 @@ public class Project {
 
         int curidx = 0;
         String curtarget;
-	
+
         do {
             curtarget = (String) sortedTargets.elementAt(curidx++);
             runTarget(curtarget, targets);
@@ -372,8 +372,8 @@ public class Project {
     }
 
     public File resolveFile(String fileName) {
-	// deal with absolute files
-	if (fileName.startsWith("/")) return new File( fileName );
+        // deal with absolute files
+        if (fileName.startsWith("/")) return new File( fileName );
 
         // Eliminate consecutive slashes after the drive spec
         if (fileName.length() >= 2 &&
@@ -404,44 +404,44 @@ public class Project {
             return new File(sb.toString());
         }
 
-	File file = new File(baseDir.getAbsolutePath());
-	StringTokenizer tok = new StringTokenizer(fileName, "/", false);
-	while (tok.hasMoreTokens()) {
-	    String part = tok.nextToken();
-	    if (part.equals("..")) {
-		file = new File(file.getParent());
-	    } else if (part.equals(".")) {
-		// Do nothing here
-	    } else {
-		file = new File(file, part);
-	    }
-	}
+        File file = new File(baseDir.getAbsolutePath());
+        StringTokenizer tok = new StringTokenizer(fileName, "/", false);
+        while (tok.hasMoreTokens()) {
+            String part = tok.nextToken();
+            if (part.equals("..")) {
+                file = new File(file.getParent());
+            } else if (part.equals(".")) {
+                // Do nothing here
+            } else {
+                file = new File(file, part);
+            }
+        }
 
-	try {
-	    return new File(file.getCanonicalPath());
-	}
-	catch (IOException e) {
-	    log("IOException getting canonical path for " + file + ": " +
+        try {
+            return new File(file.getCanonicalPath());
+        }
+        catch (IOException e) {
+            log("IOException getting canonical path for " + file + ": " +
                 e.getMessage(), MSG_ERR);
-	    return new File(file.getAbsolutePath());
-	}
+            return new File(file.getAbsolutePath());
+        }
     }
-    
+
     /**
         Translate a path into its native (platform specific)
-        path. This should be extremely fast, code is 
+        path. This should be extremely fast, code is
         borrowed from ECS project.
         <p>
-        All it does is translate the : into ; and / into \ 
+        All it does is translate the : into ; and / into \
         if needed. In other words, it isn't perfect.
-        
+
         @returns translated string or empty string if to_process is null or empty
         @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
     */
     public static String translatePath(String to_process) {
         if ( to_process == null || to_process.length() == 0 )
             return "";
-    
+
         StringBuffer bs = new StringBuffer(to_process.length() + 50);
         StringCharacterIterator sci = new StringCharacterIterator(to_process);
         String path = System.getProperty("path.separator");
@@ -449,15 +449,15 @@ public class Project {
         String tmp = null;
         for (char c = sci.first(); c != CharacterIterator.DONE; c = sci.next()) {
             tmp = String.valueOf(c);
-            
+
             if (tmp.equals(":")) {
-		// could be a DOS drive or a Unix path separator...
-		// if followed by a backslash, assume it is a drive
-		c = sci.next();
-		tmp = String.valueOf(c);
-		bs.append( tmp.equals("\\") ? ":" : path );
-		if (c == CharacterIterator.DONE) break;
-	    }
+                // could be a DOS drive or a Unix path separator...
+                // if followed by a backslash, assume it is a drive
+                c = sci.next();
+                tmp = String.valueOf(c);
+                bs.append( tmp.equals("\\") ? ":" : path );
+                if (c == CharacterIterator.DONE) break;
+            }
 
             if (tmp.equals(":") || tmp.equals(";"))
                 tmp = path;
