@@ -313,7 +313,6 @@ Changes that could break older environments:
 --------------------------------------------
 
 * Important: Single $ signs are no longer silently stripped!
->>>>>>> 1.263.2.51
   Before you panic that we have broken all your build files, we have kept
   the old "$$" -> "$" behaviour. So only build files which accidentally had
   a $ sign in a string that was being silently stripped may break.
