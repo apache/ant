@@ -20,162 +20,162 @@ it (as an optional task) would be acceptable.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add a new datatype filterset to group token-filters.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make usage of particular filters/filtersets explicit in copy tasks.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make facade tasks for things like <code>&lt;javac&gt;</code>
 (JikesImpl, ModernImpl, etc.).
 (One candidate is <code>&lt;jar&gt;</code>, with implementations for
 a <code>&lt;fastjar&gt;</code>, for example.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Unify multiple similar tasks to use similar forms (eg., all the
 <code>&lt;javacc&gt;</code>-type
 tools).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Obfuscating task.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Better scripting/notification support so the hooks are available to
 send notifications at certain times.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add an <code>&lt;ant&gt;</code> task that will find build files according
 to a fileset and invoke a common target in them. (<code>&lt;anton&gt;</code>?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add a JavaApply task that executes a given class with files from a
 fileset as arguments (similar to <code>&lt;apply&gt;</code>).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Include some more sophisticated loggers with the Ant distribution &#150;
 especially for sending emails. Make the existing one more flexible
 (stylesheet used by XmlLogger). (Could be part of the same module tasks
 would be developed in?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Better docs (eg., more examples, tutorials, beginner documents, reference
 sheets for tasks, printable version, etc.).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 RPM task.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Task for splitting files (head/tail/split-like functionality).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Task to create XMI from Java.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Socksified networking tasks, SSH tasks.
 (Peter Donald expressed some legal concerns that might need to be overcome, 
 depending on the implementation.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 A reachable task that works much like <code>&lt;available&gt;</code>,
 for network URLs.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Task to extract classes from a jar-file that a given class depends on.
 (Based on <code>&lt;depend&gt;</code> or IBM's JAX, for example.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Unify <code>&lt;available&gt;</code> and <code>&lt;uptodate&gt;</code>
 into a more general
 <code>&lt;condition&gt;</code> task &#150; support
 <code>AND</code>/<code>OR</code> of
 several tests here.
 (Will need more discussion because of vote by Peter Donald.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 JSP-compilation task. (Sounds like a candidate for a facade task.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 URL-spider task that checks links for missing content or server errors.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
 &nbsp;&nbsp;<b>Rejected</b>
 </font>
 <blockquote>
-<bl><li>
+<ul><li>
 Make the default logger's output clear, informative, and terse. (Rejectors
 think it already is.)
 </blockquote>
-</li></bl>
+</li></ul>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add an attribute to <code>&lt;property&gt;</code> to read in an entire file
 as the value of a property.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make PATH-handling consistent. Every task that has a PATH attribute
 must also accept references to PATHs.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <br>
@@ -195,65 +195,65 @@ Therefore, there are two flavors, &quot;Accepted&quot; and
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide a clear mission statement for Ant.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Main goals<b>:</b> simplicity, understandability, extensibility.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Remove magic properties if at all humanly possible.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Remove as much dependency on native scripts as possible.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Clean object model (ie., Project/Target/Task).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Good event model to integrate well with IDE/GUI/etc.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Use a consistent naming scheme for attributes across all tasks.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Keep build-file syntax as compatible to Ant1 as possible
 (ie., don't break something just because we can).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Keep the interface for tasks as similar to that of Ant1 as
 possible (ie., don't break something just because we can).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Ant should be cancelable.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -261,15 +261,15 @@ Ant should be cancelable.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 No commit of new features without documentation.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 No commit of new features without test-cases.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <br>
@@ -283,56 +283,56 @@ committers to agree.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Namespace support so different concerns can occupy different namespaces
 from Ant (thus, SAX2/JAXP1.1).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Java2
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Remove all deprecated methods, attributes, tasks.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow all datatypes to be defined anywhere (ie., as children of
 project as well as of target).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make properties fully dynamic (ie., allow their value to be reassigned).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Unify the namespace of all data types (ie., properties + filesets +
 patternsets + filtersets).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add a user-defined message if a target will be skipped as a
 result of the specified <code>if/unless</code>.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow user datatypes to be defined via a <code>&lt;typedef&gt;</code>
 similar to <code>&lt;taskdef&gt;</code>.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <br>
@@ -350,7 +350,7 @@ particular implementation has been made.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 The ability for GUI/IDE tools to integrate easily with object model
 without reinventing the wheel and writing their own parser (which
 Antidote was forced to do). 
@@ -358,89 +358,89 @@ Antidote was forced to do).
 the object model (ie., GUITask extends Task) or to have Task as an
 interface (ie., GUITask implements Task). This way, the GUI tasks could
 be W3C DOM elements, have property vetoers/listeners, etc.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Support for numerous front-ends &#150; from command-line over GUI to servlets.
 (Corollary of the above?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Fully interpreted at run-time. (This almost requires some form of
 abstraction/proxy that stands in place of tasks till it is
 interpreted. This can be hash-tables/simple DOM-like model/whatever.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide utility classes to aid in building tasks (ie., like
 <code>&lt;uptodate&gt;</code> functionality abstracted).
 (Need to become more specific here.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make ant-call a low-cost operation so it can do certain
 optional/template-like operations.
 (Corollary of "fully interpreted at run-time"?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow facilities to build projects from multiple sources (ie., CSS+XML,
 XSLT+XML, Velocity+text or database, from inside jars or normal 
 <code>build.xml</code> files, etc.)
 (Allow the project tree to be built dynamically.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Move to a system that allows docs to be generated &#150; doc snippets
 should be included with the tasks they document.
 (Which DTD? Which tools for generation?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow tasks to be loaded from jars. (Use
 either an XML file in <code>TSK-INF/taskdefs.xml</code> or a
 manifest file.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow documentation to be stored in <code>.tsk</code> jars.
 (Corollary of the above two points?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Separate tasks into <code>.tsk</code> jars somehow.
 (Decide on categories.
 Probably via function &#150; ie., java tasks, file tasks, EJB tasks, etc.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make having separate build-files easy (<i>&#224; la</i> AntFarm) and importing different
 projects a breeze.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide support for user-defined task configurations &#150; (ie., give
 users the ability to specify a default value for attributes (eg., always
 use <code>debug="true"</code> in <code>&lt;javac&gt;</code> unless
@@ -448,32 +448,32 @@ something else has been specified).
 (Three ideas so far<b>:</b> a CSS-like language,
 a <code>&lt;taskconfig&gt;</code> element, or
 properties following a specific naming scheme.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Support more control over the properties that are going to be passed
 to subprojects (modules).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Task to prompt for user input.
 (Does affect core, as we need a means to request input from the front-end.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add CVS login feature.
 (Requires handling of user input.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Easier installation process. GUI, maybe webstart from the homepage.
 This includes asking the user whether he wants to use optional tasks
 and downloads the required libs, automatic upgrades and so on.
@@ -486,45 +486,45 @@ Prompts for destination directory, extracts archive, fixes all
 text files with <code>&lt;fixCRLF&gt;</code> task<b>;</b> on UNIX,
 makes scripts executable.  
 Could also modify ant scripts with the location of <code>ANT_HOME</code>.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Logo for Ant.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Detach Ant from <code>System.err</code>/<code>.in</code>/<code>.out</code>.
 (Beware of problems with spawned processes.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Build-files should be declarative in nature.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
 &nbsp;&nbsp;<b>Rejected</b>
 </font>
 <blockquote>
-<bl><li>
+<ul><li>
 It should be possible to modify details of the actual build (e.g. classpath,
 compiler used, etc.) without the need to change the build specification.
 (Do <code>build.compiler</code> and <code>build.sysclasspath</code>
 cover everything, or do we need to add more stuff like this?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Better sub-project handling
 (whatever that means in detail).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <br>
@@ -539,7 +539,7 @@ V. Things we probably don't agree on.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow <code>&lt;include&gt;/&lt;exclude&gt;</code>
 to work with multiple characteristerics of a file
 (ie., include into fileset if file is readable, modified after 29th of Feb,
@@ -556,19 +556,19 @@ the property <code>foo.present</code> is set. Something similar to<b>:</b>
                  value="29th Feb 2003"/&gt;
   &lt;/include&gt;
 </pre>
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide support for non-hardwired (ie., loadable) low-level 
 components (mappers/itemset-filters/converters). Allow them to be 
 loaded in either globally or via a new classloader.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide support for non-hardwired (ie., loadable) converters.
 <br>
 Q<b>:</b> What is a converter? Is this an implementation detail?
@@ -580,19 +580,19 @@ of spreading converting code throughout the tasks, it can be centralized
 into one component and used by the engine. This becomes particularly 
 relevent if you build Ant-based testing systems and use Ant in certain
 web-related areas.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Set-arithmetic for fileset/patternset/*set.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Inheritance of Ant properties/datatypes/context/etc. in project hierarchy.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -600,7 +600,7 @@ Inheritance of Ant properties/datatypes/context/etc. in project hierarchy.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow mappers to be genericized so that particular features can be modified 
 during mapping. Something similar to<b>:</b>
 <pre>
@@ -613,11 +613,11 @@ during mapping. Something similar to<b>:</b>
     &lt;/mapper&gt;
   &lt;/fileset&gt;
 </pre>
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide datatypes through property tag and remove need for separate
 free-standing entities. That is<b>:</b><br>
 <pre>
@@ -627,27 +627,27 @@ free-standing entities. That is<b>:</b><br>
     &lt;/fileset&gt;
   &lt;/property&gt;
 </pre>
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make all datatypes interfaces to allow them to be customized in many
 ways.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Inheritance between Ant datatypes (ie., fileset A inherits from
 fileset B (includes all entries in A).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Homogenize notion of PATHs and filesets.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <i><b>Ant's goals</b></i>
@@ -658,7 +658,7 @@ Homogenize notion of PATHs and filesets.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide support for CJAN.
 <br>
 Q: In what way?<br>
@@ -666,7 +666,7 @@ A: Probably by supplying a set of tasks that download versioned
 binaries and their associated dependencies, caching the downloads
 in a known place and updating binaries when required.
 (&quot;When required&quot; being indicated by a change in property values).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -674,11 +674,11 @@ in a known place and updating binaries when required.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make it possible to re-use the task engine for other things
 (ie., Installshield-type app, Peter's cron-server, and other task-based
 operations).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <i><b>Class-loading</b></i>
@@ -689,22 +689,22 @@ operations).
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Force resolution of classes on loading, to identify class-loader 
 issues early (at least in global classloader).
-</li></bl>
+</li></ul>
 </blockquote>
 
 
 <blockquote>
-<bl><li>
+<ul><li>
 Ignore any classes contained in the damned ext dirs of a
 JVM &#150; possibly by launching with something like<b>:</b>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;<code>jar -Djava.ext.dir=foo -jar ant.jar</code>
 <br>
 (Accepted if optional.)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -716,18 +716,18 @@ JVM &#150; possibly by launching with something like<b>:</b>
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Create the concept of workspace so that projects can be built in a
 DAG and thus enable projects like Catalina/Tomcat to have an easy
 build process. It also helps CJAN to a lesser degree and would
 partially solve the jars-in-CVS thing.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow a target to depend on a target in another build-file.  
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -736,30 +736,30 @@ Allow a target to depend on a target in another build-file.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Project inheritance. (What's this?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Target inheritance. That is, the ability to include targets from other 
 project files, overriding them as necessary (so, cascading project
 files).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Add an attribute to <code>&lt;ant&gt;</code> to feed back the environment
 (properties and taskdefs) from the child build to the parent.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow a target to reference properties defined in another build-file.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -771,10 +771,10 @@ Allow a target to reference properties defined in another build-file.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Generate docs by Anakia/XSLT.
 (Corollary of "move to a system that allows docs to be generated"?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -786,7 +786,7 @@ Generate docs by Anakia/XSLT.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Tasks provide some way to identify their attributes from the outside. 
 
 Possible solutions include a special method like <code>getProperties()</code>,
@@ -794,14 +794,14 @@ an external describing file shipping with the task class or special
 Javadoc comments parsed by a custom doclet. Whatever the method, it
 should not impose any cost on run-time, as it is only used a small 
 percentage of the time (design-time).  
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide <code>&quot;failonerror&quot;</code>-like functionality to all tasks.
 (Provide this as an aspect?? Much like logging aspect or classloader aspect).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -809,37 +809,37 @@ Provide <code>&quot;failonerror&quot;</code>-like functionality to all tasks.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Tasks should have access to its own XML representation.
 </blockquote>
-</li></bl>
+</li></ul>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Task level if and unless attributes.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow tasks to find out, whether another task has completed successfully.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
 <i><b>Logging</b></i>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow build-file writers to modify logging (verbosity, for example)
 on a target-by-target or task-by-task basis.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make loggers configurable via build.xml.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -851,9 +851,9 @@ Make loggers configurable via build.xml.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Multi-threaded execution of tasks within the same target.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -861,9 +861,9 @@ Multi-threaded execution of tasks within the same target.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Multithreaded execution of targets.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -875,21 +875,21 @@ Multithreaded execution of targets.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Simple flow-control (<code>if-then-else</code>, <code>for</code>)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Targets should be like methods, including a return value.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Build-files should be purely declarative.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -901,10 +901,10 @@ Build-files should be purely declarative.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Ability to manage scoping of properties in general
 (ie., target/project/workspace).
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -916,11 +916,11 @@ Ability to manage scoping of properties in general
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 It should be possible to provide general/(template?) build
 specifications, and to declare, for a concrete item, that it should be
 built according to such a general specification.
-</bl></li>
+</ul></li>
 </blockquote>
 
 <p>
@@ -932,20 +932,20 @@ built according to such a general specification.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 A built-in mechanism to include build-file fragments &#150; something
 that doesn't use <code>SYSTEM</code> entities at all and therefore is
 XSchema-friendly, allows for property expansions, etc.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow Ant to farm out attributes and elements that are <i>not</i>
 in the Ant namespace to other components (ie., hand <code>doc:</code> elements
 to the Documentation component or <code>log:</code> attributes to the Log
 policy component, etc.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -953,10 +953,10 @@ policy component, etc.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Let Ant ignore &#150; but warn &#150; if unknown XML elements or attributes
 occur in a build-file.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -968,34 +968,34 @@ occur in a build-file.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow sequence to be specified in <code>&quot;depends&quot;</code> attribute,
 or enhance <code>&lt;antcall&gt;</code> to work with current list of executed
 targets.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Provide a way to define the order in which targets that a given target
 depends upon get executed. (Same as above?)
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Support nesting tasks into other elements &#150; not just as children of
 target &#150; as proposed by Thomas Christen in
 <a href http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>
 his mail message</a>.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Define task contexts that define various common aspects (logging,
 failure handling, etc.), and assign them to tasks.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <font face="Arial, Helvetica, sans-serif" size="-1">
@@ -1003,29 +1003,29 @@ failure handling, etc.), and assign them to tasks.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Allow named tasks to be defined by <code>&lt;script&gt;</code> elements.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Specify an OnFail task or target that runs in case of a build
 failure.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Make <code>if/unless</code> attributes check for the value of a property, not
 only its existance.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Check for more than one condition in <code>if/unless</code> attributes.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -1037,9 +1037,9 @@ Check for more than one condition in <code>if/unless</code> attributes.
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Separate CVSes and code hierarchies for<b>:</b>
-</li></bl>
+</li></ul>
 <ul type="circle">
 <li>task engine [org.apache.task.*]</li>
 <li>project engine (ie., model of targets/projects/workspaces) +
@@ -1057,9 +1057,9 @@ support/utility classes [org.apache.ant.*]</li>
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Internationalization.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <p>
@@ -1073,16 +1073,16 @@ VI. Things that were submitted late
 </font>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Integration of the <code>&lt;depend&gt;</code> and <code>&lt;javac&gt;</code>
 tasks.
-</li></bl>
+</li></ul>
 </blockquote>
 
 <blockquote>
-<bl><li>
+<ul><li>
 Recursive property resolution (ie., resolving <code>${dist.${name}.dir}</code>)
-</li></bl>
+</li></ul>
 </blockquote>
 
 </body>
