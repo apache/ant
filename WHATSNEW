@@ -44,6 +44,9 @@ nested into <antcall> didn't work.
 source files  could be found below them.  This has been backwards
 incompatible and caused problems with custom doclets like xdoclet.
 
+* Using the doclet, docletpath or docletpathref attributes of
+<javadoc> may have caused NullPointerExceptions.
+
 Other changes:
 --------------
 

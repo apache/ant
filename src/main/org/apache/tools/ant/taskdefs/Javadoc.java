@@ -712,6 +712,7 @@ public class Javadoc extends Task {
     public void setDoclet(String docletName) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.setName(docletName);
     }
@@ -724,6 +725,7 @@ public class Javadoc extends Task {
     public void setDocletPath(Path docletPath) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.setPath(docletPath);
     }
@@ -737,6 +739,7 @@ public class Javadoc extends Task {
     public void setDocletPathRef(Reference r) {
         if (doclet == null) {
             doclet = new DocletInfo();
+            doclet.setProject(getProject());
         }
         doclet.createPath().setRefid(r);
     }
