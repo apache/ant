@@ -802,8 +802,6 @@ public class ProjectHelperImpl extends ProjectHelper {
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
-         *
-         * @exception SAXParseException if the element doesn't support text
          */
         public void characters(char[] buf, int start, int count) {
             wrapper.addText(buf, start, count);
@@ -938,8 +936,6 @@ public class ProjectHelperImpl extends ProjectHelper {
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
-         *
-         * @exception SAXParseException if the element doesn't support text
          */
         public void characters(char[] buf, int start, int count) {
             childWrapper.addText(buf, start, count);
@@ -1035,8 +1031,6 @@ public class ProjectHelperImpl extends ProjectHelper {
          *            Will not be <code>null</code>.
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
-         *
-         * @exception SAXParseException if the element doesn't support text
          *
          * @see ProjectHelper#addText(Project,Object,char[],int,int)
          */
