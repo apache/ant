@@ -55,8 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Vector;
+import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -83,7 +83,7 @@ public class ServerDeploy extends Task
     private File source;
 
     /** The vendor specific tool for deploying the component **/
-    private ArrayList vendorTools = new ArrayList();
+    private Vector vendorTools = new Vector();
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -99,7 +99,7 @@ public class ServerDeploy extends Task
      */
     public void addGeneric(GenericHotDeploymentTool tool) {
         tool.setTask(this);
-        vendorTools.add(tool);
+        vendorTools.addElement(tool);
     }
 
     /**
@@ -110,7 +110,7 @@ public class ServerDeploy extends Task
      */
     public void addWeblogic(WebLogicHotDeploymentTool tool) {
         tool.setTask(this);
-        vendorTools.add(tool);
+        vendorTools.addElement(tool);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -128,8 +128,9 @@ public class ServerDeploy extends Task
      *  a failure occurs in the deployment process.
      */
     public void execute() throws BuildException {
-        for (Iterator iterator = vendorTools.iterator(); iterator.hasNext();) {
-            HotDeploymentTool tool = (HotDeploymentTool) iterator.next();
+        for (Enumeration enum = vendorTools.elements(); 
+             enum.hasMoreElements();) {
+            HotDeploymentTool tool = (HotDeploymentTool) enum.nextElement();
             tool.validateAttributes();
             tool.deploy();
         }
