@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,8 +68,8 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 
@@ -102,9 +102,9 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
- * @ant.task name="cvschangelog"
+ * @ant.task name="cvschangelog" category="scm"
  */
-public class ChangeLogTask extends Task {
+public class ChangeLogTask extends AbstractCvsTask {
     /** User list */
     private File m_usersFile;
 
@@ -226,7 +226,6 @@ public class ChangeLogTask extends Task {
         try {
 
             validate();
-
             final Properties userList = new Properties();
 
             loadUserlist(userList);
@@ -239,11 +238,22 @@ public class ChangeLogTask extends Task {
                 userList.put(user.getUserID(), user.getDisplayname());
             }
 
-            final Commandline command = new Commandline();
 
-            command.setExecutable("cvs");
-            command.createArgument().setValue("log");
+            setCommand("log");
 
+            if (getTag() != null) {
+                CvsVersion myCvsVersion = new CvsVersion();
+                myCvsVersion.setProject(getProject());
+                myCvsVersion.setTaskName("cvsversion");
+                myCvsVersion.setCvsRoot(getCvsRoot());
+                myCvsVersion.setCvsRsh(getCvsRsh());
+                myCvsVersion.setPassfile(getPassFile());
+                myCvsVersion.setDest(m_dir);
+                myCvsVersion.execute();
+                if (myCvsVersion.supportsCvsLogWithSOption()) {
+                    addCommandArgument("-S");
+                }
+            }
             if (null != m_start) {
                 final SimpleDateFormat outputDate =
                     new SimpleDateFormat("yyyy-MM-dd");
@@ -252,8 +262,8 @@ public class ChangeLogTask extends Task {
                 final String dateRange = ">=" + outputDate.format(m_start);
 
         // Supply '-d' as a separate argument - Bug# 14397
-                command.createArgument().setValue("-d");
-                command.createArgument().setValue(dateRange);
+                addCommandArgument("-d");
+                addCommandArgument(dateRange);
             }
 
             // Check if list of files to check has been specified
@@ -267,7 +277,7 @@ public class ChangeLogTask extends Task {
                     final String[] files = scanner.getIncludedFiles();
 
                     for (int i = 0; i < files.length; i++) {
-                        command.createArgument().setValue(files[i]);
+                        addCommandArgument(files[i]);
                     }
                 }
             }
@@ -276,23 +286,11 @@ public class ChangeLogTask extends Task {
             final RedirectingStreamHandler handler =
                 new RedirectingStreamHandler(parser);
 
-            log(command.describeCommand(), Project.MSG_VERBOSE);
+            log(getCommand(), Project.MSG_VERBOSE);
 
-            final Execute exe = new Execute(handler);
-
-            exe.setWorkingDirectory(m_dir);
-            exe.setCommandline(command.getCommandline());
-            exe.setAntRun(getProject());
-            try {
-                final int resultCode = exe.execute();
-
-                if (Execute.isFailure(resultCode)) {
-                    throw new BuildException("Error running cvs log");
-                }
-            } catch (final IOException ioe) {
-                throw new BuildException(ioe.toString());
-            }
-
+            setDest(m_dir);
+            setExecuteStreamHandler(handler);
+            super.execute();
             final String errors = handler.getErrors();
 
             if (null != errors) {

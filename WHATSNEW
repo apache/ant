@@ -66,6 +66,11 @@ Other changes:
   detected by Ant and treated just like Java 1.4.  You can now specify
   source="1.5" in the <javac> task.
 
+* created new task <cvsversion>
+
+* added support for branch logging via the tag attribute in <cvschangelog>
+  Bugzilla Report 13510.
+
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
 
