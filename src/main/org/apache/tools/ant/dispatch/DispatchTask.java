@@ -20,7 +20,7 @@ import org.apache.tools.ant.Task;
 
 /**
  * Tasks extending this class may contain multiple actions.
- * The method that is invoked for executoin depends upon the
+ * The method that is invoked for execution depends upon the
  * value of the action attribute of the task.
  * <br/>
  * Example:<br/>
