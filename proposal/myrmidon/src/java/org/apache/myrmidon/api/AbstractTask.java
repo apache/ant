@@ -80,6 +80,12 @@ public abstract class AbstractTask
         return getContext().resolveFile( filename );
     }
 
+    protected final Object resolveValue( final String value )
+        throws TaskException
+    {
+        return getContext().resolveValue( value );
+    }
+
     protected final Object getProperty( final String name )
     {
         return getContext().getProperty( name );
