@@ -107,6 +107,30 @@
         </table>
       </subsection>
 
+      <subsection name="Antmerge">
+
+        <p>Provides simple inheritance between ant files</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with 1.5. Should work with all versions.</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.russet.org.uk/antmerge.html">http://www.russet.org.uk/antmerge.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:p.lord@russet.org.uk">Phillip Lord</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Ant Pretty Build">
 
         <p>Ant Pretty Build is a tool to show and run Ant buildfiles
