@@ -364,6 +364,32 @@
         </table>
       </subsection>
 
+      <subsection name="JDE(E) 2.2.8">
+
+        <p>The Java Development Environment for Emacs (JDEE) supports
+        Apache Ant as one of three built-in ways to build your
+        applications.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jde.sunsite.dk/">http://jde.sunsite.dk/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jde-subscribe@sunsite.auc.dk">JDEE Mailing list.</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="NetBeans / Forte for Java">
 
         <p>A module that integrates Ant into the NetBeans or Forte for Java IDEs.</p>
