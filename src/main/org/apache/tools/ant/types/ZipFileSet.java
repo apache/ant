@@ -58,6 +58,7 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import java.util.Stack;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of
@@ -182,4 +183,23 @@ public class ZipFileSet extends FileSet {
         }
     }
 
+    /**
+     * A ZipFileset can accept any fileset as a reference as it just uses the
+     * standard directory scanner.
+     */
+    protected AbstractFileSet getRef(Project p) {
+        if (!checked) {
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, p);
+        }
+        
+        Object o = ref.getReferencedObject(p);
+        if (!(o instanceof FileSet)) {
+            String msg = ref.getRefId()+" doesn\'t denote a fileset";
+            throw new BuildException(msg);
+        } else {
+            return (AbstractFileSet) o;
+        }
+    }
 }

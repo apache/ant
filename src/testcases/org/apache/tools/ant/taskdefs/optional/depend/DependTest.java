@@ -74,12 +74,15 @@ import org.apache.tools.ant.DirectoryScanner;
 public class DependTest extends BuildFileTest {
     public static final String RESULT_FILESET = "result";
     
+    public static final String TEST_BUILD_FILE
+        = "src/etc/testcases/taskdefs/optional/depend/depend.xml";
+    
     public DependTest(String name) {
         super(name);
     }
 
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/optional/depend/depend.xml");
+        configureProject(TEST_BUILD_FILE);
     }
 
     public void tearDown() {

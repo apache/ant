@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project name="war-test" basedir="." default="help">
+  <property name="working.dir" value="working"/>
+
+  <target name="help">
+    <echo message="Test file for the war task"/>
+  </target>
+
+  <target name="setup">
+    <mkdir dir="${working.dir}"/>
+  </target>
+  
+  <target name="testlibrefs" depends="setup">
+    <fileset id="test" dir="." includes="foobar"/>
+    <war webxml="war.xml" destfile="${working.dir}/test.war">
+      <lib refid="test"/>
+    </war>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${working.dir}"/>
+  </target>
+</project>
