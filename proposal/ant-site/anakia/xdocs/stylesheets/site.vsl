@@ -67,17 +67,14 @@
 ## This is where the common page macro's live
 
 #macro ( subsection $subsection)
-      <p>
-      <a name="$escape.getText($subsection.getAttributeValue("name"))">
+      <a name="$escape.getText($subsection.getAttributeValue("name"))"></a>
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
         <tr><td bgcolor="$blue2">
           <font color="$lightfg" face="arial,helvetica,sanserif">
             <strong>$subsection.getAttributeValue("name")</strong>
-            </strong>
           </font>
         </td></tr>
       </table>
-      </a>
 
       #foreach ( $items in $subsection.getChildren() )
         #if ($items.getName().equals("img"))
@@ -90,7 +87,6 @@
           $xmlout.outputString($items)
         #end
       #end
-      </p>
 #end
 
 #macro ( section $section)
