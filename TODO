@@ -1,0 +1,42 @@
+TODO List:
+
+  * write a target rule that reacts on class presence or more generally, a way
+    to apply environment conditions that must be met in order for a target to 
+    be executed. This is _vital_ for highly componentized systems where
+    non-core parts of the software may be skipped if the required classes
+    are not present in the build classpath.
+
+  * Improve error reporting on BuildException catches. Error should
+    state which task and which target was active at the time the
+    BuildException was popped.
+
+  * Improve error reporting on XML parse. Currently if the build.xml
+    file is malformed we get some sort of odd SAX exception that could
+    be better put.
+
+  * Provide an AbstractFileCompareTask class with prebuilt "srcfile"
+    and "destfile" setter methods and whose execute method calls a
+    "updateNeeded" method.
+
+  * Transform task -- XSLT 
+
+  * Output logs in XML -- this would be a global option of the project
+    (log location, verboseness, etc)
+
+  * Javac improvements -- support the "modern" 1.3 compiler
+
+  * Investigate some sort of command line "execute an instance of a
+    task with these parameters" entry point. Maybe a
+    `org.apache.ant.TaskMain task org.foo.BarTask attrib1=foo
+    attrib2=bar` type entry point?
+
+  * Investigate some sort of "touch" functionality. Not sure how this
+    could be done in a portable way -- maybe append 0 bytes to a file
+    as a quick hack?
+
+  * GUI front end -- examine tasks, add task properties, etc. Also,
+    one button push build of a particular target.
+
+  * Test harness. All software projects should have an automatable
+    test suite. Ant is no exception to this rule.
+
