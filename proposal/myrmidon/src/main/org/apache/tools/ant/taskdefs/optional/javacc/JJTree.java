@@ -175,7 +175,7 @@ public class JJTree extends Task
         {
             throw new TaskException( "Javacchome not set." );
         }
-        final Path classpath = cmdl.createClasspath( project );
+        final Path classpath = cmdl.createClasspath( getProject() );
         classpath.createPathElement().setPath( javaccHome.getAbsolutePath() +
                                                "/JavaCC.zip" );
         classpath.addJavaRuntime();

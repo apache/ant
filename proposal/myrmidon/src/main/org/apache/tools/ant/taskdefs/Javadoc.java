@@ -576,7 +576,7 @@ public class Javadoc extends Task
     {
         if( bootclasspath == null )
         {
-            bootclasspath = new Path( project );
+            bootclasspath = new Path( getProject() );
         }
         return bootclasspath.createPath();
     }
@@ -586,7 +586,7 @@ public class Javadoc extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         }
         return classpath.createPath();
     }
@@ -616,7 +616,7 @@ public class Javadoc extends Task
     {
         if( sourcePath == null )
         {
-            sourcePath = new Path( project );
+            sourcePath = new Path( getProject() );
         }
         return sourcePath.createPath();
     }
@@ -918,7 +918,7 @@ public class Javadoc extends Task
         JavadocOutputStream out = new JavadocOutputStream( Project.MSG_INFO );
         JavadocOutputStream err = new JavadocOutputStream( Project.MSG_WARN );
         Execute exe = new Execute( new PumpStreamHandler( out, err ) );
-        exe.setAntRun( project );
+        exe.setAntRun( getProject() );
 
         /*
          * No reason to change the working directory as all filenames and
@@ -971,7 +971,7 @@ public class Javadoc extends Task
     protected String expand( String content )
         throws TaskException
     {
-        return project.replaceProperties( content );
+        return getProject().replaceProperties( content );
     }
 
     private String getJavadocExecutableName()
@@ -1130,7 +1130,7 @@ public class Javadoc extends Task
                 File source = resolveFile( list[ j ] );
                 fs.setDir( source );
 
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] packageDirs = ds.getIncludedDirectories();
 
                 for( int i = 0; i < packageDirs.length; i++ )

@@ -307,10 +307,10 @@ public class Delete
             FileSet fs = (FileSet)filesets.elementAt( i );
             try
             {
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] files = ds.getIncludedFiles();
                 String[] dirs = ds.getIncludedDirectories();
-                removeFiles( fs.getDir( project ), files, dirs );
+                removeFiles( fs.getDir( getProject() ), files, dirs );
             }
             catch( TaskException be )
             {

@@ -113,7 +113,7 @@ public class MMetrics extends AbstractMetamataTask
     {
         if( path == null )
         {
-            path = new Path( project );
+            path = new Path( getProject() );
         }
         return path;
     }

@@ -237,7 +237,7 @@ public class WLRun extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         }
         return classpath.createPath();
     }
@@ -251,7 +251,7 @@ public class WLRun extends Task
     {
         if( weblogicClasspath == null )
         {
-            weblogicClasspath = new Path( project );
+            weblogicClasspath = new Path( getProject() );
         }
         return weblogicClasspath.createPath();
     }
@@ -312,7 +312,7 @@ public class WLRun extends Task
             }
         }
 
-        Java weblogicServer = (Java)project.createTask( "java" );
+        Java weblogicServer = (Java)getProject().createTask( "java" );
         weblogicServer.setFork( true );
         weblogicServer.setClassname( weblogicMainClass );
 
@@ -362,7 +362,7 @@ public class WLRun extends Task
             throw new TaskException( "You must supply a management password to start the server" );
         }
 
-        Java weblogicServer = (Java)project.createTask( "java" );
+        Java weblogicServer = (Java)getProject().createTask( "java" );
         weblogicServer.setFork( true );
         weblogicServer.setDir( weblogicSystemHome );
         weblogicServer.setClassname( weblogicMainClass );

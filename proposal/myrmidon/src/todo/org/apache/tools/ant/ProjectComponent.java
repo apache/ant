@@ -20,7 +20,7 @@ import org.apache.myrmidon.api.TaskException;
 public abstract class ProjectComponent
     extends AbstractTask
 {
-    protected Project project;
+    private Project project;
 
     /**
      * Sets the project object of this component. This method is used by project

@@ -127,7 +127,7 @@ public class WLJspc extends MatchingTask
     {
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( project );
+            compileClasspath = new Path( getProject() );
         }
         return compileClasspath;
     }
@@ -161,7 +161,7 @@ public class WLJspc extends MatchingTask
         //use the systemclasspath as well, to include the ant jar
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( project );
+            compileClasspath = new Path( getProject() );
         }
 
         compileClasspath.append( Path.systemClasspath );
@@ -171,7 +171,7 @@ public class WLJspc extends MatchingTask
         // Therefore, takes loads of time
         // Can pass directories at a time (*.jsp) but easily runs out of memory on hefty dirs
         // (even on  a Sun)
-        Java helperTask = (Java)project.createTask( "java" );
+        Java helperTask = (Java)getProject().createTask( "java" );
         helperTask.setFork( true );
         helperTask.setClassname( "weblogic.jspc" );
         String[] args = new String[ 12 ];

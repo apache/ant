@@ -229,7 +229,7 @@ public class Coverage extends Task
      */
     public Path createClasspath()
     {
-        return cmdlJava.createClasspath( project ).createPath();
+        return cmdlJava.createClasspath( getProject() ).createPath();
     }
 
     public Filters createFilters()

@@ -51,7 +51,7 @@ public class TaskAdapter extends Task
                 c.getMethod( "setProject", new Class[]{Project.class} );
             if( setProjectM != null )
             {
-                setProjectM.invoke( proxy, new Object[]{project} );
+                setProjectM.invoke( proxy, new Object[]{getProject()} );
             }
         }
         catch( NoSuchMethodException e )

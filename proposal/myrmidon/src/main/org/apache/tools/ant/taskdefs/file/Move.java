@@ -151,7 +151,7 @@ public class Move extends Copy
                             FilterSetCollection executionFilters = new FilterSetCollection();
                             if( isFiltering() )
                             {
-                                executionFilters.addFilterSet( project.getGlobalFilterSet() );
+                                executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
                             }
                             for( Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements(); )
                             {
@@ -215,7 +215,7 @@ public class Move extends Copy
             while( e.hasMoreElements() )
             {
                 FileSet fs = (FileSet)e.nextElement();
-                File dir = fs.getDir( project );
+                File dir = fs.getDir( getProject() );
 
                 if( okToDelete( dir ) )
                 {

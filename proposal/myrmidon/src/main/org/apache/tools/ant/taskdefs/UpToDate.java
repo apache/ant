@@ -97,7 +97,7 @@ public class UpToDate extends MatchingTask implements Condition
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapperElement = new Mapper( project );
+        mapperElement = new Mapper( getProject() );
         return mapperElement;
     }
 
@@ -128,8 +128,8 @@ public class UpToDate extends MatchingTask implements Condition
         while( upToDate && enum.hasMoreElements() )
         {
             FileSet fs = (FileSet)enum.nextElement();
-            DirectoryScanner ds = fs.getDirectoryScanner( project );
-            upToDate = upToDate && scanDir( fs.getDir( project ),
+            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            upToDate = upToDate && scanDir( fs.getDir( getProject() ),
                                             ds.getIncludedFiles() );
         }
         return upToDate;

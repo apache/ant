@@ -120,7 +120,7 @@ public class WLStop extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         }
         return classpath.createPath();
     }
@@ -145,7 +145,7 @@ public class WLStop extends Task
             throw new TaskException( "The url of the weblogic server must be provided." );
         }
 
-        Java weblogicAdmin = (Java)project.createTask( "java" );
+        Java weblogicAdmin = (Java)getProject().createTask( "java" );
         weblogicAdmin.setFork( true );
         weblogicAdmin.setClassname( "weblogic.Admin" );
         String args;

@@ -73,7 +73,7 @@ public class Tstamp extends Task
             while( i.hasMoreElements() )
             {
                 CustomFormat cts = (CustomFormat)i.nextElement();
-                cts.execute( project, d );
+                cts.execute( getProject(), d );
             }
 
         }

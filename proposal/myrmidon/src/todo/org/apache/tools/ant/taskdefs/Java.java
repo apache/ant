@@ -197,7 +197,7 @@ public class Java extends Task
     public Path createClasspath()
         throws TaskException
     {
-        return cmdl.createClasspath( project ).createPath();
+        return cmdl.createClasspath( getProject() ).createPath();
     }
 
     /**
@@ -339,7 +339,7 @@ public class Java extends Task
             try
             {
                 outStream = new PrintStream( new FileOutputStream( out ) );
-                exe.execute( project );
+                exe.execute( getProject() );
             }
             catch( IOException io )
             {
@@ -355,7 +355,7 @@ public class Java extends Task
         }
         else
         {
-            exe.execute( project );
+            exe.execute( getProject() );
         }
     }
 
@@ -385,7 +385,7 @@ public class Java extends Task
                 exe = new Execute( new PumpStreamHandler( fos ), null );
             }
 
-            exe.setAntRun( project );
+            exe.setAntRun( getProject() );
 
             if( dir == null )
             {

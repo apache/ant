@@ -122,7 +122,7 @@ public class ExecuteOn extends ExecTask
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapperElement = new Mapper( project );
+        mapperElement = new Mapper( getProject() );
         return mapperElement;
     }
 
@@ -385,8 +385,8 @@ public class ExecuteOn extends ExecTask
             for( int i = 0; i < filesets.size(); i++ )
             {
                 FileSet fs = (FileSet)filesets.elementAt( i );
-                File base = fs.getDir( project );
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
+                File base = fs.getDir( getProject() );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
 
                 if( !"dir".equals( type ) )
                 {

@@ -206,7 +206,7 @@ public class Cab extends MatchingTask
                 FileSet fs = (FileSet)filesets.elementAt( i );
                 if( fs != null )
                 {
-                    appendFiles( files, fs.getDirectoryScanner( project ) );
+                    appendFiles( files, fs.getDirectoryScanner( getProject() ) );
                 }
             }
         }
@@ -310,7 +310,7 @@ public class Cab extends MatchingTask
     protected ExecTask createExec()
         throws TaskException
     {
-        return (ExecTask)project.createTask( "exec" );
+        return (ExecTask)getProject().createTask( "exec" );
     }
 
     /**

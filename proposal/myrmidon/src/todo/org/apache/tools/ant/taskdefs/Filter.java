@@ -57,7 +57,7 @@ public class Filter extends Task
 
         if( isSingleFilter )
         {
-            project.getGlobalFilterSet().addFilter( token, value );
+            getProject().getGlobalFilterSet().addFilter( token, value );
         }
 
         if( isFiltersFromFile )
@@ -70,6 +70,6 @@ public class Filter extends Task
         throws TaskException
     {
         log( "Reading filters from " + filtersFile, Project.MSG_VERBOSE );
-        project.getGlobalFilterSet().readFiltersFromFile( filtersFile );
+        getProject().getGlobalFilterSet().readFiltersFromFile( filtersFile );
     }
 }

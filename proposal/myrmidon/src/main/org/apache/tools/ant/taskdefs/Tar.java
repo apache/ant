@@ -145,7 +145,7 @@ public class Tar
         for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
         {
             TarFileSet fs = (TarFileSet)e.nextElement();
-            String[] files = fs.getFiles( project );
+            String[] files = fs.getFiles( getProject() );
 
             if( !archiveIsUpToDate( files ) )
             {
@@ -154,7 +154,7 @@ public class Tar
 
             for( int i = 0; i < files.length; ++i )
             {
-                if( tarFile.equals( new File( fs.getDir( project ), files[ i ] ) ) )
+                if( tarFile.equals( new File( fs.getDir( getProject() ), files[ i ] ) ) )
                 {
                     throw new TaskException( "A tar file cannot include itself" );
                 }
@@ -194,10 +194,10 @@ public class Tar
             for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
             {
                 TarFileSet fs = (TarFileSet)e.nextElement();
-                String[] files = fs.getFiles( project );
+                String[] files = fs.getFiles( getProject() );
                 for( int i = 0; i < files.length; i++ )
                 {
-                    File f = new File( fs.getDir( project ), files[ i ] );
+                    File f = new File( fs.getDir( getProject() ), files[ i ] );
                     String name = files[ i ].replace( File.separatorChar, '/' );
                     tarFile( f, tOut, name, fs );
                 }

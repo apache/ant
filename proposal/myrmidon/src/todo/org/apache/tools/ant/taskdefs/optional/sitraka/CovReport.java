@@ -203,7 +203,7 @@ public class CovReport extends Task
     {
         if( coveragePath == null )
         {
-            coveragePath = new Path( project );
+            coveragePath = new Path( getProject() );
         }
         return coveragePath.createPath();
     }
@@ -221,7 +221,7 @@ public class CovReport extends Task
     {
         if( sourcePath == null )
         {
-            sourcePath = new Path( project );
+            sourcePath = new Path( getProject() );
         }
         return sourcePath.createPath();
     }
@@ -290,7 +290,7 @@ public class CovReport extends Task
         // as a default -sourcepath use . in JProbe, so use project .
         if( sourcePath == null )
         {
-            sourcePath = new Path( project );
+            sourcePath = new Path( getProject() );
             sourcePath.createPath().setLocation( getBaseDirectory() );
         }
         v.addElement( "-sourcepath=" + sourcePath );
@@ -364,7 +364,7 @@ public class CovReport extends Task
         {
             if( classPath == null )
             {
-                classPath = new Path( CovReport.this.project );
+                classPath = new Path( CovReport.this.getProject() );
             }
             return classPath.createPath();
         }

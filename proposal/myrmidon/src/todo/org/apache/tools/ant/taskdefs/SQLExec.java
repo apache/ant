@@ -370,7 +370,7 @@ public class SQLExec extends Task
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( project );
+            this.classpath = new Path( getProject() );
         }
         return this.classpath.createPath();
     }
@@ -410,8 +410,8 @@ public class SQLExec extends Task
             for( int i = 0; i < filesets.size(); i++ )
             {
                 FileSet fs = (FileSet)filesets.elementAt( i );
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
-                File srcDir = fs.getDir( project );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+                File srcDir = fs.getDir( getProject() );
 
                 String[] srcFiles = ds.getIncludedFiles();
 
@@ -459,7 +459,7 @@ public class SQLExec extends Task
                 log( "Loading " + driver + " using AntClassLoader with classpath " + classpath,
                      Project.MSG_VERBOSE );
 
-                loader = new AntClassLoader( project, classpath );
+                loader = new AntClassLoader( getProject(), classpath );
                 dc = loader.loadClass( driver );
             }
             else
@@ -754,7 +754,7 @@ public class SQLExec extends Task
             while( ( line = in.readLine() ) != null )
             {
                 line = line.trim();
-                line = project.replaceProperties( line );
+                line = getProject().replaceProperties( line );
                 if( line.startsWith( "//" ) )
                     continue;
                 if( line.startsWith( "--" ) )

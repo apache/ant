@@ -200,7 +200,7 @@ public class Copy
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        m_mapperElement = new Mapper( project );
+        m_mapperElement = new Mapper( getProject() );
         return m_mapperElement;
     }
 
@@ -249,8 +249,8 @@ public class Copy
         for( int i = 0; i < m_filesets.size(); i++ )
         {
             final FileSet fileSet = (FileSet)m_filesets.elementAt( i );
-            final DirectoryScanner scanner = fileSet.getDirectoryScanner( project );
-            final File fromDir = fileSet.getDir( project );
+            final DirectoryScanner scanner = fileSet.getDirectoryScanner( getProject() );
+            final File fromDir = fileSet.getDir( getProject() );
 
             final String[] srcFiles = scanner.getIncludedFiles();
             final String[] srcDirs = scanner.getIncludedDirectories();
@@ -419,7 +419,7 @@ public class Copy
         final FilterSetCollection executionFilters = new FilterSetCollection();
         if( m_filtering )
         {
-            executionFilters.addFilterSet( project.getGlobalFilterSet() );
+            executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
         }
 
         for( final Enumeration filterEnum = m_filterSets.elements(); filterEnum.hasMoreElements(); )
@@ -506,7 +506,7 @@ public class Copy
             else
             {
                 FileSet fs = (FileSet)m_filesets.elementAt( 0 );
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] srcFiles = ds.getIncludedFiles();
 
                 if( srcFiles.length > 0 )

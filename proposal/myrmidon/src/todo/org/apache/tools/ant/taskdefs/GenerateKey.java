@@ -140,7 +140,7 @@ public class GenerateKey
     public void execute()
         throws TaskException
     {
-        if( project.getJavaVersion().equals( Project.JAVA_1_1 ) )
+        if( getProject().getJavaVersion().equals( Project.JAVA_1_1 ) )
         {
             throw new TaskException( "The genkey task is only available on JDK" +
                                      " versions 1.2 or greater" );
@@ -162,7 +162,7 @@ public class GenerateKey
         }
 
         getLogger().info( "Generating Key for " + alias );
-        final ExecTask cmd = (ExecTask)project.createTask( "exec" );
+        final ExecTask cmd = (ExecTask)getProject().createTask( "exec" );
         cmd.setExecutable( "keytool" );
 
         cmd.createArg().setValue( "-genkey " );

@@ -131,7 +131,7 @@ public class Property extends Task
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( project );
+            this.classpath = new Path( getProject() );
         }
         return this.classpath.createPath();
     }
@@ -195,7 +195,7 @@ public class Property extends Task
             String name = (String)e.nextElement();
             String value = (String)props.getProperty( name );
 
-            String v = project.replaceProperties( value );
+            String v = getProject().replaceProperties( value );
             addProperty( name, v );
         }
     }
@@ -278,7 +278,7 @@ public class Property extends Task
 
             if( classpath != null )
             {
-                cL = new AntClassLoader( project, classpath );
+                cL = new AntClassLoader( getProject(), classpath );
             }
             else
             {

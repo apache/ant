@@ -135,7 +135,7 @@ public class MAudit extends AbstractMetamataTask
     {
         if( searchPath == null )
         {
-            searchPath = new Path( project );
+            searchPath = new Path( getProject() );
         }
         return searchPath;
     }

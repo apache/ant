@@ -393,7 +393,7 @@ public class ExecTask extends Task
         log( cmdl.toString(), Project.MSG_VERBOSE );
 
         Execute exe = new Execute( createHandler(), createWatchdog() );
-        exe.setAntRun( project );
+        exe.setAntRun( getProject() );
         exe.setWorkingDirectory( dir );
         exe.setVMLauncher( vmLauncher );
         String[] environment = env.getVariables();

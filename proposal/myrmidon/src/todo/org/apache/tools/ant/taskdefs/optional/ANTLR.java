@@ -94,7 +94,7 @@ public class ANTLR extends Task
      */
     public Path createClasspath()
     {
-        return commandline.createClasspath( project ).createPath();
+        return commandline.createClasspath( getProject() ).createPath();
     }
 
     /**
@@ -139,7 +139,7 @@ public class ANTLR extends Task
                 ExecuteJava exe = new ExecuteJava();
                 exe.setJavaCommand( commandline.getJavaCommand() );
                 exe.setClasspath( commandline.getClasspath() );
-                exe.execute( project );
+                exe.execute( getProject() );
             }
         }
     }
@@ -229,7 +229,7 @@ public class ANTLR extends Task
     {
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
                                                          Project.MSG_WARN ), null );
-        exe.setAntRun( project );
+        exe.setAntRun( getProject() );
         if( workingdir != null )
         {
             exe.setWorkingDirectory( workingdir );

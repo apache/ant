@@ -646,7 +646,7 @@ public class Javac extends MatchingTask
     public boolean isForkedJavac()
     {
         return !"false".equals( fork ) ||
-            "extJavac".equals( project.getProperty( "build.compiler" ) );
+            "extJavac".equals( getProject().getProperty( "build.compiler" ) );
     }
 
     /**
@@ -659,7 +659,7 @@ public class Javac extends MatchingTask
     {
         if( bootclasspath == null )
         {
-            bootclasspath = new Path( project );
+            bootclasspath = new Path( getProject() );
         }
         return bootclasspath.createPath();
     }
@@ -674,7 +674,7 @@ public class Javac extends MatchingTask
     {
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( project );
+            compileClasspath = new Path( getProject() );
         }
         return compileClasspath.createPath();
     }
@@ -702,7 +702,7 @@ public class Javac extends MatchingTask
     {
         if( extdirs == null )
         {
-            extdirs = new Path( project );
+            extdirs = new Path( getProject() );
         }
         return extdirs.createPath();
     }
@@ -717,7 +717,7 @@ public class Javac extends MatchingTask
     {
         if( src == null )
         {
-            src = new Path( project );
+            src = new Path( getProject() );
         }
         return src.createPath();
     }
@@ -870,7 +870,7 @@ public class Javac extends MatchingTask
 
     private String determineCompiler()
     {
-        String compiler = project.getProperty( "build.compiler" );
+        String compiler = getProject().getProperty( "build.compiler" );
 
         if( !"false".equals( fork ) )
         {

@@ -62,7 +62,7 @@ public abstract class ClearCase extends Task
      */
     public final void setClearToolDir( String dir )
     {
-        m_ClearToolDir = project.translatePath( dir );
+        m_ClearToolDir = getProject().translatePath( dir );
     }
 
     /**

@@ -518,7 +518,7 @@ public class Translate extends MatchingTask
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.elementAt( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( project );
+            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {

@@ -206,7 +206,7 @@ public class Javah extends Task
     {
         if( bootclasspath == null )
         {
-            bootclasspath = new Path( project );
+            bootclasspath = new Path( getProject() );
         }
         return bootclasspath.createPath();
     }
@@ -222,7 +222,7 @@ public class Javah extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         }
         return classpath.createPath();
     }
@@ -264,7 +264,7 @@ public class Javah extends Task
             classpath = Path.systemClasspath;
         }
 
-        String compiler = project.getProperty( "build.compiler" );
+        String compiler = getProject().getProperty( "build.compiler" );
         if( compiler == null )
         {
             if( Project.getJavaVersion() != Project.JAVA_1_1 &&

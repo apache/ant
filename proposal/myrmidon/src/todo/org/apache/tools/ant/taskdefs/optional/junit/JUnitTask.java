@@ -344,7 +344,7 @@ public class JUnitTask extends Task
      */
     public BatchTest createBatchTest()
     {
-        BatchTest test = new BatchTest( project );
+        BatchTest test = new BatchTest( getProject() );
         batchTests.addElement( test );
         return test;
     }
@@ -356,7 +356,7 @@ public class JUnitTask extends Task
      */
     public Path createClasspath()
     {
-        return commandline.createClasspath( project ).createPath();
+        return commandline.createClasspath( getProject() ).createPath();
     }
 
     /**
@@ -392,7 +392,7 @@ public class JUnitTask extends Task
         while( list.hasMoreElements() )
         {
             JUnitTest test = (JUnitTest)list.nextElement();
-            if( test.shouldRun( project ) )
+            if( test.shouldRun( getProject() ) )
             {
                 execute( test );
             }
@@ -655,7 +655,7 @@ public class JUnitTask extends Task
         // Create a temporary file to pass the Ant properties to the forked test
         File propsFile = new File( "junit" + ( new Random( System.currentTimeMillis() ) ).nextLong() + ".properties" );
         cmd.createArgument().setValue( "propsfile=" + propsFile.getAbsolutePath() );
-        Hashtable p = project.getProperties();
+        Hashtable p = getProject().getProperties();
         Properties props = new Properties();
         for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
         {
@@ -675,7 +675,7 @@ public class JUnitTask extends Task
 
         Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
         execute.setCommandline( cmd.getCommandline() );
-        execute.setAntRun( project );
+        execute.setAntRun( getProject() );
         if( dir != null )
         {
             execute.setWorkingDirectory( dir );
@@ -710,7 +710,7 @@ public class JUnitTask extends Task
     private int executeInVM( JUnitTest test )
         throws TaskException
     {
-        test.setProperties( project.getProperties() );
+        test.setProperties( getProject().getProperties() );
         if( dir != null )
         {
             log( "dir attribute ignored if running in the same VM", Project.MSG_WARN );
@@ -730,7 +730,7 @@ public class JUnitTask extends Task
             {
                 log( "Using CLASSPATH " + classpath, Project.MSG_VERBOSE );
 
-                cl = new AntClassLoader( null, project, classpath, false );
+                cl = new AntClassLoader( null, getProject(), classpath, false );
                 // make sure the test will be accepted as a TestCase
                 cl.addSystemPackageRoot( "junit" );
                 // will cause trouble in JDK 1.1 if omitted

@@ -108,7 +108,7 @@ public class Echo extends Task
     public void addText( String msg )
         throws TaskException
     {
-        message += project.replaceProperties( msg );
+        message += getProject().replaceProperties( msg );
     }
 
     /**

@@ -89,7 +89,7 @@ public class Input extends Task
     public void addText( String msg )
         throws TaskException
     {
-        message += project.replaceProperties( msg );
+        message += getProject().replaceProperties( msg );
     }
 
     /**
@@ -143,7 +143,7 @@ public class Input extends Task
         // adopted from org.apache.tools.ant.taskdefs.Property
         if( addproperty != null )
         {
-            if( project.getProperty( addproperty ) == null )
+            if( getProject().getProperty( addproperty ) == null )
             {
                 setProperty( addproperty, input );
             }

@@ -176,7 +176,7 @@ public class IPlanetEjbcTask extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         }
         return classpath.createPath();
     }

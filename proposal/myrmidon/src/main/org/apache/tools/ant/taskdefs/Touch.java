@@ -148,7 +148,7 @@ public class Touch extends Task
             }
         }
 
-        if( millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1 )
+        if( millis >= 0 && getProject().getJavaVersion() == Project.JAVA_1_1 )
         {
             log( "modification time of files cannot be set in JDK 1.1",
                  Project.MSG_WARN );
@@ -171,8 +171,8 @@ public class Touch extends Task
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.elementAt( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( project );
-            File fromDir = fs.getDir( project );
+            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
+            File fromDir = fs.getDir( getProject() );
 
             String[] srcFiles = ds.getIncludedFiles();
             String[] srcDirs = ds.getIncludedDirectories();
@@ -202,7 +202,7 @@ public class Touch extends Task
             throw new TaskException( "Can not change modification date of read-only file " + file );
         }
 
-        if( project.getJavaVersion() == Project.JAVA_1_1 )
+        if( getProject().getJavaVersion() == Project.JAVA_1_1 )
         {
             return;
         }

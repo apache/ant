@@ -155,11 +155,11 @@ public class SignJar extends Task
             for( int i = 0; i < filesets.size(); i++ )
             {
                 FileSet fs = (FileSet)filesets.elementAt( i );
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] jarFiles = ds.getIncludedFiles();
                 for( int j = 0; j < jarFiles.length; j++ )
                 {
-                    doOneJar( new File( fs.getDir( project ), jarFiles[ j ] ), null );
+                    doOneJar( new File( fs.getDir( getProject() ), jarFiles[ j ] ), null );
                 }
             }
         }
@@ -249,7 +249,7 @@ public class SignJar extends Task
     private void doOneJar( File jarSource, File jarTarget )
         throws TaskException
     {
-        if( project.getJavaVersion().equals( Project.JAVA_1_1 ) )
+        if( getProject().getJavaVersion().equals( Project.JAVA_1_1 ) )
         {
             throw new TaskException( "The signjar task is only available on JDK versions 1.2 or greater" );
         }
@@ -269,7 +269,7 @@ public class SignJar extends Task
 
         final StringBuffer sb = new StringBuffer();
 
-        final ExecTask cmd = (ExecTask)project.createTask( "exec" );
+        final ExecTask cmd = (ExecTask)getProject().createTask( "exec" );
         cmd.setExecutable( "jarsigner" );
 
         if( null != keystore )

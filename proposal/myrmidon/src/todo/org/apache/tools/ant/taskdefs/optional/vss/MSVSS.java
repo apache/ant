@@ -135,7 +135,7 @@ public abstract class MSVSS extends Task
      */
     public final void setSsdir( String dir )
     {
-        m_SSDir = project.translatePath( dir );
+        m_SSDir = getProject().translatePath( dir );
     }
 
     /**
@@ -227,7 +227,7 @@ public abstract class MSVSS extends Task
                 exe.setEnvironment( newEnv );
             }
 
-            exe.setAntRun( project );
+            exe.setAntRun( getProject() );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();

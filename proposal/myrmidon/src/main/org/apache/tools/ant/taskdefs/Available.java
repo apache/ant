@@ -97,7 +97,7 @@ public class Available
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( project );
+            this.classpath = new Path( getProject() );
         }
         return this.classpath.createPath();
     }
@@ -107,7 +107,7 @@ public class Available
     {
         if( this.filepath == null )
         {
-            this.filepath = new Path( project );
+            this.filepath = new Path( getProject() );
         }
         return this.filepath.createPath();
     }
@@ -130,8 +130,8 @@ public class Available
 
         if( classpath != null )
         {
-            classpath.setProject( project );
-            this.loader = new AntClassLoader( project, classpath );
+            classpath.setProject( getProject() );
+            this.loader = new AntClassLoader( getProject(), classpath );
         }
 
         if( ( classname != null ) && !checkClass( classname ) )
@@ -178,7 +178,7 @@ public class Available
         if( eval() )
         {
             String lSep = System.getProperty( "line.separator" );
-            if( null == project.getProperty( property ) )
+            if( null == getProject().getProperty( property ) )
             {
                 setProperty( property, value );
             }

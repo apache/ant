@@ -95,7 +95,7 @@ public class Get extends Task
      */
     public void setUseTimestamp( boolean v )
     {
-        if( project.getJavaVersion() != Project.JAVA_1_1 )
+        if( getProject().getJavaVersion() != Project.JAVA_1_1 )
         {
             useTimestamp = v;
         }
@@ -300,9 +300,9 @@ public class Get extends Task
         throws TaskException
     {
 
-        if( project.getJavaVersion() != Project.JAVA_1_1 )
+        if( getProject().getJavaVersion() != Project.JAVA_1_1 )
         {
-            Touch touch = (Touch)project.createTask( "touch" );
+            Touch touch = (Touch)getProject().createTask( "touch" );
             touch.setFile( file );
             touch.setMillis( timemillis );
             touch.touch();

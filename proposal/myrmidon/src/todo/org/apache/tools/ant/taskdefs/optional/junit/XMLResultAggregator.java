@@ -185,7 +185,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         }
         if( toDir == null )
         {
-            toDir = FileUtil.resolveFile( project.getBaseDir(), DEFAULT_DIR );
+            toDir = FileUtil.resolveFile( getProject().getBaseDir(), DEFAULT_DIR );
         }
         return new File( toDir, toFile );
     }
@@ -202,7 +202,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         for( int i = 0; i < size; i++ )
         {
             FileSet fs = (FileSet)filesets.elementAt( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( project );
+            DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int j = 0; j < f.length; j++ )
@@ -212,7 +212,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 {
                     File file = new File( ds.getBasedir(), pathname );
                     file = FileUtil.
-                        resolveFile( project.getBaseDir(), file.getPath() );
+                        resolveFile( getProject().getBaseDir(), file.getPath() );
                     v.addElement( file );
                 }
             }

@@ -100,11 +100,11 @@ public abstract class P4Base extends org.apache.tools.ant.Task
         //Get default P4 settings from environment - Mark would have done something cool with
         //introspection here.....:-)
         String tmpprop;
-        if( ( tmpprop = project.getProperty( "p4.port" ) ) != null )
+        if( ( tmpprop = getProject().getProperty( "p4.port" ) ) != null )
             setPort( tmpprop );
-        if( ( tmpprop = project.getProperty( "p4.client" ) ) != null )
+        if( ( tmpprop = getProject().getProperty( "p4.client" ) ) != null )
             setClient( tmpprop );
-        if( ( tmpprop = project.getProperty( "p4.user" ) ) != null )
+        if( ( tmpprop = getProject().getProperty( "p4.user" ) ) != null )
             setUser( tmpprop );
     }
 
@@ -167,7 +167,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
 
             Execute exe = new Execute( handler, null );
 
-            exe.setAntRun( project );
+            exe.setAntRun( getProject() );
 
             exe.setCommandline( commandline.getCommandline() );
 

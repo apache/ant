@@ -150,7 +150,7 @@ public class MParse extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         }
         return classpath;
     }
@@ -174,7 +174,7 @@ public class MParse extends Task
     {
         if( sourcepath == null )
         {
-            sourcepath = new Path( project );
+            sourcepath = new Path( getProject() );
         }
         return sourcepath;
     }
@@ -211,7 +211,7 @@ public class MParse extends Task
 
         // set the classpath as the jar files
         File[] jars = getMetamataLibs();
-        final Path classPath = cmdl.createClasspath( project );
+        final Path classPath = cmdl.createClasspath( getProject() );
         for( int i = 0; i < jars.length; i++ )
         {
             classPath.createPathElement().setLocation( jars[ i ] );

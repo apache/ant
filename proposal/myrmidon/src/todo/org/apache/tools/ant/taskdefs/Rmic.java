@@ -502,7 +502,7 @@ public class Rmic extends MatchingTask
     {
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( project );
+            compileClasspath = new Path( getProject() );
         }
         return compileClasspath.createPath();
     }
@@ -517,7 +517,7 @@ public class Rmic extends MatchingTask
     {
         if( extdirs == null )
         {
-            extdirs = new Path( project );
+            extdirs = new Path( getProject() );
         }
         return extdirs.createPath();
     }
@@ -539,14 +539,14 @@ public class Rmic extends MatchingTask
             log( "Verify has been turned on.", Project.MSG_INFO );
         }
 
-        String compiler = project.getProperty( "build.rmic" );
+        String compiler = getProject().getProperty( "build.rmic" );
         RmicAdapter adapter = RmicAdapterFactory.getRmic( compiler, this );
 
         // now we need to populate the compiler adapter
         adapter.setRmic( this );
 
         Path classpath = adapter.getClasspath();
-        loader = new AntClassLoader( project, classpath );
+        loader = new AntClassLoader( getProject(), classpath );
 
         // scan base dirs to build up compile lists only if a
         // specific classname is not given
@@ -684,7 +684,7 @@ public class Rmic extends MatchingTask
             {
                 if( filtering )
                 {
-                    final FilterSetCollection filters = new FilterSetCollection( project.getGlobalFilterSet() );
+                    final FilterSetCollection filters = new FilterSetCollection( getProject().getGlobalFilterSet() );
                     FileUtils.copyFile( oldFile, newFile, filters );
                 }
                 else

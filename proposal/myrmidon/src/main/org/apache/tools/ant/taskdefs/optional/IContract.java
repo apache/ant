@@ -721,7 +721,7 @@ public class IContract extends MatchingTask
             // Prepare the directories for iContract. iContract will make them if they
             // don't exist, but for some reason I don't know, it will complain about the REP files
             // afterwards
-            Mkdir mkdir = (Mkdir)project.createTask( "mkdir" );
+            Mkdir mkdir = (Mkdir)getProject().createTask( "mkdir" );
             mkdir.setDir( instrumentDir );
             mkdir.execute();
             mkdir.setDir( buildDir );
@@ -733,7 +733,7 @@ public class IContract extends MatchingTask
             Path baseClasspath = createClasspath();
 
             // Might need to add the core classes if we're not using Sun's Javac (like Jikes)
-            String compiler = project.getProperty( "build.compiler" );
+            String compiler = getProject().getProperty( "build.compiler" );
             ClasspathHelper classpathHelper = new ClasspathHelper( compiler );
             classpathHelper.modify( baseClasspath );
 
@@ -764,7 +764,7 @@ public class IContract extends MatchingTask
             iContractClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create a forked java process
-            Java iContract = (Java)project.createTask( "java" );
+            Java iContract = (Java)getProject().createTask( "java" );
             iContract.setFork( true );
             iContract.setClassname( "com.reliablesystems.iContract.Tool" );
             iContract.setClasspath( iContractClasspath );
@@ -1079,8 +1079,6 @@ public class IContract extends MatchingTask
      * BuildListener that sets the iContractMissing flag to true if a message
      * about missing iContract is missing. Used to indicate a more verbose error
      * to the user, with advice about how to solve the problem
-     *
-     * @author RT
      */
     private class IContractPresenceDetector implements BuildListener
     {

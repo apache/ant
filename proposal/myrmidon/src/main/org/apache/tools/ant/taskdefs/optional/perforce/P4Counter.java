@@ -76,7 +76,7 @@ public class P4Counter extends P4Base
 
         if( shouldSetProperty )
         {
-            final Project myProj = project;
+            final Project myProj = getProject();
 
             P4Handler handler =
                 new P4HandlerAdapter()

@@ -157,7 +157,7 @@ public abstract class MatchingTask extends Task
     {
         fileset.setDir( baseDir );
         fileset.setDefaultexcludes( useDefaultExcludes );
-        return fileset.getDirectoryScanner( project );
+        return fileset.getDirectoryScanner( getProject() );
     }
 
 }

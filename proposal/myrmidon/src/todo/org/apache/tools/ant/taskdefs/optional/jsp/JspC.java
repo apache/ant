@@ -315,7 +315,7 @@ public class JspC extends MatchingTask
         throws TaskException
     {
         if( classpath == null )
-            classpath = new Path( project );
+            classpath = new Path( getProject() );
         return classpath.createPath();
     }
 
@@ -376,7 +376,7 @@ public class JspC extends MatchingTask
 
         // compile the source files
 
-        String compiler = project.getProperty( "jsp.compiler" );
+        String compiler = getProject().getProperty( "jsp.compiler" );
         if( compiler == null )
         {
             compiler = "jasper";

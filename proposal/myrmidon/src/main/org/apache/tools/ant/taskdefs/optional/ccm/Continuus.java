@@ -65,7 +65,7 @@ public abstract class Continuus extends Task
      */
     public final void setCcmDir( String dir )
     {
-        _ccmDir = project.translatePath( dir );
+        _ccmDir = getProject().translatePath( dir );
     }
 
     /**

@@ -798,12 +798,12 @@ public class FTP
 
         if( action == SEND_FILES )
         {
-            ds = fs.getDirectoryScanner( project );
+            ds = fs.getDirectoryScanner( getProject() );
         }
         else
         {
             ds = new FTPDirectoryScanner( ftp );
-            fs.setupDirectoryScanner( ds, project );
+            fs.setupDirectoryScanner( ds, getProject() );
             ds.scan();
         }
 

@@ -308,7 +308,7 @@ public class MimeMail extends Task
             FileSet fs = (FileSet)filesets.elementAt( i );
             if( fs != null )
             {
-                DirectoryScanner ds = fs.getDirectoryScanner( project );
+                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
                 String[] dsfiles = ds.getIncludedFiles();
                 File baseDir = ds.getBasedir();
 
