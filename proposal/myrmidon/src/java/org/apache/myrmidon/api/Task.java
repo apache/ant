@@ -10,14 +10,12 @@ package org.apache.myrmidon.api;
 /**
  * This is the interface that tasks implement to be executed in Myrmidon runtime.
  *
- * Instances can also implement the Avalon lifecycle methods
- * LogEnabled, Contextualizable, Composable, Initializable and Disposable.
- * Each of these lifecycle stages will be executed at appropriate time.
+ * Instances can also implement the Avalon LogEnabled method to receive a logger.
  *
- * Tasks can also choose to implement Configurable if they wish to directly
+ * Tasks can also choose to implement Avalon Configurable if they wish to directly
  * receive the Configuration data representing the task. If this interface is
- * not implemented then the engine will be responsbil for mapping configuration
- * to task object.
+ * not implemented then the container will be responsble for mapping configuration
+ * onto the task object.
  *
  * The Components passed in via ComponentManager are determined by container.
  *
@@ -29,12 +27,18 @@ public interface Task
     String ROLE = "org.apache.myrmidon.api.Task";
 
     /**
+     * Specify the context in which the task operates in.
+     * The Task will use the TaskContext to receive information
+     * about it's environment.
+     */
+    void contextualize( TaskContext context );
+
+    /**
      * Execute task.
      * This method is called to perform actual work associated with task.
-     * It is called after Task has been Configured and Initialized and before
-     * being Disposed (If task implements appropriate interfaces).
+     * It is called after Task has been Configured.
      *
-     * @exception TaskException if an error occurs
+     * @exception TaskException if task fails to execute
      */
     void execute()
         throws TaskException;
