@@ -57,18 +57,13 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 
-
-
-
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-
-
 
 /**
  * Generates a Borland Application Server 4.5 client JAR using as
@@ -76,7 +71,7 @@ import org.apache.tools.ant.types.Reference;
  *
  * Two mode are available: java mode (default) and fork mode. With the fork mode,
  * it is impossible to add classpath to the commmand line.
- * 
+ *
  * @author  <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  * @ant.task name="blgenclient" category="ejb"
@@ -98,7 +93,14 @@ public class BorlandGenerateClient extends Task {
     Path classpath;
 
     /** hold the mode (java|fork) */
-    String mode = JAVA_MODE;
+    String mode = FORK_MODE;
+
+    /** hold the version */
+    int version = BorlandDeploymentTool.BAS;
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     /**
      * Command launching mode: java or fork.
@@ -155,19 +157,19 @@ public class BorlandGenerateClient extends Task {
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
-    
+
 
     /**
      * Do the work.
      *
-     * The work is actually done by creating a separate JVM to run a java task. 
+     * The work is actually done by creating a separate JVM to run a java task.
      *
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
         if (ejbjarfile == null || ejbjarfile.isDirectory()) {
             throw new BuildException("invalid ejb jar file.");
-        } // end of if ()
+        }
 
         if (clientjarfile == null || clientjarfile.isDirectory()) {
             log("invalid or missing client jar file.", Project.MSG_VERBOSE);
@@ -176,31 +178,38 @@ public class BorlandGenerateClient extends Task {
             String clientname = ejbjarname.substring(0, ejbjarname.lastIndexOf("."));
             clientname = clientname + "client.jar";
             clientjarfile = new File(clientname);
-
-        } // end of if ()
+        }
 
         if (mode == null) {
             log("mode is null default mode  is java");
             setMode(JAVA_MODE);
-        } // end of if ()
+        }
+
+        if ( !(version == BorlandDeploymentTool.BES || version == BorlandDeploymentTool.BAS)) {
+            throw new BuildException("version "+version+" is not supported");
+        }
 
         log("client jar file is " + clientjarfile);
 
         if (mode.equalsIgnoreCase(FORK_MODE)) {
             executeFork();
-        } else {            
+        } else {
             executeJava();
-        } // end of else                       
+        } // end of else
     }
-    
+
     /** launch the generate client using java api */
     protected void executeJava() throws BuildException {
         try {
+            if ( version == BorlandDeploymentTool.BES)  {
+                throw new BuildException("java mode is supported only for previous version <="+BorlandDeploymentTool.BAS);
+            }
+
             log("mode : java");
 
-            org.apache.tools.ant.taskdefs.Java execTask = null;                
+            org.apache.tools.ant.taskdefs.Java execTask = null;
             execTask = (Java) getProject().createTask("java");
-                       
+
             execTask.setDir(new File("."));
             execTask.setClassname("com.inprise.server.commandline.EJBUtilities");
             //classpath
@@ -211,10 +220,9 @@ public class BorlandGenerateClient extends Task {
             execTask.setFork(true);
             execTask.createArg().setValue("generateclient");
             if (debug) {
-                execTask.createArg().setValue("-trace");                
-            } // end of if ()
+                execTask.createArg().setValue("-trace");
+            }
 
-            //
             execTask.createArg().setValue("-short");
             execTask.createArg().setValue("-jarfile");
             // ejb jar file
@@ -225,7 +233,7 @@ public class BorlandGenerateClient extends Task {
             execTask.createArg().setValue(clientjarfile.getAbsolutePath());
 
             log("Calling EJBUtilities", Project.MSG_VERBOSE);
-            execTask.execute();        
+            execTask.execute();
 
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
@@ -236,20 +244,30 @@ public class BorlandGenerateClient extends Task {
 
     /** launch the generate client using system api */
     protected  void executeFork() throws BuildException {
-        try {
-            log("mode : fork");
+        if ( version == BorlandDeploymentTool.BAS) {
+            executeForkV4();
+        }
+        if ( version == BorlandDeploymentTool.BES ) {
+            executeForkV5();
+        }
+    }
 
-            org.apache.tools.ant.taskdefs.ExecTask execTask = null;                
+    /** launch the generate client using system api */
+    protected  void executeForkV4() throws BuildException {
+        try {
+
+            log("mode : fork "+BorlandDeploymentTool.BAS,Project.MSG_DEBUG);
+
+            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
             execTask = (ExecTask) getProject().createTask("exec");
-                       
+
             execTask.setDir(new File("."));
             execTask.setExecutable("iastool");
             execTask.createArg().setValue("generateclient");
             if (debug) {
-                execTask.createArg().setValue("-trace");                
-            } // end of if ()
+                execTask.createArg().setValue("-trace");
+            }
 
-            //
             execTask.createArg().setValue("-short");
             execTask.createArg().setValue("-jarfile");
             // ejb jar file
@@ -259,14 +277,48 @@ public class BorlandGenerateClient extends Task {
             execTask.createArg().setValue("-clientjarfile");
             execTask.createArg().setValue(clientjarfile.getAbsolutePath());
 
-            log("Calling java2iiop", Project.MSG_VERBOSE);
-            execTask.execute();        
+            log("Calling iastool", Project.MSG_VERBOSE);
+            execTask.execute();
         } catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling generateclient Details: " 
+            String msg = "Exception while calling generateclient Details: "
                 + e.toString();
             throw new BuildException(msg, e);
         }
 
     }
+    /** launch the generate client using system api */
+    protected  void executeForkV5() throws BuildException {
+        try {
+            log("mode : fork "+BorlandDeploymentTool.BES,Project.MSG_DEBUG);
+            org.apache.tools.ant.taskdefs.ExecTask execTask = null;
+            execTask = (ExecTask) getProject().createTask("exec");
+
+            execTask.setDir(new File("."));
+
+            execTask.setExecutable("iastool");
+            if (debug) {
+                execTask.createArg().setValue("-debug");
+            }
+            execTask.createArg().setValue("-genclient");
+            execTask.createArg().setValue("-jars");
+            // ejb jar file
+            execTask.createArg().setValue(ejbjarfile.getAbsolutePath());
+            //client jar file
+            execTask.createArg().setValue("-target");
+            execTask.createArg().setValue(clientjarfile.getAbsolutePath());
+            //classpath
+            execTask.createArg().setValue("-cp");
+            execTask.createArg().setValue(classpath.toString());
+            log("Calling iastool", Project.MSG_VERBOSE);
+            execTask.execute();
+        } catch (Exception e) {
+            // Have to catch this because of the semantics of calling main()
+            String msg = "Exception while calling generateclient Details: "
+                + e.toString();
+            throw new BuildException(msg, e);
+        }
+
+    }
+
 }
