@@ -275,9 +275,18 @@ public class Manifest {
                 if (line.charAt(0) == ' ') {
                     // continuation line
                     if (attribute == null) {
-                        throw new ManifestException("Can't start an attribute with a continuation line " + line);
+                        if (name != null) {
+                            // a continuation on the first line is a continuation of the name - concatenate
+                            // this line and the name
+                            name += line.substring(1);
+                        }
+                        else {
+                            throw new ManifestException("Can't start an attribute with a continuation line " + line);
+                        }
                     }
-                    attribute.addContinuation(line);
+                    else {
+                        attribute.addContinuation(line);
+                    }
                 }
                 else {
                     attribute = new Attribute(line);
