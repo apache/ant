@@ -64,6 +64,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -100,6 +101,8 @@ import java.util.Vector;
  * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @since Ant 1.3
  */
 public class FTP
     extends Task
@@ -131,6 +134,7 @@ public class FTP
     private boolean ignoreNoncriticalErrors=false;
     private String chmod = null;
     private String umask = null;
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     protected final static String[] ACTION_STRS = {
         "sending",
@@ -177,7 +181,8 @@ public class FTP
 
             try {
                 String cwd = ftp.printWorkingDirectory();
-                scandir(".", "", true); // always start from the current ftp working dir
+                // always start from the current ftp working dir
+                scandir(".", "", true); 
                 ftp.changeWorkingDirectory(cwd);
             } catch (IOException e) {
                 throw new BuildException("Unable to scan FTP server: ", e);
@@ -198,14 +203,17 @@ public class FTP
 
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
-                    if (!file.getName().equals(".") && !file.getName().equals("..")) {
+                    if (!file.getName().equals(".") 
+                        && !file.getName().equals("..")) {
                         if (file.isDirectory()) {
                             String name = file.getName();
                             if (isIncluded(name)) {
                                 if (!isExcluded(name)) {
                                     dirsIncluded.addElement(name);
                                     if (fast) {
-                                        scandir(name, vpath + name + File.separator, fast);
+                                        scandir(name, 
+                                                vpath + name + File.separator,
+                                                fast);
                                     }
                                 } else {
                                     dirsExcluded.addElement(name);
@@ -213,11 +221,14 @@ public class FTP
                             } else {
                                 dirsNotIncluded.addElement(name);
                                 if (fast && couldHoldIncluded(name)) {
-                                    scandir(name, vpath + name + File.separator, fast);
+                                    scandir(name, 
+                                            vpath + name + File.separator, 
+                                            fast);
                                 }
                             }
                             if (!fast) {
-                                scandir(name, vpath + name + File.separator, fast);
+                                scandir(name, vpath + name + File.separator, 
+                                        fast);
                             }
                         } else {
                             if (file.isFile()) {
@@ -237,7 +248,8 @@ public class FTP
                 }
                 ftp.changeToParentDirectory();
             } catch (IOException e) {
-                throw new BuildException("Error while communicating with FTP server: ", e);
+                throw new BuildException("Error while communicating with FTP "
+                                         + "server: ", e);
             }
         }
     }
@@ -434,21 +446,24 @@ public class FTP
 
         if ((action == LIST_FILES) && (listing == null))
         {
-            throw new BuildException("listing attribute must be set for list action!");
+            throw new BuildException("listing attribute must be set for list "
+                                     + "action!");
         }
 
         if (action == MK_DIR && remotedir == null) {
-            throw new BuildException("remotedir attribute must be set for mkdir action!");
+            throw new BuildException("remotedir attribute must be set for "
+                                     + "mkdir action!");
         }
 
         if (action == CHMOD && chmod == null) {
-            throw new BuildException("chmod attribute must be set for chmod action!");
+            throw new BuildException("chmod attribute must be set for chmod "
+                                     + "action!");
         }
     }
 
     /**
-     * For each file in the fileset, do the appropriate action: send, get, delete,
-     * or list.
+     * For each file in the fileset, do the appropriate action: send,
+     * get, delete, or list.
      */
     protected int transferFiles(FTPClient ftp, FileSet fs)
         throws IOException, BuildException
@@ -465,8 +480,10 @@ public class FTP
 
         String[] dsfiles = ds.getIncludedFiles();
         String dir = null;
-        if ((ds.getBasedir() == null) && ((action == SEND_FILES) || (action == GET_FILES))) {
-            throw new BuildException( "the dir attribute must be set for send and get actions" );
+        if ((ds.getBasedir() == null) 
+            && ((action == SEND_FILES) || (action == GET_FILES))) {
+            throw new BuildException("the dir attribute must be set for send "
+                                     + "and get actions" );
         } else {
             if ((action == SEND_FILES) || (action == GET_FILES)) {
                 dir = ds.getBasedir().getAbsolutePath();
@@ -475,51 +492,52 @@ public class FTP
 
         // If we are doing a listing, we need the output stream created now.
         BufferedWriter bw = null;
-        if (action == LIST_FILES) {
-            File pd = new File(listing.getParent());
-            if (!pd.exists()) {
-                pd.mkdirs();
-            }
-            bw = new BufferedWriter(new FileWriter(listing));
-        }
-
-        for (int i = 0; i < dsfiles.length; i++)
-        {
-            switch (action) {
-            case SEND_FILES: {
-                sendFile(ftp, dir, dsfiles[i]);
-                break;
+        try {
+            if (action == LIST_FILES) {
+                File pd = fileUtils.getParentFile(listing);
+                if (!pd.exists()) {
+                    pd.mkdirs();
+                }
+                bw = new BufferedWriter(new FileWriter(listing));
             }
 
-            case GET_FILES: {
-                getFile(ftp, dir, dsfiles[i]);
-                break;
-            }
+            for (int i = 0; i < dsfiles.length; i++) {
+                switch (action) {
+                case SEND_FILES: {
+                    sendFile(ftp, dir, dsfiles[i]);
+                    break;
+                }
 
-            case DEL_FILES: {
-                delFile(ftp, dsfiles[i]);
-                break;
-            }
+                case GET_FILES: {
+                    getFile(ftp, dir, dsfiles[i]);
+                    break;
+                }
 
-            case LIST_FILES: {
-                listFile(ftp, bw, dsfiles[i]);
-                break;
-            }
+                case DEL_FILES: {
+                    delFile(ftp, dsfiles[i]);
+                    break;
+                }
+                    
+                case LIST_FILES: {
+                    listFile(ftp, bw, dsfiles[i]);
+                    break;
+                }
+                    
+                case CHMOD: {
+                    doSiteCommand(ftp, "chmod " + chmod + " " + dsfiles[i]);
+                    transferred++;
+                    break;
+                }
 
-            case CHMOD: {
-                 doSiteCommand(ftp,"chmod " + chmod + " " + dsfiles[i]);
-                 transferred++;
-                 break;
+                default: {
+                    throw new BuildException("unknown ftp action " + action );
+                }
+                }
             }
-
-            default: {
-                throw new BuildException("unknown ftp action " + action );
+        } finally {
+            if (bw != null) {
+                bw.close();
             }
-            }
-        }
-
-        if (action == LIST_FILES) {
-            bw.close();
         }
 
         return dsfiles.length;
@@ -554,7 +572,8 @@ public class FTP
 
         log(transferred + " files " + COMPLETED_ACTION_STRS[action]);
         if(skipped!=0) {
-            log(skipped + " files were not successfully "+ COMPLETED_ACTION_STRS[action]);
+            log(skipped + " files were not successfully "
+                + COMPLETED_ACTION_STRS[action]);
         }
     }
 
@@ -619,7 +638,8 @@ public class FTP
      * Checks to see if the remote file is current as compared with the
      * local file.  Returns true if the remote file is up to date.
      */
-    protected boolean isUpToDate(FTPClient ftp, File localFile, String remoteFile)
+    protected boolean isUpToDate(FTPClient ftp, File localFile, 
+                                 String remoteFile)
         throws IOException, BuildException
     {
         log("checking date for " + remoteFile, Project.MSG_VERBOSE);
@@ -694,6 +714,7 @@ public class FTP
         InputStream instream = null;
         try
         {
+            // XXX - why not simply new File(dir, filename)?
             File file = project.resolveFile(new File(dir, filename).getPath());
 
             if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {
@@ -725,10 +746,9 @@ public class FTP
             }
             else {
                 if (chmod != null) { // see if we should issue a chmod command
-                  doSiteCommand(ftp,"chmod " + chmod + " " + filename);
+                    doSiteCommand(ftp,"chmod " + chmod + " " + filename);
                 }
-                log("File " + file.getAbsolutePath() +
-                    " copied to " + server,
+                log("File " + file.getAbsolutePath() + " copied to " + server,
                     Project.MSG_VERBOSE);
                 transferred++;
             }
@@ -769,7 +789,8 @@ public class FTP
             }
         }
         else {
-            log("File " + filename + " deleted from " + server, Project.MSG_VERBOSE);
+            log("File " + filename + " deleted from " + server,
+                Project.MSG_VERBOSE);
             transferred++;
         }
     }
@@ -777,10 +798,11 @@ public class FTP
     /**
      * Retrieve a single file to the remote host.
      * <code>filename</code> may contain a relative path specification.
-     * The file will then be retreived using the entire relative path spec -
-     * no attempt is made to change directories.  It is anticipated that this may
-     * eventually cause problems with some FTP servers, but it simplifies
-     * the coding.
+     *
+     * <p>The file will then be retreived using the entire relative
+     * path spec - no attempt is made to change directories.  It is
+     * anticipated that this may eventually cause problems with some
+     * FTP servers, but it simplifies the coding.</p>
      */
     protected void getFile(FTPClient ftp, String dir, String filename)
         throws IOException, BuildException
@@ -796,11 +818,12 @@ public class FTP
 
             if (verbose)
             {
-                log("transferring " + filename + " to " + file.getAbsolutePath());
+                log("transferring " + filename + " to " 
+                    + file.getAbsolutePath());
             }
 
 
-            File pdir = new File(file.getParent());        // stay 1.1 compatible
+            File pdir = fileUtils.getParentFile(file);
             if (!pdir.exists()) {
                 pdir.mkdirs();
             }
@@ -820,8 +843,8 @@ public class FTP
 
             }
             else {
-                log("File " + file.getAbsolutePath() + " copied from " + server,
-                    Project.MSG_VERBOSE);
+                log("File " + file.getAbsolutePath() + " copied from " 
+                    + server, Project.MSG_VERBOSE);
                 transferred++;
             }
         }
@@ -844,10 +867,11 @@ public class FTP
     /**
      * List information about a single file from the remote host.
      * <code>filename</code> may contain a relative path specification.
-     * The file listing will then be retrieved using the entire relative path spec
-     * - no attempt is made to change directories.  It is anticipated that this may
-     * eventually cause problems with some FTP servers, but it simplifies
-     * the coding.
+     *
+     * <p>The file listing will then be retrieved using the entire
+     * relative path spec - no attempt is made to change directories.
+     * It is anticipated that this may eventually cause problems with
+     * some FTP servers, but it simplifies the coding.</p>
      */
     protected void listFile(FTPClient ftp, BufferedWriter bw, String filename)
         throws IOException, BuildException
@@ -866,7 +890,8 @@ public class FTP
     /**
      * Create the specified directory on the remote host.
      * @param ftp The FTP client connection
-     * @param dir The directory to create (format must be correct for host type)
+     * @param dir The directory to create (format must be correct for
+     * host type)
      */
     protected void makeRemoteDir( FTPClient ftp, String dir )
         throws IOException, BuildException
@@ -881,7 +906,8 @@ public class FTP
             //  failed because the directory already exists.
 
             int rc = ftp.getReplyCode();
-            if( !(ignoreNoncriticalErrors && (rc == 550 || rc == 553 || rc==521))) {
+            if( !(ignoreNoncriticalErrors 
+                  && (rc == 550 || rc == 553 || rc==521))) {
                 throw new BuildException( "could not create directory: " +
                                           ftp.getReplyString() );
             }
@@ -915,7 +941,8 @@ public class FTP
             ftp.connect(server, port);
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
             {
-                throw new BuildException("FTP connection failed: " + ftp.getReplyString());
+                throw new BuildException("FTP connection failed: " 
+                                         + ftp.getReplyString());
             }
 
             log("connected", Project.MSG_VERBOSE);
@@ -933,8 +960,7 @@ public class FTP
                 ftp.setFileType(com.oroinc.net.ftp.FTP.IMAGE_FILE_TYPE);
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
                 {
-                    throw new BuildException(
-                                             "could not set transfer type: " +
+                    throw new BuildException("could not set transfer type: " +
                                              ftp.getReplyString());
                 }
             }
@@ -945,8 +971,8 @@ public class FTP
                 ftp.enterLocalPassiveMode();
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
                 {
-                    throw new BuildException(
-                                             "could not enter into passive mode: " +
+                    throw new BuildException("could not enter into passive "
+                                             + "mode: " +
                                              ftp.getReplyString());
                 }
             }
@@ -955,11 +981,11 @@ public class FTP
             // created.
 
             if (umask != null) {
-               doSiteCommand(ftp,"umask " + umask);
+                doSiteCommand(ftp, "umask " + umask);
             }
 
-            // If the action is MK_DIR, then the specified remote directory is the
-            // directory to create.
+            // If the action is MK_DIR, then the specified remote
+            // directory is the directory to create.
 
             if( action == MK_DIR ) {
 
@@ -972,8 +998,8 @@ public class FTP
                     ftp.changeWorkingDirectory(remotedir);
                     if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
                     {
-                        throw new BuildException(
-                                                 "could not change remote directory: " +
+                        throw new BuildException("could not change remote "
+                                                 + "directory: " +
                                                  ftp.getReplyString());
                     }
                 }
@@ -1021,10 +1047,10 @@ public class FTP
                 actionL.equals("put")) {
                 return SEND_FILES;
             } else if (actionL.equals("recv") ||
-                     actionL.equals("get")) {
+                       actionL.equals("get")) {
                 return GET_FILES;
             } else if (actionL.equals("del") ||
-                     actionL.equals("delete" )) {
+                       actionL.equals("delete" )) {
                 return DEL_FILES;
             } else if (actionL.equals("list")) {
                 return LIST_FILES;
