@@ -15,6 +15,8 @@
        (and without typing -D each time it compiles it) -->
   <property file=".ant.properties" />
   <property file="${user.home}/.ant.properties" />
+  <property environment="env" />
+  
 
   <property name="Name" value="Apache Ant"/>
   <property name="name" value="ant"/>
@@ -447,6 +449,29 @@
     <available property="swing.present"
                classname="javax.swing.ImageIcon"
                classpathref="classpath"/>
+               
+   <condition property="wsdl.found">
+      <or>
+        <available file="wsdl"     filepath="${env.PATH}" />
+        <available file="wsdl.exe" filepath="${env.PATH}" />
+        <available file="wsdl.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> wsdl.found=${wsdl.found}</echo>
+   <condition property="csc.found">
+      <or>
+        <available file="csc"     filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> csc.found=${csc.found}</echo>
+   <condition property="dotnetapps.found">
+      <and>
+        <isset property="csc.found"/>
+        <isset property="wsdl.found"/>
+      </and>
+    </condition>               
   </target>
 
 
@@ -1244,11 +1269,8 @@
                    unless="tests.and.ant.share.classloader" />
           <exclude name="${optional.package}/metamata/MAuditParserTest.java"
                    unless="tests.and.ant.share.classloader" />
-
-          <!-- failure of this test case kills the current JVM
-          so until the defect is actually fixed it is taken
-          out of the test list -->
-          <exclude name="${ant.package}/taskdefs/JavaTest.java" />
+          <exclude name="${optional.package}/WsdlToDotnetTest.java"
+                   unless="dotnetapps.found" />                   
 
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs
