@@ -57,8 +57,10 @@ package org.apache.tools.ant.helper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Stack;
 
@@ -75,6 +77,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
@@ -103,6 +106,31 @@ public class ProjectHelper2 extends ProjectHelper {
     private static FileUtils fu = FileUtils.newFileUtils();
 
     /**
+     * Parse an unknown element from a url
+     *
+     * @param project the current project
+     * @param source  the url containing the task
+     * @return a configured task
+     * @exception BuildException if an error occurs
+     */
+    public UnknownElement parseUnknownElement(Project project, URL source)
+        throws BuildException {
+        Target dummyTarget = new Target();
+        dummyTarget.setProject(project);
+
+        AntXMLContext context = new AntXMLContext(project);
+        context.addTarget(dummyTarget);
+        context.setImplicitTarget(dummyTarget);
+
+        parse(context.getProject(), source,
+              new RootHandler(context, elementHandler));
+        Task[] tasks = dummyTarget.getTasks();
+        if (tasks.length != 1) {
+            throw new BuildException("No tasks defined");
+        }
+        return (UnknownElement) tasks[0];
+    }
+    /**
      * Parse a source xml input.
      *
      * @param project the current project
@@ -127,11 +155,11 @@ public class ProjectHelper2 extends ProjectHelper {
             // we are in an imported file.
             context.setIgnoreProjectTag(true);
             context.getCurrentTarget().startImportedTasks();
-            parse(project, source, new RootHandler(context));
+            parse(project, source, new RootHandler(context, mainHandler));
             context.getCurrentTarget().endImportedTasks();
         } else {
             // top level file
-            parse(project, source, new RootHandler(context));
+            parse(project, source, new RootHandler(context, mainHandler));
             // Execute the top-level target
             context.getImplicitTarget().execute();
         }
@@ -152,22 +180,33 @@ public class ProjectHelper2 extends ProjectHelper {
         AntXMLContext context = handler.context;
 
         File buildFile = null;
+        URL  url = null;
+        String buildFileName = null;
 
         if (source instanceof File) {
             buildFile = (File) source;
-//         } else if (source instanceof InputStream) {
-//         } else if (source instanceof URL) {
-//         } else if (source instanceof InputSource) {
+            buildFile = new File(buildFile.getAbsolutePath());
+            context.setBuildFile(buildFile);
+            buildFileName = buildFile.toString();
+//         } else if (source instanceof InputStream ) {
+        } else if (source instanceof URL) {
+            if (handler.getCurrentAntHandler() != elementHandler) {
+                throw new BuildException(
+                    "Source " + source.getClass().getName()
+                    + " not supported by this plugin for "
+                    + " non task xml");
+            }
+            url = (URL) source;
+            buildFileName = url.toString();
+//         } else if (source instanceof InputSource ) {
         } else {
             throw new BuildException("Source " + source.getClass().getName()
-                + " not supported by this plugin");
+                                     + " not supported by this plugin");
         }
 
-        FileInputStream inputStream = null;
+        InputStream inputStream = null;
         InputSource inputSource = null;
 
-        buildFile = new File(buildFile.getAbsolutePath());
-        context.setBuildFile(buildFile);
 
         try {
             /**
@@ -175,13 +214,21 @@ public class ProjectHelper2 extends ProjectHelper {
              */
             XMLReader parser = JAXPUtils.getNamespaceXMLReader();
 
-            String uri = fu.toURI(buildFile.getAbsolutePath());
+            String uri = null;
+            if (buildFile != null) {
+                uri = fu.toURI(buildFile.getAbsolutePath());
+                inputStream = new FileInputStream(buildFile);
+            } else {
+                inputStream = url.openStream();
+                uri = url.toString(); // ?? OK ??
+            }
 
-            inputStream = new FileInputStream(buildFile);
             inputSource = new InputSource(inputStream);
-            inputSource.setSystemId(uri);
-            project.log("parsing buildfile " + buildFile
-                + " with URI = " + uri, Project.MSG_VERBOSE);
+            if (uri != null) {
+                inputSource.setSystemId(uri);
+            }
+            project.log("parsing buildfile " + buildFileName
+                        + "with URI = " + uri, Project.MSG_VERBOSE);
 
             DefaultHandler hb = handler;
 
@@ -357,11 +404,20 @@ public class ProjectHelper2 extends ProjectHelper {
          * Creates a new RootHandler instance.
          *
          * @param context The context for the handler.
+         * @param rootHandler The handler for the root element.
          */
-        public RootHandler(AntXMLContext context) {
-            currentHandler = ProjectHelper2.mainHandler;
+        public RootHandler(AntXMLContext context, AntHandler rootHandler) {
+            currentHandler = rootHandler;
             antHandlers.push(currentHandler);
             this.context = context;
+        }
+
+        /**
+         * Returns the current ant handler object.
+         * @return the current ant handler.
+         */
+        public AntHandler getCurrentAntHandler() {
+            return currentHandler;
         }
 
         /**

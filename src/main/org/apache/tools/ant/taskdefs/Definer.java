@@ -59,12 +59,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
@@ -88,6 +90,7 @@ public abstract class Definer extends Task {
     private String resource;
     private ClasspathUtils.Delegate cpDelegate;
 
+    private   int    format = Format.PROPERTIES;
     private   boolean definerSet = false;
     private   ClassLoader internalClassLoader;
     private   int         onError = OnError.FAIL;
@@ -130,6 +133,24 @@ public abstract class Definer extends Task {
     }
 
     /**
+     * Enumerated type for format attribute
+     *
+     * @see EnumeratedAttribute
+     */
+    public static class Format extends EnumeratedAttribute {
+        /** Enumerated values */
+        public static final int PROPERTIES = 0, XML = 1;
+
+        /**
+         * get the values
+         * @return an array of the allowed values for this attribute.
+         */
+        public String[] getValues() {
+            return new String[] {"properties", "xml"};
+        }
+    }
+
+    /**
      * What to do if there is an error in loading the class.
      * <dl>
      *   <li>error - throw build exception</li>
@@ -141,6 +162,14 @@ public abstract class Definer extends Task {
      */
     public void setOnError(OnError onError) {
         this.onError = onError.getIndex();
+    }
+
+    /**
+     * Sets the format of the file or resource
+     * @param format the enumerated value - xml or properties
+     */
+    public void setFormat(Format format) {
+        this.format = format.getIndex();
     }
 
     /**
@@ -289,7 +318,15 @@ public abstract class Definer extends Task {
                 return;
             }
 
-            loadProperties(al, url);
+            if (url.toString().toLowerCase(Locale.US).endsWith(".xml")) {
+                format = Format.XML;
+            }
+
+            if (format == Format.PROPERTIES) {
+                loadProperties(al, url);
+            } else {
+                loadAntlib(al, url);
+            }
         }
     }
 
@@ -356,6 +393,30 @@ public abstract class Definer extends Task {
                     // ignore
                 }
             }
+        }
+    }
+
+    /**
+     * Load an antlib from a url.
+     *
+     * @param classLoader the classloader to use.
+     * @param url the url to load the definitions from.
+     */
+    private void loadAntlib(ClassLoader classLoader, URL url) {
+        try {
+            Antlib antlib = Antlib.createAntlib(getProject(), url);
+            antlib.setClassLoader(classLoader);
+            antlib.perform();
+        } catch (BuildException ex) {
+            Location location = ex.getLocation();
+            if (location == null) {
+                throw ex;
+            }
+            throw new BuildException(
+                "Error in "
+                + System.getProperty("line.separator")
+                + getLocation().toString()
+                + " " + ex.getMessage());
         }
     }
 
@@ -543,7 +604,7 @@ public abstract class Definer extends Task {
             } catch (NoClassDefFoundError ncdfe) {
                 String msg = getTaskName() + " A class needed by class "
                     + classname + " cannot be found: " + ncdfe.getMessage();
-                throw new BuildException(msg, ncdfe, location);
+                throw new BuildException(msg, ncdfe, getLocation());
             }
         } catch (BuildException ex) {
             switch (onError) {

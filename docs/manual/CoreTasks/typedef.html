@@ -9,23 +9,43 @@
 
 <h2><a name="typedef">Typedef</a></h2>
 <h3>Description</h3>
-<p>Adds a data type definition to the current project, such that this
-new type can be used in the current project. Two attributes are
-needed, the name that identifies this data type uniquely, and the full
-name of the class (including the packages) that implements this
-type.</p>
-<p>You can also define a group of data types at once using the file or
-resource attributes.  These attributes point to files in the format of
-Java property files.  Each line defines a single data type in the
-format:</p>
-<pre>
-typename=fully.qualified.java.classname
-</pre>
-<p>Typedef should be used to add your own tasks and types to the system. Data
-types are things like <a href="../using.html#path">paths</a> or <a
-href="../CoreTypes/fileset.html">filesets</a> that can be defined at
-the project level and referenced via their ID attribute.</p>
-<p>Custom data types usually need custom tasks to put them to good use.</p>
+  <p>
+    Adds a task or a data type definition to the current project
+    such that this new type or task can be used in the current project.
+  </p>
+  <p>
+    Tasks are any class that extend org.apache.tools.ant.Task or
+    a class that is adapted to a Task using an adapter class.
+  </p>
+  <p>
+    Data types are things like <a href="../using.html#path">paths</a> or
+    <a href="../CoreTypes/fileset.html">filesets</a> that can be defined at
+    the project level and referenced via their ID attribute.
+    Custom data types usually need custom tasks to put them to good use.
+  </p>
+  <p>
+    Two attributes are needed to make a definition,
+    the name that identifies this data type uniquely, and the full
+    name of the class (including the packages) that implements this
+    type.
+  </p>
+  <p>
+    You can also define a group of definitions at once using the file or
+    resource attributes.  These attributes point to files in the format of
+    Java property files or an xml format.
+  </p>
+  <p>
+    For property files each line defines a single data type in the
+    format:</p>
+  <pre>
+    typename=fully.qualified.java.classname
+  </pre>
+    
+  <p>
+    The xml format is described below in the <a href="#antlib">Antlib</a>
+    section.
+  </p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -53,6 +73,19 @@ the project level and referenced via their ID attribute.</p>
   <tr>
     <td valign="top">resource</td>
     <td valign="top">Name of the resouce to load definitions from.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">format</td>
+    <td valign="top">The format of the file or resource. The values
+      are "properties" or "xml". If the value is "properties" the file/resource
+      is a property file contains name to classname pairs. If the value
+      is "xml", the file/resource is an xml file/resource structured according
+      to   <a href="#antlib">Antlib</a>.
+      The default is "properties" unless the file/resorce name ends with
+      ".xml", in which case the format attribute will have the value "xml".
+      (introduced in ant1.6)
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -102,15 +135,51 @@ the project level and referenced via their ID attribute.</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
-<h3>Parameters specified as nested elements</h3>
-<h4>classpath</h4>
-<p><code>Typedef</code>'s <i>classpath</i> attribute is a 
-<a href="../using.html#path">PATH like structure</a> and can also be set
-via a nested <i>classpath</i> element.</p>
+  <h3>Parameters specified as nested elements</h3>
+  <h4>classpath</h4>
+  <p><code>Typedef</code>'s <i>classpath</i> attribute is a 
+    <a href="../using.html#path">PATH like structure</a> and can also be set
+    via a nested <i>classpath</i> element.</p>
+
 <h3>Examples</h3>
-<pre>  &lt;typedef name=&quot;urlset&quot; classname=&quot;com.mydomain.URLSet&quot;/&gt;</pre>
-<p>makes a data type called <code>urlset</code> available to Ant. The
-class <code>com.mydomain.URLSet</code> implements this type.</p>
+  The following fragment defines define a type called <i>urlset</i>.
+  <pre>
+    &lt;typedef name="urlset" classname="com.mydomain.URLSet"/&gt; </pre>
+  The data type is now availabe to Ant. The
+  class <code>com.mydomain.URLSet</code> implements this type.</p>
+  <p>
+    Assuming a class <i>org.acme.ant.RunnableAdapter</i> that
+    extends Task and implements <i>org.apache.tools.ant.TypeAdapter</i>,
+    and in the execute method invokes <i>run</i> on the proxied object,
+    one may use a Runnable class as an Ant task. The following fragment
+    defines  a task called <i>runclock</i>.
+    <pre>
+    &lt;typedef name="runclock"
+             classname="com.acme.ant.RunClock"
+             adapter="org.acme.ant.RunnableAdapter"/&gt;
+  </pre>
+  <h3><a name="antlib">Antlib xml format</a></h3>
+  An antlib file is an xml file with a root element of "antlib".
+  Antlib is actually a <a href="sequential.html">Sequential</a> task with
+  special treatment for tasks that are ant definition tasks - like typedef
+  and <a href="taskdef.html">Taskdef</a>.
+
+    A group of tasks and types may be defined together in an antlib
+    file. For example the file <i>sample.xml</i> contains the following:
+  <pre>
+    &lt;?xml version="1.0"?&gt;
+    &lt;antlib&gt;
+      &lt;typedef name="if" classname="org.acme.ant.If"/&gt;
+      &lt;typedef name="scriptpathmapper"
+               classname="org.acme.ant.ScriptPathMapper"
+               onerror="ignore"/&gt;
+    &lt;/antlib&gt;
+  </pre>
+    It defines two types or tasks, <i>if</i> and <i>scriptpathmapper</i>.
+    This antlib file may be used in a build script as follows:
+    <pre>
+      &lt;typedef file="sample.xml"/&gt;
+    </pre>
 
 <hr>
 <p align="center">Copyright &copy; 2001-2003 Apache Software

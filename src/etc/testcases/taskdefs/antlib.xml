@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<project name="test">
+
+  <property name="testcases.dir" location="../../../../build/testcases"/>
+
+  <path id="testclasses">
+    <pathelement location="${testcases.dir}" />
+    <pathelement path="${java.class.path}" />
+  </path>
+
+  <target name="antlib.file">
+    <typedef file="test.antlib.xml"
+             classpathref="testclasses"/>
+    <mytask/>
+  </target>
+
+</project>
