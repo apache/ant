@@ -85,6 +85,10 @@ public class Property extends Task {
         return name;
     }
 
+    public void setLocation(File location) {
+        setValue(location.getAbsolutePath());
+    }
+
     public void setValue(String value) {
         this.value = value;
     }

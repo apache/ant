@@ -26,7 +26,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/10/12</p>
+<p>Version 1.2 - 2000/10/13</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -3411,7 +3411,7 @@ This also holds for properties loaded from a property file.</p>
   <tr>
     <td valign="top">value</td>
     <td valign="top">the value of the property.</td>
-    <td valign="middle" align="center" rowspan="4">Yes</td>
+    <td valign="middle" align="center" rowspan="5">Yes</td>
   </tr>
   <tr>
     <td valign="top">refid</td>
@@ -3426,6 +3426,14 @@ This also holds for properties loaded from a property file.</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the filename of the property file .</td>
+  </tr>
+  <tr>
+    <td valign="top">location</td>
+    <td valign="top">Sets the property to the absolute filename of the
+      given file. If the value of this attribute is an absolute path, it
+      is left unchanged (with / and \ characters converted to the
+      current platforms conventions). Otherwise it is taken as a path
+      relative to the project's basedir and expanded.</td>
   </tr>
 </table>
 <h3>Examples</h3>
