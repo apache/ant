@@ -7,13 +7,15 @@
  */
 package org.apache.myrmidon.components.builder;
 
-import java.net.URL;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -22,15 +24,13 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.components.model.DefaultProject;
-import org.apache.myrmidon.components.model.TypeLib;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
+import org.apache.myrmidon.components.model.TypeLib;
+import org.apache.myrmidon.framework.Condition;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Default implementation to construct project from a build file.
@@ -90,7 +90,7 @@ public class DefaultProjectBuilder
         return project;
     }
 
-    protected void process( final URL systemID, 
+    protected void process( final URL systemID,
                             final SAXConfigurationHandler handler )
         throws Exception
     {
@@ -157,7 +157,7 @@ public class DefaultProjectBuilder
      * @param configuration the Configuration
      * @exception Exception if an error occurs
      */
-    private void buildTopLevelProject( final DefaultProject project, 
+    private void buildTopLevelProject( final DefaultProject project,
                                        final Configuration configuration,
                                        final HashMap projects )
         throws Exception
@@ -215,7 +215,7 @@ public class DefaultProjectBuilder
             if( name.equals( "target" ) ) buildTarget( project, element );
             else
             {
-                final String message = 
+                final String message =
                     REZ.getString( "ant.unknown-toplevel-element.error", name, element.getLocation() );
                 throw new Exception( message );
             }
@@ -238,21 +238,21 @@ public class DefaultProjectBuilder
 
         if( null == name )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.projectref-no-name.error", element.getLocation() );
             throw new Exception( message );
         }
 
         if( !validName( name ) )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.projectref-bad-name.error", element.getLocation() );
             throw new Exception( message );
         }
 
         if( null == location )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.projectref-no-location.error", element.getLocation() );
             throw new Exception( message );
         }
@@ -283,7 +283,7 @@ public class DefaultProjectBuilder
 
         if( null == library )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.import-no-library.error", element.getLocation() );
             throw new Exception( message );
         }
@@ -292,7 +292,7 @@ public class DefaultProjectBuilder
         {
             if( null != name || null != type )
             {
-                final String message = 
+                final String message =
                     REZ.getString( "ant.import-malformed.error", element.getLocation() );
                 throw new Exception( message );
             }
@@ -317,14 +317,14 @@ public class DefaultProjectBuilder
 
         if( null == name )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.target-noname.error", target.getLocation() );
             throw new Exception( message );
         }
 
         if( !validName( name ) )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.target-bad-name.error", target.getLocation() );
             throw new Exception( message );
         }
@@ -337,7 +337,7 @@ public class DefaultProjectBuilder
 
         if( null != ifCondition && null != unlessCondition )
         {
-            final String message = 
+            final String message =
                 REZ.getString( "ant.target-bad-logic.error", target.getLocation() );
             throw new Exception( message );
         }
@@ -377,8 +377,8 @@ public class DefaultProjectBuilder
 
                 if( 0 == dependency.length() )
                 {
-                    final String message = REZ.getString( "ant.target-bad-dependency.error", 
-                                                          target.getName(), 
+                    final String message = REZ.getString( "ant.target-bad-dependency.error",
+                                                          target.getName(),
                                                           target.getLocation() );
                     throw new Exception( message );
                 }
@@ -387,7 +387,7 @@ public class DefaultProjectBuilder
                 {
                     final String message = REZ.getString( "ant.target-dependency.notice", dependency );
                     getLogger().debug( message );
-                }   
+                }
 
                 dependsList.add( dependency );
             }
