@@ -633,3 +633,4 @@ VI. entries that have been submitted too late
 
 * Integration of the depends task and javac tasks
 
+* recursive property resolution( ie resolving ${dist.${name}.dir} )
