@@ -56,11 +56,14 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -286,6 +289,16 @@ public class ExecTask extends Task {
     }
 
     /**
+     * Indicates whether to attempt to resolve the executable to a
+     * file
+     *
+     * @since Ant 1.6
+     */
+    public boolean getResolveExecutable() {
+        return resolveExecutable;
+    }
+
+    /**
      * Add an environment variable to the launched process.
      *
      * @param var new environment variable
@@ -362,11 +375,15 @@ public class ExecTask extends Task {
      * the full path - first try basedir, then the exec dir and then
      * fallback to the straight executable name (i.e. on ther path)
      *
+     * @param exec the name of the executable
+     * @param searchPath if true, the excutable will be looked up in
+     * the PATH environment and the absolute path is returned.
+     *
      * @return the executable as a full path if it can be determined.
      *
      * @since Ant 1.6
      */
-    protected String resolveExecutable(String exec) {
+    protected String resolveExecutable(String exec, boolean searchPath) {
         if (!resolveExecutable) {
             return exec;
         }
@@ -377,9 +394,9 @@ public class ExecTask extends Task {
             return executableFile.getAbsolutePath();
         }
 
+        FileUtils fileUtils = FileUtils.newFileUtils();
         // now try to resolve against the dir if given
         if (dir != null) {
-            FileUtils fileUtils = FileUtils.newFileUtils();
             executableFile = fileUtils.resolveFile(dir, exec);
             if (executableFile.exists()) {
                 return executableFile.getAbsolutePath();
@@ -387,6 +404,32 @@ public class ExecTask extends Task {
         }
 
         // couldn't find it - must be on path
+        if (searchPath) {
+            Vector env = Execute.getProcEnvironment();
+            Enumeration e = env.elements();
+            Path p = null;
+            while (e.hasMoreElements()) {
+                String line = (String) e.nextElement();
+                if (line.startsWith("PATH=") || line.startsWith("Path=")) {
+                    p = new Path(getProject(), line.substring(5));
+                    break;
+                }
+            }
+
+            if (p != null) {
+                String[] dirs = p.list();
+                for (int i = 0; i < dirs.length; i++) {
+                    executableFile = fileUtils.resolveFile(new File(dirs[i]),
+                                                           exec);
+                    if (executableFile.exists()) {
+                        return executableFile.getAbsolutePath();
+                    }
+                }
+            }
+        }
+
+        // searchPath is false, or no PATH or not found - keep our
+        // fingers crossed.
         return exec;
     }
 
@@ -402,7 +445,7 @@ public class ExecTask extends Task {
      */
     public void execute() throws BuildException {
         File savedDir = dir; // possibly altered in prepareExec
-        cmdl.setExecutable(resolveExecutable(executable));
+        cmdl.setExecutable(resolveExecutable(executable, false));
         checkConfiguration();
         if (isValidOs()) {
             try {
