@@ -60,7 +60,6 @@ import com.jcraft.jsch.JSchException;
 
 import java.io.*;
 import java.util.*;
-import java.text.NumberFormat;
 
 public class ScpToMessage extends AbstractSshMessage {
 
@@ -182,9 +181,8 @@ public class ScpToMessage extends AbstractSshMessage {
         long startTime = System.currentTimeMillis();
         int totalLength = 0;
         try {
-            NumberFormat formatter = NumberFormat.getIntegerInstance();
-            log( "Sending: " + localFile.getName() + " : " +
-                    formatter.format( localFile.length() ) );
+            log( "Sending: " + localFile.getName() + " : " + 
+                 localFile.length());
             while (true) {
                 int len = fis.read(buf, 0, buf.length);
                 if (len <= 0) break;

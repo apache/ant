@@ -58,7 +58,6 @@ import com.jcraft.jsch.*;
 
 import java.io.*;
 import java.util.StringTokenizer;
-import java.text.NumberFormat;
 
 public class ScpFromMessage extends AbstractSshMessage {
 
@@ -154,8 +153,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         String command = token.nextToken();
         int filesize = Integer.parseInt( token.nextToken() );
         String filename = token.nextToken();
-        NumberFormat formatter = NumberFormat.getIntegerInstance();
-        log( "Receiving: " + filename + " : " + formatter.format( filesize ) );
+        log( "Receiving: " + filename + " : " + filesize);
         File transferFile = ( localFile.isDirectory() )
                 ? new File( localFile, filename )
                 : localFile;

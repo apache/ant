@@ -144,6 +144,7 @@
       <filename name="${optional.package}/sitraka/**"/>
       <filename name="${optional.package}/ide/VAJ*"/>
       <filename name="${optional.package}/starteam/*"/>
+      <filename name="${optional.package}/ssh/*"/>
       <!-- uses JDK 1.2 classloading facilities -->
       <filename name="${ant.package}/loader/AntClassLoader2.java"/>
     </or>
@@ -157,7 +158,6 @@
   <selector id="needs.jdk1.4+">
     <or>
       <filename name="${regexp.package}/Jdk14Regexp*"/>
-      <filename name="${optional.package}/ssh/*"/>
     </or>
   </selector>
 
