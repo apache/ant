@@ -559,6 +559,7 @@ public class JDependTask extends Task {
             // we have to find a cleaner way to put this output
         }
 
+        if (getSourcespath() != null) {
         // This is deprecated - use classespath in the future
         String[] sourcesPath = getSourcespath().list();
         for (int i = 0; i < sourcesPath.length; i++) {
@@ -571,7 +572,9 @@ public class JDependTask extends Task {
             }
             commandline.createArgument().setValue(f.getPath());
         }
+        }
 
+        if (getClassespath() != null) {
         // This is the new way - use classespath - code is the same for now
         String[] classesPath = getClassespath().list();
         for (int i = 0; i < classesPath.length; i++) {
@@ -582,6 +585,7 @@ public class JDependTask extends Task {
                                          + "represent a valid directory. JDepend would fail.");
             }
             commandline.createArgument().setValue(f.getPath());
+        }
         }
 
         Execute execute = new Execute(new LogStreamHandler(this,
