@@ -389,7 +389,7 @@ public class CommandlineJava implements Cloneable {
             // <JTULLEY@novell.com>
             return jExecutable.getAbsolutePath();
         } else {
-            return "java";
+            return "java" + extension;
         }
     }
     

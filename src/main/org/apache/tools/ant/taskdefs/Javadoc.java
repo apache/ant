@@ -1367,10 +1367,11 @@ public class Javadoc extends Task {
             return jdocExecutable.getAbsolutePath();
         } else {
             if (!Os.isFamily("netware")) {
-                log( "Unable to locate " + jdocExecutable.getAbsolutePath() +
-                     ". Using \"javadoc\" instead.", Project.MSG_VERBOSE );
+                log( "Unable to locate " + jdocExecutable.getAbsolutePath()
+                     + ". Using \"javadoc" + extension
+                     + "\" instead.", Project.MSG_VERBOSE );
             }
-            return "javadoc";
+            return "javadoc" + extension;
         }
     }
 

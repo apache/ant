@@ -727,7 +727,7 @@ public class Javac extends MatchingTask {
         if (jExecutable.exists() && !Os.isFamily("netware")) {
             return jExecutable.getAbsolutePath();
         } else {
-            return "javac";
+            return "javac" + extension;
         }
     }
 
