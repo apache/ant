@@ -293,16 +293,14 @@ public class ZipFileSet extends FileSet {
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
-
         Object o = getRefid().getReferencedObject(p);
-        if (o instanceof FileSet) {
-           return (AbstractFileSet)(new ZipFileSet((FileSet)o));
-        }
-        else if (!(o instanceof ZipFileSet)) {
+        if (o instanceof ZipFileSet) {
+            return (AbstractFileSet) o;
+        } else if (o instanceof FileSet) {
+           return (new ZipFileSet((FileSet) o));
+        } else {
             String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
             throw new BuildException(msg);
-        } else {
-            return (AbstractFileSet) o;
         }
     }
     /**
