@@ -547,8 +547,6 @@
     <zip file="${dist.base}/bin/${dist.name}-bin.zip" 
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"/>
-    <checksum file="${dist.base}/bin/${dist.name}-bin.zip"
-              fileext=".md5" />
     <tar longfile="gnu"
          tarfile="${dist.base}/bin/${dist.name}-bin.tar">
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
@@ -565,10 +563,13 @@
     </tar>
     <gzip zipfile="${dist.base}/bin/${dist.name}-bin.tar.gz" 
           src="${dist.base}/bin/${dist.name}-bin.tar"/>
+    <bzip2 zipfile="${dist.base}/bin/${dist.name}-bin.tar.bz2" 
+           src="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete file="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete dir="${dist.name}" />
-    <checksum file="${dist.base}/bin/${dist.name}-bin.tar.gz"
-              fileext=".md5" />
+    <checksum fileext=".md5">
+      <fileset dir="${dist.base}/bin/" />
+    </checksum>
 
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}" />
@@ -576,8 +577,6 @@
     <zip file="${dist.base}/src/${dist.name}-src.zip" 
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"/>
-    <checksum file="${dist.base}/src/${dist.name}-src.zip"
-              fileext=".md5" />
     <tar longfile="gnu"
          tarfile="${dist.base}/src/${dist.name}-src.tar" >
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
@@ -592,10 +591,13 @@
     </tar> 
     <gzip zipfile="${dist.base}/src/${dist.name}-src.tar.gz" 
           src="${dist.base}/src/${dist.name}-src.tar"/>
+    <bzip2 zipfile="${dist.base}/src/${dist.name}-src.tar.bz2" 
+           src="${dist.base}/src/${dist.name}-src.tar"/>
     <delete file="${dist.base}/src/${dist.name}-src.tar"/>
     <delete dir="${dist.name}" /> 
-    <checksum file="${dist.base}/src/${dist.name}-src.tar.gz"
-              fileext=".md5" />
+    <checksum fileext=".md5">
+      <fileset dir="${dist.base}/src/" />
+    </checksum>
   </target>
 
   <target name="rpm_check">
