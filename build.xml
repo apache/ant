@@ -433,6 +433,14 @@
                   substring="${build.tests.resolved}" />
       </or>
     </condition>
+    
+    <condition property="jasper.present">
+      <and>
+        <available classname="org.apache.jasper.compiler.Compiler" />
+        <available classname="org.apache.jasper.JasperException" />
+      </and>
+    </condition>
+    
   </target>
 
 
@@ -1190,6 +1198,9 @@
           <exclude name="${util.package}/DateUtilsTest.java"
                    unless="jdk1.2+" />
 
+          <exclude name="${optional.package}/JspcTest.java"
+                   unless="jasper.present" />
+                   
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
