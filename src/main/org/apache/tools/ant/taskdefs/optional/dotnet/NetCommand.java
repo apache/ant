@@ -202,6 +202,20 @@ public class NetCommand {
     }
 
     /**
+     *  add an argument to a command line; do nothing if the arg is null or
+     *  empty string
+     *
+     *@param  argument  The feature to be added to the Argument attribute
+     */
+    public void addArguments(String[] arguments) {
+        if (arguments != null && arguments.length != 0) {
+            for (int i = 0; i < arguments.length; i++) {
+                addArgument(arguments[i]);
+            }
+        }
+    }
+
+    /**
      *  concatenate two strings together and add them as a single argument,
      *  but only if argument2 is non-null and non-zero length
      *

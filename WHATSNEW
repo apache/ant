@@ -264,6 +264,9 @@ Other changes:
 * <rexec> with a single command should now work with unusal login
   dialogs without special read/write pairs.  Bugzilla Report 26632.
 
+* <csc>'s extraoptions can now contain multiple arguments.
+  Bugzilla Report 23599.
+
 Fixed bugs:
 -----------
 
