@@ -351,7 +351,14 @@ class DefaultObjectConfigurer
     public PropertyConfigurer getProperty( final String name )
         throws NoSuchPropertyException
     {
-        final PropertyConfigurer configurer = (PropertyConfigurer)m_props.get( name );
+        PropertyConfigurer configurer = (PropertyConfigurer)m_props.get( name );
+        if( null != configurer )
+        {
+            return configurer;
+        }
+
+        //Maybe there is a typed adder??
+        configurer = (PropertyConfigurer)m_props.get( "" );
         if( null != configurer )
         {
             return configurer;

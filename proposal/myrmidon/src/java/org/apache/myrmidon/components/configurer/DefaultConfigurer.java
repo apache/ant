@@ -26,6 +26,10 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Class used to configure tasks.
@@ -42,6 +46,9 @@ public class DefaultConfigurer
     ///Converter to use for converting between values
     private MasterConverter m_converter;
 
+    //TypeManager to use to create types in typed adders
+    private TypeManager m_typeManager;
+
     ///Cached object configurers.  This is a map from Class to the
     ///ObjectConfigurer for that class.
     private Map m_configurerCache = new HashMap();
@@ -50,6 +57,7 @@ public class DefaultConfigurer
         throws ComponentException
     {
         m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
+        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
     /**
@@ -262,7 +270,8 @@ public class DefaultConfigurer
         final String name = element.getName();
 
         // Locate the configurer for the child element
-        final PropertyConfigurer childConfigurer = state.getConfigurer().getProperty( name );
+        final PropertyConfigurer childConfigurer =
+            state.getConfigurer().getProperty( name );
 
         // Create & configure the child element
         final Object child =
@@ -270,79 +279,6 @@ public class DefaultConfigurer
 
         // Set the child element
         childConfigurer.addValue( state, child );
-    }
-
-    private Object setupChild( final ConfigurationState state,
-                               final Configuration element,
-                               final Context context,
-                               final PropertyConfigurer childConfigurer )
-        throws ConfigurationException
-    {
-        final String name = element.getName();
-        final Class type = childConfigurer.getType();
-        Object child = childConfigurer.createValue( state );
-
-        if( null == child && Configuration.class == type )
-        {
-            //special case where you have add(Configuration)
-            return element;
-        }
-        else if( null == child )
-        {
-            // Create an instance using the default constructor
-            if( type.isInterface() )
-            {
-                child = createdTypedObject( name, type );
-                configureObject( child, element, context );
-            }
-            else
-            {
-                child = createObject( type );
-                configureObject( child, element, context );
-            }
-        }
-        configureObject( child, element, context );
-        return child;
-    }
-
-    /**
-     * Utility method to create an instance of the
-     * specified type that satisfied supplied interface.
-     */
-    private Object createdTypedObject( final String name,
-                                       final Class type )
-        throws ConfigurationException
-    {
-        try
-        {
-            return type.newInstance();
-        }
-        catch( final Exception e )
-        {
-            final String message =
-                REZ.getString( "create-object.error",
-                               type.getName() );
-            throw new ConfigurationException( message, e );
-        }
-    }
-
-    /**
-     * Utility method to instantiate an instance of the specified class.
-     */
-    private Object createObject( final Class type )
-        throws ConfigurationException
-    {
-        try
-        {
-            return type.newInstance();
-        }
-        catch( final Exception e )
-        {
-            final String message =
-                REZ.getString( "create-object.error",
-                               type.getName() );
-            throw new ConfigurationException( message, e );
-        }
     }
 
     /**
@@ -467,5 +403,97 @@ public class DefaultConfigurer
             m_configurerCache.put( clazz, configurer );
         }
         return configurer;
+    }
+
+    private Object setupChild( final ConfigurationState state,
+                               final Configuration element,
+                               final Context context,
+                               final PropertyConfigurer childConfigurer )
+        throws ConfigurationException
+    {
+        final String name = element.getName();
+        final Class type = childConfigurer.getType();
+        Object child = childConfigurer.createValue( state );
+
+        if( null == child && Configuration.class == type )
+        {
+            //special case where you have add...(Configuration)
+            return element;
+        }
+        else if( null == child )
+        {
+            // Create an instance using the default constructor
+            if( type.isInterface() )
+            {
+                child = createdTypedObject( name, type );
+                configureObject( child, element, context );
+            }
+            else
+            {
+                child = createObject( type );
+                configureObject( child, element, context );
+            }
+        }
+        configureObject( child, element, context );
+        return child;
+    }
+
+    /**
+     * Utility method to create an instance of the
+     * specified type that satisfied supplied interface.
+     */
+    private Object createdTypedObject( final String name,
+                                       final Class type )
+        throws ConfigurationException
+    {
+        final TypeFactory factory = getTypeFactory( type.getName() );
+        try
+        {
+            return factory.create( name );
+        }
+        catch( final Exception e )
+        {
+            final String message =
+                REZ.getString( "create-typed-object.error",
+                               name,
+                               type.getName() );
+            throw new ConfigurationException( message, e );
+        }
+    }
+
+    /**
+     * Utility method to instantiate an instance of the specified class.
+     */
+    private Object createObject( final Class type )
+        throws ConfigurationException
+    {
+        try
+        {
+            return type.newInstance();
+        }
+        catch( final Exception e )
+        {
+            final String message =
+                REZ.getString( "create-object.error",
+                               type.getName() );
+            throw new ConfigurationException( message, e );
+        }
+    }
+
+    /**
+     * Locates a type factory.
+     */
+    protected final TypeFactory getTypeFactory( final String role )
+        throws ConfigurationException
+    {
+        try
+        {
+            return m_typeManager.getFactory( role );
+        }
+        catch( final TypeException te )
+        {
+            final String message = REZ.getString( "no-factory-for-role.error", role );
+            throw new ConfigurationException( message, te );
+        }
     }
 }

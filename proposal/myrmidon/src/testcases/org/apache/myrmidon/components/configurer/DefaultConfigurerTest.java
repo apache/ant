@@ -36,6 +36,7 @@ import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
 /**
@@ -51,6 +52,7 @@ public class DefaultConfigurerTest
 
     private DefaultComponentManager m_componentManager;
     private Configurer m_configurer;
+    private TypeManager m_typeManager;
     private Logger m_logger;
     private DefaultTaskContext m_context;
 
@@ -134,6 +136,8 @@ public class DefaultConfigurerTest
         // Find the configurer
         m_configurer = (Configurer)m_componentManager.lookup( Configurer.ROLE );
 
+        // Find the typeManager
+        m_typeManager = (TypeManager)m_componentManager.lookup( TypeManager.ROLE );
     }
 
     /**
@@ -410,6 +414,85 @@ public class DefaultConfigurerTest
                                                   MyRole2.class.getName() );
             assertSameMessage( message, ce );
         }
+    }
+
+    /**
+     * Tests to see if typed adder works.
+     */
+    public void testTypedAdder()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        final DefaultConfiguration child1 = new DefaultConfiguration( "my-type1", "test" );
+        final DefaultConfiguration child2 = new DefaultConfiguration( "my-type2", "test" );
+        config.addChild( child1 );
+        config.addChild( child2 );
+
+        final ClassLoader loader = getClass().getClassLoader();
+        final DefaultTypeFactory factory = new DefaultTypeFactory( loader );
+        factory.addNameClassMapping( "my-type1", MyType1.class.getName() );
+        factory.addNameClassMapping( "my-type2", MyType2.class.getName() );
+        m_typeManager.registerType( MyRole1.class.getName(), "my-type1", factory );
+        m_typeManager.registerType( MyRole1.class.getName(), "my-type2", factory );
+
+        final ConfigTest6 test = new ConfigTest6();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        final ConfigTest6 expected = new ConfigTest6();
+        expected.add( new MyType1() );
+        expected.add( new MyType2() );
+        assertEquals( expected, test );
+    }
+
+    /**
+     * Tests to see if typed adder works.
+     */
+    public void testTypedConfigAdder()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        final DefaultConfiguration child1 = new DefaultConfiguration( "my-type1", "test" );
+        final DefaultConfiguration child2 = new DefaultConfiguration( "my-type2", "test" );
+        config.addChild( child1 );
+        config.addChild( child2 );
+
+        final ConfigTest7 test = new ConfigTest7();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        final ConfigTest7 expected = new ConfigTest7();
+        expected.add( child1 );
+        expected.add( child2 );
+        assertEquals( expected, test );
+    }
+
+    /**
+     * Tests to see if typed adder works.
+     */
+    public void testConfigAdder()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+        final DefaultConfiguration child1 = new DefaultConfiguration( "config", "test" );
+        final DefaultConfiguration child2 = new DefaultConfiguration( "config", "test" );
+        config.addChild( child1 );
+        config.addChild( child2 );
+
+        final ConfigTest8 test = new ConfigTest8();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        final ConfigTest8 expected = new ConfigTest8();
+        expected.addConfig( child1 );
+        expected.addConfig( child2 );
+        assertEquals( expected, test );
     }
 
     /**
