@@ -25,6 +25,8 @@ Fixed bugs:
 * <style>'s style attribute will be resolved as relative to the
   projects basedir.
 
+* won't try to pass a -bootclasspath flag to javac 1.1 anymore
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
