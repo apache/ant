@@ -6,6 +6,9 @@ Changes that could break older environments:
 
 * Zip.setWhenempty() has changed its signature.
 
+* <style>'s style attribute will be resolved as relative to the
+  projects basedir instead of the basedir attribute of the task.
+
 Fixed bugs:
 -----------
 
@@ -21,9 +24,6 @@ Fixed bugs:
 
 * <antstructure> should create a valid DTD for propertyfile.operation.entry 
   and omit tasks it fails to load.
-
-* <style>'s style attribute will be resolved as relative to the
-  projects basedir.
 
 * won't try to pass a -bootclasspath flag to javac 1.1 anymore
 
