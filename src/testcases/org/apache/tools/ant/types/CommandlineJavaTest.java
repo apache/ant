@@ -92,9 +92,14 @@ public class CommandlineJavaTest extends TestCase {
         assertEquals("no classpath", "junit.textui.TestRunner", s[2]);
         assertEquals("no classpath", 
                      "org.apache.tools.ant.CommandlineJavaTest", s[3]);
+        try {
+            CommandlineJava c2 = (CommandlineJava) c.clone();
+        } catch (NullPointerException ex) {
+            fail("cloning should work without classpath specified");
+        }
 
-        c.createClasspath(project).setLocation(project.resolveFile("lib/core/junit.jar"));
-        c.createClasspath(project).setLocation(project.resolveFile("lib/ant.jar"));
+        c.createClasspath(project).setLocation(project.resolveFile("lib/optional/junit.jar"));
+        c.createClasspath(project).setLocation(project.resolveFile("bootstrap/lib/ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
         assertEquals("with classpath", "java", s[0]);
