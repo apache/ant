@@ -201,7 +201,7 @@ public class Scp extends Task implements LogListener {
             if( failOnError ) {
                 throw new BuildException(e);
             } else {
-                e.printStackTrace();
+                log("Caught exception: " + e.getMessage(), Project.MSG_ERR);
             }
         }
     }
@@ -317,7 +317,7 @@ public class Scp extends Task implements LogListener {
     }
 
     private Directory createDirectory( FileSet set ) {
-        DirectoryScanner scanner = set.getDirectoryScanner( project );
+        DirectoryScanner scanner = set.getDirectoryScanner( getProject() );
         Directory root = new Directory( scanner.getBasedir() );
         String[] files = scanner.getIncludedFiles();
         for (int j = 0; j < files.length; j++) {

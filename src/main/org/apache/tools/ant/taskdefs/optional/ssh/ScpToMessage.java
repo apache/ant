@@ -54,8 +54,9 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.JSchException;
 
 import java.io.*;
 import java.util.*;
@@ -85,7 +86,7 @@ public class ScpToMessage extends AbstractSshMessage {
         this.remotePath = aRemotePath;
     }
 
-    public void execute() throws IOException {
+    public void execute() throws IOException, JSchException {
         if( directoryList != null ) {
             doMultipleTransfer();
         }
@@ -95,7 +96,7 @@ public class ScpToMessage extends AbstractSshMessage {
         log("done.\n");
     }
 
-    private void doSingleTransfer() throws IOException {
+    private void doSingleTransfer() throws IOException, JSchException {
         String cmd = "scp -t " + remotePath;
         Channel channel = openExecChannel( cmd );
         try {
@@ -114,7 +115,7 @@ public class ScpToMessage extends AbstractSshMessage {
         }
     }
 
-    private void doMultipleTransfer() throws IOException {
+    private void doMultipleTransfer() throws IOException, JSchException {
         Channel channel = openExecChannel( "scp -d -t " + remotePath );
         try {
             OutputStream out = channel.getOutputStream();

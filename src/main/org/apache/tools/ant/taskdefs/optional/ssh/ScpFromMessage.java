@@ -76,7 +76,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         this.isRecursive = recursive;
     }
 
-    public void execute() throws IOException {
+    public void execute() throws IOException, JSchException {
         String command = "scp -f ";
         if( isRecursive )
             command += "-r ";

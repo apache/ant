@@ -54,9 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -76,7 +77,7 @@ public abstract class AbstractSshMessage {
         this.session = session;
     }
 
-    protected Channel openExecChannel( String command ) {
+    protected Channel openExecChannel( String command ) throws JSchException {
         ChannelExec channel = (ChannelExec) session.openChannel( "exec" );
         channel.setCommand( command );
 
@@ -97,7 +98,7 @@ public abstract class AbstractSshMessage {
         } while (b > 0);
     }
 
-    public abstract void execute() throws IOException;
+    public abstract void execute() throws IOException, JSchException;
 
     public void setLogListener( LogListener aListener ) {
         listener = aListener;
