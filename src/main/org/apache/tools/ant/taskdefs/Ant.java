@@ -31,6 +31,7 @@ import java.util.HashSet;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Executor;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
@@ -64,7 +65,7 @@ import org.apache.tools.ant.util.FileUtils;
 public class Ant extends Task {
 
     /** Target Executor */
-    private static SingleCheckExecutor executor = new SingleCheckExecutor();
+    private static final Executor EXECUTOR = new SingleCheckExecutor();
 
     /** the basedir where is executed the build file */
     private File dir = null;
@@ -398,7 +399,7 @@ public class Ant extends Task {
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.fireSubBuildStarted();
-                    executor.executeTargets(newProject,
+                    EXECUTOR.executeTargets(newProject,
                         (String[]) (locals.toArray(new String[locals.size()])));
 
                 } catch (BuildException ex) {
