@@ -150,7 +150,7 @@ public abstract class MSVSS extends Task {
             projectPath = vssPath;
         }
 
-        if (projectPath.charAt(0) == '$') {
+        if (projectPath.startsWith(PROJECT_PREFIX)) {
             m_vssPath = projectPath;
         } else {
             m_vssPath = PROJECT_PREFIX + projectPath;
