@@ -77,6 +77,21 @@
         </table>
       </subsection>
 
+      <subsection name="Automating the build and test process">
+        <p>This article demonstrates an approach to the automated build and test process. Working with Ant 1.3 and the JUnit test framework, it shows how to automate a process that captures pertinent information about each test suite run, generates an attractive report, and e-mails the report.</p>
+
+        <table>
+          <tr>
+            <th>Author:</th>
+            <td><a href="mailto:erik@hatcher.net">Erik Hatcher</a></td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.ibm.com/developerworks/java/library/j-junitmail/">http://www.ibm.com/developerworks/java/library/j-junitmail/</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Incremental development with Ant and JUnit">
         <p>This article explores the benefits of unit testing with Ant and
         JUnit, detailing how to develop automated unit tests and integrate them
