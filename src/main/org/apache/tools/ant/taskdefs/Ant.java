@@ -68,6 +68,7 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
@@ -363,7 +364,10 @@ public class Ant extends Task {
             if (newProject.getProperty("ant.file")
                 .equals(getProject().getProperty("ant.file"))
                 && getOwningTarget() != null) {
-                if (getOwningTarget().getName().equals("")) {
+
+                String owningTargetName = getOwningTarget().getName();
+
+                if (owningTargetName.equals("")) {
                     if (getTaskName().equals("antcall")) {
                         throw new BuildException("antcall must not be used at"
                                                  + " the top level.");
@@ -372,9 +376,20 @@ public class Ant extends Task {
                                                  + " top level must not invoke"
                                                  + " its own build file.");
                     }
-                } else if (getOwningTarget().getName().equals(target)) {
+                } else if (owningTargetName.equals(target)) {
                     throw new BuildException(getTaskName() + " task calling "
                                              + "its own parent target.");
+                } else {
+                    Target other = 
+                        (Target) getProject().getTargets().get(target);
+                    if (other != null && other.dependsOn(owningTargetName)) {
+                        throw new BuildException(getTaskName() 
+                                                 + " task calling a target"
+                                                 + " that depends on"
+                                                 + " its parent target \'"
+                                                 + owningTargetName
+                                                 + "\'.");
+                    }
                 }
             }
 

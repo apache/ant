@@ -162,4 +162,11 @@
     <echo>test2 is ${test2}</echo>
     <echo>test1.x is ${test1.x}</echo>
   </target>
+
+  <target name="infinite-loop-via-depends">
+    <antcall target="dependent"/>
+  </target>
+
+  <target name="middleman" depends="infinite-loop-via-depends"/>
+  <target name="dependent" depends="middleman"/>
 </project>

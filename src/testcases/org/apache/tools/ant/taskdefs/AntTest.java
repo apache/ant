@@ -302,6 +302,10 @@ public class AntTest extends BuildFileTest {
         assertTrue(getLog().indexOf("test1.x is 1") > -1);
     }
 
+    public void testInfiniteLoopViaDepends() {
+        expectBuildException("infinite-loop-via-depends", "recursive call");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;

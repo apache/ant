@@ -1589,8 +1589,7 @@ public class Project {
      *             Must not be <code>null</code>.
      * @param targets A map of names to targets (String to Target).
      *                Must not be <code>null</code>.
-     * @return a vector of strings with the names of the targets in
-     *         sorted order.
+     * @return a vector of Target objects in sorted order.
      * @exception BuildException if there is a cyclic dependency among the
      *                           targets, or if a named target does not exist.
      */

@@ -256,6 +256,22 @@ public class Target implements TaskContainer {
     }
 
     /**
+     * Does this target depend on the named target?
+     *
+     * @since Ant 1.6
+     */
+    public boolean dependsOn(String other) {
+        if (getProject() != null) {
+            List l = getProject().topoSort(getName(),
+                                           getProject().getTargets());
+            int myIdx = l.indexOf(this);
+            int otherIdx = l.indexOf(getProject().getTargets().get(other));
+            return myIdx >= otherIdx;
+        }
+        return false;
+    }
+
+    /**
      * Sets the "if" condition to test on execution. This is the
      * name of a property to test for existence - if the property
      * is not set, the task will not execute. The property goes
