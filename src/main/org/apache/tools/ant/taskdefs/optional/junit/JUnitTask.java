@@ -668,8 +668,10 @@ public class JUnitTask extends Task {
 
         // if there is an error/failure and that it should halt, stop
         // everything otherwise just log a statement
-        boolean errorOccurredHere = exitValue == JUnitTestRunner.ERRORS;
-        boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
+        boolean errorOccurredHere = 
+            exitValue == JUnitTestRunner.ERRORS || wasKilled;
+        boolean failureOccurredHere = 
+            exitValue != JUnitTestRunner.SUCCESS || wasKilled;
         if (errorOccurredHere || failureOccurredHere) {
             if ((errorOccurredHere && test.getHaltonerror())
                 || (failureOccurredHere && test.getHaltonfailure())) {
