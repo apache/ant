@@ -104,8 +104,8 @@
   <target name="main" depends="jar">
      <mkdir dir="${bin.dir}"/>
      <copydir src="${src.bin.dir}" dest="${bin.dir}"/>
-     <chmod perm="+x" src="${bin.dir}/ant"/>
-     <chmod perm="+x" src="${bin.dir}/antRun"/>
+     <chmod perm="+x" file="${bin.dir}/ant"/>
+     <chmod perm="+x" file="${bin.dir}/antRun"/>
      <fixcrlf srcdir="${bin.dir}" includes="ant,antRun" cr="remove"/>
      <fixcrlf srcdir="${bin.dir}" includes="*.bat" cr="add"/>
   </target>
@@ -145,8 +145,8 @@
      <copydir src="${docs.dir}" dest="${ant.dist.dir}/docs"/>
      <copydir src="${build.javadocs}" dest="${ant.dist.dir}/docs/api"/>
 
-     <chmod perm="+x" src="${ant.dist.dir}/bin/ant"/>
-     <chmod perm="+x" src="${ant.dist.dir}/bin/antRun"/>
+     <chmod perm="+x" file="${ant.dist.dir}/bin/ant"/>
+     <chmod perm="+x" file="${ant.dist.dir}/bin/antRun"/>
 
      <copyfile src="README" dest="${ant.dist.dir}/README"/>
      <copyfile src="TODO" dest="${ant.dist.dir}/TODO"/>
