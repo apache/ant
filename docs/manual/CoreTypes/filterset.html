@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0066)http://nagoya.apache.org/bugzilla/showattachment.cgi?attach_id=130 -->
+<HTML><HEAD><TITLE>Ant User Manual</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252">
+<META http-equiv=Content-Language content=en-us>
+<META content="MSHTML 5.50.4522.1800" name=GENERATOR></HEAD>
+<BODY>
+<H2><A name=fileset>Filterset</A></H2>
+<P>FilterSets are groups of filters. Filters can be defined as token value pairs 
+or be read in from a file. FilterSets can appear inside tasks that support this 
+feature or at the same level as <CODE>target</CODE> – i.e., as children of 
+<CODE>project</CODE>.</P>In addition, Filtersets can have begintoken and/or 
+endtoken attributes to define what to match. <BR>Filtersets are used for doing 
+replacements in tasks like copy etc.<BR>
+<H2>Filterset</H2>
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TBODY>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top><B>Default</B></TD>
+    <TD vAlign=top align=middle><B>Required</B></TD></TR>
+  <TR>
+    <TD vAlign=top>starttoken</TD>
+    <TD vAlign=top>The string marking the beginning of a token. eg 
+      <STRONG>@</STRONG>Date@</TD>
+    <TD vAlign=top>@</TD>
+    <TD vAlign=top align=middle>No</TD></TR>
+  <TR>
+    <TD vAlign=top>endtoken</TD>
+    <TD vAlign=top>The string marking the end of a token. eg 
+      @Date<STRONG>@</STRONG></TD>
+    <TD vAlign=top>@</TD>
+    <TD vAlign=top align=middle>No</TD></TR></TBODY></TABLE>
+<H2>Filter</H2>
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TBODY>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top align=middle><B>Required</B></TD></TR>
+  <TR>
+    <TD vAlign=top>token</TD>
+    <TD vAlign=top>The token to replace eg @<STRONG>Date</STRONG>@</TD>
+    <TD vAlign=top align=middle>Yes</TD></TR>
+  <TR>
+    <TD vAlign=top>value</TD>
+    <TD vAlign=top>The value to replace it with eg Thursday, April 26, 2001</TD>
+    <TD vAlign=top align=middle>Yes</TD></TR></TBODY></TABLE>
+<H2>Filtersfile</H2>
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TBODY>
+  <TR>
+    <TD vAlign=top><B>Attribute</B></TD>
+    <TD vAlign=top><B>Description</B></TD>
+    <TD vAlign=top align=middle><B>Required</B></TD></TR>
+  <TR>
+    <TD vAlign=top>file</TD>
+    <TD vAlign=top>The file to load tokens from should be a properties file of 
+      name value pairs.</TD>
+    <TD vAlign=top align=middle>Yes</TD></TR></TBODY></TABLE>
+<H4>Examples</H4>
+<BLOCKQUOTE><PRE>You are copying the version.txt file to the dist directory from the build directory 
+but wish to replace the token @DATE@ with todays date.
+
+&lt;copy file="${build.home}/version.txt" toFile="${dist.home}/version.txt"&lt;
+  &lt;filterset&gt;
+    &lt;filter token="DATE" value="${DATE}"/&gt;
+  &lt;/filterset&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+<BLOCKQUOTE><PRE>You are copying the version.txt file to the dist directory from the build directory 
+but wish to replace the token %DATE* with todays date.
+
+&lt;copy file="${build.home}/version.txt" toFile="${dist.home}/version.txt"&gt;
+  &lt;filterset begintoken="%" endtoken="*"&gt;
+    &lt;filter token="DATE" value="${DATE}"/&gt;
+  &lt;/filterset&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+<BLOCKQUOTE><PRE>Copy all the docs but change all dates and appropriate notices as stored in a file.
+
+&lt;copy toDir="${dist.home}/docs" &gt;
+  &lt;fileset dir="${build.home}/docs"&gt;
+    &lt;include name="**/*.html"&gt;
+  &lt;/fileset&gt;
+  &lt;filterset begintoken="%" endtoken="*"&gt;
+    &lt;filter token="DATE" value="${DATE}"/&gt;
+    &lt;filtersfile file="${user.home}/dist.properties"/&gt;
+  &lt;/filterset&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+<HR>
+
+<P align=center>Copyright © 2000,2001 Apache Software Foundation. All rights 
+Reserved.</P></BODY></HTML>
