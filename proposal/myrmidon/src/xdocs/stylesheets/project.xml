@@ -13,6 +13,7 @@
         <menu name="User Guide">
             <item name="Build file" href="/buildfile.html"/>
             <item name="Virtual File System" href="/vfs.html"/>
+            <item name="Ant1 Compatibility Layer" href="/ant1compat.html"/>
         </menu>
 
         <menu name="Extending Ant">

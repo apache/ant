@@ -53,11 +53,30 @@
             </subsection>
 
             <subsection name="Ant 1.x Compatibility">
-
-                <p>There are 2 parts to this broad topic:  Allow Ant 1.x build scripts to be
-                executed by Myrmidon, and allow Ant 1.x tasks to be executed unmodified
-                by Myrmidon.</p>
-
+                <p>The Ant1 Compatibility layer is still in early stages of development.
+                </p>
+                <ul>
+                    <li>Get a version of <code>&lt;ant&gt;</code> and
+                    <code>&lt;antcall&gt;</code> working.</li>
+                    <li>
+                    Provide hooks between Ant1 references and Myrmidon properties.
+                    May use converters for adapting Ant2 objects (like Ant2
+                    <code>&lt;path&gt;</code> or <code>&lt;fileset&gt;</code>)
+                    as Ant1 types.
+                    </li>
+                    <li>Handle differences between Ant1 if/unless on targets,
+                    and Myrmidon &lt;if&gt; task.</li>
+                    <li>
+                    Write tests for the various bits that rely on Myrmidon
+                    functionality:
+                    <ul>
+                        <li>if/unless on targets: check that behaviour complies with Ant1</li>
+                        <li>Make sure properties are shared between Ant1 and Myrmidon tasks.</li>
+                        <li>Make sure that &lt;ant1.property&gt; behaves as per Ant1</li>
+                    </ul>
+                    </li>
+                    <li>Get GUMP runs going using Myrmidon.</li>
+                </ul>
             </subsection>
 
             <subsection name="Virtual File System">

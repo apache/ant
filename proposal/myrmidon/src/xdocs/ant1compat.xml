@@ -1,0 +1,112 @@
+<document>
+
+    <properties>
+        <author email="darrell at apache dot org">Darrell DeBoer</author>
+        <title>Ant1 Compatibitlity Layer</title>
+    </properties>
+
+    <body>
+
+        <section name="Overview">
+            <p>
+            The Myrmidon-Ant1 Compatibility layer works by reusing most of the Ant1 code,
+            with tasks and datatypes
+            being prefixed with "ant1." in build files. Almost all of the main Ant1 tree
+            is included in the compatibility layer antlib. To insulate from changes in
+            the Ant1 tree, Ant1 class files are extracted from a jar, rather than
+            being compiled from scratch.
+            </p>
+            <p>
+            Here's how it works: The first time an Ant1 task is encountered, an Ant1
+            project is created, and stored in the TaskContext under the name "ant1.project".
+            The Ant1 versions of Task and Project have been extended, overriding core behaviour,
+            with Myrmidon-specific behaviour.
+            </p>
+            <p>
+            The updated version of Task implements Configurable, receiving it's
+            complete Task Model, and actually setting/adding/creating attributes
+            with the help of the IntrospectionHelper. This process is designed to
+            mimic the Ant1 configuration policy, although not <i>all</i> of the
+            subtle variations of configuration present in Ant1 are handled.
+            </p>
+            <p>
+            The updated version of Project will provide hooks into the Myrmidon TaskContext,
+            such as:</p>
+            <ul>
+            <li>logging (done)</li>
+            <li>properties (done)</li>
+            <li>references (not yet done)</li>
+            <li>Task defined by &lt;taskdef&gt; (done)</li>
+            </ul>
+
+            <p>
+            So at present, properties declared in Ant2 tasks are available to all Ant1 tasks,
+            and vice-versa. However, while a <code>&lt;ant1.path&gt;</code> reference works fine
+            in other <code>&lt;ant1.XXX&gt;</code>
+            tasks, it's not visible to Ant2 tasks in the same build, and vice-versa.
+            </p>
+
+            <p>
+            The <code>&lt;taskdef&gt;</code> task works ok, registering the task with the TypeManager using the
+            "ant1." prefix. Only a couple of DataTypes (Path and Patternset) are working
+            as top-level types, but this should be just a matter of adding references to
+            the Ant1 version of TypeInstanceTask in the descriptor.
+            </p>
+
+            <p>
+            The TransformingProjectBuilder (which is now the default builder for files
+            of type ".xml", applies a transformation stylesheet to the file, prefixing select
+            tasks (all at present) with "ant.". If a version attribute is encountered, the
+            file is not transformed
+            </p>
+        </section>
+
+        <section name="Using the compatibility layer">
+            <subsection name="Using Ant1 tasks in a Myrmidon build file">
+                <p>
+                If you have a Myrmidon build file (eg with <code>version="2.0"</code>
+                on the project element, you can use Ant1 tasks and datatypes by using
+                the "ant1." suffix on the regular element name.
+                Virtually <i>all</i> tasks and datatypes from Ant1.4.1 are available
+                in this way.
+                </p>
+                <p>
+                When declaring a new task using the <code>&lt;ant1.taskdef&gt;</code>
+                task, <i>don't</i> prepend "ant1." to the taskname. This will be
+                done automatically by the taskdef task. However, you will need
+                to use the "ant1." prefix in all uses of that task.
+                </p>
+            </subsection>
+
+            <subsection name="Using an existing Ant1 build file">
+                <p>
+                Myrmidon will automatically handle Ant1 build files using the
+                Ant1 Compatibility layer. So, using an Ant1 build
+                file with Myrmidon should be as simple as:</p>
+                <pre>[myrmidon-command] -f ant1-build-file.xml</pre>
+                <p>
+                This works as follows: When Myrmidon encounters a ".xml" build file which does not have a
+                <code>version</code> attribute on the top-level <code>project</code>
+                element, it assumes that it is an Ant1 build file. So all tasks are
+                interpreted as though they are prefixed with the "ant." name prefix.
+                </p>
+
+                Myrmidon will automatically attempt to upgrade any ".xml" build file that
+            </subsection>
+        </section>
+
+        <section name="Building the compatibility layer">
+            <p>Before building the Ant1 Compatibility layer, you need to build
+            Myrmidon, running the <code>dist-lite</code> target of the main build.
+            See <a href="user.html#Building Myrmidon">the build instructions</a>
+            for more details.</p>
+
+            <p>To build the compatibility layer, simply execute:</p>
+            <pre>ant -f ant1compat.xml</pre>
+            <p>from within the root directory of the Myrmidon source tree.</p>
+
+        </section>
+
+    </body>
+</document>
+
