@@ -57,74 +57,29 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import java.io.File;
 import java.util.*;
 import java.text.*;
 /**
  * Task to perform HISTORY commands to Microsoft Visual Source Safe.
- * <p>
- * The following attributes are interpreted:
- * <table border="1">
- *   <tr>
- *     <th>Attribute</th>
- *     <th>Values</th>
- *     <th>Required</th>
- *   </tr>
- *   <tr>
- *      <td>login</td>
- *      <td>username,password</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>vsspath</td>
- *      <td>SourceSafe path</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>ssdir</td>
- *      <td>directory where <code>ss.exe</code> resides. By default the task
- *      expects it to be in the PATH.</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>startdate</td>
- *      <td>Start date for comparison</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>outputfilename</td>
- *      <td>File to write the diff.</td>
- *      <td>Yes</td>
- *   </tr>
- *   <tr>
- *      <td>numdays</td>
- *      <td>The number of days for comparison. The default value is -2 days.</td>
- *      <td>No</td>
- *   </tr>
- *   <tr>
- *      <td>recursive</td>
- *      <td>true or false</td>
- *      <td>No</td>
- *   <tr>
- *   <tr>
- *      <td>style</td>
- *      <td>brief or codediff or nofile. The default is brief.</td>
- *      <td>No</td>
- *   <tr>
- * </table>
  *
  * @author Balazs Fejes 2
+ * @author Glenn_Twiggs@bmc.com
  */
 
 public class MSVSSHISTORY extends MSVSS {
 
     private String m_FromDate = null;
     private String m_ToDate = null;
+    private DateFormat m_DateFormat =
+        DateFormat.getDateInstance(DateFormat.SHORT);
+    
     private String m_FromLabel = null;
     private String m_ToLabel = null;
     private String m_OutputFileName = null;
     private String m_User = null;
     private int m_NumDays = Integer.MIN_VALUE;
-    private String m_Style = "-B";
+    private String m_Style = "";
     private boolean m_Recursive = false;
     
     public static final String VALUE_FROMDATE = "~d";
@@ -132,7 +87,7 @@ public class MSVSSHISTORY extends MSVSS {
 
     public static final String FLAG_OUTPUT = "-O";
     public static final String FLAG_USER = "-U";
-   
+
     /**
      * Executes the task.
      * <p>
@@ -163,9 +118,6 @@ public class MSVSSHISTORY extends MSVSS {
         // -I-
         commandLine.createArgument().setValue("-I-");  // ignore all errors
 
-        // -R
-        getRecursiveCommand(commandLine);
-
         // -V
         // Label an existing file or project version
         getVersionDateCommand(commandLine);
@@ -177,7 +129,9 @@ public class MSVSSHISTORY extends MSVSS {
         }
 
         // -B / -D / -F-
-        commandLine.createArgument().setValue(m_Style);
+        if (m_Style.length() > 0) {
+            commandLine.createArgument().setValue(m_Style);
+        }
 
         // -Y
         getLoginCommand(commandLine);
@@ -251,11 +205,20 @@ public class MSVSSHISTORY extends MSVSS {
     /**
      * Set the output file name for SourceSafe output
      */
-    public void setOutputfilename(String outfile) {
-        if ( outfile.equals("") || outfile == null ) {
+    public void setOutput(File outfile) {
+        if ( outfile == null ) {
             m_OutputFileName = null;
         } else {
-            m_OutputFileName = outfile;
+            m_OutputFileName = outfile.getAbsolutePath();
+        }
+    }
+
+    /**
+     * Set the Start Date for the Comparison of two versions in SourceSafe History
+     */
+    public void setDateFormat(String dateFormat) {
+        if ( !(dateFormat.equals("") || dateFormat == null) ) {
+            m_DateFormat = new SimpleDateFormat(dateFormat);
         }
     }
 
@@ -344,11 +307,10 @@ public class MSVSSHISTORY extends MSVSS {
         String toDate = null;
         Date currdate = new Date();
         Calendar calend= new GregorianCalendar();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-        currdate = df.parse(fromDate); 
+        currdate = m_DateFormat.parse(fromDate); 
         calend.setTime(currdate);
         calend.add(Calendar.DATE, numDays);
-        toDate = df.format(calend.getTime());
+        toDate = m_DateFormat.format(calend.getTime());
         return toDate;
     }
 
@@ -385,6 +347,7 @@ public class MSVSSHISTORY extends MSVSS {
      * <li>brief:    -B Display a brief history. 
      * <li>codediff: -D Display line-by-line file changes. 
      * <li>nofile:   -F- Do not display individual file updates in the project history. 
+     * <li>default:  No option specified. Display in Source Safe's default format.
      * </ul>
      */
     public void setStyle(BriefCodediffNofile attr) {
@@ -393,15 +356,18 @@ public class MSVSSHISTORY extends MSVSS {
             m_Style = "-B";
         } else if (option.equals("codediff")) {
             m_Style = "-D";
-        } else {
-            // must be "nofile"
+        } else if (option.equals("default")) {
+            m_Style = "";
+        } else if (option.equals("nofile")) {
             m_Style = "-F-";
+        } else {
+            throw new BuildException("Style " + attr + " unknown.");
         }
     }
 
     public static class BriefCodediffNofile extends EnumeratedAttribute {
        public String[] getValues() {
-           return new String[] {"brief", "codediff", "nofile"};
+           return new String[] {"brief", "codediff", "nofile", "default"};
        }
    }
 
