@@ -236,7 +236,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Flag, default false, to only generate the deployment 
+     * Flag, default false, to only generate the deployment
      * code, do not run RMIC or Javac
      *
      * @param codegen option
@@ -247,7 +247,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Flag, default true, to only output error messages. 
+     * Flag, default true, to only output error messages.
      *
      * @param quiet option
      */
@@ -279,7 +279,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**
      * Flag to disable informational messages; optional, default false.
      *
-     * @param noinfom 
+     * @param noinfom
      */
     public void setNoinform(boolean noinfom) {
         this.noinform = noinform;
@@ -300,8 +300,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *
      * @param options
      */
-    public void setRmicoptions(String options) { 
-        this.rmicOptions = options; 
+    public void setRmicoptions(String options) {
+        this.rmicOptions = options;
     }
 
     /**
@@ -315,7 +315,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * The compiler (switch <code>-compiler</code>) to use 
+     * The compiler (switch <code>-compiler</code>) to use
      */
     public void setCompiler(String compiler) {
         this.compiler = compiler;
@@ -922,7 +922,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
             lookupPath.append(classpath);
         }
 
-        return new AntClassLoader(getTask().getProject(), lookupPath);
+        return getTask().getProject().createClassLoader(lookupPath);
     }
 }
 

@@ -382,7 +382,7 @@ public abstract class JDBCTask extends Task {
                         log(
                                 "Loading " + driver + " using AntClassLoader with classpath " + classpath,
                                 Project.MSG_VERBOSE);
-                        loader = new AntClassLoader(getProject(), classpath);
+                        loader = getProject().createClassLoader(classpath);
                         if (caching) {
                             loaderMap.put(driver, loader);
                         }

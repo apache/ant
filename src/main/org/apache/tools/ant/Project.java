@@ -68,6 +68,7 @@ import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Description;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.WeakishReference;
@@ -275,6 +276,34 @@ public class Project {
         }
 
         setSystemProperties();
+    }
+
+    private AntClassLoader createClassLoader() {
+        AntClassLoader loader = null;
+        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            try {
+                // 1.2+ - create advanced helper dynamically
+                Class loaderClass
+                    = Class.forName("org.apache.tools.ant.loader.AntClassLoader2");
+                loader = (AntClassLoader) loaderClass.newInstance();
+            } catch (Exception e) {
+                    log("Unable to create Class Loader: "
+                        + e.getMessage(), Project.MSG_DEBUG);
+            }
+        }
+
+        if (loader == null) {
+            loader = new AntClassLoader();
+        }
+
+        loader.setProject(this);
+        return loader;
+    }
+
+    public AntClassLoader createClassLoader(Path path) {
+        AntClassLoader loader = createClassLoader();
+        loader.setClassPath(path);
+        return loader;
     }
 
     /**

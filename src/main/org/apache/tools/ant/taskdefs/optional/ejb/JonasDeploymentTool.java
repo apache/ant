@@ -112,7 +112,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
 
     /** GenIC class name (JOnAS 2.5) */
     protected static final String GENIC_CLASS =
-	"org.objectweb.jonas_ejb.genic.GenIC";
+    "org.objectweb.jonas_ejb.genic.GenIC";
 
     /** Old GenIC class name (JOnAS 2.4.x). */
     protected static final String OLD_GENIC_CLASS_1 =
@@ -185,7 +185,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
 
     /**
      * <code>true</code> if the GenIC call must be verbose. The default
-     * is <code>false</code>. 
+     * is <code>false</code>.
      */
     private boolean verbose = false;
 
@@ -202,12 +202,12 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     /**
      * <code>true</code> if the generic JAR file used as input to GenIC must be
      * retained. The default is <code>false</code>.
-     */    
+     */
     private boolean keepgeneric = false;
 
     /** Stores the suffix for the JOnAS JAR file. The default is '.jar'. */
     private String suffix = ".jar";
-   
+
     /**
      *  ORB to use (RMI, JEREMIE or DAVID). If omitted, it defaults to the one
      *  present in classpath. If specified, the corresponding JOnAS JAR is
@@ -215,7 +215,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      */
     private String orb;
 
-    /** <code>true</code> if GenIC must not be run on the EJB JAR. The default is <code>false</code>. */    
+    /** <code>true</code> if GenIC must not be run on the EJB JAR. The default is <code>false</code>. */
     private boolean nogenic = false;
 
     /* -------------------- */
@@ -309,7 +309,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Set the JOnAS root directory.
-     * 
+     *
      * @param aFile the JOnAS root directory.
      */
     public void setJonasroot(File aFile) {
@@ -357,46 +357,46 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     /* ------------- */
 
     public void processDescriptor(String aDescriptorName, SAXParser saxParser) {
-	
+
         descriptorName = aDescriptorName;
- 
+
         log("JOnAS Deployment Tool processing: " + descriptorName,
             Project.MSG_VERBOSE);
 
         super.processDescriptor(descriptorName, saxParser);
 
-	if ( outputdir != null ) {
-	    // the method deleteOnExit() do not work because the directory is not empty	     
-	    log("Deleting temp output directory '" + outputdir + "'.", Project.MSG_VERBOSE);
-	    deleteAllFiles(outputdir);
-	}
+        if ( outputdir != null ) {
+            // the method deleteOnExit() do not work because the directory is not empty
+            log("Deleting temp output directory '" + outputdir + "'.", Project.MSG_VERBOSE);
+            deleteAllFiles(outputdir);
+        }
     }
 
-    protected void writeJar(String baseName, File jarfile, Hashtable ejbFiles, String publicId) 
-	throws BuildException {
+    protected void writeJar(String baseName, File jarfile, Hashtable ejbFiles, String publicId)
+    throws BuildException {
 
-	// create the generic jar first
-	File genericJarFile = super.getVendorOutputJarFile(baseName);	
-	super.writeJar(baseName, genericJarFile, ejbFiles, publicId);
-	     
-	// GenIC call on generic jar
-	addGenICGeneratedFiles(genericJarFile, ejbFiles);
-
-	// create the real jar
-	super.writeJar(baseName, getVendorOutputJarFile(baseName), ejbFiles, publicId);
-
-	if ( !keepgeneric ) {
-	    log("Deleting generic JAR " + genericJarFile.toString(), Project.MSG_VERBOSE);
-	    genericJarFile.delete();	     
-	}
+        // create the generic jar first
+        File genericJarFile = super.getVendorOutputJarFile(baseName);
+        super.writeJar(baseName, genericJarFile, ejbFiles, publicId);
+    
+        // GenIC call on generic jar
+        addGenICGeneratedFiles(genericJarFile, ejbFiles);
+    
+        // create the real jar
+        super.writeJar(baseName, getVendorOutputJarFile(baseName), ejbFiles, publicId);
+    
+        if ( !keepgeneric ) {
+            log("Deleting generic JAR " + genericJarFile.toString(), Project.MSG_VERBOSE);
+            genericJarFile.delete();
+        }
     }
 
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
-	// JOnAS-specific descriptor deployment
-	jonasDescriptorName = getJonasDescriptorName();
+    // JOnAS-specific descriptor deployment
+    jonasDescriptorName = getJonasDescriptorName();
         File jonasDD = new File(getConfig().descriptorDir, jonasDescriptorName);
- 
+
         if ( jonasDD.exists() ) {
             ejbFiles.put(META_DIR + JONAS_DD, jonasDD);
         } else {
@@ -422,14 +422,14 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         // descriptorName = <path><basename><basenameterminator><remainder>
         // examples = /org/objectweb/fooAppli/foo/Foo-ejb-jar.xml
         // examples = /org/objectweb/fooAppli/foo/Foo.xml (JOnAS convention)
- 
+
         String jonasDescriptorName; // JOnAS-specific DD
         boolean jonasConvention = false; // true if the JOnAS convention is used for the DD
         String path;            // Directory path of the EJB descriptor
         String fileName;        // EJB descriptor file name
         String baseName;        // Filename appearing before name terminator
         String remainder;       // Filename appearing after the name terminator
- 
+
         int startOfFileName = descriptorName.lastIndexOf(File.separatorChar);
         if ( startOfFileName != -1 ) {
             // extract path info
@@ -440,18 +440,18 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
             path = "";
             fileName = descriptorName;
         }
- 
+
         if ( fileName.startsWith(EJB_DD) )
             return path + JONAS_DD;
 
         int endOfBaseName = descriptorName.indexOf(getConfig().baseNameTerminator, startOfFileName);
- 
+
         /*
          * Check for the odd case where the terminator and/or filename
          * extension aren't found.  These will ensure "jonas-" appears at the
          * end of the name and before the '.' (if present).
          */
-        if ( endOfBaseName < 0 ) { 
+        if ( endOfBaseName < 0 ) {
             // baseNameTerminator not found: the descriptor use the
             // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
             // not [Foo<baseNameTerminator>-ejb-jar.xml,
@@ -461,22 +461,22 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
                 // no . found
                 endOfBaseName = descriptorName.length() - 1;
             }
- 
+
             jonasConvention = true;
         }
 
         baseName = descriptorName.substring(startOfFileName + 1, endOfBaseName + 1);
         remainder = descriptorName.substring(endOfBaseName + 1);
- 
+
         if ( jonasConvention ) {
             jonasDescriptorName = path + "jonas-" + baseName + ".xml";
         } else {
             jonasDescriptorName = path + baseName + "jonas-" + remainder;
         }
- 
+
         log("Standard EJB descriptor name: " + descriptorName, Project.MSG_VERBOSE);
         log("JOnAS-specific descriptor name: " + jonasDescriptorName, Project.MSG_VERBOSE);
- 
+
         return jonasDescriptorName;
     }
 
@@ -489,11 +489,11 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
             // try to find JOnAS specific convention name
             if ( descriptorFileName.indexOf(getConfig().baseNameTerminator) == -1 ) {
 
-		// baseNameTerminator not found: the descriptor use the
-		// JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
-		// not [Foo<baseNameTerminator>-ejb-jar.xml,
-		// Foo<baseNameTerminator>-jonas-ejb-jar.xml].
-		
+                // baseNameTerminator not found: the descriptor use the
+                // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
+                // not [Foo<baseNameTerminator>-ejb-jar.xml,
+                // Foo<baseNameTerminator>-jonas-ejb-jar.xml].
+
                 String aCanonicalDescriptor = descriptorFileName.replace('\\', '/');
                 int lastSeparatorIndex = aCanonicalDescriptor.lastIndexOf('/');
                 int endOfBaseName;
@@ -514,22 +514,22 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
             // else get standard baseName
             baseName = super.getJarBaseName(descriptorFileName);
         }
-	
-        log("JAR base name: " + baseName, Project.MSG_VERBOSE);	
+
+        log("JAR base name: " + baseName, Project.MSG_VERBOSE);
 
         return baseName;
     }
 
     protected void registerKnownDTDs(DescriptorHandler handler) {
- 	handler.registerDTD(EJB_JAR_1_1_PUBLIC_ID, 
-			    jonasroot + File.separator + "xml" + File.separator + EJB_JAR_1_1_DTD);
- 	handler.registerDTD(EJB_JAR_2_0_PUBLIC_ID, 
-			    jonasroot + File.separator + "xml" + File.separator + EJB_JAR_2_0_DTD);
-
- 	handler.registerDTD(JONAS_EJB_JAR_2_4_PUBLIC_ID, 
-			    jonasroot + File.separator + "xml" + File.separator + JONAS_EJB_JAR_2_4_DTD);
- 	handler.registerDTD(JONAS_EJB_JAR_2_5_PUBLIC_ID, 
-			    jonasroot + File.separator + "xml" + File.separator + JONAS_EJB_JAR_2_5_DTD);
+        handler.registerDTD(EJB_JAR_1_1_PUBLIC_ID,
+                    jonasroot + File.separator + "xml" + File.separator + EJB_JAR_1_1_DTD);
+        handler.registerDTD(EJB_JAR_2_0_PUBLIC_ID,
+                    jonasroot + File.separator + "xml" + File.separator + EJB_JAR_2_0_DTD);
+    
+        handler.registerDTD(JONAS_EJB_JAR_2_4_PUBLIC_ID,
+                    jonasroot + File.separator + "xml" + File.separator + JONAS_EJB_JAR_2_4_DTD);
+        handler.registerDTD(JONAS_EJB_JAR_2_5_PUBLIC_ID,
+                    jonasroot + File.separator + "xml" + File.separator + JONAS_EJB_JAR_2_5_DTD);
     }
 
     /**
@@ -539,154 +539,154 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @param ejbFiles the hashtable.
      */
     private void addGenICGeneratedFiles(File genericJarFile, Hashtable ejbFiles) {
-     
-        Java genicTask = null;	// GenIC task 
-	String genicClass = null; // GenIC class (3 GenIC classes for various versions of JOnAS are supported)
 
+        Java genicTask = null;	// GenIC task
+        String genicClass = null; // GenIC class (3 GenIC classes for various versions of JOnAS are supported)
+    
         if ( nogenic ) {
-	    return;
+            return;
         }
-
-	genicTask = (Java) getTask().getProject().createTask("java");
-	genicTask.setTaskName("genic");
-	genicTask.setFork(true);
-	
-	// jonasroot
-	genicTask.createJvmarg().setValue("-Dinstall.root=" + jonasroot);
-	
-	// java policy file
-	String jonasConfigDir = jonasroot + File.separator + "config";            
-	File javaPolicyFile = new File(jonasConfigDir, "java.policy");
-	if ( javaPolicyFile.exists() ) {
-	    genicTask.createJvmarg().setValue("-Djava.security.policy="
-					      + javaPolicyFile.toString());
-	}
-	
-	// outputdir
-	try {
-	    outputdir = createTempDir();	    
-	} catch (IOException aIOException) {
-	    String msg = "Cannot create temp dir: " + aIOException.getMessage();
-	    throw new BuildException(msg, aIOException);
-	}
-	log("Using temporary output directory: " + outputdir, Project.MSG_VERBOSE);
-	
-	genicTask.createArg().setValue("-d");
-	genicTask.createArg().setFile(outputdir);
-	
-	// work around a bug of GenIC 2.5
-	String key;
-	File f;
-	Enumeration keys = ejbFiles.keys();
-	while ( keys.hasMoreElements() ) {
-	    key = (String)keys.nextElement();
-	    f = new File(outputdir + File.separator + key);	    
-	    f.getParentFile().mkdirs();
-	}
-	log("Worked around a bug of GenIC 2.5.", Project.MSG_VERBOSE);
-
-	// classpath 
-	Path classpath = getCombinedClasspath();	    
-	if ( classpath == null ) {
-	    classpath = new Path(getTask().getProject());
-	}
-	classpath.append(new Path(classpath.getProject(), jonasConfigDir));
-	classpath.append(new Path(classpath.getProject(), outputdir.toString()));
-	
-	// try to create the classpath for the correct ORB
-	if ( orb != null ) {	    
-	    String orbJar = jonasroot + File.separator + "lib" + File.separator + orb + "_jonas.jar";
-	    classpath.append(new Path(classpath.getProject(), orbJar));
-	}
-	
-	log("Using classpath: " + classpath.toString(), Project.MSG_VERBOSE);
-	genicTask.setClasspath(classpath);
-	
-	// class name (search in the classpath provided for the ejbjar element)
-	genicClass = getGenicClassName(classpath);
-	if ( genicClass == null ) {
-	    log("Cannot find GenIC class in classpath.", Project.MSG_ERR);
-	    throw new BuildException("GenIC class not found, please check the classpath.");
-	} else {
-	    log("Using '" + genicClass + "' GenIC class." , Project.MSG_VERBOSE);	    
-	    genicTask.setClassname(genicClass);
-	}
-	
-	// keepgenerated
-	if ( keepgenerated ) {
-	    genicTask.createArg().setValue("-keepgenerated");
-	}
-	
-	// nocompil
-	if ( nocompil ) {
-	    genicTask.createArg().setValue("-nocompil");
-	}
-	
-	// novalidation
-	if ( novalidation ) {
-	    genicTask.createArg().setValue("-novalidation");
-	}
-	
-	// javac
-	if ( javac != null ) {
-	    genicTask.createArg().setValue("-javac");
-	    genicTask.createArg().setLine(javac);
-	}
-	
-	// javacopts
-	if ( javacopts != null && !javacopts.equals("") ) {
-	    genicTask.createArg().setValue("-javacopts");
-	    genicTask.createArg().setLine(javacopts);
-	}
-
-	// rmicopts
-	if ( rmicopts != null && !rmicopts.equals("") ) {
-	    genicTask.createArg().setValue("-rmicopts");
-	    genicTask.createArg().setLine(rmicopts);
-	}
-	
-	// secpropag
-	if ( secpropag ) {
-	    genicTask.createArg().setValue("-secpropag");
-	}
-	
-	// verbose
-	if ( verbose ) {
-	    genicTask.createArg().setValue("-verbose");
+    
+        genicTask = (Java) getTask().getProject().createTask("java");
+        genicTask.setTaskName("genic");
+        genicTask.setFork(true);
+    
+        // jonasroot
+        genicTask.createJvmarg().setValue("-Dinstall.root=" + jonasroot);
+    
+        // java policy file
+        String jonasConfigDir = jonasroot + File.separator + "config";
+        File javaPolicyFile = new File(jonasConfigDir, "java.policy");
+        if ( javaPolicyFile.exists() ) {
+            genicTask.createJvmarg().setValue("-Djava.security.policy="
+                              + javaPolicyFile.toString());
+        }
+    
+        // outputdir
+        try {
+            outputdir = createTempDir();
+        } catch (IOException aIOException) {
+            String msg = "Cannot create temp dir: " + aIOException.getMessage();
+            throw new BuildException(msg, aIOException);
+        }
+        log("Using temporary output directory: " + outputdir, Project.MSG_VERBOSE);
+    
+        genicTask.createArg().setValue("-d");
+        genicTask.createArg().setFile(outputdir);
+    
+        // work around a bug of GenIC 2.5
+        String key;
+        File f;
+        Enumeration keys = ejbFiles.keys();
+        while ( keys.hasMoreElements() ) {
+            key = (String)keys.nextElement();
+            f = new File(outputdir + File.separator + key);
+            f.getParentFile().mkdirs();
+        }
+        log("Worked around a bug of GenIC 2.5.", Project.MSG_VERBOSE);
+    
+        // classpath
+        Path classpath = getCombinedClasspath();
+        if ( classpath == null ) {
+            classpath = new Path(getTask().getProject());
+        }
+        classpath.append(new Path(classpath.getProject(), jonasConfigDir));
+        classpath.append(new Path(classpath.getProject(), outputdir.toString()));
+    
+        // try to create the classpath for the correct ORB
+        if ( orb != null ) {
+            String orbJar = jonasroot + File.separator + "lib" + File.separator + orb + "_jonas.jar";
+            classpath.append(new Path(classpath.getProject(), orbJar));
+        }
+    
+        log("Using classpath: " + classpath.toString(), Project.MSG_VERBOSE);
+        genicTask.setClasspath(classpath);
+    
+        // class name (search in the classpath provided for the ejbjar element)
+        genicClass = getGenicClassName(classpath);
+        if ( genicClass == null ) {
+            log("Cannot find GenIC class in classpath.", Project.MSG_ERR);
+            throw new BuildException("GenIC class not found, please check the classpath.");
+        } else {
+            log("Using '" + genicClass + "' GenIC class." , Project.MSG_VERBOSE);
+            genicTask.setClassname(genicClass);
+        }
+    
+        // keepgenerated
+        if ( keepgenerated ) {
+            genicTask.createArg().setValue("-keepgenerated");
+        }
+    
+        // nocompil
+        if ( nocompil ) {
+            genicTask.createArg().setValue("-nocompil");
+        }
+    
+        // novalidation
+        if ( novalidation ) {
+            genicTask.createArg().setValue("-novalidation");
+        }
+    
+        // javac
+        if ( javac != null ) {
+            genicTask.createArg().setValue("-javac");
+            genicTask.createArg().setLine(javac);
+        }
+    
+        // javacopts
+        if ( javacopts != null && !javacopts.equals("") ) {
+            genicTask.createArg().setValue("-javacopts");
+            genicTask.createArg().setLine(javacopts);
+        }
+    
+        // rmicopts
+        if ( rmicopts != null && !rmicopts.equals("") ) {
+            genicTask.createArg().setValue("-rmicopts");
+            genicTask.createArg().setLine(rmicopts);
+        }
+    
+        // secpropag
+        if ( secpropag ) {
+            genicTask.createArg().setValue("-secpropag");
+        }
+    
+        // verbose
+        if ( verbose ) {
+            genicTask.createArg().setValue("-verbose");
+                }
+    
+        // additionalargs
+        if ( additionalargs != null ) {
+            genicTask.createArg().setValue(additionalargs);
+        }
+    
+        // the generated classes must not be added in the generic JAR!
+        // is that buggy on old JOnAS (2.4) ??
+        genicTask.createArg().setValue("-noaddinjar");
+    
+        // input file to process by GenIC
+        genicTask.createArg().setValue(genericJarFile.getPath());
+    
+        // calling GenIC task
+        log("Calling " + genicClass + " for " + getConfig().descriptorDir + File.separator + descriptorName
+            + ".", Project.MSG_VERBOSE);
+    
+        if ( genicTask.executeJava() != 0 ) {
+    
+            // the method deleteOnExit() do not work because the directory is not empty
+            log("Deleting temp output directory '" + outputdir + "'.", Project.MSG_VERBOSE);
+            deleteAllFiles(outputdir);
+    
+            if ( !keepgeneric ) {
+            log("Deleting generic JAR " + genericJarFile.toString(), Project.MSG_VERBOSE);
+            genericJarFile.delete();
             }
-	
-	// additionalargs
-	if ( additionalargs != null ) {
-	    genicTask.createArg().setValue(additionalargs);
-	}
-	
-	// the generated classes must not be added in the generic JAR!
-	// is that buggy on old JOnAS (2.4) ??
-	genicTask.createArg().setValue("-noaddinjar");
-	
-	// input file to process by GenIC
-	genicTask.createArg().setValue(genericJarFile.getPath());
-
-	// calling GenIC task
-	log("Calling " + genicClass + " for " + getConfig().descriptorDir + File.separator + descriptorName
-	    + ".", Project.MSG_VERBOSE);
-
- 	if ( genicTask.executeJava() != 0 ) {
-
-	    // the method deleteOnExit() do not work because the directory is not empty
-	    log("Deleting temp output directory '" + outputdir + "'.", Project.MSG_VERBOSE);
-	    deleteAllFiles(outputdir);
-
-	    if ( !keepgeneric ) {
-		log("Deleting generic JAR " + genericJarFile.toString(), Project.MSG_VERBOSE);
-		genericJarFile.delete();	     
-	    }
-
-	    throw new BuildException("GenIC reported an error.");
-	}
-	
-	// add the generated files to the ejbFiles
-	addAllFiles(outputdir, "", ejbFiles);
+    
+            throw new BuildException("GenIC reported an error.");
+        }
+    
+        // add the generated files to the ejbFiles
+        addAllFiles(outputdir, "", ejbFiles);
     }
 
     /**
@@ -698,77 +698,77 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      */
     String getGenicClassName(Path classpath) {
 
-	log("Looking for GenIC class in classpath: " + classpath.toString(), Project.MSG_VERBOSE);
-
-	AntClassLoader cl = new AntClassLoader(classpath.getProject(), classpath);
-
-	try {
-	    cl.loadClass(JonasDeploymentTool.GENIC_CLASS);
-	    log("Found GenIC class '" + JonasDeploymentTool.GENIC_CLASS + "' in classpath.", Project.MSG_VERBOSE);
-	    return JonasDeploymentTool.GENIC_CLASS;
-
-	} catch (ClassNotFoundException cnf1) {
- 	    log("GenIC class '" + JonasDeploymentTool.GENIC_CLASS + "' not found in classpath.", 
-		Project.MSG_VERBOSE);
-	} 
-
-	try {
-	    cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_1);
-	    log("Found GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1 + 
-		"' in classpath.", Project.MSG_VERBOSE);
-	    return JonasDeploymentTool.OLD_GENIC_CLASS_1;
-
-	} catch (ClassNotFoundException cnf2) {
- 	    log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1 + 
-		"' not found in classpath.",
-		Project.MSG_VERBOSE);
-	} 
-
-	try {
-	    cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_2);
-	    log("Found GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2 + 
-		"' in classpath.", Project.MSG_VERBOSE);
-	    return JonasDeploymentTool.OLD_GENIC_CLASS_2;
-
-	} catch (ClassNotFoundException cnf3) {
- 	    log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2 + 
-		"' not found in classpath.",
-		Project.MSG_VERBOSE);
-	} 
-	return null;
+        log("Looking for GenIC class in classpath: " + classpath.toString(), Project.MSG_VERBOSE);
+    
+        AntClassLoader cl = classpath.getProject().createClassLoader(classpath);
+    
+        try {
+            cl.loadClass(JonasDeploymentTool.GENIC_CLASS);
+            log("Found GenIC class '" + JonasDeploymentTool.GENIC_CLASS + "' in classpath.", Project.MSG_VERBOSE);
+            return JonasDeploymentTool.GENIC_CLASS;
+    
+        } catch (ClassNotFoundException cnf1) {
+            log("GenIC class '" + JonasDeploymentTool.GENIC_CLASS + "' not found in classpath.",
+            Project.MSG_VERBOSE);
+        }
+    
+        try {
+            cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_1);
+            log("Found GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1 +
+            "' in classpath.", Project.MSG_VERBOSE);
+            return JonasDeploymentTool.OLD_GENIC_CLASS_1;
+    
+        } catch (ClassNotFoundException cnf2) {
+            log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_1 +
+            "' not found in classpath.",
+            Project.MSG_VERBOSE);
+        }
+    
+        try {
+            cl.loadClass(JonasDeploymentTool.OLD_GENIC_CLASS_2);
+            log("Found GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2 +
+            "' in classpath.", Project.MSG_VERBOSE);
+            return JonasDeploymentTool.OLD_GENIC_CLASS_2;
+    
+        } catch (ClassNotFoundException cnf3) {
+            log("GenIC class '" + JonasDeploymentTool.OLD_GENIC_CLASS_2 +
+            "' not found in classpath.",
+            Project.MSG_VERBOSE);
+        }
+        return null;
     }
 
     protected void checkConfiguration(String descriptorFileName,
-				      SAXParser saxParser) throws BuildException {
+                      SAXParser saxParser) throws BuildException {
 
-	// jonasroot
-	if ( jonasroot == null ) {
-	    throw new BuildException("The jonasroot attribut is not set.");
-	} else if ( !jonasroot.isDirectory() ) {
-	    throw new BuildException("The jonasroot attribut '" + jonasroot + 
-				     "' is not a valid directory.");
-	}
-
-	// orb
-	if ( orb != null && !orb.equals(RMI_ORB) && !orb.equals(JEREMIE_ORB) && !orb.equals(DAVID_ORB) ) {
-	    throw new BuildException("The orb attribut '" + orb + "' is not valid (must be either " +
-				     RMI_ORB + ", " + JEREMIE_ORB + " or " + DAVID_ORB + ").");
-	}
-
-	// additionalargs
-	if ( additionalargs != null && additionalargs.equals("") ) {
-	    throw new BuildException("Empty additionalargs attribut.");
-	}
-
-	// javac
-	if ( javac != null && javac.equals("") ) {
-	    throw new BuildException("Empty javac attribut.");	
-	}
+        // jonasroot
+        if ( jonasroot == null ) {
+            throw new BuildException("The jonasroot attribut is not set.");
+        } else if ( !jonasroot.isDirectory() ) {
+            throw new BuildException("The jonasroot attribut '" + jonasroot +
+                         "' is not a valid directory.");
+        }
+    
+        // orb
+        if ( orb != null && !orb.equals(RMI_ORB) && !orb.equals(JEREMIE_ORB) && !orb.equals(DAVID_ORB) ) {
+            throw new BuildException("The orb attribut '" + orb + "' is not valid (must be either " +
+                         RMI_ORB + ", " + JEREMIE_ORB + " or " + DAVID_ORB + ").");
+        }
+    
+        // additionalargs
+        if ( additionalargs != null && additionalargs.equals("") ) {
+            throw new BuildException("Empty additionalargs attribut.");
+        }
+    
+        // javac
+        if ( javac != null && javac.equals("") ) {
+            throw new BuildException("Empty javac attribut.");
+        }
     }
 
     /* ----------------------------------------------------------------------------------- */
     /* utilitary methods */
-    /* ----------------------------------------------------------------------------------- */    
+    /* ----------------------------------------------------------------------------------- */
 
     /**
      * Create a temporary directory for GenIC output.
@@ -776,13 +776,13 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @return the temp directory.
      * @throws BuildException if a temp directory cannot be created.
      */
-    private File createTempDir() throws IOException {       
-	File tmpDir = File.createTempFile("genic", null, null);	    
-	tmpDir.delete();
-	if ( !tmpDir.mkdir() ) {
-	    throw new IOException("Cannot create the temporary directory '" + tmpDir + "'.");
-	}
-	return tmpDir;
+    private File createTempDir() throws IOException {
+        File tmpDir = File.createTempFile("genic", null, null);
+        tmpDir.delete();
+        if ( !tmpDir.mkdir() ) {
+            throw new IOException("Cannot create the temporary directory '" + tmpDir + "'.");
+        }
+        return tmpDir;
     }
 
     /**
@@ -813,20 +813,20 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     private void addAllFiles(File file, String rootDir, Hashtable hashtable) {
 
         if ( !file.exists() ) {
-	    throw new IllegalArgumentException();
-	}
-	
-	String newRootDir;
+            throw new IllegalArgumentException();
+        }
+
+        String newRootDir;
         if ( file.isDirectory() ) {
-	    File files[] = file.listFiles();	
-	    for (int i = 0; i < files.length; i++) {
-		if ( rootDir.length() > 0 ) {
-		    newRootDir = rootDir + File.separator + files[i].getName();
-		} else {
-		    newRootDir = files[i].getName();		     
-		}
-		addAllFiles(files[i], newRootDir, hashtable);
-	    }
+            File files[] = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if ( rootDir.length() > 0 ) {
+                    newRootDir = rootDir + File.separator + files[i].getName();
+                } else {
+                    newRootDir = files[i].getName();
+                }
+                addAllFiles(files[i], newRootDir, hashtable);
+            }
         } else {
             hashtable.put(rootDir, file);
         }

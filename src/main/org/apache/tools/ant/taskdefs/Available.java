@@ -67,10 +67,10 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
- * Will set the given property if the requested resource is available at 
+ * Will set the given property if the requested resource is available at
  * runtime. This task may also be used as a condition by the condition task.
  *
- * @author Stefano Mazzocchi 
+ * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Magesh Umasankar
  *
@@ -94,7 +94,7 @@ public class Available extends Task implements Condition {
 
     /**
      * Set the classpath to be used when searching for classes and resources.
-     * 
+     *
      * @param classpath an Ant Path object containing the search path.
      */
     public void setClasspath(Path classpath) {
@@ -116,7 +116,7 @@ public class Available extends Task implements Condition {
     /**
      * Set the classpath by reference.
      *
-     * @param r a Reference to a Path instance to be used as the classpath 
+     * @param r a Reference to a Path instance to be used as the classpath
      *          value.
      */
     public void setClasspathRef(Reference r) {
@@ -166,7 +166,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set a classname of a class which must be available to set the given 
+     * Set a classname of a class which must be available to set the given
      * property.
      *
      * @param classname the name of the class required.
@@ -214,7 +214,7 @@ public class Available extends Task implements Condition {
      * Set what type of file is required - either directory or file.
      *
      * @param type an instance of the FileDir enumeratedAttribute indicating
-     *             whether the file required is to be a directory or a plain 
+     *             whether the file required is to be a directory or a plain
      *             file.
      */
     public void setType(FileDir type) {
@@ -238,7 +238,7 @@ public class Available extends Task implements Condition {
      */
     public void execute() throws BuildException {
         if (property == null) {
-            throw new BuildException("property attribute is required", 
+            throw new BuildException("property attribute is required",
                                      getLocation());
         }
 
@@ -282,7 +282,7 @@ public class Available extends Task implements Condition {
 
         if (classpath != null) {
             classpath.setProject(getProject());
-            this.loader = new AntClassLoader(getProject(), classpath);
+            this.loader = getProject().createClassLoader(classpath);
         }
 
         String appendix = "";
@@ -293,14 +293,14 @@ public class Available extends Task implements Condition {
         }
 
         if ((classname != null) && !checkClass(classname)) {
-            log("Unable to load class " + classname + appendix, 
+            log("Unable to load class " + classname + appendix,
                 Project.MSG_VERBOSE);
             return false;
         }
 
         if ((file != null) && !checkFile()) {
             if (type != null) {
-                log("Unable to find " + type + " " + file + appendix, 
+                log("Unable to find " + type + " " + file + appendix,
                     Project.MSG_VERBOSE);
             } else {
                 log("Unable to find " + file + appendix, Project.MSG_VERBOSE);
@@ -309,7 +309,7 @@ public class Available extends Task implements Condition {
         }
 
         if ((resource != null) && !checkResource(resource)) {
-            log("Unable to load resource " + resource + appendix, 
+            log("Unable to load resource " + resource + appendix,
                 Project.MSG_VERBOSE);
             return false;
         }
@@ -464,8 +464,9 @@ public class Available extends Task implements Condition {
         try {
             Class requiredClass = null;
             if (ignoreSystemclasses) {
-                loader = new AntClassLoader(null, getProject(), classpath, 
-                                            false);
+                loader = getProject().createClassLoader(classpath);
+                loader.setParentFirst(false);
+                loader.addJavaLibraries();
                 if (loader != null) {
                     try {
                         requiredClass = loader.findClass(classname);

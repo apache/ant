@@ -100,8 +100,8 @@ public class ExtendSelector extends BaseSelector {
                 if (classpath == null) {
                     c = Class.forName(classname);
                 } else {
-                    AntClassLoader al = new AntClassLoader(getProject(),
-                                                           classpath);
+                    AntClassLoader al
+                        = getProject().createClassLoader(classpath);
                     c = al.loadClass(classname);
                     AntClassLoader.initializeClass(c);
                 }

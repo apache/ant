@@ -415,19 +415,19 @@ public class JspC extends MatchingTask {
         //bind to a compiler
         JspCompilerAdapter compiler =
             JspCompilerAdapterFactory.getCompiler(compilerName, this,
-               new AntClassLoader(getProject(), compilerClasspath));
+                getProject().createClassLoader(compilerClasspath));
 
         //if we are a webapp, hand off to the compiler, which had better handle it
         if(webApp!=null) {
             doCompilation(compiler);
             return;
         }
-            
-        // make sure that we've got a srcdir 
+
+        // make sure that we've got a srcdir
         if (src == null) {
             throw new BuildException("srcdir attribute must be set!",
                                      location);
-        } 
+        }
         String [] list = src.list();
         if (list.length == 0) {
             throw new BuildException("srcdir attribute must be set!",

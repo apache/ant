@@ -171,8 +171,8 @@ public final class ChainReaderHelper {
                             if (classpath == null) {
                                 clazz = Class.forName(className);
                             } else {
-                                AntClassLoader al = new AntClassLoader(project,
-                                                                       classpath);
+                                AntClassLoader al
+                                    = project.createClassLoader(classpath);
                                 clazz = al.loadClass(className);
                                 AntClassLoader.initializeClass(clazz);
                             }

@@ -413,7 +413,7 @@ public class Property extends Task {
             ClassLoader cL = null;
 
             if (classpath != null) {
-                cL = new AntClassLoader(getProject(), classpath);
+                cL = getProject().createClassLoader(classpath);
             } else {
                 cL = this.getClass().getClassLoader();
             }

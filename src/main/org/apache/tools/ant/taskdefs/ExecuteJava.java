@@ -91,7 +91,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
 
     /**
      * Set the classpath to be used when running the Java class
-     * 
+     *
      * @param p an Ant Path object containing the classpath.
      */
     public void setClasspath(Path p) {
@@ -121,7 +121,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     public void execute(Project project) throws BuildException{
         final String classname = javaCommand.getExecutable();
 
-        AntClassLoader loader = null; 
+        AntClassLoader loader = null;
         try {
             if (sysProperties != null) {
                 sysProperties.setSystem();
@@ -132,8 +132,10 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (classpath == null) {
                 target = Class.forName(classname);
             } else {
-                loader = new AntClassLoader(project.getCoreLoader(), project, 
-                                            classpath, false);
+                loader = project.createClassLoader(classpath);
+                loader.setParent(project.getCoreLoader());
+                loader.setParentFirst(false);
+                loader.addJavaLibraries();
                 loader.setIsolated(true);
                 loader.setThreadContextLoader();
                 target = loader.forceLoadClass(classname);
@@ -141,7 +143,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             }
             main = target.getMethod("main", param);
             if (main == null) {
-                throw new BuildException("Could not find main() method in " 
+                throw new BuildException("Could not find main() method in "
                                          + classname);
             }
 
@@ -149,7 +151,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 run();
             } else {
                 thread = new Thread(this, "ExecuteJava");
-                Task currentThreadTask 
+                Task currentThreadTask
                     = project.getThreadTask(Thread.currentThread());
                 project.registerThreadTask(thread, currentThreadTask);
                 // if we run into a timout, the run-away thread shall not
@@ -167,7 +169,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     } catch (InterruptedException e) {}
                     if (timedOut) {
                         project.log("Timeout: sub-process interrupted",
-                                    Project.MSG_WARN); 
+                                    Project.MSG_WARN);
                     } else {
                         thread = null;
                         w.stop();

@@ -79,8 +79,8 @@ public class WLRmic extends DefaultRmicAdapter {
             if (getRmic().getClasspath() == null) {
                 c = Class.forName("weblogic.rmic");
             } else {
-                loader = new AntClassLoader(getRmic().getProject(), 
-                                            getRmic().getClasspath());
+                loader
+                    = getRmic().getProject().createClassLoader(getRmic().getClasspath());
                 c = loader.loadClass("weblogic.rmic");
                 AntClassLoader.initializeClass(c);
             }

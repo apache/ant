@@ -891,7 +891,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             lookupPath.append(classpath);
         }
 
-        return new AntClassLoader(getTask().getProject(), lookupPath);
+        return getTask().getProject().createClassLoader(lookupPath);
     }
 }
 

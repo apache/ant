@@ -924,7 +924,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         if (combinedClasspath == null) {
             classpathLoader = getClass().getClassLoader();
         } else {
-            classpathLoader = new AntClassLoader(getTask().getProject(), combinedClasspath);
+            classpathLoader
+                = getTask().getProject().createClassLoader(combinedClasspath);
         }
 
         return classpathLoader;

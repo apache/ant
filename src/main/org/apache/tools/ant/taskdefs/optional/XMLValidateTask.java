@@ -321,7 +321,8 @@ public class XMLValidateTask extends Task {
             try {
                 // load the parser class
                 if (classpath != null) {
-                    AntClassLoader loader = new AntClassLoader(getProject(), classpath);
+                    AntClassLoader loader
+                        = getProject().createClassLoader(classpath);
                     readerClass = loader.loadClass(readerClassName);
                     AntClassLoader.initializeClass(readerClass);
                 } else {
@@ -351,7 +352,7 @@ public class XMLValidateTask extends Task {
                 log("Using SAX1 parser " + reader.getClass().getName(),
                     Project.MSG_VERBOSE);
             }  else {
-                throw new BuildException(INIT_FAILED_MSG 
+                throw new BuildException(INIT_FAILED_MSG
                                          + reader.getClass().getName()
                                          + " implements nor SAX1 Parser nor SAX2 XMLReader.");
             }
@@ -381,7 +382,7 @@ public class XMLValidateTask extends Task {
      * @param warn whether to war if the parser does not support the feature
 
      */
-    private void setFeature(String feature, boolean value) 
+    private void setFeature(String feature, boolean value)
         throws BuildException {
 
         try {

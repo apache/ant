@@ -418,7 +418,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         if (classpath == null) {
             return Class.forName(classname);
         } else {
-            AntClassLoader al = new AntClassLoader(getProject(), classpath);
+            AntClassLoader al = getProject().createClassLoader(classpath);
             Class c = al.loadClass(classname);
             AntClassLoader.initializeClass(c);
             return c;

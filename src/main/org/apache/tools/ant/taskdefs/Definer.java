@@ -316,12 +316,22 @@ public abstract class Definer extends Task {
         if (classpath != null) {
             project.log( "Creating new loader for taskdef using " + classpath +
                     " reverse=" + reverseLoader, Project.MSG_DEBUG );
-            al = new AntClassLoader(getProject(), classpath, !reverseLoader);
+            AntClassLoader acl = getProject().createClassLoader(classpath);
+            if (reverseLoader) {
+                acl.setParentFirst(false);
+                acl.addJavaLibraries();
+            }
+            al = acl;
         } else {
             // XXX Probably it would be better to reuse getClass().getClassLoader()
             // I don't think we need a new ( identical ) loader for each task
-            al = new AntClassLoader(getProject(), Path.systemClasspath,
-                    !reverseLoader);
+            AntClassLoader acl
+                = getProject().createClassLoader(Path.systemClasspath);
+            if (reverseLoader) {
+                acl.setParentFirst(false);
+                acl.addJavaLibraries();
+            }
+            al = acl;
         }
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always

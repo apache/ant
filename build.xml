@@ -144,6 +144,8 @@
       <filename name="${optional.package}/sitraka/**"/>
       <filename name="${optional.package}/ide/VAJ*"/>
       <filename name="${optional.package}/starteam/*"/>
+      <!-- uses JDK 1.2 classloading facilities -->
+      <filename name="${ant.package}/loader/AntClassLoader2.java"/>
     </or>
   </selector>
   <selector id="needs.jdk1.3+">
@@ -293,6 +295,7 @@
   </patternset>
   <patternset id="teststhatfail">
     <exclude name="${optional.package}/BeanShellScriptTest.java"/>
+    <exclude name="${ant.package}/taskdefs/ImportTest.java"/>
   </patternset>
 
   <!--

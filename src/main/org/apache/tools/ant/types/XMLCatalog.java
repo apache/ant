@@ -160,7 +160,7 @@ import org.xml.sax.XMLReader;
  * @author Jeff Turner
  * @version $Id$
  */
-public class XMLCatalog extends DataType 
+public class XMLCatalog extends DataType
     implements Cloneable, EntityResolver, URIResolver {
 
     /** helper for some File.toURL connversions */
@@ -180,7 +180,7 @@ public class XMLCatalog extends DataType
      * Path listing external catalog files to search when resolving entities
      */
     private Path catalogPath;
-   
+
     /**
      * The name of the bridge to the Apache xml-commons resolver
      * class, used to determine whether resolver.jar is present in the
@@ -436,7 +436,7 @@ public class XMLCatalog extends DataType
         log("resolveEntity: '" + publicId + "': '" + systemId + "'",
             Project.MSG_DEBUG);
 
-        InputSource inputSource = 
+        InputSource inputSource =
             getCatalogResolver().resolveEntity(publicId, systemId);
 
         if (inputSource == null) {
@@ -463,7 +463,7 @@ public class XMLCatalog extends DataType
         }
 
         SAXSource source = null;
-        
+
         String uri = removeFragment(href);
 
         log("resolve: '" + uri + "' with base: '" + base + "'", Project.MSG_DEBUG);
@@ -507,7 +507,7 @@ public class XMLCatalog extends DataType
 
     /**
      * Factory method for creating the appropriate CatalogResolver
-     * strategy implementation.  
+     * strategy implementation.
      * <p> Until we query the classpath, we don't know whether the Apache
      * resolver (Norm Walsh's library from xml-commons) is available or not.
      * This method determines whether the library is available and creates the
@@ -521,7 +521,7 @@ public class XMLCatalog extends DataType
 
             AntClassLoader loader = null;
 
-            loader = new AntClassLoader(getProject(), Path.systemClasspath);
+            loader = getProject().createClassLoader(Path.systemClasspath);
 
             try {
                 Class clazz = loader.forceLoadSystemClass(APACHE_RESOLVER);
@@ -531,10 +531,10 @@ public class XMLCatalog extends DataType
                 // available, so use it.
                 //
                 catalogResolver = new ApacheResolver(clazz, obj);
-            } 
+            }
             catch (Throwable ex) {
                 //
-                // The xml-commons resolver library is not 
+                // The xml-commons resolver library is not
                 // available, so we can't use it.
                 //
                 catalogResolver = new InternalResolver();
@@ -593,7 +593,7 @@ public class XMLCatalog extends DataType
      *
      * @param publicId the publicId of the Resource for which local information
      *        is required.
-     * @return a ResourceLocation instance with information on the local location 
+     * @return a ResourceLocation instance with information on the local location
      *         of the Resource or null if no such information is available.
      */
     private ResourceLocation findMatchingEntry(String publicId) {
@@ -656,17 +656,17 @@ public class XMLCatalog extends DataType
                 throw new BuildException("Project basedir cannot be converted to a URL");
             }
         }
-        
+
         InputSource source = null;
         URL url = null;
-        
+
         try {
             url = new URL(baseURL, uri);
         }
         catch (MalformedURLException ex) {
             // ignore
         }
-        
+
         if (url != null) {
             String fileName = url.getFile();
             if (fileName != null) {
@@ -707,7 +707,7 @@ public class XMLCatalog extends DataType
         } else {
             cp = (new Path(getProject())).concatSystemClasspath("last");
         }
-        loader = new AntClassLoader(getProject(), cp);
+        loader = getProject().createClassLoader(cp);
 
         //
         // for classpath lookup we ignore the base directory
@@ -734,7 +734,7 @@ public class XMLCatalog extends DataType
      *    if the resource does not identify a valid URL or is not readable.
      */
     private InputSource urlLookup(ResourceLocation matchingEntry) {
-        
+
         String uri = matchingEntry.getLocation();
         URL baseURL = null;
 
@@ -799,7 +799,7 @@ public class XMLCatalog extends DataType
      * library (Norm Walsh's library from xml-commons) is not
      * available.  In this case, external catalog files will be
      * ignored.
-     * 
+     *
      */
     private class InternalResolver implements CatalogResolver {
 
@@ -815,8 +815,8 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for publicId: '" + 
-                    matchingEntry.getPublicId() + "' location: '" + 
+                log("Matching catalog entry found for publicId: '" +
+                    matchingEntry.getPublicId() + "' location: '" +
                     matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
@@ -843,8 +843,8 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for uri: '" + 
-                    matchingEntry.getPublicId() + "' location: '" + 
+                log("Matching catalog entry found for uri: '" +
+                    matchingEntry.getPublicId() + "' location: '" +
                     matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
@@ -857,7 +857,7 @@ public class XMLCatalog extends DataType
                 //
                 // This is the standard behavior as per my reading of
                 // the JAXP and XML Catalog specs.  CKS 11/7/2002
-                // 
+                //
                 ResourceLocation entryCopy = matchingEntry;
                 if (base != null) {
                     try {
@@ -895,7 +895,7 @@ public class XMLCatalog extends DataType
      * library (Norm Walsh's library from xml-commons) is available in
      * the classpath.  The ApacheResolver is a essentially a superset
      * of the InternalResolver.
-     * 
+     *
      */
     private class ApacheResolver implements CatalogResolver {
 
@@ -909,7 +909,7 @@ public class XMLCatalog extends DataType
 
         private boolean externalCatalogsProcessed = false;
 
-        public ApacheResolver(Class resolverImplClass, 
+        public ApacheResolver(Class resolverImplClass,
                               Object resolverImpl) {
 
             this.resolverImpl = resolverImpl;
@@ -924,22 +924,22 @@ public class XMLCatalog extends DataType
             try {
                 setXMLCatalog =
                     resolverImplClass.getMethod("setXMLCatalog",
-                                                new Class[] 
+                                                new Class[]
                         { XMLCatalog.class });
 
                 parseCatalog =
                     resolverImplClass.getMethod("parseCatalog",
-                                                new Class[] 
+                                                new Class[]
                         { String.class });
 
                 resolveEntity =
                     resolverImplClass.getMethod("resolveEntity",
-                                                new Class[] 
+                                                new Class[]
                         { String.class, String.class });
 
                 resolve =
                     resolverImplClass.getMethod("resolve",
-                                                new Class[] 
+                                                new Class[]
                         { String.class, String.class });
             }
             catch (NoSuchMethodException ex) {
@@ -960,8 +960,8 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for publicId: '" + 
-                    matchingEntry.getPublicId() + "' location: '" + 
+                log("Matching catalog entry found for publicId: '" +
+                    matchingEntry.getPublicId() + "' location: '" +
                     matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
@@ -973,7 +973,7 @@ public class XMLCatalog extends DataType
 
                 if (result == null) {
                     try {
-                        result = 
+                        result =
                             (InputSource)resolveEntity.invoke(resolverImpl,
                                                               new Object[]
                                 { publicId, systemId });
@@ -993,7 +993,7 @@ public class XMLCatalog extends DataType
                 // this possibility.
                 //
                 try {
-                    result = 
+                    result =
                         (InputSource)resolveEntity.invoke(resolverImpl,
                                                           new Object[]
                             { publicId, systemId });
@@ -1018,8 +1018,8 @@ public class XMLCatalog extends DataType
 
             if (matchingEntry != null) {
 
-                log("Matching catalog entry found for uri: '" + 
-                    matchingEntry.getPublicId() + "' location: '" + 
+                log("Matching catalog entry found for uri: '" +
+                    matchingEntry.getPublicId() + "' location: '" +
                     matchingEntry.getLocation() + "'",
                     Project.MSG_DEBUG);
 
@@ -1034,7 +1034,7 @@ public class XMLCatalog extends DataType
                 //
                 // This is the standard behavior as per my reading of
                 // the JAXP and XML Catalog specs.  CKS 11/7/2002
-                // 
+                //
                 ResourceLocation entryCopy = matchingEntry;
                 if (base != null) {
                     try {
@@ -1059,7 +1059,7 @@ public class XMLCatalog extends DataType
                     result = new SAXSource(source);
                 } else {
                     try {
-                        result = 
+                        result =
                             (SAXSource)resolve.invoke(resolverImpl,
                                                       new Object[]
                                 { href, base });
@@ -1079,7 +1079,7 @@ public class XMLCatalog extends DataType
                 // this possibility.
                 //
                 try {
-                    result = 
+                    result =
                         (SAXSource)resolve.invoke(resolverImpl,
                                                   new Object[]
                             { href, base });
@@ -1103,8 +1103,8 @@ public class XMLCatalog extends DataType
             if (externalCatalogsProcessed == false) {
 
                 try {
-                    setXMLCatalog.invoke(resolverImpl, 
-                                         new Object[] 
+                    setXMLCatalog.invoke(resolverImpl,
+                                         new Object[]
                     { XMLCatalog.this });
                 }
                 catch (Exception ex) {
@@ -1118,11 +1118,11 @@ public class XMLCatalog extends DataType
                     String[] catPathList = getCatalogPath().list();
 
                     for (int i=0; i< catPathList.length; i++) {
-                        File catFile = new File(catPathList[i]); 
+                        File catFile = new File(catPathList[i]);
                         log("Parsing "+catFile, Project.MSG_DEBUG);
                         try {
-                            parseCatalog.invoke(resolverImpl, 
-                                    new Object[] 
+                            parseCatalog.invoke(resolverImpl,
+                                    new Object[]
                                     { catFile.getPath() });
                         }
                         catch (Exception ex) {

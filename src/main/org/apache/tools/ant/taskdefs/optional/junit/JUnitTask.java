@@ -590,7 +590,7 @@ public class JUnitTask extends Task {
      * exceeds a certain amount of time. Can be <tt>null</tt>, in this case
      * the test could probably hang forever.
      */
-    private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog) 
+    private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog)
         throws BuildException {
 
         CommandlineJava cmd = (CommandlineJava) commandline.clone();
@@ -599,7 +599,7 @@ public class JUnitTask extends Task {
         cmd.createArgument().setValue(test.getName());
         cmd.createArgument().setValue("filtertrace=" + test.getFiltertrace());
         cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
-        cmd.createArgument().setValue("haltOnFailure=" 
+        cmd.createArgument().setValue("haltOnFailure="
                                       + test.getHaltonfailure());
         if (includeAntRuntime) {
             log("Implicitly adding " + antRuntimeClasses + " to CLASSPATH",
@@ -614,7 +614,7 @@ public class JUnitTask extends Task {
                 .setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
         }
 
-        cmd.createArgument().setValue("showoutput=" 
+        cmd.createArgument().setValue("showoutput="
                                       + String.valueOf(showOutput));
 
         StringBuffer formatterArg = new StringBuffer(128);
@@ -634,10 +634,10 @@ public class JUnitTask extends Task {
 
         // Create a temporary file to pass the Ant properties to the
         // forked test
-        File propsFile = 
+        File propsFile =
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
                                                     getProject().getBaseDir());
-        cmd.createArgument().setValue("propsfile=" 
+        cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());
         Hashtable p = getProject().getProperties();
         Properties props = new Properties();
@@ -655,8 +655,8 @@ public class JUnitTask extends Task {
                                      + "file.", e, getLocation());
         }
 
-        Execute execute = new Execute(new LogStreamHandler(this, 
-                                                           Project.MSG_INFO, 
+        Execute execute = new Execute(new LogStreamHandler(this,
+                                                           Project.MSG_INFO,
                                                            Project.MSG_WARN),
                                       watchdog);
         execute.setCommandline(cmd.getCommandline());
@@ -741,7 +741,7 @@ public class JUnitTask extends Task {
         JUnitTest test = (JUnitTest) arg.clone();
         test.setProperties(getProject().getProperties());
         if (dir != null) {
-            log("dir attribute ignored if running in the same VM", 
+            log("dir attribute ignored if running in the same VM",
                 Project.MSG_WARN);
         }
 
@@ -750,27 +750,29 @@ public class JUnitTask extends Task {
                 + "the same VM.", Project.MSG_WARN);
         }
 
-        CommandlineJava.SysProperties sysProperties = 
+        CommandlineJava.SysProperties sysProperties =
             commandline.getSystemProperties();
         if (sysProperties != null) {
             sysProperties.setSystem();
         }
         AntClassLoader cl = null;
         try {
-            log("Using System properties " + System.getProperties(), 
+            log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
             Path userClasspath = commandline.getClasspath();
-            Path classpath = userClasspath == null 
-                                              ? null 
+            Path classpath = userClasspath == null
+                                              ? null
                                               : (Path) userClasspath.clone();
             if (classpath != null) {
                 if (includeAntRuntime) {
-                    log("Implicitly adding " + antRuntimeClasses 
+                    log("Implicitly adding " + antRuntimeClasses
                         + " to CLASSPATH", Project.MSG_VERBOSE);
                     classpath.append(antRuntimeClasses);
                 }
 
-                cl = new AntClassLoader(null, getProject(), classpath, false);
+                cl = getProject().createClassLoader(classpath);
+                cl.setParentFirst(false);
+                cl.addJavaLibraries();
                 log("Using CLASSPATH " + cl.getClasspath(),
                     Project.MSG_VERBOSE);
 
@@ -780,13 +782,13 @@ public class JUnitTask extends Task {
                 cl.addSystemPackageRoot("org.apache.tools.ant");
                 cl.setThreadContextLoader();
             }
-            runner = new JUnitTestRunner(test, test.getHaltonerror(), 
-                                         test.getFiltertrace(), 
+            runner = new JUnitTestRunner(test, test.getHaltonerror(),
+                                         test.getFiltertrace(),
                                          test.getHaltonfailure(), cl);
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);
 
-                SummaryJUnitResultFormatter f = 
+                SummaryJUnitResultFormatter f =
                     new SummaryJUnitResultFormatter();
                 f.setWithOutAndErr("withoutanderr"
                                    .equalsIgnoreCase(summaryValue));
@@ -876,7 +878,7 @@ public class JUnitTask extends Task {
         return feArray;
     }
 
-    /** 
+    /**
      * If the formatter sends output to a file, return that file.
      * null otherwise.
      *
@@ -929,7 +931,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Take care that some output is produced in report files if the 
+     * Take care that some output is produced in report files if the
      * watchdog kills the test.
      *
      * @since Ant 1.5.2
@@ -948,13 +950,13 @@ public class JUnitTask extends Task {
                     test.setCounts(0,0,1);
                     Test t = new Test() {
                         public int countTestCases() { return 0; }
-                        public void run(TestResult r) { 
+                        public void run(TestResult r) {
                             throw new AssertionFailedError("Timeout occurred");
                         }
                     };
                     formatter.startTest(t);
                     formatter
-                        .addError(t, 
+                        .addError(t,
                                   new AssertionFailedError("Timeout occurred"));
 
                     formatter.endTestSuite(test);

@@ -88,8 +88,8 @@ public class JspCompilerAdapterFactory {
      */
     public static JspCompilerAdapter getCompiler(String compilerType, Task task)
         throws BuildException {
-        return getCompiler(compilerType, task, 
-                           new AntClassLoader(task.getProject(), null));
+        return getCompiler(compilerType, task,
+                           task.getProject().createClassLoader(null));
     }
 
     /**
@@ -105,7 +105,7 @@ public class JspCompilerAdapterFactory {
      * @param compilerType either the name of the desired compiler, or the
      * full classname of the compiler's adapter.
      * @param task a task to log through.
-     * @param loader AntClassLoader with which the compiler should be loaded 
+     * @param loader AntClassLoader with which the compiler should be loaded
      * @throws BuildException if the compiler type could not be resolved into
      * a compiler adapter.
      */

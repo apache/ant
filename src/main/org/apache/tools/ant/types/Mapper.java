@@ -64,7 +64,7 @@ import org.apache.tools.ant.util.FileNameMapper;
 /**
  * Element to define a FileNameMapper.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Mapper extends DataType implements Cloneable {
 
@@ -180,7 +180,7 @@ public class Mapper extends DataType implements Cloneable {
         if (isReference()) {
             return getRef().getImplementation();
         }
-        
+
         if (type == null && classname == null) {
             throw new BuildException("one of the attributes type or classname is required");
         }
@@ -198,12 +198,11 @@ public class Mapper extends DataType implements Cloneable {
             if (classpath == null) {
                 c = Class.forName(classname);
             } else {
-                AntClassLoader al = new AntClassLoader(getProject(), 
-                                                       classpath);
+                AntClassLoader al = getProject().createClassLoader(classpath);
                 c = al.loadClass(classname);
                 AntClassLoader.initializeClass(c);
             }
-            
+
             FileNameMapper m = (FileNameMapper) c.newInstance();
             m.setFrom(from);
             m.setTo(to);
@@ -218,10 +217,10 @@ public class Mapper extends DataType implements Cloneable {
             }
         }
     }
-        
+
     /**
      * Performs the check for circular references and returns the
-     * referenced Mapper.  
+     * referenced Mapper.
      */
     protected Mapper getRef() {
         if (!isChecked()) {
@@ -229,7 +228,7 @@ public class Mapper extends DataType implements Cloneable {
             stk.push(this);
             dieOnCircularReference(stk, getProject());
         }
-        
+
         Object o = getRefid().getReferencedObject(getProject());
         if (!(o instanceof Mapper)) {
             String msg = getRefid().getRefId() + " doesn\'t denote a mapper";
@@ -247,22 +246,22 @@ public class Mapper extends DataType implements Cloneable {
 
         public MapperType() {
             implementations = new Properties();
-            implementations.put("identity", 
+            implementations.put("identity",
                                 "org.apache.tools.ant.util.IdentityMapper");
-            implementations.put("flatten", 
+            implementations.put("flatten",
                                 "org.apache.tools.ant.util.FlatFileNameMapper");
-            implementations.put("glob", 
+            implementations.put("glob",
                                 "org.apache.tools.ant.util.GlobPatternMapper");
-            implementations.put("merge", 
+            implementations.put("merge",
                                 "org.apache.tools.ant.util.MergingMapper");
-            implementations.put("regexp", 
+            implementations.put("regexp",
                                 "org.apache.tools.ant.util.RegexpPatternMapper");
-            implementations.put("package", 
+            implementations.put("package",
                                 "org.apache.tools.ant.util.PackageNameMapper");
         }
 
         public String[] getValues() {
-            return new String[] {"identity", "flatten", "glob", 
+            return new String[] {"identity", "flatten", "glob",
                                  "merge", "regexp", "package"};
         }
 
