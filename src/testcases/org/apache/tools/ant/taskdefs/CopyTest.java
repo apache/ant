@@ -130,6 +130,11 @@ public class CopyTest extends BuildFileTest {
         executeTarget("filtertest");
         assertTrue(getOutput().indexOf("loop in tokens") == -1);
     }
+
+    public void testInfiniteFilter() {
+        executeTarget("infinitetest");
+        assertTrue(getOutput().indexOf("loop in tokens") != -1);
+    }
     
     public void testFilterSet() throws IOException {
         executeTarget("testFilterSet");
