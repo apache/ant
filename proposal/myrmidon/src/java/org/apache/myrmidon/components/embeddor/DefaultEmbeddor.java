@@ -266,6 +266,8 @@ public class DefaultEmbeddor
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
         createComponent( PropertyResolver.class, PREFIX + "property.DefaultPropertyResolver" );
 
+        m_serviceManager.put( Embeddor.ROLE, this );
+
         // Setup the components
         for( Iterator iterator = m_components.iterator(); iterator.hasNext(); )
         {
