@@ -150,11 +150,17 @@ public class UnknownElement2 extends UnknownElement {
             task.setOwningTarget(this.getOwningTarget());
             task.init();
             task.setRuntimeConfigurableWrapper(getWrapper2());
+
+            // For Script to work. Ugly
+            // The reference is replaced by RuntimeConfigurable
+            this.getOwningTarget().replaceChild(this, (Task)realThing);
         }
 
         handleChildren(realThing, getWrapper2());
 
         getWrapper2().maybeConfigure(getProject());
+
+
     }
 
     /**
