@@ -72,8 +72,17 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 public class CommandlineJava implements Cloneable {
 
+    /**
+     * commands to the JVM
+     */
     private Commandline vmCommand = new Commandline();
+    /**
+     * actual java commands
+     */
     private Commandline javaCommand = new Commandline();
+    /**
+     * properties to add using -D
+     */
     private SysProperties sysProperties = new SysProperties();
     private Path classpath = null;
     private String vmVersion;
@@ -151,6 +160,9 @@ public class CommandlineJava implements Cloneable {
 
     }
 
+    /**
+     * constructor uses the VM we are running on now.
+     */
     public CommandlineJava() {
         setVm(JavaEnvUtils.getJreExecutable("java"));
         setVmversion(JavaEnvUtils.getJavaVersion());
@@ -178,7 +190,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * set a jar file to execute via the -jar option.
-     * @param the pathname of the jar to execute
+     * @param jarpathname the pathname of the jar to execute
      */
     public void setJar(String jarpathname){
         javaCommand.setExecutable(jarpathname);
@@ -272,6 +284,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
+     * Specify max memory of the JVM
      * -mx or -Xmx depending on VM version
      */
     public void setMaxmemory(String max){
@@ -279,6 +292,10 @@ public class CommandlineJava implements Cloneable {
     }
 
 
+    /**
+     * get a string description
+     * @return the command line as a string
+     */
     public String toString() {
         return Commandline.toString(getCommandline());
     }
@@ -361,6 +378,10 @@ public class CommandlineJava implements Cloneable {
         return sysProperties;
     }
 
+    /**
+     * clone the object; do a deep clone of all fields in the class
+     * @return a CommandlineJava object
+     */
     public Object clone() {
         CommandlineJava c = new CommandlineJava();
         c.vmCommand = (Commandline) vmCommand.clone();

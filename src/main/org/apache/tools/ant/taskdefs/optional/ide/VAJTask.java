@@ -95,7 +95,10 @@ public class VAJTask extends Task {
     }
 
     /**
-     * Set remote server attribute
+     * Name and port of a remote tool server, optiona.
+     * Format: &lt;servername&gt;:&lt;port no&gt;.
+     * If this attribute is set, the tasks will be executed on the specified tool
+     * server.
      */
     public void setRemote(String remoteServer) {
         this.remoteServer = remoteServer;

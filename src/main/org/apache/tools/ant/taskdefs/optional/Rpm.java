@@ -70,7 +70,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- *
+ * Invokes the rpm tool to build a Linux installation file.
  *  @author lucas@collab.net
  */
 public class Rpm extends Task {
@@ -195,14 +195,27 @@ public class Rpm extends Task {
         }
     }
 
+    /**
+     * The directory which will have the expected
+     * subdirectories, SPECS, SOURCES, BUILD, SRPMS ; optional. 
+     * If this isn't specified,
+     * the <tt>baseDir</tt> value is used
+     */
     public void setTopDir(File td) {
         this.topDir = td;
     }
 
+    /**
+     * What command to issue to the rpm tool; optional.
+     * The default is "-bb"
+     */
     public void setCommand(String c) {
         this.command = c;
     }
 
+    /**
+     * The name of the spec File to use; required.
+     */
     public void setSpecFile(String sf) {
         if ((sf == null) || (sf.trim().equals(""))) {
             throw new BuildException("You must specify a spec file", location);
@@ -210,22 +223,40 @@ public class Rpm extends Task {
         this.specFile = sf;
     }
 
+    /**
+     * Flag (optional, default=false) to remove 
+     * the generated files in the BUILD directory
+     */
     public void setCleanBuildDir(boolean cbd) {
         cleanBuildDir = cbd;
     }
 
+    /**
+     * Flag (optional, default=false) to remove the spec file from SPECS
+     */
     public void setRemoveSpec(boolean rs) {
         removeSpec = rs;
     }
 
+    /**
+     * Flag (optional, default=false) 
+     * to remove the sources after the build.
+     * See the the <tt>--rmsource</tt>  option of rpmbuild.
+     */
     public void setRemoveSource(boolean rs) {
         removeSource = rs;
     }
 
+    /**
+     * Optional file to save stdout to.
+     */
     public void setOutput(File output) {
         this.output = output;
     }
 
+    /**
+     * Optional file to save stderr to
+     */
     public void setError(File error) {
         this.error = error;
     }

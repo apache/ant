@@ -138,6 +138,11 @@
             <td>1.4.1</td>
             <td>11 October 2001</td>
           </tr>
+
+          <tr>
+            <td>1.5</td>
+            <td>10 July 2002</td>
+          </tr>
         </table>
       </answer>
     </faq>
@@ -264,6 +269,10 @@
           </tr>
 
         </table>
+
+        <p>With Ant &gt;= 1.5, you can also use nested
+          <code>&lt;compilerarg&gt;</code> elements with the
+          <code>&lt;javac&gt;</code> task.</p>
 
       </answer>
     </faq>
@@ -575,14 +584,33 @@ shell-prompt> cat < foo
         declaration</a>.</p>  
 
         <p>By default the parser assumes you are using the UTF-8
-        encoding instead of your platform's default.  For most western
-        european contries you should set the encoding to
+        encoding instead of your platform's default.  For most Western
+        European countries you should set the encoding to
         <code>ISO-8859-1</code>.  To do so, make the very first line
         of you build file read like</p>
 
         <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 ]]></source>
+      </answer>
+    </faq>
+
+    <faq id="properties-not-trimmed">
+      <question><code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.</question>
+
+      <answer>
+
+        <p>When <code>ant</code> loads properties from an external
+        file it dosn't touch the value of properties, trailing blanks
+        will not be trimmed for example.</p>
+
+        <p>If the value represents a file path, like a jar needed to
+        compile, the task which requires the value, javac for example
+        would fail to compile since it can't find the file due to
+        trailing spaces.</p>
       </answer>
     </faq>
   </faqsection>
@@ -607,9 +635,21 @@ shell-prompt> cat < foo
         this.</p>
 
         <p>You can disable this banner by invoking Ant with the
-        <code>-emacs</code> switch. Alternatively, you can add the
-        following snippet to your <code>.emacs</code> to make Emacs
-        understand Ant&apos;s output.</p>
+        <code>-emacs</code> switch.  To make Ant autodetect
+        Emacs&apos; compile mode, put this into your
+        <code>.antrc</code> (contributed by Ville Skytt&#228;).</p>
+
+        <source><![CDATA[
+# Detect (X)Emacs compile mode
+if [ "$EMACS" = "t" ] ; then 
+  ANT_ARGS="$ANT_ARGS -emacs" 
+  ANT_OPTS="$ANT_OPTS -Dbuild.compiler.emacs=true" 
+fi 
+]]></source>
+
+        <p>Alternatively, you can add the following snippet to your
+        <code>.emacs</code> to make Emacs understand Ant&apos;s
+        output.</p>
 
         <source><![CDATA[
 (require 'compile)
@@ -785,7 +825,7 @@ public class BuildMonitor implements BuildListener {
      * Determine the status of the build and the actions to follow, now that
      * the build has completed.
      *
-     * @param       e       Event describing the build tatus.
+     * @param       e       Event describing the build status.
      */
     public void buildFinished(BuildEvent e) {
         Throwable th = e.getException();
@@ -1024,7 +1064,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <p>To solve this, you have two major options:</p>
 
         <ol>
-          <li>put all external libaries you need in
+          <li>put all external libraries you need in
           <code>CLASSPATH</code> as well this is not what you want,
           otherwise you wouldn&apos;t have found this FAQ entry.</li>
 
@@ -1065,6 +1105,44 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         for <code>&lt;junit&gt;</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
+      </answer>
+    </faq>
+
+    <faq id="winxp-jdk14-ant14">
+      <question>When running Ant 1.4 on Windows XP and JDK 1.4, I get
+      various errors when trying to <code>&lt;exec&gt;</code>, fork
+      <code>&lt;java&gt;</code> or access environment
+      variables.</question>
+
+      <answer>
+
+        <p>Ant &lt; 1.5 doesn&apos;t recognize Windows XP as a flavor
+        of Windows that runs <code>CMD.EXE</code> instead of
+        <code>COMMAND.COM</code>.  JDK 1.3 will tell Ant that Windows
+        XP is Windows 2000 so the problem doesn&apos;t show up
+        there.</p>
+
+        <p>Apart from upgrading to Ant 1.5 or better, setting the
+        environment variable <code>ANT_OPTS</code> to
+        <code>-Dos.name=Windows_NT</code> prior to invoking Ant has
+        been confirmed as a workaround.</p>
+      </answer>
+    </faq>
+
+    <faq id="1.5-cygwin-sh">
+      <question>The <code>ant</code> wrapper script of Ant 1.5 fails
+      for Cygwin if <code>ANT_HOME</code> is set to a Windows style
+      path.</question>
+      <answer>
+
+        <p>This problem has been reported only hours after Ant 1.5 has
+        been released, see <a
+        href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10664">Bug
+        10664</a> and all it's duplicates.</p>
+
+        <p>A fixed version of the wrapper script can be found <a
+        href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5/errata/">here</a>.
+        Simply replace your script with this version.</p>
       </answer>
     </faq>
   </faqsection>

@@ -328,7 +328,7 @@ public class JUnitTestRunner implements TestListener {
                     System.setOut(savedOut);
                 }
                 if (savedErr != null) {
-                    System.setErr(savedOut);
+                    System.setErr(savedErr);
                 }
                 
                 systemError.close();

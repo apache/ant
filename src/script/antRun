@@ -1,6 +1,6 @@
 #! /bin/sh
 
-#   Copyright (c) 2001 The Apache Software Foundation.  All rights
+#   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
 #   reserved.
 
 # Args: DIR command
@@ -9,4 +9,4 @@ CMD="$2"
 shift
 shift
 
-exec $CMD "$@"
+exec "$CMD" "$@"

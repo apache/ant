@@ -67,17 +67,12 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Metamata Audit evaluates Java code for programming errors, weaknesses, and
- * style violation.
+ * Invokes the Metamata Audit/ Webgain Quality Analyzer on a set of Java files.
  * <p>
- * Metamata Audit exists in three versions:
- * <ul>
- *  <li>The Lite version evaluates about 15 built-in rules.</li>
- *  <li>The Pro version evaluates about 50 built-in rules.</li>
- *  <li>The Enterprise version allows you to add your own customized rules via the API.</li>
- * <ul>
- * For more information, visit the website at
- * <a href="http://www.metamata.com">www.metamata.com</a>
+ * <i>maudit</i> performs static analysis of the Java source code and byte code files to find and report
+ * errors of style and potential problems related to performance, maintenance and robustness.
+ *  As a convenience, a stylesheet is given in <tt>etc</tt> directory, so that an HTML report 
+ * can be generated from the XML file.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
@@ -141,44 +136,89 @@ public class MAudit extends AbstractMetamataTask {
         super("com.metamata.gui.rc.MAudit");
     }
 
-    /** set the destination file which should be an xml file */
+    /** 
+     * The XML file to which the Audit result should be written to; required
+     */
+     
     public void setTofile(File outFile) {
         this.outFile = outFile;
     }
 
+    /**
+     * Automatically fix certain errors 
+     * (those marked as fixable in the manual);
+     * optional, default=false
+     */
     public void setFix(boolean flag) {
         this.fix = flag;
     }
 
+    /**
+     * Creates listing file for each audited file; optional, default false. 
+     * When set, a .maudit file will be generated in the
+     * same location as the source file.
+     */
     public void setList(boolean flag) {
         this.list = flag;
     }
 
+    /**
+     * Finds declarations unused in search paths; optional, default false. 
+     * It will look for unused global declarations
+     * in the source code within a use domain specified by the 
+     * <tt>searchpath</tt> element.
+     */
     public void setUnused(boolean flag) {
         this.unused = flag;
     }
 
+    /**
+     * flag to suppress copyright and summary messages; default false.
+     * internal/testing only
+     * @ant.attribute ignore="true"
+     */
     public void setQuiet(boolean flag) {
         this.quiet = flag;
     }
 
+    /**
+     * flag to tell the task to exit after the first error. 
+     * internal/testing only
+     * @ant.attribute ignore="true"
+     */
     public void setExit(boolean flag) {
         this.exit = flag;
     }
 
+    /**
+     * internal/testing only
+     * @ant.attribute ignore="true"
+     */
     public void setOffsets(boolean flag) {
         this.offsets = flag;
     }
 
+    /**
+     * flag to print all messages; optional, default false.
+     * internal/testing only
+     * @ant.attribute ignore="true"
+     */
     public void setVerbose(boolean flag) {
         this.verbose = flag;
     }
 
+    /**
+     * internal/testing only
+     * @ant.attribute ignore="true"
+     */
     public void setFullsemanticize(boolean flag) {
         this.fullsemanticize = flag;
     }
 
-    /** one or more path for rules that must be placed before metamata.jar !! */
+    /** 
+     * classpath for additional audit rules
+     * these must be placed before metamata.jar !! 
+     */
     public Path createRulespath() {
         if (rulesPath == null) {
             rulesPath = new Path(getProject());
@@ -186,7 +226,10 @@ public class MAudit extends AbstractMetamataTask {
         return rulesPath;
     }
 
-    /** search path to use for unused global declarations */
+    /** 
+     * search path to use for unused global declarations; 
+     * required when <tt>unused</tt> is set. 
+     */
     public Path createSearchpath() {
         if (searchPath == null) {
             searchPath = new Path(getProject());
@@ -194,6 +237,9 @@ public class MAudit extends AbstractMetamataTask {
         return searchPath;
     }
 
+    /**
+     * create the option vector for the command
+     */
     protected Vector getOptions() {
         Vector options = new Vector(512);
         // add the source path automatically from the fileset.
@@ -259,6 +305,9 @@ public class MAudit extends AbstractMetamataTask {
         return options;
     }
 
+    /**
+     * validate the settings
+     */
     protected void checkOptions() throws BuildException {
         super.checkOptions();
         if (unused && searchPath == null) {

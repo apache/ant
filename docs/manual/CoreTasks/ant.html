@@ -36,6 +36,9 @@ new project, optionally under a different id.  References taken from
 nested elements will override existing references in the new
 project.</p>
 
+<p>Inherited references are not available to top level tasks of the
+child project.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -87,9 +90,10 @@ project.</p>
   </tr>
 </table>
 
-<h3>Parameters specified as nested elements</h3>
-<h4>property</h4>
-<p>See the description of the <a href="property.html">property task</a>.</p>
+<h3>Parameters specified as nested elements</h3> <h4>property</h4>
+<p>See the description of the <a href="property.html">property
+task</a>.  Note that the <code>refid</code> attribute points to a
+reference in the calling project, not in the new one.</p>
 
 <h4><a name="reference">reference</a></h4>
 <p>Used to chose references that shall be copied into the new project,
@@ -171,10 +175,10 @@ details:</p>
 <pre>
   &lt;path id="path1"&gt;
     ...
-  &lt;/&gt;
+  &lt;/path&gt;
   &lt;path id="path2"&gt;
     ...
-  &lt;/&gt;
+  &lt;/path&gt;
 </pre>
 
 <p>and the called build file (<code>subbuild.xml</code>) also defines
@@ -182,7 +186,7 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path2</code> is not defined:</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;true&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;true&quot;/&gt;
 </pre>
 
 <p>will not override <code>subbuild</code>'s definition of
@@ -190,21 +194,21 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path2</code> available in the subbuild.</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot;/&gt;
 </pre>
 
 <p>as well as</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;/&gt;
 </pre>
 
 <p>will neither override <code>path1</code> nor copy
 <code>path2</code>.</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot; &gt;
-    &lt;reference refid=&quot;path1&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
+    &lt;reference refid=&quot;path1&quot;/&gt;
   &lt;/ant&gt;
 </pre>
 
@@ -212,8 +216,8 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 <code>path1</code>.</p>
 
 <pre>
-  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot; &gt;
-    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot; /&gt;
+  &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
+    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
   &lt;/ant&gt;
 </pre>
 
@@ -221,7 +225,7 @@ a <code>&lt;path&gt;</code> with the id <code>path1</code>, but
 new project using the id <code>path2</code>.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

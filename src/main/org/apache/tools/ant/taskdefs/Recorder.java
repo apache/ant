@@ -67,10 +67,19 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 /**
- * This task is the manager for RecorderEntry's. It is this class that holds
- * all entries, modifies them every time the &lt;recorder&gt; task is called,
- * and addes them to the build listener process.
- *
+ * Adds a listener to the current build process that records the
+ * output to a file.
+ * <p>Several recorders can exist at the same time.  Each recorder is
+ * associated with a file.  The filename is used as a unique identifier for
+ * the recorders.  The first call to the recorder task with an unused filename
+ * will create a recorder (using the parameters provided) and add it to the
+ * listeners of the build.  All subsequent calls to the recorder task using
+ * this filename will modify that recorders state (recording or not) or other
+ * properties (like logging level).</p>
+ * <p>Some technical issues: the file's print stream is flushed for &quot;finished&quot;
+ * events (buildFinished, targetFinished and taskFinished), and is closed on
+ * a buildFinished event.</p>
+ 
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @see RecorderEntry
  * @version 0.5

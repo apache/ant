@@ -418,7 +418,7 @@ public class FilterSet extends DataType implements Cloneable {
     *
     * @param filterSet the filterset to be added to this filterset
     */
-    public void addFilterSet(FilterSet filterSet) {
+    public void addConfiguredFilterSet(FilterSet filterSet) {
         if (isReference()) {
             throw noChildrenAllowed();
         }

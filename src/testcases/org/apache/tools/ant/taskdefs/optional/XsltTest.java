@@ -114,5 +114,9 @@ public class XsltTest extends BuildFileTest {
     public void testCatalog() throws Exception {
          executeTarget("testCatalog");
     }
+    
+    public void testOutputProperty() throws Exception {
+      executeTarget("testOutputProperty");
+    }
 }
 

@@ -85,6 +85,10 @@ public class VAJProjectDescription {
         return projectFound;
     }
 
+    /**
+     * name of the VAJ project to load into
+     * the workspace; required
+     */
     public void setName(String newName) {
         if (newName == null || newName.equals("")) {
             throw new BuildException("name attribute must be set");
@@ -92,6 +96,9 @@ public class VAJProjectDescription {
         name = newName;
     }
 
+    /**
+     * name of the requested version; required.
+     */
     public void setVersion(String newVersion) {
         if (newVersion == null || newVersion.equals("")) {
             throw new BuildException("version attribute must be set");
@@ -99,6 +106,11 @@ public class VAJProjectDescription {
         version = newVersion;
     }
 
+    /**
+     * this may be a helper method, and is being ignored for now
+     
+     * @ant.attribute ignore="true"
+     */
     public void setProjectFound() {
         projectFound = true;
     }

@@ -57,7 +57,7 @@
  * who wrote the class as part of the com.oreilly.servlet
  * package for his book "Java Servlet Programming" (O'Reilly).
  * See http://www.servlets.com.
- * 
+ *
  */
 
 package org.apache.tools.mail;
@@ -72,12 +72,12 @@ import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
-/** 
+/**
  * A class to help send SMTP email.
- * This class is an improvement on the sun.net.smtp.SmtpClient class 
+ * This class is an improvement on the sun.net.smtp.SmtpClient class
  * found in the JDK.  This version has extra functionality, and can be used
  * with JVMs that did not extend from the JDK.  It's not as robust as
- * the JavaMail Standard Extension classes, but it's easier to use and 
+ * the JavaMail Standard Extension classes, but it's easier to use and
  * easier to install, and has an Open Source license.
  * <p>
  * It can be used like this:
@@ -109,12 +109,12 @@ import java.util.Enumeration;
  * msg.sendAndClose();
  * </pre></blockquote>
  * <p>
- * Be sure to set the from address, then set the recepient 
- * addresses, then set the subject and other headers, then get the 
+ * Be sure to set the from address, then set the recepient
+ * addresses, then set the subject and other headers, then get the
  * PrintStream, then write the message, and finally send and close.
  * The class does minimal error checking internally; it counts on the mail
- * host to complain if there's any malformatted input or out of order 
- * execution.  
+ * host to complain if there's any malformatted input or out of order
+ * execution.
  * <p>
  * An attachment mechanism based on RFC 1521 could be implemented on top of
  * this class.  In the meanwhile, JavaMail is the best solution for sending
@@ -160,22 +160,35 @@ public class MailMessage {
 
   /**
    * Constructs a new MailMessage to send an email.
-   * Use localhost as the mail server.
+   * Use localhost as the mail server with port 25.
    *
    * @exception IOException if there's any problem contacting the mail server
    */
   public MailMessage() throws IOException {
-    this("localhost");
+    this("localhost",DEFAULT_PORT);
   }
 
   /**
    * Constructs a new MailMessage to send an email.
-   * Use the given host as the mail server.
+   * Use the given host as the mail server with port 25.
    *
    * @param host the mail server to use
    * @exception IOException if there's any problem contacting the mail server
    */
   public MailMessage(String host) throws IOException {
+      this(host,DEFAULT_PORT);
+  }
+
+  /**
+   * Constructs a new MailMessage to send an email.
+   * Use the given host and port as the mail server.
+   *
+   * @param host the mail server to use
+   * @param port the port to connect to
+   * @exception IOException if there's any problem contacting the mail server
+   */
+  public MailMessage(String host, int port) throws IOException{
+    this.port = port;
     this.host = host;
     to = new Vector();
     cc = new Vector();
@@ -239,7 +252,7 @@ public class MailMessage {
   }
 
   /**
-   * Sets the subject of the mail message.  Actually sets the "Subject" 
+   * Sets the subject of the mail message.  Actually sets the "Subject"
    * header.
    */
   public void setSubject(String subj) {
@@ -257,7 +270,7 @@ public class MailMessage {
 
   /**
    * Returns a PrintStream that can be used to write the body of the message.
-   * A stream is used since email bodies are byte-oriented.  A writer could 
+   * A stream is used since email bodies are byte-oriented.  A writer could
    * be wrapped on top if necessary for internationalization.
    *
    * @exception IOException if there's any problem reported by the mail server
@@ -362,7 +375,7 @@ public class MailMessage {
     socket = new Socket(host, port);
     out = new MailPrintStream(
           new BufferedOutputStream(
-          socket.getOutputStream())); 
+          socket.getOutputStream()));
     in = new SmtpResponseReader(socket.getInputStream());
     getReady();
   }
@@ -415,7 +428,7 @@ public class MailMessage {
         out.rawPrint(msg + "\r\n");  // raw supports <CRLF>.<CRLF>
         String response = in.getResponse();
         if (!isResponseOK(response, ok)) {
-            throw new IOException("Unexpected reply to command: " 
+            throw new IOException("Unexpected reply to command: "
                                   + msg + ": " + response);
         }
     }
@@ -432,17 +445,17 @@ public class MailMessage {
 
     void disconnect() throws IOException {
         if (out != null) {
-            out.close(); 
+            out.close();
         }
         if (in != null) {
             try {
-                in.close(); 
+                in.close();
             } catch (IOException e) {
             }
         }
         if (socket != null) {
             try {
-                socket.close(); 
+                socket.close();
             } catch (IOException e) {
             }
         }

@@ -59,8 +59,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Task to determine the basename of a specified file, optionally minus a
- * specified suffix.
+ * Sets a property to the base name of a specified file, optionally minus a
+ * suffix.
  *
  * This task can accept the following attributes:
  * <ul>
@@ -94,17 +94,23 @@ public class Basename extends Task {
   private String property;
   private String suffix;
 
-  // The setter for the `file' attribute
+  /**
+   * File or directory to get base name from.
+   */
   public void setFile(File file) {
     this.file = file;
   }
 
-  // The setter for the `property' attribute
+  /**
+   * Property to set base name to.
+   */
   public void setProperty(String property) {
     this.property  = property ;
   }
 
-  // The setter for the `suffix' attribute
+  /**
+   * Optional suffix to remove from base name.
+   */
   public void setSuffix(String suffix) {
     this.suffix = suffix;
   }
@@ -112,20 +118,25 @@ public class Basename extends Task {
 
   // The method executing the task
   public void execute() throws BuildException {
-      String value;
       if (property == null) {
-          throw new BuildException("property attribute required", location);
+          throw new BuildException("property attribute required", getLocation());
       }
       if (file == null) {
-          throw new BuildException("file attribute required", location);
-      } else {
-        value = file.getName();
-        if (suffix != null && value.endsWith(suffix)) {
-            int pos = value.indexOf('.');
-            value = value.substring(0, pos);
-        }
-        getProject().setNewProperty(property, value);
+          throw new BuildException("file attribute required", getLocation());
       }
+      String value = file.getName();
+      if (suffix != null && value.endsWith(suffix)) {
+          // if the suffix does not starts with a '.' and the
+          // char preceding the suffix is a '.', we assume the user
+          // wants to remove the '.' as well (see docs)
+          int pos = value.length() - suffix.length();
+          if (pos > 0 && suffix.charAt(0) != '.' 
+              && value.charAt(pos - 1) == '.') {
+              pos--;
+          }
+          value = value.substring(0, pos);
+      }
+      getProject().setNewProperty(property, value);
   }
 }
 

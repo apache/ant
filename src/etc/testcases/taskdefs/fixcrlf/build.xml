@@ -109,7 +109,7 @@
              includes="input.crlf.utf16"
              javafiles="false"
              cr="remove"
-             encoding="UTF16"
+             encoding="UnicodeBig"
              />
   </target>
 

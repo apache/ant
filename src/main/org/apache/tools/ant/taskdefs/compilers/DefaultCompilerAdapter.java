@@ -277,11 +277,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
             }
-            if (bootclasspath != null) {
+            if (bootclasspath != null && bootclasspath.size() > 0) {
                 cmd.createArgument().setValue("-bootclasspath");
                 cmd.createArgument().setPath(bootclasspath);
             }
-            if (extdirs != null) {
+            if (extdirs != null && extdirs.size() > 0) {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(extdirs);
             }
@@ -335,7 +335,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      */
     protected Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
         setupJavacCommandlineSwitches(cmd, true);
-        if (attributes.getSource() != null) {
+        if (attributes.getSource() != null && !assumeJava13()) {
             cmd.createArgument().setValue("-source");
             cmd.createArgument().setValue(attributes.getSource());
         }
@@ -397,7 +397,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Do the compile with the specified arguments.
      * @param args - arguments to pass to process on command line
-     * @param firstFileName - index of the first source file in args
+     * @param firstFileName - index of the first source file in args,
+     * if the index is negative, no temporary file will ever be
+     * created, but this may hit the command line length limit on your
+     * system.
      */
     protected int executeExternalCompile(String[] args, int firstFileName) {
         String[] commandArray = null;
@@ -411,12 +414,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
              * POSIX seems to define a lower limit of 4k, so use a temporary
              * file if the total length of the command line exceeds this limit.
              */
-            if (Commandline.toString(args).length() > 4096) {
+            if (Commandline.toString(args).length() > 4096 
+                && firstFileName >= 0) {
                 PrintWriter out = null;
                 try {
                     String userDirName = System.getProperty("user.dir");
                     File userDir = new File(userDirName);
-                    tmpFile = fileUtils.createTempFile("jikes", "", userDir);
+                    tmpFile = fileUtils.createTempFile("files", "", userDir);
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         out.println(args[i]);
@@ -459,6 +463,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
+     * @deprecated use org.apache.tools.ant.types.Path#addExtdirs instead
+     */
+    protected void addExtdirsToClasspath(Path classpath) {
+        classpath.addExtdirs(extdirs);
+    }
+
+    /**
      * Adds the command line arguments specifc to the current implementation.
      */
     protected void addCurrentCompilerArgs(Commandline cmd) {
@@ -487,6 +498,20 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) ||
             ("extJavac".equals(attributes.getCompilerVersion()) 
              && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2));
+    }
+
+    /**
+     * Shall we assume JDK 1.3 command line switches?
+     * @since Ant 1.5
+     */
+    protected boolean assumeJava13() {
+        return "javac1.3".equals(attributes.getCompilerVersion()) ||
+            ("classic".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
+            ("modern".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) ||
+            ("extJavac".equals(attributes.getCompilerVersion()) 
+             && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
     }
 
 }

@@ -120,8 +120,8 @@ public abstract class StarTeamTask extends Task {
     /////////////////////////////////////////////////////////
 
     /**
-     * Set the name of StarTeamServer
-     *
+     * Set the name of StarTeamServer;
+     * required if <tt>URL</tt> is not set.
      * @param servername a <code>String</code> value
      * @see #setURL(String)
      */
@@ -140,8 +140,8 @@ public abstract class StarTeamTask extends Task {
     }
 
     /**
-     * set the port number of the StarTeam connection
-     *
+     * set the port number of the StarTeam connection;
+     * required if <tt>URL</tt> is not set.
      * @param serverport port number to be set
      * @see #setURL(String)
      */
@@ -160,7 +160,8 @@ public abstract class StarTeamTask extends Task {
     }
 
     /**
-     * set the name of the StarTeam project to be acted on
+     * set the name of the StarTeam project to be acted on;
+     * required if <tt>URL</tt> is not set.
      *
      * @param projectname the name of the StarTeam project to be acted on
      * @see #setURL(String)
@@ -180,7 +181,8 @@ public abstract class StarTeamTask extends Task {
     }
 
     /**
-     * set the name of the StarTeam view to be acted on
+     * set the name of the StarTeam view to be acted on;
+     * required if <tt>URL</tt> is not set.
      *
      * @param projectname the name of the StarTeam view to be acted on
      * @see #setURL(String)
@@ -201,8 +203,9 @@ public abstract class StarTeamTask extends Task {
 
 
     /**
-     * This is a convenience method for setting the server name, server port,
-     * project name and project folder at one shot.
+     * Set the server name, server port,
+     * project name and project folder in one shot;
+     * optional, but the server connection must be specified somehow. 
      *
      * @param url a <code>String</code> of the form
      *             "servername:portnum/project/view"
@@ -272,7 +275,7 @@ public abstract class StarTeamTask extends Task {
     }
 
     /**
-     * set the password to be used for login.
+     * set the password to be used for login; required.
      *
      * @param password the password to be used for login
      */

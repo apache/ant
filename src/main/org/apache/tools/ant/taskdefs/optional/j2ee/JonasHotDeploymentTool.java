@@ -115,7 +115,8 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     *  Set the host for the David ORB.
+     *  Set the host for the David ORB; required if 
+     *  ORB==david.
      *
      *@param  inValue  The new davidhost value
      */
@@ -125,7 +126,8 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     *  Set the port for the David ORB.
+     *  Set the port for the David ORB; required if 
+     *  ORB==david.
      *
      *@param  inValue  The new davidport value
      */
@@ -146,7 +148,12 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     *  Set the ORB to construct classpath.
+     * 
+     * Choose your ORB : RMI, JEREMIE, DAVID, ...; optional.
+     * If omitted, it defaults
+     * to the one present in classpath. The corresponding JOnAS JAR is
+     * automatically added to the classpath. If your orb is DAVID (RMI/IIOP) you must 
+     * specify davidhost and davidport properties.
      *
      *@param  inValue  RMI, JEREMIE, DAVID,...
      */

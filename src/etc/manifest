@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Main-Class: org.apache.tools.ant.Main
-Class-Path: jaxp.jar parser.jar crimson.jar optional.jar xalan.jar
+Class-Path: xml-apis.jar xercesImpl.jar optional.jar xalan.jar
 
 

@@ -31,5 +31,16 @@
      </style>
   </target>
 
+
+  <target name="testOutputProperty" depends="init">
+    <style in="xml/test.xml"
+           out="xml/out/test-out.xml"
+           style="xml/test.xsl">
+      <outputproperty name="method" value="xml"/>
+      <outputproperty name="standalone" value="yes"/>
+      <outputproperty name="encoding" value="iso8859_1"/>
+      <outputproperty name="indent" value="yes"/>
+    </style>
+  </target>
   
 </project>

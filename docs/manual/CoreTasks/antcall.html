@@ -62,6 +62,21 @@ will be fixed and not overridable in the init task -or indeed in the &quot;doSom
     <td align="center" valign="top">No</td>
   </tr>  
 </table>
+
+<h3>Note on <code>inheritRefs</code></h3>
+
+<p><code>&lt;antcall&gt;</code> will not override existing references,
+even if you set <code>inheritRefs</code> to true.  As the called build
+files is the same build file as the calling one, this means it will
+not override any reference set via an <code>id</code> attribute at
+all.  The only references that can be inherited by the child project
+are those defined by nested <code>&lt;reference&gt;</code> elements or
+references defined by tasks directly (not using the <code>id</code>
+attribute).</p>
+
+<p>Inherited references are not available to top level tasks of the
+child project.</p>
+
 <h3>Parameters specified as nested elements</h3>
 <h4>param</h4>
 <p>Specifies the properties to set before running the specified target. See <a
@@ -83,7 +98,7 @@ optionally changing their id.</p>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
-    <td valign="top">toid</td>
+    <td valign="top">torefid</td>
     <td valign="top">The id of the reference in the new project.</td>
     <td valign="top" align="center">No, defaults to the value of refid.</td>
   </tr>
@@ -105,14 +120,14 @@ optionally changing their id.</p>
 
 <pre>
   &lt;antcall ... &gt;
-    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot; /&gt;
+    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
   &lt;/antcall&gt;
 </pre>
 
 <p>will copy the parent's definition of <code>path1</code> into the
 new project using the id <code>path2</code>.</p>
 
-<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

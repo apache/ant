@@ -72,7 +72,8 @@ import java.util.Vector;
 import java.text.SimpleDateFormat;
 
 /**
- * Sets TSTAMP, DSTAMP and TODAY
+ * Sets properties to the current time, or offsets from the current time.
+ * The default properties are TSTAMP, DSTAMP and TODAY;
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
@@ -88,6 +89,8 @@ public class Tstamp extends Task {
     private String prefix = "";
 
     /**
+     * Set a prefix for the properties. If the prefix does not end with a "."
+     * one is automatically added
      * @since Ant 1.5
      */
     public void setPrefix(String prefix) {
@@ -97,37 +100,63 @@ public class Tstamp extends Task {
         }
     }
 
+    /**
+     * create the timestamps. Custom ones are done before
+     * the standard ones, to get their retalation in early.
+     * @throws BuildException
+     */
     public void execute() throws BuildException {
         try {
             Date d = new Date();
 
-            SimpleDateFormat dstamp = new SimpleDateFormat ("yyyyMMdd");
-            project.setNewProperty(prefix + "DSTAMP", dstamp.format(d));
-
-            SimpleDateFormat tstamp = new SimpleDateFormat ("HHmm");
-            project.setNewProperty(prefix + "TSTAMP", tstamp.format(d));
-
-            SimpleDateFormat today 
-                = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
-            project.setNewProperty(prefix + "TODAY", today.format(d));
-
             Enumeration i = customFormats.elements();
             while (i.hasMoreElements()) {
                 CustomFormat cts = (CustomFormat) i.nextElement();
-                cts.execute(project, d, location);
+                cts.execute(getProject(), d, getLocation());
             }
+
+            SimpleDateFormat dstamp = new SimpleDateFormat ("yyyyMMdd");
+            setProperty("DSTAMP", dstamp.format(d));
+
+            SimpleDateFormat tstamp = new SimpleDateFormat ("HHmm");
+            setProperty("TSTAMP", tstamp.format(d));
+
+            SimpleDateFormat today
+                = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
+            setProperty("TODAY", today.format(d));
 
         } catch (Exception e) {
             throw new BuildException(e);
         }
     }
 
+    /**
+     * create a custom format with the the current prefix.
+     * @return a ready to fill-in format
+     */
     public CustomFormat createFormat() {
-        CustomFormat cts = new CustomFormat(prefix);
+        CustomFormat cts = new CustomFormat();
         customFormats.addElement(cts);
         return cts;
     }
 
+    /**
+     * helper that encapsulates prefix logic and property setting
+     * policy (i.e. we use setNewProperty instead of setProperty).
+     */
+    private void setProperty(String name, String value) {
+        getProject().setNewProperty(prefix + name, value);
+    }
+
+    /**
+     * This nested element that allows a property to be set
+     * to the current date and time in a given format.
+     * The date/time patterns are as defined in the
+     * Java SimpleDateFormat class.
+     * The format element also allows offsets to be applied to
+     * the time to generate different time values.
+     * @todo consider refactoring out into a re-usable element.
+     */
     public class CustomFormat {
         private TimeZone timeZone;
         private String propertyName;
@@ -137,20 +166,40 @@ public class Tstamp extends Task {
         private String variant;
         private int offset = 0;
         private int field = Calendar.DATE;
-        private String prefix = "";
 
-        public CustomFormat(String prefix) {
-            this.prefix = prefix;
+        /**
+         * Create a format
+         */
+        public CustomFormat() {
         }
 
+        /**
+         *  The property to receive the date/time string in the given pattern
+         * @param propertyName
+         */
         public void setProperty(String propertyName) {
-            this.propertyName = prefix + propertyName;
+            this.propertyName = propertyName;
         }
 
+        /**
+         * The date/time pattern to be used. The values are as
+         * defined by the Java SimpleDateFormat class.
+         * @param pattern
+         * @see java.text.SimpleDateFormat
+         */
         public void setPattern(String pattern) {
             this.pattern = pattern;
         }
 
+        /**
+         * The locale used to create date/time string.
+         * The general form is "language, country, variant" but
+         * either variant or variant and country may be omitted.
+         * For more information please refer to documentation
+         * for the java.util.Locale  class.
+         * @param locale
+         * @see java.util.Locale
+         */
         public void setLocale(String locale) {
             StringTokenizer st = new StringTokenizer(locale, " \t\n\r\f,");
             try {
@@ -160,7 +209,7 @@ public class Tstamp extends Task {
                     if (st.hasMoreElements()) {
                         variant = st.nextToken();
                         if (st.hasMoreElements()) {
-                            throw new BuildException("bad locale format", 
+                            throw new BuildException("bad locale format",
                                                       getLocation());
                         }
                     }
@@ -168,15 +217,25 @@ public class Tstamp extends Task {
                     country = "";
                 }
             } catch (NoSuchElementException e) {
-                throw new BuildException("bad locale format", e, 
+                throw new BuildException("bad locale format", e,
                                          getLocation());
             }
         }
 
+        /**
+         * The timezone to use for displaying time.
+         * The values are as defined by the Java TimeZone class.
+         * @param id
+         * @see java.util.TimeZone
+         */
         public void setTimezone(String id){
             timeZone = TimeZone.getTimeZone(id);
         }
 
+        /**
+         * The numeric offset to the current time.
+         * @param offset
+         */
         public void setOffset(int offset) {
             this.offset = offset;
         }
@@ -196,10 +255,32 @@ public class Tstamp extends Task {
             field = u.getCalendarField();
         }
 
+        /**
+         * The unit of the offset to be applied to the current time.
+         * Valid Values are
+         * <ul>
+         *    <li>millisecond</li>
+         *    <li>second</li>
+         *    <li>minute</li>
+         *    <li>hour</li>
+         *    <li>day</li>
+         *    <li>week</li>
+         *    <li>month</li>
+         *    <li>year</li>
+         * </ul>
+         * The default unit is day.
+         * @param unit
+         */
         public void setUnit(Unit unit) {
             field = unit.getCalendarField();
         }
 
+        /**
+         * validate parameter and execute the format
+         * @param project project to set property in
+         * @param date date to use as a starting point
+         * @param location line in file (for errors)
+         */
         public void execute(Project project, Date date, Location location) {
             if (propertyName == null) {
                 throw new BuildException("property attribute must be provided",
@@ -231,10 +312,13 @@ public class Tstamp extends Task {
             if (timeZone != null){
                 sdf.setTimeZone(timeZone);
             }
-            project.setNewProperty(propertyName, sdf.format(date));
+            Tstamp.this.setProperty(propertyName, sdf.format(date));
         }
     }
 
+    /**
+     * set of valid units to use for time offsets.
+     */
     public static class Unit extends EnumeratedAttribute {
 
         private static final String MILLISECOND = "millisecond";

@@ -75,14 +75,24 @@ public class Filters {
     public Filters() {
     }
 
+    /**
+     * Automatically exclude all classes and methods
+     * unless included in nested elements; optional, default true. 
+     */
     public void setDefaultExclude(boolean value) {
         defaultExclude = value;
     }
 
+    /**
+     * include classes and methods in the analysis
+     */
     public void addInclude(Include incl) {
         filters.addElement(incl);
     }
 
+    /**
+     * exclude classes and methods from the analysis
+     */
     public void addExclude(Exclude excl) {
         filters.addElement(excl);
     }
@@ -105,23 +115,43 @@ public class Filters {
         return buf.toString();
     }
 
+    /**
+     * an includes or excludes element
+     */
     public abstract static class FilterElement {
         protected String clazz;
         protected String method = "*"; // default is all methods
         protected boolean enabled = true; // default is enable
 
-        public void setName(String value) { // this one is deprecated.
+        /** 
+         * this one is deprecated.
+         * @ant.task ignore="true"
+         */
+         
+        public void setName(String value) { 
             clazz = value;
         }
 
+        /**
+         * The classname mask as a simple regular expression;
+         * optional, defaults to "*"
+         */
         public void setClass(String value) {
             clazz = value;
         }
 
+        /**
+         * The method mask as a simple regular expression;
+         * optional, defaults to "*"
+         */
         public void setMethod(String value) {
             method = value;
         }
 
+        /** 
+         * enable or disable the filter; optional, default true
+         */
+                 
         public void setEnabled(boolean value) {
             enabled = value;
         }

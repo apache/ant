@@ -80,7 +80,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     private static final String[] VALID_ACTIONS = { ACTION_DEPLOY };
 
     /**
-     *  Creates a nested arg element.
+     *  Add a nested argument element to hand to the deployment tool; optional.
      *  @return A Commandline.Argument object representing the
      *  command line argument being passed when the deployment
      *  tool is run.  IE: "-user=mark", "-password=venture"...
@@ -90,7 +90,8 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     }
 
     /**
-     *  Creates a nested jvmarg element.
+     *  Add a nested argment element to hand to the JVM running the
+     *  deployment tool.
      *  Creates a nested arg element.
      *  @return A Commandline.Argument object representing the
      *  JVM command line argument being passed when the deployment
@@ -114,6 +115,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     /**
      *  Sets the parent task.
      *  @param task An ServerDeploy object representing the parent task.
+     *  @ant.attribute ignored="true"
      */
     public void setTask(ServerDeploy task) {
         super.setTask(task);
@@ -147,10 +149,9 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     }
 
     /**
-     *  Sets the className field.
-     *  <p>The className is the name of the class to execute to perfom
-     *  deployment.  IE: "com.foobar.tools.deploy.DeployTool"
-     *  This is a required attribute.
+     *  The name of the class to execute to perfom
+     *  deployment; required. 
+     *  Example: "com.foobar.tools.deploy.DeployTool"
      *  @param className The fully qualified class name of the class
      *  to perform deployment.
      */

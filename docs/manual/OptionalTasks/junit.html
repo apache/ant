@@ -10,7 +10,7 @@
 <p>This task runs tests from the JUnit testing framework. The latest
 version of the framework can be found at
 <a href="http://www.junit.org">http://www.junit.org</a>.
-This task has been tested with JUnit 3.0 up to JUnit 3.7; it won't
+This task has been tested with JUnit 3.0 up to JUnit 3.8.1; it won't
 work with versions prior to JUnit 3.0.</p>
 <p><strong>Note:</strong> This task depends on external libraries not included
 in the Ant distribution.  See <a href="../install.html#librarydependencies">
@@ -425,7 +425,7 @@ generates a test class name for each file that ends in
 
 <pre>
 &lt;junit&gt;
-  &lt;test name="my.test.TestCase" /&gt;
+  &lt;test name="my.test.TestCase"/&gt;
 &lt;/junit&gt;
 </pre>
 
@@ -434,8 +434,8 @@ VM. No output will be generated unless the test fails.</p>
 
 <pre>
 &lt;junit printsummary="yes" fork="yes" haltonfailure="yes"&gt;
-  &lt;formatter type="plain" /&gt;
-  &lt;test name="my.test.TestCase" /&gt;
+  &lt;formatter type="plain"/&gt;
+  &lt;test name="my.test.TestCase"/&gt;
 &lt;/junit&gt;
 </pre>
 
@@ -448,20 +448,20 @@ stopped if the test fails.</p>
 <pre>
 &lt;junit printsummary="yes" haltonfailure="yes"&gt;
   &lt;classpath&gt;
-    &lt;pathelement location="${build.tests}" /&gt;
-    &lt;pathelement path="${java.class.path}" /&gt;
+    &lt;pathelement location="${build.tests}"/&gt;
+    &lt;pathelement path="${java.class.path}"/&gt;
   &lt;/classpath&gt;
 
-  &lt;formatter type="plain" /&gt;
+  &lt;formatter type="plain"/&gt;
 
-  &lt;test name="my.test.TestCase" haltonfailure="no" outfile="result" &gt;
-    &lt;formatter type="xml" /&gt;
+  &lt;test name="my.test.TestCase" haltonfailure="no" outfile="result"&gt;
+    &lt;formatter type="xml"/&gt;
   &lt;/test&gt;
 
   &lt;batchtest fork="yes" todir="${reports.tests}"&gt;
     &lt;fileset dir="${src.tests}"&gt;
-      &lt;include name="**/*Test*.java" /&gt;
-      &lt;exclude name="**/AllTests.java" /&gt;
+      &lt;include name="**/*Test*.java"/&gt;
+      &lt;exclude name="**/AllTests.java"/&gt;
     &lt;/fileset&gt;
   &lt;/batchtest&gt;
 &lt;/junit&gt;
@@ -479,7 +479,7 @@ aborted. Results are collected in files named
 <code>${reports.tests}</code>.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

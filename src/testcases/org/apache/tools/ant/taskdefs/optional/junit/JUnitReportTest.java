@@ -51,48 +51,44 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.extension;
+
+package org.apache.tools.ant.taskdefs.optional.junit;
+
+import java.io.File;
+import org.apache.tools.ant.BuildFileTest;
 
 /**
- * Enum used in (@link Extension) to indicate the compatability
- * of one extension to another. See (@link Extension) for instances
- * of object.
+ * Small testcase for the junitreporttask. 
+ * First test added to reproduce an fault, still a lot to improve
  *
- * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
- *  This file is from excalibur.extension package. Dont edit this file
- * directly as there is no unit tests to make sure it is operational
- * in ant. Edit file in excalibur and run tests there before changing
- * ants file.
- * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
- *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @version $Revision$ $Date$
- * @see Extension
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
-public final class Compatability
-{
-    /**
-     * A string representaiton of compatability level.
-     */
-    private final String m_name;
+public class JUnitReportTest extends BuildFileTest {
 
-    /**
-     * Create a compatability enum with specified name.
-     *
-     * @param name the name of compatability level
-     */
-    Compatability( final String name )
-    {
-        m_name = name;
+    public JUnitReportTest(String name){
+        super(name);
+    }
+
+    protected void setUp() {
+        configureProject("src/etc/testcases/taskdefs/optional/junitreport.xml");
+    }
+
+    protected void tearDown() {
+        executeTarget("clean");
     }
 
     /**
-     * Return name of compatability level.
-     *
-     * @return the name of compatability level
+     * Verifies that no empty junit-noframes.html is generated when frames
+     * output is selected via the default. 
+     * Needs reports1 task from junitreport.xml.
      */
-    public String toString()
-    {
-        return m_name;
+    public void testNoFileJUnitNoFrames() {
+        executeTarget("reports1");
+        if (new File("src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists()) 
+        {
+            fail("No file junit-noframes.html expected");
+        }
     }
+
 }
+

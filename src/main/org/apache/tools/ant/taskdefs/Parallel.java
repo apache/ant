@@ -65,7 +65,8 @@ import java.util.Enumeration;
 
 
 /**
- * Implements a multi threaded task execution.
+ * Executes the contained tasks in separate threads, continuing
+ * once all are completed.
  * <p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @author Conor MacNeill
@@ -81,8 +82,7 @@ public class Parallel extends Task
 
 
     /**
-     * Add a nested task to execute parallel (asynchron).
-     * <p>
+     * Add a nested task to execute in parallel.
      * @param nestedTask  Nested task to be executed in parallel
      */
     public void addTask(Task nestedTask) throws BuildException {
@@ -150,6 +150,9 @@ public class Parallel extends Task
         }
     }
 
+    /**
+     * thread that execs a task
+     */
     class TaskThread extends Thread {
         private Throwable exception;
         private Task task;
@@ -176,8 +179,12 @@ public class Parallel extends Task
                 exception = t;
             }
         }
-        
-        public Throwable getException() { 
+
+        /**
+         * get any exception that got thrown during execution;
+         * @return an exception or null for no exception/not yet finished
+         */
+        public Throwable getException() {
             return exception;
         }
     }

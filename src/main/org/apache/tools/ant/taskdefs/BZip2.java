@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
 /**
- * Compresses a file with the BZip2 algorithm. Normally used to compress
+ * Compresses a file with the BZIP2 algorithm. Normally used to compress
  * non-compressed archives such as TAR files.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>

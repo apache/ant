@@ -61,9 +61,9 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Task to perform GET commands to Microsoft Visual Source Safe.
+ * Perform Get commands to Microsoft Visual SourceSafe.
  * <p>
- * The following attributes are interpretted:
+ * The following attributes are interpreted:
  * <table border="1">
  *   <tr>
  *     <th>Attribute</th>
@@ -189,7 +189,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the local path.
+     * Override the working directory and get to the specified path; optional.
      */
     public void setLocalpath(Path localPath) {
         m_LocalPath = localPath.toString();
@@ -221,7 +221,8 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
      */
     public void setRecursive(boolean recursive) {
         m_Recursive = recursive;
@@ -239,7 +240,7 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Sets/clears quiet mode
+     * Flag to suppress output when true ; false by default.
      */
     public final void setQuiet (boolean quiet) {
         this.m_Quiet = quiet;
@@ -252,7 +253,7 @@ public class MSVSSGET extends MSVSS {
     }
     
     /**
-     * Set behaviour, used in get command to make files that are 'got' writable
+     * make fetched files  writable; optional, default false.
      */
     public final void setWritable(boolean argWritable) {
         m_Writable = argWritable;
@@ -270,12 +271,17 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the stored version string.
+     * Set a version number to get; 
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
      * <p>
+     * ORIGINAL COMMENT THAT DOES NOT SEEM AT ALL VALID:
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
      * happens if a ant variable is used e.g. version="${ver_server}" when ver_server
      * has not been defined to ant!
+     * NO, in this case the version string is "${ver_server}".
+     * @todo fix this
      */
     public void setVersion(String version) {
         if (version.equals("") || version.equals("null")) {
@@ -286,12 +292,16 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the stored date string.
+     * Set the date to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
      * <p>
+     * ORIGINAL COMMENT THAT DOES NOT SEEM AT ALL VALID:
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
      * happens if a ant variable is used e.g. date="${date}" when date
      * has not been defined to ant!
+     * @todo fix this
      */
     public void setDate(String date) {
         if (date.equals("") || date.equals("null")) {
@@ -302,7 +312,9 @@ public class MSVSSGET extends MSVSS {
     }
 
     /**
-     * Set the labeled version to operate on in SourceSafe.
+     * Set the label to get;
+     * optional, only one of <tt>version</tt>, <tt>label</tt>, or <tt>date</tt>
+     * allowed.
      * <p>
      * Note we assume that if the supplied string has the value "null" that something
      * went wrong and that the string value got populated from a null object. This
@@ -332,6 +344,10 @@ public class MSVSSGET extends MSVSS {
         }
     }
 
+    /**
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
+     */
     public void setAutoresponse(String response){
         if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;

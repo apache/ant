@@ -48,21 +48,21 @@ FilterChain</a>s.
 
 <h3>Examples</h3>
 <pre>    &lt;loadfile property="message"
-      srcFile="message.txt" /&gt;
+      srcFile="message.txt"/&gt;
 </pre>
 Load file message.txt into property "message"; an <tt>&lt;echo&gt;</tt>
 can print this.
 
 <pre>    &lt;loadfile property="encoded-file"
       srcFile="loadfile.xml"
-      encoding="ISO-8859-1" /&gt;
+      encoding="ISO-8859-1"/&gt;
 </pre>
 Load a file using the latin-1 encoding
 
 <pre>    &lt;loadfile
       property="optional.value"
       srcFile="optional.txt"
-      failonerror="false" /&gt;
+      failonerror="false"/&gt;
 </pre>
 Load a file, don't fail if it is missing (a message is printed, though)
 
@@ -71,7 +71,7 @@ Load a file, don't fail if it is missing (a message is printed, though)
       srcFile="recipientlist.txt"&gt;
       &lt;filterchain&gt;
         &lt;<a href="../CoreTypes/filterchain.html#striplinebreaks">striplinebreaks</a>/&gt;
-      &lt;/filterchaint&gt;
+      &lt;/filterchain&gt;
     &lt;/loadfile&gt;
 </pre>
 Load a property which can be used as a parameter for another task (in this case mail),

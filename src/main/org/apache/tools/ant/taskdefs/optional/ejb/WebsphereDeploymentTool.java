@@ -54,40 +54,44 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
-
-import java.io.IOException;
-
 import java.io.FileOutputStream;
-
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.jar.JarFile;
-
-import java.util.jar.JarOutputStream;
-
-import java.util.jar.JarEntry;
-import java.util.Iterator;
-
-import java.util.Hashtable;
-
 import java.util.Enumeration;
-
-
-import org.apache.tools.ant.Project;
-
-import org.apache.tools.ant.BuildException;
-
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-
-import org.apache.tools.ant.types.Path;
-
-import org.apache.tools.ant.types.Environment;
-
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
+ * Searches for the websphere specific deployment descriptors and
+ * adds them to the final ejb jar file. Websphere has two specific descriptors for session
+ * beans:
+ * <ul>
+ *    <li>ibm-ejb-jar-bnd.xmi</li>
+ *    <li>ibm-ejb-jar-ext.xmi</li>
+ * </ul>
+ * and another two for container managed entity beans:
+ * <ul>
+ *    <li>Map.mapxmi</li>
+ *    <li>Schema.dbxmi</li>
+ * </ul>
+ * In terms of WebSphere, the generation of container code and stubs is called <code>deployment</code>.
+ * This step can be performed by the websphere element as part of the jar generation process. If the
+ * switch <code>ejbdeploy</code> is on, the ejbdeploy tool from the websphere toolset is called for
+ * every ejb-jar. Unfortunately, this step only works, if you use the ibm jdk. Otherwise, the rmic
+ * (called by ejbdeploy) throws a ClassFormatError. Be sure to switch ejbdeploy off, if run ant with
+ * sun jdk.
  *
  * @author <a href="mailto:msahu@interkeel.com">Maneesh Sahu</a>
  */
@@ -126,13 +130,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /** Instance variable that determines whether generic ejb jars are kept. */
 
-    private boolean keepgenerated = false;
-
-    private String additionalArgs = "";
-
     private boolean keepGeneric = false;
-
-    private String compiler = null;
 
     private boolean alwaysRebuild = true;
 
@@ -180,6 +178,8 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /** the scratchdir for the ejbdeploy operation */
     private String tempdir = "_ejbdeploy_temp";
 
+    /** the home directory for websphere */
+    private File websphereHome;
 
     /** Get the classpath to the websphere classpaths */
     public Path createWASClasspath() {
@@ -195,16 +195,26 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
-    /** Sets the DB Vendor for the Entity Bean mapping */
+    /** Sets the DB Vendor for the Entity Bean mapping ; optional.
+     * Valid options are for example:
+     * <ul>
+     * <li>SQL92</li> <li>SQL99</li> <li>DB2UDBWIN_V71</li>
+     * <li>DB2UDBOS390_V6</li> <li>DB2UDBAS400_V4R5</li> <li>ORACLE_V8</li>
+     * <li>INFORMIX_V92</li> <li>SYBASE_V1192</li> <li>MYSQL_V323</li>
+     * </ul>
+     * This is also used to determine the name of the Map.mapxmi and
+     * Schema.dbxmi files, for example Account-DB2UDBWIN_V71-Map.mapxmi
+     * and Account-DB2UDBWIN_V71-Schema.dbxmi.
+     */
     public void setDbvendor(DBVendor dbvendor) {
         this.dbVendor = dbvendor.getValue();
     }
 
 
     /**
-     * Sets the name of the Database to create
+     * Sets the name of the Database to create; optional.
      *
-     * @param String
+     * @param dbName name of the database
      */
     public void setDbname(String dbName) {
         this.dbName = dbName;
@@ -212,9 +222,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Sets the name of the schema to create
+     * Sets the name of the schema to create; optional.
      *
-     * @param String
+     * @param dbSchema name of the schema
      */
     public void setDbschema(String dbSchema) {
         this.dbSchema = dbSchema;
@@ -222,9 +232,10 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * (true) Only generate the deployment code, do not run RMIC or Javac
+     * Flag, default false, to only generate the deployment
+     * code, do not run RMIC or Javac
      *
-     * @param boolean
+     * @param codegen option
      */
     public void setCodegen(boolean codegen) {
         this.codegen = codegen;
@@ -232,9 +243,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * (true) Only output error messages, suppress informational messages
+     * Flag, default true, to only output error messages.
      *
-     * @param boolean
+     * @param quiet option
      */
     public void setQuiet(boolean quiet) {
         this.quiet = quiet;
@@ -242,9 +253,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * (true) Disable the validation steps
+     * Flag to disable the validation steps; optional, default false.
      *
-     * @param boolean
+     * @param novalidate option
      */
     public void setNovalidate(boolean novalidate) {
         this.novalidate = novalidate;
@@ -252,9 +263,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * (true) Disable warning and informational messages
+     * Flag to disable warning and informational messages; optional, default false.
      *
-     * @param boolean
+     * @param nowarn option
      */
     public void setNowarn(boolean nowarn) {
         this.nowarn = nowarn;
@@ -262,9 +273,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * (true) Disable informational messages
+     * Flag to disable informational messages; optional, default false.
      *
-     * @param boolean
+     * @param noinfom
      */
     public void setNoinform(boolean noinfom) {
         this.noinform = noinform;
@@ -272,34 +283,36 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * (true) Enable internal tracing
+     * Flag to enable internal tracing when set, optional, default false.
      *
-     * @param boolean
+     * @param trace
      */
     public void setTrace(boolean trace) {
         this.trace = trace;
     }
 
+    /**
+     * Set the rmic options.
+     *
+     * @param options
+     */
+    public void setRmicoptions(String options) {
+        this.rmicOptions = options;
+    }
 
     /**
-     * (true) Use the WebSphere 3.5 compatible mapping rules
+     * Flag to use the WebSphere 3.5 compatible mapping rules ; optional, default false.
      *
-     * @param boolean
+     * @param attr
      */
     public void setUse35(boolean attr) {
         use35MappingRules = attr;
     }
 
 
-    /** The compiler (switch <code>-compiler</code>) to use */
-    public void setCompiler(String compiler) {
-        this.compiler = compiler;
-    }
-
-
     /**
      * Set the rebuild flag to false to only update changes in the jar rather
-     * than rerunning ejbdeploy
+     * than rerunning ejbdeploy; optional, default true.
      */
     public void setRebuild(boolean rebuild) {
         this.alwaysRebuild = rebuild;
@@ -307,8 +320,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Setter used to store the suffix for the generated websphere jar file.
-     *
+     * String value appended to the basename of the deployment
+     * descriptor to create the filename of the WebLogic EJB
+     * jar file. Optional, default '.jar'.
      * @param inString the string to use as the suffix.
      */
     public void setSuffix(String inString) {
@@ -317,9 +331,9 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Setter used to store the value of keepGeneric
-     *
-     * @param inValue a string, either 'true' or 'false'.
+     * This controls whether the generic file used as input to
+     * ejbdeploy is retained; optional, default false.
+     * @param inValue either 'true' or 'false'.
      */
     public void setKeepgeneric(boolean inValue) {
         this.keepGeneric = inValue;
@@ -327,29 +341,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
     /**
-     * Sets whether -keepgenerated is passed to ejbdeploy (that is, the .java
-     * source files are kept).
-     *
-     * @param inValue either 'true' or 'false'
-     */
-    public void setKeepgenerated(String inValue) {
-        this.keepgenerated = Boolean.valueOf(inValue).booleanValue();
-    }
-
-
-    /**
-     * Decide, wether ejbdeploy should be called or not
+     * Decide, wether ejbdeploy should be called or not;
+     * optional, default true.
      *
      * @param ejbdeploy
      */
     public void setEjbdeploy(boolean ejbdeploy) {
         this.ejbdeploy = ejbdeploy;
-    }
-
-
-    /** sets some additional args to send to ejbdeploy. */
-    public void setArgs(String args) {
-        this.additionalArgs = args;
     }
 
 
@@ -366,6 +364,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
     /**
      * Set the value of the oldCMP scheme. This is an antonym for newCMP
+     * @ant.attribute ignore="true"
      */
     public void setOldCMP(boolean oldCMP) {
         this.newCMP = !oldCMP;
@@ -385,7 +384,11 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     }
 
 
-    /** Sets the temporary directory for the ejbdeploy task */
+    /**
+     * The directory, where ejbdeploy will write temporary files;
+     * optional, defaults to '_ejbdeploy_temp'.
+     */
+
     public void setTempdir(String tempdir) {
         this.tempdir = tempdir;
     }
@@ -592,11 +595,12 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 Environment.Variable var = new Environment.Variable();
 
                 var.setKey("websphere.lib.dir");
-                var.setValue(getTask().getProject().getProperty("websphere.home") + "/lib");
+                File libdir = new File(websphereHome, "lib");
+                var.setValue(libdir.getAbsolutePath());
                 javaTask.addSysproperty(var);
 
                 // Set the working directory
-                javaTask.setDir(new File(getTask().getProject().getProperty("websphere.home")));
+                javaTask.setDir(websphereHome);
 
                 // Set the Java class name
                 javaTask.setTaskName("ejbdeploy");
@@ -667,6 +671,11 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
+        String home = getTask().getProject().getProperty("websphere.home");
+        if (home == null) {
+            throw new BuildException("Please set the property 'websphere.home' in your buildfile");
+        }
+        websphereHome = getTask().getProject().resolveFile(home);
     }
 
 

@@ -66,10 +66,10 @@ We <b>strongly</b> recommend that you use Jakarta Oro.
     <td valign="top">flags</td>
     <td valign="top">The flags to use when matching the regular expression.  For more
                      information, consult the Perl5 syntax<br />
-                     g --> Global replacement.  Replace all occurences found<br />
-                     i --> Case Insensitive.  Do not consider case in the match<br />
-                     m --> Multiline.  Treat the string as multiple lines of input, using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.<br />
-                     s --> Singleline.  Treat the string as a single line of input, using "." to match any character, including a newline, which normally, it would not match.<br />
+                     g : Global replacement.  Replace all occurences found<br />
+                     i : Case Insensitive.  Do not consider case in the match<br />
+                     m : Multiline.  Treat the string as multiple lines of input, using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.<br />
+                     s : Singleline.  Treat the string as a single line of input, using "." to match any character, including a newline, which normally, it would not match.<br />
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -86,7 +86,7 @@ We <b>strongly</b> recommend that you use Jakarta Oro.
 <pre>  &lt;replaceregexp file=&quot;${src}/build.properties&quot;
                          match=&quot;OldProperty=(.*)&quot;
                          replace=&quot;NewProperty=\1&quot;
-                         byline=&quot;true&quot; /&gt;
+                         byline=&quot;true&quot;/&gt;
 </pre>
 <p>replaces occurrences of the property name &quot;OldProperty&quot;
  with &quot;NewProperty&quot; in a properties file, preserving the existing
@@ -98,24 +98,24 @@ value, in the file <code>${src}/build.properties</code></p>
    the regular expression.  You can use this element to refer to a previously
    defined regular expression datatype instance.</p>
 <blockquote>
-     &lt;regexp id="id" pattern="expression" /&gt;<br />
-     &lt;regexp refid="id" /&gt;
+     &lt;regexp id="id" pattern="expression"/&gt;<br />
+     &lt;regexp refid="id"/&gt;
 </blockquote>
 <p>This task supports a nested <i>Substitution</i> element to specify
    the substitution pattern.  You can use this element to refer to a previously
    defined substitution pattern datatype instance.</p>
 <blockquote>
-     &lt;substitution id="id" pattern="expression" /&gt;<br />
-     &lt;substitution refid="id" /&gt;
+     &lt;substitution id="id" pattern="expression"/&gt;<br />
+     &lt;substitution refid="id"/&gt;
 </blockquote>
 <h3>Examples</h3>
 <blockquote>
   <pre>
 &lt;replaceregexp byline=&quot;true&quot;&gt;
-  &lt;regexp expression=&quot;OldProperty=(.*)&quot; /&gt;
-  &lt;substitution expression=&quot;NewProperty=\1&quot; /&gt;
+  &lt;regexp pattern=&quot;OldProperty=(.*)&quot;/&gt;
+  &lt;substitution expression=&quot;NewProperty=\1&quot;/&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
-   &lt;includes=&quot;*.properties&quot; /&gt;
+   &lt;includes=&quot;*.properties&quot;/&gt;
   &lt;/fileset&gt;
  &lt;/replaceregexp&gt;
 </pre></blockquote>

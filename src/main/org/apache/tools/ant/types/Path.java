@@ -240,7 +240,7 @@ public class Path extends DataType implements Cloneable {
      */
     public void append(Path other) {
         if (other == null) {
-          return;
+            return;
         }
         String[] l = other.list();
         for (int i = 0; i < l.length; i++) {

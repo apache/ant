@@ -119,6 +119,11 @@ and <b>abort</b> execution and transaction and fail task.</p>
   <td width="78%" valign="top">Execute task only if rdbms version match</td>
   <td width="10%" valign="top">No (no restriction)</td>
 </tr>
+<tr>
+  <td width="12%" valign="top">caching</td>
+  <td width="78%" valign="top">Should the task cache loaders and the driver?</td>
+  <td width="10%" valign="top">No (default=true)</td>
+</tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
@@ -213,9 +218,9 @@ operation on <i>some_other_table</i>.</p>
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
     password=&quot;pass&quot; &gt;
-  &lt;transaction  src=&quot;data1.sql&quot; /&gt;
-  &lt;transaction  src=&quot;data2.sql&quot; /&gt;
-  &lt;transaction  src=&quot;data3.sql&quot; /&gt;
+  &lt;transaction  src=&quot;data1.sql&quot;/&gt;
+  &lt;transaction  src=&quot;data2.sql&quot;/&gt;
+  &lt;transaction  src=&quot;data3.sql&quot;/&gt;
   &lt;transaction&gt;
     truncate table some_other_table;
   &lt;/transaction&gt;
@@ -231,9 +236,9 @@ run before <code>data2.sql</code>.</p>
     driver=&quot;org.database.jdbcDriver&quot;
     url=&quot;jdbc:database-url&quot;
     userid=&quot;sa&quot;
-    password=&quot;pass&quot; &gt;
+    password=&quot;pass&quot;&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
-    &lt;include name=&quot;data*.sql&quot; /&gt;
+    &lt;include name=&quot;data*.sql&quot;/&gt;
   &lt;/fileset&gt;
   &lt;transaction&gt;
     truncate table some_other_table;
@@ -282,7 +287,7 @@ truncate table some_other_table;
 </pre></blockquote>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

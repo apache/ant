@@ -51,7 +51,7 @@
 	  <td valign="top">append</td>
 	  <td valign="top">
 	    Specifies whether or not the file specified by 'destfile'
-	    should be overwritten. Defaults to &quot;yes&quot;.
+	    should be overwritten. Defaults to &quot;no&quot;.
 	  </td>
 	  <td valign="top" align="center">No</td>
 	</tr>
@@ -103,7 +103,7 @@
 
       <pre>
   &lt;concat&gt;
-    &lt;fileset dir=&quot;messages&quot; includes=&quot;*important*&quot; /&gt;
+    &lt;fileset dir=&quot;messages&quot; includes=&quot;*important*&quot;/&gt;
   &lt;/concat&gt;
       </pre>
 
@@ -111,7 +111,7 @@
 
       <pre>
   &lt;concat destfile=&quot;NOTES&quot; append=&quot;true&quot;&gt;
-    &lt;filelist dir=&quot;notes&quot; files=&quot;note.txt&quot; /&gt;
+    &lt;filelist dir=&quot;notes&quot; files=&quot;note.txt&quot;/&gt;
   &lt;/concat&gt;
       </pre>
 
@@ -121,10 +121,10 @@
       <pre>
   &lt;concat destfile=&quot;${docbook.dir}/all-sections.xml&quot;&gt;
     &lt;filelist dir=&quot;${docbook.dir}/sections&quot; 
-         files=&quot;introduction.xml,overview.xml&quot; /&gt;
+         files=&quot;introduction.xml,overview.xml&quot;/&gt;
     &lt;fileset dir=&quot;${docbook.dir}&quot; 
          includes=&quot;sections/*.xml&quot; 
-         excludes=&quot;introduction.xml,overview.xml&quot; /&gt;
+         excludes=&quot;introduction.xml,overview.xml&quot;/&gt;
   &lt;/concat&gt;
       </pre>
 

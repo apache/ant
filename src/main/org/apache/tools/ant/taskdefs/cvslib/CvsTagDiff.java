@@ -53,12 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Cvs;
-import org.apache.tools.ant.util.FileUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,10 +62,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Cvs;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Cvs tag diff.
- * The task will examine the output of cvs rdiff between two tags.
+ * Examines the output of cvs rdiff between two tags.
+ *
  * It produces an XML output representing the list of changes.
  * <PRE>
  * &lt;!-- Root element --&gt;
@@ -98,9 +97,11 @@ import java.util.Vector;
  * </PRE>
  *
  * @author <a href="mailto:fred@castify.net">Frederic Lavigne</a>
+ * @author <a href="mailto:rvanoo@xs4all.nl">Rob van Oostrum</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvstagdiff"
+ * @todo Why doesn't this task extend from AbstractCvsTask?
  */
 public class CvsTagDiff extends Task {
 
@@ -128,6 +129,11 @@ public class CvsTagDiff extends Task {
      * The cvs package/module to analyse
      */
     private String m_package;
+
+    /**
+     * The root directory in the rdiff output for the cvs package/module
+     */
+    private String m_rootDir;
 
     /**
      * The earliest tag from which diffs are to be included in the report.
@@ -171,6 +177,9 @@ public class CvsTagDiff extends Task {
     }
 
     /**
+     * If set to a value 1-9 it adds -zN to the cvs command line, else
+     * it disables compression.
+     *
      * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCompressionLevel(int)
      */
     public void setCompressionLevel(int level) {
@@ -178,56 +187,65 @@ public class CvsTagDiff extends Task {
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCompression(boolean)
+     * If true, this is the same as compressionlevel="3".
      */
     public void setCompression(boolean usecomp) {
         m_cvs.setCompression(usecomp);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCvsRoot
+     * The CVSROOT variable.
      */
     public void setCvsRoot(String cvsRoot) {
         m_cvs.setCvsRoot(cvsRoot);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setCvsRsh
+     * The CVS_RSH variable.
      */
     public void setCvsRsh(String rsh) {
         m_cvs.setCvsRsh(rsh);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setPackage
+     * The package/module to analyze.
      */
     public void setPackage(String p) {
         m_package = p;
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setQuiet
+     * The root directory for the package/module to analyze.
+     */
+    public void setRootDir(String dir) {
+        m_rootDir = dir;
+    }
+
+    /**
+     * If true, suppress informational messages.
      */
     public void setQuiet(boolean quiet) {
         m_cvs.setQuiet(quiet);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setPort
+     * Port used by CVS to communicate with the server.
      */
     public void setPort(int port) {
         m_cvs.setPort(port);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setPassfile
+     * Password file to read passwords from.
      */
     public void setPassfile(File f) {
         m_cvs.setPassfile(f);
     }
 
     /**
-     * @see org.apache.tools.ant.taskdefs.AbstractCvsTask#setFailOnError
+     * Stop the build process if the command exits with
+     * a return code other than 0.
+     * Defaults to false.
      */
     public void setFailOnError(boolean b) {
         m_cvs.setFailOnError(b);
@@ -332,20 +350,11 @@ public class CvsTagDiff extends Task {
         try {
             reader = new BufferedReader(new FileReader(tmpFile));
 
-            // entries are of the form:
-            // File module/filename is new; current revision 1.1
-            // or
-            // File module/filename changed from revision 1.4 to 1.6
-            // or
-            // File module/filename is removed; not included in
-            // release tag SKINLF_12
-
-            // get rid of 'File module/"
-            int headerLength = 5 + m_package.length() + 1;
-            Vector entries = new Vector();
-
             String line = reader.readLine();
+            int headerLength = getHeaderLength(line);
+
             int index;
+            Vector entries = new Vector();
             CvsTagEntry entry = null;
 
             while (null != line) {
@@ -398,6 +407,43 @@ public class CvsTagDiff extends Task {
                 }
             }
         }
+    }
+
+    /**
+     * Return the size of the header from a given line that is the output
+     * from <tt>cvs rdiff -s ...</tt>.
+     * @param line the line of text containing the 'File module/filename is ...'
+     * @return the header length
+     */
+    private int getHeaderLength(String line) {
+        // entries are of the form:
+        // File module/filename is new; current revision 1.1
+        // or
+        // File module/filename changed from revision 1.4 to 1.6
+        // or
+        // File module/filename is removed; not included in
+        // release tag SKINLF_12
+
+        // get rid of 'File module/"
+        final boolean trimFileName = line.startsWith( "File " + m_package );
+
+        final int prefixLength = "File ".length();
+        int suffixLength = 0;
+        int rootDirLength = 0;
+
+        if (null != m_rootDir) {
+            // if root directory is set
+            rootDirLength = m_rootDir.length();
+            suffixLength = ( rootDirLength > 0 && m_rootDir.endsWith( "/" ) ) ? 1 : 0;
+        } else if (trimFileName) {
+            // if root directory wasn't set, and the rdiff output is of
+            // the format File module/filename
+            rootDirLength = m_package.length();
+            suffixLength = 1;
+        }
+
+        int headerLength = prefixLength + rootDirLength + suffixLength;
+        return headerLength;
     }
 
     /**

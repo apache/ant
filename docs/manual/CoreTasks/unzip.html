@@ -55,8 +55,7 @@ to perform unarchival upon.
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;
-  /&gt;</code></p>
+  <p><code>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;/&gt;</code></p>
 </blockquote>
 <blockquote>
   <p><code>
@@ -71,8 +70,8 @@ to perform unarchival upon.
     &lt;patternset&gt;
         &lt;include name=&quot;**/*.java&quot;/&gt;
         &lt;exclude name=&quot;**/Test*.java&quot;/&gt;
-    &lt;patternset/&gt;
-&lt;unzip/&gt;
+    &lt;/patternset&gt;
+&lt;/unzip&gt;
 </pre></p>
 </blockquote>
 <blockquote>
@@ -81,16 +80,16 @@ to perform unarchival upon.
     &lt;patternset&gt;
         &lt;include name=&quot;**/*.java&quot;/&gt;
         &lt;exclude name=&quot;**/Test*.java&quot;/&gt;
-    &lt;patternset/&gt;
+    &lt;/patternset&gt;
     &lt;fileset dir=&quot;.&quot;&gt;
         &lt;include name=&quot;**/*.zip&quot;/&gt;
         &lt;exclude name=&quot;**/tmp*.zip&quot;/&gt;
-    &lt;fileset/&gt;
-&lt;unzip/&gt;
+    &lt;/fileset&gt;
+&lt;/unzip&gt;
 </pre></p>
 </blockquote>
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

@@ -23,7 +23,7 @@ Version 1.1 2002/01/23
 <h2>Contents</h2>
 
 <ul>
-	<li><a href="#intro">Introduction</a></li>
+    <li><a href="#intro">Introduction</a></li>
     <li><a href="#tasks">The Tasks</a></li>
 
 </ul>
@@ -55,17 +55,17 @@ have been tested with Linux, Solaris &amp; Windows2000.</p>
            <td>Retrieves a read-only copy of the specified project or file.</td>
          </tr>
          <tr>
-           <td><a href="#SOSLabel">    soslabel</a></td>
+           <td><a href="#SOSLabel">soslabel</a></td>
            <td>Assigns a label to the specified project.</td>
          </tr>
          <tr>
-           <td><a href="#SOSCheckIn">     soscheckin</a></td>
+           <td><a href="#SOSCheckIn">soscheckin</a></td>
            <td>Updates VSS with changes made to a checked out file or project,
            and unlocks the VSS master copy.</td>
          </tr>
          <tr>
-           <td><a href="#SOSCheckOut">      soscheckout</a></td>
-           <td>Retrieves a read-write copy of&nbsp;the specified project
+           <td><a href="#SOSCheckOut">soscheckout</a></td>
+           <td>Retrieves a read-write copy of the specified project
            or file, locking the&nbsp;VSS master copy</td>
          </tr>
 
@@ -172,23 +172,17 @@ have been tested with Linux, Solaris &amp; Windows2000.</p>
 </table>
 
 <h3>Example</h3>
-&nbsp;&nbsp;&nbsp;
-<small>&lt;sosget&nbsp;&nbsp;&nbsp;verbose="true"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;recursive="true"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;localpath="tmp"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;projectpath="/SourceRoot/project1"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sosserverpath="192.168.10.6:8888"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vssserverpath="d:\vss\srcsafe.ini"/&gt;</small><br><br>
 
+<pre>
+&lt;sosget verbose="true"
+        recursive="true"
+        username="build"
+        password="build"
+        localpath="tmp"
+        projectpath="/SourceRoot/project1"
+        sosserverpath="192.168.10.6:8888"
+        vssserverpath="d:\vss\srcsafe.ini"/&gt;
+</pre>
 <small>Connects to a SourceOffsite server on 192.168.10.6:8888 with
 build,build as the username &amp; password. The SourceSafe  database resides
 on the same box as the SOS server  &amp; the VSS database  is at
@@ -259,23 +253,14 @@ using tmp as the working directory. </small><br>
 </table>
 
 <h3>Example</h3>
-&nbsp;&nbsp;&nbsp;
-<small>&lt;soslabel&nbsp;&nbsp;&nbsp;username="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-password="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-label="test label"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-projectpath="/SourceRoot/project1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-sosserverpath="192.168.10.6:8888"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-vssserverpath="d:\vss\srcsafe.ini"/&gt;</small><br><br>
+<pre>
+&lt;soslabel username="build"
+          password="build"
+          label="test label"
+          projectpath="/SourceRoot/project1
+          sosserverpath="192.168.10.6:8888"
+          vssserverpath="d:\vss\srcsafe.ini"/&gt;
+</pre>
 
 <small>Connects to a SourceOffsite server on 192.168.10.6:8888 with
 build,build as the username &amp; password. The SourceSafe database resides
@@ -372,30 +357,16 @@ on the same box as  the  SOS server  &amp; the VSS database is at
 </table>
 
 <h3>Example</h3>
-&nbsp;&nbsp;&nbsp;
-<small>&lt;soscheckin&nbsp;&nbsp;&nbsp;username="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;file="foobar.txt"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verbose="true"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;comment="comment abc"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;projectpath="/SourceRoot/project1"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sosserverpath="server1:8888"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vssserverpath="\\server2\vss\srcsafe.ini"/&gt;
-</small><br><br>
+<pre>
+&lt;soscheckin username="build"
+            password="build"
+            file="foobar.txt"
+            verbose="true"
+            comment="comment abc"
+            projectpath="/SourceRoot/project1"
+            sosserverpath="server1:8888"
+            vssserverpath="\\server2\vss\srcsafe.ini"/&gt;
+</pre>
 
 <small>Connects to a SourceOffsite server on server1:8888 with build,build as
 the username &amp; password. The SourceSafe database resides on a different
@@ -490,27 +461,15 @@ messages will be displayed on screen.</small><br>
      <br>
 
 <h3>Example</h3>
-&nbsp;&nbsp;&nbsp;
-<small>&lt;soscheckout&nbsp;&nbsp;&nbsp;soscmd="/usr/local/bin"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verbose="true"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;username="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password="build"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;projectpath="/SourceRoot/project1"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sosserverpath="192.168.10.6:8888"<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vssserverpath="\\server2\vss\srcsafe.ini"/&gt;
-</small><br><br>
+<pre>
+&lt;soscheckout soscmd="/usr/local/bin"
+             verbose="true"
+             username="build"
+             password="build"
+             projectpath="/SourceRoot/project1"
+             sosserverpath="192.168.10.6:8888"
+             vssserverpath="\\server2\vss\srcsafe.ini"/&gt;
+</pre>
 
 <small>Connects to a SourceOffsite server on server1:8888 with build,build as
 the username &amp; password. The SourceSafe database resides on a different

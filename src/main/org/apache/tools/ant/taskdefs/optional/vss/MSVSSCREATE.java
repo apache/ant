@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Task to perform CREATE commands to Microsoft Visual Source Safe.
+ * Creates a new project in Microsoft Visual SourceSafe.
  * <p>
  * The following attributes are interpreted:
  * <table border="1">
@@ -108,6 +108,7 @@ import org.apache.tools.ant.types.Commandline;
  * </table>
  *
  * @author Gary S. Weaver
+ * @ant.task name="vsscreate" category="scm"
  */
 public class MSVSSCREATE extends MSVSS {
 
@@ -194,7 +195,7 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets/clears quiet mode
+     * Sets/clears quiet mode; optional, default false.
      * @param quiet whether or not command should be run in "quiet mode".
      */
     public final void setQuiet (boolean quiet) {
@@ -212,7 +213,8 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets whether task should fail if there is an error creating the project.
+     * Sets whether task should fail if there is an error creating the project;
+     * optional, default true.
      * @param failOnError true if task should fail if there is an error creating 
      * the project.
      */
@@ -221,7 +223,8 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Sets the AutoResponse.
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
      * @param response the response.
      */
     public void setAutoresponse(String response) {

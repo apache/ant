@@ -28,6 +28,26 @@ whilst waiting for your builds to complete...</p>
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">antlogo.gif from the classpath</td>
   </tr>
+ 
+  <tr>
+    <td valign="top">showduration</td>
+    <td valign="top">Initial period to pause the build to show the
+    splash in milliseconds.</td>
+    <td valign="top" align="center">No</td>
+    <td valign="top" align="center">5000 ms</td>
+  </tr>  
+</table>
+<h3>Deprecated properties</h3>
+  
+The following properties can be used to configure the proxy settings to retrieve
+an image from behind a firewall. However, the settings apply not just to this
+task, but to all following tasks. Therefore they are now mostly deprecated in 
+preference to the &lt;setproxy&gt; task, that makes it clear to readers of
+the build exactly what is going on. We say mostly as this task's support
+includes proxy authentication, so you may still need to use its
+proxy attributes.
+  
+<table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td valign="top">useproxy</td>
     <td valign="top">Use a proxy to access imgurl. Note: Only tested
@@ -60,13 +80,7 @@ whilst waiting for your builds to complete...</p>
     <td valign="top" align="center">No</td>
     <td valign="top" align="center">None</td>
   </tr>
-  <tr>
-    <td valign="top">showduration</td>
-    <td valign="top">Initial period to pause the build to show the
-    splash in milliseconds.</td>
-    <td valign="top" align="center">No</td>
-    <td valign="top" align="center">5000 ms</td>
-  </tr>
+
 </table>
 <h3>Examples</h3>
 <blockquote><pre>
@@ -76,15 +90,10 @@ whilst waiting for your builds to complete...</p>
 <blockquote><pre>
 &lt;splash imageurl=&quot;http://jakarta.apache.org/images/jakarta-logo.gif&quot;
            useproxy=&quot;true&quot;
-           showduration=&quot;5000&quot;
-           proxy=&quot;proxy.mydomain.com&quot;
-           port=&quot;8080&quot;
-           user=&quot;BuildEng&quot;
-           password=&quot;LetMePass&quot;/>
+           showduration=&quot;5000&quot;/&gt;
 
 </pre></blockquote>
-<p>Splashes the jakarta logo, via a connection through the proxy at
-proxy.mydomain.com on port 8080 (as user BuildEng/LetMePass) for
+<p>Splashes the jakarta logo, for
 an initial period of 5 seconds.</p>
 <hr>
 <p align="center">Copyright &copy; 2002 Apache Software Foundation. All rights

@@ -2,6 +2,10 @@
 
 <project name="ant-test" basedir="." default="test1">
 
+  <path id="inheritable">
+    <pathelement path="${java.class.path}" />
+  </path>
+
   <target name="cleanup">
     <delete file="test1.log" />
     <delete file="test2.log" />
@@ -82,5 +86,57 @@
          inheritall="false" dir="ant" />
     <ant antfile="ant.xml" target="dummy" output="test4.log" 
          dir="ant" />
+  </target>
+
+  <target name="testRefid">
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy">
+      <property name="testprop" refid="inheritable" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-inheritall-start">
+    <property name="test" value="1" />
+    <ant antfile="ant.xml"
+         target="test-property-override-inheritall-level-2"
+         inheritall="true">
+      <property name="test" value="2" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-inheritall-level-2">
+    <property name="test" value="3" />
+    <ant antfile="ant.xml"
+         target="test-property-override-inheritall-level-3"
+         inheritall="true">
+      <property name="test" value="4" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-inheritall-level-3">
+    <property name="test" value="5" />
+    <echo message="The value of test is ${test}" />
+  </target>
+
+  <target name="test-property-override-no-inheritall-start">
+    <property name="test" value="1" />
+    <ant antfile="ant.xml"
+         target="test-property-override-no-inheritall-level-2"
+         inheritall="false">
+      <property name="test" value="2" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-no-inheritall-level-2">
+    <property name="test" value="3" />
+    <ant antfile="ant.xml"
+         target="test-property-override-no-inheritall-level-3"
+         inheritall="false">
+      <property name="test" value="4" />
+    </ant>
+  </target>
+
+  <target name="test-property-override-no-inheritall-level-3">
+    <property name="test" value="5" />
+    <echo message="The value of test is ${test}" />
   </target>
 </project>

@@ -65,7 +65,7 @@ import java.lang.reflect.Field;
 
 /**
  * Import source, class files, and resources to the Visual Age for Java
- * workspace using FileSets.
+ * workspace.
  * <p>
  * Example:
  * <pre>
@@ -140,7 +140,7 @@ public class VAJImport extends VAJTask {
     }
 
     /**
-     * Import .class files.
+     * Flag to import .class files; optional, default false.
      */
     public void setImportClasses(boolean importClasses) {
         this.importClasses = importClasses;
@@ -148,14 +148,14 @@ public class VAJImport extends VAJTask {
 
     /**
      * Import resource files (anything that doesn't end in
-     * .class or .java)
+     * .class or .java); optional, default true.
      */
     public void setImportResources(boolean importResources) {
         this.importResources = importResources;
     }
 
     /**
-     * Import .java files
+     * Import .java files; optional, default true.
      */
     public void setImportSources(boolean importSources) {
         this.importSources = importSources;

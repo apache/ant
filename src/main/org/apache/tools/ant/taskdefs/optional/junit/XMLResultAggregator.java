@@ -80,8 +80,9 @@ import org.apache.tools.ant.util.StringUtils;
 
 
 /**
- * <p> This is an helper class that will aggregate all testsuites under a specific
- * directory and create a new single document. It is not particulary clean but
+ * Aggregates all &lt;junit&gt; XML formatter testsuite data under
+ * a specific directory and transforms the results via XSLT.
+ * It is not particulary clean but
  * should be helpful while I am thinking about another technique.
  *
  * <p> The main problem is due to the fact that a JVM can be forked for a testcase
@@ -113,7 +114,9 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /** the default file name: <tt>TESTS-TestSuites.xml</tt> */
     public static final String DEFAULT_FILENAME = "TESTS-TestSuites.xml";
 
-
+    /**
+     * Generate a report based on the document created by the merge.
+     */
     public AggregateTransformer createReport(){
         AggregateTransformer transformer = new AggregateTransformer(this);
         transformers.addElement(transformer);
@@ -121,7 +124,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
 
     /**
-     * Set the name of the file aggregating the results. It must be relative
+     * Set the name of the aggregegated results file. It must be relative
      * from the <tt>todir</tt> attribute. If not set it will use {@link #DEFAULT_FILENAME}
      * @param  value   the name of the file.
      * @see #setTodir(File)
@@ -142,7 +145,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
 
     /**
-     * Add a new fileset containing the xml results to aggregate
+     * Add a new fileset containing the XML results to aggregate
      * @param    fs      the new fileset of xml results.
      */
     public void addFileSet(FileSet fs) {

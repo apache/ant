@@ -62,7 +62,8 @@ import org.apache.tools.ant.types.Commandline;
 
 
 /**
- * Task to perform Checkout command to ClearCase.
+ * Performs ClearCase checkout.
+ *
  * <p>
  * The following attributes are interpretted:
  * <table border="1">
@@ -219,7 +220,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set reserved flag status
+     * If true, checks out the file as reserved.
      *
      * @param reserved the status to set the flag to
      */
@@ -237,7 +238,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set out file
+     * Creates a writable file under a different filename.
      *
      * @param outf the path to the out file
      */
@@ -255,7 +256,8 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set the nodata flag
+     * If true, checks out the file but does not create an
+     * editable file containing its data.
      *
      * @param ndata the status to set the flag to
      */
@@ -273,7 +275,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set branch name
+     * Specify a branch to check out the file to.
      *
      * @param branch the name of the branch
      */
@@ -291,7 +293,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set the version flag
+     * If true, allows checkout of a version other than main latest.
      *
      * @param version the status to set the flag to
      */
@@ -309,7 +311,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set the nowarn flag
+     * If true, warning messages are suppressed.
      *
      * @param nwarn the status to set the flag to
      */
@@ -327,7 +329,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set comment string
+     * Sets the comment string.
      *
      * @param comment the comment string
      */
@@ -345,7 +347,7 @@ public class CCCheckout extends ClearCase {
     }
 
     /**
-     * Set comment file
+     * Specifies a file containing a comment.
      *
      * @param cfile the path to the comment file
      */

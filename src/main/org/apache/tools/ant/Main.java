@@ -115,7 +115,7 @@ public class Main {
      * BuildLogger interface.
      */
     private String loggerClassname = null;
-    
+
     /**
      * The Ant InputHandler class.  There may be only one input
      * handler.
@@ -176,6 +176,7 @@ public class Main {
         Main m = null;
 
         try {
+            Diagnostics.validateVersion();
             m = new Main(args);
         } catch (Throwable exc) {
             printMessage(exc);
@@ -250,6 +251,7 @@ public class Main {
     protected Main(String[] args) throws BuildException {
 
         String searchForThis = null;
+        PrintStream logTo = null;
 
         // cycle through given args
 
@@ -261,6 +263,9 @@ public class Main {
                 return;
             } else if (arg.equals("-version")) {
                 printVersion();
+                return;
+            } else if (arg.equals("-diagnostics")){
+                Diagnostics.doReport(System.out);
                 return;
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 msgOutputLevel = Project.MSG_WARN;
@@ -274,10 +279,7 @@ public class Main {
                 try {
                     File logFile = new File(args[i + 1]);
                     i++;
-                    out = new PrintStream(new FileOutputStream(logFile));
-                    err = out;
-                    System.setOut(out);
-                    System.setErr(out);
+                    logTo = new PrintStream(new FileOutputStream(logFile));
                     isLogFileUsed = true;
                 } catch (IOException ioe) {
                     String msg = "Cannot write on the specified log file. "
@@ -436,12 +438,12 @@ public class Main {
                 System.out.println("Could not load property file "
                    + filename + ": " + e.getMessage());
             } finally {
-                if (fis != null){
+                if (fis != null) {
                     try {
                         fis.close();
                     } catch (IOException e){
+                    }
                 }
-              }
             }
 
             // ensure that -D properties take precedence
@@ -454,6 +456,15 @@ public class Main {
             }
         }
 
+        if (msgOutputLevel >= Project.MSG_INFO) {
+            System.out.println("Buildfile: " + buildFile);
+        }
+
+        if (logTo != null) {
+            out = err = logTo;
+            System.setOut(out);
+            System.setErr(out);
+        }
         readyToRun = true;
     }
 
@@ -538,12 +549,6 @@ public class Main {
             return;
         }
 
-        // track when we started
-
-        if (msgOutputLevel >= Project.MSG_INFO) {
-            System.out.println("Buildfile: " + buildFile);
-        }
-
         final Project project = new Project();
         project.setCoreLoader(coreLoader);
 
@@ -587,7 +592,7 @@ public class Main {
                 }
 
                 project.setUserProperty("ant.file",
-                    buildFile.getAbsolutePath());
+                                        buildFile.getAbsolutePath());
 
                 ProjectHelper.configureProject(project, buildFile);
 
@@ -666,14 +671,14 @@ public class Main {
                 handler = (InputHandler)
                     (Class.forName(inputHandlerClassname).newInstance());
             } catch (ClassCastException e) {
-                String msg = "The specified input handler class " 
-                    + inputHandlerClassname 
+                String msg = "The specified input handler class "
+                    + inputHandlerClassname
                     + " does not implement the InputHandler interface";
                 throw new BuildException(msg);
             }
             catch (Exception e) {
                 String msg = "Unable to instantiate specified input handler "
-                    + "class " + inputHandlerClassname + " : " 
+                    + "class " + inputHandlerClassname + " : "
                     + e.getClass().getName();
                 throw new BuildException(msg);
             }
@@ -703,7 +708,7 @@ public class Main {
                 throw new RuntimeException();
             } catch (Exception e) {
                 System.err.println("Unable to instantiate specified logger "
-                    + "class " + loggerClassname + " : " 
+                    + "class " + loggerClassname + " : "
                     + e.getClass().getName());
                 throw new RuntimeException();
             }
@@ -730,14 +735,19 @@ public class Main {
         msg.append("  -help                  print this message" + lSep);
         msg.append("  -projecthelp           print project help information" + lSep);
         msg.append("  -version               print the version information and exit" + lSep);
-        msg.append("  -quiet                 be extra quiet" + lSep);
-        msg.append("  -verbose               be extra verbose" + lSep);
+        msg.append("  -diagnostics           print information that might be helpful to" + lSep);
+        msg.append("                         diagnose or report problems." + lSep);
+        msg.append("  -quiet, -q             be extra quiet" + lSep);
+        msg.append("  -verbose, -v           be extra verbose" + lSep);
         msg.append("  -debug                 print debugging information" + lSep);
         msg.append("  -emacs                 produce logging information without adornments" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
+        msg.append("    -l     <file>                ''" + lSep);
         msg.append("  -logger <classname>    the class which is to perform logging" + lSep);
         msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
+        msg.append("    -file    <file>              ''" + lSep);
+        msg.append("    -f       <file>              ''" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
         msg.append("  -propertyfile <name>   load all properties from file with -D" + lSep);
         msg.append("                         properties taking precedence" + lSep);
@@ -780,7 +790,6 @@ public class Main {
                 props.load(in);
                 in.close();
 
-                String lSep = System.getProperty("line.separator");
                 StringBuffer msg = new StringBuffer();
                 msg.append("Apache Ant version ");
                 msg.append(props.getProperty("VERSION"));
@@ -806,7 +815,7 @@ public class Main {
       */
     private static void printDescription(Project project) {
        if (project.getDescription() != null) {
-          System.out.println(project.getDescription());
+          project.log(project.getDescription());
        }
     }
 
@@ -850,16 +859,21 @@ public class Main {
             }
         }
 
-        printTargets(topNames, topDescriptions, "Main targets:", maxLength);
-
+        printTargets(project, topNames, topDescriptions, "Main targets:",
+                     maxLength);
+        //if there were no main targets, we list all subtargets
+        //as it means nothing has a description
+        if(topNames.size()==0) {
+            printSubTargets=true;
+        }
         if (printSubTargets) {
-            printTargets(subNames, null, "Subtargets:", 0);
+            printTargets(project, subNames, null, "Subtargets:", 0);
         }
 
         String defaultTarget = project.getDefaultTarget();
         if (defaultTarget != null && !"".equals(defaultTarget)) {
             // shouldn't need to check but...
-            System.out.println("Default target: " + defaultTarget);
+            project.log("Default target: " + defaultTarget);
         }
     }
 
@@ -901,8 +915,9 @@ public class Main {
      *               position so they line up (so long as the names really
      *               <i>are</i> shorter than this).
      */
-    private static void printTargets(Vector names, Vector descriptions,
-                                     String heading, int maxlen) {
+    private static void printTargets(Project project,Vector names,
+                                     Vector descriptions,String heading,
+                                     int maxlen) {
         // now, start printing the targets and their descriptions
         String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
@@ -921,6 +936,6 @@ public class Main {
             }
             msg.append(lSep);
         }
-        System.out.println(msg.toString());
+        project.log(msg.toString());
     }
 }

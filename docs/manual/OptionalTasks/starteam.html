@@ -164,13 +164,13 @@ If false (default) has no effect.
 
 <pre>
   &lt;stcheckout servername="STARTEAM" 
-            serverport="49201"
-            projectname="AProject" 
-            viewname="AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-	    force="true"
+              serverport="49201"
+              projectname="AProject" 
+              viewname="AView"
+              username="auser"
+              password="secret"
+              rootlocalfolder="C:\dev\buildtest\co"
+              force="true"
   /&gt;
 </pre>
 
@@ -181,23 +181,23 @@ created for them and any non-StarTeam files found in the tree will be deleted.
 
 <pre>
   &lt;stcheckout URL="STARTEAM:49201/Aproject/AView" 
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+              username="auser"
+              password="secret"
+              rootlocalfolder="C:\dev\buildtest\co"
+              forced="true"
   /&gt;
 </pre>
 And this is a simpler way of accomplishing the same thing as the previous example, using the URL attribute.
 <br></br>
 <pre>
   &lt;stcheckout URL="STARTEAM:49201/Aproject/AView" 
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            rootstarteamfolder="\Dev"
-            excludes="*.bak *.old"
-            label="v2.6.001"
-	    forced="true"
+              username="auser"
+              password="secret"
+              rootlocalfolder="C:\dev\buildtest\co"
+              rootstarteamfolder="\Dev"
+              excludes="*.bak *.old"
+              label="v2.6.001"
+              forced="true"
   /&gt;
 </pre>
 
@@ -206,12 +206,12 @@ end in <i>.bak</i> or <i>.old</i> with the label <i>v2.6.001</i>.
 
 <pre>
   &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            includes="*.htm,*.html"
-            excludes="index.*"
-	    forced="true"
+              username="auser"
+              password="secret"
+              rootlocalfolder="C:\dev\buildtest\co"
+              includes="*.htm,*.html"
+              excludes="index.*"
+              forced="true"
   /&gt;
 </pre>
 
@@ -222,13 +222,13 @@ not be checked out by this command.
 
 <pre>
   &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            includes="*.htm,*.html"
-            excludes="index.*"
-	    forced="true"
-	    recursive="false"
+              username="auser"
+              password="secret"
+              rootlocalfolder="C:\dev\buildtest\co"
+              includes="*.htm,*.html"
+              excludes="index.*"
+              forced="true"
+              recursive="false"
   /&gt;
 </pre>
 This example is like the previous one, but will only check out files in 
@@ -236,29 +236,29 @@ C:\dev\buildtest\co, because of the turning off of the recursive attribute.
 
 <pre>
   &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootstarteamfolder="src/java"
-            rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+              username="auser"
+              password="secret"
+              rootstarteamfolder="src/java"
+              rootlocalfolder="C:\dev\buildtest\co"
+              forced="true"
   /&gt;
 </pre>
 <br></br>
 <pre>
   &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootstarteamfolder="src/java"
+              username="auser"
+              password="secret"
+              rootstarteamfolder="src/java"
   /&gt;
 </pre>
 <br></br>
 <pre>
  &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootstarteamfolder="src/java"
-            rootlocalfolder="C:\dev\buildtest\co\src\java"
-	    forced="true"
+             username="auser"
+             password="secret"
+             rootstarteamfolder="src/java"
+             rootlocalfolder="C:\dev\buildtest\co\src\java"
+             forced="true"
   /&gt;
 </pre>
 
@@ -345,13 +345,13 @@ change it.  If false (default) lock status will not change.
 
 <pre>
   &lt;stcheckin servername="STARTEAM" 
-            serverport="49201"
-            projectname="AProject" 
-            viewname="AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+             serverport="49201"
+             projectname="AProject" 
+             viewname="AView"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             forced="true"
   /&gt;
 </pre>
 
@@ -362,22 +362,22 @@ For files and folders in the local tree but not in starteam, nothing will be don
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView" 
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             forced="true"
   /&gt;
 </pre>
 And this is a simpler way of giving the same commands as the command above using the URL shortcut.
 <br></br>
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView" 
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            rootstarteamfolder="\Dev"
-            excludes="*.bak *.old"
-	    forced="true"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             rootstarteamfolder="\Dev"
+             excludes="*.bak *.old"
+             forced="true"
   /&gt;
 </pre>
 
@@ -386,12 +386,12 @@ end in <i>.bak</i> or <i>.old</i> from the tree rooted at"C:\dev\buildtest\co" .
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            includes="*.htm,*.html"
-            excludes="index.*"
-	    forced="true"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             includes="*.htm,*.html"
+             excludes="index.*"
+             forced="true"
   /&gt;
 </pre>
 
@@ -402,14 +402,14 @@ not be checked in by this command.
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            rootstarteamfolder="src/java"
-            includes="*.htm,*.html"
-            excludes="index.*"
-	    forced="true"
-	    recursive="false"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             rootstarteamfolder="src/java"
+             includes="*.htm,*.html"
+             excludes="index.*"
+             forced="true"
+             recursive="false"
   /&gt;
 </pre>
 This example is like the previous one, but will only check in files from 
@@ -417,57 +417,57 @@ C:\dev\buildtest\co, because of the turning off of the recursive attribute.
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            rootstarteamfolder="src/java"
-            includes="version.txt"
-	    forced="true"
-	    recursive="false"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             rootstarteamfolder="src/java"
+             includes="version.txt"
+             forced="true"
+             recursive="false"
   /&gt;
 </pre>
 This example is like the previous one, but will only check only in one file, C:\dev\buildtest\co\version.txt to the StarTeam folder src/java.
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootlocalfolder="C:\dev\buildtest\co"
-            rootstarteamfolder="src/java"
-            includes="version.java"
-	    forced="true"
-	    recursive="false"
-	    addUncontrolled="true"
-	    comment="Fix Bug #667"
+             username="auser"
+             password="secret"
+             rootlocalfolder="C:\dev\buildtest\co"
+             rootstarteamfolder="src/java"
+             includes="version.java"
+             forced="true"
+             recursive="false"
+             addUncontrolled="true"
+             comment="Fix Bug #667"
   /&gt;
 </pre>
 This example is like the previous one, but will only check only in one file, C:\dev\buildtest\co\version.java to the StarTeam folder src/java.  Because the <i>addUncontrolled</i> attribute has been set, if StarTeam does not already control this file in this location, it will be added to the repository.  Also, it will write a comment to the repository for this version of the file.
 
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootstarteamfolder="src/java"
-            rootlocalfolder="C:\dev\buildtest\co"
-	    forced="true"
+             username="auser"
+             password="secret"
+             rootstarteamfolder="src/java"
+             rootlocalfolder="C:\dev\buildtest\co"
+             forced="true"
   /&gt;
 </pre>
 <br></br>
 <pre>
   &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootstarteamfolder="src/java"
+             username="auser"
+             password="secret"
+             rootstarteamfolder="src/java"
   /&gt;
 </pre>
 <br></br>
 <pre>
  &lt;stcheckin URL="STARTEAM:49201/Aproject/AView"
-            username="auser"
-            password="secret"
-            rootstarteamfolder="src/java"
-            rootlocalfolder="C:\dev\buildtest\co\src\java"
-	    forced="true"
+             username="auser"
+             password="secret"
+             rootstarteamfolder="src/java"
+             rootlocalfolder="C:\dev\buildtest\co\src\java"
+             forced="true"
   /&gt;
 </pre>
 
@@ -520,11 +520,11 @@ This example shows the use of this tag.  It will create a label named <i>Version
     &lt;format property="nowstamp" pattern="yyyyMMddHHmmss" locale="en"/&gt;
   &lt;/tstamp&gt;  
   &lt;stlabel URL="STARTEAM:49201/Aproject/AView"
-              username="auser"
-              password="secret"
-              label="Version 6.2"
-              lastbuild="${nowstamp}"
-              description="Thorough description"
+           username="auser"
+           password="secret"
+           label="Version 6.2"
+           lastbuild="${nowstamp}"
+           description="Thorough description"
   /&gt;
 </pre>
 
@@ -582,8 +582,8 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
 <pre>
 
   &lt;stlist url="WASHINGTON:49201/build"
-             username="auser"
-             password="secret"
+          username="auser"
+          password="secret"
  /&gt;
 </pre>
 
@@ -604,10 +604,10 @@ while adding a <i>rootlocalfolder</i> and an <i>excludes</i> param ...
 <pre>
 
   &lt;stlist url="WASHINGTON:49201/build"
-             username="auser"
-             password="secret"
-	     rootlocalfolder="srcdir2"
-	     excludes="*.properties"
+          username="auser"
+          password="secret"
+          rootlocalfolder="srcdir2"
+          excludes="*.properties"
  /&gt;
 </pre>
 

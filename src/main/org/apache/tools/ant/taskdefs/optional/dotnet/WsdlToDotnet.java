@@ -58,13 +58,14 @@ import org.apache.tools.ant.BuildException;
 import java.io.File;
 
 /**
- * Task to convert a WSDL file/url into a dotnet language 
- * see "Creating an XML Web Service Proxy", "wsdl.exe" docs in
- * the framework SDK docos
+ * Converts a WSDL file or URL resource into a .NET language.
+ *
+ * See "Creating an XML Web Service Proxy", "wsdl.exe" docs in
+ * the framework SDK documentation
  * @author      Steve Loughran steve_l@iseran.com
  * @version     0.5
- * @ant.task    name="csc" category="dotnet"
- * @since       ant 1.5
+ * @ant.task    name="wsdltodotnet" category="dotnet"
+ * @since       Ant 1.5
  */
 
 public class WsdlToDotnet extends Task  { 
@@ -110,38 +111,70 @@ public class WsdlToDotnet extends Task  {
     protected String extraOptions = null;
     
     /**
-     *
-     */ 
+     * Name of the file to generate. Required
+     * @param destFile filename
+     */
     public void setDestFile(File destFile) {
         this.destFile = destFile;
     }
+
+    /**
+     * Sets the URL to fetch. Fetching is by wsdl.exe; Ant proxy settings
+     * are ignored; either url or srcFile is required.
+     * @param url url to save
+     */
 
     public void setUrl(String url) {
         this.url = url;
     }
 
+    /**
+     * The local WSDL file to parse; either url or srcFile is required.
+     * @param srcFile name of WSDL file
+     */
     public void setSrcFile(File srcFile) {
         this.srcFile = srcFile;
     }
 
+    /**
+     * set the language; one of "CS", "JS", or "VB"
+     * optional, default is CS for C# source
+     * @param language language to generate
+     */
     public void setLanguage(String language) {
         this.language = language;
     }
+
+    /**
+     * flag to enable server side code generation;
+     * optional, default=false
+     * @param server server-side flag
+     */
 
     public void setServer(boolean server) {
         this.server = server;
     }
 
+    /**
+     * namespace to place  the source in.
+     * optional; default ""
+     * @param namespace new namespace
+     */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
+    /**
+     * Should failure halt the build? optional, default=true
+     * @param failOnError new failure option
+     */
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
     }
-    
+
     /**
-     *  Sets the ExtraOptions attribute
+     *  Any extra WSDL.EXE options which aren't explicitly
+     *  supported by the ant wrapper task; optional
      *
      *@param  extraOptions  The new ExtraOptions value
      */
@@ -204,16 +237,21 @@ public class WsdlToDotnet extends Task  {
         }
         command.addArgument("/namespace:", namespace);
         command.addArgument(extraOptions);
-        //because these args arent added when null, we can 
-        //set both of these and let either of them 
-        command.addArgument(srcFile.toString());
-        command.addArgument(url);
-        
-        //rebuild unless the dest file is newer than the source file
+
+        //set source and rebuild options
         boolean rebuild = true;
-        if (srcFile.exists() && destFile.exists() && 
-            srcFile.lastModified() <= destFile.lastModified()) {
-            rebuild = false;
+        if(srcFile!=null) {
+            command.addArgument(srcFile.toString());
+            //rebuild unless the dest file is newer than the source file
+            if (srcFile.exists() && destFile.exists() &&
+                srcFile.lastModified() <= destFile.lastModified()) {
+                rebuild = false;
+            }
+        } else {
+            //no source file? must be a url, which has no dependency
+            //handling
+            rebuild=true;
+            command.addArgument(url);
         }
         if (rebuild) {
             command.runCommand();

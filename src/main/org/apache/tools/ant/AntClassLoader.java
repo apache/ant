@@ -71,6 +71,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Used to load classes within ant with a different claspath from
@@ -318,6 +319,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             this.parent = parent;
         }
         this.parentFirst = parentFirst;
+        //TODO: turn on
+        //addJavaLibraries();        
         addSystemPackageRoot("java");
         addSystemPackageRoot("javax");
     }
@@ -391,7 +394,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (LoaderUtils.isContextLoaderAvailable()) {
             savedContextLoader = LoaderUtils.getContextClassLoader();
             ClassLoader loader = this;
-            if ("only".equals(project.getProperty("build.sysclasspath"))) {
+            if (project != null 
+                && "only".equals(project.getProperty("build.sysclasspath"))) {
                 loader = this.getClass().getClassLoader();
             }
             LoaderUtils.setContextClassLoader(loader);
@@ -902,8 +906,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * on the system classpath (when not in isolated mode) or this loader's
      * classpath.
      */
-    protected Class loadClass(String classname, boolean resolve)
+    protected synchronized Class loadClass(String classname, boolean resolve)
          throws ClassNotFoundException {
+        // 'sync' is needed - otherwise 2 threads can load the same class
+        // twice, resulting in LinkageError: duplicated class definition.
+        // findLoadedClass avoids that, but without sync it won't work.
 
         Class theClass = findLoadedClass(classname);
         if (theClass != null) {
@@ -1103,9 +1110,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * Cleans up any resources held by this classloader. Any open archive
      * files are closed.
      */
-    public void cleanup() {
-        pathComponents = null;
-        project = null;
+    public synchronized void cleanup() {
         for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
             ZipFile zipFile = (ZipFile)e.nextElement();
             try {
@@ -1132,6 +1137,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * @param event the buildFinished event
      */
     public void buildFinished(BuildEvent event) {
+        project.removeBuildListener(this);
+        project = null;
         cleanup();
     }
 
@@ -1174,4 +1181,18 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      */
     public void messageLogged(BuildEvent event) {
     }
+    
+    /**
+     * add any libraries that come with different java versions
+     * here
+     */
+    private void addJavaLibraries() {
+        Vector packages=JavaEnvUtils.getJrePackages();
+        Enumeration e=packages.elements();
+        while(e.hasMoreElements()) {
+            String packageName=(String)e.nextElement();
+            addSystemPackageRoot(packageName);
+        }
+    }
+    
 }

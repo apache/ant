@@ -78,9 +78,10 @@ import org.apache.tools.ant.types.Path;
 // ====================================================================
 
 /**
- *  This task compiles CSharp source into executables or modules. The task will
- *  only work on win2K until other platforms support csc.exe or an equivalent.
- *  CSC.exe must be on the execute path too. <p>
+ *  Compiles C# source into executables or modules.
+ *
+ *  The task will only work on win2K until other platforms support
+ *  csc.exe or an equivalent. CSC.exe must be on the execute path too. <p>
  *
  *  All parameters are optional: &lt;csc/&gt; should suffice to produce a debug
  *  build of all *.cs files. References to external files do require explicit
@@ -155,6 +156,7 @@ import org.apache.tools.ant.types.Path;
  *@author      Steve Loughran steve_l@iseran.com
  *@version     0.5
  *@ant.task    name="csc" category="dotnet"
+ * @since Ant 1.3
  */
 
 public class CSharp
@@ -207,7 +209,8 @@ public class CSharp
     private File win32res;
 
     /**
-     *  Description of the Field
+     * A flag that tells the compiler not to read in the compiler 
+     * settings files 'csc.rsp' in its bin directory and then the local directory
      */
     private boolean noconfig = false;
 
@@ -261,17 +264,7 @@ public class CSharp
             "Accessibility.dll;" +
             "cscompmgd.dll;" +
             "CustomMarshalers.dll;" +
-            "IEExecRemote.dll;" +
-            "IEHost.dll;" +
-            "IIEHost.dll;" +
-            "ISymWrapper.dll;" +
-            "Microsoft.JScript.dll;" +
-            "Microsoft.VisualBasic.dll;" +
-            "Microsoft.VisualC.dll;" +
-            "Microsoft.Vsa.dll;" +
             "Mscorcfg.dll;" +
-            "office.dll;" +
-            "RegCode.dll;" +
             "System.Configuration.Install.dll;" +
             "System.Data.dll;" +
             "System.Design.dll;" +
@@ -364,7 +357,7 @@ public class CSharp
 
 
     /**
-     *  Set the reference list to be used for this compilation.
+     * Semicolon separated list of DLLs to refer to.
      *
      *@param  s  The new References value
      */
@@ -388,7 +381,8 @@ public class CSharp
     }
 
     /**
-     *  add another path to the reference file path list
+     * Path of references to include.
+     * Wildcards should work.
      *
      *@param  path  another path to append
      */
@@ -444,6 +438,9 @@ public class CSharp
 
 
     /**
+     * If true, automatically includes the common assemblies
+     * in dotnet, and tells the compiler to link in mscore.dll.
+     *
      *  set the automatic reference inclusion flag on or off this flag controls
      *  the string of references and the /nostdlib option in CSC
      *
@@ -476,7 +473,7 @@ public class CSharp
 
 
     /**
-     *  set the optimise flag on or off
+     * If true, enables optimization flag.
      *
      *@param  f  on/off flag
      */
@@ -506,7 +503,7 @@ public class CSharp
 
 
     /**
-     *  set the incremental compilation flag on or off
+     *  set the incremental compilation flag on or off.
      *
      *@param  f  on/off flag
      */
@@ -536,7 +533,7 @@ public class CSharp
 
 
     /**
-     *  set the debug flag on or off
+     *  set the debug flag on or off.
      *
      *@param  f  on/off flag
      */
@@ -591,7 +588,8 @@ public class CSharp
 
 
     /**
-     *  set warn level (no range checking)
+     * Level of warning currently between 1 and 4
+     * with 4 being the strictest.
      *
      *@param  warnLevel  warn level -see .net docs for valid range (probably
      *      0-4)
@@ -622,7 +620,7 @@ public class CSharp
 
 
     /**
-     *  Sets the Unsafe attribute
+     * If true, enables the unsafe keyword.
      *
      *@param  unsafe  The new Unsafe value
      */
@@ -652,7 +650,7 @@ public class CSharp
 
 
     /**
-     *  Sets the MainClass attribute
+     *  Sets the name of main class for executables.
      *
      *@param  mainClass  The new MainClass value
      */
@@ -686,7 +684,8 @@ public class CSharp
 
 
     /**
-     *  Sets the ExtraOptions attribute
+     * Any extra options which are not explicitly supported
+     * by this task.
      *
      *@param  extraOptions  The new ExtraOptions value
      */
@@ -720,7 +719,7 @@ public class CSharp
 
 
     /**
-     *  Set the source dir to find the files to be compiled
+     *  Set the source directory of the files to be compiled.
      *
      *@param  srcDirName  The new SrcDir value
      */
@@ -730,7 +729,7 @@ public class CSharp
 
 
     /**
-     *  Set the destination dir to find the files to be compiled
+     * Set the destination directory of files to be compiled.
      *
      *@param  dirName  The new DestDir value
      */
@@ -740,9 +739,9 @@ public class CSharp
 
 
     /**
-     *  define the target
+     * Set the type of target.
      *
-     *@param  targetType          The new TargetType value
+     *@param  ttype          The new TargetType value
      *@exception  BuildException  if target is not one of
      *      exe|library|module|winexe
      */
@@ -753,7 +752,8 @@ public class CSharp
                 targetType.equals("module") || targetType.equals("winexe")) {
             targetType = targetType;
         } else {
-            throw new BuildException("targetType " + targetType + " is not a valid type");
+            throw new BuildException("targetType " + targetType 
+                    + " is not one of 'exe', 'module', 'winexe' or 'library'" );
         }
     }
 
@@ -783,7 +783,7 @@ public class CSharp
 
 
     /**
-     *  Set the win32 icon
+     *  Set the filename of icon to include.
      *
      *@param  fileName  path to the file. Can be relative, absolute, whatever.
      */
@@ -807,7 +807,8 @@ public class CSharp
 
 
     /**
-     *  Set the win32 resource
+     * Sets the filename of a win32 resource (.RES) file to include.
+     * This is not a .NET resource, but what Windows is used to.
      *
      *@param  fileName  path to the file. Can be relative, absolute, whatever.
      */
@@ -831,7 +832,7 @@ public class CSharp
 
 
     /**
-     *  enable generation of utf8 output from the compiler.
+     * If true, require all compiler output to be in UTF8 format.
      *
      *@param  enabled  The new utf8Output value
      */
@@ -851,11 +852,12 @@ public class CSharp
 
 
     /**
-     *  Sets the noConfig attribute of the CSharp object
+     * A flag that tells the compiler not to read in the compiler 
+     * settings files 'csc.rsp' in its bin directory and then the local directory
      *
      *@param  enabled  The new noConfig value
      */
-    protected void setNoConfig(boolean enabled) {
+    public void setNoConfig(boolean enabled) {
         noconfig = enabled;
     }
 
@@ -871,7 +873,7 @@ public class CSharp
 
 
     /**
-     *  Sets the fullPaths attribute of the CSharp object
+     * If true, print the full path of files on errors.
      *
      *@param  enabled  The new fullPaths value
      */
@@ -891,7 +893,7 @@ public class CSharp
 
 
     /**
-     *  Set the definitions
+     *  Semicolon separated list of defined constants.
      *
      *@param  params  The new definitions value
      */
@@ -915,7 +917,7 @@ public class CSharp
 
 
     /**
-     *  Set the definitions
+     * Semicolon separated list of modules to refer to.
      *
      *@param  params  The new additionalModules value
      */
@@ -948,9 +950,9 @@ public class CSharp
     }
 
     /**
-     *  Set the output file
+     *  Set the name of exe/library to create.
      *
-     *@param  params  The new outputFile value
+     *@param  file  The new outputFile value
      */
     public void setDestFile(File file) {
         outputFile = file;
@@ -973,7 +975,7 @@ public class CSharp
 
 
     /**
-     *  set fail on error flag
+     * If true, fail on compilation errors.
      *
      *@param  b  The new FailOnError value
      */
@@ -991,9 +993,10 @@ public class CSharp
         return failOnError;
     }
 
-    /** set the file alignment.
-     *  Valid values are 0,512, 1024, 2048, 4096, 8192, and 16384
-     *  0 means 'leave to the compiler'
+    /**
+     * Set the file alignment.
+     * Valid values are 0,512, 1024, 2048, 4096, 8192,
+     * and 16384, 0 means 'leave to the compiler'
      */
     public void setFileAlign(int fileAlign) {
         this.fileAlign = fileAlign;

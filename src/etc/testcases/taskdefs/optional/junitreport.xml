@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<project name="junitreport-test" basedir="." default="reports">
+
+    <property name="jrdir" location="junitreport"/>
+    <property name="outputdir" location="${jrdir}/test"/>
+
+    <!-- reports1 take care of transformation of 2 test result files and 
+         produce reports according to the default format (frames) 
+         needed for testNoFileJunitNoFrames -->
+    <target name="reports1">
+        <mkdir dir="${outputdir}"/>
+        <mkdir dir="${outputdir}/html"/>
+        <junitreport todir="${outputdir}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${outputdir}/html"/>
+        </junitreport>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${outputdir}"/>
+    </target>
+</project>

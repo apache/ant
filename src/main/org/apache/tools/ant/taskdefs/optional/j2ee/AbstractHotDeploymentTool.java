@@ -97,8 +97,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     private String server;
 
     /**
-     *  Add a classpath.  Used to handle the nested classpath
-     *  element.
+     *  Add a classpath as a nested element.
      *  @return A Path object representing the classpath to be used.
      */
     public Path createClasspath() {
@@ -147,6 +146,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     /**
      *  Sets the parent task.
      *  @param task a ServerDeploy object representing the parent task.
+     *  @ant.attribute ignore="true" 
      */
     public void setTask(ServerDeploy task) {
         this.task = task;
@@ -169,8 +169,9 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  Sets the classpath field.
-     *  This is a required attribute.
+     *  The classpath to be passed to the JVM running the tool; 
+     *  optional depending upon the tool. 
+     *  The classpath may also be supplied as a nested element.
      *  @param classpath A Path object representing the "classpath" attribute.
      */
     public void setClasspath(Path classpath) {
@@ -186,8 +187,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  Sets the userName field.
-     *  This is a  <b>not</b> required attribute.
+     *  The user with privileges to deploy applications to the server; optional.
      *  @param userName A String representing the "userName" attribute.
      */
     public void setUserName(String userName) {
@@ -203,8 +203,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  Set the password field.
-     *  This is a  <b>not</b> required attribute.
+     *  The password of the user; optional. 
      *  @param password A String representing the "password" attribute.
      */
     public void setPassword(String password) {
@@ -220,8 +219,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
     }
 
     /**
-     *  Sets the server field.
-     *  This is  <b>not</b> a required attribute.
+     *  The address or URL for the server where the component will be deployed.
      *  @param server A String representing the "server" attribute.
      */
     public void setServer(String server) {

@@ -70,9 +70,24 @@ one mapper.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">append</td>
+    <td valign="top">whether output should be appended to or overwrite
+      an existing file.  Defaults to false.  If you set parallel to
+      false, you will probably want to set this one to true.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">outputproperty</td>
     <td valign="top">the name of a property in which the output of the 
       command should be stored.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">resultproperty</td>
+    <td valign="top">the name of a property in which the return code
+      of the command should be stored. Only of interest if
+      failonerror=false. If you set parallel to false, only the result
+      of the first execution will be stored.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -85,6 +100,12 @@ one mapper.</p>
     <td valign="top">failonerror</td>
     <td valign="top">Stop the buildprocess if the command exits with a
       returncode other than 0.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failifexecutionfails</td>
+    <td valign="top">Stop the build if we can't start the program.
+      Defaults to true. </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -123,7 +144,10 @@ one mapper.</p>
         Under some operating systems, this gives access to facilities
         not normally available through the VM including, under Windows,
         being able to execute scripts, rather than their associated
-        interpreter.</td>
+        interpreter.  If you want to specify the name of the
+        executable as a relative path to the directory given by the
+        dir attribute, it may become necessary to set vmlauncher to
+        false as well.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
 </table>
@@ -154,7 +178,7 @@ system command via nested <code>&lt;env&gt;</code> elements. See the
 description in the section about <a href="exec.html#env">exec</a></p>
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;apply executable=&quot;ls&quot; &gt;
+&lt;apply executable=&quot;ls&quot;&gt;
   &lt;arg value=&quot;-l&quot;/&gt;
   &lt;fileset dir=&quot;/tmp&quot;&gt;
     &lt;patternset&gt;
@@ -169,7 +193,7 @@ files below <code>/tmp</code> not ending in <code>.txt</code> and all
 files of the FileSet with <code>id</code> <code>other.files</code> to
 the command line.</p>
 <blockquote><pre>
-&lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot; &gt;
+&lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;arg1&quot;/&gt;
   &lt;srcfile/&gt;
   &lt;arg value=&quot;arg2&quot;/&gt;
@@ -196,7 +220,7 @@ of all files separated by spaces.</p>
 <code>.o</code>, replacing TARGETFILE with the absolute filename of
 the <code>.o</code> and SOURCEFILE with the absolute name of the
 <code>.c</code> file.</p>
-<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

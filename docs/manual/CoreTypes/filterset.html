@@ -14,6 +14,14 @@ or be read in from a file. FilterSets can appear inside tasks that support this
 feature or at the same level as <CODE>&lt;target&gt;</CODE> - i.e., as
 children of 
 <CODE>&lt;project&gt;</CODE>.</P>
+
+<p>FilterSets support the <code>id</code> and <code>refid</code>
+attributes.  You can define a FilterSet with an <code>id</code>
+attribute and then refer to that definition from another FilterSet
+with a <code>refid</code> attribute.  It is also possible to nest
+filtersets into filtersets to get a set union of the contained
+filters.</p>
+
 <p>In addition, FilterSets can specify
 <code>begintoken</code> and/or 
 <code>endtoken</code> attributes to define what to match.</p>
@@ -32,14 +40,14 @@ replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
   <TR>
     <TD vAlign=top>begintoken</TD>
     <TD vAlign=top>The string marking the beginning of a token (eg.,
-      <code>@date@</code>).</TD>
+      <code>&#64;DATE&#64;</code>).</TD>
     <TD vAlign=top>@</TD>
     <TD vAlign=top align="center">No</TD>
   </TR>
   <TR>
     <TD vAlign=top>endtoken</TD>
     <TD vAlign=top>The string marking the end of a token (eg.,
-      <code>@date@</code>).</TD>
+      <code>&#64;DATE&#64;</code>).</TD>
     <TD vAlign=top>@</TD>
     <TD vAlign=top align="center">No</TD>
   </TR>
@@ -54,7 +62,7 @@ replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
   </TR>
   <TR>
     <TD vAlign=top>token</TD>
-    <TD vAlign=top>The token to replace (eg., <code>@date@</code>)</TD>
+    <TD vAlign=top>The token to replace (eg., <code>&#64;DATE&#64;</code>)</TD>
     <TD vAlign=top align="center">Yes</TD>
   </TR>
   <TR>
@@ -84,29 +92,29 @@ replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the <code>build</code> directory 
-but wish to replace the token <code>@date@</code> with today's date.</p>
+but wish to replace the token <code>&#64;DATE&#64;</code> with today's date.</p>
 <BLOCKQUOTE><PRE>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset&gt;
-    &lt;filter token=&quot;date&quot; value=&quot;${TODAY}&quot;/&gt;
+    &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
 </PRE></BLOCKQUOTE>
 
 <p>You are copying the <code>version.txt</code> file to the <code>dist</code>
 directory from the build directory 
-but wish to replace the token <code>%date*</code> with today's date.</p>
+but wish to replace the token <code>%DATE*</code> with today's date.</p>
 <BLOCKQUOTE><PRE>
 &lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
   &lt;filterset begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
-    &lt;filter token=&quot;date&quot; value=&quot;${TODAY}&quot;/&gt;
+    &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
   &lt;/filterset&gt;
 &lt;/copy&gt;
 </PRE></BLOCKQUOTE>
 
 <p>Copy all the docs but change all dates and appropriate notices as stored in a file.</p>
 <BLOCKQUOTE><PRE>
-&lt;copy toDir=&quot;${dist.dir}/docs&quot; &gt;
+&lt;copy toDir=&quot;${dist.dir}/docs&quot;&gt;
   &lt;fileset dir=&quot;${build.dir}/docs&quot;&gt;
     &lt;include name=&quot;**/*.html&quot;&gt;
   &lt;/fileset&gt;
@@ -116,6 +124,16 @@ but wish to replace the token <code>%date*</code> with today's date.</p>
 &lt;/copy&gt;
 </PRE></BLOCKQUOTE>
 
+<p>Define a FilterSet and reference it later.</p>
+<BLOCKQUOTE><PRE>
+&lt;filterset id=&quot;myFilterSet&quot; begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
+  &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
+&lt;/filterset&gt;
+
+&lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
+  &lt;filterset refid=&quot;myFilterSet&quot;/&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
 <HR>
 
 <P align=center>Copyright &copy; 2001-2002 Apache Software Foundation.

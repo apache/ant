@@ -84,7 +84,7 @@ import org.apache.tools.zip.ZipOutputStream;
 import org.apache.tools.zip.ZipEntry;
 
 /**
- * Create a ZIP archive.
+ * Create a Zip file.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
@@ -133,6 +133,7 @@ public class Zip extends MatchingTask {
      * create the .zip file.
      *
      * @deprecated Use setDestFile(File) instead.
+     * @ant.attribute ignore="true"
      */
     public void setZipfile(File zipFile) {
         setDestFile(zipFile);
@@ -140,9 +141,10 @@ public class Zip extends MatchingTask {
 
     /**
      * This is the name/location of where to
-     * create the .zip file.
-     * @since Ant 1.5alpha
+     * create the file.
+     * @since Ant 1.5
      * @deprecated Use setDestFile(File) instead
+     * @ant.attribute ignore="true"
      */
     public void setFile(File file) {
         setDestFile(file);
@@ -150,7 +152,7 @@ public class Zip extends MatchingTask {
 
 
     /**
-     * Sets the destfile attribute.
+     * The file to create; required.
      * @since Ant 1.5
      * @param destFile The new destination File
      */
@@ -160,30 +162,31 @@ public class Zip extends MatchingTask {
 
 
     /**
-     * This is the base directory to look in for
-     * things to zip.
+     * Directory from which to archive files; optional.
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
     }
 
     /**
-     * Sets whether we want to compress the files or only store them.
+     * Whether we want to compress the files or only store them;
+     * optional, default=true;
      */
     public void setCompress(boolean c) {
         doCompress = c;
     }
 
     /**
-     * Emulate Sun's jar utility by not adding parent dirs
+     * If true, emulate Sun's jar utility by not adding parent directories;
+     * optional, defaults to false.
      */
     public void setFilesonly(boolean f) {
         doFilesonly = f;
     }
 
     /**
-     * Sets whether we want to update the file (if it exists)
-     * or create a new one.
+     * If true, updates an existing file, otherwise overwrite
+     * any existing one; optional defaults to false.
      */
     public void setUpdate(boolean c) {
         doUpdate = c;
@@ -198,14 +201,14 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Adds a set of files (nested zipfileset attribute) that can be
+     * Adds a set of files that can be
      * read from an archive and be given a prefix/fullpath.
      */
     public void addZipfileset(ZipFileSet set) {
@@ -213,14 +216,15 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Adds a group of zip files (a group of nested filesets).
+     * Adds a group of zip files.
      */
     public void addZipGroupFileset(FileSet set) {
         groupfilesets.addElement(set);
     }
 
     /**
-     * Sets behavior for when a duplicate file is about to be added
+     * Sets behavior for when a duplicate file is about to be added -
+     * one of <code>keep</code>, <code>skip</code> or <code>overwrite</code>.
      * Possible values are: <code>keep</code> (keep both
      * of the files); <code>skip</code> (keep the first version
      * of the file found); <code>overwrite</code> overwrite the file
@@ -231,7 +235,10 @@ public class Zip extends MatchingTask {
         duplicate = df.getValue();
     }
 
-    /** Possible behaviors when there are no matching files for the task. */
+    /**
+     * Possible behaviors when there are no matching files for the task:
+     * "fail", "skip", or "create".
+     */
     public static class WhenEmpty extends EnumeratedAttribute {
         public String[] getValues() {
             return new String[] {"fail", "skip", "create"};
@@ -262,6 +269,9 @@ public class Zip extends MatchingTask {
         this.encoding = encoding;
     }
 
+    /**
+     * validate and build
+     */
     public void execute() throws BuildException {
         if (baseDir == null && filesets.size() == 0
             && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
@@ -282,22 +292,6 @@ public class Zip extends MatchingTask {
 
         addingNewFiles = true;
         doUpdate = doUpdate && zipFile.exists();
-        if (doUpdate) {
-            FileUtils fileUtils = FileUtils.newFileUtils();
-            renamedFile = 
-                fileUtils.createTempFile("zip", ".tmp",
-                                         fileUtils.getParentFile(zipFile));
-
-            try {
-                if (!zipFile.renameTo(renamedFile)) {
-                    throw new BuildException("Unable to rename old file to "
-                                             + "temporary file");
-                }
-            } catch (SecurityException e) {
-                throw new BuildException("Not allowed to rename old file to "
-                                         + "temporary file");
-            }
-        }
 
         // Add the files found in groupfileset to fileset
         for (int i = 0; i < groupfilesets.size(); i++) {
@@ -339,6 +333,23 @@ public class Zip extends MatchingTask {
                 return;
             }
             
+            if (doUpdate) {
+                FileUtils fileUtils = FileUtils.newFileUtils();
+                renamedFile = 
+                    fileUtils.createTempFile("zip", ".tmp",
+                                             fileUtils.getParentFile(zipFile));
+
+                try {
+                    if (!zipFile.renameTo(renamedFile)) {
+                        throw new BuildException("Unable to rename old file "
+                                                 + "to temporary file");
+                    }
+                } catch (SecurityException e) {
+                    throw new BuildException("Not allowed to rename old file "
+                                             + "to temporary file");
+                }
+            }
+
             String action = doUpdate ? "Updating " : "Building ";
             
             log(action + archiveType + ": " + zipFile.getAbsolutePath());
@@ -409,13 +420,13 @@ public class Zip extends MatchingTask {
             String msg = "Problem creating " + archiveType + ": " 
                 + ioe.getMessage();
 
-            // delete a bogus ZIP file
-            if (!zipFile.delete()) {
+            // delete a bogus ZIP file (but only if it's not the original one)
+            if ((!doUpdate || renamedFile != null) && !zipFile.delete()) {
                 msg += " (and the archive is probably corrupt but I could not "
                     + "delete it)";
             }
 
-            if (doUpdate) {
+            if (doUpdate && renamedFile != null) {
                 if (!renamedFile.renameTo(zipFile)) {
                     msg += " (and I couldn't rename the temporary file " +
                         renamedFile.getName() + " back)";
@@ -536,10 +547,16 @@ public class Zip extends MatchingTask {
         }
     }
 
+    /**
+     * method for subclasses to override
+     */
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
     }
 
+    /**
+     * method for subclasses to override
+     */
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
     }
@@ -895,7 +912,7 @@ public class Zip extends MatchingTask {
      * Makes this instance reset all attributes to their default
      * values and forget all children.
      *
-     * @since 1.72, Ant 1.5
+     * @since Ant 1.5
      *
      * @see #cleanUp
      */
@@ -913,7 +930,10 @@ public class Zip extends MatchingTask {
         encoding = null;
     }
 
-    /** Possible behaviors when a duplicate file is added. */
+    /**
+     * Possible behaviors when a duplicate file is added:
+     * "add", "preserve" or "fail"
+     */
     public static class Duplicate extends EnumeratedAttribute {
         public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};

@@ -152,8 +152,8 @@ The slashes conform to the expectations of the Properties class.  The file will 
 
 <blockquote><pre>&lt;propertyfile
     file=&quot;my.properties&quot;
-    comment&quot;My properties&quot; &gt;
-  &lt;entry  key=&quot;akey&quot; value=&quot;avalue&quot; /&gt;
+    comment&quot;My properties&quot;&gt;
+  &lt;entry  key=&quot;akey&quot; value=&quot;avalue&quot;/&gt;
   &lt;entry  key=&quot;adate&quot; type=&quot;date&quot; value=&quot;now&quot;/&gt;
   &lt;entry  key=&quot;anint&quot; type=&quot;int&quot; operation=&quot;+&quot;/&gt;
   &lt;entry  key=&quot;formated.int&quot; type=&quot;int&quot; default=&quot;0013&quot; operation=&quot;+&quot; pattern=&quot;0000&quot;/&gt;
@@ -164,7 +164,7 @@ The slashes conform to the expectations of the Properties class.  The file will 
 To produce dates relative from today :</p>
 <blockquote><pre>&lt;propertyfile
     file=&quot;my.properties&quot;
-    comment=&quot;My properties&quot; &gt;
+    comment=&quot;My properties&quot;&gt;
   &lt;entry  key=&quot;formated.date-1&quot;
       type=&quot;date&quot; default=&quot;now&quot; pattern=&quot;DDD&quot;
       operation=&quot;-&quot; value=&quot;1&quot;/&gt;
@@ -178,14 +178,14 @@ To produce dates relative from today :</p>
 Concatenation of strings :</p>
 <blockquote><pre>&lt;propertyfile
     file=&quot;my.properties&quot;
-    comment=&quot;My properties&quot; &gt;
+    comment=&quot;My properties&quot;&gt;
   &lt;entry  key=&quot;progress&quot; default=&quot;&quot; operation=&quot;+&quot; value=&quot;.&quot;/&gt;
 &lt;/propertyfile&gt;
 </pre></blockquote>
 <p>Each time called, a &quot;.&quot; will be appended to &quot;progress&quot;
 </p>
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

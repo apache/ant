@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 /**
+ * Performs operations on a CVS repository.
+ *
  * original 1.20
  *
  *  NOTE: This implementation has been moved to AbstractCvsTask with

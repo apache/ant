@@ -99,7 +99,10 @@ systems.</p>
         Under some operating systems, this gives access to facilities
         not normally available through the VM including, under Windows,
         being able to execute scripts, rather than their associated
-        interpreter.</td>
+        interpreter.  If you want to specify the name of the
+        executable as a relative path to the directory given by the
+        dir attribute, it may become necessary to set vmlauncher to
+        false as well.</td>
     <td align="center" valign="top">No, default is <i>true</i></td>
   </tr>
 </table>
@@ -167,7 +170,7 @@ but some configuration problem on your machine.
 
 <h3>Examples</h3>
 <blockquote><pre>
-&lt;exec executable=&quot;emacs&quot; &gt;
+&lt;exec executable=&quot;emacs&quot;&gt;
   &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot;/&gt;
 &lt;/exec&gt;
 </pre></blockquote>
@@ -193,7 +196,7 @@ sub process is killed and a message printed to the log. The return
 value of the execution will be "-1", which will halt the build if
 <tt>failonerror=true</tt>, but be ignored otherwise.
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
