@@ -194,7 +194,8 @@ public class FTP
             try {
                 String cwd = ftp.printWorkingDirectory();
                 // always start from the current ftp working dir
-
+                forceRemoteSensitivityCheck();
+                
                 checkIncludePatterns();
                 clearCaches();
                 ftp.changeWorkingDirectory(cwd);
@@ -210,6 +211,7 @@ public class FTP
          * @since ant1.6
          */
         private void checkIncludePatterns() {
+
             Hashtable newroots = new Hashtable();
             // put in the newroots vector the include patterns without
             // wildcard tokens
@@ -246,6 +248,7 @@ public class FTP
                     String path = null;
 
                     if (myfile.exists()) {
+                        forceRemoteSensitivityCheck();
                         if (remoteSensitivityChecked
                             && remoteSystemCaseSensitive && isFollowSymlinks()) {
                             // cool case,
@@ -262,7 +265,6 @@ public class FTP
                                 throw new BuildException(be, getLocation());
                             } catch (BuildException be) {
                                 isOK = false;
-
                             }
                         }
                     } else {
@@ -508,6 +510,17 @@ public class FTP
                 checkRemoteSensitivity(result, directory);
             }
             return result;
+        }
+        
+        private void forceRemoteSensitivityCheck()
+        {
+            if (!remoteSensitivityChecked) {
+                try {
+                    checkRemoteSensitivity(ftp.listFiles(), ftp.printWorkingDirectory());
+                } catch (IOException ioe) {
+                    throw new BuildException(ioe, getLocation());
+                }
+            }
         }
         /**
          * cd into one directory and
@@ -763,14 +776,16 @@ public class FTP
                     if (theFiles != null) {
                         theFile = getFile(theFiles, currentElement);
                     }
+                    if (!relPath.equals("")) {
+                        relPath = relPath + remoteFileSep;
+                    }
                     if (theFile == null) {
-                        throw new BuildException("could not find " + currentElement
-                            + " from " + currentPath);
+                        // hit a hidden file assume not a symlink
+                        relPath = relPath + currentElement;
+                        currentPath = currentPath + remoteFileSep + currentElement;
+                        log("Hidden file " + relPath + " assumed to not be a symlink.", Project.MSG_VERBOSE);
                     } else {
                         traversesSymlinks = traversesSymlinks || theFile.isSymbolicLink();
-                        if (!relPath.equals("")) {
-                            relPath = relPath + remoteFileSep;
-                        }
                         relPath = relPath + theFile.getName();
                         currentPath = currentPath + remoteFileSep + theFile.getName();
                     }
@@ -853,6 +868,10 @@ public class FTP
                     String relpath = getRelativePath();
                 }
                 return traversesSymlinks;
+            }
+            
+            public String toString() {
+                return "AntFtpFile: "+curpwd+"%"+ftpFile;
             }
         }
         /**
@@ -1273,7 +1292,6 @@ public class FTP
     protected int transferFiles(FTPClient ftp, FileSet fs)
          throws IOException, BuildException {
         DirectoryScanner ds;
-
         if (action == SEND_FILES) {
             ds = fs.getDirectoryScanner(getProject());
         } else {
@@ -1771,7 +1789,6 @@ public class FTP
     protected void getFile(FTPClient ftp, String dir, String filename)
          throws IOException, BuildException {
         OutputStream outstream = null;
-
         try {
             File file = getProject().resolveFile(new File(dir, filename).getPath());
 
