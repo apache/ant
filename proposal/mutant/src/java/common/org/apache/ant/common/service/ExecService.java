@@ -67,37 +67,46 @@ import org.apache.ant.common.util.ExecutionException;
  */
 public interface ExecService {
     /**
-     * Run a sub-build.
+     * Setup a sub-build.
      *
      * @param antFile the file containing the XML description of the model
-     * @param targets A list of targets to be run
      * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
+     * @exception ExecutionException if the subbuild cannot be setup
+     * @return a key to the build allowing it to be executed and managed
      */
-    void runBuild(File antFile, Map properties, List targets)
+    Object setupBuild(File antFile, Map properties)
          throws ExecutionException;
 
     /**
-     * Run a sub-build.
+     * Setup a sub-build.
      *
      * @param model the project model to be used for the build
-     * @param targets A list of targets to be run
      * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
+     * @exception ExecutionException if the subbuild cannot be setup
+     * @return a key to the build allowing it to be executed and managed
      */
-    void runBuild(Project model, Map properties, List targets)
+    Object setupBuild(Project model, Map properties)
          throws ExecutionException;
 
     /**
-     * Run a sub-build using the current frame's project model
+     * Setup a sub-build using the current frame's project model
      *
-     * @param targets A list of targets to be run
      * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
+     * @exception ExecutionException if the subbuild cannot be setup
      */
-    void callTarget(Map properties, List targets)
+    Object setupBuild(Map properties)
          throws ExecutionException;
 
+    /**
+     * Run a build which have been previously setup
+     *
+     * @param buildKey the buildKey returned previously when the build was
+     *        setup
+     * @param targets A list of targets to be run
+     * @exception ExecutionException if the build cannot be run
+     */
+   void runBuild(Object buildKey, List targets) throws ExecutionException;
+         
     /**
      * execute a task. The task should have already been initialised by
      * the core
@@ -120,5 +129,15 @@ public interface ExecService {
      * @return the base directory for this execution of Ant
      */
     File getBaseDir();
+    
+    /**
+     * Handle subbuild output.
+     *
+     * @param subbuildKey the core's key for managing the subbuild.
+     * @param line the content produce by the current thread.
+     * @param isErr true if this content is from the thread's error stream.
+     */
+    void handleBuildOutput(Object subbuildKey, String line, boolean isErr) 
+        throws ExecutionException;
 }
 

@@ -84,8 +84,8 @@ import org.apache.ant.init.InitConfig;
  * contains the data values set by Ant tasks as they are executed, including
  * task definitions, property values, etc.
  *
- * @author    Conor MacNeill
- * @created   14 January 2002
+ * @author Conor MacNeill
+ * @created 14 January 2002
  */
 public class Frame implements DemuxOutputReceiver {
     /** the base dir of the project */
@@ -151,12 +151,11 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Create an Execution Frame for the given project
      *
-     * @param standardLibs            The libraries of tasks and types
-     *      available to this frame
-     * @param config                  the user config to use for this
-     *      execution of Ant
-     * @param initConfig              Ant's initialisation config
-     * @exception ExecutionException  if a component of the library cannot be
+     * @param standardLibs The libraries of tasks and types available to this
+     *      frame
+     * @param config the user config to use for this execution of Ant
+     * @param initConfig Ant's initialisation config
+     * @exception ExecutionException if a component of the library cannot be
      *      imported
      */
     protected Frame(Map standardLibs, InitConfig initConfig,
@@ -171,11 +170,9 @@ public class Frame implements DemuxOutputReceiver {
      * Replace ${} style constructions in the given value with the string
      * value of the corresponding data values in the frame
      *
-     * @param value                   the string to be scanned for property
-     *      references.
-     * @return                        the string with all property references
-     *      replaced
-     * @exception ExecutionException  if any of the properties do not exist
+     * @param value the string to be scanned for property references.
+     * @return the string with all property references replaced
+     * @exception ExecutionException if any of the properties do not exist
      */
     public String replacePropertyRefs(String value) throws ExecutionException {
         return dataService.replacePropertyRefs(value);
@@ -185,15 +182,15 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Sets the Project of the Frame
      *
-     * @param project                 The new Project value
-     * @exception ExecutionException  if any required sub-frames cannot be
+     * @param project The new Project value
+     * @exception ExecutionException if any required sub-frames cannot be
      *      created and configured
      */
     protected void setProject(Project project) throws ExecutionException {
         this.project = project;
         referencedFrames = new HashMap();
 
-        for (Iterator i = project.getReferencedProjectNames(); i.hasNext();) {
+        for (Iterator i = project.getReferencedProjectNames(); i.hasNext(); ) {
             String referenceName = (String) i.next();
             Project referencedProject
                  = project.getReferencedProject(referenceName);
@@ -211,7 +208,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * get the name of the project associated with this frame.
      *
-     * @return   the project's name
+     * @return the project's name
      */
     public String getProjectName() {
         if (project != null) {
@@ -224,10 +221,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Set a value in this frame or any of its imported frames.
      *
-     * @param name                    the name of the value
-     * @param value                   the actual value
-     * @param mutable                 if true, existing values can be changed
-     * @exception ExecutionException  if the value name is invalid
+     * @param name the name of the value
+     * @param value the actual value
+     * @param mutable if true, existing values can be changed
+     * @exception ExecutionException if the value name is invalid
      */
     protected void setDataValue(String name, Object value, boolean mutable)
          throws ExecutionException {
@@ -253,9 +250,9 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Set the initial properties to be used when the frame starts execution
      *
-     * @param properties              a Map of named properties which may in
-     *      fact be any object
-     * @exception ExecutionException  if the properties cannot be set
+     * @param properties a Map of named properties which may in fact be any
+     *      object
+     * @exception ExecutionException if the properties cannot be set
      */
     protected void setInitialProperties(Map properties)
          throws ExecutionException {
@@ -271,7 +268,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Set the values of various magic properties
      *
-     * @exception ExecutionException  if the properties cannot be set
+     * @exception ExecutionException if the properties cannot be set
      */
     protected void setMagicProperties() throws ExecutionException {
         URL antHomeURL = initConfig.getAntHome();
@@ -291,11 +288,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get a definition from a referenced frame
      *
-     * @param definitionName          the name of the definition relative to
-     *      this frame
-     * @return                        the appropriate import info object from
-     *      the referenced frame's imports
-     * @exception ExecutionException  if the referenced definition cannot be
+     * @param definitionName the name of the definition relative to this frame
+     * @return the appropriate import info object from the referenced frame's
+     *      imports
+     * @exception ExecutionException if the referenced definition cannot be
      *      found
      */
     protected ImportInfo getReferencedDefinition(String definitionName)
@@ -318,7 +314,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Gets the project model this frame is working with
      *
-     * @return   the project model
+     * @return the project model
      */
     protected Project getProject() {
         return project;
@@ -330,7 +326,7 @@ public class Frame implements DemuxOutputReceiver {
      * is an expensive operation since it must clone all of the property
      * stores in all frames
      *
-     * @return   a Map containing the frames properties indexed by their full
+     * @return a Map containing the frames properties indexed by their full
      *      name.
      */
     protected Map getAllProperties() {
@@ -359,7 +355,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get the Ant initialization configuration for this frame.
      *
-     * @return   Ant's initialization configuration
+     * @return Ant's initialization configuration
      */
     protected InitConfig getInitConfig() {
         return initConfig;
@@ -369,7 +365,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get the config instance being used by this frame.
      *
-     * @return   the config associated with this frame.
+     * @return the config associated with this frame.
      */
     protected AntConfig getConfig() {
         return config;
@@ -379,11 +375,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get the core's implementation of the given service interface.
      *
-     * @param serviceInterfaceClass   the service interface for which an
+     * @param serviceInterfaceClass the service interface for which an
      *      implementation is require
-     * @return                        the core's implementation of the service
-     *      interface
-     * @exception ExecutionException  if the core does not provide an
+     * @return the core's implementation of the service interface
+     * @exception ExecutionException if the core does not provide an
      *      implementatin of the requested interface
      */
     protected Object getCoreService(Class serviceInterfaceClass)
@@ -402,7 +397,7 @@ public class Frame implements DemuxOutputReceiver {
      * Get the EventSupport instance for this frame. This tracks the build
      * listeners on this frame
      *
-     * @return   the EventSupport instance
+     * @return the EventSupport instance
      */
     protected BuildEventSupport getEventSupport() {
         return eventSupport;
@@ -412,7 +407,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Gets the baseDir of the Frame
      *
-     * @return   the baseDir value
+     * @return the baseDir value
      */
     protected File getBaseDir() {
         return baseDir;
@@ -422,9 +417,9 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get a referenced frame by its reference name
      *
-     * @param referenceName  the name under which the frame was imported.
-     * @return               the Frame asscociated with the given reference
-     *      name or null if there is no such project.
+     * @param referenceName the name under which the frame was imported.
+     * @return the Frame asscociated with the given reference name or null if
+     *      there is no such project.
      */
     protected Frame getReferencedFrame(String referenceName) {
         return (Frame) referencedFrames.get(referenceName);
@@ -434,7 +429,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get the frames representing referenced projects.
      *
-     * @return   an iterator which returns the referenced ExeuctionFrames..
+     * @return an iterator which returns the referenced ExeuctionFrames..
      */
     protected Iterator getReferencedFrames() {
         return referencedFrames.values().iterator();
@@ -444,8 +439,8 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get the name of an object in its frame
      *
-     * @param fullname  The name of the object
-     * @return          the name of the object within its containing frame
+     * @param fullname The name of the object
+     * @return the name of the object within its containing frame
      */
     protected String getNameInFrame(String fullname) {
         int index = fullname.lastIndexOf(Project.REF_DELIMITER);
@@ -460,11 +455,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Get a value from this frame or any imported frame
      *
-     * @param name                    the name of the data value - may contain
-     *      reference delimiters
-     * @return                        the data value fetched from the
-     *      appropriate frame
-     * @exception ExecutionException  if the value is not defined
+     * @param name the name of the data value - may contain reference
+     *      delimiters
+     * @return the data value fetched from the appropriate frame
+     * @exception ExecutionException if the value is not defined
      */
     protected Object getDataValue(String name) throws ExecutionException {
         Frame frame = getContainingFrame(name);
@@ -484,10 +478,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Indicate if a data value has been set
      *
-     * @param name                    the name of the data value - may contain
-     *      reference delimiters
-     * @return                        true if the value exists
-     * @exception ExecutionException  if the containing frame for the value
+     * @param name the name of the data value - may contain reference
+     *      delimiters
+     * @return true if the value exists
+     * @exception ExecutionException if the containing frame for the value
      *      does not exist
      */
     protected boolean isDataValueSet(String name) throws ExecutionException {
@@ -509,9 +503,9 @@ public class Frame implements DemuxOutputReceiver {
      * Get the execution frame which contains, directly, the named element
      * where the name is relative to this frame
      *
-     * @param elementName  The name of the element
-     * @return             the execution frame for the project that contains
-     *      the given target
+     * @param elementName The name of the element
+     * @return the execution frame for the project that contains the given
+     *      target
      */
     protected Frame getContainingFrame(String elementName) {
         int index = elementName.lastIndexOf(Project.REF_DELIMITER);
@@ -541,12 +535,12 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Add a collection of properties to this frame
      *
-     * @param properties              the collection of property values,
-     *      indexed by their names
-     * @exception ExecutionException  if the frame cannot be created.
+     * @param properties the collection of property values, indexed by their
+     *      names
+     * @exception ExecutionException if the frame cannot be created.
      */
     protected void addProperties(Map properties) throws ExecutionException {
-        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
             String name = (String) i.next();
             Object value = properties.get(name);
 
@@ -558,10 +552,9 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Create a new frame for a given project
      *
-     * @param project                 the project model the frame will deal
-     *      with
-     * @return                        an Frame ready to build the project
-     * @exception ExecutionException  if the frame cannot be created.
+     * @param project the project model the frame will deal with
+     * @return an Frame ready to build the project
+     * @exception ExecutionException if the frame cannot be created.
      */
     protected Frame createFrame(Project project)
          throws ExecutionException {
@@ -569,7 +562,7 @@ public class Frame implements DemuxOutputReceiver {
              = new Frame(standardLibs, initConfig, config);
 
         newFrame.setProject(project);
-        for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
+        for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
             BuildListener listener = (BuildListener) j.next();
 
             newFrame.addBuildListener(listener);
@@ -581,8 +574,8 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Log a message as a build event
      *
-     * @param message  the message to be logged
-     * @param level    the priority level of the message
+     * @param message the message to be logged
+     * @param level the priority level of the message
      */
     protected void log(String message, int level) {
         eventSupport.fireMessageLogged(project, message, level);
@@ -592,10 +585,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Add a build listener to this execution frame
      *
-     * @param listener  the listener to be added to the frame
+     * @param listener the listener to be added to the frame
      */
     protected void addBuildListener(BuildListener listener) {
-        for (Iterator i = getReferencedFrames(); i.hasNext();) {
+        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             Frame referencedFrame = (Frame) i.next();
 
             referencedFrame.addBuildListener(listener);
@@ -607,10 +600,10 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Remove a build listener from the execution
      *
-     * @param listener  the listener to be removed
+     * @param listener the listener to be removed
      */
     protected void removeBuildListener(BuildListener listener) {
-        for (Iterator i = getReferencedFrames(); i.hasNext();) {
+        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             Frame subFrame = (Frame) i.next();
 
             subFrame.removeBuildListener(listener);
@@ -622,9 +615,8 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Run the given list of targets
      *
-     * @param targets                 a list of target names which are to be
-     *      evaluated
-     * @exception ExecutionException  if there is a problem in the build
+     * @param targets a list of target names which are to be evaluated
+     * @exception ExecutionException if there is a problem in the build
      */
     protected void runBuild(List targets) throws ExecutionException {
         determineBaseDirs();
@@ -640,7 +632,7 @@ public class Frame implements DemuxOutputReceiver {
                 executeTarget(defaultTarget);
             }
         } else {
-            for (Iterator i = targets.iterator(); i.hasNext();) {
+            for (Iterator i = targets.iterator(); i.hasNext(); ) {
                 String targetName = (String) i.next();
 
                 log("Executing target: " + targetName, MessageLevel.MSG_DEBUG);
@@ -653,10 +645,9 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Execute the tasks of a target in this frame with the given name
      *
-     * @param targetName              the name of the target whose tasks will
-     *      be evaluated
-     * @exception ExecutionException  if there is a problem executing the
-     *      tasks of the target
+     * @param targetName the name of the target whose tasks will be evaluated
+     * @exception ExecutionException if there is a problem executing the tasks
+     *      of the target
      */
     protected void executeTarget(String targetName) throws ExecutionException {
         // to execute a target we must determine its dependencies and
@@ -666,7 +657,7 @@ public class Frame implements DemuxOutputReceiver {
             // firstly build a list of fully qualified target names to execute.
             List dependencyOrder = project.getTargetDependencies(targetName);
 
-            for (Iterator i = dependencyOrder.iterator(); i.hasNext();) {
+            for (Iterator i = dependencyOrder.iterator(); i.hasNext(); ) {
                 String fullTargetName = (String) i.next();
                 Frame frame = getContainingFrame(fullTargetName);
                 String localTargetName = getNameInFrame(fullTargetName);
@@ -682,8 +673,8 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Run the tasks returned by the given iterator
      *
-     * @param taskIterator            the iterator giving the tasks to execute
-     * @exception ExecutionException  if there is execution problem while
+     * @param taskIterator the iterator giving the tasks to execute
+     * @exception ExecutionException if there is execution problem while
      *      executing tasks
      */
     protected void executeTasks(Iterator taskIterator)
@@ -727,9 +718,9 @@ public class Frame implements DemuxOutputReceiver {
      * Execute the given target's tasks. The target must be local to this
      * frame's project
      *
-     * @param targetName              the name of the target within this frame
-     *      that is to be executed.
-     * @exception ExecutionException  if there is a problem executing tasks
+     * @param targetName the name of the target within this frame that is to
+     *      be executed.
+     * @exception ExecutionException if there is a problem executing tasks
      */
     protected void executeTargetTasks(String targetName)
          throws ExecutionException {
@@ -778,11 +769,11 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Initialize the frame by executing the project level tasks if any
      *
-     * @exception ExecutionException  if the top level tasks of the frame
+     * @exception ExecutionException if the top level tasks of the frame
      *      failed
      */
     protected void initialize() throws ExecutionException {
-        for (Iterator i = getReferencedFrames(); i.hasNext();) {
+        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             Frame referencedFrame = (Frame) i.next();
 
             referencedFrame.initialize();
@@ -797,7 +788,7 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Determine the base directory for each frame in the frame hierarchy
      *
-     * @exception ExecutionException  if the base directories cannot be
+     * @exception ExecutionException if the base directories cannot be
      *      determined
      */
     private void determineBaseDirs() throws ExecutionException {
@@ -825,7 +816,7 @@ public class Frame implements DemuxOutputReceiver {
         }
         setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
 
-        for (Iterator i = getReferencedFrames(); i.hasNext();) {
+        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
             Frame refFrame = (Frame) i.next();
 
             refFrame.determineBaseDirs();
@@ -859,8 +850,8 @@ public class Frame implements DemuxOutputReceiver {
      * the thread producing the content. The content is broken up into
      * separate lines
      *
-     * @param line   the content produce by the current thread.
-     * @param isErr  true if this content is from the thread's error stream.
+     * @param line the content produce by the current thread.
+     * @param isErr true if this content is from the thread's error stream.
      */
     public void threadOutput(String line, boolean isErr) {
         eventSupport.threadOutput(line, isErr);

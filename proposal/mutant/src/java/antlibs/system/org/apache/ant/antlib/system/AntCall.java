@@ -69,12 +69,12 @@ public class AntCall extends AntBase {
      * @exception ExecutionException if the build fails
      */
     public void execute() throws ExecutionException {
-        ExecService execService
-             = (ExecService) getCoreService(ExecService.class);
         setProperty(MagicProperties.BASEDIR, 
-            execService.getBaseDir().getAbsolutePath());
+            getExecService().getBaseDir().getAbsolutePath());
 
-        execService.callTarget(getProperties(), getTargets());
+        Object key = getExecService().setupBuild(getProperties());
+        setSubBuildKey(key);
+        getExecService().runBuild(key, getTargets());
     }
 
     /**
