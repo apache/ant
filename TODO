@@ -9,9 +9,6 @@ remove items from this list once they are complete.
 
 * review claimed AntClassLoader memory leak [Stefan]
 
-* <junitreport> and JDK 1.5 [Stefan hopes that Stephane solves it for
-  him, otherwise he'll do it himself]
-
 * AntClassLoader parent loader [Start thread, Peter]
 
 * delete - do not follow symlinks [Peter, may be dropped for 1.6.2]

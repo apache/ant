@@ -1031,6 +1031,7 @@
         <fileset dir="${etc.dir}">
             <include name="junit-frames.xsl"/>
             <include name="junit-noframes.xsl"/>
+            <include name="junit-frames-xalan1.xsl"/>
             <include name="coverage-frames.xsl"/>
             <include name="maudit-frames.xsl"/>
             <include name="mmetrics-frames.xsl"/>
