@@ -28,9 +28,14 @@ import org.apache.tools.ant.types.Commandline;
  * @since Ant 1.4
  */
 public class KaffeRmic extends DefaultRmicAdapter {
-    public static final String RMIC_CLASSNAME = "gnu.java.rmi.rmic.RMIC";
-    // pre Kaffe 1.1.2
-    private static final String OLD_RMIC_CLASSNAME = "kaffe.rmi.rmic.RMIC";
+    // sorted by newest Kaffe version first
+    private static final String[] RMIC_CLASSNAMES = new String[] {
+        "gnu.classpath.tools.rmi.rmic.RMIC",
+        // pre Kaffe 1.1.5
+        "gnu.java.rmi.rmic.RMIC",
+        // pre Kaffe 1.1.2
+        "kaffe.rmi.rmic.RMIC",
+    };
 
     /**
      * the name of this adapter for users to select
@@ -44,20 +49,25 @@ public class KaffeRmic extends DefaultRmicAdapter {
 
         Class c = getRmicClass();
         if (c == null) {
-            throw new BuildException("Cannot use Kaffe rmic, as it is not "
-                                     + "available.  Neither "
-                                     + RMIC_CLASSNAME
-                                     + " nor "
-                                     + OLD_RMIC_CLASSNAME
-                                     + " have been found.  "
-                                     + "A common solution is to "
-                                     + "set the environment variable "
-                                     + "JAVA_HOME or CLASSPATH.",
+            StringBuffer buf = new StringBuffer("Cannot use Kaffe rmic, as it"
+                                                + " is not available.  None"
+                                                + " of ");
+            for (int i = 0; i < RMIC_CLASSNAMES.length; i++) {
+                if (i != 0) {
+                    buf.append(", ");
+                }
+                
+                buf.append(RMIC_CLASSNAMES[i]);
+            }
+            buf.append(" have been found. A common solution is to set the"
+                       + " environment variable JAVA_HOME or CLASSPATH.");
+            throw new BuildException(buf.toString(),
                                      getRmic().getLocation());
         }
 
         cmd.setExecutable(c.getName());
-        if (c.getName().equals(RMIC_CLASSNAME)) {
+        if (!c.getName().equals(RMIC_CLASSNAMES[RMIC_CLASSNAMES.length - 1])) {
+            // only supported since Kaffe 1.1.2
             cmd.createArgument().setValue("-verbose");
             getRmic().log(Commandline.describeCommand(cmd));
         }
@@ -81,12 +91,10 @@ public class KaffeRmic extends DefaultRmicAdapter {
      * @return null if neither class can get loaded.
      */
     private static Class getRmicClass() {
-        try {
-            return Class.forName(RMIC_CLASSNAME);
-        } catch (ClassNotFoundException cnfe) {
+        for (int i = 0; i < RMIC_CLASSNAMES.length; i++) {
             try {
-                return Class.forName(OLD_RMIC_CLASSNAME);
-            } catch (ClassNotFoundException cnfe2) {
+                return Class.forName(RMIC_CLASSNAMES[i]);
+            } catch (ClassNotFoundException cnfe) {
             }
         }
         return null;
