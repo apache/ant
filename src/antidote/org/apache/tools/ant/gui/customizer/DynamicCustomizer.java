@@ -59,9 +59,7 @@ import java.beans.*;
 import javax.swing.*;
 import java.util.*;
 import java.io.File;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Component;
+import java.awt.*;
 
 /**
  * Widget for dynamically constructing a property editor based on the 
@@ -70,7 +68,7 @@ import java.awt.Component;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class DynamicCustomizer extends JPanel implements Customizer {
+public class DynamicCustomizer extends JPanel implements Customizer, Scrollable {
 	static {
 		PropertyEditorManager.registerEditor(
 			String.class, StringPropertyEditor.class);
@@ -88,6 +86,8 @@ public class DynamicCustomizer extends JPanel implements Customizer {
 			Properties.class, PropertiesPropertyEditor.class);
 		PropertyEditorManager.registerEditor(
 			File.class, FilePropertyEditor.class);
+		PropertyEditorManager.registerEditor(
+			Object.class, ObjectPropertyEditor.class);
 	}
 
     /** Property name that PropertyDescriptors can save in their property
@@ -109,7 +109,7 @@ public class DynamicCustomizer extends JPanel implements Customizer {
     private boolean _readOnly = false;
     /** List of property change listeners interested when the bean
      *  being edited has been changed. */
-    private List _changeListeners = new LinkedList();
+    private java.util.List _changeListeners = new LinkedList();
     /** Flag to trun off event propogation. */
     private boolean _squelchChangeEvents = false;
 
@@ -152,7 +152,7 @@ public class DynamicCustomizer extends JPanel implements Customizer {
                 
                 // Lookup the editor.
                 PropertyEditor editor = getEditorForProperty(props[i]);
-                if(editor == null) continue;
+
                 // Add a listener to the editor so we know when to update
                 // the bean's fields.
                 editor.addPropertyChangeListener(_eListener);
@@ -161,7 +161,8 @@ public class DynamicCustomizer extends JPanel implements Customizer {
                 // that makes use of the "paintable" capability of the editor.
                 Component comp = editor.getCustomEditor();
                 if(comp == null) {
-                    comp = new JLabel("<<null editor>>");
+                    comp = new JLabel("<No editor available.>");
+                    ((JLabel)comp).setBorder(BorderFactory.createEtchedBorder());
                 }
                 
                 // See if it is a read-only property. If so, then just
@@ -182,7 +183,6 @@ public class DynamicCustomizer extends JPanel implements Customizer {
                         ((JComponent)comp).setToolTipText(tip);
                     }
                 }
-
 
                 // Add the label and fields.
                 add(label, gbc.forLabel());
@@ -272,6 +272,11 @@ public class DynamicCustomizer extends JPanel implements Customizer {
             }
         }
 
+        // In the worse case we resort to the generic editor for Object types.
+        if(retval == null) {
+            retval = PropertyEditorManager.findEditor(Object.class);
+        }
+
         return retval;
     }
 
@@ -316,6 +321,111 @@ public class DynamicCustomizer extends JPanel implements Customizer {
         }
     }
 
+    /**
+     * Returns the preferred size of the viewport for a view component.
+     * For example the preferredSize of a JList component is the size
+     * required to acommodate all of the cells in its list however the
+     * value of preferredScrollableViewportSize is the size required for
+     * JList.getVisibleRowCount() rows.   A component without any properties
+     * that would effect the viewport size should just return 
+     * getPreferredSize() here.
+     * 
+     * @return The preferredSize of a JViewport whose view is this Scrollable.
+     * @see JViewport#getPreferredSize
+     */
+    public Dimension getPreferredScrollableViewportSize() {
+        Dimension size = getPreferredSize();
+        Dimension retval = new Dimension();
+        retval.width = size.width > 600 ? 600 : size.width;
+        retval.height = size.height > 400 ? 400 : size.height;
+        return retval;
+    }
+
+
+    /**
+     * Components that display logical rows or columns should compute
+     * the scroll increment that will completely expose one new row
+     * or column, depending on the value of orientation.  Ideally, 
+     * components should handle a partially exposed row or column by 
+     * returning the distance required to completely expose the item.
+     * <p>
+     * Scrolling containers, like JScrollPane, will use this method
+     * each time the user requests a unit scroll.
+     * 
+     * @param visibleRect The view area visible within the viewport
+     * @param orientation Either SwingConstants.VERTICAL or 
+     *                    SwingConstants.HORIZONTAL.
+     * @param direction Less than zero to scroll up/left, 
+     *                  greater than zero for down/right.
+     * @return The "unit" increment for scrolling in the specified direction
+     * @see JScrollBar#setUnitIncrement
+     */
+    public int getScrollableUnitIncrement(Rectangle visibleRect, 
+                                          int orientation, int direction) {
+        return 1;
+    }
+
+
+    /**
+     * Components that display logical rows or columns should compute
+     * the scroll increment that will completely expose one block
+     * of rows or columns, depending on the value of orientation. 
+     * <p>
+     * Scrolling containers, like JScrollPane, will use this method
+     * each time the user requests a block scroll.
+     * 
+     * @param visibleRect The view area visible within the viewport
+     * @param orientation Either SwingConstants.VERTICAL or 
+     *                    SwingConstants.HORIZONTAL.
+     * @param direction Less than zero to scroll up/left, 
+     *                  greater than zero for down/right.
+     * @return The "block" increment for scrolling in the specified direction.
+     * @see JScrollBar#setBlockIncrement
+     */
+    public int getScrollableBlockIncrement(Rectangle visibleRect, 
+                                           int orientation, int direction) {
+        return orientation == SwingConstants.VERTICAL ? 
+            visibleRect.height / 2 : visibleRect.width / 2;
+    }
+    
+
+    /**
+     * Return true if a viewport should always force the width of this 
+     * Scrollable to match the width of the viewport.  For example a noraml 
+     * text view that supported line wrapping would return true here, since it
+     * would be undesirable for wrapped lines to disappear beyond the right
+     * edge of the viewport.  Note that returning true for a Scrollable
+     * whose ancestor is a JScrollPane effectively disables horizontal
+     * scrolling.
+     * <p>
+     * Scrolling containers, like JViewport, will use this method each 
+     * time they are validated.  
+     * 
+     * @return True if a viewport should force the Scrollables 
+     *         width to match its own.
+     */
+    public boolean getScrollableTracksViewportWidth() {
+        return true;
+    }
+
+    /**
+     * Return true if a viewport should always force the height of this 
+     * Scrollable to match the height of the viewport.  For example a 
+     * columnar text view that flowed text in left to right columns 
+     * could effectively disable vertical scrolling by returning
+     * true here.
+     * <p>
+     * Scrolling containers, like JViewport, will use this method each 
+     * time they are validated.  
+     * 
+     * @return True if a viewport should force the Scrollables 
+     *         height to match its own.
+     */
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
+    }
+
+
     /** Class for receiving change events from the PropertyEditor objects. */
     private class EditorChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent e) {
@@ -354,7 +464,7 @@ public class DynamicCustomizer extends JPanel implements Customizer {
             Integer i2 = (Integer) p2.getValue(SORT_ORDER);
             
             if(i1 == null && i2 == null) {
-                return 0;
+                return p1.getName().compareTo(p2.getName());
             }
             else if(i1 != null) {
                 return i1.compareTo(i2);
@@ -365,21 +475,26 @@ public class DynamicCustomizer extends JPanel implements Customizer {
         }
     }
 
-    /** Class for testing this. */
-    private static class TestClass {
-        private String _String = null;
-        private String[] _StringArray = null;
-        private int _int = 0;
-        private Integer _Integer = null;
-        private double _double = 0;
-        private Double _Double = null;
-        private Properties _Properties = null;
-        private File _File = null;
 
-        public void setString(String string) {
+    /*----------------------------------------------------------------------*/
+
+    /** Class for testing this. */
+    private static class TestClass implements Cloneable {
+        private String _String = "This string is my name.";
+        private String[] _StringArray = { "one", "two", "three" };
+        private int _int = Integer.MIN_VALUE;
+        private Integer _Integer = new Integer(Integer.MAX_VALUE);
+        private double _double = Double.MIN_VALUE;
+        private Double _Double = new Double(Double.MAX_VALUE);
+        private Properties _Properties = System.getProperties();
+        private File _File = new File("/");
+        private Object _Object = new Font("Monospaced", Font.PLAIN, 12);
+        private JButton _button = new JButton("I'm a button!");
+
+        public void setName(String string) {
             _String = string;
         }
-        public String getString() {
+        public String getName() {
             return _String;
         }
 
@@ -431,6 +546,31 @@ public class DynamicCustomizer extends JPanel implements Customizer {
         public File getFile() {
             return _File;
         }
+        
+        public void setButton(JButton button) {
+            _button = button;
+        }
+
+        public JButton getButton() {
+            return _button;
+        }
+
+        public void setObject(Object o) {
+            _Object = o;
+        }
+
+        public Object getObject() {
+            return _Object;
+        }
+
+        public Object clone() {
+            try {
+                return super.clone();
+            }
+            catch(CloneNotSupportedException ex) {
+                return null;
+            }
+        }
     }
 
 
@@ -442,12 +582,22 @@ public class DynamicCustomizer extends JPanel implements Customizer {
     public static void main(String[] args) {
 
         try {
-            Class c = args.length > 0 ? Class.forName(args[0]) : TestClass.class;
-            JFrame f = new JFrame(c.getName());
-            DynamicCustomizer custom = 
-                new DynamicCustomizer(c);
-            custom.setObject(c.newInstance());
-            f.getContentPane().add(custom);
+            Class type = null;
+            Object instance = null;
+            if(args.length > 0) {
+                type = Class.forName(args[0]);
+                instance = type.newInstance();
+            }
+            else {
+                type = TestClass.class;
+                instance = new TestClass();
+                ((TestClass)instance).setObject(new TestClass());
+            }
+
+            JFrame f = new JFrame(type.getName());
+            DynamicCustomizer custom = new DynamicCustomizer(type);
+            custom.setObject(instance);
+            f.getContentPane().add(new JScrollPane(custom));
             f.pack();
             f.setVisible(true);
         }
