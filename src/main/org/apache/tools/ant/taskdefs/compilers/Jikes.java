@@ -44,11 +44,24 @@ public class Jikes extends DefaultCompilerAdapter {
     public boolean execute() throws BuildException {
         attributes.log("Using jikes compiler", Project.MSG_VERBOSE);
 
-        Path classpath = new Path(project);
+        Commandline cmd = new Commandline();
 
-        // Jikes doesn't support an extension dir (-extdir)
-        // so we'll emulate it for compatibility and convenience.
-        classpath.addExtdirs(extdirs);
+        // For -sourcepath, use the "sourcepath" value if present.
+        // Otherwise default to the "srcdir" value.
+        Path sourcepath = null;
+        if (compileSourcepath != null) {
+            sourcepath = compileSourcepath;
+        } else {
+            sourcepath = src;
+        }
+        // If the buildfile specifies sourcepath="", then don't
+        // output any sourcepath.
+        if (sourcepath.size() > 0) {
+            cmd.createArgument().setValue("-sourcepath");
+            cmd.createArgument().setPath(sourcepath);
+        }
+
+        Path classpath = new Path(project);
 
         if (bootclasspath == null || bootclasspath.size() == 0) {
             // no bootclasspath, therefore, get one from the java runtime
@@ -61,21 +74,17 @@ public class Jikes extends DefaultCompilerAdapter {
         }
         classpath.append(getCompileClasspath());
 
-        // Jikes has no option for source-path so we
-        // will add it to classpath.
-        if (compileSourcepath != null) {
-            classpath.append(compileSourcepath);
-        } else {
-            classpath.append(src);
-        }
-
         // if the user has set JIKESPATH we should add the contents as well
         String jikesPath = System.getProperty("jikes.class.path");
         if (jikesPath != null) {
             classpath.append(new Path(project, jikesPath));
         }
 
-        Commandline cmd = new Commandline();
+        if (extdirs != null && extdirs.size() > 0) {
+            cmd.createArgument().setValue("-extdirs");
+            cmd.createArgument().setPath(extdirs);
+        }
+
         String exec = getJavac().getExecutable();
         cmd.setExecutable(exec == null ? "jikes" : exec);
 
@@ -96,7 +105,14 @@ public class Jikes extends DefaultCompilerAdapter {
             cmd.createArgument().setValue(encoding);
         }
         if (debug) {
-            cmd.createArgument().setValue("-g");
+            String debugLevel = attributes.getDebugLevel();
+            if (debugLevel != null) {
+                cmd.createArgument().setValue("-g:" + debugLevel);
+            } else {
+                cmd.createArgument().setValue("-g");
+            }
+        } else {
+            cmd.createArgument().setValue("-g:none");
         }
         if (optimize) {
             cmd.createArgument().setValue("-O");
@@ -148,12 +164,6 @@ public class Jikes extends DefaultCompilerAdapter {
                 cmd.createArgument().setValue("-nowarn");
             }
         } if (attributes.getNowarn()) {
-            /*
-             * FIXME later
-             *
-             * let the magic property win over the attribute for backwards
-             * compatibility
-             */
             cmd.createArgument().setValue("-nowarn");
         }
 
