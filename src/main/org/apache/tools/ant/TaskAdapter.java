@@ -17,9 +17,9 @@
 
 package org.apache.tools.ant;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.apache.tools.ant.dispatch.Dispatchable;
+import org.apache.tools.ant.dispatch.DispatchUtils;
 
 /**
  * Uses introspection to "adapt" an arbitrary Bean which doesn't
@@ -93,37 +93,6 @@ public class TaskAdapter extends Task implements TypeAdapter {
     }
 
     /**
-     * Returns the name of the action method that the task must
-     * execute.
-     */
-    private final String getExecuteMethodName() throws NoSuchMethodException,
-            InvocationTargetException, IllegalAccessException {
-        String methodName = "execute";
-        if (proxy instanceof Dispatchable) {
-            final Dispatchable dispatchable = (Dispatchable) proxy;
-            final String name = dispatchable.getActionParameterName();
-            if (name != null && name.trim().length() > 0) {
-                String mName = "get" + name.trim().substring(0, 1).toUpperCase();
-                if (name.length() > 1) {
-                    mName += name.substring(1);
-                }
-                final Class c = proxy.getClass();
-                final Method actionM = c.getMethod(mName, new Class[0]);
-                if (actionM != null) {
-                    final Object o = actionM.invoke(proxy, null);
-                    if (o != null) {
-                        final String s = o.toString();
-                        if (s != null && s.trim().length() > 0) {
-                            methodName = s.trim();
-                        }
-                    }
-                }
-            }
-        }
-        return methodName;
-    }
-
-    /**
      * Executes the proxied task.
      *
      * @exception BuildException if the project could not be set
@@ -151,24 +120,8 @@ public class TaskAdapter extends Task implements TypeAdapter {
         Method executeM = null;
         try {
             Class c = proxy.getClass();
-            final String methodName = getExecuteMethodName();
-            executeM = c.getMethod(methodName, new Class[0]);
-            if (executeM == null) {
-                log("No public " + methodName + " in " + proxy.getClass(),
-                    Project.MSG_ERR);
-                throw new BuildException("No public " + methodName + "() in "
-                    + proxy.getClass());
-            }
-            executeM.invoke(proxy, null);
+            DispatchUtils.execute(proxy);
             return;
-        } catch (java.lang.reflect.InvocationTargetException ie) {
-            log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
-            Throwable t = ie.getTargetException();
-            if (t instanceof BuildException) {
-                throw ((BuildException) t);
-            } else {
-                throw new BuildException(t);
-            }
         } catch (Exception ex) {
             log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
             throw new BuildException(ex);

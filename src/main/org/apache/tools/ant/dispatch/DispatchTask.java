@@ -29,7 +29,7 @@ import org.apache.tools.ant.Task;
  * If the action attribute is not defined in the task or is empty,
  * the execute() method will be called.
  */
-public abstract class DispatchTask implements Dispatchable {
+public abstract class DispatchTask extends Task implements Dispatchable {
     private String action;
 
     public String getActionParameterName() {

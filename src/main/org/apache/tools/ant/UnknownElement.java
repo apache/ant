@@ -391,7 +391,6 @@ public class UnknownElement extends Task {
             getProject());
         String name = ue.getComponentName();
         Object o = helper.createComponent(ue, ue.getNamespace(), name);
-
         if (o == null) {
             throw getNotFoundException("task or type", name);
         }
@@ -528,6 +527,16 @@ public class UnknownElement extends Task {
     public Object getRealThing() {
         return realThing;
     }
+
+    /**
+     * Set the configured object
+     *
+     * @since ant 1.7
+     */
+    public void setRealThing(Object realThing) {
+        this.realThing = realThing;
+    }
+
     /**
      * Try to create a nested element of <code>parent</code> for the
      * given tag.

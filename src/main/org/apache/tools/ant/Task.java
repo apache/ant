@@ -17,6 +17,8 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.dispatch.DispatchUtils;
+
 import java.util.Enumeration;
 import java.io.IOException;
 
@@ -361,7 +363,7 @@ public abstract class Task extends ProjectComponent {
             Throwable reason = null;
             try {
                 maybeConfigure();
-                execute();
+                DispatchUtils.execute(this);
             } catch (BuildException ex) {
                 if (ex.getLocation() == Location.UNKNOWN_LOCATION) {
                     ex.setLocation(getLocation());
