@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2004 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,13 +21,16 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.GregorianCalendar;
 
-import junit.framework.Assert;
+import junit.framework.ComparisonFailure;
 
 /**
  * @author <a href="antoine@antbuild.com">Antoine Levy-Lambert</a>
+ * @author Matt Benson
  */
 public class ExecTaskTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
@@ -49,9 +52,128 @@ public class ExecTaskTest extends BuildFileTest {
     }
 
     public void tearDown() {
-        if (logFile != null) {
+        executeTarget("cleanup");
+        if (logFile != null && logFile.exists()) {
             logFile.delete();
         }
+    }
+
+    public void testNoRedirect() {
+        expectLog("no-redirect", getProject().getProperty("ant.file") + " out"
+            + getProject().getProperty("ant.file") + " err");
+    }
+
+    public void testRedirect1() {
+        executeTarget("redirect1");
+        String expectedOut = getProject().getProperty("ant.file") + " out\n"
+            + getProject().getProperty("ant.file") + " err\n";
+
+        String actualOut = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", expectedOut, actualOut);
+    }
+
+    public void testRedirect2() {
+        executeTarget("redirect2");
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+        String expectedErr = getProject().getProperty("ant.file") + " err\n";
+
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", expectedOut, actualOut);
+        assertEquals("unexpected error output", expectedErr, actualErr);
+    }
+
+    public void testRedirect3() {
+        expectLog("redirect3", getProject().getProperty("ant.file") + " err");
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+
+        String actualOut = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", expectedOut, actualOut);
+        assertPropertyEquals("redirect.out", expectedOut.trim());
+    }
+
+    public void testRedirect4() {
+        executeTarget("redirect4");
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+        String expectedErr = getProject().getProperty("ant.file") + " err\n";
+
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", expectedOut, actualOut);
+        assertPropertyEquals("redirect.out", expectedOut.trim());
+        assertEquals("unexpected error output", expectedErr, actualErr);
+        assertPropertyEquals("redirect.err", expectedErr.trim());
+    }
+
+    public void testRedirect5() {
+        testRedirect5or6("redirect5");
+    }
+
+    public void testRedirect6() {
+        testRedirect5or6("redirect6");
+    }
+
+    public void testRedirect5or6(String target) {
+        executeTarget(target);
+
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", "3", actualOut.trim());
+        assertEquals(getProject().getProperty("redirect.out").trim(), "3");
+        assertEquals("unexpected error output", null, actualErr);
+        assertPropertyEquals("redirect.err", "");
+    }
+
+    public void testRedirect7() {
+        executeTarget("redirect7");
+
+        String expectedOut = getProject().getProperty("ant.file") + " out\n";
+
+        String actualOut = null;
+        String actualErr = null;
+        try {
+            actualOut = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.out")));
+            actualErr = FileUtils.newFileUtils().readFully(new FileReader(
+                getProject().resolveFile("redirect.err")));
+        } catch (IOException eyeOhEx) {
+        }
+        assertEquals("unexpected output", "3", actualOut.trim());
+        assertEquals(getProject().getProperty("redirect.out").trim(), "3");
+        assertEquals("unexpected error output", null, actualErr);
     }
 
     public void testspawn() {

@@ -1,0 +1,120 @@
+<project name="apply-test" basedir=".">
+    <target name="init">
+        <property environment="env"/>
+        <!-- UNIX -->
+        <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
+        <!-- CYGWIN -->
+        <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
+        <condition property="test.can.run">
+            <or>
+                <isset property="sh.executable"/>
+                <isset property="sh.exe.executable"/>
+            </or>
+        </condition>
+        <!-- UNIX -->
+        <available file="wc" filepath="${env.PATH}" property="wc.executable"/>
+        <!-- CYGWIN -->
+        <available file="wc.exe" filepath="${env.PATH}" property="wc.exe.executable"/>
+        <condition property="wc.can.run">
+            <or>
+                <isset property="wc.executable"/>
+                <isset property="wc.exe.executable"/>
+            </or>
+        </condition>
+        <!-- UNIX -->
+        <available file="sed" filepath="${env.PATH}" property="sed.executable"/>
+        <!-- CYGWIN -->
+        <available file="sed.exe" filepath="${env.PATH}" property="sed.exe.executable"/>
+        <condition property="sed.can.run">
+            <or>
+                <isset property="sed.executable"/>
+                <isset property="sed.exe.executable"/>
+            </or>
+        </condition>
+    </target>
+
+    <target name="xyz">
+        <echo file="x">s/x/blah/g${line.separator}</echo>
+        <echo file="y">s/y/blah/g${line.separator}</echo>
+        <echo file="z">s/z/blah/g${line.separator}</echo>
+        <fileset id="xyz" dir="${basedir}" includes="x,y,z" />
+    </target>
+
+    <target name="no-redirect" depends="init,xyz" if="test.can.run">
+        <apply executable="sh">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect1" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" output="redirect.out" append="true">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect2" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" output="redirect.out"
+               error="redirect.err" append="true">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect3" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" logerror="true" append="true"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect4" depends="init,xyz" if="test.can.run">
+        <apply executable="sh" append="true"
+              error="redirect.err" errorproperty="redirect.err"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="parrot.sh"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect5" depends="init,xyz" if="sed.can.run">
+        <apply executable="sed" inputstring="x y z${line.separator}" append="true"
+              error="redirect.err" errorproperty="redirect.err"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="-f"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect6" depends="init,xyz" if="sed.can.run">
+        <echo file="redirect.in">x y z${line.separator}</echo>
+        <apply executable="sed" input="redirect.in" append="true"
+              error="redirect.err" errorproperty="redirect.err"
+              output="redirect.out" outputproperty="redirect.out">
+            <arg value="-f"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+
+    <target name="redirect7" depends="init,xyz" if="sed.can.run">
+        <apply executable="sed" inputstring="x y z${line.separator}"
+               error="redirect.err" output="redirect.out"
+               outputproperty="redirect.out">
+            <arg value="-f"/>
+            <fileset refid="xyz" />
+        </apply>
+    </target>
+    
+    <target name="redirect7b" depends="redirect7">
+        <echo>redirect.out=${redirect.out}</echo>
+    </target>
+
+    <target name="cleanup">
+        <delete>
+            <fileset dir="${basedir}" includes="redirect.*" />
+            <fileset refid="xyz" />
+        </delete>
+    </target>
+</project>
