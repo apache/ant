@@ -250,5 +250,4 @@ public final class DOMUtil {
         parent.appendChild(copy);
         return copy;
     }
-
 }
