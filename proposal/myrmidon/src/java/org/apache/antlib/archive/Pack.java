@@ -60,7 +60,7 @@ public abstract class Pack
         }
         catch( final IOException ioe )
         {
-            final String message = "Problem creating " + getName() +
+            final String message = "Problem creating " + getContext().getName() +
                 ":" + ioe.getMessage();
             throw new TaskException( message, ioe );
         }

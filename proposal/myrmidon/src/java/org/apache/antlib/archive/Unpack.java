@@ -115,7 +115,7 @@ public abstract class Unpack
     {
         if( null == m_src )
         {
-            final String message = "No Src for " + getName() + " specified";
+            final String message = "No Src for " + getContext().getName() + " specified";
             throw new TaskException( message );
         }
 

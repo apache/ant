@@ -114,7 +114,8 @@ public class LoadProperties
         try
         {
             final Object objectValue = resolveValue( value.toString() );
-            setProperty( m_prefix + name, objectValue );
+            final String name1 = m_prefix + name;
+            getContext().setProperty( name1, objectValue );
         }
         catch( final TaskException te )
         {
