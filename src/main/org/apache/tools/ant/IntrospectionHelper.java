@@ -120,7 +120,7 @@ public class IntrospectionHelper implements BuildListener {
         nestedTypes = new Hashtable();
         nestedCreators = new Hashtable();
         nestedStorers = new Hashtable();
-        
+
         this.bean = bean;
 
         Method[] methods = bean.getMethods();
@@ -131,7 +131,7 @@ public class IntrospectionHelper implements BuildListener {
             Class[] args = m.getParameterTypes();
 
             // not really user settable properties on tasks
-            if (org.apache.tools.ant.Task.class.isAssignableFrom(bean) 
+            if (org.apache.tools.ant.Task.class.isAssignableFrom(bean)
                 && args.length == 1 &&
                 (
                  (
@@ -142,14 +142,14 @@ public class IntrospectionHelper implements BuildListener {
                  )) {
                 continue;
             }
-            
+
             // hide addTask for TaskContainers
-            if (org.apache.tools.ant.TaskContainer.class.isAssignableFrom(bean) 
-                && args.length == 1 && "addTask".equals(name) 
+            if (org.apache.tools.ant.TaskContainer.class.isAssignableFrom(bean)
+                && args.length == 1 && "addTask".equals(name)
                 && org.apache.tools.ant.Task.class.equals(args[0])) {
                 continue;
             }
-            
+
 
             if ("addText".equals(name)
                 && java.lang.Void.TYPE.equals(returnType)
@@ -164,6 +164,27 @@ public class IntrospectionHelper implements BuildListener {
                        && !args[0].isArray()) {
 
                 String propName = getPropertyName(name, "set");
+                if (attributeSetters.get(propName) != null) {
+                    if (java.lang.String.class.equals(args[0])) {
+                        /*
+                            Ignore method m, as there is an overloaded
+                            form of this method that takes in a
+                            non-string argument, which gains higher
+                            priority.
+                        */
+                        continue;
+                    }
+                    /*
+                        If the argument is not a String, and if there
+                        is an overloaded form of this method already defined,
+                        we just override that with the new one.
+                        This mechanism does not guarantee any specific order
+                        in which the methods will be selected: so any code
+                        that depends on the order in which "set" methods have
+                        been defined, is not guaranteed to be selected in any
+                        particular order.
+                    */
+                }
                 AttributeSetter as = createAttributeSetter(m, args[0]);
                 if (as != null) {
                     attributeTypes.put(propName, args[0]);
@@ -179,32 +200,32 @@ public class IntrospectionHelper implements BuildListener {
                 nestedTypes.put(propName, returnType);
                 nestedCreators.put(propName, new NestedCreator() {
 
-                        public Object create(Object parent) 
-                            throws InvocationTargetException, 
+                        public Object create(Object parent)
+                            throws InvocationTargetException,
                             IllegalAccessException {
 
                             return m.invoke(parent, new Object[] {});
                         }
 
                     });
-                
+
             } else if (name.startsWith("addConfigured")
                        && java.lang.Void.TYPE.equals(returnType)
                        && args.length == 1
                        && !java.lang.String.class.equals(args[0])
                        && !args[0].isArray()
                        && !args[0].isPrimitive()) {
-                 
+
                 try {
-                    final Constructor c = 
+                    final Constructor c =
                         args[0].getConstructor(new Class[] {});
                     String propName = getPropertyName(name, "addConfigured");
                     nestedTypes.put(propName, args[0]);
                     nestedCreators.put(propName, new NestedCreator() {
 
-                            public Object create(Object parent) 
+                            public Object create(Object parent)
                                 throws InvocationTargetException, IllegalAccessException, InstantiationException {
-                                
+
                                 Object o = c.newInstance(new Object[] {});
                                 return o;
                             }
@@ -212,9 +233,9 @@ public class IntrospectionHelper implements BuildListener {
                         });
                     nestedStorers.put(propName, new NestedStorer() {
 
-                            public void store(Object parent, Object child) 
+                            public void store(Object parent, Object child)
                                 throws InvocationTargetException, IllegalAccessException, InstantiationException {
-                                
+
                                 m.invoke(parent, new Object[] {child});
                             }
 
@@ -227,17 +248,17 @@ public class IntrospectionHelper implements BuildListener {
                        && !java.lang.String.class.equals(args[0])
                        && !args[0].isArray()
                        && !args[0].isPrimitive()) {
-                 
+
                 try {
-                    final Constructor c = 
+                    final Constructor c =
                         args[0].getConstructor(new Class[] {});
                     String propName = getPropertyName(name, "add");
                     nestedTypes.put(propName, args[0]);
                     nestedCreators.put(propName, new NestedCreator() {
 
-                            public Object create(Object parent) 
+                            public Object create(Object parent)
                                 throws InvocationTargetException, IllegalAccessException, InstantiationException {
-                                
+
                                 Object o = c.newInstance(new Object[] {});
                                 m.invoke(parent, new Object[] {o});
                                 return o;
@@ -249,7 +270,7 @@ public class IntrospectionHelper implements BuildListener {
             }
         }
     }
-    
+
     /**
      * Factory method for helper objects.
      */
@@ -265,7 +286,7 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * Sets the named attribute.
      */
-    public void setAttribute(Project p, Object element, String attributeName, 
+    public void setAttribute(Project p, Object element, String attributeName,
                              String value)
         throws BuildException {
         AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
@@ -316,7 +337,7 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * Creates a named nested element.
      */
-    public Object createElement(Project project, Object element, String elementName) 
+    public Object createElement(Project project, Object element, String elementName)
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
@@ -348,7 +369,7 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * Creates a named nested element.
      */
-    public void storeElement(Project project, Object element, Object child, String elementName) 
+    public void storeElement(Project project, Object element, Object child, String elementName)
         throws BuildException {
         if (elementName == null) {
             return;
@@ -377,7 +398,7 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * returns the type of a named nested element.
      */
-    public Class getElementType(String elementName) 
+    public Class getElementType(String elementName)
         throws BuildException {
         Class nt = (Class) nestedTypes.get(elementName);
         if (nt == null) {
@@ -391,7 +412,7 @@ public class IntrospectionHelper implements BuildListener {
     /**
      * returns the type of a named attribute.
      */
-    public Class getAttributeType(String attributeName) 
+    public Class getAttributeType(String attributeName)
         throws BuildException {
         Class at = (Class) attributeTypes.get(attributeName);
         if (at == null) {
@@ -425,7 +446,7 @@ public class IntrospectionHelper implements BuildListener {
 
     /**
      * Create a proper implementation of AttributeSetter for the given
-     * attribute type.  
+     * attribute type.
      */
     private AttributeSetter createAttributeSetter(final Method m,
                                                   final Class arg) {
@@ -433,7 +454,7 @@ public class IntrospectionHelper implements BuildListener {
         // simplest case - setAttribute expects String
         if (java.lang.String.class.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new String[] {value});
                     }
@@ -443,7 +464,7 @@ public class IntrospectionHelper implements BuildListener {
         } else if (java.lang.Character.class.equals(arg)
                    || java.lang.Character.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Character[] {new Character(value.charAt(0))});
                     }
@@ -451,7 +472,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
         } else if (java.lang.Byte.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Byte[] {new Byte(value)});
                     }
@@ -459,7 +480,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
         } else if (java.lang.Short.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Short[] {new Short(value)});
                     }
@@ -467,7 +488,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
         } else if (java.lang.Integer.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Integer[] {new Integer(value)});
                     }
@@ -475,7 +496,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
         } else if (java.lang.Long.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Long[] {new Long(value)});
                     }
@@ -483,7 +504,7 @@ public class IntrospectionHelper implements BuildListener {
                 };
         } else if (java.lang.Float.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Float[] {new Float(value)});
                     }
@@ -491,21 +512,21 @@ public class IntrospectionHelper implements BuildListener {
                 };
         } else if (java.lang.Double.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Double[] {new Double(value)});
                     }
 
                 };
 
-        // boolean gets an extra treatment, because we have a nice method 
+        // boolean gets an extra treatment, because we have a nice method
         // in Project
-        } else if (java.lang.Boolean.class.equals(arg) 
+        } else if (java.lang.Boolean.class.equals(arg)
                    || java.lang.Boolean.TYPE.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, 
+                        m.invoke(parent,
                                  new Boolean[] {new Boolean(Project.toBoolean(value))});
                     }
 
@@ -514,7 +535,7 @@ public class IntrospectionHelper implements BuildListener {
         // Class doesn't have a String constructor but a decent factory method
         } else if (java.lang.Class.class.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
                             m.invoke(parent, new Class[] {Class.forName(value)});
@@ -527,7 +548,7 @@ public class IntrospectionHelper implements BuildListener {
         // resolve relative paths through Project
         } else if (java.io.File.class.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new File[] {p.resolveFile(value)});
                     }
@@ -537,7 +558,7 @@ public class IntrospectionHelper implements BuildListener {
         // resolve relative paths through Project
         } else if (org.apache.tools.ant.types.Path.class.equals(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new Path[] {new Path(p, value)});
                     }
@@ -547,7 +568,7 @@ public class IntrospectionHelper implements BuildListener {
         // EnumeratedAttributes have their own helper class
         } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(arg)) {
             return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value) 
+                    public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
                             org.apache.tools.ant.types.EnumeratedAttribute ea = (org.apache.tools.ant.types.EnumeratedAttribute)arg.newInstance();
@@ -558,18 +579,18 @@ public class IntrospectionHelper implements BuildListener {
                         }
                     }
                 };
-        
+
 
         // worst case. look for a public String constructor and use it
         } else {
 
             try {
-                final Constructor c = 
+                final Constructor c =
                     arg.getConstructor(new Class[] {java.lang.String.class});
 
                 return new AttributeSetter() {
-                        public void set(Project p, Object parent, 
-                                        String value) 
+                        public void set(Project p, Object parent,
+                                        String value)
                             throws InvocationTargetException, IllegalAccessException, BuildException {
                             try {
                                 Object attribute = c.newInstance(new String[] {value});
@@ -582,11 +603,11 @@ public class IntrospectionHelper implements BuildListener {
                             }
                         }
                     };
-                
+
             } catch (NoSuchMethodException nme) {
             }
         }
-        
+
         return null;
     }
 
@@ -617,13 +638,13 @@ public class IntrospectionHelper implements BuildListener {
                 }
             }
         }
-        
+
         return "Class " + element.getClass().getName();
     }
 
     /**
      * extract the name of a property from a method name - subtracting
-     * a given prefix.  
+     * a given prefix.
      */
     private String getPropertyName(String methodName, String prefix) {
         int start = prefix.length();
@@ -631,18 +652,18 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     private interface NestedCreator {
-        Object create(Object parent) 
+        Object create(Object parent)
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
-    
+
     private interface NestedStorer {
-        void store(Object parent, Object child) 
+        void store(Object parent, Object child)
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
-    
+
     private interface AttributeSetter {
         void set(Project p, Object parent, String value)
-            throws InvocationTargetException, IllegalAccessException, 
+            throws InvocationTargetException, IllegalAccessException,
                    BuildException;
     }
 
