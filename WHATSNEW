@@ -26,7 +26,9 @@ Other changes:
 
 * <loadproperties> supports loading from a resource.
 
-* <fail> accepts nested conditions.
+* <fail> accepts a nested <condition>.
+
+* Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =====================================================

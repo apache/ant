@@ -396,12 +396,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && firstFileName >= 0) {
                 PrintWriter out = null;
                 try {
-                    File userDir = getJavac().getTempdir();
-                    if (userDir == null) {
-                        String userDirName = System.getProperty("user.dir");
-                        userDir = new File(userDirName);
-                    }
-                    tmpFile = fileUtils.createTempFile("files", "", userDir);
+                    tmpFile = fileUtils.createTempFile(
+                        "files", "", getJavac().getTempdir());
                     tmpFile.deleteOnExit();
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
