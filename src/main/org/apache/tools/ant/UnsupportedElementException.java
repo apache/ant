@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,16 +28,16 @@ package org.apache.tools.ant;
  * This will be done once (in the case of a recursive
  * call to handlechildren).
  *
- * @since Ant 1.6.3 or Ant 1.7 ?
+ * @since Ant 1.6.3
  */
 public class UnsupportedElementException extends BuildException {
 
-    private String  element;
+    private String element;
 
     /**
-     * Constructs an unsupport element exception
-     * @param msg The string containing the message
-     * @param element The name of the incorrect element
+     * Constructs an unsupported element exception.
+     * @param msg The string containing the message.
+     * @param element The name of the incorrect element.
      */
     public UnsupportedElementException(String msg, String element) {
         super(msg);
@@ -45,9 +45,9 @@ public class UnsupportedElementException extends BuildException {
     }
 
     /**
-     * The element that is wrong
+     * Get the element that is wrong.
      *
-     * @return the element name
+     * @return the element name.
      */
     public String getElement() {
         return element;
