@@ -977,15 +977,11 @@ public class Zip extends MatchingTask {
             /*
             * ZipOutputStream.putNextEntry expects the ZipEntry to
             * know its size and the CRC sum before you start writing
-            * the data when using STORED mode.
+            * the data when using STORED mode - unless it is seekable.
             *
             * This forces us to process the data twice.
-            *
-            * In DEFLATED mode, it will take advantage of a Zip
-            * Version 2 feature where size can be stored after the
-            * data (as the data itself signals end of data).
             */
-            if (!doCompress) {
+            if (!zOut.isSeekable() && !doCompress) {
                 long size = 0;
                 CRC32 cal = new CRC32();
                 if (!in.markSupported()) {

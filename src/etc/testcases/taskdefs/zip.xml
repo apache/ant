@@ -55,6 +55,12 @@
          includes="asf-logo.gif" />
   </target>
 
+  <target name="uncompressed-feather">
+    <zip destFile="asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif" compress="false"/>
+  </target>
+
   <!-- legacy attribute support -->
   <target name="test8">
     <zip zipfile="test8.zip" basedir="." >

@@ -80,12 +80,12 @@ import java.util.zip.ZipException;
  * file.</p>
  *
  * <p>If RandomAccessFile cannot be used, this implementation will use
- * a Data Descriptor to store size and
- * CRC information for DEFLATED entries, this means, you don't need to
+ * a Data Descriptor to store size and CRC information for {@link
+ * #DEFLATED DEFLATED} entries, this means, you don't need to
  * calculate them yourself.  Unfortunately this is not possible for
- * the STORED method, here setting the CRC and uncompressed size
- * information is required before {@link #putNextEntry putNextEntry}
- * will be called.</p>
+ * the {@link #STORED STORED} method, here setting the CRC and
+ * uncompressed size information is required before {@link
+ * #putNextEntry putNextEntry} can be called.</p>
  *
  * @author Stefan Bodewig
  * @author Richard Evans
@@ -288,6 +288,20 @@ public class ZipOutputStream extends FilterOutputStream {
             }
             out = new FileOutputStream(file);
         }
+    }
+
+    /**
+     * Is this archive writing to a seekable stream (i.e. a random
+     * access file)?
+     *
+     * <p>For seekable streams, you don't need to calculate the CRC or
+     * uncompressed size for {@link #STORED STORED} entries before
+     * invoking {@link #putEntry putEntry}.
+     *
+     * @since 1.17
+     */
+    public boolean isSeekable() {
+        return raf != null;
     }
 
     /**

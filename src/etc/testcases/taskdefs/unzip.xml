@@ -27,6 +27,12 @@
     <ant antfile="zip.xml" target="cleanup" />
   </target>
 
+  <target name="testUncompressedZipTask">
+    <ant antfile="zip.xml" target="uncompressed-feather" />
+    <unzip src="asf-logo.gif.zip" dest="." />
+    <ant antfile="zip.xml" target="cleanup" />
+  </target>
+
   <target name="realTest">
     <unzip src="expected/asf-logo.gif.zip" dest="." />
   </target>

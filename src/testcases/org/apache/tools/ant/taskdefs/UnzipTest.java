@@ -101,6 +101,13 @@ public class UnzipTest extends BuildFileTest {
                                            project.resolveFile("asf-logo.gif")));
     }
     
+    public void testTestUncompressedZipTask() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        executeTarget("testUncompressedZipTask");
+        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
+                                           project.resolveFile("asf-logo.gif")));
+    }
+    
     /*
      * PR 11100
      */

@@ -548,6 +548,9 @@ If set to true, the process will be spawned. Bugzilla Report 5907.
   <parallel> to throw an exception if any thread fails without
   waiting for all other threads to complete.
 
+* <zip> and friends will consume far less memory than they used to
+  when run with compress="false".  Bugzilla Report 21899.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
