@@ -125,6 +125,9 @@ public class Jvc extends DefaultCompilerAdapter {
         if (optimize) {
             cmd.createArgument().setValue("/O");
         }
+        if (verbose) {
+            cmd.createArgument().setValue("/verbose");
+        }
 
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
