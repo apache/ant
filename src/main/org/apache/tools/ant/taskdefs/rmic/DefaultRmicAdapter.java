@@ -37,31 +37,57 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
     private Rmic attributes;
     private FileNameMapper mapper;
-    private static final Random rand = new Random();
+    private static final Random RAND = new Random();
+    /** suffix denoting a stub file */
     public static final String RMI_STUB_SUFFIX = "_Stub";
+    /** suffix denoting a skel file */
     public static final String RMI_SKEL_SUFFIX = "_Skel";
+    /** suffix denoting a tie file */
     public static final String RMI_TIE_SUFFIX = "_Tie";
 
+    /**
+     * Default constructor
+     */
     public DefaultRmicAdapter() {
     }
 
-    public void setRmic(Rmic attributes) {
+    /**
+     * Sets Rmic attributes
+     * @param attributes the rmic attributes
+     */
+    public void setRmic(final Rmic attributes) {
         this.attributes = attributes;
         mapper = new RmicFileNameMapper();
     }
 
+    /**
+     * Get the Rmic attributes
+     * @return the attributes as a Rmic taskdef
+     */
     public Rmic getRmic() {
         return attributes;
     }
 
+    /**
+     * Gets the stub class suffix
+     * @return the stub suffix &quot;_Stub&quot;
+     */
     protected String getStubClassSuffix() {
         return RMI_STUB_SUFFIX;
     }
 
+    /**
+     * Gets the skeleton class suffix
+     * @return the skeleton suffix &quot;_Skel&quot;
+     */
     protected String getSkelClassSuffix() {
         return RMI_SKEL_SUFFIX;
     }
 
+    /**
+     * Gets the tie class suffix
+     * @return the tie suffix &quot;_Tie&quot;
+     */
     protected String getTieClassSuffix() {
         return RMI_TIE_SUFFIX;
     }
@@ -81,13 +107,15 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      *   interfaces and _*_getStubClassSuffix for non-interfaces (and
      *   determine the interface and create _*_Stub from that).</li>
      * </ul>
+     * @return a <code>FileNameMapper</code>
      */
     public FileNameMapper getMapper() {
         return mapper;
     }
 
     /**
-     * The CLASSPATH this rmic process will use.
+     * Gets the CLASSPATH this rmic process will use.
+     * @return the classpath
      */
     public Path getClasspath() {
         return getCompileClasspath();
@@ -95,6 +123,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
     /**
      * Builds the compilation classpath.
+     * @return the classpath
      */
     protected Path getCompileClasspath() {
         Path classpath = new Path(attributes.getProject());
@@ -122,17 +151,18 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     }
 
     /**
-     * setup rmic argument for rmic.
+     * Setup rmic argument for rmic.
+     * @return the command line
      */
     protected Commandline setupRmicCommand() {
         return setupRmicCommand(null);
     }
 
     /**
-     * setup rmic argument for rmic.
-     *
+     * Setup rmic argument for rmic.
      * @param options additional parameters needed by a specific
      *                implementation.
+     * @return the command line
      */
     protected Commandline setupRmicCommand(String[] options) {
         Commandline cmd = new Commandline();
@@ -204,6 +234,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
      * &quot;niceSourceList&quot;
+     * @param cmd the commandline args
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         Vector compileList = attributes.getCompileList();
@@ -212,12 +243,13 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                        Project.MSG_VERBOSE);
 
         StringBuffer niceSourceList = new StringBuffer("File");
-        if (compileList.size() != 1) {
+        int cListSize = compileList.size();
+        if (cListSize != 1) {
             niceSourceList.append("s");
         }
         niceSourceList.append(" to be compiled:");
 
-        for (int i = 0; i < compileList.size(); i++) {
+        for (int i = 0; i < cListSize; i++) {
             String arg = (String) compileList.elementAt(i);
             cmd.createArgument().setValue(arg);
             niceSourceList.append("    " + arg);
@@ -284,7 +316,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
              * This is supposed to make Ant always recompile the
              * class, as a file of that name should not exist.
              */
-            String[] target = new String[] {name + ".tmp." + rand.nextLong()};
+            String[] target = new String[] {name + ".tmp." + RAND.nextLong()};
 
             if (!attributes.getIiop() && !attributes.getIdl()) {
                 // JRMP with simple naming convention
