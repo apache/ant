@@ -79,13 +79,6 @@ import org.apache.tools.ant.types.Reference;
  * @author Conor MacNeill
  */
 public class Depend extends MatchingTask {
-    /** 
-     * Tolerance on time checks to take into account inner to outer 
-     * class dependencies when the classes are written at slightly different 
-     * times 
-     */
-    static private final int TIME_TOLERANCE = 100; 
-
     /**
      * A class (struct) user to manage information about a class
      *
@@ -271,7 +264,41 @@ public class Depend extends MatchingTask {
         }
     }
 
-
+    /** 
+     * Get the classpath for dependency checking. 
+     * 
+     * This method removes the dest dirs if it is given from the dependency classpath
+     */
+    private Path getCheckClassPath() {
+        if (dependClasspath == null) {
+            return null;
+        }
+        
+        String[] destPathElements = destPath.list();
+        String[] classpathElements = dependClasspath.list();
+        String checkPath = "";
+        for (int i = 0; i < classpathElements.length; ++i) {
+            String element = classpathElements[i];
+            boolean inDestPath = false;
+            for (int j = 0; j < destPathElements.length && !inDestPath; ++j) {
+                inDestPath = destPathElements[j].equals(element);
+            }
+            if (!inDestPath) {
+                if (checkPath.length() == 0) {
+                    checkPath = element;
+                } else {
+                    checkPath += ":" + element;
+                }
+            }
+        }
+        
+        if (checkPath.length() == 0) {
+            return null;
+        }
+        
+        return new Path(getProject(), checkPath);
+    } 
+    
     /**
      * Determine the dependencies between classes. Class dependencies are
      * determined by examining the class references in a class file to other
@@ -366,11 +393,12 @@ public class Depend extends MatchingTask {
         }
 
         classpathDependencies = null;
-        if (dependClasspath != null) {
+        Path checkPath = getCheckClassPath();
+        if (checkPath != null) {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
             AntClassLoader loader 
-                = new AntClassLoader(getProject(), dependClasspath);
+                = new AntClassLoader(getProject(), checkPath);
 
             Hashtable classpathFileCache = new Hashtable();
             Object nullFileMarker = new Object();
@@ -591,7 +619,7 @@ public class Depend extends MatchingTask {
                 for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements(); ) {
                     File classpathFile = (File)e2.nextElement();
                     if (classpathFile.lastModified() 
-                        > (info.absoluteFile.lastModified() + TIME_TOLERANCE)) {
+                        > info.absoluteFile.lastModified()) {
                         log("Class " + className +
                             " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
                         outOfDateClasses.put(className, className);
