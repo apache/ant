@@ -451,7 +451,7 @@
 
       <subsection name="J2ME Ant Tasks">
 
-        <p>There are two different sets of tasks to help build <a
+        <p>There are three different sets of tasks to help build <a
         href="http://java.sun.com/j2me/">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
         
@@ -498,6 +498,32 @@
           </tr>
         </table>
 
+        <p>With Antenna, you can compile, preverify, package, and
+        obfuscate your MIDP applications, as well as convert them to
+        PRC files designed to run on MIDP for PalmOS. The tasks are
+        mostly built around the Wireless Toolkit and the free
+        RetroGuard obfuscator, with some additional gimmicks like
+        automatic version numbering.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antenna.sourceforge.net/">http://antenna.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:joerg@pleumann.de">J&#xF6;rg Pleumann</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+
       </subsection>
 
       <subsection name="javarec">
@@ -535,11 +561,15 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>Ant &gt;1.5</td>  
+            <td>Ant &gt;= 1.5</td>  
           </tr>
           <tr>
             <th>URL:</th>
             <td><a href="http://jcsc.sourceforge.net/">http://jcsc.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:rjocham72@netscape.net">Ralph Jocham</a></td>
           </tr>
           <tr>
             <th>License:</th>
