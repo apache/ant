@@ -70,12 +70,12 @@ imports a build file <code>imported.xml</code>, located anywhere on
 the file system, and <code>imported.xml</code> reads a set of
 properties from <code>imported.properties</code>:</p>
 
-<pre>&lt;-- importing.xml --&gt;
+<pre>&lt;!-- importing.xml --&gt;
 &lt;project name="importing" basedir="." default="..."&gt;
 &nbsp; &lt;import file="${path_to_imported}/imported.xml"/&gt;
 &lt;/project&gt;
 
-&lt;-- imported.xml --&gt;
+&lt;!-- imported.xml --&gt;
 &lt;project name="imported" basedir="." default="..."&gt;
 &nbsp; &lt;property file="imported.properties"/&gt;
 &lt;/project&gt;
@@ -87,7 +87,7 @@ of <code>imported.xml</code> is ignored by Ant. The right way to use
 <code>imported.properties</code> is:</p>
 
 <pre>
-&lt;-- imported.xml --&gt;
+&lt;!-- imported.xml --&gt;
 &lt;project name="imported" basedir="." default="..."&gt;
 &nbsp; &lt;dirname property="imported.basedir" file="${ant.file.imported}"/&gt;
 &nbsp; &lt;property file="${imported.basedir}/imported.properties"/&gt;
