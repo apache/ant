@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.aut.nativelib;
+package org.apache.aut.nativelib.impl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +17,8 @@ import java.util.Properties;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.Os;
 
 /**
  * This is the class that can be used to retrieve the environment

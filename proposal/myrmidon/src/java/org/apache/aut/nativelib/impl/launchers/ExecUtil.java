@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import org.apache.aut.nativelib.Environment;
+import org.apache.aut.nativelib.impl.Environment;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecMetaData;
 

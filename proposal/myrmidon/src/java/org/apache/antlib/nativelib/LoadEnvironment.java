@@ -14,7 +14,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.nativelib.Environment;
+import org.apache.aut.nativelib.impl.Environment;
 import org.apache.aut.nativelib.ExecException;
 
 /**
