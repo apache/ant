@@ -95,6 +95,7 @@ public class Os implements Condition {
      *               <li>mac</li>
      *               <li>netware</li>
      *               <li>os/2</li>
+     *               <li>tandem</li>
      *               <li>unix</li>
      *               <li>windows</li>
      *               <li>win9x</li>
@@ -214,6 +215,8 @@ public class Os implements Condition {
                     isFamily = pathSep.equals(";") && !isFamily("netware");
                 } else if (family.equals("mac")) {
                     isFamily = osName.indexOf("mac") > -1;
+                } else if (family.equals("tandem")) {
+                    isFamily = osName.indexOf("nonstop_kernel") > -1;
                 } else if (family.equals("unix")) {
                     isFamily = pathSep.equals(":")
                         && (!isFamily("mac") || osName.endsWith("x"));

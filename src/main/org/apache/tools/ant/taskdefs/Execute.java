@@ -232,6 +232,10 @@ public class Execute {
         } else if (Os.isFamily("z/os")) {
             String[] cmd = {"/bin/env"};
             return cmd;
+        } else if (Os.isFamily("tandem")) {
+//            String[] cmd = {"/bin/sh -c env"};
+            String[] cmd = {"/bin/env"};
+            return cmd;
         } else if (Os.isFamily("unix")) {
             // Generic UNIX
             // Alternatively one could use: /bin/sh -c env

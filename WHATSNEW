@@ -1,4 +1,4 @@
-Changes from Ant 1.5.2 to current CVS version
+Changes from Ant 1.5.3 to current CVS version
 =============================================
 
 Changes that could break older environments:
@@ -162,6 +162,8 @@ Other changes:
   can be found at http://www.jcraft.com/jsch/index.html
 
 * New filterreader <escapeunicode/>.
+
+* Support for HP's NonStop (Tandem) OS has been added.
 
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================

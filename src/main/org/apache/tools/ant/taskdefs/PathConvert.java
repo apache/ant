@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -202,7 +202,7 @@ public class PathConvert extends Task {
      */
     public static class TargetOs extends EnumeratedAttribute {
         public String[] getValues() {
-            return new String[]{"windows", "unix", "netware", "os/2"};
+            return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
         }
     }
 
@@ -269,7 +269,7 @@ public class PathConvert extends Task {
         // validateSetup code, the same assumptions can be made as
         // with windows - that ; is the path separator
 
-        targetWindows = !targetOS.equals("unix");
+        targetWindows = !targetOS.equals("unix") && !targetOS.equals("tandem");
     }
 
     /**
