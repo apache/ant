@@ -54,10 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.*;
-import java.io.File;
 
 /**
  * The implementation of the gcj compiler.
@@ -73,9 +73,9 @@ public class Gcj extends DefaultCompilerAdapter {
      * @author tora@debian.org
      */
     public boolean execute() throws BuildException {
-	Commandline cmd;
+        Commandline cmd;
         attributes.log("Using gcj compiler", Project.MSG_VERBOSE);
-	cmd = setupGCJCommand();
+        cmd = setupGCJCommand();
 
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
@@ -112,10 +112,10 @@ public class Gcj extends DefaultCompilerAdapter {
         if (destDir != null) {
             cmd.createArgument().setValue("-d");
             cmd.createArgument().setFile(destDir);
-	    
-	    if(destDir.mkdirs()){
+            
+            if(destDir.mkdirs()){
                 throw new BuildException("Can't make output directories. Maybe permission is wrong. ");
-	    };
+            };
         }
         
         cmd.createArgument().setValue("-classpath");
@@ -131,10 +131,10 @@ public class Gcj extends DefaultCompilerAdapter {
             cmd.createArgument().setValue("-O");
         }
 
-	/**
-	 *  gcj should be set for generate class.
+        /**
+         *  gcj should be set for generate class.
          */
         cmd.createArgument().setValue("-C");
-	return cmd;
+        return cmd;
     }
 }
