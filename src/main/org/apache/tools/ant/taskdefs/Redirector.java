@@ -214,6 +214,15 @@ public class Redirector {
         this.inputString = inputString;
     }
 
+    /**
+     * Set a stream to use as input.
+     *
+     * @param inputStream the stream from which input will be read
+     * @since Ant 1.6.3
+     */
+    /*public*/ void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
 
     /**
      * File the output of the process is redirected to. If error is not
@@ -555,7 +564,7 @@ public class Redirector {
             }
         }
 
-        // if input files are specified, inputString is ignored;
+        // if input files are specified, inputString and inputStream are ignored;
         // classes that work with redirector attributes can enforce
         // whatever warnings are needed
         if (input != null && input.length > 0) {

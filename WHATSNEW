@@ -129,6 +129,10 @@ Other changes:
 Fixed bugs:
 -----------
 
+* Programs run with <java fork="true"> can now accept standard input
+  from the Ant console.  (Programs run with <java fork="false"> could
+  already do so.)  Bugzilla 24918.
+
 * AbstractCvsTask prematurely closed its outputStream and errorStream.
   Bugzilla 30097.
 
