@@ -1,4 +1,4 @@
-REM   Copyright (c) 2001 The Apache Software Foundation.  All rights
+REM   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
 REM   reserved.
 
 set _CLASSPATHCOMPONENT=%1
