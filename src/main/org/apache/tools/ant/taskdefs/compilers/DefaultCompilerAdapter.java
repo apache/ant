@@ -68,6 +68,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -165,48 +166,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
 
         if (includeJavaRuntime) {
-            // XXX move this stuff to a separate class, code is identical to
-            //     code in ../rmic/DefaultRmicAdapter
-
-            if (System.getProperty("java.vendor").toLowerCase().indexOf("microsoft") >= 0) {
-                // Pull in *.zip from packages directory
-                FileSet msZipFiles = new FileSet();
-                msZipFiles.setDir(new File(System.getProperty("java.home") + File.separator + "Packages"));
-                msZipFiles.setIncludes("*.ZIP");
-                classpath.addFileset(msZipFiles);
-            }
-            else if (Project.getJavaVersion() == Project.JAVA_1_1) {
-                classpath.addExisting(new Path(null,
-                                                System.getProperty("java.home")
-                                                + File.separator + "lib"
-                                                + File.separator
-                                                + "classes.zip"));
-            } else {
-                // JDK > 1.1 seems to set java.home to the JRE directory.
-                classpath.addExisting(new Path(null,
-                                                System.getProperty("java.home")
-                                                + File.separator + "lib"
-                                                + File.separator + "rt.jar"));
-                // Just keep the old version as well and let addExistingToPath
-                // sort it out.
-                classpath.addExisting(new Path(null,
-                                                System.getProperty("java.home")
-                                                + File.separator +"jre"
-                                                + File.separator + "lib"
-                                                + File.separator + "rt.jar"));
-
-                // Added for MacOS X
-                classpath.addExisting(new Path(null,
-                                               System.getProperty("java.home")
-                                               + File.separator + ".."
-                                               + File.separator + "Classes"
-                                               + File.separator + "classes.jar"));
-                classpath.addExisting(new Path(null,
-                                               System.getProperty("java.home")
-                                               + File.separator + ".."
-                                               + File.separator + "Classes"
-                                               + File.separator + "ui.jar"));
-            }
+            classpath.addJavaRuntime();
         }
 
         return classpath;

@@ -62,7 +62,7 @@ import org.apache.tools.ant.PathTokenizer;
 import java.io.File;
 
 import java.util.Enumeration;
-
+import java.util.Locale;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -516,6 +516,51 @@ public class Path extends DataType implements Cloneable {
 
         return result;
 
+    }
+
+    /**
+     * Add the Java Runtime classes to this Path instance.
+     */
+    public void addJavaRuntime() {
+        if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
+            // Pull in *.zip from packages directory
+            FileSet msZipFiles = new FileSet();
+            msZipFiles.setDir(new File(System.getProperty("java.home") + File.separator + "Packages"));
+            msZipFiles.setIncludes("*.ZIP");
+            addFileset(msZipFiles);
+        }
+        else if (Project.getJavaVersion() == Project.JAVA_1_1) {
+            addExisting(new Path(null,
+                                 System.getProperty("java.home")
+                                 + File.separator + "lib"
+                                 + File.separator
+                                 + "classes.zip"));
+        } else {
+            // JDK > 1.1 seems to set java.home to the JRE directory.
+            addExisting(new Path(null,
+                                 System.getProperty("java.home")
+                                 + File.separator + "lib"
+                                 + File.separator + "rt.jar"));
+            // Just keep the old version as well and let addExistingToPath
+            // sort it out.
+            addExisting(new Path(null,
+                                 System.getProperty("java.home")
+                                 + File.separator +"jre"
+                                 + File.separator + "lib"
+                                 + File.separator + "rt.jar"));
+            
+            // Added for MacOS X
+            addExisting(new Path(null,
+                                 System.getProperty("java.home")
+                                 + File.separator + ".."
+                                 + File.separator + "Classes"
+                                 + File.separator + "classes.jar"));
+            addExisting(new Path(null,
+                                 System.getProperty("java.home")
+                                 + File.separator + ".."
+                                 + File.separator + "Classes"
+                                 + File.separator + "ui.jar"));
+        }
     }
 
 }
