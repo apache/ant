@@ -39,6 +39,11 @@ the target &quot;doSomethingElse&quot; depended on the target &quot;init&quot;, 
 Of course, any properties defined in the antcall task or inherited from the calling target 
 will be fixed and not overridable in the init task -or indeed in the &quot;doSomethingElse&quot; task.  
 </p>
+
+<p>This task reparses the current build file, so if it has changed
+since you've started the project, <code>antcall</code> will use the
+latest version of the file.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
