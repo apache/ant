@@ -179,6 +179,18 @@ public class Execute {
         String osname = System.getProperty("os.name").toLowerCase();
         if ( osname.indexOf("mac os") >= 0 ) {
             // Mac
+            // Determine if we are running under OS X
+            try {
+                float version = Float.parseFloat(System.getProperty("os.version"));
+                if (version >= 10.0) {
+                    // OS X - just line UNIX
+                    String[] cmd = {"/usr/bin/env"};
+                    return cmd;
+                }
+            } catch (NumberFormatException e) {
+                // fall through to OS 9
+            }
+            // OS 9 and previous
             // TODO: I have no idea how to get it, someone must fix it
             String[] cmd = null;
             return cmd;
