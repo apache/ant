@@ -12,11 +12,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import org.apache.avalon.excalibur.extension.DeweyDecimal;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -24,7 +22,6 @@ import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.ScannerUtil;
 
@@ -44,7 +41,7 @@ import org.apache.tools.todo.types.ScannerUtil;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @ant.task name="jarlib-manifest"
  */
-public class JarLibManifestTask
+public final class JarLibManifestTask
     extends AbstractTask
 {
     private final static Resources REZ =
@@ -61,133 +58,39 @@ public class JarLibManifestTask
     private File m_destfile;
 
     /**
+     * The extension supported by this library (if any).
+     */
+    private Extension m_extension;
+
+    /**
+     * ExtensionAdapter objects representing
+     * dependencies required by library.
+     */
+    private final ArrayList m_dependencies = new ArrayList();
+
+    /**
+     * ExtensionAdapter objects representing optional
+     * dependencies required by library.
+     */
+    private final ArrayList m_optionals = new ArrayList();
+
+    /**
      * Filesets specifying all the librarys
      * to generate dependency information about.
      */
-    private final Vector m_dependencies = new Vector();
+    private final ArrayList m_dependsFilesets = new ArrayList();
 
     /**
      * Filesets specifying all the librarys
      * to generate optional dependency information about.
      */
-    private final Vector m_optionals = new Vector();
-
-    /**
-     * The name of the optional package being made available, or required.
-     */
-    private String m_extensionName;
-
-    /**
-     * The version number (dotted decimal notation) of the specification
-     * to which this optional package conforms.
-     */
-    private DeweyDecimal m_specificationVersion;
-
-    /**
-     * The name of the company or organization that originated the
-     * specification to which this optional package conforms.
-     */
-    private String m_specificationVendor;
-
-    /**
-     * The unique identifier of the company that produced the optional
-     * package contained in this JAR file.
-     */
-    private String m_implementationVendorID;
-
-    /**
-     * The name of the company or organization that produced this
-     * implementation of this optional package.
-     */
-    private String m_implementationVendor;
-
-    /**
-     * The version number (dotted decimal notation) for this implementation
-     * of the optional package.
-     */
-    private DeweyDecimal m_implementationVersion;
-
-    /**
-     * The URL from which the most recent version of this optional package
-     * can be obtained if it is not already installed.
-     */
-    private String m_implementationURL;
+    private final ArrayList m_optionalsFilesets = new ArrayList();
 
     /**
      * Extra attributes the user specifies for main section
      * in manifest.
      */
     private final ArrayList m_extraAttributes = new ArrayList();
-
-    /**
-     * Set the name of extension in generated manifest.
-     *
-     * @param extensionName the name of extension in generated manifest
-     */
-    public void setExtensionName( final String extensionName )
-    {
-        m_extensionName = extensionName;
-    }
-
-    /**
-     * Set the specificationVersion of extension in generated manifest.
-     *
-     * @param specificationVersion the specificationVersion of extension in generated manifest
-     */
-    public void setSpecificationVersion( final String specificationVersion )
-    {
-        m_specificationVersion = new DeweyDecimal( specificationVersion );
-    }
-
-    /**
-     * Set the specificationVendor of extension in generated manifest.
-     *
-     * @param specificationVendor the specificationVendor of extension in generated manifest
-     */
-    public void setSpecificationVendor( final String specificationVendor )
-    {
-        m_specificationVendor = specificationVendor;
-    }
-
-    /**
-     * Set the implementationVendorID of extension in generated manifest.
-     *
-     * @param implementationVendorID the implementationVendorID of extension in generated manifest
-     */
-    public void setImplementationVendorID( final String implementationVendorID )
-    {
-        m_implementationVendorID = implementationVendorID;
-    }
-
-    /**
-     * Set the implementationVendor of extension in generated manifest.
-     *
-     * @param implementationVendor the implementationVendor of extension in generated manifest
-     */
-    public void setImplementationVendor( final String implementationVendor )
-    {
-        m_implementationVendor = implementationVendor;
-    }
-
-    /**
-     * Set the implementationVersion of extension in generated manifest.
-     *
-     * @param implementationVersion the implementationVersion of extension in generated manifest
-     */
-    public void setImplementationVersion( final String implementationVersion )
-    {
-        m_implementationVersion = new DeweyDecimal( implementationVersion );
-    }
-
-    /**
-     * Set the implementationURL of extension in generated manifest.
-     *
-     * @param implementationURL the implementationURL of extension in generated manifest
-     */
-    public void setImplementationURL( final String implementationURL )
-    {
-        m_implementationURL = implementationURL;
-    }
 
     /**
      * The location where generated manifest is placed.
@@ -200,13 +103,42 @@ public class JarLibManifestTask
     }
 
     /**
-     * Adds a set of files about which library data will be displayed.
+     * Adds an extension that this library implements.
      *
-     * @param fileSet a set of files about which library data will be displayed.
+     * @param extensionAdapter an extension that this library implements.
      */
-    public void addDepends( final LibFileSet fileSet )
+    public void addExtension( final ExtensionAdapter extensionAdapter )
+        throws TaskException
     {
-        m_dependencies.add( fileSet );
+        if( null != m_extension )
+        {
+            final String message = REZ.getString( "manifest.multi-extension.error" );
+            throw new TaskException( message );
+        }
+        else
+        {
+            m_extension = extensionAdapter.toExtension();
+        }
+    }
+
+    /**
+     * Adds an extension that this library requires.
+     *
+     * @param extensionAdapter an extension that this library requires.
+     */
+    public void addDepends( final ExtensionAdapter extensionAdapter )
+    {
+        m_dependencies.add( extensionAdapter );
+    }
+
+    /**
+     * Adds an extension that this library optionally requires.
+     *
+     * @param extensionAdapter an extension that this library optionally requires.
+     */
+    public void addOption( final ExtensionAdapter extensionAdapter )
+    {
+        m_optionals.add( extensionAdapter );
     }
 
     /**
@@ -214,9 +146,19 @@ public class JarLibManifestTask
      *
      * @param fileSet a set of files about which library data will be displayed.
      */
-    public void addOptional( final LibFileSet fileSet )
+    public void addDependsfileset( final LibFileSet fileSet )
     {
-        m_optionals.addElement( fileSet );
+        m_dependsFilesets.add( fileSet );
+    }
+
+    /**
+     * Adds a set of files about which library data will be displayed.
+     *
+     * @param fileSet a set of files about which library data will be displayed.
+     */
+    public void addOptionalfileset( final LibFileSet fileSet )
+    {
+        m_optionalsFilesets.add( fileSet );
     }
 
     /**
@@ -242,14 +184,26 @@ public class JarLibManifestTask
 
         appendExtraAttributes( attributes );
 
-        appendExtensionData( attributes );
+        Extension.addExtension( m_extension, attributes );
 
-        final String extensionKey = Extension.EXTENSION_LIST.toString();
-        appendLibrarys( attributes, extensionKey, m_dependencies );
+        //Add all the dependency data to manifest for dependencies
+        final ArrayList depends = toExtensions( m_dependencies );
+        extractLibraryData( depends, m_dependsFilesets );
+        appendExtensionList( attributes,
+                             Extension.EXTENSION_LIST,
+                             "lib",
+                             depends.size() );
+        appendLibraryList( attributes, "lib", depends );
 
-        final String optionalExtensionKey =
-            "Optional-" + Extension.EXTENSION_LIST.toString();
-        appendLibrarys( attributes, optionalExtensionKey, m_optionals );
+        //Add all the dependency data to manifest for "optional"
+        //dependencies
+        final ArrayList option = toExtensions( m_optionals );
+        extractLibraryData( option, m_optionalsFilesets );
+        appendExtensionList( attributes,
+                             Extension.OPTIONAL_EXTENSION_LIST,
+                             "opt",
+                             option.size() );
+        appendLibraryList( attributes, "opt", option );
 
         try
         {
@@ -328,6 +282,27 @@ public class JarLibManifestTask
     }
 
     /**
+     * Generate a list of extensions from a specified fileset.
+     *
+     * @param librarys the list to add extensions to
+     * @param fileset the filesets containing librarys
+     * @throws TaskException if an error occurs
+     */
+    private void extractLibraryData( final ArrayList librarys,
+                                     final ArrayList fileset )
+        throws TaskException
+    {
+        if( !fileset.isEmpty() )
+        {
+            final Extension[] extensions = getExtensions( fileset );
+            for( int i = 0; i < extensions.length; i++ )
+            {
+                librarys.add( extensions[ i ] );
+            }
+        }
+    }
+
+    /**
      * Append specified librarys extension data to specified attributes.
      * Use the extensionKey to list the extensions, usually "Extension-List:"
      * for required dependencies and "Optional-Extension-List:" for optional
@@ -335,116 +310,50 @@ public class JarLibManifestTask
      * specification.
      *
      * @param attributes the attributes to add extensions to
-     * @param extensionKey the key under which to add extensions
      * @param librarys the filesets containing librarys
      * @throws TaskException if an error occurs
      */
-    private void appendLibrarys( final Attributes attributes,
-                                 final String extensionKey,
-                                 final Vector librarys )
+    private void appendLibraryList( final Attributes attributes,
+                                    final String listPrefix,
+                                    final ArrayList librarys )
         throws TaskException
     {
-        if( !librarys.isEmpty() )
+        final int size = librarys.size();
+
+        for( int i = 0; i < size; i++ )
         {
-            final Extension[] extensions = getExtensions( librarys );
-            final String[] names = getNames( extensions );
-            final StringBuffer sb = new StringBuffer();
-            for( int i = 0; i < names.length; i++ )
-            {
-                sb.append( names[ i ] );
-                sb.append( ' ' );
-            }
-
-            //Extension-List: javahelp java3d
-            attributes.putValue( extensionKey, sb.toString() );
-
-            for( int i = 0; i < names.length; i++ )
-            {
-                appendDependency( attributes,
-                                  names[ i ],
-                                  extensions[ i ] );
-            }
+            final Extension extension = (Extension)librarys.get( i );
+            final String prefix = listPrefix + i + "-";
+            Extension.addExtension( extension, prefix, attributes );
         }
     }
 
     /**
-     * add a extension dependency to manifest.
-     * Use specified name as prefix name.
+     * Append an attribute such as "Extension-List: lib0 lib1 lib2"
+     * using specified prefix and counting up to specified size.
+     * Also use specified extensionKey so that can generate list of
+     * optional dependencies aswell.
      *
-     * @param attributes the attributes of manifest
-     * @param name the name to prefix to extension
-     * @param extension the extension
-     * @throws TaskException if an error occurs
+     * @param size the number of librarys to list
+     * @param listPrefix the prefix for all librarys
+     * @param attributes the attributes to add key-value to
+     * @param extensionKey the key to use
      */
-    private void appendDependency( final Attributes attributes,
-                                   final String name,
-                                   final Extension extension )
-        throws TaskException
+    private void appendExtensionList( final Attributes attributes,
+                                      final Attributes.Name extensionKey,
+                                      final String listPrefix,
+                                      final int size )
     {
-        final String prefix = name + "-";
-        attributes.putValue( prefix + Extension.EXTENSION_NAME,
-                             extension.getExtensionName() );
-
-        final String specificationVendor = extension.getSpecificationVendor();
-        if( null != specificationVendor )
+        final StringBuffer sb = new StringBuffer();
+        for( int i = 0; i < size; i++ )
         {
-            attributes.putValue( prefix + Extension.SPECIFICATION_VENDOR,
-                                 specificationVendor );
+            sb.append( listPrefix + i );
+            sb.append( ' ' );
         }
 
-        final DeweyDecimal specificationVersion = extension.getSpecificationVersion();
-        if( null != specificationVersion )
-        {
-            attributes.putValue( prefix + Extension.SPECIFICATION_VERSION,
-                                 specificationVersion.toString() );
-        }
-
-        final String implementationVendorID = extension.getImplementationVendorID();
-        if( null != implementationVendorID )
-        {
-            attributes.putValue( prefix + Extension.IMPLEMENTATION_VENDOR_ID,
-                                 implementationVendorID );
-        }
-
-        final String implementationVendor = extension.getImplementationVendor();
-        if( null != implementationVendor )
-        {
-            attributes.putValue( prefix + Extension.IMPLEMENTATION_VENDOR,
-                                 implementationVendor );
-        }
-
-        final DeweyDecimal implementationVersion = extension.getImplementationVersion();
-        if( null != implementationVersion )
-        {
-            attributes.putValue( prefix + Extension.IMPLEMENTATION_VERSION,
-                                 implementationVersion.toString() );
-        }
-
-        final String implementationURL = extension.getImplementationURL();
-        if( null != implementationURL )
-        {
-            attributes.putValue( prefix + Extension.IMPLEMENTATION_URL,
-                                 implementationURL );
-        }
-    }
-
-    /**
-     * Create an array of names that can be used for dependencies
-     * list for the specified extensions.
-     *
-     * @param extensions the extensions
-     * @return the names to use for extensions
-     */
-    private String[] getNames( final Extension[] extensions )
-    {
-        final String[] results = new String[ extensions.length ];
-        for( int i = 0; i < results.length; i++ )
-        {
-            //Perhaps generate mangled names based on extension in future
-            results[ i ] = "lib" + i;
-        }
-
-        return results;
+        //add in something like
+        //"Extension-List: javahelp java3d"
+        attributes.put( extensionKey, sb.toString() );
     }
 
     /**
@@ -454,14 +363,14 @@ public class JarLibManifestTask
      * @return the extensions contained in librarys
      * @throws TaskException if failing to scan librarys
      */
-    private Extension[] getExtensions( final Vector librarys )
+    private static Extension[] getExtensions( final ArrayList librarys )
         throws TaskException
     {
         final ArrayList extensions = new ArrayList();
         final Iterator iterator = librarys.iterator();
         while( iterator.hasNext() )
         {
-            final FileSet fileSet = (FileSet)iterator.next();
+            final LibFileSet fileSet = (LibFileSet)iterator.next();
             final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
             final File basedir = scanner.getBasedir();
             final String[] files = scanner.getIncludedFiles();
@@ -481,8 +390,8 @@ public class JarLibManifestTask
      * @param extensions the list to add available extensions to
      * @throws TaskException if there is an error
      */
-    private void loadExtensions( final File file,
-                                 final ArrayList extensions )
+    private static void loadExtensions( final File file,
+                                        final ArrayList extensions )
         throws TaskException
     {
         try
@@ -490,9 +399,9 @@ public class JarLibManifestTask
             final JarFile jarFile = new JarFile( file );
             final Extension[] extension =
                 Extension.getAvailable( jarFile.getManifest() );
-            for( int j = 0; j < extension.length; j++ )
+            for( int i = 0; i < extension.length; i++ )
             {
-                extensions.add( extension[ j ] );
+                extensions.add( extension[ i ] );
             }
         }
         catch( final Exception e )
@@ -502,42 +411,25 @@ public class JarLibManifestTask
     }
 
     /**
-     * Add extension data into specified attributes.
+     * Convert a list of extensionAdapter objects to extensions.
      *
-     * @param attributes the attributes to add extension data to
+     * @param adapters the list of ExtensionAdapterss to add to convert
+     * @throws TaskException if an error occurs
      */
-    private void appendExtensionData( final Attributes attributes )
+    private static ArrayList toExtensions( final ArrayList adapters )
+        throws TaskException
     {
-        attributes.put( Extension.EXTENSION_NAME, m_extensionName );
-        if( null != m_specificationVendor )
+        final ArrayList results = new ArrayList();
+
+        final int size = adapters.size();
+        for( int i = 0; i < size; i++ )
         {
-            attributes.put( Extension.SPECIFICATION_VENDOR,
-                            m_specificationVendor );
+            final ExtensionAdapter adapter =
+                (ExtensionAdapter)adapters.get( i );
+            final Extension extension = adapter.toExtension();
+            results.add( extension );
         }
-        if( null != m_specificationVersion )
-        {
-            attributes.put( Extension.SPECIFICATION_VERSION,
-                            m_specificationVersion.toString() );
-        }
-        if( null != m_implementationVendorID )
-        {
-            attributes.put( Extension.IMPLEMENTATION_VENDOR_ID,
-                            m_implementationVendorID );
-        }
-        if( null != m_implementationVendor )
-        {
-            attributes.put( Extension.IMPLEMENTATION_VENDOR,
-                            m_implementationVendor );
-        }
-        if( null != m_implementationVersion )
-        {
-            attributes.put( Extension.IMPLEMENTATION_VERSION,
-                            m_implementationVersion.toString() );
-        }
-        if( null != m_implementationURL )
-        {
-            attributes.put( Extension.IMPLEMENTATION_URL,
-                            m_implementationURL );
-        }
+
+        return results;
     }
 }
