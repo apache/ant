@@ -351,7 +351,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
 
         try {
             log("Calling java2iiop", Project.MSG_VERBOSE);                       
-            log(commandline.toString(), Project.MSG_DEBUG);
+            log(commandline.describeCommand(), Project.MSG_DEBUG);
             execTask.setCommandline(commandline.getCommandline());
             int result = execTask.execute();
             if (result != 0) {

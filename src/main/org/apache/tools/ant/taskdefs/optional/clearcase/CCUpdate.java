@@ -323,31 +323,31 @@ public class CCUpdate extends ClearCase {
         }
     }
 
-        /**
+    /**
      *  -graphical flag -- display graphical dialog during update operation
      */
     public static final String FLAG_GRAPHICAL = "-graphical";
-        /**
+    /**
      * -log flag -- file to log status to
      */
     public static final String FLAG_LOG = "-log";
-        /**
+    /**
      * -overwrite flag -- overwrite hijacked files
      */
     public static final String FLAG_OVERWRITE = "-overwrite";
-        /**
+    /**
      * -noverwrite flag -- do not overwrite hijacked files
      */
     public static final String FLAG_NOVERWRITE = "-noverwrite";
-        /**
+    /**
      * -rename flag -- rename hijacked files with .keep extension
      */
     public static final String FLAG_RENAME = "-rename";
-        /**
+    /**
      * -ctime flag -- modified time is written as the current time
      */
     public static final String FLAG_CURRENTTIME = "-ctime";
-        /**
+    /**
      * -ptime flag -- modified time is written as the VOB time
      */
     public static final String FLAG_PRESERVETIME = "-ptime";

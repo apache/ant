@@ -171,7 +171,7 @@ public class Rpm extends Task {
 
         exe.setAntRun(project);
         if (topDir == null) {
-          topDir = project.getBaseDir();
+            topDir = project.getBaseDir();
         }
         exe.setWorkingDirectory(topDir);
 

@@ -303,9 +303,6 @@ public class ExecTask extends Task {
         if (dir == null) {
             dir = project.getBaseDir();
         }
-        // show the command
-        log(cmdl.toString(), Project.MSG_VERBOSE);
-
         Execute exe = new Execute(createHandler(), createWatchdog());
         exe.setAntRun(getProject());
         exe.setWorkingDirectory(dir);
@@ -363,6 +360,9 @@ public class ExecTask extends Task {
      * overidden by subclasses
      */
     protected void runExec(Execute exe) throws BuildException {
+        // show the command
+        log(cmdl.describeCommand(), Project.MSG_VERBOSE);
+
         exe.setCommandline(cmdl.getCommandline());
         try {
             runExecute(exe);

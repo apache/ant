@@ -390,7 +390,7 @@ public class Javah extends Task {
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         int n = 0;
-        log("Compilation args: " + cmd.toString(),
+        log("Compilation " + cmd.describeArguments(),
             Project.MSG_VERBOSE);
 
         StringBuffer niceClassList = new StringBuffer();

@@ -283,6 +283,29 @@ public class CommandlineJava implements Cloneable {
         return Commandline.toString(getCommandline());
     }
 
+    /**
+     * Returns a String that describes the command and arguments
+     * suitable for verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @since Ant 1.5
+     */
+    public String describeCommand() {
+        return Commandline.describeCommand(getCommandline());
+    }
+
+    /**
+     * Returns a String that describes the java command and arguments
+     * for in VM executions.
+     *
+     * <p>The class name is the executable in this context.</p>
+     *
+     * @since Ant 1.5
+     */
+    public String describeJavaCommand() {
+        return Commandline.describeCommand(getJavaCommand());
+    }
+
     private Commandline getActualVMCommand() {
         Commandline actualVMCommand = (Commandline) vmCommand.clone();
         if (maxMemory != null) {

@@ -667,7 +667,7 @@ public class JUnitTask extends Task {
         execute.setNewenvironment(newEnvironment);
         execute.setEnvironment(environment);
 
-        log("Executing: " + cmd.toString(), Project.MSG_VERBOSE);
+        log(cmd.describeCommand(), Project.MSG_VERBOSE);
         int retVal;
         try {
             retVal = execute.execute();

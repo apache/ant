@@ -135,7 +135,7 @@ public class Java extends Task {
         }
 
         if (fork) {
-            log("Forking " + cmdl.toString(), Project.MSG_VERBOSE);
+            log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         } else {
             if (cmdl.getVmCommand().size() > 1) {
                 log("JVM args ignored when same JVM is used.", 
@@ -151,7 +151,7 @@ public class Java extends Task {
                     + "JVM is used.", Project.MSG_WARN);
             }
 
-            log("Running in same VM " + cmdl.getJavaCommand().toString(), 
+            log("Running in same VM " + cmdl.describeJavaCommand(), 
                 Project.MSG_VERBOSE);
         }
         

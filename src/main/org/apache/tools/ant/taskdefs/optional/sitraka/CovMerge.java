@@ -135,7 +135,7 @@ public class CovMerge extends Task {
 
             LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
-            log(cmdl.toString(), Project.MSG_VERBOSE);
+            log(cmdl.describeCommand(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());
 
             // JProbe process always return 0 so  we will not be

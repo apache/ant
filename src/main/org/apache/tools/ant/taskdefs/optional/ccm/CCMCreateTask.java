@@ -119,7 +119,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
         commandLine2.createArgument().setValue(COMMAND_DEFAULT_TASK);
         commandLine2.createArgument().setValue(getTask());
 
-        log(commandLine.toString(), Project.MSG_DEBUG);
+        log(commandLine.describeCommand(), Project.MSG_DEBUG);
 
         result = run(commandLine2);
         if (result != 0) {

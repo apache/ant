@@ -410,7 +410,7 @@ public class JDependTask extends Task {
         if (getOutputFile() != null) {
             log("Output to be stored in " + getOutputFile().getPath());
         }
-        log("Executing: " + commandline.toString(), Project.MSG_VERBOSE);
+        log(commandline.describeCommand(), Project.MSG_VERBOSE);
         try {
             return execute.execute();
         } catch (IOException e) {

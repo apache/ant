@@ -212,7 +212,7 @@ public class MParse extends Task {
         }
         
         final Execute process = new Execute(handler);
-        log(cmdl.toString(), Project.MSG_VERBOSE);
+        log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         process.setCommandline(cmdl.getCommandline());
         try {
             if (process.execute() != 0) {

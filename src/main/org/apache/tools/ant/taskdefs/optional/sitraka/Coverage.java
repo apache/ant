@@ -277,7 +277,7 @@ public class Coverage extends Task {
             // use the custom handler for stdin issues
             LogStreamHandler handler = new CoverageStreamHandler(this);
             Execute exec = new Execute(handler);
-            log(cmdl.toString(), Project.MSG_VERBOSE);
+            log(cmdl.describeCommand(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());
             int exitValue = exec.execute();
             if (exitValue != 0) {

@@ -208,7 +208,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             Random rand = new Random(System.currentTimeMillis());
             tmp = new File("pvcs_ant_" + rand.nextLong() + ".log");
             tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
-            log("Executing " + commandLine.toString(), Project.MSG_VERBOSE);
+            log(commandLine.describeCommand(), Project.MSG_VERBOSE);
             result = runCmd(commandLine, 
                 new PumpStreamHandler(new FileOutputStream(tmp), 
                 new LogOutputStream(this, Project.MSG_WARN)));

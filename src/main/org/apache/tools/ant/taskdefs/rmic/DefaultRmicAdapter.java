@@ -260,7 +260,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     protected void logAndAddFilesToCompile(Commandline cmd) {
         Vector compileList = attributes.getCompileList();
 
-        attributes.log("Compilation args: " + cmd.toString(),
+        attributes.log("Compilation " + cmd.describeArguments(),
                        Project.MSG_VERBOSE);
 
         StringBuffer niceSourceList = new StringBuffer("File");

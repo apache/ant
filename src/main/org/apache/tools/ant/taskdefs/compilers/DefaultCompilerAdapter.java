@@ -374,8 +374,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * &qout;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
-        attributes.log("Compilation args: " + cmd.toString(),
-            Project.MSG_VERBOSE);
+        attributes.log("Compilation " + cmd.describeArguments(),
+                       Project.MSG_VERBOSE);
 
         StringBuffer niceSourceList = new StringBuffer("File");
         if (compileList.length != 1) {

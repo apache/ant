@@ -1687,7 +1687,7 @@ public class Javadoc extends Task {
         if (packageList != null) {
             toExecute.createArgument().setValue("@" + packageList);
         }
-        log("Javadoc args: " + toExecute, Project.MSG_VERBOSE);
+        log(toExecute.describeCommand(), Project.MSG_VERBOSE);
 
         log("Javadoc execution", Project.MSG_INFO);
 

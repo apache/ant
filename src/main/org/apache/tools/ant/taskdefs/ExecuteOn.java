@@ -240,7 +240,7 @@ public class ExecuteOn extends ExecTask {
                     fileNames.copyInto(s);
                     for (int j = 0; j < s.length; j++) {
                         String[] command = getCommandline(s[j], base);
-                        log("Executing " + Commandline.toString(command), 
+                        log(Commandline.describeCommand(command), 
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
                         runExecute(exe);
@@ -256,8 +256,7 @@ public class ExecuteOn extends ExecTask {
                 File[] b = new File[baseDirs.size()];
                 baseDirs.copyInto(b);
                 String[] command = getCommandline(s, b);
-                log("Executing " + Commandline.toString(command), 
-                    Project.MSG_VERBOSE);
+                log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
                 exe.setCommandline(command);
                 runExecute(exe);
             }

@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.io.PrintStream;
+import java.util.StringTokenizer;
 
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
@@ -248,21 +249,34 @@ public class DefaultLogger implements BuildLogger {
         if (priority <= msgOutputLevel) {
 
             StringBuffer message = new StringBuffer();
-            // Print out the name of the task if we're in one
-            if (event.getTask() != null) {
+            if (event.getTask() != null && !emacsMode) {
+                // Print out the name of the task if we're in one
                 String name = event.getTask().getTaskName();
-
-                if (!emacsMode) {
-                    String label = "[" + name + "] ";
-                    int size = LEFT_COLUMN_SIZE - label.length();
-                    for (int i = 0; i < size; i++) {
-                        message.append(" ");
-                    }
-                    message.append(label);
+                String label = "[" + name + "] ";
+                int size = LEFT_COLUMN_SIZE - label.length();
+                StringBuffer tmp = new StringBuffer(size);
+                for (int i = 0; i < size; i++) {
+                    tmp.append(" ");
                 }
+                tmp.append(label);
+                label = tmp.toString();
+
+                StringTokenizer tok = new StringTokenizer(event.getMessage(),
+                                                          "\r\n", false);
+                boolean first = true;
+                while (tok.hasMoreTokens()) {
+                    if (!first) {
+                        message.append(StringUtils.LINE_SEP);
+                    }
+                    first = false;
+                    message.append(label);
+                    message.append(tok.nextToken());
+                }
+
+            } else {
+                message.append(event.getMessage());
             }
 
-            message.append(event.getMessage());
             String msg = message.toString();
             if (priority != Project.MSG_ERR) {
                 printMessage(msg, out, priority);

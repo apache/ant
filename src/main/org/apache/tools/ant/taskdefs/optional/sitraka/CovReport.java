@@ -285,7 +285,7 @@ public class CovReport extends Task {
             // use the custom handler for stdin issues
             LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
-            log(cmdl.toString(), Project.MSG_VERBOSE);
+            log(cmdl.describeCommand(), Project.MSG_VERBOSE);
             exec.setCommandline(cmdl.getCommandline());
             int exitValue = exec.execute();
             if (exitValue != 0) {

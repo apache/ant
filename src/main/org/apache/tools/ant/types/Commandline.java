@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.StringUtils;
 import java.io.File;
 import java.util.Vector;
 import java.util.StringTokenizer;
@@ -86,6 +87,13 @@ public class Commandline implements Cloneable {
 
     private Vector arguments = new Vector();
     private String executable = null;
+
+    protected static final String DISCLAIMER =
+        StringUtils.LINE_SEP
+        + "The \' characters around the executable and arguments are"
+        + StringUtils.LINE_SEP
+        + "not part of the command."
+        + StringUtils.LINE_SEP;
 
     public Commandline(String to_process) {
         super();
@@ -230,7 +238,7 @@ public class Commandline implements Cloneable {
      */
     public void setExecutable(String executable) {
         if (executable == null || executable.length() == 0) {
-          return;
+            return;
         }
         this.executable = executable.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
@@ -254,7 +262,7 @@ public class Commandline implements Cloneable {
     public String[] getCommandline() {
         final String[] args = getArguments();
         if (executable == null) {
-          return args;
+            return args;
         }
         final String[] result = new String[args.length + 1];
         result[0] = executable;
@@ -313,10 +321,14 @@ public class Commandline implements Cloneable {
         }
     }
 
+    /**
+     * Quotes the parts of the given array in way that makes them
+     * usable as command line arguments.
+     */
     public static String toString(String [] line) {
         // empty path return empty string
         if (line == null || line.length == 0) {
-          return "";
+            return "";
         }
 
         // path containing one or more elements
@@ -411,7 +423,8 @@ public class Commandline implements Cloneable {
     }
 
     /**
-     * Clear out the arguments but leave the executable in place for another operation.
+     * Clear out the arguments but leave the executable in place for
+     * another operation.
      */
     public void clearArgs() {
         arguments.removeAllElements();
@@ -428,4 +441,112 @@ public class Commandline implements Cloneable {
         return new Marker(arguments.size());
     }
 
+    /**
+     * Returns a String that describes the command and arguments
+     * suitable for verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @since Ant 1.5
+     */
+    public String describeCommand() {
+        return describeCommand(this);
+    }
+
+    /**
+     * Returns a String that describes the arguments suitable for
+     * verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @since Ant 1.5
+     */
+    public String describeArguments() {
+        return describeArguments(this);
+    }
+
+    /**
+     * Returns a String that describes the command and arguments
+     * suitable for verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @since Ant 1.5
+     */
+    public static String describeCommand(Commandline line) {
+        return describeCommand(line.getCommandline());
+    }
+
+    /**
+     * Returns a String that describes the arguments suitable for
+     * verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @since Ant 1.5
+     */
+    public static String describeArguments(Commandline line) {
+        return describeArguments(line.getArguments());
+    }
+
+    /**
+     * Returns a String that describes the command and arguments
+     * suitable for verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * <p>This method assumes that the first entry in the array is the
+     * executable to run.</p>
+     * 
+     * @since Ant 1.5
+     */
+    public static String describeCommand(String[] args) {
+        if (args == null || args.length == 0) {
+            return "";
+        }
+        
+        StringBuffer buf = new StringBuffer("Executing \'");
+        buf.append(args[0]);
+        buf.append("\'");
+        if (args.length > 0) {
+            buf.append(" with ");
+            buf.append(describeArguments(args, 1));
+        } else {
+            buf.append(DISCLAIMER);
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Returns a String that describes the arguments suitable for
+     * verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @since Ant 1.5
+     */
+    public static String describeArguments(String[] args) {
+        return describeArguments(args, 0);
+    }
+
+    /**
+     * Returns a String that describes the arguments suitable for
+     * verbose output before a call to
+     * <code>Runtime.exec(String[])<code>
+     *
+     * @param offset ignore entries before this index
+     *
+     * @since Ant 1.5
+     */
+    protected static String describeArguments(String[] args, int offset) {
+        if (args == null || args.length <= offset) {
+            return "";
+        }
+
+        StringBuffer buf = new StringBuffer("argument");
+        if (args.length > offset) {
+            buf.append("s");
+        }
+        buf.append(":").append(StringUtils.LINE_SEP);
+        for (int i = offset; i < args.length; i++) {
+            buf.append("\'").append(args[i]).append("\'")
+                .append(StringUtils.LINE_SEP);
+        }
+        buf.append(DISCLAIMER);
+        return buf.toString();
+    }
 }

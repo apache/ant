@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -188,7 +188,7 @@ public class ANTLR extends Task {
             commandline.createArgument().setValue(outputDirectory.toString());
             commandline.createArgument().setValue(target.toString());
 
-            log("Forking " + commandline.toString(), Project.MSG_VERBOSE);
+            log(commandline.describeCommand(), Project.MSG_VERBOSE);
             int err = run(commandline.getCommandline());
             if (err == 1) {
                 throw new BuildException("ANTLR returned: " + err, location);

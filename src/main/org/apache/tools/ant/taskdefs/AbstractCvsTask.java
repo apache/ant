@@ -321,8 +321,7 @@ public abstract class AbstractCvsTask extends Task {
 
         try {
             String actualCommandLine = executeToString(exe);
-            log("running cvs command: " + actualCommandLine, 
-                Project.MSG_DEBUG);
+            log(actualCommandLine, Project.MSG_VERBOSE);
             int retCode = exe.execute();
             log("retCode=" + retCode, Project.MSG_DEBUG);
             /*Throw an exception if cvs exited with error. (Iulian)*/
@@ -400,13 +399,9 @@ public abstract class AbstractCvsTask extends Task {
 
     private String executeToString(Execute execute){
 
-        StringBuffer stringBuffer = new StringBuffer(250);
-        String[] commandLine = execute.getCommandline();
-        for (int i = 0; i < commandLine.length; i++){
-
-            stringBuffer.append(commandLine[i]);
-            stringBuffer.append(" ");
-        }
+        StringBuffer stringBuffer = 
+            new StringBuffer(Commandline.describeCommand(execute
+                                                         .getCommandline()));
 
         String newLine = StringUtils.LINE_SEP;
         String[] variableArray = execute.getEnvironment();

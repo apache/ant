@@ -188,7 +188,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
                 cmdl += cmdline[i] + " ";
             }
 
-            log("Execing " + cmdl, Project.MSG_VERBOSE);
+            log(cmdl.describeCommand(), Project.MSG_VERBOSE);
 
             if (handler == null) {
                 handler = new SimpleP4OutputHandler(this);

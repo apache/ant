@@ -242,10 +242,10 @@ public class NetCommand {
         // assume the worst
         try {
             if (traceCommandLine) {
-                owner.log(commandLine.toString());
+                owner.log(commandLine.describeCommand());
             } else {
                 //in verbose mode we always log stuff
-                logVerbose(commandLine.toString());
+                logVerbose(commandLine.describeCommand());
             }
             executable.setCommandline(commandLine.getCommandline());
             err = executable.execute();

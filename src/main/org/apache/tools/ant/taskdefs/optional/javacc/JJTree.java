@@ -212,7 +212,7 @@ public class JJTree extends Task {
                                              Project.MSG_INFO,
                                              Project.MSG_INFO),
                         null);
-        log(cmdl.toString(), Project.MSG_VERBOSE);
+        log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         process.setCommandline(cmdl.getCommandline());
 
         try {

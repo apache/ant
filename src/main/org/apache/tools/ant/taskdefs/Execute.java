@@ -63,7 +63,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import java.io.File;
 import java.io.IOException;
 
-
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.ByteArrayOutputStream;
@@ -507,7 +506,8 @@ public class Execute {
     public static void runCommand(Task task, String[] cmdline) 
         throws BuildException {
         try {
-            task.log(Commandline.toString(cmdline), Project.MSG_VERBOSE);
+            task.log(Commandline.describeCommand(cmdline), 
+                     Project.MSG_VERBOSE);
             Execute exe = new Execute(new LogStreamHandler(task,
                                                            Project.MSG_INFO,
                                                            Project.MSG_ERR));
@@ -542,7 +542,8 @@ public class Execute {
              throws IOException {
             if (project != null) {
                 project.log("Execute:CommandLauncher: " +
-                            Commandline.toString(cmd), Project.MSG_DEBUG);
+                            Commandline.describeCommand(cmd), 
+                            Project.MSG_DEBUG);
             }
             return Runtime.getRuntime().exec(cmd, env);
         }
@@ -588,7 +589,8 @@ public class Execute {
             }
             if (project != null) {
                 project.log("Execute:Java11CommandLauncher: " +
-                            Commandline.toString(newcmd), Project.MSG_DEBUG);
+                            Commandline.describeCommand(newcmd),
+                            Project.MSG_DEBUG);
             }
             return Runtime.getRuntime().exec(newcmd, env);
         }
@@ -615,7 +617,8 @@ public class Execute {
             try {
                 if (project != null) {
                     project.log("Execute:Java13CommandLauncher: " +
-                                Commandline.toString(cmd), Project.MSG_DEBUG);
+                                Commandline.describeCommand(cmd),
+                                Project.MSG_DEBUG);
                 }
                 Object[] arguments = { cmd, env, workingDir };
                 return (Process) _execWithCWD.invoke(Runtime.getRuntime(), 
