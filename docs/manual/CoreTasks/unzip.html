@@ -15,8 +15,11 @@ carried from the archive file.</p>
 <p><a href="../CoreTypes/patternset.html">PatternSet</a>s are used to select files to extract
 <I>from</I> the archive.  If no patternset is used, all files are extracted.
 </p>
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s may be used used to select archived files
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s may be used to select archived files
 to perform unarchival upon.
+</p>
+<p>You can define filename transformations by using a nested <a href="../CoreTypes/mapper.html">mapper</a> element.  The default mapper is the
+<a href="../CoreTypes/mapper.html#identity-mapper">identity mapper</a>.
 </p>
 <p>File permissions will not be restored on extracted files.</p>
 <p>The untar task recognizes the long pathname entries used by GNU tar.<p>
@@ -99,6 +102,16 @@ to perform unarchival upon.
         &lt;include name=&quot;**/*.zip&quot;/&gt;
         &lt;exclude name=&quot;**/tmp*.zip&quot;/&gt;
     &lt;/fileset&gt;
+&lt;/unzip&gt;
+</pre></p>
+</blockquote>
+<blockquote>
+<p><pre>
+&lt;unzip src=&quot;apache-ant-bin.zip&quot; dest=&quot;${tools.home}&quot;&gt;
+    &lt;patternset&gt;
+        &lt;include name=&quot;apache-ant/lib/ant.jar&quot;/&gt;
+    &lt;/patternset&gt;
+    &lt;mapper type=&quot;flatten&quot;/&gt;
 &lt;/unzip&gt;
 </pre></p>
 </blockquote>

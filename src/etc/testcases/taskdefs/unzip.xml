@@ -93,4 +93,33 @@
     <unzip src="unziptest.zip" dest="unziptestout" encoding="UnicodeBig"/>
   </target>
 
+  <!-- Bugzilla Report 21996 -->
+  <target name="testFlattenMapper" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="1/**"/>
+      </patternset>
+      <mapper type="flatten"/>
+    </unzip>
+  </target>
+
+  <!-- Bugzilla Report 21996 -->
+  <target name="testGlobMapper" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="1/**"/>
+      </patternset>
+      <mapper type="glob" from="*" to="*.txt"/>
+    </unzip>
+  </target>
+
+  <target name="testTwoMappers" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="1/**"/>
+      </patternset>
+      <mapper type="glob" from="*" to="*.txt"/>
+      <mapper type="flatten"/>      
+    </unzip>
+  </target>
 </project>

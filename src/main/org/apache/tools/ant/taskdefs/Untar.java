@@ -26,7 +26,10 @@ import java.util.zip.GZIPInputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.FlatFileNameMapper;
+import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.bzip2.CBZip2InputStream;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarInputStream;
@@ -92,10 +95,11 @@ public class Untar extends Expand {
                     new BufferedInputStream(
                         new FileInputStream(srcF))));
             TarEntry te = null;
-
+            FileNameMapper mapper = getMapper();
             while ((te = tis.getNextEntry()) != null) {
                 extractFile(fileUtils, srcF, dir, tis,
-                            te.getName(), te.getModTime(), te.isDirectory());
+                            te.getName(), te.getModTime(),
+                            te.isDirectory(), mapper);
             }
             log("expand complete", Project.MSG_VERBOSE);
 
@@ -103,13 +107,7 @@ public class Untar extends Expand {
             throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe, getLocation());
         } finally {
-            if (tis != null) {
-                try {
-                    tis.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
+            FileUtils.close(tis);
         }
     }
 

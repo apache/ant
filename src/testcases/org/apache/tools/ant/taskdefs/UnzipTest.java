@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
+import java.io.IOException;
+
 /**
  */
 public class UnzipTest extends BuildFileTest {
@@ -49,24 +51,28 @@ public class UnzipTest extends BuildFileTest {
 
 
     public void testRealTest() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("realTest");
+        assertLogoUncorrupted();
+    }
+
+    /**
+     * test that the logo gif file has not been corrupted
+     * @throws IOException
+     */
+    private void assertLogoUncorrupted() throws IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
 
     public void testTestZipTask() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testZipTask");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        assertLogoUncorrupted();
     }
 
     public void testTestUncompressedZipTask() throws java.io.IOException {
-        FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testUncompressedZipTask");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
-                                           project.resolveFile("asf-logo.gif")));
+        assertLogoUncorrupted();
     }
 
     /*
@@ -74,10 +80,8 @@ public class UnzipTest extends BuildFileTest {
      */
     public void testPatternSetExcludeOnly() {
         executeTarget("testPatternSetExcludeOnly");
-        assertTrue("1/foo is excluded",
-                   !getProject().resolveFile("unziptestout/1/foo").exists());
-        assertTrue("2/bar is not excluded",
-                   getProject().resolveFile("unziptestout/2/bar").exists());
+        assertFileMissing("1/foo is excluded", "unziptestout/1/foo");
+        assertFileExists("2/bar is not excluded", "unziptestout/2/bar");
     }
 
     /*
@@ -85,10 +89,8 @@ public class UnzipTest extends BuildFileTest {
      */
     public void testPatternSetIncludeOnly() {
         executeTarget("testPatternSetIncludeOnly");
-        assertTrue("1/foo is not included",
-                   !getProject().resolveFile("unziptestout/1/foo").exists());
-        assertTrue("2/bar is included",
-                   getProject().resolveFile("unziptestout/2/bar").exists());
+        assertFileMissing("1/foo is not included", "unziptestout/1/foo");
+        assertFileExists("2/bar is included", "unziptestout/2/bar");
     }
 
     /*
@@ -96,10 +98,8 @@ public class UnzipTest extends BuildFileTest {
      */
     public void testPatternSetIncludeAndExclude() {
         executeTarget("testPatternSetIncludeAndExclude");
-        assertTrue("1/foo is not included",
-                   !getProject().resolveFile("unziptestout/1/foo").exists());
-        assertTrue("2/bar is excluded",
-                   !getProject().resolveFile("unziptestout/2/bar").exists());
+        assertFileMissing("1/foo is not included", "unziptestout/1/foo");
+        assertFileMissing("2/bar is excluded", "unziptestout/2/bar");
     }
 
     /*
@@ -115,19 +115,60 @@ public class UnzipTest extends BuildFileTest {
      */
     public void testPatternSetSlashOnly() {
         executeTarget("testPatternSetSlashOnly");
-        assertTrue("1/foo is not included",
-                   !getProject().resolveFile("unziptestout/1/foo").exists());
-        assertTrue("2/bar is included",
-                   getProject().resolveFile("unziptestout/2/bar").exists());
+        assertFileMissing("1/foo is not included", "unziptestout/1/foo");
+        assertFileExists("\"2/bar is included", "unziptestout/2/bar");
     }
+
 
     /*
      * PR 10504
      */
     public void testEncoding() {
         executeTarget("encodingTest");
-        assertTrue("foo has been properly named",
-                   getProject().resolveFile("unziptestout/foo").exists());
+        assertFileExists("foo has been properly named", "unziptestout/foo");
+    }
+
+    /*
+     * PR 21996
+     */
+    public void testFlattenMapper() {
+        executeTarget("testFlattenMapper");
+        assertFileMissing("1/foo is not flattened", "unziptestout/1/foo");
+        assertFileExists("foo is flattened", "unziptestout/foo");
+    }
+
+    /**
+     * assert that a file exists, relative to the project
+     * @param message message if there is no mpatch
+     * @param filename filename to resolve against the project
+     */
+    private void assertFileExists(String message, String filename) {
+        assertTrue(message,
+                   getProject().resolveFile(filename).exists());
+    }
+
+    /**
+     * assert that a file doesnt exist, relative to the project
+     *
+     * @param message  message if there is no mpatch
+     * @param filename filename to resolve against the project
+     */
+    private void assertFileMissing(String message, String filename) {
+        assertTrue(message,
+                !getProject().resolveFile(filename).exists());
+    }
+
+    /**
+     * PR 21996
+     */
+    public void testGlobMapper() {
+        executeTarget("testGlobMapper");
+        assertFileMissing("1/foo is not mapped", "unziptestout/1/foo");
+        assertFileExists("1/foo is mapped", "unziptestout/1/foo.txt");
+    }
+
+    public void testTwoMappers() {
+        expectBuildException("testTwoMappers",Expand.ERROR_MULTIPLE_MAPPERS);
     }
 
 }

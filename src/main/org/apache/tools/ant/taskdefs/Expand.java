@@ -30,9 +30,13 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.FlatFileNameMapper;
+import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
@@ -50,12 +54,14 @@ public class Expand extends Task {
     private File dest; //req
     private File source; // req
     private boolean overwrite = true;
+    private Mapper mapperElement = null;
     private Vector patternsets = new Vector();
     private Vector filesets = new Vector();
 
     private static final String NATIVE_ENCODING = "native-encoding";
 
     private String encoding = "UTF8";
+    public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
 
     /**
      * Do the work.
@@ -106,12 +112,17 @@ public class Expand extends Task {
         }
     }
 
-    /*
+    /**
      * This method is to be overridden by extending unarchival tasks.
+     *
+     * @param fileUtils
+     * @param srcF
+     * @param dir
      */
     protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
         ZipFile zf = null;
+        FileNameMapper mapper = getMapper();
         try {
             zf = new ZipFile(srcF, encoding);
             Enumeration e = zf.getEntries();
@@ -119,7 +130,7 @@ public class Expand extends Task {
                 ZipEntry ze = (ZipEntry) e.nextElement();
                 extractFile(fileUtils, srcF, dir, zf.getInputStream(ze),
                             ze.getName(), new Date(ze.getTime()),
-                            ze.isDirectory());
+                            ze.isDirectory(), mapper);
             }
 
             log("expand complete", Project.MSG_VERBOSE);
@@ -127,20 +138,40 @@ public class Expand extends Task {
             throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe);
         } finally {
-            if (zf != null) {
-                try {
-                    zf.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
+            ZipFile.closeQuietly(zf);
         }
     }
 
+    /**
+     * get a mapper for a file
+     * @return
+     */
+    protected FileNameMapper getMapper() {
+        FileNameMapper mapper = null;
+        if (mapperElement != null) {
+            mapper = mapperElement.getImplementation();
+        } else {
+            mapper = new IdentityMapper();
+        }
+        return mapper;
+    }
+
+    /**
+     * extract a file to a directory
+     * @param fileUtils
+     * @param srcF
+     * @param dir
+     * @param compressedInputStream
+     * @param entryName
+     * @param entryDate
+     * @param isDirectory
+     * @param mapper
+     * @throws IOException
+     */
     protected void extractFile(FileUtils fileUtils, File srcF, File dir,
                                InputStream compressedInputStream,
-                               String entryName,
-                               Date entryDate, boolean isDirectory)
+                               String entryName, Date entryDate,
+                               boolean isDirectory, FileNameMapper mapper)
                                throws IOException {
 
         if (patternsets != null && patternsets.size() > 0) {
@@ -194,7 +225,11 @@ public class Expand extends Task {
                 return;
             }
         }
-        File f = fileUtils.resolveFile(dir, entryName);
+        String[] mappedNames = mapper.mapFileName(entryName);
+        if (mappedNames == null || mappedNames.length == 0) {
+            mappedNames = new String[] { entryName };
+        }
+        File f = fileUtils.resolveFile(dir, mappedNames[0]);
         try {
             if (!overwrite && f.exists()
                 && f.lastModified() >= entryDate.getTime()) {
@@ -284,6 +319,21 @@ public class Expand extends Task {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * Defines the mapper to map source entries to destination files.
+     * @return a mapper to be configured
+     * @exception BuildException if more than one mapper is defined
+     * @since Ant1.7
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapperElement != null) {
+            throw new BuildException(ERROR_MULTIPLE_MAPPERS,
+                                     getLocation());
+        }
+        mapperElement = new Mapper(getProject());
+        return mapperElement;
     }
 
     /**

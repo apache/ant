@@ -161,6 +161,21 @@ public class ZipFile {
     }
 
     /**
+     * close a zipfile quietly; throw no io fault, do nothing
+     * on a null parameter
+     * @param zipfile file to close, can be null
+     */
+    public static void closeQuietly(ZipFile zipfile) {
+        if (zipfile != null) {
+            try {
+                zipfile.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
+    }
+
+    /**
      * Returns all entries.
      * @return all entries as {@link ZipEntry} instances
      */
