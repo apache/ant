@@ -114,6 +114,16 @@ public class MoveTest extends BuildFileTest {
     public void testDirectoryRetaining() throws IOException {
         executeTarget("testDirectoryRetaining");
         assertTrue(getProject().resolveFile("E").exists());
+        assertTrue(getProject().resolveFile("E/1").exists());
+        assertTrue(!getProject().resolveFile("A/1").exists());
         assertTrue(getProject().resolveFile("A").exists());
+    }
+
+    public void testCompleteDirectoryMove() throws IOException {
+        executeTarget("testCompleteDirectoryMove");
+        assertTrue(getProject().resolveFile("E").exists());
+        assertTrue(getProject().resolveFile("E/1").exists());
+        assertTrue(!getProject().resolveFile("A/1").exists());
+        assertTrue(!getProject().resolveFile("A").exists());
     }
 }

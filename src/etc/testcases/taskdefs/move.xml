@@ -44,7 +44,16 @@
   <!-- Bugzilla Report 18886 -->
   <target name="testDirectoryRetaining">
     <mkdir dir="A"/>
+    <touch file="A/1"/>
     <mkdir dir="E"/>
+    <move todir="E" includeemptydirs="true">
+      <fileset dir="A" includes="1"/>
+    </move>
+  </target>
+
+  <target name="testCompleteDirectoryMove">
+    <mkdir dir="A"/>
+    <touch file="A/1"/>
     <move todir="E">
       <fileset dir="A"/>
     </move>
