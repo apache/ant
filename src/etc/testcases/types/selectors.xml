@@ -242,4 +242,19 @@
       </copy>
   </target>
 
+  <target name="modifiedselectortest-customClasses" depends="modifiedselectortest-scenario-prepare">
+      <property name="pkg.live" value="org.apache.tools.ant.types.selectors.modifiedselector"/>
+      <property name="pkg.test" value="org.apache.tools.ant.types.selectors"/>
+      <fileset id="fs.mod" dir="${test.dir}/src">
+          <modified
+              algorithmclass="${pkg.test}.MockAlgorithm"
+              cacheclass="${pkg.test}.MockCache"
+              comparatorclass="${pkg.test}.MockComparator"
+          />
+      </fileset>
+      <fileset id="fs.full" dir="${test.dir}/src"/>
+      <property name="fs.mod.value"  refid="fs.mod"/>
+      <property name="fs.full.value" refid="fs.full"/>
+  </target>
+
 </project>

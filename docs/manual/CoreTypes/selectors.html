@@ -2,7 +2,7 @@
   <head>
     <meta http-equiv="Content-Language" content="en-us">
     <title>Selectors in Ant</title>
-<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
   </head>
 
   <body>
@@ -652,6 +652,7 @@
             <ul>
                 <li> hashvalue - HashvalueAlgorithm </li>
                 <li> digest - DigestAlgorithm </li>
+                <li> checksum - ChecksumAlgorithm </li>
             </ul>
         </td>
         <td valign="top" align="center"> No, defaults to <i>digest</i> </td>
@@ -672,10 +673,34 @@
             Acceptable values are (further information see later):
             <ul>
                 <li> equal - EqualComparator </li>
-                <li> rule - java.text.RuleBasedCollator </li>
+                <li> rule - java.text.RuleBasedCollator
+                  <!-- NOTE -->
+                  <i>(see <a href="#ModSelNote">note</a> for restrictions)</i>
+                </li>
             </ul>
         </td>
         <td valign="top" align="center"> No, defaults to <i>equal</i> </td>
+      </tr>
+      <tr>
+        <td valign="top"> algorithmclass </td>
+        <td valign="top"> Classname of custom algorithm implementation. Lower
+          priority than <i>algorithm</i>.
+          <!-- NOTE --> (see <a href="#ModSelNote">note</a> for restrictions) </td>
+        <td valign="top" align="center"> No </td>
+      </tr>
+      <tr>
+        <td valign="top"> cacheclass </td>
+        <td valign="top"> Classname of custom cache implementation. Lower
+          priority than <i>cache</i>.
+          <!-- NOTE --> (see <a href="#ModSelNote">note</a> for restrictions) </td>
+        <td valign="top" align="center"> No </td>
+      </tr>
+      <tr>
+        <td valign="top"> comparatorclass </td>
+        <td valign="top"> Classname of custom comparator implementation. Lower
+          priority than <i>comparator</i>.
+          <!-- NOTE --> (see <a href="#ModSelNote">note</a> for restrictions) </td>
+        <td valign="top" align="center"> No </td>
       </tr>
       <tr>
         <td valign="top"> update </td>
@@ -687,6 +712,15 @@
         <td valign="top"> Should directories be selected? (boolean) </td>
         <td valign="top" align="center"> No, defaults to <i>true</i> </td>
       </tr>
+      <tr>
+        <td valign="top"> delayupdate </td>
+        <td valign="top"> If set to <i>true</i>, the storage of the cache will be delayed until the
+             next finished BuildEvent; task finished, target finished or build finished,
+             whichever comes first.  This is provided for increased performance.  If set
+             to <i>false</i>, the storage of the cache will happen with each change.  This
+             attribute depends upon the <i>update</i> attribute. (boolean)</td>
+        <td valign="top" align="center"> No, defaults to <i>true</i> </td>
+      </tr>
     </table>
 
     <p>These attributes can be set with nested &lt;param/&gt; tags. With &lt;param/&gt;
@@ -695,6 +729,9 @@
         <li> <b> algorithm </b>: same as attribute algorithm </li>
         <li> <b> cache </b>: same as attribute cache </li>
         <li> <b> comparator </b>: same as attribute comparator </li>
+        <li> <b> algorithmclass </b>: same as attribute algorithmclass </li>
+        <li> <b> cacheclass </b>: same as attribute cacheclass </li>
+        <li> <b> comparatorclass </b>: same as attribute comparatorclass </li>
         <li> <b> update </b>: same as attribute update </li>
         <li> <b> seldirs </b>: same as attribute seldirs </li>
         <li> <b> algorithm.* </b>: Value is transfered to the algorithm via its
@@ -729,6 +766,16 @@
           </ul>
         </td>
       </tr>
+      <tr>
+        <td valign="top"> checksum </td>
+        <td valign="top"> Uses java.util.zip.Checksum. This Algorithm supports
+          the following attributes:
+          <ul>
+            <li><i>algorithm.algorithm</i> (optional): Name of the algorithm
+                (e.g. 'CRC' or 'ADLER', default = <i>CRC</i>) </li>
+          </ul>
+        </td>
+      </tr>
       <tr><td colspan="2"><font size="+1"><b> Cache's </b></font></td></tr>
       <tr>
         <td valign="top"> propertyfile </td>
@@ -750,6 +797,8 @@
         <td valign="top"> rule </td>
         <td valign="top"> Uses <i>java.text.RuleBasedCollator</i> for Object
           comparison.
+          <!-- NOTE -->
+          <i>(see <a href="#ModSelNote">note</a> for restrictions)</i>
         </td>
       </tr>
     </table>
@@ -818,6 +867,24 @@
   for homepage generation (e.g. with <a href="http://xml.apache.org/forrest/">
   Apache Forrest</a>). Here all <b>changed</b> files are uploaded to the server. The
   CacheSelector saves therefore much upload time.</p>
+
+
+  <!-- NOTE -->
+  <i>(see <a href="#ModSelNote">note</a> for restrictions)</i>
+  <a name="ModSelNote"></a>
+  <h4>Note on RuleBasedCollator</h4>
+  <p>The RuleBasedCollator needs a format for its work, but its needed while
+  instantiation. There is a problem in the initialization algorithm for this
+  case. Therefore you should not use this (or tell me the workaround :-).</p>
+
+  <p>The selector can not find the specified algorithm-, cache- or comparator-
+  class if the selector is loaded from a different classloader.
+  To be able to use your own classes you have to ensure that the selector
+  can find the classes by adding the your package to the core: <ul>
+  <li> by placing your JAR in %ANT_HOME/lib </li>
+  <li> by adding '-lib myclasses/' while invocation </li>
+  <li> by placing your JAR in ${ant.home}/.ant/lib </li>
+  </ul></p>
 
 
     <a name="selectcontainers"></a>

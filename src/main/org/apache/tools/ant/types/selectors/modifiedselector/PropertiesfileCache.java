@@ -96,12 +96,27 @@ public class PropertiesfileCache implements Cache {
     // -----  Cache-Configuration  -----
 
 
+    /**
+     * Setter.
+     * @param file new value
+     */
     public void setCachefile(File file) {
         cachefile = file;
     }
 
-    public File getCachefile() { return cachefile; }
 
+    /**
+     * Getter.
+     * @return the cachefile
+     */
+    public File getCachefile() {
+        return cachefile;
+    }
+
+    /**
+     * This cache is valid if the cachefile is set.
+     * @return true if all is ok false otherwise
+     */
     public boolean isValid() {
         return (cachefile != null);
     }
@@ -110,6 +125,9 @@ public class PropertiesfileCache implements Cache {
     // -----  Data Access
 
 
+    /**
+     * Load the cache from underlying properties file.
+     */
     public void load() {
         if ((cachefile != null) && cachefile.isFile() && cachefile.canRead()) {
             try {

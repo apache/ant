@@ -51,7 +51,7 @@ import org.apache.tools.ant.BuildException;
  * </tr>
  * </table>
  *
- * @version 2003-09-13
+ * @version 2004-07-08
  * @since  Ant 1.6
  */
 public class DigestAlgorithm implements Algorithm {
@@ -132,12 +132,11 @@ public class DigestAlgorithm implements Algorithm {
 
 
     /**
-     * This algorithm doesn't need any configuration.
-     * Therefore it's always valid.
+     * This algorithm supports only MD5 and SHA.
      * @return <i>true</i> if all is ok, otherwise <i>false</i>.
      */
     public boolean isValid() {
-        return true;
+        return "SHA".equalsIgnoreCase(algorithm) || "MD5".equalsIgnoreCase(algorithm);
     }
 
 
