@@ -164,17 +164,22 @@ or are out of date, the ejbc tool is run to generate new versions.
 <p>This task is designed to support building of arbitrary EJB1.1 jar files. Support is currently
    provided for 'vanilla' EJB1.1 jar files - i.e. those containing only the user generated class
    files and the standard deployment descriptor. Nested elements provide support for vendor
-   specific deployment tools. Currently a nested element is provided for Weblogic 5.1 using the 
-   weblogic.ejbc tool.</p>
+   specific deployment tools. Currently, a nested element is provided for building Weblogic 5.1 
+   session/entity beans using the weblogic.ejbc tool as well as a nested element for building 
+   TOPLink for WebLogic 2.5.1-enabled entity beans.</p>
 
-<p>This task assumes a particular naming convention for deployment descriptor files. For an 
-   Account bean, for example, the deployment descriptor would be named <code>Account-ejb-jar.xml</code>.
-   This naming convention allows the task to distinguish deployment descriptors without relying on 
-   their positioning within a source tree. It is also used to derive the name of the .jar file 
-   which is generated. For the example this would be <code>Account.jar</code>. Vendor specific files 
-   are assumed to be named in a similar fashion. The deployment descriptor file which defines 
-   additional weblogic specific information for the above bean would be 
-   <code>Account-weblogic-ejb-jar.xml</code>.
+<p>This task supports two approaches to creating ejb jar files. The first approach assumes a particular 
+   naming convention for deployment descriptor files. For an Account bean, for example, the deployment 
+   descriptor would be named <code>Account-ejb-jar.xml</code>. This naming convention allows the task to 
+   distinguish deployment descriptors without relying on their positioning within a source tree. It is 
+   also used to derive the name of the .jar file which is generated. For the example this would be 
+   <code>Account.jar</code>. Vendor specific files are assumed to be named in a similar fashion. The 
+   deployment descriptor file which defines additional weblogic specific information for the above bean 
+   would be <code>Account-weblogic-ejb-jar.xml</code>.
+   The second approach does not require a naming convention. This approach uses a specified a jar name 
+   for the resultant ejb jar. If the jar name is present, then no naming convention is required. If the
+   jar name is not specified, then the default naming convention is expected for the deployment descriptor
+   files.
    
 <p>The task works as a directory scanning task, and performs an action for each deployment descriptor
    found. As such the includes and excludes should be set to ensure that all desired EJB1.1
@@ -205,13 +210,15 @@ or are out of date, the ejbc tool is run to generate new versions.
   </tr>
   <tr>
     <td valign="top">descriptordir</td>
-    <td valign="top">The base directory under which to scan for EJB deployment descriptors.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top">The base directory under which to scan for EJB deployment descriptors. If this
+                     attribute is not specified, then the deployment descriptors must be located in
+                     the directory specified by the 'srcdir' attribute.</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">srcdir</td>
-    <td valign="top">The base directory containg the .class files that make up the bean.
-                     Note that this can be the same as the descrptordir if all files are
+    <td valign="top">The base directory containing the .class files that make up the bean.
+                     Note that this can be the same as the descriptordir if all files are
                      in the same directory tree.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
@@ -224,13 +231,22 @@ or are out of date, the ejbc tool is run to generate new versions.
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
+    <td valign="top">basejarname</td>
+    <td valign="top">The base name that is used for the generated jar files. If this attribute is specified, the
+                     generic jar file name will use this value as the prefix (followed by the value specified in 
+                     the 'genericjarsuffix' attibute) and the resultant ejb jar file (followed by any suffix specified
+                     in the nested element).</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">basenameterminator</td>
     <td valign="top">String value used to substring out a string from the name of each deployment descriptor found,
                      which is then used to locate related deployment descriptors (e.g. the WebLogic descriptors). 
                      For example, a basename of '.' and a deployment descriptor called 'FooBean.ejb-jar.xml' would
                      result in a basename of 'FooBean' which would then be used to find FooBean.weblogic-ejb-jar.xml
                      and FooBean.weblogic-cmp-rdbms-jar.xml, as well as to create the filenames of the jar files as
-                     FooBean-generic.jar and FooBean-wl.jar.</td>
+                     FooBean-generic.jar and FooBean-wl.jar. This attribute is not used if the 'basejarname' attribute
+                     is specified.</td>
     <td valign="top" align="center">No, defaults to '-'.</td>
   </tr>
   <tr>
@@ -255,8 +271,9 @@ EJB container. The parameters for each supported deployment element are detailed
   </tr>
   <tr>
     <td valign="top">destdir</td>
-    <td valign="top">The base directory into which the generated weblogic ready jar files are deposited. Jar files are deposited in
-                     directories correpsonding to their location within the descriptordir namespace. </td>
+    <td valign="top">The base directory into which the generated weblogic ready jar files are deposited. 
+                     Jar files are deposited in directories correpsonding to their location within the 
+                     descriptordir namespace. </td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -287,9 +304,65 @@ EJB container. The parameters for each supported deployment element are detailed
   </tr>
 </table>
 
+<h3>TOPLink for Weblogic element</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">The base directory into which the generated weblogic ready jar files are deposited. 
+                     Jar files are deposited in directories correpsonding to their location within the 
+                     descriptordir namespace. </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">genericjarsuffix</td>
+    <td valign="top">A generic jar is generated as an intermeditate step in build the weblogic deployment
+                     jar. The suffix used to generate the generic jar file is not particularly important
+                     unless it is desired to keep the generic jar file. It should not, however, be the same
+                     as the suffix setting.</td>
+    <td valign="top" align="center">No, defaults to '-generic.jar'.</td>
+  </tr>
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">String value appended to the basename of the deployment descriptor to create the filename of the
+                     WebLogic EJB jar file.</td>
+    <td valign="top" align="center">No, defaults to '.jar'.</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to be used when running the weblogic ejbc tool. Note that this tool 
+                     typically requires the classes that make up the bean to be available on the classpath. 
+                     Currently, however, this will cause the ejbc tool to be run in a separate VM</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">keepgeneric</td>
+    <td valign="top">This controls whether the generic file used as input to ejbc is retained.</td>
+    <td valign="top" align="center">No, defaults to false</td>
+  </tr>
+  <tr>
+    <td valign="top">toplinkdescriptor</td>
+    <td valign="top">This specifes the name of the TOPLink deployment descriptor file contained in the 
+                     'descriptordir' directory.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">toplinkdtd</td>
+    <td valign="top">This specifies the location of the TOPLink DTD file. This can be a file path or
+                     a file URL. This attribute is not required, but using a local DTD is recommended.</td>
+    <td valign="top" align="center">No, defaults to dtd file at www.objectpeople.com.</td>
+  </tr>
+</table>
+
 
 <h3>Examples</h3>
-This example shows ejbjar being used to generate deployment jars for a Weblogic EJB container.
+This example shows ejbjar being used to generate deployment jars using a Weblogic EJB container. This example
+requires the naming standard to be used for the deployment descriptors. Using this format will create a ejb
+jar file for each variation of '*-ejb-jar.xml' that is found in the deployment descriptor directory.
 <pre>
     &lt;ejbjar srcdir="${build.classes}"
             descriptordir="${descriptor.dir}"&gt;
@@ -299,6 +372,40 @@ This example shows ejbjar being used to generate deployment jars for a Weblogic 
       &lt;exclude name="**/*weblogic*.xml"/&gt;
     &lt;/ejbjar&gt;
 </pre>
+
+This example shows ejbjar being used to generate a single deployment jar using a Weblogic EJB container. This example 
+does not require the deployment descriptors to use the naming standard. This will create only one ejb jar file - 
+'TheEJBJar.jar'.
+<pre>
+    &lt;ejbjar srcdir="${build.classes}"
+            descriptordir="${descriptor.dir}"
+            basejarname="TheEJBJar"&gt;
+      &lt;weblogic destdir="${deploymentjars.dir}"
+                classpath="${descriptorbuild.classpath}"/&gt;
+      &lt;include name="**/ejb-jar.xml"/&gt;
+      &lt;exclude name="**/weblogic*.xml"/&gt;
+    &lt;/ejbjar&gt;
+</pre>
+
+This example shows ejbjar being used to generate deployment jars for a TOPLink-enabled entity bean using a 
+Weblogic EJB container. This example does not require the deployment descriptors to use the naming standard.
+This will create only one TOPLink-enabled ejb jar file - 'Address.jar'.
+<pre>
+    &lt;ejbjar srcdir="${build.dir}"
+            destdir="${solant.ejb.dir}"
+            descriptordir="${descriptor.dir}"
+            basejarname="Address"&gt;
+            &lt;weblogictoplink destdir="${solant.ejb.dir}"
+                    classpath="${java.class.path}"
+                    keepgeneric="false"
+                    toplinkdescriptor="Address.xml"
+                    toplinkdtd="file:///dtdfiles/toplink-cmp_2_5_1.dtd"
+                    suffix=".jar"/&gt;
+            &lt;include name="**/ejb-jar.xml"/&gt;
+            &lt;exclude name="**/weblogic-ejb-jar.xml"/&gt;
+    &lt;/ejbjar&gt;
+</pre>
+
 </body>
 
 </html>
