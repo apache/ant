@@ -315,7 +315,7 @@
   <target name="javadocs" depends="prepare" description="Creates the API documentation" unless="foo">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="org.apache.*"
-             sourcepath="${build.src}"
+             sourcepath="${java.dir}"
              destdir="${build.javadocs}"
              author="true"
              version="true"
