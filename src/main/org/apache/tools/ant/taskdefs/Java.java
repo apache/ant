@@ -905,7 +905,7 @@ public class Java extends Task {
      * Accessor to the command line.
      *
      * @return the current command line.
-     * @since 1.7
+     * @since 1.6.3
      */
     public CommandlineJava getCommandLine() {
         return cmdl;
@@ -915,7 +915,7 @@ public class Java extends Task {
      * Get the system properties of the command line.
      *
      * @return the current properties of this java invocation.
-     * @since 1.7
+     * @since 1.6.3
      */
     public CommandlineJava.SysProperties getSysProperties() {
         return cmdl.getSystemProperties();
