@@ -78,6 +78,9 @@ public class Main {
     /** File that we are using for configuration */
     private static File buildFile = new File("build.xml");
 
+    /** Stream that we are using for logging */
+    private static PrintStream out = System.out;
+
     /** The build targets */
     private static Vector targets = new Vector(5);
 
@@ -106,7 +109,25 @@ public class Main {
                 msgOutputLevel = Project.MSG_WARN;
             } else if (arg.equals("-verbose") || arg.equals("-v") || arg.equals("v")) {
                 msgOutputLevel = Project.MSG_VERBOSE;
-            } else if (arg.equals("-buildfile") || arg.equals("-file") || arg.equals("-f")) {
+            } else if (arg.equals("-logfile") || arg.equals("-l") || arg.equals("l")) {
+                try {
+                    File logFile = new File(args[i+1]);
+                    i++;
+                    out = new PrintStream(new FileOutputStream(logFile));
+                    System.setOut(out);
+                    System.setErr(out);
+                } catch (IOException ioe) {
+                    String msg = "Cannot write on the specified log file. " +
+                        "Make sure the path exists and you have write permissions.";
+                    System.out.println(msg);
+                    return;
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    String msg = "You must specify a log file when " +
+                        "using the -log argument";
+                    System.out.println(msg);
+                    return;
+                }
+            } else if (arg.equals("-buildfile") || arg.equals("-file") || arg.equals("-f") || arg.equals("f")) {
                 try {
                     buildFile = new File(args[i+1]);
                     i++;
@@ -157,6 +178,8 @@ public class Main {
 
         // ok, so if we've made it here, let's run the damn build allready
         runBuild();
+        
+        return;
     }
 
     /**
@@ -172,8 +195,7 @@ public class Main {
             System.out.println("Buildfile: " + buildFile);
         }
 
-        Project project = new Project();
-        project.setOutputLevel(msgOutputLevel);
+        Project project = new Project(out, msgOutputLevel);
 
         // set user-define properties
         Enumeration e = definedProps.keys();
@@ -234,6 +256,7 @@ public class Main {
         msg.append("  -help                  print this message" + lSep);
         msg.append("  -quiet                 be extra quiet" + lSep);
         msg.append("  -verbose               be extra verbose" + lSep);
+        msg.append("  -logfile <file>        use given file for log" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
         System.out.println(msg.toString());

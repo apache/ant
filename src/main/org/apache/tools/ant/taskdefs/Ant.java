@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,7 +59,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Call Ant in  a sub-project
+ * Call Ant in a sub-project
  *
  * @author costin@dnt.ro
  */
@@ -68,36 +68,34 @@ public class Ant extends Task {
     private String dir = null;
     private String antFile = null;
     private String target = null;
-    
+
     /**
      * Do the execution.
      */
     public void execute() throws BuildException {
-	Project p1=new Project();
-	p1.setOutputLevel( project.getOutputLevel() );
-	
-	// set user-define properties
-	Hashtable prop1=project.getProperties();
+        Project p1 = new Project(project.getOutput(), project.getOutputLevel());
+
+        // set user-define properties
+        Hashtable prop1 = project.getProperties();
         Enumeration e = prop1.keys();
         while (e.hasMoreElements()) {
-            String arg = (String)e.nextElement();
-            String value = (String)prop1.get(arg);
+            String arg = (String) e.nextElement();
+            String value = (String) prop1.get(arg);
             p1.setUserProperty(arg, value);
         }
-	
-	p1.setBasedir( dir );
-	p1.setUserProperty( "basedir" , dir);
-	if(antFile==null) antFile= dir + "/build.xml";
-	ProjectHelper.configureProject(p1, new File(antFile));
 
-	if (target == null) {
-	    target = p1.getDefaultTarget();
-	}
+        p1.setBasedir(dir);
+        p1.setUserProperty("basedir" , dir);
+        if (antFile == null) antFile = dir + "/build.xml";
+        ProjectHelper.configureProject(p1, new File(antFile));
 
-	p1.executeTarget( target );
-	
+        if (target == null) {
+            target = p1.getDefaultTarget();
+        }
+
+        p1.executeTarget(target);
     }
-    
+
     public void setDir(String d) {
         this.dir = d;
     }
@@ -109,6 +107,4 @@ public class Ant extends Task {
     public void setTarget(String s) {
         this.target = s;
     }
-
-
 }

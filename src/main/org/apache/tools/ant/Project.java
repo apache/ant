@@ -83,14 +83,14 @@ public class Project {
     private static final String VISITED = "VISITED";
 
     private static String javaVersion;
-    
+
     public static final String JAVA_1_0 = "1.0";
     public static final String JAVA_1_1 = "1.1";
     public static final String JAVA_1_2 = "1.2";
     public static final String JAVA_1_3 = "1.3";
 
     private String name;
-    private PrintStream out = System.out;
+    private PrintStream out;
     private int msgOutputLevel = MSG_INFO;
 
     private Hashtable properties = new Hashtable();
@@ -100,9 +100,15 @@ public class Project {
     private Hashtable targets = new Hashtable();
     private File baseDir;
 
-    public Project() {
+    public Project(PrintStream out, int msgOutputLevel) {
+
+        this.out = out;
+        this.msgOutputLevel = msgOutputLevel;
+
         detectJavaVersion();
+
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
+
         try {
             Properties props = new Properties();
             InputStream in = this.getClass().getResourceAsStream(defs);
@@ -120,11 +126,11 @@ public class Project {
                 }
             }
 
-            Properties systemP=System.getProperties();
+            Properties systemP = System.getProperties();
             Enumeration e=systemP.keys();
-            while( e.hasMoreElements() ) {
+            while (e.hasMoreElements()) {
                 String n=(String) e.nextElement();
-                properties.put( n, systemP.get(n));
+                properties.put(n, systemP.get(n));
             }
         } catch (IOException ioe) {
             String msg = "Can't load default task list";
@@ -133,18 +139,14 @@ public class Project {
         }
     }
 
-    public void setOutput(PrintStream out) {
-        this.out = out;
-    }
-
-    public void setOutputLevel(int msgOutputLevel) {
-        this.msgOutputLevel = msgOutputLevel;
+    public PrintStream getOutput() {
+        return this.out;
     }
     
     public int getOutputLevel() {
         return this.msgOutputLevel;
     }
-
+    
     public void log(String msg) {
         log(msg, MSG_INFO);
     }
@@ -157,13 +159,13 @@ public class Project {
 
     public void log(String msg, String tag, int msgLevel) {
         if (msgLevel <= msgOutputLevel) {
-            out.println("[" + tag + "]" + msg);
+            out.println("[" + tag + "] " + msg);
         }
     }
 
     public void setProperty(String name, String value) {
         // command line properties take precedence
-        if( null!= userProperties.get(name))
+        if (null != userProperties.get(name))
             return;
         log("Setting project property: " + name + " to " +
             value, MSG_VERBOSE);
@@ -178,7 +180,7 @@ public class Project {
     }
 
     public String getProperty(String name) {
-        String property = (String)properties.get(name);
+        String property = (String) properties.get(name);
         return property;
     }
 
@@ -209,9 +211,9 @@ public class Project {
     }
 
     // match basedir attribute in xml
-    public void setBasedir( String baseD ) throws BuildException {
+    public void setBasedir(String baseD) throws BuildException {
         try {
-            setBaseDir(new File( new File(baseD).getCanonicalPath()));
+            setBaseDir(new File(new File(baseD).getCanonicalPath()));
         } catch (IOException ioe) {
             String msg = "Can't set basedir " + baseDir + " due to " +
                 ioe.getMessage();
@@ -226,10 +228,12 @@ public class Project {
     }
 
     public File getBaseDir() {
-        if(baseDir==null) {
+        if (baseDir == null) {
             try {
                 setBasedir(".");
-            } catch(BuildException ex) {ex.printStackTrace();}
+            } catch (BuildException ex) {
+              ex.printStackTrace();
+            }
         }
         return baseDir;
     }
@@ -259,12 +263,12 @@ public class Project {
             // swallow as we've hit the max class version that
             // we have
         }
-        
+
         // sanity check
         if (javaVersion == JAVA_1_0) {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
-        
+
         log("Detected Java Version: " + javaVersion);
     }
 
