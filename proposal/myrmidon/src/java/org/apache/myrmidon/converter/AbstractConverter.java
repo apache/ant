@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.converter;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
 
 /**
@@ -17,6 +19,9 @@ import org.apache.avalon.framework.context.Context;
 public abstract class AbstractConverter
     implements Converter
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( AbstractConverter.class );
+
     private final Class         m_source;
     private final Class         m_destination;
 
@@ -46,14 +51,16 @@ public abstract class AbstractConverter
     {
         if( m_destination != destination )
         {
-            throw new IllegalArgumentException( "Destination type " + destination.getName() +
-                                                " is not equal to " + m_destination );
+            final String message =
+                REZ.getString( "bad-destination.error", destination.getName(), m_destination );
+            throw new IllegalArgumentException( message );
         }
 
         if( !m_source.isInstance( original ) )
         {
-            throw new IllegalArgumentException( "Object '" + original + "' is not an " +
-                                                "instance of " + m_source.getName() );
+            final String message =
+                REZ.getString( "bad-instance.error", original, m_source.getName() );
+            throw new IllegalArgumentException( message );
         }
 
         return convert( original, context );
