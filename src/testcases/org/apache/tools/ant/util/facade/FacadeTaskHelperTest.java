@@ -84,4 +84,17 @@ public class FacadeTaskHelperTest extends TestCase {
         fth.setImplementation("baz");
         assertEquals("baz", fth.getImplementation());
     }
+
+    public void testHasBeenSet() {
+        FacadeTaskHelper fth = new FacadeTaskHelper("foo");
+        assertTrue("nothing set", !fth.hasBeenSet());
+        fth.setMagicValue(null);
+        assertTrue("magic has not been set", !fth.hasBeenSet());
+        fth.setMagicValue("foo");
+        assertTrue("magic has been set", fth.hasBeenSet());
+        fth.setMagicValue(null);
+        assertTrue(!fth.hasBeenSet());
+        fth.setImplementation("baz");
+        assertTrue("set explicitly", fth.hasBeenSet());
+    }
 }
