@@ -71,14 +71,15 @@ public class Task extends OriginalAnt1Task
 
     /**
      * Uses the task Configuration to perform Ant1-style configuration
-     * on the Ant1 task.
+     * on the Ant1 task. This method configures *all* tasks the way Ant1
+     * configures tasks inside a target.
+     *
      * @param configuration The TaskModel for this Ant1 Task.
      * @throws ConfigurationException if the Configuration supplied is not valid
      */
     public void configure( Configuration configuration ) throws ConfigurationException
     {
         configure( this, configuration );
-        this.init();
     }
 
     /**
@@ -94,55 +95,13 @@ public class Task extends OriginalAnt1Task
      */
     protected void configure( Object target, Configuration configuration ) throws ConfigurationException
     {
-        IntrospectionHelper helper = IntrospectionHelper.getHelper( target.getClass() );
-
-        // Configure the id.
-        String id = configuration.getAttribute( "id", null );
-        if( id != null )
-        {
-            project.addReference( id, target );
-        }
-
-        // Configure the attributes.
-        final String[] attribs = configuration.getAttributeNames();
-        for( int i = 0; i < attribs.length; i++ )
-        {
-            final String name = attribs[ i ];
-            final String value =
-                project.replaceProperties( configuration.getAttribute( name ) );
-            try
-            {
-                helper.setAttribute( project, target,
-                                     name.toLowerCase( Locale.US ), value );
-            }
-            catch( BuildException be )
-            {
-                // id attribute must be set externally
-                if( !name.equals( "id" ) )
-                {
-                    throw be;
-                }
-            }
-        }
-
-        // Configure the text content.
-        String text = configuration.getValue( null );
-        if( text != null )
-        {
-            helper.addText( project, target, text );
-        }
-
-        // Configure the nested elements
-        Configuration[] nestedConfigs = configuration.getChildren();
-        for( int i = 0; i < nestedConfigs.length; i++ )
-        {
-            Configuration nestedConfig = nestedConfigs[ i ];
-            String name = nestedConfig.getName();
-            Object nestedElement = helper.createElement( project, target, name );
-            configure( nestedElement, nestedConfig );
-            helper.storeElement( project, target, nestedElement, name );
-        }
-
+        //TODO Maybe provide different configuration order for tasks not in a target,
+        // elements in a TaskContainer etc...
+        Ant1CompatConfigurer configurer =
+            new Ant1CompatConfigurer( target, configuration, project );
+        configurer.createChildren();
+        configurer.configure();
+        this.init();
     }
 
     /**
