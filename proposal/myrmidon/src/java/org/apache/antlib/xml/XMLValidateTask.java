@@ -24,7 +24,6 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -57,13 +56,12 @@ public class XMLValidateTask
 
     // ant task properties
     // defaults
-    private boolean failOnError = true;
-    private boolean warn = true;
-    private boolean lenient = false;
-    private String readerClassName = DEFAULT_XML_READER_CLASSNAME;
+    private boolean m_warn = true;
+    private boolean m_lenient;
+    private String m_readerClassName = DEFAULT_XML_READER_CLASSNAME;
 
-    private File file = null;// file to be validated
-    private ArrayList filesets = new ArrayList();
+    private File m_file;// file to be validated
+    private ArrayList m_filesets = new ArrayList();
 
     /**
      * the parser is viewed as a SAX2 XMLReader. If a SAX1 parser is specified,
@@ -71,16 +69,19 @@ public class XMLValidateTask
      * 'standard' way of doing this would be to use the JAXP1.1 SAXParser
      * interface.
      */
-    private XMLReader xmlReader = null;// XMLReader used to validation process
-    private ValidatorErrorHandler errorHandler
-        = new ValidatorErrorHandler();// to report sax parsing errors
-    private Hashtable features = new Hashtable();
+    private XMLReader m_xmlReader;// XMLReader used to validation process
+
+    /**
+     * to report sax parsing errors
+     */
+    private ValidatorErrorHandler m_errorHandler = new ValidatorErrorHandler();
+    private Hashtable m_features = new Hashtable();
 
     /**
      * The list of configured DTD locations
      */
-    public ArrayList dtdLocations = new ArrayList();// sets of file to be validated
-    private Path classpath;
+    private ArrayList m_dtdLocations = new ArrayList();// sets of file to be validated
+    private Path m_classpath;
 
     /**
      * Specify the class name of the SAX parser to be used. (optional)
@@ -96,52 +97,25 @@ public class XMLValidateTask
      * @see org.xml.sax.XMLReader
      * @see org.xml.sax.Parser
      */
-    public void setClassName( String className )
+    public void setClassName( final String className )
     {
-
-        readerClassName = className;
+        m_readerClassName = className;
     }
 
     /**
      * Specify the classpath to be searched to load the parser (optional)
-     *
-     * @param classpath The new Classpath value
      */
-    public void setClasspath( Path classpath )
+    public void setClasspath( final Path classpath )
         throws TaskException
     {
-        if( this.classpath == null )
+        if( m_classpath == null )
         {
-            this.classpath = classpath;
+            m_classpath = classpath;
         }
         else
         {
-            this.classpath.append( classpath );
+            m_classpath.append( classpath );
         }
-    }
-
-    /**
-     * @param r The new ClasspathRef value
-     * @see #setClasspath
-     */
-    public void setClasspathRef( Reference r )
-        throws TaskException
-    {
-        createClasspath().setRefid( r );
-    }
-
-    /**
-     * Specify how parser error are to be handled. <p>
-     *
-     * If set to <code>true</code> (default), throw a TaskException if the
-     * parser yields an error.
-     *
-     * @param fail The new FailOnError value
-     */
-    public void setFailOnError( boolean fail )
-    {
-
-        failOnError = fail;
     }
 
     /**
@@ -151,7 +125,7 @@ public class XMLValidateTask
      */
     public void setFile( File file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     /**
@@ -163,13 +137,10 @@ public class XMLValidateTask
      *
      * this option is ignored if the specified class with {@link
      * #setClassName(String)} is not a SAX2 XMLReader.
-     *
-     * @param bool The new Lenient value
      */
-    public void setLenient( boolean bool )
+    public void setLenient( final boolean bool )
     {
-
-        lenient = bool;
+        m_lenient = bool;
     }
 
     /**
@@ -178,37 +149,31 @@ public class XMLValidateTask
      * If set to <code>true
      *</true>
      *(default), log a warn message for each SAX warn event.
-     *
-     * @param bool The new Warn value
      */
-    public void setWarn( boolean bool )
+    public void setWarn( final boolean warn )
     {
-
-        warn = bool;
+        m_warn = warn;
     }
 
     /**
      * specifify a set of file to be checked
-     *
-     * @param set The feature to be added to the Fileset attribute
      */
-    public void addFileset( FileSet set )
+    public void addFileset( final FileSet fileSet )
     {
-        filesets.add( set );
+        m_filesets.add( fileSet );
     }
 
     /**
-     * @return Description of the Returned Value
      * @see #setClasspath
      */
     public Path createClasspath()
         throws TaskException
     {
-        if( this.classpath == null )
+        if( m_classpath == null )
         {
-            this.classpath = new Path();
+            m_classpath = new Path();
         }
-        return this.classpath.createPath();
+        return m_classpath.createPath();
     }
 
     /**
@@ -220,65 +185,62 @@ public class XMLValidateTask
      */
     public DTDLocation createDTD()
     {
-        DTDLocation dtdLocation = new DTDLocation();
-        dtdLocations.add( dtdLocation );
-
+        final DTDLocation dtdLocation = new DTDLocation();
+        m_dtdLocations.add( dtdLocation );
         return dtdLocation;
     }
 
     public void execute()
         throws TaskException
     {
-
         int fileProcessed = 0;
-        if( file == null && ( filesets.size() == 0 ) )
+        final int size = m_filesets.size();
+        if( m_file == null && ( size == 0 ) )
         {
-            throw new TaskException( "Specify at least one source - a file or a fileset." );
+            final String message = "Specify at least one source - a file or a fileset.";
+            throw new TaskException( message );
         }
 
         initValidator();
 
-        if( file != null )
+        if( m_file != null )
         {
-            if( file.exists() && file.canRead() && file.isFile() )
+            if( m_file.exists() && m_file.canRead() && m_file.isFile() )
             {
-                doValidate( file );
+                doValidate( m_file );
                 fileProcessed++;
             }
             else
             {
-                String errorMsg = "File " + file + " cannot be read";
-                if( failOnError )
-                    throw new TaskException( errorMsg );
-                else
-                    getLogger().error( errorMsg );
+                final String message = "File " + m_file + " cannot be read";
+                throw new TaskException( message );
             }
         }
 
-        for( int i = 0; i < filesets.size(); i++ )
+        for( int i = 0; i < size; i++ )
         {
-
-            FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
-            String[] files = ds.getIncludedFiles();
+            final FileSet fileSet = (FileSet)m_filesets.get( i );
+            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final String[] files = scanner.getIncludedFiles();
 
             for( int j = 0; j < files.length; j++ )
             {
-                File srcFile = new File( fs.getDir(), files[ j ] );
+                final File srcFile = new File( fileSet.getDir(), files[ j ] );
                 doValidate( srcFile );
                 fileProcessed++;
             }
         }
-        getLogger().info( fileProcessed + " file(s) have been successfully validated." );
+        final String message = fileProcessed + " file(s) have been successfully validated.";
+        getLogger().info( message );
     }
 
     private EntityResolver getEntityResolver()
     {
         final LocalResolver resolver = new LocalResolver();
 
-        for( int i = 0; i < dtdLocations.size(); i++ )
+        for( int i = 0; i < m_dtdLocations.size(); i++ )
         {
-            final DTDLocation location = (DTDLocation)dtdLocations.get( i );
+            final DTDLocation location = (DTDLocation)m_dtdLocations.get( i );
             resolver.registerDTD( location );
         }
 
@@ -289,13 +251,14 @@ public class XMLValidateTask
      * set a feature on the parser.
      * TODO: find a way to set any feature from build.xml
      */
-    private boolean setFeature( String feature, boolean value, boolean warn )
+    private boolean setFeature( final String feature,
+                                final boolean value,
+                                final boolean warn )
     {
-
         boolean toReturn = false;
         try
         {
-            xmlReader.setFeature( feature, value );
+            m_xmlReader.setFeature( feature, value );
             toReturn = true;
         }
         catch( SAXNotRecognizedException e )
@@ -326,7 +289,7 @@ public class XMLValidateTask
         try
         {
             getLogger().debug( "Validating " + afile.getName() + "... " );
-            errorHandler.init( afile );
+            m_errorHandler.init( afile );
             InputSource is = new InputSource( new FileReader( afile ) );
             String uri = "file:" + afile.getAbsolutePath().replace( '\\', '/' );
             for( int index = uri.indexOf( '#' ); index != -1;
@@ -335,24 +298,23 @@ public class XMLValidateTask
                 uri = uri.substring( 0, index ) + "%23" + uri.substring( index + 1 );
             }
             is.setSystemId( uri );
-            xmlReader.parse( is );
+            m_xmlReader.parse( is );
         }
         catch( SAXException ex )
         {
-            if( failOnError )
-                throw new TaskException( "Could not validate document " + afile );
+            final String message = "Could not validate document " + afile;
+            throw new TaskException( message );
         }
         catch( IOException ex )
         {
-            throw new TaskException( "Could not validate document " + afile, ex );
+            final String message = "Could not validate document " + afile;
+            throw new TaskException( message, ex );
         }
 
-        if( errorHandler.getFailure() )
+        if( m_errorHandler.getFailure() )
         {
-            if( failOnError )
-                throw new TaskException( afile + " is not a valid XML document." );
-            else
-                getLogger().error( afile + " is not a valid XML document" );
+            final String message = afile + " is not a valid XML document.";
+            throw new TaskException( message );
         }
     }
 
@@ -362,28 +324,27 @@ public class XMLValidateTask
     private void initValidator()
         throws TaskException
     {
-
         try
         {
             // load the parser class
             // with JAXP, we would use a SAXParser factory
             Class readerClass = null;
-            if( classpath != null )
+            if( m_classpath != null )
             {
-                final ClassLoader classLoader = new URLClassLoader( classpath.toURLs() );
-                readerClass = classLoader.loadClass( readerClassName );
+                final ClassLoader classLoader = new URLClassLoader( m_classpath.toURLs() );
+                readerClass = classLoader.loadClass( m_readerClassName );
             }
             else
             {
-                readerClass = Class.forName( readerClassName );
+                readerClass = Class.forName( m_readerClassName );
             }
 
             // then check it implements XMLReader
             if( XMLReader.class.isAssignableFrom( readerClass ) )
             {
 
-                xmlReader = (XMLReader)readerClass.newInstance();
-                getLogger().debug( "Using SAX2 reader " + readerClassName );
+                m_xmlReader = (XMLReader)readerClass.newInstance();
+                getLogger().debug( "Using SAX2 reader " + m_readerClassName );
             }
             else
             {
@@ -392,52 +353,52 @@ public class XMLValidateTask
                 if( Parser.class.isAssignableFrom( readerClass ) )
                 {
                     Parser parser = (Parser)readerClass.newInstance();
-                    xmlReader = new ParserAdapter( parser );
-                    getLogger().debug( "Using SAX1 parser " + readerClassName );
+                    m_xmlReader = new ParserAdapter( parser );
+                    getLogger().debug( "Using SAX1 parser " + m_readerClassName );
                 }
                 else
                 {
                     throw new TaskException( INIT_FAILED_MSG
-                                             + readerClassName
+                                             + m_readerClassName
                                              + " implements nor SAX1 Parser nor SAX2 XMLReader." );
                 }
             }
         }
         catch( ClassNotFoundException e )
         {
-            throw new TaskException( INIT_FAILED_MSG + readerClassName, e );
+            throw new TaskException( INIT_FAILED_MSG + m_readerClassName, e );
         }
         catch( InstantiationException e )
         {
-            throw new TaskException( INIT_FAILED_MSG + readerClassName, e );
+            throw new TaskException( INIT_FAILED_MSG + m_readerClassName, e );
         }
         catch( IllegalAccessException e )
         {
-            throw new TaskException( INIT_FAILED_MSG + readerClassName, e );
+            throw new TaskException( INIT_FAILED_MSG + m_readerClassName, e );
         }
 
-        xmlReader.setEntityResolver( getEntityResolver() );
-        xmlReader.setErrorHandler( errorHandler );
+        m_xmlReader.setEntityResolver( getEntityResolver() );
+        m_xmlReader.setErrorHandler( m_errorHandler );
 
-        if( !( xmlReader instanceof ParserAdapter ) )
+        if( !( m_xmlReader instanceof ParserAdapter ) )
         {
             // turn validation on
-            if( !lenient )
+            if( !m_lenient )
             {
                 boolean ok = setFeature( "http://xml.org/sax/features/validation", true, true );
                 if( !ok )
                 {
                     throw new TaskException( INIT_FAILED_MSG
-                                             + readerClassName
+                                             + m_readerClassName
                                              + " doesn't provide validation" );
                 }
             }
             // set other features
-            Enumeration enum = features.keys();
+            Enumeration enum = m_features.keys();
             while( enum.hasMoreElements() )
             {
                 String featureId = (String)enum.nextElement();
-                setFeature( featureId, ( (Boolean)features.get( featureId ) ).booleanValue(), true );
+                setFeature( featureId, ( (Boolean)m_features.get( featureId ) ).booleanValue(), true );
             }
         }
     }
@@ -484,7 +445,7 @@ public class XMLValidateTask
         {
             // depending on implementation, XMLReader can yield hips of warning,
             // only output then if user explicitely asked for it
-            if( warn )
+            if( m_warn )
             {
                 getLogger().warn( getMessage( exception ), exception );
             }
@@ -518,10 +479,6 @@ public class XMLValidateTask
         private Hashtable fileDTDs = new Hashtable();
         private Hashtable resourceDTDs = new Hashtable();
         private Hashtable urlDTDs = new Hashtable();
-
-        public LocalResolver()
-        {
-        }
 
         public void registerDTD( String publicId, String location )
         {
@@ -589,7 +546,7 @@ public class XMLValidateTask
             String dtdResourceName = (String)resourceDTDs.get( publicId );
             if( dtdResourceName != null )
             {
-                InputStream is = this.getClass().getResourceAsStream( dtdResourceName );
+                InputStream is = getClass().getResourceAsStream( dtdResourceName );
                 if( is != null )
                 {
                     getLogger().debug( "Resolved " + publicId + " to local resource " + dtdResourceName );
