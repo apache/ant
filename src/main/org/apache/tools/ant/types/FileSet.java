@@ -95,8 +95,6 @@ public class FileSet extends DataType implements Cloneable {
         this.isCaseSensitive = fileset.isCaseSensitive;
         setProject(getProject());
     }
-    
-    
 
     /**
      * Makes this instance in effect a reference to another PatternSet
@@ -302,7 +300,7 @@ public class FileSet extends DataType implements Cloneable {
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
         if (useDefaultExcludes) {
-          ds.addDefaultExcludes();
+            ds.addDefaultExcludes();
         }
         ds.setCaseSensitive(isCaseSensitive);
     }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,18 +63,18 @@ import junit.framework.AssertionFailedError;
 import java.io.File;
 
 /**
- * JUnit 3 testcases for org.apache.tools.ant.types.FileSet.
+ * JUnit 3 testcases for org.apache.tools.ant.types.DirSet.
  *
  * <p>This doesn't actually test much, mainly reference handling.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public class FileSetTest extends TestCase {
+public class DirSetTest extends TestCase {
 
     private Project project;
 
-    public FileSetTest(String name) {
+    public DirSetTest(String name) {
         super(name);
     }
 
@@ -84,104 +84,104 @@ public class FileSetTest extends TestCase {
     }
 
     public void testEmptyElementIfIsReference() {
-        FileSet f = new FileSet();
+        DirSet f = new DirSet();
         f.setIncludes("**/*.java");
         try {
             f.setRefid(new Reference("dummyref"));
-            fail("Can add reference to FileSet with elements from setIncludes");
+            fail("Can add reference to DirSet with elements from setIncludes");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
 
-        f = new FileSet();
+        f = new DirSet();
         f.createPatternSet();
         try {
             f.setRefid(new Reference("dummyref"));
-            fail("Can add reference to FileSet with nested patternset element.");
+            fail("Can add reference to DirSet with nested patternset element.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
 
-        f = new FileSet();
+        f = new DirSet();
         f.createInclude();
         try {
             f.setRefid(new Reference("dummyref"));
-            fail("Can add reference to FileSet with nested include element.");
+            fail("Can add reference to DirSet with nested include element.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
 
-        f = new FileSet();
+        f = new DirSet();
         f.setRefid(new Reference("dummyref"));
         try {
             f.setIncludes("**/*.java");
-            fail("Can set includes in FileSet that is a reference.");
+            fail("Can set includes in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
         try {
             f.setIncludesfile(new File("/a"));
-            fail("Can set includesfile in FileSet that is a reference.");
+            fail("Can set includesfile in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
         try {
             f.setExcludes("**/*.java");
-            fail("Can set excludes in FileSet that is a reference.");
+            fail("Can set excludes in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
         try {
             f.setExcludesfile(new File("/a"));
-            fail("Can set excludesfile in FileSet that is a reference.");
+            fail("Can set excludesfile in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
         try {
             f.setDir(project.resolveFile("."));
-            fail("Can set dir in FileSet that is a reference.");
+            fail("Can set dir in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify more than one attribute when using refid",
                          be.getMessage());
         }
         try {
             f.createInclude();
-            fail("Can add nested include in FileSet that is a reference.");
+            fail("Can add nested include in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
         try {
             f.createExclude();
-            fail("Can add nested exclude in FileSet that is a reference.");
+            fail("Can add nested exclude in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
         try {
             f.createIncludesFile();
-            fail("Can add nested includesfile in FileSet that is a reference.");
+            fail("Can add nested includesfile in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
         try {
             f.createExcludesFile();
-            fail("Can add nested excludesfile in FileSet that is a reference.");
+            fail("Can add nested excludesfile in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
         }
         try {
             f.createPatternSet();
-            fail("Can add nested patternset in FileSet that is a reference.");
+            fail("Can add nested patternset in DirSet that is a reference.");
         } catch (BuildException be) {
             assertEquals("You must not specify nested elements when using refid",
                          be.getMessage());
@@ -189,32 +189,32 @@ public class FileSetTest extends TestCase {
     }
 
     public void testCircularReferenceCheck() {
-        FileSet f = new FileSet();
+        DirSet f = new DirSet();
         project.addReference("dummy", f);
         f.setRefid(new Reference("dummy"));
         try {
             f.getDir(project);
-            fail("Can make FileSet a Reference to itself.");
+            fail("Can make DirSet a Reference to itself.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
                          be.getMessage());
         }
         try {
             f.getDirectoryScanner(project);
-            fail("Can make FileSet a Reference to itself.");
+            fail("Can make DirSet a Reference to itself.");
         } catch (BuildException be) {
             assertEquals("This data type contains a circular reference.",
                          be.getMessage());
         }
 
         // dummy1 --> dummy2 --> dummy3 --> dummy1
-        FileSet f1 = new FileSet();
+        DirSet f1 = new DirSet();
         project.addReference("dummy1", f1);
         f1.setRefid(new Reference("dummy2"));
-        FileSet f2 = new FileSet();
+        DirSet f2 = new DirSet();
         project.addReference("dummy2", f2);
         f2.setRefid(new Reference("dummy3"));
-        FileSet f3 = new FileSet();
+        DirSet f3 = new DirSet();
         project.addReference("dummy3", f3);
         f3.setRefid(new Reference("dummy1"));
         try {
@@ -234,13 +234,13 @@ public class FileSetTest extends TestCase {
 
         // dummy1 --> dummy2 --> dummy3 
         // (which has the Project's basedir as root).
-        f1 = new FileSet();
+        f1 = new DirSet();
         project.addReference("dummy1", f1);
         f1.setRefid(new Reference("dummy2"));
-        f2 = new FileSet();
+        f2 = new DirSet();
         project.addReference("dummy2", f2);
         f2.setRefid(new Reference("dummy3"));
-        f3 = new FileSet();
+        f3 = new DirSet();
         project.addReference("dummy3", f3);
         f3.setDir(project.resolveFile("."));
         File dir = f1.getDir(project);
