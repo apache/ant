@@ -54,10 +54,9 @@
 
 package org.apache.tools.ant.input;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 
@@ -82,8 +81,7 @@ public class DefaultInputHandler implements InputHandler {
      */
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
-        BufferedReader in = 
-            new BufferedReader(new InputStreamReader(getInputStream()));
+        DataInputStream in = new DataInputStream(getInputStream());
         do {
             System.err.println(prompt);
             try {
