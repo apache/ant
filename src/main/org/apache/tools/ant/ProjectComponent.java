@@ -81,7 +81,7 @@ public abstract class ProjectComponent {
             // 'reasonable' default, if the component is used without
             // a Project ( for example as a standalone Bean ).
             // Most ant components can be used this way.
-            if (msgLevel >= Project.MSG_INFO) {
+            if (msgLevel <= Project.MSG_INFO) {
                 System.err.println(msg);
             }
         }

@@ -95,6 +95,8 @@ Fixed bugs:
 
 * filterset used by filtertask doesn't respect loglevel. Bugzilla Report 27568.
 
+* wrong compare used in ProjectComponent for logging. Bugzilla Report 28070.
+
 Other changes:
 --------------
 
