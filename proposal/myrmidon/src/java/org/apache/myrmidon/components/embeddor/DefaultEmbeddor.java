@@ -175,7 +175,8 @@ public class DefaultEmbeddor
 
         // setup a service manager that creates the project services
         final ServiceManager projServiceManager
-            = (ServiceManager)createService( ServiceManager.class, PREFIX + "service.InstantiatingServiceManager" );
+            = (ServiceManager)createService( ServiceManager.class,
+                                             PREFIX + "service.InstantiatingServiceManager" );
         setupObject( projServiceManager, m_serviceManager, m_parameters );
 
         // setup a service manager to be used by workspaces
@@ -267,7 +268,8 @@ public class DefaultEmbeddor
         createComponent( RoleManager.class, PREFIX + "role.DefaultRoleManager" );
         createComponent( AspectManager.class, PREFIX + "aspect.DefaultAspectManager" );
         createComponent( Deployer.class, PREFIX + "deployer.DefaultDeployer" );
-        createComponent( ClassLoaderManager.class, PREFIX + "classloader.DefaultClassLoaderManager" );
+        createComponent( ClassLoaderManager.class,
+                         PREFIX + "classloader.DefaultClassLoaderManager" );
         createComponent( Executor.class, PREFIX + "executor.AspectAwareExecutor" );
         createComponent( PropertyResolver.class, PREFIX + "property.DefaultPropertyResolver" );
 
@@ -388,7 +390,8 @@ public class DefaultEmbeddor
 
             if( !roleType.isInstance( object ) )
             {
-                final String message = REZ.getString( "bad-type.error", className, roleType.getName() );
+                final String message = REZ.getString( "bad-type.error",
+                                                      className, roleType.getName() );
                 throw new Exception( message );
             }
 
@@ -396,7 +399,8 @@ public class DefaultEmbeddor
         }
         catch( final IllegalAccessException iae )
         {
-            final String message = REZ.getString( "bad-ctor.error", roleType.getName(), className );
+            final String message = REZ.getString( "bad-ctor.error",
+                                                  roleType.getName(), className );
             throw new Exception( message );
         }
         catch( final InstantiationException ie )

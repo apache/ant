@@ -19,6 +19,7 @@ package org.apache.myrmidon.interfaces.role;
  */
 public interface RoleManager
 {
+    /** Role name for this interface. */
     String ROLE = RoleManager.class.getName();
 
     /**
@@ -47,6 +48,8 @@ public interface RoleManager
 
     /**
      * Adds a role definition.
+     * @param role The RoleInfo definition of the role to add.
+     * @throws RoleException If this role conflict with an existing role.
      */
     void addRole( RoleInfo role ) throws RoleException;
 }

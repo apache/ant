@@ -19,6 +19,12 @@ public class TypeDefinition
     private final String m_role;
     private final String m_classname;
 
+    /**
+     * Creates a TypeDefinition
+     * @param name the name of the type
+     * @param roleShorthand the name of the role played by this type
+     * @param className the name of the class implementing this type
+     */
     public TypeDefinition( final String name,
                            final String roleShorthand,
                            final String className )
@@ -29,7 +35,7 @@ public class TypeDefinition
     }
 
     /**
-     * Returns the type's implementation class name.
+     * @return the type's implementation class name.
      */
     public final String getClassname()
     {
@@ -37,7 +43,7 @@ public class TypeDefinition
     }
 
     /**
-     * Returns the type's role.
+     * @return the type's role.
      */
     public final String getRole()
     {
@@ -45,7 +51,7 @@ public class TypeDefinition
     }
 
     /**
-     * Returns the type's name.
+     * @return the type's name.
      */
     public String getName()
     {

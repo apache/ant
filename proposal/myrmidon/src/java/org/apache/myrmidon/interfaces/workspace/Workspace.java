@@ -19,6 +19,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  */
 public interface Workspace
 {
+    /** Role name for this interface. */
     String ROLE = Workspace.class.getName();
 
     /**

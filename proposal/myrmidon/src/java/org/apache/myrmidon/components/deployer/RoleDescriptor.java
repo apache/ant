@@ -31,7 +31,8 @@ class RoleDescriptor
      */
     public RoleDefinition[] getDefinitions()
     {
-        return (RoleDefinition[])m_definitions.toArray( new RoleDefinition[ m_definitions.size() ] );
+        return (RoleDefinition[])m_definitions.toArray
+            ( new RoleDefinition[ m_definitions.size() ] );
     }
 
     /**

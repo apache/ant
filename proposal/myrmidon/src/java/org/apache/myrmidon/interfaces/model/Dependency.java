@@ -18,17 +18,27 @@ public class Dependency
     private final String m_projectName;
     private final String m_targetName;
 
+    /**
+     * @param projectName The project containing the depended-on target.
+     * @param targetName The name of the depended-on target.
+     */
     public Dependency( final String projectName, final String targetName )
     {
         m_projectName = projectName;
         m_targetName = targetName;
     }
 
+    /**
+     * @return The name of the project containing the depended-on target.
+     */
     public String getProjectName()
     {
         return m_projectName;
     }
 
+    /**
+     * @return The name of the depended-on target.
+     */
     public String getTargetName()
     {
         return m_targetName;

@@ -32,6 +32,7 @@ public class DefaultTypeFactory
     /**
      * Construct a factory that uses specified ClassLoader to load
      * types from.
+     * @param classLoader The ClassLoader to use for loading types.
      */
     public DefaultTypeFactory( final ClassLoader classLoader )
     {
@@ -52,6 +53,8 @@ public class DefaultTypeFactory
 
     /**
      * Map a name to the fully qualified name of the Class that implements type.
+     * @param name The type name.
+     * @param className The fully qualified name of the implementin Class.
      */
     public void addNameClassMapping( final String name, final String className )
     {
@@ -59,7 +62,7 @@ public class DefaultTypeFactory
     }
 
     /**
-     * Determines if this factory can create instances of a particular type.
+     * @see TypeFactory#canCreate
      */
     public boolean canCreate( String name )
     {
@@ -67,11 +70,7 @@ public class DefaultTypeFactory
     }
 
     /**
-     * Create a type instance with appropriate name.
-     *
-     * @param name the name
-     * @return the created instance
-     * @exception TypeException if an error occurs
+     * @see TypeFactory#create
      */
     public Object create( final String name )
         throws TypeException
@@ -103,6 +102,9 @@ public class DefaultTypeFactory
         return (String)m_classNames.get( name );
     }
 
+    /**
+     * @return The ClassLoader to use for loading types.
+     */
     protected ClassLoader getClassLoader()
     {
         return m_classLoader;

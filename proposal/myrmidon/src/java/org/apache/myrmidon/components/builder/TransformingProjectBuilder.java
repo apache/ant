@@ -38,6 +38,13 @@ public class TransformingProjectBuilder
     private static final String STYLESHEET = "ant1convert.xsl";
     private Transformer m_transformer;
 
+    /**
+     * Builds a project Configuration from a project file, applying the
+     * ant1 conversion stylesheet.
+     * @param systemID the XML system id for the project file
+     * @return the project configuration
+     * @throws ProjectException if a parse error occurs
+     */
     protected Configuration parseProject( String systemID )
         throws ProjectException
     {

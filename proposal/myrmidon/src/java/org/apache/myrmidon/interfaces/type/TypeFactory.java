@@ -19,6 +19,7 @@ public interface TypeFactory
      * Determines if this factory can create instances of a particular type.
      *
      * @param name the type name.
+     * @return <code>true</code> if this is a valid factory for the named type.
      */
     boolean canCreate( String name );
 

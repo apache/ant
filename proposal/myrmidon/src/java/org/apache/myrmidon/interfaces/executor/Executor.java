@@ -18,12 +18,14 @@ import org.apache.myrmidon.api.TaskException;
  */
 public interface Executor
 {
+    /** Role name for this interface. */
     String ROLE = Executor.class.getName();
 
     /**
      * execute a task.
      *
      * @param task the configruation data for task
+     * @param frame The frame in which the task is executed.
      * @exception TaskException if an error occurs
      */
     void execute( Configuration task, ExecutionFrame frame )

@@ -23,6 +23,8 @@ public class Target
 
     /**
      * Constructs a target.
+     * @param tasks The task models for all tasks in this target.
+     * @param dependencies The dependencies for executing this target.
      */
     public Target( final Configuration[] tasks,
                    final Dependency[] dependencies )

@@ -20,6 +20,7 @@ import org.apache.myrmidon.api.TaskContext;
  */
 public interface Configurer
 {
+    /** Role name for this interface. */
     String ROLE = Configurer.class.getName();
 
     /**

@@ -96,13 +96,17 @@ public class DefaultProjectBuilder
         }
         catch( Exception e )
         {
-            final String message = REZ.getString( "ant.project-build.error", file.getAbsolutePath() );
+            final String message = REZ.getString( "ant.project-build.error",
+                                                  file.getAbsolutePath() );
             throw new ProjectException( message, e );
         }
     }
 
     /**
-     * Parses the project.
+     * Builds a project configuration from a build file.
+     * @param systemID the XML system id of the build file
+     * @return the project configuration
+     * @throws ProjectException on parse error
      */
     protected Configuration parseProject( final String systemID )
         throws ProjectException
@@ -172,7 +176,8 @@ public class DefaultProjectBuilder
 
         if( getLogger().isDebugEnabled() )
         {
-            final String message = REZ.getString( "ant.project-banner.notice", file, baseDirectory );
+            final String message = REZ.getString( "ant.project-banner.notice",
+                                                  file, baseDirectory );
             getLogger().debug( message );
         }
 
@@ -189,7 +194,8 @@ public class DefaultProjectBuilder
      * Get the project name from the configuration, or create a default name if none
      * was supplied.
      */
-    private String getProjectName( final Configuration configuration, final File file )
+    private String getProjectName( final Configuration configuration,
+                                   final File file )
         throws ProjectException
     {
         String projectName = configuration.getAttribute( "name", null );
@@ -332,7 +338,8 @@ public class DefaultProjectBuilder
             else
             {
                 final String message =
-                    REZ.getString( "ant.unknown-toplevel-element.error", name, element.getLocation() );
+                    REZ.getString( "ant.unknown-toplevel-element.error", name,
+                                   element.getLocation() );
                 throw new ProjectException( message );
             }
         }
@@ -355,7 +362,8 @@ public class DefaultProjectBuilder
         if( null == name )
         {
             final String message =
-                REZ.getString( "ant.projectref-no-name.error", element.getLocation() );
+                REZ.getString( "ant.projectref-no-name.error",
+                               element.getLocation() );
             throw new ProjectException( message );
         }
 
@@ -366,14 +374,16 @@ public class DefaultProjectBuilder
         catch( Exception e )
         {
             final String message =
-                REZ.getString( "ant.projectref-bad-name.error", element.getLocation() );
+                REZ.getString( "ant.projectref-bad-name.error",
+                               element.getLocation() );
             throw new ProjectException( message, e );
         }
 
         if( null == location )
         {
             final String message =
-                REZ.getString( "ant.projectref-no-location.error", element.getLocation() );
+                REZ.getString( "ant.projectref-no-location.error",
+                               element.getLocation() );
             throw new ProjectException( message );
         }
 
@@ -487,7 +497,8 @@ public class DefaultProjectBuilder
         }
     }
 
-    private Dependency[] buildDependsList( final String depends, final Configuration target )
+    private Dependency[] buildDependsList( final String depends,
+                                           final Configuration target )
         throws ProjectException
     {
         //apply depends attribute
@@ -505,7 +516,8 @@ public class DefaultProjectBuilder
 
             if( getLogger().isDebugEnabled() )
             {
-                final String message = REZ.getString( "ant.target-dependency.notice", dependency );
+                final String message = REZ.getString( "ant.target-dependency.notice",
+                                                      dependency );
                 getLogger().debug( message );
             }
 
@@ -524,7 +536,8 @@ public class DefaultProjectBuilder
                 targetName = dependency;
             }
 
-            if( targetName.length() == 0 || ( projectName != null && projectName.length() == 0 ) )
+            if( targetName.length() == 0 ||
+                ( projectName != null && projectName.length() == 0 ) )
             {
                 final String message = REZ.getString( "ant.target-bad-dependency.error",
                                                       target.getName(),

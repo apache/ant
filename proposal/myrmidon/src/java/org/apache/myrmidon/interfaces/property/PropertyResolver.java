@@ -22,6 +22,7 @@ import org.apache.myrmidon.api.TaskContext;
  */
 public interface PropertyResolver
 {
+    /** Role name for this interface. */
     String ROLE = PropertyResolver.class.getName();
 
     /**

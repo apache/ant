@@ -41,7 +41,8 @@ class ServiceDescriptorBuilder
             final Version version = Version.getVersion( versionString );
             if( !SERVICE_DESCRIPTOR_VERSION.complies( version ) )
             {
-                final String message = REZ.getString( "service-descriptor-version.error", version, SERVICE_DESCRIPTOR_VERSION );
+                final String message = REZ.getString( "service-descriptor-version.error",
+                                                      version, SERVICE_DESCRIPTOR_VERSION );
                 throw new DeploymentException( message );
             }
 
@@ -55,7 +56,8 @@ class ServiceDescriptorBuilder
                 final Configuration element = elements[ i ];
                 final String roleShorthand = element.getName();
                 final String factoryClassName = element.getAttribute( "factory" );
-                final ServiceDefinition definition = new ServiceDefinition( roleShorthand, factoryClassName, config );
+                final ServiceDefinition definition =
+                    new ServiceDefinition( roleShorthand, factoryClassName, config );
                 descriptor.addDefinition( definition );
             }
 

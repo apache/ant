@@ -75,7 +75,8 @@ public class DefaultExecutor
         catch( Exception e )
         {
             // Wrap in generic error message
-            final String message = REZ.getString( "execute.error", taskName, taskModel.getLocation() );
+            final String message = REZ.getString( "execute.error",
+                                                  taskName, taskModel.getLocation() );
             throw new TaskException( message, e );
         }
     }

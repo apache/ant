@@ -21,16 +21,39 @@ import org.apache.myrmidon.aspects.AspectHandler;
 public interface AspectManager
     extends AspectHandler
 {
+    /** Role name for this interface. */
     String ROLE = AspectManager.class.getName();
 
+    /**
+     * @return The names of all AspectHandlers managed.
+     */
     String[] getNames();
 
+    /**
+     * Dispatches aspect settings to the named AspectHandler.
+     * @param name The name of the AspectHandler to recieve the settings.
+     * @param parameters The parameter settings.
+     * @param elements The nested Configuration settings.
+     * @throws TaskException if the named AspectHandler doesn't exist,
+     *                  or it cannot handle the settings.
+     */
     void dispatchAspectSettings( String name, Parameters parameters, Configuration[] elements )
         throws TaskException;
 
+    /**
+     * Adds a named aspect handler to the manager.
+     * @param name The name used to lookup the aspect handler.
+     * @param handler The aspect handler to add.
+     * @throws TaskException If an error occurs.
+     */
     void addAspectHandler( String name, AspectHandler handler )
         throws TaskException;
 
+    /**
+     * Removes a named aspect handler from the manager.
+     * @param name The name of the handler to remove.
+     * @throws TaskException If the named handler doesn't exist.
+     */
     void removeAspectHandler( String name )
         throws TaskException;
 }

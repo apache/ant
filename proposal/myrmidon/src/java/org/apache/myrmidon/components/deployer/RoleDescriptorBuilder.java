@@ -41,7 +41,8 @@ class RoleDescriptorBuilder
             final Version version = Version.getVersion( versionString );
             if( !ROLE_DESCRIPTOR_VERSION.complies( version ) )
             {
-                final String message = REZ.getString( "role-descriptor-version.error", version, ROLE_DESCRIPTOR_VERSION );
+                final String message = REZ.getString( "role-descriptor-version.error",
+                                                      version, ROLE_DESCRIPTOR_VERSION );
                 throw new DeploymentException( message );
             }
 

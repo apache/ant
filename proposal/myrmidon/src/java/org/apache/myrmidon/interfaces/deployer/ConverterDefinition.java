@@ -8,7 +8,7 @@
 package org.apache.myrmidon.interfaces.deployer;
 
 /**
- * A converter definition.
+ * A specialised TypeDefinition which defines a converter.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
@@ -19,6 +19,12 @@ public class ConverterDefinition
     private final String m_sourceType;
     private final String m_destinationType;
 
+    /**
+     * Creates a converter definition.
+     * @param className the name of the implementing class
+     * @param sourceType the name of the types converted from
+     * @param destinationType the name of the type converted to
+     */
     public ConverterDefinition( final String className,
                                 final String sourceType,
                                 final String destinationType )
@@ -29,7 +35,8 @@ public class ConverterDefinition
     }
 
     /**
-     * Returns the converter's source type.
+     * Provides the name of the type which this converter can convert from.
+     * @return the converter's source type.
      */
     public String getSourceType()
     {
@@ -37,7 +44,8 @@ public class ConverterDefinition
     }
 
     /**
-     * Returns the converter's destination type.
+     * Provides the name of the type which this converter can convert to.
+     * @return the converter's destination type.
      */
     public String getDestinationType()
     {

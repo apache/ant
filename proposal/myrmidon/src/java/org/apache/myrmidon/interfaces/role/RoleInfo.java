@@ -23,7 +23,9 @@ public final class RoleInfo
     /**
      * Creates a role definition.
      *
-     * @param name The role name.
+     *
+     * Same as calling <code>RoleInfo( name, null, null, null )</code>
+     * @see #RoleInfo( String, String, Class, String )
      */
     public RoleInfo( final String name )
     {
@@ -33,8 +35,8 @@ public final class RoleInfo
     /**
      * Creates a role definition.
      *
-     * @param name The role name.
-     * @param shorthand The role shorthand name.
+     * Same as calling <code>RoleInfo( name, shorthand, null, null )</code>
+     * @see #RoleInfo( String, String, Class, String )
      */
     public RoleInfo( final String name, final String shorthand )
     {
@@ -43,10 +45,8 @@ public final class RoleInfo
 
     /**
      * Creates a role definition.
-     *
-     * @param name The role name.
-     * @param shorthand The role shorthand name.  May be null.
-     * @param type The role type.  May be null.
+     * Same as calling <code>RoleInfo( name, shorthand, type, null )</code>
+     * @see #RoleInfo( String, String, Class, String )
      */
     public RoleInfo( final String name, final String shorthand, final Class type )
     {
@@ -56,6 +56,8 @@ public final class RoleInfo
     /**
      * Creates a role definition.  The role type's fully-qualified name
      * is used as the role name.
+     *
+     * @see #RoleInfo( String, String, Class, String )
      */
     public RoleInfo( final String shorthand, final Class type )
     {
@@ -64,6 +66,10 @@ public final class RoleInfo
 
     /**
      * Creates a role definition.
+     * @param name The role name.
+     * @param shorthand The role shorthand name.  May be null.
+     * @param type The role type.  May be null.
+     * @param defaultType The default type to use. May be null.
      */
     public RoleInfo( final String name,
                      final String shorthand,
@@ -78,6 +84,8 @@ public final class RoleInfo
 
     /**
      * Compares a role to this role.
+     * @param role The RoleInfo to compare.
+     * @return <code>true</code> if the supplied role is equal to this one.
      */
     public boolean equals( final RoleInfo role )
     {
@@ -105,7 +113,8 @@ public final class RoleInfo
     }
 
     /**
-     * Returns this role's name.  This name uniquely identifies the role.
+     * Provides this role's name, which uniquely identifies the role.
+     * @return The role name.
      */
     public String getName()
     {

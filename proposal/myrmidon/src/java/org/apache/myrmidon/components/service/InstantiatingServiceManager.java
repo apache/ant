@@ -188,7 +188,8 @@ public class InstantiatingServiceManager
             final Class serviceType = roleInfo.getType();
             if( serviceType != null && !serviceType.isInstance( service ) )
             {
-                final String message = REZ.getString( "mismatched-service-type.error", serviceRole, service.getClass().getName() );
+                final String message = REZ.getString( "mismatched-service-type.error",
+                                                      serviceRole, service.getClass().getName() );
                 throw new ServiceException( message );
             }
 

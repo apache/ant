@@ -35,6 +35,10 @@ public class ReloadingTypeFactory
      * Construct a factory that recreats a ClassLoader from specified
      * URLs and with specified parent ClassLoader. The specified urls must
      * not be null.
+     * @param urls
+     *      The URLs to include in the created classloader.
+     * @param parent
+     *      The parent to use for the created classloader. May be null.
      */
     public ReloadingTypeFactory( final URL[] urls,
                                  final ClassLoader parent )
@@ -47,6 +51,9 @@ public class ReloadingTypeFactory
         m_parent = parent;
     }
 
+    /**
+     * @see DefaultTypeFactory
+     */
     protected ClassLoader getClassLoader()
     {
         return new URLClassLoader( m_urls, m_parent );

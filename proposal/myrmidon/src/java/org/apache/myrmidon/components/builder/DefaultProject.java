@@ -50,7 +50,7 @@ public class DefaultProject
     private String m_name;
 
     /**
-     * Returns the project name.
+     * @return the project name.
      */
     public String getProjectName()
     {
@@ -59,6 +59,7 @@ public class DefaultProject
 
     /**
      * Sets the project name.
+     * @param name the project name
      */
     public void setProjectName( String name )
     {
@@ -169,7 +170,8 @@ public class DefaultProject
     }
 
     /**
-     * Retrieve base directory of project.
+     * Sets the project base directory.
+     * @param baseDirectory the base directory for the project
      */
     public final void setBaseDirectory( final File baseDirectory )
     {
@@ -178,6 +180,7 @@ public class DefaultProject
 
     /**
      * Adds a type library import to the project.
+     * @param typeLib the type library
      */
     public final void addTypeLib( final TypeLib typeLib )
     {

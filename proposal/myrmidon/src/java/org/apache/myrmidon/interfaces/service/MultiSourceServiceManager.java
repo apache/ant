@@ -31,6 +31,7 @@ public class MultiSourceServiceManager
 
     /**
      * Adds a service manager to the end of the source list.
+     * @param mgr The ServiceManager to add.
      */
     public void add( final ServiceManager mgr )
     {
@@ -39,6 +40,9 @@ public class MultiSourceServiceManager
 
     /**
      * Determines if this service manager contains a particular service.
+     * @param serviceRole The name of the service to check for.
+     * @return <code>true</code> if this service manager contains
+     *         the named service.
      */
     public boolean hasService( final String serviceRole )
     {
@@ -81,6 +85,7 @@ public class MultiSourceServiceManager
 
     /**
      * Releases a service.
+     * @param service The service to release.
      */
     public void release( final Object service )
     {

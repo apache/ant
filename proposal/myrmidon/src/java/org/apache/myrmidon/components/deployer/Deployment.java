@@ -85,7 +85,8 @@ class Deployment
 
         // Build the role descriptors
         final ArrayList roleUrls = locateResources( ROLE_DESCRIPTOR_NAME, jarUrl );
-        final ArrayList roleDescriptors = buildDescriptors( roleUrls, m_roleBuilder, parser, handler );
+        final ArrayList roleDescriptors =
+            buildDescriptors( roleUrls, m_roleBuilder, parser, handler );
 
         // Deploy the roles
         // TODO - need to defer this
@@ -98,13 +99,17 @@ class Deployment
 
         // Build the type descriptors
         final ArrayList typeUrls = locateResources( TYPE_DESCRIPTOR_NAME, jarUrl );
-        final ArrayList typeDescriptors = buildDescriptors( typeUrls, m_typeBuilder, parser, handler );
-        m_descriptors = (TypeDescriptor[])typeDescriptors.toArray( new TypeDescriptor[ typeDescriptors.size() ] );
+        final ArrayList typeDescriptors =
+            buildDescriptors( typeUrls, m_typeBuilder, parser, handler );
+        m_descriptors = (TypeDescriptor[])typeDescriptors.toArray
+            ( new TypeDescriptor[ typeDescriptors.size() ] );
 
         // Build the service descriptors
         final ArrayList serviceUrls = locateResources( SERVICE_DESCRIPTOR_NAME, jarUrl );
-        final ArrayList serviceDescriptors = buildDescriptors( serviceUrls, m_serviceBuilder, parser, handler );
-        m_services = (ServiceDescriptor[])serviceDescriptors.toArray( new ServiceDescriptor[ serviceDescriptors.size() ] );
+        final ArrayList serviceDescriptors =
+            buildDescriptors( serviceUrls, m_serviceBuilder, parser, handler );
+        m_services = (ServiceDescriptor[])serviceDescriptors.toArray
+            ( new ServiceDescriptor[ serviceDescriptors.size() ] );
     }
 
     /**
@@ -198,7 +203,8 @@ class Deployment
         }
         catch( Exception e )
         {
-            final String message = REZ.getString( "deploy-type.error", typeDef.getRole(), typeDef.getName() );
+            final String message = REZ.getString( "deploy-type.error",
+                                                  typeDef.getRole(), typeDef.getName() );
             throw new DeploymentException( message, e );
         }
     }
@@ -220,7 +226,8 @@ class Deployment
 
             // Parse the file
             parser.parse( url );
-            final TypelibDescriptor descriptor = builder.createDescriptor( handler.getConfiguration(), url );
+            final TypelibDescriptor descriptor =
+                builder.createDescriptor( handler.getConfiguration(), url );
             descriptors.add( descriptor );
         }
 
@@ -274,7 +281,8 @@ class Deployment
         {
             if( getLogger().isDebugEnabled() )
             {
-                final String message = REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
+                final String message =
+                    REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
                 getLogger().debug( message );
             }
 
@@ -302,7 +310,8 @@ class Deployment
         {
             if( getLogger().isDebugEnabled() )
             {
-                final String message = REZ.getString( "url-deploy-types.notice", descriptor.getUrl() );
+                final String message =
+                    REZ.getString( "url-deploy-types.notice", descriptor.getUrl() );
                 getLogger().debug( message );
             }
 
@@ -332,7 +341,8 @@ class Deployment
         {
             if( getLogger().isDebugEnabled() )
             {
-                final String message = REZ.getString( "url-deploy-services.notice", descriptor.getUrl() );
+                final String message =
+                    REZ.getString( "url-deploy-services.notice", descriptor.getUrl() );
                 getLogger().debug( message );
             }
 

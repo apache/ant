@@ -29,7 +29,8 @@ class TypeDescriptor
 
     public TypeDefinition[] getDefinitions()
     {
-        return (TypeDefinition[])m_definitions.toArray( new TypeDefinition[ m_definitions.size() ] );
+        return (TypeDefinition[])m_definitions.toArray
+            ( new TypeDefinition[ m_definitions.size() ] );
     }
 
     public void addDefinition( final TypeDefinition def )

@@ -203,7 +203,8 @@ public class DefaultWorkspace
             }
             catch( final DeploymentException de )
             {
-                final String message = REZ.getString( "no-deploy.error", typeLib.getLibrary(), file );
+                final String message = REZ.getString( "no-deploy.error",
+                                                      typeLib.getLibrary(), file );
                 throw new TaskException( message, de );
             }
         }
@@ -416,7 +417,8 @@ public class DefaultWorkspace
 
         if( getLogger().isDebugEnabled() )
         {
-            final String message = REZ.getString( "exec-target.notice", project.getProjectName(), name );
+            final String message = REZ.getString( "exec-target.notice",
+                                                  project.getProjectName(), name );
             getLogger().debug( message );
         }
 

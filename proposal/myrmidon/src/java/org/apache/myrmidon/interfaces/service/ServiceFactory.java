@@ -19,12 +19,15 @@ package org.apache.myrmidon.interfaces.service;
  */
 public interface ServiceFactory
 {
+    /** Role name for this interface. */
     String ROLE = ServiceFactory.class.getName();
 
     /**
      * Create a service that corresponds to this factory.
      * This method is usually called after the factory has been
      * prepared and configured as appropriate.
+     * @return The created service.
+     * @throws AntServiceException If the service could not be created.
      */
     Object createService()
         throws AntServiceException;

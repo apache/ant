@@ -18,6 +18,8 @@ public interface TypeDeployer
 {
     /**
      * Deploys everything in the type library.
+     * @throws DeploymentException
+     *      If the library cannot be deployed.
      */
     void deployAll()
         throws DeploymentException;
@@ -43,6 +45,9 @@ public interface TypeDeployer
      *
      * @param typeDef
      *      The type definition.
+     *
+     * @throws DeploymentException
+     *      If the type cannot be deployed.
      */
     void deployType( TypeDefinition typeDef )
         throws DeploymentException;

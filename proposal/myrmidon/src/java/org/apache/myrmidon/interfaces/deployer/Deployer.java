@@ -19,6 +19,7 @@ import org.apache.avalon.framework.service.ServiceManager;
  */
 public interface Deployer
 {
+    /** Role name for this interface. */
     String ROLE = Deployer.class.getName();
 
     /**
@@ -26,6 +27,7 @@ public interface Deployer
      * creating the deployer if necessary.
      *
      * @param loader The ClassLoader to get the deployer for.
+     * @return the deployer for this loader.
      * @exception DeploymentException if an error occurs.
      */
     TypeDeployer createDeployer( ClassLoader loader )
@@ -36,13 +38,17 @@ public interface Deployer
      * necessary.
      *
      * @param file the file containing the type library.
+     * @return the deployer for this type library.
      * @exception DeploymentException if an error occurs.
      */
     TypeDeployer createDeployer( File file )
         throws DeploymentException;
 
     /**
-     * Creates a child deployer.
+     * Creates a deployer which is a child of this deployer.
+     * @param componentManager the ServiceManager for this component.
+     * @return a child deployer.
+     * @throws ServiceException if an error occurs.
      */
     Deployer createChildDeployer( ServiceManager componentManager )
         throws ServiceException;

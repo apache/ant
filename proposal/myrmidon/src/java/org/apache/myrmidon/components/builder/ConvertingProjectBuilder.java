@@ -27,6 +27,13 @@ public class ConvertingProjectBuilder
 {
     private static final String VERSION_ATTRIBUTE = "version";
 
+    /**
+     * Builds a Configuration from an Ant1 project file, converting it
+     * into a valid Myrmidon Project.
+     * @param systemID the xml Systemid of the project file.
+     * @return the configured project
+     * @throws ProjectException if an error occurs parsing the project file
+     */
     protected Configuration parseProject( String systemID )
         throws ProjectException
     {

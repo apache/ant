@@ -19,11 +19,21 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public interface ExecutionFrame
 {
+    /** Role name for this interface. */
     String ROLE = ExecutionFrame.class.getName();
 
+    /**
+     * @return The TypeManager to use for creating Tasks.
+     */
     TypeManager getTypeManager();
 
+    /**
+     * @return The logger which is used for execution messages.
+     */
     Logger getLogger();
 
+    /**
+     * @return The TaskContext in which the task is executed.
+     */
     TaskContext getContext();
 }

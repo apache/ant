@@ -82,6 +82,7 @@ public class DefaultNameValidator
      * Creates a valid name based on the supplied string value, removing invalid
      * characters. If no valid characters are present, an exception is thrown.
      * @param baseName the name used to construct the valid name
+     * @return a valid name based on the supplied name.
      * @throws Exception if no valid name could be constructed.
      */
     public String makeValidName( final String baseName ) throws Exception
@@ -113,8 +114,7 @@ public class DefaultNameValidator
     }
 
     /**
-     * Validates the supplied name, failing if it is not.
-     * @throws Exception is the supplied name is not valid.
+     * @see NameValidator
      */
     public void validate( final String name ) throws Exception
     {

@@ -18,9 +18,10 @@ import java.io.File;
  */
 public interface Project
 {
+    /** Role name for this interface. */
     String ROLE = Project.class.getName();
 
-    // the name of currently executing project
+    /** Property which holds the name of currently executing project */
     String PROJECT = "myrmidon.project.name";
 
     // the name of currently executing project
@@ -30,7 +31,7 @@ public interface Project
     //String TARGET           = "myrmidon.target.name";
 
     /**
-     * Returns the project name.
+     * @return the project name.
      *
      * TODO: Determine if projects should carry their own name. Breaks IOC but
      * Can be useful as project files embed own name (or should that be description).

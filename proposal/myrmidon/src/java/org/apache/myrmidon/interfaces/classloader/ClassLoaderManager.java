@@ -16,10 +16,14 @@ import java.io.File;
  */
 public interface ClassLoaderManager
 {
+    /** Role name for this interface. */
     String ROLE = ClassLoaderManager.class.getName();
 
     /**
      * Builds the ClassLoader for a Jar file, resolving dependencies.
+     * @param jar the jar file containing the classes to load
+     * @return the created classloader
+     * @throws ClassLoaderException on error
      */
     ClassLoader createClassLoader( File jar ) throws ClassLoaderException;
 
@@ -28,12 +32,15 @@ public interface ClassLoaderManager
      *
      * @param jars The Jar/zip files to create the classloader for.  Use null
      *             or an empty array to use the common classloader.
+     * @return the created ClassLoader
+     * @throws ClassLoaderException on error
      */
     ClassLoader createClassLoader( File[] jars ) throws ClassLoaderException;
 
     /**
-     * Returns the common ClassLoader.  This is the parent of all classloaders
+     * Provides the common ClassLoader, which is the parent of all classloaders
      * built by this ClassLoaderManager.
+     * @return the common ClassLoader
      */
     ClassLoader getCommonClassLoader();
 }

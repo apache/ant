@@ -154,7 +154,8 @@ public class ClassicConfigurer
 
                 if( DEBUG )
                 {
-                    final String message = REZ.getString( "configure-attribute.notice", name, value );
+                    final String message = REZ.getString( "configure-attribute.notice",
+                                                          name, value );
                     getLogger().debug( message );
                 }
 

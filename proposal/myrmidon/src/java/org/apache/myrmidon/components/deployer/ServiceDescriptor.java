@@ -28,7 +28,8 @@ class ServiceDescriptor
 
     public ServiceDefinition[] getDefinitions()
     {
-        return (ServiceDefinition[])m_services.toArray( new ServiceDefinition[ m_services.size() ] );
+        return (ServiceDefinition[])m_services.toArray
+            ( new ServiceDefinition[ m_services.size() ] );
     }
 
     public void addDefinition( final ServiceDefinition definition )

@@ -27,11 +27,21 @@ public class TypeLib
     //The name of type instance
     private final String m_name;
 
+    /**
+     * Create a import for a complete library.
+     * @param library The name of the library to import.
+     */
     public TypeLib( final String library )
     {
         this( library, null, null );
     }
 
+    /**
+     * Create an import for a single type from a library.
+     * @param library The library containing the type.
+     * @param role The role for the imported type.
+     * @param name The name of the imported type.
+     */
     public TypeLib( final String library, final String role, final String name )
     {
         m_library = library;

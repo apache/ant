@@ -15,6 +15,7 @@ package org.apache.myrmidon.interfaces.converter;
  */
 public interface ConverterRegistry
 {
+    /** Role name for this interface. */
     String ROLE = ConverterRegistry.class.getName();
 
     /**

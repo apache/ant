@@ -20,6 +20,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  */
 public interface Embeddor
 {
+    /** Role name for this interface. */
     String ROLE = Embeddor.class.getName();
 
     /**
@@ -30,6 +31,8 @@ public interface Embeddor
      *             project file name.
      * @param parameters The project builder parameters.
      * @return the created Project
+     * @throws Exception If an error occurs creating the Project.
+     *
      * @todo Should location be a URL or will it automatically assume file
      *       unless there is a protocol section like ftp:, file: etc
      * @todo parameters needs more thought put into it.
@@ -42,6 +45,7 @@ public interface Embeddor
      *
      * @param name The shorthand name of the listener.
      * @return the listener.
+     * @throws Exception If the listener could not be created.
      */
     ProjectListener createListener( String name )
         throws Exception;
@@ -51,6 +55,7 @@ public interface Embeddor
      *
      * @param parameters The properties to define in the workspace
      * @return the Workspace
+     * @throws Exception If the workspace could not be created.
      */
     Workspace createWorkspace( Parameters parameters )
         throws Exception;

@@ -104,7 +104,8 @@ public class DefaultConfigurer
         catch( final Exception e )
         {
             // Wrap all other errors with general purpose error message
-            final String message = REZ.getString( "bad-configure-element.error", configuration.getName() );
+            final String message = REZ.getString( "bad-configure-element.error",
+                                                  configuration.getName() );
             throw new ConfigurationException( message, e );
         }
     }
@@ -426,7 +427,8 @@ public class DefaultConfigurer
         else
         {
             // Set the value
-            PropertyConfigurer propConfigurer = getConfigurerFromName( state.getConfigurer(), name, false, false );
+            PropertyConfigurer propConfigurer =
+                getConfigurerFromName( state.getConfigurer(), name, false, false );
             setValue( propConfigurer, state, value, context );
         }
     }
@@ -558,7 +560,8 @@ public class DefaultConfigurer
                 else
                 {
                     // Check the role name
-                    final RoleInfo roleInfo = m_roleManager.getRoleByType( propertyConfigurer.getType() );
+                    final RoleInfo roleInfo =
+                        m_roleManager.getRoleByType( propertyConfigurer.getType() );
                     if( roleInfo != null && name.equalsIgnoreCase( roleInfo.getShorthand() ) )
                     {
                         return propertyConfigurer;

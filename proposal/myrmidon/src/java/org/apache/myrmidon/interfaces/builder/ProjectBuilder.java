@@ -18,6 +18,7 @@ import org.apache.myrmidon.interfaces.model.Project;
  */
 public interface ProjectBuilder
 {
+    /** Role name for this interface. */
     String ROLE = ProjectBuilder.class.getName();
 
     /**

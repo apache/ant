@@ -651,6 +651,8 @@ Legal:
 
     <target name="checkstyle" description="Checkstyle">
 
+        <property name="checkstyle.dir" value="${java.dir}"/>
+
         <!-- this invocation of checkstyle requires that checkstyle be downloaded and setup -->
         <!-- thats why you are required to define do.checkstyle property to generate the report -->
         <taskdef name="checkstyle"
@@ -678,7 +680,7 @@ Legal:
             cacheFile="checkstyle.cache"
             failOnViolation="false"
             ignoreCastWhitespace="true">
-            <fileset dir="${java.dir}">
+            <fileset dir="${checkstyle.dir}">
                 <include name="**/*.java"/>
             </fileset>
             <formatter type="plain"/>
@@ -738,6 +740,18 @@ Legal:
             excludes="stylesheets/**"
             velocitypropertiesfile="src/xdocs/velocity.properties"
             />
+    </target>
+
+    <target name="javadoc" description="Generates the API docs.">
+        <property name="build.apidocs" value="${build.dir}/apidocs"/>
+        <mkdir dir="${build.apidocs}"/>
+
+        <javadoc destdir="${build.apidocs}" packagenames="org.apache.*">
+            <sourcepath>
+                <pathelement location="${java.dir}"/>
+            </sourcepath>
+            <classpath refid="project.class.path"/>
+        </javadoc>
     </target>
 
     <!-- Creates the distribution -->

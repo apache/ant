@@ -18,5 +18,6 @@ import org.apache.avalon.excalibur.extension.PackageRepository;
 public interface ExtensionManager
     extends PackageRepository
 {
+    /** Role name for this interface. */
     String ROLE = ExtensionManager.class.getName();
 }
