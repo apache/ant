@@ -766,115 +766,120 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
     </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-trax"/>
-      <param name="selectorid" value="needs.trax"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-trax.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.trax"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-xalan1"/>
-      <param name="selectorid" value="needs.xalan1"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-xalan1.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.xalan1"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-xalan2"/>
-      <param name="selectorid" value="needs.xalan2"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-xalan2.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.xalan2"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-xslp"/>
-      <param name="selectorid" value="needs.xslp"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-xslp.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.xslp"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-junit"/>
-      <param name="selectorid" value="needs.junit"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-junit.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.junit"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-jakarta-regexp"/>
-      <param name="selectorid" value="needs.jakarta.regexp"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-jakarta-regexp.jar" 
+         basedir="${build.classes}" manifest="${manifest.tmp}">
+      <selector refid="needs.jakarta.regexp"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-oro"/>
-      <param name="selectorid" value="needs.jakarta.oro"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-oro.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jakarta.oro"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-bcel"/>
-      <param name="selectorid" value="needs.jakarta.bcel"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-bcel.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jakarta.bcel"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-log4j"/>
-      <param name="selectorid" value="needs.jakarta.log4j"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-log4j.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jakarta.log4j"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-commons-log"/>
-      <param name="selectorid" value="needs.commons.logging"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-commons-logging.jar" 
+         basedir="${build.classes}" manifest="${manifest.tmp}">
+      <selector refid="needs.commons.logging"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-bsf"/>
-      <param name="selectorid" value="needs.bsf"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-bsf.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.bsf"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-stylebook"/>
-      <param name="selectorid" value="needs.stylebook"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-stylebook.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.stylebook"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-icontract"/>
-      <param name="selectorid" value="needs.icontract"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-javamail.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.javamail"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-netrexx"/>
-      <param name="selectorid" value="needs.netrexx"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-icontract.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.icontract"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-netcomp"/>
-      <param name="selectorid" value="needs.netcomponents"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-netrexx.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.netrexx"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-starteam"/>
-      <param name="selectorid" value="needs.starteam"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-netcomp.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.netcomponents"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-vaj"/>
-      <param name="selectorid" value="needs.vaj"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-starteam.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.starteam"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-antlr"/>
-      <param name="selectorid" value="needs.antlr"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-vaj.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.vaj"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-jmf"/>
-      <param name="selectorid" value="needs.jmf"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-antlr.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.antlr"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-jai"/>
-      <param name="selectorid" value="needs.jai"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-jmf.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jmf"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-jdepend"/>
-      <param name="selectorid" value="needs.jdepend"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-jai.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jai"/>
+    </jar>
 
-    <antcall target="makejar" inheritall="false">
-      <param name="jarname" value="needs-swing"/>
-      <param name="selectorid" value="needs.swing"/>
-    </antcall>
+    <jar destfile="${build.lib}/needs-swing.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.swing"/>
+    </jar>
+
+    <jar destfile="${build.lib}/needs-jdepend.jar" basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jdepend"/>
+    </jar>
 
     <jar destfile="${build.lib}/needs-weblogic.jar"
          basedir="${build.classes}"
@@ -884,16 +889,6 @@
         <selector refid="needs.weblogic.ddcreator" />
         <selector refid="needs.weblogic.server"/>
       </or>
-    </jar>
-  </target>
-
-  <!-- creates a jar that only contains the classes that depend on a
-       common external library -->
-  <target name="makejar">
-    <jar destfile="${build.lib}/${jarname}.jar"
-         basedir="${build.classes}"
-         manifest="${manifest.tmp}">
-      <selector refid="${selectorid}"/>
     </jar>
   </target>
 
