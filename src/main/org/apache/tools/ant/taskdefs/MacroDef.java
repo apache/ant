@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.HashMap;
 
 import org.apache.tools.ant.AntTypeDefinition;
@@ -293,7 +294,7 @@ public class MacroDef extends AntlibDefinition  {
                 throw new BuildException(
                     "Illegal name [" + name + "] for attribute");
             }
-            this.name = name;
+            this.name = name.toLowerCase(Locale.US);
         }
 
         /**

@@ -75,4 +75,15 @@
     <property name="property" value="A property value"/>
     <double prop="property"/>
   </target>
+
+  <target name="ignorecase">
+    <macrodef name="ignore">
+      <attribute name="MyAttribute"/>
+      <sequential>
+        <echo>@{myattribute} is @{MYATTRIBUTE}</echo>
+      </sequential>
+    </macrodef>
+    <ignore myattribute="a"/>
+    <ignore Myattribute="b"/>
+  </target>
 </project>
