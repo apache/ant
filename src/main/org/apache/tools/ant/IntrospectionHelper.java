@@ -322,7 +322,11 @@ public class IntrospectionHelper implements BuildListener {
             throw new BuildException(msg);
         }
         try {
-            return nc.create(element);
+            Object nestedElement = nc.create(element);
+            if (nestedElement instanceof ProjectComponent) {
+                ((ProjectComponent)nestedElement).setProject(project);
+            }
+            return nestedElement;
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
@@ -565,7 +569,11 @@ public class IntrospectionHelper implements BuildListener {
                                         String value) 
                             throws InvocationTargetException, IllegalAccessException, BuildException {
                             try {
-                                m.invoke(parent, new Object[] {c.newInstance(new String[] {value})});
+                                Object attribute = c.newInstance(new String[] {value});
+                                if (attribute instanceof ProjectComponent) {
+                                    ((ProjectComponent)attribute).setProject(p);
+                                }
+                                m.invoke(parent, new Object[] {attribute});
                             } catch (InstantiationException ie) {
                                 throw new BuildException(ie);
                             }

@@ -60,9 +60,8 @@ package org.apache.tools.ant;
  * <p>Use {@link Project#createTask Project.createTask} to create a new Task.
  */
 
-public abstract class Task {
+public abstract class Task extends ProjectComponent {
 
-    protected Project project = null;
     protected Target target = null;
     protected String description=null;
     protected Location location = Location.UNKNOWN_LOCATION;
@@ -70,27 +69,6 @@ public abstract class Task {
     protected String taskType = null;
     protected RuntimeConfigurable wrapper;
 
-    /**
-     * Sets the project object of this task. This method is used by
-     * project when a task is added to it so that the task has
-     * access to the functions of the project. It should not be used
-     * for any other purpose.
-     *
-     * @param project Project in whose scope this task belongs.
-     */
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    /**
-     * Get the Project to which this task belongs
-     *
-     * @return the task's project.
-     */
-    public Project getProject() {
-        return project;
-    }
-    
     /**
      * Sets the target object of this task.
      *
@@ -135,26 +113,6 @@ public abstract class Task {
     void setTaskType(String type) {
         this.taskType = type;
     }
-
-    /**
-     * Log a message with the default (INFO) priority.
-     *
-     * @param the message to be logged.
-     */
-    public void log(String msg) {
-        log(msg, Project.MSG_INFO);
-    }
-
-    /**
-     * Log a mesage with the give priority.
-     *
-     * @param the message to be logged.
-     * @param msgLevel the message priority at which this message is to be logged.
-     */
-    public void log(String msg, int msgLevel) {
-        project.log(this, msg, msgLevel);
-    }
-
 
     /** Sets a description of the current action. It will be usefull in commenting
      *  what we are doing.

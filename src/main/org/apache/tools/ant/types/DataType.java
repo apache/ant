@@ -58,6 +58,7 @@ package org.apache.tools.ant.types;
 import java.util.Stack;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 
 /**
  * Base class for those classes that can appear inside the build file
@@ -71,7 +72,7 @@ import org.apache.tools.ant.Project;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public abstract class DataType {
+public abstract class DataType extends ProjectComponent {
     /**
      * The descriptin the user has set.
      */
@@ -159,6 +160,26 @@ public abstract class DataType {
             }
         }
         checked = true;
+    }
+
+    /**
+     * Performs the check for circular references and returns the
+     * referenced object.  
+     */
+    protected Object getCheckedRef(Class requiredClass, String dataTypeName) {
+        if (!checked) {
+            Stack stk = new Stack();
+            stk.push(this);
+            dieOnCircularReference(stk, getProject());
+        }
+        
+        Object o = ref.getReferencedObject(getProject());
+        if (!(requiredClass.isAssignableFrom(o.getClass()))) {
+            String msg = ref.getRefId()+" doesn\'t denote a " + dataTypeName;
+            throw new BuildException(msg);
+        } else {
+            return o;
+        }
     }
 
     /**
