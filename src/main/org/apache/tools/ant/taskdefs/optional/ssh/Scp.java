@@ -176,7 +176,7 @@ public class Scp extends SSHBase {
                     upload(fromUri, toUri);
                 }
             } else if (isFromRemote && isToRemote) {
-                // not implemented yet.
+                throw new BuildException("Copying from a remote server to a remote server is not supported.");
             } else {
                 throw new BuildException("'todir' and 'file' attributes "
                     + "must have syntax like the following: "
