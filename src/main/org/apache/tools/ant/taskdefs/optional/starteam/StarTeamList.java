@@ -79,7 +79,9 @@ import org.apache.tools.ant.BuildException;
 
 public class StarTeamList extends TreeBasedTask {
     /**
-     * Sets the label StarTeam is to be listed.
+     * List files, dates, and statuses as of this label; optional.
+     * The label must exist in starteam or an exception will be thrown.  
+     * If not specified, the most recent version of each file will be listed.
      *
      * @param label the label to be listed
      */
