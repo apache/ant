@@ -83,6 +83,7 @@ import java.util.*;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Patrick Chanezon <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
+ * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  */
 
 public class Javadoc extends Exec {
