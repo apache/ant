@@ -87,15 +87,6 @@ case "`uname`" in
 esac
 
 if [ -z "$ANT_HOME" -o ! -d "$ANT_HOME" ] ; then
-  # try to find ANT
-  if [ -d /opt/ant ] ; then
-    ANT_HOME=/opt/ant
-  fi
-
-  if [ -d "${HOME}/opt/ant" ] ; then
-    ANT_HOME="${HOME}/opt/ant"
-  fi
-
   ## resolve links - $0 may be a link to ant's home
   PRG="$0"
   progname=`basename "$0"`
