@@ -110,6 +110,9 @@ Fixed bugs:
 * <zip whenempty="skip"> didn't work in a common situation.  Bugzilla
   Report 22865.
 
+* <scp> now properly handles remote files and directories with spaces
+  in their names.  Bugzilla Report 26097.
+
 Other changes:
 --------------
 * doc fix concerning the dependencies of the ftp task
