@@ -949,6 +949,31 @@
         </table>
       </subsection>
 
+      <subsection name="Jegustator">
+
+        <p>Jegustator is an Ant task which preforms source code and
+        bytecode reviews and also documents source and bytecode.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with Ant 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jegustator.pavelvlasov.com/">http://jegustator.pavelvlasov.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jegustator@pavelvlasov.com">jegustator@pavelvlasov.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="JFlex">
 
         <p>JFlex is a lexical analyzer generator (also known as
