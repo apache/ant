@@ -185,9 +185,13 @@ public class XmlLogger implements BuildListener {
             buildElement.element.appendChild(stacktrace);
         }
 
-       String outFilename = event.getProject().getProperty("XmlLogger.file");
+        String outFilename = event.getProject().getProperty("XmlLogger.file");
         if (outFilename == null) {
             outFilename = "log.xml";
+        }
+        String xslUri=event.getProject().getProperty("ant.XmlLogger.stylesheet.uri");
+        if(xslUri==null) {
+            xslUri="log.xsl";
         }
         Writer out = null;
         try {
@@ -196,7 +200,9 @@ public class XmlLogger implements BuildListener {
             FileOutputStream fos = new FileOutputStream(outFilename);
             out = new OutputStreamWriter(fos, "UTF8");
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-            out.write("<?xml-stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
+            if(xslUri.length()>0) {
+                out.write("<?xml-stylesheet type=\"text/xsl\" href=\""+xslUri+"\"?>\n\n");
+            }
             (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
         } catch(IOException exc) {

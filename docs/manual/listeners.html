@@ -269,7 +269,20 @@ corresponding Log4j level.</p>
 <h3><a name="XmlLogger">XmlLogger</a></h3>
 
 <p>Writes all build information out to an XML file named log.xml, or the value
-of the XmlLogger.file property if present.</p>
+of the <code>XmlLogger.file</code> property if present. 
+<p>
+By default the xml file creates 
+a reference to an xslt file "log.xsl" in the current directory; look in 
+ANT_HOME/etc for one of these. You can set the property 
+<code>ant.XmlLogger.stylesheet.uri</code> to provide a uri to a style sheet.
+this can be a relative or absolute file path, or an http URL. 
+If you set the property to the empty string, "", no XSLT transform
+is declared at all. 
+
+ 
+
+
+</p>
 
 <blockquote>
 
