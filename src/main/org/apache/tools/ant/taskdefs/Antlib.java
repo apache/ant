@@ -183,6 +183,10 @@ public class Antlib extends Task implements TaskContainer {
             if (t == null) {
                 continue;
             }
+            if (!(t instanceof AntlibInterface)) {
+                throw new BuildException(
+                    "Invalid element in antlib " + ue.getTag());
+            }
             if (t instanceof AntlibInterface) {
                 AntlibInterface d = (AntlibInterface) t;
                 d.setURI(uri);
