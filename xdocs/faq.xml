@@ -594,6 +594,25 @@ shell-prompt> cat < foo
 ]]></source>
       </answer>
     </faq>
+
+    <faq id="properties-not-trimmed">
+      <question><code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.</question>
+
+      <answer>
+
+        <p>When <code>ant</code> loads properties from an external
+        file it dosn't touch the value of properties, trailing blanks
+        will not be trimmed for example.</p>
+
+        <p>If the value represents a file path, like a jar needed to
+        compile, the task which requires the value, javac for example
+        would fail to compile since it can't find the file due to
+        trailing spaces.</p>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">

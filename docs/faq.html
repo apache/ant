@@ -226,6 +226,12 @@
   How can I include national characters like German
         umlauts in my build file?
   </a></li>
+                    <li><a href="#properties-not-trimmed">
+  <code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -1326,6 +1332,31 @@ shell-prompt&gt; cat &lt; foo
       </tr>
     </table>
   </div>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="properties-not-trimmed">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          <code>ant</code> failed to build my program via javac
+      even when I put the needed jars in an external
+      <code>build.properties</code> file and reference them by
+      <code>pathelement</code> or <code>classpath refid</code>.
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>When <code>ant</code> loads properties from an external
+        file it dosn't touch the value of properties, trailing blanks
+        will not be trimmed for example.</p>
+                                        <p>If the value represents a file path, like a jar needed to
+        compile, the task which requires the value, javac for example
+        would fail to compile since it can't find the file due to
+        trailing spaces.</p>
                         </blockquote>
     </td></tr>
   </table>
