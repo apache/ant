@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,6 +44,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     public static final String RMI_SKEL_SUFFIX = "_Skel";
     /** suffix denoting a tie file */
     public static final String RMI_TIE_SUFFIX = "_Tie";
+    public static final String STUB_COMPAT = "-vcompat";
+    public static final String STUB_1_1 = "-v1.1";
+    public static final String STUB_1_2 = "-v1.2";
 
     /**
      * Default constructor
@@ -186,16 +189,24 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 
+        //handle the many different stub options.
         String stubVersion = attributes.getStubVersion();
+        //default is compatibility
+        String stubOption=STUB_COMPAT;
         if (null != stubVersion) {
             if ("1.1".equals(stubVersion)) {
-                cmd.createArgument().setValue("-v1.1");
+                stubOption = STUB_1_1;
             } else if ("1.2".equals(stubVersion)) {
-                cmd.createArgument().setValue("-v1.2");
+                stubOption = STUB_1_2;
+            } else if ("compat".equals(stubVersion)) {
+                stubOption = STUB_COMPAT;
             } else {
-                cmd.createArgument().setValue("-vcompat");
+                //anything else
+                attributes.log("Unknown stub option "+stubVersion);
+                //do nothing with the value? or go -v+stubVersion??
             }
         }
+        cmd.createArgument().setValue(stubOption);
 
         if (null != attributes.getSourceBase()) {
             cmd.createArgument().setValue("-keepgenerated");

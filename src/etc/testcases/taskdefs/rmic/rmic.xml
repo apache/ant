@@ -37,23 +37,68 @@
     <macrodef name="assertFileCreated">
       <attribute name="file" />
       <sequential>
-        <property name="file.to.find" location="${build.dir}/@{file}" />
-        <available property="file.found" file="${file.to.find}"/>
-        <fail unless="file.found">Not found : ${file.to.find}</fail>
+        <fail>Not found : ${build.dir}/@{file}
+          <condition>
+            <not><available file="${build.dir}/@{file}"/></not>
+          </condition>
+        </fail>
       </sequential>
     </macrodef>
 
-    <macrodef name="assertBaseCompiled">
+    <macrodef name="assertFileAbsent">
+      <attribute name="file" />
+      <sequential>
+        <fail>Expected to be missing : ${build.dir}/@{file}
+          <condition>
+            <available file="${build.dir}/@{file}"/>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+
+    
+    <macrodef name="assertStubCompiled">
       <sequential>
         <assertFileCreated file="RemoteTimestampImpl_Stub.class"  />
-        <assertFileCreated file="RemoteTimestampImpl_Skel.class"/>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertSkelCompiled">
+      <sequential>
+        <assertFileCreated file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertSkelAbsent">
+      <sequential>
+        <assertFileAbsent file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertBaseCompiled">
+      <sequential>
+        <assertStubCompiled />
+        <assertSkelCompiled />
+      </sequential>
+    </macrodef>
+
+    
+    <macrodef name="assertAntStubCompiled">
+      <sequential>
+        <assertFileCreated file="AntTimestamp_Stub.class"/>
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertAntSkelCompiled">
+      <sequential>
+        <assertFileCreated file="AntTimestamp_Skel.class"/>
       </sequential>
     </macrodef>
 
     <macrodef name="assertAntCompiled">
       <sequential>
-        <assertFileCreated file="AntTimestamp_Stub.class"/>
-        <assertFileCreated file="AntTimestamp_Skel.class"/>
+        <assertAntStubCompiled />
+        <assertAntSkelCompiled />
       </sequential>
     </macrodef>
 
@@ -75,6 +120,22 @@
     <assertBaseCompiled/>
   </target>
 
+  <target name="testVersion11" depends="init">
+    <base-rmic compiler="default" stubversion="1.1" />
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testVersion12" depends="init">
+    <base-rmic compiler="default" stubversion="1.2" />
+    <assertStubCompiled/>
+    <assertSkelAbsent/>
+  </target>
+  
+  <target name="testVersionCompat" depends="init">
+    <base-rmic compiler="default" stubversion="compat" />
+    <assertBaseCompiled/>
+  </target>
+  
   <target name="testRmic" if="rmic.present" depends="init">
     <base-rmic compiler="sun"/>
     <assertBaseCompiled/>

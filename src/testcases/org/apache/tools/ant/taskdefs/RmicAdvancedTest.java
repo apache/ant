@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright  2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class RmicAdvancedTest extends BuildFileTest {
     /**
      * test the forking compiler
      */
-    public void NotestForkingAntClasspath() throws Exception {
+    public void testForkingAntClasspath() throws Exception {
         executeTarget("testForkingAntClasspath");
     }
 
@@ -154,7 +154,7 @@ public class RmicAdvancedTest extends BuildFileTest {
 
 
     /**
-     * test the forking compiler
+     *
      */
     public void testMagicPropertyIsEmptyString() throws Exception {
         executeTarget("testMagicPropertyIsEmptyString");
@@ -167,6 +167,32 @@ public class RmicAdvancedTest extends BuildFileTest {
                 Rmic.ERROR_RMIC_FAILED);
     }
 
+
+    /**
+     * test that version 1.1 stubs are good
+     * @throws Exception
+     */
+    public void testVersion11() throws Exception {
+        executeTarget("testVersion11");
+    }
+
+    /**
+     * test that version 1.2 stubs are good
+     *
+     * @throws Exception
+     */
+    public void testVersion12() throws Exception {
+        executeTarget("testVersion12");
+    }
+
+    /**
+     * test that version compat stubs are good
+     *
+     * @throws Exception
+     */
+    public void testVersionCompat() throws Exception {
+        executeTarget("testVersionCompat");
+    }
 
     /**
      * this little bunny verifies that we can load stuff, and that
