@@ -367,3 +367,9 @@ V. Things we probably don't agree on.
 
 * Make all datatypes interfaces to allow them to be customized in many
   ways.
+
+* Allow tasks to find out, whether another task has completed successfully.
+
+* Make if/unless attributes to check for the value of a property, not
+  only its existance.
+
