@@ -13,6 +13,22 @@ Fixed bugs:
 * Ant could fail to start with a NullPointerException if
   ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
 
+* Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
+  Bugzilla Report 23154.
+
+* Fix handling of default ant namespace for nested elements.
+
+* Ant could fail to start with a NullPointerException if
+  ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
+
+* presetdef'ed types did not work with the ant-type attribute
+
+Other changes:
+--------------
+
+* <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
+
+
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================
 
