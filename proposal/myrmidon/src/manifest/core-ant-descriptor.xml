@@ -13,35 +13,35 @@
     <task name="property" classname="org.apache.ant.modules.basic.Property" />
     <task name="ant-call" classname="org.apache.ant.modules.basic.AntCall" />
 
-    <task name="pattern" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
-    <data-type name="pattern" classname="org.apache.ant.modules.basic.Pattern" />
-
   </types>
   
   <converters>
 
-    <converter classname="org.apache.ant.modules.basic.StringToLongConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToFileConverter" 
+               source="java.lang.String" 
+               destination="java.io.File" />
+    <converter classname="org.apache.myrmidon.libs.core.StringToLongConverter" 
                source="java.lang.String" 
                destination="java.lang.Long" />
-    <converter classname="org.apache.ant.modules.basic.StringToIntegerConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToIntegerConverter" 
                source="java.lang.String" 
                destination="java.lang.Integer" />
-    <converter classname="org.apache.ant.modules.basic.StringToShortConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToShortConverter" 
                source="java.lang.String" 
                destination="java.lang.Short" />
-    <converter classname="org.apache.ant.modules.basic.StringToByteConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToByteConverter" 
                source="java.lang.String" 
                destination="java.lang.Byte" />
-    <converter classname="org.apache.ant.modules.basic.StringToDoubleConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToDoubleConverter" 
                source="java.lang.String" 
                destination="java.lang.Double" />
-    <converter classname="org.apache.ant.modules.basic.StringToFloatConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToFloatConverter" 
                source="java.lang.String" 
                destination="java.lang.Float" />
-    <converter classname="org.apache.ant.modules.basic.StringToClassConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToClassConverter" 
                source="java.lang.String" 
                destination="java.lang.Class" />
-    <converter classname="org.apache.ant.modules.basic.StringToURLConverter" 
+    <converter classname="org.apache.myrmidon.libs.core.StringToURLConverter" 
                source="java.lang.String" 
                destination="java.net.URL" />
 
