@@ -80,6 +80,7 @@
       <exclude name="**/WLRun.java" unless="ejb.wls.present" />
       <exclude name="**/WLStop.java" unless="ejb.wls.present" />
       <exclude name="**/EjbJar.java" unless="ejb.build" />
+      <exclude name="**/junit/*" unless="junit.present" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
@@ -266,6 +267,22 @@
   <!-- Run testcase                                                        -->
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
+<!--
+    This would make the buildprocess fail if using an Ant version
+    without the junit task
+
+    <junit defaultprintxml="false" defaultprintsummary="true" fork="on">
+      <classpath>
+        <pathelement location="${lib.dir}/${name}.jar" />
+        <pathelement location="${build.tests}" />
+        <pathelement path="${classpath}" />
+        <pathelement path="${java.class.path}" />
+      </classpath>
+
+      <test name="org.apache.tools.ant.AllJUnitTests" />
+    </junit>
+-->
+
     <java fork="yes"
           classname="junit.textui.TestRunner"
           args="org.apache.tools.ant.AllJUnitTests"
