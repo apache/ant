@@ -100,10 +100,6 @@ Other changes:
 
 * Added clone task. Bugzilla report 32631.
 
-* Add else attribute to the condition task, which specifies an
-  optional alternate value to set the property to if the nested
-  condition evaluates to false. Bugzilla report 33074.
-  
 * Added <scriptcondition> condition, for inline scripted conditions
 
 * Added <xor> condition for exclusive-or combining of nested conditions.
@@ -254,6 +250,10 @@ Other changes:
 * Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
   variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
 
+* Add else attribute to the condition task, which specifies an
+  optional alternate value to set the property to if the nested
+  condition evaluates to false. Bugzilla report 33074.
+  
 Fixed bugs:
 -----------
 
