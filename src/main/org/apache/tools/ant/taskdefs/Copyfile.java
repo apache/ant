@@ -72,16 +72,16 @@ public class Copyfile extends Task {
     private boolean filtering = false;
     private boolean forceOverwrite = false;
  
-    public void setSrc(String src) {
-        srcFile = project.resolveFile(src);
+    public void setSrc(File src) {
+        srcFile = src;
     }
 
     public void setForceoverwrite(String force) {
         forceOverwrite = Project.toBoolean(force);
     }
 
-    public void setDest(String dest) {
-        destFile = project.resolveFile(dest);
+    public void setDest(File dest) {
+        destFile = dest;
     }
 
     public void setFiltering(String filter) {
@@ -89,6 +89,19 @@ public class Copyfile extends Task {
     }
 
     public void execute() throws BuildException {
+        if (srcFile == null) {
+            throw new BuildException("The src attribute must be present.", location);
+        }
+        
+        if (!srcFile.exists()) {
+            throw new BuildException("src " + srcFile.toString()
+                                     + " does not exist.", location);
+        }
+
+        if (destFile == null) {
+            throw new BuildException("The dest attribute must be present.", location);
+        }
+        
         if (forceOverwrite || srcFile.lastModified() > destFile.lastModified()) {
             try {
                 project.copyFile(srcFile, destFile, filtering, forceOverwrite);

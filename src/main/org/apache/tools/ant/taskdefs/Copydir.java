@@ -74,12 +74,12 @@ public class Copydir extends MatchingTask {
     private boolean forceOverwrite = false;
     private Hashtable filecopyList = new Hashtable();
 
-    public void setSrc(String src) {
-        srcDir = project.resolveFile(src);
+    public void setSrc(File src) {
+        srcDir = src;
     }
 
-    public void setDest(String dest) {
-        destDir = project.resolveFile(dest);
+    public void setDest(File dest) {
+        destDir = dest;
     }
 
     public void setFiltering(String filter) {
@@ -103,6 +103,10 @@ public class Copydir extends MatchingTask {
         if (!srcDir.exists()) {
             throw new BuildException("srcdir "+srcDir.toString()
                                      +" does not exist!", location);
+        }
+
+        if (destDir == null) {
+            throw new BuildException("The dest attribute must be set.", location);
         }
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
