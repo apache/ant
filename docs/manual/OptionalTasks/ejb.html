@@ -847,6 +847,12 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
     <td valign="top"><b>Deprecated</b> This is an antonym for newCMP which should be used instead.</td>
     <td valign="top" align="center">No.</td>
   </tr>
+  <tr>
+    <td valign="top">noEJBC</td>
+    <td valign="top">If this attribute is set to true, Weblogic's ejbc will not be run on the EJB jar.
+                     Use this if you prefer to run ejbc at deployment time.</td>
+    <td valign="top" align="center">No.</td>
+  </tr>
 </table>
 
 <p>The weblogic nested element itself supports two nested elements &lt;classpath&gt; and 

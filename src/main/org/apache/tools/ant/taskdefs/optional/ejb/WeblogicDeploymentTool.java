@@ -119,6 +119,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     private boolean alwaysRebuild = true;
 
+    /** controls whether ejbc is run on the generated jar */
+    private boolean noEJBC = false;
+    
     /**
      * Indicates if the old CMP location convention is to be used.
      */
@@ -254,7 +257,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     public void setNewCMP(boolean newCMP) {
         this.newCMP = newCMP;
     }
-    
+
+    /**
+     * Do not EJBC the jar after it has been put together.
+     *
+     */
+    public void setNoEJBC(boolean noEJBC) {
+        this.noEJBC = noEJBC;
+    }
+   
     protected void registerKnownDTDs(DescriptorHandler handler) {
         // register all the known DTDs
         handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL51_EJB11_DTD_LOCATION);
@@ -372,7 +383,20 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      */
     private void buildWeblogicJar(File sourceJar, File destJar, String publicId) {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
-        
+
+        if (noEJBC) {
+            try {
+                getTask().getProject().copyFile(sourceJar, destJar);
+                if (!keepgenerated) {
+                    sourceJar.delete();
+                }
+                return;
+            }
+            catch (IOException e) {
+                throw new BuildException("Unable to write EJB jar", e);
+            }
+        }
+
         String ejbcClassName = ejbcClass;
         
         try {
