@@ -12,13 +12,15 @@
         <!-- TaskAdapter tasks -->
         <task name="ant1.condition"
             classname="org.apache.tools.ant.Ant1CompatTaskAdapter" />
+            
+        <!-- Tasks specialised for myrmidon -->
+        <task name="ant1.ant"
+              classname="org.apache.tools.ant.taskdefs.Ant" />
 
         <!-- Tasks not currently supported.
 
                 <task name="ant1.antcall"
                     classname="org.apache.tools.ant.taskdefs.CallTarget" />
-                <task name="ant1.ant"
-                    classname="org.apache.tools.ant.taskdefs.Ant" />
         -->
 
         <!-- standard ant tasks -->

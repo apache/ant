@@ -279,6 +279,32 @@ Legal:
         <ant/>
     </target>
 
+    <target name="antcall-test">
+        <log message="Testing antcall task..."/>
+        <ant-call target="if-test"/>
+
+        <log message="Using params..."/>
+        <ant-call target="prop-print">
+            <param name="meep.meep" value="Meep!"/>
+        </ant-call>
+
+        <log message="Using params value-ref..."/>
+        <pattern id="meep.data" name="*.java" if="..." />
+        <ant-call target="prop-print">
+            <param name="meep.meep" value-ref="meep.data"/>
+        </ant-call>
+
+        <log message="Using inheritall..."/>
+        <pattern id="meep.meep" name="*.java" if="..." />
+        <ant-call target="prop-print" inherit-all="true"/>
+
+        <log message="Calling referenced project, default target..."/>
+        <ant-call project="prim"/>
+
+        <log message="Calling referenced project, named target..."/>
+        <ant-call project="prim" target="extensions-test"/>
+    </target>
+
     <target name="prop-print">
         <log message="Give me a property ... ${meep.meep}"/>
     </target>

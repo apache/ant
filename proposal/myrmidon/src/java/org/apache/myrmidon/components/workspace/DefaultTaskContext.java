@@ -214,7 +214,15 @@ public class DefaultTaskContext
     {
         checkPropertyName( name );
         checkPropertyValid( name, value );
-        m_contextData.put( name, value );
+
+        if ( value == null )
+        {
+            m_contextData.remove( name );
+        }
+        else
+        {
+            m_contextData.put( name, value );
+        }
     }
 
     /**

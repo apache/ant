@@ -155,7 +155,7 @@ public class DefaultClassLoaderManager
     private URL[] buildClasspath( final ArrayList files )
         throws MalformedURLException
     {
-        final URL[] urls = new URL[ files.size() + 1 ];
+        final URL[] urls = new URL[ files.size() ];
         final int count = files.size();
         for( int i = 0; i < count; i++ )
         {
