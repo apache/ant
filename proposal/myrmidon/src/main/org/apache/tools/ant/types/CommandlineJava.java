@@ -7,13 +7,8 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
-import org.apache.myrmidon.framework.exec.Environment;
-import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -301,96 +296,6 @@ public class CommandlineJava implements Cloneable
         {
             return "java";
         }
-    }
-
-    /**
-     * Specialized EnvironmentData class for System properties
-     *
-     * @author RT
-     */
-    public static class SysProperties extends EnvironmentData implements Cloneable
-    {
-        Properties sys = null;
-
-        public void setSystem()
-            throws TaskException
-        {
-            try
-            {
-                Properties p = new Properties( sys = System.getProperties() );
-
-                for( Iterator e = m_variables.iterator(); e.hasNext(); )
-                {
-                    EnvironmentVariable v = (EnvironmentVariable)e.next();
-                    p.put( v.getKey(), v.getValue() );
-                }
-                System.setProperties( p );
-            }
-            catch( SecurityException e )
-            {
-                throw new TaskException( "Cannot modify system properties", e );
-            }
-        }
-
-        public String[] getJavaVariables()
-            throws TaskException
-        {
-            String props[] = new String[ 0 ];
-            try
-            {
-                props = Environment.toNativeFormat( super.getVariables() );
-            }
-            catch( final ExecException ee )
-            {
-                throw new TaskException( ee.getMessage(), ee );
-            }
-
-            if( props == null )
-                return null;
-
-            for( int i = 0; i < props.length; i++ )
-            {
-                props[ i ] = "-D" + props[ i ];
-            }
-            return props;
-        }
-
-        public Object clone()
-        {
-            try
-            {
-                SysProperties c = (SysProperties)super.clone();
-                c.m_variables.addAll( (ArrayList)m_variables.clone() );
-                return c;
-            }
-            catch( CloneNotSupportedException e )
-            {
-                return null;
-            }
-        }
-
-        public void restoreSystem()
-            throws TaskException
-        {
-            if( sys == null )
-                throw new TaskException( "Unbalanced nesting of SysProperties" );
-
-            try
-            {
-                System.setProperties( sys );
-                sys = null;
-            }
-            catch( SecurityException e )
-            {
-                throw new TaskException( "Cannot modify system properties", e );
-            }
-        }
-
-        public int size()
-        {
-            return m_variables.size();
-        }
-
     }
 
 }

@@ -28,6 +28,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.SysProperties;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -686,7 +687,7 @@ public class JUnitTask extends Task
             getLogger().warn( "dir attribute ignored if running in the same VM" );
         }
 
-        CommandlineJava.SysProperties sysProperties = commandline.getSystemProperties();
+        SysProperties sysProperties = commandline.getSystemProperties();
         if( sysProperties != null )
         {
             sysProperties.setSystem();

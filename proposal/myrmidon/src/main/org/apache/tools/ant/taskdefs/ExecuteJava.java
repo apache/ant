@@ -16,6 +16,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.SysProperties;
 
 /*
  * @author thomas.haas@softwired-inc.com
@@ -25,7 +26,7 @@ public class ExecuteJava
 {
     private Commandline m_javaCommand;
     private Path m_classpath;
-    private CommandlineJava.SysProperties m_sysProperties;
+    private SysProperties m_sysProperties;
 
     public void setClasspath( final Path classpath )
     {
@@ -37,7 +38,7 @@ public class ExecuteJava
         m_javaCommand = javaCommand;
     }
 
-    public void setSystemProperties( final CommandlineJava.SysProperties sysProperties )
+    public void setSystemProperties( final SysProperties sysProperties )
     {
         m_sysProperties = sysProperties;
     }
