@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Extension-List: bzip2
+bzip2-Extension-Name: excalibur-bzip2

@@ -37,9 +37,8 @@ Legal:
         <pathelement location="../../lib/optional/junit.jar" />
         <pathelement location="../xdocs/lib/xdoclet.jar" />
         <pathelement location="../xdocs/lib/log4j-core.jar" />
-        <fileset dir="${lib.dir}">
-            <include name="*.jar" />
-        </fileset>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="tools/lib" includes="**/*.jar"/>
         <pathelement path="${build.classes}" />
         <pathelement path="${build.custom-tasks}" />
     </path>

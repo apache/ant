@@ -71,16 +71,17 @@ Legal:
 
     <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
 
+    <path id="tools.class.path">
+        <fileset dir="tools/lib" includes="**/*.jar"/>
+        <fileset dir="../xdocs/lib" includes="*.jar" />
+    </path>
     <path id="project.class.path">
         <pathelement location="../../lib/optional/junit.jar" />
-        <pathelement location="../xdocs/lib/xdoclet.jar" />
-        <pathelement location="../xdocs/lib/log4j-core.jar" />
-        <fileset dir="${lib.dir}">
-            <include name="*.jar" />
-        </fileset>
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
         <pathelement location="${build.classes}"/>
         <!-- Need this to get tools.jar in the classpath -->
         <pathelement path="${java.class.path}"/>
+        <path refid="tools.class.path"/>
     </path>
 
     <!-- Main target -->
@@ -205,7 +206,7 @@ Legal:
         <property name="custom-package-dir" value="${build.custom-tasks}/org/apache/myrmidon/build"/>
         <mkdir dir="${build.custom-tasks}"/>
         <javac srcdir="src/make" destdir="${build.custom-tasks}">
-            <classpath refid="project.class.path"/>
+            <classpath refid="tools.class.path"/>
         </javac>
 
         <copy file="${manifest.dir}/ant-descriptor.j" todir="${custom-package-dir}"/>
@@ -220,7 +221,7 @@ Legal:
             classname="org.apache.myrmidon.build.AntlibDescriptorTask">
             <classpath>
                 <pathelement location="${build.custom-tasks}"/>
-                <path refid="project.class.path"/>
+                <path refid="tools.class.path"/>
             </classpath>
         </taskdef>
     </target>
@@ -558,6 +559,7 @@ Legal:
             <classpath>
               <pathelement location="${build.classes}"/>
               <path refid="project.class.path"/>
+              <path refid="tools.class.path"/>
             </classpath>
 
             <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
@@ -659,8 +661,9 @@ Legal:
 
         <!-- Prepare the project tests -->
         <antlib-descriptor libName="unittests"
-            destdir="${gen.dir}"
-            classpathref="project.class.path">
+            destdir="${gen.dir}">
+            <classpath refid="project.class.path"/>
+            <classpath refid="tools.class.path"/>
             <fileset dir="src/test">
                 <include name="org/apache/antlib/**"/>
                 <include name="org/apache/myrmidon/framework/**"/>
@@ -716,7 +719,7 @@ Legal:
         <!-- thats why you are required to define do.checkstyle property to generate the report -->
         <taskdef name="checkstyle"
             classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
-            <classpath refid="project.class.path"/>
+            <classpath refid="tools.class.path"/>
         </taskdef>
         <checkstyle
             lcurlyType="nl"
@@ -767,7 +770,7 @@ Legal:
 
         <!-- this invocation of jdepend requires the CVS version of ant for the xml format -->
         <jdepend outputfile="${build.dir}/jdepend-results.xml" format="xml" fork="yes">
-            <classpath refid="project.class.path"/>
+            <classpath refid="tools.class.path"/>
             <sourcespath>
                 <path refid="java.src" />
             </sourcespath>
@@ -824,24 +827,19 @@ Legal:
 
         <copy todir="${dist.bin}">
             <fileset dir="${build.bin}"/>
+            <fileset dir="${lib.dir}/bin"/>
         </copy>
 
         <copy todir="${dist.lib}">
             <fileset dir="${build.lib}"/>
+            <fileset dir="${lib.dir}" includes="*.jar, *.zip"/>
+            <fileset dir="../../lib/optional" includes="junit.jar" />
         </copy>
 
         <copy todir="${dist.ext}">
             <fileset dir="${build.ext}"/>
+            <fileset dir="${lib.dir}/ext"/>
         </copy>
-
-        <copy todir="${dist.lib}">
-            <fileset dir="${lib.dir}">
-                <exclude name="xdoclet.jar"/>
-                <exclude name="jdepend.jar"/>
-            </fileset>
-        </copy>
-
-        <copy todir="${dist.lib}" file="../../lib/optional/junit.jar" />
 
         <copy todir="${dist.bin}">
             <fileset dir="${script.dir}"/>
