@@ -96,6 +96,9 @@ Fixed bugs:
 
 * Using <macrodef> could break XmlLogger. Bugzilla Report 28993.
 
+* <genkey> no longer requires keytool to be in your PATH.  Bugzilla
+  Report 29382.
+
 Other changes:
 --------------
 * doc fix concerning the dependencies of the ftp task

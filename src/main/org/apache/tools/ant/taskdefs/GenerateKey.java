@@ -360,7 +360,7 @@ public class GenerateKey extends Task {
 
         log("Generating Key for " + alias);
         final ExecTask cmd = (ExecTask) getProject().createTask("exec");
-        cmd.setExecutable("keytool");
+        cmd.setExecutable(JavaEnvUtils.getJdkExecutable("keytool"));
         Commandline.Argument arg = cmd.createArg();
         arg.setLine(sb.toString());
         cmd.setFailonerror(true);
