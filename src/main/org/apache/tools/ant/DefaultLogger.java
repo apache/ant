@@ -62,35 +62,52 @@ import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
 
 /**
- *  Writes build event to a PrintStream. Currently, it
- *  only writes which targets are being executed, and
- *  any messages that get logged.
+ * Writes build events to a PrintStream. Currently, it
+ * only writes which targets are being executed, and
+ * any messages that get logged.
  */
 public class DefaultLogger implements BuildLogger {
+    /** 
+     * Size of left-hand column for right-justified task name.
+     * @see #messageLogged(BuildEvent)
+     */
     private static int LEFT_COLUMN_SIZE = 12;
 
+    /** PrintStream to write non-error messages to */
     protected PrintStream out;
+    /** PrintStream to write error messages to */
     protected PrintStream err;
+    /** Lowest level of message to write out */
     protected int msgOutputLevel = Project.MSG_ERR;
+    /** Time of the start of the build */
     private long startTime = System.currentTimeMillis();
 
-    /** line separator */
+    /** Line separator */
     protected final static String lSep = StringUtils.LINE_SEP;
-
+    
+    /** Whether or not to use emacs-style output */
     protected boolean emacsMode = false;
 
     /**
-     * Set the msgOutputLevel this logger is to respond to.
+     * Sole constructor.
+     */
+    public DefaultLogger() {
+    }
+
+    /**
+     * Sets the highest level of message this logger should respond to.
      *
-     * Only messages with a message level lower than or equal to the given level are
-     * output to the log.
+     * Only messages with a message level lower than or equal to the 
+     * given level should be written to the log.
      * <P>
-     * Constants for the message levels are in Project.java. The order of
-     * the levels, from least to most verbose, is MSG_ERR, MSG_WARN,
-     * MSG_INFO, MSG_VERBOSE, MSG_DEBUG.
-     *
+     * Constants for the message levels are in the 
+     * {@link Project Project} class. The order of the levels, from least 
+     * to most verbose, is <code>MSG_ERR</code>, <code>MSG_WARN</code>, 
+     * <code>MSG_INFO</code>, <code>MSG_VERBOSE</code>, 
+     * <code>MSG_DEBUG</code>.
+     * <P>
      * The default message level for DefaultLogger is Project.MSG_ERR.
-     *
+     * 
      * @param level the logging level for the logger.
      */
     public void setMessageOutputLevel(int level) {
@@ -98,40 +115,51 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
-     * Set the output stream to which this logger is to send its output.
+     * Sets the output stream to which this logger is to send its output.
      *
-     * @param output the output stream for the logger.
+     * @param output The output stream for the logger.
+     *               Must not be <code>null</code>.
      */
     public void setOutputPrintStream(PrintStream output) {
         this.out = new PrintStream(output, true);
     }
 
     /**
-     * Set the output stream to which this logger is to send error messages.
+     * Sets the output stream to which this logger is to send error messages.
      *
-     * @param err the error stream for the logger.
+     * @param err The error stream for the logger.
+     *            Must not be <code>null</code>.
      */
     public void setErrorPrintStream(PrintStream err) {
         this.err = new PrintStream(err, true);
     }
 
     /**
-     * Set this logger to produce emacs (and other editor) friendly output.
+     * Sets this logger to produce emacs (and other editor) friendly output.
      *
-     * @param emacsMode true if output is to be unadorned so that emacs and other
-     * editors can parse files names, etc.
+     * @param emacsMode <code>true</code> if output is to be unadorned so that
+     *                  emacs and other editors can parse files names, etc.
      */
     public void setEmacsMode(boolean emacsMode) {
         this.emacsMode = emacsMode;
     }
 
+    /**
+     * Responds to a build being started by just remembering the current time.
+     * 
+     * @param event Ignored.
+     */
     public void buildStarted(BuildEvent event) {
         startTime = System.currentTimeMillis();
     }
 
     /**
-     *  Prints whether the build succeeded or failed, and
-     *  any errors the occured during the build.
+     * Prints whether the build succeeded or failed,
+     * any errors the occured during the build, and
+     * how long the build took.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
      */
     public void buildFinished(BuildEvent event) {
         Throwable error = event.getException();
@@ -172,6 +200,13 @@ public class DefaultLogger implements BuildLogger {
         log(msg);
     }
 
+    /**
+     * Logs a message to say that the target has started if this
+     * logger allows information-level messages.
+     * 
+     * @param event An event with any relevant extra information.
+     *              Must not be <code>null</code>.
+      */
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
             String msg = StringUtils.LINE_SEP + event.getTarget().getName() + ":";
@@ -180,12 +215,35 @@ public class DefaultLogger implements BuildLogger {
         }
     }
 
-    public void targetFinished(BuildEvent event) {
-    }
+    /**
+     * No-op implementation.
+     * 
+     * @param event Ignored.
+     */
+    public void targetFinished(BuildEvent event) {}
 
+    /**
+     * No-op implementation.
+     * 
+     * @param event Ignored.
+     */
     public void taskStarted(BuildEvent event) {}
+
+    /**
+     * No-op implementation.
+     * 
+     * @param event Ignored.
+     */
     public void taskFinished(BuildEvent event) {}
 
+    /**
+     * Logs a message, if the priority is suitable.
+     * In non-emacs mode, task level messages are prefixed by the
+     * task name which is right-justified.
+     * 
+     * @param event A BuildEvent containing message information.
+     *              Must not be <code>null</code>.
+     */
     public void messageLogged(BuildEvent event) {
         int priority = event.getPriority();
         // Filter out messages based on priority
@@ -216,10 +274,27 @@ public class DefaultLogger implements BuildLogger {
         }
     }
 
+    /**
+     * Convenience method to format a specified length of time.
+     * 
+     * @param millis Length of time to format, in milliseonds.
+     * 
+     * @see DateUtils#formatElapsedTime(long)
+     */
     protected static String formatTime(final long millis) {
         return DateUtils.formatElapsedTime(millis);
     }
 
+    /**
+     * Prints a message to a PrintStream.
+     * 
+     * @param message  The message to print. 
+     *                 Should not be <code>null</code>.
+     * @param stream   A PrintStream to print the message to. 
+     *                 Must not be <code>null</code>.
+     * @param priority The priority of the message. 
+     *                 (Ignored in this implementation.)
+     */
     protected void printMessage(final String message,
                                 final PrintStream stream,
                                 final int priority) {
@@ -229,6 +304,8 @@ public class DefaultLogger implements BuildLogger {
     /**
      * Empty implementation which allows subclasses to receive the
      * same output that is generated here.
+     * 
+     * @param message Message being logged. Should not be <code>null</code>.
      */
     protected void log(String message) {}
 }

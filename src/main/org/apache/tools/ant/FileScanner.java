@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,107 +56,138 @@ package org.apache.tools.ant;
 import java.io.File;
 
 /**
- * An interface used to describe the actions required by any type of 
+ * An interface used to describe the actions required of any type of 
  * directory scanner.
  */
 public interface FileScanner {
     /**
-     * Adds an array with default exclusions to the current exclusions set.
-     *
+     * Adds default exclusions to the current exclusions set.
      */
     void addDefaultExcludes();
+    
     /**
-     * Gets the basedir that is used for scanning. This is the directory that
-     * is scanned recursively.
+     * Returns the base directory to be scanned. 
+     * This is the directory which is scanned recursively.
      *
-     * @return the basedir that is used for scanning
+     * @return the base directory to be scanned
      */
     File getBasedir();
+    
     /**
-     * Get the names of the directories that matched at least one of the include
-     * patterns, an matched also at least one of the exclude patterns.
-     * The names are relative to the basedir.
-     *
-     * @return the names of the directories
+     * Returns the names of the directories which matched at least one of the 
+     * include patterns and at least one of the exclude patterns.
+     * The names are relative to the base directory.
+     * 
+     * @return the names of the directories which matched at least one of the 
+     * include patterns and at least one of the exclude patterns.
      */
     String[] getExcludedDirectories();
+    
     /**
-     * Get the names of the files that matched at least one of the include
-     * patterns, an matched also at least one of the exclude patterns.
-     * The names are relative to the basedir.
+     * Returns the names of the files which matched at least one of the 
+     * include patterns and at least one of the exclude patterns.
+     * The names are relative to the base directory.
      *
-     * @return the names of the files
-     */
+     * @return the names of the files which matched at least one of the 
+     *         include patterns and at at least one of the exclude patterns.
+     * 
+     */    
     String[] getExcludedFiles();
+    
     /**
-     * Get the names of the directories that matched at least one of the include
-     * patterns, an matched none of the exclude patterns.
-     * The names are relative to the basedir.
+     * Returns the names of the directories which matched at least one of the 
+     * include patterns and none of the exclude patterns.
+     * The names are relative to the base directory.
      *
-     * @return the names of the directories
+     * @return the names of the directories which matched at least one of the
+     * include patterns and none of the exclude patterns.
      */
     String[] getIncludedDirectories();
+    
     /**
-     * Get the names of the files that matched at least one of the include
-     * patterns, an matched none of the exclude patterns.
-     * The names are relative to the basedir.
+     * Returns the names of the files which matched at least one of the 
+     * include patterns and none of the exclude patterns.
+     * The names are relative to the base directory.
      *
-     * @return the names of the files
+     * @return the names of the files which matched at least one of the
+     *         include patterns and none of the exclude patterns.
      */
     String[] getIncludedFiles();
+    
     /**
-     * Get the names of the directories that matched at none of the include
+     * Returns the names of the directories which matched none of the include
+     * patterns. The names are relative to the base directory.
+     *
+     * @return the names of the directories which matched none of the include
      * patterns.
-     * The names are relative to the basedir.
-     *
-     * @return the names of the directories
-     */
+     */    
     String[] getNotIncludedDirectories();
+    
     /**
-     * Get the names of the files that matched at none of the include patterns.
-     * The names are relative to the basedir.
+     * Returns the names of the files which matched none of the include 
+     * patterns. The names are relative to the base directory.
      *
-     * @return the names of the files
+     * @return the names of the files which matched none of the include 
+     *         patterns.
      */
     String[] getNotIncludedFiles();
+    
     /**
-     * Scans the base directory for files that match at least one include
-     * pattern, and don't match any exclude patterns.
+     * Scans the base directory for files which match at least one include
+     * pattern and don't match any exclude patterns.
      *
-     * @exception IllegalStateException when basedir was set incorrecly
+     * @exception IllegalStateException if the base directory was set 
+     *            incorrectly (i.e. if it is <code>null</code>, doesn't exist,
+     *            or isn't a directory).
      */
     void scan();
+    
     /**
-     * Sets the basedir for scanning. This is the directory that is scanned
-     * recursively. 
+     * Sets the base directory to be scanned. This is the directory which is
+     * scanned recursively. All '/' and '\' characters should be replaced by
+     * <code>File.separatorChar</code>, so the separator used need not match
+     * <code>File.separatorChar</code>.
      *
-     * @param basedir the (non-null) basedir for scanning
+     * @param basedir The base directory to scan. 
+     *                Must not be <code>null</code>.
      */
     void setBasedir(String basedir);
+    
     /**
-     * Sets the basedir for scanning. This is the directory that is scanned
-     * recursively.
+     * Sets the base directory to be scanned. This is the directory which is 
+     * scanned recursively.
      *
-     * @param basedir the basedir for scanning
+     * @param basedir The base directory for scanning. 
+     *                Should not be <code>null</code>.
      */
     void setBasedir(File basedir);
+    
     /**
-     * Sets the set of exclude patterns to use.
+     * Sets the list of exclude patterns to use.
      *
-     * @param excludes list of exclude patterns
-     */
+     * @param excludes A list of exclude patterns. 
+     *                 May be <code>null</code>, indicating that no files 
+     *                 should be excluded. If a non-<code>null</code> list is 
+     *                 given, all elements must be non-<code>null</code>.
+     */    
     void setExcludes(String[] excludes);
+    
     /**
-     * Sets the set of include patterns to use.
+     * Sets the list of include patterns to use.
      *
-     * @param includes list of include patterns
+     * @param includes A list of include patterns.
+     *                 May be <code>null</code>, indicating that all files 
+     *                 should be included. If a non-<code>null</code>
+     *                 list is given, all elements must be 
+     * non-<code>null</code>.
      */
     void setIncludes(String[] includes);
 
     /**
-     * Sets the case sensitivity of the file system
+     * Sets whether or not the file system should be regarded as case sensitive.
      *
-     * @param specifies if the filesystem is case sensitive
+     * @param isCaseSensitive whether or not the file system should be 
+     *                        regarded as a case sensitive one
      */
     void setCaseSensitive(boolean isCaseSensitive);
 }

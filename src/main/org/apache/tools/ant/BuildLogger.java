@@ -68,10 +68,10 @@ import java.io.PrintStream;
 public interface BuildLogger extends BuildListener {
     
     /**
-     * Sets the msgOutputLevel this logger is to respond to.
+     * Sets the highest level of message this logger should respond to.
      *
-     * Only messages with a message level lower than or equal to the given 
-     * level are output to the log.
+     * Only messages with a message level lower than or equal to the 
+     * given level should be written to the log.
      * <P>
      * Constants for the message levels are in the 
      * {@link Project Project} class. The order of the levels, from least 
@@ -94,8 +94,8 @@ public interface BuildLogger extends BuildListener {
     /**
      * Sets this logger to produce emacs (and other editor) friendly output.
      *
-     * @param emacsMode <code>true</code> if output is to be unadorned so that 
-     * emacs and other editors can parse files names, etc.
+     * @param emacsMode <code>true</code> if output is to be unadorned so that
+     *                  emacs and other editors can parse files names, etc.
      */
     void setEmacsMode(boolean emacsMode);
 
@@ -103,7 +103,7 @@ public interface BuildLogger extends BuildListener {
      * Sets the output stream to which this logger is to send error messages.
      *
      * @param err The error stream for the logger.
-     *            Must not be <code>null<code>.
+     *            Must not be <code>null</code>.
      */
     void setErrorPrintStream(PrintStream err);    
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,22 +59,33 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 
-
 /**
  * Logs content written by a thread and forwards the buffers onto the
  * project object which will forward the content to the appropriate
- * task 
+ * task.
  *
  * @author Conor MacNeill
  */
 public class DemuxOutputStream extends OutputStream {
 
+    /** Maximum buffer size */
     private final static int MAX_SIZE = 1024;
-    
+    /** Mapping from thread to buffer (Thread->ByteOutputStream) */
     private Hashtable buffers = new Hashtable();
 //    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    /** 
+     * Whether the next line-terminator should be skipped in terms
+     * of processing the buffer or not. Used to avoid \r\n invoking
+     * processBuffer twice.
+     */
     private boolean skip = false;
+    /**
+     * The project to send output to
+     */
     private Project project;
+    /**
+     * Whether or not this stream represents an error stream
+     */
     private boolean isErrorStream;
     
     /**
@@ -88,6 +99,11 @@ public class DemuxOutputStream extends OutputStream {
         this.isErrorStream = isErrorStream;
     }
 
+    /**
+     * Returns the buffer associated with the current thread.
+     * 
+     * @return a ByteArrayOutputStream for the current thread to write data to
+     */
     private ByteArrayOutputStream getBuffer() {
         Thread current = Thread.currentThread();
         ByteArrayOutputStream buffer = (ByteArrayOutputStream)buffers.get(current);
@@ -98,14 +114,17 @@ public class DemuxOutputStream extends OutputStream {
         return buffer;
     }
 
+    /**
+     * Resets the buffer for the current thread.
+     */
     private void resetBuffer() {    
         Thread current = Thread.currentThread();
         buffers.remove(current);
     }
     
     /**
-     * Write the data to the buffer and flush the buffer, if a line
-     * separator is detected.
+     * Writes the data to the buffer and flushes the buffer if a line
+     * separator is detected or if the buffer has reached its maximum size.
      *
      * @param cc data to log (byte).
      */
@@ -122,12 +141,21 @@ public class DemuxOutputStream extends OutputStream {
                 processBuffer();
             }
         }
-        skip = (c == '\r');
+       // XXX: This isn't threadsafe. Consider two threads logging
+       // Hello\r\n
+       // and
+       // There\r\n
+       // at the same time, with the two '\r's both being sent before
+       // either '\n', and the '\n's coming in the opposite order (thread-wise)
+       // to the '\r's - one buffer will be processed twice, and the other won't
+       // be processed at all.
+       skip = (c == '\r');
     }
 
 
     /**
-     * Converts the buffer to a string and sends it to <code>processLine</code>
+     * Converts the buffer to a string and sends it to 
+     * {@link Project#demuxOutput(String,boolean) Project.demuxOutput}.
      */
     protected void processBuffer() {
         String output = getBuffer().toString();
@@ -136,14 +164,15 @@ public class DemuxOutputStream extends OutputStream {
     }
 
     /**
-     * Writes all remaining
+     * Equivalent to calling {@link #flush flush} on the stream.
      */
     public void close() throws IOException {
         flush();
     }
 
     /**
-     * Writes all remaining
+     * Writes all remaining data in the buffer associated
+     * with the current thread to the project.
      */
     public void flush() throws IOException {
         if (getBuffer().size() > 0) {
