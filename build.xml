@@ -299,6 +299,10 @@
   <patternset id="needs.jmf">
     <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
   </patternset>
+  <patternset id="needs.jai">
+    <exclude name="${optional.package}/image/*.java" unless="jai.present"/>
+    <exclude name="${optional.package}/image/types/*.java" unless="jai.present"/>
+  </patternset>
   <patternset id="needs.jdepend">
     <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
   </patternset>
@@ -403,6 +407,9 @@
                classpathref="classpath" />
     <available property="jmf.present"
                classname="javax.sound.sampled.Clip"
+               classpathref="classpath"/>
+    <available property="jai.present"
+               classname="javax.media.jai.JAI"
                classpathref="classpath"/>
     <condition property="icontract.present">
         <and>
@@ -601,6 +608,7 @@
       <patternset refid="needs.vaj" />
       <patternset refid="needs.servletapi" />
       <patternset refid="needs.jmf" />
+      <patternset refid="needs.jai"/>
       <patternset refid="needs.xalan2" />
       <patternset refid="needs.jdepend" />
       <patternset refid="needs.sun.tools" />
