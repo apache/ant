@@ -101,7 +101,7 @@ public class Manifest extends Task {
     public final static String DEFAULT_MANIFEST_VERSION = "1.0";
 
     /** The max length of a line in a Manifest */
-    public final static int MAX_LINE_LENGTH = 70;
+    public final static int MAX_LINE_LENGTH = 72;
 
     /**
      * Helper class for Manifest's mode attribute.
