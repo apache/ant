@@ -315,11 +315,13 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             dependencyAnalyzer.addClassPath(config.classpath);
         } catch (NoClassDefFoundError e) {
             dependencyAnalyzer = null;
-            task.log("Unable to load dependency analyzer: " + analyzerClassName,
+            task.log("Unable to load dependency analyzer: " + analyzerClassName
+                + " - dependent class not found: " + e.getMessage(),
                 Project.MSG_WARN);
         } catch (Exception e) {
             dependencyAnalyzer = null;
-            task.log("Unable to load dependency analyzer: " + analyzerClassName,
+            task.log("Unable to load dependency analyzer: " + analyzerClassName
+                     + " - exception: " + e.getMessage(),
                 Project.MSG_WARN);
         }
     }

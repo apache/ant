@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -159,6 +159,11 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         }
 
         File fileDTD = new File(location);
+        if (!fileDTD.exists()) {
+            // resolve relative to project basedir
+            fileDTD = owningTask.getProject().resolveFile(location);
+        }
+        
         if (fileDTD.exists()) {
             if (publicId != null) {
                 fileDTDs.put(publicId, fileDTD);
