@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -76,6 +76,8 @@ import java.util.Vector;
  * Runs an external program.
  *
  * @author thomas.haas@softwired-inc.com
+ *
+ * @version $Revision$
  */
 public class Execute {
 
@@ -135,12 +137,14 @@ public class Execute {
                 baseLauncher = new CommandLauncher();
             }
 
-            // Determine if we're running under 2000/NT or 98/95
+            // Determine if we're running under XP/2000/NT or 98/95
             String osname =
                 System.getProperty("os.name").toLowerCase(Locale.US);
 
-            if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
-                // Windows 2000/NT
+            if ( osname.indexOf("nt") >= 0 ||
+                 osname.indexOf("2000") >= 0 ||
+                 osname.indexOf("xp") >= 0 ) {
+                // Windows XP/2000/NT
                 shellLauncher = new WinNTCommandLauncher(baseLauncher);
             }
             else {
@@ -173,7 +177,7 @@ public class Execute {
      */
     public static synchronized Vector getProcEnvironment() {
         if (procEnvironment != null) {
-          return procEnvironment;
+            return procEnvironment;
         }
 
         procEnvironment = new Vector();
@@ -231,9 +235,11 @@ public class Execute {
         else if ( Os.isFamily("windows") ) {
             String osname =
                 System.getProperty("os.name").toLowerCase(Locale.US);
-            // Determine if we're running under 2000/NT or 98/95
-            if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
-                // Windows 2000/NT
+            // Determine if we're running under XP/2000/NT or 98/95
+            if ( osname.indexOf("nt") >= 0 ||
+                 osname.indexOf("2000") >= 0 ||
+                 osname.indexOf("xp") >= 0 ) {
+                // Windows XP/2000/NT
                 String[] cmd = {"cmd", "/c", "set" };
                 return cmd;
             }
@@ -329,7 +335,7 @@ public class Execute {
      */
     public String[] getEnvironment() {
         if (env == null || newEnvironment) {
-          return env;
+            return env;
         }
         return patchEnvironment();
     }
@@ -414,7 +420,7 @@ public class Execute {
         processDestroyer.add(process);
 
         if (watchdog != null) {
-          watchdog.start(process);
+            watchdog.start(process);
         }
         waitFor(process);
 
@@ -423,11 +429,11 @@ public class Execute {
         processDestroyer.remove(process);
 
         if (watchdog != null) {
-          watchdog.stop();
+            watchdog.stop();
         }
         streamHandler.stop();
         if (watchdog != null) {
-          watchdog.checkException();
+            watchdog.checkException();
         }
         return getExitValue();
     }
