@@ -116,8 +116,8 @@ public class War extends Jar {
             throw new BuildException("webxml attribute is required", location);
  	}
 
-        addFiles(libFileSets, zOut, "lib/");
-        addFiles(classesFileSets, zOut, "classes/");
+        addFiles(libFileSets, zOut, "WEB-INF/lib/");
+        addFiles(classesFileSets, zOut, "WEB-INF/classes/");
         addFiles(webInfFileSets, zOut, "WEB-INF/");
 
         super.initZipOutputStream(zOut);

@@ -3807,8 +3807,8 @@ carried from tarfile.</p>
 <h2><a name="war">War</a></h2>
 <h3>Description</h3>
 <p>An extension of the <a name="#jar">Jar</a> task with special
-treatment for files that should end up in the <code>lib</code>,
-<code>classes</code> or <code>WEB-INF</code> directories of the Web
+treatment for files that should end up in the <code>WEB-INF/lib</code>,
+<code>WEB-INF/classes</code> or <code>WEB-INF</code> directories of the Web
 Application Archive.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -3882,11 +3882,11 @@ Application Archive.</p>
 <h4>lib</h4>
 <p>The nested <code>lib</code> element specifies a <a
 href="#fileset">FileSet</a>. All files included in this fileset will
-end up in the <code>lib</code> directory of the war file.</p>
+end up in the <code>WEB-INF/lib</code> directory of the war file.</p>
 <h4>classes</h4>
 <p>The nested <code>classes</code> element specifies a <a
 href="#fileset">FileSet</a>. All files included in this fileset will
-end up in the <code>classes</code> directory of the war file.</p>
+end up in the <code>WEB-INF/classes</code> directory of the war file.</p>
 <h4>webinf</h4>
 <p>The nested <code>webinf</code> element specifies a <a
 href="#fileset">FileSet</a>. All files included in this fileset will
@@ -3917,8 +3917,8 @@ then the war file <code>myapp.war</code> created with
 will consist of
 <pre>
 WEB-INF/web.xml
-lib/jdbc2.jar
-classes/com/myco/myapp/Servlet.class
+WEB-INF/lib/jdbc2.jar
+WEB-INF/classes/com/myco/myapp/Servlet.class
 META-INF/MANIFEST.MF
 index.html
 front.jsp
