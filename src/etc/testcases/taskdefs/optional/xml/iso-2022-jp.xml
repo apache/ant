@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="iso-2022-jp"?>
+<!DOCTYPE test [
+  <!ELEMENT test (#PCDATA)>
+]>
+<test>
+ISO-2022-JP のファイル。
+</test>
