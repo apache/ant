@@ -166,7 +166,11 @@ public class Available extends Task implements Condition {
         if (eval()) {
             String lSep = System.getProperty("line.separator");
             if (null != project.getProperty(property)) {
-                log("DEPRECATED - <available> used to override an existing property." + lSep + "  Build file should not reuse the same property name for different values.");
+                log("DEPRECATED - <available> used to override an existing"
+                    + " property."
+                    + lSep
+                    + "  Build file should not reuse the same property name"
+                    + " for different values.");
             }
             this.project.setProperty(property, value);
         }
