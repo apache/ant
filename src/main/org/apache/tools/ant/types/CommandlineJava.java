@@ -401,7 +401,7 @@ public class CommandlineJava implements Cloneable {
 
         //now any assertions are added
         if (getAssertions() != null) {
-            getAssertions().applyAssertions(this);
+            getAssertions().applyAssertions(listIterator);
         }
 
         // JDK usage command line says that -jar must be the first option, as there is

@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -140,6 +141,47 @@ public class CommandlineJavaTest extends TestCase {
         }
         assertNull(System.getProperty("key"));
         assertNull(System.getProperty("key2"));
+    }
+
+    public void testAssertions() {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
+            return;
+        }
+
+        CommandlineJava c = new CommandlineJava();
+        c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
+        c.setClassname("junit.textui.TestRunner");
+        c.createVmArgument().setValue("-Djava.compiler=NONE");
+        Assertions a = new Assertions();
+        a.setProject(project);
+        Assertions.EnabledAssertion ea = new Assertions.EnabledAssertion();
+        ea.setClass("junit.textui.TestRunner");
+        a.addEnable(ea);
+        c.setAssertions(a);
+
+        String[] expected = new String[] {
+            null,
+            "-Djava.compiler=NONE",
+            "-ea:junit.textui.TestRunner",
+            "junit.textui.TestRunner",
+            "org.apache.tools.ant.CommandlineJavaTest",
+        };
+            
+        // only the second iteration would pass because of PR 27218
+        for (int i = 0; i < 3; i++) {
+            String[] s = c.getCommandline();
+            assertEquals(expected.length, s.length);
+            for (int j = 1; j < expected.length; j++) {
+                assertEquals(expected[j], s[j]);
+            }
+        }
+        CommandlineJava c2 = (CommandlineJava) c.clone();
+        String[] s = c2.getCommandline();
+        assertEquals(expected.length, s.length);
+        for (int j = 1; j < expected.length; j++) {
+            assertEquals(expected[j], s[j]);
+        }
     }
 
 }
