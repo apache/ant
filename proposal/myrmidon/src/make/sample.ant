@@ -34,6 +34,13 @@ Legal:
     <register-tasklib lib="../../dist/lib/core.atl" />
 -->
 
+  <target name="if-test">
+    <property name="blah" value="true" />
+    <if test="${blah}">
+      <log message="Sucessful if test!"/>
+    </if>
+  </target>
+
   <target name="property-test">
     <property name="blah" value="fred" />
     <property name="${blah}" value="barney" />
