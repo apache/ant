@@ -9,9 +9,11 @@ package org.apache.myrmidon.interfaces.deployer;
 
 import java.io.File;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 
 /**
- * This class deploys a .tsk file into a registry.
+ * This class deploys type libraries into a registry.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
@@ -21,17 +23,28 @@ public interface Deployer
     String ROLE = "org.apache.myrmidon.interfaces.deployer.Deployer";
 
     /**
-     * Deploy a library.
+     * Returns the deployer for the type libraries contained in a ClassLoader,
+     * creating the deployer if necessary.
      *
-     * @param file the file deployment
-     * @exception DeploymentException if an error occurs
+     * @param loader The ClassLoader to get the deployer for.
+     * @exception DeploymentException if an error occurs.
      */
-    void deploy( File file )
+    TypeDeployer createDeployer( ClassLoader loader )
         throws DeploymentException;
 
-    void deployConverter( String name, File file )
+    /**
+     * Returns the deployer for a type library, creating the deployer if
+     * necessary.
+     *
+     * @param file the file containing the type library.
+     * @exception DeploymentException if an error occurs.
+     */
+    TypeDeployer createDeployer( File file )
         throws DeploymentException;
 
-    void deployType( String role, String name, File file )
-        throws DeploymentException;
+    /**
+     * Creates a child deployer.
+     */
+    Deployer createChildDeployer( ComponentManager componentManager )
+        throws ComponentException;
 }

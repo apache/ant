@@ -14,6 +14,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 
 /**
  * Task to import a tasklib.
@@ -45,7 +46,8 @@ public class Import
         try
         {
             final Deployer deployer = (Deployer)getService( Deployer.class );
-            deployer.deploy( m_lib );
+            TypeDeployer typeDeployer = deployer.createDeployer( m_lib );
+            typeDeployer.deployAll();
         }
         catch( final DeploymentException de )
         {

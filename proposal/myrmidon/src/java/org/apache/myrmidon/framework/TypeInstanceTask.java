@@ -63,7 +63,7 @@ public class TypeInstanceTask
 
         try
         {
-            final TypeFactory typeFactory = getTypeFactory( DataType.ROLE );
+            final TypeFactory typeFactory = getTypeFactory( DataType.class );
             m_value = typeFactory.create( configuration.getName() );
         }
         catch( final Exception e )

@@ -28,7 +28,7 @@ public class DefaultTypeManager
     ///Parent type manager to inherit values from.
     private final DefaultTypeManager m_parent;
 
-    ///Maps role to MultiSourceTypeFactory.
+    ///Maps role Class to MultiSourceTypeFactory.
     private final HashMap m_roleMap = new HashMap();
 
     public DefaultTypeManager()
@@ -41,7 +41,7 @@ public class DefaultTypeManager
         m_parent = parent;
     }
 
-    public void registerType( final String role,
+    public void registerType( final Class role,
                               final String shorthandName,
                               final TypeFactory factory )
         throws TypeException
@@ -50,7 +50,7 @@ public class DefaultTypeManager
         msFactory.register( shorthandName, factory );
     }
 
-    public TypeFactory getFactory( final String role )
+    public TypeFactory getFactory( final Class role )
         throws TypeException
     {
         return createFactory( role );
@@ -61,7 +61,7 @@ public class DefaultTypeManager
         return new DefaultTypeManager( this );
     }
 
-    protected final MultiSourceTypeFactory lookupFactory( final String role )
+    protected final MultiSourceTypeFactory lookupFactory( final Class role )
     {
         return (MultiSourceTypeFactory)m_roleMap.get( role );
     }
@@ -74,7 +74,7 @@ public class DefaultTypeManager
      * @return the Factory for interface
      * @exception TypeException role does not specify accessible work interface
      */
-    private MultiSourceTypeFactory createFactory( final String role )
+    private MultiSourceTypeFactory createFactory( final Class role )
         throws TypeException
     {
         MultiSourceTypeFactory factory = (MultiSourceTypeFactory)m_roleMap.get( role );
@@ -92,17 +92,7 @@ public class DefaultTypeManager
         ///If we haven't got factory try to create a new one
         if( null == factory )
         {
-            try
-            {
-                //TODO: Should we use ContextClassLoader here ??? Or perhaps try that on failure??
-                final Class clazz = Class.forName( role );
-                factory = new MultiSourceTypeFactory( clazz );
-            }
-            catch( final Exception e )
-            {
-                final String message = REZ.getString( "no-work-interface.error", role );
-                throw new TypeException( message );
-            }
+            factory = new MultiSourceTypeFactory( role );
         }
 
         m_roleMap.put( role, factory );
@@ -110,7 +100,7 @@ public class DefaultTypeManager
         return factory;
     }
 
-    private MultiSourceTypeFactory getParentTypedFactory( final String role )
+    private MultiSourceTypeFactory getParentTypedFactory( final Class role )
     {
         if( null != m_parent )
         {

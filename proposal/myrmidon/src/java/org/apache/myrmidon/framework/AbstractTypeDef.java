@@ -8,16 +8,13 @@
 package org.apache.myrmidon.framework;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeException;
-import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 
 /**
  * Abstract task to extend to define a type.
@@ -66,44 +63,20 @@ public abstract class AbstractTypeDef
             throw new TaskException( message );
         }
 
-        final String typeName = getTypeName();
-        final RoleManager roleManager = (RoleManager)getService( RoleManager.class );
-        final String role = roleManager.getRoleForName( typeName );
+        final String shorthand = getRoleShorthand();
 
-        final ClassLoader classLoader = createClassLoader();
-        final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
-        factory.addNameClassMapping( m_name, m_className );
-
-        final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
         try
         {
-            typeManager.registerType( role, m_name, factory );
+            // Locate the deployer, and use it to deploy the type
+            final Deployer deployer = (Deployer)getService( Deployer.class );
+            final TypeDeployer typeDeployer = deployer.createDeployer( m_lib );
+            typeDeployer.deployType( shorthand, m_name, m_className );
         }
-        catch( final TypeException te )
+        catch( DeploymentException e )
         {
-            final String message = REZ.getString( "typedef.no-register.error" );
-            throw new TaskException( message, te );
+            throw new TaskException( e.getMessage(), e );
         }
     }
 
-    protected ClassLoader createClassLoader()
-        throws TaskException
-    {
-        //TODO: Make this support classpath sub-element in future
-        try
-        {
-            final URL url = m_lib.toURL();
-            final ClassLoader classLoader =
-                Thread.currentThread().getContextClassLoader();
-
-            return new URLClassLoader( new URL[]{url}, classLoader );
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "typedef.bad-classloader.error", e );
-            throw new TaskException( message, e );
-        }
-    }
-
-    protected abstract String getTypeName();
+    protected abstract String getRoleShorthand();
 }

@@ -403,6 +403,9 @@ public class DefaultConfigurer
         return configurer;
     }
 
+    /**
+     * Creates and configures an inline object.
+     */
     private Object setupChild( final ConfigurationState state,
                                final Configuration element,
                                final Context context,
@@ -424,14 +427,13 @@ public class DefaultConfigurer
             if( type.isInterface() )
             {
                 child = createdTypedObject( name, type );
-                configureObject( child, element, context );
             }
             else
             {
                 child = createObject( type );
-                configureObject( child, element, context );
             }
         }
+
         configureObject( child, element, context );
         return child;
     }
@@ -444,7 +446,7 @@ public class DefaultConfigurer
                                        final Class type )
         throws ConfigurationException
     {
-        final TypeFactory factory = getTypeFactory( type.getName() );
+        final TypeFactory factory = getTypeFactory( type );
         try
         {
             return factory.create( name );
@@ -481,7 +483,7 @@ public class DefaultConfigurer
     /**
      * Locates a type factory.
      */
-    protected final TypeFactory getTypeFactory( final String role )
+    protected final TypeFactory getTypeFactory( final Class role )
         throws ConfigurationException
     {
         try
@@ -490,7 +492,7 @@ public class DefaultConfigurer
         }
         catch( final TypeException te )
         {
-            final String message = REZ.getString( "no-factory-for-role.error", role );
+            final String message = REZ.getString( "no-factory-for-role.error", role.getName() );
             throw new ConfigurationException( message, te );
         }
     }

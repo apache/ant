@@ -50,7 +50,7 @@ public class Facility
         {
             try
             {
-                final TypeFactory typeFactory = getTypeFactory( AspectHandler.ROLE );
+                final TypeFactory typeFactory = getTypeFactory( AspectHandler.class );
                 m_aspectHandler = (AspectHandler)typeFactory.create( children[ 0 ].getName() );
             }
             catch( final Exception e )

@@ -19,11 +19,32 @@ public interface TypeManager
 {
     String ROLE = "org.apache.myrmidon.interfaces.type.TypeManager";
 
-    void registerType( String role, String shorthandName, TypeFactory factory )
+    /**
+     * Registers a new type.
+     *
+     * @param roleType
+     *      The role interface for the type.  Objects created by the factory
+     *      must implement this interface.
+     *
+     * @param shorthandName
+     *      The shorthand name for the type.
+     *
+     * @param factory
+     *      The type factory.
+     */
+    void registerType( Class roleType, String shorthandName, TypeFactory factory )
         throws TypeException;
 
-    TypeFactory getFactory( String role )
+    /**
+     * Returns the factory for a role.
+     */
+    TypeFactory getFactory( Class roleType )
         throws TypeException;
 
+    /**
+     * Creates a child type manager.  The child inherits the type factories
+     * from this type manager.  Additional type factories may be added to the
+     * child, without affecting this type manager.
+     */
     TypeManager createChildTypeManager();
 }

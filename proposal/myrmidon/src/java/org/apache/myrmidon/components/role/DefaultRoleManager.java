@@ -7,19 +7,10 @@
  */
 package org.apache.myrmidon.components.role;
 
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.xml.sax.XMLReader;
 
 /**
  * Interface to manage roles and mapping to names.
@@ -28,12 +19,10 @@ import org.xml.sax.XMLReader;
  * @version CVS $Revision$ $Date$
  */
 public class DefaultRoleManager
-    implements RoleManager, Initializable
+    implements RoleManager
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultRoleManager.class );
-
-    private final static String ROLE_DESCRIPTOR = "META-INF/ant-roles.xml";
 
     /** Parent <code>RoleManager</code> for nested resolution */
     private final RoleManager m_parent;
@@ -61,51 +50,6 @@ public class DefaultRoleManager
     public DefaultRoleManager( final RoleManager parent )
     {
         m_parent = parent;
-    }
-
-    /**
-     * initialize the RoleManager.
-     * This involves reading all Role descriptors in common classloader.
-     *
-     * @exception Exception if an error occurs
-     */
-    public void initialize()
-        throws Exception
-    {
-        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        final SAXParser saxParser = saxParserFactory.newSAXParser();
-        final XMLReader parser = saxParser.getXMLReader();
-        //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
-
-        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
-        parser.setContentHandler( handler );
-        parser.setErrorHandler( handler );
-
-        final Enumeration enum = getClass().getClassLoader().getResources( ROLE_DESCRIPTOR );
-        while( enum.hasMoreElements() )
-        {
-            final URL url = (URL)enum.nextElement();
-            parser.parse( url.toString() );
-            handleDescriptor( handler.getConfiguration() );
-        }
-    }
-
-    /**
-     * Configure RoleManager based on contents of single descriptor.
-     *
-     * @param descriptor the descriptor
-     * @exception ConfigurationException if an error occurs
-     */
-    private void handleDescriptor( final Configuration descriptor )
-        throws ConfigurationException
-    {
-        final Configuration[] types = descriptor.getChildren( "role" );
-        for( int i = 0; i < types.length; i++ )
-        {
-            final String name = types[ i ].getAttribute( "shorthand" );
-            final String role = types[ i ].getAttribute( "name" );
-            addNameRoleMapping( name, role );
-        }
     }
 
     /**
@@ -155,14 +99,14 @@ public class DefaultRoleManager
         throws IllegalArgumentException
     {
         final String oldRole = (String)m_names.get( name );
-        if( null != oldRole && oldRole.equals( role ) )
+        if( null != oldRole && ! oldRole.equals( role ) )
         {
             final String message = REZ.getString( "duplicate-name.error", oldRole );
             throw new IllegalArgumentException( message );
         }
 
         final String oldName = (String)m_roles.get( role );
-        if( null != oldName && oldName.equals( name ) )
+        if( null != oldName && ! oldName.equals( name ) )
         {
             final String message = REZ.getString( "duplicate-role.error", oldName );
             throw new IllegalArgumentException( message );

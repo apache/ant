@@ -53,7 +53,7 @@ public class DefaultMasterConverter
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         try
         {
-            m_factory = typeManager.getFactory( Converter.ROLE );
+            m_factory = typeManager.getFactory( Converter.class );
         }
         catch( final TypeException te )
         {
@@ -132,11 +132,10 @@ public class DefaultMasterConverter
                                      final Class destination )
         throws ConverterException
     {
-        Class clazz = destination;
-
         //TODO: Maybe we should search the source classes hierarchy aswell
-        final Class terminator = Object.class;
-        while( terminator != clazz )
+        for( Class clazz = destination;
+             clazz != null;
+             clazz = clazz.getSuperclass() )
         {
             final String name =
                 m_registry.getConverterName( originalClass.getName(),
@@ -145,8 +144,6 @@ public class DefaultMasterConverter
             {
                 return name;
             }
-
-            clazz = clazz.getSuperclass();
         }
 
         final String message =

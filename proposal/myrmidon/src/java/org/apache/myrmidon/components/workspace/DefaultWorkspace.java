@@ -28,11 +28,11 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Hierarchy;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.executor.DefaultExecutionFrame;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Project;
@@ -61,6 +61,7 @@ public class DefaultWorkspace
     private TaskContext m_baseContext;
     private HashMap m_entrys = new HashMap();
     private TypeManager m_typeManager;
+    private Deployer m_deployer;
     private Hierarchy m_hierarchy;
     private int m_projectID;
 
@@ -96,6 +97,7 @@ public class DefaultWorkspace
         m_componentManager = componentManager;
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
         m_executor = (Executor)componentManager.lookup( Executor.ROLE );
+        m_deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
     }
 
     public void parameterize( final Parameters parameters )
@@ -198,13 +200,16 @@ public class DefaultWorkspace
 
             try
             {
+                final TypeDeployer typeDeployer = deployer.createDeployer( file );
                 if( null == typeLib.getRole() )
                 {
-                    deployer.deploy( file );
+                    // Deploy everything in the typelib
+                    typeDeployer.deployAll();
                 }
                 else
                 {
-                    deployer.deployType( typeLib.getRole(), typeLib.getName(), file );
+                    // Deploy the specified type
+                    typeDeployer.deployType( typeLib.getRole(), typeLib.getName() );
                 }
             }
             catch( final DeploymentException de )
@@ -227,27 +232,34 @@ public class DefaultWorkspace
         final TypeManager typeManager = m_typeManager.createChildTypeManager();
         componentManager.put( TypeManager.ROLE, typeManager );
 
+        //try
+        //{
+        //    //Add VFS manager
+        //    // TODO - need to drive this from a typelib descriptor, plus
+        //    // should be adding services to the root frame, rather than here
+        //    final DefaultFileSystemManager vfsManager = new DefaultFileSystemManager();
+        //    vfsManager.setBaseFile( project.getBaseDirectory() );
+        //    componentManager.put( FileSystemManager.ROLE, vfsManager );
+        //}
+        //catch( Exception e )
+        //{
+        //    throw new TaskException( e.getMessage(), e );
+        //}
+
         //We need to create a new deployer so that it deploys
         //to project specific TypeManager
-        final DefaultDeployer deployer = new DefaultDeployer();
-        deployer.enableLogging( getLogger() );
-
+        final Deployer deployer;
         try
         {
-            deployer.compose( componentManager );
+            deployer = m_deployer.createChildDeployer( componentManager );
+            componentManager.put( Deployer.ROLE, deployer );
         }
-        catch( final ComponentException ce )
+        catch( ComponentException e )
         {
-            final String message = REZ.getString( "bad-deployer-config.error" );
-            throw new TaskException( message, ce );
+            throw new TaskException( e.getMessage(), e );
         }
 
-        //HACK: Didn't call initialize because Deployer contained in Embeddor
-        // Already initialized and this would be reduendent
-        //deployer.initialize();
-
-        componentManager.put( Deployer.ROLE, deployer );
-
+        // Deploy the imported typelibs
         deployTypeLib( deployer, project );
 
         //We need to place projects and ProjectManager

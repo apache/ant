@@ -8,15 +8,12 @@
 package org.apache.antlib.runtime;
 
 import java.io.File;
-import java.net.URL;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
-import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.deployer.Deployer;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 
 /**
  * Task to define a converter.
@@ -80,15 +77,10 @@ public class ConverterDef
 
         try
         {
-            final ConverterRegistry converterRegistry = (ConverterRegistry)getService( ConverterRegistry.class );
-            converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
-
-            final URL url = m_lib.toURL();
-            final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[]{url} );
-            factory.addNameClassMapping( m_classname, m_classname );
-
-            final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
-            typeManager.registerType( Converter.ROLE, m_classname, factory );
+            // Locate the deployer, then deploy the converter
+            final Deployer deployer = (Deployer)getService( Deployer.class );
+            final TypeDeployer typeDeployer = deployer.createDeployer( m_lib );
+            typeDeployer.deployConverter( m_classname, m_sourceType, m_destinationType );
         }
         catch( final Exception e )
         {

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.type;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -28,34 +26,11 @@ public class DefaultTypeFactory
     ///A Map of shortnames to classnames
     private final HashMap m_classNames = new HashMap();
 
-    ///A list of URLs from which classLoader is constructed
-    private final URL[] m_urls;
-
-    ///The parent classLoader (if any)
-    private final ClassLoader m_parent;
-
     ///The parent classLoader (if any)
     private ClassLoader m_classLoader;
 
-    public DefaultTypeFactory( final URL url )
-    {
-        this( new URL[]{url} );
-    }
-
-    public DefaultTypeFactory( final URL[] urls )
-    {
-        this( urls, Thread.currentThread().getContextClassLoader() );
-    }
-
-    public DefaultTypeFactory( final URL[] urls, final ClassLoader parent )
-    {
-        m_urls = urls;
-        m_parent = parent;
-    }
-
     public DefaultTypeFactory( final ClassLoader classLoader )
     {
-        this( null, null );
         m_classLoader = classLoader;
     }
 
@@ -78,7 +53,7 @@ public class DefaultTypeFactory
 
         try
         {
-            return getClassLoader().loadClass( className ).newInstance();
+            return m_classLoader.loadClass( className ).newInstance();
         }
         catch( final Exception e )
         {
@@ -99,15 +74,5 @@ public class DefaultTypeFactory
         }
 
         return className;
-    }
-
-    private ClassLoader getClassLoader()
-    {
-        if( null == m_classLoader )
-        {
-            m_classLoader = new URLClassLoader( m_urls, m_parent );
-        }
-
-        return m_classLoader;
     }
 }

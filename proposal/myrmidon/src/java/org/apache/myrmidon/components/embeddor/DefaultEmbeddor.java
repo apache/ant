@@ -27,6 +27,7 @@ import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
@@ -106,7 +107,7 @@ public class DefaultEmbeddor
         throws Exception
     {
 
-        final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.ROLE );
+        final TypeFactory factory = m_typeManager.getFactory( ProjectBuilder.class );
         final ProjectBuilder builder = (ProjectBuilder)factory.create( type );
 
         setupLogger( builder );
@@ -181,6 +182,12 @@ public class DefaultEmbeddor
     public void start()
         throws Exception
     {
+        // Deploy all type libraries found in the classpath
+        final ClassLoader libClassloader = Thread.currentThread().getContextClassLoader();
+        final TypeDeployer typeDeployer = m_deployer.createDeployer( libClassloader );
+        typeDeployer.deployAll();
+
+        // Deploy all type libraries in the lib directory
         final ExtensionFileFilter filter = new ExtensionFileFilter( ".atl" );
         deployFromDirectory( m_deployer, m_taskLibDir, filter );
     }
@@ -479,6 +486,9 @@ public class DefaultEmbeddor
         }
     }
 
+    /**
+     * Deploys all type libraries in a directory.
+     */
     private void deployFromDirectory( final Deployer deployer,
                                       final File directory,
                                       final FilenameFilter filter )
@@ -492,6 +502,9 @@ public class DefaultEmbeddor
         }
     }
 
+    /**
+     * Deploys a set of type libraries.
+     */
     private void deployFiles( final Deployer deployer, final File[] files )
         throws DeploymentException
     {
@@ -508,7 +521,8 @@ public class DefaultEmbeddor
             try
             {
                 final File file = files[ i ].getCanonicalFile();
-                deployer.deploy( file );
+                final TypeDeployer typeDeployer = deployer.createDeployer( file );
+                typeDeployer.deployAll();
             }
             catch( final DeploymentException de )
             {

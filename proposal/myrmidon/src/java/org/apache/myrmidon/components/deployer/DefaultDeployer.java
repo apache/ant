@@ -14,33 +14,22 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.Manifest;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.extension.OptionalPackage;
 import org.apache.avalon.excalibur.extension.PackageManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
+import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
-import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
-import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.xml.sax.XMLReader;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -49,15 +38,37 @@ import org.xml.sax.XMLReader;
  */
 public class DefaultDeployer
     extends AbstractLogEnabled
-    implements Deployer, Initializable, Composable
+    implements Deployer, Composable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultDeployer.class );
 
-    private ConverterRegistry m_converterRegistry;
-    private TypeManager m_typeManager;
-    private RoleManager m_roleManager;
+    private Deployer m_parent;
+    private ComponentManager m_componentManager;
     private PackageManager m_packageManager;
+
+    /** Map from ClassLoader to the deployer for that class loader. */
+    private Map m_classLoaderDeployers = new HashMap();
+
+    /**
+     * Map from File to the ClassLoader for that library.  This map is shared
+     * by all descendents of the root deployer.
+     */
+    private Map m_fileDeployers;
+
+    /**
+     * Creates a root deployer.
+     */
+    public DefaultDeployer()
+    {
+        m_fileDeployers = new HashMap();
+    }
+
+    private DefaultDeployer( final DefaultDeployer parent )
+    {
+        m_parent = parent;
+        m_fileDeployers = parent.m_fileDeployers;
+    }
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -68,145 +79,99 @@ public class DefaultDeployer
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
-        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
-
+        m_componentManager = componentManager;
         final ExtensionManager extensionManager =
             (ExtensionManager)componentManager.lookup( ExtensionManager.ROLE );
         m_packageManager = new PackageManager( extensionManager );
     }
 
-    public void initialize()
+    /**
+     * Creates a child deployer.
+     */
+    public Deployer createChildDeployer( ComponentManager componentManager )
+        throws ComponentException
+    {
+        final DefaultDeployer child = new DefaultDeployer( this );
+        setupLogger( child );
+        child.compose( componentManager );
+        return child;
+    }
+
+    /**
+     * Returns the deployer for a ClassLoader, creating the deployer if
+     * necessary.
+     */
+    public TypeDeployer createDeployer( final ClassLoader loader )
+        throws DeploymentException
+    {
+        try
+        {
+            return createDeployment( loader, null );
+        }
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "deploy-from-classloader.error" );
+            throw new DeploymentException( message, e );
+        }
+    }
+
+    /**
+     * Returns the deployer for a type library, creating the deployer if
+     * necessary.
+     */
+    public TypeDeployer createDeployer( final File file )
+        throws DeploymentException
+    {
+        try
+        {
+            URLClassLoader classLoader = getClassLoaderForFile( file );
+            return createDeployment( classLoader, file.toURL() );
+        }
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "deploy-from-file.error", file );
+            throw new DeploymentException( message, e );
+        }
+    }
+
+    /**
+     * Locates the classloader for a typelib file.
+     */
+    private URLClassLoader getClassLoaderForFile( final File file )
         throws Exception
     {
-        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        final SAXParser saxParser = saxParserFactory.newSAXParser();
-        final XMLReader parser = saxParser.getXMLReader();
-        //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+        File canonFile = file.getCanonicalFile();
 
-        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
-        parser.setContentHandler( handler );
-        parser.setErrorHandler( handler );
-
-        final ClassLoader classLoader = getClass().getClassLoader();
-
-        final Enumeration enum = classLoader.getResources( Deployment.DESCRIPTOR_NAME );
-        while( enum.hasMoreElements() )
+        // Locate cached classloader, creating it if necessary
+        URLClassLoader classLoader = (URLClassLoader)m_fileDeployers.get( canonFile );
+        if( classLoader == null )
         {
-            final URL url = (URL)enum.nextElement();
-            parser.parse( url.toString() );
-
-            final String message = REZ.getString( "url-deploy.notice", url );
-            getLogger().debug( message );
-
-            deployFromDescriptor( handler.getConfiguration(), classLoader, url );
+            checkFile( canonFile );
+            final File[] extensions = getOptionalPackagesFor( canonFile );
+            final URL[] urls = buildClasspath( canonFile, extensions );
+            classLoader  = new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
+            m_fileDeployers.put( canonFile, classLoader );
         }
+        return classLoader;
     }
 
-    public void deploy( final File file )
-        throws DeploymentException
+    /**
+     * Creates a deployer for a ClassLoader.
+     */
+    private Deployment createDeployment( final ClassLoader loader,
+                                         final URL jarUrl ) throws Exception
     {
-        if( getLogger().isInfoEnabled() )
+        // Locate cached deployer, creating it if necessary
+        Deployment deployment = (Deployment)m_classLoaderDeployers.get( loader );
+        if( deployment == null )
         {
-            final String message = REZ.getString( "file-deploy.notice", file );
-            getLogger().info( message );
+            deployment = new Deployment( loader, m_componentManager );
+            setupLogger( deployment );
+            deployment.loadDescriptors( jarUrl );
+            m_classLoaderDeployers.put( loader, deployment );
         }
 
-        checkFile( file );
-
-        try
-        {
-            final File[] extensions = getOptionalPackagesFor( file );
-            final URL[] urls = buildClasspath( file, extensions );
-            final Deployment deployment = new Deployment( file );
-            final Configuration descriptor = deployment.getDescriptor();
-
-            final URLClassLoader classLoader =
-                new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
-
-            deployFromDescriptor( descriptor, classLoader, deployment.getURL() );
-        }
-        catch( final DeploymentException de )
-        {
-            throw de;
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "deploy-lib.error" );
-            throw new DeploymentException( message, e );
-        }
-    }
-
-    public void deployConverter( final String name, final File file )
-        throws DeploymentException
-    {
-        checkFile( file );
-
-        final Deployment deployment = new Deployment( file );
-        final Configuration descriptor = deployment.getDescriptor();
-        final DefaultTypeFactory factory = new DefaultTypeFactory( deployment.getURL() );
-
-        try
-        {
-            final Configuration[] converters =
-                descriptor.getChild( "converters" ).getChildren( "converter" );
-
-            for( int i = 0; i < converters.length; i++ )
-            {
-                if( converters[ i ].getAttribute( "classname" ).equals( name ) )
-                {
-                    handleConverter( converters[ i ], factory );
-                    break;
-                }
-            }
-        }
-        catch( final ConfigurationException ce )
-        {
-            final String message = REZ.getString( "bad-descriptor.error" );
-            throw new DeploymentException( message, ce );
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "deploy-converter.error", name );
-            throw new DeploymentException( message, e );
-        }
-    }
-
-    public void deployType( final String role, final String name, final File file )
-        throws DeploymentException
-    {
-        checkFile( file );
-
-        final String shorthand = getNameForRole( role );
-        final Deployment deployment = new Deployment( file );
-        final Configuration descriptor = deployment.getDescriptor();
-        final DefaultTypeFactory factory = new DefaultTypeFactory( deployment.getURL() );
-
-        try
-        {
-            final Configuration[] datatypes =
-                descriptor.getChild( "types" ).getChildren( shorthand );
-
-            for( int i = 0; i < datatypes.length; i++ )
-            {
-                if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
-                {
-                    handleType( role, datatypes[ i ], factory );
-                    break;
-                }
-            }
-        }
-        catch( final ConfigurationException ce )
-        {
-            final String message = REZ.getString( "bad-descriptor.error" );
-            throw new DeploymentException( message, ce );
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "deploy-type.error", name );
-            throw new DeploymentException( message, e );
-        }
+        return deployment;
     }
 
     private URL[] buildClasspath( final File file, final File[] dependencies )
@@ -243,10 +208,10 @@ public class DefaultDeployer
         if( getLogger().isDebugEnabled() )
         {
             final String message1 =
-                REZ.getString( "available-extensions", Arrays.asList( available ) );
+                REZ.getString( "available-extensions.notice", Arrays.asList( available ) );
             getLogger().debug( message1 );
             final String message2 =
-                REZ.getString( "required-extensions", Arrays.asList( required ) );
+                REZ.getString( "required-extensions.notice", Arrays.asList( required ) );
             getLogger().debug( message2 );
         }
 
@@ -279,7 +244,7 @@ public class DefaultDeployer
             }
 
             final String message =
-                REZ.getString( "unsatisfied.extensions", new Integer( size ) );
+                REZ.getString( "unsatisfied.extensions.error", new Integer( size ) );
             throw new Exception( message );
         }
 
@@ -288,87 +253,9 @@ public class DefaultDeployer
         return OptionalPackage.toFiles( packages );
     }
 
-    private void deployFromDescriptor( final Configuration descriptor,
-                                       final ClassLoader classLoader,
-                                       final URL url )
-        throws DeploymentException, Exception
-    {
-        try
-        {
-            //Have to keep a new factory per role
-            //To avoid name clashes (ie a datatype and task with same name)
-            final HashMap factorys = new HashMap();
-
-            final Configuration[] types = descriptor.getChild( "types" ).getChildren();
-            for( int i = 0; i < types.length; i++ )
-            {
-                final String name = types[ i ].getName();
-                final String role = getRoleForName( name );
-                final DefaultTypeFactory factory = getFactory( role, classLoader, factorys );
-                handleType( role, types[ i ], factory );
-            }
-
-            final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
-            final Configuration[] converters = descriptor.getChild( "converters" ).getChildren();
-            for( int i = 0; i < converters.length; i++ )
-            {
-                handleConverter( converters[ i ], factory );
-            }
-        }
-        catch( final DeploymentException de )
-        {
-            throw de;
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "deploy-lib.error", url );
-            throw new DeploymentException( message, e );
-        }
-    }
-
-    private DefaultTypeFactory getFactory( final String role,
-                                           final ClassLoader classLoader,
-                                           final HashMap factorys )
-    {
-        DefaultTypeFactory factory = (DefaultTypeFactory)factorys.get( role );
-
-        if( null == factory )
-        {
-            factory = new DefaultTypeFactory( classLoader );
-            factorys.put( role, factory );
-        }
-
-        return factory;
-    }
-
-    private String getNameForRole( final String role )
-        throws DeploymentException
-    {
-        final String name = m_roleManager.getNameForRole( role );
-
-        if( null == name )
-        {
-            final String message = REZ.getString( "unknown-name4role.error", role );
-            throw new DeploymentException( message );
-        }
-
-        return name;
-    }
-
-    private String getRoleForName( final String name )
-        throws DeploymentException
-    {
-        final String role = m_roleManager.getRoleForName( name );
-
-        if( null == role )
-        {
-            final String message = REZ.getString( "unknown-role4name.error", name );
-            throw new DeploymentException( message );
-        }
-
-        return role;
-    }
-
+    /**
+     * Ensures a file exists and is not a directory.
+     */
     private void checkFile( final File file )
         throws DeploymentException
     {
@@ -385,43 +272,4 @@ public class DefaultDeployer
         }
     }
 
-    private void handleConverter( final Configuration converter,
-                                  final DefaultTypeFactory factory )
-        throws Exception
-    {
-        final String name = converter.getAttribute( "classname" );
-        final String source = converter.getAttribute( "source" );
-        final String destination = converter.getAttribute( "destination" );
-
-        m_converterRegistry.registerConverter( name, source, destination );
-
-        factory.addNameClassMapping( name, name );
-        m_typeManager.registerType( Converter.ROLE, name, factory );
-
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message =
-                REZ.getString( "register-converter.notice", name, source, destination );
-            getLogger().debug( message );
-        }
-    }
-
-    private void handleType( final String role,
-                             final Configuration type,
-                             final DefaultTypeFactory factory )
-        throws Exception
-    {
-        final String name = type.getAttribute( "name" );
-        final String className = type.getAttribute( "classname" );
-
-        factory.addNameClassMapping( name, className );
-        m_typeManager.registerType( role, name, factory );
-
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message =
-                REZ.getString( "register-role.notice", role, name, className );
-            getLogger().debug( message );
-        }
-    }
 }

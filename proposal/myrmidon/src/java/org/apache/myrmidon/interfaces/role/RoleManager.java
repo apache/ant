@@ -38,4 +38,13 @@ public interface RoleManager
      * @return the name
      */
     String getNameForRole( String role );
+
+    /**
+     * Adds a role mapping.
+     *
+     * @param name the shorthand name.
+     * @param role the role name.
+     */
+    void addNameRoleMapping( String name, String role )
+        throws IllegalArgumentException;
 }

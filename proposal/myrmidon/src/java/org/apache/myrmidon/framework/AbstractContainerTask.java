@@ -109,17 +109,17 @@ public abstract class AbstractContainerTask
     /**
      * Locates a type factory.
      */
-    protected final TypeFactory getTypeFactory( final String role )
+    protected final TypeFactory getTypeFactory( final Class roleType )
         throws TaskException
     {
         final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
         try
         {
-            return typeManager.getFactory( role );
+            return typeManager.getFactory( roleType );
         }
         catch( final TypeException te )
         {
-            final String message = REZ.getString( "container.no-factory.error", role );
+            final String message = REZ.getString( "container.no-factory.error", roleType.getName() );
             throw new TaskException( message, te );
         }
     }

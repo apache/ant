@@ -32,8 +32,6 @@ public class DefaultExecutor
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
 
-    private final static String TASK_ROLE = Task.class.getName();
-
     private Configurer m_configurer;
 
     /**
@@ -81,7 +79,7 @@ public class DefaultExecutor
     {
         try
         {
-            final TypeFactory factory = frame.getTypeManager().getFactory( TASK_ROLE );
+            final TypeFactory factory = frame.getTypeManager().getFactory( Task.class );
             return (Task)factory.create( name );
         }
         catch( final TypeException te )

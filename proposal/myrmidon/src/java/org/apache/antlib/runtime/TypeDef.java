@@ -24,7 +24,7 @@ public class TypeDef
         m_type = type;
     }
 
-    protected String getTypeName()
+    protected String getRoleShorthand()
     {
         return m_type;
     }

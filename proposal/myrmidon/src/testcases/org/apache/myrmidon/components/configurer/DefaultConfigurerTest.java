@@ -433,8 +433,8 @@ public class DefaultConfigurerTest
         final DefaultTypeFactory factory = new DefaultTypeFactory( loader );
         factory.addNameClassMapping( "my-type1", MyType1.class.getName() );
         factory.addNameClassMapping( "my-type2", MyType2.class.getName() );
-        m_typeManager.registerType( MyRole1.class.getName(), "my-type1", factory );
-        m_typeManager.registerType( MyRole1.class.getName(), "my-type2", factory );
+        m_typeManager.registerType( MyRole1.class, "my-type1", factory );
+        m_typeManager.registerType( MyRole1.class, "my-type2", factory );
 
         final ConfigTest6 test = new ConfigTest6();
 
