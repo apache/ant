@@ -98,7 +98,7 @@
   <target name="javadocs" depends="prepare">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="${packages}"
-             sourcepath="${src.dir}"
+             sourcepath="${basedir}/${src.dir}"
              destdir="${build.javadocs}"
              author="true"
              version="true"
