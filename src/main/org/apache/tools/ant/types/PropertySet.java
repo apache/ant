@@ -155,6 +155,15 @@ public class PropertySet extends DataType {
         return _mapper;
     }
 
+    /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
     public void setDynamic(boolean dynamic) {
         assertNotReference();
         this.dynamic = dynamic;
