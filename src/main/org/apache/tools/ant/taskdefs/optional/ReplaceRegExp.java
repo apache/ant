@@ -306,6 +306,7 @@ public class ReplaceRegExp extends Task {
         Regexp regexp = r.getRegexp(getProject());
 
         if (regexp.matches(input, options)) {
+            log("Found match; substituting",Project.MSG_DEBUG);
             res = regexp.substitute(input, s.getExpression(getProject()),
                                     options);
         }
@@ -436,6 +437,7 @@ public class ReplaceRegExp extends Task {
             w = null;
 
             if (changes) {
+                log("File has changed; saving the updated file",Project.MSG_VERBOSE);
                 try {
                     fileUtils.rename(temp, f);
                     temp = null;
@@ -443,6 +445,8 @@ public class ReplaceRegExp extends Task {
                     throw new BuildException("Couldn't rename temporary file "
                                              + temp, getLocation());
                 }
+            } else {
+                log("No change made",Project.MSG_DEBUG);
             }
         } finally {
             try {
