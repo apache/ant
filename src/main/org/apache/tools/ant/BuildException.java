@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,6 +52,9 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant;
+
+
+import java.io.*;
 
 /**
  * Signals an error condition during a build.
@@ -161,5 +164,30 @@ public class BuildException extends RuntimeException {
      */
     public Location getLocation() {
         return location;
+    }
+
+    // Override stack trace methods to show original cause:
+    public void printStackTrace() {
+        printStackTrace(System.err);
+    }
+    
+    public void printStackTrace(PrintStream ps) {
+        synchronized (ps) {
+            ps.println(this);
+            if (cause != null) {
+                ps.println("--- Nested Exception ---");
+                cause.printStackTrace(ps);
+            }
+        }
+    }
+    
+    public void printStackTrace(PrintWriter pw) {
+        synchronized (pw) {
+            pw.println(this);
+            if (cause != null) {
+                pw.println("--- Nested Exception ---");
+                cause.printStackTrace(pw);
+            }
+        }
     }
 }
