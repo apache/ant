@@ -24,6 +24,16 @@ class TaskManager {
     // -----------------------------------------------------------------
     
     /**
+     * Reference to Ant that holds this TaskManager
+     */
+    //private Ant ant;
+    
+    /**
+     * Project to which this task manger belongs.
+     */
+    private Project project;
+    
+    /**
      * Data structure where all the Class definition for all known tasks are
      * held.
      */
@@ -41,7 +51,8 @@ class TaskManager {
     /**
      * Creates a new TaskManager.
      */
-    TaskManager() {
+    TaskManager(Project project) {
+        this.project = project;
     }
     
     // -----------------------------------------------------------------
@@ -59,16 +70,15 @@ class TaskManager {
     /**
      *
      */
-    AbstractTask getTaskInstance(String taskName) {
+    AbstractTask getTaskInstance(String taskName) throws AntException {
         Class clazz = (Class)taskClasses.get(taskName);
         try {
             return (AbstractTask)clazz.newInstance();
-        } catch (Exception e) {
-            System.out.println("Can't instantiate task: " + taskName);
-            System.out.println(e);
-            // XXX error out and stop
+        } catch (Exception e) { 
+            String msg = "Can't instantiate task: " + taskName;
+            AntException ae = new AntException(msg, e);
+            throw ae;
         }
-        return null;
     }
  
     // -----------------------------------------------------------------
@@ -94,7 +104,8 @@ class TaskManager {
      * Processes a directory to get class defintions from it
      */
     private void processDir(File dir) {
-        System.out.println("Scanning " + dir + " for tasks");
+        project.getFrontEnd().writeMessage("Scanning " + dir + " for tasks", 
+                                       FrontEnd.MSG_LEVEL_LOW);
         File file = new File(dir, "taskdef.properties");
         if (file.exists()) {
             try {
@@ -110,7 +121,8 @@ class TaskManager {
                     URLClassLoader loader = new URLClassLoader(new URL[] {dir.toURL()});
                     try {
                         Class clazz = loader.loadClass(taskClass);
-                        System.out.println("Got task: " + taskName + " " + clazz);
+                        project.getFrontEnd().writeMessage("Got Task: " + taskName +
+                                                       clazz, FrontEnd.MSG_LEVEL_LOW);
                         taskClasses.put(taskName, clazz);
                     } catch (ClassNotFoundException cnfe) {
                         System.out.println("Couldn't load task: " + taskName);
@@ -130,7 +142,8 @@ class TaskManager {
      * Processes a jar file to get class definitions from it
      */
     private void processJar(File file) {
-        System.out.println("Scanning " + file + " for tasks");
+        project.getFrontEnd().writeMessage("Scanning " + file + " for tasks", 
+                                       FrontEnd.MSG_LEVEL_LOW);
         try {
             ZipFile zipFile = new ZipFile(file);
             ZipEntry zipEntry = zipFile.getEntry("taskdef.properties");
@@ -147,7 +160,8 @@ class TaskManager {
                     URLClassLoader loader = new URLClassLoader(new URL[] {file.toURL()});
                     try {
                         Class clazz = loader.loadClass(taskClass);
-                        System.out.println("Got Task: " + taskName + " " + clazz);
+                        project.getFrontEnd().writeMessage("Got Task: " + taskName +
+                                                       clazz, FrontEnd.MSG_LEVEL_LOW);
                         taskClasses.put(taskName, clazz);
                     } catch (ClassNotFoundException cnfe) {
                         System.out.println("Couldn't load task: " + taskName);

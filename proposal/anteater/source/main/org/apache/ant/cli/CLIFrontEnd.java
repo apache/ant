@@ -14,7 +14,7 @@ import org.apache.ant.*;
  *
  * @author James Duncan Davidson (duncan@apache.org)
  */
-public class CLIFrontEnd extends AntFrontEnd {
+public class CLIFrontEnd extends FrontEnd {
 
     // -----------------------------------------------------------------
     // PRIVATE MEMBERS
@@ -23,22 +23,28 @@ public class CLIFrontEnd extends AntFrontEnd {
     /**
      *
      */
-    private Ant ant;
+    //private Ant ant;
 
     /**
      *
      */
-    private int msgLevel = MSG_LEVEL_MED;
+    private String[] args;
+
+    /**
+     *
+     */
+    private int msgLevelFilter = MSG_LEVEL_MED;
     
     // -----------------------------------------------------------------
     // CONSTRUCTORS
     // ----------------------------------------------------------------- 
 
     /**
-     *
+     * Creates a new CLIFrontEnd that can drive an Ant build from the Command
+     * Line.
      */
     public CLIFrontEnd() {
-        ant = new Ant(this);
+        //ant = new Ant(this);
     }
 
     // -----------------------------------------------------------------
@@ -99,9 +105,172 @@ public class CLIFrontEnd extends AntFrontEnd {
     }
 
     /**
+     *
+     */
+    public void run(String[] args) {
+        this.args = args;
+        String target = "";
+        File buildFile = null;
+        writeMessage("Ant(Eater) -- Proposed Ant 2.0");
+        
+        // process through the args set
+        
+        if (isArg("help")) {
+            printHelp();
+            return;
+        }
+        
+        if (isArg("quiet")) {
+            msgLevelFilter = MSG_LEVEL_HIGH;
+        }
+        
+        if (isArg("verbose")) {
+            msgLevelFilter = MSG_LEVEL_LOW;
+        }
+        
+        String argTaskpath = getArgValue("taskpath");
+        if (argTaskpath != null) {
+            if (argTaskpath.equals("")) {
+                writeMessage("Must give a value for -taskpath");
+                return;
+            } else {
+                // XXX need to separate on path seps so that real paths can be taken
+                // ant.addTaskPathNode(new File(argTaskpath));
+            }
+        }
+        
+        String argBuildfile = getArgValue("buildfile");
+        if (argBuildfile != null) {
+            if (argBuildfile.equals("")) {
+                writeMessage("Must give a value for -buildfile");
+                return;
+            } else {
+                //try {
+                buildFile = new File(argBuildfile);
+                    //ant.setBuildfile(new File(argBuildfile));
+                //} catch (AntException ae) {
+                //    writeMessage("Can't set buildfile");
+                //    writeMessage(ae.toString());
+                //    return;
+                //}
+            }
+        }
+        
+        target = getTargetArg();
+                
+        // XXX do something if we dont' have a buildfile set!
+        
+        // XXX really should check to make sure that the target is set to something
+        // like get the default...
+        
+        try {
+            ProjectBuilder projectBuilder = new ProjectBuilder(this);
+            Project project = projectBuilder.buildFromFile(buildFile);
+            //Project project = ant.getProject();
+            
+            // XXX
+            // get taskmanager from project and set taskpath nodes on it!
+            
+            project.setFrontEnd(this);
+            project.startBuild(target);
+        } catch (AntException ae) {            
+            writeMessage("Build Stopped");
+            writeMessage("    Project: " + ae.getProject().getName());
+            writeMessage("     Target: " + ae.getTarget().getName());
+            writeMessage("  Task Type: " + ae.getTask().getType());
+            writeMessage("Details Follow");
+            writeMessage("");
+            writeMessage(ae.getMessage());
+            ae.printStackTrace(System.out);
+        }        
+    }
+
+    /**
+     * Writes a message to the front end.
+     */
+    public void writeMessage(String message, int level) {
+        if (level >= msgLevelFilter) {
+            System.out.println(message);
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // PRIVATE METHODS
+    // ----------------------------------------------------------------- 
+    
+    /**
+     * Returns the value for a given argument name, null if the argument
+     * name isn't in the argument set, or "" if the argument doesn't have
+     * a value.
+     */
+    private String getArgValue(String argName) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-" + argName)) {
+                if (i != args.length - 1) {
+                    return args[i + 1];
+                } else {
+                    return "";
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the target that was requested to be built, if any. If no
+     * target is determined, returns null.
+     */
+    public String getTargetArg() {
+        String possibleTarget = getArgValue("target");
+        if (possibleTarget != null) {
+            if (possibleTarget.equals("")) {
+                writeMessage("Must give a value for -target");
+            } else {
+                return possibleTarget;
+            }
+        } 
+        
+        possibleTarget = args[args.length - 1];
+        if (possibleTarget.startsWith("-")) {
+            return null;
+        }
+        if (args[args.length - 2].startsWith("-")) {
+            // our possible target might be an arg value instead of a target
+            // XXX ugh -- there has to be a better way here. We need to hold
+            // a list of all args that don't have values somewhere.
+            if (args[args.length - 2].equals("-help") ||
+                args[args.length - 2].equals("-verbose") ||
+                args[args.length - 2].equals("-quiet")) {
+                // we're ok, the arg before the possible target doesn't have a value
+                return possibleTarget;
+            } else {
+                return null;
+            }
+        } else {
+            return possibleTarget;
+        }
+    }
+    
+    /**
+     * Indicates whether or not a given argument name exists in the argument
+     * set.
+     */
+    private boolean isArg(String argName) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-" + argName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Prints help to System.out
      */  
     private void printHelp() {
+    
+        // XXX resource bundle this.
+    
         String ls = System.getProperty("line.separator");
         String msg = "Usage: ant [args] [target]" + ls +
                      "    Arguments can be any of the following:" + ls +
@@ -116,67 +285,4 @@ public class CLIFrontEnd extends AntFrontEnd {
                      "    will bail.";
         writeMessage(msg);
     }
-
-    /**
-     *
-     */
-    public void run(String[] args) {
-        String target = "";
-        writeMessage("Ant(Eater) -- Proposed Ant 2.0");
-        
-        // flip through args and set things accordingly
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
-            // scan through -- all -aaa args come first.
-            if (arg.startsWith("-")) {
-                if (arg.equals("-help")) {
-                    printHelp();
-                    return; 
-                } else if (arg.equals("-taskpath")) {
-                    // XXX
-                    // need to seperate on pathsep, but not today
-                    ant.addTaskPathNode(new File(args[++i]));
-                } else if (arg.equals("-buildfile")) {
-                    // XXX
-                    // need to check file to make sure it exists!
-                    try {
-                        ant.setBuildfile(new File(args[++i]));
-                    } catch (AntException ae) {
-                        writeMessage("ICK: " + ae);
-                        writeMessage(ae.getMessage());
-                        return;
-                    }
-                }
-            } else {
-                target = arg;
-            }
-        }
-        
-        // XXX do something if we dont' have a buildfile set!
-        
-        // XXX really should check to make sure that the target is set to something
-
-        // set our listeners on the project
-        
-        Project project = ant.getProject();
-        project.setOutput(System.out);
-        
-        try {
-            ant.buildTarget(target);
-        } catch (AntException ae) {
-            writeMessage("Problem while building: " + ae);
-            writeMessage(ae.getMessage());
-        }        
-    }
-
-    /**
-     * Writes a message to the front end.
-     */
-    public void writeMessage(String message, int level) {
-        if (level >= msgLevel) {
-            System.out.println(message);
-        }
-    }
-
-
 }

@@ -23,6 +23,12 @@ public class Target {
     private String name;
 
     /**
+     * Vector containing the names of the targets that this target
+     * depends on.
+     */
+    private Vector dependsList = new Vector();
+
+    /**
      * Vector containing the tasks that are part of this target.
      */
     private Vector tasks = new Vector();
@@ -42,6 +48,13 @@ public class Target {
     // PUBLIC ACCESSOR METHODS
     // -----------------------------------------------------------------
     
+    /**
+     * Adds a dependancy to this task.
+     */
+    public void addDependancy(String targetName) {
+        dependsList.addElement(targetName);
+    }
+       
     /**
      *
      */
