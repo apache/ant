@@ -178,5 +178,16 @@ public interface SelectorContainer {
      */
     public void addContainsRegexp(ContainsRegexpSelector selector);
 
+    /**
+     * add the type selector
+     * @since ant 1.6
+     */
+    public void addType(TypeSelector selector);
+
+    /**
+     * add the different selector
+     * @since ant 1.6
+     */
+    public void addDifferent(DifferentSelector selector);
 }
 

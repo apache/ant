@@ -68,6 +68,7 @@ import org.apache.tools.ant.types.selectors.ContainsSelector;
 import org.apache.tools.ant.types.selectors.DateSelector;
 import org.apache.tools.ant.types.selectors.DependSelector;
 import org.apache.tools.ant.types.selectors.DepthSelector;
+import org.apache.tools.ant.types.selectors.DifferentSelector;
 import org.apache.tools.ant.types.selectors.ExtendSelector;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
@@ -79,6 +80,7 @@ import org.apache.tools.ant.types.selectors.PresentSelector;
 import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SelectorContainer;
 import org.apache.tools.ant.types.selectors.SizeSelector;
+import org.apache.tools.ant.types.selectors.TypeSelector;
 
 /**
  * This is an abstract task that should be used by all those tasks that
@@ -414,6 +416,23 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         fileset.addContainsRegexp(selector);
+    }
+
+    /**
+     * add a type selector entry on the type list
+     * @param selector
+     * @since ant 1.6
+     */
+    public void addDifferent(DifferentSelector selector) {
+        fileset.addDifferent(selector);
+    }
+    /**
+     * add a type selector entry on the type list
+     * @param selector
+     * @since ant 1.6
+     */
+    public void addType(TypeSelector selector) {
+        fileset.addType(selector);
     }
 
     /**
