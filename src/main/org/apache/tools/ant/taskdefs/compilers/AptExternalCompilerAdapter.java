@@ -30,6 +30,12 @@ import org.apache.tools.ant.types.Commandline;
 public class AptExternalCompilerAdapter extends DefaultCompilerAdapter {
 
 
+    /**
+     * Get the facade task that fronts this adapter
+     *
+     * @return task instance
+     * @see DefaultCompilerAdapter#getJavac()
+     */
     protected Apt getApt() {
         return (Apt) getJavac();
     }

@@ -31,22 +31,70 @@ import java.util.Vector;
 
 /**
  * The implementation of the apt compiler for JDK 1.5
+ * <p/>
+ * As usual, the low level entry points for Java tools are neither documented or
+ * stable; this entry point may change from that of 1.5.0_01-b08 without any
+ * warning at all. The IDE decompile of the tool entry points is as follows:
+ * <pre>
+ * public class Main {
+ * public Main() ;
+ * <p/>
+ * public static transient void main(String... strings) ;
+ * <p/>
+ * public static transient int process(String... strings);
+ * <p/>
+ * public static transient int process(PrintWriter printWriter,
+ *      String... strings) ;
+ * public static transient int process(
+ *      AnnotationProcessorFactory annotationProcessorFactory,
+ *      String... strings) ;
+ * <p/>
+ * public static transient int process(
+ *      AnnotationProcessorFactory annotationProcessorFactory,
+ *      PrintWriter printWriter,
+ *      String... strings);
+ * private static transient int processing(
+ *      AnnotationProcessorFactory annotationProcessorFactory,
+ *      PrintWriter printWriter,
+ *      String... strings) ;
+ * }
+ * </pre>
  *
  * @since Ant 1.7
  */
 public class AptCompilerAdapter extends DefaultCompilerAdapter {
 
     /**
-     * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
+     * Integer returned by the Apt compiler to indicate success.
      */
     private static final int APT_COMPILER_SUCCESS = 0;
+    /**
+     * class in tools.jar that implements APT
+     */
     public static final String APT_ENTRY_POINT = "com.sun.tools.apt.Main";
-    public static final String APT_METHOD_NAME = "compile";
 
+    /**
+     * method used to compile.
+     */
+    public static final String APT_METHOD_NAME = "process";
+
+    /**
+     * Get the facade task that fronts this adapter
+     *
+     * @return task instance
+     * @see DefaultCompilerAdapter#getJavac()
+     */
     protected Apt getApt() {
         return (Apt) getJavac();
     }
 
+    /**
+     * Using the front end arguments, set up the command line to run Apt
+     *
+     * @param apt task
+     * @param cmd command that is set up with the various switches from the task
+     *            options
+     */
     static void setAptCommandlineSwitches(Apt apt, Commandline cmd) {
 
         if (!apt.isCompile()) {
@@ -89,8 +137,12 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
         }
     }
 
+    /**
+     * using our front end task, set up the command line switches
+     *
+     * @param cmd command line to set up
+     */
     protected void setAptCommandlineSwitches(Commandline cmd) {
-        // Process the nocompile flag
         Apt apt = getApt();
         setAptCommandlineSwitches(apt, cmd);
     }
@@ -102,9 +154,12 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
      */
     public boolean execute() throws BuildException {
         attributes.log("Using apt compiler", Project.MSG_VERBOSE);
+        //set up the javac options
         Commandline cmd = setupModernJavacCommand();
+        //then add the Apt options
         setAptCommandlineSwitches(cmd);
 
+        //finally invoke APT
         // Use reflection to be able to build on all JDKs:
         try {
             Class c = Class.forName(APT_ENTRY_POINT);
@@ -116,8 +171,10 @@ public class AptCompilerAdapter extends DefaultCompilerAdapter {
                     .intValue();
             return (result == APT_COMPILER_SUCCESS);
         } catch (BuildException be) {
+            //rethrow build exceptions
             throw be;
         } catch (Exception ex) {
+            //cast everything else to a build exception
             throw new BuildException("Error starting apt compiler",
                     ex, location);
         }
