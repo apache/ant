@@ -16,6 +16,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.converter.ConverterException;
@@ -50,36 +51,6 @@ public abstract class AbstractContainerTask
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
         m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
         m_executor = (Executor)componentManager.lookup( Executor.ROLE );
-    }
-
-    /**
-     * Helper method to resolve a string.
-     *
-     * @param value the value to resolve
-     * @return the resolved value
-     * @exception ConfigurationException if an error occurs
-     */
-    protected final Object resolve( final String value )
-        throws ConfigurationException
-    {
-        try
-        {
-            final Object object =
-                PropertyUtil.resolveProperty( value, getContext(), false );
-
-            if( null == object )
-            {
-                final String message = REZ.getString( "container.null-value.error", value );
-                throw new ConfigurationException( message );
-            }
-
-            return object;
-        }
-        catch( final PropertyException pe )
-        {
-            final String message = REZ.getString( "container.bad-resolve.error", value );
-            throw new ConfigurationException( message, pe );
-        }
     }
 
     /**
