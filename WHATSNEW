@@ -1,5 +1,11 @@
 Changes from Ant 1.5 to current CVS version
-==============================================
+===========================================
+
+Fixed bugs:
+-----------
+
+* The sh wrapper script didn't work under Cygwin if ANT_HOME wasn't
+  set with a Unix style filename.
 
 Other changes:
 --------------
@@ -12,6 +18,8 @@ properties files and output them instead of Ant's properties.
 * <filterset> will now resolve filters recursively.
 
 * <input> has a new attribute that allows you to specify a default value.
+
+* All tasks can be used outside of <target>s
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
