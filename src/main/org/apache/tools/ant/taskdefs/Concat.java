@@ -468,8 +468,7 @@ public class Concat extends Task {
         String text = textBuffer.toString();
 
         // Replace ${property} strings.
-        text = ProjectHelper.replaceProperties(getProject(), text,
-                                               getProject().getProperties());
+        text = getProject().replaceProperties(text);
 
         // Set up a writer if necessary.
         FileWriter writer = null;
