@@ -5,17 +5,17 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.test;
+package org.apache.myrmidon.libs.selftest;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This is to test whether content is added.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class ContentTest 
+public class ContentTest
     extends AbstractTask
 {
     public void addContent( final Integer value )

@@ -5,17 +5,17 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.test;
+package org.apache.myrmidon.libs.selftest;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Test sub-elements addition.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class SubElementTest 
+public class SubElementTest
     extends AbstractTask
 {
     public static final class Beep
