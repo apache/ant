@@ -22,6 +22,7 @@
     
   <target name="build" depends="main" />
   <target name="main">
+    <mkdir dir="${ant.home}/lib"/>
     <mkdir dir="build/classes" />
     <javac srcdir="src/java"  
            debug="${debug}"
@@ -34,8 +35,7 @@
       <fileset dir="src/java" includes="META-INF/**" />
     </copy>
 
-    <jar file="${embed.build}/ant-sax2.jar" basedir="${embed.build}/classes"
-         manifest="src/java/META-INF/MANIFEST" >
+    <jar file="${embed.build}/ant-sax2.jar" basedir="${embed.build}/classes">
       <include name="**" />
     </jar>
         
@@ -50,6 +50,7 @@
   </target>
 
   <target name="embed-optional">
+    <mkdir dir="${ant.home}/lib"/>
     <mkdir dir="build/classes" />
     <javac srcdir="src/java"  
            debug="${debug}"
@@ -69,8 +70,7 @@
       <fileset dir="src/java" includes="META-INF/**" />
     </copy>
 
-    <jar file="${embed.build}/optional-dynprop.jar" basedir="${embed.build}/classes"
-         manifest="src/java/META-INF/MANIFEST" >
+    <jar file="${embed.build}/optional-dynprop.jar" basedir="${embed.build}/classes">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
     </jar>
         
@@ -89,7 +89,20 @@
          to recreate ant.jar ( using build/classes ) to include our code -->
     <unjar jar="${ant.src}/bootstrap/lib/ant.jar" dest="${embed.build}/classes" />
     <delete file="${ant.src}/bootstrap/lib/ant.jar" />
-    <jar file="${ant.src}/bootstrap/lib/ant.jar" basedir="${embed.build}/classes"
-         manifest="${embed.build}/classes/META-INF/MANIFEST" includes="**" />
+    <jar file="${ant.src}/bootstrap/lib/ant.jar" basedir="${embed.build}/classes"/>
   </target>
+
+  <target name="install" description="Installs built jars">
+    <echo message="${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
+    <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
+  </target>
+
+  <target name="install-embed" depends="main, install" 
+          description="Installs core built jars"/>
+ 
+  <target name="install-embed-optional" depends="embed-optional, install" 
+          description="Installs extra built jars">
+    <copy file="${commons-logging.jar}" toDir="${ant.home}/lib"/>
+    <copy file="${commons-discovery.jar}" toDir="${ant.home}/lib"/>
+  </target> 
 </project>
