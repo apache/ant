@@ -309,7 +309,7 @@ public class Ant extends Task {
             antFile = file.getAbsolutePath();
 
             log("calling target(s) "
-                + ((locals.size() == 0) ? locals.toString() : "[default]")
+                + ((locals.size() > 0) ? locals.toString() : "[default]")
                 + " in build file " + antFile, Project.MSG_VERBOSE);
             newProject.setUserProperty("ant.file" , antFile);
 
