@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.Os;
-import org.apache.tools.ant.taskdefs.ExecuteOn;
+import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
