@@ -82,7 +82,15 @@ public class Main
     };
 
     private ProjectListener      m_listener;
+
+    ///Parameters for run of myrmidon
     private Parameters           m_parameters  = new Parameters();
+
+    ///List of targets supplied on command line to execute
+    private ArrayList            m_targets     = new ArrayList();
+
+    ///List of user supplied defines
+    private HashMap              m_defines     = new HashMap();
 
     /**
      * Main entry point called to run standard Myrmidon.
@@ -92,21 +100,22 @@ public class Main
     public static void main( final String[] args )
     {
         final Main main = new Main();
-        main.setLogger( Hierarchy.getDefaultHierarchy().getLoggerFor( "default" ) );
 
         try { main.execute( args ); }
         catch( final Throwable throwable )
         {
-            main.getLogger().error( "Error: " + throwable );
-            main.getLogger().debug( "Exception..." + ExceptionUtil.printStackTrace( throwable ) );
+            System.err.println( "Error: " + ExceptionUtil.printStackTrace( throwable ) );
+            System.exit( -1 );
         }
+
+        System.exit( 0 );
     }
 
     /**
      * Display usage report.
      *
      */
-    protected void usage( final CLOptionDescriptor[] options )
+    private void usage( final CLOptionDescriptor[] options )
     {
         System.out.println( "java " + getClass().getName() + " [options]" );
         System.out.println( "\tAvailable options:");
@@ -193,8 +202,7 @@ public class Main
         return options;
     }
 
-    protected void execute( final String[] args )
-        throws Exception
+    private boolean parseCommandLineOptions( final String[] args )
     {
         final CLOptionDescriptor[] options = createCLOptions();
         final CLArgsParser parser = new CLArgsParser( args, options );
@@ -202,21 +210,11 @@ public class Main
         if( null != parser.getErrorString() )
         {
             System.err.println( "Error: " + parser.getErrorString() );
-            return;
+            return false;
         }
 
         final List clOptions = parser.getArguments();
         final int size = clOptions.size();
-        final ArrayList targets = new ArrayList();
-        final HashMap defines = new HashMap();
-
-        m_parameters.setParameter( "filename", "build.ant" );
-        m_parameters.setParameter( "log.level", "WARN" );
-        m_parameters.setParameter( "listener", "org.apache.myrmidon.listeners.DefaultProjectListener" );
-        m_parameters.setParameter( "incremental", "false" );
-
-        //System property set up by launcher
-        m_parameters.setParameter( "myrmidon.home", System.getProperty( "myrmidon.home" ) );
 
         for( int i = 0; i < size; i++ )
         {
@@ -224,8 +222,8 @@ public class Main
 
             switch( option.getId() )
             {
-            case HELP_OPT: usage( options ); return;
-            case VERSION_OPT: System.out.println( Constants.BUILD_DESCRIPTION ); return;
+            case HELP_OPT: usage( options ); return false;
+            case VERSION_OPT: System.out.println( Constants.BUILD_DESCRIPTION ); return false;
 
             case HOME_DIR_OPT: m_parameters.setParameter( "myrmidon.home", option.getArgument() ); break;
             case TASKLIB_DIR_OPT: 
@@ -242,11 +240,35 @@ public class Main
             case LISTENER_OPT: m_parameters.setParameter( "listener", option.getArgument() ); break;
 
             case DEFINE_OPT:
-                defines.put( option.getArgument( 0 ), option.getArgument( 1 ) );
+                m_defines.put( option.getArgument( 0 ), option.getArgument( 1 ) );
                 break;
 
-            case 0: targets.add( option.getArgument() ); break;
+            case 0: m_targets.add( option.getArgument() ); break;
             }
+        }
+
+        return true;
+    }
+
+    private void setupDefaultParameters()
+    {
+        //System property set up by launcher
+        m_parameters.setParameter( "myrmidon.home", System.getProperty( "myrmidon.home", "." ) );
+
+        m_parameters.setParameter( "filename", "build.ant" );
+        m_parameters.setParameter( "log.level", "WARN" );
+        m_parameters.setParameter( "listener", "org.apache.myrmidon.listeners.DefaultProjectListener" );
+        m_parameters.setParameter( "incremental", "false" );
+    }
+
+    private void execute( final String[] args )
+        throws Exception
+    {
+        setupDefaultParameters();
+
+        if( !parseCommandLineOptions( args ) )
+        {
+            return;
         }
 
         //handle logging...
@@ -257,7 +279,7 @@ public class Main
         final File homeDir = (new File( home )).getAbsoluteFile();
         if( !homeDir.isDirectory() )
         {
-            throw new TaskException( "myrmidon-home (" + homeDir + ") is not a directory" );
+            throw new Exception( "myrmidon-home (" + homeDir + ") is not a directory" );
         }
 
         final File libDir = new File( homeDir, "lib" );
@@ -266,14 +288,8 @@ public class Main
         final File buildFile = (new File( filename )).getCanonicalFile();
         if( !buildFile.isFile() )
         {
-            throw new TaskException( "File " + buildFile + " is not a file or doesn't exist" );
+            throw new Exception( "File " + buildFile + " is not a file or doesn't exist" );
         }
-
-        //setup classloader so that it will correctly load
-        //the Project/ProjectBuilder/ProjectManager and all dependencies
-        //FIXEME: Use separate classloader instead of injecting
-        final ClassLoader classLoader = createClassLoader( libDir );
-        Thread.currentThread().setContextClassLoader( classLoader );
 
         //handle listener..
         final String listenerName = m_parameters.getParameter( "listener", null );
@@ -281,8 +297,6 @@ public class Main
 
         final LogTarget target = new LogTargetToListenerAdapter( listener );
         getLogger().setLogTargets( new LogTarget[] { target } );
-
-
 
         getLogger().warn( "Ant Build File: " + buildFile );
         getLogger().info( "Ant Home Directory: " + homeDir );
@@ -313,8 +327,8 @@ public class Main
             //actually do the build ...
             final TaskContext context = new DefaultTaskContext();
             
-            //Add CLI defines
-            addToContext( context, defines );
+            //Add CLI m_defines
+            addToContext( context, m_defines );
 
             //Add system properties second so that they overide user-defined properties
             addToContext( context, System.getProperties() );
@@ -323,7 +337,7 @@ public class Main
             context.setProperty( Project.PROJECT_FILE, buildFile );
             //context.setProperty( Project.PROJECT, project.getName() );
 
-            doBuild( manager, project, context, targets );
+            doBuild( manager, project, context, m_targets );
 
             if( !incremental ) break;
 
@@ -351,10 +365,10 @@ public class Main
      * @param project the project
      * @param targets the targets to build as passed by CLI
      */
-    protected void doBuild( final ProjectManager manager,
-                            final Project project,
-                            final TaskContext context,
-                            final ArrayList targets )
+    private void doBuild( final ProjectManager manager,
+                          final Project project,
+                          final TaskContext context,
+                          final ArrayList targets )
     {
         try
         {
@@ -385,17 +399,17 @@ public class Main
      *
      * @param logLevel the log-level
      * @return the logger
-     * @exception TaskException if an error occurs
+     * @exception Exception if an error occurs
      */
-    protected Logger createLogger( final String logLevel )
-        throws TaskException
+    private Logger createLogger( final String logLevel )
+        throws Exception
     {
         final String logLevelCapitalized = logLevel.toUpperCase();
         final Priority priority = Priority.getPriorityForName( logLevelCapitalized );
 
         if( !priority.getName().equals( logLevelCapitalized ) )
         {
-            throw new TaskException( "Unknown log level - " + logLevel );
+            throw new Exception( "Unknown log level - " + logLevel );
         }
 
         final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
@@ -410,56 +424,15 @@ public class Main
      *
      * @param listener the classname of project listener
      */
-    protected ProjectListener createListener( final String listener )
-        throws TaskException
+    private ProjectListener createListener( final String listener )
+        throws Exception
     {
         try { return (ProjectListener)Class.forName( listener ).newInstance(); }
         catch( final Throwable t )
         {
-            throw new TaskException( "Error creating the listener " + listener +
-                                     " due to " + ExceptionUtil.printStackTrace( t, 5, true ),
-                                     t );
+            throw new Exception( "Error creating the listener " + listener +
+                                 " due to " + ExceptionUtil.printStackTrace( t, 5, true ) );
         }
-    }
-
-    /**
-     * Try to load all extra zipz/jars from lib directory into CURRENT classloader.
-     *
-     * @param libDir the directory of lib files to add
-     */
-    protected ClassLoader createClassLoader( final File libDir )
-    {
-        final ClassLoader candidate = getClass().getClassLoader();
-
-        if( !(candidate instanceof LauncherClassLoader) )
-        {
-            getLogger().warn( "Warning: Unable to add entries from " +
-                              "lib-path to classloader" );
-            return candidate;
-        }
-
-        final LauncherClassLoader classLoader = (LauncherClassLoader)candidate;
-
-        final ExtensionFileFilter filter =
-            new ExtensionFileFilter( new String[] { ".jar", ".zip" } );
-
-        final File[] files = libDir.listFiles( filter );
-
-        for( int i = 0; i < files.length; i++ )
-        {
-            //except for a few *special* files add all the
-            //.zip/.jars to classloader
-            final String name = files[ i ].getName();
-            if( !name.equals( "ant.jar" ) &&
-                !name.equals( "myrmidon.jar" ) &&
-                !name.equals( "avalonapi.jar" ) )
-            {
-                try { classLoader.addURL( files[ i ].toURL() ); }
-                catch( final MalformedURLException mue ) {}
-            }
-        }
-
-        return classLoader;
     }
 
     /**
@@ -468,8 +441,8 @@ public class Main
      * @param context the context
      * @param map the map of names->values
      */
-    protected void addToContext( final TaskContext context, final Map map )
-        throws TaskException
+    private void addToContext( final TaskContext context, final Map map )
+        throws Exception
     {
         final Iterator keys = map.keySet().iterator();
 
