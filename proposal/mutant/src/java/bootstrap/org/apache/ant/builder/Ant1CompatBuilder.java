@@ -8,6 +8,10 @@ public class Ant1CompatBuilder {
         helper.setProperty("dist.dir", "dist");
         helper.setProperty("javadocs.dir", "${dist.dir}/javadocs");
         helper.setProperty("distlib.dir", "${dist.dir}/lib");
+        helper.setProperty("ant1base.dir", "../..");
+        helper.setProperty("ant1src.dir", "${ant1base.dir}/src");
+        helper.setProperty("ant1java.dir", "${ant1src.dir}/main");
+        helper.setProperty("ant1etc.dir", "${ant1src.dir}/etc");
         helper.setProperty("debug", "true");
         helper.setProperty("ant.package", "org/apache/tools/ant");
         helper.setProperty("optional.package", "${ant.package}/taskdefs/optional");
@@ -26,11 +30,12 @@ public class Ant1CompatBuilder {
     protected void check_for_optional_packages(BuildHelper helper) {
     }
     protected void ant1compat(BuildHelper helper) {
-        helper.mkdir("${bin.dir}/ant1src");
+        helper.mkdir("${bin.dir}/ant1src_copy");
         helper.mkdir("${bin.dir}/ant1compat");
-        helper.copyFilesetRef("ant1src", "${bin.dir}/ant1src");
-        helper.javac("${bin.dir}/ant1src:${java.dir}/antlibs/ant1compat", "${bin.dir}/ant1compat", "classpath");
-        helper.copyFileset("${bin.dir}/ant1src", "${bin.dir}/ant1compat");
+        helper.copyFilesetRef("ant1src_tocopy", "${bin.dir}/ant1src_copy");
+        helper.javac("${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat", "${bin.dir}/ant1compat", "classpath");
+        helper.copyFileset("${bin.dir}/ant1src_copy", "${bin.dir}/ant1compat");
+        helper.copyFileset("${ant1etc.dir}", "${bin.dir}/ant1compat/${optional.package}/junit/xsl");
         helper.jar("${bin.dir}/ant1compat", "${distlib.dir}/antlibs/ant1compat.jar",
                    "${java.dir}/antlibs/ant1compat", "antlib.xml");
     }

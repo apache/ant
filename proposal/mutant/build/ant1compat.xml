@@ -8,7 +8,12 @@
   <property name="dist.dir" value="dist"/>
   <property name="javadocs.dir" value="${dist.dir}/javadocs"/>
   <property name="distlib.dir" value="${dist.dir}/lib"/>
-  
+
+  <property name="ant1base.dir" value="../.."/>  
+  <property name="ant1src.dir" value="${ant1base.dir}/src"/>
+  <property name="ant1java.dir" value="${ant1src.dir}/main"/>
+  <property name="ant1etc.dir" value="${ant1src.dir}/etc"/>
+
   <property name="debug" value="true"/>
 
   <property name="ant.package" value="org/apache/tools/ant"/>
@@ -34,7 +39,7 @@
     <exclude name="org/apache/tools/ant/taskdefs/CallTarget.java"/>
   </patternset>
 
-  <fileset id="ant1src" dir="../../src/main">
+  <fileset id="ant1src_tocopy" dir="${ant1java.dir}">
     <include name="**/*.properties"/>
     <include name="**/*.mf"/>
     <include name="org/apache/tools/ant/taskdefs/**/*.java"/>
@@ -390,16 +395,16 @@
   </target>
 
   <target name="ant1compat" depends="check_for_optional_packages">
-    <mkdir dir="${bin.dir}/ant1src"/>
+    <mkdir dir="${bin.dir}/ant1src_copy"/>
     <mkdir dir="${bin.dir}/ant1compat"/>
-    <copy todir="${bin.dir}/ant1src">
-      <fileset refid="ant1src"/>
+    <copy todir="${bin.dir}/ant1src_copy">
+      <fileset refid="ant1src_tocopy"/>
     </copy>
-    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src;${java.dir}/antlibs/ant1compat">
+    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat">
       <classpath refid="classpath"/>
     </depend>
     <javac destdir="${bin.dir}/ant1compat" 
-           srcdir="${bin.dir}/ant1src:${java.dir}/antlibs/ant1compat"
+           srcdir="${bin.dir}/ant1src_copy:${java.dir}/antlibs/ant1compat"
            debug="${debug}">
       <classpath refid="classpath"/>
       <patternset refid="needs.jdk1.2+" />
@@ -435,8 +440,16 @@
       <patternset refid="needs.swing" />
      </javac>
     <copy todir="${bin.dir}/ant1compat">
-      <fileset dir="${bin.dir}/ant1src" excludes="**/*.java"/>
+      <fileset dir="${bin.dir}/ant1src_copy" excludes="**/*.java"/>
     </copy>
+
+    <copy todir="${bin.dir}/ant1compat/${optional.package}/junit/xsl">
+       <fileset dir="${ant1etc.dir}">
+         <include name="junit-frames.xsl" />
+         <include name="junit-noframes.xsl" />
+       </fileset>
+    </copy>
+
     <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.jar">
       <metainf dir="${java.dir}/antlibs/ant1compat" 
                 includes="antlib.xml"/>
@@ -444,7 +457,7 @@
   </target>
   
   <target name="clean">
-    <delete dir="${bin.dir}/ant1src"/>
+    <delete dir="${bin.dir}/ant1src_copy"/>
     <delete dir="${bin.dir}/ant1compat"/>
   </target>
 

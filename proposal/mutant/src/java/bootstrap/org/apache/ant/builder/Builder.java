@@ -276,7 +276,7 @@ public class Builder {
         Ant1CompatBuilder ant1Builder = new Ant1CompatBuilder();
         BuildHelper ant1Build = new BuildHelper();
         ant1Build.setProperty("dist.dir", "bootstrap");
-        ant1Build.addFileSet("ant1src", ANT1_SRC_ROOT, getAnt1Files());
+        ant1Build.addFileSet("ant1src_tocopy", ANT1_SRC_ROOT, getAnt1Files());
         ant1Builder._init(ant1Build);
         ant1Builder.ant1compat(ant1Build);
     }
