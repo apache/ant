@@ -518,7 +518,12 @@ public class ExecTask extends Task {
 
             //test for and handle a forced process death
             if (exe.killedProcess()) {
-                log("Timeout: killed the sub-process", Project.MSG_WARN);
+                String msg = "Timeout: killed the sub-process";
+                if (failOnError) {
+                    throw new BuildException(msg);
+                } else {
+                    log(msg, Project.MSG_WARN);
+                }
             }
             maybeSetResultPropertyValue(returnCode);
             if (Execute.isFailure(returnCode)) {

@@ -569,8 +569,8 @@ public class Execute {
 
     /**
      * Query the exit value of the process.
-     * @return the exit value, 1 if the process was killed,
-     * or Execute.INVALID if no exit value has been received
+     * @return the exit value or Execute.INVALID if no exit value has
+     * been received
      */
     public int getExitValue() {
         return exitValue;

@@ -691,6 +691,9 @@ public class Java extends Task {
             redirector.createStreams();
             exe.execute(getProject());
             redirector.complete();
+            if (exe.killedProcess()) {
+                throw new BuildException("Timeout: killed the sub-process");
+            }
         } catch (IOException e) {
             throw new BuildException(e);
         }
@@ -728,10 +731,10 @@ public class Java extends Task {
             exe.setCommandline(command);
             try {
                 int rc = exe.execute();
-                if (exe.killedProcess()) {
-                    log("Timeout: killed the sub-process", Project.MSG_WARN);
-                }
                 redirector.complete();
+                if (exe.killedProcess()) {
+                    throw new BuildException("Timeout: killed the sub-process");
+                }
                 return rc;
             } catch (IOException e) {
                 throw new BuildException(e, getLocation());
