@@ -90,17 +90,18 @@ import org.apache.tools.zip.ZipEntry;
  */
 public class Zip extends MatchingTask {
 
-    private File zipFile;
+    protected File zipFile;
     private File baseDir;
     private boolean doCompress = true;
     private boolean doUpdate = false;
     private boolean doFilesonly = false;
     protected String archiveType = "zip";
+
     // For directories:
-    private static long emptyCrc = new CRC32 ().getValue ();
+    private final static long EMPTY_CRC = new CRC32 ().getValue ();
     protected String emptyBehavior = "skip";
     private Vector filesets = new Vector ();
-    private Hashtable addedDirs = new Hashtable();
+    protected Hashtable addedDirs = new Hashtable();
     private Vector addedFiles = new Vector();
 
     /** true when we are adding new files into the Zip file, as opposed to
@@ -596,7 +597,7 @@ public class Zip extends MatchingTask {
         ze.setSize (0);
         ze.setMethod (ZipEntry.STORED);
         // This is faintly ridiculous:
-        ze.setCrc (emptyCrc);
+        ze.setCrc (EMPTY_CRC);
 
         // this is 040775 | MS-DOS directory flag in reverse byte order
         ze.setExternalAttributes(0x41FD0010L);

@@ -60,14 +60,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Creates a JAR archive.
@@ -75,6 +70,8 @@ import java.util.Enumeration;
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
 public class Jar extends Zip {
+    /** The index file name. */
+    private final static String INDEX_NAME = "META-INF/INDEX.LIST";
 
     private File manifestFile;
     private Manifest manifest;
@@ -82,7 +79,11 @@ public class Jar extends Zip {
     
     /** true if a manifest has been specified in the task */
     private boolean buildFileManifest = false;
-    
+
+    /** jar index is JDK 1.3+ only */
+    private boolean index = false;
+
+    /** constructor */
     public Jar() {
         super();
         archiveType = "jar";
@@ -90,9 +91,20 @@ public class Jar extends Zip {
         setEncoding("UTF8");
     }
 
+    /**
+     * @deprecated use setFile(File) instead.
+     */
     public void setJarfile(File jarFile) {
         log("DEPRECATED - The jarfile attribute is deprecated. Use file attribute instead.");
         setFile(jarFile);
+    }
+
+    /**
+     * Set whether or not to create an index list for classes
+     * to speed up classloading.
+     */
+    public void setIndex(boolean flag){
+        index = flag;
     }
 
     public void addConfiguredManifest(Manifest newManifest) throws ManifestException {
@@ -174,7 +186,67 @@ public class Jar extends Zip {
             throw new BuildException("Invalid Manifest", e, getLocation());
         }
     }
-        
+
+    protected void finalizeZipOutputStream(ZipOutputStream zOut)
+            throws IOException, BuildException {
+        if (index) {
+            createIndexList(zOut);
+        }
+    }
+
+    /**
+     * Create the index list to speed up classloading.
+     * This is a JDK 1.3+ specific feature and is enabled by default.
+     * {@link http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index}
+     * @param zOut the zip stream representing the jar being built.
+     * @throws IOException thrown if there is an error while creating the
+     * index and adding it to the zip stream.
+     */
+    private void createIndexList(ZipOutputStream zOut) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // encoding must be UTF8 as specified in the specs.
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos, "UTF8"));
+
+        // version-info blankline
+        writer.println("JarIndex-Version: 1.0");
+        writer.println();
+
+        // header newline
+        writer.println(zipFile.getName());
+
+        // JarIndex is sorting the directories by ascending order.
+        // it's painful to do in JDK 1.1 and it has no value but cosmetic
+        // since it will be read into a hashtable by the classloader.
+        Enumeration enum = addedDirs.keys();
+        while (enum.hasMoreElements()) {
+            String dir = (String)enum.nextElement();
+
+            // try to be smart, not to be fooled by a weird directory name
+            // @fixme do we need to check for directories starting by ./ ?
+            dir = dir.replace('\\', '/');
+            int pos = dir.lastIndexOf('/');
+            if (pos != -1){
+                dir = dir.substring(0, pos);
+            }
+
+            // looks like nothing from META-INF should be added
+            // and the check is not case insensitive.
+            // see sun.misc.JarIndex
+            if ( dir.startsWith("META-INF") ){
+                continue;
+            }
+            // name newline
+            writer.println(dir);
+        }
+
+        writer.flush();
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis());
+    }
+
+
+
+
     private Manifest getDefaultManifest() {
         try {
             String s = "/org/apache/tools/ant/defaultManifest.mf";
