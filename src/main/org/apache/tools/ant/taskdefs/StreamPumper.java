@@ -128,7 +128,7 @@ public class StreamPumper implements Runnable {
             wait();
         }
     }
-    
+
     /**
      * Stop the pumper as soon as possible.
      * Note that it may continue to block on the input stream
@@ -140,5 +140,4 @@ public class StreamPumper implements Runnable {
         finished = true;
         notifyAll();
     }
-    
 }
