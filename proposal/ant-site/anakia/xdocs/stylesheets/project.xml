@@ -6,8 +6,8 @@
     
     <body>
     <menu name="Apache Ant">
-        <item name="Front Page"            href="/index.html"/>
-        <item name="License"               href="/LICENSE"/>
+        <item name="Welcome"               href="/index.html"/>
+        <item name="License"               href="/license.html"/>
         <item name="News"                  href="/antnews.html"/>
     </menu>
 
@@ -20,7 +20,7 @@
               href="/external.html"/>
         <item name="Resources"
               href="/resources.html"/>
-        <item name="Ant FAQ"
+        <item name="Frequently Asked Questions"
               href="/faq.html"/>
         <item name="Having Problems?"
               href="/problems.html"/>
@@ -40,8 +40,8 @@
 
     <menu name="Project Management">
         <item name="Contributors"          href="/contributors.html"/>
-        <item name="Mission"               href="/mission.html"/>
-        <item name="Guidelines Notes"      href="/guidelines.html"/>
+        <item name="Apache Ant Mission"    href="/mission.html"/>
+        <item name="Project Guidelines"    href="/guidelines.html"/>
         <item name="Legal"                 href="/legal.html"/>
     </menu>
 
