@@ -23,6 +23,8 @@
                       href="/resources.html"/>
                 <item name="Frequently Asked Questions"
                       href="/faq.html"/>
+                <item name="Wiki"
+                      href="http://nagoya.apache.org/wiki/apachewiki.cgi?AntProjectPages"/>
                 <item name="Having Problems?"
                       href="/problems.html"/>
             </menu>
