@@ -219,7 +219,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         return handler;                                    
     }
 
-    protected DescriptorHandler getWebglogicDescriptorHandler(File srcDir) {
+    protected DescriptorHandler getWeblogicDescriptorHandler(File srcDir) {
         DescriptorHandler handler = 
             new DescriptorHandler(srcDir) {        
                 protected void processElement() {
@@ -282,7 +282,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
                 saxParserFactory.setValidating(true);
                 SAXParser saxParser = saxParserFactory.newSAXParser();
-                DescriptorHandler handler = getWebglogicDescriptorHandler(ejbDescriptor.getParentFile());
+                DescriptorHandler handler = getWeblogicDescriptorHandler(ejbDescriptor.getParentFile());
                 saxParser.parse(new InputSource
                                 (new FileInputStream
                                 (weblogicDD)),
