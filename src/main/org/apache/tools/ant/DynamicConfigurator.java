@@ -69,7 +69,7 @@ public interface DynamicConfigurator {
      * @param value the new value of the attribute
      * @throws BuildException when any error occurs
      */    
-    public void setDynamicAttribute(String name, String value)
+    void setDynamicAttribute(String name, String value)
             throws BuildException;
 
     /**
@@ -79,5 +79,5 @@ public interface DynamicConfigurator {
      * @throws BuildException when any error occurs
      * @return the element created
      */    
-    public Object createDynamicElement(String name) throws BuildException;
+    Object createDynamicElement(String name) throws BuildException;
 }

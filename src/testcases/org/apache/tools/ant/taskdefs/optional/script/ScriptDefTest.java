@@ -141,4 +141,15 @@ public class ScriptDefTest extends BuildFileTest {
             "Should have detected duplicate attribute definition", 
             "attr1 attribute more than once");
     }
+
+    public void testProperty() {
+        executeTarget("property");
+        // get the fileset and its basedir
+        Project project = getProject();
+        String log = getLog();
+        assertTrue("Expecting property in attribute value replaced", 
+            log.indexOf("Attribute value = test") != -1);
+    }
+
+
 }

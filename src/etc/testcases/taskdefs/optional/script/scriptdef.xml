@@ -109,4 +109,20 @@
       <attribute name="attr1"/>
     </scriptdef>
   </target>
+  
+  <target name="property">
+    <scriptdef name="scripttest" language="javascript">
+      <attribute name="attr1"/>
+      <![CDATA[
+        
+        project.log("Attribute value = " + attributes.get("attr1"));
+      ]]>
+    </scriptdef>
+
+    <property name="testproperty" value="test"/>    
+    <scripttest attr1="${testproperty}">
+    </scripttest>
+  </target>
+
+
 </project>

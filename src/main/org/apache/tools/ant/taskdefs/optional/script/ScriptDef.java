@@ -110,6 +110,10 @@ public class ScriptDef extends Task {
         this.name = name;
     }
 
+    public boolean isAttributeSupported(String attributeName) {
+        return attributeSet.contains(attributeName);
+    }
+    
     /**
      * Set the scripting language used by this script
      *
@@ -276,6 +280,57 @@ public class ScriptDef extends Task {
         project.addTaskDefinition(name, ScriptDefBase.class);
     }
 
+    public Object createNestedElement(String elementName) {
+        NestedElement definition 
+            = (NestedElement) nestedElementMap.get(elementName);
+        if (definition == null) {                
+            throw new BuildException("<" + name + "> does not support " 
+                + "the <" + elementName + "> nested element");
+        }
+        
+        Object instance = null;
+        String classname = definition.className;
+        if (classname == null) {
+            instance = getProject().createTask(definition.type);
+            if (instance == null) {
+                instance = getProject().createDataType(definition.type);
+            }
+        } else {
+            // try the context classloader
+            ClassLoader loader 
+                = Thread.currentThread().getContextClassLoader();
+            
+            Class instanceClass = null;
+            try {
+                instanceClass = Class.forName(classname, true, loader);
+            } catch (Throwable e) {
+                // try normal method
+                try {
+                    instanceClass = Class.forName(classname);
+                } catch (Throwable e2) {
+                    throw new BuildException("scriptdef: Unable to load " 
+                        + "class " + classname + " for nested element <" 
+                        + elementName + ">", e2);
+                }
+            }
+            
+            try {
+                instance = instanceClass.newInstance();
+            } catch (Throwable e) {
+                throw new BuildException("scriptdef: Unable to create " 
+                    + "element of class " + classname + " for nested " 
+                    + "element <" + elementName + ">", e);
+            }
+            getProject().setProjectReference(instance);
+        }
+        
+        if (instance == null) {
+            throw new BuildException("<" + name + "> is unable to create " 
+                + "the <" + elementName + "> nested element");
+        }
+        return instance;
+    }
+    
     /**
      * Execute the script.
      *
@@ -285,90 +340,14 @@ public class ScriptDef extends Task {
      * @param elements a list of UnknownElements which contain the configuration
      * of the nested elements of the script instance.
      */
-    public void executeScript(RuntimeConfigurable scriptConfig, List elements) {
-        
-        Map configAttributes = scriptConfig.getAttributeMap();
-        for (Iterator i = configAttributes.keySet().iterator(); i.hasNext();) {
-            String attributeName = (String) i.next();
-            if (!attributeSet.contains(attributeName)) {
-                throw new BuildException("<" + name + "> does not support " 
-                    + "the \"" + attributeName + "\" attribute");
-            }
-        }
-
-        // handle nested elements
-        Map elementInstances = new HashMap();
-        for (Iterator i = elements.iterator(); i.hasNext();) {
-            UnknownElement element = (UnknownElement) i.next();
-            String elementTag = element.getTag().toLowerCase(Locale.US);
-            
-            NestedElement definition 
-                = (NestedElement) nestedElementMap.get(elementTag);
-            if (definition == null) {                
-                throw new BuildException("<" + name + "> does not support " 
-                    + "the <" + elementTag + "> nested element");
-            }
-            
-            // what is the type of the object to be created
-            Object instance = null;
-            String classname = definition.className;
-            if (classname == null) {
-                instance = getProject().createTask(definition.type);
-                if (instance == null) {
-                    instance = getProject().createDataType(definition.type);
-                }
-            } else {
-                // try the context classloader
-                ClassLoader loader 
-                    = Thread.currentThread().getContextClassLoader();
-                
-                Class instanceClass = null;
-                try {
-                    instanceClass = Class.forName(classname, true, loader);
-                } catch (Throwable e) {
-                    // try normal method
-                    try {
-                        instanceClass = Class.forName(classname);
-                    } catch (Throwable e2) {
-                        throw new BuildException("scriptdef: Unable to load " 
-                            + "class " + classname + " for nested element <" 
-                            + elementTag + ">", e2);
-                    }
-                }
-                
-                try {
-                    instance = instanceClass.newInstance();
-                } catch (Throwable e) {
-                    throw new BuildException("scriptdef: Unable to create " 
-                        + "element of class " + classname + " for nested " 
-                        + "element <" + elementTag + ">", e);
-                }
-                getProject().setProjectReference(instance);
-            }
-            
-            if (instance == null) {
-                throw new BuildException("<" + name + "> is unable to create " 
-                    + "the <" + elementTag + "> nested element");
-            }
-
-            element.configure(instance);
-            
-            // find the appropriate list
-            List instanceList = (List) elementInstances.get(elementTag);
-            if (instanceList == null) {
-                instanceList = new ArrayList();
-                elementInstances.put(elementTag, instanceList);
-            }
-            instanceList.add(instance);
-        }
-        
+    public void executeScript(Map attributes, Map elements) {
         try {
             BSFManager manager = new BSFManager();
             // execute the script
-            manager.declareBean("attributes", configAttributes, 
-                configAttributes.getClass());
-            manager.declareBean("elements", elementInstances, 
-                elementInstances.getClass());
+            manager.declareBean("attributes", attributes, 
+                attributes.getClass());
+            manager.declareBean("elements", elements, 
+                elements.getClass());
             manager.declareBean("project", getProject(), Project.class);
             manager.exec(language, "scriptdef <" + name + ">", 0, 0, script);
         } catch (BSFException e) {
