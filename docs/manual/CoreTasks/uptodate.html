@@ -74,6 +74,10 @@ set of source files.</p>
       The mapper "to" attribute is relative to the target file, or to
       the "dir" attribute of the nested srcfiles element.
    </p>
+  <p>
+    <em>Since Ant 1.6.3</em>,
+    one can use a filenamemapper type in place of the mapper element.
+  </p>
 <h3>Examples</h3>
 <pre>  &lt;uptodate property=&quot;xmlBuild.notRequired&quot; targetfile=&quot;${deploy}\xmlClasses.jar&quot; &gt;
     &lt;srcfiles dir= &quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot;/&gt;
