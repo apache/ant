@@ -4,9 +4,9 @@
     <property name="ftp.host" value="localhost"/>
     <property name="ftp.port" value="21" />
     <property name="ftp.password" value="sunshine" />
+    <property name="ftp.filesep" value="/"/>
     <property name="tmp.dir" location="tmp"/>
     <property name="tmp.get.dir" location="tmp.get"/>
-    <property name="ftp.filesep" value="/"/>
     <fileset dir="${tmp.get.dir}" id="fileset-destination-with-selector">
         <include name="alpha/**"/>
         <filename name="**/alpha.xml" />
@@ -34,6 +34,7 @@
             server="${ftp.host}"
             userid="${ftp.user}"
             password="${ftp.password}"
+            separator="${ftp.filesep}"
             remotedir="${tmp.dir}">
             <fileset refid="fileset-destination-with-selector"/>
         </ftp>
@@ -57,6 +58,7 @@
             server="${ftp.host}"
             userid="${ftp.user}"
             password="${ftp.password}"
+            separator="${ftp.filesep}"
             remotedir="${tmp.dir}"
             >
             <fileset refid="fileset-destination-followsymlinks"/>
@@ -67,6 +69,7 @@
             server="${ftp.host}"
             userid="${ftp.user}"
             password="${ftp.password}"
+            separator="${ftp.filesep}"
             remotedir="${tmp.dir}"
             >
             <fileset refid="fileset-destination-nofollowsymlinks"/>
@@ -85,6 +88,7 @@
             server="${ftp.host}"
             userid="${ftp.user}"
             password="${ftp.password}"
+            separator="${ftp.filesep}"
             remotedir="${tmp.dir}">
             <fileset dir="${tmp.get.dir}">
                 <include name="**"/>
@@ -94,6 +98,7 @@
             server="${ftp.host}"
             userid="${ftp.user}"
             password="${ftp.password}"
+            separator="${ftp.filesep}"
             remotedir="${tmp.dir}">
             <fileset dir="${tmp.get.dir}">
                 <include name="**"/>

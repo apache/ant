@@ -113,6 +113,11 @@ public class FTPTest extends BuildFileTest{
     }
 
     public void tearDown() {
+        try {
+            ftp.disconnect();
+        } catch (IOException ioe) {
+            // do nothing
+        }
         getProject().executeTarget("cleanup");
     }
     private boolean changeRemoteDir(String remoteDir) {
