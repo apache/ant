@@ -400,6 +400,11 @@ Other changes:
 * <mail> and mailloger support SMTP over TLS/SSL
   Bugzilla Report 19180.
 
+* <mail> the attributes from, replyto ,tolist, cclist, bcclist
+  can now contain email addresses of the form name <address@xyz.com>
+  or (name) address@xyz.com
+  Bugzilla Report 22474.
+
 * <zipfileset> can now be defined in the main body of a project
   and referred to with refid="xyz". Bugzilla Report 17007.
 
