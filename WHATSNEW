@@ -159,7 +159,7 @@ Other changes:
   always want passed to the 'ant' command -- for example, if you always
   want to use a different logger or the -find flag.
   
-* <tstamp> now supports a new "prefix" attribute to prefix properties set.WHATSNEW
+* <tstamp> now supports a new "prefix" attribute to prefix properties set.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
