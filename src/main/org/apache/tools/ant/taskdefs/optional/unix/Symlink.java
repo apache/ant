@@ -66,29 +66,31 @@ import org.apache.tools.ant.taskdefs.Execute;
  *
  * <p> Examples of use:
  *
- * <p> Make a link named "foo" to a resource named "bar.foo" in subdir:
+ * <p> Make a link named &quot;foo&quot; to a resource named
+ * &quot;bar.foo&quot; in subdir:
  * <pre>
- * &lt;symlink link="${dir.top}/foo" resource="${dir.top}/subdir/bar.foo"/&gt;
+ * &lt;symlink link=&quot;${dir.top}/foo&quot; resource=&quot;${dir.top}/subdir/bar.foo&quot;/&gt;
  * </pre>
  *
- * <p> Record all links in subdir and it's descendants in files named
- * "dir.links"
+ * <p> Record all links in subdir and its descendants in files named
+ * &quot;dir.links&quot;
  * <pre>
- * &lt;symlink action="record" linkfilename="dir.links"&gt;
- *    &lt;fileset dir="${dir.top}" includes="subdir&#47;**" /&gt;
+ * &lt;symlink action=&quot;record&quot; linkfilename=&quot;dir.links&quot;&gt;
+ *    &lt;fileset dir=&quot;${dir.top}&quot; includes=&quot;subdir&#47;**&quot; /&gt;
  * &lt;/symlink&gt;
  * </pre>
  *
  * <p> Recreate the links recorded in the previous example:
  * <pre>
- * &lt;symlink action="recreate"&gt;
- *    &lt;fileset dir="${dir.top}" includes="subdir&#47;**&#47;dir.links" /&gt;
+ * &lt;symlink action=&quot;recreate&quot;&gt;
+ *    &lt;fileset dir=&quot;${dir.top}&quot; includes=&quot;subdir&#47;**&#47;dir.links&quot; /&gt;
  * &lt;/symlink&gt;
  * </pre>
  *
- * <p> Delete a link named "foo" to a resource named "bar.foo" in subdir:
+ * <p> Delete a link named &quot;foo&quot; to a resource named
+ * &quot;bar.foo&quot; in subdir:
  * <pre>
- * &lt;symlink action="delete" link="${dir.top}/foo"/&gt;
+ * &lt;symlink action=&quot;delete&quot; link=&quot;${dir.top}/foo&quot;/&gt;
  * </pre>
  *
  * <p><strong>LIMITATIONS:</strong> Because Java has no direct support for
@@ -96,17 +98,16 @@ import org.apache.tools.ant.taskdefs.Execute;
  * absolute paths. On non-unix systems this may cause false positives.
  * Furthermore, any operating system on which the command
  * <code>ln -s link resource</code> is not a valid command on the command line
- * will not be able to use action= "delete", action="single" or
- * action="recreate", but action="record" should still work. Finally, the
- * lack of support for symlinks in Java means that all links are recorded
- * as links to the <strong>canonical</strong> resource name. Therefore
- * the link: <code>link --> subdir/dir/../foo.bar</code> will be recorded
- * as <code>link=subdir/foo.bar</code> and restored as
- * <code>link --> subdir/foo.bar</code>
+ * will not be able to use action= &quot;delete&quot;, action=&quot;single&quot;
+ * or action=&quot;recreate&quot;, but action=&quot;record&quot; should still
+ * work. Finally, the lack of support for symlinks in Java means that all links
+ * are recorded as links to the <strong>canonical</strong> resource name.
+ * Therefore the link: <code>link --> subdir/dir/../foo.bar</code> will be
+ * recorded as <code>link=subdir/foo.bar</code> and restored as
+ * <code>link --> subdir/foo.bar</code>.
  *
  * @version $Revision$
  */
-
 public class Symlink extends Task {
 
     // Attributes with setter methods:
@@ -120,8 +121,10 @@ public class Symlink extends Task {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    /** Initialize the task. */
-
+    /**
+     * Initialize the task.
+     * @throws BuildException on error.
+     */
     public void init() throws BuildException {
         super.init();
         failonerror = true;   // default behavior is to fail on an error
@@ -285,17 +288,18 @@ public class Symlink extends Task {
     }
 
     /**
-     * The setter for the "action" attribute. May be "single", "multi"
-     * or "record"
+     * Set the action to be performed.  May be
+     * &quot;single&quot;, &quot;multi&quot; or &quot;record&quot;.
      *
-     * @param typ    The action of action to perform.
+     * @param typ    The action to perform.
      */
     public void setAction(String typ) {
         this.action = typ;
     }
 
     /**
-     * The setter for the "link" attribute. Only used for action = single.
+     * Set the same of the link.
+     * Only used when action = &quot;single&quot;.
      *
      * @param lnk     The name for the link.
      */
@@ -304,16 +308,18 @@ public class Symlink extends Task {
     }
 
     /**
-     * The setter for the "resource" attribute. Only used for action = single.
+     * Set the name of the resource to which a link should be created.
+     * Only used when action = &quot;single&quot;.
      *
-     * @param src      The source of the resource to be linked.
+     * @param src      The resource to be linked.
      */
     public void setResource(String src) {
         this.resource = src;
     }
 
     /**
-     * The setter for the "linkfilename" attribute. Only used for action=record.
+     * Set the name of the file to which links will be written.
+     * Only used when action = &quot;record&quot;.
      *
      * @param lf      The name of the file to write links to.
      */
@@ -322,7 +328,7 @@ public class Symlink extends Task {
     }
 
     /**
-     * Adds a fileset to this task.
+     * Add a fileset to this task.
      *
      * @param set      The fileset to add.
      */
@@ -335,7 +341,7 @@ public class Symlink extends Task {
      * ********************************************************** */
 
     /**
-     * Deletes a symlink without deleteing the resource it points to.
+     * Deletes a symlink without deleting the resource it points to.
      *
      * <p>This is a convenience method that simply invokes
      * <code>deleteSymlink(java.io.File)</code>.
@@ -427,8 +433,6 @@ public class Symlink extends Task {
      * This method use <code>Properties.store</code>
      * and thus report exceptions that occur while writing the file.
      *
-     * This is not jdk 1.1 compatible, but Ant 1.6 is not anymore.
-     *
      * @param properties     The properties object to be written.
      * @param propertyfile   The File to write to.
      * @param comment        The comment to place at the head of the file.
@@ -443,7 +447,6 @@ public class Symlink extends Task {
         try {
             fos = new FileOutputStream(propertyfile);
             properties.store(fos, comment);
-
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         } finally {
@@ -528,11 +531,11 @@ public class Symlink extends Task {
     /**
      * Finds all the links in all supplied filesets.
      *
-     * <p> This method is invoked when the action attribute is is "record".
-     * This means that filesets are interpreted as the directories in
-     * which links may be found.
+     * <p> This method is invoked when the action attribute is
+     * &quot;record&quot;. This means that filesets are interpreted
+     * as the directories in which links may be found.
      *
-     * <p> The basic method follwed here is, for each file set:
+     * <p> The basic method followed here is, for each fileset:
      *   <ol>
      *      <li> Compile a list of all matches </li>
      *      <li> Convert matches to <code>File</code> objects </li>
@@ -545,7 +548,7 @@ public class Symlink extends Task {
      *   </ol>
      *
      * @param fileSets   The filesets specified by the user.
-     * @return           A vector of <code>File</code> objects containing the
+     * @return           A Vector of <code>File</code> objects containing the
      *                     links (with canonical parent directories).
      */
 
@@ -647,8 +650,8 @@ public class Symlink extends Task {
      * Load the links from a properties file.
      *
      * <p> This method is only invoked when the action attribute is set to
-     * "multi". The filesets passed in are assumed to specify the names
-     * of the property files with the link information and the
+     * &quot;multi&quot;. The filesets passed in are assumed to specify the
+     * names of the property files with the link information and the
      * subdirectories in which to look for them.
      *
      * <p> The basic method follwed here is, for each file set:
