@@ -534,6 +534,7 @@ public abstract class AbstractFileObject implements FileObject
         if( m_type == FileType.FOLDER )
         {
             final String message = REZ.getString( "write-folder.error", m_name );
+            throw new FileSystemException( message );
         }
 
         if( m_type == null )

@@ -16,8 +16,6 @@ import org.apache.avalon.framework.CascadingException;
  */
 public class FileSystemException extends CascadingException
 {
-    private Throwable m_cause;
-
     /**
      * Constructs exception with the specified detail message.
      *

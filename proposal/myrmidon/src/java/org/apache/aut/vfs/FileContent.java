@@ -9,9 +9,6 @@ package org.apache.aut.vfs;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
-import java.sql.Date;
 
 /**
  * This interface is used to access the data content of a file.

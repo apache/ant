@@ -11,17 +11,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
-import java.sql.Date;
 import org.apache.aut.vfs.FileContent;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * The content of a file.
@@ -275,7 +270,7 @@ public class DefaultFileContent implements FileContent
         /**
          * Reads bytes from this input stream.error occurs.
          */
-        public int read( byte b[], int off, int len )
+        public int read( byte[] buffer, int offset, int length )
             throws IOException
         {
             if( _finished )
@@ -283,7 +278,7 @@ public class DefaultFileContent implements FileContent
                 return -1;
             }
 
-            int nread = super.read( b, off, len );
+            int nread = super.read( buffer, offset, length );
             if( nread != -1 )
             {
                 return nread;
