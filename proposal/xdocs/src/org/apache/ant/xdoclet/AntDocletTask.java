@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,75 +51,30 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.xdoclet;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.Type;
+package org.apache.ant.xdoclet;
 
-import xdoclet.XDocletException;
-import xdoclet.XDocletTagSupport;
-import xdoclet.tags.AbstractProgramElementTagsHandler;
+import org.apache.tools.ant.BuildException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import xdoclet.DocletTask;
 
 /**
- * Custom tag handler for XDoclet templates for Ant-specific processing.
- *
- * @author     Erik Hatcher
- * @created    February 17, 2002
- *
- * @todo clean up logic so that all setters are gathered first (even
- * superclass) and sorted along wih them
- * @todo need to create better logic for finding proper setters
- * @todo add ifIsAntTask, among other convenience tags
+ * @created       January 5, 2003
+ * @ant.element   name="antdoclet" display-name="AntDoclet Task"
  */
-public class DatatypeTagsHandler extends XDocletTagSupport {
-
-    /**
-     * Iterates over all Ant datatypes
-     */
-    public void forAllDatatypes(String template, Properties attributes) throws XDocletException {
-        ClassDoc[] classes = AbstractProgramElementTagsHandler.getAllClasses();
-        ClassDoc cur_class = null;
-
-        for (int i = 0; i < classes.length; i++) {
-            cur_class = classes[i];
-            setCurrentClass(cur_class);
-
-            if (DatatypeSubTask.isAntDatatype(cur_class)) {
-                generate(template);
-            }
-        }
+public class AntDocletTask extends DocletTask
+{
+    public AntDocletTask()
+    {
+        // by default, binary classes do not provide their
+        // methods for performance reasons, but it is needed
+        // here to climb up and find true tasks.
+        System.setProperty("xjavadoc.compiledmethods", "true");
     }
 
-    /**
-     * Provides the datatype name
-     */
-    public String typeName() throws XDocletException {
-        return getDatatypeName(getCurrentClass());
-    }
-
-    public static final String getDatatypeName(ClassDoc clazz) throws XDocletException {
-        // sheesh!  There should be a friendlier method than this!
-        String tagValue = getTagValue(clazz, "ant:datatype", "name", -1,
-                null, null, null, null,
-                null, false, XDocletTagSupport.FOR_CLASS, false);
-
-        if (tagValue == null) {
-            tagValue = clazz.name();
-
-            tagValue = tagValue.toLowerCase();
-        }
-        return tagValue;
+    protected void validateOptions() throws BuildException
+    {
+        super.validateOptions();
+        checkClass("org.apache.tools.ant.IntrospectionHelper");
     }
 }
-

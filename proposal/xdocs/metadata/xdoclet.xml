@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+<!DOCTYPE xdoclet-module PUBLIC "-//XDoclet Team//DTD XDoclet Module 1.0//EN" "http://xdoclet.sourceforge.net/dtd/xdoclet-module_1_0.dtd">
+-->
+
+<xdoclet-module>
+    <taghandler
+        namespace="Ant"
+        class="org.apache.ant.xdoclet.TaskTagsHandler"
+    />
+
+    <subtask
+        name="taskdescriptor"
+        implementation-class="org.apache.ant.xdoclet.TaskDescriptorSubTask"
+        parent-task-class="org.apache.ant.xdoclet.AntDocletTask"
+    />
+    <subtask
+        name="taskdefproperties"
+        implementation-class="org.apache.ant.xdoclet.TaskDefPropertiesSubTask"
+        parent-task-class="org.apache.ant.xdoclet.AntDocletTask"
+    />
+</xdoclet-module>

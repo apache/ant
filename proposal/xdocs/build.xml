@@ -384,10 +384,14 @@
     <delete dir="${gen.dir}"/>
   </target>
 
-  <target name="gen" depends="init">
+  <target name="gen" depends="jar">
     <taskdef name="antdoclet"
-             classname="xdoclet.modules.apache.ant.AntDocletTask"
-             classpathref="xdoclet.classpath"/>
+             classname="org.apache.ant.xdoclet.AntDocletTask">
+      <classpath>
+        <path refid="xdoclet.classpath"/>
+        <pathelement location="${build.dir}/xdoclet-ant.jar"/>
+      </classpath>
+    </taskdef>
     <antdoclet destdir="${gen.dir}"
                excludedtags="@version,@author"
                force="${xdoclet.force}"
@@ -462,15 +466,24 @@
     <mkdir dir="${build.dir}/classes"/>
     <javac destdir="${build.dir}/classes"
            srcdir="src"
+           deprecation="on"
            debug="true"
-           includes="**/IndexGen.java"
+           classpathref="xdoclet.classpath"
     />
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar destfile="${build.dir}/xdoclet-ant.jar">
+      <fileset dir="${build.dir}/classes"/>
+      <metainf dir="metadata" includes="xdoclet.xml"/>
+      <fileset dir="src" includes="**/*.xdt"/>
+    </jar>
   </target>
 
   <target name="indexgen" depends="compile">
     <taskdef name="indexgen"
              classpath="${build.dir}/classes"
-             classname="org.apache.tools.ant.xdoclet.IndexGen"
+             classname="org.apache.ant.xdoclet.IndexGen"
     />
     <indexgen rootdir="${build.dir}/docs/manual"/>
   </target>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,48 +51,28 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.xdoclet;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.FileSet;
-import xdoclet.DocletTask;
-import xdoclet.doc.info.InfoSubTask;
-import xdoclet.doc.DocumentDocletTask;
+package org.apache.ant.xdoclet;
 
-import java.io.File;
-import java.util.Vector;
+import xdoclet.TemplateSubTask;
 
-public class AntXDocletTask extends DocumentDocletTask {
-    private Vector _subTasks = new Vector();
+/**
+ * Generates Ant taskdef properties files, suitable for bulk defining tasks with Ant's &lt;taskdef&gt; task.
+ *
+ * @author        Erik Hatcher (ehatcher@apache.org)
+ * @created       January 5, 2003
+ * @ant.element   display-name="taskdefproperties" name="taskdefproperties"
+ *      parent="org.apache.ant.xdoclet.AntDocletTask"
+ * @ant.task      ignore="true"
+ * @version       $Revision$
+ */
+public class TaskDefPropertiesSubTask extends AntSubTask
+{
+    protected static String DEFAULT_TEMPLATE_FILE = "resources/taskdef_properties.xdt";
 
-    public void addTasks(TaskSubTask subtask) {
-        _subTasks.add(subtask);
-    }
-
-    public void addDatatypes(DatatypeSubTask subtask) {
-        _subTasks.add(subtask);
-    }
-
-    /**
-     * Borrowed a bit from Darrell DeBoer's myrmidon stuff (thanks Darrell!)
-     */
-    public void execute() throws BuildException {
-        // Add the base directories of all the filesets to the sourcepath
-        final Vector filesets = getFilesets();
-        for (int i = 0; i < filesets.size(); i++) {
-            final FileSet fileSet = (FileSet) filesets.elementAt(i);
-            final File basedir = fileSet.getDir(project);
-            createSourcepath().setLocation(basedir);
-        }
-
-        super.execute();
-    }
-
-    protected Vector getSubTasks() {
-        Vector subtasks = super.getSubTasks();
-
-        subtasks.addAll(_subTasks);
-
-        return subtasks;
+    public TaskDefPropertiesSubTask()
+    {
+        setTemplateURL(getClass().getResource(DEFAULT_TEMPLATE_FILE));
+        setDestinationFile("taskdef.properties");
     }
 }

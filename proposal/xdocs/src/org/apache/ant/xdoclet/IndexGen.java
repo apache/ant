@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.xdoclet;
+package org.apache.ant.xdoclet;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;

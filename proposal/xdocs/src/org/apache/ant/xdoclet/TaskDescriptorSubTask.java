@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,71 +51,57 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.xdoclet;
 
-import com.sun.javadoc.ClassDoc;
+package org.apache.ant.xdoclet;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
+
+import xjavadoc.XClass;
+import xjavadoc.XJavaDoc;
+import xjavadoc.XMethod;
+
 import xdoclet.TemplateSubTask;
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
-import xdoclet.tags.TypeTagsHandler;
 import xdoclet.util.TypeConversionUtil;
 
-import java.io.File;
-import java.text.MessageFormat;
-
 /**
- * Custom XDoclet subtask to handle Ant datatypes
+ * Generates Ant task descriptors.
+ *
+ * @author               Erik Hatcher (ehatcher@apache.org)
+ * @created              January 1, 2003
+ * @ant.element          display-name="taskdescriptor" name="taskdescriptor"
+ *      parent="xdoclet.modules.apache.ant.org.apache.ant.xdoclet.AntDocletTask"
+ * @ant.task             ignore="true"
+ * @version              $Revision$
+ * @xdoclet.merge-file   file="{0}.xml" relates-to="{0}.xml" description="Used for code examples. An example merge file
+ *      may be found in Ant's proposal/xdocs/src directory."
  */
-public class DatatypeSubTask extends TemplateSubTask {
-    public final static String SUBTASK_NAME = "datatypes";
+public class TaskDescriptorSubTask extends AntSubTask
+{
+    protected static String DEFAULT_TEMPLATE_FILE = "resources/task_xml.xdt";
 
-    public String getSubTaskName() {
-        return SUBTASK_NAME;
+    public TaskDescriptorSubTask()
+    {
+        setTemplateURL(getClass().getResource(DEFAULT_TEMPLATE_FILE));
+        setDestinationFile("{0}.xml");
     }
 
     /**
-     * Returns true if the class is an Ant task. This causes the task to be processed
-     * by the XDoclet template task.
-     */
-    protected boolean matchesGenerationRules(ClassDoc clazz) throws XDocletException {
-        return isAntDatatype(clazz);
-    }
-
-    /**
-     * @todo a datatype doesn't have to extend Datatype, right?  so perhaps should
-     *       another condition to flag a class with @ant.datatype name="..."
-     */
-    public static final boolean isAntDatatype(ClassDoc clazz) throws XDocletException {
-        if (clazz.isAbstract()) {
-            return false;
-        }
-
-        // no inner classes
-        if (clazz.containingClass() != null) {
-            return false;
-        }
-
-        String ignoreValue = XDocletTagSupport.getClassTagValue(clazz, "ant:datatype", "ignore", 0, null, "false", false, false);
-        boolean ignore = TypeConversionUtil.stringToBoolean(ignoreValue, true);
-
-        if (ignore) {
-            return false;
-        }
-
-        return TypeTagsHandler.isOfType(clazz,
-                "org.apache.tools.ant.types.DataType",
-                TypeTagsHandler.TYPE_HIERARCHY);
-    }
-
-    /**
-     * Custom file naming. Use the task name for the file name rather than the
-     * default class name.
+     * Custom file naming. Use the task name for the file name rather than the default class name.
      *
-     * @todo fix hardcoded path name
+     * @param clazz
+     * @return
+     * @exception XDocletException
      */
-    protected String getGeneratedFileName(ClassDoc clazz) throws XDocletException {
-        String typeName = DatatypeTagsHandler.getDatatypeName(clazz);
-        return typeName + ".xml";
+    protected String getGeneratedFileName(XClass clazz) throws XDocletException
+    {
+        String dir = TaskTagsHandler.getCategoryName(clazz);
+        String taskName = TaskTagsHandler.getTaskName(clazz);
+
+        return new File(dir, taskName + ".xml").toString();
     }
 
 }
