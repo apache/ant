@@ -642,7 +642,15 @@ public class Javac extends MatchingTask {
     private void doJikesCompile() throws BuildException {
         log("Using jikes compiler", Project.MSG_VERBOSE);
 
-        Path classpath = new Path(getCompileClasspath(true));
+        Path classpath = new Path();
+
+        // Jikes doesn't support bootclasspath dir (-bootclasspath)
+        // so we'll emulate it for compatibility and convenience.
+        if (bootclasspath != null) {
+            classpath.append(bootclasspath);
+        }
+
+        classpath.append(new Path(getCompileClasspath(true)));
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
