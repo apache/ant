@@ -31,14 +31,6 @@ public class VfsManagerFactory
     public Object createService()
         throws AntServiceException
     {
-        try
-        {
-            return new VfsManager();
-        }
-        catch( Exception e )
-        {
-            final String message = REZ.getString( "create-vfs-manager.error" );
-            throw new AntServiceException( message );
-        }
+        return new VfsManager();
     }
 }
