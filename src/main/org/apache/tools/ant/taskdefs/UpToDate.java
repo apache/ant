@@ -77,6 +77,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * @author Hiroaki Nakamura 
  *         <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
  * @author Stefan Bodewig
+ * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
  *
  * @since Ant 1.2
  *
@@ -182,6 +183,8 @@ public class UpToDate extends Task implements Condition {
 
         // if the target file is not there, then it can't be up-to-date
         if (_targetFile != null && !_targetFile.exists()) {
+            log("The targetfile \"" + _targetFile.getAbsolutePath() 
+                    + "\" does not exist.", Project.MSG_VERBOSE);
             return false;
         } 
 
