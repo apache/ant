@@ -22,4 +22,20 @@
     <basename property="file.wo.suf" file="foo.txt" suffix="txt"/>
   </target>
 
+  <target name="testMultipleDots">
+    <basename property="file.wo.suf" file="foo.bar.txt" suffix="txt"/>
+  </target>
+
+  <target name="testNoDots">
+    <basename property="file.wo.suf" file="foo.bartxt" suffix="txt"/>
+  </target>
+  
+  <target name="testValueEqualsSuffixWithDot">
+    <basename property="file.wo.suf" file=".txt" suffix=".txt"/>
+  </target>
+
+  <target name="testValueEqualsSuffixWithoutDot">
+    <basename property="file.wo.suf" file=".txt" suffix="txt"/>
+  </target>
+  
 </project>

@@ -9,6 +9,9 @@ Fixed bugs:
 * <junitreport> created an empty junit-noframes.html if no format had
   been specified.
 
+* <basename> would remove more than it should if the file name
+  contained more than one dot.
+
 Other changes:
 --------------
 
