@@ -110,7 +110,7 @@ class ChangeLogParser {
         }
         return array;
     }
-
+   
     /**
      * Receive notification about the process writing
      * to standard output.
@@ -118,6 +118,9 @@ class ChangeLogParser {
     public void stdout(final String line) {
         switch(m_status) {
             case GET_FILE:
+                // make sure attributes are reset when
+                // working on a 'new' file.
+                reset();
                 processFile(line);
                 break;
             case GET_REVISION:
@@ -259,4 +262,17 @@ class ChangeLogParser {
             return null;
         }
     }
+    
+    /**
+     * reset all internal attributes except status.
+     */
+    private void reset(){
+        m_file = null;
+        m_date = null;
+        m_author = null;
+        m_comment = null;
+        m_revision = null;
+        m_previousRevision = null;
+    }
+
 }
