@@ -31,6 +31,8 @@ import java.io.File;
  */
 public class CommandlineJavaTest extends TestCase {
 
+    private String cloneVm;
+
     public CommandlineJavaTest(String name) {
         super(name);
     }
@@ -41,6 +43,16 @@ public class CommandlineJavaTest extends TestCase {
         project = new Project();
         project.setBasedir(".");
         project.setProperty("build.sysclasspath", "ignore");
+        cloneVm = System.getProperty("build.clonevm");
+        if (cloneVm != null) {
+            System.setProperty("build.clonevm", "false");
+        }
+    }
+
+    public void tearDown() {
+        if (cloneVm != null) {
+            System.setProperty("build.clonevm", cloneVm);
+        }
     }
 
     public void testGetCommandline() {
