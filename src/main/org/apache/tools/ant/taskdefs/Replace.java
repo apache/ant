@@ -328,8 +328,10 @@ public class Replace extends MatchingTask {
     public Properties getProperties(File propertyFile) throws BuildException {
         Properties properties = new Properties();
 
+        FileInputStream in = null;
         try {
-            properties.load(new FileInputStream(propertyFile));
+            in = new FileInputStream(propertyFile);
+            properties.load(in);
         } catch (FileNotFoundException e) {
             String message = "Property file (" + propertyFile.getPath()
                 + ") not found.";
@@ -338,6 +340,14 @@ public class Replace extends MatchingTask {
             String message = "Property file (" + propertyFile.getPath()
                 + ") cannot be loaded.";
             throw new BuildException(message);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
         }
 
         return properties;
