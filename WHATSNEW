@@ -268,6 +268,8 @@ Other changes:
 * <zipfileset> can now be defined in the main body of a project
   and referred to with refid="xyz". Bugzilla Report 17007.
 
+* A wrapper script for OS/2 has been added.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
