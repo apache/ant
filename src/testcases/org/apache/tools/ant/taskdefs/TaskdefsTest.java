@@ -140,6 +140,7 @@ public abstract class TaskdefsTest extends TestCase {
     }
     
     protected void configureProject(String filename) { 
+        logBuffer = new StringBuffer();
         project = new Project();
         project.init();
         project.setUserProperty( "ant.file" , new File(filename).getAbsolutePath() );
