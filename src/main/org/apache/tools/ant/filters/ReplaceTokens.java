@@ -190,8 +190,10 @@ public final class ReplaceTokens
                 
                 final String replaceWith = (String) hash.get(key.toString());
                 if (replaceWith != null) {
-                    replaceData = replaceWith;
-                    replaceIndex = 0;
+                    if (replaceWith.length() > 0) {
+                        replaceData = replaceWith;
+                        replaceIndex = 0;
+                    }
                     return read();
                 } else {
                     String newData = key.toString() + endToken;

@@ -90,6 +90,9 @@ Fixed bugs:
 * <tar> and <zip> didn't honor the defaultexcludes attribute for the
   implicit fileset.  Bugzilla Report 18637.
 
+* The <replacetokens> filter would throw an exception if the token's
+  value was an empty string.  Bugzilla Report 18625.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces 2.4.0
