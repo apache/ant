@@ -43,6 +43,18 @@ import org.apache.tools.ant.util.SourceFileScanner;
  */
 public class ExecuteOn extends ExecTask {
 
+    private class ExtendedDirectoryScanner extends DirectoryScanner {
+        public int getIncludedFilesCount() {
+            if (filesIncluded == null) throw new IllegalStateException();
+            return filesIncluded.size();
+        }
+
+        public int getIncludedDirsCount() {
+            if (dirsIncluded == null) throw new IllegalStateException();
+            return dirsIncluded.size();
+        }
+    }
+
     protected Vector filesets = new Vector(); // contains AbstractFileSet
                                               // (both DirSet and FileSet)
     private Vector filelists = new Vector();
@@ -270,7 +282,11 @@ public class ExecuteOn extends ExecTask {
                     }
                 }
                 File base = fs.getDir(getProject());
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+
+                ExtendedDirectoryScanner ds = new ExtendedDirectoryScanner();
+                fs.setupDirectoryScanner(ds, getProject());
+                ds.setFollowSymlinks(fs.isFollowSymlinks());
+                ds.scan();
 
                 if (!"dir".equals(currentType)) {
                     String[] s = getFiles(base, ds);
@@ -291,8 +307,15 @@ public class ExecuteOn extends ExecTask {
                 }
 
                 if (fileNames.size() == 0 && skipEmpty) {
-                    log("Skipping fileset for directory "
-                        + base + ". It is empty.", Project.MSG_INFO);
+                    int includedCount
+                        = ((!"dir".equals(currentType))
+                        ? ds.getIncludedFilesCount() : 0)
+                        + ((!"file".equals(currentType))
+                        ? ds.getIncludedDirsCount() : 0);
+
+                    log("Skipping fileset for directory " + base + ". It is "
+                        + ((includedCount > 0) ? "up to date." : "empty."),
+                        Project.MSG_INFO);
                     continue;
                 }
 
@@ -346,8 +369,16 @@ public class ExecuteOn extends ExecTask {
                 }
 
                 if (fileNames.size() == 0 && skipEmpty) {
-                    log("Skipping filelist for directory "
-                        + base + ". It is empty.", Project.MSG_INFO);
+                    ExtendedDirectoryScanner ds = new ExtendedDirectoryScanner();
+                    ds.setBasedir(base);
+                    ds.setIncludes(list.getFiles(getProject()));
+                    ds.scan();
+                    int includedCount
+                        = ds.getIncludedFilesCount() + ds.getIncludedDirsCount();
+
+                    log("Skipping filelist for directory " + base + ". It is "
+                        + ((includedCount > 0) ? "up to date." : "empty."),
+                        Project.MSG_INFO);
                     continue;
                 }
 
