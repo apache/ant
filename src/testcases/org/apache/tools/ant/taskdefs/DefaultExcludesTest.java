@@ -32,6 +32,10 @@ public class DefaultExcludesTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/defaultexcludes.xml");
     }
 
+    public void tearDown() {
+        project.executeTarget("cleanup");
+    }
+
     // Output the default excludes
     public void test1() {
         String[] expected = {

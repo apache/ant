@@ -122,6 +122,10 @@ Other changes:
   run all tests in a single forked JVM reducing the overhead of VM
   creation a lot.  Bugzilla Report 24697.
 
+* <jar> can now optionally create an index for jars different than the
+  one it currently builds as well.  See the new <indexjars> element
+  for details.  Bugzilla Report 14255.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 

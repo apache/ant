@@ -161,7 +161,13 @@ being wrapped and continued on the next line.
   </tr>
   <tr>
     <td valign="top">index</td>
-    <td valign="top">whether to create an <A HREF="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">index list</A> to speed up classloading.  This is a JDK 1.3+ specific feature.  Defaults to false. </td>
+    <td valign="top">whether to create an <A
+    HREF="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">index
+    list</A> to speed up classloading.  This is a JDK 1.3+ specific
+    feature.  Unless you specify additional jars with nested <a
+    href="#indexjars"><code>indexjars</code></a> elements, only the
+    contents of this jar will be included in the index.  Defaults to
+    false.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -196,6 +202,32 @@ from the manifest that exists in the Jar, if it exists.
 If the manifest values have changed the jar will be updated or rebuilt, as
 appropriate.
 </p>
+
+<a name="indexjars"><h4>indexjars</h4></a>
+
+<p><em>since ant 1.6.2</em></p>
+
+<p>The nested <code>indexjars</code> element specifies a <a
+href="../using.html#path">PATH like structure</a>.  Its content is
+completely ignored unless you set the index attribute of the task to
+true.</p>
+
+<p>The index created by this task will contain indices for the
+archives contained in this path, the names used for the archioves
+depend on your manifest:</p>
+<ul>
+  <li>If the generated jar's manifest contains no Class-Path
+  attribute, the file name without any leading directory path will be
+  used and all parts of the path will get indexed.</li>
+  <li>If the manifest contains a Class-Path attribute, this task will
+  try to guess which part of the Class-Path belongs to a given
+  archive.  If it cannot guess a name, the archive will be skipped,
+  otherwise tha name listed inside the Class-PAth attribute will be
+  used.</li>
+</ul>
+
+<p>This task will not create any index entries for archives that are
+empty or only contain files inside the META-INF directory.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
