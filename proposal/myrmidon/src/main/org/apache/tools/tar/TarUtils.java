@@ -30,8 +30,8 @@ public class TarUtils
     {
         getOctalBytes( value, buf, offset, length );
 
-        buf[offset + length - 1] = ( byte )' ';
-        buf[offset + length - 2] = 0;
+        buf[ offset + length - 1 ] = (byte)' ';
+        buf[ offset + length - 2 ] = 0;
 
         return offset + length;
     }
@@ -47,7 +47,7 @@ public class TarUtils
      */
     public static int getLongOctalBytes( long value, byte[] buf, int offset, int length )
     {
-        byte[] temp = new byte[length + 1];
+        byte[] temp = new byte[ length + 1 ];
 
         getOctalBytes( value, temp, 0, length + 1 );
         System.arraycopy( temp, 0, buf, offset, length );
@@ -70,12 +70,12 @@ public class TarUtils
 
         for( i = 0; i < length && i < name.length(); ++i )
         {
-            buf[offset + i] = ( byte )name.charAt( i );
+            buf[ offset + i ] = (byte)name.charAt( i );
         }
 
         for( ; i < length; ++i )
         {
-            buf[offset + i] = 0;
+            buf[ offset + i ] = 0;
         }
 
         return offset + length;
@@ -92,31 +92,31 @@ public class TarUtils
      */
     public static int getOctalBytes( long value, byte[] buf, int offset, int length )
     {
-        byte[] result = new byte[length];
+        byte[] result = new byte[ length ];
         int idx = length - 1;
 
-        buf[offset + idx] = 0;
+        buf[ offset + idx ] = 0;
         --idx;
-        buf[offset + idx] = ( byte )' ';
+        buf[ offset + idx ] = (byte)' ';
         --idx;
 
         if( value == 0 )
         {
-            buf[offset + idx] = ( byte )'0';
+            buf[ offset + idx ] = (byte)'0';
             --idx;
         }
         else
         {
             for( long val = value; idx >= 0 && val > 0; --idx )
             {
-                buf[offset + idx] = ( byte )( ( byte )'0' + ( byte )( val & 7 ) );
+                buf[ offset + idx ] = (byte)( (byte)'0' + (byte)( val & 7 ) );
                 val = val >> 3;
             }
         }
 
         for( ; idx >= 0; --idx )
         {
-            buf[offset + idx] = ( byte )' ';
+            buf[ offset + idx ] = (byte)' ';
         }
 
         return offset + length;
@@ -134,7 +134,7 @@ public class TarUtils
 
         for( int i = 0; i < buf.length; ++i )
         {
-            sum += 255 & buf[i];
+            sum += 255 & buf[ i ];
         }
 
         return sum;
@@ -155,12 +155,12 @@ public class TarUtils
 
         for( int i = offset; i < end; ++i )
         {
-            if( header[i] == 0 )
+            if( header[ i ] == 0 )
             {
                 break;
             }
 
-            result.append( ( char )header[i] );
+            result.append( (char)header[ i ] );
         }
 
         return result;
@@ -183,26 +183,26 @@ public class TarUtils
 
         for( int i = offset; i < end; ++i )
         {
-            if( header[i] == 0 )
+            if( header[ i ] == 0 )
             {
                 break;
             }
 
-            if( header[i] == ( byte )' ' || header[i] == '0' )
+            if( header[ i ] == (byte)' ' || header[ i ] == '0' )
             {
                 if( stillPadding )
                 {
                     continue;
                 }
 
-                if( header[i] == ( byte )' ' )
+                if( header[ i ] == (byte)' ' )
                 {
                     break;
                 }
             }
 
             stillPadding = false;
-            result = ( result << 3 ) + ( header[i] - '0' );
+            result = ( result << 3 ) + ( header[ i ] - '0' );
         }
 
         return result;

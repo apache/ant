@@ -82,42 +82,42 @@ public interface TarConstants
     /**
      * Normal file type.
      */
-    byte LF_NORMAL = ( byte )'0';
+    byte LF_NORMAL = (byte)'0';
 
     /**
      * Link file type.
      */
-    byte LF_LINK = ( byte )'1';
+    byte LF_LINK = (byte)'1';
 
     /**
      * Symbolic link file type.
      */
-    byte LF_SYMLINK = ( byte )'2';
+    byte LF_SYMLINK = (byte)'2';
 
     /**
      * Character device file type.
      */
-    byte LF_CHR = ( byte )'3';
+    byte LF_CHR = (byte)'3';
 
     /**
      * Block device file type.
      */
-    byte LF_BLK = ( byte )'4';
+    byte LF_BLK = (byte)'4';
 
     /**
      * Directory file type.
      */
-    byte LF_DIR = ( byte )'5';
+    byte LF_DIR = (byte)'5';
 
     /**
      * FIFO (pipe) file type.
      */
-    byte LF_FIFO = ( byte )'6';
+    byte LF_FIFO = (byte)'6';
 
     /**
      * Contiguous file type.
      */
-    byte LF_CONTIG = ( byte )'7';
+    byte LF_CONTIG = (byte)'7';
 
     /**
      * The magic tag representing a POSIX tar archive.
@@ -137,5 +137,5 @@ public interface TarConstants
     /**
      * Identifies the *next* file on the tape as having a long name.
      */
-    byte LF_GNUTYPE_LONGNAME = ( byte )'L';
+    byte LF_GNUTYPE_LONGNAME = (byte)'L';
 }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.tar;
+
 import java.io.File;
 import java.util.Date;
 
@@ -190,8 +191,8 @@ public class TarEntry implements TarConstants
                     char ch2 = name.charAt( 1 );
 
                     if( ch2 == ':'
-                         && ( ( ch1 >= 'a' && ch1 <= 'z' )
-                         || ( ch1 >= 'A' && ch1 <= 'Z' ) ) )
+                        && ( ( ch1 >= 'a' && ch1 <= 'z' )
+                        || ( ch1 >= 'A' && ch1 <= 'Z' ) ) )
                     {
                         name = name.substring( 2 );
                     }
@@ -406,15 +407,15 @@ public class TarEntry implements TarConstants
     {
         if( this.file == null || !this.file.isDirectory() )
         {
-            return new TarEntry[0];
+            return new TarEntry[ 0 ];
         }
 
         String[] list = this.file.list();
-        TarEntry[] result = new TarEntry[list.length];
+        TarEntry[] result = new TarEntry[ list.length ];
 
         for( int i = 0; i < list.length; ++i )
         {
-            result[i] = new TarEntry( new File( this.file, list[i] ) );
+            result[ i ] = new TarEntry( new File( this.file, list[ i ] ) );
         }
 
         return result;
@@ -490,7 +491,6 @@ public class TarEntry implements TarConstants
         return this.size;
     }
 
-
     /**
      * Get this entry's user id.
      *
@@ -549,7 +549,6 @@ public class TarEntry implements TarConstants
         return false;
     }
 
-
     /**
      * Indicate if this entry is a GNU long name block
      *
@@ -585,19 +584,19 @@ public class TarEntry implements TarConstants
 
         this.name = TarUtils.parseName( header, offset, NAMELEN );
         offset += NAMELEN;
-        this.mode = ( int )TarUtils.parseOctal( header, offset, MODELEN );
+        this.mode = (int)TarUtils.parseOctal( header, offset, MODELEN );
         offset += MODELEN;
-        this.userId = ( int )TarUtils.parseOctal( header, offset, UIDLEN );
+        this.userId = (int)TarUtils.parseOctal( header, offset, UIDLEN );
         offset += UIDLEN;
-        this.groupId = ( int )TarUtils.parseOctal( header, offset, GIDLEN );
+        this.groupId = (int)TarUtils.parseOctal( header, offset, GIDLEN );
         offset += GIDLEN;
         this.size = TarUtils.parseOctal( header, offset, SIZELEN );
         offset += SIZELEN;
         this.modTime = TarUtils.parseOctal( header, offset, MODTIMELEN );
         offset += MODTIMELEN;
-        this.checkSum = ( int )TarUtils.parseOctal( header, offset, CHKSUMLEN );
+        this.checkSum = (int)TarUtils.parseOctal( header, offset, CHKSUMLEN );
         offset += CHKSUMLEN;
-        this.linkFlag = header[offset++];
+        this.linkFlag = header[ offset++ ];
         this.linkName = TarUtils.parseName( header, offset, NAMELEN );
         offset += NAMELEN;
         this.magic = TarUtils.parseName( header, offset, MAGICLEN );
@@ -606,9 +605,9 @@ public class TarEntry implements TarConstants
         offset += UNAMELEN;
         this.groupName = TarUtils.parseName( header, offset, GNAMELEN );
         offset += GNAMELEN;
-        this.devMajor = ( int )TarUtils.parseOctal( header, offset, DEVLEN );
+        this.devMajor = (int)TarUtils.parseOctal( header, offset, DEVLEN );
         offset += DEVLEN;
-        this.devMinor = ( int )TarUtils.parseOctal( header, offset, DEVLEN );
+        this.devMinor = (int)TarUtils.parseOctal( header, offset, DEVLEN );
     }
 
     /**
@@ -631,10 +630,10 @@ public class TarEntry implements TarConstants
 
         for( int c = 0; c < CHKSUMLEN; ++c )
         {
-            outbuf[offset++] = ( byte )' ';
+            outbuf[ offset++ ] = (byte)' ';
         }
 
-        outbuf[offset++] = this.linkFlag;
+        outbuf[ offset++ ] = this.linkFlag;
         offset = TarUtils.getNameBytes( this.linkName, outbuf, offset, NAMELEN );
         offset = TarUtils.getNameBytes( this.magic, outbuf, offset, MAGICLEN );
         offset = TarUtils.getNameBytes( this.userName, outbuf, offset, UNAMELEN );
@@ -644,7 +643,7 @@ public class TarEntry implements TarConstants
 
         while( offset < outbuf.length )
         {
-            outbuf[offset++] = 0;
+            outbuf[ offset++ ] = 0;
         }
 
         long checkSum = TarUtils.computeCheckSum( outbuf );

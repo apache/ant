@@ -437,7 +437,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                 Execute exe = new Execute( new LogStreamHandler( attributes,
                                                                  Project.MSG_INFO,
                                                                  Project.MSG_WARN ) );
-                exe.setAntRun( project );
                 exe.setWorkingDirectory( project.getBaseDir() );
                 exe.setCommandline( commandArray );
                 exe.execute();

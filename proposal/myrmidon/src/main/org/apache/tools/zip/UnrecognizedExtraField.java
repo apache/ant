@@ -92,7 +92,7 @@ public class UnrecognizedExtraField implements ZipExtraField
 
     public void parseFromLocalFileData( byte[] data, int offset, int length )
     {
-        byte[] tmp = new byte[length];
+        byte[] tmp = new byte[ length ];
         System.arraycopy( data, offset, tmp, 0, length );
         setLocalFileDataData( tmp );
     }

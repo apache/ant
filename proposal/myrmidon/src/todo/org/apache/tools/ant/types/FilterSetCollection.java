@@ -9,8 +9,8 @@ package org.apache.tools.ant.types;// java io classes
 
 // java util classes
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 
 // ant classes

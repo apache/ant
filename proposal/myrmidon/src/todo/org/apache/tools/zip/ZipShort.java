@@ -50,8 +50,8 @@ public class ZipShort implements Cloneable
      */
     public ZipShort( byte[] bytes, int offset )
     {
-        value = ( bytes[offset + 1] << 8 ) & 0xFF00;
-        value += ( bytes[offset] & 0xFF );
+        value = ( bytes[ offset + 1 ] << 8 ) & 0xFF00;
+        value += ( bytes[ offset ] & 0xFF );
     }
 
     /**
@@ -62,9 +62,9 @@ public class ZipShort implements Cloneable
      */
     public byte[] getBytes()
     {
-        byte[] result = new byte[2];
-        result[0] = ( byte )( value & 0xFF );
-        result[1] = ( byte )( ( value & 0xFF00 ) >> 8 );
+        byte[] result = new byte[ 2 ];
+        result[ 0 ] = (byte)( value & 0xFF );
+        result[ 1 ] = (byte)( ( value & 0xFF00 ) >> 8 );
         return result;
     }
 
@@ -92,7 +92,7 @@ public class ZipShort implements Cloneable
         {
             return false;
         }
-        return value == ( ( ZipShort )o ).getValue();
+        return value == ( (ZipShort)o ).getValue();
     }
 
     /**

@@ -6,7 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.bzip2;
-import java.io.*;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * An output stream that compresses into the BZip2 format (without the file
@@ -35,15 +37,15 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
     protected final static int QSORT_STACK_SIZE = 1000;
     CRC mCrc = new CRC();
 
-    private boolean inUse[] = new boolean[256];
+    private boolean inUse[] = new boolean[ 256 ];
 
-    private char seqToUnseq[] = new char[256];
-    private char unseqToSeq[] = new char[256];
+    private char seqToUnseq[] = new char[ 256 ];
+    private char unseqToSeq[] = new char[ 256 ];
 
-    private char selector[] = new char[MAX_SELECTORS];
-    private char selectorMtf[] = new char[MAX_SELECTORS];
+    private char selector[] = new char[ MAX_SELECTORS ];
+    private char selectorMtf[] = new char[ MAX_SELECTORS ];
 
-    private int mtfFreq[] = new int[MAX_ALPHA_SIZE];
+    private int mtfFreq[] = new int[ MAX_ALPHA_SIZE ];
 
     private int currentChar = -1;
     private int runLength = 0;
@@ -57,8 +59,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
      * usually small, typically <= 20.
      */
     private int incs[] = {1, 4, 13, 40, 121, 364, 1093, 3280,
-        9841, 29524, 88573, 265720,
-        797161, 2391484};
+                          9841, 29524, 88573, 265720,
+                          797161, 2391484};
 
     boolean blockRandomised;
 
@@ -181,38 +183,38 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         int k;
         boolean tooLong;
 
-        int heap[] = new int[MAX_ALPHA_SIZE + 2];
-        int weight[] = new int[MAX_ALPHA_SIZE * 2];
-        int parent[] = new int[MAX_ALPHA_SIZE * 2];
+        int heap[] = new int[ MAX_ALPHA_SIZE + 2 ];
+        int weight[] = new int[ MAX_ALPHA_SIZE * 2 ];
+        int parent[] = new int[ MAX_ALPHA_SIZE * 2 ];
 
         for( i = 0; i < alphaSize; i++ )
-            weight[i + 1] = ( freq[i] == 0 ? 1 : freq[i] ) << 8;
+            weight[ i + 1 ] = ( freq[ i ] == 0 ? 1 : freq[ i ] ) << 8;
 
         while( true )
         {
             nNodes = alphaSize;
             nHeap = 0;
 
-            heap[0] = 0;
-            weight[0] = 0;
-            parent[0] = -2;
+            heap[ 0 ] = 0;
+            weight[ 0 ] = 0;
+            parent[ 0 ] = -2;
 
             for( i = 1; i <= alphaSize; i++ )
             {
-                parent[i] = -1;
+                parent[ i ] = -1;
                 nHeap++;
-                heap[nHeap] = i;
+                heap[ nHeap ] = i;
                 {
                     int zz;
                     int tmp;
                     zz = nHeap;
-                    tmp = heap[zz];
-                    while( weight[tmp] < weight[heap[zz >> 1]] )
+                    tmp = heap[ zz ];
+                    while( weight[ tmp ] < weight[ heap[ zz >> 1 ] ] )
                     {
-                        heap[zz] = heap[zz >> 1];
+                        heap[ zz ] = heap[ zz >> 1 ];
                         zz >>= 1;
                     }
-                    heap[zz] = tmp;
+                    heap[ zz ] = tmp;
                 }
             }
             if( !( nHeap < ( MAX_ALPHA_SIZE + 2 ) ) )
@@ -220,78 +222,78 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
 
             while( nHeap > 1 )
             {
-                n1 = heap[1];
-                heap[1] = heap[nHeap];
+                n1 = heap[ 1 ];
+                heap[ 1 ] = heap[ nHeap ];
                 nHeap--;
                 {
                     int zz = 0;
                     int yy = 0;
                     int tmp = 0;
                     zz = 1;
-                    tmp = heap[zz];
+                    tmp = heap[ zz ];
                     while( true )
                     {
                         yy = zz << 1;
                         if( yy > nHeap )
                             break;
                         if( yy < nHeap &&
-                            weight[heap[yy + 1]] < weight[heap[yy]] )
+                            weight[ heap[ yy + 1 ] ] < weight[ heap[ yy ] ] )
                             yy++;
-                        if( weight[tmp] < weight[heap[yy]] )
+                        if( weight[ tmp ] < weight[ heap[ yy ] ] )
                             break;
-                        heap[zz] = heap[yy];
+                        heap[ zz ] = heap[ yy ];
                         zz = yy;
                     }
-                    heap[zz] = tmp;
+                    heap[ zz ] = tmp;
                 }
-                n2 = heap[1];
-                heap[1] = heap[nHeap];
+                n2 = heap[ 1 ];
+                heap[ 1 ] = heap[ nHeap ];
                 nHeap--;
                 {
                     int zz = 0;
                     int yy = 0;
                     int tmp = 0;
                     zz = 1;
-                    tmp = heap[zz];
+                    tmp = heap[ zz ];
                     while( true )
                     {
                         yy = zz << 1;
                         if( yy > nHeap )
                             break;
                         if( yy < nHeap &&
-                            weight[heap[yy + 1]] < weight[heap[yy]] )
+                            weight[ heap[ yy + 1 ] ] < weight[ heap[ yy ] ] )
                             yy++;
-                        if( weight[tmp] < weight[heap[yy]] )
+                        if( weight[ tmp ] < weight[ heap[ yy ] ] )
                             break;
-                        heap[zz] = heap[yy];
+                        heap[ zz ] = heap[ yy ];
                         zz = yy;
                     }
-                    heap[zz] = tmp;
+                    heap[ zz ] = tmp;
                 }
                 nNodes++;
-                parent[n1] = parent[n2] = nNodes;
+                parent[ n1 ] = parent[ n2 ] = nNodes;
 
-                weight[nNodes] = ( ( weight[n1] & 0xffffff00 )
-                     + ( weight[n2] & 0xffffff00 ) )
-                     | ( 1 + ( ( ( weight[n1] & 0x000000ff ) >
-                    ( weight[n2] & 0x000000ff ) ) ?
-                    ( weight[n1] & 0x000000ff ) :
-                    ( weight[n2] & 0x000000ff ) ) );
+                weight[ nNodes ] = ( ( weight[ n1 ] & 0xffffff00 )
+                    + ( weight[ n2 ] & 0xffffff00 ) )
+                    | ( 1 + ( ( ( weight[ n1 ] & 0x000000ff ) >
+                    ( weight[ n2 ] & 0x000000ff ) ) ?
+                    ( weight[ n1 ] & 0x000000ff ) :
+                    ( weight[ n2 ] & 0x000000ff ) ) );
 
-                parent[nNodes] = -1;
+                parent[ nNodes ] = -1;
                 nHeap++;
-                heap[nHeap] = nNodes;
+                heap[ nHeap ] = nNodes;
                 {
                     int zz = 0;
                     int tmp = 0;
                     zz = nHeap;
-                    tmp = heap[zz];
-                    while( weight[tmp] < weight[heap[zz >> 1]] )
+                    tmp = heap[ zz ];
+                    while( weight[ tmp ] < weight[ heap[ zz >> 1 ] ] )
                     {
-                        heap[zz] = heap[zz >> 1];
+                        heap[ zz ] = heap[ zz >> 1 ];
                         zz >>= 1;
                     }
-                    heap[zz] = tmp;
+                    heap[ zz ] = tmp;
                 }
             }
             if( !( nNodes < ( MAX_ALPHA_SIZE * 2 ) ) )
@@ -302,12 +304,12 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
             {
                 j = 0;
                 k = i;
-                while( parent[k] >= 0 )
+                while( parent[ k ] >= 0 )
                 {
-                    k = parent[k];
+                    k = parent[ k ];
                     j++;
                 }
-                len[i - 1] = ( char )j;
+                len[ i - 1 ] = (char)j;
                 if( j > maxLen )
                     tooLong = true;
             }
@@ -317,9 +319,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
 
             for( i = 1; i < alphaSize; i++ )
             {
-                j = weight[i] >> 8;
+                j = weight[ i ] >> 8;
                 j = 1 + ( j / 2 );
-                weight[i] = j << 8;
+                weight[ i ] = j << 8;
             }
         }
     }
@@ -398,13 +400,13 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
     private void allocateCompressStructures()
     {
         int n = baseBlockSize * blockSize100k;
-        block = new char[( n + 1 + NUM_OVERSHOOT_BYTES )];
-        quadrant = new int[( n + NUM_OVERSHOOT_BYTES )];
-        zptr = new int[n];
-        ftab = new int[65537];
+        block = new char[ ( n + 1 + NUM_OVERSHOOT_BYTES ) ];
+        quadrant = new int[ ( n + NUM_OVERSHOOT_BYTES ) ];
+        zptr = new int[ n ];
+        ftab = new int[ 65537 ];
 
         if( block == null || quadrant == null || zptr == null
-             || ftab == null )
+            || ftab == null )
         {
             //int totalDraw = (n + 1 + NUM_OVERSHOOT_BYTES) + (n + NUM_OVERSHOOT_BYTES) + n + 65537;
             //compressOutOfMemory ( totalDraw, n );
@@ -422,7 +424,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
          */
         //    szptr = zptr;
 
-        szptr = new short[2 * n];
+        szptr = new short[ 2 * n ];
     }
 
     private void bsFinishedWithStream()
@@ -519,7 +521,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
 
         origPtr = -1;
         for( i = 0; i <= last; i++ )
-            if( zptr[i] == 0 )
+            if( zptr[ i ] == 0 )
             {
                 origPtr = i;
                 break;
@@ -616,43 +618,43 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         int s1;
         int s2;
 
-        c1 = block[i1 + 1];
-        c2 = block[i2 + 1];
+        c1 = block[ i1 + 1 ];
+        c2 = block[ i2 + 1 ];
         if( c1 != c2 )
             return ( c1 > c2 );
         i1++;
         i2++;
 
-        c1 = block[i1 + 1];
-        c2 = block[i2 + 1];
+        c1 = block[ i1 + 1 ];
+        c2 = block[ i2 + 1 ];
         if( c1 != c2 )
             return ( c1 > c2 );
         i1++;
         i2++;
 
-        c1 = block[i1 + 1];
-        c2 = block[i2 + 1];
+        c1 = block[ i1 + 1 ];
+        c2 = block[ i2 + 1 ];
         if( c1 != c2 )
             return ( c1 > c2 );
         i1++;
         i2++;
 
-        c1 = block[i1 + 1];
-        c2 = block[i2 + 1];
+        c1 = block[ i1 + 1 ];
+        c2 = block[ i2 + 1 ];
         if( c1 != c2 )
             return ( c1 > c2 );
         i1++;
         i2++;
 
-        c1 = block[i1 + 1];
-        c2 = block[i2 + 1];
+        c1 = block[ i1 + 1 ];
+        c2 = block[ i2 + 1 ];
         if( c1 != c2 )
             return ( c1 > c2 );
         i1++;
         i2++;
 
-        c1 = block[i1 + 1];
-        c2 = block[i2 + 1];
+        c1 = block[ i1 + 1 ];
+        c2 = block[ i2 + 1 ];
         if( c1 != c2 )
             return ( c1 > c2 );
         i1++;
@@ -662,45 +664,45 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
 
         do
         {
-            c1 = block[i1 + 1];
-            c2 = block[i2 + 1];
+            c1 = block[ i1 + 1 ];
+            c2 = block[ i2 + 1 ];
             if( c1 != c2 )
                 return ( c1 > c2 );
-            s1 = quadrant[i1];
-            s2 = quadrant[i2];
+            s1 = quadrant[ i1 ];
+            s2 = quadrant[ i2 ];
             if( s1 != s2 )
                 return ( s1 > s2 );
             i1++;
             i2++;
 
-            c1 = block[i1 + 1];
-            c2 = block[i2 + 1];
+            c1 = block[ i1 + 1 ];
+            c2 = block[ i2 + 1 ];
             if( c1 != c2 )
                 return ( c1 > c2 );
-            s1 = quadrant[i1];
-            s2 = quadrant[i2];
+            s1 = quadrant[ i1 ];
+            s2 = quadrant[ i2 ];
             if( s1 != s2 )
                 return ( s1 > s2 );
             i1++;
             i2++;
 
-            c1 = block[i1 + 1];
-            c2 = block[i2 + 1];
+            c1 = block[ i1 + 1 ];
+            c2 = block[ i2 + 1 ];
             if( c1 != c2 )
                 return ( c1 > c2 );
-            s1 = quadrant[i1];
-            s2 = quadrant[i2];
+            s1 = quadrant[ i1 ];
+            s2 = quadrant[ i2 ];
             if( s1 != s2 )
                 return ( s1 > s2 );
             i1++;
             i2++;
 
-            c1 = block[i1 + 1];
-            c2 = block[i2 + 1];
+            c1 = block[ i1 + 1 ];
+            c2 = block[ i2 + 1 ];
             if( c1 != c2 )
                 return ( c1 > c2 );
-            s1 = quadrant[i1];
-            s2 = quadrant[i2];
+            s1 = quadrant[ i1 ];
+            s2 = quadrant[ i2 ];
             if( s1 != s2 )
                 return ( s1 > s2 );
             i1++;
@@ -721,14 +723,14 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
 
             k -= 4;
             workDone++;
-        }while ( k >= 0 );
+        } while( k >= 0 );
 
         return false;
     }
 
     private void generateMTFValues()
     {
-        char yy[] = new char[256];
+        char yy[] = new char[ 256 ];
         int i;
         int j;
         char tmp;
@@ -741,30 +743,30 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         EOB = nInUse + 1;
 
         for( i = 0; i <= EOB; i++ )
-            mtfFreq[i] = 0;
+            mtfFreq[ i ] = 0;
 
         wr = 0;
         zPend = 0;
         for( i = 0; i < nInUse; i++ )
-            yy[i] = ( char )i;
+            yy[ i ] = (char)i;
 
         for( i = 0; i <= last; i++ )
         {
             char ll_i;
 
-            ll_i = unseqToSeq[block[zptr[i]]];
+            ll_i = unseqToSeq[ block[ zptr[ i ] ] ];
 
             j = 0;
-            tmp = yy[j];
+            tmp = yy[ j ];
             while( ll_i != tmp )
             {
                 j++;
                 tmp2 = tmp;
-                tmp = yy[j];
-                yy[j] = tmp2;
+                tmp = yy[ j ];
+                yy[ j ] = tmp2;
             }
             ;
-            yy[0] = tmp;
+            yy[ 0 ] = tmp;
 
             if( j == 0 )
             {
@@ -777,18 +779,18 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
                     zPend--;
                     while( true )
                     {
-                        switch ( zPend % 2 )
+                        switch( zPend % 2 )
                         {
-                        case 0:
-                            szptr[wr] = ( short )RUNA;
-                            wr++;
-                            mtfFreq[RUNA]++;
-                            break;
-                        case 1:
-                            szptr[wr] = ( short )RUNB;
-                            wr++;
-                            mtfFreq[RUNB]++;
-                            break;
+                            case 0:
+                                szptr[ wr ] = (short)RUNA;
+                                wr++;
+                                mtfFreq[ RUNA ]++;
+                                break;
+                            case 1:
+                                szptr[ wr ] = (short)RUNB;
+                                wr++;
+                                mtfFreq[ RUNB ]++;
+                                break;
                         }
                         ;
                         if( zPend < 2 )
@@ -798,9 +800,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
                     ;
                     zPend = 0;
                 }
-                szptr[wr] = ( short )( j + 1 );
+                szptr[ wr ] = (short)( j + 1 );
                 wr++;
-                mtfFreq[j + 1]++;
+                mtfFreq[ j + 1 ]++;
             }
         }
 
@@ -809,18 +811,18 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
             zPend--;
             while( true )
             {
-                switch ( zPend % 2 )
+                switch( zPend % 2 )
                 {
-                case 0:
-                    szptr[wr] = ( short )RUNA;
-                    wr++;
-                    mtfFreq[RUNA]++;
-                    break;
-                case 1:
-                    szptr[wr] = ( short )RUNB;
-                    wr++;
-                    mtfFreq[RUNB]++;
-                    break;
+                    case 0:
+                        szptr[ wr ] = (short)RUNA;
+                        wr++;
+                        mtfFreq[ RUNA ]++;
+                        break;
+                    case 1:
+                        szptr[ wr ] = (short)RUNB;
+                        wr++;
+                        mtfFreq[ RUNB ]++;
+                        break;
                 }
                 if( zPend < 2 )
                     break;
@@ -828,9 +830,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
             }
         }
 
-        szptr[wr] = ( short )EOB;
+        szptr[ wr ] = (short)EOB;
         wr++;
-        mtfFreq[EOB]++;
+        mtfFreq[ EOB ]++;
 
         nMTF = wr;
     }
@@ -846,9 +848,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         for( n = minLen; n <= maxLen; n++ )
         {
             for( i = 0; i < alphaSize; i++ )
-                if( length[i] == n )
+                if( length[ i ] == n )
                 {
-                    code[i] = vec;
+                    code[ i ] = vec;
                     vec++;
                 }
             ;
@@ -864,7 +866,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         //        ch = 0;
 
         for( int i = 0; i < 256; i++ )
-            inUse[i] = false;
+            inUse[ i ] = false;
 
         /*
          * 20 is just a paranoia constant
@@ -895,9 +897,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         int j;
         int ss;
         int sb;
-        int runningOrder[] = new int[256];
-        int copy[] = new int[256];
-        boolean bigDone[] = new boolean[256];
+        int runningOrder[] = new int[ 256 ];
+        int copy[] = new int[ 256 ];
+        boolean bigDone[] = new boolean[ 256 ];
         int c1;
         int c2;
         int numQSorted;
@@ -909,11 +911,11 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
          */
         //   if (verbosity >= 4) fprintf ( stderr, "        sort initialise ...\n" );
         for( i = 0; i < NUM_OVERSHOOT_BYTES; i++ )
-            block[last + i + 2] = block[( i % ( last + 1 ) ) + 1];
+            block[ last + i + 2 ] = block[ ( i % ( last + 1 ) ) + 1 ];
         for( i = 0; i <= last + NUM_OVERSHOOT_BYTES; i++ )
-            quadrant[i] = 0;
+            quadrant[ i ] = 0;
 
-        block[0] = ( char )( block[last + 1] );
+        block[ 0 ] = (char)( block[ last + 1 ] );
 
         if( last < 4000 )
         {
@@ -922,7 +924,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
              * has quite a large constant overhead.
              */
             for( i = 0; i <= last; i++ )
-                zptr[i] = i;
+                zptr[ i ] = i;
             firstAttempt = false;
             workDone = workLimit = 0;
             simpleSort( 0, last, 0 );
@@ -931,35 +933,35 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
         {
             numQSorted = 0;
             for( i = 0; i <= 255; i++ )
-                bigDone[i] = false;
+                bigDone[ i ] = false;
 
             for( i = 0; i <= 65536; i++ )
-                ftab[i] = 0;
+                ftab[ i ] = 0;
 
-            c1 = block[0];
+            c1 = block[ 0 ];
             for( i = 0; i <= last; i++ )
             {
-                c2 = block[i + 1];
-                ftab[( c1 << 8 ) + c2]++;
+                c2 = block[ i + 1 ];
+                ftab[ ( c1 << 8 ) + c2 ]++;
                 c1 = c2;
             }
 
             for( i = 1; i <= 65536; i++ )
-                ftab[i] += ftab[i - 1];
+                ftab[ i ] += ftab[ i - 1 ];
 
-            c1 = block[1];
+            c1 = block[ 1 ];
             for( i = 0; i < last; i++ )
             {
-                c2 = block[i + 2];
+                c2 = block[ i + 2 ];
                 j = ( c1 << 8 ) + c2;
                 c1 = c2;
-                ftab[j]--;
-                zptr[ftab[j]] = i;
+                ftab[ j ]--;
+                zptr[ ftab[ j ] ] = i;
             }
 
-            j = ( ( block[last + 1] ) << 8 ) + ( block[1] );
-            ftab[j]--;
-            zptr[ftab[j]] = last;
+            j = ( ( block[ last + 1 ] ) << 8 ) + ( block[ 1 ] );
+            ftab[ j ]--;
+            zptr[ ftab[ j ] ] = last;
 
             /*
              * Now ftab contains the first loc of every small bucket.
@@ -967,32 +969,32 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants
              * big bucket.
              */
             for( i = 0; i <= 255; i++ )
-                runningOrder[i] = i;
+                runningOrder[ i ] = i;
             {
                 int vv;
                 int h = 1;
                 do
                     h = 3 * h + 1;
-while ( h <= 256 );
+                while( h <= 256 );
                 do
                 {
                     h = h / 3;
                     for( i = h; i <= 255; i++ )
                     {
-                        vv = runningOrder[i];
+                        vv = runningOrder[ i ];
                         j = i;
-                        while( ( ftab[( ( runningOrder[j - h] ) + 1 ) << 8]
-                             - ftab[( runningOrder[j - h] ) << 8] ) >
-                            ( ftab[( ( vv ) + 1 ) << 8] - ftab[( vv ) << 8] ) )
+                        while( ( ftab[ ( ( runningOrder[ j - h ] ) + 1 ) << 8 ]
+                            - ftab[ ( runningOrder[ j - h ] ) << 8 ] ) >
+                            ( ftab[ ( ( vv ) + 1 ) << 8 ] - ftab[ ( vv ) << 8 ] ) )
                         {
-                            runningOrder[j] = runningOrder[j - h];
+                            runningOrder[ j ] = runningOrder[ j - h ];
                             j = j - h;
                             if( j <= ( h - 1 ) )
                                 break;
                         }
-                        runningOrder[j] = vv;
+                        runningOrder[ j ] = vv;
                     }
-                }while ( h != 1 );
+                } while( h != 1 );
             }
 
             /*
@@ -1004,7 +1006,7 @@ while ( h <= 256 );
                 /*
                  * Process big buckets, starting with the least full.
                  */
-                ss = runningOrder[i];
+                ss = runningOrder[ i ];
 
                 /*
                  * Complete the big bucket [ss] by quicksorting
@@ -1016,10 +1018,10 @@ while ( h <= 256 );
                 for( j = 0; j <= 255; j++ )
                 {
                     sb = ( ss << 8 ) + j;
-                    if( !( ( ftab[sb] & SETMASK ) == SETMASK ) )
+                    if( !( ( ftab[ sb ] & SETMASK ) == SETMASK ) )
                     {
-                        int lo = ftab[sb] & CLEARMASK;
-                        int hi = ( ftab[sb + 1] & CLEARMASK ) - 1;
+                        int lo = ftab[ sb ] & CLEARMASK;
+                        int hi = ( ftab[ sb + 1 ] & CLEARMASK ) - 1;
                         if( hi > lo )
                         {
                             qSort3( lo, hi, 2 );
@@ -1027,7 +1029,7 @@ while ( h <= 256 );
                             if( workDone > workLimit && firstAttempt )
                                 return;
                         }
-                        ftab[sb] |= SETMASK;
+                        ftab[ sb ] |= SETMASK;
                     }
                 }
 
@@ -1039,12 +1041,12 @@ while ( h <= 256 );
                  * this updating for the last bucket processed, since
                  * updating for the last bucket is pointless.
                  */
-                bigDone[ss] = true;
+                bigDone[ ss ] = true;
 
                 if( i < 255 )
                 {
-                    int bbStart = ftab[ss << 8] & CLEARMASK;
-                    int bbSize = ( ftab[( ss + 1 ) << 8] & CLEARMASK ) - bbStart;
+                    int bbStart = ftab[ ss << 8 ] & CLEARMASK;
+                    int bbSize = ( ftab[ ( ss + 1 ) << 8 ] & CLEARMASK ) - bbStart;
                     int shifts = 0;
 
                     while( ( bbSize >> shifts ) > 65534 )
@@ -1052,11 +1054,11 @@ while ( h <= 256 );
 
                     for( j = 0; j < bbSize; j++ )
                     {
-                        int a2update = zptr[bbStart + j];
+                        int a2update = zptr[ bbStart + j ];
                         int qVal = ( j >> shifts );
-                        quadrant[a2update] = qVal;
+                        quadrant[ a2update ] = qVal;
                         if( a2update < NUM_OVERSHOOT_BYTES )
-                            quadrant[a2update + last + 1] = qVal;
+                            quadrant[ a2update + last + 1 ] = qVal;
                     }
 
                     if( !( ( ( bbSize - 1 ) >> shifts ) <= 65535 ) )
@@ -1068,21 +1070,21 @@ while ( h <= 256 );
                  * sorted order for small buckets [t, ss] for all t != ss.
                  */
                 for( j = 0; j <= 255; j++ )
-                    copy[j] = ftab[( j << 8 ) + ss] & CLEARMASK;
+                    copy[ j ] = ftab[ ( j << 8 ) + ss ] & CLEARMASK;
 
-                for( j = ftab[ss << 8] & CLEARMASK;
-                    j < ( ftab[( ss + 1 ) << 8] & CLEARMASK ); j++ )
+                for( j = ftab[ ss << 8 ] & CLEARMASK;
+                     j < ( ftab[ ( ss + 1 ) << 8 ] & CLEARMASK ); j++ )
                 {
-                    c1 = block[zptr[j]];
-                    if( !bigDone[c1] )
+                    c1 = block[ zptr[ j ] ];
+                    if( !bigDone[ c1 ] )
                     {
-                        zptr[copy[c1]] = zptr[j] == 0 ? last : zptr[j] - 1;
-                        copy[c1]++;
+                        zptr[ copy[ c1 ] ] = zptr[ j ] == 0 ? last : zptr[ j ] - 1;
+                        copy[ c1 ]++;
                     }
                 }
 
                 for( j = 0; j <= 255; j++ )
-                    ftab[( j << 8 ) + ss] |= SETMASK;
+                    ftab[ ( j << 8 ) + ss ] |= SETMASK;
             }
         }
     }
@@ -1092,10 +1094,10 @@ while ( h <= 256 );
         int i;
         nInUse = 0;
         for( i = 0; i < 256; i++ )
-            if( inUse[i] )
+            if( inUse[ i ] )
             {
-                seqToUnseq[nInUse] = ( char )i;
-                unseqToSeq[i] = ( char )nInUse;
+                seqToUnseq[ nInUse ] = (char)i;
+                unseqToSeq[ i ] = (char)nInUse;
                 nInUse++;
             }
     }
@@ -1141,15 +1143,15 @@ while ( h <= 256 );
         int lo;
         int hi;
         int d;
-        StackElem[] stack = new StackElem[QSORT_STACK_SIZE];
+        StackElem[] stack = new StackElem[ QSORT_STACK_SIZE ];
         for( int count = 0; count < QSORT_STACK_SIZE; count++ )
-            stack[count] = new StackElem();
+            stack[ count ] = new StackElem();
 
         sp = 0;
 
-        stack[sp].ll = loSt;
-        stack[sp].hh = hiSt;
-        stack[sp].dd = dSt;
+        stack[ sp ].ll = loSt;
+        stack[ sp ].hh = hiSt;
+        stack[ sp ].dd = dSt;
         sp++;
 
         while( sp > 0 )
@@ -1158,9 +1160,9 @@ while ( h <= 256 );
                 panic();
 
             sp--;
-            lo = stack[sp].ll;
-            hi = stack[sp].hh;
-            d = stack[sp].dd;
+            lo = stack[ sp ].ll;
+            hi = stack[ sp ].hh;
+            d = stack[ sp ].dd;
 
             if( hi - lo < SMALL_THRESH || d > DEPTH_THRESH )
             {
@@ -1170,9 +1172,9 @@ while ( h <= 256 );
                 continue;
             }
 
-            med = med3( block[zptr[lo] + d + 1],
-                block[zptr[hi] + d + 1],
-                block[zptr[( lo + hi ) >> 1] + d + 1] );
+            med = med3( block[ zptr[ lo ] + d + 1 ],
+                        block[ zptr[ hi ] + d + 1 ],
+                        block[ zptr[ ( lo + hi ) >> 1 ] + d + 1 ] );
 
             unLo = ltLo = lo;
             unHi = gtHi = hi;
@@ -1183,13 +1185,13 @@ while ( h <= 256 );
                 {
                     if( unLo > unHi )
                         break;
-                    n = ( ( int )block[zptr[unLo] + d + 1] ) - med;
+                    n = ( (int)block[ zptr[ unLo ] + d + 1 ] ) - med;
                     if( n == 0 )
                     {
                         int temp = 0;
-                        temp = zptr[unLo];
-                        zptr[unLo] = zptr[ltLo];
-                        zptr[ltLo] = temp;
+                        temp = zptr[ unLo ];
+                        zptr[ unLo ] = zptr[ ltLo ];
+                        zptr[ ltLo ] = temp;
                         ltLo++;
                         unLo++;
                         continue;
@@ -1203,13 +1205,13 @@ while ( h <= 256 );
                 {
                     if( unLo > unHi )
                         break;
-                    n = ( ( int )block[zptr[unHi] + d + 1] ) - med;
+                    n = ( (int)block[ zptr[ unHi ] + d + 1 ] ) - med;
                     if( n == 0 )
                     {
                         int temp = 0;
-                        temp = zptr[unHi];
-                        zptr[unHi] = zptr[gtHi];
-                        zptr[gtHi] = temp;
+                        temp = zptr[ unHi ];
+                        zptr[ unHi ] = zptr[ gtHi ];
+                        zptr[ gtHi ] = temp;
                         gtHi--;
                         unHi--;
                         continue;
@@ -1222,18 +1224,18 @@ while ( h <= 256 );
                 if( unLo > unHi )
                     break;
                 int temp = 0;
-                temp = zptr[unLo];
-                zptr[unLo] = zptr[unHi];
-                zptr[unHi] = temp;
+                temp = zptr[ unLo ];
+                zptr[ unLo ] = zptr[ unHi ];
+                zptr[ unHi ] = temp;
                 unLo++;
                 unHi--;
             }
 
             if( gtHi < ltLo )
             {
-                stack[sp].ll = lo;
-                stack[sp].hh = hi;
-                stack[sp].dd = d + 1;
+                stack[ sp ].ll = lo;
+                stack[ sp ].hh = hi;
+                stack[ sp ].dd = d + 1;
                 sp++;
                 continue;
             }
@@ -1246,19 +1248,19 @@ while ( h <= 256 );
             n = lo + unLo - ltLo - 1;
             m = hi - ( gtHi - unHi ) + 1;
 
-            stack[sp].ll = lo;
-            stack[sp].hh = n;
-            stack[sp].dd = d;
+            stack[ sp ].ll = lo;
+            stack[ sp ].hh = n;
+            stack[ sp ].dd = d;
             sp++;
 
-            stack[sp].ll = n + 1;
-            stack[sp].hh = m - 1;
-            stack[sp].dd = d + 1;
+            stack[ sp ].ll = n + 1;
+            stack[ sp ].hh = m - 1;
+            stack[ sp ].dd = d + 1;
             sp++;
 
-            stack[sp].ll = m;
-            stack[sp].hh = hi;
-            stack[sp].dd = d;
+            stack[ sp ].ll = m;
+            stack[ sp ].hh = hi;
+            stack[ sp ].dd = d;
             sp++;
         }
     }
@@ -1269,30 +1271,30 @@ while ( h <= 256 );
         int rNToGo = 0;
         int rTPos = 0;
         for( i = 0; i < 256; i++ )
-            inUse[i] = false;
+            inUse[ i ] = false;
 
         for( i = 0; i <= last; i++ )
         {
             if( rNToGo == 0 )
             {
-                rNToGo = ( char )rNums[rTPos];
+                rNToGo = (char)rNums[ rTPos ];
                 rTPos++;
                 if( rTPos == 512 )
                     rTPos = 0;
             }
             rNToGo--;
-            block[i + 1] ^= ( ( rNToGo == 1 ) ? 1 : 0 );
+            block[ i + 1 ] ^= ( ( rNToGo == 1 ) ? 1 : 0 );
             // handle 16 bit signed numbers
-            block[i + 1] &= 0xFF;
+            block[ i + 1 ] &= 0xFF;
 
-            inUse[block[i + 1]] = true;
+            inUse[ block[ i + 1 ] ] = true;
         }
     }
 
     private void sendMTFValues()
         throws IOException
     {
-        char len[][] = new char[N_GROUPS][MAX_ALPHA_SIZE];
+        char len[][] = new char[ N_GROUPS ][ MAX_ALPHA_SIZE ];
 
         int v;
 
@@ -1324,7 +1326,7 @@ while ( h <= 256 );
         alphaSize = nInUse + 2;
         for( t = 0; t < N_GROUPS; t++ )
             for( v = 0; v < alphaSize; v++ )
-                len[t][v] = ( char )GREATER_ICOST;
+                len[ t ][ v ] = (char)GREATER_ICOST;
 
         /*
          * Decide how many coding tables to use
@@ -1362,21 +1364,21 @@ while ( h <= 256 );
                 while( aFreq < tFreq && ge < alphaSize - 1 )
                 {
                     ge++;
-                    aFreq += mtfFreq[ge];
+                    aFreq += mtfFreq[ ge ];
                 }
 
                 if( ge > gs && nPart != nGroups && nPart != 1
-                     && ( ( nGroups - nPart ) % 2 == 1 ) )
+                    && ( ( nGroups - nPart ) % 2 == 1 ) )
                 {
-                    aFreq -= mtfFreq[ge];
+                    aFreq -= mtfFreq[ ge ];
                     ge--;
                 }
 
                 for( v = 0; v < alphaSize; v++ )
                     if( v >= gs && v <= ge )
-                        len[nPart - 1][v] = ( char )LESSER_ICOST;
+                        len[ nPart - 1 ][ v ] = (char)LESSER_ICOST;
                     else
-                        len[nPart - 1][v] = ( char )GREATER_ICOST;
+                        len[ nPart - 1 ][ v ] = (char)GREATER_ICOST;
 
                 nPart--;
                 gs = ge + 1;
@@ -1384,20 +1386,20 @@ while ( h <= 256 );
             }
         }
 
-        int rfreq[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
-        int fave[] = new int[N_GROUPS];
-        short cost[] = new short[N_GROUPS];
+        int rfreq[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
+        int fave[] = new int[ N_GROUPS ];
+        short cost[] = new short[ N_GROUPS ];
         /*
          * Iterate up to N_ITERS times to improve the tables.
          */
         for( iter = 0; iter < N_ITERS; iter++ )
         {
             for( t = 0; t < nGroups; t++ )
-                fave[t] = 0;
+                fave[ t ] = 0;
 
             for( t = 0; t < nGroups; t++ )
                 for( v = 0; v < alphaSize; v++ )
-                    rfreq[t][v] = 0;
+                    rfreq[ t ][ v ] = 0;
 
             nSelectors = 0;
             totc = 0;
@@ -1419,7 +1421,7 @@ while ( h <= 256 );
                  * by each of the coding tables.
                  */
                 for( t = 0; t < nGroups; t++ )
-                    cost[t] = 0;
+                    cost[ t ] = 0;
 
                 if( nGroups == 6 )
                 {
@@ -1432,28 +1434,28 @@ while ( h <= 256 );
                     cost0 = cost1 = cost2 = cost3 = cost4 = cost5 = 0;
                     for( i = gs; i <= ge; i++ )
                     {
-                        short icv = szptr[i];
-                        cost0 += len[0][icv];
-                        cost1 += len[1][icv];
-                        cost2 += len[2][icv];
-                        cost3 += len[3][icv];
-                        cost4 += len[4][icv];
-                        cost5 += len[5][icv];
+                        short icv = szptr[ i ];
+                        cost0 += len[ 0 ][ icv ];
+                        cost1 += len[ 1 ][ icv ];
+                        cost2 += len[ 2 ][ icv ];
+                        cost3 += len[ 3 ][ icv ];
+                        cost4 += len[ 4 ][ icv ];
+                        cost5 += len[ 5 ][ icv ];
                     }
-                    cost[0] = cost0;
-                    cost[1] = cost1;
-                    cost[2] = cost2;
-                    cost[3] = cost3;
-                    cost[4] = cost4;
-                    cost[5] = cost5;
+                    cost[ 0 ] = cost0;
+                    cost[ 1 ] = cost1;
+                    cost[ 2 ] = cost2;
+                    cost[ 3 ] = cost3;
+                    cost[ 4 ] = cost4;
+                    cost[ 5 ] = cost5;
                 }
                 else
                 {
                     for( i = gs; i <= ge; i++ )
                     {
-                        short icv = szptr[i];
+                        short icv = szptr[ i ];
                         for( t = 0; t < nGroups; t++ )
-                            cost[t] += len[t][icv];
+                            cost[ t ] += len[ t ][ icv ];
                     }
                 }
 
@@ -1464,22 +1466,22 @@ while ( h <= 256 );
                 bc = 999999999;
                 bt = -1;
                 for( t = 0; t < nGroups; t++ )
-                    if( cost[t] < bc )
+                    if( cost[ t ] < bc )
                     {
-                        bc = cost[t];
+                        bc = cost[ t ];
                         bt = t;
                     }
                 ;
                 totc += bc;
-                fave[bt]++;
-                selector[nSelectors] = ( char )bt;
+                fave[ bt ]++;
+                selector[ nSelectors ] = (char)bt;
                 nSelectors++;
 
                 /*
                  * Increment the symbol frequencies for the selected table.
                  */
                 for( i = gs; i <= ge; i++ )
-                    rfreq[bt][szptr[i]]++;
+                    rfreq[ bt ][ szptr[ i ] ]++;
 
                 gs = ge + 1;
             }
@@ -1488,7 +1490,7 @@ while ( h <= 256 );
              * Recompute the tables based on the accumulated frequencies.
              */
             for( t = 0; t < nGroups; t++ )
-                hbMakeCodeLengths( len[t], rfreq[t], alphaSize, 20 );
+                hbMakeCodeLengths( len[ t ], rfreq[ t ], alphaSize, 20 );
         }
 
         rfreq = null;
@@ -1503,30 +1505,30 @@ while ( h <= 256 );
             /*
              * Compute MTF values for the selectors.
              */
-            char pos[] = new char[N_GROUPS];
+            char pos[] = new char[ N_GROUPS ];
             char ll_i;
             char tmp2;
             char tmp;
             for( i = 0; i < nGroups; i++ )
-                pos[i] = ( char )i;
+                pos[ i ] = (char)i;
             for( i = 0; i < nSelectors; i++ )
             {
-                ll_i = selector[i];
+                ll_i = selector[ i ];
                 j = 0;
-                tmp = pos[j];
+                tmp = pos[ j ];
                 while( ll_i != tmp )
                 {
                     j++;
                     tmp2 = tmp;
-                    tmp = pos[j];
-                    pos[j] = tmp2;
+                    tmp = pos[ j ];
+                    pos[ j ] = tmp2;
                 }
-                pos[0] = tmp;
-                selectorMtf[i] = ( char )j;
+                pos[ 0 ] = tmp;
+                selectorMtf[ i ] = (char)j;
             }
         }
 
-        int code[][] = new int[N_GROUPS][MAX_ALPHA_SIZE];
+        int code[][] = new int[ N_GROUPS ][ MAX_ALPHA_SIZE ];
 
         /*
          * Assign actual codes for the tables.
@@ -1537,41 +1539,41 @@ while ( h <= 256 );
             maxLen = 0;
             for( i = 0; i < alphaSize; i++ )
             {
-                if( len[t][i] > maxLen )
-                    maxLen = len[t][i];
-                if( len[t][i] < minLen )
-                    minLen = len[t][i];
+                if( len[ t ][ i ] > maxLen )
+                    maxLen = len[ t ][ i ];
+                if( len[ t ][ i ] < minLen )
+                    minLen = len[ t ][ i ];
             }
             if( maxLen > 20 )
                 panic();
             if( minLen < 1 )
                 panic();
-            hbAssignCodes( code[t], len[t], minLen, maxLen, alphaSize );
+            hbAssignCodes( code[ t ], len[ t ], minLen, maxLen, alphaSize );
         }
         {
             /*
              * Transmit the mapping table.
              */
-            boolean inUse16[] = new boolean[16];
+            boolean inUse16[] = new boolean[ 16 ];
             for( i = 0; i < 16; i++ )
             {
-                inUse16[i] = false;
+                inUse16[ i ] = false;
                 for( j = 0; j < 16; j++ )
-                    if( inUse[i * 16 + j] )
-                        inUse16[i] = true;
+                    if( inUse[ i * 16 + j ] )
+                        inUse16[ i ] = true;
             }
 
             nBytes = bytesOut;
             for( i = 0; i < 16; i++ )
-                if( inUse16[i] )
+                if( inUse16[ i ] )
                     bsW( 1, 1 );
                 else
                     bsW( 1, 0 );
 
             for( i = 0; i < 16; i++ )
-                if( inUse16[i] )
+                if( inUse16[ i ] )
                     for( j = 0; j < 16; j++ )
-                        if( inUse[i * 16 + j] )
+                        if( inUse[ i * 16 + j ] )
                             bsW( 1, 1 );
                         else
                             bsW( 1, 0 );
@@ -1586,7 +1588,7 @@ while ( h <= 256 );
         bsW( 15, nSelectors );
         for( i = 0; i < nSelectors; i++ )
         {
-            for( j = 0; j < selectorMtf[i]; j++ )
+            for( j = 0; j < selectorMtf[ i ]; j++ )
                 bsW( 1, 1 );
             bsW( 1, 0 );
         }
@@ -1598,11 +1600,11 @@ while ( h <= 256 );
 
         for( t = 0; t < nGroups; t++ )
         {
-            int curr = len[t][0];
+            int curr = len[ t ][ 0 ];
             bsW( 5, curr );
             for( i = 0; i < alphaSize; i++ )
             {
-                while( curr < len[t][i] )
+                while( curr < len[ t ][ i ] )
                 {
                     bsW( 2, 2 );
                     curr++;
@@ -1610,7 +1612,7 @@ while ( h <= 256 );
                      * 10
                      */
                 }
-                while( curr > len[t][i] )
+                while( curr > len[ t ][ i ] )
                 {
                     bsW( 2, 3 );
                     curr--;
@@ -1637,8 +1639,8 @@ while ( h <= 256 );
                 ge = nMTF - 1;
             for( i = gs; i <= ge; i++ )
             {
-                bsW( len[selector[selCtr]][szptr[i]],
-                    code[selector[selCtr]][szptr[i]] );
+                bsW( len[ selector[ selCtr ] ][ szptr[ i ] ],
+                     code[ selector[ selCtr ] ][ szptr[ i ] ] );
             }
 
             gs = ge + 1;
@@ -1662,13 +1664,13 @@ while ( h <= 256 );
             return;
 
         hp = 0;
-        while( incs[hp] < bigN )
+        while( incs[ hp ] < bigN )
             hp++;
         hp--;
 
         for( ; hp >= 0; hp-- )
         {
-            h = incs[hp];
+            h = incs[ hp ];
 
             i = lo + h;
             while( true )
@@ -1678,16 +1680,16 @@ while ( h <= 256 );
                  */
                 if( i > hi )
                     break;
-                v = zptr[i];
+                v = zptr[ i ];
                 j = i;
-                while( fullGtU( zptr[j - h] + d, v + d ) )
+                while( fullGtU( zptr[ j - h ] + d, v + d ) )
                 {
-                    zptr[j] = zptr[j - h];
+                    zptr[ j ] = zptr[ j - h ];
                     j = j - h;
                     if( j <= ( lo + h - 1 ) )
                         break;
                 }
-                zptr[j] = v;
+                zptr[ j ] = v;
                 i++;
 
                 /*
@@ -1695,16 +1697,16 @@ while ( h <= 256 );
                  */
                 if( i > hi )
                     break;
-                v = zptr[i];
+                v = zptr[ i ];
                 j = i;
-                while( fullGtU( zptr[j - h] + d, v + d ) )
+                while( fullGtU( zptr[ j - h ] + d, v + d ) )
                 {
-                    zptr[j] = zptr[j - h];
+                    zptr[ j ] = zptr[ j - h ];
                     j = j - h;
                     if( j <= ( lo + h - 1 ) )
                         break;
                 }
-                zptr[j] = v;
+                zptr[ j ] = v;
                 i++;
 
                 /*
@@ -1712,16 +1714,16 @@ while ( h <= 256 );
                  */
                 if( i > hi )
                     break;
-                v = zptr[i];
+                v = zptr[ i ];
                 j = i;
-                while( fullGtU( zptr[j - h] + d, v + d ) )
+                while( fullGtU( zptr[ j - h ] + d, v + d ) )
                 {
-                    zptr[j] = zptr[j - h];
+                    zptr[ j ] = zptr[ j - h ];
                     j = j - h;
                     if( j <= ( lo + h - 1 ) )
                         break;
                 }
-                zptr[j] = v;
+                zptr[ j ] = v;
                 i++;
 
                 if( workDone > workLimit && firstAttempt )
@@ -1735,9 +1737,9 @@ while ( h <= 256 );
         int temp = 0;
         while( n > 0 )
         {
-            temp = zptr[p1];
-            zptr[p1] = zptr[p2];
-            zptr[p2] = temp;
+            temp = zptr[ p1 ];
+            zptr[ p1 ] = zptr[ p2 ];
+            zptr[ p2 ] = temp;
             p1++;
             p2++;
             n--;
@@ -1749,44 +1751,44 @@ while ( h <= 256 );
     {
         if( last < allowableBlockSize )
         {
-            inUse[currentChar] = true;
+            inUse[ currentChar ] = true;
             for( int i = 0; i < runLength; i++ )
             {
-                mCrc.updateCRC( ( char )currentChar );
+                mCrc.updateCRC( (char)currentChar );
             }
-            switch ( runLength )
+            switch( runLength )
             {
-            case 1:
-                last++;
-                block[last + 1] = ( char )currentChar;
-                break;
-            case 2:
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                break;
-            case 3:
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                break;
-            default:
-                inUse[runLength - 4] = true;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )currentChar;
-                last++;
-                block[last + 1] = ( char )( runLength - 4 );
-                break;
+                case 1:
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    break;
+                case 2:
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    break;
+                case 3:
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    break;
+                default:
+                    inUse[ runLength - 4 ] = true;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)currentChar;
+                    last++;
+                    block[ last + 1 ] = (char)( runLength - 4 );
+                    break;
             }
         }
         else

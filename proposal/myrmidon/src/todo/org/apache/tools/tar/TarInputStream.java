@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.tar;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +49,7 @@ public class TarInputStream extends FilterInputStream
 
         this.buffer = new TarBuffer( is, blockSize, recordSize );
         this.readBuf = null;
-        this.oneBuf = new byte[1];
+        this.oneBuf = new byte[ 1 ];
         this.debug = false;
         this.hasHitEOF = false;
     }
@@ -90,10 +91,10 @@ public class TarInputStream extends FilterInputStream
             if( this.debug )
             {
                 System.err.println( "TarInputStream: SKIP currENTRY '"
-                     + this.currEntry.getName() + "' SZ "
-                     + this.entrySize + " OFF "
-                     + this.entryOffset + "  skipping "
-                     + numToSkip + " bytes" );
+                                    + this.currEntry.getName() + "' SZ "
+                                    + this.entrySize + " OFF "
+                                    + this.entryOffset + "  skipping "
+                                    + numToSkip + " bytes" );
             }
 
             if( numToSkip > 0 )
@@ -131,56 +132,56 @@ public class TarInputStream extends FilterInputStream
         {
             this.currEntry = new TarEntry( headerBuf );
 
-            if( !( headerBuf[257] == 'u' && headerBuf[258] == 's'
-                 && headerBuf[259] == 't' && headerBuf[260] == 'a'
-                 && headerBuf[261] == 'r' ) )
+            if( !( headerBuf[ 257 ] == 'u' && headerBuf[ 258 ] == 's'
+                && headerBuf[ 259 ] == 't' && headerBuf[ 260 ] == 'a'
+                && headerBuf[ 261 ] == 'r' ) )
             {
                 this.entrySize = 0;
                 this.entryOffset = 0;
                 this.currEntry = null;
 
                 throw new IOException( "bad header in block "
-                     + this.buffer.getCurrentBlockNum()
-                     + " record "
-                     + this.buffer.getCurrentRecordNum()
-                     + ", " +
-                    "header magic is not 'ustar', but '"
-                     + headerBuf[257]
-                     + headerBuf[258]
-                     + headerBuf[259]
-                     + headerBuf[260]
-                     + headerBuf[261]
-                     + "', or (dec) "
-                     + ( ( int )headerBuf[257] )
-                     + ", "
-                     + ( ( int )headerBuf[258] )
-                     + ", "
-                     + ( ( int )headerBuf[259] )
-                     + ", "
-                     + ( ( int )headerBuf[260] )
-                     + ", "
-                     + ( ( int )headerBuf[261] ) );
+                                       + this.buffer.getCurrentBlockNum()
+                                       + " record "
+                                       + this.buffer.getCurrentRecordNum()
+                                       + ", " +
+                                       "header magic is not 'ustar', but '"
+                                       + headerBuf[ 257 ]
+                                       + headerBuf[ 258 ]
+                                       + headerBuf[ 259 ]
+                                       + headerBuf[ 260 ]
+                                       + headerBuf[ 261 ]
+                                       + "', or (dec) "
+                                       + ( (int)headerBuf[ 257 ] )
+                                       + ", "
+                                       + ( (int)headerBuf[ 258 ] )
+                                       + ", "
+                                       + ( (int)headerBuf[ 259 ] )
+                                       + ", "
+                                       + ( (int)headerBuf[ 260 ] )
+                                       + ", "
+                                       + ( (int)headerBuf[ 261 ] ) );
             }
 
             if( this.debug )
             {
                 System.err.println( "TarInputStream: SET CURRENTRY '"
-                     + this.currEntry.getName()
-                     + "' size = "
-                     + this.currEntry.getSize() );
+                                    + this.currEntry.getName()
+                                    + "' size = "
+                                    + this.currEntry.getSize() );
             }
 
             this.entryOffset = 0;
 
             // REVIEW How do we resolve this discrepancy?!
-            this.entrySize = ( int )this.currEntry.getSize();
+            this.entrySize = (int)this.currEntry.getSize();
         }
 
         if( this.currEntry != null && this.currEntry.isGNULongNameEntry() )
         {
             // read in the name
             StringBuffer longName = new StringBuffer();
-            byte[] buffer = new byte[256];
+            byte[] buffer = new byte[ 256 ];
             int length = 0;
             while( ( length = read( buffer ) ) >= 0 )
             {
@@ -240,7 +241,7 @@ public class TarInputStream extends FilterInputStream
     public void copyEntryContents( OutputStream out )
         throws IOException
     {
-        byte[] buf = new byte[32 * 1024];
+        byte[] buf = new byte[ 32 * 1024 ];
 
         while( true )
         {
@@ -260,7 +261,9 @@ public class TarInputStream extends FilterInputStream
      *
      * @param markLimit The limit to mark.
      */
-    public void mark( int markLimit ) { }
+    public void mark( int markLimit )
+    {
+    }
 
     /**
      * Since we do not support marking just yet, we return false.
@@ -290,7 +293,7 @@ public class TarInputStream extends FilterInputStream
         }
         else
         {
-            return ( int )this.oneBuf[0];
+            return (int)this.oneBuf[ 0 ];
         }
     }
 
@@ -337,7 +340,7 @@ public class TarInputStream extends FilterInputStream
         if( this.readBuf != null )
         {
             int sz = ( numToRead > this.readBuf.length ) ? this.readBuf.length
-                 : numToRead;
+                : numToRead;
 
             System.arraycopy( this.readBuf, 0, buf, offset, sz );
 
@@ -348,7 +351,7 @@ public class TarInputStream extends FilterInputStream
             else
             {
                 int newLen = this.readBuf.length - sz;
-                byte[] newBuf = new byte[newLen];
+                byte[] newBuf = new byte[ newLen ];
 
                 System.arraycopy( this.readBuf, sz, newBuf, 0, newLen );
 
@@ -368,7 +371,7 @@ public class TarInputStream extends FilterInputStream
             {
                 // Unexpected EOF!
                 throw new IOException( "unexpected EOF with " + numToRead
-                     + " bytes unread" );
+                                       + " bytes unread" );
             }
 
             int sz = numToRead;
@@ -378,7 +381,7 @@ public class TarInputStream extends FilterInputStream
             {
                 System.arraycopy( rec, 0, buf, offset, sz );
 
-                this.readBuf = new byte[recLen - sz];
+                this.readBuf = new byte[ recLen - sz ];
 
                 System.arraycopy( rec, sz, this.readBuf, 0, recLen - sz );
             }
@@ -402,7 +405,9 @@ public class TarInputStream extends FilterInputStream
     /**
      * Since we do not support marking just yet, we do nothing.
      */
-    public void reset() { }
+    public void reset()
+    {
+    }
 
     /**
      * Skip bytes in the input buffer. This skips bytes in the current entry's
@@ -420,13 +425,13 @@ public class TarInputStream extends FilterInputStream
         // This is horribly inefficient, but it ensures that we
         // properly skip over bytes via the TarBuffer...
         //
-        byte[] skipBuf = new byte[8 * 1024];
+        byte[] skipBuf = new byte[ 8 * 1024 ];
 
-        for( int num = numToSkip; num > 0;  )
+        for( int num = numToSkip; num > 0; )
         {
             int numRead = this.read( skipBuf, 0,
-                ( num > skipBuf.length ? skipBuf.length
-                 : num ) );
+                                     ( num > skipBuf.length ? skipBuf.length
+                                       : num ) );
 
             if( numRead == -1 )
             {

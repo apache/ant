@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.tar;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -137,7 +138,7 @@ public class TarBuffer
     {
         for( int i = 0, sz = this.getRecordSize(); i < sz; ++i )
         {
-            if( record[i] != 0 )
+            if( record[ i ] != 0 )
             {
                 return false;
             }
@@ -165,7 +166,7 @@ public class TarBuffer
             this.flushBlock();
 
             if( this.outStream != System.out
-                 && this.outStream != System.err )
+                && this.outStream != System.err )
             {
                 this.outStream.close();
 
@@ -195,7 +196,7 @@ public class TarBuffer
         if( this.debug )
         {
             System.err.println( "ReadRecord: recIdx = " + this.currRecIdx
-                 + " blkIdx = " + this.currBlkIdx );
+                                + " blkIdx = " + this.currBlkIdx );
         }
 
         if( this.inStream == null )
@@ -211,11 +212,11 @@ public class TarBuffer
             }
         }
 
-        byte[] result = new byte[this.recordSize];
+        byte[] result = new byte[ this.recordSize ];
 
         System.arraycopy( this.blockBuffer,
-            ( this.currRecIdx * this.recordSize ), result, 0,
-            this.recordSize );
+                          ( this.currRecIdx * this.recordSize ), result, 0,
+                          this.recordSize );
 
         this.currRecIdx++;
 
@@ -233,7 +234,7 @@ public class TarBuffer
         if( this.debug )
         {
             System.err.println( "SkipRecord: recIdx = " + this.currRecIdx
-                 + " blkIdx = " + this.currBlkIdx );
+                                + " blkIdx = " + this.currBlkIdx );
         }
 
         if( this.inStream == null )
@@ -264,7 +265,7 @@ public class TarBuffer
         if( this.debug )
         {
             System.err.println( "WriteRecord: recIdx = " + this.currRecIdx
-                 + " blkIdx = " + this.currBlkIdx );
+                                + " blkIdx = " + this.currBlkIdx );
         }
 
         if( this.outStream == null )
@@ -275,9 +276,9 @@ public class TarBuffer
         if( record.length != this.recordSize )
         {
             throw new IOException( "record to write has length '"
-                 + record.length
-                 + "' which is not the record size of '"
-                 + this.recordSize + "'" );
+                                   + record.length
+                                   + "' which is not the record size of '"
+                                   + this.recordSize + "'" );
         }
 
         if( this.currRecIdx >= this.recsPerBlock )
@@ -286,8 +287,8 @@ public class TarBuffer
         }
 
         System.arraycopy( record, 0, this.blockBuffer,
-            ( this.currRecIdx * this.recordSize ),
-            this.recordSize );
+                          ( this.currRecIdx * this.recordSize ),
+                          this.recordSize );
 
         this.currRecIdx++;
     }
@@ -306,7 +307,7 @@ public class TarBuffer
         if( this.debug )
         {
             System.err.println( "WriteRecord: recIdx = " + this.currRecIdx
-                 + " blkIdx = " + this.currBlkIdx );
+                                + " blkIdx = " + this.currBlkIdx );
         }
 
         if( this.outStream == null )
@@ -317,9 +318,9 @@ public class TarBuffer
         if( ( offset + this.recordSize ) > buf.length )
         {
             throw new IOException( "record has length '" + buf.length
-                 + "' with offset '" + offset
-                 + "' which is less than the record size of '"
-                 + this.recordSize + "'" );
+                                   + "' with offset '" + offset
+                                   + "' which is less than the record size of '"
+                                   + this.recordSize + "'" );
         }
 
         if( this.currRecIdx >= this.recsPerBlock )
@@ -328,8 +329,8 @@ public class TarBuffer
         }
 
         System.arraycopy( buf, offset, this.blockBuffer,
-            ( this.currRecIdx * this.recordSize ),
-            this.recordSize );
+                          ( this.currRecIdx * this.recordSize ),
+                          this.recordSize );
 
         this.currRecIdx++;
     }
@@ -370,7 +371,7 @@ public class TarBuffer
         this.blockSize = blockSize;
         this.recordSize = recordSize;
         this.recsPerBlock = ( this.blockSize / this.recordSize );
-        this.blockBuffer = new byte[this.blockSize];
+        this.blockBuffer = new byte[ this.blockSize ];
 
         if( this.inStream != null )
         {
@@ -409,7 +410,7 @@ public class TarBuffer
         while( bytesNeeded > 0 )
         {
             long numBytes = this.inStream.read( this.blockBuffer, offset,
-                bytesNeeded );
+                                                bytesNeeded );
 
             //
             // NOTE
@@ -437,8 +438,8 @@ public class TarBuffer
                 if( this.debug )
                 {
                     System.err.println( "ReadBlock: INCOMPLETE READ "
-                         + numBytes + " of " + this.blockSize
-                         + " bytes read." );
+                                        + numBytes + " of " + this.blockSize
+                                        + " bytes read." );
                 }
             }
         }

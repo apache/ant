@@ -50,10 +50,10 @@ public class ZipLong implements Cloneable
      */
     public ZipLong( byte[] bytes, int offset )
     {
-        value = ( bytes[offset + 3] << 24 ) & 0xFF000000l;
-        value += ( bytes[offset + 2] << 16 ) & 0xFF0000;
-        value += ( bytes[offset + 1] << 8 ) & 0xFF00;
-        value += ( bytes[offset] & 0xFF );
+        value = ( bytes[ offset + 3 ] << 24 ) & 0xFF000000l;
+        value += ( bytes[ offset + 2 ] << 16 ) & 0xFF0000;
+        value += ( bytes[ offset + 1 ] << 8 ) & 0xFF00;
+        value += ( bytes[ offset ] & 0xFF );
     }
 
     /**
@@ -64,11 +64,11 @@ public class ZipLong implements Cloneable
      */
     public byte[] getBytes()
     {
-        byte[] result = new byte[4];
-        result[0] = ( byte )( ( value & 0xFF ) );
-        result[1] = ( byte )( ( value & 0xFF00 ) >> 8 );
-        result[2] = ( byte )( ( value & 0xFF0000 ) >> 16 );
-        result[3] = ( byte )( ( value & 0xFF000000l ) >> 24 );
+        byte[] result = new byte[ 4 ];
+        result[ 0 ] = (byte)( ( value & 0xFF ) );
+        result[ 1 ] = (byte)( ( value & 0xFF00 ) >> 8 );
+        result[ 2 ] = (byte)( ( value & 0xFF0000 ) >> 16 );
+        result[ 3 ] = (byte)( ( value & 0xFF000000l ) >> 24 );
         return result;
     }
 
@@ -96,7 +96,7 @@ public class ZipLong implements Cloneable
         {
             return false;
         }
-        return value == ( ( ZipLong )o ).getValue();
+        return value == ( (ZipLong)o ).getValue();
     }
 
     /**
@@ -107,7 +107,7 @@ public class ZipLong implements Cloneable
      */
     public int hashCode()
     {
-        return ( int )value;
+        return (int)value;
     }
 
 }// ZipLong

@@ -457,8 +457,8 @@ public class Delete
             if( dirCount > 0 )
             {
                 getLogger().info( "Deleted " + dirCount + " director" +
-                     ( dirCount == 1 ? "y" : "ies" ) +
-                     " from " + d.getAbsolutePath() );
+                                  ( dirCount == 1 ? "y" : "ies" ) +
+                                  " from " + d.getAbsolutePath() );
             }
         }
     }

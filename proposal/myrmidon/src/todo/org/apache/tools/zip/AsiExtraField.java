@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.zip;
+
 import java.util.zip.CRC32;
 import java.util.zip.ZipException;
 
@@ -79,7 +80,9 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable
      */
     private CRC32 crc = new CRC32();
 
-    public AsiExtraField() { }
+    public AsiExtraField()
+    {
+    }
 
     /**
      * Indicate whether this entry is a directory.
@@ -205,17 +208,17 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable
     public byte[] getLocalFileDataData()
     {
         // CRC will be added later
-        byte[] data = new byte[getLocalFileDataLength().getValue() - 4];
+        byte[] data = new byte[ getLocalFileDataLength().getValue() - 4 ];
         System.arraycopy( ( new ZipShort( getMode() ) ).getBytes(), 0, data, 0, 2 );
 
         byte[] linkArray = getLinkedFile().getBytes();
         System.arraycopy( ( new ZipLong( linkArray.length ) ).getBytes(),
-            0, data, 2, 4 );
+                          0, data, 2, 4 );
 
         System.arraycopy( ( new ZipShort( getUserId() ) ).getBytes(),
-            0, data, 6, 2 );
+                          0, data, 6, 2 );
         System.arraycopy( ( new ZipShort( getGroupId() ) ).getBytes(),
-            0, data, 8, 2 );
+                          0, data, 8, 2 );
 
         System.arraycopy( linkArray, 0, data, 10, linkArray.length );
 
@@ -223,7 +226,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable
         crc.update( data );
         long checksum = crc.getValue();
 
-        byte[] result = new byte[data.length + 4];
+        byte[] result = new byte[ data.length + 4 ];
         System.arraycopy( ( new ZipLong( checksum ) ).getBytes(), 0, result, 0, 4 );
         System.arraycopy( data, 0, result, 4, data.length );
         return result;
@@ -239,11 +242,11 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable
     public ZipShort getLocalFileDataLength()
     {
         return new ZipShort( 4// CRC
-         + 2// Mode
-         + 4// SizDev
-         + 2// UID
-         + 2// GID
-         + getLinkedFile().getBytes().length );
+                             + 2// Mode
+                             + 4// SizDev
+                             + 2// UID
+                             + 2// GID
+                             + getLinkedFile().getBytes().length );
     }
 
     /**
@@ -304,7 +307,7 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable
     {
 
         long givenChecksum = ( new ZipLong( data, offset ) ).getValue();
-        byte[] tmp = new byte[length - 4];
+        byte[] tmp = new byte[ length - 4 ];
         System.arraycopy( data, offset + 4, tmp, 0, length - 4 );
         crc.reset();
         crc.update( tmp );
@@ -312,13 +315,13 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable
         if( givenChecksum != realChecksum )
         {
             throw new ZipException( "bad CRC checksum "
-                 + Long.toHexString( givenChecksum )
-                 + " instead of "
-                 + Long.toHexString( realChecksum ) );
+                                    + Long.toHexString( givenChecksum )
+                                    + " instead of "
+                                    + Long.toHexString( realChecksum ) );
         }
 
         int newMode = ( new ZipShort( tmp, 0 ) ).getValue();
-        byte[] linkArray = new byte[( int )( new ZipLong( tmp, 2 ) ).getValue()];
+        byte[] linkArray = new byte[ (int)( new ZipLong( tmp, 2 ) ).getValue() ];
         uid = ( new ZipShort( tmp, 6 ) ).getValue();
         gid = ( new ZipShort( tmp, 8 ) ).getValue();
 

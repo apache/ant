@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.zip;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.ArrayList;
 import java.util.zip.CRC32;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -216,17 +217,17 @@ public class ZipOutputStream extends DeflaterOutputStream
             return DOS_TIME_MIN;
         }
         long value = ( ( year - 1980 ) << 25 )
-             | ( month << 21 )
-             | ( time.getDate() << 16 )
-             | ( time.getHours() << 11 )
-             | ( time.getMinutes() << 5 )
-             | ( time.getSeconds() >> 1 );
+            | ( month << 21 )
+            | ( time.getDate() << 16 )
+            | ( time.getHours() << 11 )
+            | ( time.getMinutes() << 5 )
+            | ( time.getSeconds() >> 1 );
 
-        byte[] result = new byte[4];
-        result[0] = ( byte )( ( value & 0xFF ) );
-        result[1] = ( byte )( ( value & 0xFF00 ) >> 8 );
-        result[2] = ( byte )( ( value & 0xFF0000 ) >> 16 );
-        result[3] = ( byte )( ( value & 0xFF000000l ) >> 24 );
+        byte[] result = new byte[ 4 ];
+        result[ 0 ] = (byte)( ( value & 0xFF ) );
+        result[ 1 ] = (byte)( ( value & 0xFF00 ) >> 8 );
+        result[ 2 ] = (byte)( ( value & 0xFF0000 ) >> 16 );
+        result[ 3 ] = (byte)( ( value & 0xFF000000l ) >> 24 );
         return new ZipLong( result );
     }
 
@@ -332,19 +333,19 @@ public class ZipOutputStream extends DeflaterOutputStream
             if( entry.getCrc() != realCrc )
             {
                 throw new ZipException( "bad CRC checksum for entry "
-                     + entry.getName() + ": "
-                     + Long.toHexString( entry.getCrc() )
-                     + " instead of "
-                     + Long.toHexString( realCrc ) );
+                                        + entry.getName() + ": "
+                                        + Long.toHexString( entry.getCrc() )
+                                        + " instead of "
+                                        + Long.toHexString( realCrc ) );
             }
 
             if( entry.getSize() != written - dataStart )
             {
                 throw new ZipException( "bad size for entry "
-                     + entry.getName() + ": "
-                     + entry.getSize()
-                     + " instead of "
-                     + ( written - dataStart ) );
+                                        + entry.getName() + ": "
+                                        + entry.getSize()
+                                        + " instead of "
+                                        + ( written - dataStart ) );
             }
 
         }
@@ -372,7 +373,7 @@ public class ZipOutputStream extends DeflaterOutputStream
         cdOffset = new ZipLong( written );
         for( int i = 0; i < entries.size(); i++ )
         {
-            writeCentralFileHeader( ( ZipEntry )entries.get( i ) );
+            writeCentralFileHeader( (ZipEntry)entries.get( i ) );
         }
         cdLength = new ZipLong( written - cdOffset.getValue() );
         writeCentralDirectoryEnd();
@@ -593,7 +594,7 @@ public class ZipOutputStream extends DeflaterOutputStream
         written += 4;
 
         // relative offset of LFH
-        out.write( ( ( ZipLong )offsets.get( ze ) ).getBytes() );
+        out.write( ( (ZipLong)offsets.get( ze ) ).getBytes() );
         written += 4;
 
         // file name

@@ -8,9 +8,9 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 

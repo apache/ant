@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import java.io.File;
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;

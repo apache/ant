@@ -9,11 +9,11 @@ package org.apache.tools.ant.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.avalon.excalibur.io.FileUtil;
 
 /**
  * Utility class that collects the functionality of the various scanDir methods
@@ -78,7 +78,7 @@ public class SourceFileScanner
             if( targets == null || targets.length == 0 )
             {
                 m_task.log( files[ i ] + " skipped - don\'t know how to handle it",
-                          Project.MSG_VERBOSE );
+                            Project.MSG_VERBOSE );
                 continue;
             }
 
@@ -87,7 +87,7 @@ public class SourceFileScanner
             if( src.lastModified() > now )
             {
                 m_task.log( "Warning: " + files[ i ] + " modified in the future.",
-                          Project.MSG_WARN );
+                            Project.MSG_WARN );
             }
 
             boolean added = false;
@@ -99,14 +99,14 @@ public class SourceFileScanner
                 if( !dest.exists() )
                 {
                     m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
-                              Project.MSG_VERBOSE );
+                                Project.MSG_VERBOSE );
                     v.add( files[ i ] );
                     added = true;
                 }
                 else if( src.lastModified() > dest.lastModified() )
                 {
                     m_task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.",
-                              Project.MSG_VERBOSE );
+                                Project.MSG_VERBOSE );
                     v.add( files[ i ] );
                     added = true;
                 }
@@ -123,8 +123,8 @@ public class SourceFileScanner
             if( !added )
             {
                 m_task.log( files[ i ] + " omitted as " + targetList.toString()
-                          + ( targets.length == 1 ? " is" : " are " )
-                          + " up to date.", Project.MSG_VERBOSE );
+                            + ( targets.length == 1 ? " is" : " are " )
+                            + " up to date.", Project.MSG_VERBOSE );
             }
 
         }

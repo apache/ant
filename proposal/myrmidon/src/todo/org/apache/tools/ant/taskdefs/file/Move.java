@@ -9,16 +9,15 @@ package org.apache.tools.ant.taskdefs.file;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Iterator;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Moves a file or directory to a new file or directory. By default, the

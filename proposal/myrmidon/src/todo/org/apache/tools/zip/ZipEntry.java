@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.zip;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
     public ZipEntry( ZipEntry entry )
         throws ZipException
     {
-        this( ( java.util.zip.ZipEntry )entry );
+        this( (java.util.zip.ZipEntry)entry );
         setInternalAttributes( entry.getInternalAttributes() );
         setExternalAttributes( entry.getExternalAttributes() );
         setExtraFields( entry.getExtraFields() );
@@ -142,7 +143,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
                 {
                     setCompressedSizeMethod =
                         java.util.zip.ZipEntry.class.getMethod( "setCompressedSize",
-                        new Class[]{Long.TYPE} );
+                                                                new Class[]{Long.TYPE} );
                 }
                 catch( NoSuchMethodException nse )
                 {
@@ -181,14 +182,14 @@ public class ZipEntry extends java.util.zip.ZipEntry
         {
             Throwable nested = ite.getTargetException();
             throw new RuntimeException( "Exception setting the compressed size "
-                 + "of " + ze + ": "
-                 + nested.getMessage() );
+                                        + "of " + ze + ": "
+                                        + nested.getMessage() );
         }
         catch( Throwable other )
         {
             throw new RuntimeException( "Exception setting the compressed size "
-                 + "of " + ze + ": "
-                 + other.getMessage() );
+                                        + "of " + ze + ": "
+                                        + other.getMessage() );
         }
     }
 
@@ -255,7 +256,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
         extraFields.clear();
         for( int i = 0; i < fields.length; i++ )
         {
-            extraFields.add( fields[i] );
+            extraFields.add( fields[ i ] );
         }
         setExtra();
     }
@@ -341,7 +342,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
     public byte[] getLocalFileDataExtra()
     {
         byte[] extra = getExtra();
-        return extra != null ? extra : new byte[0];
+        return extra != null ? extra : new byte[ 0 ];
     }
 
     /**
@@ -357,7 +358,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
         boolean done = false;
         for( int i = 0; !done && i < extraFields.size(); i++ )
         {
-            if( ( ( ZipExtraField )extraFields.get( i ) ).getHeaderId().equals( type ) )
+            if( ( (ZipExtraField)extraFields.get( i ) ).getHeaderId().equals( type ) )
             {
                 extraFields.set( i, ze );
                 done = true;
@@ -381,7 +382,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
         ZipEntry e = null;
         try
         {
-            e = new ZipEntry( ( java.util.zip.ZipEntry )super.clone() );
+            e = new ZipEntry( (java.util.zip.ZipEntry)super.clone() );
         }
         catch( Exception ex )
         {
@@ -405,7 +406,7 @@ public class ZipEntry extends java.util.zip.ZipEntry
         boolean done = false;
         for( int i = 0; !done && i < extraFields.size(); i++ )
         {
-            if( ( ( ZipExtraField )extraFields.get( i ) ).getHeaderId().equals( type ) )
+            if( ( (ZipExtraField)extraFields.get( i ) ).getHeaderId().equals( type ) )
             {
                 extraFields.remove( i );
                 done = true;

@@ -6,16 +6,17 @@
  * the LICENSE file.
  */
 package org.apache.tools.mail;
+
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * A class to help send SMTP email. This class is an improvement on the
@@ -348,7 +349,7 @@ public class MailMessage
         // Check that the response is one of the valid codes
         for( int i = 0; i < ok.length; i++ )
         {
-            if( response.startsWith( "" + ok[i] ) )
+            if( response.startsWith( "" + ok[ i ] ) )
             {
                 return true;
             }
@@ -364,7 +365,7 @@ public class MailMessage
         socket = new Socket( host, port );
         out = new MailPrintStream(
             new BufferedOutputStream(
-            socket.getOutputStream() ) );
+                socket.getOutputStream() ) );
         in = new SmtpResponseReader( socket.getInputStream() );
         getReady();
     }
@@ -387,8 +388,8 @@ public class MailMessage
         Enumeration e = headers.keys();
         while( e.hasMoreElements() )
         {
-            String name = ( String )e.nextElement();
-            String value = ( String )headers.get( name );
+            String name = (String)e.nextElement();
+            String value = (String)headers.get( name );
             out.println( name + ": " + value );
         }
         out.println();
@@ -471,6 +472,7 @@ public class MailMessage
 // This PrintStream subclass makes sure that <CRLF>. becomes <CRLF>..
 // per RFC 821.  It also ensures that new lines are always \r\n.
 //
+
 class MailPrintStream extends PrintStream
 {
 
@@ -506,7 +508,7 @@ class MailPrintStream extends PrintStream
     {
         for( int i = 0; i < len; i++ )
         {
-            write( buf[off + i] );
+            write( buf[ off + i ] );
         }
     }
 

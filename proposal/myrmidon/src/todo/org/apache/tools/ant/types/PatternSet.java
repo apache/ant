@@ -11,10 +11,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
@@ -357,7 +357,7 @@ public class PatternSet extends DataType
         }
 
         final String[] result = new String[ tmpNames.size() ];
-        return (String[]) tmpNames.toArray( result );
+        return (String[])tmpNames.toArray( result );
     }
 
     /**

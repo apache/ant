@@ -7,10 +7,9 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;

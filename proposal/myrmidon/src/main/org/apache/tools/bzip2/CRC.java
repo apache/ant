@@ -80,7 +80,7 @@ class CRC
         0x9abc8bd5, 0x9e7d9662, 0x933eb0bb, 0x97ffad0c,
         0xafb010b1, 0xab710d06, 0xa6322bdf, 0xa2f33668,
         0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4
-        };
+    };
 
     int globalCrc;
 
@@ -114,7 +114,7 @@ class CRC
         int temp = ( globalCrc >> 24 ) ^ inCh;
         if( temp < 0 )
             temp = 256 + temp;
-        globalCrc = ( globalCrc << 8 ) ^ CRC.crc32Table[temp];
+        globalCrc = ( globalCrc << 8 ) ^ CRC.crc32Table[ temp ];
     }
 }
 
