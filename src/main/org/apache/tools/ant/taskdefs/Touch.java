@@ -174,13 +174,18 @@ public class Touch extends Task {
                                              location);
                 }
             }
-            touch(file);
         }
 
         if (millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1) {
             log("modification time of files cannot be set in JDK 1.1",
                 Project.MSG_WARN);
             return;
+        } else {
+            millis = System.currentTimeMillis();
+        }
+
+        if (file != null) {
+            touch(file);
         }
 
         // deal with the filesets
@@ -211,11 +216,7 @@ public class Touch extends Task {
             return;
         }
 
-        if (millis < 0) {
-            fileUtils.setFileLastModified(file, System.currentTimeMillis());
-        } else {
-            fileUtils.setFileLastModified(file, millis);
-        }
+        fileUtils.setFileLastModified(file, millis);
     }
 
 }
