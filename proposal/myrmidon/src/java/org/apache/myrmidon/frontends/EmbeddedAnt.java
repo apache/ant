@@ -10,8 +10,12 @@ package org.apache.myrmidon.frontends;
 import java.io.File;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
@@ -24,13 +28,14 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * executing a project.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public class EmbeddedAnt
     extends AbstractLogEnabled
 {
-    private final static Resources REZ
-        = ResourceManager.getPackageResources( EmbeddedAnt.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( EmbeddedAnt.class );
 
     private static final String DEFAULT_EMBEDDOR_CLASS =
         "org.apache.myrmidon.components.embeddor.DefaultEmbeddor";
@@ -41,17 +46,9 @@ public class EmbeddedAnt
     private ProjectListener m_listener;
     private Parameters m_workspaceProps = new Parameters();
     private Parameters m_builderProps = new Parameters();
-    private Parameters m_embeddorProps = new Parameters();
+    private Parameters m_embeddorParameters = new Parameters();
     private ClassLoader m_sharedClassLoader;
     private Embeddor m_embeddor;
-
-    /**
-     * Sets the logger to use.
-     */
-    public void setLogger( final Logger logger )
-    {
-        enableLogging( logger );
-    }
 
     /**
      * Sets the project file to execute.  Default is 'build.ant'.
@@ -117,7 +114,7 @@ public class EmbeddedAnt
     public void setEmbeddorProperty( final String name, final Object value )
     {
         // TODO - Make properties Objects, not Strings
-        m_embeddorProps.setParameter( name, (String)value );
+        m_embeddorParameters.setParameter( name, (String)value );
     }
 
     /**
@@ -164,8 +161,14 @@ public class EmbeddedAnt
         {
             if( m_embeddor != null )
             {
-                m_embeddor.stop();
-                m_embeddor.dispose();
+                if( m_embeddor instanceof Startable )
+                {
+                    ( (Startable)m_embeddor ).stop();
+                }
+                if( m_embeddor instanceof Disposable )
+                {
+                    ( (Disposable)m_embeddor ).dispose();
+                }
             }
         }
         finally
@@ -204,7 +207,7 @@ public class EmbeddedAnt
      */
     private void checkHomeDir() throws Exception
     {
-        final String home = m_embeddorProps.getParameter( "myrmidon.home" );
+        final String home = m_embeddorParameters.getParameter( "myrmidon.home" );
         final File homeDir = ( new File( home ) ).getAbsoluteFile();
         if( !homeDir.isDirectory() )
         {
@@ -229,9 +232,18 @@ public class EmbeddedAnt
         {
             m_embeddor = createEmbeddor();
             setupLogger( m_embeddor );
-            m_embeddor.parameterize( m_embeddorProps );
-            m_embeddor.initialize();
-            m_embeddor.start();
+            if( m_embeddor instanceof Parameterizable )
+            {
+                ( (Parameterizable)m_embeddor ).parameterize( m_embeddorParameters );
+            }
+            if( m_embeddor instanceof Initializable )
+            {
+                ( (Initializable)m_embeddor ).initialize();
+            }
+            if( m_embeddor instanceof Startable )
+            {
+                ( (Startable)m_embeddor ).start();
+            }
         }
         return m_embeddor;
     }

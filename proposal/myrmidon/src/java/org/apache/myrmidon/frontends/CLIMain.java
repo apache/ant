@@ -8,12 +8,12 @@
 package org.apache.myrmidon.frontends;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
 import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
@@ -311,7 +311,7 @@ public class CLIMain
 
             // Setup logging
             final BasicLogger logger = new BasicLogger( "[myrmidon] ", m_priority );
-            m_embedded.setLogger( logger );
+            m_embedded.enableLogging( logger );
 
             if( m_dryRun )
             {
@@ -380,7 +380,7 @@ public class CLIMain
     private void executeBuild() throws Exception
     {
         //actually do the build ...
-        final String[] targets = (String[])m_targets.toArray( new String[m_targets.size() ] );
+        final String[] targets = (String[])m_targets.toArray( new String[ m_targets.size() ] );
         m_embedded.executeTargets( targets );
     }
 

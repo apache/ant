@@ -20,6 +20,7 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -30,6 +31,7 @@ import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
@@ -43,7 +45,6 @@ import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -55,7 +56,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  */
 public class DefaultEmbeddor
     extends AbstractLogEnabled
-    implements Embeddor
+    implements Embeddor, Parameterizable, Initializable, Startable, Disposable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
@@ -284,7 +285,7 @@ public class DefaultEmbeddor
      * Creates a component.
      */
     private Object createComponent( final Class roleType,
-                                  final String defaultImpl )
+                                    final String defaultImpl )
         throws Exception
     {
         final Object component = createService( roleType, defaultImpl );
