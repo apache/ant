@@ -94,6 +94,7 @@ public class FixCRLF extends MatchingTask {
     private int addcr;      // cr:  -1 => remove, 0 => asis, +1 => add
     private int addtab;     // tab: -1 => remove, 0 => asis, +1 => add
     private int ctrlz;      // eof: -1 => remove, 0 => asis, +1 => add
+    private int tablength = 8;  // length of tab in spaces
 
     private File srcDir;
     private File destDir = null;
@@ -177,6 +178,15 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
+     * Specify tab length in characters
+     *
+     * @param tlength specify the length of tab in spaces, has to be a power of 2
+     */
+    public void setTablength(String tlength) {
+        tablength = Integer.parseInt(tlength);
+    }
+
+    /**
      * Specify how DOS EOF (control-z) charaters are to be handled
      *
      * @param option valid values:
@@ -226,7 +236,8 @@ public class FixCRLF extends MatchingTask {
         log("options:" +
             " cr=" + (addcr==-1 ? "add" : addcr==0 ? "asis" : "remove") +
             " tab=" + (addtab==-1 ? "add" : addtab==0 ? "asis" : "remove") +
-            " eof=" + (ctrlz==-1 ? "add" : ctrlz==0 ? "asis" : "remove"),
+            " eof=" + (ctrlz==-1 ? "add" : ctrlz==0 ? "asis" : "remove") +
+            " tablength=" + tablength,
             Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
@@ -270,7 +281,7 @@ public class FixCRLF extends MatchingTask {
             int outsize = count;
             if (addcr  !=  0) outsize-=cr;
             if (addcr  == +1) outsize+=lf;
-            if (addtab == -1) outsize+=tab*7;
+            if (addtab == -1) outsize+=tab*(tablength-1);
             if (ctrlz  == +1) outsize+=1;
 
             // copy the data
@@ -294,7 +305,7 @@ public class FixCRLF extends MatchingTask {
                             col++;
                         } else {
                             // advance column to next tab stop
-                            col = (col|7)+1;
+                            col = (col|(tablength-1))+1;
                         }
                         break;
 
@@ -322,9 +333,9 @@ public class FixCRLF extends MatchingTask {
 
                             // add tabs until this column would be passed
                             // note: the start of line is adjusted to match
-                            while ((diff|7)<col) {
+                            while ((diff|(tablength-1))<col) {
                                 outdata[o++]=(byte)'\t';
-                                line-=7-(diff&7);
+                                line-=(tablength-1)-(diff&(tablength-1));
                                 diff=o-line;
                             };
                         };
