@@ -28,14 +28,14 @@
   <property name="version" value="1.6alpha"/>
   <property name="manifest-version" value="1.6"/>
   <property name="bootstrap.jar" value="ant-bootstrap.jar"/>
-  
+
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
   <property name="optional.type.package" value="${ant.package}/types/optional"/>
   <property name="apache.resolver.type.package" value="${ant.package}/types/resolver"/>
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
-  
+
   <property name="optional.jars.prefix" value="ant"/>
 
   <!--
@@ -103,7 +103,7 @@
     <pathelement location="${tests.etc.dir}"/>
     <path refid="classpath"/>
   </path>
-  
+
   <!-- turn this path into a string which is passed to the tests -->
   <property name="tests-classpath.value"
             refid="tests-classpath"/>
@@ -140,7 +140,7 @@
       <filename name="${optional.package}/extension/**"/>
     </or>
   </selector>
-  
+
   <selector id="needs.jdk1.4+">
     <or>
       <filename name="${regexp.package}/Jdk14Regexp*"/>
@@ -155,11 +155,11 @@
       <filename name="${optional.package}/Javah*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.sun.uue">
     <filename name="${ant.package}/taskdefs/email/UUMailer*"/>
   </selector>
-  
+
   <selector id="needs.sun.b64">
     <or>
       <filename name="${optional.package}/splash/SplashTask*"/>
@@ -176,34 +176,34 @@
       <filename name="${ant.package}/types/XMLCatalogBuildFileTest*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.xalan1">
     <or>
       <filename name="${optional.package}/XalanLiaison*"/>
       <filename name="${optional.package}/junit/Xalan1Executor*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.xalan2">
     <filename name="${optional.package}/junit/Xalan2Executor*"/>
   </selector>
-  
+
   <selector id="needs.xslp">
     <filename name="${optional.package}/XslpLiaison*"/>
   </selector>
-  
+
   <selector id="needs.apache.resolver">
     <filename name="${apache.resolver.type.package}/**"/>
   </selector>
-  
+
   <selector id="needs.junit">
     <filename name="${optional.package}/junit/**"/>
   </selector>
-  
+
   <selector id="needs.jakarta.regexp">
     <filename name="${regexp.package}/JakartaRegexp*"/>
   </selector>
-  
+
   <selector id="needs.jakarta.oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
@@ -211,7 +211,7 @@
       <filename name="${optional.package}/metamata/MAudit*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.jakarta.bcel">
     <or>
       <filename name="${ant.package}/filters/util/JavaClassHelper*"/>
@@ -219,15 +219,15 @@
       <filename name="${optional.type.package}/depend/ClassFileSetTest*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.jakarta.log4j">
     <filename name="${ant.package}/listener/Log4jListener*"/>
   </selector>
-  
+
   <selector id="needs.commons.logging">
     <filename name="${ant.package}/listener/CommonsLoggingListener*"/>
   </selector>
-  
+
   <selector id="needs.bsf">
     <or>
       <filename name="${optional.package}/Script*"/>
@@ -235,40 +235,40 @@
       <filename name="${optional.type.package}/Script*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.stylebook">
     <filename name="${optional.package}/StyleBook*"/>
   </selector>
-  
+
   <selector id="needs.javamail">
     <or>
       <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.icontract">
     <filename name="${optional.package}/IContract*"/>
   </selector>
-  
+
   <selector id="needs.netrexx">
     <filename name="${optional.package}/NetRexxC*"/>
   </selector>
-  
+
   <selector id="needs.weblogic.ejbc">
     <filename name="${optional.package}/ejb/Ejbc*"/>
   </selector>
-  
+
   <selector id="needs.weblogic.ddcreator">
     <filename name="${optional.package}/ejb/DDCreator*"/>
   </selector>
-  
+
   <selector id="needs.weblogic.server">
     <or>
       <filename name="${optional.package}/ejb/WLRun*"/>
       <filename name="${optional.package}/ejb/WLStop*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.commons.net">
     <or>
       <filename name="${optional.package}/net/FTP*"/>
@@ -276,41 +276,41 @@
       <filename name="${optional.package}/net/TelnetTask*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.starteam">
     <or>
       <filename name="${optional.package}/scm/AntStarTeam*"/>
       <filename name="${optional.package}/starteam/*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.vaj">
     <filename name="${optional.package}/ide/VAJ*"/>
   </selector>
-  
+
   <selector id="needs.antlr">
     <filename name="${optional.package}/ANTLR*"/>
   </selector>
-  
+
   <selector id="needs.jmf">
     <filename name="${optional.package}/sound/*"/>
   </selector>
-  
+
   <selector id="needs.jai">
     <or>
       <filename name="${optional.package}/image/*"/>
       <filename name="${ant.package}/types/optional/image/*"/>
     </or>
   </selector>
-  
+
   <selector id="needs.jdepend">
     <filename name="${optional.package}/jdepend/*"/>
   </selector>
-  
+
   <selector id="needs.swing">
     <filename name="${optional.package}/splash/*"/>
   </selector>
-  
+
   <selector id="needs.jsch">
     <filename name="${optional.package}/ssh/*"/>
   </selector>
@@ -318,12 +318,12 @@
   <selector id="ant.launcher">
     <filename name="${ant.package}/launch/**/*"/>
   </selector>
-  
+
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
     <exclude name="**/SignJarTest.java" if="offline"/>
   </patternset>
-  
+
   <patternset id="teststhatfail">
     <exclude name="${optional.package}/BeanShellScriptTest.java"/>
     <exclude name="${ant.package}/taskdefs/ImportTest.java"/>
@@ -714,7 +714,7 @@
         <attribute name="Class-Path" value="xercesImpl.jar xml-apis.jar"/>
       </manifest>
     </jar>
-    
+
     <jar destfile="${build.lib}/${name}.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
