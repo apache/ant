@@ -1489,16 +1489,20 @@ public class Javadoc extends Task {
         }
 
         if (!javadoc1) {
-            toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setPath(classpath);
+            if (classpath.size() > 0) {
+                toExecute.createArgument().setValue("-classpath");
+                toExecute.createArgument().setPath(classpath);
+            }
             if (sourceDirs.size() > 0) {
                 toExecute.createArgument().setValue("-sourcepath");
                 toExecute.createArgument().setPath(sourceDirs);
             }
         } else {
             sourceDirs.append(classpath);
-            toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument().setPath(sourceDirs);
+            if (sourceDirs.size() > 0) {
+                toExecute.createArgument().setValue("-classpath");
+                toExecute.createArgument().setPath(sourceDirs);
+            }
         }
 
         if (version && doclet == null) {
@@ -1549,7 +1553,7 @@ public class Javadoc extends Task {
                     }
                 }
             }
-            if (bootclasspath != null) {
+            if (bootclasspath != null && bootclasspath.size() > 0) {
                 toExecute.createArgument().setValue("-bootclasspath");
                 toExecute.createArgument().setPath(bootclasspath);
             }
@@ -1586,9 +1590,9 @@ public class Javadoc extends Task {
                                 + " must be provided because the link is "
                                 + "offline");
                         }
-                        File packageList = 
+                        File packageListFile = 
                             new File(packageListLocation, "package-list");
-                        if (packageList.exists()) {
+                        if (packageListFile.exists()) {
                             toExecute.createArgument().setValue("-linkoffline");
                             toExecute.createArgument().setValue(la.getHref());
                             toExecute.createArgument()
