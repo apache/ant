@@ -227,8 +227,6 @@ public class WsdlToDotnet extends Task  {
         validate();
         NetCommand command = new NetCommand(this, "WSDL", "wsdl");
         command.setFailOnError(failOnError);
-        //DEBUG helper
-        command.setTraceCommandLine(true);
         //fill in args
         command.addArgument("/nologo");
         command.addArgument("/out:" + destFile);

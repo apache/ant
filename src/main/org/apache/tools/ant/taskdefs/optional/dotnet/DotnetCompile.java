@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -737,7 +737,7 @@ public abstract class DotnetCompile
         if(defines.length()==0) {
             return null;
         } else {
-            return new String(defines);
+            return "/D:"+defines;
         }
     }
 
@@ -810,6 +810,13 @@ public abstract class DotnetCompile
         return failOnError;
     }
 
+    /**
+     * add a new source directory to the compile
+     * @param src
+     */
+    public void addSrc(FileSet src) {
+        filesets.add(src);
+    }
 
     /**
      *  test for a string containing something useful
@@ -996,8 +1003,6 @@ public abstract class DotnetCompile
      */
     protected void fillInSharedParameters(NetCommand command) {
         command.setFailOnError(getFailOnError());
-        //DEBUG helper
-        command.setTraceCommandLine(true);
         //fill in args
         command.addArgument("/nologo");
         command.addArgument(getAdditionalModulesParameter());
