@@ -63,6 +63,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Will set the given property if the requested resource is available at runtime.
@@ -191,7 +192,7 @@ public class Available extends Task implements Condition {
 
     private boolean checkFile() {
         if (filepath == null) {
-            return checkFile(file);
+            return checkFile(project.resolveFile(file), file);
         } else {
             String[] paths = filepath.list();
             for(int i = 0; i < paths.length; ++i) {
@@ -210,57 +211,64 @@ public class Available extends Task implements Condition {
                 **
                 */
                 File path = new File(paths[i]);
-                String dirname = path.getParent();
-                if (type != null) {
-                    if (type.equalsIgnoreCase("dir")) {
-                        if (path.isFile()) {
-                            // full-pathname specified
-                            if (dirname.equals(path.toString())) {
-                                log("Found directory: " + path, Project.MSG_VERBOSE);
-                                return true;
-                            // simple name specified
-                            } else if(new File(dirname, file).isDirectory()) {
-                                log("Found directory: " + dirname + File.separator + file, Project.MSG_VERBOSE);
-                                return true;
-                            }
-                        // full-pathname specified
-                        } else if (path.toString().equals(new File(file).toString()) && path.isDirectory()) {
-                                log("Found directory: " + path, Project.MSG_VERBOSE);
-                                return true;
-                        // simple name specified
-                        } else if (new File(path, file).isDirectory()) {
-                                log("Found directory: " + path + File.separator + file, Project.MSG_VERBOSE);
-                                return true;
-                        }
-                    /* end check for type dir */
-                    } else {
-                        if (path.toString().equals(new File(file).toString()) && path.isFile()) {
-                                log("Found file: " + path, Project.MSG_VERBOSE);
-                                return true;
-                        } else if (new File(path, file).isFile()) {
-                            log("Found file: " + path + File.separator + file, Project.MSG_VERBOSE);
-                            return true;
-                        } else if (new File(dirname, file).isFile()) {
-                            log("Found file: " + dirname + File.separator + file, Project.MSG_VERBOSE);
-                            return true;
-                        }
-                    }
-                /* end check for specified type */
-                } else {
-                    if (path.toString().equals(new File(file).toString())) {
+
+                // **   full-pathname specified == path in list
+                // **   simple name specified   == path in list
+                if (path.exists() && file.equals(paths[i])) {
+                    if (type == null) {
                         log("Found: " + path, Project.MSG_VERBOSE);
                         return true;
-                    } else if (new File(path, file).exists()) {
-                        log("Found: " + path + File.separator + file, Project.MSG_VERBOSE);
+                    } else if (type.equalsIgnoreCase("dir") 
+                               && path.isDirectory()) {
+                        log("Found directory: " + path, Project.MSG_VERBOSE);
                         return true;
-                    } else if (new File(dirname, file).exists()) {
-                        log("Found: " + dirname + File.separator + file, Project.MSG_VERBOSE);
+                    } else if (type.equalsIgnoreCase("file") 
+                               && path.isFile()) {
+                        log("Found file: " + path, Project.MSG_VERBOSE);
                         return true;
-                    } else {
-                        File dir = new File(dirname);
-                        dirname = dir.getParent();
-                        if (new File(dirname, file).exists()) {
-                            log("Found: " + dirname + File.separator + file, Project.MSG_VERBOSE);
+                    }
+                    // not the requested type
+                    return false;
+                }
+                
+                FileUtils fileUtils = FileUtils.newFileUtils();
+                File parent = fileUtils.getParentFile(path);
+                // **   full-pathname specified == parent dir of path in list
+                if (parent != null && parent.exists() 
+                    && file.equals(parent.getAbsolutePath())) {
+                    if (type == null) {
+                        log("Found: " + parent, Project.MSG_VERBOSE);
+                        return true;
+                    } else if (type.equalsIgnoreCase("dir")) {
+                        log("Found directory: " + parent, Project.MSG_VERBOSE);
+                        return true;
+                    }
+                    // not the requested type
+                    return false;
+                }
+
+                // **   simple name specified   == path in list + name
+                if (path.exists() && path.isDirectory()) {
+                    if (checkFile(new File(path, file), 
+                                  file + " in " + path)) {
+                        return true;
+                    }
+                }
+                
+                // **   simple name specified   == parent dir + name
+                if (parent != null && parent.exists()) {
+                    if (checkFile(new File(parent, file), 
+                                  file + " in " + parent)) {
+                        return true;
+                    }
+                }
+                
+                // **   simple name specified   == parent of parent dir + name
+                if (parent != null) {
+                    File grandParent = fileUtils.getParentFile(parent);
+                    if (grandParent != null && grandParent.exists()) {
+                        if (checkFile(new File(grandParent, file), 
+                                      file + " in " + grandParent)) {
                             return true;
                         }
                     }
@@ -270,25 +278,24 @@ public class Available extends Task implements Condition {
         return false;
     }
 
-    private boolean checkFile(String file) {
-        File filename = new File(file);
+    private boolean checkFile(File f, String text) {
         if (type != null) {
             if (type.equalsIgnoreCase("dir")) {
-                if( filename.isDirectory()) {
-                    log("Found directory: " + file, Project.MSG_VERBOSE);
+                if( f.isDirectory()) {
+                    log("Found directory: " + text, Project.MSG_VERBOSE);
                 }
-                return filename.isDirectory();
+                return f.isDirectory();
             } else if (type.equalsIgnoreCase("file")) {
-                if( filename.isFile()) {
-                    log("Found file: " + file, Project.MSG_VERBOSE);
+                if( f.isFile()) {
+                    log("Found file: " + text, Project.MSG_VERBOSE);
                 }
-                return filename.isFile();
+                return f.isFile();
             }
         }
-        if (filename.exists()) {
-            log("Found: " + file, Project.MSG_VERBOSE);
+        if (f.exists()) {
+            log("Found: " + text, Project.MSG_VERBOSE);
         }
-        return filename.exists();
+        return f.exists();
     }
 
     private boolean checkResource(String resource) {
