@@ -125,8 +125,8 @@ public class EjbJar extends MatchingTask {
      */
     private ArrayList deploymentTools = new ArrayList();
 
-    public EJBDeploymentTool createWeblogic() {
-        EJBDeploymentTool tool = new WeblogicDeploymentTool();
+    public WeblogicDeploymentTool createWeblogic() {
+        WeblogicDeploymentTool tool = new WeblogicDeploymentTool();
         tool.setTask(this);
         deploymentTools.add(tool);
         return tool;
