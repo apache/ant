@@ -139,15 +139,11 @@ public class CommandlineJava implements Cloneable {
 
     }
 
-
     public CommandlineJava() {
         setVm(getJavaExecutableName());
         setVmversion(Project.getJavaVersion());
     }
 
-    /**
-     * cr
-     */
     public Commandline.Argument createArgument() {
         return javaCommand.createArgument();
     }
@@ -227,7 +223,7 @@ public class CommandlineJava implements Cloneable {
     public String[] getCommandline() {
        String[] result = new String[size()];
         int pos = 0;
-        String[] vmArgs = vmCommand.getCommandline();
+        String[] vmArgs = getActualVMCommand().getCommandline();
         // first argument is the java.exe path...
         result[pos++] = vmArgs[0];
         
@@ -287,7 +283,7 @@ public class CommandlineJava implements Cloneable {
      * @see #getCommandline()
      */
     public int size() {
-        int size = vmCommand.size() + javaCommand.size() + sysProperties.size();
+        int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
         if (classpath != null && classpath.size() > 0) {
             size += 2;
