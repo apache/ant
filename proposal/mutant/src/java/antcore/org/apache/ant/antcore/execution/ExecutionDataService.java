@@ -72,13 +72,20 @@ public class ExecutionDataService implements DataService {
     /** The ExecutionFrame this service instance is working for */
     private ExecutionFrame frame;
 
+    /** all properties to be unset without throwing an exception */
+    private boolean allowUnsetProperties;
+
     /**
      * Constructor
      *
      * @param frame the frame containing this context
+     * @param allowUnsetProperties true if the reference to an unset
+     *      property should not throw an exception
      */
-    public ExecutionDataService(ExecutionFrame frame) {
+    public ExecutionDataService(ExecutionFrame frame,
+                                boolean allowUnsetProperties) {
         this.frame = frame;
+        this.allowUnsetProperties = allowUnsetProperties;
     }
 
     /**
@@ -169,10 +176,14 @@ public class ExecutionDataService implements DataService {
             if (fragment == null) {
                 String propertyName = (String)j.next();
                 if (!isDataValueSet(propertyName)) {
-                    throw new ExecutionException("Property \"" + propertyName
-                         + "\" has not been set");
+                    if (!allowUnsetProperties) {
+                        throw new ExecutionException("Property \""
+                             + propertyName + "\" has not been set");
+                    }
+                    fragment = "${" + propertyName + "}";
+                } else {
+                    fragment = getDataValue(propertyName).toString();
                 }
-                fragment = getDataValue(propertyName).toString();
             }
             sb.append(fragment);
         }

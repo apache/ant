@@ -54,17 +54,18 @@
 package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.PropertyUtils;
 import org.apache.ant.common.util.MessageLevel;
-import org.apache.tools.ant.taskdefs.ExecTask;
-import org.apache.tools.ant.taskdefs.Java;
+import org.apache.ant.common.util.PropertyUtils;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
@@ -111,6 +112,11 @@ public class Project {
 
     /** The java version detected that Ant is running on */
     private static String javaVersion;
+
+    /** Collection of Ant1 type definitions */
+    private Hashtable dataClassDefinitions = new Hashtable();
+    /** Collection of Ant1 task definitions */
+    private Hashtable taskClassDefinitions = new Hashtable();
 
     /** The project description */
     private String description;
@@ -357,6 +363,53 @@ public class Project {
     }
 
     /**
+     * get a copy of the property hashtable
+     *
+     * @return the hashtable containing all properties, user included
+     */
+    public Hashtable getProperties() {
+        Map properties = dataService.getAllProperties();
+        Hashtable result = new Hashtable();
+        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+            String name = (String)i.next();
+            Object value = properties.get(name);
+            if (value instanceof String) {
+                result.put(name, value);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * get a copy of the property hashtable
+     *
+     * @return the hashtable containing all properties, user included
+     */
+    public Hashtable getUserProperties() {
+        return getProperties();
+    }
+
+    /**
+     * Get all references in the project
+     *
+     * @return the hashtable containing all references
+     */
+    public Hashtable getReferences() {
+        Map properties = dataService.getAllProperties();
+        Hashtable result = new Hashtable();
+        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+            String name = (String)i.next();
+            Object value = properties.get(name);
+            if (!(value instanceof String)) {
+                result.put(name, value);
+            }
+        }
+
+        return result;
+    }
+
+    /**
      * Add a reference to an object. NOte that in Ant2 objects and
      * properties occupy the same namespace.
      *
@@ -524,6 +577,66 @@ public class Project {
         this.context = context;
         fileService = (FileService)context.getCoreService(FileService.class);
         dataService = (DataService)context.getCoreService(DataService.class);
+
+        String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
+
+        try {
+            Properties props = new Properties();
+            InputStream in = this.getClass().getResourceAsStream(defs);
+            if (in == null) {
+                throw new BuildException("Can't load default task list");
+            }
+            props.load(in);
+            in.close();
+
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String key = (String)enum.nextElement();
+                String value = props.getProperty(key);
+                try {
+                    Class taskClass = Class.forName(value);
+                    taskClassDefinitions.put(key, taskClass);
+                } catch (NoClassDefFoundError ncdfe) {
+                    log("Could not load a dependent class ("
+                         + ncdfe.getMessage() + ") for task " + key, MSG_DEBUG);
+                } catch (ClassNotFoundException cnfe) {
+                    log("Could not load class (" + value
+                         + ") for task " + key, MSG_DEBUG);
+                }
+            }
+        } catch (IOException ioe) {
+            throw new BuildException("Can't load default task list");
+        }
+
+        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
+
+        try {
+            Properties props = new Properties();
+            InputStream in = this.getClass().getResourceAsStream(dataDefs);
+            if (in == null) {
+                throw new BuildException("Can't load default datatype list");
+            }
+            props.load(in);
+            in.close();
+
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String key = (String)enum.nextElement();
+                String value = props.getProperty(key);
+                try {
+                    Class dataClass = Class.forName(value);
+                    dataClassDefinitions.put(key, dataClass);
+                } catch (NoClassDefFoundError ncdfe) {
+                    log("Could not load a dependent class ("
+                         + ncdfe.getMessage() + ") for type " + key, MSG_DEBUG);
+                } catch (ClassNotFoundException cnfe) {
+                    log("Could not load class (" + value
+                         + ") for type " + key, MSG_DEBUG);
+                }
+            }
+        } catch (IOException ioe) {
+            throw new BuildException("Can't load default datatype list");
+        }
     }
 
     /**
@@ -600,70 +713,26 @@ public class Project {
      * Create a Task. This faced hard codes a few well known tasks at this
      * time
      *
-     * @param taskName the name of the task to be created.
+     * @param taskType the name of the task to be created.
      * @return the created task instance
      */
-    public Task createTask(String taskName) {
+    public Task createTask(String taskType) {
         // we piggy back the task onto the current context
         Task task = null;
-        if (taskName.equals("java")) {
-            task = new Java();
-        } else if (taskName.equals("exec")) {
-            task = new ExecTask();
-        } else {
+        Class c = (Class) taskClassDefinitions.get(taskType);
+
+        if (c == null) {
             return null;
         }
+        
         try {
+            task = (Task)c.newInstance();
             task.setProject(this);
             task.init(context);
             return task;
-        } catch (ExecutionException e) {
+        } catch (Throwable e) {
             throw new BuildException(e);
         }
-    }
-    
-    /**
-     * get a copy of the property hashtable
-     * @return the hashtable containing all properties, user included
-     */
-    public Hashtable getProperties() {
-        Map properties = dataService.getAllProperties();
-        Hashtable result = new Hashtable();
-        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
-            String name = (String)i.next();
-            Object value = properties.get(name);
-            if (value instanceof String) {
-                result.put(name, value);
-            }
-        }
-        
-        return result;
-    }
-
-    /**
-     * get a copy of the property hashtable
-     * @return the hashtable containing all properties, user included
-     */
-    public Hashtable getUserProperties() {
-        return getProperties();
-    }
-    
-    /**
-     * Get all references in the project
-     * @return the hashtable containing all references
-     */
-    public Hashtable getReferences() {
-        Map properties = dataService.getAllProperties();
-        Hashtable result = new Hashtable();
-        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
-            String name = (String)i.next();
-            Object value = properties.get(name);
-            if (!(value instanceof String)) {
-                result.put(name, value);
-            }
-        }
-        
-        return result;
     }
 }
 

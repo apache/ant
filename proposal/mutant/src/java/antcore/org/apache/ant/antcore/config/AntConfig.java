@@ -82,10 +82,22 @@ public class AntConfig {
     private Map libPaths = new HashMap();
 
     /** Indicates if remote libraries may be used */
-    private boolean allowRemoteLibs = false;
+    private boolean remoteLibs = false;
 
     /** Indicates if remote projects may be used */
-    private boolean allowRemoteProjects = false;
+    private boolean remoteProjects = false;
+
+    /** Indicates if unset properties are ignored */
+    private boolean unsetProperties = true;
+
+    /**
+     * Indicate if unset properties are OK.
+     *
+     * @return true if unset properties will not cause an exception
+     */
+    public boolean isUnsetPropertiesAllowed() {
+        return unsetProperties;
+    }
 
     /**
      * Indicate if the use of remote library's is allowe dby this config.
@@ -93,16 +105,16 @@ public class AntConfig {
      * @return true if this config allows the use of remote libraries,
      */
     public boolean isRemoteLibAllowed() {
-        return allowRemoteLibs;
+        return remoteLibs;
     }
 
     /**
-     * Indicate if this config allows the execution of a remote project 
+     * Indicate if this config allows the execution of a remote project
      *
      * @return true if remote projects are allowed
      */
     public boolean isRemoteProjectAllowed() {
-        return allowRemoteProjects;
+        return remoteProjects;
     }
 
     /**
@@ -138,6 +150,34 @@ public class AntConfig {
      */
     public Iterator getLibraryIds() {
         return libPaths.keySet().iterator();
+    }
+
+    /**
+     * Allow remote libraries to be used
+     *
+     * @param allowRemoteLibs true if remote libraries may be used.
+     */
+    public void allowRemoteLibs(boolean allowRemoteLibs) {
+        this.remoteLibs = allowRemoteLibs;
+    }
+
+    /**
+     * Allow remote projects to be used
+     *
+     * @param allowRemoteProjects true if remote projects may be executed.
+     */
+    public void allowRemoteProjects(boolean allowRemoteProjects) {
+        this.remoteProjects = allowRemoteProjects;
+    }
+
+    /**
+     * Allow properties to be used even when they have not been set
+     *
+     * @param allowUnsetProperties true if un set properties should not
+     *      cause an exception
+     */
+    public void allowUnsetProperties(boolean allowUnsetProperties) {
+        this.unsetProperties = allowUnsetProperties;
     }
 
     /**
@@ -207,6 +247,10 @@ public class AntConfig {
             combined.addAll(currentList);
             libPaths.put(libraryId, combined);
         }
+
+        remoteLibs = otherConfig.remoteLibs;
+        remoteProjects = otherConfig.remoteProjects;
+        unsetProperties = otherConfig.unsetProperties;
     }
 
     /**

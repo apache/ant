@@ -168,9 +168,6 @@ public class ExecutionFrame {
         this.standardLibs = standardLibs;
         this.config = config;
         this.initConfig = initConfig;
-
-        configureServices();
-        componentManager.setStandardLibraries(standardLibs);
     }
 
     /**
@@ -206,6 +203,9 @@ public class ExecutionFrame {
             referencedFrames.put(referenceName, referencedFrame);
 
         }
+
+        configureServices();
+        componentManager.setStandardLibraries(standardLibs);
     }
 
     /**
@@ -747,7 +747,8 @@ public class ExecutionFrame {
         fileService = new ExecutionFileService(this);
         componentManager
              = new ComponentManager(this, config.isRemoteLibAllowed());
-        dataService = new ExecutionDataService(this);
+        dataService = new ExecutionDataService(this, 
+            config.isUnsetPropertiesAllowed());
 
         services.put(FileService.class, fileService);
         services.put(ComponentService.class, componentManager);

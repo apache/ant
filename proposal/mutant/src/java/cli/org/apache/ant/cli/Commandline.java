@@ -260,7 +260,6 @@ public class Commandline {
      */
     private void process(String[] args, InitConfig initConfig) {
         this.initConfig = initConfig;
-        System.out.println("Ant Home is " + initConfig.getAntHome());
         try {
             parseArguments(args);
 

@@ -196,7 +196,6 @@ public class Main {
             InitConfig config = new InitConfig();
 
             URL libraryURL = getLibraryURL();
-            System.out.println("Library URL is " + libraryURL);
             config.setLibraryURL(libraryURL);
 
             URL antHome = getAntHome();

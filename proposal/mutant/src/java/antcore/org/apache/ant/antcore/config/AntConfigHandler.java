@@ -64,6 +64,18 @@ import org.xml.sax.SAXParseException;
  * @created 20 January 2002
  */
 public class AntConfigHandler extends ElementHandler {
+    /** The allowRemoteProject attribute name */
+    public final static String REMOTE_PROJECT_ATTR = "allow-remote-project";
+    
+    /** The allowRemoteLibrary attribute name */
+    public final static String REMOTE_LIBRARY_ATTR = "allow-remote-library";
+
+    /** The allowReportProject attribute name */
+    public final static String UNSET_PROPS_ATTR = "allow-unset-properties";
+
+    /** The list of allowed Attributes */
+    public final static String[] ALLOWED_ATTRIBUTES
+         = {REMOTE_PROJECT_ATTR, REMOTE_LIBRARY_ATTR, UNSET_PROPS_ATTR};
     /**
      * The config object which is contructed from the XML representation of
      * the config
@@ -89,8 +101,11 @@ public class AntConfigHandler extends ElementHandler {
     public void processElement(String elementName)
          throws SAXParseException {
         config = new AntConfig();
-    }
-
+        config.allowRemoteLibs(getBooleanAttribute(REMOTE_LIBRARY_ATTR));
+        config.allowRemoteProjects(getBooleanAttribute(REMOTE_PROJECT_ATTR));
+        config.allowUnsetProperties(getBooleanAttribute(UNSET_PROPS_ATTR));
+    }        
+        
     /**
      * Start a new element in the ant config.
      *
@@ -136,6 +151,24 @@ public class AntConfigHandler extends ElementHandler {
         }
     }
 
+    /**
+     * Validate that the given attribute and value are valid.
+     *
+     * @param attributeName The name of the attributes
+     * @param attributeValue The value of the attributes
+     * @exception SAXParseException if the attribute is not allowed on the
+     *      element.
+     */
+    protected void validateAttribute(String attributeName,
+                                     String attributeValue)
+         throws SAXParseException {
+        for (int i = 0; i < ALLOWED_ATTRIBUTES.length; ++i) {
+            if (attributeName.equals(ALLOWED_ATTRIBUTES[i])) {
+                return;
+            }
+        }
+        throwInvalidAttribute(attributeName);
+    }
 }
 
 

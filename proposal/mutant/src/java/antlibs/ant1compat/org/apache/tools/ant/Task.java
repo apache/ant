@@ -83,9 +83,11 @@ public abstract class Task extends ProjectComponent
     public void init(AntContext context) throws ExecutionException {
         super.init(context);
         
-        BuildElement buildElement = (BuildElement)context.getModelElement();
-        taskType = buildElement.getType();
-        taskName = taskType;        
+        if (context.getModelElement() instanceof BuildElement) {
+            BuildElement buildElement = (BuildElement)context.getModelElement();
+            taskType = buildElement.getType();
+            taskName = taskType;
+        }
     }
         
     /**
