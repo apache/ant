@@ -414,7 +414,7 @@ public final class IntrospectionHelper implements BuildListener {
             return true;
         }
 
-        if  ("setTaskType".equals(name)
+        if ("setTaskType".equals(name)
              && java.lang.String.class.equals(type)) {
             return true;
         }
@@ -453,7 +453,8 @@ public final class IntrospectionHelper implements BuildListener {
      *
      * @return a helper for the specified class
      */
-    public static synchronized IntrospectionHelper getHelper(Project p, Class c) {
+    public static synchronized IntrospectionHelper getHelper(Project p, 
+                                                             Class c) {
         IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
         if (ih == null) {
             ih = new IntrospectionHelper(c);
@@ -1113,8 +1114,7 @@ public final class IntrospectionHelper implements BuildListener {
                 Class elementClass = nestedCreator.getElementClass();
                 ComponentHelper helper =
                     ComponentHelper.getComponentHelper(project);
-                nestedObject = ComponentHelper.getComponentHelper(project)
-                    .createComponent(polyType);
+                nestedObject = helper.createComponent(polyType);
                 if (nestedObject == null) {
                     throw new BuildException(
                         "Unable to create object of type " + polyType);

@@ -309,7 +309,7 @@ public class ProjectHelper {
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
             String value = replaceProperties(project, attrs.getValue(i),
-                                           project.getProperties());
+                                             project.getProperties());
             try {
                 ih.setAttribute(project, target,
                                 attrs.getName(i).toLowerCase(Locale.US), value);

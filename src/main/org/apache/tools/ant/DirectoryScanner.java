@@ -422,7 +422,7 @@ public class DirectoryScanner
      * @since Ant 1.6
      */
     public static void resetDefaultExcludes() {
-    defaultExcludes = new Vector();
+        defaultExcludes = new Vector();
 
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             defaultExcludes.add(DEFAULTEXCLUDES[i]);
