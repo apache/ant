@@ -187,7 +187,7 @@ public class Copy extends Task {
                 if (destFile == null) {
                     destFile = new File(destDir, file.getName());
                 }
-
+                
                 if (forceOverwrite || 
                     (file.lastModified() > destFile.lastModified())) {
                     fileCopyMap.put(file.getAbsolutePath(), destFile.getAbsolutePath());
@@ -290,7 +290,7 @@ public class Copy extends Task {
         for (int i = 0; i < toCopy.length; i++) {
             File src = new File(fromDir, toCopy[i]);
             File dest = new File(toDir, mapper.mapFileName(toCopy[i])[0]);
-            map.put(src.getAbsolutePath(), dest.getAbsolutePath());
+            map.put( src.getAbsolutePath(), dest.getAbsolutePath() );
         }
     }
 
@@ -309,8 +309,14 @@ public class Copy extends Task {
                 String fromFile = (String) e.nextElement();
                 String toFile = (String) fileCopyMap.get(fromFile);
 
+                if( fromFile.equals( toFile ) ) {
+                    log("Skipping self-copy of " + fromFile, verbosity);
+                    continue;
+                }
+
                 try {
                     log("Copying " + fromFile + " to " + toFile, verbosity);
+                    
                     project.copyFile(fromFile, 
                                      toFile, 
                                      filtering, 
