@@ -49,6 +49,15 @@ file.</p> <p>The <code>&lt;or&gt;</code> condition has the same
 shortcut semantics as the Java || operator, as soon as one of the
 nested conditions is true, no other condition will be evaluated.</p>
 
+<h4>xor</h4>
+<p>The <code>&lt;xor&gt;</code> element performs an exclusive
+or on all nested elements, similar to the <code>^</code> operator
+in Java. It only evaluates to true if an odd number of nested conditions
+are true. There is no shortcutting of evaluation, unlike the <code>&lt;and&gt;</code>
+and <code>&lt;or&gt;</code> tests.
+It doesn't have any attributes and accepts all nested
+elements of the condition task as nested elements as well.</p>
+
 <h4>available</h4>
 <p>This condition is identical to the <a
 href="available.html">Available</a> task, all attributes and nested
