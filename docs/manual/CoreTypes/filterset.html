@@ -14,6 +14,9 @@ or be read in from a file. FilterSets can appear inside tasks that support this
 feature or at the same level as <CODE>&lt;target&gt;</CODE> - i.e., as
 children of 
 <CODE>&lt;project&gt;</CODE>.</P>
+<P>FilterSets support the <code>id</code> and <code>refid</code> attributes.
+You can define a FilterSet with an <code>id</code> attribute and then refer
+to that definition from another FilterSet with a <code>refid</code> attribute.
 <p>In addition, FilterSets can specify
 <code>begintoken</code> and/or 
 <code>endtoken</code> attributes to define what to match.</p>
@@ -116,6 +119,16 @@ but wish to replace the token <code>%DATE*</code> with today's date.</p>
 &lt;/copy&gt;
 </PRE></BLOCKQUOTE>
 
+<p>Define a FilterSet and reference it later.</p>
+<BLOCKQUOTE><PRE>
+&lt;filterset id=&quot;myFilterSet&quot; begintoken=&quot;%&quot; endtoken=&quot;*&quot;&gt;
+  &lt;filter token=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
+&lt;/filterset&gt;
+
+&lt;copy file=&quot;${build.dir}/version.txt&quot; toFile=&quot;${dist.dir}/version.txt&quot;&gt;
+  &lt;filterset refid=&quot;myFilterSet&quot;/&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
 <HR>
 
 <P align=center>Copyright &copy; 2001-2002 Apache Software Foundation.
