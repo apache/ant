@@ -114,6 +114,7 @@ import org.apache.tools.ant.BuildException;
 public class SendEmail extends Task {
     private String from;
     private String mailhost = "localhost";
+    private int mailport = MailMessage.DEFAULT_PORT;
     private String message;
     private String toList;
     private String subject;
@@ -149,7 +150,15 @@ public class SendEmail extends Task {
     public void setMailhost(String mailhost) {
         this.mailhost = mailhost;
     }
-  
+
+    /**
+     * Sets the mailport parameter of this build task.
+     * @param value mail port name.
+     */
+    public void setMailport(Integer value){
+        this.mailport = value.intValue();
+    }
+
     /**
      * Sets the message parameter of this build task.
      *
@@ -184,12 +193,12 @@ public class SendEmail extends Task {
     /**
      * Executes this build task.
      *
-     * throws org.apache.tools.ant.BuildException if there is an error during task
-     *        execution.
+     * @throws BuildException if there is an error during task execution.
      */
-    public void execute() {
+    public void execute() throws BuildException {
         try {
             MailMessage mailMessage = new MailMessage(mailhost);
+            mailMessage.setPort(mailport);
 
             if (from != null) {
                 mailMessage.from(from);
@@ -251,7 +260,7 @@ public class SendEmail extends Task {
             log("Sending email");
             mailMessage.sendAndClose();
         } catch (IOException ioe) {
-            throw new BuildException("IO error sending mail: " + ioe.getMessage());
+            throw new BuildException("IO error sending mail", ioe);
         }
     }
 

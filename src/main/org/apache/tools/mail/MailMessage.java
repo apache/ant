@@ -86,6 +86,7 @@ import java.util.Enumeration;
  * String bcc = "bcc@you.com";
  * &nbsp;
  * MailMessage msg = new MailMessage(mailhost);
+ * msg.setPort(25);
  * msg.from(from);
  * msg.to(to);
  * msg.cc(cc1);
@@ -126,13 +127,32 @@ import java.util.Enumeration;
  */
 public class MailMessage {
 
-  String host;
-  String from;
-  Vector to, cc;
-  Hashtable headers;
-  MailPrintStream out;
-  SmtpResponseReader in;
-  Socket socket;
+    /** default port for SMTP: 25 */
+    public final static int DEFAULT_PORT = 25;
+
+    /** host name for the mail server */
+    private String host;
+
+    /** host port for the mail server */
+    private int port = DEFAULT_PORT;
+
+    /** sender email address */
+    private String from;
+
+    /** list of email addresses to send to */
+    private Vector to;
+
+    /** list of email addresses to cc to */
+    private Vector cc;
+
+    /** headers to send in the mail */
+    private Hashtable headers;
+
+    private MailPrintStream out;
+
+    private SmtpResponseReader in;
+
+    private Socket socket;
 
   /**
    * Constructs a new MailMessage to send an email.
@@ -160,6 +180,15 @@ public class MailMessage {
     connect();
     sendHelo();
   }
+
+    /**
+     * Set the port to connect to the SMTP host.
+     * @param port the port to use for connection.
+     * @see #DEFAULT_PORT
+     */
+    public void setPort(int port){
+        this.port = port;
+    }
 
   /**
    * Sets the from address.  Also sets the "From" header.  This method should
@@ -326,7 +355,7 @@ public class MailMessage {
   // * * * * * Raw protocol methods below here * * * * *
 
   void connect() throws IOException {
-    socket = new Socket(host, 25);
+    socket = new Socket(host, port);
     out = new MailPrintStream(
           new BufferedOutputStream(
           socket.getOutputStream())); 
