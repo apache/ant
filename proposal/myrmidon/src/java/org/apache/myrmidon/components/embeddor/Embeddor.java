@@ -15,7 +15,7 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.myrmidon.components.model.Project;
-import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.workspace.Workspace;
 
 /**
  * Interface through which you embed Myrmidon into applications.
@@ -36,12 +36,12 @@ public interface Embeddor
         throws Exception;
 
     /**
-     * Create a ProjectManager for a particular project.
+     * Create a Workspace for a particular project.
      *
      * @param project the root project
      * @param defines the defines in project
-     * @return the ProjectManager
+     * @return the Workspace
      */
-    ProjectManager createProjectManager( Project project, Parameters parameters )
+    Workspace createWorkspace( Project project, Parameters parameters )
         throws Exception;
 }

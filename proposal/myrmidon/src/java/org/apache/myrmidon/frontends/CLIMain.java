@@ -40,8 +40,8 @@ import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
-import org.apache.myrmidon.components.manager.LogTargetToListenerAdapter;
-import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.workspace.LogTargetToListenerAdapter;
+import org.apache.myrmidon.components.workspace.Workspace;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.listeners.ProjectListener;
 
@@ -353,11 +353,10 @@ public class CLIMain
         while( true )
         {
             //actually do the build ...
-            final ProjectManager manager = 
-                embeddor.createProjectManager( project, m_defines );
-            manager.addProjectListener( listener );
+            final Workspace workspace = embeddor.createWorkspace( project, m_defines );
+            workspace.addProjectListener( listener );
 
-            doBuild( manager, project, m_targets );
+            doBuild( workspace, project, m_targets );
 
             if( !incremental ) break;
 
@@ -385,7 +384,7 @@ public class CLIMain
      * @param project the project
      * @param targets the targets to build as passed by CLI
      */
-    private void doBuild( final ProjectManager manager,
+    private void doBuild( final Workspace workspace,
                           final Project project,
                           final ArrayList targets )
     {
@@ -396,13 +395,13 @@ public class CLIMain
             //if we didn't specify a target on CLI then choose default
             if( 0 == targetCount )
             {
-                manager.executeProject( project, project.getDefaultTargetName() );
+                workspace.executeProject( project, project.getDefaultTargetName() );
             }
             else
             {
                 for( int i = 0; i < targetCount; i++ )
                 {
-                    manager.executeProject( project, (String)targets.get( i ) );
+                    workspace.executeProject( project, (String)targets.get( i ) );
                 }
             }
         }

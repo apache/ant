@@ -23,7 +23,6 @@ import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.components.type.TypeManager;
 

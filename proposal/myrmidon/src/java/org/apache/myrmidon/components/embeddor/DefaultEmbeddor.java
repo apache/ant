@@ -27,12 +27,12 @@ import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.deployer.DeploymentException;
-import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.workspace.Workspace;
+import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.components.type.TypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
-import org.apache.myrmidon.components.model.Project;
 
 /**
  * Default implementation of Embeddor.
@@ -122,13 +122,13 @@ public class DefaultEmbeddor
         return builder;
     }
 
-    public ProjectManager createProjectManager( final Project project, 
-                                                final Parameters parameters )
+    public Workspace createWorkspace( final Project project, 
+                                      final Parameters parameters )
         throws Exception
     {
-        final String component = getParameter( ProjectManager.ROLE );
-        final ProjectManager projectManager = 
-            (ProjectManager)createComponent( component, ProjectManager.class );
+        final String component = getParameter( Workspace.ROLE );
+        final Workspace projectManager = 
+            (Workspace)createComponent( component, Workspace.class );
 
         setupLogger( projectManager );
 
@@ -240,8 +240,8 @@ public class DefaultEmbeddor
                                //"org.apache.myrmidon.components.executor.DefaultExecutor" );
                                //"org.apache.myrmidon.components.executor.PrintingExecutor" );
                                "org.apache.myrmidon.components.executor.AspectAwareExecutor" );
-        defaults.setParameter( ProjectManager.ROLE,
-                               "org.apache.myrmidon.components.manager.DefaultProjectManager" );
+        defaults.setParameter( Workspace.ROLE,
+                               "org.apache.myrmidon.components.workspace.DefaultWorkspace" );
         defaults.setParameter( Deployer.ROLE,
                                "org.apache.myrmidon.components.deployer.DefaultDeployer" );
         defaults.setParameter( Configurer.ROLE,
