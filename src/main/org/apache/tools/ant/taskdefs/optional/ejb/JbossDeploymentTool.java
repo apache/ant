@@ -74,6 +74,14 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
     private String jarSuffix = ".jar";
 
     /**
+     * Setter used to store the suffix for the generated JBoss jar file.
+     * @param inString the string to use as the suffix.
+     */
+    public void setSuffix(String inString) {
+        jarSuffix = inString;
+    }
+    
+    /**
      * Add any vendor specific files which should be included in the
      * EJB Jar.
      */
