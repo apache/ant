@@ -348,10 +348,16 @@ public class Execute {
      */
     public Execute(ExecuteStreamHandler streamHandler,
                    ExecuteWatchdog watchdog) {
-        this.streamHandler = streamHandler;
+        setStreamHandler(streamHandler);
         this.watchdog = watchdog;
     }
 
+    /**
+     * @since Ant 1.6
+     */
+    public void setStreamHandler(ExecuteStreamHandler streamHandler) {
+        this.streamHandler = streamHandler;
+    }
 
     /**
      * Returns the commandline used to create a subprocess.

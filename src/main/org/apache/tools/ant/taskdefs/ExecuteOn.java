@@ -333,6 +333,11 @@ public class ExecuteOn extends ExecTask {
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
+                        if (haveExecuted) {
+                            // need to reset the stream handler to restart
+                            // reading of pipes
+                            exe.setStreamHandler(createHandler());
+                        }
                         runExecute(exe);
                         haveExecuted = true;
                     }
@@ -376,6 +381,11 @@ public class ExecuteOn extends ExecTask {
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
+                        if (haveExecuted) {
+                            // need to reset the stream handler to restart
+                            // reading of pipes
+                            exe.setStreamHandler(createHandler());
+                        }
                         runExecute(exe);
                         haveExecuted = true;
                     }
@@ -595,6 +605,11 @@ public class ExecuteOn extends ExecTask {
                 String[] command = getCommandline(cs, cb);
                 log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
                 exe.setCommandline(command);
+                if (currentOffset > 0) {
+                    // need to reset the stream handler to restart
+                    // reading of pipes
+                    exe.setStreamHandler(createHandler());
+                }
                 runExecute(exe);
 
                 stillToDo -= currentAmount;
