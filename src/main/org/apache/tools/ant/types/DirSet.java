@@ -54,18 +54,11 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.FileScanner;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
-
-import java.io.File;
-import java.util.Stack;
-import java.util.Vector;
-
 /**
  * Subclass as hint for supporting tasks that the included directories
  * instead of files should be used.
+ *
+ * @since Ant 1.5
  */
 public class DirSet extends FileSet {
     

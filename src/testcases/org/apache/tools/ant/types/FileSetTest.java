@@ -83,8 +83,16 @@ public class FileSetTest extends TestCase {
         project.setBasedir(".");
     }
 
+    protected FileSet getInstance() {
+        return new FileSet();
+    }
+
+    protected Project getProject() {
+        return project;
+    }
+
     public void testEmptyElementIfIsReference() {
-        FileSet f = new FileSet();
+        FileSet f = getInstance();
         f.setIncludes("**/*.java");
         try {
             f.setRefid(new Reference("dummyref"));
@@ -94,7 +102,7 @@ public class FileSetTest extends TestCase {
                          be.getMessage());
         }
 
-        f = new FileSet();
+        f = getInstance();
         f.createPatternSet();
         try {
             f.setRefid(new Reference("dummyref"));
@@ -104,7 +112,7 @@ public class FileSetTest extends TestCase {
                          be.getMessage());
         }
 
-        f = new FileSet();
+        f = getInstance();
         f.createInclude();
         try {
             f.setRefid(new Reference("dummyref"));
@@ -114,7 +122,7 @@ public class FileSetTest extends TestCase {
                          be.getMessage());
         }
 
-        f = new FileSet();
+        f = getInstance();
         f.setRefid(new Reference("dummyref"));
         try {
             f.setIncludes("**/*.java");
@@ -189,7 +197,7 @@ public class FileSetTest extends TestCase {
     }
 
     public void testCircularReferenceCheck() {
-        FileSet f = new FileSet();
+        FileSet f = getInstance();
         project.addReference("dummy", f);
         f.setRefid(new Reference("dummy"));
         try {
@@ -208,13 +216,13 @@ public class FileSetTest extends TestCase {
         }
 
         // dummy1 --> dummy2 --> dummy3 --> dummy1
-        FileSet f1 = new FileSet();
+        FileSet f1 = getInstance();
         project.addReference("dummy1", f1);
         f1.setRefid(new Reference("dummy2"));
-        FileSet f2 = new FileSet();
+        FileSet f2 = getInstance();
         project.addReference("dummy2", f2);
         f2.setRefid(new Reference("dummy3"));
-        FileSet f3 = new FileSet();
+        FileSet f3 = getInstance();
         project.addReference("dummy3", f3);
         f3.setRefid(new Reference("dummy1"));
         try {
@@ -234,13 +242,13 @@ public class FileSetTest extends TestCase {
 
         // dummy1 --> dummy2 --> dummy3 
         // (which has the Project's basedir as root).
-        f1 = new FileSet();
+        f1 = getInstance();
         project.addReference("dummy1", f1);
         f1.setRefid(new Reference("dummy2"));
-        f2 = new FileSet();
+        f2 = getInstance();
         project.addReference("dummy2", f2);
         f2.setRefid(new Reference("dummy3"));
-        f3 = new FileSet();
+        f3 = getInstance();
         project.addReference("dummy3", f3);
         f3.setDir(project.resolveFile("."));
         File dir = f1.getDir(project);
