@@ -24,8 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import org.apache.tools.ant.BuildException;
-//import org.apache.tools.ant.DynamicConfiguratorNS;
-import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.DynamicConfiguratorNS;
 import org.apache.tools.ant.ProjectHelper;
 
 /**
@@ -39,8 +38,7 @@ import org.apache.tools.ant.ProjectHelper;
  *
  * @since Ant 1.7
  */
-//public class XMLFragment implements DynamicConfiguratorNS {
-public class XMLFragment implements DynamicConfigurator {
+public class XMLFragment implements DynamicConfiguratorNS {
 
     private Document doc;
     private DocumentFragment fragment;
@@ -68,8 +66,7 @@ public class XMLFragment implements DynamicConfigurator {
     /**
      * No attributes for the wrapping element.
      */
-    //    public void setDynamicAttribute(String uri, String name, String qName, String value)
-    public void setDynamicAttribute(String name, String value)
+    public void setDynamicAttribute(String uri, String name, String qName, String value)
         throws BuildException {
         throw new BuildException("Attribute " + name + " is not supported.");
     }
@@ -77,12 +74,8 @@ public class XMLFragment implements DynamicConfigurator {
     /**
      * Creates a nested element.
      */
-//    public Object createDynamicElement(String uri, String name, String qName) {
-//        Element e = doc.createElementNS(uri, qName);
-    public Object createDynamicElement(String name) {
-        Element e = doc
-            .createElementNS(ProjectHelper.extractUriFromComponentName(name),
-                             ProjectHelper.extractNameFromComponentName(name));
+    public Object createDynamicElement(String uri, String name, String qName) {
+        Element e = doc.createElementNS(uri, qName);
         fragment.appendChild(e);
         return new Child(e);
     }
@@ -94,8 +87,7 @@ public class XMLFragment implements DynamicConfigurator {
         }
     }
 
-    //    public class Child implements DynamicConfiguratorNS {
-    public class Child implements DynamicConfigurator {
+   public class Child implements DynamicConfiguratorNS {
         private Element e;
 
         Child(Element e) {
@@ -112,33 +104,25 @@ public class XMLFragment implements DynamicConfigurator {
         /**
          * Sets the attribute
          */
-//        public void setDynamicAttribute(
-//            String uri, String name, String qName, String value) {
-//            if (uri.equals("")) {
-//                e.setAttribute(name, value);
-//            } else {
-//                e.setAttributeNS(uri, qName, value);
-//            }
-        public void setDynamicAttribute(String name, String value) {
-            e.setAttribute(name, value);
+        public void setDynamicAttribute(
+            String uri, String name, String qName, String value) {
+            if (uri.equals("")) {
+                e.setAttribute(name, value);
+            } else {
+                e.setAttributeNS(uri, qName, value);
+            }
         }
 
         /**
          * Creates a nested element.
          */
-//        public Object createDynamicElement(String uri, String name, String qName) {
-//            Element e2 = null;
-//            if (uri.equals("")) {
-//                e2 = doc.createElement(name);
-//            } else {
-//                e2 = doc.createElementNS(uri, qName);
-//            }
-        public Object createDynamicElement(String name) {
-            Element e2 = doc
-                .createElementNS(ProjectHelper
-                                 .extractUriFromComponentName(name),
-                                 ProjectHelper
-                                 .extractNameFromComponentName(name));
+        public Object createDynamicElement(String uri, String name, String qName) {
+            Element e2 = null;
+            if (uri.equals("")) {
+                e2 = doc.createElement(name);
+            } else {
+                e2 = doc.createElementNS(uri, qName);
+            }
             e.appendChild(e2);
             return new Child(e2);
         }
