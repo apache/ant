@@ -903,6 +903,12 @@ public class Zip extends MatchingTask {
     protected Resource[][] grabResources(FileSet[] filesets) {
         Resource[][] result = new Resource[filesets.length][];
         for (int i = 0; i < filesets.length; i++) {
+            boolean skipEmptyNames = true;
+            if (filesets[i] instanceof ZipFileSet) {
+                ZipFileSet zfs = (ZipFileSet) filesets[i];
+                skipEmptyNames = zfs.getPrefix(getProject()).equals("")
+                    && zfs.getFullpath(getProject()).equals("");
+            }
             DirectoryScanner rs =
                 filesets[i].getDirectoryScanner(getProject());
             if (rs instanceof ZipScanner) {
@@ -911,11 +917,15 @@ public class Zip extends MatchingTask {
             Vector resources = new Vector();
             String[] directories = rs.getIncludedDirectories();
             for (int j = 0; j < directories.length; j++) {
+                if (!"".equals(directories[0]) || !skipEmptyNames) {
                 resources.addElement(rs.getResource(directories[j]));
+                }
             }
             String[] files = rs.getIncludedFiles();
             for (int j = 0; j < files.length; j++) {
+                if (!"".equals(files[0]) || !skipEmptyNames) {
                 resources.addElement(rs.getResource(files[j]));
+                }
             }
 
             result[i] = new Resource[resources.size()];
