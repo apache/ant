@@ -76,7 +76,7 @@ public class PropertySet extends DataType {
 
         public void setBuiltin(BuiltinPropertySetName b) {
             String built_in = b.getValue();
-            assertValid("builtin", builtin);
+            assertValid("builtin", built_in);
             this.builtin = built_in;
         }
 
