@@ -269,15 +269,17 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             Attribute other = (Attribute) obj;
             if (name == null) {
-                return other.name == null;
-            }
-            if (!name.equals(other.name)) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
                 return false;
             }
             if (defaultValue == null) {
-                return other.defaultValue == null;
-            }
-            if (!name.equals(other.defaultValue)) {
+                if (other.defaultValue != null) {
+                    return false;
+                }
+            } else if (!defaultValue.equals(other.defaultValue)) {
                 return false;
             }
             return true;
@@ -343,9 +345,10 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             TemplateElement other = (TemplateElement) obj;
             if (name == null) {
-                return other.name == null;
-            }
-            if (!name.equals(other.name)) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
                 return false;
             }
             return optional == other.optional;
