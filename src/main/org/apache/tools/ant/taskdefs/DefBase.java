@@ -42,7 +42,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @ant.attribute ignore="true"
      */
     public void setReverseLoader(boolean reverseLoader) {
-        this.cpDelegate.setReverseLoader(reverseLoader);
+        getDelegate().setReverseLoader(reverseLoader);
         log("The reverseloader attribute is DEPRECATED. It will be removed",
             Project.MSG_WARN);
     }
@@ -51,14 +51,14 @@ public abstract class DefBase extends AntlibDefinition {
      * @return the classpath for this definition
      */
     public Path getClasspath() {
-        return cpDelegate.getClasspath();
+        return getDelegate().getClasspath();
     }
 
     /**
      * @return the reverse loader attribute of the classpath delegate.
      */
     public boolean isReverseLoader() {
-        return cpDelegate.isReverseLoader();
+        return getDelegate().isReverseLoader();
     }
 
     /**
@@ -66,7 +66,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @return the loader id
      */
     public String getLoaderId() {
-        return cpDelegate.getClassLoadId();
+        return getDelegate().getClassLoadId();
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @return the class path id
      */
     public String getClasspathId() {
-        return cpDelegate.getClassLoadId();
+        return getDelegate().getClassLoadId();
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @param classpath an Ant Path object containing the classpath.
      */
     public void setClasspath(Path classpath) {
-        this.cpDelegate.setClasspath(classpath);
+        getDelegate().setClasspath(classpath);
     }
 
     /**
@@ -92,7 +92,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @return the classpath of the this definition
      */
     public Path createClasspath() {
-        return this.cpDelegate.createClasspath();
+        return getDelegate().createClasspath();
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @param r the reference to the classpath
      */
     public void setClasspathRef(Reference r) {
-        this.cpDelegate.setClasspathref(r);
+        getDelegate().setClasspathref(r);
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class DefBase extends AntlibDefinition {
      * @since Ant 1.5
      */
     public void setLoaderRef(Reference r) {
-        this.cpDelegate.setLoaderRef(r);
+        getDelegate().setLoaderRef(r);
     }
 
     /**
@@ -125,11 +125,14 @@ public abstract class DefBase extends AntlibDefinition {
      * @return the classloader from the cpDelegate
      */
     protected ClassLoader createLoader() {
-        if (getAntlibClassLoader() != null) {
+        if (getAntlibClassLoader() != null && cpDelegate == null) {
             return getAntlibClassLoader();
         }
+        if (cpDelegate == null) {
+            cpDelegate = ClasspathUtils.getDelegate(this);
+        }
         if (createdLoader == null) {
-            createdLoader = this.cpDelegate.getClassLoader();
+            createdLoader = cpDelegate.getClassLoader();
             // need to load Task via system classloader or the new
             // task we want to define will never be a Task but always
             // be wrapped into a TaskAdapter.
@@ -144,9 +147,13 @@ public abstract class DefBase extends AntlibDefinition {
      * @since Ant 1.6
      */
     public void init() throws BuildException {
-        this.cpDelegate = ClasspathUtils.getDelegate(this);
         super.init();
     }
 
-
+    private ClasspathUtils.Delegate getDelegate() {
+        if (cpDelegate == null) {
+            cpDelegate = ClasspathUtils.getDelegate(this);
+        }
+        return cpDelegate;
+    }
 }
