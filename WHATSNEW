@@ -4,6 +4,11 @@ Changes from Ant 1.5 to 1.5.1Beta1
 
 Fixed bugs:
 -----------
+* EjbJar threw NPEs for the Websphere element. The property 'websphere.home'
+  was not documented.
+
+* Mail example in the documentation was not correct.
+
 * Checksum was broken in the following scenario: 
   (using verifyproperty OR in a condition) AND using filesets 
   with multiple files.
