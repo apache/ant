@@ -5,19 +5,20 @@
     <body>
         <menu name="Myrmidon">
             <item name="Introduction" href="/index.html"/>
-            <item name="User Guide" href="/user.html"/>
-            <item name="Get Involved" href="/todo.html"/>
-            <item name="Todo List" href="/todo.html#Todo List"/>
+            <item name="Get Involved" href="/getinvolved.html"/>
+            <item name="Building Myrmidon" href="/user.html"/>
+            <item name="Todo List" href="/todo.html"/>
+        </menu>
+
+        <menu name="User Guide">
+            <item name="Build file" href="/buildfile.html"/>
+            <item name="Virtual File System" href="/vfs.html"/>
         </menu>
 
         <menu name="Extending Ant">
             <item name="Task Writers HOWTO" href="/task.html"/>
             <item name="ClassLoader HOWTO" href="/classloader.html"/>
             <item name="Library HOWTO" href="/librarys.html"/>
-        </menu>
-
-        <menu name="Features">
-            <item name="Virtual File System" href="/vfs.html"/>
         </menu>
 
         <menu name="Container Design">
