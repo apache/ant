@@ -93,6 +93,7 @@ public class ExecTask extends Task {
     private ByteArrayOutputStream baos = null;
     private String outputprop;
     private String resultProperty;
+    private boolean failIfExecFails=true;
 
     /** Controls whether the VM (1.3 and above) is used to execute the command */
     private boolean vmLauncher = true;
@@ -197,6 +198,13 @@ public class ExecTask extends Task {
            && project.getProperty(resultProperty) == null) {
                 project.setProperty(resultProperty,res);
         }
+    }
+    
+    /**
+     * ant attribute
+     */
+    public void setFailIfExecutionFails(boolean flag) {
+        failIfExecFails=flag;
     }
     
     /**
@@ -310,7 +318,7 @@ public class ExecTask extends Task {
         try {
             runExecute(exe);
         } catch (IOException e) {
-            if (failOnError) {
+            if (failIfExecFails) {
                 throw new BuildException("Execute failed: ",e, location);
             } else {
                 log("Execute failed: "+e.toString(), Project.MSG_ERR);
