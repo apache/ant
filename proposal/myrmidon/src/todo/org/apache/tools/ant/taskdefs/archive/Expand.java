@@ -8,15 +8,12 @@
 package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskContext;
@@ -35,7 +32,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Expand
+public abstract class Expand
     extends MatchingTask
 {
     private boolean m_overwrite = true;
@@ -171,7 +168,15 @@ public class Expand
             getLogger().info( message );
         }
 
-        expandArchive( src, dir );
+        try
+        {
+            expandArchive( src, dir );
+        }
+        catch( final IOException ioe )
+        {
+            final String message = "Error while expanding " + src.getPath();
+            throw new TaskException( message, ioe );
+        }
 
         if( getLogger().isDebugEnabled() )
         {
@@ -180,36 +185,8 @@ public class Expand
         }
     }
 
-    protected void expandArchive( final File src, final File dir )
-        throws TaskException
-    {
-        ZipInputStream zis = null;
-        try
-        {
-            // code from WarExpand
-            zis = new ZipInputStream( new FileInputStream( src ) );
-            ZipEntry ze = null;
-
-            while( ( ze = zis.getNextEntry() ) != null )
-            {
-                final Date date = new Date( ze.getTime() );
-                extractFile( dir,
-                             zis,
-                             ze.getName(),
-                             date,
-                             ze.isDirectory() );
-            }
-        }
-        catch( final IOException ioe )
-        {
-            final String message = "Error while expanding " + src.getPath();
-            throw new TaskException( message, ioe );
-        }
-        finally
-        {
-            IOUtil.shutdownStream( zis );
-        }
-    }
+    protected abstract void expandArchive( final File src, final File dir )
+        throws IOException, TaskException;
 
     protected void extractFile( final File dir,
                                 final InputStream input,

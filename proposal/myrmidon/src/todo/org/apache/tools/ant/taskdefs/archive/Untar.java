@@ -25,7 +25,7 @@ public class Untar
     extends Expand
 {
     protected void expandArchive( final File src, final File dir )
-        throws TaskException
+        throws IOException, TaskException
     {
         TarInputStream input = null;
         FileInputStream fileInput = null;
@@ -44,18 +44,10 @@ public class Untar
                              entry.isDirectory() );
             }
         }
-        catch( final IOException ioe )
-        {
-            final String message = "Error while expanding " + src.getPath();
-            throw new TaskException( message, ioe );
-        }
         finally
         {
             IOUtil.shutdownStream( fileInput );
             IOUtil.shutdownStream( input );
         }
-
-        final String message = "expand complete";
-        getLogger().debug( message );
     }
 }

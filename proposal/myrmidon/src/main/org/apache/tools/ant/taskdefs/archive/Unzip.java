@@ -10,8 +10,9 @@ package org.apache.tools.ant.taskdefs.archive;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import org.apache.aut.tar.TarEntry;
-import org.apache.aut.tar.TarInputStream;
+import java.util.Date;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
 
@@ -21,33 +22,32 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Untar
+public class Unzip
     extends Expand
 {
     protected void expandArchive( final File src, final File dir )
         throws IOException, TaskException
     {
-        TarInputStream input = null;
-        FileInputStream fileInput = null;
+        ZipInputStream zis = null;
         try
         {
-            fileInput = new FileInputStream( src );
-            input = new TarInputStream( fileInput );
+            // code from WarExpand
+            zis = new ZipInputStream( new FileInputStream( src ) );
+            ZipEntry ze = null;
 
-            TarEntry entry = null;
-            while( ( entry = input.getNextEntry() ) != null )
+            while( ( ze = zis.getNextEntry() ) != null )
             {
+                final Date date = new Date( ze.getTime() );
                 extractFile( dir,
-                             input,
-                             entry.getName(),
-                             entry.getModTime(),
-                             entry.isDirectory() );
+                             zis,
+                             ze.getName(),
+                             date,
+                             ze.isDirectory() );
             }
         }
         finally
         {
-            IOUtil.shutdownStream( fileInput );
-            IOUtil.shutdownStream( input );
+            IOUtil.shutdownStream( zis );
         }
     }
 }
