@@ -9,6 +9,15 @@
     </classpath>
   </taskdef>
 
+  <property environment="env"/>
+  <condition property="msbuild.found">
+    <or>
+      <available file="MSBuild.exe" filepath="${env.PATH}"/>
+      <available file="MSBuild.exe" filepath="${env.Path}"/>
+      <available file="MSBuild.exe"/>
+    </or>
+  </condition>
+
   <target name="echo">
     <msbuild 
       buildfile="src/msbuild.proj" 

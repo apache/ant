@@ -9,6 +9,15 @@
     </classpath>
   </taskdef>
 
+  <property environment="env"/>
+  <condition property="nant.found">
+    <or>
+      <available file="NAnt.exe" filepath="${env.PATH}"/>
+      <available file="NAnt.exe" filepath="${env.Path}"/>
+      <available file="NAnt.exe"/>
+    </or>
+  </condition>
+
   <target name="echo">
     <nant 
       buildfile="src/nant.build" 
