@@ -40,7 +40,7 @@
 doing a  change ${change} on  client ${p4.client}
 </echo>
     <p4edit change="${change}" view="${depot_file_spec}"/>
-    <echo file="${depot_file_spec}">
+    <echo file="${client_root}/depot/foobar">
 hello ${p4.client} ${change}
 </echo>
   </target>
