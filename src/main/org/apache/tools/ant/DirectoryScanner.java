@@ -155,38 +155,34 @@ import org.apache.tools.ant.util.FileUtils;
 public class DirectoryScanner 
        implements FileScanner, SelectorScanner, ResourceFactory {
 
+
     /**
      * Patterns which should be excluded by default.
      *
      * @see #addDefaultExcludes()
      */
-    protected static final String[] DEFAULTEXCLUDES = {
-        // Miscellaneous typical temporary files
-        "**/*~",
-        "**/#*#",
-        "**/.#*",
-        "**/%*%",
-        "**/._*",
+    private static Vector defaultExcludes = new Vector();  
 
-        // CVS
-        "**/CVS",
-        "**/CVS/**",
-        "**/.cvsignore",
+    static {
+        defaultExcludes.add("**/*~");
+        defaultExcludes.add("**/#*#");
+        defaultExcludes.add("**/.#*");
+        defaultExcludes.add("**/%*%");
+        defaultExcludes.add("**/._*");
 
-        // SCCS
-        "**/SCCS",
-        "**/SCCS/**",
+        defaultExcludes.add("**/CVS");
+        defaultExcludes.add("**/CVS/**");
+        defaultExcludes.add("**/.cvsignore");
 
-        // Visual SourceSafe
-        "**/vssver.scc",
+        defaultExcludes.add("**/SCCS");
+        defaultExcludes.add("**/SCCS/**");
 
-        // Subversion
-        "**/.svn",
-        "**/.svn/**",
+        defaultExcludes.add("**/vssver.scc");
 
-        // Mac
-        "**/.DS_Store"
-    };
+        defaultExcludes.add("**/.svn");
+        defaultExcludes.add("**/.svn/**");
+        defaultExcludes.add("**/.DS_Store");
+    }
 
     /** The base directory to be scanned. */
     protected File basedir;
@@ -379,6 +375,48 @@ public class DirectoryScanner
     protected static boolean match(String pattern, String str,
                                    boolean isCaseSensitive) {
         return SelectorUtils.match(pattern, str, isCaseSensitive);
+    }
+
+
+    /**
+     * Get the list of patterns that should be excluded by default.
+     *
+     * @return An array of <code>String</code> based on the current 
+     *         contents of the <code>defaultExcludes</code> 
+     *         <code>Vector</code>.
+     */
+    public static String[] getDefaultExcludes() {
+        return (String[]) defaultExcludes.toArray(new String[defaultExcludes.size()]);
+    }
+
+    /**
+     * Add a pattern to the default excludes unless it is already a 
+     * default exclude.
+     *
+     * @param s   A string to add as an exclude pattern.
+     * @return    <code>true</code> if the string was added 
+     *            <code>false</code> if it already
+     *            existed.
+     */
+    public static boolean addDefaultExclude(String s){
+        if (defaultExcludes.indexOf(s) == -1) {
+            defaultExcludes.add(s);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Remove a string if it is a default exclude.
+     *
+     * @param s   The string to attempt to remove.
+     * @return    <code>true</code> if <code>s</code> was a default 
+     *            exclude (and thus was removed),
+     *            <code>false</code> if <code>s</code> was not
+     *            in the default excludes list to begin with
+     */
+    public static boolean removeDefaultExclude(String s) {
+        return defaultExcludes.remove(s);
     }
 
     /**
@@ -938,13 +976,15 @@ public class DirectoryScanner
     public void addDefaultExcludes() {
         int excludesLength = excludes == null ? 0 : excludes.length;
         String[] newExcludes;
-        newExcludes = new String[excludesLength + DEFAULTEXCLUDES.length];
+        newExcludes = new String[excludesLength + defaultExcludes.size()];
         if (excludesLength > 0) {
             System.arraycopy(excludes, 0, newExcludes, 0, excludesLength);
         }
-        for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
-            newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].replace('/',
-                    File.separatorChar).replace('\\', File.separatorChar);
+        String[] defaultExcludesTemp = getDefaultExcludes();
+        for (int i = 0; i < defaultExcludesTemp.length; i++) {
+            newExcludes[i + excludesLength] = defaultExcludesTemp[i].
+                replace('/', File.separatorChar).
+                replace('\\', File.separatorChar);
         }
         excludes = newExcludes;
     }

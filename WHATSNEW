@@ -302,6 +302,9 @@ Other changes:
   in <vajload> by using special wildcard characters.  Also fixes
   Bugzilla Report 2236.
 
+* Users can now modify the list of default excludes using the new
+  defaultexcludes task.  Bugzilla Report 12700.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -1,0 +1,73 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>DefaultExcludes Task</title>
+</head>
+
+<body>
+
+<h2><a name="echo">DefaultExcludes</a></h2>
+
+<p><em>since Ant 1.6</em></p>
+
+<h3>Description</h3>
+<p>Alters the default excludes for all subsequent processing in the
+build, and prints out the current default excludes if desired.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">echo</td>
+    <td valign="top">whether or not to print out the default excludes.(defaults to false)</td>
+    <td valign="top" align="center">atribute "true" required if no 
+                                    other argument specified</td>
+  </tr>
+  <tr>
+    <td valign="top">add</td>
+    <td valign="top">the pattern to add to the default excludes</td>
+    <td valign="top" align="center">if no other atribute is specified</td>
+  </tr>
+  <tr>
+    <td valign="top">remove</td>
+    <td valign="top">remove the specified pattern from the default excludes</td>
+    <td valign="top" align="center">if no other atribute is specified</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+
+<p>Print out the default excludes</p>
+
+<pre>  &lt;defaultexcludes echo=&quot;true&quot;/&gt;</pre>
+
+<p>Print out the default excludes and exclude all *.bak files in
+<strong>all</strong> further processing</p>
+
+<pre>  &lt;defaultexcludes echo=&quot;true&quot; add=&quot;**/*.bak&quot;/&gt;</pre>
+
+<p>Silently allow several fileset based tasks to operate on emacs
+backup files and then restore normal behavior</p>
+
+<pre>
+  &lt;defaultexcludes remove=&quot;**/*~&quot;/&gt;
+
+  (do several fileset based tasks here)
+
+  &lt;defaultexcludes add=&quot;**/*~&quot;/&gt;
+</pre>
+
+
+<hr>
+
+<p align="center">Copyright &copy; 2003 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

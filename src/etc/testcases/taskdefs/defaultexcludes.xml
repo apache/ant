@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<project name="echo-test" basedir="." default="test1">
+
+  <target name="test1">
+    <defaultexcludes echo="true"/>
+  </target>
+
+  <target name="test2">
+    <defaultexcludes add="foo" echo="true"/>
+    <defaultexcludes remove="foo" echo="false"/>
+  </target>
+
+  <target name="test3">
+    <defaultexcludes remove="**/CVS" echo="true"/>
+    <defaultexcludes add="**/CVS" echo="false"/>
+  </target>
+
+</project>
