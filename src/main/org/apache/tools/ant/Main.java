@@ -603,17 +603,13 @@ public class Main implements AntMain {
             InputStream in = System.in;
 
             // use a system manager that prevents from System.exit()
-            // only in JDK > 1.1
             SecurityManager oldsm = null;
-            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)
-                && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-                oldsm = System.getSecurityManager();
+            oldsm = System.getSecurityManager();
 
                 //SecurityManager can not be installed here for backwards
                 //compatibility reasons (PD). Needs to be loaded prior to
                 //ant class if we are going to implement it.
                 //System.setSecurityManager(new NoExitSecurityManager());
-            }
             try {
                 if (allowInput) {
                     project.setDefaultInputStream(System.in);
