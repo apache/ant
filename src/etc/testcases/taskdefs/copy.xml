@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<project name="copy-test" basedir="." >
+
+  <target name="test1">
+    <copy file="copy.xml" todir="."/>
+  </target>
+
+</project>
