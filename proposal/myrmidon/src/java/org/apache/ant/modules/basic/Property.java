@@ -9,27 +9,27 @@ package org.apache.ant.modules.basic;
 
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.components.Configurer;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
+import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Resolvable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.context.Resolvable;
+import org.apache.myrmidon.components.configurer.Configurer;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class Property 
+public class Property
     extends AbstractTask
     implements Configurable, Composable
 {
@@ -39,12 +39,12 @@ public class Property
     protected DataTypeEngine      m_engine;
     protected Converter           m_converter;
     protected Configurer          m_configurer;
-    
+
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
         m_configurer = (Configurer)componentManager.
-            lookup( "org.apache.myrmidon.components.Configurer" );
+            lookup( "org.apache.myrmidon.components.configurer.Configurer" );
 
         m_engine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
@@ -71,9 +71,9 @@ public class Property
 
             if( name.equals( "name" ) )
             {
-                try 
+                try
                 {
-                    final String convertedValue = 
+                    final String convertedValue =
                         (String)m_converter.convert( String.class, object, getContext() );
                     setName( convertedValue );
                 }
@@ -86,13 +86,13 @@ public class Property
             {
                 setValue( object );
             }
-            else if( name.equals( "local-scope" ) ) 
+            else if( name.equals( "local-scope" ) )
             {
-                try 
+                try
                 {
-                    final Boolean localScope = 
+                    final Boolean localScope =
                         (Boolean)m_converter.convert( Boolean.class, object, getContext() );
-                    setLocalScope( Boolean.TRUE == localScope ); 
+                    setLocalScope( Boolean.TRUE == localScope );
                 }
                 catch( final Exception e )
                 {
@@ -128,7 +128,7 @@ public class Property
     {
         m_name = name;
     }
-    
+
     public void setValue( final Object value )
         throws AntException
     {
@@ -139,7 +139,7 @@ public class Property
 
         m_value = value;
     }
-    
+
     public void setLocalScope( final boolean localScope )
     {
         m_localScope = localScope;

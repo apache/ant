@@ -34,8 +34,7 @@ import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.components.Configurer;
-import org.apache.myrmidon.components.configurer.DefaultConfigurer;
+import org.apache.myrmidon.components.configurer.Configurer;
 
 public class DefaultTaskletEngine
     extends AbstractLoggable
@@ -91,7 +90,7 @@ public class DefaultTaskletEngine
         m_tskDeployer = (TskDeployer)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
         m_configurer = (Configurer)componentManager.
-            lookup( "org.apache.myrmidon.components.Configurer" );
+            lookup( "org.apache.myrmidon.components.configurer.Configurer" );
         m_dataTypeEngine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
         m_converterEngine = (ConverterEngine)componentManager.

@@ -81,13 +81,13 @@ public class DefaultProjectEngine
      * @param target the name of the target
      * @exception AntException if an error occurs
      */
-    public void execute( final Project project, final String target )
+    public void executeTarget( final Project project, final String target, final TaskContext context )
         throws AntException
     {
         //HACK: should do this a better way !!!!!!
         m_componentManager.put( "org.apache.ant.project.Project", project );
 
-        final TaskContext context = project.getContext();
+        //final TaskContext context = project.getContext();
 
         final String projectName = (String)context.getProperty( Project.PROJECT );
 

@@ -32,6 +32,7 @@ import org.apache.ant.runtime.AntEngine;
 import org.apache.ant.runtime.DefaultAntEngine;
 import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
@@ -317,7 +318,6 @@ public class Main
 
         //create the project
         final Project project = builder.build( buildFile );
-        setupProjectContext( project, defines );
 
         final ProjectEngine engine = antEngine.getProjectEngine();
         engine.addProjectListener( listener );
@@ -328,7 +328,14 @@ public class Main
         while( true )
         {
             //actually do the build ...
-            doBuild( engine, project, targets );
+            final TaskContext context = new DefaultTaskContext();
+            setupContext( context, defines );
+
+            context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
+            context.setProperty( Project.PROJECT_FILE, buildFile );
+            //context.setProperty( Project.PROJECT, projectName );
+
+            doBuild( engine, project, context, targets );
 
             if( !incremental ) break;
 
@@ -357,6 +364,7 @@ public class Main
      */
     protected void doBuild( final ProjectEngine engine,
                             final Project project,
+                            final TaskContext context,
                             final ArrayList targets )
     {
         try
@@ -366,13 +374,13 @@ public class Main
             //if we didn't specify a target on CLI then choose default
             if( 0 == targetCount )
             {
-                engine.execute( project, project.getDefaultTargetName() );
+                engine.executeTarget( project, project.getDefaultTargetName(), context );
             }
             else
             {
                 for( int i = 0; i < targetCount; i++ )
                 {
-                    engine.execute( project, (String)targets.get( i ) );
+                    engine.executeTarget( project, (String)targets.get( i ), context );
                 }
             }
         }
@@ -483,7 +491,7 @@ public class Main
      * @param defines the defines
      * @exception AntException if an error occurs
      */
-    protected void setupProjectContext( final Project project, final HashMap defines )
+    protected void setupContext( final TaskContext context, final HashMap defines )
         throws AntException
     {
         //put these values into defines so that they overide
@@ -494,7 +502,7 @@ public class Main
         //defines.put( AntContextResources.TASKLIB_DIR, m_taskLibDir );
         //defines.put( TaskletContext.JAVA_VERSION, getJavaVersion() );
 
-        final TaskContext context = project.getContext();
+        //final TaskContext context = project.getContext();
         addToContext( context, defines );
 
         //Add system properties second so that they overide user-defined properties

@@ -25,7 +25,6 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
-import org.apache.myrmidon.components.Configurer;
 
 /**
  * Class used to configure tasks.

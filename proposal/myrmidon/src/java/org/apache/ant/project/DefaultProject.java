@@ -24,19 +24,35 @@ import org.apache.myrmidon.api.TaskContext;
 public class DefaultProject
     implements Project
 {
-    protected final TaskContext          m_baseContext     = new DefaultTaskContext();
-    protected final HashMap              m_targets         = new HashMap();
-    protected Target                     m_implicitTarget;
-    protected String                     m_defaultTarget;
+    ///The targets contained by this project
+    private final HashMap   m_targets         = new HashMap();
+
+    ///The implicit target (not present in m_targets)
+    private Target          m_implicitTarget;
+
+    ///The name of the default target
+    private String          m_defaultTarget;
+
+    ///The base directory of project
+    private File            m_baseDirectory;
+
+    /**
+     * Retrieve base directory of project.
+     *
+     * @return the projects base directory
+     */
+    public final File getBaseDirectory()
+    {
+        return m_baseDirectory;
+    }
     
     /**
      * Retrieve implicit target. 
-     * The implicit target is top level tasks. 
-     * Currently restricted to property tasks.
+     * The implicit target contains all the top level tasks. 
      *
      * @return the Target
      */
-    public Target getImplicitTarget()
+    public final Target getImplicitTarget()
     {
         return m_implicitTarget;
     }
@@ -46,7 +62,7 @@ public class DefaultProject
      *
      * @param target the implicit target
      */
-    public void setImplicitTarget( final Target target )
+    public final void setImplicitTarget( final Target target )
     {
         m_implicitTarget = target;
     }
@@ -57,7 +73,7 @@ public class DefaultProject
      * @param name the name of target
      * @return the Target or null if no target exists with name
      */
-    public Target getTarget( final String targetName )
+    public final Target getTarget( final String targetName )
     {
         return (Target)m_targets.get( targetName );
     }
@@ -67,7 +83,7 @@ public class DefaultProject
      *
      * @return the default target name
      */
-    public String getDefaultTargetName()
+    public final String getDefaultTargetName()
     {
         return m_defaultTarget;
     }
@@ -75,21 +91,11 @@ public class DefaultProject
     /**
      * Retrieve names of all targets in project.
      *
-     * @return the iterator of project names
+     * @return an array target names
      */
-    public Iterator getTargetNames()
+    public final String[] getTargetNames()
     {
-        return m_targets.keySet().iterator();
-    }
-    
-    /**
-     * Get project (top-level) context.
-     *
-     * @return the context
-     */    
-    public TaskContext getContext()
-    {
-        return m_baseContext;
+        return (String[])m_targets.keySet().toArray( new String[ 0 ] );
     }
 
     /**
@@ -97,9 +103,19 @@ public class DefaultProject
      *
      * @param defaultTarget the default target name
      */
-    public void setDefaultTargetName( final String defaultTarget )
+    public final void setDefaultTargetName( final String defaultTarget )
     {
         m_defaultTarget = defaultTarget;
+    }
+
+    /**
+     * Retrieve base directory of project.
+     *
+     * @return the projects base directory
+     */
+    public final void setBaseDirectory( final File baseDirectory )
+    {
+        m_baseDirectory = baseDirectory;
     }
 
     /**
@@ -109,7 +125,7 @@ public class DefaultProject
      * @param target the Target
      * @exception AntException if an error occurs
      */
-    public void addTarget( final String name, final Target target )
+    public final void addTarget( final String name, final Target target )
         throws AntException
     {
         if( null != m_targets.get( name ) )

@@ -37,17 +37,6 @@ public interface ProjectEngine
     void removeProjectListener( ProjectListener listener );
 
     /**
-     * Execute a target in a particular project.
-     * Execute in the project context.
-     *
-     * @param project the Project
-     * @param target the name of the target
-     * @exception AntException if an error occurs
-     */
-    void execute( Project project, String target )
-        throws AntException;
-
-    /**
      * Execute a target in a particular project, in a particular context.
      *
      * @param project the Project
@@ -55,6 +44,6 @@ public interface ProjectEngine
      * @param context the context
      * @exception AntException if an error occurs
      */
-    void execute( Project project, String target, TaskContext context )
+    void executeTarget( Project project, String target, TaskContext context )
         throws AntException;
 }

@@ -105,23 +105,20 @@ public class DefaultProjectBuilder
         //get project-level attributes
         final String baseDirectoryName = configuration.getAttribute( "basedir" );
         final String defaultTarget = configuration.getAttribute( "default" );
-        final String projectName = configuration.getAttribute( "name" );
+
+        //Ignore Project name in the future ok??
+        //final String projectName = configuration.getAttribute( "name" );
 
         //determine base directory for project
         final File baseDirectory =
             (new File( file.getParentFile(), baseDirectoryName )).getAbsoluteFile();
 
-        getLogger().debug( "Project " + projectName + " base directory: " + baseDirectory );
+        getLogger().debug( "Project " + file + " base directory: " + baseDirectory );
 
         //create project and ...
         final DefaultProject project = new DefaultProject();
         project.setDefaultTargetName( defaultTarget );
-
-        //setup basic context of project
-        final TaskContext context = project.getContext();
-        context.setProperty( TaskContext.BASE_DIRECTORY, baseDirectory );
-        context.setProperty( Project.PROJECT_FILE, file );
-        context.setProperty( Project.PROJECT, projectName );
+        project.setBaseDirectory( baseDirectory );
 
         //build using all top-level attributes
         buildTopLevelProject( project, configuration );

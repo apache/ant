@@ -82,6 +82,7 @@ public class AntCall
         }
 
         getLogger().info( "Calling target " + m_target );
-        m_projectEngine.execute( m_project, m_target, m_childContext );
+        //This calls startProject() which is probably not wanted???
+        m_projectEngine.executeTarget( m_project, m_target, m_childContext );
     }
 }

@@ -7,13 +7,12 @@
  */
 package org.apache.ant.project;
 
-import java.util.Iterator;
-import org.apache.ant.AntException;
-import org.apache.myrmidon.api.TaskContext;
+import java.io.File;
 import org.apache.avalon.framework.component.Component;
 
 /**
- * Interface through which to interact with projects.
+ * Abstraction used to interact with projects.
+ * Implementations may choose to structure it anyway they choose. 
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -58,12 +57,12 @@ public interface Project
      *
      * @return the iterator of project names
      */
-    Iterator getTargetNames();
+    String[] getTargetNames();
 
     /**
-     * Get project (top-level) context.
+     * Retrieve base directory of project.
      *
-     * @return the context
+     * @return the projects base directory
      */
-    TaskContext getContext();
+    File getBaseDirectory();
 }
