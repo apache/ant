@@ -16,6 +16,11 @@ Changes that could break older environments:
   it comes to bootclasspath handling), then the bootclasspath of the
   VM running Ant will be added to the bootclasspath you've specified.
 
+* The Reference class now has a project field that will get
+  used (if set) in preference to the passed in project, when
+  dereferencing the reference.
+  Bugzilla Report 25777.
+
 Fixed bugs:
 -----------
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -171,6 +171,10 @@ public class AntTest extends BuildFileTest {
                       new boolean[] {false, true}, null);
         testReference("testRename", new String[] {"newpath", "newpath"},
                       new boolean[] {false, true}, p);
+    }
+
+    public void testInheritPath() {
+        executeTarget("testInheritPath");
     }
 
     protected void testReference(String target, String[] keys,

@@ -7,4 +7,10 @@
   </target>
 
   <target name="dummy" />
+
+  <target name="testInheritPath">
+    <pathconvert refid="test.classpath" pathsep="${line.separator}" property="myprop"/>
+    <echo>${myprop}</echo>
+  </target>
+
 </project>

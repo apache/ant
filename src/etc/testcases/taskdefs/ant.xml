@@ -82,6 +82,20 @@
     </ant>
   </target>
 
+  <target name="testInheritPath" description="try to pass a reference to a path, which refers itself to a second path">
+    <property name="rootdir" location="."/>
+    <path id="project.classpath">
+      <pathelement location="../classes"/>
+    </path>
+    <path id="test.classpath">
+      <pathelement location="${rootdir}/test/testframework.jar"/>
+      <path refid="project.classpath"/>
+    </path>
+    <ant antfile="ant/references.xml"  target="testInheritPath">
+      <reference refid="test.classpath"/>
+    </ant>
+  </target>
+
   <target name="testLogfilePlacement">
     <ant antfile="ant.xml" target="dummy" output="test1.log"
          inheritall="false" />
