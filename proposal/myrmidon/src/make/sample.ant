@@ -181,7 +181,7 @@ Legal:
   </target>
 
   <target name="bzip2-test">
-    <property name="zip" value="../../dist/bin/sample.gz" />
+    <property name="zip" value="../../dist/bin/sample.bz2" />
     <property name="unzip" value="../../dist/bin/sample.txt" />
 
     <bzip2 src="sample.ant" zipfile="${zip}"/>
