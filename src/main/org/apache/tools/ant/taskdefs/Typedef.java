@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,12 +55,12 @@
 package org.apache.tools.ant.taskdefs;
 
 /**
- * Define a new task.
+ * Define a new data type.
  *
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class Taskdef extends Definer {
+public class Typedef extends Definer {
     protected void addDefinition(String name, Class c) {
-        project.addTaskDefinition(name, c);
+        project.addDataTypeDefinition(name, c);
     }
 }
