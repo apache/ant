@@ -447,14 +447,22 @@ public class Ant1CompatProject extends Project
      */
     public Hashtable getProperties()
     {
-        Hashtable propsCopy = new Hashtable();
+        final Hashtable propsCopy = new Hashtable();
 
-        Map contextProps = m_context.getProperties();
-        Iterator propNames = contextProps.keySet().iterator();
+        final Map contextProps;
+        try
+        {
+            contextProps = m_context.getProperties();
+        }
+        catch( final TaskException e )
+        {
+            throw new BuildException( e );
+        }
+        final Iterator propNames = contextProps.keySet().iterator();
         while( propNames.hasNext() )
         {
-            String name = (String)propNames.next();
-            String value = getProperty( name );
+            final String name = (String)propNames.next();
+            final String value = getProperty( name );
             if( value != null )
             {
                 propsCopy.put( name, value );

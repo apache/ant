@@ -71,16 +71,15 @@ import org.apache.tools.ant.Location;
 public class BuildException extends RuntimeException {
 
     /** Exception that might have caused this one. */
-    private Throwable cause;
+    private Throwable m_cause;
 
     /** Location in the build file where the exception occured */
-    private Location location = Location.UNKNOWN_LOCATION;
+    private Location m_location = Location.UNKNOWN_LOCATION;
 
     /**
      * Constructs a build exception with no descriptive information.
      */
     public BuildException() {
-        super();
     }
 
     /**
@@ -89,7 +88,7 @@ public class BuildException extends RuntimeException {
      * @param msg A description of or information about the exception.
      *            Should not be <code>null</code>.
      */
-    public BuildException(String msg) {
+    public BuildException(final String msg) {
         super(msg);
     }
 
@@ -102,9 +101,9 @@ public class BuildException extends RuntimeException {
      * @param cause The exception that might have caused this one.
      *              May be <code>null</code>.
      */
-    public BuildException(String msg, Throwable cause) {
+    public BuildException(final String msg, final Throwable cause) {
         super(msg);
-        this.cause = cause;
+        m_cause = cause;
     }
 
     /**
@@ -118,9 +117,11 @@ public class BuildException extends RuntimeException {
      * @param location The location in the project file where the error 
      *                 occurred. Must not be <code>null</code>.
      */
-    public BuildException(String msg, Throwable cause, Location location) {
+    public BuildException( final String msg,
+                           final Throwable cause,
+                           final Location location) {
         this(msg, cause);
-        this.location = location;
+        m_location = location;
     }
 
     /**
@@ -129,9 +130,8 @@ public class BuildException extends RuntimeException {
      * @param cause The exception that might have caused this one.
      *              Should not be <code>null</code>.
      */
-    public BuildException(Throwable cause) {
-        super(cause.toString());
-        this.cause = cause;
+    public BuildException(final Throwable cause ) {
+        this(cause.getMessage(), cause);
     }
 
     /**
@@ -143,9 +143,9 @@ public class BuildException extends RuntimeException {
      * @param location The location in the project file where the error 
      *                 occurred. Must not be <code>null</code>.
      */
-    public BuildException(String msg, Location location) {
+    public BuildException(final String msg, final Location location) {
         super(msg);
-        this.location = location;
+        m_location = location;
     }
 
     /**
@@ -157,9 +157,9 @@ public class BuildException extends RuntimeException {
      * @param location The location in the project file where the error 
      *                 occurred. Must not be <code>null</code>.
      */
-    public BuildException(Throwable cause, Location location) {
+    public BuildException(final Throwable cause, final Location location) {
         this(cause);
-        this.location = location;
+        m_location = location;
     }
 
     /**
@@ -169,7 +169,7 @@ public class BuildException extends RuntimeException {
      *         exception is associated with this one
      */
     public Throwable getException() {
-        return cause;
+        return m_cause;
     }
 
     /**
@@ -178,7 +178,7 @@ public class BuildException extends RuntimeException {
      * @return the location of the error and the error message
      */
     public String toString() {
-        return location.toString() + getMessage();
+        return m_location.toString() + getMessage();
     }
 
     /**
@@ -187,8 +187,8 @@ public class BuildException extends RuntimeException {
      * @param location The file location where the error occurred.
      *                 Must not be <code>null</code>.
      */
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocation(final Location location) {
+        m_location = location;
     }
 
     /**
@@ -197,7 +197,7 @@ public class BuildException extends RuntimeException {
      * @return the file location where the error occurred.
      */
     public Location getLocation() {
-        return location;
+        return m_location;
     }
 
     /**
@@ -218,9 +218,9 @@ public class BuildException extends RuntimeException {
     public void printStackTrace(PrintStream ps) {
         synchronized (ps) {
             super.printStackTrace(ps);
-            if (cause != null) {
+            if (m_cause != null) {
                 ps.println("--- Nested Exception ---");
-                cause.printStackTrace(ps);
+                m_cause.printStackTrace(ps);
             }
         }
     }
@@ -235,21 +235,19 @@ public class BuildException extends RuntimeException {
     public void printStackTrace(PrintWriter pw) {
         synchronized (pw) {
             super.printStackTrace(pw);
-            if (cause != null) {
+            if (m_cause != null) {
                 pw.println("--- Nested Exception ---");
-                cause.printStackTrace(pw);
+                m_cause.printStackTrace(pw);
             }
         }
     }
 
-    //-------------------Modified from Ant1 ---------------------
     /**
      * Myrmidon-friendly cascading exception method.
      * @return the cascading cause of this exception.
      */
     public Throwable getCause()
     {
-        return cause;
+        return m_cause;
     }
-    //--------------------- End modified section ---------------
 }
