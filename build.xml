@@ -357,6 +357,9 @@
 
     <chmod dir="${dist.dir}" perm="go-rwx" />
 
+  </target>
+
+  <target name="bin-dist" depends="dist">
     <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
          basedir="${dist.dir}/.." 
          includes="${dist.dir}/**"/>
@@ -443,18 +446,23 @@
       <param name="src.dist.dir" value="${dist.name}" />
     </antcall>
 
-    <antcall target="dist">
+    <antcall target="bin-dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
     <delete dir="${dist.name}" />
   </target> 
 
   <target name="install">
-    <antcall target="dist-lite">
+    <antcall target="dist">
       <param name="dist.dir" value="${ant.home}" />
     </antcall>
   </target>
 
+  <target name="install-lite">
+    <antcall target="dist-lite">
+      <param name="dist.dir" value="${ant.home}" />
+    </antcall>
+  </target>
   <!--
        ===================================================================
                  Cleans up build and distribution directories

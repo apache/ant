@@ -75,7 +75,7 @@ public class Main {
     public final static String VERSION             = "@VERSION@";
     public final static String DATE                = "@DATE@";
     public final static String BANNER              = 
-        "Ant version " + DATE + " compiled on " + DATE;
+        "Ant version " + VERSION + " compiled on " + DATE;
 
     /** The default build file name */
     public static final String DEFAULT_BUILD_FILENAME = "build.xml";

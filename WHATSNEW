@@ -16,7 +16,7 @@ Changes that could break older environments:
 Other changes:
 --------------
 
-* A GUI Frontend: Antidote
+* A GUI Frontend: Antidote. This is currently in development.
 
 * New tasks: stylebook, propertyfile, depend, antlr, telnet, csc,
   ilasm, transform, javah, several clearcase tasks
@@ -77,6 +77,7 @@ Fixed bugs:
   CMP files are included by parsing the weblogic deployment descriptor rather 
   than relying on the naming convention used in ant 1.2
   Include super classes and super interfaces into the generated ejb jar files
+  <support> nested element allows support classes to be included in the EJB jar
 
 * <vssget> now correctly deals with spaces in arguments
 
@@ -97,6 +98,8 @@ Fixed bugs:
 * <property> and <available> will search for the resource "foo" instead
   of "/org/apache/tools/ant/taskdefs/foo" when given a relative resource
   name foo.
+  
+* Handle build files in directories whose name contained a "#" character
 
 Changes from Ant 1.1 to Ant 1.2
 ===============================
