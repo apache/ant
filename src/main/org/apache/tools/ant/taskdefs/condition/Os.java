@@ -56,6 +56,8 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
 
+import java.util.Locale;
+
 /**
  * Condition that tests the OS type.
  *
@@ -65,6 +67,12 @@ import org.apache.tools.ant.BuildException;
 public class Os implements Condition {
     private String family;
 
+    public Os() {}
+
+    public Os(String family) {
+        setFamily(family);
+    }
+
     /**
      * Sets the desired OS family type
      * 
@@ -73,10 +81,11 @@ public class Os implements Condition {
      *               <ul><li>dos</li>
      *               <li>mac</li>
      *               <li>netware</li>
+     *               <li>os/2</li>
      *               <li>unix</li>
      *               <li>windows</li></ul>
      */
-    public void setFamily(String f) {family = f.toLowerCase();}
+    public void setFamily(String f) {family = f.toLowerCase(Locale.US);}
 
     /**
      * Determines if the OS on which Ant is executing matches the type of 
@@ -84,11 +93,13 @@ public class Os implements Condition {
      * @see Os#setFamily(String)
      */
     public boolean eval() throws BuildException {
-        String osName = System.getProperty("os.name").toLowerCase();
+        String osName = System.getProperty("os.name").toLowerCase(Locale.US);
         String pathSep = System.getProperty("path.separator");
         if (family != null) {
             if (family.equals("windows")) {
                 return osName.indexOf("windows") > -1;
+            } else if (family.equals("os/2")) {
+                return osName.indexOf("os/2") > -1;
             } else if (family.equals("netware")) {
                 return osName.indexOf("netware") > -1;
             } else if (family.equals("dos")) {
