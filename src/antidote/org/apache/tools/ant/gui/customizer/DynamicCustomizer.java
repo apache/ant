@@ -58,6 +58,7 @@ import java.lang.reflect.*;
 import java.beans.*;
 import javax.swing.*;
 import java.util.*;
+import java.io.File;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Component;
@@ -85,6 +86,8 @@ public class DynamicCustomizer extends JPanel implements Customizer {
 			Double.class, DoublePropertyEditor.class);
 		PropertyEditorManager.registerEditor(
 			Properties.class, PropertiesPropertyEditor.class);
+		PropertyEditorManager.registerEditor(
+			File.class, FilePropertyEditor.class);
 	}
 
     /** Property name that PropertyDescriptors can save in their property
@@ -109,8 +112,6 @@ public class DynamicCustomizer extends JPanel implements Customizer {
     private List _changeListeners = new LinkedList();
     /** Flag to trun off event propogation. */
     private boolean _squelchChangeEvents = false;
-
-
 
 	/** 
      * Standard constructor.
@@ -364,6 +365,75 @@ public class DynamicCustomizer extends JPanel implements Customizer {
         }
     }
 
+    /** Class for testing this. */
+    private static class TestClass {
+        private String _String = null;
+        private String[] _StringArray = null;
+        private int _int = 0;
+        private Integer _Integer = null;
+        private double _double = 0;
+        private Double _Double = null;
+        private Properties _Properties = null;
+        private File _File = null;
+
+        public void setString(String string) {
+            _String = string;
+        }
+        public String getString() {
+            return _String;
+        }
+
+        public void setStringArray(String[] array) {
+            _StringArray = array;
+        }
+        public String[] getStringArray() {
+            return _StringArray;
+        }
+
+        public void setInt(int val) {
+            _int = val;
+        }
+        public int getInt() {
+            return _int;
+        }
+
+        public void setInteger(Integer val) {
+            _Integer = val;
+        }
+        public Integer getInteger() {
+            return _Integer;
+        }
+
+        public void setDoub(double val) {
+            _double = val;
+        }
+        public double getDoub() {
+            return _double;
+        }
+
+        public void setDouble(Double val) {
+            _Double = val;
+        }
+        public Double getDouble() {
+            return _Double;
+        }
+
+        public void setProperties(Properties props) {
+            _Properties = props;
+        }
+        public Properties getProperties() {
+            return _Properties;
+        }
+
+        public void setFile(File f) {
+            _File = f;
+        }
+        public File getFile() {
+            return _File;
+        }
+    }
+
+
     /** 
      * Test code.
      * 
@@ -372,7 +442,7 @@ public class DynamicCustomizer extends JPanel implements Customizer {
     public static void main(String[] args) {
 
         try {
-            Class c = Class.forName(args[0]);
+            Class c = args.length > 0 ? Class.forName(args[0]) : TestClass.class;
             JFrame f = new JFrame(c.getName());
             DynamicCustomizer custom = 
                 new DynamicCustomizer(c);
