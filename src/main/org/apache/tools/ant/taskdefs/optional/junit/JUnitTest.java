@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import org.apache.tools.ant.Project;
 
-
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -73,10 +71,12 @@ import java.util.Vector;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>,
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  *
+ * @since Ant 1.2
+ *
  * @see JUnitTask
  * @see JUnitTestRunner
  */
-public class JUnitTest extends BaseTest {
+public class JUnitTest extends BaseTest implements Cloneable {
     
     /** the name of the test case */
     private String name = null;
@@ -100,7 +100,8 @@ public class JUnitTest extends BaseTest {
         this.name  = name;
     }
 
-    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure, boolean filtertrace) {
+    public JUnitTest(String name, boolean haltOnError, boolean haltOnFailure, 
+                     boolean filtertrace) {
         this.name  = name;
         this.haltOnError = haltOnError;
         this.haltOnFail = haltOnFailure;
@@ -185,6 +186,21 @@ public class JUnitTest extends BaseTest {
         final int count = formatters.size();
         for (int i = 0; i < count; i++){
             v.addElement( formatters.elementAt(i) );
+        }
+    }
+
+    /**
+     * @since Ant 1.5
+     */
+    public Object clone() {
+        try {
+            JUnitTest t = (JUnitTest) super.clone();
+            t.props = props == null ? null : (Properties) props.clone();
+            t.formatters = (Vector) formatters.clone();
+            return t;
+        } catch (CloneNotSupportedException e) {
+            // plain impossible
+            return this;
         }
     }
 }

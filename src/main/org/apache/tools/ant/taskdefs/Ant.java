@@ -135,7 +135,7 @@ public class Ant extends Task {
      * inside the ant call itself
      */
     public void setInheritAll(boolean value) {
-       inheritAll = value;
+        inheritAll = value;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Ant extends Task {
      * inside the ant call itself
      */
     public void setInheritRefs(boolean value) {
-       inheritRefs = value;
+        inheritRefs = value;
     }
 
     /**
