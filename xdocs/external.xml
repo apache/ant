@@ -1214,6 +1214,34 @@
         </table>
       </subsection>
 
+      <subsection name="JarBundler">
+
+        <p>JarBundler is a task that generates Mac OS X native Java
+        Application Bundles.  It is fully configurable and can be used
+        to generate Mac OS X application bundles from any supported
+        Java platform, making it ideal for targeting multiple
+        platforms with one build.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.loomcom.com/jarbundler/">http://www.loomcom.com/jarbundler/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:sethm@loomcom.com">Seth Morabito</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Java+ Precompile Task">
 
         <p>Java+ is an open source Java preprocessor that adds these
