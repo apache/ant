@@ -1335,7 +1335,7 @@ public final class IntrospectionHelper implements BuildListener {
      * Internal interface used to create nested elements. Not documented
      * in detail for reasons of source code readability.
      */
-    private abstract class NestedCreator {
+    private abstract static class NestedCreator {
         Method method; // the method called to add/create the nested element
         NestedCreator(Method m) {
             this.method = m;
@@ -1365,7 +1365,7 @@ public final class IntrospectionHelper implements BuildListener {
      * Internal interface used to setting element attributes. Not documented
      * in detail for reasons of source code readability.
      */
-    private abstract class AttributeSetter {
+    private abstract static class AttributeSetter {
         Method method; // the method called to set the attribute
         AttributeSetter(Method m) {
             this.method = m;
@@ -1468,11 +1468,10 @@ public final class IntrospectionHelper implements BuildListener {
             rObject = ((PreSetDef.PreSetDefinition) addedObject).createObject(
                 project);
         }
-        final Method method = addMethod;
         final Object nestedObject = addedObject;
         final Object realObject = rObject;
 
-        return new NestedCreator(method) {
+        return new NestedCreator(addMethod) {
             Object create(Project project, Object parent, Object ignore)
                 throws InvocationTargetException, IllegalAccessException {
                 if (!method.getName().endsWith("Configured")) {
