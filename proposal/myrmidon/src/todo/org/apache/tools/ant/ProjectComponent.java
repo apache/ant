@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 
@@ -20,11 +19,6 @@ import org.apache.myrmidon.api.TaskException;
 public abstract class ProjectComponent
     extends AbstractTask
 {
-    public Logger hackGetLogger()
-    {
-        return super.getLogger();
-    }
-
     /**
      * Get the Project to which this component belongs
      *
