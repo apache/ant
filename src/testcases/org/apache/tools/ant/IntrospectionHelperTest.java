@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -603,7 +604,7 @@ public class IntrospectionHelperTest extends TestCase {
                         makeTable("key", "value"), makeTable("1", "2"));
 
         assertExtMethod(extensions.get(2), "addConfigured", Map.class,
-                        Collections.EMPTY_MAP, makeTable("1", "2"));
+                        new HashMap(), makeTable("1", "2"));
     }
 
     private void assertExtMethod(Object mo, String methodName, Class methodArg,
@@ -654,7 +655,7 @@ public class IntrospectionHelperTest extends TestCase {
 
     public void addConfigured(Map m) {
         // Valid extension point
-        assertTrue(Collections.EMPTY_MAP == m);
+        assertTrue(m.size() == 0);
     }
 
     public void addConfigured(Hashtable h) {
