@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -97,6 +97,9 @@ public class RedirectorElement extends DataType {
 
     /** The input encoding */
     private String inputEncoding;
+
+    /** whether to log the inputstring */
+    private Boolean logInputString;
 
     /**
      * Add the input file mapper.
@@ -210,6 +213,18 @@ public class RedirectorElement extends DataType {
         this.inputString = inputString;
     }
 
+    /**
+     * Set whether to include the value of the input string in log messages.
+     * Defaults to true.
+     * @param logInputString true or false.
+     * @since Ant 1.7
+     */
+    public void setLogInputString(boolean logInputString) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.logInputString = logInputString ? Boolean.TRUE : Boolean.FALSE;
+    }
 
     /**
      * File the output of the process is redirected to. If error is not
@@ -438,6 +453,9 @@ public class RedirectorElement extends DataType {
         }
         if (inputString != null) {
             redirector.setInputString(inputString);
+        }
+        if (logInputString != null) {
+            redirector.setLogInputString(logInputString.booleanValue());
         }
         if (inputMapper != null) {
             String[] inputTargets = null;

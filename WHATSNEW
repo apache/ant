@@ -108,6 +108,8 @@ Other changes:
 * zip/jar/war/ear supports level attribute for deflate compression level.
   Bugzilla report 25513.
 
+* Added loginputstring attribute to the redirector type.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

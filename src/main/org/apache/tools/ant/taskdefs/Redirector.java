@@ -167,6 +167,9 @@ public class Redirector {
     /** The thread group used for starting <code>StreamPumper</code> threads */
     private ThreadGroup threadGroup = new ThreadGroup("redirector");
 
+    /** whether to log the inputstring */
+    private boolean logInputString = true;
+
     /**
      * Create a redirector instance for the given task
      *
@@ -212,6 +215,16 @@ public class Redirector {
      */
     public synchronized void setInputString(String inputString) {
         this.inputString = inputString;
+    }
+
+    /**
+     * Set whether to include the value of the input string in log messages.
+     * Defaults to true.
+     * @param logInputString true or false.
+     * @since Ant 1.7
+     */
+    public void setLogInputString(boolean logInputString) {
+        this.logInputString = logInputString;
     }
 
     /**
@@ -577,8 +590,13 @@ public class Redirector {
             }
             ((ConcatFileInputStream) inputStream).setManagingComponent(managingTask);
         } else if (inputString != null) {
-            managingTask.log("Using input \"" + inputString + "\"",
-                Project.MSG_VERBOSE);
+            StringBuffer buf = new StringBuffer("Using input ");
+            if (logInputString) {
+                buf.append('"').append(inputString).append('"');
+            } else {
+                buf.append("string");
+            }
+            managingTask.log(buf.toString(), Project.MSG_VERBOSE);
             inputStream = new ByteArrayInputStream(inputString.getBytes());
         }
 

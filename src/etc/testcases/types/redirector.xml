@@ -21,4 +21,21 @@
     </redirector>
   </target>
 
+  <target name="testLogInputString" depends="cat-check" if="can-cat">
+    <exec executable="cat">
+      <redirector inputstring="foo" loginputstring="false" />
+    </exec>
+  </target>
+
+  <target name="cat-check">
+    <property environment="env" />
+    <condition property="can-cat">
+      <or>
+        <available file="cat" filepath="${env.PATH}" property="can-cat" />
+        <available file="cat.exe" filepath="${env.PATH}" property="can-cat" />
+        <available file="cat.exe" filepath="${env.Path}" property="can-cat" />
+      </or>
+    </condition>
+  </target>
+
 </project>
