@@ -236,7 +236,7 @@ public class Main {
 
         if (!buildFile.exists()) {
             System.out.println("Buildfile: " + buildFile + " does not exist!");
-            return;
+            throw new BuildException("Build failed");
         }
 
         // make sure it's not a directory (this falls into the ultra
@@ -244,7 +244,7 @@ public class Main {
 
         if (buildFile.isDirectory()) {
             System.out.println("What? Buildfile: " + buildFile + " is a dir!");
-            return;
+            throw new BuildException("Build failed");
         }
 
         readyToRun = true;
