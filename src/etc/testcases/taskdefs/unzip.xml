@@ -88,9 +88,9 @@
   <target name="encodingTest">
     <mkdir dir="unziptestin"/>
     <touch file="unziptestin/foo"/>
-    <zip zipfile="unziptest.zip" basedir="unziptestin" encoding="UTF16"/>
+    <zip zipfile="unziptest.zip" basedir="unziptestin" encoding="UnicodeBig"/>
     <mkdir dir="unziptestout"/>
-    <unzip src="unziptest.zip" dest="unziptestout" encoding="UTF16"/>
+    <unzip src="unziptest.zip" dest="unziptestout" encoding="UnicodeBig"/>
   </target>
 
 </project>
