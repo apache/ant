@@ -352,6 +352,9 @@ public class EjbJar extends MatchingTask {
      * @return the deployment tool instance to be configured.
      */
     public WeblogicTOPLinkDeploymentTool createWeblogictoplink() {
+        log("The <weblogictoplink> element is no longer required. Please use "
+            + "the <weblogic> element and set newCMP=\"true\"", 
+            Project.MSG_INFO); 
         WeblogicTOPLinkDeploymentTool tool 
             = new WeblogicTOPLinkDeploymentTool();
         tool.setTask(this);
