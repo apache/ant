@@ -149,29 +149,46 @@ classes. Defaults to false</td>
   </tr>
 </table>
 
-<h3>Nested Elements</h3>
-<p><code>depend</code>'s <i>classpath</i> attribute is a 
-<a href="../using.html#path">PATH like structure</a> and can also be set
-via a nested <i>classpath</i> element.</p>
+<h3>Parameters specified as nested elements</h3>
+<p>The <code>depend</code> task's <code>classpath</code> attribute is a 
+<a href="../using.html#path">PATH-like structure</a> and can also be set
+via a nested <code>&lt;classpath&gt;</code> element.</p>
+
+<p>Additionally,
+this task forms an implicit
+<a href="../CoreTypes/fileset.html">FileSet</a>
+and supports all attributes of
+<code>&lt;fileset&gt;</code> (<code>dir</code> becomes <code>srcdir</code>),
+as well as the nested <code>&lt;include&gt;</code>,
+<code>&lt;exclude&gt;</code>, and <code>&lt;patternset&gt;</code> elements.
 
 <h3>Examples</h3>
-<blockquote>
 <pre>&lt;depend srcdir=&quot;${java.dir}&quot;
         destdir=&quot;${build.classes}&quot;
         cache=&quot;depcache&quot;
         closure=&quot;yes&quot;/&gt;</pre>
-</blockquote>
 
-<p> In this example classes in the ${build.classes} directory will be removed if 
-they depend on out-of-date classes. Classes are considered out of date with 
-respect to the source in the ${java.dir} directory using the same mechanism as 
-the javac task. In this instance the depend task caches its dependency 
-information in the depcache directory. </p>
+<p>removes any classes in the <code>${build.classes}</code> directory
+that depend on out-of-date classes. Classes are considered out-of-date with 
+respect to the source in the <code>${java.dir}</code> directory, using the same
+mechanism as the <code>&lt;javac&gt;</code> task. In this example, the
+<code>&lt;depend&gt;</code> task caches its dependency 
+information in the <code>depcache</code> directory. </p>
+
+<pre>
+&lt;depend srcdir=&quot;${java.dir}&quot; destdir=&quot;${build.classes}&quot;
+        cache=&quot;depcache&quot; closure=&quot;yes&quot;&gt;
+  &lt;include name=&quot;**/*.java&quot;/&gt;
+  &lt;excludesfile name=&quot;${java.dir}/build_excludes&quot;/&gt;
+&lt;/depend&gt;
+</pre>
+<p>does the same as the previous example, but explicitly includes all
+<code>.java</code> files, except those that match the list given
+in <code>${java.dir}/build_excludes</code>.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2001-2002 Apache Software Foundation.
-All rights
-Reserved.</p>
+All rights Reserved.</p>
 
 </body>
 </html>
