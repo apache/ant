@@ -7,12 +7,12 @@
  */
 package org.apache.antlib.xml;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXParseException;
+import javax.xml.transform.ErrorListener;
 
 /*
  * ValidatorErrorHandler role :
@@ -25,9 +25,8 @@ final class ValidatorErrorHandler
     extends AbstractLogEnabled
     implements ErrorHandler
 {
-    private File m_file;
-    private boolean m_failed;
     private final boolean m_warn;
+    private boolean m_failed;
 
     protected ValidatorErrorHandler( final boolean warn )
     {
@@ -56,9 +55,8 @@ final class ValidatorErrorHandler
         }
     }
 
-    protected void init( final File file )
+    protected void reset()
     {
-        m_file = file;
         m_failed = false;
     }
 
@@ -70,19 +68,22 @@ final class ValidatorErrorHandler
 
     private String getMessage( final SAXParseException spe )
     {
-        final String sysID = spe.getSystemId();
-        if( sysID != null )
+        final String systemID = spe.getSystemId();
+        if( null != systemID )
         {
+            final int line = spe.getLineNumber();
+            final int col = spe.getColumnNumber();
+
             try
             {
-                final int line = spe.getLineNumber();
-                final int col = spe.getColumnNumber();
-                return new URL( sysID ).getFile() +
+                //Build a message using standard compiler
+                //error format
+                return new URL( systemID ).getFile() +
                     ( line == -1 ? "" : ( ":" + line +
                     ( col == -1 ? "" : ( ":" + col ) ) ) ) +
                     ": " + spe.getMessage();
             }
-            catch( MalformedURLException mfue )
+            catch( final MalformedURLException mue )
             {
             }
         }
