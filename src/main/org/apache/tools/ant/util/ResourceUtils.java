@@ -105,34 +105,34 @@ public class ResourceUtils {
         Vector vresult = new Vector();
         for (int counter = 0; counter < source.length; counter++) {
             if (source[counter].getLastModified() > now) {
-                logTo.log("Warning: " + source[counter].getName() 
-                         + " modified in the future.", 
+                logTo.log("Warning: " + source[counter].getName()
+                         + " modified in the future.",
                          Project.MSG_WARN);
             }
 
-            String[] targetnames = 
+            String[] targetnames =
                 mapper.mapFileName(source[counter].getName()
                                    .replace('/', File.separatorChar));
             if (targetnames != null) {
                 boolean added = false;
                 StringBuffer targetList = new StringBuffer();
-                for (int ctarget = 0; !added && ctarget < targetnames.length; 
+                for (int ctarget = 0; !added && ctarget < targetnames.length;
                      ctarget++) {
-                    Resource atarget = 
+                    Resource atarget =
                         targets.getResource(targetnames[ctarget]
                                             .replace(File.separatorChar, '/'));
                     // if the target does not exist, or exists and
                     // is older than the source, then we want to
                     // add the resource to what needs to be copied
                     if (!atarget.isExists()) {
-                        logTo.log(source[counter].getName() + " added as " 
+                        logTo.log(source[counter].getName() + " added as "
                                   + atarget.getName()
                                   + " doesn\'t exist.", Project.MSG_VERBOSE);
                         vresult.addElement(source[counter]);
                         added = true;
-                    } else if (atarget.getLastModified() 
+                    } else if (!atarget.isDirectory() && atarget.getLastModified()
                                < source[counter].getLastModified()) {
-                        logTo.log(source[counter].getName() + " added as " 
+                        logTo.log(source[counter].getName() + " added as "
                                   + atarget.getName()
                                   + " is outdated.", Project.MSG_VERBOSE);
                         vresult.addElement(source[counter]);
@@ -146,13 +146,13 @@ public class ResourceUtils {
                 }
 
                 if (!added) {
-                    logTo.log(source[counter].getName() 
+                    logTo.log(source[counter].getName()
                               + " omitted as " + targetList.toString()
                               + (targetnames.length == 1 ? " is" : " are ")
                               + " up to date.", Project.MSG_VERBOSE);
                 }
             } else {
-                logTo.log(source[counter].getName() 
+                logTo.log(source[counter].getName()
                           + " skipped - don\'t know how to handle it",
                           Project.MSG_VERBOSE);
             }
