@@ -69,21 +69,55 @@ import java.io.*;
 public class Cvs extends Task {
 
     private Commandline cmd = new Commandline();
-    private String cvsRoot;
-    private String pack;
-    private String command = "checkout";
-    private boolean quiet = false;
-    private boolean noexec = false;
-    private File dest;
     
+    /**
+     * the CVSROOT variable.
+     */
+    private String cvsRoot;
+
+    /**
+     * the package/module to check out.
+     */
+    private String pack;
+
+    /**
+     * the CVS command to execute.
+     */
+    private String command = "checkout";
+
+    /**
+     * suppress information messages.
+     */
+    private boolean quiet = false;
+
+    /**
+     * report only, don't change any files.
+     */
+    private boolean noexec = false;
+
+    /**
+     * the directory where the checked out files should be placed.
+     */
+    private File dest;
+
+    /**
+     * the file to direct standard output from the command.
+     */
+    private File output;
+
+    /**
+     * the file to direct standard error from the command.
+     */
+    private File error; 
+
     public void execute() throws BuildException {
 
-	// XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
-	// execution so that we don't rely on having native CVS stuff around (SM)
+        // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
+        // execution so that we don't rely on having native CVS stuff around (SM)
 
         // We can't do it ourselves as jCVS is GPLed, a third party task 
         // outside of jakarta repositories would be possible though (SB).
-	
+    
         Commandline toExecute = new Commandline();
 
         toExecute.setExecutable("cvs");
@@ -100,12 +134,42 @@ public class Cvs extends Task {
         toExecute.createArgument().setLine(command);
         toExecute.addArguments(cmd.getCommandline());
 
-	if (pack != null) {
+        if (pack != null) {
             toExecute.createArgument().setValue(pack);
-	}
+        }
 
-        Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
-                                                       Project.MSG_WARN), 
+        ExecuteStreamHandler streamhandler = null;
+        OutputStream outputstream = null;
+        OutputStream errorstream = null; 
+        if (error == null && output == null) {
+            streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
+                                                 Project.MSG_WARN);
+        }
+        else {
+            if (output != null) {
+                try {
+                    outputstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+                } catch (IOException e) {
+                    throw new BuildException(e, location);
+                }
+            }
+            else {
+                outputstream = new LogOutputStream(this, Project.MSG_INFO);
+            }
+            if (error != null) {
+                try {
+                    errorstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(error)));
+                } catch (IOException e) {
+                    throw new BuildException(e, location);
+                }
+            }
+            else {
+                errorstream = new LogOutputStream(this, Project.MSG_WARN);
+            }
+            streamhandler = new PumpStreamHandler(outputstream, errorstream);
+        }
+
+        Execute exe = new Execute(streamhandler, 
                                   null);
 
         exe.setAntRun(project);
@@ -117,6 +181,17 @@ public class Cvs extends Task {
             exe.execute();
         } catch (IOException e) {
             throw new BuildException(e, location);
+        } finally {
+            if (output != null) {
+                try {
+                    outputstream.close();
+                } catch (IOException e) {}
+            }
+            if (error != null) {
+                try {
+                    errorstream.close();
+                } catch (IOException e) {}
+            }
         }
     }
 
@@ -127,7 +202,7 @@ public class Cvs extends Task {
                 root = null; 
         } 
 
-	this.cvsRoot = root;
+        this.cvsRoot = root;
     }
 
     public void setDest(File dest) {
@@ -135,7 +210,7 @@ public class Cvs extends Task {
     }
 
     public void setPackage(String p) {
-	this.pack = p;
+        this.pack = p;
     }
 
     public void setTag(String p) { 
@@ -155,7 +230,7 @@ public class Cvs extends Task {
     }
 
     public void setCommand(String c) {
-	this.command = c;
+        this.command = c;
     }
     
     public void setQuiet(boolean q) {
@@ -164,6 +239,14 @@ public class Cvs extends Task {
     
     public void setNoexec(boolean ne) {
         noexec = ne;
+    }
+
+    public void setOutput(File output) {
+        this.output = output;
+    }
+    
+    public void setError(File error) {
+        this.error = error;
     }
 }
 

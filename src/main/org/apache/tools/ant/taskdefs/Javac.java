@@ -398,7 +398,7 @@ public class Javac extends MatchingTask {
      * @param addRuntime Shall <code>rt.jar</code> or
      * <code>classes.zip</code> be added to the classpath.  
      */
-    private Path getCompileClasspath(boolean addRuntime) {
+    protected Path getCompileClasspath(boolean addRuntime) {
         Path classpath = new Path(project);
 
         // add dest dir to classpath so that previously compiled and
@@ -598,7 +598,7 @@ public class Javac extends MatchingTask {
      * Logs the compilation parameters, adds the files to compile and logs the 
      * &qout;niceSourceList&quot;
      */
-    private void logAndAddFilesToCompile(Commandline cmd) {
+    protected void logAndAddFilesToCompile(Commandline cmd) {
         log("Compilation args: " + cmd.toString(),
             Project.MSG_VERBOSE);
 
@@ -742,7 +742,7 @@ public class Javac extends MatchingTask {
      * @param args - arguments to pass to process on command line
      * @param firstFileName - index of the first source file in args
      */
-    private int executeJikesCompile(String[] args, int firstFileName) {
+    protected int executeJikesCompile(String[] args, int firstFileName) {
         String[] commandArray = null;
         File tmpFile = null;
 
@@ -804,7 +804,7 @@ public class Javac extends MatchingTask {
      * so that you don't have to specify them all one by one.
      * @param classpath - Path to append files to
      */
-    private void addExtdirsToClasspath(Path classpath) {
+    protected void addExtdirsToClasspath(Path classpath) {
         if (extdirs == null) {
             String extProp = System.getProperty("java.ext.dirs");
             if (extProp != null) {
