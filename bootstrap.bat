@@ -45,6 +45,7 @@ echo.
 echo ... Building Ant Distribution
 
 %JAVA% org.apache.tools.ant.Main clean main %1 %2 %3 %4 %5
+%JAVA% org.apache.tools.ant.Main install %1 %2 %3 %4 %5
 
 echo.
 echo ... Cleaning Up Build Directories

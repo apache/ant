@@ -11,12 +11,12 @@
   <property name="version" value="1.0-rc1"/>
 
   <property name="ant.home" value="."/>
-  <property name="bin.dir" value="bin"/>
   <property name="src.bin.dir" value="src/bin"/>
   <property name="src.dir" value="src/main"/>
-  <property name="lib.dir" value="lib"/>
   <property name="docs.dir" value="docs"/>
   <property name="build.dir" value="../build/ant"/>
+  <property name="lib.dir" value="${build.dir}/lib"/>
+  <property name="bin.dir" value="${build.dir}/bin"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="ant.dist.dir" value="../dist/ant"/>
@@ -168,6 +168,15 @@
     <tar tarfile="${Name}-${version}.tar" basedir="${ant.dist.dir}" includes="**"/>
     <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
   </target>
+
+  <!-- =================================================================== -->
+  <!-- Installs the ant.jar library and binary files into ant.home         -->
+  <!-- =================================================================== -->
+  <target name="install" depends="main">
+    <echo message="installing into ${ant.home}"/>
+    <copydir src="${lib.dir}" dest="${ant.home}/lib"/>
+    <copydir src="${bin.dir}" dest="${ant.home}/bin"/>
+  </target>     
 
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->

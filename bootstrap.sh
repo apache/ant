@@ -21,6 +21,7 @@ javac  -d ${CLASSDIR} ${SRCDIR}/ant/taskdefs/*.java
 cp src/main/org/apache/tools/ant/taskdefs/defaults.properties ${CLASSDIR}/org/apache/tools/ant/taskdefs
 
 java org.apache.tools.ant.Main clean main
+java org.apache.tools.ant.Main install
 java org.apache.tools.ant.Main clean 
 
 if test ! -d bin; then mkdir bin; fi
