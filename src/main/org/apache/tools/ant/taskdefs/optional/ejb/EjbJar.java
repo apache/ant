@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000, 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -188,6 +188,21 @@ public class EjbJar extends MatchingTask {
      */
     public WeblogicDeploymentTool createWeblogic() {
         WeblogicDeploymentTool tool = new WeblogicDeploymentTool();
+        tool.setTask(this);
+        deploymentTools.add(tool);
+        return tool;
+    }
+
+    /**
+     * Create a Borland nested element used to configure a
+     * deployment tool for Borland server.
+     *
+     * @return the deployment tool instance to be configured.
+     */
+    public BorlandDeploymentTool createBorland() {
+        log("Borland deployment tools",  Project.MSG_VERBOSE);
+
+        BorlandDeploymentTool tool = new BorlandDeploymentTool();
         tool.setTask(this);
         deploymentTools.add(tool);
         return tool;
