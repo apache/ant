@@ -58,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.TimeZone;
 
 /**
  * A class used to parse the output of the CVS log command.
@@ -74,8 +75,13 @@ class ChangeLogParser {
     private static final int GET_PREVIOUS_REV = 5;
 
     /** input format for dates read in from cvs log */
-    private static final SimpleDateFormat c_inputDate 
-        = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+    private static final SimpleDateFormat c_inputDate
+        = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+    static {
+        TimeZone utc = TimeZone.getTimeZone("UTC");
+        c_inputDate.setTimeZone(utc);
+    }
 
     //The following is data used while processing stdout of CVS command
     private String m_file;
@@ -142,13 +148,13 @@ class ChangeLogParser {
         if (line.startsWith("======")) {
             //We have ended changelog for that particular file
             //so we can save it
-            final int end 
+            final int end
                 = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring(0, end);
             saveEntry();
             m_status = GET_FILE;
         } else if (line.startsWith("----------------------------")) {
-            final int end 
+            final int end
                 = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring(0, end);
             m_status = GET_PREVIOUS_REV;
@@ -211,7 +217,7 @@ class ChangeLogParser {
      */
     private void processGetPreviousRevision(final String line) {
         if (!line.startsWith("revision")) {
-            throw new IllegalStateException("Unexpected line from CVS: " 
+            throw new IllegalStateException("Unexpected line from CVS: "
                 + line);
         }
         m_previousRevision = line.substring(9);
