@@ -63,6 +63,12 @@ import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.XMLReader;
+
+import javax.xml.parsers.SAXParserFactory;
+
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -72,6 +78,9 @@ import javax.xml.transform.ErrorListener;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+
+import javax.xml.transform.sax.SAXSource;
 
 /**
  * Concrete liaison for XSLT processor implementing TraX. (ie JAXP 1.1)
@@ -95,6 +104,9 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     private Transformer transformer = null;
 
     private XSLTLogger logger;
+    
+    /** possible resolver for publicIds */
+    private EntityResolver resolver;
 
     public TraXLiaison() throws Exception {
         tfactory = TransformerFactory.newInstance();
@@ -128,7 +140,23 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         try {
             fis = new FileInputStream(infile);
             fos = new FileOutputStream(outfile);
-            StreamSource src = new StreamSource(fis);
+            // FIXME: need to use a SAXSource as the source for the transform
+            // so we can plug in our own entity resolver
+            Source src = null;
+            if (resolver != null) {
+                if (tfactory.getFeature(SAXSource.FEATURE)) {
+                    SAXParserFactory spFactory = SAXParserFactory.newInstance();
+                    spFactory.setNamespaceAware( true ); 
+                    XMLReader reader = spFactory.newSAXParser().getXMLReader();
+                    reader.setEntityResolver(resolver);
+                    src = new SAXSource(reader, new InputSource(fis));
+                } else {
+                    throw new IllegalStateException("xcatalog specified, but "+
+                        "parser doesn't support SAX");
+                }
+            } else {
+                src = new StreamSource(fis);
+            }
             src.setSystemId(getSystemId(infile));
             StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
@@ -225,4 +253,10 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         logger.log(msg.toString());
     }
 
+    /** Set the class to resolve entities during the transformation
+     */
+    public void setEntityResolver(EntityResolver aResolver) throws Exception {
+        resolver = aResolver;
+    }
+    
 } //-- TraXLiaison
