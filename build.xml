@@ -245,6 +245,9 @@
       <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
     </javac>
 
+    <copy file="${build.src}/${ant.package}/defaultManifest.mf"
+          todir="${build.classes}/${ant.package}" />
+
   </target>
 
   <!-- 
