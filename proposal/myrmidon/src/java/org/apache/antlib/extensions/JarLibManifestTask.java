@@ -184,7 +184,10 @@ public final class JarLibManifestTask
 
         appendExtraAttributes( attributes );
 
-        Extension.addExtension( m_extension, attributes );
+        if( null != m_extension )
+        {
+            Extension.addExtension( m_extension, attributes );
+        }
 
         //Add all the dependency data to manifest for dependencies
         final ArrayList depends = toExtensions( m_dependencies );
