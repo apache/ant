@@ -83,10 +83,10 @@ public class TaskAdapter extends Task implements TypeAdapter {
     }
 
     /**
-     * check if the proxy class is a valid class to use
+     * Check if the proxy class is a valid class to use
      * with this adapter.
-     * the class must have a public no-arg "execute()" method.
-     * @param proxyClass the class to check
+     * The class must have a public no-arg "execute()" method.
+     * @param proxyClass the class to check.
      */
     public void checkProxyClass(Class proxyClass) {
         checkTaskClass(proxyClass, getProject());
@@ -101,9 +101,8 @@ public class TaskAdapter extends Task implements TypeAdapter {
     public void execute() throws BuildException {
         Method setProjectM = null;
         try {
-            Class c = proxy.getClass();
-            setProjectM =
-                c.getMethod("setProject", new Class[] {Project.class});
+            setProjectM = proxy.getClass().getMethod(
+                "setProject", new Class[] {Project.class});
             if (setProjectM != null) {
                 setProjectM.invoke(proxy, new Object[] {getProject()});
             }
@@ -115,18 +114,14 @@ public class TaskAdapter extends Task implements TypeAdapter {
                 Project.MSG_ERR);
             throw new BuildException(ex);
         }
-
-
         Method executeM = null;
         try {
             Class c = proxy.getClass();
             DispatchUtils.execute(proxy);
-            return;
         } catch (Exception ex) {
             log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
             throw new BuildException(ex);
         }
-
     }
 
     /**
@@ -141,7 +136,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
     /**
      * Returns the target object being proxied.
      *
-     * @return the target proxy object
+     * @return the target proxy object.
      */
     public Object getProxy() {
         return proxy;
