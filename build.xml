@@ -343,6 +343,7 @@
         <include name="LICENSE"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
+        <include name="KEYS"/>
       </fileset>
     </copy>
 
@@ -404,6 +405,7 @@
         <include name="LICENSE"/>
         <include name="TODO"/>
         <include name="WHATSNEW"/>
+        <include name="KEYS"/>
         <include name="build.bat"/>
         <include name="build.sh"/>
         <include name="bootstrap.bat"/>
