@@ -1,4 +1,4 @@
-Changes from Ant 1.6.1 to current CVS version
+Changes from current Ant 1.6 CVS version to current CVS version
 =============================================
 
 Changes that could break older environments:
@@ -17,10 +17,6 @@ Fixed bugs:
   cases; when split file-property, files were only created if
   writes were performed.
 
-* subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
-
-* macrodef @@ escaping was broken.  Bugzilla Report 27069.
-
 * replacestring tokenfilter only replaced the first occurrence.
 
 * AntLikeTasksAtTopLevelTest failed on cygwin.
@@ -35,6 +31,24 @@ Other changes:
   <java> code will inherit this priority in their main thread.
 
 * <touch> has filelist support.
+
+
+Changes from Ant 1.6.1 to current Ant 1.6 CVS version
+=============================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* subant haltonfailure=false did not catch all failures. Bugzilla Report 27007.
+
+* macrodef @@ escaping was broken.  Bugzilla Report 27069.
+
+Other changes:
+--------------
+
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
