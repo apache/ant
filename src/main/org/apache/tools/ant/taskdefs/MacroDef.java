@@ -78,8 +78,8 @@ import org.apache.tools.ant.UnknownElement;
 public class MacroDef extends AntlibDefinition  {
     private NestedSequential nestedSequential;
     private String     name;
-    private Map        attributes = new HashMap();
-    private Map        elements = new HashMap();
+    private List       attributes = new ArrayList();
+    private Map        elements   = new HashMap();
 
     /**
      * Name of the definition
@@ -170,7 +170,7 @@ public class MacroDef extends AntlibDefinition  {
     /**
      * @return the nested Attributes
      */
-    public Map getAttributes() {
+    public List getAttributes() {
         return attributes;
     }
 
@@ -221,12 +221,15 @@ public class MacroDef extends AntlibDefinition  {
             throw new BuildException(
                 "the attribute nested element needed a \"name\" attribute");
         }
-        if (attributes.get(attribute.getName()) != null) {
-            throw new BuildException(
-                "the attribute " + attribute.getName()
-                + " has already been specified");
+        for (int i = 0; i < attributes.size(); ++i) {
+            if (((Attribute) attributes.get(i)).getName().equals(
+                    attribute.getName())) {
+                throw new BuildException(
+                    "the attribute " + attribute.getName()
+                    + " has already been specified");
+            }
         }
-        attributes.put(attribute.getName(), attribute);
+        attributes.add(attribute);
     }
 
     /**
@@ -347,6 +350,13 @@ public class MacroDef extends AntlibDefinition  {
             }
             return true;
         }
+
+        /**
+         * @return a hash code value for this object.
+         */
+        public int hashCode() {
+            return objectHashCode(defaultValue) + objectHashCode(name);
+        }
     }
 
     /**
@@ -416,6 +426,13 @@ public class MacroDef extends AntlibDefinition  {
             }
             return optional == other.optional;
         }
+
+        /**
+         * @return a hash code value for this object.
+         */
+        public int hashCode() {
+            return objectHashCode(name) + (optional ? 1 : 0);
+        }
     }
 
     /**
@@ -461,6 +478,17 @@ public class MacroDef extends AntlibDefinition  {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return a hash code value for this object.
+     */
+    public int hashCode() {
+        return objectHashCode(name)
+            + objectHashCode(getURI())
+            + objectHashCode(nestedSequential)
+            + objectHashCode(attributes)
+            + objectHashCode(elements);
     }
 
     /**
@@ -524,6 +552,14 @@ public class MacroDef extends AntlibDefinition  {
             }
             MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
             return macroDef.equals(otherDef.macroDef);
+        }
+    }
+
+    private static int objectHashCode(Object o) {
+        if (o == null) {
+            return 0;
+        } else {
+            return o.hashCode();
         }
     }
 }

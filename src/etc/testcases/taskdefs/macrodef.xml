@@ -4,7 +4,7 @@
     <macrodef name="my.echo">
       <attribute name="text"/>
       <sequential>
-        <echo message="${text}"/>
+        <echo message="@{text}"/>
       </sequential>
     </macrodef>
     <my.echo text="Hello World"/>
@@ -14,7 +14,7 @@
     <macrodef name="my.echo">
       <attribute name="text"/>
       <sequential>
-        <echo>${text}</echo>
+        <echo>@{text}</echo>
       </sequential>
     </macrodef>
     <my.echo text="Inner Text"/>
@@ -25,7 +25,7 @@
       <attribute name="text"/>
       <attribute name="text"/>
       <sequential>
-        <echo>${text}</echo>
+        <echo>@{text}</echo>
       </sequential>
     </macrodef>
   </target>
@@ -44,7 +44,7 @@
     <macrodef name="echo" uri="abc">
       <attribute name="text"/>
       <sequential>
-        <echo message="${text}"/>
+        <echo message="@{text}"/>
       </sequential>
     </macrodef>
     <x:echo xmlns:x="abc" text="Hello World"/>
@@ -65,4 +65,14 @@
     </nested>
   </target>
 
+  <target name="double">
+    <macrodef name="double">
+      <attribute name="prop"/>
+      <sequential>
+        <echo>@@{prop} is '@{prop}', value of $${@{prop}} is '${@{prop}}'</echo>
+      </sequential>
+    </macrodef>
+    <property name="property" value="A property value"/>
+    <double prop="property"/>
+  </target>
 </project>

@@ -817,10 +817,10 @@
     <macrodef name="optional-jar">
       <attribute name="dep"/>
       <sequential>
-        <jar destfile="${build.lib}/${optional.jars.prefix}-${dep}.jar"
+        <jar destfile="${build.lib}/${optional.jars.prefix}-@{dep}.jar"
           basedir="${build.classes}"
           manifest="${manifest.tmp}">
-          <selector refid="needs.${dep}"/>
+          <selector refid="needs.@{dep}"/>
         </jar>
       </sequential>
     </macrodef>
