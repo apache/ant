@@ -72,7 +72,7 @@ import org.apache.tools.mail.MailMessage;
  *  results. The following Project properties are used to send the mail.
  *  <ul>
  *    <li> MailLogger.mailhost [default: localhost] - Mail server to use</li>
- *
+ *    <li> MailLogger.port [default: 25] - Default port for SMTP </li>
  *    <li> MailLogger.from [required] - Mail "from" address</li>
  *    <li> MailLogger.failure.notify [default: true] - Send build failure
  *    e-mails?</li>
@@ -150,13 +150,14 @@ public class MailLogger extends DefaultLogger {
             }
 
             String mailhost = getValue(properties, "mailhost", "localhost");
+            int port = Integer.parseInt(getValue(properties,"port",String.valueOf(MailMessage.DEFAULT_PORT)));
             String from = getValue(properties, "from", null);
 
             String toList = getValue(properties, prefix + ".to", null);
             String subject = getValue(properties, prefix + ".subject",
                     (success) ? "Build Success" : "Build Failure");
 
-            sendMail(mailhost, from, toList, subject, buffer.toString());
+            sendMail(mailhost, port, from, toList, subject, buffer.toString());
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
             e.printStackTrace(System.err);
@@ -207,15 +208,16 @@ public class MailLogger extends DefaultLogger {
      *  Send the mail
      *
      * @param  mailhost         mail server
+     * @param  port             mail server port number
      * @param  from             from address
      * @param  toList           comma-separated recipient list
      * @param  subject          mail subject
      * @param  message          mail body
      * @exception  IOException  thrown if sending message fails
      */
-    private void sendMail(String mailhost, String from, String toList,
+    private void sendMail(String mailhost, int port, String from, String toList,
                           String subject, String message) throws IOException {
-        MailMessage mailMessage = new MailMessage(mailhost);
+        MailMessage mailMessage = new MailMessage(mailhost, port);
 
         mailMessage.from(from);
 
