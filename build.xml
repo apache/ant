@@ -104,6 +104,8 @@
   <property name="src.dist.src" value="${src.dist.dir}/src"/>
   <property name="src.dist.docs" value="${src.dist.dir}/docs"/>
   <property name="src.dist.lib" value="${src.dist.dir}/lib"/>
+  
+
 
   <!--
        ===================================================================
@@ -697,6 +699,7 @@
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}">
         <exclude name="**/images/**"/>
+        <exclude name="artwork/**"/>
       </fileset>
       <filterset refid="ant.filters"/>
     </copy>
@@ -704,6 +707,7 @@
     <copy todir="${dist.docs}" filtering="false">
       <fileset dir="${docs.dir}">
         <include name="**/images/**"/>
+        <include name="artwork/**"/>
       </fileset>
     </copy>
 
@@ -1250,7 +1254,7 @@
           classname="org.apache.tools.ant.taskdefs.TestProcess" 
           fork="true" />
   </target>
-
+  
   <!--
        ===================================================================
          Main target - runs dist-lite by default
