@@ -73,7 +73,19 @@ being wrapped and continued on the next line.
   </tr>
   <tr>
     <td valign="top">compress</td>
-    <td valign="top">Not only store data but also compress them, defaults to true</td>
+    <td valign="top">Not only store data but also compress them,
+    defaults to true.  Unless you set the <em>keepcompression</em>
+    attribute to false, this will apply to the entire archive, not
+    only the files you've added while updating.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">keepcompression</td>
+    <td valign="top">For entries coming from existing archives (like
+    nested <em>zipfileset</em>s or while updating the archive), keep
+    the compression as it has been originally instead of using the
+    <em>compress</em> attribute.  Defaults false.  <em>Since Ant
+    1.6</em></td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

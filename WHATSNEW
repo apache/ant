@@ -557,6 +557,10 @@ If set to true, the process will be spawned. Bugzilla Report 5907.
 * <if/> and <unless/> attributes added to <param/> element of <style>
    Bugzilla Report 22044
 
+* <zip> and friends have a new attribute "keepcompression" that can be
+  used to incrementally build an archive mixing compressed and uncompressed
+  entries.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -141,6 +141,14 @@ public class Zip extends MatchingTask {
     private String encoding;
 
     /**
+     * Whether the original compression of entries coming from a ZIP
+     * archive should be kept (for example when updating an archive).
+     *
+     * @since Ant 1.6
+     */
+    private boolean keepCompression = false;
+
+    /**
      * This is the name/location of where to
      * create the .zip file.
      *
@@ -305,6 +313,16 @@ public class Zip extends MatchingTask {
      */
     public String getEncoding() {
         return encoding;
+    }
+
+    /**
+     * Whether the original compression of entries coming from a ZIP
+     * archive should be kept (for example when updating an archive).
+     *
+     * @since Ant 1.6
+     */
+    public void setKeepCompression(boolean keep) {
+        keepCompression = keep;
     }
 
     /**
@@ -631,11 +649,20 @@ public class Zip extends MatchingTask {
                     zipFile(f, zOut, prefix + name, fileMode);
                 } else if (!resources[i].isDirectory()) {
                     ZipEntry ze = zf.getEntry(resources[i].getName());
+                    
                     if (ze != null) {
-                        zipFile(zf.getInputStream(ze), zOut, prefix + name,
-                                ze.getTime(), zfs.getSrc(getProject()),
-                                zfs.hasFileModeBeenSet() ? fileMode
-                                                         : ze.getUnixMode());
+                        boolean oldCompress = doCompress;
+                        if (keepCompression) {
+                            doCompress = (ze.getMethod() == ZipEntry.DEFLATED);
+                        }
+                        try {
+                            zipFile(zf.getInputStream(ze), zOut, prefix + name,
+                                    ze.getTime(), zfs.getSrc(getProject()),
+                                    zfs.hasFileModeBeenSet() ? fileMode
+                                    : ze.getUnixMode());
+                        } finally {
+                            doCompress = oldCompress;
+                        }
                     }
                 }
             }
@@ -973,6 +1000,7 @@ public class Zip extends MatchingTask {
         if (!skipWriting) {
             ZipEntry ze = new ZipEntry(vPath);
             ze.setTime(lastModified);
+            ze.setMethod(doCompress ? ZipEntry.DEFLATED : ZipEntry.STORED);
 
             /*
             * ZipOutputStream.putNextEntry expects the ZipEntry to
