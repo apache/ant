@@ -78,11 +78,6 @@
   <path id="classpath">
   </path>
 
-  <!-- empty for JDK 1.2+, contains classes.zip otherwise -->
-  <path id="classes.zip">
-    <fileset dir="${java.home}" includes="lib/classes.zip"/>
-  </path>
-
   <path id="tests-classpath">
     <pathelement location="${build.classes}"/>
     <pathelement location="${build.tests}"/>
@@ -126,29 +121,6 @@
        ===================================================================
   -->
   <!-- depends on JDK version -->
-  <selector id="needs.jdk1.2+">
-    <or>
-      <filename name="${util.package}/optional/WeakishReference12*"/>
-      <filename name="${optional.package}/extension/**"/>
-      <filename name="${util.package}/optional/NoExitSecurityManager*"/>
-      <filename name="${optional.package}/Javah*"/>
-      <filename name="${optional.package}/metamata/*"/>
-      <filename name="${optional.package}/ejb/EjbJar*"/>
-      <filename name="${optional.package}/ejb/*DeploymentTool*"/>
-      <filename name="${optional.package}/ejb/IPlanet*"/>
-      <filename name="${optional.package}/ejb/Borland*"/>
-      <filename name="${optional.package}/j2ee/*"/>
-      <!-- uses the context classloader -->
-      <filename name="${optional.package}/junit/JUnitClassLoaderTest*"/>
-      <!-- use various 1.2 methods -->
-      <filename name="${optional.package}/sitraka/**"/>
-      <filename name="${optional.package}/ide/VAJ*"/>
-      <filename name="${optional.package}/starteam/*"/>
-      <filename name="${optional.package}/ssh/*"/>
-      <!-- uses JDK 1.2 classloading facilities -->
-      <filename name="${ant.package}/loader/AntClassLoader2.java"/>
-    </or>
-  </selector>
   <selector id="needs.jdk1.3+">
     <or>
       <filename name="${ant.package}/taskdefs/TestProcess*"/>
@@ -336,20 +308,15 @@
        ===================================================================
   -->
   <target name="check_for_optional_packages">
-    <available property="jdk1.2+" classname="java.lang.ThreadLocal"/>
     <available property="jdk1.3+" classname="java.lang.StrictMath"/>
     <available property="jdk1.4+" classname="java.lang.CharSequence"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
                classname="org.apache.bsf.BSFManager"
                classpathref="classpath"/>
-    <condition property="netrexx.present">
-      <and>
-        <isset property="jdk1.2+"/>
-        <available classname="netrexx.lang.Rexx"
-                   classpathref="classpath"/>
-      </and>
-    </condition>
+    <available property="netrexx.present"
+               classname="netrexx.lang.Rexx"
+               classpathref="classpath"/>
     <available property="trax.present"
                classname="javax.xml.transform.Transformer"
                classpathref="classpath"/>
@@ -366,9 +333,9 @@
     <available property="xslp.present"
                classname="com.kvisco.xsl.XSLProcessor"
                classpathref="classpath"/>
-   <available property="apache.resolver.present"
-              classname="org.apache.xml.resolver.tools.CatalogResolver"
-              classpathref="classpath" />
+    <available property="apache.resolver.present"
+               classname="org.apache.xml.resolver.tools.CatalogResolver"
+               classpathref="classpath" />
     <available property="xalan.present"
                classname="org.apache.xalan.xslt.XSLTProcessorFactory"
                classpathref="classpath"/>
@@ -414,13 +381,9 @@
     <available property="jai.present"
                classname="javax.media.jai.JAI"
                classpathref="classpath"/>
-    <condition property="icontract.present">
-        <and>
-            <isset property="jdk1.2+"/>
-            <available classname="com.reliablesystems.iContract.IContracted"
-                       classpathref="classpath"/>
-        </and>
-    </condition>
+    <available property="icontract.present"
+               classname="com.reliablesystems.iContract.IContracted"
+               classpathref="classpath"/>
     <available property="jdepend.present"
                classname="jdepend.framework.JDepend"
                classpathref="classpath"/>
@@ -444,13 +407,9 @@
     <available property="xerces.present"
                classname="org.apache.xerces.parsers.SAXParser"
                classpathref="classpath"/>
-    <condition property="bcel.present">
-        <and>
-            <isset property="jdk1.2+"/>
-            <available classname="org.apache.bcel.Constants"
-                       classpathref="classpath"/>
-        </and>
-    </condition>
+    <available property="bcel.present"
+               classname="org.apache.bcel.Constants"
+               classpathref="classpath"/>
     <available property="sunuue.present"
                classname="sun.misc.UUEncoder"
                classpathref="classpath"/>
@@ -509,12 +468,9 @@
 
     <condition property="swing.present">
       <or>
-        <and>
-          <isset property="jdk1.2+"/>
-          <not>
-            <isset property="kaffe"/>
-          </not>
-        </and>
+        <not>
+          <isset property="kaffe"/>
+        </not>
         <available classname="javax.swing.ImageIcon"
                    classpathref="classpath"/>
       </or>
@@ -596,7 +552,6 @@
       <selector id="conditional-patterns">
         <not>
           <or>
-            <selector refid="needs.jdk1.2+" unless="jdk1.2+"/>
             <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
             <selector refid="needs.sun.tools" unless="sun.tools.present"/>
@@ -1510,7 +1465,6 @@
            failureproperty="tests.failed">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
-      <classpath refid="classes.zip"/>
 
       <sysproperty key="ant.home" value="${ant.home}"/>
       <sysproperty key="build.tests" value="${build.tests}"/>
@@ -1543,10 +1497,6 @@
           <!-- only run these tests if their required libraries are
                installed -->
           <selector refid="conditional-patterns"/>
-
-          <!-- fails under 1.1 -->
-          <exclude name="${optional.package}/perforce/P4ChangeTest.java"
-                   unless="jdk1.2+"/>
 
           <!-- tests excluded if the test is run in offline mode -->
           <patternset refid="onlinetests"/>
@@ -1600,15 +1550,6 @@
           <exclude name="${optional.package}/JspcTest.java"
                    unless="jasper.present"/>
 
-          <!--
-          XXX need to figure out what's causing this InvocationTargetException
-          -->
-          <exclude name="${optional.package}/junit/JUnitTestRunnerTest.java"
-                   unless="jdk1.2+"/>
-          <!-- DateTime handling seems to be broken in JDK 1.1 -->
-          <exclude name="${util.package}/DateUtilsTest.java"
-                   unless="jdk1.2+"/>
-
           <!-- misc oneoff tests -->
           <exclude name="${optional.package}/WsdlToDotnetTest.java"
                    unless="dotnetapps.found"/>
@@ -1661,7 +1602,6 @@
       <sysproperty key="build.tests" value="${build.tests}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
-      <classpath refid="classes.zip"/>
       <classpath refid="tests-classpath"/>
       <formatter type="plain" usefile="false"/>
       <test name="${testcase}"/>
