@@ -133,18 +133,19 @@ public class DefaultLogger implements BuildLogger {
         Throwable error = event.getException();
 
         if (error == null) {
-            out.println(lSep + "BUILD SUCCESSFUL");
+            printlnAndFlush(out, lSep + "BUILD SUCCESSFUL");
         }
         else {
-            err.println(lSep + "BUILD FAILED" + lSep);
+            printlnAndFlush(err, lSep + "BUILD FAILED" + lSep);
 
             if (Project.MSG_VERBOSE <= msgOutputLevel ||
                 !(error instanceof BuildException)) {
                 error.printStackTrace(err);
+                err.flush();
             }
             else {
                 if (error instanceof BuildException) {
-                    err.println(error.toString());
+                    printlnAndFlush(err, error.toString());
                 }
                 else {
                     err.println(error.getMessage());
@@ -152,12 +153,12 @@ public class DefaultLogger implements BuildLogger {
             }
         }
 
-        out.println(lSep + "Total time: " + formatTime(System.currentTimeMillis() - startTime));
+        printlnAndFlush(out, lSep + "Total time: " + formatTime(System.currentTimeMillis() - startTime));
     }
 
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
-            out.println(lSep + event.getTarget().getName() + ":");
+            printlnAndFlush(out, lSep + event.getTarget().getName() + ":");
         }
     }
 
@@ -188,7 +189,7 @@ public class DefaultLogger implements BuildLogger {
             }
 
             // Print the message
-            logTo.println(event.getMessage());
+            printlnAndFlush(logTo, event.getMessage());
         }
     }
 
@@ -208,6 +209,14 @@ public class DefaultLogger implements BuildLogger {
                 + (seconds%60 == 1 ? "" : "s");
         }
 
+    }
+
+    /**
+     * Print a line to the given stream and flush the stream right after that.
+     */
+    private void printlnAndFlush(PrintStream p, String line) {
+        p.println(line);
+        p.flush();
     }
 
 }
