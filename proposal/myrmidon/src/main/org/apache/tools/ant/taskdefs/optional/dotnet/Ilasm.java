@@ -42,12 +42,6 @@ public class Ilasm
     extends MatchingTask
 {
     /**
-     * name of the executable. the .exe suffix is deliberately not included in
-     * anticipation of the unix version
-     */
-    private final static String EXE_NAME = "ilasm";
-
-    /**
      * what is the file extension we search on?
      */
     private final static String FILE_EXT = "il";
