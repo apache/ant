@@ -76,6 +76,7 @@ import java.util.Enumeration;
  * @author costin@dnt.ro
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
+ * @since Ant 1.1
  */
 public class Property extends Task {
 
@@ -94,6 +95,9 @@ public class Property extends Task {
         super();
     }
 
+    /**
+     * @since Ant 1.5
+     */
     protected Property(boolean userProperty) {
         this.userProperty = userProperty;
     }
@@ -129,7 +133,7 @@ public class Property extends Task {
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         if (!prefix.endsWith(".")) {
-          this.prefix += ".";
+            this.prefix += ".";
         }
     }
 
@@ -177,11 +181,12 @@ public class Property extends Task {
     }
 
     /**
-     * @deprecated This was never a supported feature and has been deprecated without replacement
+     * @deprecated This was never a supported feature and has been
+     * deprecated without replacement
      */
     public void setUserProperty(boolean userProperty) {
-        log("DEPRECATED: Ignoring request to set user property in Property task.",
-            Project.MSG_WARN);
+        log("DEPRECATED: Ignoring request to set user property in Property"
+            + " task.", Project.MSG_WARN);
     }
 
     public String toString() {
@@ -191,18 +196,21 @@ public class Property extends Task {
     public void execute() throws BuildException {
         if (name != null) {
             if (value == null && ref == null) {
-                throw new BuildException("You must specify value, location or refid with the name attribute",
+                throw new BuildException("You must specify value, location or "
+                                         + "refid with the name attribute",
                                          location);
             }
         } else {
             if (file == null && resource == null && env == null) {
-                throw new BuildException("You must specify file, resource or environment when not using the name attribute",
-                                         location);
+                throw new BuildException("You must specify file, resource or "
+                                         + "environment when not using the "
+                                         + "name attribute", location);
             }
         }
         
         if (file == null && resource == null && prefix != null) {
-            throw new BuildException("Prefix is only valid when loading from a file or resource", location);
+            throw new BuildException("Prefix is only valid when loading from "
+                                     + "a file or resource", location);
         }
 
         if ((name != null) && (value != null)) {
@@ -210,15 +218,15 @@ public class Property extends Task {
         }
 
         if (file != null) {
-          loadFile(file);
+            loadFile(file);
         }
 
         if (resource != null) {
-          loadResource(resource);
+            loadResource(resource);
         }
 
         if (env != null) {
-          loadEnvironment(env);
+            loadEnvironment(env);
         }
 
         if ((name != null) && (ref != null)) {
@@ -255,9 +263,9 @@ public class Property extends Task {
     protected void loadResource(String name) {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
+        InputStream is = null;
         try {
             ClassLoader cL = null;
-            InputStream is = null;
 
             if (classpath != null) {
                 cL = new AntClassLoader(project, classpath);
@@ -279,13 +287,20 @@ public class Property extends Task {
             }
         } catch (IOException ex) {
             throw new BuildException(ex, location);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {}
+            }
         }
+        
     }
 
     protected void loadEnvironment( String prefix ) {
         Properties props = new Properties();
         if (!prefix.endsWith(".")) {
-          prefix += ".";
+            prefix += ".";
         }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
         Vector osEnv = Execute.getProcEnvironment();
@@ -340,7 +355,8 @@ public class Property extends Task {
             while (!resolved) {
                 Vector fragments = new Vector();
                 Vector propertyRefs = new Vector();
-                ProjectHelper.parsePropertyString(value, fragments, propertyRefs);
+                ProjectHelper.parsePropertyString(value, fragments, 
+                                                  propertyRefs);
 
                 resolved = true;
                 if (propertyRefs.size() != 0) {
@@ -352,7 +368,9 @@ public class Property extends Task {
                         if (fragment == null) {
                             String propertyName = (String)j.nextElement();
                             if (propertyName.equals(name)) {
-                                throw new BuildException("Property " + name + " was circularly defined.");
+                                throw new BuildException("Property " + name 
+                                                         + " was circularly "
+                                                         + "defined.");
                             }
                             fragment = getProject().getProperty(propertyName);
                             if (fragment == null) {
