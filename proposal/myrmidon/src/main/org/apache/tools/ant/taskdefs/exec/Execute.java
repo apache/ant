@@ -7,20 +7,19 @@
  */
 package org.apache.tools.ant.taskdefs.exec;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Locale;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Properties;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
-import org.apache.myrmidon.framework.exec.launchers.PerlCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
 import org.apache.tools.ant.Project;
@@ -39,20 +38,19 @@ public class Execute
      */
     public final static int INVALID = Integer.MAX_VALUE;
 
-    protected static String c_antWorkingDirectory = System.getProperty( "user.dir" );
-    private static CommandLauncher c_launcher;
+    private static final CommandLauncher c_launcher = new DefaultCommandLauncher();
     private static CommandLauncher c_shellLauncher;
-    private static ArrayList c_procEnvironment;
 
     /**
      * Used to destroy processes when the VM exits.
      */
     private static ProcessDestroyer c_processDestroyer = new ProcessDestroyer();
 
+    private ExecMetaData m_metaData;
     private String[] m_command;
-    private String[] m_environment;
+    private Properties m_environment;
     private int m_exitValue = INVALID;
-    private File m_workingDirectory;
+    private File m_workingDirectory = new File( "." );
     private Project m_project;
     private boolean m_newEnvironment;
 
@@ -68,55 +66,88 @@ public class Execute
      */
     static
     {
+        c_shellLauncher = createShellLauncher();
+    }
 
+    private static CommandLauncher createShellLauncher()
+    {
+        CommandLauncher launcher = null;
         try
         {
-            c_launcher = new DefaultCommandLauncher();
-
             if( Os.isFamily( "mac" ) )
             {
                 // Mac
-                c_shellLauncher = new MacCommandLauncher();
+                launcher = new MacCommandLauncher();
             }
             else if( Os.isFamily( "os/2" ) )
             {
                 // OS/2 - use same mechanism as Windows 2000
-                c_shellLauncher = new WinNTCommandLauncher();
+                launcher = new WinNTCommandLauncher();
             }
             else if( Os.isFamily( "windows" ) )
             {
                 // Windows.  Need to determine which JDK we're running in
 
                 // Determine if we're running under 2000/NT or 98/95
-                String osname =
+                final String osname =
                     System.getProperty( "os.name" ).toLowerCase( Locale.US );
 
                 if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
                 {
                     // Windows 2000/NT
-                    c_shellLauncher = new WinNTCommandLauncher();
+                    launcher = new WinNTCommandLauncher();
                 }
                 else
                 {
                     // Windows 98/95 - need to use an auxiliary script
-                    c_shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat" );
+                    final String script = resolveCommand( "bin/antRun.bat" );
+                    launcher = new ScriptCommandLauncher( script );
                 }
             }
             else if( ( new Os( "netware" ) ).eval() )
             {
                 // NetWare.  Need to determine which JDK we're running in
-                c_shellLauncher = new PerlCommandLauncher( "bin/antRun.pl" );
+                final String perlScript = resolveCommand( "bin/antRun.pl" );
+                final String[] script = new String[]{"perl", perlScript};
+                launcher = new ScriptCommandLauncher( script );
             }
             else
             {
                 // Generic
-                c_shellLauncher = new ScriptCommandLauncher( "bin/antRun" );
+                final String script = resolveCommand( "bin/antRun" );
+                launcher = new ScriptCommandLauncher( script );
             }
         }
-        catch( TaskException e )
+        catch( final TaskException te )
         {
-            e.printStackTrace();
+            te.printStackTrace();
         }
+        return launcher;
+    }
+
+    private static String resolveCommand( final String command )
+    {
+        final File homeDir = getAntHomeDirectory();
+        final String script =
+            FileUtil.resolveFile( homeDir, command ).toString();
+        return script;
+    }
+
+    /**
+     * Retrieve the directory in which Myrmidon is installed.
+     * This is used to determine the locaiton of scripts in various launchers.
+     */
+    protected static File getAntHomeDirectory()
+    {
+        final String antHome = System.getProperty( "ant.home" );
+        if( null == antHome )
+        {
+            final String message =
+                "Cannot locate antRun script: Property 'ant.home' not specified";
+            throw new IllegalStateException( message );
+        }
+
+        return new File( antHome );
     }
 
     /**
@@ -149,74 +180,8 @@ public class Execute
      */
     public Execute( ExecuteStreamHandler streamHandler, ExecuteWatchdog watchdog )
     {
-        this.m_streamHandler = streamHandler;
-        this.m_watchdog = watchdog;
-    }
-
-    /**
-     * Find the list of environment variables for this process.
-     *
-     * @return The ProcEnvironment value
-     */
-    public static synchronized ArrayList getProcEnvironment()
-        throws TaskException
-    {
-        if( c_procEnvironment != null )
-            return c_procEnvironment;
-
-        c_procEnvironment = new ArrayList();
-        try
-        {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            Execute exe = new Execute( new PumpStreamHandler( out ) );
-            exe.setCommandline( getProcEnvCommand() );
-            // Make sure we do not recurse forever
-            exe.setNewenvironment( true );
-            int retval = exe.execute();
-            if( retval != 0 )
-            {
-                // Just try to use what we got
-            }
-
-            BufferedReader in =
-                new BufferedReader( new StringReader( out.toString() ) );
-            String var = null;
-            String line;
-            String lineSep = System.getProperty( "line.separator" );
-            while( ( line = in.readLine() ) != null )
-            {
-                if( line.indexOf( '=' ) == -1 )
-                {
-                    // Chunk part of previous env var (UNIX env vars can
-                    // contain embedded new lines).
-                    if( var == null )
-                    {
-                        var = lineSep + line;
-                    }
-                    else
-                    {
-                        var += lineSep + line;
-                    }
-                }
-                else
-                {
-                    // New env var...append the previous one if we have it.
-                    if( var != null )
-                    {
-                        c_procEnvironment.add( var );
-                    }
-                    var = line;
-                }
-            }
-            // Since we "look ahead" before adding, there's one last env var.
-            c_procEnvironment.add( var );
-        }
-        catch( IOException exc )
-        {
-            exc.printStackTrace();
-            // Just try to see how much we got
-        }
-        return c_procEnvironment;
+        m_streamHandler = streamHandler;
+        m_watchdog = watchdog;
     }
 
     /**
@@ -236,7 +201,6 @@ public class Execute
             Execute exe = new Execute( new LogStreamHandler( task,
                                                              Project.MSG_INFO,
                                                              Project.MSG_ERR ) );
-            exe.setAntRun( task.getProject() );
             exe.setCommandline( cmdline );
             int retval = exe.execute();
             if( retval != 0 )
@@ -248,66 +212,6 @@ public class Execute
         {
             throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + exc );
         }
-    }
-
-    private static String[] getProcEnvCommand()
-    {
-        if( Os.isFamily( "os/2" ) )
-        {
-            // OS/2 - use same mechanism as Windows 2000
-            // Not sure
-            String[] cmd = {"cmd", "/c", "set"};
-            return cmd;
-        }
-        else if( Os.isFamily( "windows" ) )
-        {
-            String osname =
-                System.getProperty( "os.name" ).toLowerCase( Locale.US );
-            // Determine if we're running under 2000/NT or 98/95
-            if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
-            {
-                // Windows 2000/NT
-                String[] cmd = {"cmd", "/c", "set"};
-                return cmd;
-            }
-            else
-            {
-                // Windows 98/95 - need to use an auxiliary script
-                String[] cmd = {"command.com", "/c", "set"};
-                return cmd;
-            }
-        }
-        else if( Os.isFamily( "unix" ) )
-        {
-            // Generic UNIX
-            // Alternatively one could use: /bin/sh -c env
-            String[] cmd = {"/usr/bin/env"};
-            return cmd;
-        }
-        else if( Os.isFamily( "netware" ) )
-        {
-            String[] cmd = {"env"};
-            return cmd;
-        }
-        else
-        {
-            // MAC OS 9 and previous
-            // TODO: I have no idea how to get it, someone must fix it
-            String[] cmd = null;
-            return cmd;
-        }
-    }
-
-    /**
-     * Set the name of the antRun script using the project's value.
-     *
-     * @param project the current project.
-     * @exception TaskException Description of Exception
-     */
-    public void setAntRun( Project project )
-        throws TaskException
-    {
-        this.m_project = project;
     }
 
     /**
@@ -323,11 +227,17 @@ public class Execute
     /**
      * Sets the environment variables for the subprocess to launch.
      *
-     * @param env The new Environment value
+     * @param env The new EnvironmentData value
      */
     public void setEnvironment( String[] env )
+        throws TaskException
     {
-        this.m_environment = env;
+        setEnvironment( Environment.createEnvVars( env ) );
+    }
+
+    public void setEnvironment( final Properties environment )
+    {
+        m_environment = environment;
     }
 
     /**
@@ -356,28 +266,11 @@ public class Execute
     /**
      * Sets the working directory of the process to execute. <p>
      *
-     * This is emulated using the antRun scripts unless the OS is Windows NT in
-     * which case a cmd.exe is spawned, or MRJ and setting user.dir works, or
-     * JDK 1.3 and there is official support in java.lang.Runtime.
-     *
-     * @param wd the working directory of the process.
+     * @param workingDirectory the working directory of the process.
      */
-    public void setWorkingDirectory( File wd )
+    public void setWorkingDirectory( final File workingDirectory )
     {
-        if( wd == null || wd.getAbsolutePath().equals( c_antWorkingDirectory ) )
-            m_workingDirectory = null;
-        else
-            m_workingDirectory = wd;
-    }
-
-    /**
-     * Returns the commandline used to create a subprocess.
-     *
-     * @return the commandline used to create a subprocess
-     */
-    public String[] getCommandline()
-    {
-        return m_command;
+        m_workingDirectory = workingDirectory;
     }
 
     /**
@@ -389,8 +282,21 @@ public class Execute
         throws TaskException
     {
         if( m_environment == null || m_newEnvironment )
-            return m_environment;
-        return patchEnvironment();
+        {
+            return Environment.toNativeFormat( m_environment );
+        }
+        else
+        {
+            try
+            {
+                Environment.addNativeEnvironment( m_environment );
+                return Environment.toNativeFormat( m_environment );
+            }
+            catch( final IOException ioe )
+            {
+                throw new TaskException( ioe.getMessage(), ioe );
+            }
+        }
     }
 
     /**
@@ -419,9 +325,8 @@ public class Execute
             launcher = c_shellLauncher;
         }
 
-        if( null == m_workingDirectory ) m_workingDirectory = new File( "." );
         final ExecMetaData metaData =
-            new ExecMetaData( getCommandline(), getEnvironment(),
+            new ExecMetaData( m_command, getEnvironment(),
                               m_workingDirectory, false );
         final Process process = launcher.exec( metaData );
         try
@@ -483,35 +388,5 @@ public class Execute
         catch( InterruptedException e )
         {
         }
-    }
-
-    /**
-     * Patch the current environment with the new values from the user.
-     *
-     * @return the patched environment
-     */
-    private String[] patchEnvironment()
-        throws TaskException
-    {
-        ArrayList osEnv = (ArrayList)getProcEnvironment().clone();
-        for( int i = 0; i < m_environment.length; i++ )
-        {
-            int pos = m_environment[ i ].indexOf( '=' );
-            // Get key including "="
-            String key = m_environment[ i ].substring( 0, pos + 1 );
-            int size = osEnv.size();
-            for( int j = 0; j < size; j++ )
-            {
-                if( ( (String)osEnv.get( j ) ).startsWith( key ) )
-                {
-                    osEnv.remove( j );
-                    break;
-                }
-            }
-            osEnv.add( m_environment[ i ] );
-        }
-
-        final String[] result = new String[ osEnv.size() ];
-        return (String[])osEnv.toArray( result );
     }
 }
