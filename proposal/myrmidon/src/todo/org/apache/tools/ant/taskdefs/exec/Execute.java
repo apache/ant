@@ -12,11 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Vector;
-import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
@@ -35,29 +32,29 @@ public class Execute
      */
     public final static int INVALID = Integer.MAX_VALUE;
 
-    private static String antWorkingDirectory = System.getProperty( "user.dir" );
-    private static CommandLauncher vmLauncher;
-    private static CommandLauncher shellLauncher;
-    private static Vector procEnvironment;
+    private static String c_antWorkingDirectory = System.getProperty( "user.dir" );
+    private static CommandLauncher c_vmLauncher;
+    private static CommandLauncher c_shellLauncher;
+    private static Vector c_procEnvironment;
 
     /**
      * Used to destroy processes when the VM exits.
      */
-    private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
+    private static ProcessDestroyer c_processDestroyer = new ProcessDestroyer();
 
-    private String[] cmdl = null;
-    private String[] env = null;
-    private int exitValue = INVALID;
-    private File workingDirectory = null;
-    private Project project = null;
-    private boolean newEnvironment = false;
+    private String[] m_command;
+    private String[] m_environment;
+    private int m_exitValue = INVALID;
+    private File m_workingDirectory;
+    private Project m_project;
+    private boolean m_newEnvironment;
 
     /**
      * Controls whether the VM is used to launch commands, where possible
      */
-    private boolean useVMLauncher = true;
-    private ExecuteStreamHandler streamHandler;
-    private ExecuteWatchdog watchdog;
+    private boolean m_useVMLauncher = true;
+    private ExecuteStreamHandler m_streamHandler;
+    private ExecuteWatchdog m_watchdog;
 
     /**
      * Builds a command launcher for the OS and JVM we are running under
@@ -70,7 +67,7 @@ public class Execute
             // Try using a JDK 1.3 launcher
             try
             {
-                vmLauncher = new Java13CommandLauncher();
+                c_vmLauncher = new Java13CommandLauncher();
             }
             catch( NoSuchMethodException exc )
             {
@@ -80,12 +77,12 @@ public class Execute
             if( Os.isFamily( "mac" ) )
             {
                 // Mac
-                shellLauncher = new MacCommandLauncher( new CommandLauncher() );
+                c_shellLauncher = new MacCommandLauncher( new CommandLauncher() );
             }
             else if( Os.isFamily( "os/2" ) )
             {
                 // OS/2 - use same mechanism as Windows 2000
-                shellLauncher = new WinNTCommandLauncher( new CommandLauncher() );
+                c_shellLauncher = new WinNTCommandLauncher( new CommandLauncher() );
             }
             else if( Os.isFamily( "windows" ) )
             {
@@ -110,15 +107,15 @@ public class Execute
                 if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
                 {
                     // Windows 2000/NT
-                    shellLauncher = new WinNTCommandLauncher( baseLauncher );
+                    c_shellLauncher = new WinNTCommandLauncher( baseLauncher );
                 }
                 else
                 {
                     // Windows 98/95 - need to use an auxiliary script
-                    shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat", baseLauncher );
+                    c_shellLauncher = new ScriptCommandLauncher( "bin/antRun.bat", baseLauncher );
                 }
             }
-            else if( ( new Os( "netware" ) ).eval() )
+            else if( (new Os( "netware" )).eval() )
             {
                 // NetWare.  Need to determine which JDK we're running in
                 CommandLauncher baseLauncher;
@@ -133,12 +130,12 @@ public class Execute
                     baseLauncher = new CommandLauncher();
                 }
 
-                shellLauncher = new PerlScriptCommandLauncher( "bin/antRun.pl", baseLauncher );
+                c_shellLauncher = new PerlScriptCommandLauncher( "bin/antRun.pl", baseLauncher );
             }
             else
             {
                 // Generic
-                shellLauncher = new ScriptCommandLauncher( "bin/antRun", new CommandLauncher() );
+                c_shellLauncher = new ScriptCommandLauncher( "bin/antRun", new CommandLauncher() );
             }
         }
         catch( TaskException e )
@@ -177,8 +174,8 @@ public class Execute
      */
     public Execute( ExecuteStreamHandler streamHandler, ExecuteWatchdog watchdog )
     {
-        this.streamHandler = streamHandler;
-        this.watchdog = watchdog;
+        this.m_streamHandler = streamHandler;
+        this.m_watchdog = watchdog;
     }
 
     /**
@@ -189,10 +186,10 @@ public class Execute
     public static synchronized Vector getProcEnvironment()
         throws TaskException
     {
-        if( procEnvironment != null )
-            return procEnvironment;
+        if( c_procEnvironment != null )
+            return c_procEnvironment;
 
-        procEnvironment = new Vector();
+        c_procEnvironment = new Vector();
         try
         {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -211,7 +208,7 @@ public class Execute
             String var = null;
             String line;
             String lineSep = System.getProperty( "line.separator" );
-            while( ( line = in.readLine() ) != null )
+            while( (line = in.readLine()) != null )
             {
                 if( line.indexOf( '=' ) == -1 )
                 {
@@ -231,20 +228,20 @@ public class Execute
                     // New env var...append the previous one if we have it.
                     if( var != null )
                     {
-                        procEnvironment.addElement( var );
+                        c_procEnvironment.addElement( var );
                     }
                     var = line;
                 }
             }
             // Since we "look ahead" before adding, there's one last env var.
-            procEnvironment.addElement( var );
+            c_procEnvironment.addElement( var );
         }
         catch( IOException exc )
         {
             exc.printStackTrace();
             // Just try to see how much we got
         }
-        return procEnvironment;
+        return c_procEnvironment;
     }
 
     /**
@@ -335,7 +332,7 @@ public class Execute
     public void setAntRun( Project project )
         throws TaskException
     {
-        this.project = project;
+        this.m_project = project;
     }
 
     /**
@@ -345,7 +342,7 @@ public class Execute
      */
     public void setCommandline( String[] commandline )
     {
-        cmdl = commandline;
+        m_command = commandline;
     }
 
     /**
@@ -355,7 +352,7 @@ public class Execute
      */
     public void setEnvironment( String[] env )
     {
-        this.env = env;
+        this.m_environment = env;
     }
 
     /**
@@ -365,7 +362,7 @@ public class Execute
      */
     public void setNewenvironment( boolean newenv )
     {
-        newEnvironment = newenv;
+        m_newEnvironment = newenv;
     }
 
     /**
@@ -378,7 +375,7 @@ public class Execute
      */
     public void setVMLauncher( boolean useVMLauncher )
     {
-        this.useVMLauncher = useVMLauncher;
+        this.m_useVMLauncher = useVMLauncher;
     }
 
     /**
@@ -392,10 +389,10 @@ public class Execute
      */
     public void setWorkingDirectory( File wd )
     {
-        if( wd == null || wd.getAbsolutePath().equals( antWorkingDirectory ) )
-            workingDirectory = null;
+        if( wd == null || wd.getAbsolutePath().equals( c_antWorkingDirectory ) )
+            m_workingDirectory = null;
         else
-            workingDirectory = wd;
+            m_workingDirectory = wd;
     }
 
     /**
@@ -405,7 +402,7 @@ public class Execute
      */
     public String[] getCommandline()
     {
-        return cmdl;
+        return m_command;
     }
 
     /**
@@ -416,8 +413,8 @@ public class Execute
     public String[] getEnvironment()
         throws TaskException
     {
-        if( env == null || newEnvironment )
-            return env;
+        if( m_environment == null || m_newEnvironment )
+            return m_environment;
         return patchEnvironment();
     }
 
@@ -429,7 +426,7 @@ public class Execute
      */
     public int getExitValue()
     {
-        return exitValue;
+        return m_exitValue;
     }
 
     /**
@@ -441,43 +438,43 @@ public class Execute
     public int execute()
         throws IOException, TaskException
     {
-        CommandLauncher launcher = vmLauncher != null ? vmLauncher : shellLauncher;
-        if( !useVMLauncher )
+        CommandLauncher launcher = c_vmLauncher != null ? c_vmLauncher : c_shellLauncher;
+        if( !m_useVMLauncher )
         {
-            launcher = shellLauncher;
+            launcher = c_shellLauncher;
         }
 
-        final Process process = launcher.exec( project, getCommandline(), getEnvironment(), workingDirectory );
+        final Process process = launcher.exec( m_project, getCommandline(), getEnvironment(), m_workingDirectory );
         try
         {
-            streamHandler.setProcessInputStream( process.getOutputStream() );
-            streamHandler.setProcessOutputStream( process.getInputStream() );
-            streamHandler.setProcessErrorStream( process.getErrorStream() );
+            m_streamHandler.setProcessInputStream( process.getOutputStream() );
+            m_streamHandler.setProcessOutputStream( process.getInputStream() );
+            m_streamHandler.setProcessErrorStream( process.getErrorStream() );
         }
         catch( IOException e )
         {
             process.destroy();
             throw e;
         }
-        streamHandler.start();
+        m_streamHandler.start();
 
         // add the process to the list of those to destroy if the VM exits
         //
-        processDestroyer.add( process );
+        c_processDestroyer.add( process );
 
-        if( watchdog != null )
-            watchdog.start( process );
+        if( m_watchdog != null )
+            m_watchdog.start( process );
         waitFor( process );
 
         // remove the process to the list of those to destroy if the VM exits
         //
-        processDestroyer.remove( process );
+        c_processDestroyer.remove( process );
 
-        if( watchdog != null )
-            watchdog.stop();
-        streamHandler.stop();
-        if( watchdog != null )
-            watchdog.checkException();
+        if( m_watchdog != null )
+            m_watchdog.stop();
+        m_streamHandler.stop();
+        if( m_watchdog != null )
+            m_watchdog.checkException();
         return getExitValue();
     }
 
@@ -489,12 +486,12 @@ public class Execute
      */
     public boolean killedProcess()
     {
-        return watchdog != null && watchdog.killedProcess();
+        return m_watchdog != null && m_watchdog.killedProcess();
     }
 
-    protected void setExitValue( int value )
+    private void setExitValue( final int value )
     {
-        exitValue = value;
+        m_exitValue = value;
     }
 
     protected void waitFor( Process process )
@@ -518,443 +515,25 @@ public class Execute
         throws TaskException
     {
         Vector osEnv = (Vector)getProcEnvironment().clone();
-        for( int i = 0; i < env.length; i++ )
+        for( int i = 0; i < m_environment.length; i++ )
         {
-            int pos = env[ i ].indexOf( '=' );
+            int pos = m_environment[ i ].indexOf( '=' );
             // Get key including "="
-            String key = env[ i ].substring( 0, pos + 1 );
+            String key = m_environment[ i ].substring( 0, pos + 1 );
             int size = osEnv.size();
             for( int j = 0; j < size; j++ )
             {
-                if( ( (String)osEnv.elementAt( j ) ).startsWith( key ) )
+                if( ((String)osEnv.elementAt( j )).startsWith( key ) )
                 {
                     osEnv.removeElementAt( j );
                     break;
                 }
             }
-            osEnv.addElement( env[ i ] );
+            osEnv.addElement( m_environment[ i ] );
         }
         String[] result = new String[ osEnv.size() ];
         osEnv.copyInto( result );
         return result;
     }
 
-    /**
-     * A command launcher for a particular JVM/OS platform. This class is a
-     * general purpose command launcher which can only launch commands in the
-     * current working directory.
-     *
-     * @author RT
-     */
-    private static class CommandLauncher
-    {
-        /**
-         * Launches the given command in a new process.
-         *
-         * @param project The project that the command is part of
-         * @param cmd The command to execute
-         * @param env The environment for the new process. If null, the
-         *      environment of the current proccess is used.
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env )
-            throws IOException, TaskException
-        {
-            if( project != null )
-            {
-                project.log( "Execute:CommandLauncher: " +
-                             Commandline.toString( cmd ), Project.MSG_DEBUG );
-            }
-            return Runtime.getRuntime().exec( cmd, env );
-        }
-
-        /**
-         * Launches the given command in a new process, in the given working
-         * directory.
-         *
-         * @param project The project that the command is part of
-         * @param cmd The command to execute
-         * @param env The environment for the new process. If null, the
-         *      environment of the current proccess is used.
-         * @param workingDir The directory to start the command in. If null, the
-         *      current directory is used
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException, TaskException
-        {
-            if( workingDir == null )
-            {
-                return exec( project, cmd, env );
-            }
-            throw new IOException( "Cannot execute a process in different directory under this JVM" );
-        }
-    }
-
-    /**
-     * A command launcher that proxies another command launcher. Sub-classes
-     * override exec(args, env, workdir)
-     *
-     * @author RT
-     */
-    private static class CommandLauncherProxy extends CommandLauncher
-    {
-
-        private CommandLauncher _launcher;
-
-        CommandLauncherProxy( CommandLauncher launcher )
-        {
-            _launcher = launcher;
-        }
-
-        /**
-         * Launches the given command in a new process. Delegates this method to
-         * the proxied launcher
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env )
-            throws IOException, TaskException
-        {
-            return _launcher.exec( project, cmd, env );
-        }
-    }
-
-    /**
-     * A command launcher for JDK/JRE 1.1 under Windows. Fixes quoting problems
-     * in Runtime.exec(). Can only launch commands in the current working
-     * directory
-     *
-     * @author RT
-     */
-    private static class Java11CommandLauncher extends CommandLauncher
-    {
-        /**
-         * Launches the given command in a new process. Needs to quote arguments
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env )
-            throws IOException, TaskException
-        {
-            // Need to quote arguments with spaces, and to escape quote characters
-            String[] newcmd = new String[ cmd.length ];
-            for( int i = 0; i < cmd.length; i++ )
-            {
-                newcmd[ i ] = Commandline.quoteArgument( cmd[ i ] );
-            }
-            if( project != null )
-            {
-                project.log( "Execute:Java11CommandLauncher: " +
-                             Commandline.toString( newcmd ), Project.MSG_DEBUG );
-            }
-            return Runtime.getRuntime().exec( newcmd, env );
-        }
-    }
-
-    /**
-     * A command launcher for JDK/JRE 1.3 (and higher). Uses the built-in
-     * Runtime.exec() command
-     *
-     * @author RT
-     */
-    private static class Java13CommandLauncher extends CommandLauncher
-    {
-
-        private Method _execWithCWD;
-
-        public Java13CommandLauncher()
-            throws NoSuchMethodException
-        {
-            // Locate method Runtime.exec(String[] cmdarray, String[] envp, File dir)
-            _execWithCWD = Runtime.class.getMethod( "exec", new Class[]{String[].class, String[].class, File.class} );
-        }
-
-        /**
-         * Launches the given command in a new process, in the given working
-         * directory
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @param workingDir Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException, TaskException
-        {
-            try
-            {
-                if( project != null )
-                {
-                    project.log( "Execute:Java13CommandLauncher: " +
-                                 Commandline.toString( cmd ), Project.MSG_DEBUG );
-                }
-                Object[] arguments = {cmd, env, workingDir};
-                return (Process)_execWithCWD.invoke( Runtime.getRuntime(), arguments );
-            }
-            catch( InvocationTargetException exc )
-            {
-                Throwable realexc = exc.getTargetException();
-                if( realexc instanceof ThreadDeath )
-                {
-                    throw (ThreadDeath)realexc;
-                }
-                else if( realexc instanceof IOException )
-                {
-                    throw (IOException)realexc;
-                }
-                else
-                {
-                    throw new TaskException( "Unable to execute command", realexc );
-                }
-            }
-            catch( Exception exc )
-            {
-                // IllegalAccess, IllegalArgument, ClassCast
-                throw new TaskException( "Unable to execute command", exc );
-            }
-        }
-    }
-
-    /**
-     * A command launcher for Mac that uses a dodgy mechanism to change working
-     * directory before launching commands.
-     *
-     * @author RT
-     */
-    private static class MacCommandLauncher extends CommandLauncherProxy
-    {
-        MacCommandLauncher( CommandLauncher launcher )
-        {
-            super( launcher );
-        }
-
-        /**
-         * Launches the given command in a new process, in the given working
-         * directory
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @param workingDir Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException, TaskException
-        {
-            if( workingDir == null )
-            {
-                return exec( project, cmd, env );
-            }
-
-            System.getProperties().put( "user.dir", workingDir.getAbsolutePath() );
-            try
-            {
-                return exec( project, cmd, env );
-            }
-            finally
-            {
-                System.getProperties().put( "user.dir", antWorkingDirectory );
-            }
-        }
-    }
-
-    /**
-     * A command launcher that uses an auxiliary perl script to launch commands
-     * in directories other than the current working directory.
-     *
-     * @author RT
-     */
-    private static class PerlScriptCommandLauncher extends CommandLauncherProxy
-    {
-        private String _script;
-
-        PerlScriptCommandLauncher( String script, CommandLauncher launcher )
-        {
-            super( launcher );
-            _script = script;
-        }
-
-        /**
-         * Launches the given command in a new process, in the given working
-         * directory
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @param workingDir Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException, TaskException
-        {
-            if( project == null )
-            {
-                if( workingDir == null )
-                {
-                    return exec( project, cmd, env );
-                }
-                throw new IOException( "Cannot locate antRun script: No project provided" );
-            }
-
-            // Locate the auxiliary script
-            String antHome = project.getProperty( "ant.home" );
-            if( antHome == null )
-            {
-                throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
-            }
-            String antRun = FileUtil.
-                resolveFile( project.getBaseDir(), antHome + File.separator + _script ).toString();
-
-            // Build the command
-            File commandDir = workingDir;
-            if( workingDir == null && project != null )
-            {
-                commandDir = project.getBaseDir();
-            }
-
-            String[] newcmd = new String[ cmd.length + 3 ];
-            newcmd[ 0 ] = "perl";
-            newcmd[ 1 ] = antRun;
-            newcmd[ 2 ] = commandDir.getAbsolutePath();
-            System.arraycopy( cmd, 0, newcmd, 3, cmd.length );
-
-            return exec( project, newcmd, env );
-        }
-    }
-
-    /**
-     * A command launcher that uses an auxiliary script to launch commands in
-     * directories other than the current working directory.
-     *
-     * @author RT
-     */
-    private static class ScriptCommandLauncher extends CommandLauncherProxy
-    {
-
-        private String _script;
-
-        ScriptCommandLauncher( String script, CommandLauncher launcher )
-        {
-            super( launcher );
-            _script = script;
-        }
-
-        /**
-         * Launches the given command in a new process, in the given working
-         * directory
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @param workingDir Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException, TaskException
-        {
-            if( project == null )
-            {
-                if( workingDir == null )
-                {
-                    return exec( project, cmd, env );
-                }
-                throw new IOException( "Cannot locate antRun script: No project provided" );
-            }
-
-            // Locate the auxiliary script
-            String antHome = project.getProperty( "ant.home" );
-            if( antHome == null )
-            {
-                throw new IOException( "Cannot locate antRun script: Property 'ant.home' not found" );
-            }
-            String antRun = FileUtil.
-                resolveFile( project.getBaseDir(), antHome + File.separator + _script ).toString();
-
-            // Build the command
-            File commandDir = workingDir;
-            if( workingDir == null && project != null )
-            {
-                commandDir = project.getBaseDir();
-            }
-
-            String[] newcmd = new String[ cmd.length + 2 ];
-            newcmd[ 0 ] = antRun;
-            newcmd[ 1 ] = commandDir.getAbsolutePath();
-            System.arraycopy( cmd, 0, newcmd, 2, cmd.length );
-
-            return exec( project, newcmd, env );
-        }
-    }
-
-    /**
-     * A command launcher for Windows 2000/NT that uses 'cmd.exe' when launching
-     * commands in directories other than the current working directory.
-     *
-     * @author RT
-     */
-    private static class WinNTCommandLauncher extends CommandLauncherProxy
-    {
-        WinNTCommandLauncher( CommandLauncher launcher )
-        {
-            super( launcher );
-        }
-
-        /**
-         * Launches the given command in a new process, in the given working
-         * directory.
-         *
-         * @param project Description of Parameter
-         * @param cmd Description of Parameter
-         * @param env Description of Parameter
-         * @param workingDir Description of Parameter
-         * @return Description of the Returned Value
-         * @exception IOException Description of Exception
-         */
-        public Process exec( Project project, String[] cmd, String[] env, File workingDir )
-            throws IOException, TaskException
-        {
-            File commandDir = workingDir;
-            if( workingDir == null )
-            {
-                if( project != null )
-                {
-                    commandDir = project.getBaseDir();
-                }
-                else
-                {
-                    return exec( project, cmd, env );
-                }
-            }
-
-            // Use cmd.exe to change to the specified directory before running
-            // the command
-            final int preCmdLength = 6;
-            String[] newcmd = new String[ cmd.length + preCmdLength ];
-            newcmd[ 0 ] = "cmd";
-            newcmd[ 1 ] = "/c";
-            newcmd[ 2 ] = "cd";
-            newcmd[ 3 ] = "/d";
-            newcmd[ 4 ] = commandDir.getAbsolutePath();
-            newcmd[ 5 ] = "&&";
-            System.arraycopy( cmd, 0, newcmd, preCmdLength, cmd.length );
-
-            return exec( project, newcmd, env );
-        }
-    }
 }
