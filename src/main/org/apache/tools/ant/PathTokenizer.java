@@ -70,12 +70,12 @@ public class PathTokenizer {
     /**
      * A tokenizer to break the string up based on the ':' or ';' separators.
      */
-    StringTokenizer tokenizer;
+    private StringTokenizer tokenizer;
     
     /**
      * A String which stores any path components which have been read ahead.
      */
-    String lookahead = null;
+    private String lookahead = null;
 
     public PathTokenizer(String path) {
        tokenizer = new StringTokenizer(path, ":;", false);
@@ -90,35 +90,33 @@ public class PathTokenizer {
     }
     
     public String nextToken() throws NoSuchElementException {
+        String token = null;
         if (lookahead != null) {
-            String token = lookahead;
+            token = lookahead;
             lookahead = null;
-            
-            return token;
         }
         else {
-            String token = tokenizer.nextToken().trim();
+            token = tokenizer.nextToken().trim();
+        }            
             
-            
-            if (token.length() == 1 && Character.isLetter(token.charAt(0))
-                                    && File.pathSeparator.equals(";") 
-                                    && tokenizer.hasMoreTokens()) {
-                // we are on a dos style system so this path could be a drive
-                // spec. We look at the next token
-                String nextToken = tokenizer.nextToken().trim();
-                if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
-                    // we know we are on a DOS style platform and the next path starts with a
-                    // slash or backslash, so we know this is a drive spec
-                    token += ":" + nextToken;
-                }
-                else {
-                    // store the token just read for next time
-                    lookahead = nextToken;
-                }
+        if (token.length() == 1 && Character.isLetter(token.charAt(0))
+                                && File.pathSeparator.equals(";") 
+                                && tokenizer.hasMoreTokens()) {
+            // we are on a dos style system so this path could be a drive
+            // spec. We look at the next token
+            String nextToken = tokenizer.nextToken().trim();
+            if (nextToken.startsWith("\\") || nextToken.startsWith("/")) {
+                // we know we are on a DOS style platform and the next path starts with a
+                // slash or backslash, so we know this is a drive spec
+                token += ":" + nextToken;
             }
-            
-            return token;
+            else {
+                // store the token just read for next time
+                lookahead = nextToken;
+            }
         }
+           
+        return token;
     }
 }
           
