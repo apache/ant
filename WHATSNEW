@@ -185,6 +185,8 @@ Other changes:
   a granularity of two seconds).  The default remains to round up.
   Bugzilla Report 17934.
 
+* A binary option has been added to <concat>. Bugzilla Report 26312.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
