@@ -340,6 +340,32 @@ jakarta-ORO and finally try jakarta-regexp.</li>
   </tr>
 </table>
 
+<h4><a name="package-mapper">package</a></h4>
+<p>Sharing the same syntax as the <a href="#glob-mapper">glob mapper</a>,
+the package mapper replaces
+directory separators found in the matched source pattern with dots in the target
+pattern placeholder. This mapper is particularly useful in combination
+with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
+<b>Example:</b>
+<blockquote><pre>
+&lt;mapper type="package"
+        from="*Test.java" to="TEST-*Test.xml"/&gt;
+</pre></blockquote>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Source file name</b></td>
+    <td valign="top"><b>Target file name</b></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>org/apache/tools/ant/util/PackageMapperTest.java</code></td>
+    <td valign="top"><code>TEST-org.apache.tools.ant.util.PackageMapperTest.xml</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><code>org/apache/tools/ant/util/Helper.java</code></td>
+    <td valign="top">ignored</td>
+  </tr>
+</table>
+
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
