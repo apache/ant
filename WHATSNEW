@@ -76,6 +76,12 @@ non-existing directories.
 
 * <patch> didn't work at all.
 
+* <replace> and <replaceregexp> now fail if the file they are working
+on is locked.
+
+* <javadoc> would pick up the wrong executable in the combination JDK
+1.2  and AIX.
+
 Other changes:
 --------------
 
