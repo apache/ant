@@ -10,6 +10,8 @@ package org.apache.myrmidon;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.frontends.BasicLogger;
@@ -26,6 +28,36 @@ public abstract class AbstractMyrmidonTest
     private final File m_testBaseDir;
     private final File m_baseDir;
     private Logger m_logger;
+
+    protected static final Resources getResourcesForTested( final Class clazz )
+    {
+        final Package pkg = clazz.getPackage();
+
+        String baseName;
+        if( null == pkg )
+        {
+            final String name = clazz.getName();
+            if( -1 == name.lastIndexOf( "." ) )
+            {
+                baseName = "";
+            }
+            else
+            {
+                baseName = name.substring( 0, name.lastIndexOf( "." ) );
+            }
+        }
+        else
+        {
+            baseName = pkg.getName();
+        }
+
+        if( baseName.endsWith( ".test" ) )
+        {
+            baseName = baseName.substring( 0, baseName.length() - 5 );
+        }
+
+        return ResourceManager.getBaseResources( baseName + ".Resources", AbstractMyrmidonTest.class.getClassLoader() );
+    }
 
     public AbstractMyrmidonTest( String name )
     {
@@ -162,7 +194,7 @@ public abstract class AbstractMyrmidonTest
      */
     protected void assertSameMessage( final String message, final Throwable throwable )
     {
-        assertSameMessage( new String[] { message }, throwable );
+        assertSameMessage( new String[]{message}, throwable );
     }
 
     /**

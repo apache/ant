@@ -1,0 +1,65 @@
+<project version="2.0">
+
+    <!-- Test setting property via attribute -->
+    <target name="set-attr">
+        <property name="test-prop" value="some value"/>
+        <log>test-prop = [${test-prop}]</log>
+    </target>
+
+    <!-- Test setting property via content -->
+    <target name="set-content">
+        <property name="test-prop2">some value</property>
+        <log>test-prop2 = [${test-prop2}]</log>
+    </target>
+
+    <!-- Test setting property via a nested element -->
+    <target name="set-element">
+        <property name="test-prop3">
+            <property-test-type value="some value"/>
+        </property>
+        <log>test-prop3 = [${test-prop3}]</log>
+    </target>
+
+    <!-- Test missing property name -->
+    <target name="missing-name">
+        <property value="some value"/>
+    </target>
+
+    <!-- Test missing property value -->
+    <target name="missing-value">
+        <property name="some-prop"/>
+    </target>
+
+    <!-- Test setting the value more than once -->
+    <target name="too-many-values1">
+        <property name="some-prop" value="some value">another value</property>
+    </target>
+
+    <!-- Test setting the value more than once -->
+    <target name="too-many-values2">
+        <property name="some-prop" value="some value">
+            <property-test-type value="value 2"/>
+        </property>
+    </target>
+
+    <!-- Test setting the value more than once -->
+    <target name="too-many-values3">
+        <property name="some-prop">
+            <property-test-type value="value 1"/>
+            <property-test-type value="value 2"/>
+            <property-test-type value="value 3"/>
+        </property>
+    </target>
+
+    <!-- Test properties with invalid names -->
+    <target name="bad-prop-name1">
+        <property name="badname!" value="value"/>
+    </target>
+    <target name="bad-prop-name2">
+        <property name="bad name" value="value"/>
+    </target>
+    <target name="bad-prop-name3">
+        <property name="" value="value"/>
+    </target>
+
+</project>

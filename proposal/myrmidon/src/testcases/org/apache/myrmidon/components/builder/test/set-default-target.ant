@@ -1,0 +1,3 @@
+<!-- Project with a non-default default target -->
+<project version="2.0" default="some-target">
+</project>

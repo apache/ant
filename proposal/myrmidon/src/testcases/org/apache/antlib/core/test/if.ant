@@ -1,0 +1,63 @@
+<project version="2.0">
+    <target name="true-prop">
+        <property name="test-prop" value="true"/>
+        <if test="test-prop">
+            <log>test-prop is set</log>
+        </if>
+        <if not-test="test-prop">
+            <log>test-prop is not set</log>
+        </if>
+    </target>
+
+    <target name="set-prop">
+        <property name="test-prop" value="some value"/>
+        <if test="test-prop">
+            <log>test-prop is set</log>
+        </if>
+        <if not-test="test-prop">
+            <log>test-prop is not set</log>
+        </if>
+    </target>
+
+    <target name="not-set-prop">
+        <if test="test-prop">
+            <log>test-prop is set</log>
+        </if>
+        <if not-test="test-prop">
+            <log>test-prop is not set</log>
+        </if>
+    </target>
+
+    <target name="false-prop">
+        <property name="test-prop" value="false"/>
+        <if test="test-prop">
+            <log>test-prop is set</log>
+        </if>
+        <if not-test="test-prop">
+            <log>test-prop is not set</log>
+        </if>
+    </target>
+
+    <target name="multiple-nested-tasks">
+        <property name="test-prop" value="true"/>
+        <if test="test-prop">
+            <log>task 1</log>
+            <log>task 2</log>
+            <log>task 3</log>
+            <log>task 4</log>
+        </if>
+    </target>
+
+    <target name="no-condition">
+        <if>
+            <log>no go</log>
+        </if>
+    </target>
+
+    <target name="too-many-conditions">
+        <if test="test-prop" not-test="test-prop">
+            <log>no go</log>
+        </if>
+    </target>
+
+</project>
