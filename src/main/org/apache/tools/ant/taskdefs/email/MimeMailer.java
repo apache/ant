@@ -164,7 +164,7 @@ class MimeMailer
     private static InternetAddress[] internetAddresses( Vector list )
         throws AddressException, UnsupportedEncodingException
     {
-        InternetAddress addrs[] = new InternetAddress[ list.size() ];
+        InternetAddress[] addrs = new InternetAddress[ list.size() ];
         for( int i = 0; i < list.size(); ++i )
         {
             EmailAddress addr = (EmailAddress)list.elementAt( i );

@@ -126,7 +126,6 @@ public class EmailTask
     /** failure flag */
     private boolean failOnError = true;
     private boolean includeFileNames = false;
-    private boolean simpleMessage = false;
     private String messageMimeType = null;
 
     /**
