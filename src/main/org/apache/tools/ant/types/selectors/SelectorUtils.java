@@ -227,6 +227,7 @@ public final class SelectorUtils {
             }
             if (!match(patDir,(String)strDirs.elementAt(strIdxStart),
                     isCaseSensitive)) {
+                patDirs = null; strDirs = null;
                 return false;
             }
             patIdxStart++;
@@ -236,6 +237,7 @@ public final class SelectorUtils {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
                 if (!patDirs.elementAt(i).equals("**")) {
+                    patDirs = null; strDirs = null;
                     return false;
                 }
             }
@@ -243,6 +245,7 @@ public final class SelectorUtils {
         } else {
             if (patIdxStart > patIdxEnd) {
                 // String not exhausted, but pattern is. Failure.
+                patDirs = null; strDirs = null;
                 return false;
             }
         }
@@ -255,6 +258,7 @@ public final class SelectorUtils {
             }
             if (!match(patDir,(String)strDirs.elementAt(strIdxEnd),
                     isCaseSensitive)) {
+                patDirs = null; strDirs = null;
                 return false;
             }
             patIdxEnd--;
@@ -264,6 +268,7 @@ public final class SelectorUtils {
             // String is exhausted
             for (int i = patIdxStart; i <= patIdxEnd; i++) {
                 if (!patDirs.elementAt(i).equals("**")) {
+                    patDirs = null; strDirs = null;
                     return false;
                 }
             }
@@ -303,6 +308,7 @@ strLoop:
             }
 
             if (foundIdx == -1) {
+                patDirs = null; strDirs = null;
                 return false;
             }
 
@@ -312,6 +318,7 @@ strLoop:
 
         for (int i = patIdxStart; i <= patIdxEnd; i++) {
             if (!patDirs.elementAt(i).equals("**")) {
+                patDirs = null; strDirs = null;
                 return false;
             }
         }
