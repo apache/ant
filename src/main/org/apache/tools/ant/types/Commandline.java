@@ -82,7 +82,7 @@ import java.util.StringTokenizer;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class Commandline implements Clonable {
+public class Commandline implements Cloneable {
 
     private Vector arguments = new Vector();
     private String executable = null;
