@@ -58,6 +58,9 @@ public class DefaultEmbeddor
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
 
+    /** Package containing the default component implementations. */
+    private static final String PREFIX = "org.apache.myrmidon.components.";
+
     private Deployer m_deployer;
     private TypeManager m_typeManager;
 
@@ -68,9 +71,6 @@ public class DefaultEmbeddor
 
     private File m_homeDir;
     private File m_taskLibDir;
-
-    /** Package containing the default component implementations. */
-    private static final String PREFIX = "org.apache.myrmidon.components.";
 
     /**
      * Setup basic properties of engine.
