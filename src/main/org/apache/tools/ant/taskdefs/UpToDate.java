@@ -161,29 +161,25 @@ public class UpToDate extends MatchingTask implements Condition {
      */
     public boolean eval() {
         if (sourceFileSets.size() == 0 && _sourceFile == null) {
-          throw new BuildException("At least one srcfile or a nested <srcfiles> element must be set.");
+            throw new BuildException("At least one srcfile or a nested <srcfiles> element must be set.");
         }
 
         if (sourceFileSets.size() > 0 && _sourceFile != null) {
-          throw new BuildException("Cannot specify both the srcfile attribute and a nested <srcfiles> element.");
+            throw new BuildException("Cannot specify both the srcfile attribute and a nested <srcfiles> element.");
         }
 
         if (_targetFile == null && mapperElement == null) {
-          throw new BuildException("The targetfile attribute or a nested mapper element must be set.");
-        }
-
-        if (_sourceFile != null && mapperElement != null) {
-          throw new BuildException("Cannot specify both the srcfile attribute and a nested mapper element.");
+            throw new BuildException("The targetfile attribute or a nested mapper element must be set.");
         }
 
         // if the target file is not there, then it can't be up-to-date
         if (_targetFile != null && !_targetFile.exists()) {
-          return false;
+            return false;
         } 
 
         // if the source file isn't there, throw an exception
         if (_sourceFile != null && !_sourceFile.exists()) {
-          throw new BuildException(_sourceFile.getAbsolutePath() + " not found.");
+            throw new BuildException(_sourceFile.getAbsolutePath() + " not found.");
         } 
 
         Enumeration enum = sourceFileSets.elements();
@@ -191,13 +187,22 @@ public class UpToDate extends MatchingTask implements Condition {
         while (upToDate && enum.hasMoreElements()) {
             FileSet fs = (FileSet) enum.nextElement();
             DirectoryScanner ds = fs.getDirectoryScanner(project);
-                upToDate = upToDate && scanDir(fs.getDir(project), 
-                                               ds.getIncludedFiles());
+            upToDate = upToDate && scanDir(fs.getDir(project), 
+                                           ds.getIncludedFiles());
         }
+
         if (_sourceFile != null) {
-            File srcfile = new File(_sourceFile.getAbsolutePath());
-            File tgtfile = new File(_targetFile.getAbsolutePath());
-            upToDate = (tgtfile.lastModified() > srcfile.lastModified());
+            if (mapperElement == null) {
+                upToDate = upToDate &&
+                    (_targetFile.lastModified() > _sourceFile.lastModified());
+            } else {
+                SourceFileScanner sfs = new SourceFileScanner(this);
+                upToDate = upToDate &&
+                    (sfs.restrict(new String[] {_sourceFile.getAbsolutePath()},
+                                  null, null,
+                                  mapperElement.getImplementation())
+                     .length == 0);
+            }
         }
         return upToDate;
     }
