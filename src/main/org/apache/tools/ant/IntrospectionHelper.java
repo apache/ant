@@ -219,7 +219,7 @@ public class IntrospectionHelper  {
         throws BuildException {
         AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
-            String msg = "Class " + element.getClass() +
+            String msg = "Class " + element.getClass().getName() +
                 " doesn't support the \"" + attributeName + "\" attribute";
             throw new BuildException(msg);
         }
@@ -242,7 +242,7 @@ public class IntrospectionHelper  {
      */
     public void addText(Object element, String text) {
         if (addText == null) {
-            String msg = "Class " + element.getClass() +
+            String msg = "Class " + element.getClass().getName() +
                 " doesn't support nested text elements";
             throw new BuildException(msg);
         }
@@ -267,7 +267,7 @@ public class IntrospectionHelper  {
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
-            String msg = "Class " + element.getClass() +
+            String msg = "Class " + element.getClass().getName() +
                 " doesn't support the nested \"" + elementName + "\" element";
             throw new BuildException(msg);
         }
@@ -295,7 +295,7 @@ public class IntrospectionHelper  {
         throws BuildException {
         Class nt = (Class) nestedTypes.get(elementName);
         if (nt == null) {
-            String msg = "Class " + bean +
+            String msg = "Class " + bean.getName() +
                 " doesn't support the nested \"" + elementName + "\" element";
             throw new BuildException(msg);
         }
@@ -309,7 +309,7 @@ public class IntrospectionHelper  {
         throws BuildException {
         Class at = (Class) attributeTypes.get(attributeName);
         if (at == null) {
-            String msg = "Class " + bean +
+            String msg = "Class " + bean.getName() +
                 " doesn't support the \"" + attributeName + "\" attribute";
             throw new BuildException(msg);
         }
