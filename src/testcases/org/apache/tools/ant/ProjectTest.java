@@ -198,7 +198,7 @@ public class ProjectTest extends TestCase {
              */
             assertSame(Project.JAVA_1_1, p.getJavaVersion());
             assertTaskDefFails(DummyTaskProtected.class, 
-                               "No public default constructor in " 
+                               "No public no-arg constructor in " 
                                + DummyTaskProtected.class);
         }
         
@@ -207,8 +207,8 @@ public class ProjectTest extends TestCase {
         assertTaskDefFails(DummyTaskAbstract.class,  DummyTaskAbstract.class  + " is abstract"); 
         assertTaskDefFails(DummyTaskInterface.class, DummyTaskInterface.class + " is abstract");
 
-        assertTaskDefFails(DummyTaskWithoutDefaultConstructor.class, "No public default constructor in " + DummyTaskWithoutDefaultConstructor.class);
-        assertTaskDefFails(DummyTaskWithoutPublicConstructor.class,  "No public default constructor in " + DummyTaskWithoutPublicConstructor.class);
+        assertTaskDefFails(DummyTaskWithoutDefaultConstructor.class, "No public no-arg constructor in " + DummyTaskWithoutDefaultConstructor.class);
+        assertTaskDefFails(DummyTaskWithoutPublicConstructor.class,  "No public no-arg constructor in " + DummyTaskWithoutPublicConstructor.class);
         
         assertTaskDefFails(DummyTaskWithoutExecute.class,       "No public execute() in " + DummyTaskWithoutExecute.class);
         assertTaskDefFails(DummyTaskWithNonPublicExecute.class, "No public execute() in " + DummyTaskWithNonPublicExecute.class);
