@@ -119,9 +119,6 @@ public class Path
 
     /**
      * Adds a nested <code>&lt;fileset&gt;</code> element.
-     *
-     * @param fs The feature to be added to the Fileset attribute
-     * @exception TaskException Description of Exception
      */
     public void addFileset( final FileSet fileSet )
     {
@@ -152,9 +149,6 @@ public class Path
 
     /**
      * Creates a nested <code>&lt;path&gt;</code> element.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     public void addPath( final Path path )
     {
