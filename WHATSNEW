@@ -20,6 +20,9 @@ Fixed bugs:
 
 * presetdef'ed types did not work with the ant-type attribute
 
+* fixed case handling of macrodef attributes and elements. Bugzilla
+  Reports 25687 and 26225.
+
 Other changes:
 --------------
 
@@ -28,6 +31,8 @@ Other changes:
 * <p4submit> has 2 new attributes, needsresolveproperty and changeproperty.
   Bugzilla Report 25711.
 
+* add description attributes to macrodef attributes and elements.
+  Bugzilla Report 24711.
 
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================
