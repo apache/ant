@@ -250,6 +250,9 @@ Fixed bugs:
 * <cab> didn't work for files with spaces in their names on Windows.
   Bugzilla Report 17182.
 
+* The VAJ tasks could fail if the project name contained characters
+  that need to get URL encoded.  Bugzilla Report 23322.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

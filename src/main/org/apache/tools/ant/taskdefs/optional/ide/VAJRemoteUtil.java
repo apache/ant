@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,14 +56,15 @@ class VAJRemoteUtil implements VAJUtil {
                                boolean exportResources, boolean exportSources,
                                boolean useDefaultExcludes, boolean overwrite) {
         try {
-            String request = "http://" + remoteServer + "/servlet/vajexport?"
-                + VAJExportServlet.WITH_DEBUG_INFO + "=" + exportDebugInfo + "&"
-                + VAJExportServlet.OVERWRITE_PARAM + "=" + overwrite + "&"
-                + assembleImportExportParams(destDir,
-                                              includePatterns, excludePatterns,
-                                              exportClasses, exportResources,
-                                              exportSources, useDefaultExcludes);
-            sendRequest(request);
+            String request = "http://" + remoteServer + "/servlet/vajexport";
+            Vector parameters = new Vector();
+            parameters.addElement(new URLParam(VAJExportServlet.WITH_DEBUG_INFO, exportDebugInfo));
+            parameters.addElement(new URLParam(VAJExportServlet.OVERWRITE_PARAM, overwrite));
+            assembleImportExportParams(parameters, destDir,
+                                       includePatterns, excludePatterns,
+                                       exportClasses, exportResources,
+                                       exportSources, useDefaultExcludes);
+            sendRequest(request, parameters);
         } catch (Exception ex) {
             throw new BuildException(ex);
         }
@@ -78,14 +79,15 @@ class VAJRemoteUtil implements VAJUtil {
                             boolean importClasses, boolean importResources,
                             boolean importSources, boolean useDefaultExcludes) {
         try {
-            String request = "http://" + remoteServer + "/servlet/vajimport?"
-                + VAJImportServlet.PROJECT_NAME_PARAM + "="
-                + importProject + "&"
-                + assembleImportExportParams(srcDir,
-                                              includePatterns, excludePatterns,
-                                              importClasses, importResources,
-                                              importSources, useDefaultExcludes);
-            sendRequest(request);
+            String request = "http://" + remoteServer + "/servlet/vajimport";
+            Vector parameters = new Vector();
+            parameters.addElement(new
+                                  URLParam(VAJImportServlet.PROJECT_NAME_PARAM, importProject));
+            assembleImportExportParams(parameters, srcDir,
+                                       includePatterns, excludePatterns,
+                                       importClasses, importResources,
+                                       importSources, useDefaultExcludes);
+            sendRequest(request, parameters);
         } catch (Exception ex) {
             throw new BuildException(ex);
         }
@@ -93,36 +95,32 @@ class VAJRemoteUtil implements VAJUtil {
     }
 
     /**
-     * Assemble string for parameters common for import and export
+     * Add parameters common for import and export to vector
      * Helper method to remove double code.
      */
-    private String assembleImportExportParams(
-                                              File dir,
-                                              String[] includePatterns, String[] excludePatterns,
-                                              boolean includeClasses, boolean includeResources,
-                                              boolean includeSources, boolean useDefaultExcludes) {
-        String result =
-            VAJToolsServlet.DIR_PARAM + "="
-            + URLEncoder.encode(dir.getPath()) + "&"
-            + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
-            + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
-            + VAJToolsServlet.SOURCES_PARAM + "=" + includeSources + "&"
-            + VAJToolsServlet.DEFAULT_EXCLUDES_PARAM + "=" + useDefaultExcludes;
+    private void assembleImportExportParams(Vector parameters,
+                                            File dir,
+                                            String[] includePatterns, String[] excludePatterns,
+                                            boolean includeClasses, boolean includeResources,
+                                            boolean includeSources, boolean useDefaultExcludes) {
+        parameters.addElement(new URLParam(VAJToolsServlet.DIR_PARAM, dir.getPath()));
+        parameters.addElement(new URLParam(VAJToolsServlet.CLASSES_PARAM, includeClasses));
+        parameters.addElement(new URLParam(VAJToolsServlet.RESOURCES_PARAM, includeResources));
+        parameters.addElement(new URLParam(VAJToolsServlet.SOURCES_PARAM, includeSources));
+        parameters.addElement(new URLParam(VAJToolsServlet.DEFAULT_EXCLUDES_PARAM, useDefaultExcludes));
 
         if (includePatterns != null) {
             for (int i = 0; i < includePatterns.length; i++) {
-                result = result + "&" + VAJExportServlet.INCLUDE_PARAM + "="
-                    + URLEncoder.encode(includePatterns[i]);
+                parameters.addElement(new
+                                      URLParam(VAJExportServlet.INCLUDE_PARAM, includePatterns[i]));
             }
         }
         if (excludePatterns != null) {
             for (int i = 0; i < excludePatterns.length; i++) {
-                result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "="
-                    + URLEncoder.encode(excludePatterns[i]);
+                parameters.addElement(new
+                                      URLParam(VAJExportServlet.EXCLUDE_PARAM, excludePatterns[i]));
             }
         }
-
-        return result;
     }
 
     /**
@@ -130,19 +128,16 @@ class VAJRemoteUtil implements VAJUtil {
      */
     public void loadProjects(Vector projectDescriptions) {
         try {
-            String request = "http://" + remoteServer + "/servlet/vajload?";
-            String delimiter = "";
+            String request = "http://" + remoteServer + "/servlet/vajload";
+            Vector parameters = new Vector();
             for (Enumeration e = projectDescriptions.elements(); e.hasMoreElements();) {
                 VAJProjectDescription pd = (VAJProjectDescription) e.nextElement();
-                request = request
-                    + delimiter + VAJLoadServlet.PROJECT_NAME_PARAM
-                    + "=" + pd.getName().replace(' ', '+')
-                    + "&" + VAJLoadServlet.VERSION_PARAM
-                    + "=" + pd.getVersion().replace(' ', '+');
-                //the first param needs no delimiter, but all other
-                delimiter = "&";
+                parameters.addElement(new
+                                      URLParam(VAJLoadServlet.PROJECT_NAME_PARAM, pd.getName()));
+                parameters.addElement(new
+                                      URLParam(VAJLoadServlet.VERSION_PARAM, pd.getVersion())); 
             }
-            sendRequest(request);
+            sendRequest(request, parameters);
         } catch (Exception ex) {
             throw new BuildException(ex);
         }
@@ -155,16 +150,51 @@ class VAJRemoteUtil implements VAJUtil {
         caller.log(msg, level);
     }
 
+    
+    private class URLParam {
+        private String name;
+        private String value;
+        public URLParam(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+        public URLParam(String name, boolean value) {
+            this.name = name;
+            this.value = (new Boolean(value)).toString();
+        }
+        public void setValue(String value) { this.value = value; }
+        public void setName(String name) { this.name = name; }
+        public String getName() { return name; }
+        public String getValue() { return value; }
+    }
+    
     /**
      * Sends a servlet request.
+     *
+     * The passed URL and parameter list are combined into a
+     * valid URL (with proper URL encoding for the parameters)
+     * and the URL is requested.
+     *
+     * @param request Request URL without trailing characters (no ?)
+     * @param parameters Vector of URLParam objects to append as parameters.
      */
-    private void sendRequest(String request) {
+    private void sendRequest(String request, Vector parameters) {
         boolean requestFailed = false;
+        
+        // Build request & URL encode parameters
+        String url = request + "?";
+        for (int i=0; i<parameters.size(); i++) {
+            URLParam p = (URLParam)parameters.elementAt(i);
+            url += p.getName() + "=" + URLEncoder.encode(p.getValue());
+            url += (i==parameters.size()-1)?"":"&";
+        }
+
+
         try {
-            log("Request: " + request, MSG_DEBUG);
+            log("Request: " + url, MSG_DEBUG);
 
             //must be HTTP connection
-            URL requestUrl = new URL(request);
+            URL requestUrl = new URL(url);
             HttpURLConnection connection =
                 (HttpURLConnection) requestUrl.openConnection();
 
@@ -179,8 +209,8 @@ class VAJRemoteUtil implements VAJUtil {
                 }
             }
             if (is == null) {
-                log("Can't get " + request, MSG_ERR);
-                throw new BuildException("Couldn't execute " + request);
+                log("Can't get " + url, MSG_ERR);
+                throw new BuildException("Couldn't execute " + url);
             }
 
             // log the response
@@ -203,7 +233,7 @@ class VAJRemoteUtil implements VAJUtil {
 
         } catch (IOException ex) {
             log("Error sending tool request to VAJ" + ex, MSG_ERR);
-            throw new BuildException("Couldn't execute " + request);
+            throw new BuildException("Couldn't execute " + url);
         }
         if (requestFailed) {
             throw new BuildException("VAJ tool request failed");
