@@ -73,31 +73,7 @@ public class ClassFileUtils {
      * @return the class name in dot notation (eg. java.lang.Object).
      */
     static public String convertSlashName(String name) {
-        String dotName = null;
-        int    startIndex = 0;
-        int    sepIndex = 0;
-
-        String slashName = name.replace('\\', '/');
-        do {
-            String component = null;
-
-            sepIndex = slashName.indexOf('/', startIndex);
-
-            if (sepIndex == -1) {
-                component = slashName.substring(startIndex);
-            } else {
-                component = slashName.substring(startIndex, sepIndex);
-                startIndex = sepIndex + 1;
-            } 
-
-            if (dotName == null) {
-                dotName = component;
-            } else {
-                dotName += "." + component;
-            } 
-        } while (sepIndex != -1);
-
-        return dotName;
+        return name.replace('\\', '.').replace( '/', '.' );
     } 
 
     /**
@@ -108,31 +84,7 @@ public class ClassFileUtils {
      * @return the class name in slash notation (eg. java/lang/Object).
      */
     static public String convertDotName(String dotName) {
-        String slashName = null;
-        int    startIndex = 0;
-        int    sepIndex = 0;
-
-        do {
-            String component = null;
-
-            sepIndex = dotName.indexOf('.', startIndex);
-
-            if (sepIndex == -1) {
-                component = dotName.substring(startIndex);
-            } else {
-                component = dotName.substring(startIndex, sepIndex);
-                startIndex = sepIndex + 1;
-            } 
-
-            if (slashName == null) {
-                slashName = component;
-            } else {
-                slashName += "/" + component;
-            } 
-        } while (sepIndex != -1);
-
-        return slashName;
+        return dotName.replace( '.', '/');
     } 
-
 }
 
