@@ -42,7 +42,7 @@
       </pre>
     </blockquote>
     <p>
-      The other attributes of &lt;typedef&gt; may be used as well.
+      The other attributes of <code>&lt;typedef&gt;</code> may be used as well.
       For example, assuming that the <i>sample.xml</i> is in a jar
       file <i>sample.jar</i> also containing the classes, the
       following build fragment will define the <i>if</i> and <i>scriptpathmapper</i>
@@ -116,12 +116,12 @@
     <p>
       Definitions defined in antlibs may be used in antlibs. However
       the namespace that definitions are placed in are dependent on
-      the &lt;typedef&gt; that uses the antlib. To deal with this
+      the <code>&lt;typedef&gt;</code> that uses the antlib. To deal with this
       problem, the definitions are placed in the namepace URI <i>ant:current</i>
       for the duration of the antlib execution.
-      For example the following antlib defines the task &lt;if&gt;, the
-      type &lt;isallowed&gt; and a macro
-      &lt;ifallowed&gt; that makes use of the task and type:
+      For example the following antlib defines the task <code>&lt;if&gt;</code>, the
+      type <code>&lt;isallowed&gt;</code> and a macro
+      <code>&lt;ifallowed&gt;</code> that makes use of the task and type:
     </p>
     <blockquote>
       <pre>
@@ -149,7 +149,7 @@
     </p>
     <p>
       As the names defined in the antlib are in the namespace uri as
-      specified by the calling &lt;typedef&gt; or by automatic element
+      specified by the calling <code>&lt;typedef&gt;</code> or by automatic element
       resolution, one may reuse names from core ant types and tasks,
       provided the caller uses a namespace uri. For example, the
       following antlib may be used to define defaults for various

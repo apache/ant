@@ -1,4 +1,4 @@
-<html>
+html>
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
@@ -20,7 +20,7 @@ in Ant 1.6, any attempt to read input in the forked program will receive an
 EOF (-1). This is a change from Ant 1.5, where such an attempt would block.</p>
 
 <h4>Cygwin Users</h4>
-<p>In general the &lt;exec&gt; task will not understand paths such as /bin/sh for
+<p>In general the <code>&lt;exec&gt;</code> task will not understand paths such as /bin/sh for
 the executable parameter. This is because the Java VM in which Ant is running is a
 Windows executable and is not aware of Cygwin conventions.
 </p>
@@ -280,14 +280,14 @@ will fall back to the task level attributes.  In practice this means that
 defaults can be specified for input, output, and error output files.
 </p>
 <h3>Errors and return codes</h3>
-By default the return code of a &lt;exec&gt; is ignored; when you set
+By default the return code of a <code>&lt;exec&gt;</code> is ignored; when you set
 <code>failonerror="true"</code> then any return code signaling failure
 (OS specific) causes the build to fail. Alternatively, you can set
 <code>resultproperty</code> to the name of a property and have it assigned to
 the result code (barring immutability, of course).
 <p>
 If the attempt to start the program fails with an OS dependent error code,
-then &lt;exec&gt; halts the build unless <code>failifexecutionfails</code>
+then <code>&lt;exec&gt;</code> halts the build unless <code>failifexecutionfails</code>
 is set to <code>false</code>. You can use that to run a program if it exists, but
 otherwise do nothing.
 <p>
@@ -330,10 +330,10 @@ ant process. The browser will let be open.</p>
                 errorproperty=&quot;redirector.err&quot;
                 inputstring=&quot;blah before blah&quot;&gt;
         &lt;inputfilterchain&gt;
-            &lt;replacestring from=&quot;before&quot; to=&quot;after&quot; /&gt;
+            &lt;replacestring from=&quot;before&quot; to=&quot;after&quot;/&gt;
         &lt;/inputfilterchain&gt;
-        &lt;outputmapper type=&quot;merge&quot; to=&quot;redirector.out&quot; /&gt;
-        &lt;errormapper type=&quot;merge&quot; to=&quot;redirector.err&quot; /&gt;
+        &lt;outputmapper type=&quot;merge&quot; to=&quot;redirector.out&quot;/&gt;
+        &lt;errormapper type=&quot;merge&quot; to=&quot;redirector.err&quot;/&gt;
     &lt;/redirector&gt;
 &lt;/exec&gt;
 </pre></blockquote>

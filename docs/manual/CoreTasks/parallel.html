@@ -60,7 +60,7 @@ threads do not interact. For example, two javac compile tasks which write
 classes into the same destination directory may interact where one tries to
 read a class for dependency information while the other task is writing the
 class file. Be sure to avoid these types of interactions within a
-&lt;parallel&gt; task</p>
+<code>&lt;parallel&gt;</code> task</p>
 
 <p>Any valid Ant task may be embedded within a
 parallel task, including other parallel tasks.</p>
@@ -72,7 +72,7 @@ flag is set, the parallel task will complete without waiting for other nested
 tasks to complete in other threads.
 </p>
 
-<p>If any of the tasks within the &lt;parallel&gt; task fails and failonany is
+<p>If any of the tasks within the <code>&lt;parallel&gt;</code> task fails and failonany is
 not set, the remaining tasks in other threads will continue to run until
 all threads have completed. In this situation, the parallel task will also fail.</p>
 
@@ -105,7 +105,7 @@ semantics and is best used for "embarassingly parallel" tasks.</p>
 
 <h4>daemons</h4>
 <p>
-The parallel task supports a &lt;daemons&gt; nested element. This is a list of tasks
+The parallel task supports a <code>&lt;daemons&gt;</code> nested element. This is a list of tasks
 which are to be run in parallel daemon threads. The parallel task will not wait for
 these tasks to complete. Being daemon threads, however, they will not prevent Ant from
 completing, whereupon the threads are terminated. Failures in daemon threads which
@@ -115,7 +115,7 @@ reported.
 </p>
 
 <p>Daemon tasks can be used, for example, to start test servers which might not be easily
-terminated from Ant. By using &lt;daemons&gt; such servers do not halt the build.
+terminated from Ant. By using <code>&lt;daemons&gt;</code> such servers do not halt the build.
 </p>
 
 

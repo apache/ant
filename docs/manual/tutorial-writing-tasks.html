@@ -65,7 +65,7 @@ So the buildfile contains three targets.
 </pre>
 
 This buildfile uses often the same value (src, classes, MyTask.jar), so we should rewrite that
-using &lt;property&gt;s. On second there are some handicaps: &lt;javac&gt; requires that the destination
+using <code>&lt;property&gt;</code>s. On second there are some handicaps: <code>&lt;javac&gt;</code> requires that the destination
 directory exists; a call of "clean" with a non existing classes directory will fail; "jar" requires
 the execution of some steps bofore. So the refactored code is:
 
@@ -119,7 +119,7 @@ its <i>depends</i>-clause the "compile" is executed before).
 <p>But after creating the jar we want to use our new Task. Therefore we need a
 new target "use". Before we can use our new task we have to declare it with
 <a href="http://ant.apache.org/manual/CoreTasks/taskdef.html" target="_blank">
-&lt;taskdef&gt; [2]</a>. And for easier process we change the default clause:
+<code>&lt;taskdef&gt;</code> [2]</a>. And for easier process we change the default clause:
 <pre class="code">
 &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
 &lt;project name="MyTask" basedir="." default="<b>use</b>"&gt;
@@ -227,8 +227,8 @@ use:
 <a name="attributes">
 <h2>Attributes</h2>
 <p>Now we want to specify the text of our message (it seems that we are
-rewriting the &lt;echo/&gt; task :-). First we well do that with an attribute.
-It is very easy - for each attribute provide a <tt>public void set&lt;attributename&gt;(&lt;type&gt;
+rewriting the <code>&lt;echo/&gt;</code> task :-). First we well do that with an attribute.
+It is very easy - for each attribute provide a <tt>public void set<code>&lt;attributename&gt;</code>(<code>&lt;type&gt;</code>
 newValue)</tt> method and Ant will do the rest via reflection.</p>
 <pre class="code">
 import org.apache.tools.ant.Task;
@@ -282,7 +282,7 @@ would not set the message string to "${msg}" if there is a property "msg" with a
 
 <a name="NestedText"></a>
 <h2>Nested Text</h2>
-<p>Maybe you have used the &lt;echo&gt; task in a way like <tt>&lt;echo&gt;Hello World&lt;/echo&gt;</tt>.
+<p>Maybe you have used the <code>&lt;echo&gt;</code> task in a way like <tt>&lt;echo&gt;Hello World&lt;/echo&gt;</tt>.
 For that you have to provide a <tt>public void addText(String text)</tt> method.
 <pre class="code">
 ...
@@ -306,7 +306,7 @@ the <a href="http://ant.apache.org/manual/develop.html#nested-elements">Manual [
 We use the first way of the three described ways. There are several steps for that:<ol>
 <li>We create a class for collecting all the infos the nested element should contain.
   This class is created by the same rules for attributes and nested elements
-  as for the task (set&lt;attributename&gt;() methods). </li>
+  as for the task (<code>set&lt;attributename&gt;</code>() methods). </li>
 <li>The task holds multiple instances of this class in a list.</li>
 <li>A factory method instantiates an object, saves the reference in the list
   and returns it to Ant Core.</li>
@@ -581,8 +581,8 @@ target "test-jar" or you can download a nightly build from
 <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">
 http://gump.covalent.net/jars/latest/ant/ant-testutil.jar [5]</a>.</p>
 
-<p>For executing the test and creating a report we need the optional tasks &lt;junit&gt;
-and &lt;junitreport&gt;. So we add to the buildfile:
+<p>For executing the test and creating a report we need the optional tasks <code>&lt;junit&gt;</code>
+and <code>&lt;junitreport&gt;</code>. So we add to the buildfile:
 <pre class="code">
 ...
 <font color="#9F9F9F">&lt;project name="MyTask" basedir="." </font>default="test"<font color="#9F9F9F">&gt;</font>

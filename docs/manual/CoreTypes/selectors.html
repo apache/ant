@@ -8,7 +8,7 @@
   <body>
     <h2>Selectors</h2>
 
-    <p>Selectors are a mechanism whereby the files that make up a fileset
+    <p>Selectors are a mechanism whereby the files that make up a fileset&lt;depend&gt;<code>
     can be selected based on criteria other than filename as provided
     by the <code>&lt;include&gt;</code> and <code>&lt;exclude&gt;</code>
     tags.</p>
@@ -16,7 +16,7 @@
     <h3>How to use a Selector</h3>
 
     <p>A selector is an element of FileSet, and appears within it. It can
-    also be defined outside of any target by using the &lt;selector&gt; tag
+    also be defined outside of any target by using the <code>&lt;selector&gt;</code> tag
     and then using it as a reference.
     </p>
 
@@ -40,30 +40,30 @@
     <p>The core selectors are:</p>
 
     <ul>
-      <li><a href="#containsselect">&lt;contains&gt;</a> - Select
+      <li><a href="#containsselect"><code>&lt;contains&gt;</code></a> - Select
         files that contain a particular text string</li>
-      <li><a href="#dateselect">&lt;date&gt;</a> - Select files
+      <li><a href="#dateselect"><code>&lt;date&gt;</code></a> - Select files
         that have been modified either before or after a particular date
         and time</li>
-      <li><a href="#dependselect">&lt;depend&gt;</a> - Select files
+      <li><a href="#dependselect"><code>&lt;depend&gt;</code></a> - Select files
         that have been modified more recently than equivalent files
         elsewhere</li>
-      <li><a href="#depthselect">&lt;depth&gt;</a> - Select files
+      <li><a href="#depthselect"><code>&lt;depth&gt;</code></a> - Select files
         that appear so many directories down in a directory tree</li>
-      <li><a href="#differentselect">&lt;different&gt;</a> - Select files
+      <li><a href="#differentselect"><code>&lt;different&gt;</code></a> - Select files
         that are different from those elsewhere</li>
-      <li><a href="#filenameselect">&lt;filename&gt;</a> - Select
+      <li><a href="#filenameselect"><code>&lt;filename&gt;</code></a> - Select
         files whose name matches a particular pattern. Equivalent to
         the include and exclude elements of a patternset.</li>
-      <li><a href="#presentselect">&lt;present&gt;</a> - Select
+      <li><a href="#presentselect"><code>&lt;present&gt;</code></a> - Select
         files that either do or do not exist in some other location</li>
-      <li><a href="#regexpselect">&lt;containsregexp&gt;</a> - Select
+      <li><a href="#regexpselect"><code>&lt;containsregexp&gt;</code></a> - Select
         files that match a regular expression</li>
-      <li><a href="#sizeselect">&lt;size&gt;</a> - Select files
+      <li><a href="#sizeselect"><code>&lt;size&gt;</code></a> - Select files
         that are larger or smaller than a particular number of bytes.</li>
-      <li><a href="#typeselect">&lt;type&gt;</a> - Select files
+      <li><a href="#typeselect"><code>&lt;type&gt;</code></a> - Select files
         that are either regular files or directories.</li>
-      <li><a href="#modified">&lt;modified&gt;</a> - Select files if
+      <li><a href="#modified"><code>&lt;modified&gt;</code></a> - Select files if
         the return value of the configured algorithm is different from that
         stored in a cache.</li>
     </ul>
@@ -310,7 +310,7 @@
     so their dependencies are driven on the absolute state of the files, not just
     a timestamp. For example: anything fetched from a web site, or the output of
     some program. To reduce the amount of checking, when using this task inside
-    a &lt;copy&gt; task, set the <tt>preservelastmodified</tt> to propagate the timestamp
+    a <code>&lt;copy&gt;</code> task, set the <tt>preservelastmodified</tt> to propagate the timestamp
     from source file to destintaion file.
 
 
@@ -469,7 +469,7 @@
               src and target directory trees
           </ul>
           Default is both. Setting this attribute to &quot;srconly&quot;
-          is equivalent to wrapping the selector in the &lt;not&gt;
+          is equivalent to wrapping the selector in the <code>&lt;not&gt;</code>
           selector container.
         </td>
         <td valign="top" align="center">No</td>
@@ -633,7 +633,7 @@
 
     <a name="modified"></a>
     <h4>Modified Selector</h4>
-    <p>The &lt;modified&gt; selector computes a value for a file, compares that
+    <p>The <code>&lt;modified&gt;</code> selector computes a value for a file, compares that
     to the value stored in a cache and select the file, if these two values
     differ.</p>
     <p>Because this selector is highly configurable the order in which the selection is done
@@ -698,7 +698,7 @@
       </tr>
     </table>
 
-    <p>These attributes can be set with nested &lt;param/&gt; tags. With &lt;param/&gt;
+    <p>These attributes can be set with nested <code>&lt;param/&gt;</code> tags. With <code>&lt;param/&gt;</code>
     tags you can set other values too - as long as they are named according to
     the following rules: <ul>
         <li> <b> algorithm </b>: same as attribute algorithm </li>
@@ -839,17 +839,17 @@
     <p>The selector containers are:</p>
 
     <ul>
-      <li><a href="#andselect">&lt;and&gt;</a> - select a file only if all
+      <li><a href="#andselect"><code>&lt;and&gt;</code></a> - select a file only if all
         the contained selectors select it.
-      <li><a href="#majorityselect">&lt;majority&gt;</a> - select a file
+      <li><a href="#majorityselect"><code>&lt;majority&gt;</code></a> - select a file
         if a majority of its selectors select it.
-      <li><a href="#noneselect">&lt;none&gt;</a> - select a file only if
+      <li><a href="#noneselect"><code>&lt;none&gt;</code></a> - select a file only if
         none of the contained selectors select it.
-      <li><a href="#notselect">&lt;not&gt;</a> - can contain only one
+      <li><a href="#notselect"><code>&lt;not&gt;</code></a> - can contain only one
         selector, and reverses what it selects and doesn't select.
-      <li><a href="#orselect">&lt;or&gt;</a> - selects a file if any one
+      <li><a href="#orselect"><code>&lt;or&gt;</code></a> - selects a file if any one
         of the contained selectors selects it.
-      <li><a href="#selectorselect">&lt;selector&gt;</a> - contains only one
+      <li><a href="#selectorselect"><code>&lt;selector&gt;</code></a> - contains only one
         selector and forwards all requests to it without alteration, provided
         that any <code>&quot;if&quot;</code> or
         <code>&quot;unless&quot;</code> conditions are met. This
@@ -865,20 +865,20 @@
     selector elements within a container:</P>
 
     <ul>
-      <li>&lt;and&gt;
-      <li>&lt;contains&gt;
-      <li>&lt;custom&gt;
-      <li>&lt;date&gt;
-      <li>&lt;depend&gt;
-      <li>&lt;depth&gt;
-      <li>&lt;filename&gt;
-      <li>&lt;majority&gt;
-      <li>&lt;none&gt;
-      <li>&lt;not&gt;
-      <li>&lt;or&gt;
-      <li>&lt;present&gt;
-      <li>&lt;selector&gt;
-      <li>&lt;size&gt;
+      <li><code>&lt;and&gt;</code></li>
+      <li><code>&lt;contains&gt;</code></li>
+      <li><code>&lt;custom&gt;</code></li>
+      <li><code>&lt;date&gt;</code></li>
+      <li><code>&lt;depend&gt;</code></li>
+      <li><code>&lt;depth&gt;</code></li>
+      <li><code>&lt;filename&gt;</code></li>
+      <li><code>&lt;majority&gt;</code></li>
+      <li><code>&lt;none&gt;</code></li>
+      <li><code>&lt;not&gt;</code></li>
+      <li><code>&lt;or&gt;</code></li>
+      <li><code>&lt;present&gt;</code></li>
+      <li><code>&lt;selector&gt;</code></li>
+      <li><code>&lt;size&gt;</code></li>
     </ul>
 
     <a name="andselect"></a>
@@ -1127,7 +1127,7 @@
     <h3>Custom Selectors</h3>
 
     <p>You can write your own selectors and use them within the selector
-    containers by specifying them within the &lt;custom&gt; tag.</p>
+    containers by specifying them within the <code>&lt;custom&gt;</code> tag.</p>
 
     <p>First, you have to write your selector class in Java. The only
     requirement it must meet in order to be a selector is that it implements
@@ -1186,7 +1186,7 @@
 </pre></blockquote>
 
     <p>A number of core selectors can also be used as custom selectors
-    by specifying their attributes using &lt;param&gt; elements. These
+    by specifying their attributes using <code>&lt;param&gt;</code> elements. These
     are</p>
 
     <ul>

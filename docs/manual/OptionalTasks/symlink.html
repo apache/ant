@@ -81,14 +81,14 @@ set of links to record, or a set of property files to create links from. </p>
   "dir.links"</p>
   <pre>
   &lt;symlink action="record" linkfilename="dir.links"&gt;
-     &lt;fileset dir="${dir.top}" includes="subdir&#47;**" /&gt;
+     &lt;fileset dir="${dir.top}" includes="subdir&#47;**"/&gt;
   &lt;/symlink&gt;
   </pre>
  
   <p> Recreate the links recorded in the previous example:</p>
   <pre>
   &lt;symlink action="recreate"&gt;
-     &lt;fileset dir="${dir.top}" includes="subdir&#47;**&#47;dir.links" /&gt;  
+     &lt;fileset dir="${dir.top}" includes="subdir&#47;**&#47;dir.links"/&gt;  
   &lt;/symlink&gt;
   </pre>
  

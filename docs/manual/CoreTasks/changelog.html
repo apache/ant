@@ -13,7 +13,7 @@
 <p>Generates an XML-formatted report file of the change logs recorded in a
 <a href="http://www.cvshome.org/" target="_top">CVS</a> repository. </p>
 <p><b>Important:</b> This task needs "cvs" on the path. If it isn't, you will get
-an error (such as error 2 on windows). If &lt;cvs&gt; doesn't work, try to execute cvs.exe
+an error (such as error 2 on windows). If <code>&lt;cvs&gt;</code> doesn't work, try to execute cvs.exe
 from the command line in the target directory in which you are working.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -49,7 +49,7 @@ from the command line in the target directory in which you are working.
   <tr>
     <td valign="top">passfile</td>
     <td valign="top">Password file to read passwords from.</td>
-    <td align="center" valign="top">No, default file ~/.cvspass.</td>
+    <td align="center" valign="top">No, default file <code>~/.cvspass</code>.</td>
   </tr>
   <tr>
     <td valign="top">failonerror</td>
@@ -185,7 +185,7 @@ It writes these changes into the file <code>changelog.xml</code>.</p>
 <p>Generates a change log report on the <code>ANT_16_BRANCH</code>.</p>
 <pre>
  &lt;cvschangelog dir=&quot;c:/dev/asf/ant.head&quot; passfile=&quot;c:/home/myself/.cvspass&quot;
-                destfile=&quot;changelogant.xml&quot; tag=&quot;ANT_16_BRANCH&quot; /&gt;
+                destfile=&quot;changelogant.xml&quot; tag=&quot;ANT_16_BRANCH&quot;/&gt;
 </pre>
 <h4>Generate Report</h4>
 <p>Ant includes a basic XSLT stylesheet that you can use to generate 

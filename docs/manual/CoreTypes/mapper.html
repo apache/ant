@@ -94,7 +94,7 @@ implicitly configured as a <a href="#composite-mapper">composite mapper</a>.
 <b>Examples:</b>
 <blockquote><pre>
 &lt;mapper type=&quot;identity&quot;/&gt;
-&lt;identitymapper /&gt;
+&lt;identitymapper/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -125,7 +125,7 @@ leading directory information stripped off. Both <code>to</code> and
 <b>Examples:</b>
 <blockquote><pre>
 &lt;mapper type=&quot;flatten&quot;/&gt;
-&lt;flattenmapper /&gt;
+&lt;flattenmapper/&gt;
 </pre></blockquote>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -419,7 +419,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
 <b>Examples:</b>
 <blockquote><pre>
 &lt;compositemapper&gt;
-  &lt;identitymapper /&gt;
+  &lt;identitymapper/&gt;
   &lt;packagemapper from="*.java" to="*"/&gt;
 &lt;/compositemapper&gt;
 </pre></blockquote>
@@ -448,7 +448,7 @@ with <code>&lt;uptodate&gt;</code> and <code>&lt;junit&gt;</code> output.</p>
 <b>Examples:</b>
 <blockquote><pre>
 &lt;chainedmapper&gt;
-  &lt;flattenmapper /&gt;
+  &lt;flattenmapper/&gt;
   &lt;globmapper from="*" to="new/path/*"/&gt;
   &lt;mapper&gt;
     &lt;globmapper from="*" to="*1"/&gt;

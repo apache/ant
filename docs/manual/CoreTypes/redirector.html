@@ -14,7 +14,7 @@ task, used to execute an external process, stands as a very
 basic example.  The executed process may accept input, produce
 output, or do either or both depending upon various circumstances.
 Output may be classified as &quot;output&quot; or as &quot;error
-output.&quot;  The &lt;redirector&gt; type provides a concrete means
+output.&quot;  The <code>&lt;redirector&gt;</code> type provides a concrete means
 of redirecting input and output featuring the use of
 <a href="./mapper.html">File Mapper</a>s to specify
 source (input) and destination (output/error) files.  <em>Since Ant 1.6.2</em>
@@ -119,19 +119,19 @@ source (input) and destination (output/error) files.  <em>Since Ant 1.6.2</em>
 input.  Multiple mapping results should concatenate all mapped files as input.
 Mapping will ordinarily be performed on a task-specified sourcefile;
 consult the documentation of the individual task for more details.
-A nested &lt;inputmapper&gt; is not compatible with either of the
+A nested <code>&lt;inputmapper&gt;</code> is not compatible with either of the
 <i>input</i> or <i>inputstring</i> attributes.</p>
 <h4>outputmapper</h4>
 <p>A single <a href="./mapper.html">File Mapper</a> used to redirect process
 output.  Mapping will ordinarily be performed on a task-specified sourcefile;
 consult the documentation of the individual task for more details.
-A nested &lt;outputmapper&gt; is not compatible with the
+A nested <code>&lt;outputmapper&gt;</code> is not compatible with the
 <i>output</i> attribute.</p>
 <h4>errormapper</h4>
 <p>A single <a href="./mapper.html">File Mapper</a> used to redirect error
 output.  Mapping will ordinarily be performed on a task-specified sourcefile;
 consult the documentation of the individual task for more details.
-A nested &lt;errormapper&gt; is not compatible with the
+A nested <code>&lt;errormapper&gt;</code> is not compatible with the
 <i>error</i> attribute.</p>
 <h4>inputfilterchain</h4>
 <p>A <a href="./filterchain.html">FilterChain</a> can be
@@ -149,7 +149,7 @@ Tasks known to support I/O redirection:
 <li><a href="../CoreTasks/apply.html">Apply</a></li>
 <li><a href="../CoreTasks/java.html">Java</a></li>
 </ul>
-<p>The expected behavior of a &lt;redirector&gt; is to a great degree
+<p>The expected behavior of a <code>&lt;redirector&gt;</code> is to a great degree
 dependent on the supporting task.  Any possible points of confusion
 should be noted at the task level.</p>
 <hr />

@@ -27,7 +27,7 @@ or simply to syntax check the pages without deploying them.
 In most cases, a javac task is usually the next stage in the build process.
 The task does basic dependency checking to prevent unnecessary recompilation -this
 checking compares source and destination timestamps, and does not factor
-in class or taglib dependencies, or &lt;jsp:include&gt; references.
+in class or taglib dependencies, or <code>&lt;jsp:include&gt;</code> references.
 
 <p>
 By default the task uses the Jasper JSP compiler. This
@@ -234,7 +234,7 @@ When used, the task hands off all dependency checking to the compiler.
       package="com.i3sp.jsp"
       compiler="jasper41"
       verbose="9"&gt;
-  &lt;include name="**/*.jsp" /&gt;
+  &lt;include name="**/*.jsp"/&gt;
 &lt;/jspc&gt;
 </pre>
 Build all jsp pages under src/war into the destination /gensrc, in a
@@ -247,7 +247,7 @@ package hierarchy beginning with com.i3sp.jsp.
       srcdir="src"
       compiler="jasper41"
       package="com.i3sp.jsp"&gt;
-  &lt;include name="**/*.jsp" /&gt;
+  &lt;include name="**/*.jsp"/&gt;
 &lt;/jspc&gt;
 &lt;depend
          srcdir="interim"

@@ -46,7 +46,7 @@ the server's WSDL and running it against the server.
 Axis tasks to create JUnit tests to call the endpoints.
 
 <li>Patching .NET type libraries to work with more complex IDL than the
-basic &lt;importtypelib&gt; wrapper around tlbimport supports. Hence the
+basic <code>&lt;importtypelib&gt;</code> wrapper around tlbimport supports. Hence the
 disassembler and the reassembler.
 </li>
 
@@ -151,7 +151,7 @@ executable or library will be rebuilt.
 <h5>Examples</h5>
 
 <pre>
-&lt;resource file="app.ico" name="icon" /&gt;
+&lt;resource file="app.ico" name="icon"/&gt;
 &lt;resource file="splash.jpg"/&gt;
 &lt;resource name="splash" file="splash.jpg" public="false"/&gt;
 </pre>
@@ -197,7 +197,7 @@ build the code when the defines are likely to be different.
 <h5>Examples</h5>
 
 <pre>
-&lt;define name="unsafe" /&gt;
+&lt;define name="unsafe"/&gt;
 &lt;define name="debug" if="build.debug"/&gt;
 &lt;define name="dotnet" unless="build.mono"/&gt;
 </pre>

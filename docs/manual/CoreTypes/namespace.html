@@ -19,7 +19,7 @@
         prefixes in tag names a special meaning, and thus build files using
         colons in user-defined tasks and types will break.
       </li>
-      <li> Attributes with the names 'xmlns' and 'xmlns:&lt;prefix&gt;'
+      <li> Attributes with the names 'xmlns' and 'xmlns:<code>&lt;prefix&gt;</code>'
         are not treated specially, which means that custom tasks and types have
         actually been able to use such attributes as parameter names. Again,
         such tasks/types are going to break when namespace support is enabled
@@ -36,15 +36,15 @@
       easy to get into name conflicts. When individual types are defined, the
       build file writer can do some name-spacing manually (for example, using
       "tomcat-deploy" instead of just "deploy"). But when defining whole
-      libraries of types using the &lt;typedef&gt; 'resource' attribute, the
+      libraries of types using the <code>&lt;typedef&gt;</code> 'resource' attribute, the
       build file writer has no chance to override or even prefix the names
       supplied by the library. </p>
     <h2>Assigning Namespaces</h2>
 
     <p>
-      Adding a 'prefix' attribute to &lt;typedef&gt; might have been enough,
+      Adding a 'prefix' attribute to <code>&lt;typedef&gt;</code> might have been enough,
       but XML already has a well-known method for name-spacing. Thus, instead
-      of adding a 'prefix' attribute, the &lt;typedef&gt; and &lt;taskdef&gt;
+      of adding a 'prefix' attribute, the <code>&lt;typedef&gt;</code> and <code>&lt;taskdef&gt;</code>
       tasks get a 'uri' attribute, which stores the URI of the XML namespace
       with which the type should be associated:
     </p><pre> &lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
@@ -75,7 +75,7 @@
  &lt;/project&gt;
 </pre>
     <p>
-      Here, the namespace is set as the default namespace for the &lt;task&gt;
+      Here, the namespace is set as the default namespace for the <code>&lt;task&gt;</code>
       element and all its descendants.
     </p>
     <h2>Default namespace</h2>
@@ -173,9 +173,9 @@
       Ant types and tasks are now free to accept arbritrary named types as
       nested elements, as long as the concrete type implements the interface
       expected by the task/type. The most obvioius example for this is the
-      &lt;condition&gt; task, which supports various nested conditions, all
+      <code>&lt;condition&gt;</code> task, which supports various nested conditions, all
       of which extend the interface <tt>Condition</tt>. To integrate a
-      custom condition in Ant, you can now simply &lt;typedef&gt; the
+      custom condition in Ant, you can now simply <code>&lt;typedef&gt;</code> the
       condition, and then use it anywhere develop.html#nestedtypwhere conditions are allowed
       (assuming the containing element has a generic <tt>add(Condition)</tt> or <tt>addConfigured(Configured)</tt>method):
 </p><pre> &lt;typedef resource="org/example/conditions.properties" uri="<a href="http://example.org/conditions">http://example.org/conditions</a>"/&gt;

@@ -46,7 +46,7 @@ to send input to it is via the input and inputstring attributes.</p>
   </tr>
   <tr>
     <td valign="top">dest</td>
-    <td valign="top">the directory where the &lt;apply&gt; expects the target files will be placed by the 
+    <td valign="top">the directory where the <code>&lt;apply&gt;</code> expects the target files will be placed by the 
                      command, when it is executed. 
     </td>
     <td align="center" valign="top">Yes, if you specify a nested mapper</td>
@@ -354,24 +354,24 @@ the <code>.o</code> and SOURCEFILE with the absolute name of the
 <blockquote><pre>
 &lt;mapper id=&quot;out&quot; type=&quot;glob&quot;
            from=&quot;src${file.separator}*.file&quot;
-           to=&quot;dest${file.separator}*.out&quot; /&gt;
+           to=&quot;dest${file.separator}*.out&quot;/&gt;
 
 &lt;apply executable=&quot;processfile&quot; dest=&quot;dest&quot;&gt;
   &lt;fileset dir=&quot;src&quot; includes=&quot;*.file&quot;/&gt;
-  &lt;mapper refid=&quot;out&quot; /&gt;
+  &lt;mapper refid=&quot;out&quot;/&gt;
   &lt;redirector&gt;
-    &lt;outputmapper refid=&quot;out&quot; /&gt;
+    &lt;outputmapper refid=&quot;out&quot;/&gt;
   &lt;/redirector&gt;
 &lt;/apply&gt;
 </pre></blockquote>
 Applies the fictitious &quot;processfile&quot; executable to all
 files matching <code>*.file</code> in the <CODE>src</CODE> directory.
-The <CODE>out</CODE> &lt;mapper&gt; has been set up to map
-<CODE>*.file</CODE> to <CODE>*.out</CODE>, then this &lt;mapper&gt;
+The <CODE>out</CODE> <code>&lt;mapper&gt;</code> has been set up to map
+<CODE>*.file</CODE> to <CODE>*.out</CODE>, then this <code>&lt;mapper&gt;</code>
 is used to specify <CODE>targetfile</CODE>s for this &lt;apply&gt;
 task.  A reference to <CODE>out</CODE> is then used as an
-&lt;outputmapper&gt; nested in a &lt;redirector&gt;, which in turn is
-nested beneath this &lt;apply&gt; instance.  This allows us to perform
+<code>&lt;outputmapper&gt;</code> nested in a <code>&lt;redirector&gt;</code>, which in turn is
+nested beneath this <code>&lt;apply&gt;</code> instance.  This allows us to perform
 dependency checking against output files--the target files in this case.
 
 <hr><p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights

@@ -427,7 +427,7 @@ and hence ant, will not complete until the weblogic instance is stopped.</p>
 
 <h3>Nested Elements</h3>
 
-<p>The wlrun task supports nested &lt;classpath&gt; and &lt;wlclasspath&gt;
+<p>The wlrun task supports nested <code>&lt;classpath&gt;</code> and <code>&lt;wlclasspath&gt;</code>
 elements to set the respective classpaths.</p>
 
 <h3>Examples</h3>
@@ -513,7 +513,7 @@ specify the BEA Home to have this task work correctly under 6.0</p>
 
 <h3>Nested Element</h3>
 
-<p>The classpath of the wlstop task can be set by a &lt;classpath&gt; nested element.</p>
+<p>The classpath of the wlstop task can be set by a <code>&lt;classpath&gt;</code> nested element.</p>
 
 <h3>Examples</h3>
 
@@ -555,7 +555,7 @@ server descriptors are found. For each descriptor found, ejbjar will parse the
 deployment descriptor to determine the necessary class files which implement the
 bean. These files are assembled along with the deployment descriptors into a
 well formed EJB jar file. Any support files which need to be included in the
-generated jar can be added with the &lt;support&gt; nested element. For each
+generated jar can be added with the <code>&lt;support&gt;</code> nested element. For each
 class included in the jar, ejbjar will scan for any super classes or super
 interfaces. These will be added to the generated jar.</p>
 
@@ -601,10 +601,10 @@ is deployed in separate beans.
 deploying the same bean classes in different beans, with different deployment characteristics.
 
 <li>ejb-name</li>
-<p> This naming scheme uses the &lt;ejb-name&gt; element from the deployment descriptor to
+<p> This naming scheme uses the <code>&lt;ejb-name&gt;</code> element from the deployment descriptor to
 determine the bean name. In this situation, the descriptors normally use the generic
 descriptor names, such as <code>ejb-jar.xml</code> along with any associated vendor specific descriptor
-names. For example, If the value of the &lt;ejb-name&gt; were to be given in the deployment descriptor
+names. For example, If the value of the <code>&lt;ejb-name&gt;</code> were to be given in the deployment descriptor
 as follows:
 <pre>
 &lt;ejb-jar&gt;
@@ -635,7 +635,7 @@ although that is not mandatory. This scheme can handle multiple beans per jar.
 
 <li>basejarname</li>
 <p>
-The final scheme supported by the &lt;ejbjar&gt; task is used when you want to specify the generated
+The final scheme supported by the <code>&lt;ejbjar&gt;</code> task is used when you want to specify the generated
 bean jar name directly. In this case the name of the generated jar is specified by the
 &quot;basejarname&quot; attribute. Since all generated beans will have the same name, this task should
 be only used when each descriptor is in its own directory.
@@ -797,22 +797,22 @@ three nested elements. </p>
 
 <h4>Classpath</h4>
 
-<p>The &lt;classpath&gt; nested element allows the classpath
+<p>The <code>&lt;classpath&gt;</code> nested element allows the classpath
 to be set. It is useful when setting the classpath from a reference path. In all
 other respects the behaviour is the same as the classpath attribute.</p>
 
 <a name="ejbjar-dtd"><h4>dtd</h4></a>
 
-<p>The &lt;dtd&gt; element is used to specify the local location of DTDs to be
+<p>The <code>&lt;dtd&gt;</code> element is used to specify the local location of DTDs to be
 used when parsing the EJB deployment descriptor. Using a local DTD is much
 faster than loading the DTD across the net. If you are running ejbjar behind a
 firewall you may not even be able to access the remote DTD. The supported
 vendor-specific nested elements know the location of the required DTDs within
-the vendor class hierarchy and, in general, this means &lt;dtd&gt; elements are
+the vendor class hierarchy and, in general, this means <code>&lt;dtd&gt;</code> elements are
 not required. It does mean, however, that the vendor's class hierarchy must be
 available in the classpath when Ant is started. If your want to run Ant without
 requiring the vendor classes in the classpath, you would need to use a
-&lt;dtd&gt; element.</p>
+<code>&lt;dtd&gt;</code> element.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -835,10 +835,10 @@ requiring the vendor classes in the classpath, you would need to use a
 
 <h4>support</h4>
 
-<p>The &lt;support&gt; nested element is used to supply additional classes
-(files) to be included in the generated jars. The &lt;support&gt; element is a
+<p>The <code>&lt;support&gt;</code> nested element is used to supply additional classes
+(files) to be included in the generated jars. The <code>&lt;support&gt;</code> element is a
 <a href="../CoreTypes/fileset.html">FileSet</a>, so it can either reference a fileset declared elsewhere or it can be
-defined in-place with the appropriate &lt;include&gt; and &lt;exclude&gt; nested
+defined in-place with the appropriate <code>&lt;include&gt;</code> and <code>&lt;exclude&gt;</code> nested
 elements. The files in the support fileset are added into the generated EJB jar
 in the same relative location as their location within the support fileset. Note
 that when ejbjar generates more than one jar file, the support files are added
@@ -915,7 +915,7 @@ generating weblogic EJB jars. Prior to Ant 1.3, the method of locating CMP
 descriptors was to use the ejbjar naming convention. So if your ejb-jar was
 called, Customer-ejb-jar.xml, your weblogic descriptor was called Customer-
 weblogic-ejb-jar.xml and your CMP descriptor had to be Customer-weblogic-cmp-
-rdbms-jar.xml. In addition, the &lt;type-storage&gt; element in the weblogic
+rdbms-jar.xml. In addition, the <code>&lt;type-storage&gt;</code> element in the weblogic
 descriptor had to be set to the standard name META-INF/weblogic-cmp-rdbms-
 jar.xml, as that is where the CMP descriptor was mapped to in the generated
 jar.</p>
@@ -928,7 +928,7 @@ deployment descriptors generated by some tools.</p>
 CMP descriptors, which are then included automatically. This behaviour is
 controlled by the newCMP attribute. Note that if you move to the new method of
 determining CMP descriptors, you will need to update your weblogic deployment
-descriptor's &lt;type-storage&gt; element. In the above example, you would
+descriptor's <code>&lt;type-storage&gt;</code> element. In the above example, you would
 define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -1030,9 +1030,9 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
     <td valign="top"><b>Deprecated</b>. Defines the location of the ejb-jar DTD in
                      the weblogic class hierarchy. This should not be necessary if you
                      have weblogic in your classpath. If you do not, you should use a
-                     nested &lt;dtd&gt; element, described above. If you do choose
+                     nested <code>&lt;dtd&gt;</code> element, described above. If you do choose
                      to use an attribute, you should use a
-                     nested &lt;dtd&gt; element.
+                     nested <code>&lt;dtd&gt;</code> element.
                      </td>
     <td valign="top" align="center">No.</td>
   </tr>
@@ -1041,7 +1041,7 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
     <td valign="top"><b>Deprecated</b>. Defines the location of the weblogic-ejb-jar
                      DTD which covers the Weblogic specific deployment descriptors.
                      This should not be necessary if you have weblogic in your
-                     classpath. If you do not, you should use a nested &lt;dtd&gt;
+                     classpath. If you do not, you should use a nested <code>&lt;dtd&gt;</code>
                      element, described above.
                      </td>
     <td valign="top" align="center">No.</td>
@@ -1051,7 +1051,7 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
     <td valign="top"><b>Deprecated</b>. Defines the location of the ejb-jar DTD in
                      the weblogic class hierarchy. This should not be necessary if you
                      have weblogic in your classpath. If you do not, you should use a
-                     nested &lt;dtd&gt; element, described above.
+                     nested <code>&lt;dtd&gt;</code> element, described above.
                      </td>
     <td valign="top" align="center">No.</td>
   </tr>
@@ -1108,9 +1108,9 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
 </table>
 
 <p>The weblogic nested element supports three nested elements. The
-first two, &lt;classpath&gt; and &lt;wlclasspath&gt;, are used to set the
+first two, <code>&lt;classpath&gt;</code> and <code>&lt;wlclasspath&gt;</code>, are used to set the
 respective classpaths. These nested elements are useful when setting up
-class paths using reference Ids. The last, &lt;sysproperty&gt;, allows
+class paths using reference Ids. The last, <code>&lt;sysproperty&gt;</code>, allows
 Java system properties to be set during the compiler run. This turns out
 to be necessary for supporting CMP EJB compilation in all environments.
 </p>
@@ -1229,7 +1229,7 @@ This will create only one TOPLink-enabled ejb jar file - 'Address.jar'.</p>
 </pre>
 
 <p>This final example shows how you would set-up ejbjar under Weblogic 6.0. It also shows the use of the
-&lt;support&gt; element to add support files</p>
+<code>&lt;support&gt;</code> element to add support files</p>
 
 <pre>
     &lt;ejbjar descriptordir=&quot;${dd.dir}&quot; srcdir=&quot;${build.classes.server}&quot;&gt;
@@ -1486,11 +1486,11 @@ If omitted, it defaults to ".jar". </td>
 </tr>
 </table>
 
-<p>As noted above, the iplanet element supports additional &lt;classpath&gt;
+<p>As noted above, the iplanet element supports additional <code>&lt;classpath&gt;</code>
 nested elements.</p>
 <h3>
 Examples</h3>
-This example demonstrates the typical use of the &lt;iplanet&gt; nested element.
+This example demonstrates the typical use of the <code>&lt;iplanet&gt;</code> nested element.
 It will name each EJB-JAR using the "basename" prepended to each standard
 EJB descriptor.  For example, if the descriptor named "Account-ejb-jar.xml"
 is processed, the EJB-JAR will be named "Account.jar"
@@ -1554,7 +1554,7 @@ local DTDs are found in the [iAS-install-directory]/dtd directory.
 
 <h3><a name="ejbjar_jonas">JOnAS (Java Open Application Server) element</a></h3>
 
-<p>The &lt;jonas&gt; nested element is used to build JOnAS-specific stubs and
+<p>The <code>&lt;jonas&gt;</code> nested element is used to build JOnAS-specific stubs and
 skeletons thanks to the <code>GenIC</code> specific tool, and construct a JAR
 file which may be deployed to the JOnAS Application Server. The build process
 will always determine if the EJB stubs/skeletons and the EJB-JAR file are up to
@@ -1563,13 +1563,13 @@ date, and it will do the minimum amount of work required.</p>
 <p>Like the WebLogic element, a naming convention for the EJB descriptors is
 most commonly used to specify the name for the completed JAR file. For example,
 if the EJB descriptor <code>ejb/Account-ejb-jar.xml</code> is found in the
-descriptor directory, the &lt;jonas&gt; element will search for a JOnAS-specific
+descriptor directory, the <code>&lt;jonas&gt;</code> element will search for a JOnAS-specific
 EJB descriptor file named <code>ejb/Account-jonas-ejb-jar.xml</code> and a JAR
 file named <code>ejb/Account.jar</code> will be written in the destination
-directory. But the &lt;jonas&gt; element can also use the JOnAS naming
+directory. But the <code>&lt;jonas&gt;</code> element can also use the JOnAS naming
 convention. With the same example as below, the EJB descriptor can also be named
 <code>ejb/Account.xml</code> (no base name terminator here) in the descriptor
-directory. Then the &lt;jonas&gt; element will search for a JOnAS-specific EJB
+directory. Then the <code>&lt;jonas&gt;</code> element will search for a JOnAS-specific EJB
 descriptor file called <code>ejb/jonas-Account.xml</code>. This convention do
 not follow strictly the ejb-jar naming convention recommendation but is
 supported for backward compatibility with previous version of JOnAS.</p>
@@ -1699,7 +1699,7 @@ documentation for more details.</p>
   </tbody>
 </table>
 
-<p>As noted above, the jonas element supports additional &lt;classpath&gt;
+<p>As noted above, the jonas element supports additional <code>&lt;classpath&gt;</code>
 nested elements.</p>
 
 <h3>Examples</h3>

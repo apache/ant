@@ -511,8 +511,8 @@ javac's default searching mechanism then you can unset the sourcepath
 attribute:
 <pre>  &lt;javac sourcepath=&quot;&quot; srcdir=&quot;${src}&quot;
          destdir=&quot;${build}&quot; &gt;
-    &lt;include name="**/*.java" /&gt;
-    &lt;exclude name="**/Example.java" /&gt;
+    &lt;include name="**/*.java"/&gt;
+    &lt;exclude name="**/Example.java"/&gt;
   &lt;/javac&gt;</pre>
 That way the javac will compile all java source files under &quot;${src}&quot;
 directory but skip the examples. The compiler will even produce errors if some of

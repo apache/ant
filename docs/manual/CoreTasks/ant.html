@@ -34,14 +34,14 @@ by using nested property tags. These properties are always passed
 to the new project and any project created in that project
 regardless of the setting of <i>inheritAll</i>.  This allows you to
 parameterize your subprojects.  Properties defined on the command line
-can not be overridden by nested &lt;property&gt; elements.</p>
+can not be overridden by nested <code>&lt;property&gt;</code> elements.</p>
 
 <p>References to data types can also be passed to the new project, but
 by default they are not.  If you set the inheritrefs attribute to
 true, all references will be copied, but they will not override
 references defined in the new project.</p>
 
-<p>Nested <a href="#reference"><i>&lt;reference&gt;</i></a> elements
+<p>Nested <a href="#reference"><i><code>&lt;reference&gt;</code></i></a> elements
 can also be used to copy references from the calling project to the
 new project, optionally under a different id.  References taken from
 nested elements will override existing references that have been
@@ -162,12 +162,12 @@ details:</p>
     <td valign="top">omitted</td>
     <td valign="top">true</td>
     <td valign="top">basedir of calling project (the one whose build
-        file contains the &lt;ant&gt; task).</td>
+        file contains the <code>&lt;ant&gt;</code> task).</td>
   </tr>
   <tr>
     <td valign="top">omitted</td>
     <td valign="top">false</td>
-    <td valign="top">basedir attribute of the &lt;project&gt; element
+    <td valign="top">basedir attribute of the <code>&lt;project&gt;</code> element
         of the new project</td>
   </tr>
 </table>
