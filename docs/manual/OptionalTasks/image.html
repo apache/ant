@@ -146,7 +146,7 @@ ImageOperation can handle nested Rotate, Draw, Rectangle, Text and Scale objects
         <li>&quot;cover&quot; - keep proportions and fit in the supplied dimensions.</li>
         <li>&quot;fit&quot; - keep proportions and cover the supplied dimensions.</li>
     </ul></td>
-+    <td align="center"> no (defaults to <i>ignore</i>) </td>
+    <td align="center"> no (defaults to <i>ignore</i>) </td>
   <tr>
     <td valign="top"> width </td>
     <td valign="top"> Sets the width of the image, either as an integer or a %. </td>
@@ -186,8 +186,19 @@ nested inside the Draw object.</p>
 <h3>Examples</h3>
 
 <blockquote><pre>
+&nbsp;&lt;image destdir="samples/low" overwrite="yes"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset dir="samples/full"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;include name="**/*.jpg"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;/fileset&gt;
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;scale width="160" height="160" proportions="fit"/&gt;
+&nbsp;&lt;/image&gt;
+</pre></blockquote>
+<p>Create thumbnails of my images and make sure they all fit within the 160x160 size whether the
+image is portrait or landscape.</p>
+
+<blockquote><pre>
 &lt;image srcdir="src" includes="*.png"&gt;
-    &lt;scale keepproportions="true" width="40"/&gt;
+    &lt;scale proportions="width" width="40"/&gt;
 &lt;/image&gt;
 </pre></blockquote>
 <p>Creates a thumbnail for all PNG-files in <i>src</i> in the size of 40 pixel keeping the proportions
@@ -195,7 +206,7 @@ and stores the <i>src</i>.</p>
 
 <blockquote><pre>
 &lt;image srcdir="src" destdir="dest" includes="*.png"&gt;
-    &lt;scale keepproportions="true" width="40"/&gt;
+    &lt;scale proportions="width" width="40"/&gt;
 &lt;/image&gt;
 </pre></blockquote>
 <p>Same as above but stores the result in <i>dest</i>.</p>
