@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -516,9 +516,9 @@ public class PropertyFile extends Task
         */
         private void executeInteger(String oldValue) throws BuildException
         {
-            int value = 0;
-            int newValue  = 0;
-            int oldIntValue  = 0;
+            int value = 0;          // the value given in the 'value' attr
+            int newValue  = 0;      // the new value, after the operation
+            int oldIntValue  = 0;   // the old value from the prop file
 
             DecimalFormat fmt = (m_pattern != null) ? new DecimalFormat(m_pattern)
                                                     : new DecimalFormat();
@@ -526,7 +526,6 @@ public class PropertyFile extends Task
             if (oldValue != null) {
                 try {
                     oldIntValue = fmt.parse(oldValue).intValue();
-                    value = fmt.parse(oldValue).intValue();
                 }
                 catch (NumberFormatException nfe) { /* swollow */ }
                 catch (ParseException pe)  { /* swollow */ }
@@ -540,36 +539,37 @@ public class PropertyFile extends Task
             }
             if (m_default != null && oldValue == null) {
                 try {
-                    value = fmt.parse(m_default).intValue();
+                    oldIntValue = fmt.parse(m_default).intValue();
                 }
                 catch (NumberFormatException nfe) { /* swollow */ }
                 catch (ParseException pe)  { /* swollow */ }
             }
 
             if (m_operation == Operation.EQUALS_OPER) {
-                newValue = value;
+                newValue = oldIntValue;
             }
             else if (m_operation == Operation.INCREMENT_OPER) {
-                if (this.m_value == "") {
-                    // No value attr was given, so just increment "value"
-                    // (which is the old value from the prop file, 0 by
-                    // assignment above, if none) by 1.
-                    newValue = ++value;
+                if (m_value == "") {
+                    // No value attr was given, so just increment the
+                    // old value from the prop file (0 by assignment above,
+                    // if none).
+                    newValue = ++oldIntValue;
                 } else {
-                    // A value attr was given, so add it to "value", which
-                    // is the old value from the prop file (0, if none).
+                    // A value attr was given, so add the old value from
+                    // the prop file (0, if none) to the specified value.
                     newValue = (oldIntValue + value) ;
                 }
             }
             else if (m_operation == Operation.DECREMENT_OPER) {
-                if (this.m_value == "") {
-                    // No value attr was given, so just decrement "value"
-                    // (which is the old value from the prop file, 0 by
-                    // assignment above, if none) by 1.
-                    newValue = --value;
+                if (m_value == "") {
+                    // No value attr was given, so just decrement the
+                    // old value from the prop file (0 by assignment above,
+                    // if none).
+                    newValue = --oldIntValue;
                 } else {
-                    // A value attr was given, so subtract from it "value",
-                    // which is the old value from the prop file (0, if none).
+                    // A value attr was given, so subtract from the
+                    // old value from the prop file (0, if none) the
+                    // specified value.
                     newValue = (oldIntValue - value);
                 }
             }
