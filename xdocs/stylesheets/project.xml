@@ -43,7 +43,6 @@
             <menu name="Project Management">
                 <item name="Contributors"          href="/contributors.html"/>
                 <item name="Apache Ant Mission"    href="/mission.html"/>
-                <item name="Project Guidelines"    href="/guidelines.html"/>
                 <item name="Project Bylaws"        href="/bylaws.html"/>
                 <item name="Legal"                 href="/legal.html"/>
             </menu>
