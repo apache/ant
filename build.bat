@@ -7,7 +7,7 @@ if exist bootstrap\lib\ant.jar if exist bootstrap\bin\ant.bat if exist bootstrap
 call bootstrap.bat
 
 :runAnt
-set LOCALCLASSPATH=lib\parser.jar;lib\jaxp.jar;bootstrap\lib\ant.jar
+set LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;bootstrap\lib\ant.jar
 for %%i in (lib\optional\*.jar) do call bootstrap\bin\lcp.bat "%%i"
 set CLASSPATH=%LOCALCLASSPATH%;%CLASSPATH%
 set LOCALCLASSPATH=

@@ -21,7 +21,7 @@ echo ... Bootstrapping Ant Distribution
 if     "%OS%" == "Windows_NT" if exist bootstrap rmdir/s/q bootstrap
 if not "%OS%" == "Windows_NT" if exist bootstrap deltree/y bootstrap
 
-SET LOCALCLASSPATH=lib\parser.jar;lib\jaxp.jar;lib\optional\junit.jar
+SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;lib\optional\junit.jar
 
 if exist %JAVA_HOME%\lib\tools.jar call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist %JAVA_HOME%\lib\classes.zip call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
@@ -29,7 +29,7 @@ if exist %JAVA_HOME%\lib\classes.zip call src\script\lcp.bat %JAVA_HOME%\lib\cla
 set TOOLS=src\main\org\apache\tools
 set CLASSDIR=classes
 
-SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
+SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;"%CLASSPATH%"
 
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
