@@ -372,6 +372,25 @@ public class DefaultProjectBuilder
         final String ifCondition = target.getAttribute( "if", null );
         final String unlessCondition = target.getAttribute( "unless", null );
 
+        verifyName( name, target );
+
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = REZ.getString( "ant.target-parse.notice", name );
+            getLogger().debug( message );
+        }
+
+        final String[] dependencies = buildDependsList( depends, target );
+        final Condition condition = buildCondition( ifCondition, unlessCondition, target );
+        final Target defaultTarget =
+            new Target( condition, target.getChildren(), dependencies );
+
+        //add target to project
+        project.addTarget( name, defaultTarget );
+    }
+
+    private void verifyName( final String name, final Configuration target ) throws Exception
+    {
         if( null == name )
         {
             final String message =
@@ -385,41 +404,10 @@ public class DefaultProjectBuilder
                 REZ.getString( "ant.target-bad-name.error", target.getLocation() );
             throw new Exception( message );
         }
+    }
 
-        if( getLogger().isDebugEnabled() )
-        {
-            final String message = REZ.getString( "ant.target-parse.notice", name );
-            getLogger().debug( message );
-        }
-
-        if( null != ifCondition && null != unlessCondition )
-        {
-            final String message =
-                REZ.getString( "ant.target-bad-logic.error", target.getLocation() );
-            throw new Exception( message );
-        }
-
-        Condition condition = null;
-
-        if( null != ifCondition )
-        {
-            if( getLogger().isDebugEnabled() )
-            {
-                final String message = REZ.getString( "ant.target-if.notice", ifCondition );
-                getLogger().debug( message );
-            }
-            condition = new Condition( true, ifCondition );
-        }
-        else if( null != unlessCondition )
-        {
-            if( getLogger().isDebugEnabled() )
-            {
-                final String message = REZ.getString( "ant.target-unless.notice", unlessCondition );
-                getLogger().debug( message );
-            }
-            condition = new Condition( false, unlessCondition );
-        }
-
+    private String[] buildDependsList( final String depends, final Configuration target ) throws Exception
+    {
         String[] dependencies = null;
 
         //apply depends attribute
@@ -451,12 +439,39 @@ public class DefaultProjectBuilder
 
             dependencies = (String[])dependsList.toArray( new String[ 0 ] );
         }
+        return dependencies;
+    }
 
-        final Target defaultTarget =
-            new Target( condition, target.getChildren(), dependencies );
+    private Condition buildCondition( final String ifCondition, final String unlessCondition, final Configuration target ) throws Exception
+    {
+        if( null != ifCondition && null != unlessCondition )
+        {
+            final String message =
+                REZ.getString( "ant.target-bad-logic.error", target.getLocation() );
+            throw new Exception( message );
+        }
 
-        //add target to project
-        project.addTarget( name, defaultTarget );
+        Condition condition = null;
+
+        if( null != ifCondition )
+        {
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "ant.target-if.notice", ifCondition );
+                getLogger().debug( message );
+            }
+            condition = new Condition( true, ifCondition );
+        }
+        else if( null != unlessCondition )
+        {
+            if( getLogger().isDebugEnabled() )
+            {
+                final String message = REZ.getString( "ant.target-unless.notice", unlessCondition );
+                getLogger().debug( message );
+            }
+            condition = new Condition( false, unlessCondition );
+        }
+        return condition;
     }
 
     protected boolean validName( final String name )
