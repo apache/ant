@@ -54,6 +54,8 @@ Fixed bugs:
 * AntClassLoader#getResource could return invalid URLs.  Bugzilla
   Report 28060.
 
+* AntLikeTasksAtTopLevelTest failed on cygwin.
+
 Other changes:
 --------------
 
