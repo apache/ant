@@ -75,6 +75,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* gzip now checks that the zipfile is older than the source file
+  before rebuilding the zipfile. 
+
 * New task <loadfile> to load a whole file into a property
 
 * New task <echoproperties> to list your current properties to the screen

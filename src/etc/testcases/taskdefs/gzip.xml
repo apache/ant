@@ -22,6 +22,11 @@
     <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
   </target>
 
+  <target name="testDateCheck">
+    <touch file="asf-logo.gif.gz"/>
+    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
+  </target>
+
   <target name="cleanup">
     <delete file="asf-logo.gif.gz" />
   </target>

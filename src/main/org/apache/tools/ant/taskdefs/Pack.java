@@ -83,11 +83,11 @@ public abstract class Pack extends Task {
     }
 
     private void validate() {
-        if (zipFile == null) {
+        if (zipFile == null || zipFile.getName().equals("")) {
             throw new BuildException("zipfile attribute is required", location);
         }
 
-        if (source == null) {
+        if (source == null || source.getName().equals("")) {
             throw new BuildException("src attribute is required", location);
         }
 
@@ -99,8 +99,14 @@ public abstract class Pack extends Task {
 
     public void execute() throws BuildException {
         validate();
-        log("Building: " + zipFile.getAbsolutePath());
-        pack();
+
+        if(zipFile.lastModified() < source.lastModified()){
+            log("Building: " + zipFile.getAbsolutePath());
+            pack();
+        }else{
+            log("Nothing to do: " + zipFile.getAbsolutePath() +
+                " is up to date.");
+        }
     }
 
     private void zipFile(InputStream in, OutputStream zOut)
