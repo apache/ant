@@ -53,7 +53,6 @@
  */
 package org.apache.ant.builder;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -90,7 +89,7 @@ public class Builder {
     /** the input root */
     private static final File INPUT_ROOT
          = new File(PACKAGE_ROOT, "input");
-         
+    /** the input root */
          
     /** the root forthe depend task's support classes */
     private static final File DEPEND_ROOT
@@ -107,21 +106,22 @@ public class Builder {
     }
 
     /**
-     * Add all the java files fro, a given directory.
+     * Add all the java files from a given directory.
      *
      * @param files the list to which the files are to be added.
      * @param dir the directory from which the Java files are added.
+     * @param recurse true if subdirectories should be searched.
      */
-    private void addJavaFiles(List files, File dir) {
-        File[] javaFiles = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".java");
-            }
-        });
+    private void addJavaFiles(List files, File dir, boolean recurse) {
+        File[] javaFiles = dir.listFiles();
         
         if (javaFiles != null) {
             for (int i = 0; i < javaFiles.length; ++i) {
-                files.add(javaFiles[i]);
+                if (javaFiles[i].isDirectory() && recurse) {
+                    addJavaFiles(files, javaFiles[i], recurse);
+                } else if (javaFiles[i].getName().endsWith(".java")) {
+                    files.add(javaFiles[i]);
+                }
             }
         }
     }
@@ -134,18 +134,17 @@ public class Builder {
      */
     private File[] getAnt1Files() {
         List files = new ArrayList();
-        addJavaFiles(files, TASKDEFS_ROOT);
-        addJavaFiles(files, new File(TASKDEFS_ROOT, "compilers"));
-        addJavaFiles(files, new File(TASKDEFS_ROOT, "condition"));
-        addJavaFiles(files, DEPEND_ROOT);
-        addJavaFiles(files, new File(DEPEND_ROOT, "constantpool"));
-        addJavaFiles(files, TYPES_ROOT);
-        addJavaFiles(files, FILTERS_ROOT);
-        addJavaFiles(files, UTIL_ROOT);
-        addJavaFiles(files, new File(UTIL_ROOT, "depend"));
-        addJavaFiles(files, ZIP_ROOT);
-        addJavaFiles(files, new File(UTIL_ROOT, "facade"));
-        addJavaFiles(files, INPUT_ROOT);
+        addJavaFiles(files, TASKDEFS_ROOT, false);
+        addJavaFiles(files, new File(TASKDEFS_ROOT, "compilers"), true);
+        addJavaFiles(files, new File(TASKDEFS_ROOT, "condition"), true);
+        addJavaFiles(files, DEPEND_ROOT, true);
+        addJavaFiles(files, TYPES_ROOT, true);
+        addJavaFiles(files, FILTERS_ROOT, false);
+        addJavaFiles(files, UTIL_ROOT, false);
+        addJavaFiles(files, new File(UTIL_ROOT, "depend"), false);
+        addJavaFiles(files, new File(UTIL_ROOT, "facade"), true);
+        addJavaFiles(files, ZIP_ROOT, true);
+        addJavaFiles(files, INPUT_ROOT, true);
 
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
         files.add(new File(PACKAGE_ROOT, "Location.java"));

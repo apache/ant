@@ -111,7 +111,7 @@ public class ComponentManager implements ComponentService {
      * These are AntLibraries which have been loaded into this component
      * manager
      */
-    private Map antLibraries = new HashMap();
+    private static Map antLibraries = new HashMap();
 
     /** dynamic libraries which have been defined */
     private Map dynamicLibraries;
@@ -149,9 +149,12 @@ public class ComponentManager implements ComponentService {
      * @param libLocation the file or URL of the library location
      * @param importAll if true all tasks are imported as the library is
      *      loaded
+     * @param autoImport true if libraries in the Ant namespace should be
+     *                   automatically imported.
      * @exception ExecutionException if the library cannot be loaded
      */
-    public void loadLib(String libLocation, boolean importAll)
+    public void loadLib(String libLocation, boolean importAll,
+                        boolean autoImport)
          throws ExecutionException {
         try {
             Map librarySpecs = new HashMap();
@@ -162,8 +165,9 @@ public class ComponentManager implements ComponentService {
             Iterator i = librarySpecs.keySet().iterator();
             while (i.hasNext()) {
                 String libraryId = (String) i.next();
-                if (importAll 
-                    || libraryId.startsWith(Constants.ANT_LIB_PREFIX)) {
+                boolean doAuto = autoImport 
+                    && libraryId.startsWith(Constants.ANT_LIB_PREFIX);
+                if (importAll || doAuto) {
                     importLibrary(libraryId);
                 }
             }

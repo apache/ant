@@ -151,7 +151,7 @@ public class LoadLib extends AbstractTask {
         AntContext context = getAntContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
-        componentService.loadLib(url.toString(), importAll);
+        componentService.loadLib(url.toString(), importAll, false);
     }
 
     /**

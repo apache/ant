@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.config;
-import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.antcore.xml.ElementHandler;
 import org.apache.ant.antcore.modelparser.BuildElementHandler;
 import org.xml.sax.Attributes;

@@ -52,13 +52,9 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.ant.antcore.antlib.AntLibManager;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.model.Project;

@@ -153,8 +153,6 @@ public class Frame implements DemuxOutputReceiver {
     /**
      * Create an Execution Frame for the given project
      *
-     * @param standardLibs The libraries of tasks and types available to this
-     *      frame
      * @param config the user config to use for this execution of Ant
      * @param initConfig Ant's initialisation config
      * @exception ExecutionException if a component of the library cannot be
@@ -951,14 +949,14 @@ public class Frame implements DemuxOutputReceiver {
             // load system ant lib
             URL systemLibs 
                 = new URL(initConfig.getLibraryURL(), "syslibs/");
-            componentManager.loadLib(systemLibs.toString(), true);
+            componentManager.loadLib(systemLibs.toString(), true, true);
             
             // execute any config tasks
             executeTasks(config.getTasks());
     
             // now load other system libraries
             URL antLibs = new URL(initConfig.getLibraryURL(), "antlibs/");
-            componentManager.loadLib(antLibs.toString(), false);                           
+            componentManager.loadLib(antLibs.toString(), false, true);
             
             executeTasks(project.getTasks());
         } catch (MalformedURLException e) {

@@ -77,10 +77,12 @@ public interface ComponentService {
      * @param libLocation the location of the library or the libraries
      * @param importAll true if all components of the loaded libraries
      *      should be imported
+     * @param autoImport true if libraries in the Ant namespace should be
+     *                   automatically imported.
      * @exception ExecutionException if the library or libraries cannot be
      *      imported.
      */
-    void loadLib(String libLocation, boolean importAll)
+    void loadLib(String libLocation, boolean importAll, boolean autoImport)
          throws ExecutionException;
 
     /**

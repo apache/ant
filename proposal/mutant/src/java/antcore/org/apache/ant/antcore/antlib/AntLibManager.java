@@ -166,9 +166,17 @@ public class AntLibManager {
             if (libraries.containsKey(libraryId)) {
                 AntLibrary currentVersion
                      = (AntLibrary) libraries.get(libraryId);
-                throw new ExecutionException("Ant Library \"" + libraryId
-                     + "\" is already loaded from "
-                     + currentVersion.getDefinitionURL());
+                // same location?
+                AntLibrarySpec spec 
+                    = (AntLibrarySpec) librarySpecs.get(libraryId); 
+                URL specURL = spec.getLibraryURL();
+                if (!specURL.equals(currentVersion.getDefinitionURL())) {
+                    throw new ExecutionException("Ant Library \"" + libraryId
+                         + "\" is already loaded from "
+                         + currentVersion.getDefinitionURL() 
+                         + " new version found at " 
+                         + specURL);
+                }
             }
         }
 
