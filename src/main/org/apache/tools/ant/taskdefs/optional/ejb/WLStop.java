@@ -62,9 +62,9 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Shutdown a Weblogic server.
+ * Shuts down a WebLogic server.
  * To shut down an instance you must supply both a username and
- * a password. 
+ * a password.
  *
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
@@ -138,9 +138,9 @@ public class WLStop extends Task {
 
     /**
      * The classpath to be used with the Java Virtual Machine that runs the Weblogic
-     * Shutdown command; 
+     * Shutdown command;
      *
-     * @param s the classpath to use when executing the weblogic admin task.
+     * @param path the classpath to use when executing the weblogic admin task.
      */
     public void setClasspath(Path path) {
         this.classpath = path;
@@ -148,7 +148,7 @@ public class WLStop extends Task {
 
     /**
      * The classpath to be used with the Java Virtual Machine that runs the Weblogic
-     * Shutdown command; 
+     * Shutdown command;
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -199,7 +199,7 @@ public class WLStop extends Task {
     }
 
     /**
-     * The location of the BEA Home; implicitly 
+     * The location of the BEA Home; implicitly
      * selects Weblogic 6.0 shutdown; optional.
      *
      * @param beaHome the BEA Home directory.
