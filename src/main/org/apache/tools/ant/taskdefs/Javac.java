@@ -116,6 +116,7 @@ public class Javac extends MatchingTask {
     private Path extdirs;
     private static String lSep = System.getProperty("line.separator");
 
+    protected boolean failOnError = true;
     protected File[] compileList = new File[0];
 
     /**
@@ -230,6 +231,20 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Throw a BuildException if compilation fails
+     */
+    public void setFailonerror(boolean fail) {
+        failOnError = fail;
+    }
+
+    /**
+     * Proceed if compilation fails
+     */
+    public void setProceed(boolean proceed) {
+        failOnError = !proceed;
+    }
+
+    /**
      * Set the deprecation flag.
      */
     public void setDeprecation(boolean deprecation) {
@@ -330,17 +345,28 @@ public class Javac extends MatchingTask {
                 + (compileList.length == 1 ? "" : "s")
                 + (destDir != null ? " to " + destDir : ""));
 
+            boolean compileSucceeded = false;
+
             if (compiler.equalsIgnoreCase("classic")) {
-                doClassicCompile();
+                compileSucceeded = doClassicCompile();
             } else if (compiler.equalsIgnoreCase("modern")) {
-                doModernCompile();
+                compileSucceeded = doModernCompile();
             } else if (compiler.equalsIgnoreCase("jikes")) {
-                doJikesCompile();
+                compileSucceeded = doJikesCompile();
             } else if (compiler.equalsIgnoreCase("jvc")) {
-                doJvcCompile();
+                compileSucceeded = doJvcCompile();
             } else {
                 String msg = "Don't know how to use compiler " + compiler;
                 throw new BuildException(msg, location);
+            }
+            
+            if (!compileSucceeded) {
+                if (failOnError) {
+                    throw new BuildException(FAIL_MSG, location);
+                }
+                else {
+                    log(FAIL_MSG, Project.MSG_ERR);
+                }
             }
         }
     }
@@ -456,9 +482,10 @@ public class Javac extends MatchingTask {
     /**
      * Peforms a compile using the classic compiler that shipped with
      * JDK 1.1 and 1.2.
+     *
+     * @return true if the compile succeeded
      */
-
-    private void doClassicCompile() throws BuildException {
+    private boolean doClassicCompile() throws BuildException {
         log("Using classic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJavacCommand();
 
@@ -483,9 +510,7 @@ public class Javac extends MatchingTask {
             // Call the compile() method
             Method compile = c.getMethod("compile", new Class [] { String[].class });
             Boolean ok = (Boolean)compile.invoke(compiler, new Object[] {cmd.getArguments()});
-            if (!ok.booleanValue()) {
-                throw new BuildException(FAIL_MSG, location);
-            }
+            return ok.booleanValue();
         }
         catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use classic compiler, as it is not available"+
@@ -503,15 +528,15 @@ public class Javac extends MatchingTask {
 
     /**
      * Performs a compile using the newer compiler that ships with JDK 1.3
+     *
+     * @return true if the compile succeeded
      */
-
-    private void doModernCompile() throws BuildException {
+    private boolean doModernCompile() throws BuildException {
         try {
             Class.forName("com.sun.tools.javac.Main");
         } catch (ClassNotFoundException cnfe) {
             log("Modern compiler is not available - using classic compiler", Project.MSG_WARN);
-            doClassicCompile();
-            return;
+            return doClassicCompile();
         }
 
         log("Using modern compiler", Project.MSG_VERBOSE);
@@ -532,9 +557,7 @@ public class Javac extends MatchingTask {
                 new Class [] {(new String [] {}).getClass ()});
             int result = ((Integer) compile.invoke
                           (compiler, new Object[] {cmd.getArguments()})) .intValue ();
-            if (result != MODERN_COMPILER_SUCCESS) {
-                throw new BuildException(FAIL_MSG, location);
-            }
+            return (result == MODERN_COMPILER_SUCCESS);
         } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
@@ -653,9 +676,10 @@ public class Javac extends MatchingTask {
      * It has been successfully tested with jikes >1.10
      *
      * @author skanthak@muehlheim.de
+     *
+     * @return true if the compile succeeded
      */
-
-    private void doJikesCompile() throws BuildException {
+    private boolean doJikesCompile() throws BuildException {
         log("Using jikes compiler", Project.MSG_VERBOSE);
 
         Path classpath = new Path(project);
@@ -762,9 +786,7 @@ public class Javac extends MatchingTask {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        if (executeJikesCompile(cmd.getCommandline(), firstFileName) != 0) {
-            throw new BuildException(FAIL_MSG, location);
-        }
+        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
     /**
@@ -772,7 +794,7 @@ public class Javac extends MatchingTask {
      * @param args - arguments to pass to process on command line
      * @param firstFileName - index of the first source file in args
      */
-    protected int executeJikesCompile(String[] args, int firstFileName) {
+    protected int executeExternalCompile(String[] args, int firstFileName) {
         String[] commandArray = null;
         File tmpFile = null;
 
@@ -856,7 +878,11 @@ public class Javac extends MatchingTask {
         }
     }
 
-    private void doJvcCompile() throws BuildException {
+    /*
+     *
+     * @return true if the compile succeeded
+     */
+    private boolean doJvcCompile() throws BuildException {
         log("Using jvc compiler", Project.MSG_VERBOSE);
 
         Path classpath = new Path(project);
@@ -906,9 +932,7 @@ public class Javac extends MatchingTask {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        if (executeJikesCompile(cmd.getCommandline(), firstFileName) != 0) {
-            throw new BuildException(FAIL_MSG, location);
-        }
+        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 }
 
