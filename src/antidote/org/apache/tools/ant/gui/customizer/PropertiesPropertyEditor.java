@@ -67,8 +67,15 @@ import java.util.*;
  * @author Simeon Fitch 
  */
 public class PropertiesPropertyEditor extends AbstractPropertyEditor {
+    /** Recommended size for widgets inside a JScrollPane, as communicated
+     *  through the setPreferredScrollableViewportSize() method. */
+    protected static final Dimension VIEWPORT_SIZE = new Dimension(200, 50);
+
+    /** Container. */
     private JPanel _widget = null;
-    private Properties _value = null;
+    /* The current properties being edited. */
+    private Properties _properties = null;
+    /** The table editor for the properties. */
     private JTable _table = null;
 
     /** 
@@ -80,7 +87,7 @@ public class PropertiesPropertyEditor extends AbstractPropertyEditor {
         _widget.addFocusListener(new FocusHandler(this));
 
         _table = new JTable();
-        _table.setPreferredScrollableViewportSize(new Dimension(300, 100));
+        _table.setPreferredScrollableViewportSize(VIEWPORT_SIZE);
         JScrollPane scroller = new JScrollPane(_table);
         _widget.add(BorderLayout.CENTER, scroller);
     }
@@ -126,20 +133,21 @@ public class PropertiesPropertyEditor extends AbstractPropertyEditor {
                 value.getClass().getName() + " is not of type Properties.");
         }
 
-        Object old = _value;
-        _value = (Properties) value;
+        Object old = _properties;
+        _properties = (Properties) ((Properties) value).clone();
 
-        _table.setModel(new PropertiesTableModel(_value));
-
-        firePropertyChange(old, value);
+        PropertiesTableModel model = new PropertiesTableModel();
+        _table.setModel(model);
+        _table.clearSelection();
     }
 
     /**
-     * @return The value of the property.  Builtin types such as "int" will
-     * be wrapped as the corresponding object type such as "java.lang.Integer".
+     * @return The value of the property.  Builtin types
+     * such as "int" will be wrapped as the corresponding
+     * object type such as "java.lang.Integer".  
      */
     public Object getValue() {
-        return _value;
+        return _properties;
     }
 
     /**
@@ -165,46 +173,132 @@ public class PropertiesPropertyEditor extends AbstractPropertyEditor {
     } 
 
     /** Table model view of the Properties object. */
-    private static class PropertiesTableModel extends AbstractTableModel {
+    private class PropertiesTableModel extends AbstractTableModel {
         private static final int NAME = 0;
         private static final int VALUE = 1;
 
-        private Properties _properties = null;
-        private String[] _keys = null;
+        private List _keys = null;
 
-        public PropertiesTableModel(Properties props) {
-            _properties = props;
-
-            Enumeration enum = _properties.keys();
-            _keys = new String[_properties.size()];
-            for(int i = 0; enum.hasMoreElements(); i++) {
-                String key = (String) enum.nextElement();
-                _keys[i] = key;
-            }
+        public PropertiesTableModel() {
+            // We need to store the property keys in an array
+            // so that the ordering is preserved.
+            _keys = new ArrayList(_properties.keySet());
+            Collections.sort(_keys);
         }
 
+        /** 
+         * Get the number of rows. 
+         * 
+         * @return Number of rows.
+         */
         public int getRowCount() {
-            return _keys.length;
+            return _properties.size() + 1;
         }
 
+        /** 
+         * Get the number of columns.
+         * 
+         * @return 2
+         */
         public int getColumnCount() {
             return 2;
         }
 
+        /** 
+         * Get the editing and display class of the given column.
+         * 
+         * @return String.class
+         */
+        public Class getColumnClass(int column) {
+            return String.class;
+        }
+
+        /** 
+         * Get the header name of the column.
+         * 
+         * @param column Column index.
+         * @return Name of the column.
+         */
         public String getColumnName(int column) {
             // XXX fix me.
             return column == NAME ? "Name" : "Value";
         }
+
+        /** 
+         * Determine if the given cell is editable.
+         * 
+         * @param row Cell row.
+         * @param column Cell column.
+         * @return true
+         */
+        public boolean isCellEditable(int row, int column) {
+            return true;
+        }
+
+        /** 
+         * Get the object at the given table coordinates.
+         * 
+         * @param row Table row.
+         * @param column Table column.
+         * @return Object at location, or null if none.
+         */
         public Object getValueAt(int row, int column) {
-            switch(column) {
-              case NAME: return _keys[row];
-              case VALUE: return _properties.getProperty(_keys[row]);
+            if(row < _properties.size()) {
+                switch(column) {
+                  case NAME: 
+                      return _keys.get(row);
+                  case VALUE: 
+                      return _properties.getProperty((String)_keys.get(row));
+                }
             }
             return null;
         }
+        /** 
+         * Set the table value at the given location.
+         * 
+         * @param value Value to set.
+         * @param row Row.
+         * @param column Column.
+         */
+        public void setValueAt(Object value, int row, int column) {
+            String k = null;
+            String v = null;
+
+            String currKey = (String) getValueAt(row, NAME);
+            switch(column) {
+              case NAME: 
+                  k = String.valueOf(value);
+                  if(row < _keys.size()) {
+                      _keys.set(row, k);
+                  }
+                  else {
+                      _keys.add(k);
+                  }
+                  String currValue = null;
+                  if(currKey != null) {
+                      currValue = _properties.getProperty(currKey);
+                      _properties.remove(currKey);
+                  }
+                  v = currValue == null ? "" : currValue;
+                  break;
+              case VALUE:
+                  v = String.valueOf(value);
+                  k = currKey;
+                  if(k == null || k.length() == 0) {
+                      k = "key-for-" + v;
+                  }
+                  break;
+            }
+
+            if(k.length() > 0) {
+                _properties.setProperty(k, v);
+            }
+
+            fireTableRowsUpdated(row, row);
+            // Fire change in outer class.
+            firePropertyChange(null, _properties);
+        }
     }
-
-
 }
 
 

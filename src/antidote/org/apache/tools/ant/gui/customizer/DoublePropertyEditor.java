@@ -117,8 +117,6 @@ public class DoublePropertyEditor extends AbstractPropertyEditor {
         }
 
         _widget.setText(value.toString());
-        
-        firePropertyChange(old, value);
     }
 
     /**
@@ -155,7 +153,6 @@ public class DoublePropertyEditor extends AbstractPropertyEditor {
         }
         text = val.toString();
         _widget.setText(text);
-        firePropertyChange(old, text);
     }
 
     /**

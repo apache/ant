@@ -64,14 +64,20 @@ import javax.swing.border.BevelBorder;
  * @author Simeon Fitch 
  */
 public class StringPropertyEditor extends AbstractPropertyEditor {
-    private JTextPane _widget = null;
+    private JTextArea _widget = null;
 
     /** 
      * Default ctor.
      * 
      */
     public StringPropertyEditor() {
-        _widget = new JTextPane();
+        _widget = new JTextArea() {
+                public boolean isManagingFocus() {
+                    return false;
+                }
+            };
+
+        _widget.setLineWrap(true);
         _widget.addFocusListener(new FocusHandler(this));
         _widget.setBorder(
             BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -115,15 +121,18 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
     public void setValue(Object value) {
         Object old = _widget.getText();
         _widget.setText(String.valueOf(value));
-        firePropertyChange(old, value);
     }
 
     /**
-     * @return The value of the property.  Builtin types such as "int" will
-     * be wrapped as the corresponding object type such as "java.lang.Integer".
-     */
+     * @return The value of the property.  Builtin types
+     * such as "int" will be wrapped as the corresponding
+     * object type such as "java.lang.Integer".  */
     public Object getValue() {
-        return _widget.getText();
+        String retval = _widget.getText();
+        if(retval != null && retval.length() == 0) {
+            retval = null;
+        }
+        return retval;
     }
 
     /**
@@ -136,7 +145,6 @@ public class StringPropertyEditor extends AbstractPropertyEditor {
     public void setAsText(String text) throws IllegalArgumentException {
         Object old = _widget.getText();
         _widget.setText(text);
-        firePropertyChange(old, text);
     }
 
     /**

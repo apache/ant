@@ -63,6 +63,7 @@ import java.io.StringReader;
 import java.io.IOException;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Point;
 
 /**
  * Stub for a property editor.
@@ -76,6 +77,8 @@ class PropertyEditor extends AntEditor {
     private Customizer _customizer = null;
     /** Container for the customizer. */
     private JPanel _container = null;
+    /** Scroll area containing contents. */
+    private JScrollPane _scroller = null;
 
 	/** 
 	 * Standard ctor.
@@ -87,7 +90,7 @@ class PropertyEditor extends AntEditor {
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
         _container = new JPanel(new BorderLayout());
-        add(new JScrollPane(_container));
+        add(_scroller = new JScrollPane(_container));
 	}
 
 	/** 
@@ -115,7 +118,7 @@ class PropertyEditor extends AntEditor {
             }
         }
 
-        validate();
+        _container.revalidate();
     }
 
 

@@ -103,7 +103,7 @@ public abstract class ACSElement extends ElementNode {
 	 * @param value Value of the attribute.
 	 */
     public void setAttribute(String name, String value) {
-        if(value == null || value.length() == 0) {
+        if(value == null && getAttribute(name).length() != 0) {
             removeAttribute(name);
         }
         else {

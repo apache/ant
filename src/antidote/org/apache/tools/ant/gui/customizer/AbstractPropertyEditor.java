@@ -57,6 +57,7 @@ import java.beans.*;
 import java.awt.Graphics;
 import java.awt.Component;
 import java.awt.Rectangle;
+import java.awt.Dimension;
 import javax.swing.JComponent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusAdapter;
@@ -71,8 +72,9 @@ public abstract class AbstractPropertyEditor implements PropertyEditor {
 
     /** Bean property change property name. */
     public static final String BEAN_PROP = "BeanEditorProperty";
-
+    /** Event listener support. */
     private PropertyChangeSupport _listeners = new PropertyChangeSupport(this);
+
     /** 
      * Default constructor.
      * 

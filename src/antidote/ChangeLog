@@ -1,3 +1,12 @@
+2000-11-18  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/customizer/PropertiesPropertyEditor.java:
+	Added proper editing capability. Rows are added and removed
+	automatically. 
+	
+	* org/apache/tools/ant/gui/customizer/XXXPropertyEditor.java:
+	Removed stray event firing upon setting value of property to edit.
+
 2000-11-16  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/customizer/StringPropertyEditor.java:

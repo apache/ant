@@ -117,8 +117,6 @@ public class IntegerPropertyEditor extends AbstractPropertyEditor {
         }
 
         _widget.setText(value.toString());
-        
-        firePropertyChange(old, value);
     }
 
     /**
@@ -155,7 +153,6 @@ public class IntegerPropertyEditor extends AbstractPropertyEditor {
         }
         text = val.toString();
         _widget.setText(text);
-        firePropertyChange(old, text);
     }
 
     /**

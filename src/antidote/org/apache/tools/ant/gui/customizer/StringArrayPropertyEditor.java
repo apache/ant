@@ -65,14 +65,14 @@ import java.util.StringTokenizer;
  * @author Simeon Fitch 
  */
 public class StringArrayPropertyEditor extends AbstractPropertyEditor {
-    private JTextPane _widget = null;
+    private JTextField _widget = null;
 
     /** 
      * Default ctor.
      * 
      */
     public StringArrayPropertyEditor() {
-        _widget = new JTextPane();
+        _widget = new JTextField() ;
         _widget.setBorder(
             BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         _widget.addFocusListener(new FocusHandler(this));
@@ -130,7 +130,6 @@ public class StringArrayPropertyEditor extends AbstractPropertyEditor {
             }
         }
         _widget.setText(buf.toString());
-        firePropertyChange(old, buf.toString());
     }
 
     /**
@@ -158,7 +157,6 @@ public class StringArrayPropertyEditor extends AbstractPropertyEditor {
     public void setAsText(String text) throws IllegalArgumentException {
         Object old = _widget.getText();
         _widget.setText(text);
-        firePropertyChange(old, text);
     }
 
     /**
