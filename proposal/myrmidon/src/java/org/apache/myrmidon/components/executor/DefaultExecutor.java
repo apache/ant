@@ -143,15 +143,12 @@ public class DefaultExecutor
     {
         try
         {
-            if( task instanceof Contextualizable )
-            {
-                ( (Contextualizable)task ).contextualize( context );
-            }
+           task.contextualize( context );
         }
         catch( final Throwable throwable )
         {
             final String message =
-                REZ.getString( "compose.error",
+                REZ.getString( "contextualize.error",
                                taskModel.getName(),
                                taskModel.getLocation(),
                                throwable.getMessage() );
