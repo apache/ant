@@ -173,8 +173,8 @@ the <code>&lt;message&gt;</code> element.</p>
 
 <blockquote><pre>
 &lt;mail mailhost=&quot;smtp.myisp.com&quot; mailport=&quot;1025&quot; subject=&quot;Test build&quot;&gt;
-  &lt;from name=&quot;me@myisp.com&quot;&gt;
-  &lt;to name=&quot;all@xyz.com&quot;&gt;
+  &lt;from name=&quot;me@myisp.com&quot;/&gt;
+  &lt;to name=&quot;all@xyz.com&quot;/&gt;
   &lt;message&gt;The ${buildname} nightly build has completed&lt;/message&gt;
   &lt;fileset dir=&quot;dist&quot;&gt;
     &lt;includes name=&quot;**/*.zip&quot;/&gt;
