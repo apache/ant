@@ -81,17 +81,17 @@ import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
 public class MessageReader {
 
     /** the set of registered listeners */
-    protected Vector listeners = new Vector();
+    private Vector listeners = new Vector();
 
     // communication states with client
-    protected boolean inReadTrace = false;
-    protected boolean inFailedMessage = false;
-    protected String failedTest;
-    protected String failedMessage;
-    protected String failedTrace;
-    protected int failureKind;
-    protected long elapsedTime;
-    protected Properties sysprops;
+    private boolean inReadTrace = false;
+    private boolean inFailedMessage = false;
+    private String failedTest;
+    private String failedMessage;
+    private String failedTrace;
+    private int failureKind;
+    private long elapsedTime;
+    private Properties sysprops;
 
     public MessageReader() {
     }

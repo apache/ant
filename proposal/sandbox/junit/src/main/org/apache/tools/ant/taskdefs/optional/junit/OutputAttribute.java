@@ -100,7 +100,7 @@ public class OutputAttribute extends ProjectComponent {
         } else if (STDERR.equals(value)) {
             return new KeepAliveOutputStream(System.err);
         }
-        File f = project.resolveFile(value);
+        File f = getProject().resolveFile(value);
         try {
             return new FileOutputStream(f);
         } catch (IOException e) {

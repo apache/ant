@@ -87,10 +87,15 @@ public class Server {
     private MessageReader reader = new MessageReader();
 
     /** writer used to send message to clients */
-    private PrintWriter writer;
+    private MessageWriter writer;
 
     public Server(int port) {
         this.port = port;
+    }
+
+    protected void finalize() throws Exception {
+        cancel();
+        shutdown();
     }
 
     /**
@@ -123,19 +128,35 @@ public class Server {
     /** cancel the connection to the client */
     public void cancel() {
         if (isRunning()) {
-            //@fixme
+            writer.sendMessage(MessageIds.TEST_STOP);
         }
     }
 
     /** shutdown the server and any running client */
     public void shutdown() {
+        if (writer != null){
+            writer.close();
+            writer = null;
+        }
+        if (reader != null){
+            //@fixme what about the stream ?
+            reader = null;
+        }
         try {
             if (client != null) {
                 client.shutdownInput();
                 client.shutdownOutput();
+                client.close();
+                client = null;
             }
-            server.close();
         } catch (IOException e) {
+        }
+        try {
+            if (server != null){
+                server.close();
+                server = null;
+            }
+        } catch (IOException e){
         }
     }
 
@@ -146,12 +167,14 @@ public class Server {
             try {
                 server = new ServerSocket(port);
                 client = server.accept();
-                writer = new PrintWriter(client.getOutputStream(), true);
+                writer = new MessageWriter(client.getOutputStream());
                 reader.process(client.getInputStream());
             } catch (IOException e) {
+                //@fixme this stacktrace might be normal when closing
+                // the socket. So decompose the above in distinct steps
                 e.printStackTrace();
             } finally {
-                stop();
+                cancel();
                 shutdown();
             }
         }

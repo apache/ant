@@ -116,7 +116,7 @@ public class TestRunnerTest extends TestCase
         runner.addTestClassName(TestCases.NullTestCase.class.getName());
 //        server.addListener( new DefaultTestRunListener() );
         runner.run();
-        synchronized(this){ if (!done){ wait(); } }
+        synchronized(this){ while (!done){ wait(); } }
         assertEquals(new Integer(3), recorder.runStarted.elementAt(0));
         /*
         assertTrue(recorder.runStarted.elementAt(0).toSt("testSuccess"));
@@ -128,7 +128,7 @@ public class TestRunnerTest extends TestCase
     public void testFailSetupTestCase() throws Exception {
         runner.addTestClassName(TestCases.FailSetupTestSuite.class.getName());
         runner.run();
-        synchronized(this){ if (!done){ wait(); } }
+        synchronized(this){ while (!done){ wait(); } }
 
         assertEquals(1, recorder.runStarted.size());
         assertEquals(1, recorder.runEnded.size());
@@ -137,7 +137,7 @@ public class TestRunnerTest extends TestCase
     public void testFailSetupTestSuite() throws Exception {
         runner.addTestClassName(TestCases.FailSetupTestSuite.class.getName());
         runner.run();
-        synchronized(this){ if (!done){ wait(); } }
+        synchronized(this){ while (!done){ wait(); } }
         assertEquals(1, recorder.runStarted.size());
         assertEquals(1, recorder.runEnded.size());
     }
@@ -159,14 +159,14 @@ public class TestRunnerTest extends TestCase
     public void onTestRunEnded(long elapsedtime) {
         synchronized(this){
             done = true;
+            notify();
         }
-        notify();
     }
     public void onTestRunStopped(long elapsedtime) {
         synchronized(this){
             done = true;
+            notify();
         }
-        notify();
     }
     public void onTestRunSystemProperties(Properties props) {
     }

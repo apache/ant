@@ -64,7 +64,18 @@ import junit.runner.TestCollector;
  */
 public class TestElement implements TestCollector {
 
+    /** classname of JUnit test */
+    private String name;
+
+//@fixme, a path is needed for a test.
+
     public Enumeration collectTests() {
-        return null;
+        return Enumerations.fromArray( new String[]{ name } );
+    }
+
+// Ant bean setters
+
+    public String setName(String value){
+        this.name = value;
     }
 }
