@@ -18,9 +18,6 @@ Other changes:
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
-* <nice> task lets you set the priority of the current thread; non-forking
-  <java> code will inherit this priority in their main thread.
-
 * A new roundup attribute on <zip> and related task can be used to
   control whether the file modification times inside the archive will
   be rounded up or down (since zips only store modification times with
@@ -31,8 +28,6 @@ Other changes:
   introduced.  Additionally, the <mapper> element now accepts "defined"
   nested FileNameMapper implementations directly, allowing a usage
   comparable to those of <condition>, <filter>, and <selector>.
-
-* New attribute "negate" on <propertyset> to invert selection criteria.
 
 * New <redirector> type introduced to provide extreme I/O flexibility.
   Initial support for <exec>, <apply>, and <java> tasks.
@@ -156,6 +151,11 @@ Other changes:
 * <xslt> now supports a nested <mapper>.  Bugzilla Report 11249.
 
 * <touch> has filelist support.
+
+* <nice> task lets you set the priority of the current thread; non-forking
+  <java> code will inherit this priority in their main thread.
+
+* New attribute "negate" on <propertyset> to invert selection criteria.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
