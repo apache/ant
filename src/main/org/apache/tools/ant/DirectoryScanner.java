@@ -332,7 +332,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a given path matches the start of a given
+     * Test whether or not a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -352,7 +352,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a given path matches the start of a given
+     * Test whether or not a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -375,7 +375,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a given path matches a given pattern.
+     * Test whether or not a given path matches a given pattern.
      *
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
@@ -390,7 +390,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a given path matches a given pattern.
+     * Test whether or not a given path matches a given pattern.
      *
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
@@ -408,7 +408,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a string matches against a pattern.
+     * Test whether or not a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
@@ -426,7 +426,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a string matches against a pattern.
+     * Test whether or not a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
@@ -496,7 +496,7 @@ public class DirectoryScanner
     }
 
     /**
-     *  Go back to the hardwired default exclude patterns.
+     * Go back to the hardwired default exclude patterns.
      *
      * @since Ant 1.6
      */
@@ -508,7 +508,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Sets the base directory to be scanned. This is the directory which is
+     * Set the base directory to be scanned. This is the directory which is
      * scanned recursively. All '/' and '\' characters are replaced by
      * <code>File.separatorChar</code>, so the separator used need not match
      * <code>File.separatorChar</code>.
@@ -522,7 +522,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Sets the base directory to be scanned. This is the directory which is
+     * Set the base directory to be scanned. This is the directory which is
      * scanned recursively.
      *
      * @param basedir The base directory for scanning.
@@ -895,7 +895,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Scans the given directory for files and directories. Found files and
+     * Scan the given directory for files and directories. Found files and
      * directories are placed in their respective collections, based on the
      * matching of includes, excludes, and the selectors.  When a directory
      * is found, it is scanned recursively.
