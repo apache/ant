@@ -1357,30 +1357,34 @@ public class FTP
                 }
                 bw = new BufferedWriter(new FileWriter(listing));
             }
-
-            for (int i = 0; i < dsfiles.length; i++) {
-                switch (action) {
-                    case SEND_FILES:
-                        sendFile(ftp, dir, dsfiles[i]);
-                        break;
-                    case GET_FILES:
-                        getFile(ftp, dir, dsfiles[i]);
-                        break;
-                    case DEL_FILES:
-                        delFile(ftp, dsfiles[i]);
-                        break;
-                    case LIST_FILES:
-                        listFile(ftp, bw, dsfiles[i]);
-                        break;
-                    case CHMOD:
-                        doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(dsfiles[i]));
-                        transferred++;
-                        break;
-                    case RM_DIR:
-                        rmDir(ftp, dsfiles[i]);
-                        break;
-                    default:
-                        throw new BuildException("unknown ftp action " + action);
+            if (action == RM_DIR) {
+                // to remove directories, start by the end of the list
+                // the trunk does not let itself be removed before the leaves
+                for (int i = dsfiles.length - 1; i >= 0; i--) {
+                    rmDir(ftp, dsfiles[i]);
+                }
+            }   else {
+                for (int i = 0; i < dsfiles.length; i++) {
+                    switch (action) {
+                        case SEND_FILES:
+                            sendFile(ftp, dir, dsfiles[i]);
+                            break;
+                        case GET_FILES:
+                            getFile(ftp, dir, dsfiles[i]);
+                            break;
+                        case DEL_FILES:
+                            delFile(ftp, dsfiles[i]);
+                            break;
+                        case LIST_FILES:
+                            listFile(ftp, bw, dsfiles[i]);
+                            break;
+                        case CHMOD:
+                            doSiteCommand(ftp, "chmod " + chmod + " " + resolveFile(dsfiles[i]));
+                            transferred++;
+                            break;
+                        default:
+                            throw new BuildException("unknown ftp action " + action);
+                    }
                 }
             }
         } finally {

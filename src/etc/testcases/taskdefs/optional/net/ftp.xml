@@ -77,4 +77,27 @@
         <symlink link="${tmp.dir}/alpha/beta/gamma/gamma.xml"
             resource="${tmp.dir}/alpha/beta/beta.xml"/>
     </target>
+    <target name="ftp-delete">
+        <!-- this target can produce an error if the rmdir does not work -->
+        <!-- there can be problems with the rmdir action if the directories are not removed in a proper order -->
+        <!-- which means beginning by the leaves of the tree, going back to the trunk -->
+        <ftp action="del"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}">
+            <fileset dir="${tmp.get.dir}">
+                <include name="**"/>
+            </fileset>
+        </ftp>
+        <ftp action="rmdir"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}">
+            <fileset dir="${tmp.get.dir}">
+                <include name="**"/>
+            </fileset>
+        </ftp>
+    </target>
 </project>
