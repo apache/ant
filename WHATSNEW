@@ -23,6 +23,9 @@ Fixed bugs:
 
 * <junit> and <assertions> are working together. Bugzilla report 27218
 
+* I/O-intensive processes hung when executed via <exec spawn="true">.
+  Bugzilla reports 23893/26852.
+
 
 Other changes:
 --------------

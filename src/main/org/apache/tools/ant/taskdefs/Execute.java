@@ -17,6 +17,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.OutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -509,6 +510,18 @@ public class Execute {
                     Project.MSG_VERBOSE);
             }
         }
+
+        OutputStream dummyOut = new OutputStream() {
+            public void write(int b) throws IOException {
+            }
+        };
+
+        ExecuteStreamHandler streamHandler = new PumpStreamHandler(dummyOut);
+        streamHandler.setProcessErrorStream(process.getErrorStream());
+        streamHandler.setProcessOutputStream(process.getInputStream());
+        streamHandler.start();
+        process.getOutputStream().close();
+
         project.log("spawned process " + process.toString(), Project.MSG_VERBOSE);
     }
 
