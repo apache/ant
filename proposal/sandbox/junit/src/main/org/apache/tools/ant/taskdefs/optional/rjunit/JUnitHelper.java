@@ -81,7 +81,6 @@ public final class JUnitHelper {
      */
     public static String getTestName(String text){
         int p1 = text.indexOf('(');
-        int p2 = text.indexOf(')', p1);
         return text.substring(0, p1);
     }
 
@@ -118,7 +117,6 @@ public final class JUnitHelper {
     /**
      * Extract a test from a given class
      * @param clazz the class to extract a test from.
-     * @throws Exception a generic exception
      */
     public static Test getTest(Class clazz) {
         try {

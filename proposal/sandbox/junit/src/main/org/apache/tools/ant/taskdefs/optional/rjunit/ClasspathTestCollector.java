@@ -122,8 +122,8 @@ public final class ClasspathTestCollector extends ProjectComponent
         Project project = getProject();
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(dir);
-        ds.setIncludes(patterns.getIncludePatterns(getProject()));
-        ds.setExcludes(patterns.getExcludePatterns(getProject()));
+        ds.setIncludes(patterns.getIncludePatterns(project));
+        ds.setExcludes(patterns.getExcludePatterns(project));
         ds.scan();
         String[] included = ds.getIncludedFiles();
         return testClassNameFromFile(included);

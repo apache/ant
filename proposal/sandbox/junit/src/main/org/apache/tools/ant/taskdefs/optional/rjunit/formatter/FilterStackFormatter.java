@@ -127,7 +127,7 @@ public class FilterStackFormatter extends FilterFormatter {
     }
     /**
      * Check whether or not the line should be accepted.
-     * @param the line to be check for acceptance.
+     * @param line the line to be check for acceptance.
      * @return <tt>true</tt> if the line is accepted, <tt>false</tt> if not.
      */
     protected boolean accept(String line) {
