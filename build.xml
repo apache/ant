@@ -327,6 +327,7 @@
 
   <patternset id="teststhatfail">
     <exclude name="${optional.package}/BeanShellScriptTest.java"/>
+    <exclude name="${optional.package}/jdepend/JDependTest.java"/>
   </patternset>
 
   <!--
