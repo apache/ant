@@ -1,14 +1,13 @@
-
-  <html>
+<html>
 
     <head>
       <meta http-equiv="Content-Language" content="en-us">
-      <title>Ant User Manual</title>
+      <title>Concat</title>
     </head>
 
     <body>
 
-      <h2><a name="copy">Concat</a></h2>
+      <h2><a name="Concat">Concat</a></h2>
 
       <h3>Description</h3>
 
@@ -41,10 +40,10 @@
 	  <td valign="top">destfile</td>
 	  <td valign="top">
 	    The destination file for the concatenated stream.
+        If not specified the console will be used instead.
 	  </td>
 	  <td valign="top" align="center">
-	    No, the console will be used as the destination for the
-	    stream in the absence of this attribute.
+	    No, 
 	  </td>
 	</tr>
 
@@ -61,7 +60,8 @@
           <td valign="top">encoding</td>
           <td valign="top">
             Specifies the encoding for the input files. Please see <a
-            href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>
+            href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
+            http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html</a>
             for a list of possible values. Defaults to the platform's
             default character encoding.
           </td>
@@ -93,35 +93,39 @@
 
       <h3>Examples</h3>
 
-      <p><b>Cat a string to a file:</b></p>
+      <p><b>Concatenate a string to a file:</b></p>
 
       <pre>
-  &lt;cat tofile=&quot;README&quot;&gt;Hello, World!&lt;/cat&gt;
+  &lt;concat tofile=&quot;README&quot;&gt;Hello, World!&lt;/concat&gt;
       </pre>
 
-      <p><b>Cat a series of files to the console:</b></p>
+      <p><b>Concatenate a series of files to the console:</b></p>
 
       <pre>
-  &lt;cat&gt;
+  &lt;concat&gt;
     &lt;fileset dir=&quot;messages&quot; includes=&quot;*important*&quot; /&gt;
-  &lt;/cat&gt;
+  &lt;/concat&gt;
       </pre>
 
-      <p><b>Cat a single file, appending if the destination file exists:</b></p>
+      <p><b>Concatenate a single file, appending if the destination file exists:</b></p>
 
       <pre>
-  &lt;cat tofile=&quot;NOTES&quot; append=&quot;true&quot;&gt;
+  &lt;concat tofile=&quot;NOTES&quot; append=&quot;true&quot;&gt;
     &lt;filelist dir=&quot;notes&quot; files=&quot;note.txt&quot; /&gt;
-  &lt;/cat&gt;
+  &lt;/concat&gt;
       </pre>
 
-      <p><b>Cat a series of files, overwriting if the destination file exists:</b></p>
+      <p><b>Concatenate a series of files, overwriting if the 
+      destination file exists:</b></p>
 
       <pre>
-  &lt;cat tofile=&quot;${docbook.dir}/all-sections.xml&quot;&gt;
-    &lt;filelist dir=&quot;${docbook.dir}/sections&quot; files=&quot;introduction.xml,overview.xml&quot; /&gt;
-    &lt;fileset dir=&quot;${docbook.dir}&quot; includes=&quot;sections/*.xml&quot; excludes=&quot;introduction.xml,overview.xml&quot; /&gt;
-  &lt;/cat&gt;
+  &lt;concat tofile=&quot;${docbook.dir}/all-sections.xml&quot;&gt;
+    &lt;filelist dir=&quot;${docbook.dir}/sections&quot; 
+         files=&quot;introduction.xml,overview.xml&quot; /&gt;
+    &lt;fileset dir=&quot;${docbook.dir}&quot; 
+         includes=&quot;sections/*.xml&quot; 
+         excludes=&quot;introduction.xml,overview.xml&quot; /&gt;
+  &lt;/concat&gt;
       </pre>
 
       <hr>
