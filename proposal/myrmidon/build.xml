@@ -397,6 +397,28 @@ Legal:
 
   </target>
 
+  <target name="xdoclet">
+    <path id="xdoclet.classpath">
+      <pathelement location="lib/xdoclet.jar"/>
+      <pathelement location="lib/log4j-core.jar"/>
+      <path refid="project.class.path"/>
+    </path>
+    <taskdef name="xdoclet"
+           classname="xdoclet.DocletTask"
+           classpath="lib/xdoclet.jar"/>
+    <xdoclet sourcepath="${java.dir}"
+              destdir="${build.dir}"
+              classpathref="xdoclet.classpath">
+      <fileset dir="${java.dir}">
+        <include name="**/*.java" />
+      </fileset>
+      <template templateFile="${manifest.dir}/core-ant-descriptor.template"
+                destinationfile="core-ant-descriptor.xml"/>
+      <template templateFile="${manifest.dir}/builtin-ant-roles.template"
+                destinationfile="builtin-ant-roles.xml"/>
+    </xdoclet>
+  </target>
+
   <!-- Creates the distribution -->
   <target name="dist" depends="jars">
 
@@ -452,28 +474,6 @@ Legal:
   <target name="rebuild">
     <antcall target="clean"/>
     <antcall target="main"/>
-  </target>
-
-  <target name="xdoclet">
-    <path id="xdoclet.classpath">
-      <pathelement location="lib/xdoclet.jar"/>
-      <pathelement location="lib/log4j-core.jar"/>
-      <path refid="project.class.path"/>
-    </path>
-    <taskdef name="xdoclet"
-           classname="xdoclet.DocletTask"
-           classpath="lib/xdoclet.jar"/>
-    <xdoclet sourcepath="${java.dir}"
-              destdir="${build.dir}"
-              classpathref="xdoclet.classpath">
-      <fileset dir="${java.dir}">
-        <include name="**/*.java" />
-      </fileset>
-      <template templateFile="${manifest.dir}/core-ant-descriptor.template"
-                destinationfile="core-ant-descriptor.xml"/>
-      <template templateFile="${manifest.dir}/builtin-ant-roles.template"
-                destinationfile="builtin-ant-roles.xml"/>
-    </xdoclet>
   </target>
 
 </project>
