@@ -4,6 +4,13 @@ Changes from current Ant 1.6 CVS version to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* Use org.apache.log4j.Logger instead of org.apache.log4j.Category. Category has
+  been deprecated for ~2 years and is been removed from the log4j code.
+  Logger was introduced in log4j 1.2 so users of log4j 1.1 and log4j 1.0 need
+  to upgrade to a newer version of log4j.
+  Bugzilla Report 31951.
+
+
 Fixed bugs:
 -----------
 
@@ -95,9 +102,6 @@ Other changes:
 * Add xmlcatalog nested element to XmlProperty. Bugzilla report 27053.
 
 * New attribute alwayslog for <redirector> type.
-
-* Use org.apache.log4j.Logger instead of org.apache.log4j.Category.
-  Bugzilla Report 31951.
 
 Fixed bugs:
 -----------
