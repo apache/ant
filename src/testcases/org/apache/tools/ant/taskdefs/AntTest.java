@@ -492,7 +492,6 @@ public class AntTest extends BuildFileTest {
         private String key;
         private int calls = 0;
         private AssertionFailedError error;
-        private String message = "";
 
         PropertyChecker(String key, String[] values) {
             this.key = key;
@@ -510,10 +509,10 @@ public class AntTest extends BuildFileTest {
             if (event.getTarget().getName().equals("")) {
                 return;
             }
-            message += ", " + event.getTarget().getName();
             if (calls >= expectedValues.length) {
                 error = new AssertionFailedError("Unexpected invocation of"
-                                                 + " target " + message);
+                                                 + " target "
+                                                 + event.getTarget().getName());
             }
             
             if (error == null) {
