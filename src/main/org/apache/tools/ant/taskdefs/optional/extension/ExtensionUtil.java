@@ -54,9 +54,11 @@
 package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -234,5 +236,27 @@ public class ExtensionUtil
         }
 
         extensionList.add( extension );
+    }
+
+    /**
+     * retrieve manifest for specified file.
+     *
+     * @param file the file
+     * @return the manifest
+     * @throws BuildException if errror occurs (file not exist,
+     *         file not a jar, manifest not exist in file)
+     */
+    static Manifest getManifest( final File file )
+        throws BuildException
+    {
+        try
+        {
+            final JarFile jarFile = new JarFile( file );
+            return jarFile.getManifest();
+        }
+        catch( final IOException ioe )
+        {
+            throw new BuildException( ioe.getMessage(), ioe );
+        }
     }
 }

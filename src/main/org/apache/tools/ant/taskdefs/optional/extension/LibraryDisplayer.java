@@ -54,9 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional.extension;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
-import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import org.apache.tools.ant.BuildException;
 
@@ -80,7 +78,7 @@ class LibraryDisplayer
     void displayLibrary( final File file )
         throws BuildException
     {
-        final Manifest manifest = getManifest( file );
+        final Manifest manifest = ExtensionUtil.getManifest( file );
         displayLibrary( file, manifest );
     }
 
@@ -208,27 +206,5 @@ class LibraryDisplayer
             System.out.println( sb );
         }
         System.out.println( specification.toString() );
-    }
-
-    /**
-     * retrieve manifest for specified file.
-     *
-     * @param file the file
-     * @return the manifest
-     * @throws BuildException if errror occurs (file not exist,
-     *         file not a jar, manifest not exist in file)
-     */
-    private Manifest getManifest( final File file )
-        throws BuildException
-    {
-        try
-        {
-            final JarFile jarFile = new JarFile( file );
-            return jarFile.getManifest();
-        }
-        catch( final IOException ioe )
-        {
-            throw new BuildException( ioe.getMessage(), ioe );
-        }
     }
 }
