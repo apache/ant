@@ -21,9 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -45,10 +45,10 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 public abstract class Definer extends DefBase {
     private static class ResourceStack extends ThreadLocal {
         public Object initialValue() {
-            return new ArrayList();
+            return new HashMap();
         }
-        List getStack() {
-            return (List) get();
+        Map getStack() {
+            return (Map) get();
         }
     }
     private static ResourceStack resourceStack = new ResourceStack();
@@ -223,13 +223,16 @@ public abstract class Definer extends DefBase {
                     loadProperties(al, url);
                     break;
                 } else {
-                    if (resourceStack.getStack().contains(url)) {
-                        log("Warning: Attempting to recursively load " + url
-                            + " at " + getLocation(),
+                    if (resourceStack.getStack().get(url) != null) {
+                        log("Warning: Recursive loading of " + url
+                            + " ignored"
+                            + " at " + getLocation()
+                            + " originally loaded at "
+                            + resourceStack.getStack().get(url),
                             Project.MSG_WARN);
                     } else {
                         try {
-                            resourceStack.getStack().add(url);
+                            resourceStack.getStack().put(url, getLocation());
                             loadAntlib(al, url);
                         } finally {
                             resourceStack.getStack().remove(url);
