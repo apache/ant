@@ -387,3 +387,6 @@ V. Things we probably don't agree on.
 * check for more than one condition in if/unless attributes.
 
 * provide failonerror like functionality to all tasks.
+
+* internationalization
+
