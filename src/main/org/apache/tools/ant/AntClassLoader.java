@@ -32,6 +32,7 @@ import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 
@@ -44,6 +45,8 @@ import org.apache.tools.ant.util.LoaderUtils;
  *
  */
 public class AntClassLoader extends ClassLoader implements BuildListener {
+
+    private static final FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
      * An enumeration of all resources of a given name found within the
@@ -888,7 +891,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
 
                 if (resource.exists()) {
                     try {
-                        return new URL("file:" + resource.toString());
+                        return fileUtils.getFileURL(resource);
                     } catch (MalformedURLException ex) {
                         return null;
                     }
@@ -903,7 +906,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 ZipEntry entry = zipFile.getEntry(resourceName);
                 if (entry != null) {
                     try {
-                        return new URL("jar:file:" + file.toString()
+                        return new URL("jar:" + fileUtils.getFileURL(file)
                             + "!/" + entry);
                     } catch (MalformedURLException ex) {
                         return null;
