@@ -64,8 +64,11 @@ import java.text.*;
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
+ * @author roxspring@yahoo.com
  */
 public class Tstamp extends Task {
+    
+    private Vector customFormats = new Vector();
 
     public void execute() throws BuildException {
         try {
@@ -79,8 +82,49 @@ public class Tstamp extends Task {
 
             SimpleDateFormat today  = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
             project.setProperty("TODAY", today.format(d));
+            
+            Enumeration i = customFormats.elements();
+            while(i.hasMoreElements())
+            {
+                CustomFormat cts = (CustomFormat)i.nextElement();
+                cts.execute(project,d);
+            }
+            
         } catch (Exception e) {
             throw new BuildException(e);
+        }
+    }
+    
+    public CustomFormat createFormat()
+    {
+        CustomFormat cts = new CustomFormat();
+        customFormats.addElement(cts);
+        return cts;
+    }
+    
+    public class CustomFormat
+    {
+        private String propertyName;
+        private String pattern;
+        
+        public CustomFormat()
+        {
+        }
+        
+        public void setProperty(String propertyName)
+        {
+            this.propertyName = propertyName;
+        }
+        
+        public void setPattern(String pattern)
+        {
+            this.pattern = pattern;
+        }
+        
+        public void execute(Project project, Date date)
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat (pattern);
+            project.setProperty(propertyName, sdf.format(date));
         }
     }
 }
