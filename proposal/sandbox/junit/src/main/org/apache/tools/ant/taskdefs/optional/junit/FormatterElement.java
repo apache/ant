@@ -182,7 +182,7 @@ public class FormatterElement {
         }
 
         public String getClassName() {
-            return CLASSNAMES[index];
+            return CLASSNAMES[getIndex()];
         }
     }
 

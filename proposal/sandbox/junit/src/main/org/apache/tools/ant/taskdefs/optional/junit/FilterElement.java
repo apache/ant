@@ -130,7 +130,7 @@ public class FilterElement {
 
         /** get the classname matching the alias */
         public String getClassName() {
-            return CLASSNAMES[index];
+            return CLASSNAMES[getIndex()];
         }
     }
 
