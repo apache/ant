@@ -40,6 +40,10 @@ enhancements of existing tasks.
   Actually, this is a little bit abstract, but doesn't apply to the
   core either.
 
+* Better docs.
+
+* RPM task.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
@@ -170,6 +174,13 @@ decide between several possible options.
 * Add cvs login feature.
 
   Requires handling of user input.
+
+* Easier installation process. GUI - maybe webstart from the homepage.
+
+  This includes asking the user whether he wants to use optional tasks
+  and downloads the required libs. Automatic upgrades and so on.
+
+* Logo for Ant.
 
 V. Things we probably don't agree on. 
 ======================================================================
