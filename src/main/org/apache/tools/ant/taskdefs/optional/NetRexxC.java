@@ -70,6 +70,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Task to compile NetRexx source files. This task can take the following
@@ -101,6 +102,11 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * <li>trace</li>
  * <li>utf8</li>
  * <li>verbose</li>
+ * <li>suppressMethodArgumentNotUsed</li>
+ * <li>suppressPrivatePropertyNotUsed</li>
+ * <li>suppressVariableNotUsed</li>
+ * <li>suppressExceptionNotSignalled</li>
+ * <li>suppressDeprecation</li>
  * </ul>
  * Of these arguments, the <b>srcdir</b> argument is required.
  *
@@ -125,7 +131,7 @@ public class NetRexxC extends MatchingTask {
     private boolean binary;
     private String classpath;
     private boolean comments;
-    private boolean compact;
+    private boolean compact = true; // should be the default, as it integrates better in ant.
     private boolean compile = true;
     private boolean console;
     private boolean crossref;
@@ -152,12 +158,23 @@ public class NetRexxC extends MatchingTask {
     private String trace = "trace2";
     private boolean utf8;
     private String verbose = "verbose3";
+    private boolean suppressMethodArgumentNotUsed = false;
+    private boolean suppressPrivatePropertyNotUsed = false;
+    private boolean suppressVariableNotUsed = false;
+    private boolean suppressExceptionNotSignalled = false;
+    private boolean suppressDeprecation = false;
+
+    // constants for the messages to suppress by flags and their corresponding properties
+    static final String MSG_METHOD_ARGUMENT_NOT_USED = "Warning: Method argument is not used";
+    static final String MSG_PRIVATE_PROPERTY_NOT_USED = "Warning: Private property is defined but not used";
+    static final String MSG_VARIABLE_NOT_USED = "Warning: Variable is set but not used";
+    static final String MSG_EXCEPTION_NOT_SIGNALLED = "is in SIGNALS list but is not signalled within the method";
+    static final String MSG_DEPRECATION = "has been deprecated";
 
     // other implementation variables
     private Vector compileList = new Vector();
     private Hashtable filecopyList = new Hashtable();
     private String oldClasspath = System.getProperty("java.class.path");
-
 
     /**
      * Set whether literals are treated as binary, rather than NetRexx types
@@ -396,20 +413,19 @@ public class NetRexxC extends MatchingTask {
         this.time = time;
     }
 
+    public void setTrace(TraceAttr trace) {
+        this.trace = trace.getValue();
+    }
+
     /**
      * Turns on or off tracing and directs the resultant trace output
      * Valid values are: "trace", "trace1", "trace2" and "notrace".
      * "trace" and "trace2"
      */
     public void setTrace(String trace) {
-        if (trace.equalsIgnoreCase("trace")
-            || trace.equalsIgnoreCase("trace1")
-            || trace.equalsIgnoreCase("trace2")
-            || trace.equalsIgnoreCase("notrace")) {
-            this.trace = trace;
-        } else {
-            throw new BuildException("Unknown trace value specified: '" + trace + "'");
-        }
+        TraceAttr t = new TraceAttr();
+        t.setValue(trace);
+        setTrace(t);
     }
 
     /**
@@ -424,8 +440,171 @@ public class NetRexxC extends MatchingTask {
     /**
      * Whether lots of warnings and error messages should be generated
      */
+    public void setVerbose(VerboseAttr verbose) {
+        this.verbose = verbose.getValue();
+    }
+    
+
+    /**
+     * Whether lots of warnings and error messages should be generated
+     */
     public void setVerbose(String verbose) {
-        this.verbose = verbose;
+        VerboseAttr v = new VerboseAttr();
+        v.setValue(verbose);
+        setVerbose(v);
+    }
+
+    /**
+     * Whether the task should suppress the "Method argument is not used"
+     * in strictargs-Mode, which can not be suppressed by the compiler itself.
+     * The warning is logged as verbose message, though.
+     */
+    public void setSuppressMethodArgumentNotUsed(boolean suppressMethodArgumentNotUsed) {
+        this.suppressMethodArgumentNotUsed = suppressMethodArgumentNotUsed;
+    }
+
+    /**
+     * Whether the task should suppress the "Private property is defined but
+     * not used" in strictargs-Mode, which can be quite annoying while developing.
+     * The warning is logged as verbose message, though.
+     */
+    public void setSuppressPrivatePropertyNotUsed(boolean suppressPrivatePropertyNotUsed) {
+        this.suppressPrivatePropertyNotUsed = suppressPrivatePropertyNotUsed;
+    }
+
+    /**
+     * Whether the task should suppress the "Variable is set but not used"
+     * in strictargs-Mode. Be careful with this one!
+     * The warning is logged as verbose message, though.
+     */
+    public void setSuppressVariableNotUsed(boolean suppressVariableNotUsed) {
+        this.suppressVariableNotUsed = suppressVariableNotUsed;
+    }
+
+    /**
+     * Whether the task should suppress the "FooException is in SIGNALS list but
+     * is not signalled within the method", which is sometimes rather useless.
+     * The warning is logged as verbose message, though.
+     */
+    public void setSuppressExceptionNotSignalled(boolean suppressExceptionNotSignalled) {
+        this.suppressExceptionNotSignalled = suppressExceptionNotSignalled;
+    }
+
+    /**
+     * Whether the task should suppress the "FooException is in SIGNALS list but
+     * is not signalled within the method", which is sometimes rather useless.
+     * The warning is logged as verbose message, though.
+     */
+    public void setSuppressDeprecation(boolean suppressDeprecation) {
+        this.suppressDeprecation = suppressDeprecation;
+    }
+
+    /**
+     * init-Method sets defaults from Properties. That way, when ant is called with arguments
+     * like -Dant.netrexxc.verbose=verbose5 one can easily take control of all netrexxc-tasks.
+     */
+    // Sorry for the formatting, but that way it's easier to keep in sync with the private properties (line by line).
+    public void init() {
+        String p;
+        if ((p=project.getProperty("ant.netrexxc.binary"))!=null) {
+            this.binary=Project.toBoolean(p);
+        }
+        // classpath makes no sense
+        if ((p=project.getProperty("ant.netrexxc.comments"))!=null) {
+            this.comments=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.compact"))!=null) {
+            this.compact=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.compile"))!=null) {
+            this.compile=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.console"))!=null) {
+            this.console=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.crossref"))!=null) {
+            this.crossref=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.decimal"))!=null) {
+            this.decimal=Project.toBoolean(p);
+            // destDir
+        }
+        if ((p=project.getProperty("ant.netrexxc.diag"))!=null) {
+            this.diag=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.explicit"))!=null) {
+            this.explicit=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.format"))!=null) {
+            this.format=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.java"))!=null) {
+            this.java=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.keep"))!=null) {
+            this.keep=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.logo"))!=null) {
+            this.logo=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.replace"))!=null) {
+            this.replace=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.savelog"))!=null) {
+            this.savelog=Project.toBoolean(p);
+            // srcDir
+        }
+        if ((p=project.getProperty("ant.netrexxc.sourcedir"))!=null) {
+            this.sourcedir=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.strictargs"))!=null) {
+            this.strictargs=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.strictassign"))!=null) {
+            this.strictassign=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.strictcase"))!=null) {
+            this.strictcase=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.strictimport"))!=null) {
+            this.strictimport=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.strictprops"))!=null) {
+            this.strictprops=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.strictsignal"))!=null) {
+            this.strictsignal=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.symbols"))!=null) {
+            this.symbols=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.time"))!=null) {
+            this.time=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.trace"))!=null) {
+            setTrace(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.utf8"))!=null) {
+            this.utf8=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.verbose"))!=null) {
+            setVerbose(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.suppressMethodArgumentNotUsed"))!=null) {
+            this.suppressMethodArgumentNotUsed=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.suppressPrivatePropertyNotUsed"))!=null) {
+            this.suppressPrivatePropertyNotUsed=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.suppressVariableNotUsed"))!=null) {
+            this.suppressVariableNotUsed=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.suppressExceptionNotSignalled"))!=null) {
+            this.suppressExceptionNotSignalled=Project.toBoolean(p);
+        }
+        if ((p=project.getProperty("ant.netrexxc.suppressDeprecation"))!=null) {
+            this.suppressDeprecation=Project.toBoolean(p);
+        }
     }
 
     /**
@@ -571,24 +750,33 @@ public class NetRexxC extends MatchingTask {
                 main(new Rexx(compileArgs), new PrintWriter(out));
             String sdir=srcDir.getAbsolutePath();
             String ddir=destDir.getAbsolutePath();
+            boolean doReplace=!(sdir.equals(ddir));
             int dlen=ddir.length();
             String l;
-            StringBuffer lb;
             BufferedReader in=new BufferedReader(new StringReader(out.toString()));
             log("replacing destdir '"+ddir+"' through sourcedir '"+sdir+"'", Project.MSG_VERBOSE);
             while ((l=in.readLine())!=null) {
-                lb=new StringBuffer(l);
                 int idx;
-                while ((idx=l.indexOf(ddir))!=-1) { // path is mentioned in the message
-                    lb.replace(idx,idx+dlen,sdir);
-                    l=lb.toString();
+                while (doReplace && ((idx=l.indexOf(ddir))!=-1)) { // path is mentioned in the message
+                    l=(new StringBuffer(l)).replace(idx,idx+dlen,sdir).toString();
                 }
-                if (l.indexOf("Error:")!=-1) {
+                // verbose level logging for suppressed messages
+                if (suppressMethodArgumentNotUsed && l.indexOf(MSG_METHOD_ARGUMENT_NOT_USED)!=-1) {
+                    log(l, Project.MSG_VERBOSE);
+                } else if (suppressPrivatePropertyNotUsed && l.indexOf(MSG_PRIVATE_PROPERTY_NOT_USED)!=-1) {
+                    log(l, Project.MSG_VERBOSE);
+                } else if (suppressVariableNotUsed && l.indexOf(MSG_VARIABLE_NOT_USED)!=-1) {
+                    log(l, Project.MSG_VERBOSE);
+                } else if (suppressExceptionNotSignalled && l.indexOf(MSG_EXCEPTION_NOT_SIGNALLED)!=-1) {
+                    log(l, Project.MSG_VERBOSE);
+                } else if (suppressDeprecation && l.indexOf(MSG_DEPRECATION)!=-1) {
+                    log(l, Project.MSG_VERBOSE);
+                } else if (l.indexOf("Error:")!=-1) {   // error level logging for compiler errors
                     log(l, Project.MSG_ERR);
-                } else if (l.indexOf("Warning:")!=-1) {
+                } else if (l.indexOf("Warning:")!=-1) { // warning for all warning messages
                     log(l, Project.MSG_WARN);
                 } else {
-                    log(l, Project.MSG_INFO);
+                    log(l, Project.MSG_INFO);           // info level for the rest.
                 }
             }
             if (rc>1) {
@@ -687,5 +875,19 @@ public class NetRexxC extends MatchingTask {
             }
         }
 
+    }
+
+    public static class TraceAttr extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"trace", "trace1", "trace2", "notrace"};
+        }
+    }
+
+    public static class VerboseAttr extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"verbose", "verbose0", "verbose1",
+                                 "verbose2", "verbose3", "verbose4",
+                                 "verbose5", "noverbose"};
+        }
     }
 }
