@@ -27,6 +27,11 @@ Changes that could break older environments:
   volumes can still be specified without an intervening separator.
   UNC pathnames on Windows must include a server and share name, i.e.
   "\\a\b" to be considered valid absolute paths.
+  
+* The <java fork="false"> now as per default installs a security manager
+  using the default permissions. This is now independent of the 
+  failonerror attribute.
+  Bugzilla report 33361.
 
 Fixed bugs:
 -----------

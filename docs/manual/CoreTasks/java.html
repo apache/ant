@@ -239,10 +239,13 @@ see <a href="../CoreTypes/permissions.html">permissions</a></p>
 <p>When the permission RuntimePermission exitVM has not been granted (or has
 been revoked) the System.exit() call will be intercepted
 and treated like indicated in <i>failonerror</i>.</p>
-<p><a name="failonerror">Note:</a>
-if you specify <code>failonerror=&quot;true&quot;</code> and you do not specify permissions,
-a set of default permissions will be added to your Java invocation to make sure that
-a non-zero return code will lead to a <code>BuildException</code>.
+<p>Note:<br/>
+If you do not specify permissions,
+a set of default permissions will be added to your Java invocation to make 
+sure that the ant run will continue or terminated as indicated by
+<i>failonerror</i>. All permissions not granted per default will be 
+checked by whatever security manager was already in place. exitVM will be
+disallowed.
 </p>
 <p>Settings will be ignored if fork is enabled.</p>
 

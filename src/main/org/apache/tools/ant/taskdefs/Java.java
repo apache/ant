@@ -36,7 +36,6 @@ import org.apache.tools.ant.types.Assertions;
 import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.taskdefs.condition.Os;
-import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.KeepAliveInputStream;
 
 /**
@@ -117,7 +116,8 @@ public class Java extends Task {
      * Do the execution and return a return code.
      *
      * @return the return code from the execute java class if it was
-     * executed in a separate VM (fork = "yes").
+     * executed in a separate VM (fork = "yes") or a security manager was 
+     * installed that prohibits ExitVM (default).
      *
      * @throws BuildException if required parameters are missing.
      */
@@ -168,7 +168,7 @@ public class Java extends Task {
                 log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
-            if (perm == null && failOnError) {
+            if (perm == null) {
                 perm = new Permissions(true);
                 log("running " + this.cmdl.getClassname()
                     + " with default permissions (exit forbidden)", Project.MSG_VERBOSE);
