@@ -150,7 +150,7 @@ public class Patch extends Task {
 
     /**
      * Work silently unless an error occurs; optional, default=false
-     * @param q if true supress set the -s option on the patch command
+     * @param q if true suppress set the -s option on the patch command
      */
     public void setQuiet(boolean q) {
         if (q) {

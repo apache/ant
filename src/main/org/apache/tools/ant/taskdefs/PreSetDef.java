@@ -288,7 +288,7 @@ public class PreSetDef extends Task implements AntlibInterface, TaskContainer {
         }
 
         /**
-         * Similiar method for this definition
+         * Similar method for this definition
          *
          * @param other another definition
          * @param project the current project

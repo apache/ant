@@ -207,7 +207,7 @@ public class Parallel extends Task
      * is set and the JVM is at least a 1.4 VM then this value is
      * ignored.; optional
      *
-     * @param numThreads total number of therads.
+     * @param numThreads total number of threads.
      *
      */
     public void setThreadCount(int numThreads) {
@@ -351,7 +351,7 @@ public class Parallel extends Task
                         running[i] = runnables[threadNumber++];
                         Thread thread =  new Thread(group, running[i]);
                         thread.start();
-                        // countinue on outer while loop to get another
+                        // continue on outer while loop to get another
                         // available slot
                         continue outer;
                     }
@@ -362,7 +362,7 @@ public class Parallel extends Task
                 try {
                     semaphore.wait();
                 } catch (InterruptedException ie) {
-                    // dosen't java know interruptions are rude?
+                    // doesn't java know interruptions are rude?
                     // just pretend it didn't happen and go about out business.
                     // sheesh!
                 }
@@ -442,7 +442,7 @@ public class Parallel extends Task
         /**
          * Construct a new TaskRunnable.<p>
          *
-         * @param task the Task to be executed in a seperate thread
+         * @param task the Task to be executed in a separate thread
          */
         TaskRunnable(Task task) {
             this.task = task;

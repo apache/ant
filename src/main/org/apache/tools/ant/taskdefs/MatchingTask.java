@@ -474,7 +474,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     }
 
     /**
-     * Accessor for the implict fileset.
+     * Accessor for the implicit fileset.
      *
      * @since Ant 1.5.2
      */

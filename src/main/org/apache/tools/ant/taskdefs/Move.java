@@ -365,7 +365,7 @@ public class Move extends Copy {
         } else {
             if (!filtering) {
                 // ensure that parent dir of dest file exists!
-                // not using getParentFile method to stay 1.1 compat
+                // not using getParentFile method to stay 1.1 compatibility
                 String parentPath = destFile.getParent();
                 if (parentPath != null) {
                     File parent = new File(parentPath);

@@ -67,7 +67,7 @@ import java.io.OutputStream;
 public class StreamPumper implements Runnable {
 
     // TODO: make SIZE an instance variable.
-    // TODO: add a status flag to note if an error occured in run.
+    // TODO: add a status flag to note if an error occurred in run.
 
     private static final int SIZE = 128;
     private InputStream is;

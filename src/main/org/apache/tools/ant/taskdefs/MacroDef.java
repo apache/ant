@@ -126,7 +126,7 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     }
 
     /**
-     * <em>Expermential</em>
+     * <em>Experimental</em>
      * I am uncertain at the moment how to encode attributes
      * using ant style ${attribute} or xpath style @attribute.
      * The first may get mixed up with ant properties and
@@ -140,7 +140,7 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     }
 
     /**
-     * <em>Expermential</em>
+     * <em>Experimental</em>
      * @return the attribute style
      */
     public int getAttributeStyle() {
@@ -511,7 +511,7 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
         }
 
         /**
-         * Similiar method for this definition
+         * Similar method for this definition
          *
          * @param other another definition
          * @param project the current project

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,8 +65,8 @@ import org.apache.tools.ant.Task;
  *<p>
  * A negative value can be supplied to any of attributes provided the total sleep time
  * is positive, pending fundamental changes in physics and JVM
- * execution tims</p>
- * Note that sleep times are always hints to be interpred by the OS how it feels
+ * execution times</p>
+ * Note that sleep times are always hints to be interpreted by the OS how it feels
  * small times may either be ignored or rounded up to a minimum timeslice. Note
  * also that the system clocks often have a fairly low granularity too, which complicates
  * measuring how long a sleep actually took.</p>

@@ -175,7 +175,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Sets the the class to run <code>rmic</code> against;
+     * Sets the class to run <code>rmic</code> against;
      * optional
      */
     public void setClassname(String classname) {

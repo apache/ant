@@ -80,7 +80,7 @@ import org.apache.tools.ant.util.TeeOutputStream;
  */
 public class Redirector {
     /**
-     * The file receiveing standard output. Will also receive standard error
+     * The file receiving standard output. Will also receive standard error
      * unless standard error is redirected or logError is true.
      */
     private File out;
@@ -445,7 +445,7 @@ public class Redirector {
     /**
      * Complete redirection.
      *
-     * This opertaion will close any streams and create any specified
+     * This operation will close any streams and create any specified
      * property values.
      *
      * @throws IOException if the output properties cannot be read from their

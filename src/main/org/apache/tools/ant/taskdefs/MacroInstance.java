@@ -75,7 +75,7 @@ import org.apache.tools.ant.RuntimeConfigurable;
  * The class to be placed in the ant type definition.
  * It is given a pointer to the template definition,
  * and makes a copy of the unknown element, substituting
- * the the parameter values in attributes and text.
+ * the parameter values in attributes and text.
  * @author Peter Reilly
  * @since Ant 1.6
  */

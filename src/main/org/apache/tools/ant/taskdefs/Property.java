@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.Reference;
  * Sets a property by name, or set of properties (from file or
  * resource) in the project.  </p>
  * Properties are immutable: whoever sets a property first freezes it for the
- * rest of the build; they are most definately not variable.
+ * rest of the build; they are most definitely not variable.
  * <p>There are five ways to set properties:</p>
  * <ul>
  *   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>

@@ -273,7 +273,7 @@ public class SQLExec extends JDBCTask {
      * Set the delimiter type: "normal" or "row" (default "normal").
      *
      * <p>The delimiter type takes two values - normal and row. Normal
-     * means that any occurence of the delimiter terminate the SQL
+     * means that any occurrence of the delimiter terminate the SQL
      * command whereas with row, only a line containing just the
      * delimiter is recognized as the end of the command.</p>
      */
@@ -411,7 +411,7 @@ public class SQLExec extends JDBCTask {
 
                         ((Transaction) e.nextElement()).runTransaction(out);
                         if (!isAutocommit()) {
-                            log("Commiting transaction", Project.MSG_VERBOSE);
+                            log("Committing transaction", Project.MSG_VERBOSE);
                             conn.commit();
                         }
                     }

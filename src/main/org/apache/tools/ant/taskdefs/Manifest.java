@@ -321,7 +321,7 @@ public class Manifest {
          *
          * @param writer the Writer to which the attribute is written
          *
-         * @throws IOException if the attribte value cannot be written
+         * @throws IOException if the attribute value cannot be written
          */
         public void write(PrintWriter writer) throws IOException {
             for (Enumeration e = getValues(); e.hasMoreElements();) {
@@ -335,7 +335,7 @@ public class Manifest {
          * @param writer the Writer to which the attribute is written
          * @param value the attribute value
          *
-         * @throws IOException if the attribte value cannot be written
+         * @throws IOException if the attribute value cannot be written
          */
         private void writeValue(PrintWriter writer, String value)
              throws IOException {
@@ -857,7 +857,7 @@ public class Manifest {
      * @param other the Manifest to be merged with this one.
      *
      * @throws ManifestException if there is a problem merging the
-     *         manfest according to the Manifest spec.
+     *         manifest according to the Manifest spec.
      */
     public void merge(Manifest other) throws ManifestException {
         merge(other, false);
@@ -871,7 +871,7 @@ public class Manifest {
      *        of the current manifest
      *
      * @throws ManifestException if there is a problem merging the
-     *         manfest according to the Manifest spec.
+     *         manifest according to the Manifest spec.
      */
     public void merge(Manifest other, boolean overwriteMain)
          throws ManifestException {
