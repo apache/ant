@@ -47,7 +47,7 @@ public class CaseTest extends BuildFileTest {
     public void testTaskCase() {
         expectBuildExceptionContaining("taskcase",
             "Task names are case sensitive",
-            "Could not create task or type of type: ecHO");
+            "Problem: failed to create task or type ecHO");
     }
 }
 
