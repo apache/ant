@@ -228,8 +228,13 @@ Fixed bugs:
 
 * Get with usetimestamp did not work when local timestamp roughly >= now.
 
-* NPE when when <presetdef> tries to configure a task that
-  cannot be instantiated. Bugzilla Report 33689.
+* Added -nouserlib option to allow running ant without automatically loading
+  up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
+  Modified the build.sh and build.bat to use the option.
+
+* Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
+  variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
+
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
