@@ -140,7 +140,8 @@ public abstract class MatchingTask extends Task {
         project.log("The items attribute is deprecated. " +
                     "Please use the includes attribute.",
                     Project.MSG_WARN);
-        if (itemString == null || itemString.equals("*")) {
+        if (itemString == null || itemString.equals("*") 
+				               || itemString.equals(".")) {
             createInclude().setName("**");
         } else {
             StringTokenizer tok = new StringTokenizer(itemString, ", ");
