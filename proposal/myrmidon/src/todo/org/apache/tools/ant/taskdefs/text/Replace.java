@@ -22,10 +22,10 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Properties;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Replaces all occurrences of one or more string tokens with given values in

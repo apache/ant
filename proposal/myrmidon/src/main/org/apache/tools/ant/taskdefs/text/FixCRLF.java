@@ -7,6 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs.text;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,19 +16,17 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Task to convert text source files to local OS formatting conventions, as well

@@ -88,97 +88,91 @@ import org.apache.myrmidon.api.TaskException;
  * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class DirectoryScanner implements FileScanner
+public class DirectoryScanner
+    implements FileScanner
 {
-
     /**
      * Patterns that should be excluded by default.
      *
      * @see #addDefaultExcludes()
      */
-    protected final static String[] DEFAULTEXCLUDES = {
-        "**/*~",
-        "**/#*#",
-        "**/.#*",
-        "**/%*%",
-        "**/CVS",
-        "**/CVS/**",
-        "**/.cvsignore",
-        "**/SCCS",
-        "**/SCCS/**",
-        "**/vssver.scc"
-    };
+    private final static String[] DEFAULTEXCLUDES =
+        {
+            "**/*~",
+            "**/#*#",
+            "**/.#*",
+            "**/%*%",
+            "**/CVS",
+            "**/CVS/**",
+            "**/.cvsignore",
+            "**/SCCS",
+            "**/SCCS/**",
+            "**/vssver.scc"
+        };
 
     /**
      * Have the ArrayLists holding our results been built by a slow scan?
      */
-    protected boolean haveSlowResults = false;
+    private boolean m_haveSlowResults;
 
     /**
      * Should the file system be treated as a case sensitive one?
      */
-    protected boolean isCaseSensitive = true;
+    private boolean m_isCaseSensitive = true;
 
     /**
      * Is everything we've seen so far included?
      */
-    protected boolean everythingIncluded = true;
+    private boolean m_everythingIncluded = true;
 
     /**
      * The base directory which should be scanned.
      */
-    protected File basedir;
+    private File m_basedir;
 
     /**
      * The files that where found and matched at least one includes, and also
      * matched at least one excludes.
      */
-    protected ArrayList dirsExcluded;
+    private ArrayList m_dirsExcluded;
 
     /**
      * The directories that where found and matched at least one includes, and
      * matched no excludes.
      */
-    protected ArrayList dirsIncluded;
+    private ArrayList m_dirsIncluded;
 
     /**
      * The directories that where found and did not match any includes.
      */
-    protected ArrayList dirsNotIncluded;
+    private ArrayList m_dirsNotIncluded;
 
     /**
      * The patterns for the files that should be excluded.
      */
-    protected String[] excludes;
+    private String[] m_excludes;
 
     /**
      * The files that where found and matched at least one includes, and also
      * matched at least one excludes.
      */
-    protected ArrayList filesExcluded;
+    private ArrayList m_filesExcluded;
 
     /**
      * The files that where found and matched at least one includes, and matched
      * no excludes.
      */
-    protected ArrayList filesIncluded;
+    private ArrayList m_filesIncluded;
 
     /**
      * The files that where found and did not match any includes.
      */
-    protected ArrayList filesNotIncluded;
+    private ArrayList m_filesNotIncluded;
 
     /**
      * The patterns for the files that should be included.
      */
-    protected String[] includes;
-
-    /**
-     * Constructor.
-     */
-    public DirectoryScanner()
-    {
-    }
+    private String[] m_includes;
 
     /**
      * Matches a string against a pattern. The pattern contains two special
@@ -190,7 +184,7 @@ public class DirectoryScanner implements FileScanner
      * @return <code>true</code> when the string matches against the pattern,
      *      <code>false</code> otherwise.
      */
-    public static boolean match( String pattern, String str )
+    public static boolean match( final String pattern, final String str )
     {
         return match( pattern, str, true );
     }
@@ -206,7 +200,9 @@ public class DirectoryScanner implements FileScanner
      * @return <code>true</code> when the string matches against the pattern,
      *      <code>false</code> otherwise.
      */
-    protected static boolean match( String pattern, String str, boolean isCaseSensitive )
+    protected static boolean match( final String pattern,
+                                    final String str,
+                                    final boolean isCaseSensitive )
     {
         char[] patArr = pattern.toCharArray();
         char[] strArr = str.toCharArray();
@@ -398,7 +394,7 @@ public class DirectoryScanner implements FileScanner
      * @return <code>true</code> when the pattern matches against the string.
      *      <code>false</code> otherwise.
      */
-    protected static boolean matchPath( String pattern, String str )
+    protected static boolean matchPath( final String pattern, final String str )
     {
         return matchPath( pattern, str, true );
     }
@@ -412,7 +408,9 @@ public class DirectoryScanner implements FileScanner
      * @return <code>true</code> when the pattern matches against the string.
      *      <code>false</code> otherwise.
      */
-    protected static boolean matchPath( String pattern, String str, boolean isCaseSensitive )
+    protected static boolean matchPath( final String pattern,
+                                        final String str,
+                                        final boolean isCaseSensitive )
     {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
@@ -578,7 +576,7 @@ public class DirectoryScanner implements FileScanner
      * @param str the (non-null) string (path) to match
      * @return Description of the Returned Value
      */
-    protected static boolean matchPatternStart( String pattern, String str )
+    protected static boolean matchPatternStart( final String pattern, final String str )
     {
         return matchPatternStart( pattern, str, true );
     }
@@ -596,8 +594,9 @@ public class DirectoryScanner implements FileScanner
      * @param isCaseSensitive must matches be case sensitive?
      * @return Description of the Returned Value
      */
-    protected static boolean matchPatternStart( String pattern, String str,
-                                                boolean isCaseSensitive )
+    protected static boolean matchPatternStart( final String pattern,
+                                                final String str,
+                                                final boolean isCaseSensitive )
     {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
@@ -669,7 +668,7 @@ public class DirectoryScanner implements FileScanner
      *
      * @param basedir the (non-null) basedir for scanning
      */
-    public void setBasedir( String basedir )
+    public void setBasedir( final String basedir )
     {
         setBasedir( new File( basedir.replace( '/', File.separatorChar ).replace( '\\', File.separatorChar ) ) );
     }
@@ -680,9 +679,9 @@ public class DirectoryScanner implements FileScanner
      *
      * @param basedir the basedir for scanning
      */
-    public void setBasedir( File basedir )
+    public void setBasedir( final File basedir )
     {
-        this.basedir = basedir;
+        m_basedir = basedir;
     }
 
     /**
@@ -690,9 +689,9 @@ public class DirectoryScanner implements FileScanner
      *
      * @param isCaseSensitive The new CaseSensitive value
      */
-    public void setCaseSensitive( boolean isCaseSensitive )
+    public void setCaseSensitive( final boolean isCaseSensitive )
     {
-        this.isCaseSensitive = isCaseSensitive;
+        m_isCaseSensitive = isCaseSensitive;
     }
 
     /**
@@ -704,15 +703,15 @@ public class DirectoryScanner implements FileScanner
      *
      * @param excludes list of exclude patterns
      */
-    public void setExcludes( String[] excludes )
+    public void setExcludes( final String[] excludes )
     {
         if( excludes == null )
         {
-            this.excludes = null;
+            m_excludes = null;
         }
         else
         {
-            this.excludes = new String[ excludes.length ];
+            m_excludes = new String[ excludes.length ];
             for( int i = 0; i < excludes.length; i++ )
             {
                 String pattern;
@@ -721,7 +720,7 @@ public class DirectoryScanner implements FileScanner
                 {
                     pattern += "**";
                 }
-                this.excludes[ i ] = pattern;
+                m_excludes[ i ] = pattern;
             }
         }
     }
@@ -735,15 +734,15 @@ public class DirectoryScanner implements FileScanner
      *
      * @param includes list of include patterns
      */
-    public void setIncludes( String[] includes )
+    public void setIncludes( final String[] includes )
     {
         if( includes == null )
         {
-            this.includes = null;
+            m_includes = null;
         }
         else
         {
-            this.includes = new String[ includes.length ];
+            m_includes = new String[ includes.length ];
             for( int i = 0; i < includes.length; i++ )
             {
                 String pattern;
@@ -752,7 +751,7 @@ public class DirectoryScanner implements FileScanner
                 {
                     pattern += "**";
                 }
-                this.includes[ i ] = pattern;
+                m_includes[ i ] = pattern;
             }
         }
     }
@@ -765,7 +764,7 @@ public class DirectoryScanner implements FileScanner
      */
     public File getBasedir()
     {
-        return basedir;
+        return m_basedir;
     }
 
     /**
@@ -779,11 +778,11 @@ public class DirectoryScanner implements FileScanner
         throws TaskException
     {
         slowScan();
-        int count = dirsExcluded.size();
+        int count = m_dirsExcluded.size();
         String[] directories = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            directories[ i ] = (String)dirsExcluded.get( i );
+            directories[ i ] = (String)m_dirsExcluded.get( i );
         }
         return directories;
     }
@@ -799,11 +798,11 @@ public class DirectoryScanner implements FileScanner
         throws TaskException
     {
         slowScan();
-        int count = filesExcluded.size();
+        int count = m_filesExcluded.size();
         String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[ i ] = (String)filesExcluded.get( i );
+            files[ i ] = (String)m_filesExcluded.get( i );
         }
         return files;
     }
@@ -817,11 +816,11 @@ public class DirectoryScanner implements FileScanner
      */
     public String[] getIncludedDirectories()
     {
-        int count = dirsIncluded.size();
+        int count = m_dirsIncluded.size();
         String[] directories = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            directories[ i ] = (String)dirsIncluded.get( i );
+            directories[ i ] = (String)m_dirsIncluded.get( i );
         }
         return directories;
     }
@@ -835,11 +834,11 @@ public class DirectoryScanner implements FileScanner
      */
     public String[] getIncludedFiles()
     {
-        int count = filesIncluded.size();
+        int count = m_filesIncluded.size();
         String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[ i ] = (String)filesIncluded.get( i );
+            files[ i ] = (String)m_filesIncluded.get( i );
         }
         return files;
     }
@@ -854,11 +853,11 @@ public class DirectoryScanner implements FileScanner
         throws TaskException
     {
         slowScan();
-        int count = dirsNotIncluded.size();
+        int count = m_dirsNotIncluded.size();
         String[] directories = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            directories[ i ] = (String)dirsNotIncluded.get( i );
+            directories[ i ] = (String)m_dirsNotIncluded.get( i );
         }
         return directories;
     }
@@ -873,11 +872,11 @@ public class DirectoryScanner implements FileScanner
         throws TaskException
     {
         slowScan();
-        int count = filesNotIncluded.size();
+        int count = m_filesNotIncluded.size();
         String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[ i ] = (String)filesNotIncluded.get( i );
+            files[ i ] = (String)m_filesNotIncluded.get( i );
         }
         return files;
     }
@@ -891,7 +890,7 @@ public class DirectoryScanner implements FileScanner
      */
     public boolean isEverythingIncluded()
     {
-        return everythingIncluded;
+        return m_everythingIncluded;
     }
 
     /**
@@ -899,18 +898,18 @@ public class DirectoryScanner implements FileScanner
      */
     public void addDefaultExcludes()
     {
-        int excludesLength = excludes == null ? 0 : excludes.length;
+        int excludesLength = m_excludes == null ? 0 : m_excludes.length;
         String[] newExcludes;
         newExcludes = new String[ excludesLength + DEFAULTEXCLUDES.length ];
         if( excludesLength > 0 )
         {
-            System.arraycopy( excludes, 0, newExcludes, 0, excludesLength );
+            System.arraycopy( m_excludes, 0, newExcludes, 0, excludesLength );
         }
         for( int i = 0; i < DEFAULTEXCLUDES.length; i++ )
         {
             newExcludes[ i + excludesLength ] = DEFAULTEXCLUDES[ i ].replace( '/', File.separatorChar ).replace( '\\', File.separatorChar );
         }
-        excludes = newExcludes;
+        m_excludes = newExcludes;
     }
 
     /**
@@ -921,55 +920,55 @@ public class DirectoryScanner implements FileScanner
     public void scan()
         throws TaskException
     {
-        if( basedir == null )
+        if( m_basedir == null )
         {
             throw new IllegalStateException( "No basedir set" );
         }
-        if( !basedir.exists() )
+        if( !m_basedir.exists() )
         {
-            throw new IllegalStateException( "basedir " + basedir
+            throw new IllegalStateException( "basedir " + m_basedir
                                              + " does not exist" );
         }
-        if( !basedir.isDirectory() )
+        if( !m_basedir.isDirectory() )
         {
-            throw new IllegalStateException( "basedir " + basedir
+            throw new IllegalStateException( "basedir " + m_basedir
                                              + " is not a directory" );
         }
 
-        if( includes == null )
+        if( m_includes == null )
         {
             // No includes supplied, so set it to 'matches all'
-            includes = new String[ 1 ];
-            includes[ 0 ] = "**";
+            m_includes = new String[ 1 ];
+            m_includes[ 0 ] = "**";
         }
-        if( excludes == null )
+        if( m_excludes == null )
         {
-            excludes = new String[ 0 ];
+            m_excludes = new String[ 0 ];
         }
 
-        filesIncluded = new ArrayList();
-        filesNotIncluded = new ArrayList();
-        filesExcluded = new ArrayList();
-        dirsIncluded = new ArrayList();
-        dirsNotIncluded = new ArrayList();
-        dirsExcluded = new ArrayList();
+        m_filesIncluded = new ArrayList();
+        m_filesNotIncluded = new ArrayList();
+        m_filesExcluded = new ArrayList();
+        m_dirsIncluded = new ArrayList();
+        m_dirsNotIncluded = new ArrayList();
+        m_dirsExcluded = new ArrayList();
 
         if( isIncluded( "" ) )
         {
             if( !isExcluded( "" ) )
             {
-                dirsIncluded.add( "" );
+                m_dirsIncluded.add( "" );
             }
             else
             {
-                dirsExcluded.add( "" );
+                m_dirsExcluded.add( "" );
             }
         }
         else
         {
-            dirsNotIncluded.add( "" );
+            m_dirsNotIncluded.add( "" );
         }
-        scandir( basedir, "", true );
+        scandir( m_basedir, "", true );
     }
 
     /**
@@ -981,9 +980,9 @@ public class DirectoryScanner implements FileScanner
      */
     protected boolean isExcluded( String name )
     {
-        for( int i = 0; i < excludes.length; i++ )
+        for( int i = 0; i < m_excludes.length; i++ )
         {
-            if( matchPath( excludes[ i ], name, isCaseSensitive ) )
+            if( matchPath( m_excludes[ i ], name, m_isCaseSensitive ) )
             {
                 return true;
             }
@@ -998,11 +997,11 @@ public class DirectoryScanner implements FileScanner
      * @return <code>true</code> when the name matches against at least one
      *      include pattern, <code>false</code> otherwise.
      */
-    protected boolean isIncluded( String name )
+    protected boolean isIncluded( final String name )
     {
-        for( int i = 0; i < includes.length; i++ )
+        for( int i = 0; i < m_includes.length; i++ )
         {
-            if( matchPath( includes[ i ], name, isCaseSensitive ) )
+            if( matchPath( m_includes[ i ], name, m_isCaseSensitive ) )
             {
                 return true;
             }
@@ -1017,11 +1016,11 @@ public class DirectoryScanner implements FileScanner
      * @return <code>true</code> when the name matches against at least one
      *      include pattern, <code>false</code> otherwise.
      */
-    protected boolean couldHoldIncluded( String name )
+    protected boolean couldHoldIncluded( final String name )
     {
-        for( int i = 0; i < includes.length; i++ )
+        for( int i = 0; i < m_includes.length; i++ )
         {
-            if( matchPatternStart( includes[ i ], name, isCaseSensitive ) )
+            if( matchPatternStart( m_includes[ i ], name, m_isCaseSensitive ) )
             {
                 return true;
             }
@@ -1046,7 +1045,7 @@ public class DirectoryScanner implements FileScanner
      * @see #dirsNotIncluded
      * @see #dirsExcluded
      */
-    protected void scandir( File dir, String vpath, boolean fast )
+    protected void scandir( final File dir, final String vpath, final boolean fast )
         throws TaskException
     {
         String[] newfiles = dir.list();
@@ -1074,7 +1073,7 @@ public class DirectoryScanner implements FileScanner
                 {
                     if( !isExcluded( name ) )
                     {
-                        dirsIncluded.add( name );
+                        m_dirsIncluded.add( name );
                         if( fast )
                         {
                             scandir( file, name + File.separator, fast );
@@ -1082,8 +1081,8 @@ public class DirectoryScanner implements FileScanner
                     }
                     else
                     {
-                        everythingIncluded = false;
-                        dirsExcluded.add( name );
+                        m_everythingIncluded = false;
+                        m_dirsExcluded.add( name );
                         if( fast && couldHoldIncluded( name ) )
                         {
                             scandir( file, name + File.separator, fast );
@@ -1092,8 +1091,8 @@ public class DirectoryScanner implements FileScanner
                 }
                 else
                 {
-                    everythingIncluded = false;
-                    dirsNotIncluded.add( name );
+                    m_everythingIncluded = false;
+                    m_dirsNotIncluded.add( name );
                     if( fast && couldHoldIncluded( name ) )
                     {
                         scandir( file, name + File.separator, fast );
@@ -1110,18 +1109,18 @@ public class DirectoryScanner implements FileScanner
                 {
                     if( !isExcluded( name ) )
                     {
-                        filesIncluded.add( name );
+                        m_filesIncluded.add( name );
                     }
                     else
                     {
-                        everythingIncluded = false;
-                        filesExcluded.add( name );
+                        m_everythingIncluded = false;
+                        m_filesExcluded.add( name );
                     }
                 }
                 else
                 {
-                    everythingIncluded = false;
-                    filesNotIncluded.add( name );
+                    m_everythingIncluded = false;
+                    m_filesNotIncluded.add( name );
                 }
             }
         }
@@ -1135,22 +1134,22 @@ public class DirectoryScanner implements FileScanner
     protected void slowScan()
         throws TaskException
     {
-        if( haveSlowResults )
+        if( m_haveSlowResults )
         {
             return;
         }
 
-        String[] excl = new String[ dirsExcluded.size() ];
-        excl = (String[])dirsExcluded.toArray( excl );
+        String[] excl = new String[ m_dirsExcluded.size() ];
+        excl = (String[])m_dirsExcluded.toArray( excl );
 
-        String[] notIncl = new String[ dirsNotIncluded.size() ];
-        notIncl = (String[])dirsNotIncluded.toArray( notIncl );
+        String[] notIncl = new String[ m_dirsNotIncluded.size() ];
+        notIncl = (String[])m_dirsNotIncluded.toArray( notIncl );
 
         for( int i = 0; i < excl.length; i++ )
         {
             if( !couldHoldIncluded( excl[ i ] ) )
             {
-                scandir( new File( basedir, excl[ i ] ),
+                scandir( new File( m_basedir, excl[ i ] ),
                          excl[ i ] + File.separator, false );
             }
         }
@@ -1159,12 +1158,86 @@ public class DirectoryScanner implements FileScanner
         {
             if( !couldHoldIncluded( notIncl[ i ] ) )
             {
-                scandir( new File( basedir, notIncl[ i ] ),
+                scandir( new File( m_basedir, notIncl[ i ] ),
                          notIncl[ i ] + File.separator, false );
             }
         }
 
-        haveSlowResults = true;
+        m_haveSlowResults = true;
     }
 
+    public static String[] getDEFAULTEXCLUDES()
+    {
+        return DEFAULTEXCLUDES;
+    }
+
+    public ArrayList getDirsExcluded()
+    {
+        return m_dirsExcluded;
+    }
+
+    public void setDirsExcluded( ArrayList dirsExcluded )
+    {
+        m_dirsExcluded = dirsExcluded;
+    }
+
+    public ArrayList getDirsIncluded()
+    {
+        return m_dirsIncluded;
+    }
+
+    public void setDirsIncluded( ArrayList dirsIncluded )
+    {
+        m_dirsIncluded = dirsIncluded;
+    }
+
+    public ArrayList getDirsNotIncluded()
+    {
+        return m_dirsNotIncluded;
+    }
+
+    public void setDirsNotIncluded( ArrayList dirsNotIncluded )
+    {
+        m_dirsNotIncluded = dirsNotIncluded;
+    }
+
+    public String[] getExcludes()
+    {
+        return m_excludes;
+    }
+
+    public ArrayList getFilesExcluded()
+    {
+        return m_filesExcluded;
+    }
+
+    public void setFilesExcluded( ArrayList filesExcluded )
+    {
+        m_filesExcluded = filesExcluded;
+    }
+
+    public ArrayList getFilesIncluded()
+    {
+        return m_filesIncluded;
+    }
+
+    public void setFilesIncluded( ArrayList filesIncluded )
+    {
+        m_filesIncluded = filesIncluded;
+    }
+
+    public ArrayList getFilesNotIncluded()
+    {
+        return m_filesNotIncluded;
+    }
+
+    public void setFilesNotIncluded( ArrayList filesNotIncluded )
+    {
+        m_filesNotIncluded = filesNotIncluded;
+    }
+
+    public String[] getIncludes()
+    {
+        return m_includes;
+    }
 }

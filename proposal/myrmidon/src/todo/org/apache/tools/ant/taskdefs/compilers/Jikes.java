@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.compilers;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 

@@ -24,7 +24,9 @@ import org.apache.myrmidon.api.TaskException;
  * @author <A href="mailto:gholam@xtra.co.nz"> Michael McCallum </A>
  * @created 14 March 2001
  */
-public class FilterSet extends DataType implements Cloneable
+public class FilterSet
+    extends DataType
+    implements Cloneable
 {
 
     /**

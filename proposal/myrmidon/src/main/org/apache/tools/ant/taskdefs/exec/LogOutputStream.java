@@ -11,8 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 
 /**
  * Logs each line written to this stream to the log system of ant. Tries to be

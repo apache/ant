@@ -8,9 +8,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.PrintStream;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.tools.ant.Project;
 

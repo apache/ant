@@ -29,7 +29,6 @@ import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * PropertyFile task uses java.util.Properties to modify integer, String and

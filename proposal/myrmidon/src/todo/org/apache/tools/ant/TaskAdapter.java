@@ -7,8 +7,8 @@
  */
 package org.apache.tools.ant;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -47,7 +47,7 @@ public class TaskAdapter
             Throwable target = e;
             if( e instanceof InvocationTargetException )
             {
-                target = ((InvocationTargetException)e).getTargetException();
+                target = ( (InvocationTargetException)e ).getTargetException();
             }
 
             final String message = "Error invoking " + m_proxy.getClass();

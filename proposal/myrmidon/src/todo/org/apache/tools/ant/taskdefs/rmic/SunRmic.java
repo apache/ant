@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 

@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Prints plain text output of the test to a specified Writer. Inspired by the

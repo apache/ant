@@ -76,7 +76,7 @@ public class Echo
     {
         if( m_file == null )
         {
-            throw new TaskException( "Echo only used to write to files now !");
+            throw new TaskException( "Echo only used to write to files now !" );
         }
         else
         {

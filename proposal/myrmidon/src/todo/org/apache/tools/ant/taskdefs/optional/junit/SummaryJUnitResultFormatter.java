@@ -12,8 +12,8 @@ import java.io.OutputStream;
 import java.text.NumberFormat;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Prints short summary output of the test to Ant's logging system.

@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.PathTokenizer;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;

@@ -11,14 +11,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.JavaVersion;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -267,7 +266,7 @@ public class Javah extends Task
         String compiler = getProject().getProperty( "build.compiler" );
         if( compiler == null )
         {
-            if( JavaVersion.JAVA1_2  != JavaVersion.getCurrentJavaVersion() )
+            if( JavaVersion.JAVA1_2 != JavaVersion.getCurrentJavaVersion() )
             {
                 compiler = "modern";
             }

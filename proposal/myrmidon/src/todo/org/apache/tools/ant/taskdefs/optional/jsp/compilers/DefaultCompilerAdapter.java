@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
 

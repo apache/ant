@@ -14,7 +14,6 @@ import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SysProperties;
 
@@ -22,6 +21,7 @@ import org.apache.tools.ant.types.SysProperties;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
+
 public class ExecuteJava
 {
     private Commandline m_javaCommand;

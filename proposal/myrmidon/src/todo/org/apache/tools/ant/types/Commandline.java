@@ -38,25 +38,6 @@ public class Commandline
     protected final ArrayList m_arguments = new ArrayList();
     private String m_executable;
 
-    public Commandline( String to_process )
-        throws TaskException
-    {
-        String[] tmp = translateCommandline( to_process );
-        if( tmp != null && tmp.length > 0 )
-        {
-            setExecutable( tmp[ 0 ] );
-            for( int i = 1; i < tmp.length; i++ )
-            {
-                createArgument().setValue( tmp[ i ] );
-            }
-        }
-    }
-
-    public Commandline()
-    {
-        super();
-    }
-
     /**
      * Put quotes around the given String if necessary. <p>
      *

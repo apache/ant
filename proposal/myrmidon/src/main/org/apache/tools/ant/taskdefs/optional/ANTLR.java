@@ -13,7 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.exec.Execute;

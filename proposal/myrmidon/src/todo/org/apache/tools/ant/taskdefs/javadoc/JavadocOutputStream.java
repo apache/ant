@@ -7,10 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.javadoc;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 
 class JavadocOutputStream
     extends LogOutputStream

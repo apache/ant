@@ -16,14 +16,13 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.Properties;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
-import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Executes a given command if the os platform is appropriate.

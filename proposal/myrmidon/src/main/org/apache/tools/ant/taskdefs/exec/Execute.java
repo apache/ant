@@ -11,14 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.impl.DefaultExecManager;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.tools.ant.Project;
+import org.apache.myrmidon.framework.exec.impl.DefaultExecManager;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.avalon.framework.logger.Logger;
 
 /**
  * Runs an external program.

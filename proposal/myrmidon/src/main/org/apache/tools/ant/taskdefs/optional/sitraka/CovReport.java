@@ -18,7 +18,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;

@@ -18,7 +18,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Creates a partial DTD for Ant from the currently known tasks.

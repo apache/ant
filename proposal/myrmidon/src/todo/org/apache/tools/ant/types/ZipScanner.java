@@ -21,13 +21,13 @@ import org.apache.tools.ant.DirectoryScanner;
  *
  * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
  */
-public class ZipScanner extends DirectoryScanner
+public class ZipScanner
+    extends DirectoryScanner
 {
-
     /**
      * The zip file which should be scanned.
      */
-    protected File srcFile;
+    private File m_srcFile;
 
     /**
      * Sets the srcFile for scanning. This is the jar or zip file that is
@@ -37,7 +37,7 @@ public class ZipScanner extends DirectoryScanner
      */
     public void setSrc( File srcFile )
     {
-        this.srcFile = srcFile;
+        this.m_srcFile = srcFile;
     }
 
     /**
@@ -60,7 +60,7 @@ public class ZipScanner extends DirectoryScanner
     public String[] getIncludedFiles()
     {
         String[] result = new String[ 1 ];
-        result[ 0 ] = srcFile.getAbsolutePath();
+        result[ 0 ] = m_srcFile.getAbsolutePath();
         return result;
     }
 
@@ -69,15 +69,15 @@ public class ZipScanner extends DirectoryScanner
      */
     public void init()
     {
-        if( includes == null )
+        if( getIncludes() == null )
         {
             // No includes supplied, so set it to 'matches all'
-            includes = new String[ 1 ];
-            includes[ 0 ] = "**";
+            setIncludes( new String[ 1 ] );
+            getIncludes()[ 0 ] = "**";
         }
-        if( excludes == null )
+        if( getExcludes() == null )
         {
-            excludes = new String[ 0 ];
+            setExcludes( new String[ 0 ] );
         }
     }
 
@@ -91,9 +91,8 @@ public class ZipScanner extends DirectoryScanner
      */
     public boolean match( String path )
     {
-        String vpath = path.replace( '/', File.separatorChar ).
-            replace( '\\', File.separatorChar );
+        final String vpath =
+            path.replace( '/', File.separatorChar ).replace( '\\', File.separatorChar );
         return isIncluded( vpath ) && !isExcluded( vpath );
     }
-
 }
