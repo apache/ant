@@ -246,7 +246,7 @@ public class Get extends Task {
     protected boolean touchFile(File file, long timemillis)
         throws BuildException  {
 
-        if (project.getJavaVersion() != Project.JAVA_1_1) {
+        if (Project.getJavaVersion() != Project.JAVA_1_1) {
             Touch touch = (Touch) project.createTask("touch");
             touch.setOwningTarget(target);
             touch.setTaskName(getTaskName());
@@ -313,7 +313,7 @@ public class Get extends Task {
      * @param v "true" to enable file time fetching
      */
     public void setUseTimestamp(boolean v) {
-        if (project.getJavaVersion() != Project.JAVA_1_1) {
+        if (Project.getJavaVersion() != Project.JAVA_1_1) {
             useTimestamp = v;
         }
     }
