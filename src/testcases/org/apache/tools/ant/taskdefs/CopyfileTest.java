@@ -54,17 +54,27 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
 public class CopyfileTest extends TaskdefsTest { 
     
+    public void test6() { 
+        expectBuildException("test6", "target is directory");
+    }
+
     public CopyfileTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
         configureProject("src/etc/testcases/taskdefs/copyfile.xml");
+    }
+    
+    public void tearDown() {
+        executeTarget("cleanup");
     }
     
     public void test1() { 
@@ -85,7 +95,7 @@ public class CopyfileTest extends TaskdefsTest {
 
     public void test5() { 
         executeTarget("test5");
-        java.io.File f = new java.io.File("src/etc/testcases/taskdefs/copyfile.tmp");
+        java.io.File f = new java.io.File(getProjectDir(), "copyfile.tmp");
         if (f.exists()) { 
             f.delete();
         } else {

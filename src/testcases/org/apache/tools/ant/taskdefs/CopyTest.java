@@ -54,47 +54,38 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.util.Date;
-
 /**
- * @author Erik Meade <emeade@geekfarm.org>
+ * Tests FileSet using the Copy task.
+ *
+ * @author David Rees <dave@ubiqsoft.com> 
  */
-public class JarTest extends TaskdefsTest {
-
-    private static long jarModifiedDate;
-    private static String tempJar = "tmp.jar";
-
-    public JarTest(String name) {
+public class CopyTest extends TaskdefsTest { 
+    
+    public CopyTest(String name) { 
         super(name);
     }
 
-    public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/jar.xml");
+    public void setUp() { 
+        configureProject("src/etc/testcases/taskdefs/copy.xml");
     }
 
-    public void test1() {
-        expectBuildException("test1", "required argument not specified");
+    public void test1() { 
+        executeTarget("test1");
+        java.io.File f = new java.io.File(getProjectDir(), "copytest1.tmp");
+        if ( !f.exists()) {
+            fail("Copy failed");
+        }
     }
 
-    public void test2() {
-        expectBuildException("test2", "manifect file does not exist");
+    public void tearDown() {
+        executeTarget("cleanup");
     }
 
-    public void test3() {
-        expectBuildException("test3", "Unrecognized whenempty attribute: format C: /y");
-    }
-
-    public void test4() {
-        executeTarget("test4");
-        File jarFile = new File(getProjectDir(), tempJar);
-        assert(jarFile.exists());
-        jarModifiedDate = jarFile.lastModified();
-    }
-
-    public void XXXtest5() {
-        executeTarget("test5");
-        File jarFile = new File(getProjectDir(), tempJar);
-        assertEquals(jarModifiedDate, jarFile.lastModified());
+    public void test2() { 
+        executeTarget("test2");
+        java.io.File f = new java.io.File(getProjectDir(), "copytest1dir/copy.xml");
+        if ( !f.exists()) {
+            fail("Copy failed");
+        }
     }
 }

@@ -7,7 +7,7 @@
   </target>
 
   <target name="test2">
-    <deltree dir="src/etc/testcases/taskdefs.tmp"/>
+    <deltree dir="taskdefs.tmp"/>
   </target>
 
 </project>

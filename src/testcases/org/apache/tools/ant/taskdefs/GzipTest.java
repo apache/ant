@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+ 
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
@@ -85,7 +87,7 @@ public class GzipTest extends TaskdefsTest {
 
     public void test5() { 
         executeTarget("test5");
-        java.io.File f = new java.io.File("src/etc/testcases/taskdefs/gzip.tmp");
+        java.io.File f = new java.io.File(getProjectDir(), "gzip.tmp");
         if (!f.exists()) { 
             fail("gzip failed");
         }

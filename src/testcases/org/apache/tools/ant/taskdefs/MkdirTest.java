@@ -1,3 +1,5 @@
+package org.apache.tools.ant.taskdefs;
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -52,8 +54,6 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
-
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
@@ -61,8 +61,8 @@ public class MkdirTest extends TaskdefsTest {
     
     public MkdirTest(String name) { 
         super(name);
-    }    
-    
+    }
+
     public void setUp() { 
         configureProject("src/etc/testcases/taskdefs/mkdir.xml");
     }
@@ -77,12 +77,11 @@ public class MkdirTest extends TaskdefsTest {
 
     public void test3() { 
         executeTarget("test3");
-        java.io.File f = new java.io.File("src/etc/testcases/taskdefs/testdir.tmp");
+        java.io.File f = new java.io.File(getProjectDir(), "testdir.tmp");
         if (!f.exists() || !f.isDirectory()) { 
             fail("mkdir failed");
         } else {
             f.delete();
         }
     }
-    
 }

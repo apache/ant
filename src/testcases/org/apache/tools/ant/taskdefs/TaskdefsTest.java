@@ -79,12 +79,7 @@ public abstract class TaskdefsTest extends TestCase {
     }
 
     protected void expectBuildException(String taskname, String cause) { 
-        try { 
-            executeTarget(taskname);
-        } catch (org.apache.tools.ant.BuildException ex) { 
-            return;
-        }
-        fail("Should throw BuildException because: " + cause);
+        expectSpecificBuildException(taskname, cause, null);
     }
 
     protected void expectOutput(String taskname, String output) { 
@@ -170,6 +165,21 @@ public abstract class TaskdefsTest extends TestCase {
         
     }
     
+    protected File getProjectDir() {
+        return project.getBaseDir();
+    }
+
+    protected void expectSpecificBuildException(String taskname, String cause, String msg) { 
+        try { 
+            executeTarget(taskname);
+        } catch (org.apache.tools.ant.BuildException ex) {
+            if ((null != msg) && (ex.getMessage() != msg)) {
+                fail("Should throw BuildException because '" + cause + "' with message '" + msg + "' (received message '" + ex.getMessage() + "' instead)");
+            }
+            return;
+        }
+        fail("Should throw BuildException because: " + cause);
+    }
     private class AntOutputStream extends java.io.OutputStream { 
         public void write(int b) { 
             outBuffer.append((char)b);

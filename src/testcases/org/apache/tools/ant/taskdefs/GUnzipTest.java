@@ -52,7 +52,9 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+ package org.apache.tools.ant.taskdefs;
+ 
+ import java.io.File;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
@@ -77,12 +79,12 @@ public class GUnzipTest extends TaskdefsTest {
 
     public void test3() { 
         executeTarget("test3");
-        java.io.File f = new java.io.File("src/etc/testcases/taskdefs/gzip.tmp2");
+        java.io.File f = new File(getProjectDir(), "gzip.tmp2");
         if (!f.exists()) { 
             fail("gzip failed");
         } else {
             f.delete();
-            f = new java.io.File("src/etc/testcases/taskdefs/gzip.tmp");
+            f = new File(getProjectDir(), "gzip.tmp");
             if (f.exists()) f.delete();
         }
     }

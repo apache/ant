@@ -64,15 +64,13 @@ import java.io.IOException;
  * @author Nico Seessle <nico@seessle.de> 
  */
 public class FilterTest extends TaskdefsTest { 
-    
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
-    
+      
     public FilterTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
-        configureProject(TASKDEFS_DIR + "filter.xml");
+        configureProject("src/etc/testcases/taskdefs/filter.xml");
     }
 
     public void test1() { 
@@ -94,32 +92,32 @@ public class FilterTest extends TaskdefsTest {
     public void test5() {
         executeTarget("test5");
         assertEquals("2000",
-                     getFilteredFile("5", TASKDEFS_DIR + "filtered.tmp"));
+                     getFilteredFile("5", "filtered.tmp"));
     }
-
+    
 
     public void test6() {
         executeTarget("test6");
         assertEquals("2000",
-                     getFilteredFile("6", TASKDEFS_DIR + "taskdefs.tmp/filter1.txt"));
+                     getFilteredFile("6", "taskdefs.tmp/filter1.txt"));
     }
 
     public void test7() {
         executeTarget("test7");
         assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
-                     getFilteredFile("7", TASKDEFS_DIR + "filtered.tmp"));
+                     getFilteredFile("7", "filtered.tmp"));
     }
-    
+
     public void test8() {
         executeTarget("test8");
         assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
-                     getFilteredFile("8", TASKDEFS_DIR + "taskdefs.tmp/filter2.txt"));
+                     getFilteredFile("8", "taskdefs.tmp/filter2.txt"));
     }
     
     private String getFilteredFile(String testNumber, String filteredFile) {
     
         String line = null;
-        File f = new File(filteredFile);
+        File f = new File(getProjectDir(), filteredFile);
         if (!f.exists()) {
             fail("filter test"+testNumber+" failed");
         } else {

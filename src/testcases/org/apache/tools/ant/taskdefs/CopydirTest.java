@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
@@ -85,7 +87,7 @@ public class CopydirTest extends TaskdefsTest {
     
     public void test5() { 
         executeTarget("test5");
-        java.io.File f = new java.io.File("src/etc/testcases/taskdefs.tmp");
+        java.io.File f = new java.io.File(getProjectDir(), "../taskdefs.tmp");
         if (!f.exists() || !f.isDirectory()) { 
             fail("Copy failed");
         }

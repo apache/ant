@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
@@ -84,21 +86,18 @@ public class GetTest extends TaskdefsTest {
     }
 
     public void test5() { 
-        // We can't expect a build-system to have a webserver installed...
-        //expectBuildException("test5", "dest invalid (or no http-server on local machine)");
+        expectBuildException("test5", "dest invalid (or no http-server on local machine)");
     }
 
     public void test6() { 
-        // We can't expect a build-system to have a webserver installed...
-/*
         executeTarget("test6");
-        java.io.File f = new java.io.File("src/etc/testcases/taskdefs/get.tmp");
+        java.io.File f = new File(getProjectDir(), "get.tmp");
         if (!f.exists()) { 
             fail("get failed");
         } else {
             f.delete();
         }
-*/        
+        
     }
     
 }
