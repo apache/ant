@@ -169,6 +169,10 @@
 
     <!--redirection testcases don't want to run under junit unless forked-->
     <target name="redirect1">
+        <condition property="sleeptime" value="2000">
+            <os family="windows"/>
+        </condition>
+        <property name="sleeptime" value="1"/>
         <property name="outfile" location="${tmp}/redirect.out" />
 
         <java classname="${pipeapp}"
@@ -184,7 +188,7 @@
         <waitfor>
             <available file="${outfile}" />
         </waitfor>
-
+        <sleep milliseconds="${sleeptime}"/>
         <loadfile property="redirect.out.contents" srcfile="${outfile}" />
 
         <condition property="r1file">
@@ -220,6 +224,7 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
         <waitfor>
             <available file="${outfile}" />
         </waitfor>
+        <sleep milliseconds="${sleeptime}"/>
 
         <loadfile property="redirect.out.contents2" srcfile="${outfile}" />
 
