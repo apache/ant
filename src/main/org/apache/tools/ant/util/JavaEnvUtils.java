@@ -125,7 +125,7 @@ public class JavaEnvUtils {
             Class.forName("java.lang.CharSequence");
             javaVersion = JAVA_1_4;
             javaVersionNumber++;
-        } catch (ClassNotFoundException cnfe) {
+        } catch (Throwable t) {
             // swallow as we've hit the max class version that
             // we have
         }
