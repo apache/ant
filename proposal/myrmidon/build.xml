@@ -175,7 +175,7 @@ Legal:
 
 
   <!-- Compiles the source code -->
-  <target name="compile">
+  <target name="compile" depends="check_for_optional_packages">
 
     <tstamp/>
     <mkdir dir="${build.src}"/>
