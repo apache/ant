@@ -1,0 +1,5 @@
+<project>
+  <typedef name="mapperresult"
+           classpath="../../../../../build/testcases"
+           classname="org.apache.tools.ant.types.mappers.MapperResult"/>
+</project>
