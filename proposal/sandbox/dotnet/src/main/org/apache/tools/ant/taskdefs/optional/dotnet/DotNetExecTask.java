@@ -135,10 +135,21 @@ public class DotNetExecTask extends ExecTask {
                 // can invoke executable directly
                 super.setExecutable(executable);
             } else {
+                boolean b = getResolveExecutable();
+                // Mono wants the absolte path of the assembly
+                setResolveExecutable(b || isMono(vm));
                 super.setExecutable(vm);
                 cmdl.createArgument(true)
-                    .setValue(resolveExecutable(executable));
+                    .setValue(resolveExecutable(executable, isMono(vm)));
+                setResolveExecutable(b);
             }
         }
+    }
+
+    /**
+     * Whether the given vm looks like the Mono executable.
+     */
+    protected final static boolean isMono(String vm) {
+        return "mono".equals(vm) || "mint".equals(vm);
     }
 }
