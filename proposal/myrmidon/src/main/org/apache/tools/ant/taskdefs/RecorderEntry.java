@@ -8,9 +8,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.PrintStream;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildLogger;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.excalibur.util.StringUtil;
+import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.tools.ant.Project;
 
 /**
@@ -18,50 +19,54 @@ import org.apache.tools.ant.Project;
  * process.
  *
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
- * @version 0.5
  */
 public class RecorderEntry
-    extends AbstractLogEnabled
-    implements BuildLogger
+    extends AbstractProjectListener
+    implements LogEnabled
 {
-    /**
-     * the line separator for this OS
-     */
-    private final static String LINE_SEP = System.getProperty( "line.separator" );
-
-    //////////////////////////////////////////////////////////////////////
-    // ATTRIBUTES
-
-    /**
-     * The name of the file associated with this recorder entry.
-     */
-    private String filename = null;
     /**
      * The state of the recorder (recorder on or off).
      */
-    private boolean record = true;
+    private boolean m_record;
+
     /**
      * The current verbosity level to record at.
      */
-    private int loglevel = Project.MSG_INFO;
+    private int m_loglevel = Project.MSG_INFO;
+
     /**
      * The output PrintStream to record to.
      */
-    private PrintStream out = null;
+    private final PrintStream m_output;
+
     /**
      * The start time of the last know target.
      */
-    private long targetStartTime = 0l;
+    private long m_targetStartTime = 0l;
 
-    //////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS / INITIALIZERS
+    private Logger m_logger;
 
     /**
      * @param name The name of this recorder (used as the filename).
      */
-    protected RecorderEntry( String name )
+    protected RecorderEntry( final PrintStream output )
     {
-        filename = name;
+        m_output = output;
+    }
+
+    /**
+     * Provide component with a logger.
+     *
+     * @param logger the logger
+     */
+    public void enableLogging( final Logger logger )
+    {
+        m_logger = logger;
+    }
+
+    protected final Logger getLogger()
+    {
+        return m_logger;
     }
 
     private static String formatTime( long millis )
@@ -71,38 +76,18 @@ public class RecorderEntry
 
         if( minutes > 0 )
         {
-            return Long.toString( minutes ) + " minute"
-                + ( minutes == 1 ? " " : "s " )
-                + Long.toString( seconds % 60 ) + " second"
-                + ( seconds % 60 == 1 ? "" : "s" );
+            return minutes + " minute" + ( minutes == 1 ? " " : "s " ) +
+                ( seconds % 60 ) + " second" + ( seconds % 60 == 1 ? "" : "s" );
         }
         else
         {
-            return Long.toString( seconds ) + " second"
-                + ( seconds % 60 == 1 ? "" : "s" );
+            return seconds + " second" + ( seconds % 60 == 1 ? "" : "s" );
         }
-
     }
 
-    public void setEmacsMode( boolean emacsMode )
+    public void setLogLevel( final int loglevel )
     {
-        throw new java.lang.RuntimeException( "Method setEmacsMode() not yet implemented." );
-    }
-
-    public void setErrorPrintStream( PrintStream err )
-    {
-        out = err;
-    }
-
-    public void setMessageOutputLevel( int level )
-    {
-        if( level >= Project.MSG_ERR && level <= Project.MSG_DEBUG )
-            loglevel = level;
-    }
-
-    public void setOutputPrintStream( PrintStream output )
-    {
-        out = output;
+        m_loglevel = loglevel;
     }
 
     /**
@@ -110,105 +95,125 @@ public class RecorderEntry
      *
      * @param state true for on, false for off, null for no change.
      */
-    public void setRecordState( Boolean state )
+    public void setRecordState( final boolean record )
     {
-        if( state != null )
-            record = state.booleanValue();
+        m_record = record;
     }
-
-    //////////////////////////////////////////////////////////////////////
-    // ACCESSOR METHODS
 
     /**
-     * @return the name of the file the output is sent to.
+     * Notify listener of log message event.
+     *
+     * @param message the message
+     * @param throwable the throwable
      */
-    public String getFilename()
+    public void log( final String message, final Throwable throwable )
     {
-        return filename;
+        m_output.println( StringUtil.LINE_SEPARATOR + "BUILD FAILED" + StringUtil.LINE_SEPARATOR );
+        throwable.printStackTrace( m_output );
+        finishRecording();
     }
 
-    public void buildFinished( BuildEvent event )
+    /**
+     * Notify listener of projectFinished event.
+     */
+    public void projectFinished()
+    {
+        m_output.println( StringUtil.LINE_SEPARATOR + "BUILD SUCCESSFUL" );
+        finishRecording();
+    }
+
+    private void finishRecording()
     {
         getLogger().debug( "< BUILD FINISHED" );
-
-        Throwable error = event.getException();
-        if( error == null )
-        {
-            out.println( LINE_SEP + "BUILD SUCCESSFUL" );
-        }
-        else
-        {
-            out.println( LINE_SEP + "BUILD FAILED" + LINE_SEP );
-            error.printStackTrace( out );
-        }
-        out.flush();
-        out.close();
+        m_output.flush();
+        m_output.close();
     }
 
-    public void buildStarted( BuildEvent event )
+    /**
+     * Notify listener of projectStarted event.
+     */
+    public void projectStarted()
     {
         getLogger().debug( "> BUILD STARTED" );
     }
 
-    public void messageLogged( BuildEvent event )
+    /**
+     * Notify listener of log message event.
+     *
+     * @param message the message
+     */
+    public void log( final String message )
     {
         getLogger().debug( "--- MESSAGE LOGGED" );
 
-        StringBuffer buf = new StringBuffer();
-        if( event.getTask() != null )
+        final StringBuffer sb = new StringBuffer();
+
+        final String task = getTask();
+        if( task != null )
         {
-            String name = "[" + event.getTask() + "]";
-            /**
-             * @todo replace 12 with DefaultLogger.LEFT_COLUMN_SIZE
-             */
-            for( int i = 0; i < ( 12 - name.length() ); i++ )
+            final String name = "[" + task + "]";
+            final int padding = 12 - name.length();
+            for( int i = 0; i < padding; i++ )
             {
-                buf.append( " " );
-            }// for
-            buf.append( name );
-        }// if
-        buf.append( event.getMessage() );
+                sb.append( " " );
+            }
+            sb.append( name );
+        }
 
-        log( buf.toString(), event.getPriority() );
-    }
+        sb.append( message );
 
-    public void targetFinished( BuildEvent event )
-    {
-        getLogger().debug( "<< TARGET FINISHED -- " + event.getTarget() );
-        String time = formatTime( System.currentTimeMillis() - targetStartTime );
-        getLogger().debug( event.getTarget() + ":  duration " + time );
-        out.flush();
-    }
-
-    public void targetStarted( final BuildEvent event )
-    {
-        getLogger().debug( ">> TARGET STARTED -- " + event.getTarget() );
-        getLogger().info( LINE_SEP + event.getTarget() + ":" );
-        targetStartTime = System.currentTimeMillis();
-    }
-
-    public void taskFinished( BuildEvent event )
-    {
-        getLogger().debug( "<<< TASK FINISHED -- " + event.getTask() );
-        out.flush();
-    }
-
-    public void taskStarted( BuildEvent event )
-    {
-        getLogger().debug( ">>> TASK STARTED -- " + event.getTask() );
+        //FIXME: Check log level here
+        if( m_record )
+        {
+            m_output.println( sb.toString() );
+        }
     }
 
     /**
-     * The thing that actually sends the information to the output.
-     *
-     * @param mesg The message to log.
-     * @param level The verbosity level of the message.
+     * Notify listener of targetFinished event.
      */
-    private void log( String mesg, int level )
+    public void targetFinished()
     {
-        if( record && ( level <= loglevel ) )
-        {
-            out.println( mesg );
-        }
+        getLogger().debug( "<< TARGET FINISHED -- " + getTarget() );
+        final long millis = System.currentTimeMillis() - m_targetStartTime;
+        final String duration = formatTime( millis );
+        getLogger().debug( getTarget() + ":  duration " + duration );
+        m_output.flush();
+        super.targetFinished();
+    }
+
+    /**
+     * Notify listener of targetStarted event.
+     *
+     * @param target the name of target
+     */
+    public void targetStarted( final String target )
+    {
+        super.targetStarted( target );
+        getLogger().debug( ">> TARGET STARTED -- " + getTarget() );
+        getLogger().info( StringUtil.LINE_SEPARATOR + getTarget() + ":" );
+        m_targetStartTime = System.currentTimeMillis();
+
+    }
+
+    /**
+     * Notify listener of taskStarted event.
+     *
+     * @param task the name of task
+     */
+    public void taskStarted( String task )
+    {
+        super.taskStarted( task );
+        getLogger().debug( ">>> TASK STARTED -- " + getTask() );
+    }
+
+    /**
+     * Notify listener of taskFinished event.
+     */
+    public void taskFinished()
+    {
+        getLogger().debug( "<<< TASK FINISHED -- " + getTask() );
+        m_output.flush();
+        super.taskFinished();
     }
 }

@@ -7,6 +7,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -14,7 +15,6 @@ import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * This task is the manager for RecorderEntry's. It is this class that holds all
@@ -25,29 +25,30 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @version 0.5
  * @see RecorderEntry
  */
-public class Recorder extends Task
+public class Recorder
+    extends Task
 {
     /**
      * The list of recorder entries.
      */
-    private static Hashtable recorderEntries = new Hashtable();
-
-    //////////////////////////////////////////////////////////////////////
-    // ATTRIBUTES
+    private final static Hashtable c_recorderEntries = new Hashtable();
 
     /**
      * The name of the file to record to.
      */
-    private String filename = null;
+    private String m_filename;
+
     /**
      * Whether or not to append. Need Boolean to record an unset state (null).
      */
-    private Boolean append = null;
+    private Boolean m_append;
+
     /**
      * Whether to start or stop recording. Need Boolean to record an unset state
      * (null).
      */
-    private Boolean start = null;
+    private Boolean m_start;
+
     /**
      * What level to log? -1 means not initialized yet.
      */
@@ -58,15 +59,15 @@ public class Recorder extends Task
      *
      * @param action The action for the entry to take: start or stop.
      */
-    public void setAction( ActionChoices action )
+    public void setAction( final ActionChoices action )
     {
         if( action.getValue().equalsIgnoreCase( "start" ) )
         {
-            start = Boolean.TRUE;
+            m_start = Boolean.TRUE;
         }
         else
         {
-            start = Boolean.FALSE;
+            m_start = Boolean.FALSE;
         }
     }
 
@@ -75,9 +76,9 @@ public class Recorder extends Task
      *
      * @param append The new Append value
      */
-    public void setAppend( boolean append )
+    public void setAppend( final boolean append )
     {
-        this.append = new Boolean( append );
+        m_append = new Boolean( append );
     }
 
     /**
@@ -86,7 +87,7 @@ public class Recorder extends Task
      * @param level The new Loglevel value
      * @see VerbosityLevelChoices
      */
-    public void setLoglevel( VerbosityLevelChoices level )
+    public void setLoglevel( final VerbosityLevelChoices level )
     {
         //I hate cascading if/elseif clauses !!!
         String lev = level.getValue();
@@ -112,12 +113,6 @@ public class Recorder extends Task
         }
     }
 
-    //////////////////////////////////////////////////////////////////////
-    // CONSTRUCTORS / INITIALIZERS
-
-    //////////////////////////////////////////////////////////////////////
-    // ACCESSOR METHODS
-
     /**
      * Sets the name of the file to log to, and the name of the recorder entry.
      *
@@ -125,11 +120,8 @@ public class Recorder extends Task
      */
     public void setName( String fname )
     {
-        filename = fname;
+        m_filename = fname;
     }
-
-    //////////////////////////////////////////////////////////////////////
-    // CORE / MAIN BODY
 
     /**
      * The main execution.
@@ -139,101 +131,69 @@ public class Recorder extends Task
     public void execute()
         throws TaskException
     {
-        if( filename == null )
+        if( m_filename == null )
+        {
             throw new TaskException( "No filename specified" );
+        }
 
-        getLogger().debug( "setting a recorder for name " + filename );
+        getLogger().debug( "setting a recorder for name " + m_filename );
 
         // get the recorder entry
-        RecorderEntry recorder = getRecorder( filename, getProject() );
+        final RecorderEntry recorder = getRecorder( m_filename );
+
+        getProject().addProjectListener( recorder );
+
         // set the values on the recorder
-        recorder.setMessageOutputLevel( loglevel );
-        recorder.setRecordState( start );
+        recorder.setLogLevel( loglevel );
+
+        if( null != m_start )
+        {
+            recorder.setRecordState( m_start.booleanValue() );
+        }
     }
 
     /**
      * Gets the recorder that's associated with the passed in name. If the
      * recorder doesn't exist, then a new one is created.
-     *
-     * @param name Description of Parameter
-     * @param proj Description of Parameter
-     * @return The Recorder value
-     * @exception TaskException Description of Exception
      */
-    protected RecorderEntry getRecorder( String name, Project proj )
+    protected RecorderEntry getRecorder( final String name )
         throws TaskException
     {
-        Object o = recorderEntries.get( name );
-        RecorderEntry entry;
-        if( o == null )
+        final Object o = c_recorderEntries.get( name );
+        if( null == o )
         {
-            // create a recorder entry
-            try
-            {
-                entry = new RecorderEntry( name );
-                PrintStream out = null;
-                if( append == null )
-                {
-                    out = new PrintStream(
-                        new FileOutputStream( name ) );
-                }
-                else
-                {
-                    out = new PrintStream(
-                        new FileOutputStream( name, append.booleanValue() ) );
-                }
-                entry.setErrorPrintStream( out );
-                entry.setOutputPrintStream( out );
-            }
-            catch( IOException ioe )
-            {
-                throw new TaskException( "Problems creating a recorder entry",
-                                         ioe );
-            }
-            proj.addBuildListener( entry );
-            recorderEntries.put( name, entry );
+            return (RecorderEntry)o;
+        }
+
+        // create a recorder entry
+        try
+        {
+            final PrintStream output = createOutput( name );
+            final RecorderEntry entry = new RecorderEntry( output );
+            c_recorderEntries.put( name, entry );
+            return entry;
+        }
+        catch( final IOException ioe )
+        {
+            throw new TaskException( "Problems creating a recorder entry",
+                                     ioe );
+        }
+    }
+
+    private PrintStream createOutput( final String name )
+        throws FileNotFoundException
+    {
+        FileOutputStream outputStream = null;
+        if( m_append == null )
+        {
+            outputStream = new FileOutputStream( name );
         }
         else
         {
-            entry = (RecorderEntry)o;
+            outputStream = new FileOutputStream( name, m_append.booleanValue() );
         }
-        return entry;
+
+        final PrintStream out = new PrintStream( outputStream );
+        return out;
     }
-
-    //////////////////////////////////////////////////////////////////////
-    // INNER CLASSES
-
-    /**
-     * A list of possible values for the <code>setAction()</code> method.
-     * Possible values include: start and stop.
-     *
-     * @author RT
-     */
-    public static class ActionChoices extends EnumeratedAttribute
-    {
-        private final static String[] values = {"start", "stop"};
-
-        public String[] getValues()
-        {
-            return values;
-        }
-    }
-
-    /**
-     * A list of possible values for the <code>setLoglevel()</code> method.
-     * Possible values include: error, warn, info, verbose, debug.
-     *
-     * @author RT
-     */
-    public static class VerbosityLevelChoices extends EnumeratedAttribute
-    {
-        private final static String[] values = {"error", "warn", "info",
-                                                "verbose", "debug"};
-
-        public String[] getValues()
-        {
-            return values;
-        }
-    }
-
 }
