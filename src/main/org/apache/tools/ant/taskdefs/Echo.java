@@ -67,6 +67,8 @@ import java.io.IOException;
  *
  * @author costin@dnt.ro
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="utility"
  */
 public class Echo extends Task {
