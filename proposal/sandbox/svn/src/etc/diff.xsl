@@ -32,7 +32,7 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="revisiondiff">
+  <xsl:template match="revisiondiff|tagdiff">
     <HTML>
       <HEAD>
         <TITLE><xsl:value-of select="$title"/></TITLE>
@@ -60,7 +60,7 @@
           <h1>
             <a name="top"><xsl:value-of select="$title"/></a>
           </h1>
-          diff between <xsl:value-of select="@start"/> and <xsl:value-of select="@end"/>
+          diff between <xsl:value-of select="@start"/><xsl:value-of select="@tag1"/> and <xsl:value-of select="@end"/><xsl:value-of select="@tag2"/>
           <p align="right">Designed for use with <a href="http://ant.apache.org/">Apache Ant</a>.</p>
           <hr size="2"/>
 	<a name="TOP"/>

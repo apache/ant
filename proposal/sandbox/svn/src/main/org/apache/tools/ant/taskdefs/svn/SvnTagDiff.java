@@ -32,18 +32,31 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Examines the output of svn diff between two revisions.
+ * Examines the output of svn diff between two tags or a tag and trunk.
+ *
+ * <p>This task only works if you follow the best-practice structure of
+ * <pre>
+ * BASEURL
+ *   |
+ *   |
+ *   -----&gt; trunk
+ *   -----&gt; tags
+ *            |
+ *            |
+ *            ----------&gt; tag1
+ *            ----------&gt; tag2
+ * </pre>
  *
  * It produces an XML output representing the list of changes.
  * <PRE>
  * &lt;!-- Root element --&gt;
- * &lt;!ELEMENT revisiondiff ( paths? ) &gt;
- * &lt;!-- Start revision of the report --&gt;
- * &lt;!ATTLIST revisiondiff start NMTOKEN #IMPLIED &gt;
- * &lt;!-- End revision of the report --&gt;
- * &lt;!ATTLIST revisiondiff end NMTOKEN #IMPLIED &gt;
- * &lt;!-- Subversion URL if known  --&gt;
- * &lt;!ATTLIST revisiondiff svnurl NMTOKEN #IMPLIED &gt;
+ * &lt;!ELEMENT tagdiff ( paths? ) &gt;
+ * &lt;!-- First tag --&gt;
+ * &lt;!ATTLIST tagdiff tag1 NMTOKEN #IMPLIED &gt;
+ * &lt;!-- Second tag --&gt;
+ * &lt;!ATTLIST tagdiff tag2 NMTOKEN #IMPLIED &gt;
+ * &lt;!-- Subversion BaseURL --&gt;
+ * &lt;!ATTLIST tagdiff svnurl NMTOKEN #IMPLIED &gt;
  *
  * &lt;!-- Path added, changed or removed --&gt;
  * &lt;!ELEMENT path ( name,action ) &gt;
@@ -52,9 +65,9 @@ import org.apache.tools.ant.util.FileUtils;
  * &lt;!ELEMENT action (added|modified|deleted)&gt;
  * </PRE>
  *
- * @ant.task name="svnrevisiondiff"
+ * @ant.task name="svntagdiff"
  */
-public class SvnRevisionDiff extends AbstractSvnTask {
+public class SvnTagDiff extends AbstractSvnTask {
 
     /**
      * Used to create the temp file for svn log
@@ -64,12 +77,12 @@ public class SvnRevisionDiff extends AbstractSvnTask {
     /**
      * The earliest revision from which diffs are to be included in the report.
      */
-    private String mystartRevision;
+    private String tag1;
 
     /**
      * The latest revision from which diffs are to be included in the report.
      */
-    private String myendRevision;
+    private String tag2;
 
     /**
      * The file in which to write the diff report.
@@ -77,21 +90,26 @@ public class SvnRevisionDiff extends AbstractSvnTask {
     private File mydestfile;
 
     /**
-     * Set the start revision.
-     *
-     * @param s the start revision.
+     * Base URL.
      */
-    public void setStart(String s) {
-        mystartRevision = s;
+    private String baseURL;
+
+    /**
+     * Set the first tag.
+     *
+     * @param s the first tag.
+     */
+    public void setTag1(String s) {
+        tag1 = s;
     }
 
     /**
-     * Set the end revision.
+     * Set the second tag.
      *
-     * @param s the end revision.
+     * @param s the second tag.
      */
-    public void setEnd(String s) {
-        myendRevision = s;
+    public void setTag2(String s) {
+        tag2 = s;
     }
 
     /**
@@ -101,6 +119,18 @@ public class SvnRevisionDiff extends AbstractSvnTask {
      */
     public void setDestFile(File f) {
         mydestfile = f;
+    }
+
+    /**
+     * Set the base URL from which to calculate tag URLs.
+     *
+     * @param u the base URL from which to calculate tag URLs.
+     */
+    public void setBaseURL(String u) {
+        baseURL = u;
+        if (!u.endsWith("/")) {
+            baseURL += "/";
+        }
     }
 
     /**
@@ -114,13 +144,30 @@ public class SvnRevisionDiff extends AbstractSvnTask {
 
         // build the rdiff command
         setSubCommand("diff");
-        setRevision(mystartRevision + ":" + myendRevision);
         addSubCommandArgument("--no-diff-deleted");
-
+        if (tag1.equals("trunk") || tag1.equals("trunk/")) {
+            addSubCommandArgument(baseURL + "trunk/");
+        } else {
+            if (tag1.endsWith("/")) {
+                addSubCommandArgument(baseURL + "tags/" + tag1);
+            } else {
+                addSubCommandArgument(baseURL + "tags/" + tag1 + "/");
+            }
+        }
+        if (tag2 == null || tag2.equals("trunk") || tag2.equals("trunk/")) {
+            addSubCommandArgument(baseURL + "trunk/");
+        } else {
+            if (tag2.endsWith("/")) {
+                addSubCommandArgument(baseURL + "tags/" + tag2);
+            } else {
+                addSubCommandArgument(baseURL + "tags/" + tag2 + "/");
+            }
+        }
+        
         File tmpFile = null;
         try {
             tmpFile = 
-                FILE_UTILS.createTempFile("svnrevisiondiff", ".log", null);
+                FILE_UTILS.createTempFile("svntagdiff", ".log", null);
             tmpFile.deleteOnExit();
             setOutput(tmpFile);
 
@@ -131,9 +178,10 @@ public class SvnRevisionDiff extends AbstractSvnTask {
             SvnEntry.Path[] entries = SvnDiffHandler.parseDiff(tmpFile);
 
             // write the revision diff
-            SvnDiffHandler.writeDiff(mydestfile, entries, "revisiondiff",
-                                     "start", mystartRevision,
-                                     "end", myendRevision, getSvnURL());
+            SvnDiffHandler.writeDiff(mydestfile, entries, "tagdiff",
+                                     "tag1", tag1, "tag2", 
+                                     tag2 == null ? "trunk" : tag2, 
+                                     baseURL);
         } finally {
             if (tmpFile != null) {
                 tmpFile.delete();
@@ -151,12 +199,12 @@ public class SvnRevisionDiff extends AbstractSvnTask {
             throw new BuildException("Destfile must be set.");
         }
 
-        if (null == mystartRevision) {
-            throw new BuildException("Start revision or start date must be set.");
+        if (null == tag1) {
+            throw new BuildException("tag1 must be set.");
         }
 
-        if (null == myendRevision) {
-            throw new BuildException("End revision or end date must be set.");
+        if (null == baseURL) {
+            throw new BuildException("baseURL must be set.");
         }
     }
 }

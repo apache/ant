@@ -17,35 +17,40 @@
 -->
 
 <project name="revisiondiff-test" basedir="../../../" 
-         default="diff" xmlns:svn="antlib:org.apache.tools.ant.taskdefs.svn">
+         default="diff-with-implicit-trunk"
+         xmlns:svn="antlib:org.apache.tools.ant.taskdefs.svn">
 
   <property name="tmpdir" value="tmpdir"/>
-  <property name="trunkdir" value="${tmpdir}/trunk"/>
 
   <target name="dir-prep">
     <mkdir dir="${tmpdir}"/>
   </target>
 
-  <target name="setup" depends="dir-prep">
-    <svn:svn
-      svnURL="http://svn.apache.org/repos/asf/jakarta/bcel/trunk"
-      dest="${tmpdir}"/>
+  <target name="diff-with-two-tags" depends="dir-prep">
+    <svn:tagdiff failonerror="true"
+      baseURL="http://svn.apache.org/repos/asf/jakarta/bcel/"
+      destfile="${tmpdir}/diff.xml"
+      tag2="BCEL_5_0" tag1="initial"/>
   </target>
 
-  <target name="diff" depends="setup">
-    <svn:revisiondiff failonerror="true" dest="${trunkdir}"
-      destfile="${tmpdir}/diff.xml" start="152904" end="153682"/>
+  <target name="diff-with-explicit-trunk" depends="dir-prep">
+    <svn:tagdiff failonerror="true"
+      baseURL="http://svn.apache.org/repos/asf/jakarta/bcel/"
+      destfile="${tmpdir}/diff.xml"
+      tag1="BCEL_5_0" tag2="trunk"/>
   </target>
 
-  <target name="diff-using-url" depends="dir-prep">
-    <svn:revisiondiff failonerror="true"
-      svnURL="http://svn.apache.org/repos/asf/jakarta/bcel/trunk"
-      destfile="${tmpdir}/diff.xml" start="152904" end="153682"/>
+  <target name="diff-with-implicit-trunk" depends="dir-prep">
+    <svn:tagdiff failonerror="true"
+      baseURL="http://svn.apache.org/repos/asf/jakarta/bcel/"
+      destfile="${tmpdir}/diff.xml"
+      tag1="BCEL_5_0"/>
   </target>
 
-  <target name="report" depends="diff-using-url">
-    <style in="${tmpdir}/diff.xml" 
-      out="${tmpdir}/diff.html" 
+  <!--target name="report" depends="diff-with-implicit-trunk"-->
+  <target name="report">
+    <style in="/tmp/diff.xml" 
+      out="/tmp/diff.html" 
       style="src/etc/diff.xsl">
       <param name="title" expression="Jakarta BCEL diff"/>
       <param name="repo" expression="http://svn.apache.org/repos/asf/jakarta/bcel/trunk"/>

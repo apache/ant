@@ -26,31 +26,38 @@ import junit.framework.Assert;
 
 /**
  */
-public class SvnRevisionDiffTest extends BuildFileTest {
+public class SvnTagDiffTest extends BuildFileTest {
 
-    public SvnRevisionDiffTest(String name) {
+    public SvnTagDiffTest(String name) {
         super(name);
     }
 
     public void setUp() {
-        configureProject("src/etc/testcases/revisiondiff.xml");
+        configureProject("src/etc/testcases/tagdiff.xml");
     }
 
     public void tearDown() {
         executeTarget("cleanup");
     }
 
-    public void testDiff() throws IOException {
-        String log = executeTargetAndReadLogFully("diff");
-        assertAttributesNoURL(log);
-        assertAdded(log);
-        assertModified(log);
-        assertDeleted(log);
+    public void testDiffWithTwoTags() throws IOException {
+        String log = executeTargetAndReadLogFully("diff-with-two-tags");
+        assertAttributes(log, "initial", "BCEL_5_0");
+        assertAdded1(log);
     }
 
-    public void testDiffUrl() throws IOException {
-        String log = executeTargetAndReadLogFully("diff-using-url");
-        assertAttributesWithURL(log);
+    public void testDiffWithExplicitTrunk() throws IOException {
+        String log = executeTargetAndReadLogFully("diff-with-explicit-trunk");
+        assertDiffWithTrunk(log);
+    }
+
+    public void testDiffWithImplicitTrunk() throws IOException {
+        String log = executeTargetAndReadLogFully("diff-with-implicit-trunk");
+        assertDiffWithTrunk(log);
+    }
+
+    private static void assertDiffWithTrunk(String log) {
+        assertAttributes(log, "BCEL_5_0", "trunk");
         assertAdded(log);
         assertModified(log);
         assertDeleted(log);
@@ -68,37 +75,24 @@ public class SvnRevisionDiffTest extends BuildFileTest {
         }
     }
 
-    private static final void assertAttributes(String log) {
-        int start = log.indexOf("<revisiondiff");
+    private static final void assertAttributes(String log, String tag1,
+                                               String tag2) {
+        int start = log.indexOf("<tagdiff");
         Assert.assertTrue(start > -1);
         int end = log.indexOf(">", start);
         Assert.assertTrue(end > -1);
-        Assert.assertTrue(log.indexOf("start=\"152904\"", start) > -1);
-        Assert.assertTrue(log.indexOf("start=\"152904\"", start) < end);
-        Assert.assertTrue(log.indexOf("end=\"153682\"", start) > -1);
-        Assert.assertTrue(log.indexOf("end=\"153682\"", start) < end);
-    }
-
-    private static final void assertAttributesNoURL(String log) {
-        assertAttributes(log);
-        Assert.assertEquals(-1, log.indexOf("svnurl="));
-    }
-
-    private static final void assertAttributesWithURL(String log) {
-        assertAttributes(log);
-        int start = log.indexOf("<revisiondiff");
-        int end = log.indexOf(">", start);
+        Assert.assertTrue(log.indexOf("tag1=\"" + tag1 + "\"", start) > -1);
+        Assert.assertTrue(log.indexOf("tag1=\"" + tag1 + "\"", start) < end);
+        Assert.assertTrue(log.indexOf("tag2=\"" + tag2 + "\"", start) > -1);
+        Assert.assertTrue(log.indexOf("tag2=\"" + tag2 + "\"", start) < end);
         Assert.assertTrue(log.indexOf("svnurl=\"http://svn.apache.org/repos/"
-                                      + "asf/jakarta/bcel/trunk\"", start)
-                          > -1);
+                                      + "asf/jakarta/bcel/\"", start) > -1);
         Assert.assertTrue(log.indexOf("svnurl=\"http://svn.apache.org/repos/"
-                                      + "asf/jakarta/bcel/trunk\"", start)
-                          < end);
+                                      + "asf/jakarta/bcel/\"", start) < end);
     }
 
     private static final void assertAdded(String log) {
-        int name = log.indexOf("<![CDATA[src/java/org/apache/bcel/classfile/"
-                               + "ElementValuePair.java]]>");
+        int name = log.indexOf("<![CDATA[LICENSE.txt]]>");
         Assert.assertTrue(name > -1);
 
         int pathAfterName = log.indexOf("</path>", name);
@@ -110,8 +104,8 @@ public class SvnRevisionDiffTest extends BuildFileTest {
     }
 
     private static final void assertModified(String log) {
-        int name = log.indexOf("<name><![CDATA[xdocs/stylesheets/project."
-                               + "xml]]></name>");
+        int name = log.indexOf("<name><![CDATA[src/java/org/apache/bcel/"
+                               + "Repository.java]]></name>");
         Assert.assertTrue(name > -1);
 
         int pathAfterName = log.indexOf("</path>", name);
@@ -123,7 +117,7 @@ public class SvnRevisionDiffTest extends BuildFileTest {
     }
 
     private static final void assertDeleted(String log) {
-        int name = log.indexOf("<name><![CDATA[lib/CCK.jar]]></name>");
+        int name = log.indexOf("<name><![CDATA[LICENSE]]></name>");
         Assert.assertTrue(name > -1);
 
         int pathAfterName = log.indexOf("</path>", name);
@@ -133,4 +127,18 @@ public class SvnRevisionDiffTest extends BuildFileTest {
         Assert.assertTrue(log.indexOf("<action>deleted</action>", name) 
                           < pathAfterName);
     }
+
+    private static final void assertAdded1(String log) {
+        int name = log.indexOf("<name><![CDATA[src/java/org/apache/bcel/"
+                               + "Repository.java]]></name>");
+        Assert.assertTrue(name > -1);
+
+        int pathAfterName = log.indexOf("</path>", name);
+        Assert.assertTrue(pathAfterName > -1);
+
+        Assert.assertTrue(log.indexOf("<action>added</action>", name) > -1);
+        Assert.assertTrue(log.indexOf("<action>added</action>", name) 
+                          < pathAfterName);
+    }
+
 }

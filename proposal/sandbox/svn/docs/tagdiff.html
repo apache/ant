@@ -4,11 +4,11 @@
 <title>RevisionDiff Task</title>
 </head>
 <body>
-<h2><a name="revisiondiff">RevisionDiff</a></h2>
+<h2><a name="tagdiff">TagDiff</a></h2>
 <h3>Description</h3>
 
 <p>Generates an XML-formatted report file of the changes between two
-revisions recorded in a <a href="http://subversion.tigris.org/"
+tags recorded in a <a href="http://subversion.tigris.org/"
 target="_top">Subversion</a> repository. </p>
 
 <p><b>Important:</b> This task needs "svn" on the path. If it isn't,
@@ -16,6 +16,20 @@ you will get an error (such as error 2 on windows). If
 <code>&lt;svn&gt;</code> doesn't work, try to execute
 <code>svn.exe</code> from the command line in the target directory in
 which you are working.</p>
+
+<p>This task assumes that your repository follows the best-practice
+layout of</p>
+<pre>
+BASEURL
+  |
+  |
+  -----&gt; trunk
+  -----&gt; tags
+           |
+           |
+           ----------&gt; tag1
+           ----------&gt; tag2
+</pre>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -25,20 +39,24 @@ which you are working.</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">start</td>
-    <td valign="top">The earliest revision from which diffs are to be
-     included in the report.</td>
+    <td valign="top">tag1</td>
+    <td valign="top">The first tag.</td>
     <td align="center" valign="top">Yes.</td>
   </tr>
   <tr>
-    <td valign="top">end</td>
-    <td valign="top">The latest revision from which diffs are to be
-     included in the report.</td>
-    <td align="center" valign="top">Yes.</td>
+    <td valign="top">tag2</td>
+    <td valign="top">The second tag.</td>
+    <td align="center" valign="top">No, defaults to "trunk/"</td>
   </tr>
   <tr>
     <td valign="top">destfile</td>
     <td valign="top">The file in which to write the diff report.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">baseURL</td>
+    <td valign="top">The baseURL of the repository, used to calculate
+    the two URLs to compare.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
@@ -51,11 +69,6 @@ which you are working.</p>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
-    <td valign="top">svnURL</td>
-    <td valign="top">the svn URL to diff.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
     <td valign="top">failonerror</td>
     <td valign="top">Stop the buildprocess if the command exits with a
       returncode other than 0. Defaults to false</td>
@@ -64,32 +77,44 @@ which you are working.</p>
 </table>
 
 <h3>Examples</h3>
-<pre>  &lt;revisiondiff
-                svnURL=&quot;http://svn.apache.org/repos/asf/jakarta/bcel/trunk&quot;
-                destfile=&quot;diff.xml&quot;
-                start=&quot;152904&quot;
-                end=&quot;153682&quot;
-  /&gt;</pre>
+<pre>
+  &lt;tagdiff failonerror="true"
+      baseURL="http://svn.apache.org/repos/asf/jakarta/bcel/"
+      destfile="diff.xml"
+      tag1="initial"
+      tag2="BCEL_5_0"
+  />
+</pre>
 
-<p>Generates a revisiondiff report for all the changes that have been
-made in the <code>Apache BCEL</code> module between the revisions
-<code>152904</code> and <code>153682</code>.  It writes these changes
+<p>Generates a tagdiff report for all the changes that have been
+made in the <code>Apache BCEL</code> module between the tags
+<code>initial</code> and <code>BCEL_5_0</code>.  It writes these changes
 into the file <code>diff.xml</code>.</p>
 
-<pre>  &lt;revisiondiff
-                destfile=&quot;diff.xml&quot;
-                package=&quot;ant&quot;
-                start=&quot;{2002-01-01}&quot;
-                end=&quot;{2002-02-01}&quot;
-                dest=&quot;my-working-copy-of-BCEL&quot;
-  /&gt;</pre>
+<pre>
+  &lt;tagdiff failonerror="true"
+      baseURL="http://svn.apache.org/repos/asf/jakarta/bcel/"
+      destfile="diff.xml"
+      tag1="BCEL_5_0"
+      tag2="trunk"
+  />
+</pre>
 
-<p>Generates a diff report for all the changes that have been made in
-the <code>Apache BCEL</code> module in january 2002. In this example
-<code>svnURL</code> has not been set, it is assumed that
-<code>my-working-copy-of-BCEL</code> contains a checked out copy of
-the BCEL module.  It writes these changes into the file
-<code>diff.xml</code>.</p>
+<p>Generates a tagdiff report for all the changes that have been made
+in the <code>Apache BCEL</code> module between the tag
+<code>BCEL_5_0</code> and the <code>trunk</code>.  It writes these
+changes into the file <code>diff.xml</code>.</p>
+
+<pre>
+  &lt;tagdiff failonerror="true"
+      baseURL="http://svn.apache.org/repos/asf/jakarta/bcel/"
+      destfile="diff.xml"
+      tag1="BCEL_5_0"
+  />
+</pre>
+
+<p>Does the same, using <code>trunk</code> as <code>tag2</code>
+implicitly.</p>
 
 <h4>Generate Report</h4>
 
@@ -109,16 +134,20 @@ illustrates how to generate a HTML report from the XML report.</p>
 <h4>(Shortened) Example Output</h4>
 <pre>
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;revisiondiff start="153872" end="152873" svnurl="http://svn.apache.org/repos/asf/jakarta/bcel/trunk" &gt;
+&lt;tagdiff tag1="BCEL_5_0" svnurl="http://svn.apache.org/repos/asf/jakarta/bcel/" &gt;
   &lt;path&gt;
-    &lt;name&gt;&lt;![CDATA[LICENSE.txt]]&gt;&lt;/name&gt;
+    &lt;name&gt;&lt;![CDATA[default.properties]]&gt;&lt;/name&gt;
+    &lt;action&gt;added&lt;/action&gt;
+  &lt;/path&gt;
+  &lt;path&gt;
+    &lt;name&gt;&lt;![CDATA[xdocs/images/classloader.gif]]&gt;&lt;/name&gt;
     &lt;action&gt;modified&lt;/action&gt;
   &lt;/path&gt;
   &lt;path&gt;
-    &lt;name&gt;&lt;![CDATA[NOTICE.txt]]&gt;&lt;/name&gt;
+    &lt;name&gt;&lt;![CDATA[README]]&gt;&lt;/name&gt;
     &lt;action&gt;deleted&lt;/action&gt;
   &lt;/path&gt;
-&lt;/revisiondiff&gt;
+&lt;/tagdiff&gt;
 </pre>
 
 <hr><p align="center">Copyright &copy; 2005 The Apache Software Foundation. All rights

@@ -27,4 +27,8 @@
     name="revisiondiff"
     classname="org.apache.tools.ant.taskdefs.svn.SvnRevisionDiff"
     />
+  <taskdef
+    name="tagdiff"
+    classname="org.apache.tools.ant.taskdefs.svn.SvnTagDiff"
+    />
 </antlib>
