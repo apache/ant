@@ -103,6 +103,12 @@ public class Builder {
         builder.runBuild(args);
     }
 
+    /**
+     * Add all the java files fro, a given directory.
+     *
+     * @param files the list to which the files are to be added.
+     * @param dir the directory from which the Java files are added.
+     */
     private void addJavaFiles(List files, File dir) {
         File[] javaFiles = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {

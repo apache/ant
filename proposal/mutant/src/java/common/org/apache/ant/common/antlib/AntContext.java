@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.antlib;
-import java.io.File;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.Location;
 

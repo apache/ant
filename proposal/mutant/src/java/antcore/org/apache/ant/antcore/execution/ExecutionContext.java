@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import java.io.File;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.ExecutionComponent;
 import org.apache.ant.common.util.ExecutionException;
