@@ -54,46 +54,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-/**
- * @author Nico Seessle <nico@seessle.de> 
- */
-public class TaskdefTest extends TaskdefsTest { 
-    
-    public TaskdefTest(String name) { 
-        super(name);
-    }    
-    
-    public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/taskdef.xml");
-    }
-    
-    public void test1() { 
-        expectBuildException("test1", "required argument not specified");
-    }
-
-    public void test2() { 
-        expectBuildException("test2", "required argument not specified");
-    }
-
-    public void test3() { 
-        expectBuildException("test3", "required argument not specified");
-    }
-
-    public void test4() { 
-        expectBuildException("test4", "classname specified doesn't exist");
-    }
-
-    public void test5() { 
-        executeTarget("test5");
-    }
-
-    /* disabled until I know why they fail when run via the junit task --SB
-    public void test6() {
-        expectOutput("test6", "simpletask: worked");
-    }
-
-    public void test7() {
-        expectOutput("test7", "worked");
-    }
-    */
+public class TaskdefTestContainerTask extends Sequential {
+    public TaskdefTestContainerTask() {}
 }

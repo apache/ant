@@ -654,6 +654,9 @@
           <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
           <exclude name="org/apache/tools/ant/util/regexp/RegexpMatcherTest.java" />
 
+          <!-- helper classes, not testcases -->
+          <exclude name="org/apache/tools/ant/taskdefs/TaskdefTest*Task.java" />
+
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/PvcsTest.java" />
 

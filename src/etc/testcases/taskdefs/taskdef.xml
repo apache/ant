@@ -22,4 +22,21 @@
     <taskdef name="test" classname="org.apache.tools.ant.Project" />
   </target>
 
+  <target name="test6">
+    <echo message="${build.test}" />
+    <taskdef name="test6"
+             classname="org.apache.tools.ant.taskdefs.TaskdefTestSimpleTask" />
+    <test6>
+      <echo message="worked" />
+    </test6>
+  </target>
+
+  <target name="test7">
+    <taskdef name="test7"
+             classname="org.apache.tools.ant.taskdefs.TaskdefTestContainerTask" />
+    <test7>
+      <echo message="worked" />
+    </test7>
+  </target>
+
 </project>
