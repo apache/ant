@@ -137,7 +137,7 @@ public class AbstractMasterConverter
      *
      * @param name the name of converter
      * @return the created converter instance
-     * @throws java.lang.Exception if converter can not be created.
+     * @throws Exception if converter can not be created.
      */
     protected abstract Converter createConverter( final String name )
         throws Exception;
