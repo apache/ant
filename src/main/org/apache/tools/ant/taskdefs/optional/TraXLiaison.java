@@ -308,6 +308,10 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             final Object[] pair = (Object[])attributes.elementAt(i);
             tfactory.setAttribute((String)pair[0], pair[1]);
         }
+
+        if (uriResolver != null) {
+            tfactory.setURIResolver(uriResolver);
+        }
         return tfactory;
     }
 
