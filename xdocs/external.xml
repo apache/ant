@@ -80,7 +80,7 @@
         automate the process of checking Java code, and to spare
         humans of this boring (but important) task.</p>
 
-        <p>Checkstyle can be run via an ANT task or a command line
+        <p>Checkstyle can be run via an Ant task or a command line
         utility.</p>
 
         <table>
@@ -158,7 +158,7 @@
       </subsection>
 
       <subsection name="GenJar">
-        <p>Builds a jar file based on class dependencies rather than simply the contents of a directory</p>
+        <p>Builds a JAR file based on class dependencies rather than simply the contents of a directory</p>
 
         <table>
           <tr>
@@ -181,7 +181,7 @@
       </subsection>
 
       <subsection name="Importscrubber">
-        <p>Removes unncessary import statements from a Java source code file.</p>
+        <p>Removes unnecessary import statements from a Java source code file.</p>
 
         <table>
           <tr>
@@ -491,7 +491,7 @@
         <table>
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.3</td>
+            <td>bundles Ant 1.4.1</td>
           </tr>
           <tr>
             <th>URL:</th>
