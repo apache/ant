@@ -90,8 +90,8 @@ public class Project {
     public static final String JAVA_1_2 = "1.2";
     public static final String JAVA_1_3 = "1.3";
 
-    private String TOKEN_START;
-    private String TOKEN_END;
+    public static final String TOKEN_START = "@";
+    public static final String TOKEN_END = "@";
 
     private String name;
 
@@ -1026,11 +1026,6 @@ public class Project {
 
     public Hashtable getReferences() {
         return references;
-    }
-
-    public void setToken(String token) {
-        TOKEN_START=token;
-        TOKEN_END=token;
     }
 
     protected void fireBuildStarted() {
