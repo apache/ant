@@ -93,6 +93,13 @@ public interface TaskContext
     Object getProperty( String name );
 
     /**
+     * Retrieve a copy of all the properties accessible via context.
+     *
+     * @return the map of all property names to values
+     */
+    Map getPropertys();
+
+    /**
      * Set property value in current context.
      *
      * @param name the name of property
