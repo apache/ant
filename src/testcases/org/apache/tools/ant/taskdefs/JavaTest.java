@@ -182,7 +182,7 @@ public class JavaTest extends BuildFileTest {
 
     public void testResultPropertyNonZero() {
         executeTarget("testResultPropertyNonZero");
-        assertEquals("-1",project.getProperty("exitcode"));
+        assertEquals("2",project.getProperty("exitcode"));
     }
 
     public void testSpawn() {
