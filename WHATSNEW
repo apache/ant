@@ -121,6 +121,10 @@ Other changes:
 
 * add uid and gid to tarfileset. Bugzilla Report 19120.
 
+* <scp> has a verbose attribute to get some feedback during the
+  transfer and new [local|remote][File|Todir] alternatives to file and
+  todir that explicitly state the direction of the transfer.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
