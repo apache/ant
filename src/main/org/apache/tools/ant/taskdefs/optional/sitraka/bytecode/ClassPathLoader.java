@@ -151,24 +151,17 @@ public class ClassPathLoader {
 			long t0 = System.currentTimeMillis();
 			ClassFile[] classes = loader.getClasses();
 			long dt = System.currentTimeMillis() - t0;
-			System.out.println("" + classes.length + " loaded in " + dt + "ms");
+			System.out.println("" + classes.length + " classes loaded in " + dt + "ms");
 			for (int j = 0; j < classes.length; j++){
-				String name = classes[j].getName();
+				String name = classes[j].getFullName();
 				// do not allow duplicates entries to preserve 'classpath' behavior
 				// first class in wins
-				if ( !map.contains(name) ){
+				if ( !map.containsKey(name) ){
 					map.put(name, classes[j]);
 				}
 			}
 		}
 		return map;
-	}
-	
-	/** dirty little test, should be moved to a testcase */
-	public static void main(String[] args) throws Exception {
-		ClassPathLoader cl = new ClassPathLoader("e:/jdk/jdk1.3.1/lib/tools.jar;e:/jdk/jdk1.3.1/jre/lib/rt.jar");
-		Hashtable map = cl.getClasses();
-		System.out.println("Loaded classes: " + map.size());
 	}
 	
 	/** the loader enumeration that will return loaders */
