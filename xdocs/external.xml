@@ -681,6 +681,33 @@
         </table>
       </subsection>
 
+      <subsection name="JFlex">
+
+        <p>JFlex is a lexical analyzer generator (also known as
+        scanner generator) for Java, written in Java.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jflex.de/">http://jflex.de/</a></td>
+          </tr>
+<!--
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:Rafal.Mantiuk@bellstream.pl">Rafal Mantiuk</a></td>
+          </tr>
+-->
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Jing Task">
 
         <p> Validates XML files against the RELAX NG alternative to XML Schema.
@@ -978,6 +1005,35 @@
           <tr>
             <th>License:</th>
             <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Syntax">
+
+        <p>Transforms source files into HTML documents with syntax
+        highlighting. It can handle a variety of source files
+        including Java, HTML, C/C++, SQL, and Java properties.  Colors
+        for elements are specified using cascading style sheets.  The
+        output can be templated for easy integration with a site's
+        look and feel.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ostermiller.org/syntax/ant.html">http://ostermiller.org/syntax/ant.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://ostermiller.org/contact.pl?regarding=Syntax+Highlighting">Stephen Ostermiller</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
           </tr>
         </table>
       </subsection>
