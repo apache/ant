@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -100,7 +101,7 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @version $Revision$ $Date$
+ * @author <a href="mailto:j.kenneth.gentle@acm.org">Ken Gentle</a>
  * @since Ant 1.5
  * @ant.task name="cvschangelog"
  */
@@ -119,9 +120,21 @@ public class ChangeLogTask extends Task {
 
     /** The earliest date at which to start processing entrys.  */
     private Date m_start;
+    
+    /** 
+     * The start date as a string, possibly to be interpreted according
+     * to a format
+     */
+    private String m_startDate;
+     
 
     /** The latest date at which to stop processing entrys.  */
     private Date m_stop;
+    
+    /** 
+     * The stop date as a string
+     */
+    private String m_stopDate;
 
     /**
      * Filesets containting list of files against which the cvs log will be
@@ -130,7 +143,12 @@ public class ChangeLogTask extends Task {
      */
     private final Vector m_filesets = new Vector();
 
-
+    /** 
+     * The <code>SimpleDateFormat</code> pattern to be used in parsing date 
+     * attributes
+     */ 
+    private String m_datePattern = "yyyy-MM-dd";
+    
     /**
      * Set the base dir for cvs.
      *
@@ -213,7 +231,62 @@ public class ChangeLogTask extends Task {
         m_filesets.addElement(fileSet);
     }
 
+    /**
+     * <code>SimpleDateFormat</code> pattern to be used in parsing date
+     * attributes.
+     * 
+     * @param pattern <code>SimpleDateFormat</code> pattern.
+     */
+    public void setDatePattern(final String datePattern) {
+        m_datePattern = datePattern;
+    }
+ 
+    /**
+     * 
+     * @param startDate
+     */
+    public void setStartDate(final String startDate) {
+        m_startDate = startDate;
+    }
 
+    public void setEndDate(final String stopDate) {
+        m_stopDate = stopDate;
+    }
+
+    private void determineDates() {
+        SimpleDateFormat format;
+        try {
+            format = new SimpleDateFormat(m_datePattern);
+        } catch (IllegalArgumentException iae) {
+            final String message = "Illegal SimpleDateFormat pattern '"
+                 + m_datePattern + "'";
+            throw new BuildException(message);
+        }
+        
+        
+        if (m_startDate != null) {
+            try {
+                m_start = format.parse(m_startDate);
+            } catch (ParseException e) {
+                final String message = "Can't parse date '" + m_startDate
+                     + "' with pattern '" + m_datePattern + "'";
+                throw new BuildException(message);
+            }
+        }
+        
+        if (m_stopDate != null) {
+            try {
+                m_stop = format.parse(m_stopDate);
+            } catch (ParseException e) {
+                final String message = "Can't parse date '" + m_stopDate
+                     + "' with pattern '" + m_datePattern + "'";
+                throw new BuildException(message);
+            }
+        }
+                   
+    }
+    
+    
     /**
      * Execute task
      *
@@ -226,6 +299,7 @@ public class ChangeLogTask extends Task {
         try {
 
             validate();
+            determineDates();
 
             final Properties userList = new Properties();
 
@@ -287,7 +361,8 @@ public class ChangeLogTask extends Task {
                 final int resultCode = exe.execute();
 
                 if (0 != resultCode) {
-                    throw new BuildException("Error running cvs log");
+                    throw new BuildException("Error running cvs log - " 
+                        + "command returned '"+resultCode+"'");                
                 }
             } catch (final IOException ioe) {
                 throw new BuildException(ioe.toString());
@@ -337,6 +412,16 @@ public class ChangeLogTask extends Task {
                  + m_usersFile.getAbsolutePath();
 
             throw new BuildException(message);
+        }
+        
+        if (m_start != null && m_startDate != null) {
+            throw new BuildException("You cannot specify the start date using "  
+                + "both \"startdate\" and \"start\" (or \"daysinpast\")");
+        }
+        
+        if (m_stop != null && m_stopDate != null) {
+            throw new BuildException("You cannot specify the stop date using "  
+                + "both \"stopdate\" and \"stop\"");
         }
     }
 
