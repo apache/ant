@@ -36,7 +36,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Gets lengths:  of files, byte size; of strings, length (optionally trimmed).
  * The task is overloaded in this way for semantic reasons, much like Available.
- * @since Ant 1.7
+ * @since Ant 1.6.3
  */
 public class Length extends Task {
 
