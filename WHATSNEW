@@ -1,5 +1,19 @@
-Changes from Ant 1.5.4 to current CVS version
-=============================================
+Changes from Ant 1.6 to current cvs version
+===========================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+* Translate task does not remove tokens when a key is not found.  
+  It logs a verbose message.  Bugzilla Report 13936.
+
+Other changes:
+--------------
+
+Changes from Ant 1.5.4 to Ant 1.6Beta1
+======================================
 
 Changes that could break older environments:
 --------------------------------------------

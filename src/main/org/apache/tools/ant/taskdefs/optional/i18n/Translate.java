@@ -577,66 +577,66 @@ public class Translate extends MatchingTask {
                         lineTokenizer.setIncludeDelims(true);
                         line = lineTokenizer.getToken(in);
                         while ((line) != null) {
-                        // 2003-02-21 new replace algorithm by tbee (tbee@tbee.org)
-                        // because it wasn't able to replace something like "@aaa;@bbb;"
+                            // 2003-02-21 new replace algorithm by tbee (tbee@tbee.org)
+                            // because it wasn't able to replace something like "@aaa;@bbb;"
 
-                        // is there a startToken
-                        // and there is still stuff following the startToken
-                        int startIndex = line.indexOf(startToken);
-                        while (startIndex >= 0
-                            && (startIndex + startToken.length()) <= line.length()) {
-                            // the new value, this needs to be here
-                            // because it is required to calculate the next position to search from
-                            // at the end of the loop
-                            String replace = null;
+                            // is there a startToken
+                            // and there is still stuff following the startToken
+                            int startIndex = line.indexOf(startToken);
+                            while (startIndex >= 0
+                                && (startIndex + startToken.length()) <= line.length()) {
+                                // the new value, this needs to be here
+                                // because it is required to calculate the next position to search from
+                                // at the end of the loop
+                                String replace = null;
 
-                            // we found a starttoken, is there an endtoken following?
-                            // start at token+tokenlength because start and end
-                            // token may be indentical
-                            int endIndex = line.indexOf(endToken, startIndex + startToken.length());
-                            if (endIndex < 0) {
-                                startIndex += 1;
-                            } else {
-                                // grab the token
-                                String token
-                                    = line.substring(startIndex + startToken.length(), endIndex);
-
-                                // If there is a white space or = or :, then
-                                // it isn't to be treated as a valid key.
-                                boolean validToken = true;
-                                for (int k = 0; k < token.length() && validToken; k++) {
-                                    char c = token.charAt(k);
-                                    if (c == ':' || c == '='
-                                        || Character.isSpaceChar(c)) {
-                                        validToken = false;
-                                    }
-                                }
-                                if (!validToken) {
+                                // we found a starttoken, is there an endtoken following?
+                                // start at token+tokenlength because start and end
+                                // token may be indentical
+                                int endIndex = line.indexOf(endToken, startIndex + startToken.length());
+                                if (endIndex < 0) {
                                     startIndex += 1;
                                 } else {
-                                    // find the replace string
-                                    if (resourceMap.containsKey(token)) {
-                                        replace = (String) resourceMap.get(token);
-                                    } else {
-                                        replace = token;
+                                    // grab the token
+                                    String token
+                                        = line.substring(startIndex + startToken.length(), endIndex);
+
+                                    // If there is a white space or = or :, then
+                                    // it isn't to be treated as a valid key.
+                                    boolean validToken = true;
+                                    for (int k = 0; k < token.length() && validToken; k++) {
+                                        char c = token.charAt(k);
+                                        if (c == ':' || c == '='
+                                            || Character.isSpaceChar(c)) {
+                                            validToken = false;
+                                        }
                                     }
+                                    if (!validToken) {
+                                        startIndex += 1;
+                                    } else {
+                                        // find the replace string
+                                        if (resourceMap.containsKey(token)) {
+                                            replace = (String) resourceMap.get(token);
+                                        } else {
+                                            log("Replacement string missing for: "
+                                                + token, Project.MSG_VERBOSE);
+                                            replace = startToken + token + endToken;
+                                        }
 
 
-                                    // generate the new line
-                                    line = line.substring(0, startIndex)
-                                         + replace
-                                         + line.substring(endIndex + endToken.length());
+                                        // generate the new line
+                                        line = line.substring(0, startIndex)
+                                             + replace
+                                             + line.substring(endIndex + endToken.length());
 
-                                    // set start position for next search
-                                    startIndex += replace.length();
+                                        // set start position for next search
+                                        startIndex += replace.length();
+                                    }
                                 }
+
+                                // find next starttoken
+                                startIndex = line.indexOf(startToken, startIndex);
                             }
-
-                            // find next starttoken
-                            startIndex = line.indexOf(startToken, startIndex);
-                        }
-
-
                             out.write(line);
                             line = lineTokenizer.getToken(in);
                         }
