@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,14 +99,14 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public PatternSet.NameEntry createInclude() {
         return fileset.createInclude();
     }
-    
+
     /**
      * add a name entry on the include files list
      */
     public PatternSet.NameEntry createIncludesFile() {
         return fileset.createIncludesFile();
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -120,7 +120,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     public PatternSet.NameEntry createExcludesFile() {
         return fileset.createExcludesFile();
     }
-    
+
     /**
      * add a set of patterns
      */
@@ -162,7 +162,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
             }
         }
     }
-    
+
     /**
      * Sets the set of exclude patterns. Patterns may be separated by a comma
      * or a space.
@@ -209,7 +209,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     protected DirectoryScanner getDirectoryScanner(File baseDir) {
         fileset.setDir(baseDir);
         fileset.setDefaultexcludes(useDefaultExcludes);
-        return fileset.getDirectoryScanner(project);
+        return fileset.getDirectoryScanner(getProject());
     }
 
     /**
@@ -395,5 +395,14 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     public void addDepend(DependSelector selector) {
         fileset.addDepend(selector);
+    }
+
+    /**
+     * Accessor for the implict fileset.
+     *
+     * @since Ant 1.5.2
+     */
+    protected final FileSet getImplicitFileSet() {
+        return fileset;
     }
 }

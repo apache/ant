@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -519,7 +519,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         written += 4;
 
         // version made by
-        out.write((new ZipShort(20)).getBytes());
+        out.write((new ZipShort((ze.getPlatform() << 8) | 20)).getBytes());
         written += 2;
 
         // version needed to extract

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.zip.UnixStat;
 import java.util.Stack;
 
 /**
@@ -80,17 +81,45 @@ import java.util.Stack;
  */
 public class ZipFileSet extends FileSet {
 
+    /**
+     * Default value for the dirmode attribute.
+     *
+     * @since Ant 1.5.2
+     */
+    public static final int DEFAULT_DIR_MODE =
+        UnixStat.DIR_FLAG  | UnixStat.DEFAULT_DIR_PERM;
+
+    /**
+     * Default value for the filemode attribute.
+     *
+     * @since Ant 1.5.2
+     */
+    public static final int DEFAULT_FILE_MODE =
+        UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
+
     private File srcFile          = null;
     private String prefix         = "";
     private String fullpath       = "";
     private boolean hasDir        = false;
+    private int fileMode          = DEFAULT_FILE_MODE;
+    private int dirMode           = DEFAULT_DIR_MODE;
 
     public ZipFileSet() {
-      super();
+        super();
     }
 
     protected ZipFileSet(FileSet fileset) {
-      super(fileset);
+        super(fileset);
+    }
+
+    protected ZipFileSet(ZipFileSet fileset) {
+        super(fileset);
+        srcFile = fileset.srcFile;
+        prefix = fileset.prefix;
+        fullpath = fileset.fullpath;
+        hasDir = fileset.hasDir;
+        fileMode = fileset.fileMode;
+        dirMode = fileset.dirMode;
     }
 
     /**
@@ -181,6 +210,44 @@ public class ZipFileSet extends FileSet {
         } else {
             return super.getDirectoryScanner(p);
         }
+    }
+
+    /**
+     * A 3 digit octal string, specify the user, group and 
+     * other modes in the standard Unix fashion; 
+     * optional, default=0644
+     *
+     * @since Ant 1.5.2
+     */
+    public void setFileMode(String octalString) {
+        this.fileMode = 
+            UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
+    }
+    
+    /**
+     * @since Ant 1.5.2
+     */
+    public int getFileMode() {
+        return fileMode;
+    }
+    
+    /**
+     * A 3 digit octal string, specify the user, group and 
+     * other modes in the standard Unix fashion; 
+     * optional, default=0755
+     *
+     * @since Ant 1.6
+     */
+    public void setDirMode(String octalString) {
+        this.dirMode = 
+            UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
+    }
+    
+    /**
+     * @since Ant 1.6
+     */
+    public int getDirMode() {
+        return dirMode;
     }
 
     /**

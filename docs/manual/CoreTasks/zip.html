@@ -40,7 +40,11 @@ or by using the special nested fileset <i>zipgroupfileset</i>.</p>
 ZIP file already exists. When set to <code>yes</code>, the ZIP file is
 updated with the files specified. (New files are added; old files are
 replaced with the new versions.) When set to <code>no</code> (the
-default) the ZIP file is overwritten.</p>
+default) the ZIP file is overwritten.  Please note that ZIP files
+store file modification times with a granularity of two seconds.  If a
+file is less than two seconds newer than the entry in the archive, Ant
+will not consider it newer.</p>
+
 <p>The <code>whenempty</code> parameter controls what happens when no files match.
 If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
 If <code>fail</code>, the ZIP is not created and the build is halted with an error.
@@ -52,6 +56,15 @@ but causes problems if you try to open them from within Java and your
 filenames contain non US-ASCII characters. Use the encoding attribute
 and set it to UTF8 to create zip files that can safely be read by
 Java.</p>
+
+<p>Starting with Ant 1.5.2, &lt;zip&gt; can store Unix permissions
+inside the archive (see description of the filemode and dirmode
+attributes for <a href="#zipfileset">&lt;zipfileset&gt;</a>).
+Unfortunately there is no portable way to store these permissions.
+Ant uses the algorithm used by <a href="http://www.info-zip.org">Info-Zip's</a>
+implementation of the zip and unzip commands - these are the default
+versions of zip and unzip for many Unix and Unix-like systems.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -144,15 +157,64 @@ Java.</p>
 <p>The zip task supports any number of nested <a
 href="../CoreTypes/fileset.html"><code>&lt;fileset&gt;</code></a> elements to specify
 the files to be included in the archive.</p>
-<h4>zipfileset</h4>
-<p>A <code>&lt;zipfileset&gt;</code> has three additional attributes: <i>prefix</i>, <i>fullpath</i>, and <i>src</i>.  The 
-<i>prefix</i> and <i>fullpath</i> attributes modify the location of the files when they are placed 
-inside the archive. If the <i>prefix</i> attribute is set, all files in the fileset are prefixed
-with that path in the archive. If the <i>fullpath</i> attribute is set, the file described by the fileset is placed at that 
-exact location in the archive. (The <i>fullpath</i> attribute can only be set for filesets that represent a single file. The <i>prefix</i> and <i>fullpath</i> attributes cannot both be set on the same fileset.)  The <i>src</i> attribute
-may be used in place of the <i>dir</i> attribute to specify a zip file whose
-contents will be extracted and included in the archive.  As with directories, include and exclude patterns may be used to specify a subset of the zip file
-for inclusion in the archive.</p>
+
+<h4><a name="zipfileset">zipfileset</a></h4>
+
+<p>A <code>&lt;zipfileset&gt;</code> is a special form of a
+<code>&lt;fileset&gt;</code> that adds some extra functionality.  It
+supports all attributes of <code>&lt;fileset&gt;</code> in addition to
+those listed below.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td valign="top" align="center"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">prefix</td>
+    <td valign="top">all files in the fileset are prefixed with that
+    path in the archive.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">fullpath</td>
+    <td valign="top">the file described by the fileset is placed at
+    that exact location in the archive.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">may be used in place of the <i>dir</i> attribute
+    to specify a zip file whose contents will be extracted and
+    included in the archive.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">filemode</td>
+    <td valign="top">A 3 digit octal string, specify the user, group
+    and other modes in the standard Unix fashion.  Only applies to
+    plain files.  Default is 644. <em>since Ant 1.5.2</em>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dirmode</td>
+    <td valign="top">A 3 digit octal string, specify the user, group
+    and other modes in the standard Unix fashion.  Only applies to
+    directories.  Default is 755. <em>since Ant 1.5.2</em>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<p>The <i>fullpath</i> attribute can only be set for filesets that
+represent a single file. The <i>prefix</i> and <i>fullpath</i>
+attributes cannot both be set on the same fileset.</p>
+
+<p>When using the <i>src</i> attribute, include and exclude patterns
+may be used to specify a subset of the zip file for inclusion in the
+archive as with the <i>dir</i> attribute.</p>
+
 <h4>zipgroupfileset</h4>
 <p>A <code>&lt;zipgroupfileset&gt;</code> allows for multiple zip files to be 
 merged into the archive. Each file found in this fileset is added to the archive 
@@ -217,7 +279,7 @@ The code
 <p>
 <p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

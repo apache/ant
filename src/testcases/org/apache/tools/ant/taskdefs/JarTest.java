@@ -97,6 +97,59 @@ public class JarTest extends BuildFileTest {
         assertTrue(jarFile.exists());
     }
 
+    public void testNoRecreateWithoutUpdate() {
+        testNoRecreate("test4");
+    }
+
+    public void testNoRecreateWithUpdate() {
+        testNoRecreate("testNoRecreateWithUpdate");
+    }
+
+    private void testNoRecreate(String secondTarget) {
+        executeTarget("test4");
+        File jarFile = new File(getProjectDir(), tempJar);
+        long jarModifiedDate = jarFile.lastModified();
+        try {
+            Thread.currentThread().sleep(2500);
+        } catch (InterruptedException e) {
+        } // end of try-catch
+        executeTarget(secondTarget);
+        assertEquals("jar has not been recreated in " + secondTarget,
+                     jarModifiedDate, jarFile.lastModified());
+    }
+
+    public void testRecreateWithoutUpdateAdditionalFiles() {
+        testRecreate("test4", "testRecreateWithoutUpdateAdditionalFiles");
+    }
+
+    public void testRecreateWithUpdateAdditionalFiles() {
+        testRecreate("test4", "testRecreateWithUpdateAdditionalFiles");
+    }
+
+    public void testRecreateWithoutUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateWithoutUpdateNewerFile");
+    }
+
+    public void testRecreateWithUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateWithUpdateNewerFile");
+    }
+
+    private void testRecreate(String firstTarget, String secondTarget) {
+        executeTarget(firstTarget);
+        try {
+            Thread.currentThread().sleep(2500);
+        } catch (InterruptedException e) {
+        } // end of try-catch
+        File jarFile = new File(getProjectDir(), tempJar);
+        long jarModifiedDate = jarFile.lastModified();
+        executeTarget(secondTarget);
+        jarFile = new File(getProjectDir(), tempJar);
+        assertTrue("jar has been recreated in " + secondTarget,
+                   jarModifiedDate < jarFile.lastModified());
+    }
+
     public void testManifestStaysIntact() 
         throws IOException, ManifestException {
         executeTarget("testManifestStaysIntact");
@@ -108,4 +161,41 @@ public class JarTest extends BuildFileTest {
                                         .resolveFile("jartmp/META-INF/MANIFEST.MF")));
         assertEquals(mf1, mf2);
     }
+
+    public void testNoRecreateBasedirExcludesWithUpdate() {
+        testNoRecreate("testNoRecreateBasedirExcludesWithUpdate");
+    }
+
+    public void testNoRecreateBasedirExcludesWithoutUpdate() {
+        testNoRecreate("testNoRecreateBasedirExcludesWithoutUpdate");
+    }
+
+    public void testNoRecreateZipfilesetExcludesWithUpdate() {
+        testNoRecreate("testNoRecreateZipfilesetExcludesWithUpdate");
+    }
+
+    public void testNoRecreateZipfilesetExcludesWithoutUpdate() {
+        testNoRecreate("testNoRecreateZipfilesetExcludesWithoutUpdate");
+    }
+
+    public void testRecreateZipfilesetWithoutUpdateAdditionalFiles() {
+        testRecreate("test4",
+                     "testRecreateZipfilesetWithoutUpdateAdditionalFiles");
+    }
+
+    public void testRecreateZipfilesetWithUpdateAdditionalFiles() {
+        testRecreate("test4",
+                     "testRecreateZipfilesetWithUpdateAdditionalFiles");
+    }
+
+    public void testRecreateZipfilesetWithoutUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateZipfilesetWithoutUpdateNewerFile");
+    }
+
+    public void testRecreateZipfilesetWithUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateZipfilesetWithUpdateNewerFile");
+    }
+
 }

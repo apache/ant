@@ -990,9 +990,21 @@
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}"/>
     </antcall>
-    <zip destfile="${dist.base}/bin/${dist.name}-bin.zip"
-         basedir="${dist.name}/.."
-         includes="${dist.name}/**"/>
+    <zip destfile="${dist.base}/bin/${dist.name}-bin.zip">
+      <zipfileset dir="${dist.name}/.." filemode="755">
+        <include name="${dist.name}/bin/ant"/>
+        <include name="${dist.name}/bin/antRun"/>
+        <include name="${dist.name}/bin/*.pl"/>
+        <include name="${dist.name}/bin/*.py"/>
+      </zipfileset>
+      <fileset dir="${dist.name}/..">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bin/ant"/>
+        <exclude name="${dist.name}/bin/antRun"/>
+        <exclude name="${dist.name}/bin/*.pl"/>
+        <exclude name="${dist.name}/bin/*.py"/>
+      </fileset>
+    </zip>
     <tar longfile="gnu"
          destfile="${dist.base}/bin/${dist.name}-bin.tar">
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
@@ -1026,9 +1038,17 @@
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}"/>
     </antcall>
-    <zip destfile="${dist.base}/src/${dist.name}-src.zip"
-         basedir="${dist.name}/.."
-         includes="${dist.name}/**"/>
+    <zip destfile="${dist.base}/src/${dist.name}-src.zip">
+      <zipfileset dir="${dist.name}/.." filemode="755">
+        <include name="${dist.name}/bootstrap.sh"/>
+        <include name="${dist.name}/build.sh"/>
+      </zipfileset>
+      <fileset dir="${dist.name}/..">
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bootstrap.sh"/>
+        <exclude name="${dist.name}/build.sh"/>
+      </fileset>
+    </zip>
     <tar longfile="gnu"
          destfile="${dist.base}/src/${dist.name}-src.tar" >
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">

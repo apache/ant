@@ -19,11 +19,12 @@
   </target>
 
   <!-- Test when the zip file includes itself
-  when target file does not exist before the zip task is run -->
+  when target file does not exist before the zip task is run
   <target name="test4">
      <zip destFile="test4.zip"
          basedir="."/>
   </target>
+  -->
 
   <target name="test5">
     <zip zipfile="test5.zip" basedir="." >

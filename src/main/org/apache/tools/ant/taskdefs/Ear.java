@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -105,8 +105,7 @@ public class Ear extends Jar {
 
         // Create a ZipFileSet for this file, and pass it up.
         ZipFileSet fs = new ZipFileSet();
-        fs.setDir(new File(deploymentDescriptor.getParent()));
-        fs.setIncludes(deploymentDescriptor.getName());
+        fs.setFile(deploymentDescriptor);
         fs.setFullpath("META-INF/application.xml");
         super.addFileset(fs);
     }
@@ -129,13 +128,17 @@ public class Ear extends Jar {
         throws IOException, BuildException {
         // If no webxml file is specified, it's an error.
         if (deploymentDescriptor == null && !isInUpdateMode()) {
-            throw new BuildException("appxml attribute is required", location);
+            throw new BuildException("appxml attribute is required", getLocation());
         }
 
         super.initZipOutputStream(zOut);
     }
 
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+    /**
+     * Overriden from Zip class to deal with application.xml
+     */
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath, 
+                           int mode)
         throws IOException {
         // If the file being added is META-INF/application.xml, we
         // warn if it's not the one specified in the "appxml"
@@ -151,11 +154,11 @@ public class Ear extends Jar {
                     + " be ignored (please use appxml attribute to "
                     + archiveType + " task)", Project.MSG_WARN);
             } else {
-                super.zipFile(file, zOut, vPath);
+                super.zipFile(file, zOut, vPath, mode);
                 descriptorAdded = true;
             }
         } else {
-            super.zipFile(file, zOut, vPath);
+            super.zipFile(file, zOut, vPath, mode);
         }
     }
 

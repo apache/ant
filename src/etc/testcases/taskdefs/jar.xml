@@ -4,6 +4,7 @@
 
   <property name="tmp.jar" location="tmp.jar"/>
   <property name="tmp.dir" location="jartmp"/>
+  <property name="tmp.zip" location="tmp.zip"/>
 
   <target name="test1">
     <jar/>
@@ -31,12 +32,50 @@
     />
   </target>
 
-  <!-- This test is to make sure upToDate is working -->
-  <target name="test5">
+  <target name="testNoRecreateWithUpdate">
     <jar
-    	destfile="${tmp.jar}"
-	basedir="."
-	includes="jar.xml"
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testRecreateNewerFileSetup" depends="test4">
+    <touch file="jar.xml"/>
+  </target>
+
+  <target name="testRecreateWithoutUpdateAdditionalFiles">
+    <jar
+         destfile="${tmp.jar}"
+         includes="*.xml"
+         basedir="."
+    />
+  </target>
+
+  <target name="testRecreateWithUpdateAdditionalFiles">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="*.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testRecreateWithoutUpdateNewerFile">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+    />
+  </target>
+
+  <target name="testRecreateWithUpdateNewerFile">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="jar.xml"
+         update="true"
     />
   </target>
 
@@ -54,9 +93,79 @@
     <unjar src="${tmp.jar}" dest="${tmp.dir}"/>
   </target>    
 
+  <target name="testNoRecreateBasedirExcludesWithUpdate">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="j*.xml"
+         excludes="java.xml"
+         update="true"
+    />
+  </target>
+
+  <target name="testNoRecreateBasedirExcludesWithoutUpdate">
+    <jar
+         destfile="${tmp.jar}"
+         basedir="."
+         includes="j*.xml"
+         excludes="java.xml"
+    />
+  </target>
+
+  <target name="makezip">
+    <zip destfile="${tmp.zip}"
+         basedir="." includes="j*.xml"/>
+  </target>
+
+  <target name="testNoRecreateZipfilesetExcludesWithUpdate"
+          depends="makezip">
+    <jar destfile="${tmp.jar}"
+         update="true">
+      <zipfileset src="${tmp.zip}" excludes="java.xml"/>
+    </jar>
+  </target>
+
+  <target name="testNoRecreateZipfilesetExcludesWithoutUpdate"
+          depends="makezip">
+    <jar destfile="${tmp.jar}">
+      <zipfileset src="${tmp.zip}" excludes="java.xml"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithoutUpdateAdditionalFiles"
+          depends="makezip">
+    <jar destfile="${tmp.jar}">
+      <zipfileset src="${tmp.zip}"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithUpdateAdditionalFiles"
+          depends="makezip">
+    <jar destfile="${tmp.jar}"
+         update="true">
+      <zipfileset src="${tmp.zip}"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithoutUpdateNewerFile"
+          depends="makezip">
+    <jar destfile="${tmp.jar}">
+      <zipfileset src="${tmp.zip}" includes="jar.xml"/>
+    </jar>
+  </target>
+
+  <target name="testRecreateZipfilesetWithUpdateNewerFile"
+          depends="makezip">
+    <jar destfile="${tmp.jar}"
+         update="true">
+      <zipfileset src="${tmp.zip}" includes="jar.xml"/>
+    </jar>
+  </target>
+
   <target name="cleanup">
     <delete file="${tmp.jar}" />
     <delete dir="${tmp.dir}"/>
+    <delete file="${tmp.zip}" />
   </target>
 
 </project>

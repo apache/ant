@@ -36,7 +36,11 @@ See the <a href="zip.html">Zip</a> task for more details and examples.</p>
 JAR file already exists. When set to <code>yes</code>, the JAR file is
 updated with the files specified. When set to <code>no</code> (the
 default) the JAR file is overwritten. An example use of this is
-provided in the <a href="zip.html">Zip task documentation</a>.</p>
+provided in the <a href="zip.html">Zip task documentation</a>.  Please
+note that ZIP files store file modification times with a granularity
+of two seconds.  If a file is less than two seconds newer than the
+entry in the archive, Ant will not consider it newer.</p>
+
 <p>(The Jar task is a shortcut for specifying the manifest file of a JAR file.
 The same thing can be accomplished by using the <i>fullpath</i>
 attribute of a zipfileset in a Zip task. The one difference is that if the
@@ -154,8 +158,8 @@ ignored and you will get a warning.</p>
 <p>The manifest nested element allows the manifest for the Jar file to
 be provided inline in the build file rather than in an external
 file. This element is identical to the
-<a href="manifest.html">manifest</a> task, but its file and mode
-attributes will be ignored.</p>
+<a href="manifest.html">manifest</a> task, but the file and mode
+attributes must be omitted.</p>
 <p>
 If both an inline manifest and an external file are both specified, the
 manifests are merged.
@@ -224,7 +228,7 @@ Name: common/class1.class
 Sealed: false</code></pre>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

@@ -3,9 +3,18 @@ Changes from Ant 1.5.1 to current CVS version
 
 Changes that could break older environments:
 --------------------------------------------
-* ANT_OPTS environment variable is now applied at the start of the Java command 
-  line, allowing position specific parameters of some JVMs, such as -classic to 
-  be specified.
+* ANT_OPTS environment variable is now applied at the start of the
+  Java command line, allowing position specific parameters of some
+  JVMs, such as -classic to be specified.
+
+* ZipScanner#getIncludedFiles will now return the names of the ZipEntries
+  that have been matched instead of the name of the archive.
+
+* The <zip> task and friends have been heavily modified, almost every
+  method signature of the Zip class has changed.  If you have subclassed
+  Zip (or one of its subclasses), your class will most likely not
+  compile against the current code base.  If it still compiles, it will
+  probably not work as in Ant 1.5.1.
 
 Fixed bugs:
 -----------
@@ -72,15 +81,23 @@ Fixed bugs:
 
 * <tar>'s up-to-date check didn't work for nested <(tar)fileset>s.
 
-* Corrected a problem in XMLLogger where it would not associated messages with a
-  taskdef'd task
+* Corrected a problem in XMLLogger where it would not associated
+  messages with a taskdef'd task
 
 * <uptodate> now works when using attributes (i.e. not filesets) and pointing 
   to the same file
 
-* Java task (and output system) now stores output which doos not end with a line feed.
+* Java task (and output system) now stores output which doos not end
+  with a line feed.
 
-* splash screen wouldn't disppear when build was finished.
+* splash screen wouldn't disappear when build was finished.
+
+* <exec> now supports OS/2.
+
+* <zip> and friends would only update/recreate existing archives if
+  the files to add/update have been newer than the archive.
+
+* <javadoc>'s <link> element could fail for offline="true" on some JDKs.
 
 Other changes:
 --------------
@@ -95,9 +112,12 @@ Other changes:
 
 * **/.DS_Store has been added to the list of default pattern excludes.
 
-* The Created-By header in the default manifest now contains the JVM vendor and
-  version according to the jar specification. A new header, Ant-Versio,n provides 
-  the Ant version used to create the jar.  
+* The Created-By header in the default manifest now contains the JVM
+  vendor and version according to the jar specification. A new header,
+  Ant-Version provides the Ant version used to create the jar.
+
+* <zip> can now store Unix permissions in a way that can be
+  reconstructed by Info-Zip's unzip command.
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
