@@ -54,8 +54,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Date;
@@ -230,17 +233,61 @@ public class JarTest extends BuildFileTest {
         assertTrue(jarXml.exists());
     }
 
+    // bugzilla report 10262
     public void testNoDuplicateIndex() throws IOException {
-        executeTarget("testNoDuplicateIndex");
-        ZipFile archive = new ZipFile(getProject().resolveFile(tempJar));
-        Enumeration enum = archive.entries();
-        int numberOfIndexLists = 0;
-        while (enum.hasMoreElements()) {
-            ZipEntry ze = (ZipEntry) enum.nextElement();
-            if (ze.getName().equals("META-INF/INDEX.LIST")) {
-                numberOfIndexLists++;
+        ZipFile archive = null;
+        try {
+            executeTarget("testIndexTests");
+            archive = new ZipFile(getProject().resolveFile(tempJar));
+            Enumeration enum = archive.entries();
+            int numberOfIndexLists = 0;
+            while (enum.hasMoreElements()) {
+                ZipEntry ze = (ZipEntry) enum.nextElement();
+                if (ze.getName().equals("META-INF/INDEX.LIST")) {
+                    numberOfIndexLists++;
+                }
+            }
+            assertEquals(1, numberOfIndexLists);
+        } finally {
+            if (archive != null) {
+                archive.close();
             }
         }
-        assertEquals(1, numberOfIndexLists);
+    }
+
+    // bugzilla report 16972
+    public void XtestRootFilesInIndex() throws IOException {
+        ZipFile archive = null;
+        try {
+            executeTarget("testIndexTests");
+            archive = new ZipFile(getProject().resolveFile(tempJar));
+            ZipEntry ze = archive.getEntry("META-INF/INDEX.LIST");
+            InputStream is = archive.getInputStream(ze);
+            BufferedReader r = new BufferedReader(new InputStreamReader(is,
+                                                                        "UTF8"));
+            boolean foundSub = false;
+            boolean foundSubFoo = false;
+            boolean foundFoo = false;
+            
+            String line = r.readLine();
+            while (line != null) {
+                if (line.equals("foo")) {
+                    foundFoo = true;
+                } else if (line.equals("sub")) {
+                    foundSub = true;
+                } else if (line.equals("sub/foo")) {
+                    foundSubFoo = true;
+                }
+                line = r.readLine();
+            }
+
+            assertTrue(foundSub);
+            assertTrue(!foundSubFoo);
+            assertTrue(foundFoo);
+        } finally {
+            if (archive != null) {
+                archive.close();
+            }
+        }
     }
 }

@@ -201,11 +201,13 @@
     <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
   </target>
 
-  <!-- bug 10262 -->
-  <target name="testNoDuplicateIndex">
+  <!-- bugs 10262 and 16972 -->
+  <target name="testIndexTests">
     <mkdir dir="${tmp.dir}/META-INF"/>
     <touch file="${tmp.dir}/META-INF/INDEX.LIST"/>
     <touch file="${tmp.dir}/foo"/>
+    <mkdir dir="${tmp.dir}/sub"/>
+    <touch file="${tmp.dir}/sub/foo"/>
     <jar destfile="${tmp.jar}" index="yes" basedir="${tmp.dir}"/>
   </target>
 </project>
