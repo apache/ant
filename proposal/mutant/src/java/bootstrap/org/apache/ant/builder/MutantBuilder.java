@@ -51,9 +51,9 @@ public class MutantBuilder {
     }
     protected void cli(BuildHelper helper) {
         helper.mkdir("${bin.dir}/cli");
-        helper.mkdir("${distlib.dir}/cli");
+        helper.mkdir("${distlib.dir}/frontend");
         helper.javac("${java.dir}/cli", "${bin.dir}/cli", "classpath.cli");
-        helper.jar("${bin.dir}/cli", "${distlib.dir}/cli/cli.jar",
+        helper.jar("${bin.dir}/cli", "${distlib.dir}/frontend/cli.jar",
                    null, null);
     }
     protected void start(BuildHelper helper) {

@@ -52,9 +52,11 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.init;
-
-import java.net.URL;
 import java.io.File;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * InitConfig is the initialization configuration created to start Ant. This
@@ -64,6 +66,10 @@ import java.io.File;
  * @created 9 January 2002
  */
 public class InitConfig {
+
+    /** The default name of the jar containing the XML parser */
+    public static final String DEFAULT_PARSER_JAR = "crimson.jar";
+
     /** The system classloader */
     private ClassLoader systemLoader;
 
@@ -106,6 +112,59 @@ public class InitConfig {
 
     /** The location of the user config file */
     private File userConfigArea;
+
+    /**
+     * XXX Constructor for the InitConfig object
+     *
+     * @exception InitException XXX Description of Exception
+     */
+    public InitConfig() throws InitException {
+        try {
+            URL antLibURL = getAntLibURL();
+            setLibraryURL(antLibURL);
+
+            URL antHome = new URL(antLibURL, "..");
+            setAntHome(antHome);
+            if (antHome.getProtocol().equals("file")) {
+                File systemConfigArea = new File(antHome.getFile(), "conf");
+                setSystemConfigArea(systemConfigArea);
+            }
+            File userConfigArea
+                 = new File(System.getProperty("user.home"), ".ant/conf");
+            setUserConfigArea(userConfigArea);
+
+            // set up the class loaders that will be used when running Ant
+            ClassLoader systemLoader = getClass().getClassLoader();
+            setSystemLoader(systemLoader);
+            URL toolsJarURL = ClassLocator.getToolsJarURL();
+            setToolsJarURL(toolsJarURL);
+
+            URL commonJarLib = new URL(libraryURL, "common/");
+            ClassLoader commonLoader
+                 = new URLClassLoader(LoaderUtils.getLocationURLs(commonJarLib,
+                "common.jar"), systemLoader);
+            setCommonLoader(commonLoader);
+
+            // core needs XML parser for parsing various XML components.
+            URL parserBase = new URL(libraryURL, "parser/");
+            URL[] parserURLs
+                 = LoaderUtils.getLocationURLs(parserBase, DEFAULT_PARSER_JAR);
+            setParserURLs(parserURLs);
+
+            URL[] coreURLs
+                 = LoaderUtils.getLocationURLs(new URL(libraryURL, "antcore/"),
+                "antcore.jar");
+            URL[] combinedURLs = new URL[parserURLs.length + coreURLs.length];
+            System.arraycopy(coreURLs, 0, combinedURLs, 0, coreURLs.length);
+            System.arraycopy(parserURLs, 0, combinedURLs, coreURLs.length,
+                parserURLs.length);
+            ClassLoader coreLoader = new URLClassLoader(combinedURLs,
+                commonLoader);
+            setCoreLoader(coreLoader);
+        } catch (MalformedURLException e) {
+            throw new InitException(e);
+        }
+    }
 
     /**
      * Sets the location of the user configuration files
@@ -267,6 +326,25 @@ public class InitConfig {
      */
     public URL getLibraryURL() {
         return libraryURL;
+    }
+
+    /**
+     * Get a URL to the Ant Library directory.
+     *
+     * @return the URL for the Ant library directory
+     * @throws MalformedURLException if there is a problem constructing the 
+     *      library URL
+     */
+    private URL getAntLibURL() throws MalformedURLException {
+        URL initClassURL = ClassLocator.getClassLocationURL(getClass());
+
+        String initURLString = initClassURL.toString();
+        int index = initURLString.lastIndexOf("/");
+        if (index != -1) {
+            initURLString = initURLString.substring(0, index + 1);
+        }
+
+        return  new URL(initURLString);
     }
 }
 

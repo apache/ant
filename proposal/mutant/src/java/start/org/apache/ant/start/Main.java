@@ -53,16 +53,10 @@
  */
 package org.apache.ant.start;
 
-import java.io.File;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import org.apache.ant.init.ClassLocator;
-import org.apache.ant.init.InitUtils;
 import org.apache.ant.init.InitConfig;
-import org.apache.ant.init.InitException;
-import org.apache.ant.init.LoaderUtils;
 
 /**
  * This is the main startup class for the command line interface of Ant. It
@@ -76,46 +70,10 @@ public class Main {
     public static final String COMMANDLINE_CLASS
          = "org.apache.ant.cli.Commandline";
 
-
-    /**
-     * Get a URL to the Ant Library directory.
-     *
-     * @return the URL for the Ant library directory
-     * @throws InitException if there is a problem constructing the library
-     *      URL
-     */
-    public static URL getLibraryURL()
-         throws InitException {
-        try {
-            URL cliURL = ClassLocator.getClassLocationURL(Main.class);
-
-            if (cliURL.getProtocol().equals("file")
-                 && cliURL.getFile().endsWith("/")) {
-                // we are running from a set of classes. This should only
-                // happen in an Ant build situation. We use some embedded
-                // knowledge to locate the lib directory
-                File classesDirectory = new File(cliURL.getFile());
-                File libDirectory = new File(classesDirectory.getParent(),
-                    "lib");
-                if (!libDirectory.exists()) {
-                    throw new RuntimeException("Ant library directory "
-                         + libDirectory + " does not exist");
-                }
-                return InitUtils.getFileURL(libDirectory);
-            } else {
-                String cliURLString = cliURL.toString();
-                int index = cliURLString.lastIndexOf("/");
-                if (index != -1) {
-                    cliURLString = cliURLString.substring(0, index + 1);
-                }
-                return new URL(cliURLString);
-            }
-        } catch (MalformedURLException e) {
-            throw new InitException(e);
-        }
-    }
-
-
+         
+    /** The default front end name */
+    public static final String DEFAULT_FRONTEND = "cli";
+         
     /**
      * Entry point for starting command line Ant
      *
@@ -123,92 +81,27 @@ public class Main {
      */
     public static void main(String[] args) {
         Main main = new Main();
-        main.start(args);
+        main.start(DEFAULT_FRONTEND, args);
     }
-
-
-
-    /**
-     * Get the location of AntHome
-     *
-     * @return the URL containing AntHome.
-     * @throws InitException if Ant's home cannot be determined or properly
-     *      contructed.
-     */
-    private URL getAntHome()
-         throws InitException {
-        try {
-            URL libraryURL = getLibraryURL();
-            if (libraryURL != null) {
-                return new URL(libraryURL, "..");
-            }
-        } catch (MalformedURLException e) {
-            throw new InitException(e);
-        }
-        throw new InitException("Unable to determine Ant Home");
-    }
-
 
     /**
      * Internal start method used to initialise front end
      *
+     * @param frontend the frontend jar to launch
      * @param args commandline arguments
      */
-    private void start(String[] args) {
+    public void start(String frontend, String[] args) {
         try {
             InitConfig config = new InitConfig();
 
-            URL libraryURL = getLibraryURL();
-            config.setLibraryURL(libraryURL);
+            URL frontendJar = new URL(config.getLibraryURL(), 
+                "frontend/" + frontend + ".jar");
+            URL[] frontendJars = new URL[]{frontendJar};
+            ClassLoader frontEndLoader 
+                = new URLClassLoader(frontendJars, config.getCoreLoader());
 
-            URL antHome = getAntHome();
-            config.setAntHome(antHome);
-            if (antHome.getProtocol().equals("file")) {
-                File systemConfigArea = new File(antHome.getFile(), "conf");
-                config.setSystemConfigArea(systemConfigArea);
-            }
-            File userConfigArea
-                 = new File(System.getProperty("user.home"), ".ant/conf");
-            config.setUserConfigArea(userConfigArea);
-
-            // set up the class loaders that will be used when running Ant
-            ClassLoader systemLoader = getClass().getClassLoader();
-            config.setSystemLoader(systemLoader);
-            URL toolsJarURL = ClassLocator.getToolsJarURL();
-            config.setToolsJarURL(toolsJarURL);
-
-            URL commonJarLib = new URL(libraryURL, "common/");
-            ClassLoader commonLoader
-                 = new URLClassLoader(LoaderUtils.getLocationURLs(commonJarLib,
-                "common.jar"), systemLoader);
-            config.setCommonLoader(commonLoader);
-
-            // core needs XML parser for parsing various XML components.
-            URL[] parserURLs
-                 = LoaderUtils.getLocationURLs(new URL(libraryURL, "parser/"),
-                "crimson.jar");
-            config.setParserURLs(parserURLs);
-
-            URL[] coreURLs
-                 = LoaderUtils.getLocationURLs(new URL(libraryURL, "antcore/"),
-                "antcore.jar");
-            URL[] combinedURLs = new URL[parserURLs.length + coreURLs.length];
-            System.arraycopy(coreURLs, 0, combinedURLs, 0, coreURLs.length);
-            System.arraycopy(parserURLs, 0, combinedURLs, coreURLs.length,
-                parserURLs.length);
-            ClassLoader coreLoader = new URLClassLoader(combinedURLs,
-                commonLoader);
-            config.setCoreLoader(coreLoader);
-
-            URL cliJarLib = new URL(libraryURL, "cli/");
-            ClassLoader frontEndLoader
-                 = new URLClassLoader(LoaderUtils.getLocationURLs(cliJarLib,
-                "cli.jar"), coreLoader);
-
-            //System.out.println("System Loader config");                
-            //LoaderUtils.dumpLoader(System.out, systemLoader);
-            // System.out.println("Front End Loader config");
-            // LoaderUtils.dumpLoader(System.out, frontEndLoader);
+            //System.out.println("Front End Loader config");
+            //LoaderUtils.dumpLoader(System.out, frontEndLoader);
 
             // Now start the front end by reflection.
             Class commandLineClass = Class.forName(COMMANDLINE_CLASS, true,
@@ -220,7 +113,6 @@ public class Main {
                  = commandLineClass.getMethod("start", param);
             final Object[] argument = {args, config};
             startMethod.invoke(null, argument);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

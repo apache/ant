@@ -77,14 +77,14 @@
 
   <target name="cli" depends="antcore, start">
     <mkdir dir="${bin.dir}/cli"/>
-    <mkdir dir="${distlib.dir}/cli"/>
+    <mkdir dir="${distlib.dir}/frontend"/>
     <depend destdir="${bin.dir}/cli" srcdir="${java.dir}/cli">
       <classpath refid="classpath.cli"/>
     </depend>
     <javac destdir="${bin.dir}/cli" srcdir="${java.dir}/cli" debug="${debug}">
       <classpath refid="classpath.cli"/>
     </javac>
-    <jar basedir="${bin.dir}/cli" jarfile="${distlib.dir}/cli/cli.jar"/>
+    <jar basedir="${bin.dir}/cli" jarfile="${distlib.dir}/frontend/cli.jar"/>
   </target>
 
   <target name="start" depends="init">
@@ -199,7 +199,7 @@
     <mkdir dir="${javadocs.dir}"/>
     <javadoc packagenames="org.apache.*"
              useexternalfile="yes"
-             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/cli:${java.dir}/start"
+             sourcepath="${java.dir}/antcore:${java.dir}/init:${java.dir}/common:${java.dir}/frontend:${java.dir}/start"
              destdir="${javadocs.dir}"
              author="true" 
              private ="true"
