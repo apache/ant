@@ -424,6 +424,8 @@ public class Project {
     public File resolveFile(String fileName) {
         // deal with absolute files
         if (fileName.startsWith("/")) return new File( fileName );
+        if (fileName.startsWith(System.getProperty("file.separator"))) 
+            return new File( fileName );
 
         // Eliminate consecutive slashes after the drive spec
         if (fileName.length() >= 2 &&
