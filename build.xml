@@ -5,7 +5,7 @@
     Ant own build file                                                      
   ======================================================================= 
 -->
-<project name="Ant" default="main" basedir=".">
+<project default="main" basedir=".">
 
   <!-- Give user a chance to override without editing this file 
        (and without typing -D each time it compiles it) -->
