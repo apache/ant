@@ -65,7 +65,6 @@ package org.apache.tools.ant;
  * @author Peter Reilly
  */
 public class AntTypeDefinition {
-    private Project     project;
     private String      name;
     private Class       clazz;
     private Class       adapterClass;
@@ -74,13 +73,11 @@ public class AntTypeDefinition {
     private ClassLoader classLoader;
 
     /**
-     * Clone this definiton and changed the cloned definitions' project.
-     * @param p   the project the cloned definition lives in
+     * Clone this definition and changed the cloned definitions' project.
      * @return    the cloned definition
      */
-    public AntTypeDefinition copy(Project p) {
+    public AntTypeDefinition copy() {
         AntTypeDefinition copy = new AntTypeDefinition();
-        copy.project = p;
         copy.name = name;
         copy.clazz = clazz;
         copy.adapterClass = adapterClass;
@@ -88,14 +85,6 @@ public class AntTypeDefinition {
         copy.classLoader = classLoader;
         copy.adaptToClass = adaptToClass;
         return copy;
-    }
-
-    /**
-     * set the project on the definition
-     * @param project the project this definition belongs in
-     */
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     /**
@@ -190,11 +179,12 @@ public class AntTypeDefinition {
      * (adapted class) if there is an adpater
      * class and the definition class is not
      * assignable from the assignable class.
+     * @param project the current project
      * @return the exposed class
      */
-    public Class getExposedClass() {
+    public Class getExposedClass(Project project) {
         if (adaptToClass != null) {
-            Class z = getTypeClass();
+            Class z = getTypeClass(project);
             if (z == null) {
                 return null;
             }
@@ -205,14 +195,15 @@ public class AntTypeDefinition {
         if (adapterClass != null) {
             return adapterClass;
         }
-        return getTypeClass();
+        return getTypeClass(project);
     }
 
     /**
      * get the definition class
+     * @param project the current project
      * @return the type of the definition
      */
-    public Class getTypeClass() {
+    public Class getTypeClass(Project project) {
         if (clazz != null) {
             return clazz;
         }
@@ -237,23 +228,24 @@ public class AntTypeDefinition {
     /**
      * create an instance of the definition.
      * The instance may be wrapped in a proxy class.
+     * @param project the current project
      * @return the created object
      */
-    public Object create() {
-        return  icreate();
+    public Object create(Project project) {
+        return  icreate(project);
     }
 
     /**
      * Create a component object based on
      * its definition
      */
-    private Object icreate() {
-        Class c = getTypeClass();
+    private Object icreate(Project project) {
+        Class c = getTypeClass(project);
         if (c == null) {
             return null;
         }
 
-        Object o = createAndSet(c);
+        Object o = createAndSet(project, c);
         if (o == null || adapterClass == null) {
             return o;
         }
@@ -264,7 +256,8 @@ public class AntTypeDefinition {
             }
         }
 
-        TypeAdapter adapterObject = (TypeAdapter) createAndSet(adapterClass);
+        TypeAdapter adapterObject = (TypeAdapter) createAndSet(
+            project, adapterClass);
         if (adapterObject == null) {
             return null;
         }
@@ -281,10 +274,11 @@ public class AntTypeDefinition {
      *   <li>if the type is assignable from adapto</li>
      *   <li>if the type can be used with the adapter class</li>
      * </dl>
+     * @param project the current project
      */
-    public void checkClass() {
+    public void checkClass(Project project) {
         if (clazz == null) {
-            clazz = getTypeClass();
+            clazz = getTypeClass(project);
             if (clazz == null) {
                 throw new BuildException(
                     "Unable to create class for " + getName());
@@ -298,7 +292,8 @@ public class AntTypeDefinition {
                 needToCheck = false;
             }
             if (needToCheck) {
-                TypeAdapter adapter = (TypeAdapter) createAndSet(adapterClass);
+                TypeAdapter adapter = (TypeAdapter) createAndSet(
+                    project, adapterClass);
                 if (adapter == null) {
                     throw new BuildException("Unable to create adapter object");
                 }
@@ -311,7 +306,7 @@ public class AntTypeDefinition {
      * get the constructor of the defintion
      * and invoke it.
      */
-    private Object createAndSet(Class c) {
+    private Object createAndSet(Project project, Class c) {
         try {
             java.lang.reflect.Constructor ctor = null;
             boolean noArg = false;

@@ -528,14 +528,13 @@ public abstract class Definer extends Task {
 
                 AntTypeDefinition def = new AntTypeDefinition();
                 def.setName(name);
-                def.setProject(getProject());
                 def.setClassName(classname);
                 def.setClass(cl);
                 def.setAdapterClass(adapterClass);
                 def.setAdaptToClass(adaptToClass);
                 def.setClassLoader(al);
                 if (cl != null) {
-                    def.checkClass();
+                    def.checkClass(project);
                 }
                 ComponentHelper.getComponentHelper(getProject())
                     .addDataTypeDefinition(def);

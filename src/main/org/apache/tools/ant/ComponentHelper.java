@@ -154,7 +154,6 @@ public class ComponentHelper  {
         AntTypeTable typeTable = helper.antTypeTable;
         for (Iterator i = typeTable.values().iterator(); i.hasNext();) {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
-            def = def.copy(project);
             antTypeTable.put(def.getName(), def);
         }
     }
@@ -256,7 +255,6 @@ public class ComponentHelper  {
     public void addTaskDefinition(String taskName, Class taskClass) {
         checkTaskClass(taskClass);
         AntTypeDefinition def = new AntTypeDefinition();
-        def.setProject(project);
         def.setName(taskName);
         def.setClassLoader(taskClass.getClassLoader());
         def.setClass(taskClass);
@@ -386,7 +384,6 @@ public class ComponentHelper  {
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
         AntTypeDefinition def = new AntTypeDefinition();
-        def.setProject(project);
         def.setName(typeName);
         def.setClass(typeClass);
         updateDataTypeDefinition(def);
@@ -567,7 +564,7 @@ public class ComponentHelper  {
         Class elementClass = element.getClass();
         for (Iterator i = antTypeTable.values().iterator(); i.hasNext();) {
             AntTypeDefinition def = (AntTypeDefinition) i.next();
-            if (elementClass == def.getExposedClass()) {
+            if (elementClass == def.getExposedClass(project)) {
                 return "The <" + def.getName() + "> type"; 
             }
         }
@@ -578,10 +575,11 @@ public class ComponentHelper  {
     /** return true if the two definitions are the same */
     private boolean sameDefinition(
         AntTypeDefinition def, AntTypeDefinition old) {
-        if (! (old.getTypeClass().equals(def.getTypeClass()))) {
+        if (! (old.getTypeClass(project).equals(def.getTypeClass(project)))) {
             return false;
         }
-        if (! (old.getExposedClass().equals(def.getExposedClass()))) {
+        if (! (old.getExposedClass(project).equals(
+                   def.getExposedClass(project)))) {
             return false;
         }
         return true;
@@ -649,7 +647,6 @@ public class ComponentHelper  {
                 String name = (String) enum.nextElement();
                 String className = props.getProperty(name);
                 AntTypeDefinition def = new AntTypeDefinition();
-                def.setProject(project);
                 def.setName(name);
                 def.setClassName(className);
                 def.setClassLoader(classLoader);
@@ -692,7 +689,6 @@ public class ComponentHelper  {
                 String name = (String) enum.nextElement();
                 String className = props.getProperty(name);
                 AntTypeDefinition def = new AntTypeDefinition();
-                def.setProject(project);
                 def.setName(name);
                 def.setClassName(className);
                 def.setClassLoader(classLoader);
@@ -733,7 +729,7 @@ public class ComponentHelper  {
             if (def == null) {
                 return null;
             }
-            return def.create();
+            return def.create(project);
         }
             
         public Class getTypeClass(String name) {
@@ -741,7 +737,7 @@ public class ComponentHelper  {
             if (def == null) {
                 return null;
             }
-            return def.getTypeClass();
+            return def.getTypeClass(project);
         }
 
         public Class getExposedClass(String name) {
@@ -749,13 +745,13 @@ public class ComponentHelper  {
             if (def == null) {
                 return null;
             }
-            return def.getExposedClass();
+            return def.getExposedClass(project);
         }
 
         public boolean contains(Object clazz) {
             for (Iterator i = values().iterator(); i.hasNext();) {
                 AntTypeDefinition def = (AntTypeDefinition) i.next();
-                Class c = def.getExposedClass();
+                Class c = def.getExposedClass(project);
                 if (c == clazz)
                     return true;
             }
