@@ -530,8 +530,8 @@ specify the BEA Home to have this task work correctly under 6.0</p>
 <h2><a name="ejbjar">ejbjar</a></h2>
 <h3><b>Description:</b></h3>
 
-<p>This task is designed to support building of EJB1.1 jar files. Support is
-currently provided for 'vanilla' EJB1.1 jar files - i.e. those containing only
+<p>This task is designed to support building of EJB jar files (EJB 1.1 &amp; 2.0). 
+Support is currently provided for 'vanilla' EJB jar files - i.e. those containing only
 the user generated class files and the standard deployment descriptor. Nested
 elements provide support for vendor specific deployment tools. These currently
 include: </p>
@@ -548,7 +548,7 @@ include: </p>
 
 <p>The task works as a directory scanning task, and performs an action for each
 deployment descriptor found. As such the includes and excludes should be set
-to ensure that all desired EJB1.1 descriptors are found, but no application
+to ensure that all desired EJB descriptors are found, but no application
 server descriptors are found. For each descriptor found, ejbjar will parse the
 deployment descriptor to determine the necessary class files which implement the
 bean. These files are assembled along with the deployment descriptors into a
