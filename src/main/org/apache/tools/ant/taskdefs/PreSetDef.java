@@ -44,16 +44,16 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
     private String         name;
 
     /**
-     * Name of the definition
-     * @param name the name of the definition
+     * Set the name of this definition.
+     * @param name the name of the definition.
      */
      public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Add a nested task to predefine attributes and elements on
-     * @param nestedTask  Nested task/type to extend
+     * Add a nested task to predefine attributes and elements on.
+     * @param nestedTask  Nested task/type to extend.
      */
     public void addTask(Task nestedTask) {
         if (this.nestedTask != null) {
@@ -68,7 +68,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
 
 
     /**
-     * make a new definition
+     * Make a new definition.
      */
     public void execute() {
         if (nestedTask == null) {
@@ -77,7 +77,6 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
         if (name == null) {
             throw new BuildException("Name not specified");
         }
-
         name = ProjectHelper.genComponentName(getURI(), name);
 
         ComponentHelper helper = ComponentHelper.getComponentHelper(
@@ -91,7 +90,6 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
             throw new BuildException(
                 "Unable to find typedef " + componentName);
         }
-
         PreSetDefinition newDef = new PreSetDefinition(def, nestedTask);
 
         newDef.setName(name);
@@ -111,7 +109,7 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
         /**
          * Creates a new <code>PresetDefinition</code> instance.
          *
-         * @param parent The parent of this predefintion.
+         * @param parent The parent of this predefinition.
          * @param el     The predefined attributes, nested elements and text.
          */
         public PreSetDefinition(AntTypeDefinition parent, UnknownElement el) {
@@ -125,80 +123,80 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
         }
 
         /**
-         * Override so that it is not allowed
+         * Override so that it is not allowed.
          *
-         * @param clazz a <code>Class</code> value
+         * @param clazz a <code>Class</code> value.
          */
         public void setClass(Class clazz) {
             throw new BuildException("Not supported");
         }
 
         /**
-         * Override so that it is not allowed
+         * Override so that it is not allowed.
          *
-         * @param className a <code>String</code> value
+         * @param className a <code>String</code> value.
          */
         public void setClassName(String className) {
             throw new BuildException("Not supported");
         }
 
         /**
-         * get the classname of the definition
-         * @return the name of the class of this definition
+         * Get the classname of the definition.
+         * @return the name of the class of this definition.
          */
         public String getClassName() {
             return parent.getClassName();
         }
 
         /**
-         * set the adapter class for this definition.
-         * NOTE Supported
-         * @param adapterClass the adapterClass
+         * Set the adapter class for this definition.
+         * NOT Supported
+         * @param adapterClass the adapterClass.
          */
         public void setAdapterClass(Class adapterClass) {
             throw new BuildException("Not supported");
         }
 
         /**
-         * set the assignable class for this definition.
+         * Set the assignable class for this definition.
          * NOT SUPPORTED
-         * @param adaptToClass the assignable class
+         * @param adaptToClass the assignable class.
          */
-
         public void setAdaptToClass(Class adaptToClass) {
             throw new BuildException("Not supported");
         }
 
         /**
-         * set the classloader to use to create an instance
-         * of the definition
-         * @param classLoader the classLoader
+         * Set the classloader to use to create an instance
+         * of the definition.
+         * NOT SUPPORTED
+         * @param classLoader the classLoader.
          */
         public void setClassLoader(ClassLoader classLoader) {
             throw new BuildException("Not supported");
         }
 
         /**
-         * get the classloader for this definition
-         * @return the classloader for this definition
+         * Get the classloader for this definition.
+         * @return the classloader for this definition.
          */
         public ClassLoader getClassLoader() {
             return parent.getClassLoader();
         }
 
         /**
-         * get the exposed class for this definition.
-         * @param project the current project
-         * @return the exposed class
+         * Get the exposed class for this definition.
+         * @param project the current project.
+         * @return the exposed class.
          */
         public Class getExposedClass(Project project) {
             return parent.getExposedClass(project);
         }
 
         /**
-         * get the definition class
-         * @param project the current project
-         * @return the type of the definition
+         * Get the definition class.
+         * @param project the current project.
+         * @return the type of the definition.
          */
         public Class getTypeClass(Project project) {
             return parent.getTypeClass(project);
@@ -206,94 +204,70 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
 
 
         /**
-         * check if the attributes are correct
-         * @param project the current project
+         * Check if the attributes are correct.
+         * @param project the current project.
          */
         public void checkClass(Project project) {
             parent.checkClass(project);
         }
 
         /**
-         * create an instance of the definition.
-         * The instance may be wrapped in a proxy class.
-         * This is a special version of create for IH and UE.
-         * @param project the current project
-         * @return the created object
+         * Create an instance of the definition. The instance may be wrapped
+         * in a proxy class. This is a special version of create for
+         * IntrospectionHelper and UnknownElement.
+         * @param project the current project.
+         * @return the created object.
          */
         public Object createObject(Project project) {
-            Object o = parent.create(project);
-            if (o == null) {
-                return null;
-            }
-            return o;
+            return parent.create(project);
         }
 
         /**
+         * Get the preset values.
          * @return the predefined attributes, elements and text as
-         *         a UnknownElement
+         *         an UnknownElement.
          */
         public UnknownElement getPreSets() {
             return element;
         }
 
         /**
-         * Fake create an object, used by IH and UE to see that
-         * this is a predefined object.
+         * Fake create an object, used by IntrospectionHelper and UnknownElement
+         * to see that this is a predefined object.
          *
-         * @param project the current project
-         * @return this object
+         * @param project the current project.
+         * @return this object.
          */
         public Object create(Project project) {
             return this;
         }
 
         /**
-         * Equality method for this definition
+         * Equality method for this definition.
          *
-         * @param other another definition
-         * @param project the current project
-         * @return true if the definitions are the same
+         * @param other another definition.
+         * @param project the current project.
+         * @return true if the definitions are the same.
          */
         public boolean sameDefinition(AntTypeDefinition other, Project project) {
-            if (other == null) {
-                return false;
-            }
-            if (other.getClass() != getClass()) {
-                return false;
-            }
-            PreSetDefinition otherDef = (PreSetDefinition) other;
-            if (!parent.sameDefinition(otherDef.parent, project)) {
-                return false;
-            }
-            if (!element.similar(otherDef.element)) {
-                return false;
-            }
-            return true;
+            return (other != null && other.getClass() == getClass() && parent != null
+                && parent.sameDefinition(((PreSetDefinition) other).parent, project)
+                && element.similar(((PreSetDefinition) other).element));
         }
 
         /**
-         * Similar method for this definition
+         * Similar method for this definition.
          *
-         * @param other another definition
-         * @param project the current project
-         * @return true if the definitions are the same
+         * @param other another definition.
+         * @param project the current project.
+         * @return true if the definitions are similar.
          */
         public boolean similarDefinition(
             AntTypeDefinition other, Project project) {
-            if (other == null) {
-                return false;
-            }
-            if (!other.getClass().getName().equals(getClass().getName())) {
-                return false;
-            }
-            PreSetDefinition otherDef = (PreSetDefinition) other;
-            if (!parent.similarDefinition(otherDef.parent, project)) {
-                return false;
-            }
-            if (!element.similar(otherDef.element)) {
-                return false;
-            }
-            return true;
+            return (other != null && other.getClass().getName().equals(
+                getClass().getName()) && parent != null
+                && parent.similarDefinition(((PreSetDefinition) other).parent, project)
+                && element.similar(((PreSetDefinition) other).element));
         }
     }
 }
