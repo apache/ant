@@ -1277,8 +1277,36 @@
         </table>
       </subsection>
       
-     <subsection name="XmlTask">
+      <subsection name="XInclude">
+        <p><a href="http://www.jeckle.de/freeStuff/xia/index.html">XInclude</a> is
+          a W3C standardized vocabulary for including arbitrary text or XML
+          documents in other XML documents. This task perfomes the inclusion
+          using an existing XInclude implementation</p>
 
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.jeckle.de/freeStuff/xia/index.html">http://www.jeckle.de/freeStuff/xia/index.html</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mario@jeckle.de">mario@jeckle.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lesser GNU Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="XmlTask">
+        
         <p>XmlTask provides a simple means to modify XML documents
         without having to learn XSLT. A simple path reference to an
         XML node specifies the node you want to change, and how you
