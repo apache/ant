@@ -3,6 +3,20 @@
 #   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
 #   reserved.
 
+# load system-wide ant configuration
+if [ -f "/etc/ant.conf" ] ; then 
+  . /etc/ant.conf
+fi
+
+# provide default values for people who don't use RPMs
+if [ -z "$rpm_mode" ] ; then
+  rpm_mode=false;
+fi
+if [ -z "$usejikes" ] ; then
+  usejikes=false;
+fi
+
+# load user ant configuration
 if [ -f "$HOME/.antrc" ] ; then 
   . $HOME/.antrc
 fi
@@ -84,10 +98,22 @@ if [ -n "$CLASSPATH" ] ; then
   LOCALCLASSPATH="$CLASSPATH"
 fi
 
-# add in the dependency .jar files
-DIRLIBS="${ANT_HOME}"/lib
-for i in "${DIRLIBS}"/*.jar
-do
+# in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR 
+if $rpm_mode; then
+  JAVALIBDIR=/usr/share/java
+  for i in ant ant-optional jaxp_parser xml_apis 
+  do
+    if [ -z "$LOCALCLASSPATH" ] ; then
+      LOCALCLASSPATH=$JAVALIBDIR/$i.jar
+    else
+      LOCALCLASSPATH="$i.jar":"$LOCALCLASSPATH"
+    fi
+  done
+else
+  # add in the dependency .jar files in non-RPM mode (the default)
+  DIRLIBS="${ANT_HOME}"/lib
+  for i in "${DIRLIBS}"/*.jar
+  do
     # if the directory is empty, then it will return the input string
     # this is stupid, so case for it
     if [ "$i" != "${DIRLIBS}/*.jar" ] ; then
@@ -97,7 +123,8 @@ do
         LOCALCLASSPATH="$i":"$LOCALCLASSPATH"
       fi
     fi
-done
+  done
+fi
 
 if [ -n "$JAVA_HOME" ] ; then
   if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
@@ -132,6 +159,11 @@ if [ -n "$JIKESPATH" ] ; then
     JIKESPATH=`cygpath --path --windows "$JIKESPATH"`
   fi
   ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
+fi
+
+# Allow Jikes support (off by default)
+if $usejikes; then
+  ANT_OPTS="$ANT_OPTS -Dbuild.compiler=jikes"
 fi
 
 # For Cygwin, switch paths to Windows format before running java
