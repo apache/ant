@@ -301,6 +301,7 @@ public class JUnitTask extends Task {
                 execute.setCommandline(cmd.getCommandline());
                 if (dir != null) {
                     execute.setWorkingDirectory(dir);
+                    execute.setAntRun(project);
                 }
                 
                 log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
