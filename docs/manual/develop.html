@@ -16,51 +16,36 @@
     <code>public void</code> method that takes a single argument. The
     name of the method must begin with <code>set</code>, followed by the
     attribute name, with the first character of the name in uppercase, and the rest in
-    lowercase. The type of the attribute can be:
-<ul>
-<li>
-<code>String</code>
-</li>
-<li>
-any primitive type (they are converted for you from their String-representation
-in the buildfile)
-</li>
-<li>
-boolean - your method will be passed the value
-<i>true</i> if the value specified in the buildfile is one of <code>true</code>,
-<code>yes</code>, or <code>on</code>)
-</li>
-<li>
-<code>Class</code>
-</li>
-<li>
-<code>File</code>
-(in which case the value of the attribute is interpreted relative to the
-project's basedir)
-</li>
-<li>
-any other type that has a constructor with a single
-<code>String</code> argument
-</li>
-</ul>
-</li>
-<li>If your task has enumerated attributes, you should consider using
-a subclass of <code>org.apache.tools.ant.types.EnumeratedAttribute</code>
-as an argument
-to your setter method. See
-<code>org/apache/tools/ant/taskdefs/FixCRLF.java</code> for
-an example.</li>
-<li>If the task should support character data, write a <code>public void
-addText(String)</code> method.</li>
-<li>For each nested element, write a <i>create</i> or <i>add</i> method.
-A create method
-must be a <code>public</code> method that takes no arguments and returns
-an <code>Object</code> type. The name of the create method must begin with
-<code>create</code>, followed by the element name. An add method must be
-a <code>public void</code> method that takes a single argument of an
-<code>Object</code> type with a no-argument constructor.
-The name of the add method
-must begin with <code>add</code>, followed by the element name.</li>
+
+    lowercase.  That is, to support an attribute named
+    <code>file</code> you create a method <code>setFile</code>.
+    Depending on the type of the argument, Ant will perform some
+    conversions for you, see <a href="#set-magic">below</a>.</li>
+
+  <li>If your task shall contain other tasks as nested elements (like
+  <a href="CoreTasks/parallel.html"><code>parallel</code></a>), your
+  class must implement the interface
+  <code>org.apache.tools.ant.TaskContainer</code>.  If you do so, your
+  task can not support any other nested elements.  See 
+  <a href="#taskcontainer">below</a>.</li>
+
+<li>If the task should support character data (text nested between the
+start end end tags), write a <code>public void addText(String)</code>
+method.  Note that Ant does <strong>not</strong> expand properties on
+the text it passes to the task.</li>
+
+<li>For each nested element, write a <i>create</i>, <i>add</i> or
+<i>addConfigured</i> method.  A create method must be a
+<code>public</code> method that takes no arguments and returns an
+<code>Object</code> type. The name of the create method must begin
+with <code>create</code>, followed by the element name. An add (or
+addConfigured) method must be a <code>public void</code> method that
+takes a single argument of an <code>Object</code> type with a
+no-argument constructor.  The name of the add (addConfigured) method
+must begin with <code>add</code> (<code>addConfigured</code>),
+followed by the element name.  For a more complete discussion see 
+<a href="#nested-elements">below</a>.</li>
+
 <li>Write a <code>public void execute</code> method, with no arguments, that
 throws a <code>BuildException</code>. This method implements the task
 itself.</li>
@@ -101,7 +86,7 @@ itself.</li>
   <li>All attributes of all child elements get set via their corresponding
     <code>setXXX</code> methods, at runtime.</li>
 
-  <li><code>execute()</code> is called at runtime. While the above initialization
+  <li><a name="execute"><code>execute()</code></a> is called at runtime. While the above initialization
     steps only occur once, the execute() method may be
     called more than once, if the task is invoked more than once. For example,
     if <code>target1</code> and <code>target2</code> both depend
@@ -109,6 +94,129 @@ itself.</li>
     <code>'ant target1 target2'</code> will run all tasks in
     <code>target3</code> twice.</li>
 </ol>
+
+<h3><a name="set-magic">Conversions Ant will perform for attributes</a></h3>
+
+<p>Ant will always expand properties before it passes the value of an
+attribute to the corresponding setter method.</p>
+
+<p>The most common way to write an attribute setter is to use a
+<code>java.lang.String</code> argument.  In this case Ant will pass
+the literal value (after property expansion) to your task.  But there
+is more!  If the argument of you setter method is</p>
+
+<ul>
+
+  <li><code>boolean</code>, your method will be passed the value
+  <i>true</i> if the value specified in the build file is one of
+  <code>true</code>, <code>yes</code>, or <code>on</code> and
+  <i>false</i> otherwise.</li>
+
+  <li><code>char</code> or <code>java.lang.Character</code>, your
+  method will be passed the first character of the value specified in
+  the build file.</li>
+
+  <li>any other primitive type (<code>int</code>, <code>short</code>
+  and so on), Ant will convert the value of the attribute into this
+  type, thus making sure that you'll never receive input that is not a
+  number for that attribute.</li>
+
+  <li><code>java.io.File</code>, Ant will first determine whether the
+  value given in the build file represents an absolute path name.  If
+  not, Ant will interpret the value as a path name relative to the
+  project's basedir.</li>
+
+  <li><code>org.apache.tools.ant.types.Path</code>, Ant will tokenize
+  the value specified in the build file, accepting <code>:</code> and
+  <code>;</code> as path separators.  Relative path names will be
+  interpreted as relative to the project's basedir.</li>
+
+  <li><code>java.lang.Class</code>, Ant will interpret the value
+  given in the build file as a Java class name and load the named
+  class from the system class loader.</li>
+
+  <li>any other type that has a constructor with a single
+  <code>String</code> argument, Ant will use this constructor to
+  create a new instance from the value given in the build file.</li>
+
+  <li>A subclass of
+  <code>org.apache.tools.ant.types.EnumeratedAttribute</code>, Ant
+  will invoke this classes <code>setValue</code> method.  Use this if
+  your task should support enumerated attributes (attributes with
+  values that must be part of a predefined set of values).  See
+  <code>org/apache/tools/ant/taskdefs/FixCRLF.java</code> and the
+  inner <code>AddAsisRemove</code> class used in <code>setCr</code>
+  for an example.</li>
+
+</ul>
+
+<p>What happens if more than one setter method is present for a given
+attribute?  A method taking a <code>String</code> argument will always
+lose against the more specific methods.  If there are still more
+setters Ant could chose from, only one of them will be called, but we
+don't know which, this depends on the implementation of your Java
+virtual machine.</p>
+
+<h3><a name="nested-elements">Supporting nested elements</a></h3>
+
+<p>Let's assume your task shall support nested elements with the name
+<code>inner</code>.  First of all, you need a class that represents
+this nested element.  Often you simply want to use one of Ant's
+classes like <code>org.apache.tools.ant.types.FileSet</code> to
+support nested <code>fileset</code> elements.</p>
+
+<p>Attributes of the nested elements or nested child elements of them
+will be handled using the same mechanism used for tasks (i.e. setter
+methods for attributes, addText for nested text and
+create/add/addConfigured methods for child elements).</p>
+
+<p>Now you have a class <code>NestedElement</code> that is supposed to
+be used for your nested <code>&lt;inner&gt;</code> elements, you have
+three options:</p>
+
+<ol>
+  <li><code>public NestedElement createInner()</code></li>
+  <li><code>public void addInner(NestedElement anInner)</code></li>
+  <li><code>public void addConfiguredInner(NestedElement anInner)</code></li>
+</ol>
+
+<p>What is the difference?</p>
+
+<p>Option 1 makes the task create the instance of
+<code>NestedElement</code>, there are no restrictions on the type.
+For the options 2 and 3, Ant has to create an instance of
+<code>NestedInner</code> before it can pass it to the task, this
+means, <code>NestedInner</code> must have a <code>public</code> no-arg
+constructor.  This is the only difference between options 1 and 2.</p>
+
+<p>The difference between 2 and 3 is what Ant has done to the object
+before it passes it to the method.  <code>addInner</code> will receive
+an object directly after the constructor has been called, while
+<code>addConstructedInner</code> gets the object <em>after</em> the
+attributes and nested children for this new object have been
+handled.</p>
+
+<p>What happens if you use more than one of the options?  Only one of
+the methods will be called, but we don't know which, this depends on
+the implementation of your Java virtual machine.</p>
+
+<h3><a name="taskcontainer">TaskContainer</a></h3>
+
+<p>The <code>TaskContainer</code> consists of a single method,
+<code>addTask</code> that basically is the same as an <a
+href="#nested-elements">add method</a> for nested elements.  The task
+instances will be configured (their attributes and nested elements
+have been handled) when your task's <code>execute</code> method gets
+invoked, but not before that.</p>
+
+<p>When we <a href="#execute">said</a> <code>execute</code> would be
+called, we lied ;-).  In fact, Ant will call the <code>perform</code>
+method in <code>org.apache.tools.ant.Task</code>, which in turn calls
+<code>execute</code>.  This method makes sure that <a
+href="#buildevents">Build Events</a> will be triggered.  If you
+execute the task instances nested into your task, you should also
+invoke <code>perform</code> on these instances instead of
+<code>execute</code>.</p>
 
 <h3>Example</h3>
 <p>Let's write our own task, which prints a message on the
@@ -123,17 +231,17 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 public class MyVeryOwnTask extends Task {
-  private String msg;
+    private String msg;
 
-  // The method executing the task
-  public void execute() throws BuildException {
-    System.out.println(msg);
-  }
+    // The method executing the task
+    public void execute() throws BuildException {
+        System.out.println(msg);
+    }
 
-  // The setter for the &quot;message&quot; attribute
-  public void setMessage(String msg) {
-    this.msg = msg;
-  }
+    // The setter for the &quot;message&quot; attribute
+    public void setMessage(String msg) {
+        this.msg = msg;
+    }
 }
 </pre>
 </blockquote>
