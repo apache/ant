@@ -996,8 +996,8 @@
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
-        <include name="${dist.name}/bin/*.pl"/>
-        <include name="${dist.name}/bin/*.py"/>
+        <exclude name="${dist.name}/bin/*.pl"/>
+        <exclude name="${dist.name}/bin/*.py"/>
       </tarfileset>
     </tar>
     <gzip zipfile="${dist.base}/bin/${dist.name}-bin.tar.gz"
