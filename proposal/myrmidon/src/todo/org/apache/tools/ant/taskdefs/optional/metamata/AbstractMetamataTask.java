@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Random;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;

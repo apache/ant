@@ -9,7 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Task to assemble .net 'Intermediate Language' files. The task will only work

@@ -20,7 +20,7 @@ import netrexx.lang.Rexx;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**

@@ -9,13 +9,13 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.SourceFileScanner;
 
 /**
  * Convert files from native encodings to ascii.

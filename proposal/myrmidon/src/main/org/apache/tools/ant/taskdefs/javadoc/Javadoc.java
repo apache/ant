@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
@@ -546,7 +546,7 @@ public class Javadoc
             m_command.createArgument().setValue( m_bottom.getText() );
         }
 
-        Commandline cmd = (Commandline)m_command.clone();
+        Commandline cmd = new Commandline();//(Commandline)m_command.clone();
         cmd.setExecutable( getJavadocExecutableName() );
 
         // ------------------------------------------------ general javadoc arguments

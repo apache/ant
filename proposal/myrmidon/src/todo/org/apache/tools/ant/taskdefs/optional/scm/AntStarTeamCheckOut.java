@@ -17,7 +17,7 @@ import com.starbase.starteam.View;
 import com.starbase.util.Platform;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Checks out files from a specific StarTeam server, project, view, and folder.

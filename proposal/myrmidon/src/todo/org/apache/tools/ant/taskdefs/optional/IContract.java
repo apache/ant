@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;

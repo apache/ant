@@ -5,15 +5,16 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.util;
+package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.nativelib.Os;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileNameMapper;
 
 /**
  * Utility class that collects the functionality of the various scanDir methods

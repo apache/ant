@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Class for scanning a Visual Age for Java workspace for packages matching a

@@ -15,7 +15,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
@@ -25,7 +25,7 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.FlatFileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
-import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.types.SourceFileScanner;
 
 /**
  * A consolidated copy task. Copies a file or directory to a new file or

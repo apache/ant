@@ -24,7 +24,7 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 

@@ -174,8 +174,8 @@ public class VAJExport extends VAJTask
 
         // delegate the export to the VAJUtil object.
         getUtil().exportPackages( destDir,
-                                  patternSet.getIncludePatterns( getProject() ),
-                                  patternSet.getExcludePatterns( getProject() ),
+                                  patternSet.getIncludePatterns( null ),
+                                  patternSet.getExcludePatterns( null ),
                                   exportClasses, exportDebugInfo,
                                   exportResources, exportSources,
                                   useDefaultExcludes, overwrite );

@@ -10,8 +10,6 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
