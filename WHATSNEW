@@ -31,6 +31,12 @@ Other changes:
 * Added <target> nested elements to <ant> and <antcall> to allow
   specification of multiple sub-build targets, which are executed
   with a single dependency analysis.
+  
+* Major revision of <wsdltodotnet>. Supports mono wsdl and the microsoft
+  wsdl run on mono, as well as most of the .NET WSE2.0 options. Extra
+  schemas (files or urls) can be named in the <schema> element.
+  Compilers can be selected using the compiler attribute, which defaults
+  to "microsoft" on windows, and "mono" on everything else.   
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
