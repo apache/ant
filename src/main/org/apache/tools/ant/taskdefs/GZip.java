@@ -83,19 +83,26 @@ public class GZip extends Task {
     public void execute() throws BuildException {
         log("Building gzip: " + zipFile.getAbsolutePath());
     
+        GZIPOutputStream zOut = null;
         try {
-            GZIPOutputStream zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
+            zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
         
             if (source.isDirectory()) {
-                log ("Cannot Gzip a directory!");
+                log ("Cannot Gzip a directory!", Project.MSG_ERR);
             } else {
                 zipFile(source, zOut);
             }
-            // close up
-            zOut.close();
         } catch (IOException ioe) {
             String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException(msg);
+            throw new BuildException(msg, ioe, location);
+	} finally {
+	    if (zOut != null) {
+	        try {
+                    // close up
+	            zOut.close();
+	        }
+	        catch (IOException e) {}
+	    }
         }
     }
 
@@ -114,7 +121,10 @@ public class GZip extends Task {
         throws IOException
     {
         FileInputStream fIn = new FileInputStream(file);
-        zipFile(fIn, zOut);
-        fIn.close();
+        try {
+            zipFile(fIn, zOut);
+        } finally {
+            fIn.close();
+        }
     }
 }

@@ -82,15 +82,15 @@ public class GUnzip extends Task {
 
     public void execute() throws BuildException {
         if (source == null) {
-            throw new BuildException("No source specified");
+            throw new BuildException("No source for gunzip specified", location);
         }
 
         if (!source.exists()) {
-            throw new BuildException("source doesn't exist");
+            throw new BuildException("source doesn't exist", location);
         }
 
         if (source.isDirectory()) {
-            throw new BuildException("Cannot expand a directory");
+            throw new BuildException("Cannot expand a directory", location);
         }
 
         if (dest == null) {
@@ -112,20 +112,31 @@ public class GUnzip extends Task {
             log("Expanding "+ source.getAbsolutePath() + " to "
                         + dest.getAbsolutePath());
 
+            FileOutputStream out = null;
+            GZIPInputStream zIn = null;
             try {
-                FileOutputStream out = new FileOutputStream(dest);
-                GZIPInputStream zIn = new GZIPInputStream(new FileInputStream(source));
+                out = new FileOutputStream(dest);
+                zIn = new GZIPInputStream(new FileInputStream(source));
                 byte[] buffer = new byte[8 * 1024];
                 int count = 0;
                 do {
                     out.write(buffer, 0, count);
                     count = zIn.read(buffer, 0, buffer.length);
                 } while (count != -1);
-                zIn.close();
-                out.close();
             } catch (IOException ioe) {
                 String msg = "Problem expanding gzip " + ioe.getMessage();
-                throw new BuildException(msg, ioe);
+                throw new BuildException(msg, ioe, location);
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ioex) {}
+                }
+                if (zIn != null) {
+                    try {
+                        zIn.close();
+                    } catch (IOException ioex) {}
+                }
             }
         }
     }

@@ -87,18 +87,20 @@ public class Tar extends MatchingTask {
         log("Building tar: "+ tarFile.getAbsolutePath());
 
         if (baseDir == null) {
-            throw new BuildException("basedir attribute must be set!");
+            throw new BuildException("basedir attribute must be set!", 
+                                     location);
         }
         if (!baseDir.exists()) {
-            throw new BuildException("basedir does not exist!");
+            throw new BuildException("basedir does not exist!", location);
         }
 
         DirectoryScanner ds = super.getDirectoryScanner(baseDir);
 
         String[] files = ds.getIncludedFiles();
 
+        TarOutputStream tOut = null;
         try {
-            TarOutputStream tOut = new TarOutputStream(new FileOutputStream(tarFile));
+            tOut = new TarOutputStream(new FileOutputStream(tarFile));
             tOut.setDebug(true);
 
             for (int i = 0; i < files.length; i++) {
@@ -106,12 +108,17 @@ public class Tar extends MatchingTask {
                 String name = files[i].replace(File.separatorChar,'/');
                 tarFile(f, tOut, name);
             }
-
-            // close up
-            tOut.close();
         } catch (IOException ioe) {
             String msg = "Problem creating TAR: " + ioe.getMessage();
-            throw new BuildException(msg);
+            throw new BuildException(msg, ioe, location);
+	} finally {
+	    if (tOut != null) {
+	        try {
+                    // close up
+	            tOut.close();
+	        }
+	        catch (IOException e) {}
+	    }
         }
     }
 
@@ -120,20 +127,22 @@ public class Tar extends MatchingTask {
     {
         FileInputStream fIn = new FileInputStream(file);
 
-        TarEntry te = new TarEntry(vPath);
-        te.setSize(file.length());
-        te.setModTime(file.lastModified());
-        tOut.putNextEntry(te);
-
-        byte[] buffer = new byte[8 * 1024];
-        int count = 0;
-        do {
-            tOut.write(buffer, 0, count);
-            count = fIn.read(buffer, 0, buffer.length);
-        } while (count != -1);
-        
-        tOut.closeEntry();        
-        
-        fIn.close();
+        try {
+            TarEntry te = new TarEntry(vPath);
+            te.setSize(file.length());
+            te.setModTime(file.lastModified());
+            tOut.putNextEntry(te);
+            
+            byte[] buffer = new byte[8 * 1024];
+            int count = 0;
+            do {
+                tOut.write(buffer, 0, count);
+                count = fIn.read(buffer, 0, buffer.length);
+            } while (count != -1);
+            
+            tOut.closeEntry();        
+        } finally {
+            fIn.close();
+        }
     }
 }

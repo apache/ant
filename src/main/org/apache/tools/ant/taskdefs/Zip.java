@@ -122,8 +122,9 @@ public class Zip extends MatchingTask {
 
         log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
+        ZipOutputStream zOut = null;
         try {
-            ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+            zOut = new ZipOutputStream(new FileOutputStream(zipFile));
             if (doCompress) {
                 zOut.setMethod(ZipOutputStream.DEFLATED);
             } else {
@@ -142,12 +143,17 @@ public class Zip extends MatchingTask {
                 String name = files[i].replace(File.separatorChar,'/');
                 zipFile(f, zOut, name);
             }
-
-            // close up
-            zOut.close();
         } catch (IOException ioe) {
             String msg = "Problem creating " + archiveType + " " + ioe.getMessage();
-            throw new BuildException(msg);
+            throw new BuildException(msg, ioe, location);
+	} finally {
+	    if (zOut != null) {
+	        try {
+                    // close up
+	            zOut.close();
+	        }
+	        catch (IOException e) {}
+	    }
         }
     }
 
@@ -224,7 +230,10 @@ public class Zip extends MatchingTask {
         throws IOException
     {
         FileInputStream fIn = new FileInputStream(file);
-        zipFile(fIn, zOut, vPath, file.lastModified());
-        fIn.close();
+        try {
+            zipFile(fIn, zOut, vPath, file.lastModified());
+        } finally {
+            fIn.close();
+        }
     }
 }

@@ -79,11 +79,13 @@ public class Untar extends Task {
         Touch touch = (Touch) project.createTask("touch");
         touch.setTarget(target);
                     
+        File srcF=project.resolveFile(source);
+
+        TarInputStream tis = null;
         try {
             if (source == null) {
                 throw new BuildException("No source specified", location);
             }
-            File srcF=project.resolveFile(source);
             if (!srcF.exists()) {
                 throw new BuildException("source "+srcF+" doesn't exist",
                                          location);
@@ -95,8 +97,7 @@ public class Untar extends Task {
             File dir=project.resolveFile(dest);
 
             log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-            // code from WarExpand
-            TarInputStream tis = new TarInputStream(new FileInputStream(srcF));
+            tis = new TarInputStream(new FileInputStream(srcF));
             TarEntry te = null;
 
             while ((te = tis.getNextEntry()) != null) {
@@ -133,8 +134,16 @@ public class Untar extends Task {
                 }
             }
         } catch (IOException ioe) {
-            throw new BuildException(ioe);
-        }
+	    throw new BuildException("Error while expanding " + srcF.getPath(),
+                                     ioe, location);
+	} finally {
+	    if (tis != null) {
+	        try {
+	            tis.close();
+	        }
+	        catch (IOException e) {}
+	    }
+	}
     }
 
     /**
