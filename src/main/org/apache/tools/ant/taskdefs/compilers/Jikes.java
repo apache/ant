@@ -35,7 +35,7 @@ public class Jikes extends DefaultCompilerAdapter {
      * Performs a compile using the Jikes compiler from IBM.
      * Mostly of this code is identical to doClassicCompile()
      * However, it does not support all options like
-     * bootclasspath, extdirs, deprecation and so on, because
+     * extdirs, deprecation and so on, because
      * there is no option in jikes and I don't understand
      * what they should do.
      *
@@ -45,12 +45,6 @@ public class Jikes extends DefaultCompilerAdapter {
         attributes.log("Using jikes compiler", Project.MSG_VERBOSE);
 
         Path classpath = new Path(project);
-
-        // Jikes doesn't support bootclasspath dir (-bootclasspath)
-        // so we'll emulate it for compatibility and convenience.
-        if (bootclasspath != null) {
-            classpath.append(bootclasspath);
-        }
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
@@ -203,13 +197,10 @@ public class Jikes extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        // this is a quick hack to make things work in a
-        // Gump/Kaffe/Jikes combo.  I promise I'll explain it later -
-        // and add a real solution as well ;-) Stefan
-        if ("true".equals(System.getProperty("build.clonevm"))
-            && Path.systemBootClasspath.size() > 0) {
+        Path boot = getBootClassPath();
+        if (boot.size() > 0) {
             cmd.createArgument().setValue("-bootclasspath");
-            cmd.createArgument().setPath(Path.systemBootClasspath);
+            cmd.createArgument().setPath(boot);
         }
 
         return

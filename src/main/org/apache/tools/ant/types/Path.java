@@ -530,7 +530,24 @@ public class Path extends DataType implements Cloneable {
      * if ${build.sysclasspath} has not been set.
      */
     public Path concatSystemClasspath(String defValue) {
+        return concatSpecialPath(defValue, Path.systemClasspath);
+    }
 
+    /**
+     * Concatenates the system boot class path in the order specified
+     * by the ${build.sysclasspath} property - using the supplied
+     * value if ${build.sysclasspath} has not been set.
+     */
+    public Path concatSystemBootClasspath(String defValue) {
+        return concatSpecialPath(defValue, Path.systemBootClasspath);
+    }
+
+    /**
+     * Concatenates a class path in the order specified by the
+     * ${build.sysclasspath} property - using the supplied value if
+     * ${build.sysclasspath} has not been set.
+     */
+    private Path concatSpecialPath(String defValue, Path p) {
         Path result = new Path(getProject());
 
         String order = defValue;
@@ -543,11 +560,11 @@ public class Path extends DataType implements Cloneable {
 
         if (order.equals("only")) {
             // only: the developer knows what (s)he is doing
-            result.addExisting(Path.systemClasspath, true);
+            result.addExisting(p, true);
 
         } else if (order.equals("first")) {
             // first: developer could use a little help
-            result.addExisting(Path.systemClasspath, true);
+            result.addExisting(p, true);
             result.addExisting(this);
 
         } else if (order.equals("ignore")) {
@@ -562,7 +579,7 @@ public class Path extends DataType implements Cloneable {
             }
 
             result.addExisting(this);
-            result.addExisting(Path.systemClasspath, true);
+            result.addExisting(p, true);
         }
 
 

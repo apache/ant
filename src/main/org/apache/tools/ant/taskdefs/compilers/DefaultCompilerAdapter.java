@@ -213,12 +213,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         // as well as "bootclasspath" and "extdirs"
         if (assumeJava11()) {
             Path cp = new Path(project);
-            /*
-             * XXX - This doesn't mix very well with build.systemclasspath,
-             */
-            if (bootclasspath != null) {
-                cp.append(bootclasspath);
+
+            Path bp = getBootClassPath();
+            if (bp.size() > 0) {
+                cp.append(bp);
             }
+
             if (extdirs != null) {
                 cp.addExtdirs(extdirs);
             }
@@ -237,10 +237,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
             }
-            if (bootclasspath != null && bootclasspath.size() > 0) {
+
+            Path bp = getBootClassPath();
+            if (bp.size() > 0) {
                 cmd.createArgument().setValue("-bootclasspath");
-                cmd.createArgument().setPath(bootclasspath);
+                cmd.createArgument().setPath(bp);
             }
+
             if (extdirs != null && extdirs.size() > 0) {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(extdirs);
@@ -523,5 +526,19 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4));
     }
 
+    /**
+     * Combines a user specified bootclasspath with the system
+     * bootclasspath taking build.sysclasspath into account.
+     *
+     * @return a non-null Path instance that combines the user
+     * specified and the system bootclasspath.
+     */
+    protected Path getBootClassPath() {
+        Path bp = new Path(project);
+        if (bootclasspath != null) {
+            bp.append(bootclasspath);
+        }
+        return bp.concatSystemBootClasspath("ignore");
+    }
 }
 
