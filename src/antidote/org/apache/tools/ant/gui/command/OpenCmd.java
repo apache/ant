@@ -73,7 +73,7 @@ public class OpenCmd implements Command {
 
     /** The application context */
     private AppContext _context = null;
-    /** Filter for showing only XML file.s */
+    /** Filter for showing only XML files. */
     private FileFilter _filter = null;
 
 	/** 
@@ -93,7 +93,6 @@ public class OpenCmd implements Command {
 	 * 
 	 */
     public void execute() {
-        // XXX need to set chooser text based on ResourceManager values.
         JFileChooser chooser = new JFileChooser();
         chooser.addChoosableFileFilter(_filter);
         int val = chooser.showOpenDialog(_context.getParentFrame());

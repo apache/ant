@@ -51,103 +51,26 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.util.WindowUtils;
+package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.AppContext;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.util.*;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
- * Dialog displaying information on the application.
+ * Command for doing a "Save as" type of save.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class About extends JDialog {
+public class SaveAsCmd extends SaveCmd {
+    /** Name of the action the command maps to. */
+    public static final String ACTION_NAME = "saveas";
 
 	/** 
 	 * Standard ctor.
 	 * 
 	 * @param context Application context.
 	 */
-	public About(AppContext context) {
-		super(context.getParentFrame(), true);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-		String version = null;
-		String date = null;
-		String contributors = null;
-
-		Properties props = new Properties();
-
-		try {
-			props.load(getClass().getResourceAsStream("version.txt"));
-		}
-		catch(IOException ex) {
-			// XXX log me.
-			ex.printStackTrace();
-			return;
-		}
-
-		version = props.getProperty("VERSION", "??");
-		date = props.getProperty("DATE", "??");
-		// XXX eventually this should be tokenized on commas and
-		// presented nicely in box.
-		contributors = props.getProperty("CONTRIBUTORS", "??");
-
-        StringBuffer buf = new StringBuffer();
-        StringTokenizer tok = new StringTokenizer(contributors, ",");
-        while(tok.hasMoreTokens()) {
-            String name = tok.nextToken();
-            buf.append(name);
-            buf.append("<br>\n");
-        }
-
-		String message = context.getResources().getMessage(
-			getClass(), "message", 
-			new Object[] { version, date, buf.toString() });
-
-		String title = context.getResources().getString(
-			getClass(), "title");
-		setTitle(title);
-
-        JTextPane contents = new JTextPane();
-        contents.setContentType("text/html");
-        contents.setText(message);
-        contents.setEditable(false);
-        // XXX Still not sure why this is necessary. JTextPane doesn't 
-        // seem to report a "true" preferred size.
-        contents.setPreferredSize(
-            new Dimension(contents.getPreferredSize().width, 450));
-		getContentPane().add(BorderLayout.CENTER, contents);
-
-		// Add the OK button.
-		JButton ok = new JButton(
-			context.getResources().getString(getClass(), "ok"));
-		ok.addActionListener(new ActionHandler());
-		JPanel p = new JPanel();
-		p.add(ok);
-		getContentPane().add(BorderLayout.SOUTH, p);
-
-        getRootPane().setDefaultButton(ok);
-
-
-		// Just go ahead and show it...
-		pack();
-		WindowUtils.centerWindow(context.getParentFrame(), this);
-		setVisible(true);
-	}
-
-	/** Handles press of the OK button. */
-	private class ActionHandler implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			WindowUtils.sendCloseEvent(About.this);
-		}
-	}
-
+    public SaveAsCmd(AppContext context) {
+        super(context, null);
+    }
 }

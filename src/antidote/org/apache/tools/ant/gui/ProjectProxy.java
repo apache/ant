@@ -56,6 +56,7 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.gui.event.*;
 import org.apache.tools.ant.gui.acs.*;
 import java.io.File;
+import java.io.Writer;
 import java.io.IOException;
 import javax.swing.tree.TreeModel;
 import javax.swing.text.Document;
@@ -95,7 +96,6 @@ public class ProjectProxy {
         _file = file;
         _context = context;
         loadProject();
-
     }
 
 	/** 
@@ -106,6 +106,17 @@ public class ProjectProxy {
         _project = ACSFactory.getInstance().load(_file);
         _selections = new ElementSelectionModel();
         _selections.addTreeSelectionListener(new SelectionForwarder());
+    }
+
+	/** 
+	 * Write the project in XML format to the given output.
+	 * 
+	 * @param out Output to write to.
+	 */
+    public void write(Writer out) throws IOException {
+        if(_project == null) return;
+
+        _project.write(out);
     }
 
 	/** 
@@ -143,6 +154,16 @@ public class ProjectProxy {
     public File getFile() {
         return _file;
     }
+
+	/** 
+	 * Set the file that this is to be saved to.
+	 * 
+	 * @param file File to save to.
+	 */
+    public void setFile(File file) {
+        _file = file;
+    }
+
 
 	/** 
 	 * Get the TreeModel perspective on the data.

@@ -1,7 +1,34 @@
 TODO List:
+    * Dispatch tree node change events when the properties editor changes a 
+      node value. This will make sure that the node gets displayed correctly in
+      the project navigator.
+
+    * Implement a custom tree node renderer with better icons.
+
+    * Implement a build progress reporter.
+
+    * Add "syntax" colorization to the console window, with a preferences
+      editor for setting up the styles.
+
+    * Rework EventResponder to remove hard coded command translation.
+
+    * Figure out an approach to gracefully stopping a running build.
+
+    * Add error handler for SAX parser to better report loading errors.
+
+    * Create an error dialog that is able to display a stack backtrace if
+      desired.
+
     * Add support to ActionManager to handle toggle actions in tool bar. Also
       need a better way of detecting the selected state of the action button.
 
+    * Project properties viewer, including the ability to view
+      dependencies (local and cascading).
+
+    * Acquire or implement a logging facility.
+
+(pending Ant 2.0)
+    
     * Need Ant API access to:
         - Tasks within a Target
         - The topo sorted task list to get flattened dependencies
@@ -11,11 +38,4 @@ TODO List:
 
     * Better define the data model architecture, and how it interfaces
       with the Ant data model.
-
-    * Project properties viewer, including the ability to view
-      dependencies (local and cascading).
-
-    * Acquire or implement a logging facility.
-
-    * Build launching capability.
 

@@ -51,103 +51,50 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.util.WindowUtils;
-
-import javax.swing.*;
-import java.io.IOException;
-import java.util.*;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.AppContext;
+import org.apache.tools.ant.gui.ide.EmacsNotifier;
 
 /**
- * Dialog displaying information on the application.
+ * Toggle on or off the sending of error events to emacs so that 
+ * it can display the source of the error.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class About extends JDialog {
+public class EmacsNotifyCmd implements Command {
+    /** Action command. */
+    public static final String ACTION_NAME = "notifyEmacs";
+
+    /** A global notifier can be used as it stores no state. */
+    private static EmacsNotifier _notifier = new EmacsNotifier();
+    /** Application context. */
+    private AppContext _context = null;
+    /** State notification should be in. */
+    private boolean _notify = false;
 
 	/** 
 	 * Standard ctor.
 	 * 
 	 * @param context Application context.
+     * @param state True if notifying on, false for notifying off.
 	 */
-	public About(AppContext context) {
-		super(context.getParentFrame(), true);
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    public EmacsNotifyCmd(AppContext context, boolean state) {
+        _context = context;
+        _notify = state;
+    }
 
-		String version = null;
-		String date = null;
-		String contributors = null;
-
-		Properties props = new Properties();
-
-		try {
-			props.load(getClass().getResourceAsStream("version.txt"));
-		}
-		catch(IOException ex) {
-			// XXX log me.
-			ex.printStackTrace();
-			return;
-		}
-
-		version = props.getProperty("VERSION", "??");
-		date = props.getProperty("DATE", "??");
-		// XXX eventually this should be tokenized on commas and
-		// presented nicely in box.
-		contributors = props.getProperty("CONTRIBUTORS", "??");
-
-        StringBuffer buf = new StringBuffer();
-        StringTokenizer tok = new StringTokenizer(contributors, ",");
-        while(tok.hasMoreTokens()) {
-            String name = tok.nextToken();
-            buf.append(name);
-            buf.append("<br>\n");
+	/** 
+	 * Turn on or off the notifying of emacs.
+	 * 
+	 */
+    public void execute() {
+        if(_notify) {
+            _context.addBuildListener(_notifier);
         }
-
-		String message = context.getResources().getMessage(
-			getClass(), "message", 
-			new Object[] { version, date, buf.toString() });
-
-		String title = context.getResources().getString(
-			getClass(), "title");
-		setTitle(title);
-
-        JTextPane contents = new JTextPane();
-        contents.setContentType("text/html");
-        contents.setText(message);
-        contents.setEditable(false);
-        // XXX Still not sure why this is necessary. JTextPane doesn't 
-        // seem to report a "true" preferred size.
-        contents.setPreferredSize(
-            new Dimension(contents.getPreferredSize().width, 450));
-		getContentPane().add(BorderLayout.CENTER, contents);
-
-		// Add the OK button.
-		JButton ok = new JButton(
-			context.getResources().getString(getClass(), "ok"));
-		ok.addActionListener(new ActionHandler());
-		JPanel p = new JPanel();
-		p.add(ok);
-		getContentPane().add(BorderLayout.SOUTH, p);
-
-        getRootPane().setDefaultButton(ok);
-
-
-		// Just go ahead and show it...
-		pack();
-		WindowUtils.centerWindow(context.getParentFrame(), this);
-		setVisible(true);
-	}
-
-	/** Handles press of the OK button. */
-	private class ActionHandler implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			WindowUtils.sendCloseEvent(About.this);
-		}
-	}
-
+        else {
+            _context.removeBuildListener(_notifier);
+        }
+        
+    }
 }
