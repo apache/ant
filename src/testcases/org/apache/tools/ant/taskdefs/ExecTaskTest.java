@@ -32,10 +32,10 @@ import junit.framework.Assert;
 public class ExecTaskTest extends BuildFileTest {
     private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
     private static final String BUILD_FILE = BUILD_PATH + "exec.xml";
-    private final int TIME_TO_WAIT = 4;
+    private final int TIME_TO_WAIT = 1;
     /** maximum time allowed for the build in milliseconds */
     private final int MAX_BUILD_TIME = 4000;
-    private final int SECURITY_MARGIN = 1000; // wait 1 second extras
+    private final int SECURITY_MARGIN = 2000; // wait 2 second extras
     // the test failed with 100 ms of margin on cvs.apache.org on August 1st, 2003
     private File logFile;
     private MonitoredBuild myBuild = null;
@@ -92,7 +92,8 @@ public class ExecTaskTest extends BuildFileTest {
         }
         // time of the build in milli seconds
         long elapsed = myBuild.getTimeElapsed();
-        assertTrue("we waited more than the process lasted", TIME_TO_WAIT * 1000 > elapsed);
+        assertTrue("we waited more than the process lasted", TIME_TO_WAIT * 1000
+                + SECURITY_MARGIN > elapsed);
         logFile = new File(logFile.getAbsolutePath());
         assertTrue("log file found after spawn", logFile.exists());
     }
