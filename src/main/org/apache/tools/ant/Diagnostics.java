@@ -17,6 +17,7 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.launch.Launcher;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -26,6 +27,8 @@ import java.io.FilenameFilter;
 import java.io.PrintStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.lang.reflect.Method;
@@ -202,10 +205,8 @@ public final class Diagnostics {
     public static void doReport(PrintStream out) {
         out.println("------- Ant diagnostics report -------");
         out.println(Main.getAntVersion());
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" Implementation Version ");
-        out.println("-------------------------------------------");
+        header(out, "Implementation Version");
+
         out.println("core tasks     : " + getImplementationVersion(Main.class));
 
         Class optional = null;
@@ -218,44 +219,35 @@ public final class Diagnostics {
             out.println("optional tasks : not available");
         }
 
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" ANT_HOME/lib jar listing");
-        out.println("-------------------------------------------");
+        header(out, "ANT_HOME/lib jar listing");
         doReportAntHomeLibraries(out);
 
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" USER_HOME/.ant/lib jar listing");
-        out.println("-------------------------------------------");
+        header(out, "USER_HOME/.ant/lib jar listing");
         doReportUserHomeLibraries(out);
 
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" Tasks availability");
-        out.println("-------------------------------------------");
+        header(out, "Tasks availability");
         doReportTasksAvailability(out);
 
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" org.apache.env.Which diagnostics");
-        out.println("-------------------------------------------");
+        header(out, "org.apache.env.Which diagnostics");
         doReportWhich(out);
 
-
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" XML Parser information");
-        out.println("-------------------------------------------");
+        header(out, "XML Parser information");
         doReportParserInfo(out);
 
-        out.println();
-        out.println("-------------------------------------------");
-        out.println(" System properties");
-        out.println("-------------------------------------------");
+        header(out, "System properties");
         doReportSystemProperties(out);
 
+        header(out, "Temp dir");
+        doReportTempDir(out);
         out.println();
+    }
+
+    private static void header(PrintStream out, String section) {
+        out.println();
+        out.println("-------------------------------------------");
+        out.print(" ");
+        out.println(section);
+        out.println("-------------------------------------------");
     }
 
     /**
@@ -394,5 +386,51 @@ public final class Diagnostics {
         }
         out.println("XML Parser : " + parserName);
         out.println("XML Parser Location: " + parserLocation);
+    }
+
+    /**
+     * try and create a temp file in our temp dir; this
+     * checks that it has space and access.
+     * @param out
+     */
+    private static void doReportTempDir(PrintStream out) {
+        String tempdir=System.getProperty("java.io.tmpdir");
+        if( tempdir == null ) {
+            out.println("Warning: java.io.tmpdir is undefined");
+            return;
+        }
+        out.println("Temp dir is "+ tempdir);
+        File tempDirectory=new File(tempdir);
+        if(!tempDirectory.exists()) {
+            out.println("Warning, java.io.tmpdir directory does not exist: "+
+                    tempdir);
+            return;
+        }
+        //create the file
+        File tempFile=null;
+        FileOutputStream fileout = null;
+        try {
+            tempFile = File.createTempFile("diag","txt",tempDirectory);
+            //do some writing to it
+            fileout = new FileOutputStream(tempFile);
+            byte buffer[]=new byte[1024];
+            for(int i=0;i<32;i++) {
+                fileout.write(buffer);
+            }
+            fileout.close();
+            fileout=null;
+            tempFile.delete();
+            out.println("Temp dir is writeable");
+        } catch (IOException e) {
+            out.println("Failed to create a temporary file in the temp dir "
+                + tempdir);
+            out.println("File  "+ tempFile + " could not be created/written to");
+        } finally {
+            FileUtils.close(fileout);
+            if(tempFile!=null && tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
+
     }
 }

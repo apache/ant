@@ -97,7 +97,8 @@ Other changes:
 
 * Added <scriptselector> selector for scripted file selection
 
-* ant -diagnostics lists contents of ${user.home}/.ant/lib
+* ant -diagnostics lists contents of ${user.home}/.ant/lib , and
+  checks that the java.io.tmpdir directory exists and is writeable. 
 
 * mail task accepts nested header element.  Bugzilla report 24713.
 
