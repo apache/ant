@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,8 +60,14 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * For more complex source trees, nested <tt>src</tt> elemements can be
  * supplied. When such an element is present, the implicit fileset is ignored.
  * This makes sense, when you think about it :)
- * <p>
  *
+ * <p>For historical reasons the pattern
+ * <code>**</code><code>/*.cs</code> is preset as includes list and
+ * you can not override it with an explicit includes attribute.  Use
+ * nested <code>&lt;src&gt;</code> elements instead of the basedir
+ * attribute if you need more control.</p>
+ *
+ * <p>
  * References to external files can be made through the references attribute,
  * or (since Ant1.6), via nested &lt;reference&gt; filesets. With the latter,
  * the timestamps of the references are also used in the dependency

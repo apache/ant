@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,6 +42,12 @@ import org.apache.tools.ant.BuildException;
  </p>
  <p>
  * Also, dependency checking only works if destfile is set.
+ *
+ * <p>For historical reasons the pattern
+ * <code>**</code><code>/*.vb</code> is preset as includes list and
+ * you can not override it with an explicit includes attribute.  Use
+ * nested <code>&lt;src&gt;</code> elements instead of the basedir
+ * attribute if you need more control.</p>
  *
  * As with &lt;csc&gt; nested <tt>src</tt> filesets of source,
  * reference filesets, definitions and resources can be provided.
