@@ -44,11 +44,11 @@ public class DefaultExecManager
     private final CommandLauncher m_launcher;
     private final CommandLauncher m_shellLauncher;
 
-    public DefaultExecManager( final File antDir )
+    public DefaultExecManager( final File homeDir )
         throws ExecException
     {
         m_launcher = new DefaultCommandLauncher();
-        m_shellLauncher = createShellLauncher( antDir );
+        m_shellLauncher = createShellLauncher( homeDir );
     }
 
     /**
@@ -133,7 +133,7 @@ public class DefaultExecManager
         return launcher;
     }
 
-    private CommandLauncher createShellLauncher( final File antDir )
+    private CommandLauncher createShellLauncher( final File homeDir )
         throws ExecException
     {
         CommandLauncher launcher = null;
@@ -164,21 +164,21 @@ public class DefaultExecManager
             else
             {
                 // Windows 98/95 - need to use an auxiliary script
-                final String script = resolveCommand( antDir, "bin/antRun.bat" );
+                final String script = resolveCommand( homeDir, "bin/antRun.bat" );
                 launcher = new ScriptCommandLauncher( script );
             }
         }
         else if( Os.isFamily( "netware" ) )
         {
             // NetWare.  Need to determine which JDK we're running in
-            final String perlScript = resolveCommand( antDir, "bin/antRun.pl" );
+            final String perlScript = resolveCommand( homeDir, "bin/antRun.pl" );
             final String[] script = new String[]{"perl", perlScript};
             launcher = new ScriptCommandLauncher( script );
         }
         else
         {
             // Generic
-            final String script = resolveCommand( antDir, "bin/antRun" );
+            final String script = resolveCommand( homeDir, "bin/antRun" );
             launcher = new ScriptCommandLauncher( script );
         }
 
