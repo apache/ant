@@ -378,6 +378,9 @@ public class Main implements AntMain {
                     name = name.substring(0, posEq);
                 } else if (i < args.length - 1) {
                     value = args[++i];
+                } else {
+                    throw new BuildException("Missing value for property "
+                                             + name);
                 }
 
                 definedProps.put(name, value);
