@@ -89,14 +89,12 @@ public class SmtpResponseReader {
         }
         
         while (line != null) {
-            System.err.println(line);
             append(line);
             if (!hasMoreLines(line)) {
                 break;
             }
             line = reader.readLine();
         }
-        System.err.println("\""+result.toString().trim()+"\"");
         return result.toString().trim();
     }
 
