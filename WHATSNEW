@@ -24,6 +24,8 @@ Fixed bugs:
 * <concat> would cause an exception if a <filelist> pointed to files
   that do not exist.
 
+* <javadoc> will now pass -source to custom doclets as well.
+
 Other changes:
 --------------
 
