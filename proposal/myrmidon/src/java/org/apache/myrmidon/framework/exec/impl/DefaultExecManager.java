@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec;
+package org.apache.myrmidon.framework.exec.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,10 @@ import java.io.OutputStream;
 import java.util.Locale;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.framework.Os;
+import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.ExecException;
+import org.apache.myrmidon.framework.exec.ExecManager;
+import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
@@ -24,8 +28,8 @@ import org.apache.myrmidon.framework.exec.launchers.WinNTCommandLauncher;
  * Used to run processes in the ant environment.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @version $Revision$ $Date$
  * @author <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
+ * @version $Revision$ $Date$
  * @see ExecManager
  * @see ExecMetaData
  */

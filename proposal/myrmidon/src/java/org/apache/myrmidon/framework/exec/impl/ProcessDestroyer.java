@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.framework.exec;
+package org.apache.myrmidon.framework.exec.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
