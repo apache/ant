@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -42,35 +43,36 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Copy extends Task
+public class Copy
+    extends Task
 {
-    protected File file = null;// the source file
-    protected File destFile = null;// the destination file
-    protected File destDir = null;// the destination directory
-    protected Vector filesets = new Vector();
+    private File m_file;// the source file
+    private File m_destFile;// the destination file
+    private File m_destDir;// the destination directory
+    private Vector m_filesets = new Vector();
 
-    protected boolean filtering = false;
-    protected boolean preserveLastModified = false;
-    protected boolean forceOverwrite = false;
-    protected boolean flatten = false;
-    protected int verbosity = Project.MSG_VERBOSE;
-    protected boolean includeEmpty = true;
+    private boolean m_filtering;
+    private boolean m_preserveLastModified;
+    private boolean m_forceOverwrite;
+    private boolean m_flatten;
+    private int m_verbosity = Project.MSG_VERBOSE;
+    private boolean m_includeEmpty = true;
 
-    protected Hashtable fileCopyMap = new Hashtable();
-    protected Hashtable dirCopyMap = new Hashtable();
-    protected Hashtable completeDirMap = new Hashtable();
+    private Hashtable m_fileCopyMap = new Hashtable();
+    private Hashtable m_dirCopyMap = new Hashtable();
+    private Hashtable m_completeDirMap = new Hashtable();
 
-    protected Mapper mapperElement = null;
-    private Vector filterSets = new Vector();
+    private Mapper m_mapperElement;
+    private Vector m_filterSets = new Vector();
 
     /**
      * Sets a single source file to copy.
      *
      * @param file The new File value
      */
-    public void setFile( File file )
+    public void setFile( final File file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     /**
@@ -78,9 +80,9 @@ public class Copy extends Task
      *
      * @param filtering The new Filtering value
      */
-    public void setFiltering( boolean filtering )
+    public void setFiltering( final boolean filtering )
     {
-        this.filtering = filtering;
+        m_filtering = filtering;
     }
 
     /**
@@ -91,9 +93,9 @@ public class Copy extends Task
      *
      * @param flatten The new Flatten value
      */
-    public void setFlatten( boolean flatten )
+    public void setFlatten( final boolean flatten )
     {
-        this.flatten = flatten;
+        m_flatten = flatten;
     }
 
     /**
@@ -101,9 +103,9 @@ public class Copy extends Task
      *
      * @param includeEmpty The new IncludeEmptyDirs value
      */
-    public void setIncludeEmptyDirs( boolean includeEmpty )
+    public void setIncludeEmptyDirs( final boolean includeEmpty )
     {
-        this.includeEmpty = includeEmpty;
+        m_includeEmpty = includeEmpty;
     }
 
     /**
@@ -111,9 +113,9 @@ public class Copy extends Task
      *
      * @param overwrite The new Overwrite value
      */
-    public void setOverwrite( boolean overwrite )
+    public void setOverwrite( final boolean overwrite )
     {
-        this.forceOverwrite = overwrite;
+        m_forceOverwrite = overwrite;
     }
 
     /**
@@ -121,9 +123,9 @@ public class Copy extends Task
      *
      * @param preserve The new PreserveLastModified value
      */
-    public void setPreserveLastModified( boolean preserve )
+    public void setPreserveLastModified( final boolean preserve )
     {
-        preserveLastModified = preserve;
+        m_preserveLastModified = preserve;
     }
 
     /**
@@ -131,9 +133,9 @@ public class Copy extends Task
      *
      * @param destDir The new Todir value
      */
-    public void setTodir( File destDir )
+    public void setTodir( final File destDir )
     {
-        this.destDir = destDir;
+        m_destDir = destDir;
     }
 
     /**
@@ -141,9 +143,9 @@ public class Copy extends Task
      *
      * @param destFile The new Tofile value
      */
-    public void setTofile( File destFile )
+    public void setTofile( final File destFile )
     {
-        this.destFile = destFile;
+        m_destFile = destFile;
     }
 
     /**
@@ -151,15 +153,15 @@ public class Copy extends Task
      *
      * @param verbose The new Verbose value
      */
-    public void setVerbose( boolean verbose )
+    public void setVerbose( final boolean verbose )
     {
         if( verbose )
         {
-            this.verbosity = Project.MSG_INFO;
+            m_verbosity = Project.MSG_INFO;
         }
         else
         {
-            this.verbosity = Project.MSG_VERBOSE;
+            m_verbosity = Project.MSG_VERBOSE;
         }
     }
 
@@ -168,9 +170,9 @@ public class Copy extends Task
      *
      * @param set The feature to be added to the Fileset attribute
      */
-    public void addFileset( FileSet set )
+    public void addFileset( final FileSet set )
     {
-        filesets.addElement( set );
+        m_filesets.addElement( set );
     }
 
     /**
@@ -180,8 +182,8 @@ public class Copy extends Task
      */
     public FilterSet createFilterSet()
     {
-        FilterSet filterSet = new FilterSet();
-        filterSets.addElement( filterSet );
+        final FilterSet filterSet = new FilterSet();
+        m_filterSets.addElement( filterSet );
         return filterSet;
     }
 
@@ -194,12 +196,12 @@ public class Copy extends Task
     public Mapper createMapper()
         throws TaskException
     {
-        if( mapperElement != null )
+        if( m_mapperElement != null )
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapperElement = new Mapper( project );
-        return mapperElement;
+        m_mapperElement = new Mapper( project );
+        return m_mapperElement;
     }
 
     /**
@@ -214,51 +216,52 @@ public class Copy extends Task
         validateAttributes();
 
         // deal with the single file
-        if( file != null )
+        if( m_file != null )
         {
-            if( file.exists() )
+            if( m_file.exists() )
             {
-                if( destFile == null )
+                if( m_destFile == null )
                 {
-                    destFile = new File( destDir, file.getName() );
+                    m_destFile = new File( m_destDir, m_file.getName() );
                 }
 
-                if( forceOverwrite ||
-                    ( file.lastModified() > destFile.lastModified() ) )
+                if( m_forceOverwrite ||
+                    ( m_file.lastModified() > m_destFile.lastModified() ) )
                 {
-                    fileCopyMap.put( file.getAbsolutePath(), destFile.getAbsolutePath() );
+                    m_fileCopyMap.put( m_file.getAbsolutePath(), m_destFile.getAbsolutePath() );
                 }
                 else
                 {
-                    log( file + " omitted as " + destFile + " is up to date.",
+                    log( m_file + " omitted as " + m_destFile + " is up to date.",
                          Project.MSG_VERBOSE );
                 }
             }
             else
             {
                 String message = "Could not find file "
-                    + file.getAbsolutePath() + " to copy.";
+                    + m_file.getAbsolutePath() + " to copy.";
                 getLogger().info( message );
                 throw new TaskException( message );
             }
         }
 
         // deal with the filesets
-        for( int i = 0; i < filesets.size(); i++ )
+        for( int i = 0; i < m_filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)filesets.elementAt( i );
-            DirectoryScanner ds = fs.getDirectoryScanner( project );
-            File fromDir = fs.getDir( project );
+            final FileSet fileSet = (FileSet)m_filesets.elementAt( i );
+            final DirectoryScanner scanner = fileSet.getDirectoryScanner( project );
+            final File fromDir = fileSet.getDir( project );
 
-            String[] srcFiles = ds.getIncludedFiles();
-            String[] srcDirs = ds.getIncludedDirectories();
-            boolean isEverythingIncluded = ds.isEverythingIncluded();
-            if( isEverythingIncluded
-                && !flatten && mapperElement == null )
+            final String[] srcFiles = scanner.getIncludedFiles();
+            final String[] srcDirs = scanner.getIncludedDirectories();
+            final boolean isEverythingIncluded = scanner.isEverythingIncluded();
+
+            if( isEverythingIncluded && !m_flatten && null == m_mapperElement )
             {
-                completeDirMap.put( fromDir, destDir );
+                m_completeDirMap.put( fromDir, m_destDir );
             }
-            scan( fromDir, destDir, srcFiles, srcDirs );
+
+            scan( fromDir, m_destDir, srcFiles, srcDirs );
         }
 
         // do all the copy operations now...
@@ -266,9 +269,9 @@ public class Copy extends Task
 
         // clean up destDir again - so this instance can be used a second
         // time without throwing an exception
-        if( destFile != null )
+        if( null != m_destFile )
         {
-            destDir = null;
+            m_destDir = null;
         }
     }
 
@@ -279,39 +282,51 @@ public class Copy extends Task
      */
     protected Vector getFilterSets()
     {
-        return filterSets;
+        return m_filterSets;
     }
 
-    protected void buildMap( File fromDir, File toDir, String[] names,
-                             FileNameMapper mapper, Hashtable map )
+    protected void buildMap( final File fromDir,
+                             final File toDir,
+                             final String[] names,
+                             final FileNameMapper mapper,
+                             final Hashtable map )
         throws TaskException
     {
-
-        String[] toCopy = null;
-        if( forceOverwrite )
+        final String[] toCopy = buildFilenameList( names, mapper, fromDir, toDir );
+        for( int i = 0; i < toCopy.length; i++ )
         {
-            Vector v = new Vector();
+            final String destFilename = mapper.mapFileName( toCopy[ i ] )[ 0 ];
+
+            final File src = new File( fromDir, toCopy[ i ] );
+            final File dest = new File( toDir, destFilename );
+            map.put( src.getAbsolutePath(), dest.getAbsolutePath() );
+        }
+    }
+
+    private String[] buildFilenameList( final String[] names,
+                                        final FileNameMapper mapper,
+                                        final File fromDir,
+                                        final File toDir )
+        throws TaskException
+    {
+        if( m_forceOverwrite )
+        {
+            final ArrayList list = new ArrayList( names.length );
             for( int i = 0; i < names.length; i++ )
             {
-                if( mapper.mapFileName( names[ i ] ) != null )
+                final String name = names[ i ];
+                if( null != mapper.mapFileName( name ) )
                 {
-                    v.addElement( names[ i ] );
+                    list.add( name );
                 }
             }
-            toCopy = new String[ v.size() ];
-            v.copyInto( toCopy );
+
+            return (String[])list.toArray( new String[ list.size() ] );
         }
         else
         {
-            SourceFileScanner ds = new SourceFileScanner( this );
-            toCopy = ds.restrict( names, fromDir, toDir, mapper );
-        }
-
-        for( int i = 0; i < toCopy.length; i++ )
-        {
-            File src = new File( fromDir, toCopy[ i ] );
-            File dest = new File( toDir, mapper.mapFileName( toCopy[ i ] )[ 0 ] );
-            map.put( src.getAbsolutePath(), dest.getAbsolutePath() );
+            final SourceFileScanner scanner = new SourceFileScanner( this );
+            return scanner.restrict( names, fromDir, toDir, mapper );
         }
     }
 
@@ -322,61 +337,56 @@ public class Copy extends Task
     protected void doFileOperations()
         throws TaskException
     {
-        if( fileCopyMap.size() > 0 )
+        if( m_fileCopyMap.size() > 0 )
         {
-            getLogger().info( "Copying " + fileCopyMap.size() +
-                              " file" + ( fileCopyMap.size() == 1 ? "" : "s" ) +
-                              " to " + destDir.getAbsolutePath() );
+            getLogger().info( "Copying " + m_fileCopyMap.size() +
+                              " file" + ( m_fileCopyMap.size() == 1 ? "" : "s" ) +
+                              " to " + m_destDir.getAbsolutePath() );
 
-            Enumeration e = fileCopyMap.keys();
+            Enumeration e = m_fileCopyMap.keys();
             while( e.hasMoreElements() )
             {
                 String fromFile = (String)e.nextElement();
-                String toFile = (String)fileCopyMap.get( fromFile );
+                String toFile = (String)m_fileCopyMap.get( fromFile );
 
                 if( fromFile.equals( toFile ) )
                 {
-                    log( "Skipping self-copy of " + fromFile, verbosity );
+                    getLogger().info( "Skipping self-copy of " + fromFile );
                     continue;
                 }
 
                 try
                 {
-                    log( "Copying " + fromFile + " to " + toFile, verbosity );
+                    getLogger().info( "Copying " + fromFile + " to " + toFile );
 
-                    FilterSetCollection executionFilters = new FilterSetCollection();
-                    if( filtering )
-                    {
-                        executionFilters.addFilterSet( project.getGlobalFilterSet() );
-                    }
-                    for( Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements(); )
-                    {
-                        executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
-                    }
+                    final FilterSetCollection executionFilters = buildFilterSet();
                     final File src = new File( fromFile );
                     final File dest = new File( toFile );
-                    if( forceOverwrite )
+
+                    if( m_forceOverwrite )
                     {
                         FileUtil.forceDelete( dest );
                     }
+
                     FileUtils.newFileUtils().copyFile( src, dest, executionFilters );
-                    if( preserveLastModified )
+
+                    if( m_preserveLastModified )
                     {
                         dest.setLastModified( src.lastModified() );
                     }
                 }
-                catch( IOException ioe )
+                catch( final IOException ioe )
                 {
-                    String msg = "Failed to copy " + fromFile + " to " + toFile
-                        + " due to " + ioe.getMessage();
+                    final String msg = "Failed to copy " + fromFile + " to " +
+                        toFile + " due to " + ioe.getMessage();
                     throw new TaskException( msg, ioe );
                 }
             }
         }
 
-        if( includeEmpty )
+        if( m_includeEmpty )
         {
-            Enumeration e = dirCopyMap.elements();
+            Enumeration e = m_dirCopyMap.elements();
             int count = 0;
             while( e.hasMoreElements() )
             {
@@ -399,9 +409,24 @@ public class Copy extends Task
                 getLogger().info( "Copied " + count +
                                   " empty director" +
                                   ( count == 1 ? "y" : "ies" ) +
-                                  " to " + destDir.getAbsolutePath() );
+                                  " to " + m_destDir.getAbsolutePath() );
             }
         }
+    }
+
+    private FilterSetCollection buildFilterSet()
+    {
+        final FilterSetCollection executionFilters = new FilterSetCollection();
+        if( m_filtering )
+        {
+            executionFilters.addFilterSet( project.getGlobalFilterSet() );
+        }
+
+        for( final Enumeration filterEnum = m_filterSets.elements(); filterEnum.hasMoreElements(); )
+        {
+            executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
+        }
+        return executionFilters;
     }
 
     /**
@@ -417,11 +442,11 @@ public class Copy extends Task
         throws TaskException
     {
         FileNameMapper mapper = null;
-        if( mapperElement != null )
+        if( m_mapperElement != null )
         {
-            mapper = mapperElement.getImplementation();
+            mapper = m_mapperElement.getImplementation();
         }
-        else if( flatten )
+        else if( m_flatten )
         {
             mapper = new FlatFileNameMapper();
         }
@@ -430,11 +455,11 @@ public class Copy extends Task
             mapper = new IdentityMapper();
         }
 
-        buildMap( fromDir, toDir, files, mapper, fileCopyMap );
+        buildMap( fromDir, toDir, files, mapper, m_fileCopyMap );
 
-        if( includeEmpty )
+        if( m_includeEmpty )
         {
-            buildMap( fromDir, toDir, dirs, mapper, dirCopyMap );
+            buildMap( fromDir, toDir, dirs, mapper, m_dirCopyMap );
         }
     }
 
@@ -451,45 +476,45 @@ public class Copy extends Task
     protected void validateAttributes()
         throws TaskException
     {
-        if( file == null && filesets.size() == 0 )
+        if( m_file == null && m_filesets.size() == 0 )
         {
             throw new TaskException( "Specify at least one source - a file or a fileset." );
         }
 
-        if( destFile != null && destDir != null )
+        if( m_destFile != null && m_destDir != null )
         {
             throw new TaskException( "Only one of tofile and todir may be set." );
         }
 
-        if( destFile == null && destDir == null )
+        if( m_destFile == null && m_destDir == null )
         {
             throw new TaskException( "One of tofile or todir must be set." );
         }
 
-        if( file != null && file.exists() && file.isDirectory() )
+        if( m_file != null && m_file.exists() && m_file.isDirectory() )
         {
             throw new TaskException( "Use a fileset to copy directories." );
         }
 
-        if( destFile != null && filesets.size() > 0 )
+        if( m_destFile != null && m_filesets.size() > 0 )
         {
-            if( filesets.size() > 1 )
+            if( m_filesets.size() > 1 )
             {
                 throw new TaskException(
                     "Cannot concatenate multiple files into a single file." );
             }
             else
             {
-                FileSet fs = (FileSet)filesets.elementAt( 0 );
+                FileSet fs = (FileSet)m_filesets.elementAt( 0 );
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
                 String[] srcFiles = ds.getIncludedFiles();
 
                 if( srcFiles.length > 0 )
                 {
-                    if( file == null )
+                    if( m_file == null )
                     {
-                        file = new File( srcFiles[ 0 ] );
-                        filesets.removeElementAt( 0 );
+                        m_file = new File( srcFiles[ 0 ] );
+                        m_filesets.removeElementAt( 0 );
                     }
                     else
                     {
@@ -505,9 +530,59 @@ public class Copy extends Task
             }
         }
 
-        if( destFile != null )
+        if( m_destFile != null )
         {
-            destDir = new File( destFile.getParent() );// be 1.1 friendly
+            m_destDir = new File( m_destFile.getParent() );// be 1.1 friendly
         }
+    }
+
+    protected Vector getFilesets()
+    {
+        return m_filesets;
+    }
+
+    protected boolean isFiltering()
+    {
+        return m_filtering;
+    }
+
+    protected boolean isForceOverwrite()
+    {
+        return m_forceOverwrite;
+    }
+
+    protected int getVerbosity()
+    {
+        return m_verbosity;
+    }
+
+    protected boolean isIncludeEmpty()
+    {
+        return m_includeEmpty;
+    }
+
+    protected Hashtable getFileCopyMap()
+    {
+        return m_fileCopyMap;
+    }
+
+    protected Hashtable getDirCopyMap()
+    {
+        return m_dirCopyMap;
+    }
+
+    protected Hashtable getCompleteDirMap()
+    {
+        return m_completeDirMap;
+    }
+
+    protected File getDestDir()
+    {
+        return m_destDir;
+    }
+
+    protected void setForceOverwrite( final boolean forceOverwrite )
+    {
+        m_forceOverwrite = forceOverwrite;
     }
 }

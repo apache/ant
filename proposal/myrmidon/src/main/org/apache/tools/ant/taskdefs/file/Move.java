@@ -36,11 +36,10 @@ import org.apache.tools.ant.types.FilterSetCollection;
  */
 public class Move extends Copy
 {
-
     public Move()
     {
         super();
-        forceOverwrite = true;
+        setForceOverwrite( true );
     }
 
     /**
@@ -68,7 +67,7 @@ public class Move extends Copy
                 throw new TaskException( "UNEXPECTED ERROR - The file " + f.getAbsolutePath() + " should not exist!" );
             }
         }
-        log( "Deleting directory " + d.getAbsolutePath(), verbosity );
+        log( "Deleting directory " + d.getAbsolutePath(), getVerbosity() );
         if( !d.delete() )
         {
             throw new TaskException( "Unable to delete directory " + d.getAbsolutePath() );
@@ -83,18 +82,18 @@ public class Move extends Copy
         throws TaskException
     {
         //Attempt complete directory renames, if any, first.
-        if( completeDirMap.size() > 0 )
+        if( getCompleteDirMap().size() > 0 )
         {
-            Enumeration e = completeDirMap.keys();
+            Enumeration e = getCompleteDirMap().keys();
             while( e.hasMoreElements() )
             {
                 File fromDir = (File)e.nextElement();
-                File toDir = (File)completeDirMap.get( fromDir );
+                File toDir = (File)getCompleteDirMap().get( fromDir );
                 try
                 {
                     log( "Attempting to rename dir: " + fromDir +
-                         " to " + toDir, verbosity );
-                    renameFile( fromDir, toDir, filtering, forceOverwrite );
+                         " to " + toDir, getVerbosity() );
+                    renameFile( fromDir, toDir, isFiltering(), isForceOverwrite() );
                 }
                 catch( IOException ioe )
                 {
@@ -105,20 +104,20 @@ public class Move extends Copy
                 }
             }
         }
-        if( fileCopyMap.size() > 0 )
+        if( getFileCopyMap().size() > 0 )
         {// files to move
-            getLogger().info( "Moving " + fileCopyMap.size() + " files to " +
-                              destDir.getAbsolutePath() );
+            getLogger().info( "Moving " + getFileCopyMap().size() + " files to " +
+                              getDestDir().getAbsolutePath() );
 
-            Enumeration e = fileCopyMap.keys();
+            Enumeration e = getFileCopyMap().keys();
             while( e.hasMoreElements() )
             {
                 String fromFile = (String)e.nextElement();
-                String toFile = (String)fileCopyMap.get( fromFile );
+                String toFile = (String)getFileCopyMap().get( fromFile );
 
                 if( fromFile.equals( toFile ) )
                 {
-                    log( "Skipping self-move of " + fromFile, verbosity );
+                    log( "Skipping self-move of " + fromFile, getVerbosity() );
                     continue;
                 }
 
@@ -132,8 +131,8 @@ public class Move extends Copy
                     try
                     {
                         log( "Attempting to rename: " + fromFile +
-                             " to " + toFile, verbosity );
-                        moved = renameFile( f, d, filtering, forceOverwrite );
+                             " to " + toFile, getVerbosity() );
+                        moved = renameFile( f, d, isFiltering(), isForceOverwrite() );
                     }
                     catch( IOException ioe )
                     {
@@ -147,10 +146,10 @@ public class Move extends Copy
                     {
                         try
                         {
-                            log( "Moving " + fromFile + " to " + toFile, verbosity );
+                            log( "Moving " + fromFile + " to " + toFile, getVerbosity() );
 
                             FilterSetCollection executionFilters = new FilterSetCollection();
-                            if( filtering )
+                            if( isFiltering() )
                             {
                                 executionFilters.addFilterSet( project.getGlobalFilterSet() );
                             }
@@ -159,7 +158,7 @@ public class Move extends Copy
                                 executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
                             }
 
-                            if( forceOverwrite )
+                            if( isForceOverwrite() )
                             {
                                 FileUtil.forceDelete( d );
                             }
@@ -184,9 +183,9 @@ public class Move extends Copy
             }
         }
 
-        if( includeEmpty )
+        if( isIncludeEmpty() )
         {
-            Enumeration e = dirCopyMap.elements();
+            Enumeration e = getDirCopyMap().elements();
             int count = 0;
             while( e.hasMoreElements() )
             {
@@ -206,13 +205,13 @@ public class Move extends Copy
 
             if( count > 0 )
             {
-                getLogger().info( "Moved " + count + " empty directories to " + destDir.getAbsolutePath() );
+                getLogger().info( "Moved " + count + " empty directories to " + getDestDir().getAbsolutePath() );
             }
         }
 
-        if( filesets.size() > 0 )
+        if( getFilesets().size() > 0 )
         {
-            Enumeration e = filesets.elements();
+            Enumeration e = getFilesets().elements();
             while( e.hasMoreElements() )
             {
                 FileSet fs = (FileSet)e.nextElement();
