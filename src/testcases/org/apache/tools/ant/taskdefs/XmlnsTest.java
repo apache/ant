@@ -88,6 +88,14 @@ public class XmlnsTest extends BuildFileTest {
             "Attempt to use a reserved URI ant:notallowed");
     }
 
+    public void testOther() {
+        expectLog("other", "a message");
+    }
+
+    public void testNsAttributes() {
+        expectLog("ns.attributes", "hello world");
+    }
+    
     public static class MyTask extends Task {
         public void execute() {
             log("MyTask called");

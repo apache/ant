@@ -645,9 +645,15 @@ public class ProjectHelper2 extends ProjectHelper {
              */
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String attrUri = attrs.getURI(i);
+                if (attrUri != null
+                    && !attrUri.equals("")
+                    && !attrUri.equals(uri)) {
+                    continue; // Ignore attributes from unknown uris
+                }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
-
+ 
                 if (key.equals("default")) {
                     if (value != null && !value.equals("")) {
                         if (!context.isIgnoringProjectTag()) {
@@ -797,6 +803,12 @@ public class ProjectHelper2 extends ProjectHelper {
             context.addTarget(target);
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String attrUri = attrs.getURI(i);
+                if (attrUri != null
+                    && !attrUri.equals("")
+                    && !attrUri.equals(uri)) {
+                    continue; // Ignore attributes from unknown uris
+                }
                 String key = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
 
@@ -967,6 +979,12 @@ public class ProjectHelper2 extends ProjectHelper {
                 = new RuntimeConfigurable(task, task.getTaskName());
 
             for (int i = 0; i < attrs.getLength(); i++) {
+                String attrUri = attrs.getURI(i);
+                if (attrUri != null
+                    && !attrUri.equals("")
+                    && !attrUri.equals(uri)) {
+                    continue; // Ignore attributes from unknown uris
+                }
                 String name = attrs.getLocalName(i);
                 String value = attrs.getValue(i);
                 // PR: Hack for ant-type value
