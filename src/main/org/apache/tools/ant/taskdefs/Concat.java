@@ -142,14 +142,14 @@ public class Concat extends Task {
     // Attribute setters.
 
     /**
-     * Sets the destination file for the stream.
+     * Sets the destination file, or uses the console if not specified.
      */
     public void setDestfile(File destinationFile) {
         this.destinationFile = destinationFile;
     }
 
     /**
-     * Sets the behavior when the destination file exists, if set to
+     * Sets the behavior when the destination file exists. If set to
      * <code>true</code> the stream data will be appended to the
      * existing file, otherwise the existing file will be
      * overwritten. Defaults to <code>false</code>.
@@ -169,14 +169,14 @@ public class Concat extends Task {
     // Nested element creators.
 
     /**
-     * Adds a set of files (nested fileset element).
+     * Set of files to concatenate.
      */
     public void addFileset(FileSet set) {
         fileSets.addElement(set);
     }
 
     /**
-     * Adds a list of files (nested filelist element).
+     * List of files to concatenate.
      */
     public void addFilelist(FileList list) {
         fileSets.addElement(list);
