@@ -160,8 +160,102 @@ or are out of date, the ejbc tool is run to generate new versions.
 <hr>
 <h2><a name="ejbjar">ejbjar</a></h2>
 <h3><b>Description:</b></h3>
-<p>Documentation is not currently available.
+<p>This task is designed to support building of arbitrary EJB1.1 jar files. Support is currently
+   provided for 'vanilla' EJB1.1 jar files - i.e. those containing only the user generated class
+    files and the standard deployment descriptor, as well as for WebLogic 5.1 jar files.</p>
+ 
+<p>The task works as a directory scanning task, and performs an action for each deployment descriptor
+   found. As such the includes and excludes should be set to ensure that all desired EJB1.1
+   descriptors are found, but no application server descriptors are found. For each descriptor
+   found, ejbjar will parse the deployment descriptor to determine the necessary class files to
+   include and assemble those files and necessary deployment descriptors into a well formed EJB
+   jar file. If generateweblogic is set to true, weblogic.ejbc is then invoked (in VM) to create
+   the WebLogic jar file.</p>
 
+<p>In order to locate the WebLogic deployment descriptors for each jar file, certain naming 
+   conventions are assumed. For the purpose of this document we will assume a basenameterminator
+   of '-' (see below for how to specify this option). If you have a deployment descriptor called
+   FooBean-ejb-jar.xml, the basename will be taken as FooBean, the string up to the basenameterminator.
+   Descriptors will then be searched for called FooBean-weblogic-ejb-jar.xml and also
+   FooBean-weblogic-cmp-rdbms-jar.xml. If generateweblogic is false, neither WebLogic descriptor is
+   required, but will still be embedded if found. If generateweblogic is true, only
+   FooBean-weblogic-ejb-jar.xml is required, but again, both will be embedded in the jar file if
+   they are found.</p>
+
+<p>The jar files are only built if they are out of date.  As more than one jar file can be built
+   per deployment descriptor, this process works as follows. If generateweblogic is true use the
+   modification date of the WebLogic jar file as the jar file modification date, otherwise use the
+   modification date of the generic jar file. If the modification timestamp of any of the class
+   files or deployment descriptors is later than the selected jar file's, a build is executed,
+   otherwise a message is logged that the jar file is up to date.</p>
+
+<h3>Parameters:</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">srcdir</td>
+    <td valign="top">The base directory under which to scan for EJB deployment descriptors.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">destdir</td>
+    <td valign="top">The base directory under which generated jar files are deposited. Jar files are deposited in
+                     directories correpsonding to the package in which their deployment descriptor was found.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">generateweblogic</td>
+    <td valign="top">Boolean value specifying whether or not ejbc should be invoked to create the weblogic jar file.
+                     Acceptable values are 'true' and 'false'.</td>
+    <td valign="top" align="center">No, defaults to 'false'.</td>
+  </tr>
+  <tr>
+    <td valign="top">keepgeneric</td>
+    <td valign="top">Boolean value specifying whether or not to keep the generic EJB1.1 jar files created. If you are
+                     only interested in the generated WebLogic jar files, set this to false to remove the temporary
+                     jar files created. Acceptable values are 'true' and 'false'.</td>
+    <td valign="top" align="center">No, defaults to 'true'.</td>
+  </tr>
+  <tr>
+    <td valign="top">basenameterminator</td>
+    <td valign="top">String value used to substring out a string from the name of each deployment descriptor found,
+                     which is then used to locate related deployment descriptors (e.g. the WebLogic descriptors). 
+                     For example, a basename of '.' and a deployment descriptor called 'FooBean.ejb-jar.xml' would
+                     result in a basename of 'FooBean' which would then be used to find FooBean.weblogic-ejb-jar.xml
+                     and FooBean.weblogic-cmp-rdbms-jar.xml, as well as to create the filenames of the jar files as
+                     FooBean-generic.jar and FooBean-wl.jar.</td>
+    <td valign="top" align="center">No, defaults to '-'.</td>
+  </tr>
+  <tr>
+    <td valign="top">genericjarsuffix</td>
+    <td valign="top">String value appended to the basename of the deployment descriptor to create the filename of the
+                     generic EJB jar file.</td>
+    <td valign="top" align="center">No, defaults to '-generic.jar'.</td>
+  </tr>
+  <tr>
+    <td valign="top">weblogicjarsuffix</td>
+    <td valign="top">String value appended to the basename of the deployment descriptor to create the filename of the
+                     WebLogic EJB jar file.</td>
+    <td valign="top" align="center">No, defaults to '-wl.jar'.</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<pre>
+    &lt;ejbjar srcdir="classes"
+            destdir="classes"
+            generateweblogic="true"
+            keepgeneric="false"
+            genericjarsuffix="-temp.jar"
+            weblogicjarsuffix=".jar"&gt;
+      &lt;include name="**/*-ejb-jar.xml"/&gt;
+      &lt;exclude name="**/*weblogic*.xml"/&gt;
+    &lt;/ejbjar&gt;
+</pre>
 </body>
 
 </html>
