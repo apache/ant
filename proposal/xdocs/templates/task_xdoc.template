@@ -1,6 +1,7 @@
 <XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.AntTagsHandler"/>
 
-<task name="<XDtAnt:taskName/>" classname="<XDtClass:fullClassName/>">
+<task name="<XDtAnt:taskName/>" category="<XDtAnt:categoryName/>"
+      classname="<XDtClass:fullClassName/>">
 
   <short-description><![CDATA[<XDtClass:firstSentenceDescription/>]]></short-description>
   <long-description>

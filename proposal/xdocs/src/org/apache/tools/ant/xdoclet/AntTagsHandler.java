@@ -81,6 +81,9 @@ import java.util.Properties;
  */
 public class AntTagsHandler extends XDocletTagSupport {
 
+    /** Default category for tasks without a category attribute. */
+    public static final String DEFAULT_CATEGORY = "other";
+
     /**
      * @todo add check for execute method
      */
@@ -163,6 +166,7 @@ public class AntTagsHandler extends XDocletTagSupport {
      * Provides the Ant task name.
      *
      * @see getTaskName
+	 * @doc:tag      type="content"
      */
     public String taskName() throws XDocletException {
         return getTaskName(getCurrentClass());
@@ -192,6 +196,33 @@ public class AntTagsHandler extends XDocletTagSupport {
             }
 
             tagValue = tagValue.toLowerCase();
+        }
+        return tagValue;
+    }
+
+
+    /**
+     * Provides the Ant category name.
+     *
+     * @see getCategoryName
+     */
+    public String categoryName() throws XDocletException {
+        return getCategoryName(getCurrentClass());
+    }
+
+    /**
+     * Provides the Ant category name as the Value of the category attribute, 
+     * <code>@ant:task&nbsp;category="..."</code>.  This attribute is mandatory.
+     */
+    public static final String getCategoryName(ClassDoc clazz) throws XDocletException {
+        String tagValue = getTagValue(clazz, "ant:task", "category", -1,
+                null, null, null, null,
+                null, false, XDocletTagSupport.FOR_CLASS, true);
+        if (tagValue != null) {
+            tagValue = tagValue.toLowerCase();
+        }
+        else {
+            tagValue = DEFAULT_CATEGORY;
         }
         return tagValue;
     }

@@ -83,11 +83,6 @@ public class AntSubTask extends TemplateSubTask {
      *       - and only throw BuildException if at all
      */
     protected boolean matchesGenerationRules(ClassDoc clazz) throws XDocletException {
-
-        if (clazz.isAbstract()) {
-            return false;
-        }
-
         return isAntTask(clazz);;
     }
 
@@ -124,8 +119,7 @@ public class AntSubTask extends TemplateSubTask {
         String dir = getDestDir().getAbsolutePath();
 
         if (filename.indexOf("{0}") != -1) {
-            PackageDoc pak = clazz.containingPackage();
-            dir = PackageTagsHandler.packageNameAsPathFor(pak);
+            dir = AntTagsHandler.getCategoryName(clazz);
             String taskName = AntTagsHandler.getTaskName(clazz);
             filename = MessageFormat.format(getDestinationFile(), new Object[]{taskName});
         }
