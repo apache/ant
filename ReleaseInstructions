@@ -102,6 +102,8 @@ Note: This document was created in the context of releasing Ant 1.5.
     etc).
     
     Also ensure you:
+    * Update docs/manual/cover.html
+    * Update docs/manual/credits.html
     * Update antnews.xml (Announcement)
     * Update faq.xml (Ant's history details - not for betas)
     * Update index.xml (Announcement, latest release details, link to
