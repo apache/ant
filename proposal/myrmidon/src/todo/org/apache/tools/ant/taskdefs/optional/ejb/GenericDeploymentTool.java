@@ -28,7 +28,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;

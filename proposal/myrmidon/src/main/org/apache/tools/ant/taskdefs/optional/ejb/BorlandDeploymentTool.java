@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -361,43 +360,18 @@ public class BorlandDeploymentTool
      */
     private void buildBorlandStubs( Iterator ithomes, Hashtable files )
     {
-        Execute execTask = null;
+        final Execute2 exe = new Execute2();
+        exe.setWorkingDirectory( getTask().getBaseDirectory() );
 
-        execTask = new Execute( this );
-        Project project = getTask().getProject();
-        execTask.setWorkingDirectory( project.getBaseDir() );
+        final Commandline cmd = buildCommandline( ithomes );
+        exe.setCommandline( cmd.getCommandline() );
 
-        Commandline commandline = new Commandline();
-        commandline.setExecutable( JAVA2IIOP );
-        //debug ?
-        if( java2iiopdebug )
-        {
-            commandline.createArgument().setValue( "-VBJdebug" );
-        }// end of if ()
-        //set the classpath
-        commandline.createArgument().setValue( "-VBJclasspath" );
-        commandline.createArgument().setPath( getCombinedClasspath() );
-        //list file
-        commandline.createArgument().setValue( "-list_files" );
-        //no TIE classes
-        commandline.createArgument().setValue( "-no_tie" );
-        //root dir
-        commandline.createArgument().setValue( "-root_dir" );
-        commandline.createArgument().setValue( getConfig().srcDir.getAbsolutePath() );
-        //compiling order
-        commandline.createArgument().setValue( "-compile" );
-        //add the home class
-        while( ithomes.hasNext() )
-        {
-            commandline.createArgument().setValue( ithomes.next().toString() );
-        }// end of while ()
+        getLogger().debug( "Calling java2iiop" );
+        getLogger().debug( cmd.toString() );
 
         try
         {
-            getLogger().debug( "Calling java2iiop" );
-            getLogger().debug( commandline.toString() );
-            execTask.setCommandline( commandline.getCommandline() );
-            int result = execTask.execute();
+            final int result = exe.execute();
             if( result != 0 )
             {
                 String msg = "Failed executing java2iiop (ret code is " + result + ")";
@@ -409,6 +383,35 @@ public class BorlandDeploymentTool
             getLogger().error( "java2iiop exception :" + e.getMessage() );
             throw new TaskException( "Error", e );
         }
+    }
+
+    private Commandline buildCommandline( final Iterator ithomes )
+    {
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( JAVA2IIOP );
+        //debug ?
+        if( java2iiopdebug )
+        {
+            cmd.createArgument().setValue( "-VBJdebug" );
+        }// end of if ()
+        //set the classpath
+        cmd.createArgument().setValue( "-VBJclasspath" );
+        cmd.createArgument().setPath( getCombinedClasspath() );
+        //list file
+        cmd.createArgument().setValue( "-list_files" );
+        //no TIE classes
+        cmd.createArgument().setValue( "-no_tie" );
+        //root dir
+        cmd.createArgument().setValue( "-root_dir" );
+        cmd.createArgument().setValue( getConfig().srcDir.getAbsolutePath() );
+        //compiling order
+        cmd.createArgument().setValue( "-compile" );
+        //add the home class
+        while( ithomes.hasNext() )
+        {
+            cmd.createArgument().setValue( ithomes.next().toString() );
+        }
+        return cmd;
     }
 
     /**

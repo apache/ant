@@ -10,8 +10,8 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.exec.ExecTask;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -150,31 +150,17 @@ public class BorlandGenerateClient extends Task
     {
         try
         {
+
+            final Commandline cmd = buildCommand();
+
             getLogger().info( "mode : fork" );
-
-            org.apache.tools.ant.taskdefs.exec.ExecTask execTask = null;
-            execTask = (ExecTask)getProject().createTask( "exec" );
-
-            execTask.setDir( new File( "." ) );
-            execTask.setExecutable( "iastool" );
-            execTask.createArg().setValue( "generateclient" );
-            if( debug )
-            {
-                execTask.createArg().setValue( "-trace" );
-            }// end of if ()
-
-            //
-            execTask.createArg().setValue( "-short" );
-            execTask.createArg().setValue( "-jarfile" );
-            // ejb jar file
-            execTask.createArg().setValue( ejbjarfile.getAbsolutePath() );
-            //client jar file
-            execTask.createArg().setValue( "-single" );
-            execTask.createArg().setValue( "-clientjarfile" );
-            execTask.createArg().setValue( clientjarfile.getAbsolutePath() );
-
             getLogger().debug( "Calling java2iiop" );
-            execTask.execute();
+
+            final Execute2 exe = new Execute2();
+            setupLogger( exe );
+            exe.setWorkingDirectory( new File( "." ) );
+            exe.setCommandline( cmd.getCommandline() );
+            exe.execute();
         }
         catch( Exception e )
         {
@@ -183,6 +169,27 @@ public class BorlandGenerateClient extends Task
             throw new TaskException( msg, e );
         }
 
+    }
+
+    private Commandline buildCommand()
+    {
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( "iastool" );
+        cmd.createArgument().setValue( "generateclient" );
+        if( debug )
+        {
+            cmd.createArgument().setValue( "-trace" );
+        }
+
+        cmd.createArgument().setValue( "-short" );
+        cmd.createArgument().setValue( "-jarfile" );
+        // ejb jar file
+        cmd.createArgument().setValue( ejbjarfile.getAbsolutePath() );
+        //client jar file
+        cmd.createArgument().setValue( "-single" );
+        cmd.createArgument().setValue( "-clientjarfile" );
+        cmd.createArgument().setValue( clientjarfile.getAbsolutePath() );
+        return cmd;
     }
 
     /**
