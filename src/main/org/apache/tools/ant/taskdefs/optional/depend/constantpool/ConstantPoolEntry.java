@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -138,7 +138,7 @@ public abstract class ConstantPoolEntry {
      *      be read.
      * @return the appropriate ConstantPoolEntry subclass representing the
      *      constant pool entry from the stream.
-     * @exception IOException if the constant pool entry cannot be read 
+     * @exception IOException if the constant pool entry cannot be read
      *      from the stream
      */
     public static ConstantPoolEntry readEntry(DataInputStream cpStream)

@@ -91,7 +91,7 @@
         </table>
       </section>
     </xsl:template>
- 
+
     <xsl:template match="file" mode="filelist">
         <tr>
             <xsl:call-template name="alternated-row"/>
@@ -139,14 +139,17 @@
       <section name="Summary">
         <xsl:variable name="fileCount" select="count(file)"/>
         <xsl:variable name="errorCount" select="count(file/error)"/>
+        <xsl:variable name="fileErrorCount" select="count(file[count(error) != 0])"/>
         <table>
             <tr>
                 <th>Files</th>
+                <th>Files With Errors</th>
                 <th>Errors</th>
             </tr>
             <tr>
                 <xsl:call-template name="alternated-row"/>
                 <td><xsl:value-of select="$fileCount"/></td>
+                <td><xsl:value-of select="$fileErrorCount"/></td>
                 <td><xsl:value-of select="$errorCount"/></td>
             </tr>
         </table>

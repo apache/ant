@@ -165,9 +165,15 @@ public class FileUtils {
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     *
+     * @throws IOException if the copying fails
      */
-    public void copyFile(String sourceFile, String destFile) throws IOException {
+    public void copyFile(String sourceFile, String destFile)
+        throws IOException {
         copyFile(new File(sourceFile), new File(destFile), null, false, false);
     }
 
@@ -175,11 +181,19 @@ public class FileUtils {
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     *
+     * @throws IOException if the copying fails
      */
-    public void copyFile(String sourceFile, String destFile, FilterSetCollection filters)
+    public void copyFile(String sourceFile, String destFile,
+                         FilterSetCollection filters)
         throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), filters, false, false);
+        copyFile(new File(sourceFile), new File(destFile), filters,
+                 false, false);
     }
 
     /**
@@ -187,7 +201,15 @@ public class FileUtils {
      * destination specifying if token filtering must be used and if
      * source files may overwrite newer destination files.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     *
+     * @throws IOException if the copying fails
      */
     public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
                          boolean overwrite) throws IOException {
@@ -202,7 +224,18 @@ public class FileUtils {
      * last modified time of <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     *
+     * @throws IOException if the copying fails
      */
     public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
                          boolean overwrite, boolean preserveLastModified)
@@ -218,9 +251,21 @@ public class FileUtils {
      * last modified time of <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param encoding the encoding used to read and write the files.
      *
-     * @since 1.14, Ant 1.5
+     * @throws IOException if the copying fails
+     *
+     * @since Ant 1.5
      */
     public void copyFile(String sourceFile, String destFile,
                          FilterSetCollection filters, boolean overwrite,
@@ -238,9 +283,23 @@ public class FileUtils {
      * <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param encoding the encoding used to read and write the files.
+     * @param project the project instance
      *
-     * @since 1.15, Ant 1.5
+     * @throws IOException if the copying fails
+     *
+     * @since Ant 1.5
      */
     public void copyFile(String sourceFile, String destFile,
                          FilterSetCollection filters, Vector filterChains,
@@ -260,7 +319,22 @@ public class FileUtils {
      * <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance
+     *
+     * @throws IOException if the copying fails
      *
      * @since Ant 1.6
      */
@@ -279,7 +353,12 @@ public class FileUtils {
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     *
+     * @throws IOException if the copying fails
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
         copyFile(sourceFile, destFile, null, false, false);
@@ -289,7 +368,13 @@ public class FileUtils {
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     *
+     * @throws IOException if the copying fails
      */
     public void copyFile(File sourceFile, File destFile, FilterSetCollection filters)
         throws IOException {
@@ -301,7 +386,15 @@ public class FileUtils {
      * destination specifying if token filtering must be used and if
      * source files may overwrite newer destination files.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     *
+     * @throws IOException if the copying fails
      */
     public void copyFile(File sourceFile, File destFile, FilterSetCollection filters,
                          boolean overwrite) throws IOException {
@@ -315,7 +408,18 @@ public class FileUtils {
      * last modified time of <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     *
+     * @throws IOException if the copying fails
      */
     public void copyFile(File sourceFile, File destFile, FilterSetCollection filters,
                          boolean overwrite, boolean preserveLastModified)
@@ -332,9 +436,21 @@ public class FileUtils {
      * equal to the last modified time of <code>sourceFile</code> and
      * which character encoding to assume.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param encoding the encoding used to read and write the files.
      *
-     * @since 1.14, Ant 1.5
+     * @throws IOException if the copying fails
+     *
+     * @since Ant 1.5
      */
     public void copyFile(File sourceFile, File destFile,
                          FilterSetCollection filters, boolean overwrite,
@@ -352,9 +468,23 @@ public class FileUtils {
      * <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param encoding the encoding used to read and write the files.
+     * @param project the project instance
      *
-     * @since 1.15, Ant 1.5
+     * @throws IOException if the copying fails
+     *
+     * @since Ant 1.5
      */
     public void copyFile(File sourceFile, File destFile,
                          FilterSetCollection filters, Vector filterChains,
@@ -373,9 +503,25 @@ public class FileUtils {
      * <code>destFile</code> file should be made equal
      * to the last modified time of <code>sourceFile</code>.
      *
-     * @throws IOException
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance
      *
-     * @since 1.15, Ant 1.6
+     *
+     * @throws IOException if the copying fails
+     *
+     * @since Ant 1.6
      */
     public void copyFile(File sourceFile, File destFile,
                          FilterSetCollection filters, Vector filterChains,
@@ -384,8 +530,8 @@ public class FileUtils {
                          Project project)
         throws IOException {
 
-        if (overwrite || !destFile.exists() ||
-            destFile.lastModified() < sourceFile.lastModified()) {
+        if (overwrite || !destFile.exists()
+            || destFile.lastModified() < sourceFile.lastModified()) {
 
             if (destFile.exists() && destFile.isFile()) {
                 destFile.delete();
@@ -411,19 +557,19 @@ public class FileUtils {
                     if (inputEncoding == null) {
                         in = new BufferedReader(new FileReader(sourceFile));
                     } else {
-                        in =
-                            new BufferedReader(new InputStreamReader(
-                                                                     new FileInputStream(sourceFile),
-                                                                     inputEncoding));
+                        InputStreamReader isr
+                            = new InputStreamReader(new FileInputStream(sourceFile),
+                                                    inputEncoding);
+                        in = new BufferedReader(isr);
                     }
 
                     if (outputEncoding == null) {
                         out = new BufferedWriter(new FileWriter(destFile));
                     } else {
-                        out =
-                            new BufferedWriter(new OutputStreamWriter(
-                                                                      new FileOutputStream(destFile),
-                                                                      outputEncoding));
+                        OutputStreamWriter osw
+                            = new OutputStreamWriter(new FileOutputStream(destFile),
+                                                     outputEncoding);
+                        out = new BufferedWriter(osw);
                     }
 
                     if (filterChainsAvailable) {
@@ -442,7 +588,8 @@ public class FileUtils {
                     String line = lineTokenizer.getToken(in);
                     while (line != null) {
                         if (line.length() == 0) {
-                            // this should not happen, because the lines are returned with the end of line delimiter
+                            // this should not happen, because the lines are
+                            // returned with the end of line delimiter
                             out.newLine();
                         } else {
                             newline = filters.replaceTokens(line);
@@ -495,7 +642,7 @@ public class FileUtils {
                          Reader rdr = crh.getAssembledReader();
                          in = new BufferedReader(rdr);
                      }
-                     char buffer[] = new char[1024*8];
+                     char[] buffer = new char[1024 * 8];
                      while (true) {
                          int nRead = in.read(buffer, 0, buffer.length);
                          if (nRead == -1) {
@@ -542,6 +689,8 @@ public class FileUtils {
 
     /**
      * see whether we have a setLastModified method in File and return it.
+     *
+     * @return a method to setLastModified.
      */
     protected final Method getSetLastModified() {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
@@ -564,8 +713,14 @@ public class FileUtils {
 
     /**
      * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
+     *
+     * @param file the file whose modified time is to be set
+     * @param time the time to which the last modified time is to be set.
+     *
+     * @throws BuildException if the time cannot be set.
      */
-    public void setFileLastModified(File file, long time) throws BuildException {
+    public void setFileLastModified(File file, long time)
+        throws BuildException {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             return;
         }
@@ -665,6 +820,9 @@ public class FileUtils {
      *     \ as the separator.</li>
      * </ul>
      *
+     * @param path the path to be normalized
+     * @param the normalized version of the path.
+     *
      * @throws java.lang.NullPointerException if the file path is
      * equal to null.
      */
@@ -678,10 +836,10 @@ public class FileUtils {
         int colon = path.indexOf(":");
 
         if (!onNetWare) {
-            if (!path.startsWith(File.separator) &&
-                !(path.length() >= 2 &&
-                  Character.isLetter(path.charAt(0)) &&
-                  colon == 1)) {
+            if (!path.startsWith(File.separator)
+                && !(path.length() >= 2
+                    && Character.isLetter(path.charAt(0))
+                    && colon == 1)) {
                 String msg = path + " is not an absolute path";
                 throw new BuildException(msg);
             }
@@ -696,11 +854,10 @@ public class FileUtils {
         boolean dosWithDrive = false;
         String root = null;
         // Eliminate consecutive slashes after the drive spec
-        if ((!onNetWare &&
-             path.length() >= 2 &&
-             Character.isLetter(path.charAt(0)) &&
-             path.charAt(1) == ':') ||
-            (onNetWare && colon > -1)) {
+        if ((!onNetWare && path.length() >= 2
+                && Character.isLetter(path.charAt(0))
+                && path.charAt(1) == ':')
+            || (onNetWare && colon > -1)) {
 
             dosWithDrive = true;
 
@@ -792,6 +949,7 @@ public class FileUtils {
      * current working directory will be assumed if this parameter is
      * null.
      *
+     * @return a File reference to the new temporary file.
      * @since ant 1.5
      */
     public File createTempFile(String prefix, String suffix, File parentDir) {
@@ -819,6 +977,13 @@ public class FileUtils {
      * working rather than fast. Better would be a block read into
      * buffers followed by long comparisions apart from the final 1-7
      * bytes.</p>
+     *
+     * @param f1 the file whose content is to be compared.
+     * @param f2 the other file whose content is to be compared.
+     *
+     * @return true if the content of the files is the same.
+     *
+     * @throws IOException if the files cannot be read.
      *
      * @since 1.9
      */
@@ -885,6 +1050,10 @@ public class FileUtils {
     /**
      * Emulation of File.getParentFile for JDK 1.1
      *
+     *
+     * @param f the file whose parent is required.
+     * @return the given file's parent, or null if the file does not have a
+     *         parent.
      * @since 1.10
      */
     public File getParentFile(File f) {
@@ -899,6 +1068,11 @@ public class FileUtils {
 
     /**
      * Read from reader till EOF
+     * @param rdr the reader from which to read.
+     * @return the contents read out of the given reader
+     *
+     * @throws IOException if the contents could not be read out from the
+     *         reader.
      */
     public static final String readFully(Reader rdr) throws IOException {
         return readFully(rdr, 8192);
@@ -906,8 +1080,17 @@ public class FileUtils {
 
     /**
      * Read from reader till EOF
+     *
+     * @param rdr the reader from which to read.
+     * @param bufferSize the buffer size to use when reading
+     *
+     * @return the contents read out of the given reader
+     *
+     * @throws IOException if the contents could not be read out from the
+     *         reader.
      */
-    public static final String readFully(Reader rdr, int bufferSize) throws IOException {
+    public static final String readFully(Reader rdr, int bufferSize)
+        throws IOException {
         if (bufferSize <= 0) {
             throw new IllegalArgumentException("Buffer size must be greater "
                                                + "than 0");
@@ -939,7 +1122,9 @@ public class FileUtils {
      * <p>This method does <strong>not</strong> guarantee that the
      * operation is atomic.</p>
      *
-     * @since 1.21, Ant 1.5
+     * @param f the file to be created
+     * @return true if the file did not exist already.
+     * @since Ant 1.5
      */
     public boolean createNewFile(File f) throws IOException {
         if (f != null) {
@@ -972,6 +1157,7 @@ public class FileUtils {
      * @param parent the parent directory of the file to test
      * @param name the name of the file to test.
      *
+     * @return true if the file is a symbolic link.
      * @since Ant 1.5
      */
     public boolean isSymbolicLink(File parent, String name)
@@ -1018,6 +1204,8 @@ public class FileUtils {
      *
      * <p>This code doesn't handle non-ASCII characters properly.</p>
      *
+     * @param path the path in the local file system
+     * @return the URI version of the local path.
      * @since Ant 1.6
      */
     public String toURI(String path) {
@@ -1065,6 +1253,8 @@ public class FileUtils {
      * <p>Swallows '%' that are not followed by two characters,
      * doesn't deal with non-ASCII characters.</p>
      *
+     * @param uri the URI designating a file in the local filesystem.
+     * @return the local file system path for the file.
      * @since Ant 1.6
      */
     public String fromURI(String uri) {
@@ -1118,6 +1308,11 @@ public class FileUtils {
      * <p>Unlike java.io.File#equals this method will try to compare
      * the absolute paths and &quot;normalize&quot; the filenames
      * before comparing them.</p>
+     *
+     * @param f1 the file whose name is to be compared.
+     * @param f2 the other file whose name is to be compared.
+     *
+     * @return true if the file are for the same file.
      *
      * @since Ant 1.5.3
      */

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,6 +61,9 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
  */
 public class CCMCheckout extends CCMCheck {
 
+    /**
+     * default constructor
+     */
     public CCMCheckout() {
         super();
         setCcmAction(COMMAND_CHECKOUT);

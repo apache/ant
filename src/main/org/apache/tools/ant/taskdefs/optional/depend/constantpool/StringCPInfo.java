@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -89,7 +89,7 @@ public class StringCPInfo extends ConstantCPInfo {
      * @return the string representation of this constant pool entry.
      */
     public String toString() {
-        return "String Constant Pool Entry for " 
+        return "String Constant Pool Entry for "
             + getValue() + "[" + index + "]";
     }
 

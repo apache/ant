@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,28 +75,25 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @ant.task name="jarlib-display"
  */
-public class JarLibDisplayTask
-    extends Task
-{
+public class JarLibDisplayTask extends Task {
     /**
      * The library to display information about.
      */
-    private File m_file;
+    private File libraryFile;
 
     /**
      * Filesets specifying all the librarys
      * to display information about.
      */
-    private final Vector m_filesets = new Vector();
+    private final Vector libraryFileSets = new Vector();
 
     /**
      * The JAR library to display information for.
      *
      * @param file The jar library to display information for.
      */
-    public void setFile( final File file )
-    {
-        m_file = file;
+    public void setFile(final File file) {
+        this.libraryFile = file;
     }
 
     /**
@@ -104,37 +101,35 @@ public class JarLibDisplayTask
      *
      * @param fileSet a set of files about which library data will be displayed.
      */
-    public void addFileset( final FileSet fileSet )
-    {
-        m_filesets.addElement( fileSet );
+    public void addFileset(final FileSet fileSet) {
+        libraryFileSets.addElement(fileSet);
     }
 
-    public void execute()
-        throws BuildException
-    {
+    /**
+     * Execute the task.
+     *
+     * @throws BuildException if the task fails.
+     */
+    public void execute() throws BuildException {
         validate();
 
         final LibraryDisplayer displayer = new LibraryDisplayer();
         // Check if list of files to check has been specified
-        if( !m_filesets.isEmpty() )
-        {
-            final Iterator iterator = m_filesets.iterator();
-            while( iterator.hasNext() )
-            {
-                final FileSet fileSet = (FileSet)iterator.next();
-                final DirectoryScanner scanner = fileSet.getDirectoryScanner( getProject() );
+        if (!libraryFileSets.isEmpty()) {
+            final Iterator iterator = libraryFileSets.iterator();
+            while (iterator.hasNext()) {
+                final FileSet fileSet = (FileSet) iterator.next();
+                final DirectoryScanner scanner
+                    = fileSet.getDirectoryScanner(getProject());
                 final File basedir = scanner.getBasedir();
                 final String[] files = scanner.getIncludedFiles();
-                for( int i = 0; i < files.length; i++ )
-                {
-                    final File file = new File( basedir, files[ i ] );
-                    displayer.displayLibrary( file );
+                for (int i = 0; i < files.length; i++) {
+                    final File file = new File(basedir, files[ i ]);
+                    displayer.displayLibrary(file);
                 }
             }
-        }
-        else
-        {
-            displayer.displayLibrary( m_file );
+        } else {
+            displayer.displayLibrary(libraryFile);
         }
     }
 
@@ -143,23 +138,18 @@ public class JarLibDisplayTask
      *
      * @throws BuildException if invalid parameters found
      */
-    private void validate()
-        throws BuildException
-    {
-        if( null == m_file && m_filesets.isEmpty() )
-        {
+    private void validate() throws BuildException {
+        if (null == libraryFile && libraryFileSets.isEmpty()) {
             final String message = "File attribute not specified.";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
-        if( null != m_file && !m_file.exists() )
-        {
-            final String message = "File '" + m_file + "' does not exist.";
-            throw new BuildException( message );
+        if (null != libraryFile && !libraryFile.exists()) {
+            final String message = "File '" + libraryFile + "' does not exist.";
+            throw new BuildException(message);
         }
-        if( null != m_file && !m_file.isFile() )
-        {
-            final String message = "\'" + m_file + "\' is not a file.";
-            throw new BuildException( message );
+        if (null != libraryFile && !libraryFile.isFile()) {
+            final String message = "\'" + libraryFile + "\' is not a file.";
+            throw new BuildException(message);
         }
     }
 }

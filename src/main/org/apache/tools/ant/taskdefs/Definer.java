@@ -353,6 +353,7 @@ public abstract class Definer extends Task {
                 try {
                     is.close();
                 } catch (IOException e) {
+                    // ignore
                 }
             }
         }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,38 +66,35 @@ import org.apache.tools.ant.Task;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @ant.task name="jarlib-available"
  */
-public class JarLibAvailableTask
-    extends Task
-{
+public class JarLibAvailableTask extends Task {
     /**
      * The library to display information about.
      */
-    private File m_file;
+    private File libraryFile;
 
     /**
      * Filesets specifying all the librarys
      * to display information about.
      */
-    private final Vector m_extensionSets = new Vector();
+    private final Vector extensionFileSets = new Vector();
 
     /**
      * The name of the property to set if extension is available.
      */
-    private String m_property;
+    private String propertyName;
 
     /**
      * The extension that is required.
      */
-    private ExtensionAdapter m_extension;
+    private ExtensionAdapter requiredExtension;
 
     /**
      * The name of property to set if extensions are available.
      *
      * @param property The name of property to set if extensions is available.
      */
-    public void setProperty( final String property )
-    {
-        m_property = property;
+    public void setProperty(final String property) {
+        this.propertyName = property;
     }
 
     /**
@@ -105,9 +102,8 @@ public class JarLibAvailableTask
      *
      * @param file The jar library to check.
      */
-    public void setFile( final File file )
-    {
-        m_file = file;
+    public void setFile(final File file) {
+        this.libraryFile = file;
     }
 
     /**
@@ -115,15 +111,13 @@ public class JarLibAvailableTask
      *
      * @param extension Set the Extension looking for.
      */
-    public void addConfiguredExtension( final ExtensionAdapter extension )
-    {
-        if( null != m_extension )
-        {
-            final String message = "Can not specify extension to " +
-                "search for multiple times.";
-            throw new BuildException( message );
+    public void addConfiguredExtension(final ExtensionAdapter extension) {
+        if (null != requiredExtension) {
+            final String message = "Can not specify extension to "
+                + "search for multiple times.";
+            throw new BuildException(message);
         }
-        m_extension = extension;
+        requiredExtension = extension;
     }
 
     /**
@@ -131,47 +125,42 @@ public class JarLibAvailableTask
      *
      * @param extensionSet a set of extensions to search in.
      */
-    public void addConfiguredExtensionSet( final ExtensionSet extensionSet )
-    {
-        m_extensionSets.addElement( extensionSet );
+    public void addConfiguredExtensionSet(final ExtensionSet extensionSet) {
+        extensionFileSets.addElement(extensionSet);
     }
 
-    public void execute()
-        throws BuildException
-    {
+    /**
+     * Execute the task.
+     *
+     * @throws BuildException if somethign goes wrong.
+     */
+    public void execute() throws BuildException {
         validate();
 
-        final Extension test = m_extension.toExtension();
+        final Extension test = requiredExtension.toExtension();
 
         // Check if list of files to check has been specified
-        if( !m_extensionSets.isEmpty() )
-        {
-            final Iterator iterator = m_extensionSets.iterator();
-            while( iterator.hasNext() )
-            {
-                final ExtensionSet extensionSet = (ExtensionSet)iterator.next();
+        if (!extensionFileSets.isEmpty()) {
+            final Iterator iterator = extensionFileSets.iterator();
+            while (iterator.hasNext()) {
+                final ExtensionSet extensionSet
+                    = (ExtensionSet) iterator.next();
                 final Extension[] extensions =
-                    extensionSet.toExtensions( getProject() );
-                for( int i = 0; i < extensions.length; i++ )
-                {
+                    extensionSet.toExtensions(getProject());
+                for (int i = 0; i < extensions.length; i++) {
                     final Extension extension = extensions[ i ];
-                    if( extension.isCompatibleWith( test ) )
-                    {
-                        getProject().setNewProperty( m_property, "true" );
+                    if (extension.isCompatibleWith(test)) {
+                        getProject().setNewProperty(propertyName, "true");
                     }
                 }
             }
-        }
-        else
-        {
-            final Manifest manifest = ExtensionUtil.getManifest( m_file );
-            final Extension[] extensions = Extension.getAvailable( manifest );
-            for( int i = 0; i < extensions.length; i++ )
-            {
+        } else {
+            final Manifest manifest = ExtensionUtil.getManifest(libraryFile);
+            final Extension[] extensions = Extension.getAvailable(manifest);
+            for (int i = 0; i < extensions.length; i++) {
                 final Extension extension = extensions[ i ];
-                if( extension.isCompatibleWith( test ) )
-                {
-                    getProject().setNewProperty( m_property, "true" );
+                if (extension.isCompatibleWith(test)) {
+                    getProject().setNewProperty(propertyName, "true");
                 }
             }
         }
@@ -182,29 +171,23 @@ public class JarLibAvailableTask
      *
      * @throws BuildException if invalid parameters found
      */
-    private void validate()
-        throws BuildException
-    {
-        if( null == m_extension )
-        {
+    private void validate() throws BuildException {
+        if (null == requiredExtension) {
             final String message = "Extension element must be specified.";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
 
-        if( null == m_file && m_extensionSets.isEmpty() )
-        {
+        if (null == libraryFile && extensionFileSets.isEmpty()) {
             final String message = "File attribute not specified.";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
-        if( null != m_file && !m_file.exists() )
-        {
-            final String message = "File '" + m_file + "' does not exist.";
-            throw new BuildException( message );
+        if (null != libraryFile && !libraryFile.exists()) {
+            final String message = "File '" + libraryFile + "' does not exist.";
+            throw new BuildException(message);
         }
-        if( null != m_file && !m_file.isFile() )
-        {
-            final String message = "\'" + m_file + "\' is not a file.";
-            throw new BuildException( message );
+        if (null != libraryFile && !libraryFile.isFile()) {
+            final String message = "\'" + libraryFile + "\' is not a file.";
+            throw new BuildException(message);
         }
     }
 }

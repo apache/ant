@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,5 +59,10 @@ package org.apache.tools.ant.types;
  * @author Magesh Umasankar
  */
 public interface Parameterizable {
+    /**
+     * Set the parameters
+     *
+     * @param parameters an array of name/type/value parameters.
+     */
     void setParameters(Parameter[] parameters);
 }

@@ -100,7 +100,7 @@
             <noframes>
                 <h2>Frame Alert</h2>
                 <p>
-                    This document is designed to be viewed using the frames feature. 
+                    This document is designed to be viewed using the frames feature.
                     If you see this message, you are using a non-frame-capable web client.
                 </p>
             </noframes>
@@ -113,8 +113,8 @@
                 <td class="text-align:right"><h2>CheckStyle Audit</h2></td>
             </tr>
             <tr>
-                <td class="text-align:right">Designed for use with 
-                  <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and 
+                <td class="text-align:right">Designed for use with
+                  <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and
                   <a href='http://ant.apache.org/'>Ant</a>.</td>
             </tr>
         </table>
@@ -152,10 +152,10 @@
         background-color:#FFFFFF;
         color:#000000;
         }
-        .a td {
+        .oddrow td {
         background: #efefef;
         }
-        .b td {
+        .evenrow td {
         background: #fff;
         }
         th, td {
@@ -305,14 +305,17 @@
         <h3>Summary</h3>
         <xsl:variable name="fileCount" select="count(file)"/>
         <xsl:variable name="errorCount" select="count(file/error)"/>
+        <xsl:variable name="fileErrorCount" select="count(file[count(error) != 0])"/>
         <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
             <tr>
-                <th>Files</th>
+                <th>Total Files</th>
+                <th>Files With Errors</th>
                 <th>Errors</th>
             </tr>
             <tr>
                 <xsl:call-template name="alternated-row"/>
                 <td><xsl:value-of select="$fileCount"/></td>
+                <td><xsl:value-of select="$fileErrorCount"/></td>
                 <td><xsl:value-of select="$errorCount"/></td>
             </tr>
         </table>
@@ -320,8 +323,8 @@
 
     <xsl:template name="alternated-row">
         <xsl:attribute name="class">
-            <xsl:if test="position() mod 2 = 1">a</xsl:if>
-            <xsl:if test="position() mod 2 = 0">b</xsl:if>
+            <xsl:if test="position() mod 2 = 1">oddrow</xsl:if>
+            <xsl:if test="position() mod 2 = 0">evenrow</xsl:if>
         </xsl:attribute>
     </xsl:template>
 </xsl:stylesheet>

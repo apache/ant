@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,9 @@ public class NotSelector extends NoneSelector {
     public NotSelector() {
     }
 
+    /**
+     * @return a string representation of the selector
+     */
     public String toString() {
         StringBuffer buf = new StringBuffer();
         if (hasSelectors()) {
@@ -88,8 +91,8 @@ public class NotSelector extends NoneSelector {
      */
     public void verifySettings() {
         if (selectorCount() != 1) {
-            setError("One and only one selector is allowed within the " +
-                    "<not> tag");
+            setError("One and only one selector is allowed within the "
+                + "<not> tag");
         }
     }
 
