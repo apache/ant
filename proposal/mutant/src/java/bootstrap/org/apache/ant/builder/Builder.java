@@ -129,6 +129,7 @@ public class Builder {
         files.add(new File(UTIL_ROOT, "IdentityMapper.java"));
         files.add(new File(UTIL_ROOT, "MergingMapper.java"));
         files.add(new File(UTIL_ROOT, "GlobPatternMapper.java"));
+        files.add(new File(UTIL_ROOT, "LoaderUtils.java"));
         files.add(new File(UTIL_ROOT, "regexp/Regexp.java"));
         files.add(new File(UTIL_ROOT, "regexp/RegexpMatcher.java"));
         files.add(new File(UTIL_ROOT, "regexp/RegexpFactory.java"));
