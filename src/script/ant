@@ -100,10 +100,6 @@ if [ ! -x "$JAVACMD" ] ; then
   exit 1
 fi
 
-if [ -n "$CLASSPATH" ] ; then
-  LOCALCLASSPATH="$CLASSPATH"
-fi
-
 # in rpm_mode get ant/optional/xml parser&api from JAVALIBDIR
 if $rpm_mode; then
   JAVALIBDIR=/usr/share/java
@@ -156,14 +152,14 @@ fi
 
 if [ -n "$CYGHOME" ]; then
   if [ -n "$JIKESPATH" ]; then
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@" -lib "$CLASSPATH"
   else
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Dcygwin.user.home="$CYGHOME" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@" -lib "$CLASSPATH"
   fi
 else
   if [ -n "$JIKESPATH" ]; then
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" -Djikes.class.path="$JIKESPATH" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@" -lib "$CLASSPATH"
   else
-    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@"
+    exec "$JAVACMD" $ANT_OPTS -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" org.apache.tools.ant.launch.Launcher $ANT_ARGS "$@" -lib "$CLASSPATH"
   fi
 fi

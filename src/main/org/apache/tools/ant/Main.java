@@ -290,7 +290,8 @@ public class Main implements AntMain {
     }
 
     /**
-     * Process command line arguments
+     * Process command line arguments.
+     * When ant is started from Launcher, the -lib argument does not get passed through to this routine.
      *
      * @param args the command line arguments.
      *
