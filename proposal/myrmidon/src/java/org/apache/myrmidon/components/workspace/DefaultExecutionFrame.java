@@ -7,6 +7,7 @@
  */
 package org.apache.myrmidon.components.workspace;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -23,7 +24,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 class DefaultExecutionFrame
-    implements ExecutionFrame, LogEnabled, Contextualizable
+    implements ExecutionFrame, Component, LogEnabled, Contextualizable
 {
     private Logger m_logger;
     private TaskContext m_context;
@@ -34,7 +35,8 @@ class DefaultExecutionFrame
         m_logger = logger;
     }
 
-    public void contextualize( final Context context ) throws ContextException
+    public void contextualize( final Context context )
+        throws ContextException
     {
         m_context = (TaskContext)context;
         try
