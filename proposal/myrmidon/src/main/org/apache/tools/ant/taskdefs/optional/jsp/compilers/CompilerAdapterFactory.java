@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * Creates the necessary compiler adapter, given basic criteria.
@@ -18,7 +19,6 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class CompilerAdapterFactory
 {
-
     /**
      * This is a singlton -- can't create instances!!
      */
@@ -39,12 +39,19 @@ public class CompilerAdapterFactory
      *
      * @param compilerType either the name of the desired compiler, or the full
      *      classname of the compiler's adapter.
-     * @param task a task to log through.
      * @return The Compiler value
      * @throws TaskException if the compiler type could not be resolved into a
      *      compiler adapter.
      */
-    public static CompilerAdapter getCompiler( String compilerType, AbstractTask task )
+    public static CompilerAdapter getCompiler( String compilerType, TaskContext context )
+        throws TaskException
+    {
+        final CompilerAdapter adapter = createAdapter( compilerType );
+        adapter.setTaskContext( context );
+        return adapter;
+    }
+
+    private static CompilerAdapter createAdapter( String compilerType )
         throws TaskException
     {
         /*

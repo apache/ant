@@ -10,7 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.avalon.excalibur.util.StringUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
 
@@ -21,10 +21,20 @@ import org.apache.tools.ant.types.Commandline;
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
 public abstract class DefaultCompilerAdapter
-    extends AbstractLogEnabled
     implements CompilerAdapter
 {
     private JspC m_attributes;
+    private TaskContext m_taskContext;
+
+    public void setTaskContext( final TaskContext context )
+    {
+        m_taskContext = context;
+    }
+
+    protected final TaskContext getTaskContext()
+    {
+        return m_taskContext;
+    }
 
     public void setJspc( final JspC attributes )
     {
@@ -51,7 +61,7 @@ public abstract class DefaultCompilerAdapter
                                             ArrayList compileList,
                                             Commandline cmd )
     {
-        getLogger().debug( "Compilation args: " + cmd.toString() );
+        getTaskContext().debug( "Compilation args: " + cmd.toString() );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )
@@ -70,7 +80,7 @@ public abstract class DefaultCompilerAdapter
             niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 
-        getLogger().debug( niceSourceList.toString() );
+        getTaskContext().debug( niceSourceList.toString() );
     }
 }
 

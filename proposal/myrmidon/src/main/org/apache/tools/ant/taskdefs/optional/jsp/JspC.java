@@ -383,7 +383,7 @@ public class JspC extends MatchingTask
         if( compileList.size() > 0 )
         {
             CompilerAdapter adapter =
-                CompilerAdapterFactory.getCompiler( compiler.toString(), this );
+                CompilerAdapterFactory.getCompiler( compiler.toString(), getContext() );
             getLogger().info( "Compiling " + compileList.size() +
                               " source file"
                               + ( compileList.size() == 1 ? "" : "s" )

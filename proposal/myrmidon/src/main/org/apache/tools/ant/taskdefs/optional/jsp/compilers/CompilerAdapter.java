@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 
 /**
@@ -23,9 +24,9 @@ import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
  *      jayglanville@home.com</a>
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
-
 public interface CompilerAdapter
 {
+    void setTaskContext( TaskContext context );
 
     /**
      * Sets the compiler attributes, which are stored in the Jspc task.
