@@ -5,19 +5,19 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.zip;
+package org.apache.aut.zip;
 
 /**
- * Utility class that represents a four byte integer with conversion rules for
+ * Utility class that represents a two byte integer with conversion rules for
  * the big endian byte order of ZIP files.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class ZipLong implements Cloneable
+public class ZipShort implements Cloneable
 {
 
-    private long value;
+    private int value;
 
     /**
      * Create instance from a number.
@@ -25,7 +25,7 @@ public class ZipLong implements Cloneable
      * @param value Description of Parameter
      * @since 1.1
      */
-    public ZipLong( long value )
+    public ZipShort( int value )
     {
         this.value = value;
     }
@@ -36,23 +36,21 @@ public class ZipLong implements Cloneable
      * @param bytes Description of Parameter
      * @since 1.1
      */
-    public ZipLong( byte[] bytes )
+    public ZipShort( byte[] bytes )
     {
         this( bytes, 0 );
     }
 
     /**
-     * Create instance from the four bytes starting at offset.
+     * Create instance from the two bytes starting at offset.
      *
      * @param bytes Description of Parameter
      * @param offset Description of Parameter
      * @since 1.1
      */
-    public ZipLong( byte[] bytes, int offset )
+    public ZipShort( byte[] bytes, int offset )
     {
-        value = ( bytes[ offset + 3 ] << 24 ) & 0xFF000000l;
-        value += ( bytes[ offset + 2 ] << 16 ) & 0xFF0000;
-        value += ( bytes[ offset + 1 ] << 8 ) & 0xFF00;
+        value = ( bytes[ offset + 1 ] << 8 ) & 0xFF00;
         value += ( bytes[ offset ] & 0xFF );
     }
 
@@ -64,11 +62,9 @@ public class ZipLong implements Cloneable
      */
     public byte[] getBytes()
     {
-        byte[] result = new byte[ 4 ];
-        result[ 0 ] = (byte)( ( value & 0xFF ) );
+        byte[] result = new byte[ 2 ];
+        result[ 0 ] = (byte)( value & 0xFF );
         result[ 1 ] = (byte)( ( value & 0xFF00 ) >> 8 );
-        result[ 2 ] = (byte)( ( value & 0xFF0000 ) >> 16 );
-        result[ 3 ] = (byte)( ( value & 0xFF000000l ) >> 24 );
         return result;
     }
 
@@ -78,7 +74,7 @@ public class ZipLong implements Cloneable
      * @return The Value value
      * @since 1.1
      */
-    public long getValue()
+    public int getValue()
     {
         return value;
     }
@@ -92,11 +88,11 @@ public class ZipLong implements Cloneable
      */
     public boolean equals( Object o )
     {
-        if( o == null || !( o instanceof ZipLong ) )
+        if( o == null || !( o instanceof ZipShort ) )
         {
             return false;
         }
-        return value == ( (ZipLong)o ).getValue();
+        return value == ( (ZipShort)o ).getValue();
     }
 
     /**
@@ -107,7 +103,7 @@ public class ZipLong implements Cloneable
      */
     public int hashCode()
     {
-        return (int)value;
+        return value;
     }
 
-}// ZipLong
+}// ZipShort

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.zip;
+package org.apache.aut.zip;
 
 /**
  * Constants from stat.h on Unix systems.

@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.ZipFileSet;
-import org.apache.tools.zip.ZipOutputStream;
+import org.apache.aut.zip.ZipOutputStream;
 
 /**
  * Creates a EAR archive. Based on WAR task

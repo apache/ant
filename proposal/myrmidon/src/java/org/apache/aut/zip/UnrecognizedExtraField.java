@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.zip;
+package org.apache.aut.zip;
 
 /**
  * Simple placeholder for all those extra fields we don't want to deal with. <p>

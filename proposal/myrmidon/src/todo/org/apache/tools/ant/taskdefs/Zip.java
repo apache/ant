@@ -28,8 +28,8 @@ import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
 import org.apache.tools.ant.util.mappers.MergingMapper;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
+import org.apache.aut.zip.ZipEntry;
+import org.apache.aut.zip.ZipOutputStream;
 
 /**
  * Create a ZIP archive.

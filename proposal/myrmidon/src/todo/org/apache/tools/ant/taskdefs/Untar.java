@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.tar.TarEntry;
-import org.apache.tools.tar.TarInputStream;
+import org.apache.aut.tar.TarEntry;
+import org.apache.aut.tar.TarInputStream;
 
 /**
  * Untar a file. Heavily based on the Expand task.
