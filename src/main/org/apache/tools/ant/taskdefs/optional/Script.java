@@ -65,15 +65,28 @@ import org.apache.tools.ant.util.ScriptRunner;
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  */
 public class Script extends Task {
-    /** Used to run the script */
-    private ScriptRunner runner = new ScriptRunner();
 
+    private String language;
+    private File   src;
+    private String text;
+    
     /**
      * Do the work.
      *
      * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
+        ScriptRunner runner = new ScriptRunner();
+        if (language != null) {
+            runner.setLanguage(language);
+        }
+        if (src != null) {
+            runner.setSrc(src);
+        }
+        if (text != null) {
+            runner.addText(text);
+        }
+        
         runner.addBeans(getProject().getProperties());
         runner.addBeans(getProject().getUserProperties());
         runner.addBeans(getProject().getTargets());
@@ -91,7 +104,7 @@ public class Script extends Task {
      * @param language the scripting language name for the script.
      */
     public void setLanguage(String language) {
-        runner.setLanguage(language);
+        this.language = language;
     }
 
     /**
@@ -100,8 +113,7 @@ public class Script extends Task {
      * @param fileName the name of the file containing the script source.
      */
     public void setSrc(String fileName) {
-        File file = new File(fileName);
-        runner.setSrc(file);
+        this.src = new File(fileName);
     }
 
     /**
@@ -110,6 +122,6 @@ public class Script extends Task {
      * @param text a component of the script text to be added.
      */
     public void addText(String text) {
-        runner.addText(text);
+        this.text = text;
     }
 }
