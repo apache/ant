@@ -214,7 +214,7 @@
       </and>
     </condition>
 
-    <condition property="run.sqlexec.test">
+    <condition property="tests.and.ant.share.classloader">
       <or>
         <equals arg1="${junit.fork}" arg2="true" />
         <equals arg1="${build.sysclasspath}" arg2="only" />
@@ -934,11 +934,13 @@
           <!-- interactive test -->
           <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java" />
 
-          <!--  This test only passes if SQLExecTest and SQLExec have
+          <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
           IllegalAccessExceptions otherwise.  -->
           <exclude name="org/apache/tools/ant/taskdefs/SQLExecTest.java"
-                   unless="run.sqlexec.test" />
+                   unless="tests.and.ant.share.classloader" />
+          <exclude name="${optional.package}/sos/SOSTest.java"
+                   unless="tests.and.ant.share.classloader" />
 
         </fileset>
       </batchtest>
