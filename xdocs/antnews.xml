@@ -48,7 +48,7 @@ features which were asked for by users on Bugzilla.</p>
   <section name="Ant 1.6.1">
     <h3>February 12, 2004 - Ant 1.6.1 Available</h3>
      <p>Apache Ant 1.6.1 is still available for
-      <a href="http://archive.apache.org/dist/ant">download</a>.
+      <a href="http://archive.apache.org/dist/ant/">download</a>.
      </p>
     <p>The ASF Board has approved the new Apache License 2.0.
     For a copy of that license, please see
@@ -64,7 +64,7 @@ features which were asked for by users on Bugzilla.</p>
    <section name="Ant 1.6.0">
     <h3>December 18, 2003 - Ant 1.6.0 Available</h3>
      <p>Apache Ant 1.6.0 is still available for
-      <a href="http://archive.apache.org/dist/ant">download</a>.
+      <a href="http://archive.apache.org/dist/ant/">download</a>.
      </p>
      <p>As
     we've already said in the announcements of Ant 1.5.4, this release
@@ -85,7 +85,7 @@ did) or could be explained better, feel free to help us out in the
   <section name="Ant 1.5.4">
     <h3>August 12, 2003 - Ant 1.5.4 Available</h3>
     <p>Apache Ant 1.5.4 is still available for
-     <a href="http://archive.apache.org/dist/ant">download</a>.
+     <a href="http://archive.apache.org/dist/ant/">download</a>.
     </p>
     
     <p>This is a minor bugfix release that fixes a problem with the
@@ -132,7 +132,7 @@ did) or could be explained better, feel free to help us out in the
   </section>
 
   <section name="Ant keeps on winning!">
-    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2003.gif" alt="" border="0" height="108" width="252" align="right"/></a>
+    <a href="http://www.javaworld.com/"><img src="images/jw_ec_logo_winner2003.gif" alt="" border="0" height="108" width="252" align="right"/></a>
     <h3>June 9th, 2003: Ant wins the JavaWorld Editors&apos; Choice Award</h3>
 
     <p>
@@ -151,7 +151,7 @@ did) or could be explained better, feel free to help us out in the
   <section name="Ant 1.5.3">
     <h3>April 9, 2003 - Ant 1.5.3 Available</h3>
     <p>Apache Ant 1.5.3 is still available for
-     <a href="http://archive.apache.org/dist/ant">download</a>.
+     <a href="http://archive.apache.org/dist/ant/">download</a>.
     </p>
   </section>
 
@@ -159,7 +159,7 @@ did) or could be explained better, feel free to help us out in the
   <section name="Ant 1.5.2">
     <h3>March 3, 2003 - Ant 1.5.2 Available!</h3>
     <p>The final version of Ant 1.5.2 is available for
-     <a href="http://archive.apache.org/dist/ant">download</a>.
+     <a href="http://archive.apache.org/dist/ant/">download</a>.
      If you have any feedback on this release, feel free to join the 
      discussion on the dev and user mailing lists.
      </p>
@@ -173,14 +173,14 @@ did) or could be explained better, feel free to help us out in the
        organizational change and will not affect the technical aspects of
        the project. Ant retains a strong association with the Apache
        Jakarta project. One effect of this change is that the Ant webpage
-       is now located at <a href="http://ant.apache.org">http://ant.apache.org</a>
+       is now located at <a href="http://ant.apache.org/">http://ant.apache.org/</a>
      </p>
   </section>
     
   <section name="Ant 1.5.1">
     <h3>October 3, 2002 - Ant 1.5.1 Available !</h3>
     <p>The final version of Ant 1.5.1 is still available for
-     <a href="http://archive.apache.org/dist/ant">
+     <a href="http://archive.apache.org/dist/ant/">
      download</a>. If you have any feedback on this release, feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
@@ -194,14 +194,14 @@ did) or could be explained better, feel free to help us out in the
 
     <h3>July 10, 2002 - Ant 1.5 Released!</h3>
     <p>The final version of Ant 1.5 is now available for 
-     <a href="http://archive.apache.org/dist/ant">
+     <a href="http://archive.apache.org/dist/ant/">
      download</a>. If you have any feedback on this release, feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
 
   <section name="Ant wins again!">
-    <a href="http://www.sdmagazine.com"><img src="images/sdm_productivity_award.gif" alt="" border="0" height="108" width="181" align="right"/></a>
+    <a href="http://www.sdmagazine.com/"><img src="images/sdm_productivity_award.gif" alt="" border="0" height="108" width="181" align="right"/></a>
     <h3>Apr 29, 2002: Ant wins <em>Software Development</em> magazine&apos;s
     2002 Productivity Award.</h3>
     <p>
@@ -214,7 +214,7 @@ did) or could be explained better, feel free to help us out in the
   </section>
 
   <section name="Ant has won!">
-    <a href="http://www.javaworld.com"><img src="images/jw_ec_logo_winner2002.gif" alt="" border="0" height="108" width="252" align="right"/></a>
+    <a href="http://www.javaworld.com/"><img src="images/jw_ec_logo_winner2002.gif" alt="" border="0" height="108" width="252" align="right"/></a>
     <h3>Mar 26, 2002: Ant wins the JavaWorld Editors&apos; Choice
     Award</h3>
 
