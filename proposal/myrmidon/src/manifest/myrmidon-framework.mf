@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Created-By: Apache Ant Project
+Extension-Name: myrmidon.framework
+Specification-Title: Myrmidon Framework
+Specification-Version: 0.01
+Specification-Vendor: Jakarta Apache
+Implementation-Vendor-Id: org.apache.jakarta
+Implementation-Vendor: Jakarta Apache Project
+Implementation-Version: 0.01
+Extension-List: myrmidon.api
+myrmidon.api-Extension-Name: myrmidon.api
+myrmidon.api-Specification-Version: 0.01
+myrmidon.api-Implementation-Version: 0.01
+myrmidon.api-Implementation-Vendor-Id: org.apache.jakarta
+_myrmidon.api-Implementation-URL: http://jakarta.apache.org/ant/myrmidon-api.jar

@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 /**
@@ -40,9 +41,13 @@ public final class Main
 
             //setup classloader appropriately for myrmidon jar
             final File libDir = new File( installDirectory, "lib" );
-            final URL[] urls = buildURLList( libDir );
+            final URL[] libUrls = buildURLList( libDir );
+            final URLClassLoader libClassLoader = new URLClassLoader( libUrls );
 
-            final URLClassLoader classLoader = new URLClassLoader( urls );
+            final File containerLibDir = new File( installDirectory, "bin" + File.separator + "lib" );
+            final URL[] containerLibUrls = buildURLList( containerLibDir );
+            final URLClassLoader classLoader = 
+                new URLClassLoader( containerLibUrls, libClassLoader );
 
             //load class and retrieve appropriate main method.
             final Class clazz = classLoader.loadClass( "org.apache.myrmidon.frontends.CLIMain" );
@@ -116,7 +121,7 @@ public final class Main
         {
             final String element = tokenizer.nextToken();
 
-            if( element.endsWith( "ant.jar" ) )
+            if( element.endsWith( "myrmidon-launcher.jar" ) )
             {
                 File file = (new File( element )).getAbsoluteFile();
                 file = file.getParentFile();
@@ -133,3 +138,58 @@ public final class Main
         throw new Exception( "Unable to locate ant.jar in classpath" );
     }
 }
+
+class MyClassLoader extends URLClassLoader
+{
+    MyClassLoader( final URL[] urls, final ClassLoader classLoader )
+    {
+        super( urls, classLoader );
+    }
+
+    public Class loadClass( final String name )
+        throws ClassNotFoundException
+    {
+        System.out.println( "Loading: " + name );
+        try
+        {
+            return super.loadClass( name );
+        }
+        catch( final ClassNotFoundException cnfe )
+        {
+            System.out.println( "Failed to Load: " + name );
+            throw cnfe;
+        }
+    }
+
+    protected Class findClass( final String name )
+        throws ClassNotFoundException
+    {
+        System.out.println( "findClass: " + name );
+        try
+        {
+            return super.findClass( name );
+        }
+        catch( final ClassNotFoundException cnfe )
+        {
+            System.out.println( "Failed to Load: " + name );
+            throw cnfe;
+        }
+    }
+
+    public Class loadClass( final String name, final boolean resolve )
+        throws ClassNotFoundException
+    {
+        System.out.println( "Loading: " + name );
+        try
+        {
+            return super.loadClass( name, resolve );
+        }
+        catch( final ClassNotFoundException cnfe )
+        {
+            System.out.println( "Failed to Load: " + name );
+            throw cnfe;
+        }
+    }
+}
+
+

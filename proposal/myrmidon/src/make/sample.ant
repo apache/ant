@@ -101,11 +101,13 @@ Legal:
 
   <target name="ant1-tasklib-test">
 
+  <!--
     <ant1-tasklib prefix="a1-" lib="../../dist/lib/ant1-compat.jar"/>
 
     <a1-echo message="Boo!" />
     <a1-mkdir dir="../../dist/test"/>
     <a1-copy file="../../tools/lib/ant.jar" tofile="../../dist/test/ant1-compat.jar" />
+  -->
 
   </target>
 

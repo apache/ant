@@ -105,18 +105,24 @@ Legal:
 
     <mkdir dir="${build.lib}"/>
 
-    <jar jarfile="${build.lib}/ant.jar" 
+    <jar jarfile="${build.lib}/myrmidon-launcher.jar" 
          basedir="${build.classes}" 
-         manifest="${manifest.dir}/ant-manifest.mf">
+         manifest="${manifest.dir}/myrmidon-launcher.mf">
       <include name="org/apache/myrmidon/launcher/*" />
     </jar>
 
-    <jar jarfile="${build.lib}/myrmidon.jar" 
+    <jar jarfile="${build.lib}/myrmidon-api.jar" 
          basedir="${build.classes}" 
-         manifest="${manifest.dir}/myrmidon-manifest.mf">
-      <include name="org/apache/**" />
-      <exclude name="org/apache/myrmidon/launcher/*" />
-      <exclude name="org/apache/myrmidon/libs/*" />
+         manifest="${manifest.dir}/myrmidon-api.mf">
+      <include name="org/apache/myrmidon/api/*" />
+      <include name="org/apache/myrmidon/aspects/*" />
+      <include name="org/apache/myrmidon/converter/*" />
+      <include name="org/apache/myrmidon/interfaces/**" />
+      <include name="org/apache/myrmidon/listeners/*" />
+      <include name="org/apache/myrmidon/framework/**" />
+<!--      <include name="org/apache/myrmidon/*" />
+      <include name="org/apache/myrmidon/components/**"/>
+      <include name="org/apache/myrmidon/frontends/*" /> -->
 
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
         <include name="builtin-ant-roles.xml"/>
@@ -125,7 +131,29 @@ Legal:
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="builtin-ant-descriptor.xml"/>
       </zipfileset>
+    </jar>
 
+<!--
+    <jar jarfile="${build.lib}/myrmidon-framework.jar" 
+         basedir="${build.classes}" 
+         manifest="${manifest.dir}/myrmidon-framework.mf">
+      <include name="org/apache/myrmidon/framework/**" />
+
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-roles.xml">
+        <include name="builtin-ant-roles.xml"/>
+      </zipfileset>
+
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="builtin-ant-descriptor.xml"/>
+      </zipfileset>
+    </jar>
+-->
+    <jar jarfile="${build.lib}/myrmidon-container.jar" 
+         basedir="${build.classes}" 
+         manifest="${manifest.dir}/myrmidon-container.mf">
+      <include name="org/apache/myrmidon/components/**" />
+      <include name="org/apache/myrmidon/frontends/*" />
+      <include name="org/apache/myrmidon/*" />
     </jar>
 
     <jar jarfile="${build.lib}/core.atl" basedir="${build.classes}">
@@ -167,10 +195,14 @@ Legal:
     <mkdir dir="${dist.ext}"/>
 
     <copy file="tools/lib/ant.jar" tofile="${dist.lib}/ant1-compat.jar" />
+    <copy file="${build.lib}/myrmidon-launcher.jar" tofile="${dist.bin}/myrmidon-launcher.jar" />
+    <copy file="${build.lib}/myrmidon-container.jar" tofile="${dist.bin}/lib/myrmidon-container.jar" />
 
     <copy todir="${dist.lib}">
       <fileset dir="${build.lib}">
         <exclude name="selftest.atl"/>
+        <exclude name="myrmidon-container.jar"/>
+        <exclude name="myrmidon-launcher.jar"/>
       </fileset>
     </copy>
 

@@ -57,7 +57,7 @@ goto setupArgs
 :doneArgs
 rem Mmmmmm tasty - finished slurping args
 
-%JAVACMD% %ANT_OPTS% -jar %ANT_HOME%\lib\ant.jar %ANT_CMD_LINE_ARGS%
+%JAVACMD% %ANT_OPTS% -jar %ANT_HOME%\bin\myrmidon-launcher.jar %ANT_CMD_LINE_ARGS%
 
 :end
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"

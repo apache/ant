@@ -42,4 +42,4 @@ else
   fi
 fi
 
-$JAVACMD $ANT_OPTS -jar $ANT_HOME/lib/ant.jar $@
+$JAVACMD $ANT_OPTS -jar $ANT_HOME/bin/myrmidon-launcher.jar $@
