@@ -210,4 +210,16 @@
     <touch file="${tmp.dir}/sub/foo"/>
     <jar destfile="${tmp.jar}" index="yes" basedir="${tmp.dir}"/>
   </target>
+    <!-- bug 32802 -->
+  <target name="testManifestOnlyJar">
+    <mkdir dir="${tmp.dir}"/>  
+    <jar destfile="${tmp.jar}" duplicate="preserve">
+      <manifest>
+        <attribute name="Foo" value="bar"/>
+      </manifest>
+    </jar>
+    <mkdir dir="${tmp.dir}"/>
+    <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
+
+  </target>
 </project>

@@ -176,6 +176,8 @@ Fixed bugs:
 
 * Zip task was not zipping when only empty directories were found. Bugzilla 30365.
 
+* Jar task was not including manifest files when duplicate="preserve" was chosen. Bugzilla 32802.
+
 * Classpath was treated in the same way as -lib options. Bugzilla 28046.
 
 * Manual page for cvsversion contained incorrect attributes and did not say since 1.6.1.
