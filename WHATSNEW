@@ -26,9 +26,6 @@ Fixed bugs:
 * Incorrect task name with invalid "javac" task after a "presetdef.
   Bugzilla reports 31389 and 29499.
 
-* Execution of top level tasks in imported files get delayed by targets.
-  Bugzilla report 31487.
-
 Other changes:
 --------------
 
@@ -115,6 +112,9 @@ Fixed bugs:
 
 * Typo in definition of <cvsversion> task causing it not to be defined.
   Bugzilla 31403.
+
+* Execution of top level tasks in imported files get delayed by targets.
+  Bugzilla report 31487.
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
