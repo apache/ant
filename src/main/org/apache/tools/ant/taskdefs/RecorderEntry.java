@@ -93,6 +93,7 @@ public class RecorderEntry implements BuildLogger {
      * @param name The name of this recorder (used as the filename).
      */
     protected RecorderEntry(String name) {
+        targetStartTime = System.currentTimeMillis();
         filename = name;
     }
 
