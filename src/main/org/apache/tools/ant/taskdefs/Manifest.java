@@ -437,6 +437,8 @@ public class Manifest {
                 } else {
                     attribute = new Attribute(line);
                     String nameReadAhead = addAttributeAndCheck(attribute);
+                    // refresh attribute in case of multivalued attributes.
+                    attribute = getAttribute(attribute.getKey());
                     if (nameReadAhead != null) {
                         return nameReadAhead;
                     }
