@@ -213,6 +213,15 @@ public class Replace extends MatchingTask {
             String message = "Property file " + propertyFile.getPath() + " does not exist.";
             throw new BuildException(message, location);
         }
+        if (token == null && replacefilters.size() == 0) {
+            String message = "Either token or a nested replacefilter "
+                + "must be specified";
+            throw new BuildException(message, location);
+        }
+        if (token != null && "".equals(token.getText())) {
+            String message ="The token attribute must not be an empty string.";
+            throw new BuildException(message, location);
+        }
     }
 
     /**
