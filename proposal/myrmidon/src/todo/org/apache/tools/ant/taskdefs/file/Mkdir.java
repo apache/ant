@@ -8,48 +8,51 @@
 package org.apache.tools.ant.taskdefs.file;
 
 import java.io.File;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Creates a given directory.
  *
  * @author duncan@x180.com
  */
-
-public class Mkdir extends Task
+public class Mkdir
+    extends AbstractTask
 {
+    private File m_dir;
 
-    private File dir;
-
-    public void setDir( File dir )
+    public void setDir( final File dir )
     {
-        this.dir = dir;
+        m_dir = dir;
     }
 
     public void execute()
         throws TaskException
     {
-        if( dir == null )
+        if( m_dir == null )
         {
-            throw new TaskException( "dir attribute is required" );
+            final String message = "dir attribute is required";
+            throw new TaskException( message );
         }
 
-        if( dir.isFile() )
+        if( m_dir.isFile() )
         {
-            throw new TaskException( "Unable to create directory as a file already exists with that name: " + dir.getAbsolutePath() );
+            final String message = "Unable to create directory as a file " +
+                "already exists with that name: " + m_dir.getAbsolutePath();
+            throw new TaskException( message );
         }
 
-        if( !dir.exists() )
+        if( !m_dir.exists() )
         {
-            boolean result = dir.mkdirs();
+            boolean result = m_dir.mkdirs();
             if( result == false )
             {
-                String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
+                final String message = "Directory " + m_dir.getAbsolutePath() + " creation was not " +
                     "successful for an unknown reason";
-                throw new TaskException( msg );
+                throw new TaskException( message );
             }
-            getLogger().info( "Created dir: " + dir.getAbsolutePath() );
+            final String message = "Created dir: " + m_dir.getAbsolutePath();
+            getLogger().info( message );
         }
     }
 }
