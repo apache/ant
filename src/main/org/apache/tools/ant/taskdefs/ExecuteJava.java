@@ -104,6 +104,8 @@ public class ExecuteJava {
 
         final String classname = javaCommand.getExecutable();
         final Object[] argument = { javaCommand.getArguments() };
+
+        AntClassLoader loader = null; 
         try {
             if (sysProperties != null) {
                 sysProperties.setSystem();
@@ -119,9 +121,9 @@ public class ExecuteJava {
             if (classpath == null) {
                 target = Class.forName(classname);
             } else {
-                AntClassLoader loader 
-                    = new AntClassLoader(project.getSystemLoader(), project, classpath, false);
+                loader = new AntClassLoader(project.getSystemLoader(), project, classpath, false);
                 loader.setIsolated(true);
+                loader.setThreadContextLoader();
                 target = loader.forceLoadClass(classname);
                 AntClassLoader.initializeClass(target);
             }
@@ -142,6 +144,9 @@ public class ExecuteJava {
         } catch (Exception e) {
             throw new BuildException(e);
         } finally {
+            if (loader != null) {
+                loader.resetThreadContextLoader();
+            }
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }

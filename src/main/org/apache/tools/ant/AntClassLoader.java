@@ -203,20 +203,32 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * The parent class loader, if one is given or can be determined
      */
     private ClassLoader parent = null;
+
+    /**
+     * The context loader saved when setting the thread's current context loader.
+     */
+    private ClassLoader savedContextLoader = null;
+    private boolean isContextLoaderSaved = false;
     
     private static Method getProtectionDomain = null;
     private static Method defineClassProtectionDomain = null;
+    private static Method getContextClassLoader = null;
+    private static Method setContextClassLoader = null;
     static {
         try {
             getProtectionDomain = Class.class.getMethod("getProtectionDomain", new Class[0]);
             Class protectionDomain = Class.forName("java.security.ProtectionDomain");
             Class[] args = new Class[] {String.class, byte[].class, Integer.TYPE, Integer.TYPE, protectionDomain};
             defineClassProtectionDomain = ClassLoader.class.getDeclaredMethod("defineClass", args);
+            
+            getContextClassLoader = Thread.class.getMethod("getContextClassLoader", new Class[0]);
+            args = new Class[] {ClassLoader.class};
+            setContextClassLoader = Thread.class.getMethod("setContextClassLoader", args);
         }
         catch (Exception e) {}
     }
 
-
+    
     /**
      * Create a classloader for the given project using the classpath given.
      *
@@ -246,8 +258,12 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     /**
      * Create a classloader for the given project using the classpath given.
      *
+     * @param parent the parent classloader to which unsatisfied loading attempts
+     *               are delgated
      * @param project the project to which this classloader is to belong.
      * @param classpath the classpath to use to load the classes.
+     * @param parentFirst if true indicates that the parent classloader should be consulted
+     *                    before trying to load the a class through this loader.
      */
     public AntClassLoader(ClassLoader parent, Project project, Path classpath, 
                           boolean parentFirst) {
@@ -261,8 +277,13 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     }
 
     /**
-     * Create an empty class loader
+     * Create an empty class loader. The classloader should be configured with path elements
+     * to specify where the loader is to look for classes.
      *
+     * @param parent the parent classloader to which unsatisfied loading attempts
+     *               are delgated
+     * @param parentFirst if true indicates that the parent classloader should be consulted
+     *                    before trying to load the a class through this loader.
      */
     public AntClassLoader(ClassLoader parent, boolean parentFirst) {
         if (parent != null) {
@@ -275,6 +296,12 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         this.parentFirst = parentFirst;
     }
     
+    /**
+     * Log a message through the project object if one has been provided.
+     *
+     * @param message the message to log
+     * @param priority the logging priority of the message
+     */
     protected void log(String message, int priority) {
         if (project != null) {
             project.log(message, priority);
@@ -284,6 +311,55 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
 //         }
     }
 
+    /**
+     * Set the current thread's context loader to this classloader, storing the current
+     * loader value for later resetting
+     */
+    public void setThreadContextLoader() {
+        if (isContextLoaderSaved) {
+            throw new BuildException("Context loader has not been reset");
+        }
+        if (getContextClassLoader != null && setContextClassLoader != null) {
+            try {
+                savedContextLoader 
+                    = (ClassLoader)getContextClassLoader.invoke(Thread.currentThread(), new Object[0]);
+                Object[] args = new Object[] {this};
+                setContextClassLoader.invoke(Thread.currentThread(), args);
+                isContextLoaderSaved = true;
+            }
+            catch (InvocationTargetException ite) {
+                Throwable t = ite.getTargetException();
+                throw new BuildException(t.toString());
+            }
+            catch (Exception e) {
+                throw new BuildException(e.toString());
+            }
+        }
+    }
+        
+    /**
+     * Reset the current thread's context loader to its original value
+     */
+    public void resetThreadContextLoader() {
+        if (isContextLoaderSaved &&
+                getContextClassLoader != null && setContextClassLoader != null) {
+            try {
+                Object[] args = new Object[] {savedContextLoader};
+                setContextClassLoader.invoke(Thread.currentThread(), args);
+                savedContextLoader = null;
+                isContextLoaderSaved = false;
+            }
+            catch (InvocationTargetException ite) {
+                Throwable t = ite.getTargetException();
+                throw new BuildException(t.toString());
+            }
+            catch (Exception e) {
+                throw new BuildException(e.toString());
+            }
+        }
+    }
+        
+    
     /**
      * Add an element to the classpath to be searched
      *
@@ -869,7 +945,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         }
     }
 
-    public void buildStarted(BuildEvent event) {}
+    public void buildStarted(BuildEvent event) {
+    }
 
     public void buildFinished(BuildEvent event) {
         pathComponents = null;
