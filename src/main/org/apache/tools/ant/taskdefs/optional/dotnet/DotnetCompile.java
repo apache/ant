@@ -714,7 +714,7 @@ public abstract class DotnetCompile
      * @param define
      */
     public void addDefine(Define define) {
-        definitionList.add(define);
+        definitionList.addElement(define);
     }
 
 

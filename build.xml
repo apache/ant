@@ -123,6 +123,8 @@
   -->
   <!-- depends on JDK version -->
   <patternset id="needs.jdk1.2+">
+    <exclude name="${ant.package}/util/WeakishReference12.java"
+             unless="jdk1.2+"/>
     <exclude name="${optional.package}/extension/**/*.java"
              unless="jdk1.2+"/>
     <exclude name="${util.package}/optional/NoExitSecurityManager.java"
