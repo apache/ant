@@ -9,9 +9,9 @@
 
 <body>
 
- <section name="Ant 1.6beta2">
-    <p>Apache Ant 1.6beta2 is now available for <a
-    href="http://cvs.apache.org/dist/ant/v1.6beta2/">download</a>.  As
+ <section name="Ant 1.6beta3">
+    <p>Apache Ant 1.6beta3 is now available for <a
+    href="http://cvs.apache.org/dist/ant/v1.6beta3/">download</a>.  As
     we've already said in the announcements of Ant 1.5.4, this release
     requires JDK 1.2 or later to run.</p>
 
