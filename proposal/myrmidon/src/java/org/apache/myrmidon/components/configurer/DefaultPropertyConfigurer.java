@@ -7,33 +7,38 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
- * The default element configurer implementation, which uses reflection to
- * create and/or add nested elements.
+ * The default property configurer implementation, which uses reflection to
+ * create and set property values.
  *
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-class DefaultElementConfigurer
-    implements ElementConfigurer
+class DefaultPropertyConfigurer
+    implements PropertyConfigurer
 {
     private static final Resources REZ =
-        ResourceManager.getPackageResources( DefaultElementConfigurer.class );
+        ResourceManager.getPackageResources( DefaultPropertyConfigurer.class );
 
     private final Class m_type;
     private final Method m_createMethod;
     private final Method m_addMethod;
 
-    public DefaultElementConfigurer( final Class type,
-                                     final Method createMethod,
-                                     final Method addMethod )
+    public DefaultPropertyConfigurer( Class type,
+                                      Method createMethod,
+                                      Method addMethod )
     {
+        if ( type.isPrimitive() )
+        {
+            type = getComplexTypeFor(type);
+        }
         m_type = type;
         m_createMethod = createMethod;
         m_addMethod = addMethod;
@@ -48,9 +53,17 @@ class DefaultElementConfigurer
     }
 
     /**
+     * Determines if the property value must be created via {@link #createValue}.
+     */
+    public boolean useCreator()
+    {
+        return (m_createMethod != null);
+    }
+
+    /**
      * Creates a nested element.
      */
-    public Object createElement( final Object parent )
+    public Object createValue( final Object parent )
         throws ConfigurationException
     {
         try
@@ -78,7 +91,7 @@ class DefaultElementConfigurer
     /**
      * Sets the nested element, after it has been configured.
      */
-    public void addElement( final Object parent, final Object child )
+    public void setValue( final Object parent, final Object child )
         throws ConfigurationException
     {
         try
@@ -96,6 +109,50 @@ class DefaultElementConfigurer
         catch( final Exception e )
         {
             throw new ConfigurationException( e.getMessage(), e );
+        }
+    }
+
+    /**
+     * Determines the complex type for a prmitive type.
+     */
+    private Class getComplexTypeFor( final Class clazz )
+    {
+        if( String.class == clazz )
+        {
+            return String.class;
+        }
+        else if( Integer.TYPE.equals( clazz ) )
+        {
+            return Integer.class;
+        }
+        else if( Long.TYPE.equals( clazz ) )
+        {
+            return Long.class;
+        }
+        else if( Short.TYPE.equals( clazz ) )
+        {
+            return Short.class;
+        }
+        else if( Byte.TYPE.equals( clazz ) )
+        {
+            return Byte.class;
+        }
+        else if( Boolean.TYPE.equals( clazz ) )
+        {
+            return Boolean.class;
+        }
+        else if( Float.TYPE.equals( clazz ) )
+        {
+            return Float.class;
+        }
+        else if( Double.TYPE.equals( clazz ) )
+        {
+            return Double.class;
+        }
+        else
+        {
+            final String message = REZ.getString( "no-complex-type.error", clazz.getName() );
+            throw new IllegalArgumentException( message );
         }
     }
 }

@@ -7,23 +7,17 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+
 /**
- * An object configurer which uses reflection to determine the attributes
- * and elements of a class.
+ * An object configurer which uses reflection to determine the properties
+ * of a class.
  *
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
@@ -37,19 +31,14 @@ public class DefaultObjectConfigurer
     private final Class m_class;
 
     /**
-     * Map from lowercase attribute name -> AttributeSetter.
+     * Map from lowercase property name -> PropertyConfigurer.
      */
-    private final Map m_attrs = new HashMap();
+    private final Map m_props = new HashMap();
 
     /**
-     * Map from lowercase element name -> ElementSetter.
+     * Content configurer.
      */
-    private final Map m_elements = new HashMap();
-
-    /**
-     * Content setter.
-     */
-    private AttributeSetter m_contentSetter;
+    private PropertyConfigurer m_contentConfigurer;
 
     /**
      * Creates an object configurer for a particular class.  The newly
@@ -62,47 +51,20 @@ public class DefaultObjectConfigurer
     }
 
     /**
-     * Enables all attributes, elements and content handling.
+     * Enables all properties and content handling.
      */
     public void enableAll()
         throws ConfigurationException
     {
-        enableAttributes();
-        enableElements();
+        // TODO - get rid of creators, and either setter or adders
+        enableAdders();
         enableContent();
     }
 
     /**
-     * Enables all attributes.
+     * Enables all creators + adders.
      */
-    public void enableAttributes()
-        throws ConfigurationException
-    {
-        // Find all 'set' methods which take a single parameter, and return void.
-        final List methods = new ArrayList();
-        findMethodsWithPrefix( "set", methods );
-        final Iterator iterator = methods.iterator();
-        while( iterator.hasNext() )
-        {
-            final Method method = (Method)iterator.next();
-            if( method.getReturnType() != Void.TYPE ||
-                method.getParameterTypes().length != 1 )
-            {
-                continue;
-            }
-
-            // Extract the attribute name
-            final String attrName = extractName( "set", method.getName() );
-
-            // Enable the attribute
-            enableAttribute( attrName, method );
-        }
-    }
-
-    /**
-     * Enables all elements.
-     */
-    public void enableElements()
+    public void enableAdders()
         throws ConfigurationException
     {
         final Map creators = findCreators();
@@ -116,9 +78,9 @@ public class DefaultObjectConfigurer
         final Iterator iterator = elemNames.iterator();
         while( iterator.hasNext() )
         {
-            final String elemName = (String)iterator.next();
-            final Method createMethod = (Method)creators.get( elemName );
-            final Method addMethod = (Method)adders.get( elemName );
+            final String propName = (String)iterator.next();
+            final Method createMethod = (Method)creators.get( propName );
+            final Method addMethod = (Method)adders.get( propName );
 
             // Determine and check the return type
             Class type;
@@ -132,7 +94,7 @@ public class DefaultObjectConfigurer
                 {
                     final String message =
                         REZ.getString( "incompatible-element-types.error",
-                                       elemName,
+                                       propName,
                                        m_class.getName() );
                     throw new ConfigurationException( message );
                 }
@@ -146,14 +108,15 @@ public class DefaultObjectConfigurer
                 type = addMethod.getParameterTypes()[ 0 ];
             }
 
-            final DefaultElementConfigurer configurer =
-                new DefaultElementConfigurer( type, createMethod, addMethod );
-            m_elements.put( elemName, configurer );
+            final DefaultPropertyConfigurer configurer =
+                new DefaultPropertyConfigurer( type, createMethod, addMethod );
+            m_props.put( propName, configurer );
         }
     }
 
     /**
-     * Locate all 'add' methods which return void, and take a non-primitive type
+     * Locate all 'add' and 'set' methods which return void, and take a
+     * single parameter.
      */
     private Map findAdders()
         throws ConfigurationException
@@ -161,6 +124,7 @@ public class DefaultObjectConfigurer
         final Map adders = new HashMap();
         final List methodSet = new ArrayList();
         findMethodsWithPrefix( "add", methodSet );
+        findMethodsWithPrefix( "set", methodSet );
 
         final Iterator iterator = methodSet.iterator();
         while( iterator.hasNext() )
@@ -168,8 +132,7 @@ public class DefaultObjectConfigurer
             final Method method = (Method)iterator.next();
             final String methodName = method.getName();
             if( method.getReturnType() != Void.TYPE ||
-                method.getParameterTypes().length != 1 ||
-                method.getParameterTypes()[ 0 ].isPrimitive() )
+                method.getParameterTypes().length != 1 )
             {
                 continue;
             }
@@ -181,7 +144,7 @@ public class DefaultObjectConfigurer
             }
 
             // Extract element name
-            final String elemName = extractName( "add", methodName );
+            final String elemName = extractName( 3, methodName );
 
             // Add to the adders map
             if( adders.containsKey( elemName ) )
@@ -220,7 +183,7 @@ public class DefaultObjectConfigurer
             }
 
             // Extract element name
-            final String elemName = extractName( "create", methodName );
+            final String elemName = extractName( 6, methodName );
 
             // Add to the creators map
             if( creators.containsKey( elemName ) )
@@ -257,14 +220,16 @@ public class DefaultObjectConfigurer
                 continue;
             }
 
-            if( null != m_contentSetter )
+            // Check for multiple content setters
+            if( null != m_contentConfigurer )
             {
                 final String message =
                     REZ.getString( "multiple-content-setter-methods.error", m_class.getName() );
                 throw new ConfigurationException( message );
             }
 
-            m_contentSetter = new DefaultAttributeSetter( method );
+            Class type = method.getParameterTypes()[0];
+            m_contentConfigurer = new DefaultPropertyConfigurer( type, null, method );
         }
     }
 
@@ -288,57 +253,31 @@ public class DefaultObjectConfigurer
     }
 
     /**
-     * Returns a configurer for an attribute of this class.
-     */
-    public AttributeSetter getAttributeSetter( final String name )
-    {
-        return (AttributeSetter)m_attrs.get( name );
-    }
-
-    /**
      * Returns a configurer for an element of this class.
      */
-    public ElementConfigurer getElement( final String name )
+    public PropertyConfigurer getProperty( final String name )
     {
-        return (ElementConfigurer)m_elements.get( name );
+        return (PropertyConfigurer)m_props.get( name );
     }
 
     /**
      * Returns a configurer for the content of this class.
      */
-    public AttributeSetter getContentSetter()
+    public PropertyConfigurer getContentConfigurer()
     {
-        return m_contentSetter;
+        return m_contentConfigurer;
     }
 
     /**
-     * Enables an attribute.
-     */
-    private void enableAttribute( final String attrName,
-                                  final Method method )
-        throws ConfigurationException
-    {
-        if( m_attrs.containsKey( attrName ) )
-        {
-            final String message =
-                REZ.getString( "multiple-setter-methods-for-attribute.error",
-                               m_class.getName(),
-                               attrName );
-            throw new ConfigurationException( message );
-        }
-        final DefaultAttributeSetter setter = new DefaultAttributeSetter( method );
-        m_attrs.put( attrName, setter );
-    }
-
-    /**
-     * Extracts an attribute/element name from a Java method name.
-     * Removes the prefix, inserts '-' before each uppercase character
+     * Extracts a property name from a Java method name.
+     *
+     * <p>Removes the prefix, inserts '-' before each uppercase character
      * (except the first), then converts all to lowercase.
      */
-    private String extractName( final String prefix, final String methodName )
+    private String extractName( final int prefixLen, final String methodName )
     {
         final StringBuffer sb = new StringBuffer( methodName );
-        sb.delete( 0, prefix.length() );
+        sb.delete( 0, prefixLen );
         for( int i = 0; i < sb.length(); i++ )
         {
             char ch = sb.charAt( i );

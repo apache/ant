@@ -10,38 +10,45 @@ package org.apache.myrmidon.components.configurer;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
- * Configures an element of an object.
+ * Configures a property of an object.
+ * TODO - axe useCreator() and createValue().
  *
  * @author <a href="mailto:adammurdoch_ml@yahoo.com">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public interface ElementConfigurer
+public interface PropertyConfigurer
 {
     /**
-     * Returns the type of the element.
+     * Returns the type of the property.
      */
     Class getType();
 
     /**
-     * Creates an object for an element.
+     * Determines if the property value must be created via {@link #createValue}.
+     */
+    boolean useCreator();
+
+    /**
+     * Creates a default value for the property.  This value must be configured,
+     * and then attached to the object using {@link #setValue}.  This
+     * method must be called if {@link #useCreator} returns true.
      *
      * @param parent The parent object.
      * @return An object which is assignable to the type returned by
      *         {@link #getType}.
      * @throws ConfigurationException If the object cannot be created.
      */
-    Object createElement( Object parent )
+    Object createValue( Object parent )
         throws ConfigurationException;
 
     /**
-     * Attaches an element object to its parent, after it has been configured.
+     * Sets a property value for an object.
      *
-     * @param parent The parent object.
-     *
-     * @param child The element object.  This must be assignable to the type
+     * @param object The object to set the property of.
+     * @param value The property value.  This must be assignable to the type
      *              returned by {@link #getType}.
-     * @throws ConfigurationException If the object cannot be attached.
+     * @throws ConfigurationException If the property cannot be set.
      */
-    void addElement( Object parent, Object child )
+    void setValue( Object object, Object value )
         throws ConfigurationException;
 }

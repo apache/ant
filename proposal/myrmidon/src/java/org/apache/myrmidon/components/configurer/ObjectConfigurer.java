@@ -21,22 +21,13 @@ public interface ObjectConfigurer
     Class getType();
 
     /**
-     * Returns a configurer for an attribute of this class.
-     *
-     * @param name The attribute name.
-     * @return A configurer for the attribute.  Returns null if the attribute
-     *         is not valid for this class.
-     */
-    AttributeSetter getAttributeSetter( String name );
-
-    /**
-     * Returns a configurer for an element of this class.
+     * Returns a configurer for a property of this class.
      *
      * @param name The element name.
-     * @return A configurer for the element.  Returns null if the element
+     * @return A configurer for the property.  Returns null if the property
      *         is not valid for this class.
      */
-    ElementConfigurer getElement( String name );
+    PropertyConfigurer getProperty( String name );
 
     /**
      * Returns a configurer for the content of this class.
@@ -44,5 +35,5 @@ public interface ObjectConfigurer
      * @return A configurer for the content.  Returns null if the class does
      *         not allow text content.
      */
-    AttributeSetter getContentSetter();
+    PropertyConfigurer getContentConfigurer();
 }
