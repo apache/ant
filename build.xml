@@ -155,7 +155,10 @@
     </or>
   </selector>
   <selector id="needs.jdk1.4+">
-    <filename name="${regexp.package}/Jdk14Regexp*"/>
+    <or>
+      <filename name="${regexp.package}/Jdk14Regexp*"/>
+      <filename name="${optional.package}/ssh/*"/>
+    </or>
   </selector>
 
   <!-- classes that should be present in Sun based JVMs, but not in
@@ -288,6 +291,9 @@
   </selector>
   <selector id="needs.swing">
     <filename name="${optional.package}/splash/*"/>
+  </selector>
+  <selector id="needs.jsch">
+    <filename name="${optional.package}/ssh/*"/>
   </selector>
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
@@ -543,6 +549,9 @@
     <available property="beanshell.present"
                classname="bsh.StringUtil"
                classpathref="classpath"/>
+    <available property="jsch.present"
+               classname="com.jcraft.jsch.Session"
+               classpathref="classpath"/>
   </target>
 
 
@@ -625,6 +634,7 @@
             <selector refid="needs.jai" unless="jai.present"/>
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing"  unless="swing.present"/>
+            <selector refid="needs.jsch" unless="jsch.present"/>
           </or>
         </not>
       </selector>
@@ -792,6 +802,7 @@
             <selector refid="needs.jai"/>
             <selector refid="needs.jdepend"/>
             <selector refid="needs.swing"/>
+            <selector refid="needs.jsch"/>
           </or>
         </not>
       </and>
@@ -949,6 +960,13 @@
         <selector refid="needs.weblogic.server"/>
       </or>
     </jar>
+
+    <jar destfile="${build.lib}/${optional.jars.prefix}-jsch.jar"
+         basedir="${build.classes}"
+         manifest="${manifest.tmp}">
+      <selector refid="needs.jsch"/>
+    </jar>
+
   </target>
 
   <!--   Creates jar of test utility classes -->
@@ -1616,6 +1634,9 @@
           -->
           <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
                    unless="have.cvs"/>
+
+          <!-- test needs special setup -->
+          <exclude name="${optional.package}/ssh/ScpTest.java"/>
         </fileset>
       </batchtest>
     </junit>

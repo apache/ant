@@ -157,6 +157,9 @@ Other changes:
 * The <javadoc> task <tag> subelement has been enhanced to allow files
   with tag mappings to be used.
 
+* New task <scp> that supports file transfers over SSH.  Requires
+  jsch, a BSD licensed SSH library that can be found at 
+  http://www.jcraft.com/jsch/index.html
 
 Changes from Ant 1.5.1 to Ant 1.5.2
 =============================================
