@@ -1,7 +1,7 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Language" content="en-us"></meta>
 <title>Script Task</title>
 </head>
 
@@ -19,7 +19,7 @@ accessible from the script, using either their <code>name</code> or
 valid Java identifiers, that is).
 The name "project" is a pre-defined reference to the Project, which can be
 used instead of the project name. The name "self" is a pre-defined reference to the actual
-&lt;script&gt;-Task instance.<br>From these objects you have access to the Ant Java API, see the
+&lt;script&gt;-Task instance.<br/>From these objects you have access to the Ant Java API, see the
 <a href="../api/index.html">JavaDoc</a> (especially for
 <a href="../api/org/apache/tools/ant/Project.html">Project</a> and
 <a href="../api/org/apache/tools/ant/taskdefs/optional/Script.html">Script</a>) for more information.</p>
@@ -55,7 +55,7 @@ Groups@Google: "Rhino, enum.js, JavaAdapter?"</a> by Norris Boyd in the newsgrou
   </tr>
 </table>
 <h3>Examples</h3>
-The following snippet shows use of four different languages:
+The following snippet shows use of five different languages:
   <blockquote><pre>
     &lt;property name="message" value="Hello world"/&gt;
 
@@ -71,6 +71,10 @@ The following snippet shows use of four different languages:
         println 'message is ', message
     &lt;/script&gt;
 
+    &lt;script language="ruby"&gt;
+        print 'message is ', $message, "\n"
+    &lt;/script&gt;
+
     &lt;script language="jython"&gt;
 print "message is %s" % message
     &lt;/script&gt;
@@ -80,6 +84,31 @@ print "message is %s" % message
   Note that for the <i>jython</i> example, the script contents <b>must</b>
   start on the first column.
   </p>
+  <p>
+    The following script shows a little more complicted jruby example:
+  </p>
+  <blockquote><pre>
+&lt;script language="ruby"&gt;
+  xmlfiles = Dir.new(".").entries.delete_if { |i| ! (i =~ /\.xml$/) }
+  xmlfiles.sort.each { |i| $self.log(i) }
+&lt;/script&gt;
+</pre>
+  </blockquote>
+  <p>
+    Note that due to a limitation in the current version of jruby (0.7.0),
+    $project.log("Hello World") does not work (most likely because there are
+    two log methods on Project), this is fixed in the current CVS version of jruby.
+  </p>
+  <p>
+    The same example in groovy is:
+  </p>
+  <blockquote><pre>
+&lt;script language="groovy"&gt;
+  xmlfiles = new java.io.File(".").listFiles().findAll{ it =~ "\.xml$"}
+  xmlfiles.sort().each { self.log(it.toString())}
+&lt;/script&gt;
+</pre>
+  </blockquote>
   <p>
     The following script uses javascript to create a number of
     echo tasks and execute them.
