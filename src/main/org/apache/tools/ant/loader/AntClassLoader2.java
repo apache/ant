@@ -283,7 +283,8 @@ public class AntClassLoader2 extends AntClassLoader {
             if (manifestStream == null) {
                 return;
             }                
-            Reader manifestReader = new InputStreamReader(manifestStream);
+            Reader manifestReader 
+                = new InputStreamReader(manifestStream, "UTF-8");
             org.apache.tools.ant.taskdefs.Manifest manifest
                 = new org.apache.tools.ant.taskdefs.Manifest(manifestReader);
             classpath 
