@@ -110,6 +110,10 @@ public class ExecTask extends Task {
         env.addVariable(var);
     }
 
+    public Commandline.Argument createArg() {
+        return cmdl.createArgument();
+    }
+
     public void execute() throws BuildException {
         if (cmdl.getExecutable() == null) {
             throw new BuildException("no executable specified", location);
