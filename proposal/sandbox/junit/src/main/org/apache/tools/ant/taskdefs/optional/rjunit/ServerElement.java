@@ -53,8 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.rjunit;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
@@ -76,7 +76,7 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.Server;
 public final class ServerElement extends ProjectComponent {
 
     /** formatters that write the tests results */
-    private Vector formatterElements = new Vector();
+    private ArrayList formatters = new ArrayList();
 
     /** port to run the server on. Default to 6666 */
     private int port = 6666;
@@ -101,17 +101,17 @@ public final class ServerElement extends ProjectComponent {
     public void execute() throws BuildException {
         // configure the server...
         server = new Server(port);
-        Enumeration listeners = formatterElements.elements();
-        while (listeners.hasMoreElements()) {
-            ResultFormatterElement fe = (ResultFormatterElement)listeners.nextElement();
-            Formatter formatter = fe.createFormatter();
-            server.addListener( formatter );
+        final int formatterCount = formatters.size();
+        for (int i = 0; i < formatterCount; i++) {
+            final Formatter f = (Formatter) formatters.get(i);
+            server.addListener(f);
         }
+
         // and run it. It will stop once a client has finished.
         try {
-            server.start(true);
+            server.start(false); // do not loop
             server.shutdown();
-        } catch (InterruptedException e){
+        } catch (IOException e) {
             throw new BuildException(e);
         }
     }
@@ -133,7 +133,8 @@ public final class ServerElement extends ProjectComponent {
     }
 
     /** add a new formatter element */
-    public void addFormatter(ResultFormatterElement fe) {
-        formatterElements.addElement(fe);
+    public void addConfiguredFormatter(ResultFormatterElement fe) {
+        Formatter formatter = fe.createFormatter();
+        formatters.add(formatter);
     }
 }

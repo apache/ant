@@ -54,9 +54,9 @@
 package org.apache.tools.ant.taskdefs.optional.rjunit;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import junit.runner.TestCollector;
 
@@ -90,7 +90,7 @@ public final class ClasspathTestCollector extends ProjectComponent
         String[] paths = path.list();
         for (int i = paths.length - 1; i >= 0; i--) {
             File f = new File(paths[i]);
-            Vector included = null;
+            ArrayList included = null;
             if (f.isDirectory()) {
                 included = gatherFromDirectory(f);
             } else if (f.getName().endsWith(".zip")
@@ -103,16 +103,22 @@ public final class ClasspathTestCollector extends ProjectComponent
             final int includedCount = included.size();
             log("Adding " + includedCount + " testcases from " + f, Project.MSG_VERBOSE);
             for (int j = 0; j < includedCount; j++) {
-                String testname = (String) included.elementAt(j);
+                String testname = (String) included.get(j);
                 collected.put(testname, "");
             }
         }
-        log("Collected " + collected.size() + " testcases from " + paths.length + " paths.");
+        log("Collected " + collected.size() + " testcases from " + paths.length + " path(s).", Project.MSG_VERBOSE);
         return collected.keys();
     }
 
 
-    protected Vector gatherFromDirectory(File dir) {
+    /**
+     * Return the list of classnames from a directory that match
+     * the specified patterns.
+     * @param dir the base directory (must also be the base package)
+     * @return the list of classnames matching the pattern.
+     */
+    protected ArrayList gatherFromDirectory(File dir) {
         Project project = getProject();
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(dir);
@@ -123,7 +129,13 @@ public final class ClasspathTestCollector extends ProjectComponent
         return testClassNameFromFile(included);
     }
 
-    protected Vector gatherFromArchive(File zip) {
+    /**
+     * Return the list of classnames from a zipfile that match
+     * the specified patterns.
+     * @param zip the zipfile (must also be the base package)
+     * @return the list of classnames matching the pattern.
+     */
+    protected ArrayList gatherFromArchive(File zip) {
         ZipScanner zs = new ZipScanner();
         zs.setBasedir(zip);
         zs.setIncludes(patterns.getIncludePatterns(project));
@@ -133,13 +145,17 @@ public final class ClasspathTestCollector extends ProjectComponent
         return testClassNameFromFile(included);
     }
 
-    protected Vector testClassNameFromFile(String[] classFileNames) {
-        Vector tests = new Vector(classFileNames.length);
+    /**
+     * transform a set of file into their matching classname
+     * @todo what about using a mapper for this ?
+     */
+    protected ArrayList testClassNameFromFile(String[] classFileNames) {
+        ArrayList tests = new ArrayList(classFileNames.length);
         for (int i = 0; i < classFileNames.length; i++) {
             String file = classFileNames[i];
             if (isTestClass(file)) {
                 String classname = classNameFromFile(file);
-                tests.addElement(classname);
+                tests.add(classname);
             }
         }
         return tests;
@@ -165,7 +181,7 @@ public final class ClasspathTestCollector extends ProjectComponent
         this.path = path;
     }
 
-    public Path getPath(){
+    public Path getPath() {
         return this.path;
     }
 

@@ -54,14 +54,14 @@
 package org.apache.tools.ant.taskdefs.optional.rjunit;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.Vector;
 
 import junit.runner.TestCollector;
 
@@ -100,13 +100,16 @@ public final class ClientElement extends ProjectComponent {
     private String host = "127.0.0.1";
 
     /** test collector elements */
-    private Vector testCollectors = new Vector();
+    private ArrayList testCollectors = new ArrayList();
 
     /** the command line to launch the TestRunner */
     private CommandlineJava cmd = new CommandlineJava();
 
     /** the parent task */
     private RJUnitTask parent;
+
+    /** help debug the TestRunner */
+    private boolean debug = false;
 
     /** create a new client */
     public ClientElement(RJUnitTask value) {
@@ -133,7 +136,7 @@ public final class ClientElement extends ProjectComponent {
 
     protected void doExecute() throws BuildException {
         File tmp = configureTestRunner();
-        Execute execute = new Execute(new LogStreamHandler(parent, Project.MSG_INFO, Project.MSG_WARN));
+        Execute execute = new Execute(new LogStreamHandler(parent, Project.MSG_VERBOSE, Project.MSG_VERBOSE));
         execute.setCommandline(cmd.getCommandline());
         execute.setAntRun(project);
 
@@ -141,7 +144,7 @@ public final class ClientElement extends ProjectComponent {
         int retVal = 0;
         try {
             retVal = execute.execute();
-            if (retVal != 0){
+            if (retVal != 0) {
                 throw new BuildException("task.process-failed.error");
             }
         } catch (IOException e) {
@@ -162,14 +165,7 @@ public final class ClientElement extends ProjectComponent {
     protected Enumeration collectTests() {
         Enumeration[] tests = new Enumeration[testCollectors.size()];
         for (int i = 0; i < testCollectors.size(); i++) {
-            TestCollector te = (TestCollector) testCollectors.elementAt(i);
-            //@fixme I'm forced to append the classpath from batchtests
-            // here to make sure it will be included as part of the
-            // testrunner classpath. Need a better design ?
-            if (te instanceof BatchTestElement){
-                Path path = ((BatchTestElement)te).getPath();
-                cmd.getClasspath().append(path);
-            }
+            TestCollector te = (TestCollector) testCollectors.get(i);
             tests[i] = te.collectTests();
         }
         return new CompoundEnumeration(tests);
@@ -182,8 +178,8 @@ public final class ClientElement extends ProjectComponent {
      */
     protected File configureTestRunner() throws BuildException {
         Properties props = new Properties();
-        props.setProperty("debug", "true");
-        props.setProperty("host", "127.0.0.1");
+        props.setProperty("debug", String.valueOf(debug));
+        props.setProperty("host", host);
         props.setProperty("port", String.valueOf(port));
         // get all test classes to run...
         StringBuffer buf = new StringBuffer(10240);
@@ -233,6 +229,11 @@ public final class ClientElement extends ProjectComponent {
         host = value;
     }
 
+    /** set debug mode for the runner. it will log a file to working dir */
+    public void setDebug(boolean flag) {
+        debug = flag;
+    }
+
     /** Create a new JVM argument. */
     public Commandline.Argument createJvmarg() {
         return cmd.createVmArgument();
@@ -244,14 +245,16 @@ public final class ClientElement extends ProjectComponent {
     }
 
     /** add a single test element */
-    public void addTest(TestElement value) {
-        testCollectors.addElement(value);
+    public void addConfiguredTest(TestElement value) {
+        testCollectors.add(value);
     }
 
     /** add a batch test element */
-    public void addBatchTest(BatchTestElement value) {
-        testCollectors.addElement(value);
+    public void addConfiguredBatchTest(BatchTestElement value) {
+        // add the classpath of batchtest to cmd classpath
+        Path path = value.getPath();
+        cmd.getClasspath().append(path);
+        testCollectors.add(value);
     }
-
 
 }

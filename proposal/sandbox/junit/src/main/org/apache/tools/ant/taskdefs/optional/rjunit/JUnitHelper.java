@@ -55,10 +55,12 @@ package org.apache.tools.ant.taskdefs.optional.rjunit;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
 import org.apache.tools.ant.types.Path;
 
@@ -75,14 +77,24 @@ public final class JUnitHelper {
      * This method parse the output of the method <tt>toString()</tt>
      * from the <tt>TestCase</tt> class. The format returned is:
      * <tt>name(classname)</tt>
-     * @return an array with the elements in the order name, classname.
+     * @return the string corresponding to name.
      */
-    public static String[] parseTestString(String testname) {
-        int p1 = testname.indexOf('(');
-        int p2 = testname.indexOf(')', p1);
-        return new String[]{
-            testname.substring(0, p1),
-            testname.substring(p1 + 1, p2)};
+    public static String getTestName(String text){
+        int p1 = text.indexOf('(');
+        int p2 = text.indexOf(')', p1);
+        return text.substring(0, p1);
+    }
+
+    /**
+     * This method parse the output of the method <tt>toString()</tt>
+     * from the <tt>TestCase</tt> class. The format returned is:
+     * <tt>name(classname)</tt>
+     * @return the string corresponding to classname.
+     */
+    public static String getSuiteName(String text){
+        int p1 = text.indexOf('(');
+        int p2 = text.indexOf(')', p1);
+        return text.substring(p1 + 1, p2);
     }
 
     /**
@@ -121,6 +133,14 @@ public final class JUnitHelper {
             Method suiteMethod = clazz.getMethod(SUITE_METHODNAME, new Class[0]);
             return (Test) suiteMethod.invoke(null, new Class[0]);
         } catch (Exception e) {
+        }
+
+        // check if it is really a valid testcase
+        int modifiers = clazz.getModifiers();
+        if ( !Modifier.isPublic(modifiers) ||
+                Modifier.isAbstract(modifiers) ||
+                !TestCase.class.isAssignableFrom(clazz)) {
+            return null;
         }
         // try to extract a test suite automatically
         // this will generate warnings if the class is no suitable Test
