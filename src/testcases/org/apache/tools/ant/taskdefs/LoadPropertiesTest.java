@@ -58,7 +58,7 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class LoadPropertiesTest extends BuildFileTest {
 

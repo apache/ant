@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.Parameter;
  * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;/&gt;</pre>
  *
  * @author Steve Loughran
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class StripLineBreaks
     extends BaseParamFilterReader

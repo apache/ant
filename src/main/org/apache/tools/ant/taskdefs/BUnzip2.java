@@ -67,7 +67,7 @@ import org.apache.tools.bzip2.CBZip2InputStream;
  * algorithm. Normally used to compress non-compressed archives such
  * as TAR files.
  *
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.5
  *

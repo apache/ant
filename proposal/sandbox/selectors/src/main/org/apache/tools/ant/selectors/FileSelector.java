@@ -58,7 +58,7 @@ import java.io.File;
 /**
  * File Selector API.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public interface FileSelector {
     public void setValue(final String value);

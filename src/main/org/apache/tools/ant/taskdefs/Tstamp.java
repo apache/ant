@@ -79,7 +79,7 @@ import java.text.SimpleDateFormat;
  * @author stefano@apache.org
  * @author roxspring@yahoo.com
  * @author Conor MacNeill
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @since Ant 1.1
  * @ant.task category="utility"
  */

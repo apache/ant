@@ -60,7 +60,7 @@ import java.util.Vector;
  * An AntFileReader is a wrapper class that encloses the classname
  * and configuration of a Configurable FilterReader.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class AntFilterReader
     extends DataType

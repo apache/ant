@@ -66,7 +66,7 @@ import java.util.Vector;
 /**
  * Named collection of include/exclude tags.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class Pattern {
     private String pattern = null;

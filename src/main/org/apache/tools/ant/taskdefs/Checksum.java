@@ -75,7 +75,7 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * Used to create or verify file checksums.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.5
  *

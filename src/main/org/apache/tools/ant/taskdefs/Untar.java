@@ -84,7 +84,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <p>The untar task recognizes the long pathname entries used by GNU tar.<p>
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.1
  *

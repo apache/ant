@@ -80,7 +80,7 @@ import org.apache.tools.ant.types.Parameter;
  * This will include only those lines that contain <code>foo</code> and
  * <code>bar</code>.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class LineContains
     extends BaseParamFilterReader

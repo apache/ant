@@ -82,7 +82,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  * @author Conor MacNeill
  * @author <a href="mailto:Jesse.Glick@netbeans.com">Jesse Glick</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class AntClassLoader extends ClassLoader implements BuildListener {
 

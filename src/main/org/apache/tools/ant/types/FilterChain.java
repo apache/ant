@@ -72,7 +72,7 @@ import org.apache.tools.ant.filters.TailFilter;
 /**
  * FilterChain may contain a chained set of filter readers.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public final class FilterChain extends DataType implements Cloneable {
 

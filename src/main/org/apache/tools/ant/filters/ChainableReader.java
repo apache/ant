@@ -58,7 +58,7 @@ import java.io.Reader;
 /**
  * Interface indicating that a reader may be chained to another one.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public interface ChainableReader {
     /**

@@ -166,7 +166,7 @@ What's missing?  What shouldn't be on the list?
 Adam
 
 > -----Original Message-----
-> From: Magesh Umasankar [mailto:umagesh@apache.org]
+> From: Magesh Umasankar
 > Sent: Saturday, 22 December 2001 10:44 AM
 > To: ant-dev@jakarta.apache.org
 > Subject: Virtual FileSystem Layer

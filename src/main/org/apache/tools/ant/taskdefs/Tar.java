@@ -83,7 +83,7 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  *
  * @since Ant 1.1
  *
@@ -559,7 +559,7 @@ public class Tar extends MatchingTask {
     /**
      * Set of options for long file handling in the task. 
      *
-     * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+     * @author Magesh Umasankar
      */
     public static class TarLongFileMode extends EnumeratedAttribute {
 

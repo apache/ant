@@ -71,7 +71,7 @@ import java.util.Vector;
  * Load a file into a property
  *
  * @author Steve Loughran
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @since Ant 1.5
  * @ant.task category="utility"
  */

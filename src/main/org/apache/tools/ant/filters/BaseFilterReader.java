@@ -64,7 +64,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Base class for core filter readers.
  *
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public abstract class BaseFilterReader
     extends FilterReader {

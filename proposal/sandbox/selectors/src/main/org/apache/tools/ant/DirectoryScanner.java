@@ -145,7 +145,7 @@ import org.apache.tools.ant.selectors.FileSelector;
  * .class files in all directories under a directory called "modules"
  *
  * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class DirectoryScanner implements FileScanner {
 

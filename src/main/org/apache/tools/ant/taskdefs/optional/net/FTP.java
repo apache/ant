@@ -99,7 +99,7 @@ import java.util.Vector;
  *      rvaughn@seaconinc.com</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">
  *      glennm@ca.ibm.com</a>
- * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  * @since Ant 1.3
  */
 public class FTP
