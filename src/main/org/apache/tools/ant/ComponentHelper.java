@@ -157,7 +157,8 @@ public class ComponentHelper  {
         }
     }
 
-    /** Factory method to create the components.
+    /**
+     * Factory method to create the components.
      *
      * This should be called by UnknownElement.
      *
@@ -173,10 +174,6 @@ public class ComponentHelper  {
                                   String componentType)
         throws BuildException {
         Object component = createComponent(componentType);
-        if (component == null) {
-            return null;
-        }
-
         if (component instanceof Task) {
             Task task = (Task) component;
             task.setLocation(ue.getLocation());
@@ -186,7 +183,6 @@ public class ComponentHelper  {
             task.init();
             addCreatedTask(componentType, task);
         }
-
         return component;
     }
 
@@ -213,10 +209,7 @@ public class ComponentHelper  {
      */
     public Class getComponentClass(String componentName) {
         AntTypeDefinition def = getDefinition(componentName);
-        if (def == null) {
-            return null;
-        }
-        return def.getExposedClass(project);
+        return (def == null) ? null : def.getExposedClass(project);
     }
 
     /**
@@ -392,9 +385,8 @@ public class ComponentHelper  {
         def.setName(typeName);
         def.setClass(typeClass);
         updateDataTypeDefinition(def);
-        String msg = " +User datatype: " + typeName + "     "
-                + typeClass.getName();
-        project.log(msg, Project.MSG_DEBUG);
+        project.log(" +User datatype: " + typeName + "     "
+                + typeClass.getName(), Project.MSG_DEBUG);
     }
 
     /**
@@ -443,7 +435,6 @@ public class ComponentHelper  {
                               org.apache.tools.ant.taskdefs.Property.class);
             task = createNewTask(taskType);
         }
-
         if (task != null) {
             addCreatedTask(taskType, task);
         }
@@ -468,7 +459,6 @@ public class ComponentHelper  {
         if (c == null) {
             return null;
         }
-
         if (!(Task.class.isAssignableFrom(c))) {
             return null;
         }
@@ -481,8 +471,7 @@ public class ComponentHelper  {
         // set default value, can be changed by the user
         task.setTaskName(taskType);
 
-        String msg = "   +Task: " + taskType;
-        project.log (msg, Project.MSG_DEBUG);
+        project.log("   +Task: " + taskType, Project.MSG_DEBUG);
         return task;
     }
 
@@ -520,8 +509,7 @@ public class ComponentHelper  {
             if (v != null) {
                 Enumeration taskEnum = v.elements();
                 while (taskEnum.hasMoreElements()) {
-                    WeakReference ref =
-                            (WeakReference) taskEnum.nextElement();
+                    WeakReference ref = (WeakReference) taskEnum.nextElement();
                     Task t = (Task) ref.get();
                     //being a weak ref, it may be null by this point
                     if (t != null) {
@@ -558,7 +546,7 @@ public class ComponentHelper  {
      * @param element The element to describe.
      *                Must not be <code>null</code>.
      *
-     * @return a description of the element type
+     * @return a description of the element type.
      *
      * @since Ant 1.6
      */
@@ -578,39 +566,34 @@ public class ComponentHelper  {
 
 
     /**
-     * check if definition is a valid definition - it
+     * Check if definition is a valid definition - it
      * may be a definition of an optional task that
-     * does not exist
-     * @param def the definition to test
-     * @return true if exposed type of definition is present
+     * does not exist.
+     * @param def the definition to test.
+     * @return true if exposed type of definition is present.
      */
     private boolean validDefinition(AntTypeDefinition def) {
-        if (def.getTypeClass(project) == null
-            || def.getExposedClass(project) == null) {
-            return false;
-        }
-        return true;
+        return !(def.getTypeClass(project) == null
+            || def.getExposedClass(project) == null);
     }
 
     /**
-     * check if two definitions are the same
-     * @param def  the new definition
-     * @param old the old definition
-     * @return true if the two definitions are the same
+     * Check if two definitions are the same.
+     * @param def  the new definition.
+     * @param old the old definition.
+     * @return true if the two definitions are the same.
      */
     private boolean sameDefinition(
         AntTypeDefinition def, AntTypeDefinition old) {
-        if (!validDefinition(def) || !validDefinition(old)) {
-            return validDefinition(def) == validDefinition(old);
-        }
-        return def.sameDefinition(old, project);
+        return ((validDefinition(def) && validDefinition(old)
+            && def.sameDefinition(old, project))
+            || !(validDefinition(def) | validDefinition(old)));
     }
 
-
     /**
-     * update the component definition table with a new or
+     * Update the component definition table with a new or
      * modified definition.
-     * @param def the definition to update or insert
+     * @param def the definition to update or insert.
      */
     private void updateDataTypeDefinition(AntTypeDefinition def) {
         String name = def.getName();
@@ -644,8 +627,8 @@ public class ComponentHelper  {
     }
 
     /**
-     * Called at the start of processing an antlib
-     * @param uri the uri that is associated with this antlib
+     * Called at the start of processing an antlib.
+     * @param uri the uri that is associated with this antlib.
      */
     public void enterAntLib(String uri) {
         antLibCurrentUri = uri;
@@ -653,26 +636,23 @@ public class ComponentHelper  {
     }
 
     /**
-     * @return the current antlib uri
+     * @return the current antlib uri.
      */
     public String getCurrentAntlibUri() {
         return antLibCurrentUri;
     }
 
     /**
-     * Called at the end of processing an antlib
+     * Called at the end of processing an antlib.
      */
     public void exitAntLib() {
         antLibStack.pop();
-        if (antLibStack.size() != 0) {
-            antLibCurrentUri = (String) antLibStack.peek();
-        } else {
-            antLibCurrentUri = null;
-        }
+        antLibCurrentUri = (antLibStack.size() == 0)
+            ? null : (String)antLibStack.peek();
     }
 
     /**
-     * load ant's tasks
+     * Load ant's tasks.
      */
     private void initTasks() {
         ClassLoader classLoader = null;
@@ -717,7 +697,7 @@ public class ComponentHelper  {
     }
 
     /**
-     * load ant's datatypes
+     * Load ant's datatypes.
      */
     private void initTypes() {
         ClassLoader classLoader = null;
@@ -760,7 +740,7 @@ public class ComponentHelper  {
     }
 
     /**
-     * called for each component name, check if the
+     * Called for each component name, check if the
      * associated URI has been examined for antlibs.
      */
     private synchronized void checkNamespace(String componentName) {
@@ -788,7 +768,7 @@ public class ComponentHelper  {
     }
 
     /**
-     * map that contains the component definitions
+     * Map that contains the component definitions.
      */
     private static class AntTypeTable extends Hashtable {
         private Project project;

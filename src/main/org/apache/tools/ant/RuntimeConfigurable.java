@@ -113,9 +113,9 @@ public class RuntimeConfigurable implements Serializable {
 
     /**
      * Sets the creator of the element to be configured
-     * used to store the element in the parent;
+     * used to store the element in the parent.
      *
-     * @param creator the creator object
+     * @param creator the creator object.
      */
     void setCreator(IntrospectionHelper.Creator creator) {
         this.creator = creator;
@@ -123,7 +123,7 @@ public class RuntimeConfigurable implements Serializable {
 
     /**
      * Get the object for which this RuntimeConfigurable holds the configuration
-     * information
+     * information.
      *
      * @return the object whose configure is held by this instance.
      */
@@ -132,16 +132,16 @@ public class RuntimeConfigurable implements Serializable {
     }
 
     /**
-     * get the polymorphic type for this element
-     * @return the ant component type name, null if not set
+     * Get the polymorphic type for this element.
+     * @return the ant component type name, null if not set.
      */
     public String getPolyType() {
         return polyType;
     }
 
     /**
-     * set the polymorphic type for this element
-     * @param polyType the ant component type name, null if not set
+     * Set the polymorphic type for this element.
+     * @param polyType the ant component type name, null if not set.
      */
     public void setPolyType(String polyType) {
         this.polyType = polyType;
@@ -162,7 +162,7 @@ public class RuntimeConfigurable implements Serializable {
     }
 
     /**
-     * Set an attribute to a given value
+     * Set an attribute to a given value.
      *
      * @param name the name of the attribute.
      * @param value the attribute's value.
@@ -180,9 +180,10 @@ public class RuntimeConfigurable implements Serializable {
         }
     }
 
-    /** Return the attribute map.
+    /**
+     * Return the attribute map.
      *
-     * @return Attribute name to attribute value map
+     * @return Attribute name to attribute value map.
      * @since Ant 1.6
      */
     public Hashtable getAttributeMap() {
@@ -264,7 +265,8 @@ public class RuntimeConfigurable implements Serializable {
         characters.append(buf, start, count);
     }
 
-    /** Get the text content of this element. Various text chunks are
+    /**
+     * Get the text content of this element. Various text chunks are
      * concatenated, there is no way ( currently ) of keeping track of
      * multiple fragments.
      *
