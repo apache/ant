@@ -62,7 +62,7 @@ public class Path
     {
         try
         {
-            return new Path( null, System.getProperty( "java.class.path" ) );
+            return new Path( System.getProperty( "java.class.path" ) );
         }
         catch( final TaskException te )
         {
@@ -73,20 +73,16 @@ public class Path
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code> attribute
      * setters.
-     *
-     * @param p Description of Parameter
-     * @param path Description of Parameter
      */
-    public Path( Project p, String path )
+    public Path( final String path )
         throws TaskException
     {
-        this( p );
+        this();
         createPathElement().setPath( path );
     }
 
-    public Path( Project project )
+    public Path()
     {
-        setProject( project );
         elements = new ArrayList();
     }
 
@@ -113,10 +109,6 @@ public class Path
 
     /**
      * Splits a PATH (with : or ; as separators) into its parts.
-     *
-     * @param project Description of Parameter
-     * @param source Description of Parameter
-     * @return Description of the Returned Value
      */
     public String[] translatePath( Project project, String source )
     {
@@ -298,7 +290,7 @@ public class Path
             String extProp = System.getProperty( "java.ext.dirs" );
             if( extProp != null )
             {
-                extdirs = new Path( getProject(), extProp );
+                extdirs = new Path( extProp );
             }
             else
             {
@@ -363,38 +355,32 @@ public class Path
         }
         else if( Project.getJavaVersion() == Project.JAVA_1_1 )
         {
-            addExisting( new Path( null,
-                                   System.getProperty( "java.home" )
-                                   + File.separator + "lib"
-                                   + File.separator
-                                   + "classes.zip" ) );
+            final String classes = System.getProperty( "java.home" ) +
+                File.separator + "lib" + File.separator + "classes.zip";
+            addExisting( new Path( classes ) );
         }
         else
         {
             // JDK > 1.1 seems to set java.home to the JRE directory.
-            addExisting( new Path( null,
-                                   System.getProperty( "java.home" )
-                                   + File.separator + "lib"
-                                   + File.separator + "rt.jar" ) );
+            final String rt = System.getProperty( "java.home" ) +
+                File.separator + "lib" + File.separator + "rt.jar";
+            addExisting( new Path( rt ) );
             // Just keep the old version as well and let addExisting
             // sort it out.
-            addExisting( new Path( null,
-                                   System.getProperty( "java.home" )
-                                   + File.separator + "jre"
-                                   + File.separator + "lib"
-                                   + File.separator + "rt.jar" ) );
+            final String rt2 = System.getProperty( "java.home" ) +
+                File.separator + "jre" + File.separator + "lib" +
+                File.separator + "rt.jar";
+            addExisting( new Path( rt2 ) );
 
             // Added for MacOS X
-            addExisting( new Path( null,
-                                   System.getProperty( "java.home" )
-                                   + File.separator + ".."
-                                   + File.separator + "Classes"
-                                   + File.separator + "classes.jar" ) );
-            addExisting( new Path( null,
-                                   System.getProperty( "java.home" )
-                                   + File.separator + ".."
-                                   + File.separator + "Classes"
-                                   + File.separator + "ui.jar" ) );
+            final String classes = System.getProperty( "java.home" ) +
+                File.separator + ".." + File.separator + "Classes" +
+                File.separator + "classes.jar";
+            addExisting( new Path( classes ) );
+            final String ui = System.getProperty( "java.home" ) +
+                File.separator + ".." + File.separator + "Classes" +
+                File.separator + "ui.jar";
+            addExisting( new Path( ui ) );
         }
     }
 
@@ -427,7 +413,7 @@ public class Path
     {
         try
         {
-            Path p = new Path( getProject() );
+            Path p = new Path();
             p.append( this );
             return p;
         }
@@ -461,7 +447,7 @@ public class Path
     public Path concatSystemClasspath( String defValue )
         throws TaskException
     {
-        Path result = new Path( getProject() );
+        Path result = new Path();
 
         String order = defValue;
         if( getProject() != null )
@@ -521,7 +507,7 @@ public class Path
         {
             throw noChildrenAllowed();
         }
-        Path p = new Path( getProject() );
+        Path p = new Path();
         elements.add( p );
         checked = false;
         return p;
@@ -597,10 +583,6 @@ public class Path
             else if( o instanceof Path )
             {
                 Path p = (Path)o;
-                if( p.getProject() == null )
-                {
-                    p.setProject( getProject() );
-                }
                 String[] parts = p.list();
                 for( int j = 0; j < parts.length; j++ )
                 {

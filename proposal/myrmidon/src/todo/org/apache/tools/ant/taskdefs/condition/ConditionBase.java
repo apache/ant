@@ -199,11 +199,6 @@ public abstract class ConditionBase extends ProjectComponent
             {
                 throw new NoSuchElementException();
             }
-
-            if( o instanceof ProjectComponent )
-            {
-                ( (ProjectComponent)o ).setProject( getProject() );
-            }
             return o;
         }
     }

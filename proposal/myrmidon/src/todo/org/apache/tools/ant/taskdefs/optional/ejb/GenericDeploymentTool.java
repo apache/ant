@@ -198,7 +198,7 @@ public class GenericDeploymentTool
     {
         if( classpath == null )
         {
-            classpath = new Path( task.getProject() );
+            classpath = new Path();
         }
         return classpath.createPath();
     }
@@ -670,11 +670,6 @@ public class GenericDeploymentTool
          * subclasses should throw a TaskException if the configuration is
          * invalid for their server.
          */
-    }
-
-    protected void log( String message, int level )
-    {
-        getTask().log( message, level );
     }
 
     /**

@@ -75,7 +75,7 @@ public class DocletInfo
     {
         if( m_path == null )
         {
-            m_path = new Path( null );
+            m_path = new Path();
         }
         return m_path.createPath();
     }

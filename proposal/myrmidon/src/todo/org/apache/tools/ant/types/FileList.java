@@ -38,7 +38,6 @@ public class FileList extends DataType
     {
         this.dir = filelist.dir;
         this.filenames = filelist.filenames;
-        setProject( filelist.getProject() );
     }
 
     public void setDir( File dir )

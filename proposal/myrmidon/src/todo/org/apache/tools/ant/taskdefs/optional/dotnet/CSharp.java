@@ -422,7 +422,7 @@ public class CSharp
     {
         //demand create pathlist
         if( _referenceFiles == null )
-            _referenceFiles = new Path( this.getProject() );
+            _referenceFiles = new Path();
         _referenceFiles.append( path );
     }
 

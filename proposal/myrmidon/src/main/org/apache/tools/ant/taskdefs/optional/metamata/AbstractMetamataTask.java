@@ -158,7 +158,7 @@ public abstract class AbstractMetamataTask extends Task
     {
         if( classPath == null )
         {
-            classPath = new Path( getProject() );
+            classPath = new Path();
         }
         return classPath;
     }
@@ -182,7 +182,7 @@ public abstract class AbstractMetamataTask extends Task
     {
         if( sourcePath == null )
         {
-            sourcePath = new Path( getProject() );
+            sourcePath = new Path();
         }
         return sourcePath;
     }

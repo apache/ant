@@ -228,7 +228,7 @@ public class CommandlineJava implements Cloneable
     {
         if( classpath == null )
         {
-            classpath = new Path( p );
+            classpath = new Path();
         }
         return classpath;
     }

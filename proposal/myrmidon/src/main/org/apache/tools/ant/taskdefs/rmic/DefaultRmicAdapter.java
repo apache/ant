@@ -187,7 +187,7 @@ public abstract class DefaultRmicAdapter
     {
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
-        Path classpath = new Path( attributes.getProject() );
+        Path classpath = new Path();
         classpath.setLocation( attributes.getBase() );
 
         // Combine the build classpath with the system classpath, in an

@@ -184,7 +184,7 @@ public class Depend extends MatchingTask
     {
         if( dependClasspath == null )
         {
-            dependClasspath = new Path( getProject() );
+            dependClasspath = new Path();
         }
         return dependClasspath.createPath();
     }

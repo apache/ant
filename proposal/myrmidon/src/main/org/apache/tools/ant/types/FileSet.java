@@ -50,7 +50,6 @@ public class FileSet
         this.additionalPatterns = fileset.additionalPatterns;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.isCaseSensitive = fileset.isCaseSensitive;
-        setProject( getProject() );
     }
 
     /**

@@ -84,7 +84,7 @@ public class Kjc extends DefaultCompilerAdapter
         // generate the clsspath
         cmd.createArgument().setValue( "-classpath" );
 
-        Path cp = new Path( m_project );
+        Path cp = new Path();
 
         // kjc don't have bootclasspath option.
         if( m_bootclasspath != null )

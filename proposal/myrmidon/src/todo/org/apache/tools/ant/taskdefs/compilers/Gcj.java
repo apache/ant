@@ -44,7 +44,7 @@ public class Gcj extends DefaultCompilerAdapter
         throws TaskException
     {
         Commandline cmd = new Commandline();
-        Path classpath = new Path( m_project );
+        Path classpath = new Path();
 
         // gcj doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.

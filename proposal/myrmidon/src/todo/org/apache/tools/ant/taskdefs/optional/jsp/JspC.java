@@ -314,7 +314,7 @@ public class JspC extends MatchingTask
         throws TaskException
     {
         if( classpath == null )
-            classpath = new Path( getProject() );
+            classpath = new Path();
         return classpath.createPath();
     }
 

@@ -96,7 +96,7 @@ public class UpToDate extends MatchingTask implements Condition
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapperElement = new Mapper( getProject() );
+        mapperElement = new Mapper();
         return mapperElement;
     }
 

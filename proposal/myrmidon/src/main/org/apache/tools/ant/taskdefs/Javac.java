@@ -658,7 +658,7 @@ public class Javac extends MatchingTask
     {
         if( bootclasspath == null )
         {
-            bootclasspath = new Path( getProject() );
+            bootclasspath = new Path();
         }
         return bootclasspath.createPath();
     }
@@ -673,7 +673,7 @@ public class Javac extends MatchingTask
     {
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( getProject() );
+            compileClasspath = new Path();
         }
         return compileClasspath.createPath();
     }
@@ -701,7 +701,7 @@ public class Javac extends MatchingTask
     {
         if( extdirs == null )
         {
-            extdirs = new Path( getProject() );
+            extdirs = new Path();
         }
         return extdirs.createPath();
     }
@@ -716,7 +716,7 @@ public class Javac extends MatchingTask
     {
         if( src == null )
         {
-            src = new Path( getProject() );
+            src = new Path();
         }
         return src.createPath();
     }

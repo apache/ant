@@ -376,7 +376,7 @@ public class WebsphereDeploymentTool
     {
         if( wasClasspath == null )
         {
-            wasClasspath = new Path( getTask().getProject() );
+            wasClasspath = new Path();
         }
         return wasClasspath.createPath();
     }
@@ -403,7 +403,7 @@ public class WebsphereDeploymentTool
     protected ClassLoader getClassLoaderFromJar( File classjar )
         throws IOException, TaskException
     {
-        Path lookupPath = new Path( getTask().getProject() );
+        Path lookupPath = new Path();
         lookupPath.setLocation( classjar );
         Path classpath = getCombinedClasspath();
         if( classpath != null )

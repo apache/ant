@@ -46,7 +46,7 @@ public class VAJTask extends Task
         {
             if( remoteServer == null )
             {
-                util = new VAJLocalToolUtil();
+                util = new VAJLocalToolUtil( this );
             }
             else
             {
@@ -56,16 +56,4 @@ public class VAJTask extends Task
         return util;
     }
 
-    /**
-     * Adaption of VAJLocalUtil to Task context.
-     *
-     * @author RT
-     */
-    class VAJLocalToolUtil extends VAJLocalUtil
-    {
-        public void log( String msg, int level )
-        {
-            VAJTask.this.log( msg, level );
-        }
-    }
 }

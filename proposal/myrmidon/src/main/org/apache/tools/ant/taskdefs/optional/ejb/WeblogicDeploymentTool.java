@@ -296,7 +296,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
     {
         if( wlClasspath == null )
         {
-            wlClasspath = new Path( getTask().getProject() );
+            wlClasspath = new Path();
         }
         return wlClasspath.createPath();
     }
@@ -323,7 +323,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
     protected ClassLoader getClassLoaderFromJar( File classjar )
         throws IOException, TaskException
     {
-        Path lookupPath = new Path( getTask().getProject() );
+        Path lookupPath = new Path();
         lookupPath.setLocation( classjar );
 
         Path classpath = getCombinedClasspath();
@@ -740,7 +740,6 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
      * @param sourceJar java.io.File representing the source (EJB1.1) jarfile.
      * @param destJar java.io.File representing the destination, WebLogic
      *      jarfile.
-     * @param publicId Description of Parameter
      */
     private void buildWeblogicJar( File sourceJar, File destJar, String publicId )
         throws TaskException

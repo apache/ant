@@ -101,7 +101,7 @@ public class Native2Ascii extends MatchingTask
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapper = new Mapper( getProject() );
+        mapper = new Mapper();
         return mapper;
     }
 

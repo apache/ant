@@ -122,7 +122,7 @@ public class ExecuteOn extends ExecTask
         {
             throw new TaskException( "Cannot define more than one mapper" );
         }
-        mapperElement = new Mapper( getProject() );
+        mapperElement = new Mapper();
         return mapperElement;
     }
 

@@ -96,7 +96,7 @@ public class Available
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( getProject() );
+            this.classpath = new Path();
         }
         return this.classpath.createPath();
     }
@@ -106,7 +106,7 @@ public class Available
     {
         if( this.filepath == null )
         {
-            this.filepath = new Path( getProject() );
+            this.filepath = new Path();
         }
         return this.filepath.createPath();
     }
@@ -129,7 +129,6 @@ public class Available
 
         if( classpath != null )
         {
-            classpath.setProject( getProject() );
             this.loader = new AntClassLoader( getProject(), classpath );
         }
 

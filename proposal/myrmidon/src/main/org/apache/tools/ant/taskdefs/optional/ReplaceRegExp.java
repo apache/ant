@@ -197,7 +197,8 @@ public class ReplaceRegExp extends Task
         }
         else if( file != null )
         {
-            final String message = "The following file is missing: '" + file.getAbsolutePath() + "'";
+            final String message =
+                "The following file is missing: '" + file.getAbsolutePath() + "'";
             getLogger().error( message );
         }
 

@@ -183,7 +183,7 @@ public class Ejbc extends MatchingTask
 
         Argument arguments = helperTask.createArg();
         arguments.setLine( args );
-        helperTask.setClasspath( new Path( getProject(), execClassPath ) );
+        helperTask.setClasspath( new Path( execClassPath ) );
         if( helperTask.executeJava() != 0 )
         {
             throw new TaskException( "Execution of ejbc helper failed" );

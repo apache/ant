@@ -42,7 +42,7 @@ public class Jikes
     {
         getLogger().debug( "Using jikes compiler" );
 
-        Path classpath = new Path( m_project );
+        Path classpath = new Path();
 
         // Jikes doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.
@@ -77,7 +77,7 @@ public class Jikes
         String jikesPath = System.getProperty( "jikes.class.path" );
         if( jikesPath != null )
         {
-            classpath.append( new Path( m_project, jikesPath ) );
+            classpath.append( new Path( jikesPath ) );
         }
 
         Commandline cmd = new Commandline();

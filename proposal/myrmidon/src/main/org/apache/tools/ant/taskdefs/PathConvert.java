@@ -146,7 +146,7 @@ public class PathConvert extends Task
 
         if( path == null )
         {
-            path = new Path( getProject() );
+            path = new Path();
         }
         return path.createPath();
     }
@@ -162,7 +162,7 @@ public class PathConvert extends Task
         // If we are a reference, the create a Path from the reference
         if( isReference() )
         {
-            path = new Path( getProject() ).createPath();
+            path = new Path().createPath();
 
             Object obj = refid.getReferencedObject( getProject() );
 

@@ -674,7 +674,7 @@ public class IContract extends MatchingTask
     {
         if( classpath == null )
         {
-            classpath = new Path( getProject() );
+            classpath = new Path();
         }
         return classpath;
     }
@@ -738,29 +738,29 @@ public class IContract extends MatchingTask
 
             // Create the classpath required to compile the sourcefiles BEFORE instrumentation
             Path beforeInstrumentationClasspath = ( (Path)baseClasspath.clone() );
-            beforeInstrumentationClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
+            beforeInstrumentationClasspath.append( new Path( srcDir.getAbsolutePath() ) );
 
             // Create the classpath required to compile the sourcefiles AFTER instrumentation
             Path afterInstrumentationClasspath = ( (Path)baseClasspath.clone() );
-            afterInstrumentationClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
-            afterInstrumentationClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
-            afterInstrumentationClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
-            afterInstrumentationClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
+            afterInstrumentationClasspath.append( new Path( instrumentDir.getAbsolutePath() ) );
+            afterInstrumentationClasspath.append( new Path( repositoryDir.getAbsolutePath() ) );
+            afterInstrumentationClasspath.append( new Path( srcDir.getAbsolutePath() ) );
+            afterInstrumentationClasspath.append( new Path( buildDir.getAbsolutePath() ) );
 
             // Create the classpath required to automatically compile the repository files
             Path repositoryClasspath = ( (Path)baseClasspath.clone() );
-            repositoryClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
-            repositoryClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
-            repositoryClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
-            repositoryClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
+            repositoryClasspath.append( new Path( instrumentDir.getAbsolutePath() ) );
+            repositoryClasspath.append( new Path( srcDir.getAbsolutePath() ) );
+            repositoryClasspath.append( new Path( repositoryDir.getAbsolutePath() ) );
+            repositoryClasspath.append( new Path( buildDir.getAbsolutePath() ) );
 
             // Create the classpath required for iContract itself
             Path iContractClasspath = ( (Path)baseClasspath.clone() );
-            iContractClasspath.append( new Path( getProject(), System.getProperty( "java.home" ) + File.separator + ".." + File.separator + "lib" + File.separator + "tools.jar" ) );
-            iContractClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
-            iContractClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
-            iContractClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
-            iContractClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
+            iContractClasspath.append( new Path( System.getProperty( "java.home" ) + File.separator + ".." + File.separator + "lib" + File.separator + "tools.jar" ) );
+            iContractClasspath.append( new Path( srcDir.getAbsolutePath() ) );
+            iContractClasspath.append( new Path( repositoryDir.getAbsolutePath() ) );
+            iContractClasspath.append( new Path( instrumentDir.getAbsolutePath() ) );
+            iContractClasspath.append( new Path( buildDir.getAbsolutePath() ) );
 
             // Create a forked java process
             Java iContract = (Java)getProject().createTask( "java" );

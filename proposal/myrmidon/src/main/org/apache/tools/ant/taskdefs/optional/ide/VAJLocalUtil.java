@@ -28,7 +28,8 @@ import org.apache.tools.ant.DirectoryScanner;
  *
  * @author Wolf Siberski, TUI Infotec GmbH
  */
-abstract class VAJLocalUtil implements VAJUtil
+abstract class VAJLocalUtil
+    implements VAJUtil
 {
     // singleton containing the VAJ workspace
     private static Workspace workspace;

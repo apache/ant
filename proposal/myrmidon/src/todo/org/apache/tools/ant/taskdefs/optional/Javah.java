@@ -206,7 +206,7 @@ public class Javah extends Task
     {
         if( bootclasspath == null )
         {
-            bootclasspath = new Path( getProject() );
+            bootclasspath = new Path();
         }
         return bootclasspath.createPath();
     }
@@ -222,7 +222,7 @@ public class Javah extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( getProject() );
+            classpath = new Path();
         }
         return classpath.createPath();
     }

@@ -126,7 +126,7 @@ public class WLJspc extends MatchingTask
     {
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( getProject() );
+            compileClasspath = new Path();
         }
         return compileClasspath;
     }
@@ -160,7 +160,7 @@ public class WLJspc extends MatchingTask
         //use the systemclasspath as well, to include the ant jar
         if( compileClasspath == null )
         {
-            compileClasspath = new Path( getProject() );
+            compileClasspath = new Path();
         }
 
         compileClasspath.append( Path.systemClasspath );

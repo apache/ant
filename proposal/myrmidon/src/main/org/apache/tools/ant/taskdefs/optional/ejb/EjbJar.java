@@ -254,7 +254,7 @@ public class EjbJar extends MatchingTask
     {
         if( config.classpath == null )
         {
-            config.classpath = new Path( getProject() );
+            config.classpath = new Path();
         }
         return config.classpath.createPath();
     }

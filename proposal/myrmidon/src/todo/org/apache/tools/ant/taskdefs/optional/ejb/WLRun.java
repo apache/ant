@@ -237,7 +237,7 @@ public class WLRun extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( getProject() );
+            classpath = new Path();
         }
         return classpath.createPath();
     }
@@ -251,7 +251,7 @@ public class WLRun extends Task
     {
         if( weblogicClasspath == null )
         {
-            weblogicClasspath = new Path( getProject() );
+            weblogicClasspath = new Path();
         }
         return weblogicClasspath.createPath();
     }

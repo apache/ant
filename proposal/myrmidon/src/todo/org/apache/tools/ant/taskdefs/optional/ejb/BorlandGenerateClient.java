@@ -97,7 +97,7 @@ public class BorlandGenerateClient extends Task
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( getProject() );
+            this.classpath = new Path();
         }
         return this.classpath.createPath();
     }

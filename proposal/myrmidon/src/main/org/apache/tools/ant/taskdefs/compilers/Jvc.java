@@ -29,7 +29,7 @@ public class Jvc extends DefaultCompilerAdapter
     {
         getLogger().debug( "Using jvc compiler" );
 
-        Path classpath = new Path( m_project );
+        Path classpath = new Path();
 
         // jvc doesn't support bootclasspath dir (-bootclasspath)
         // so we'll emulate it for compatibility and convenience.

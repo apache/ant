@@ -14,16 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Abstract base class to provide common services for the VAJ tool API servlets
  *
  * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
-public abstract class VAJToolsServlet extends HttpServlet
+public abstract class VAJToolsServlet
+    extends HttpServlet
 {
-
     // constants for servlet param names
     public final static String DIR_PARAM = "dir";
     public final static String INCLUDE_PARAM = "include";
@@ -197,10 +196,9 @@ public abstract class VAJToolsServlet extends HttpServlet
 
     /**
      * Adaptation of VAJUtil for servlet context.
-     *
-     * @author RT
      */
-    class VAJLocalServletUtil extends VAJLocalUtil
+    class VAJLocalServletUtil
+        extends VAJLocalUtil
     {
         public void log( String msg, int level )
         {

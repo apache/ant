@@ -118,7 +118,7 @@ public class JlinkTask extends MatchingTask
     {
         if( this.addfiles == null )
         {
-            this.addfiles = new Path( getProject() );
+            this.addfiles = new Path();
         }
         return this.addfiles.createPath();
     }
@@ -134,7 +134,7 @@ public class JlinkTask extends MatchingTask
     {
         if( this.mergefiles == null )
         {
-            this.mergefiles = new Path( getProject() );
+            this.mergefiles = new Path();
         }
         return this.mergefiles.createPath();
     }
