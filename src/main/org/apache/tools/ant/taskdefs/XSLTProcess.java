@@ -130,16 +130,20 @@ public class XSLTProcess extends MatchingTask {
         scanner = getDirectoryScanner(baseDir);
         log("Transforming into "+destDir, Project.MSG_INFO);
 
-        // if processor wasn't specified, default it to xslp or xalan,
-        // depending on which is in the classpath
+        // if processor wasn't specified, see if TraX is available.  If not,
+        // default it to xslp or xalan, depending on which is in the classpath
         if (liaison == null) {
             try {
-                setProcessor("xslp");
+                setProcessor("trax");
             } catch (Throwable e1) {
                 try {
-                    setProcessor("xalan");
+                    setProcessor("xslp");
                 } catch (Throwable e2) {
-                    throw new BuildException(e2);
+                    try {
+                        setProcessor("xalan");
+                    } catch (Throwable e3) {
+                        throw new BuildException(e1);
+                    }
                 }
             }
         }
@@ -220,8 +224,13 @@ public class XSLTProcess extends MatchingTask {
      * Sets the file to use for styling relative to the base directory.
      */
     public void setProcessor(String processor) throws Exception {
+System.out.println("trying " + processor);
 
-        if (processor.equals("xslp")) {
+        if (processor.equals("trax")) {
+            final Class clazz = 
+                Class.forName("org.apache.tools.ant.taskdefs.optional.TraXLiaison");
+            liaison = (XSLTLiaison)clazz.newInstance();
+        } else if (processor.equals("xslp")) {
             final Class clazz = 
                 Class.forName("org.apache.tools.ant.taskdefs.optional.XslpLiaison");
             liaison = (XSLTLiaison) clazz.newInstance();
