@@ -75,6 +75,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     /**
      * Generate a report based on the document created by the merge.
+     * @return the report
      */
     public AggregateTransformer createReport() {
         AggregateTransformer transformer = new AggregateTransformer(this);
