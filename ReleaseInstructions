@@ -140,9 +140,8 @@ Note: This document was created in the context of releasing Ant 1.5.
     announce@jakarta.apache.org, announce@xml.apache.org,
     announce@apache.org, ant-dev and ant-user.
 
-    Announce release at freshmeat.net and opensourcedirectory.org
-    (Stefan Bodewig is the owner of Ant's project entries - bug him
-    ;-).
+    Announce release at freshmeat.net
+    (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
 
     Announce release in the usenet groups comp.lang.java.softwaretools
     and comp.lang.java.announce.
