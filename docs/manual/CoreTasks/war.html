@@ -171,6 +171,14 @@ images/large/logo.gif
 using Ant's default manifest file. The content of
 <code>WEB-INF/web.xml</code> is identical to
 <code>src/metadata/myapp.xml</code>.
+
+We regulary receive bug reports that this task is creating the WEB-INF
+directory, and thus it is our fault your webapp doesn't work. The cause
+of these complaints lies in WinZip, which turns an all upper-case
+directory into an all lower case one in a fit of helpfulness. Please check that
+jar xvf yourwebapp.war shows the same behaviour before filing another
+report. 
+
 <hr>
 <p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
