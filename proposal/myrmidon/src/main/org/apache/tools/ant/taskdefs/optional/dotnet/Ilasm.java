@@ -42,6 +42,12 @@ public class Ilasm
     extends MatchingTask
 {
     /**
+     * name of the executable. the .exe suffix is deliberately not included in
+     * anticipation of the unix version
+     */
+    private final static String EXE_NAME = "ilasm";
+
+    /**
      * what is the file extension we search on?
      */
     private final static String FILE_EXT = "il";
@@ -50,11 +56,6 @@ public class Ilasm
      * and now derive the search pattern from the extension
      */
     private final static String FILE_PATTERN = "**/*." + FILE_EXT;
-
-    /**
-     * title of task for external presentation
-     */
-    private final static String EXE_TITLE = "ilasm";
 
     /**
      * debug flag. Controls generation of debug information.
