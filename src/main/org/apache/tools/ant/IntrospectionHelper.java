@@ -22,10 +22,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.taskdefs.PreSetDef;
 
@@ -34,7 +36,6 @@ import org.apache.tools.ant.taskdefs.PreSetDef;
  * holds to set attributes, create nested elements or hold PCDATA
  * elements.
  * The class is final as it has a private constructor.
- *
  */
 public final class IntrospectionHelper implements BuildListener {
 
@@ -63,9 +64,9 @@ public final class IntrospectionHelper implements BuildListener {
     private Hashtable nestedCreators;
 
     /**
-     * Vector of methods matching add[Configured](Class) pattern
+     * Vector of methods matching add[Configured](Class) pattern.
      */
-    private List   addTypeMethods;
+    private List addTypeMethods;
 
     /**
      * The method to invoke to add PCDATA.
@@ -188,8 +189,7 @@ public final class IntrospectionHelper implements BuildListener {
             }
 
             // hide addTask for TaskContainers
-            if (org.apache.tools.ant.TaskContainer.class.isAssignableFrom(bean)
-                && args.length == 1 && "addTask".equals(name)
+            if (isContainer() && args.length == 1 && "addTask".equals(name)
                 && org.apache.tools.ant.Task.class.equals(args[0])) {
                 continue;
             }
@@ -246,27 +246,12 @@ public final class IntrospectionHelper implements BuildListener {
                 // add takes preference over create for CB purposes
                 if (nestedCreators.get(propName) == null) {
                     nestedTypes.put(propName, returnType);
-                    nestedCreators.put(propName, new NestedCreator() {
-                        public boolean isPolyMorphic() {
-                            return false;
-                        }
-
-                        public Object getRealObject() {
-                            return null;
-                        }
-
-                        public Class getElementClass() {
-                            return null;
-                        }
-
-                        public Object create(
+                    nestedCreators.put(propName, new NestedCreator(m) {
+                        Object create(
                             Project project, Object parent, Object ignore)
                             throws InvocationTargetException,
                             IllegalAccessException {
                             return m.invoke(parent, new Object[] {});
-                        }
-
-                        public void store(Object parent, Object child) {
                         }
                     });
                 }
@@ -290,21 +275,16 @@ public final class IntrospectionHelper implements BuildListener {
                     final Constructor c = constructor;
                     String propName = getPropertyName(name, "addConfigured");
                     nestedTypes.put(propName, args[0]);
-                    nestedCreators.put(propName, new NestedCreator() {
-
-                            public boolean isPolyMorphic() {
+                    nestedCreators.put(propName, new NestedCreator(m) {
+                            boolean isPolyMorphic() {
                                 return true;
                             }
 
-                            public Object getRealObject() {
-                                return null;
-                            }
-
-                            public Class getElementClass() {
+                            Class getElementClass() {
                                 return c.getDeclaringClass();
                             }
 
-                            public Object create(
+                            Object create(
                                 Project project, Object parent, Object child)
                                 throws InvocationTargetException,
                                 IllegalAccessException, InstantiationException {
@@ -323,7 +303,7 @@ public final class IntrospectionHelper implements BuildListener {
                                 return child;
                             }
 
-                            public void store(Object parent, Object child)
+                            void store(Object parent, Object child)
                                 throws InvocationTargetException,
                                 IllegalAccessException, InstantiationException {
                                 m.invoke(parent, new Object[] {child});
@@ -353,21 +333,16 @@ public final class IntrospectionHelper implements BuildListener {
                     final Constructor c = constructor;
                     String propName = getPropertyName(name, "add");
                     nestedTypes.put(propName, args[0]);
-                    nestedCreators.put(propName, new NestedCreator() {
-
-                            public boolean isPolyMorphic() {
+                    nestedCreators.put(propName, new NestedCreator(m) {
+                            boolean isPolyMorphic() {
                                 return true;
                             }
 
-                            public Object getRealObject() {
-                                return null;
-                            }
-
-                            public Class getElementClass() {
+                            Class getElementClass() {
                                 return c.getDeclaringClass();
                             }
 
-                            public Object create(
+                            Object create(
                                 Project project, Object parent, Object child)
                                 throws InvocationTargetException,
                                        IllegalAccessException, InstantiationException {
@@ -386,12 +361,6 @@ public final class IntrospectionHelper implements BuildListener {
                                 m.invoke(parent, new Object[] {child});
                                 return child;
                             }
-                            public void store(Object parent, Object child)
-                                throws InvocationTargetException,
-                                       IllegalAccessException, InstantiationException {
-
-                            }
-
                         });
                 } catch (NoSuchMethodException nse) {
                     // ignore
@@ -453,7 +422,7 @@ public final class IntrospectionHelper implements BuildListener {
      *
      * @return a helper for the specified class
      */
-    public static synchronized IntrospectionHelper getHelper(Project p, 
+    public static synchronized IntrospectionHelper getHelper(Project p,
                                                              Class c) {
         IntrospectionHelper ih = (IntrospectionHelper) helpers.get(c);
         if (ih == null) {
@@ -529,7 +498,7 @@ public final class IntrospectionHelper implements BuildListener {
             throw new BuildException(t);
         }
     }
-    
+
 
     /**
      * Adds PCDATA to an element, using the element's
@@ -619,23 +588,10 @@ public final class IntrospectionHelper implements BuildListener {
                     (child == null ? "" : child.getNamespace()),
                     name, qName);
             if (nestedElement != null) {
-                nc = new NestedCreator() {
-                    public boolean isPolyMorphic() {
-                        return false;
-                    }
-                    public Class getElementClass() {
-                        return null;
-                    }
-
-                    public Object getRealObject() {
-                        return null;
-                    }
-
-                    public Object create(
+                nc = new NestedCreator(null) {
+                    Object create(
                         Project project, Object parent, Object ignore) {
                         return nestedElement;
-                    }
-                    public void store(Object parent, Object child) {
                     }
                 };
             }
@@ -645,23 +601,10 @@ public final class IntrospectionHelper implements BuildListener {
             final Object nestedElement =
                 dc.createDynamicElement(name.toLowerCase(Locale.US));
             if (nestedElement != null) {
-                nc = new NestedCreator() {
-                    public boolean isPolyMorphic() {
-                        return false;
-                    }
-                    public Class getElementClass() {
-                        return null;
-                    }
-
-                    public Object getRealObject() {
-                        return null;
-                    }
-
-                    public Object create(
+                nc = new NestedCreator(null) {
+                    Object create(
                         Project project, Object parent, Object ignore) {
                         return nestedElement;
-                    }
-                    public void store(Object parent, Object child) {
                     }
                 };
             }
@@ -730,7 +673,6 @@ public final class IntrospectionHelper implements BuildListener {
      * @param ue           The unknown element associated with the element.
      * @return a creator object to create and store the element instance.
      */
-
     public Creator getElementCreator(
         Project project, String parentUri, Object parent, String elementName,
         UnknownElement ue) {
@@ -740,7 +682,37 @@ public final class IntrospectionHelper implements BuildListener {
     }
 
     /**
-     * Indicate if this element supports a nested element of the
+     * Indicates whether the introspected class is a dynamic one,
+     * supporting arbitrary nested elements and/or attributes.
+     *
+     * @return <code>true<code> if the introspected class is dynamic;
+     *         <code>false<code> otherwise.
+     * @since  Ant 1.6.3
+     *
+     * @see DynamicElement
+     * @see DynamicElementNS
+     */
+    public boolean isDynamic() {
+        return DynamicElement.class.isAssignableFrom(bean)
+            || DynamicElementNS.class.isAssignableFrom(bean);
+    }
+
+    /**
+     * Indicates whether the introspected class is a task container,
+     * supporting arbitrary nested tasks/types.
+     *
+     * @return <code>true<code> if the introspected class is a container;
+     *         <code>false<code> otherwise.
+     * @since  Ant 1.6.3
+     *
+     * @see TaskContainer
+     */
+    public boolean isContainer() {
+        return TaskContainer.class.isAssignableFrom(bean);
+    }
+
+    /**
+     * Indicates if this element supports a nested element of the
      * given name.
      *
      * @param elementName the name of the nested element being checked
@@ -749,8 +721,7 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public boolean supportsNestedElement(String elementName) {
         return nestedCreators.containsKey(elementName.toLowerCase(Locale.US))
-            || DynamicElement.class.isAssignableFrom(bean)
-            || DynamicElementNS.class.isAssignableFrom(bean)
+            || isDynamic()
             || addTypeMethods.size() != 0;
     }
 
@@ -776,8 +747,7 @@ public final class IntrospectionHelper implements BuildListener {
         return (
             nestedCreators.containsKey(name.toLowerCase(Locale.US))
             && (uri.equals(parentUri) || uri.equals("")))
-            || DynamicElement.class.isAssignableFrom(bean)
-            || DynamicElementNS.class.isAssignableFrom(bean)
+            || isDynamic()
             || addTypeMethods.size() != 0;
     }
 
@@ -876,6 +846,72 @@ public final class IntrospectionHelper implements BuildListener {
     }
 
     /**
+     * Returns the addText method when the introspected
+     * class supports nested text.
+     *
+     * @return the method on this introspected class that adds nested text.
+     *         Cannot be <code>null</code>.
+     * @throws BuildException if the introspected class does not
+     *         support the nested text.
+     * @since  Ant 1.6.3
+     */
+    public Method getAddTextMethod()
+                  throws BuildException {
+        if (!supportsCharacters()) {
+            String msg = "Class " + bean.getName()
+                + " doesn't support nested text data.";
+            throw new BuildException(msg);
+        }
+        return addText;
+    }
+
+    /**
+     * Returns the adder or creator method of a named nested element.
+     *
+     * @param  elementName The name of the attribute to find the setter
+     *         method of. Must not be <code>null</code>.
+     * @return the method on this introspected class that adds or creates this
+     *         nested element. Can be <code>null</code> when the introspected
+     *         class is a dynamic configurator!
+     * @throws BuildException if the introspected class does not
+     *         support the named nested element.
+     * @since  Ant 1.6.3
+     */
+    public Method getElementMethod(String elementName)
+                  throws BuildException {
+        Object creator = nestedCreators.get(elementName);
+        if (creator == null) {
+            String msg = "Class " + bean.getName()
+                + " doesn't support the nested \"" + elementName
+                + "\" element.";
+            throw new BuildException(msg);
+        }
+        return ((NestedCreator) creator).method;
+    }
+
+    /**
+     * Returns the setter method of a named attribute.
+     *
+     * @param  attributeName The name of the attribute to find the setter
+     *         method of. Must not be <code>null</code>.
+     * @return the method on this introspected class that sets this attribute.
+     *         This will never be <code>null</code>.
+     * @throws BuildException if the introspected class does not
+     *         support the named attribute.
+     * @since  Ant 1.6.3
+     */
+    public Method getAttributeMethod(String attributeName)
+                  throws BuildException {
+        Object setter = attributeSetters.get(attributeName);
+        if (setter == null) {
+            String msg = "Class " + bean.getName()
+                + " doesn't support the \"" + attributeName + "\" attribute.";
+            throw new BuildException(msg);
+        }
+        return ((AttributeSetter) setter).method;
+    }
+
+    /**
      * Returns whether or not the introspected class supports PCDATA.
      *
      * @return whether or not the introspected class supports PCDATA.
@@ -890,9 +926,25 @@ public final class IntrospectionHelper implements BuildListener {
      *
      * @return an enumeration of the names of the attributes supported
      *         by the introspected class.
+     * @see #getAttributeMap
      */
     public Enumeration getAttributes() {
         return attributeSetters.keys();
+    }
+
+    /**
+     * Returns a read-only map of attributes supported
+     * by the introspected class.
+     *
+     * @return an attribute name to attribute <code>Class</code>
+     *         unmodifiable map. Can be empty, but never <code>null</code>.
+     * @since  Ant 1.6.3
+     */
+    public Map getAttributeMap() {
+        if (attributeTypes.size() < 1) {
+            return Collections.EMPTY_MAP;
+        }
+        return Collections.unmodifiableMap(attributeTypes);
     }
 
     /**
@@ -901,9 +953,49 @@ public final class IntrospectionHelper implements BuildListener {
      *
      * @return an enumeration of the names of the nested elements supported
      *         by the introspected class.
+     * @see #getNestedElementMap
      */
     public Enumeration getNestedElements() {
         return nestedTypes.keys();
+    }
+
+    /**
+     * Returns a read-only map of nested elements supported
+     * by the introspected class.
+     *
+     * @return a nested-element name to nested-element <code>Class</code>
+     *         unmodifiable map. Can be empty, but never <code>null</code>.
+     * @since  Ant 1.6.3
+     */
+    public Map getNestedElementMap() {
+        if (nestedTypes.size() < 1) {
+            return Collections.EMPTY_MAP;
+        }
+        return Collections.unmodifiableMap(nestedTypes);
+    }
+
+    /**
+     * Returns a read-only list of extension points supported
+     * by the introspected class.
+     * <p>
+     * A task/type or nested element with void methods named <code>add()<code>
+     * or <code>addConfigured()</code>, taking a single class or interface
+     * argument, supports extensions point. This method returns the list of
+     * all these <em>void add[Configured](type)</em> methods.
+     *
+     * @return a list of void, single argument add() or addConfigured()
+     *         <code>Method<code>s of all supported extension points.
+     *         These methods are sorted such that if the argument type of a
+     *         method derives from another type also an argument of a method
+     *         of this list, the method with the most derived argument will
+     *         always appear first. Can be empty, but never <code>null</code>.
+     * @since  Ant 1.6.3
+     */
+    public List getExtensionPoints() {
+        if (addTypeMethods.size() < 1) {
+            return Collections.EMPTY_LIST;
+        }
+        return Collections.unmodifiableList(addTypeMethods);
     }
 
     /**
@@ -947,7 +1039,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         // simplest case - setAttribute expects String
         if (java.lang.String.class.equals(reflectedArg)) {
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new String[] {value});
@@ -956,7 +1048,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         // char and Character get special treatment - take the first character
         } else if (java.lang.Character.class.equals(reflectedArg)) {
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         if (value.length() == 0) {
@@ -971,7 +1063,7 @@ public final class IntrospectionHelper implements BuildListener {
         // boolean and Boolean get special treatment because we
         // have a nice method in Project
         } else if (java.lang.Boolean.class.equals(reflectedArg)) {
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent,
@@ -983,7 +1075,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         // Class doesn't have a String constructor but a decent factory method
         } else if (java.lang.Class.class.equals(reflectedArg)) {
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
@@ -996,7 +1088,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         // resolve relative paths through Project
         } else if (java.io.File.class.equals(reflectedArg)) {
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent, new File[] {p.resolveFile(value)});
@@ -1006,7 +1098,7 @@ public final class IntrospectionHelper implements BuildListener {
 
         // EnumeratedAttributes have their own helper class
         } else if (EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
@@ -1045,7 +1137,7 @@ public final class IntrospectionHelper implements BuildListener {
             final boolean finalIncludeProject = includeProject;
             final Constructor finalConstructor = c;
 
-            return new AttributeSetter() {
+            return new AttributeSetter(m) {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
@@ -1235,25 +1327,45 @@ public final class IntrospectionHelper implements BuildListener {
      * Internal interface used to create nested elements. Not documented
      * in detail for reasons of source code readability.
      */
-    private interface NestedCreator {
-        boolean isPolyMorphic();
-        Class getElementClass();
-        Object getRealObject();
-        Object create(Project project, Object parent, Object child)
-            throws InvocationTargetException, IllegalAccessException, InstantiationException;
+    private abstract class NestedCreator {
+        Method method; // the method called to add/create the nested element
+        NestedCreator(Method m) {
+            this.method = m;
+        }
+        boolean isPolyMorphic() {
+            return false;
+        }
+        Class getElementClass() {
+            return null;
+        }
+        Object getRealObject() {
+            return null;
+        }
+        abstract Object create(Project project, Object parent, Object child)
+                        throws InvocationTargetException,
+                               IllegalAccessException,
+                               InstantiationException;
         void store(Object parent, Object child)
-            throws InvocationTargetException, IllegalAccessException, InstantiationException;
+             throws InvocationTargetException,
+                    IllegalAccessException,
+                    InstantiationException {
+            // DO NOTHING
+        }
     }
-
 
     /**
      * Internal interface used to setting element attributes. Not documented
      * in detail for reasons of source code readability.
      */
-    private interface AttributeSetter {
-        void set(Project p, Object parent, String value)
-            throws InvocationTargetException, IllegalAccessException,
-                   BuildException;
+    private abstract class AttributeSetter {
+        Method method; // the method called to set the attribute
+        AttributeSetter(Method m) {
+            this.method = m;
+        }
+        abstract void set(Project p, Object parent, String value)
+                      throws InvocationTargetException,
+                             IllegalAccessException,
+                             BuildException;
     }
 
     /**
@@ -1318,7 +1430,6 @@ public final class IntrospectionHelper implements BuildListener {
     public void messageLogged(BuildEvent event) {
     }
 
-
     /**
      *
      */
@@ -1353,15 +1464,8 @@ public final class IntrospectionHelper implements BuildListener {
         final Object nestedObject = addedObject;
         final Object realObject = rObject;
 
-        return new NestedCreator() {
-            public boolean isPolyMorphic() {
-                return false;
-            }
-
-            public Class getElementClass() {
-                return null;
-            }
-            public Object create(Project project, Object parent, Object ignore)
+        return new NestedCreator(method) {
+            Object create(Project project, Object parent, Object ignore)
                 throws InvocationTargetException, IllegalAccessException {
                 if (!method.getName().endsWith("Configured")) {
                     method.invoke(parent, new Object[]{realObject});
@@ -1369,11 +1473,11 @@ public final class IntrospectionHelper implements BuildListener {
                 return nestedObject;
             }
 
-            public Object getRealObject() {
+            Object getRealObject() {
                 return realObject;
             }
 
-            public void store(Object parent, Object child)
+            void store(Object parent, Object child)
                 throws InvocationTargetException, IllegalAccessException,
                 InstantiationException {
                 if (method.getName().endsWith("Configured")) {
@@ -1389,7 +1493,6 @@ public final class IntrospectionHelper implements BuildListener {
      * ordered so that the more derived classes
      * are first.
      */
-
     private void insertAddTypeMethod(Method method) {
         Class argClass = method.getParameterTypes()[0];
         for (int c = 0; c < addTypeMethods.size(); ++c) {
@@ -1406,10 +1509,9 @@ public final class IntrospectionHelper implements BuildListener {
         addTypeMethods.add(method);
     }
 
-
     /**
      * Search the list of methods to find the first method
-     * that has a parameter that accepts the nested element object
+     * that has a parameter that accepts the nested element object.
      */
     private Method findMatchingMethod(Class paramClass, List methods) {
         Class matchedClass = null;

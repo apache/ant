@@ -20,7 +20,15 @@ package org.apache.tools.ant;
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 import java.io.File;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
@@ -31,6 +39,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 public class IntrospectionHelperTest extends TestCase {
 
     private Project p;
+    private IntrospectionHelper ih;
     private static final String projectBasedir = File.separator;
 
     public IntrospectionHelperTest(String name) {
@@ -40,17 +49,18 @@ public class IntrospectionHelperTest extends TestCase {
     public void setUp() {
         p = new Project();
         p.setBasedir(projectBasedir);
+        ih = IntrospectionHelper.getHelper(getClass());
+    }
+
+    public void testIsDynamic() {
+        assertTrue("Not dynamic", false == ih.isDynamic());
+    }
+
+    public void testIsContainer() {
+        assertTrue("Not a container", false == ih.isContainer());
     }
 
     public void testAddText() throws BuildException {
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(java.lang.String.class);
-        try {
-            ih.addText(p, "", "test");
-            fail("String doesn\'t support addText");
-        } catch (BuildException be) {
-        }
-
-        ih = IntrospectionHelper.getHelper(getClass());
         ih.addText(p, this, "test");
         try {
             ih.addText(p, this, "test2");
@@ -58,14 +68,31 @@ public class IntrospectionHelperTest extends TestCase {
         } catch (BuildException be) {
             assertTrue(be.getException() instanceof AssertionFailedError);
         }
+
+        ih = IntrospectionHelper.getHelper(String.class);
+        try {
+            ih.addText(p, "", "test");
+            fail("String doesn\'t support addText");
+        } catch (BuildException be) {
+        }
+    }
+
+    public void testGetAddTextMethod() {
+        Method m = ih.getAddTextMethod();
+        assertMethod(m, "addText", String.class, "test", "bing!");
+
+        ih = IntrospectionHelper.getHelper(String.class);
+        try {
+            m = ih.getAddTextMethod();
+        } catch (BuildException e) {}
     }
 
     public void testSupportsCharacters() {
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(java.lang.String.class);
-        assertTrue("String doesn\'t support addText", !ih.supportsCharacters());
-        ih = IntrospectionHelper.getHelper(getClass());
         assertTrue("IntrospectionHelperTest supports addText",
-               ih.supportsCharacters());
+                   ih.supportsCharacters());
+
+        ih = IntrospectionHelper.getHelper(String.class);
+        assertTrue("String doesn\'t support addText", !ih.supportsCharacters());
     }
 
     public void addText(String text) {
@@ -73,7 +100,6 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void testElementCreators() throws BuildException {
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
         try {
             ih.getElementType("one");
             fail("don't have element type one");
@@ -99,7 +125,7 @@ public class IntrospectionHelperTest extends TestCase {
             fail("createFive returns primitive type");
         } catch (BuildException be) {
         }
-        assertEquals(java.lang.String.class, ih.getElementType("six"));
+        assertEquals(String.class, ih.getElementType("six"));
         assertEquals("test", ih.createElement(p, this, "six"));
 
         try {
@@ -132,7 +158,7 @@ public class IntrospectionHelperTest extends TestCase {
             fail("no primitive constructor for java.lang.Class");
         } catch (BuildException be) {
         }
-        assertEquals(java.lang.StringBuffer.class, ih.getElementType("thirteen"));
+        assertEquals(StringBuffer.class, ih.getElementType("thirteen"));
         assertEquals("test", ih.createElement(p, this, "thirteen").toString());
 
         try {
@@ -150,23 +176,69 @@ public class IntrospectionHelperTest extends TestCase {
         }
     }
 
+    private Map getExpectedNestedElements() {
+        Map elemMap = new Hashtable();
+        elemMap.put("six", String.class);
+        elemMap.put("thirteen", StringBuffer.class);
+        elemMap.put("fourteen", StringBuffer.class);
+        elemMap.put("fifteen", StringBuffer.class);
+        return elemMap;
+    }
+
     public void testGetNestedElements() {
-        Hashtable h = new Hashtable();
-        h.put("six", java.lang.String.class);
-        h.put("thirteen", java.lang.StringBuffer.class);
-        h.put("fourteen", java.lang.StringBuffer.class);
-        h.put("fifteen", java.lang.StringBuffer.class);
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
+        Map elemMap = getExpectedNestedElements();
         Enumeration e = ih.getNestedElements();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
-            Class expect = (Class) h.get(name);
+            Class expect = (Class) elemMap.get(name);
             assertNotNull("Support for "+name+" in IntrospectioNHelperTest?",
                           expect);
             assertEquals("Return type of "+name, expect, ih.getElementType(name));
-            h.remove(name);
+            elemMap.remove(name);
         }
-        assertTrue("Found all", h.isEmpty());
+        assertTrue("Found all", elemMap.isEmpty());
+    }
+
+    public void testGetNestedElementMap() {
+        Map elemMap = getExpectedNestedElements();
+        Map actualMap = ih.getNestedElementMap();
+        for (Iterator i = actualMap.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String elemName = (String) entry.getKey();
+            Class elemClass = (Class) elemMap.get(elemName);
+            assertNotNull("Support for " + elemName +
+                          " in IntrospectionHelperTest?", elemClass);
+            assertEquals("Type of " + elemName, elemClass, entry.getValue());
+            elemMap.remove(elemName);
+        }
+        assertTrue("Found all", elemMap.isEmpty());
+
+        // Check it's a read-only map.
+        try {
+            actualMap.clear();
+        } catch (UnsupportedOperationException e) {}
+    }
+
+    public void testGetElementMethod() {
+        assertElemMethod("six", "createSix", String.class, null);
+        assertElemMethod("thirteen", "addThirteen", null, StringBuffer.class);
+        assertElemMethod("fourteen", "addFourteen", null, StringBuffer.class);
+        assertElemMethod("fifteen", "createFifteen", StringBuffer.class, null);
+    }
+
+    private void assertElemMethod(String elemName, String methodName,
+                                  Class returnType, Class methodArg) {
+        Method m = ih.getElementMethod(elemName);
+        assertEquals("Method name", methodName, m.getName());
+        Class expectedReturnType = (returnType == null)? Void.TYPE: returnType;
+        assertEquals("Return type", expectedReturnType, m.getReturnType());
+        Class[] args = m.getParameterTypes();
+        if (methodArg != null) {
+            assertEquals("Arg Count", 1, args.length);
+            assertEquals("Arg Type", methodArg, args[0]);
+        } else {
+            assertEquals("Arg Count", 0, args.length);
+        }
     }
 
     public Object createTwo(String s) {
@@ -214,7 +286,6 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void testAttributeSetters() throws BuildException {
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
         try {
             ih.setAttribute(p, this, "one", "test");
             fail("setOne doesn't exist");
@@ -344,21 +415,21 @@ public class IntrospectionHelperTest extends TestCase {
         }
     }
 
-    public void testGetAttributes() {
-        Hashtable h = new Hashtable();
-        h.put("seven", java.lang.String.class);
-        h.put("eight", java.lang.Integer.TYPE);
-        h.put("nine", java.lang.Integer.class);
-        h.put("ten", java.io.File.class);
-        h.put("eleven", java.lang.Boolean.TYPE);
-        h.put("twelve", java.lang.Boolean.class);
-        h.put("thirteen", java.lang.Class.class);
-        h.put("fourteen", java.lang.StringBuffer.class);
-        h.put("fifteen", java.lang.Character.TYPE);
-        h.put("sixteen", java.lang.Character.class);
-        h.put("seventeen", java.lang.Byte.TYPE);
-        h.put("eightteen", java.lang.Short.TYPE);
-        h.put("nineteen", java.lang.Double.TYPE);
+    private Map getExpectedAttributes() {
+        Map attrMap = new Hashtable();
+        attrMap.put("seven", String.class);
+        attrMap.put("eight", Integer.TYPE);
+        attrMap.put("nine", Integer.class);
+        attrMap.put("ten", File.class);
+        attrMap.put("eleven", Boolean.TYPE);
+        attrMap.put("twelve", Boolean.class);
+        attrMap.put("thirteen", Class.class);
+        attrMap.put("fourteen", StringBuffer.class);
+        attrMap.put("fifteen", Character.TYPE);
+        attrMap.put("sixteen", Character.class);
+        attrMap.put("seventeen", Byte.TYPE);
+        attrMap.put("eightteen", Short.TYPE);
+        attrMap.put("nineteen", Double.TYPE);
 
         /*
          * JUnit 3.7 adds a getName method to TestCase - so we now
@@ -367,20 +438,85 @@ public class IntrospectionHelperTest extends TestCase {
          *
          * Simply add it here and remove it after the tests.
          */
-        h.put("name", java.lang.String.class);
+        attrMap.put("name", String.class);
 
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
+        return attrMap;
+    }
+
+    public void testGetAttributes() {
+        Map attrMap = getExpectedAttributes();
         Enumeration e = ih.getAttributes();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
-            Class expect = (Class) h.get(name);
+            Class expect = (Class) attrMap.get(name);
             assertNotNull("Support for "+name+" in IntrospectionHelperTest?",
                           expect);
             assertEquals("Type of "+name, expect, ih.getAttributeType(name));
-            h.remove(name);
+            attrMap.remove(name);
         }
-        h.remove("name");
-        assertTrue("Found all", h.isEmpty());
+        attrMap.remove("name");
+        assertTrue("Found all", attrMap.isEmpty());
+    }
+
+    public void testGetAttributeMap() {
+        Map attrMap = getExpectedAttributes();
+        Map actualMap = ih.getAttributeMap();
+        for (Iterator i = actualMap.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String attrName = (String) entry.getKey();
+            Class attrClass = (Class) attrMap.get(attrName);
+            assertNotNull("Support for " + attrName +
+                          " in IntrospectionHelperTest?", attrClass);
+            assertEquals("Type of " + attrName, attrClass, entry.getValue());
+            attrMap.remove(attrName);
+        }
+        attrMap.remove("name");
+        assertTrue("Found all", attrMap.isEmpty());
+
+        // Check it's a read-only map.
+        try {
+            actualMap.clear();
+        } catch (UnsupportedOperationException e) {}
+    }
+
+    public void testGetAttributeMethod() {
+        assertAttrMethod("seven", "setSeven", String.class,
+                         "2", "3");
+        assertAttrMethod("eight", "setEight", Integer.TYPE,
+                         new Integer(2), new Integer(3));
+        assertAttrMethod("nine", "setNine", Integer.class,
+                         new Integer(2), new Integer(3));
+        assertAttrMethod("ten", "setTen", File.class,
+                         new File(projectBasedir + 2), new File("toto"));
+        assertAttrMethod("eleven", "setEleven", Boolean.TYPE,
+                         Boolean.FALSE, Boolean.TRUE);
+        assertAttrMethod("twelve", "setTwelve", Boolean.class,
+                         Boolean.FALSE, Boolean.TRUE);
+        assertAttrMethod("thirteen", "setThirteen", Class.class,
+                         Project.class, Map.class);
+        assertAttrMethod("fourteen", "setFourteen", StringBuffer.class,
+                         new StringBuffer("2"), new StringBuffer("3"));
+        assertAttrMethod("fifteen", "setFifteen", Character.TYPE,
+                         new Character('a'), new Character('b'));
+        assertAttrMethod("sixteen", "setSixteen", Character.class,
+                         new Character('a'), new Character('b'));
+        assertAttrMethod("seventeen", "setSeventeen", Byte.TYPE,
+                         new Byte((byte)17), new Byte((byte)10));
+        assertAttrMethod("eightteen", "setEightteen", Short.TYPE,
+                         new Short((short)18), new Short((short)10));
+        assertAttrMethod("nineteen", "setNineteen", Double.TYPE,
+                         new Double(19), new Double((short)10));
+
+        try {
+            assertAttrMethod("onehundred", null, null, null, null);
+            fail("Should have raised a BuildException!");
+        } catch (BuildException e) {}
+    }
+
+    private void assertAttrMethod(String attrName, String methodName,
+                                  Class methodArg, Object arg, Object badArg) {
+        Method m = ih.getAttributeMethod(attrName);
+        assertMethod(m, methodName, methodArg, arg, badArg);
     }
 
     public int setTwo(String s) {
@@ -408,12 +544,14 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void setTen(File f) {
+        String path = f.getAbsolutePath();
         if (Os.isFamily("unix") || Os.isFamily("openvms")) {
-            assertEquals(projectBasedir+"2", f.getAbsolutePath());
+            assertEquals(projectBasedir+"2", path);
         } else if (Os.isFamily("netware")) {
-            assertEquals(projectBasedir+"2", f.getAbsolutePath().toLowerCase(Locale.US));
+            assertEquals(projectBasedir+"2", path.toLowerCase(Locale.US));
         } else {
-            assertEquals(":"+projectBasedir+"2", f.getAbsolutePath().toLowerCase(Locale.US).substring(1));
+            assertEquals(":"+projectBasedir+"2",
+                         path.toLowerCase(Locale.US).substring(1));
         }
     }
 
@@ -453,4 +591,82 @@ public class IntrospectionHelperTest extends TestCase {
         assertEquals(19, d, 1e-6);
     }
 
-}// IntrospectionHelperTest
+    public void testGetExtensionPoints() {
+        List extensions = ih.getExtensionPoints();
+        assertEquals("extension count", 3, extensions.size());
+
+        assertExtMethod(extensions.get(0), "add", Number.class,
+                        new Integer(2), new Integer(3));
+
+        // addConfigured(Hashtable) should come before addConfigured(Map)
+        assertExtMethod(extensions.get(1), "addConfigured", Hashtable.class,
+                        makeTable("key", "value"), makeTable("1", "2"));
+
+        assertExtMethod(extensions.get(2), "addConfigured", Map.class,
+                        Collections.EMPTY_MAP, makeTable("1", "2"));
+    }
+
+    private void assertExtMethod(Object mo, String methodName, Class methodArg,
+                                 Object arg, Object badArg) {
+        assertMethod((Method) mo, methodName, methodArg, arg, badArg);
+    }
+
+    private void assertMethod(Method m, String methodName, Class methodArg,
+                              Object arg, Object badArg) {
+        assertEquals("Method name", methodName, m.getName());
+        assertEquals("Return type", Void.TYPE, m.getReturnType());
+        Class[] args = m.getParameterTypes();
+        assertEquals("Arg Count", 1, args.length);
+        assertEquals("Arg Type", methodArg, args[0]);
+
+        try {
+            m.invoke(this, new Object[] { arg });
+        } catch (IllegalAccessException e) {
+            throw new BuildException(e);
+        } catch (InvocationTargetException e) {
+            throw new BuildException(e);
+        }
+
+        try {
+            m.invoke(this, new Object[] { badArg });
+            fail("Should have raised an assertion exception");
+        } catch (IllegalAccessException e) {
+            throw new BuildException(e);
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            assertTrue(t instanceof junit.framework.AssertionFailedError);
+        }
+    }
+
+    public List add(List l) {
+        // INVALID extension point
+        return null;
+    }
+
+    public void add(Number n) {
+        // Valid extension point
+        assertEquals(2, n.intValue());
+    }
+
+    public void add(List l, int i) {
+        // INVALID extension point
+    }
+
+    public void addConfigured(Map m) {
+        // Valid extension point
+        assertTrue(Collections.EMPTY_MAP == m);
+    }
+
+    public void addConfigured(Hashtable h) {
+        // Valid extension point, more derived than Map above, but *after* it!
+        assertEquals(makeTable("key", "value"), h);
+    }
+
+    private Hashtable makeTable(Object key, Object value) {
+        Hashtable table = new Hashtable();
+        table.put(key, value);
+        return table;
+    }
+
+} // IntrospectionHelperTest
+

@@ -60,6 +60,8 @@ Changes that could break older environments:
   attribute to point to.  This is the last version of the XSLT
   stylesheet that is expected to be compatible with Xalan-J 1.
 
+* Expose objects and  methods in IntrospectionHelper. Bugzilla Report 30794.
+
 Fixed bugs:
 -----------
 
