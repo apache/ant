@@ -8,7 +8,6 @@
 package org.apache.tools.ant.util.regexp;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 
 /**
  * Simple Factory Class that produces an implementation of RegexpMatcher based
@@ -22,22 +21,9 @@ import org.apache.tools.ant.Project;
  */
 public class RegexpMatcherFactory
 {
-
-    public RegexpMatcherFactory()
-    {
-    }
-
-    /**
-     * Create a new regular expression instance.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
-     */
-    public RegexpMatcher newRegexpMatcher()
-        throws TaskException
-    {
-        return newRegexpMatcher( null );
-    }
+    protected static final String JAKARTA_REGEXP = "org.apache.tools.ant.util.regexp.JakartaRegexpRegexp";
+    protected static final String JAKARTA_ORO = "org.apache.tools.ant.util.regexp.JakartaOroRegexp";
+    protected static final String JDK14_REGEXP = "org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp";
 
     /**
      * Create a new regular expression instance.
@@ -46,19 +32,10 @@ public class RegexpMatcherFactory
      * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    public RegexpMatcher newRegexpMatcher( Project p )
+    public RegexpMatcher newRegexpMatcher()
         throws TaskException
     {
-        String systemDefault = null;
-        if( p == null )
-        {
-            systemDefault = System.getProperty( "ant.regexp.regexpimpl" );
-        }
-        else
-        {
-            systemDefault = (String)p.getProperties().get( "ant.regexp.regexpimpl" );
-        }
-
+        final String systemDefault = System.getProperty( "ant.regexp.regexpimpl" );
         if( systemDefault != null )
         {
             return createInstance( systemDefault );
@@ -68,7 +45,7 @@ public class RegexpMatcherFactory
 
         try
         {
-            return createInstance( "org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher" );
+            return createInstance( JDK14_REGEXP );
         }
         catch( TaskException be )
         {
@@ -76,7 +53,7 @@ public class RegexpMatcherFactory
 
         try
         {
-            return createInstance( "org.apache.tools.ant.util.regexp.JakartaOroMatcher" );
+            return createInstance( JAKARTA_ORO );
         }
         catch( TaskException be )
         {
@@ -84,16 +61,17 @@ public class RegexpMatcherFactory
 
         try
         {
-            return createInstance( "org.apache.tools.ant.util.regexp.JakartaRegexpMatcher" );
+            return createInstance( JAKARTA_REGEXP );
         }
         catch( TaskException be )
         {
         }
 
-        throw new TaskException( "No supported regular expression matcher found" );
+        final String message = "No supported regular expression matcher found";
+        throw new TaskException( message );
     }
 
-    protected RegexpMatcher createInstance( String className )
+    protected RegexpMatcher createInstance( final String className )
         throws TaskException
     {
         try
