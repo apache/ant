@@ -12,8 +12,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractContainerTask;
-import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
-import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.framework.TaskList;
 
 /**
  * A task that emulates the try-catch-finally construct in a number
@@ -81,20 +80,17 @@ public final class TryCatchTask
     {
         validate();
 
-        final ExecutionFrame frame = (ExecutionFrame)getService( ExecutionFrame.class );
-        final Executor executor = (Executor)getService( Executor.class );
-
         try
         {
             final Configuration[] tasks = m_try.getTasks();
-            executeTasks( executor, frame, tasks );
+            executeTasks( tasks );
         }
         catch( final TaskException te )
         {
             if( null != m_catch )
             {
                 final Configuration[] tasks = m_catch.getTasks();
-                executeTasks( executor, frame, tasks );
+                executeTasks( tasks );
             }
             else
             {
@@ -106,7 +102,7 @@ public final class TryCatchTask
             if( null != m_finally )
             {
                 final Configuration[] tasks = m_finally.getTasks();
-                executeTasks( executor, frame, tasks );
+                executeTasks( tasks );
             }
         }
     }
@@ -123,21 +119,6 @@ public final class TryCatchTask
         {
             final String message = REZ.getString( "trycatch.missing-second.error" );
             throw new TaskException( message );
-        }
-    }
-
-    /**
-     * Utility method to execute the tasks in an appropriate environment.
-     */
-    private void executeTasks( final Executor executor,
-                               final ExecutionFrame frame,
-                               final Configuration[] tasks )
-        throws TaskException
-    {
-        for( int i = 0; i < tasks.length; i++ )
-        {
-            final Configuration task = tasks[ i ];
-            executor.execute( task, frame );
         }
     }
 

@@ -16,8 +16,6 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.framework.conditions.IsSetCondition;
 import org.apache.myrmidon.framework.conditions.NotCondition;
-import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
-import org.apache.myrmidon.interfaces.executor.Executor;
 
 /**
  * A simple task to test a supplied condition. If the condition is true
@@ -77,7 +75,7 @@ public class IfTask
         }
 
         // Evaluate the condition
-        if( ! m_condition.evaluate( getContext() ) )
+        if( !m_condition.evaluate( getContext() ) )
         {
             return;
         }
@@ -85,15 +83,7 @@ public class IfTask
         final Configuration[] tasks =
             (Configuration[])m_tasks.toArray( new Configuration[ m_tasks.size() ] );
 
-        // TODO - don't use getService()
-        final ExecutionFrame frame = (ExecutionFrame)getService( ExecutionFrame.class );
-        final Executor executor = (Executor)getService( Executor.class );
-
-        for( int i = 0; i < tasks.length; i++ )
-        {
-            final Configuration task = tasks[ i ];
-            executor.execute( task, frame );
-        }
+        executeTasks( tasks );
     }
 
     public String toString()
