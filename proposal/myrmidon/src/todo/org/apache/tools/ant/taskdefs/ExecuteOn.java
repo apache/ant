@@ -84,7 +84,6 @@ public class ExecuteOn extends ExecTask
      * @param skip The new SkipEmptyFilesets value
      */
     public void setSkipEmptyFilesets( boolean skip )
-        throws TaskException
     {
         skipEmpty = skip;
     }
