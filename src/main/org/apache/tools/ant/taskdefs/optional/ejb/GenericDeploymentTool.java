@@ -570,7 +570,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * This method checks the timestamp on each file listed in the <code>
      * ejbFiles</code> and compares them to the timestamp on the <code>jarFile
      * </code>.  If the <code>jarFile</code>'s timestamp is more recent than
-     * each EJB file, <code>false</code> is returned.  Otherwise, <code>true
+     * each EJB file, <code>true</code> is returned.  Otherwise, <code>false
      * </code> is returned.
      *
      * @param ejbFiles Hashtable of EJB classes (and other) files that will be
@@ -581,28 +581,32 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *                 is up to date
      */
     protected boolean needToRebuild(Hashtable ejbFiles, File jarFile) {
-        // By default we assume we need to build.
-        boolean needBuild = true;
-
         if (jarFile.exists()) {
-            long    lastBuild = jarFile.lastModified();
+            long lastBuild = jarFile.lastModified();
+            if (config.manifest != null && config.manifest.exists() &&
+                config.manifest.lastModified() > lastBuild) {
+                log("Build needed because manifest " + config.manifest + " is out of date",
+                    Project.MSG_VERBOSE);
+                return true;
+            }
+                            
+            
             Iterator fileIter = ejbFiles.values().iterator();
-            // Set the need build to false until we find out otherwise.
-            needBuild = false;
 
             // Loop through the files seeing if any has been touched
             // more recently than the destination jar.
-            while( (needBuild == false) && (fileIter.hasNext()) ) {
+            while(fileIter.hasNext()) {
                 File currentFile = (File) fileIter.next();
-                needBuild = ( lastBuild < currentFile.lastModified() );
-                if (needBuild) {
+                if (lastBuild < currentFile.lastModified()) {
                     log("Build needed because " + currentFile.getPath() + " is out of date",
                         Project.MSG_VERBOSE);
+                    return true;                        
                 }
             }
+            return false;
         }
         
-        return needBuild;
+        return true;
     }
 
     /**
@@ -640,13 +644,36 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             jarfile.getParentFile().mkdirs();
             jarfile.createNewFile();
             
-            String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
-            InputStream in = this.getClass().getResourceAsStream(defaultManifest);
-            if ( in == null ) {
-                throw new BuildException ( "Could not find: " + defaultManifest );
+            InputStream in = null;
+            Manifest manifest = null;
+            try {
+                if (config.manifest != null) {
+                    in = new FileInputStream(config.manifest);
+                    if ( in == null ) {
+                        throw new BuildException("Could not find manifest file: " + config.manifest, 
+                                                  getLocation());
+                    }
+                }
+                else {
+                    String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
+                    in = this.getClass().getResourceAsStream(defaultManifest);
+                    if ( in == null ) {
+                        throw new BuildException("Could not find default manifest: " + defaultManifest,
+                                                  getLocation());
+                    }
+                }
+                            
+                manifest = new Manifest(in);
+            }
+            catch (IOException e) {
+                throw new BuildException ("Unable to read manifest", e, getLocation());
+            }
+            finally {
+                if (in != null) {
+                    in.close();
+                }
             }
             
-            Manifest manifest = new Manifest(in);
             // Create the streams necessary to write the jarfile
             
             jarStream = new JarOutputStream(new FileOutputStream(jarfile), manifest);

@@ -167,6 +167,11 @@ public class EjbJar extends MatchingTask {
          * from the descriptor information
          */
         public NamingScheme namingScheme;
+        
+        /**
+         * The Manifest file
+         */
+        public File manifest;
     };
 
 
@@ -303,6 +308,19 @@ public class EjbJar extends MatchingTask {
         return supportFileSet;
     }
     
+
+     /**
+      * Set the Manifest file to use when jarring.
+      *
+      * As of EJB 1.1, manifest files are no longer used to configure the EJB. However, they
+      * still have a vital importance if the EJB is intended to be packaged in an EAR file.
+      * By adding "Class-Path" settings to a Manifest file, the EJB can look for classes inside
+      * the EAR file itself, allowing for easier deployment. This is outlined in the J2EE
+      * specification, and all J2EE components are meant to support it.
+      */
+     public void setManifest(File manifest) {
+         config.manifest = manifest;
+     }
 
     /**
      * Set the srcdir attribute. The source directory is the directory that contains
