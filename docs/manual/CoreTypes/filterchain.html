@@ -333,19 +333,8 @@ Convenience method:
 Filter which includes only those lines that contain the user-specified
 regular expression matching strings.
 
-<TABLE cellSpacing=0 cellPadding=2 border=1>
-  <TR>
-    <TD vAlign=top><B>Parameter Type</B></TD>
-    <TD vAlign=top><B>Parameter Value</B></TD>
-    <TD vAlign=top align="center"><B>Required</B></TD>
-  </TR>
-  <TR>
-    <TD vAlign=top>regexp</TD>
-    <TD vAlign=top align="center">Pattern of the substring to be searched for.</TD>
-    <TD vAlign=top align="center">Yes</TD>
-  </TR>
-</TABLE>
-<P>
+See <a href="../CoreTypes/regexp.html">Regexp Type</a> for the description of the nested element regexp and of
+the choice of regular expression implementation.
 <H4>Example:</H4>
 
 This will fetch all those lines that contain the pattern <code>foo</code>
@@ -1112,10 +1101,12 @@ Include only lines that contain "foo";
 </PRE></BLOCKQUOTE>
 
 <p><b><em><a name="replaceregex">ReplaceRegex</a></em></b></p>
-This string filter replaces regular expressions. See
-<a href="../OptionalTasks/replaceregexp.html">ReplaceRegexp</a>
-for an explanation on regular expressions.
+This string filter replaces regular expressions.
 This filter may be used directly within a filterchain.
+<p>
+ See <a href="../CoreTypes/regexp.html#implementation">Regexp Type</a>
+concerning the choice of the implementation.
+</p>
 
 <TABLE cellSpacing=0 cellPadding=2 border=1>
   <TR>
@@ -1143,7 +1134,6 @@ for an explanation of regex flags.</TD>
     <TD vAlign=top align="center">No</TD>
   </TR>
 </TABLE>
-
 <H4>Examples:</H4>
 
 Replace all occurances of "hello" with "world", ignoring case.
@@ -1158,11 +1148,12 @@ Replace all occurances of "hello" with "world", ignoring case.
 <p><b><em><a name="containsregex">ContainsRegex</a></em></b></p>
 This filters strings that match regular expressions.
 The filter may optionally replace the matched regular expression.
-See
-<a href="../OptionalTasks/replaceregexp.html">ReplaceRegexp</a>
-for an explanation on regular expressions.
 This filter may be used directly within a filterchain.
-
+<p>
+See
+<a href="../CoreTypes/regexp.html#implementation">Regexp Type</a>
+concerning the choice of regular expression implementation.
+</p>
 <TABLE cellSpacing=0 cellPadding=2 border=1>
   <TR>
     <TD vAlign=top><B>Attribute</B></TD>
