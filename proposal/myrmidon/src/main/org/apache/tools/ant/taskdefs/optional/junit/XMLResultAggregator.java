@@ -18,9 +18,8 @@ import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.framework.ExceptionUtil;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -44,7 +43,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class XMLResultAggregator
-    extends Task
+    extends AbstractTask
     implements XMLConstants
 {
     /**

@@ -7,8 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Creates the necessary compiler adapter, given basic criteria.
@@ -44,7 +44,7 @@ public class CompilerAdapterFactory
      * @throws TaskException if the compiler type could not be resolved into a
      *      compiler adapter.
      */
-    public static CompilerAdapter getCompiler( String compilerType, Task task )
+    public static CompilerAdapter getCompiler( String compilerType, AbstractTask task )
         throws TaskException
     {
         /*

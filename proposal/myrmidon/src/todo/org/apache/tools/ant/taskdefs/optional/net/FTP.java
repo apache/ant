@@ -22,10 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -53,7 +52,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class FTP
-    extends Task
+    extends AbstractTask
 {
     protected final static int SEND_FILES = 0;
     protected final static int GET_FILES = 1;

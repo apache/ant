@@ -17,11 +17,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Transform a JUnit xml report. The default transformation generates an html
@@ -60,7 +59,7 @@ public class AggregateTransformer
      */
     private File m_styleDir;
 
-    private Task m_task;
+    private AbstractTask m_task;
 
     /**
      * the destination directory, this is the root from where html should be
@@ -68,7 +67,7 @@ public class AggregateTransformer
      */
     private File m_toDir;
 
-    public AggregateTransformer( Task task )
+    public AggregateTransformer( AbstractTask task )
     {
         m_task = task;
     }
@@ -109,10 +108,8 @@ public class AggregateTransformer
         throws TaskException
     {
         checkOptions();
-        final long t0 = System.currentTimeMillis();
         try
         {
-            Element root = m_document.getDocumentElement();
             XalanExecutor executor = XalanExecutor.newInstance( this );
             executor.execute();
         }
@@ -120,7 +117,6 @@ public class AggregateTransformer
         {
             throw new TaskException( "Errors while applying transformations", e );
         }
-        final long dt = System.currentTimeMillis() - t0;
         //task.getLogger().info( "Transform time: " + dt + "ms" );
     }
 

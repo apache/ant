@@ -14,9 +14,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import org.apache.aut.nativelib.ExecManager;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -36,7 +35,7 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class Coverage
-    extends Task
+    extends AbstractTask
 {
     protected Commandline cmdl = new Commandline();
     protected CommandlineJava cmdlJava = new CommandlineJava();

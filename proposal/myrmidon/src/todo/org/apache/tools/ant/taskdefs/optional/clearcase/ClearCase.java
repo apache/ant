@@ -9,9 +9,9 @@ package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import java.io.File;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Curtis White
  */
-public abstract class ClearCase extends Task
+public abstract class ClearCase extends AbstractTask
 {
 
     /**

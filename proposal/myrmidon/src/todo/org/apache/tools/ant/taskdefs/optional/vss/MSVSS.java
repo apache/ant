@@ -10,9 +10,9 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 import java.io.File;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -29,7 +29,8 @@ import org.apache.tools.ant.types.Commandline;
  * @author Craig Cottingham
  * @author Andrew Everitt
  */
-public abstract class MSVSS extends Task
+public abstract class MSVSS
+    extends AbstractTask
 {
 
     /**

@@ -16,6 +16,7 @@ import com.starbase.starteam.Type;
 import com.starbase.starteam.View;
 import com.starbase.util.Platform;
 import java.util.StringTokenizer;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.ScannerUtil;
 
@@ -60,9 +61,9 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  */
-public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
+public class AntStarTeamCheckOut
+    extends AbstractTask
 {
-
     /**
      * This constant sets the filter to include all files. This default has the
      * same result as <CODE>setIncludes("*")</CODE>.

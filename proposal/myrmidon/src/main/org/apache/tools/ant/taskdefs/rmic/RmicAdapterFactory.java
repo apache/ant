@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.rmic;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Creates the necessary rmic adapter, given basic criteria.
@@ -39,12 +38,11 @@ public class RmicAdapterFactory
      *
      * @param rmicType either the name of the desired rmic, or the full
      *      classname of the rmic's adapter.
-     * @param task a task to log through.
      * @return The Rmic value
      * @throws TaskException if the rmic type could not be resolved into a rmic
      *      adapter.
      */
-    public static RmicAdapter getRmic( String rmicType, Task task )
+    public static RmicAdapter getRmic( String rmicType )
         throws TaskException
     {
         if( rmicType == null )

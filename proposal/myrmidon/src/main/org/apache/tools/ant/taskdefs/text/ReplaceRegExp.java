@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -68,7 +68,8 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *
  * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
-public class ReplaceRegExp extends Task
+public class ReplaceRegExp
+    extends AbstractTask
 {
     private boolean byline;
 

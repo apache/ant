@@ -14,15 +14,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Execute a script
  *
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  */
-public class Script extends Task
+public class Script extends AbstractTask
 {
     private String script = "";
     private Hashtable beans = new Hashtable();
@@ -88,7 +88,7 @@ public class Script extends Task
     {
         try
         {
-            addBeans( getProject().getProperties() );
+            addBeans( getContext().getPropertys() );
             //In Ant2 there is no difference between properties and references
             //addBeans( getProject().getReferences() );
 

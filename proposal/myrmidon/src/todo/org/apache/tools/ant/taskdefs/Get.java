@@ -15,8 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Get a particular file from a URL source. Options include verbose reporting,
@@ -27,7 +27,7 @@ import org.apache.tools.ant.Task;
  * @author costin@dnt.ro
  * @author gg@grtmail.com (Added Java 1.1 style HTTP basic auth)
  */
-public class Get extends Task
+public class Get extends AbstractTask
 {// required
     private boolean verbose = false;
     private boolean useTimestamp = false;//off by default

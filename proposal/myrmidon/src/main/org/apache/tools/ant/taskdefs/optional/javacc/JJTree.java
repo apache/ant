@@ -11,9 +11,9 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -26,7 +26,8 @@ import org.apache.tools.ant.types.PathUtil;
  * @author Michael Saunders <a href="mailto:michael@amtec.com">michael@amtec.com
  *      </a>
  */
-public class JJTree extends Task
+public class JJTree
+    extends AbstractTask
 {
     // keys to optional attributes
     private final static String BUILD_NODE_FILES = "BUILD_NODE_FILES";

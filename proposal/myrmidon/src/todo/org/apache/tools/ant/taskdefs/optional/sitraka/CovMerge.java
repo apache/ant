@@ -14,9 +14,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -28,9 +27,9 @@ import org.apache.tools.ant.types.ScannerUtil;
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class CovMerge extends Task
+public class CovMerge
+    extends AbstractTask
 {
-
     /**
      * coverage home, it is mandatory
      */

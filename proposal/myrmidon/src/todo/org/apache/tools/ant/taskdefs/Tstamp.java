@@ -17,8 +17,8 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -31,7 +31,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class Tstamp
-    extends Task
+    extends AbstractTask
 {
     private ArrayList customFormats = new ArrayList();
     private String m_prefix = "";

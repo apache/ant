@@ -12,9 +12,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -33,7 +33,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:roxspring@yahoo.com">Rob Oxspring</a>
  */
 public class JDependTask
-    extends Task
+    extends AbstractTask
 {
     /**
      * No problems with this test.

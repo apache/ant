@@ -10,8 +10,8 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Log
@@ -19,7 +19,7 @@ import org.apache.tools.ant.Task;
  * @author costin@dnt.ro
  */
 public class Echo
-    extends Task
+    extends AbstractTask
 {
     private String m_message = "";// required
     private File m_file;

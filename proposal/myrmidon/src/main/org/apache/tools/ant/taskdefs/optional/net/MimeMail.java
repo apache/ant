@@ -23,8 +23,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -41,7 +41,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @created 01 May 2001
  */
-public class MimeMail extends Task
+public class MimeMail extends AbstractTask
 {
     /**
      * failure flag

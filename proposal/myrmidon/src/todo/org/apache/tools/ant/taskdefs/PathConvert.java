@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -23,7 +23,7 @@ import org.apache.tools.ant.types.Path;
  * @author Larry Streepy <a href="mailto:streepy@healthlanguage.com">
  *      streepy@healthlanguage.com</a>
  */
-public class PathConvert extends Task
+public class PathConvert extends AbstractTask
 {
     private Path m_path;// Path to be converted
     private String m_targetOS;// The target OS type

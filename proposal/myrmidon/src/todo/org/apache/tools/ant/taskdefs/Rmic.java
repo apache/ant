@@ -481,7 +481,7 @@ public class Rmic extends MatchingTask
         }
 
         String compiler = getContext().getProperty( "build.rmic" ).toString();
-        RmicAdapter adapter = RmicAdapterFactory.getRmic( compiler, this );
+        RmicAdapter adapter = RmicAdapterFactory.getRmic( compiler );
 
         // now we need to populate the compiler adapter
         adapter.setRmic( this );

@@ -10,9 +10,8 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
@@ -26,7 +25,7 @@ import org.apache.tools.ant.types.PathUtil;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class Available
-    extends Task
+    extends AbstractTask
     implements Condition
 {
     private String m_value = "true";

@@ -14,8 +14,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Properties;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 
@@ -28,7 +28,7 @@ import org.apache.tools.ant.types.PathUtil;
  * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  */
 public class Property
-    extends Task
+    extends AbstractTask
 {
     private Path m_classpath;
 

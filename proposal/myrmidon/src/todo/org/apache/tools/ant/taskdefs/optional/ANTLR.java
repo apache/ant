@@ -13,10 +13,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -28,7 +28,7 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:emeade@geekfarm.org">Erik Meade</a>
  * @author <a href="mailto:sbailliez@apache.org>Stephane Bailliez</a>
  */
-public class ANTLR extends Task
+public class ANTLR extends AbstractTask
 {
 
     private CommandlineJava commandline = new CommandlineJava();

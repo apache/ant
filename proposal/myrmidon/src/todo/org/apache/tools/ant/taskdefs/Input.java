@@ -12,15 +12,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Ant task to read input line from console.
  *
  * @author Ulrich Schmidt <usch@usch.net>
  */
-public class Input extends Task
+public class Input extends AbstractTask
 {
     private String validargs = null;
     private String message = "";

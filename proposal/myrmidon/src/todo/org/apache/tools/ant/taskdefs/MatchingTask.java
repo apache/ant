@@ -8,10 +8,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.myrmidon.framework.PatternSet;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
@@ -27,7 +27,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public abstract class MatchingTask
-    extends Task
+    extends AbstractTask
 {
     private FileSet m_fileset = new FileSet();
 

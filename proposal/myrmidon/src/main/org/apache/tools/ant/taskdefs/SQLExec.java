@@ -32,9 +32,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
@@ -51,7 +50,7 @@ import org.apache.tools.ant.types.ScannerUtil;
  * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
  */
 public class SQLExec
-    extends Task
+    extends AbstractTask
 {
     private int goodSql = 0, totalSql = 0;
 

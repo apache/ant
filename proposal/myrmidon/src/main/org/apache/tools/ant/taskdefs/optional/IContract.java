@@ -704,7 +704,8 @@ public class IContract extends MatchingTask
 
             // We want to be notified if iContract jar is missing. This makes life easier for the user
             // who didn't understand that iContract is a separate library (duh!)
-            getProject().addProjectListener( new IContractPresenceDetector() );
+
+            //addProjectListener( new IContractPresenceDetector() );
 
             // Prepare the directories for iContract. iContract will make them if they
             // don't exist, but for some reason I don't know, it will complain about the REP files
@@ -748,7 +749,7 @@ public class IContract extends MatchingTask
             iContractClasspath.append( new Path( buildDir.getAbsolutePath() ) );
 
             // Create a forked java process
-            Java iContract = (Java)getProject().createTask( "java" );
+            Java iContract = null;//(Java)getProject().createTask( "java" );
             iContract.setFork( true );
             iContract.setClassname( "com.reliablesystems.iContract.Tool" );
             iContract.setClasspath( iContractClasspath );

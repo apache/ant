@@ -18,11 +18,10 @@ import java.util.StringTokenizer;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.aut.nativelib.Os;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.Pattern;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -64,7 +63,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 
 public class Javadoc
-    extends Task
+    extends AbstractTask
     implements ExecOutputHandler
 {
     private Commandline m_command = new Commandline();

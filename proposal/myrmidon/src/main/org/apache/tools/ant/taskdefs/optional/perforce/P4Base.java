@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.types.Commandline;
@@ -26,10 +26,9 @@ import org.apache.tools.ant.types.Commandline;
  * @see P4Edit
  * @see P4Submit
  * @see P4Label
- * @see org.apache.tools.ant.taskdefs.Exec
  */
 public abstract class P4Base
-    extends org.apache.tools.ant.Task
+    extends AbstractTask
     implements ExecOutputHandler
 {
     /**
@@ -123,7 +122,6 @@ public abstract class P4Base
     {
         //Setup task before executing it
         prepare();
-        super.execute();
     }
 
     /**

@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
@@ -74,7 +74,7 @@ public class XMLReport
     /**
      * task caller, can be null, used for logging purpose
      */
-    protected Task task;
+    protected AbstractTask task;
 
     /**
      * create a new XML report, logging will be on stdout
@@ -92,7 +92,7 @@ public class XMLReport
      * @param task Description of Parameter
      * @param file Description of Parameter
      */
-    public XMLReport( Task task, File file )
+    public XMLReport( AbstractTask task, File file )
     {
         this.file = file;
         this.task = task;

@@ -15,10 +15,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -33,7 +32,7 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class MParse
-    extends Task
+    extends AbstractTask
 {
     private Path m_classpath;
     private Path m_sourcepath;
