@@ -106,6 +106,17 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
     font-family: Verdana, Helvetica, sans-serif;
 }
 
+.copyright {
+    font-family: arial,helvetica,sanserif;
+    font-size: 90%;
+    background-color: #CFDCED;
+    clear: both;
+    text-align: center;
+    margin: 0px;
+    border-top: thin solid #4C6C8F; 
+}
+
+
 @media print {
    .menu {
      display: none;

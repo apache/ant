@@ -214,7 +214,7 @@
   #makeProject ( $menus )
 #end
 
-#macro ( makeProject $menus)
+#macro (makeProject $menus)
   <div class="menu"><ul>
   #foreach ( $menu in $menus )
     <li><font color="$blue1">$menu.getAttributeValue("name")</font>
@@ -263,16 +263,22 @@
                   <td colspan="3"><img height="10" width="1" alt="" src="$relativePath/images/spacer.gif"></td>
                 </tr>
                 <tr>
-                  <td><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif"></td><td nowrap="nowrap"><input name="q" type="hidden"><input size="15" id="query" type="text"><img height="1" width="5" alt="" src="$relativePath/images/spacer.gif"><input name="Search" value="Search" type="submit">
-                  <br>
-                  <font face="Arial, Helvetica, Sans-serif" size="2" color="white">
-                                    the Apache Ant site
-
-
-                                    </font></td><td><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                  <td><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                  <td nowrap="nowrap">
+                    <input name="q" type="hidden">
+                    <input size="15" id="query" type="text">
+                    <img height="1" width="5" alt="" src="$relativePath/images/spacer.gif">
+                    <input name="Search" value="Search" type="submit">
+                    <br>
+                    <font face="Arial, Helvetica, Sans-serif" size="2" color="white">
+                        the Apache Ant site
+                    </font></td><td><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif">
+                  </td>
                 </tr>
                 <tr>
-                  <td><img alt="" border="0" height="10" width="9" src="$relativePath/images/search-left.gif"></td><td><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif"></td><td><img alt="" border="0" height="10" width="9" src="$relativePath/images/search-right.gif"></td>
+                  <td><img alt="" border="0" height="10" width="9" src="$relativePath/images/search-left.gif"></td>
+                  <td><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                  <td><img alt="" border="0" height="10" width="9" src="$relativePath/images/search-right.gif"></td>
                 </tr>
               </table>
             </form>
@@ -280,8 +286,7 @@
         </tr>
         <tr>
           <td valign="bottom" bgcolor="$blue3" colspan="2">
-  #makeTabs()
-
+            #makeTabs()
           </td><td bgcolor="$blue3"><img alt="" width="1" height="1" src="$relativePath/images/spacer.gif"></td>
         </tr>
         <tr>
@@ -306,12 +311,23 @@
                       <td bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
                     </tr>
                   </table>
-                </td><td bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td><td valign="bottom" bgcolor="$blue2"><img width="10" height="10" alt="" src="$relativePath/images/spacer.gif"></td><td nowrap="nowrap" valign="top" bgcolor="$blue2">
-  #makeMainNavigation()
-                </td><td valign="bottom" bgcolor="$blue2"><img width="10" height="10" alt="" src="$relativePath/images/spacer.gif"></td><td bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                </td>
+                <td bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                <td valign="bottom" bgcolor="$blue2"><img width="10" height="10" alt="" src="$relativePath/images/spacer.gif"></td>
+                <td nowrap="nowrap" valign="top" bgcolor="$blue2">
+                    #makeMainNavigation()
+                </td>
+                <td valign="bottom" bgcolor="$blue2"><img width="10" height="10" alt="" src="$relativePath/images/spacer.gif"></td>
+                <td bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
               </tr>
               <tr>
-                <td valign="bottom" align="left" colspan="2" rowspan="2" bgcolor="$blue2"><img height="10" width="10" border="0" alt="" src="$relativePath/images/menu-left.gif"></td><td bgcolor="$blue2"><img height="10" width="10" border="0" alt="" src="$relativePath/images/spacer.gif"></td><td valign="bottom" align="right" colspan="2" rowspan="2" bgcolor="$blue2"><img height="10" width="10" border="0" alt="" src="$relativePath/images/menu-right.gif"></td>
+                <td valign="bottom" align="left" colspan="2" rowspan="2" bgcolor="$blue2">
+                    <img height="10" width="10" border="0" alt="" src="$relativePath/images/menu-left.gif">
+                </td>
+                <td bgcolor="$blue2"><img height="10" width="10" border="0" alt="" src="$relativePath/images/spacer.gif"></td>
+                <td valign="bottom" align="right" colspan="2" rowspan="2" bgcolor="$blue2">
+                    <img height="10" width="10" border="0" alt="" src="$relativePath/images/menu-right.gif">
+                </td>
               </tr>
               <tr>
                 <td height="1" bgcolor="$blue3"><img width="1" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
@@ -323,11 +339,17 @@
                 <td colspan="4" bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
               </tr>
               <tr>
-                <td align="left" width="10" bgcolor="$blue1"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td><td align="left" width="50%" bgcolor="$blue1"><font color="$blue2" size="3" face="Arial, Helvetica, Sans-serif">
+                <td align="left" width="10" bgcolor="$blue1"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                <td align="left" width="50%" bgcolor="$blue1"><font color="$blue2" size="3" face="Arial, Helvetica, Sans-serif">
                 &nbsp;
-                </font><img width="10" height="8" alt="" src="$relativePath/images/spacer.gif"></td><td align="right" width="50%" bgcolor="$blue1"><font color="$blue2" size="3" face="Arial, Helvetica, Sans-serif">
-                &nbsp;
-                </font><img width="10" height="8" alt="" src="$relativePath/images/spacer.gif"></td><td width="10" bgcolor="$blue1"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
+                </font><img width="10" height="8" alt="" src="$relativePath/images/spacer.gif"></td>
+                <td align="right" width="50%" bgcolor="$blue1">
+                    <font color="$blue2" size="3" face="Arial, Helvetica, Sans-serif">
+                        &nbsp;
+                    </font>
+                    <img width="10" height="8" alt="" src="$relativePath/images/spacer.gif">
+                </td>
+                <td width="10" bgcolor="$blue1"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
               </tr>
               <tr>
                 <td colspan="4" bgcolor="$blue3"><img width="10" height="1" alt="" src="$relativePath/images/spacer.gif"></td>
@@ -345,16 +367,14 @@
           </td>
         </tr>
       </table>
-      <table summary="footer" cellspacing="0" cellpadding="0" width="100%" border="0">
-        <tr>
-          <td colspan="2" height="1" bgcolor="$blue2"><img height="1" width="1" alt="" src="$relativePath/images/spacer.gif"><a href="$relativePath/images/label.gif"></a><a href="$relativePath/images/page.gif"></a><a href="$relativePath/images/chapter.gif"></a><a href="$relativePath/images/chapter_open.gif"></a><a href="$relativePath/images/current.gif"></a><a href="/favicon.ico"></a></td>
-        </tr>
-        <tr>
-          <td colspan="2" bgcolor="$blue1" class="copyright" align="center"><font size="2" face="Arial, Helvetica, Sans-Serif">Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.<script type="text/javascript" language="JavaScript"><!--
-                        document.write(" - "+"Last Published: " + document.lastModified);
-                      //  --></script></font></td>
-        </tr>
-      </table>
+      
+      <p class="copyright">
+        Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.
+        <script type="text/javascript" language="JavaScript"><!--
+                document.write(" - "+"Last Published: " + document.lastModified);
+              //  -->
+        </script>
+      </p>
     </body>
   </html>
 #end
