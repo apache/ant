@@ -110,7 +110,7 @@ public class Replace extends MatchingTask {
         }
         
         if (dir != null) {
-	    DirectoryScanner ds = super.getDirectoryScanner(dir);
+            DirectoryScanner ds = super.getDirectoryScanner(dir);
             String[] srcs = ds.getIncludedFiles();
 
             for(int i=0; i<srcs.length; i++) {

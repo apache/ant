@@ -53,15 +53,15 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.Commandline;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Generates a key.
  * 
- * @author Peter Donald <a href="mailto:donaldp@mad.scientist.com">donaldp@mad.scientist.com</a>
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class GenerateKey extends Task {
 
@@ -104,46 +104,46 @@ public class GenerateKey extends Task {
         }
 
         public String toString() {
-		  final int size = params.size();
-		  final StringBuffer sb = new StringBuffer();
-		  boolean firstPass = true;
+            final int size = params.size();
+            final StringBuffer sb = new StringBuffer();
+            boolean firstPass = true;
 
-		  for( int i = 0; i < size; i++ ) {
-			  if( !firstPass ) {
-				sb.append(" ,");
-			  }
-			  firstPass = false;
+            for( int i = 0; i < size; i++ ) {
+                if( !firstPass ) {
+                    sb.append(" ,");
+                }
+                firstPass = false;
 
-			  final DnameParam param = (DnameParam)params.elementAt( i );
-			  sb.append( encode( param.getName() ) );
-			  sb.append( '=' );
-			  sb.append( encode( param.getValue() ) );
-		  }
-			
-		  return sb.toString();
+                final DnameParam param = (DnameParam)params.elementAt( i );
+                sb.append( encode( param.getName() ) );
+                sb.append( '=' );
+                sb.append( encode( param.getValue() ) );
+            }
+                        
+            return sb.toString();
         }
 
-	  public String encode( final String string ) {
-		int end = string.indexOf(',');
+        public String encode( final String string ) {
+            int end = string.indexOf(',');
 
-		if( -1 == end ) return string;
-		
-		final StringBuffer sb = new StringBuffer();
-		
-		int start = 0;
+            if( -1 == end ) return string;
+                
+            final StringBuffer sb = new StringBuffer();
+                
+            int start = 0;
 
-		while( -1 != end )
-		  {
-			sb.append( string.substring( start, end ) );
-			sb.append( "\\," );
-			start = end + 1;
-			end = string.indexOf( ',', start );
-		  }
+            while( -1 != end )
+            {
+                sb.append( string.substring( start, end ) );
+                sb.append( "\\," );
+                start = end + 1;
+                end = string.indexOf( ',', start );
+            }
 
-		sb.append( string.substring( start ) );
-		
-		return sb.toString();		
-	  }
+            sb.append( string.substring( start ) );
+                
+            return sb.toString();                
+        }
     }
 
     /**
@@ -168,20 +168,22 @@ public class GenerateKey extends Task {
     protected boolean verbose;
 
     public DistinguishedName createDname() throws BuildException {
-	    if( null != expandedDname ) {
-		  throw new BuildException("DName sub-element can only be specified once.");
-		}
-		if( null != dname ) {
-		  throw new BuildException("It is not possible to specify dname both as attribute and element.");
-		}
-		expandedDname = new DistinguishedName();
-		return expandedDname;
+        if( null != expandedDname ) {
+            throw new BuildException( "DName sub-element can only be specified once." );
+        }
+        if( null != dname ) {
+            throw new BuildException( "It is not possible to specify dname both " +
+                                      "as attribute and element." );
+        }
+        expandedDname = new DistinguishedName();
+        return expandedDname;
     }
   
     public void setDname(final String dname) {
-	    if( null != expandedDname ) {
-		  throw new BuildException("It is not possible to specify dname both as attribute and element.");
-		}
+        if( null != expandedDname ) {
+            throw new BuildException( "It is not possible to specify dname both " +
+                                      "as attribute and element." );
+        }
         this.dname = dname;
     } 
 
@@ -214,40 +216,41 @@ public class GenerateKey extends Task {
     } 
 
     public void setKeysize(final String keysize) throws BuildException {
-	  try { this.keysize = Integer.parseInt(keysize); }
-	  catch(final NumberFormatException nfe) 
-		{
-		  throw new BuildException( "KeySize attribute should be a integer" );
-		}
+        try { this.keysize = Integer.parseInt(keysize); }
+        catch(final NumberFormatException nfe) 
+        {
+            throw new BuildException( "KeySize attribute should be a integer" );
+        }
     } 
 
     public void setValidity(final String validity) throws BuildException {
-	  try { this.validity = Integer.parseInt(validity); }
-	  catch(final NumberFormatException nfe) 
-		{
-		  throw new BuildException( "Validity attribute should be a integer" );
-		}
+        try { this.validity = Integer.parseInt(validity); }
+        catch(final NumberFormatException nfe) 
+        {
+            throw new BuildException( "Validity attribute should be a integer" );
+        }
     } 
 
-    public void setVerbose(final String verbose) {
-        this.verbose = project.toBoolean(verbose);
+    public void setVerbose(final boolean verbose) {
+        this.verbose = verbose;
     } 
 
     public void execute() throws BuildException {
         if (project.getJavaVersion().equals(Project.JAVA_1_1)) {
-            throw new BuildException("The genkey task is only available on JDK versions 1.2 or greater");
+            throw new BuildException( "The genkey task is only available on JDK" +
+                                      " versions 1.2 or greater" );
         } 
 
         if (null == alias) {
-            throw new BuildException("alias attribute must be set");
+            throw new BuildException( "alias attribute must be set" );
         } 
 
         if (null == storepass) {
-            throw new BuildException("storepass attribute must be set");
+            throw new BuildException( "storepass attribute must be set" );
         } 
 
         if (null == dname && null == expandedDname) {
-            throw new BuildException("dname must be set");
+            throw new BuildException( "dname must be set" );
         } 
 
         final StringBuffer sb = new StringBuffer();
@@ -258,9 +261,9 @@ public class GenerateKey extends Task {
             sb.append("-v ");
         } 
 
-		sb.append("-alias \"");
-		sb.append(alias);
-		sb.append("\" ");
+        sb.append("-alias \"");
+        sb.append(alias);
+        sb.append("\" ");
 
         if (null != dname) {
             sb.append("-dname \"");
@@ -275,9 +278,9 @@ public class GenerateKey extends Task {
         } 
 
         if (null != keystore) {
-		    sb.append("-keystore \"");
+            sb.append("-keystore \"");
             sb.append(keystore);
-			sb.append("\" ");
+            sb.append("\" ");
         }
 
         if (null != storepass) {
@@ -292,14 +295,14 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         } 
 
-		sb.append("-keypass \"");
+        sb.append("-keypass \"");
         if (null != keypass) {
             sb.append(keypass);
         } 
-		else {
+        else {
             sb.append(storepass);
-		}
-		sb.append("\" ");
+        }
+        sb.append("\" ");
 
         if (null != sigalg) {
             sb.append("-sigalg \"");

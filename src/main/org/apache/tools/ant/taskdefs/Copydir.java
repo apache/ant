@@ -54,10 +54,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-
 import java.io.*;
 import java.util.*;
+import org.apache.tools.ant.*;
 
 /**
  * Copies a directory.
@@ -84,16 +83,16 @@ public class Copydir extends MatchingTask {
         destDir = dest;
     }
 
-    public void setFiltering(String filter) {
-        filtering = Project.toBoolean(filter);
+    public void setFiltering(boolean filter) {
+        filtering = filter;
     }
 
     public void setFlatten(boolean flatten) {
         this.flatten = flatten;
     }
 
-    public void setForceoverwrite(String force) {
-        forceOverwrite = Project.toBoolean(force);
+    public void setForceoverwrite(boolean force) {
+        forceOverwrite = force;
     }
 
     public void execute() throws BuildException {

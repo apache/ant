@@ -54,10 +54,9 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-
 import java.io.*;
 import java.util.*;
+import org.apache.tools.ant.*;
 
 /**
  * Copies a file.
@@ -78,8 +77,8 @@ public class Copyfile extends Task {
         srcFile = src;
     }
 
-    public void setForceoverwrite(String force) {
-        forceOverwrite = Project.toBoolean(force);
+    public void setForceoverwrite(boolean force) {
+        forceOverwrite = force;
     }
 
     public void setDest(File dest) {

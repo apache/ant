@@ -54,14 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-
-import netrexx.lang.Rexx;
-
 import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
+import netrexx.lang.Rexx;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.taskdefs.*;
 
 /**
  * Task to compile NetRexx source files. This task can take the following
@@ -154,8 +152,8 @@ public class NetRexxC extends MatchingTask {
     /**
      * Set whether literals are treated as binary, rather than NetRexx types
      */
-    public void setBinary(String binary) {
-        this.binary = Project.toBoolean(binary);
+    public void setBinary(boolean binary) {
+        this.binary = binary;
     }
 
     /**
@@ -170,17 +168,17 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false
      */
-    public void setComments(String comments) {
-        this.comments = Project.toBoolean(comments);
+    public void setComments(boolean comments) {
+        this.comments = comments;
     }
 
-   /**
+    /**
      * Set whether error messages come out in compact or verbose format.
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false
      */
-    public void setCompact(String compact) {
-        this.compact = Project.toBoolean(compact);
+    public void setCompact(boolean compact) {
+        this.compact = compact;
     }
 
     /**
@@ -189,8 +187,8 @@ public class NetRexxC extends MatchingTask {
      * The default value is true.
      * Setting this flag to false, will automatically set the keep flag to true.
      */
-    public void setCompile(String compile) {
-        this.compile = Project.toBoolean(compile);
+    public void setCompile(boolean compile) {
+        this.compile = compile;
         if (!this.compile && !this.keep) this.keep = true;
     }
 
@@ -199,15 +197,15 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is true.
      */
-    public void setConsole(String console) {
-        this.console = Project.toBoolean(console);
+    public void setConsole(boolean console) {
+        this.console = console;
     }
 
     /**
      * Whether variable cross references are generated
      */
-    public void setCrossref(String crossref) {
-        this.crossref = Project.toBoolean(crossref);
+    public void setCrossref(boolean crossref) {
+        this.crossref = crossref;
     }
 
     /**
@@ -216,8 +214,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is true.
      */
-    public void setDecimal(String decimal) {
-        this.decimal = Project.toBoolean(decimal);
+    public void setDecimal(boolean decimal) {
+        this.decimal = decimal;
     }
 
     /**
@@ -231,8 +229,8 @@ public class NetRexxC extends MatchingTask {
     /**
      * Whether diagnostic information about the compile is generated
      */
-    public void setDiag(String diag) {
-        this.diag = Project.toBoolean(diag);
+    public void setDiag(boolean diag) {
+        this.diag = diag;
     }
 
     /**
@@ -240,16 +238,16 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setExplicit(String explicit) {
-        this.explicit = Project.toBoolean(explicit);
+    public void setExplicit(boolean explicit) {
+        this.explicit = explicit;
     }
 
     /**
      * Whether the generated java code is formatted nicely or left to match NetRexx
      * line numbers for call stack debugging
      */
-    public void setFormat(String format) {
-        this.format = Project.toBoolean(format);
+    public void setFormat(boolean format) {
+        this.format = format;
     }
 
     /**
@@ -257,8 +255,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setJava(String java) {
-        this.java = Project.toBoolean(java);
+    public void setJava(boolean java) {
+        this.java = java;
     }
 
 
@@ -268,24 +266,24 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setKeep(String keep) {
-        this.keep = Project.toBoolean(keep);
+    public void setKeep(boolean keep) {
+        this.keep = keep;
     }
 
     /**
      * Whether the compiler text logo is displayed when compiling
      */
-    public void setLogo(String logo) {
-        this.logo = Project.toBoolean(logo);
+    public void setLogo(boolean logo) {
+        this.logo = logo;
     }
 
-     /**
+    /**
      * Whether the generated .java file should be replaced when compiling
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setReplace(String replace) {
-        this.replace = Project.toBoolean(replace);
+    public void setReplace(boolean replace) {
+        this.replace = replace;
     }
 
     /**
@@ -294,8 +292,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setSavelog(String savelog) {
-        this.savelog = Project.toBoolean(savelog);
+    public void setSavelog(boolean savelog) {
+        this.savelog = savelog;
     }
 
     /**
@@ -304,8 +302,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is true.
      */
-    public void setSourcedir(String sourcedir) {
-        this.sourcedir = Project.toBoolean(sourcedir);
+    public void setSourcedir(boolean sourcedir) {
+        this.sourcedir = sourcedir;
     }
 
     /**
@@ -322,22 +320,22 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setStrictargs(String strictargs) {
-        this.strictargs = Project.toBoolean(strictargs);
+    public void setStrictargs(boolean strictargs) {
+        this.strictargs = strictargs;
     }
 
     /**
      * Tells the NetRexx compile that assignments must match exactly on type
      */
-    public void setStrictassign(String strictassign) {
-        this.strictassign = Project.toBoolean(strictassign);
+    public void setStrictassign(boolean strictassign) {
+        this.strictassign = strictassign;
     }
 
     /**
      * Specifies whether the NetRexx compiler should be case sensitive or not
      */
-    public void setStrictcase(String strictcase) {
-        this.strictcase = Project.toBoolean(strictcase);
+    public void setStrictcase(boolean strictcase) {
+        this.strictcase = strictcase;
     }
 
     /**
@@ -347,8 +345,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setStrictimport(String strictimport) {
-        this.strictimport = Project.toBoolean(strictimport);
+    public void setStrictimport(boolean strictimport) {
+        this.strictimport = strictimport;
     }
 
     /**
@@ -356,16 +354,16 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setStrictprops(String strictprops) {
-        this.strictprops = Project.toBoolean(strictprops);
+    public void setStrictprops(boolean strictprops) {
+        this.strictprops = strictprops;
     }
 
 
     /**
      * Whether the compiler should force catching of exceptions by explicitly named types
      */
-    public void setStrictsignal(String strictsignal) {
-        this.strictsignal = Project.toBoolean(strictsignal);
+    public void setStrictsignal(boolean strictsignal) {
+        this.strictsignal = strictsignal;
     }
 
     /**
@@ -373,8 +371,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setSymbols(String symbols) {
-        this.symbols = Project.toBoolean(symbols);
+    public void setSymbols(boolean symbols) {
+        this.symbols = symbols;
     }
 
     /**
@@ -382,8 +380,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setTime(String time) {
-        this.time = Project.toBoolean(time);
+    public void setTime(boolean time) {
+        this.time = time;
     }
 
     /**
@@ -393,9 +391,9 @@ public class NetRexxC extends MatchingTask {
      */
     public void setTrace(String trace) {
         if (trace.equalsIgnoreCase("trace")
-        || trace.equalsIgnoreCase("trace1")
-        || trace.equalsIgnoreCase("trace2")
-        || trace.equalsIgnoreCase("notrace")) {
+            || trace.equalsIgnoreCase("trace1")
+            || trace.equalsIgnoreCase("trace2")
+            || trace.equalsIgnoreCase("notrace")) {
             this.trace = trace;
         } else {
             throw new BuildException("Unknown trace value specified: '" + trace + "'");
@@ -407,8 +405,8 @@ public class NetRexxC extends MatchingTask {
      * Valid true values are "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      */
-    public void setUtf8(String utf8) {
-        this.utf8 = Project.toBoolean(utf8);
+    public void setUtf8(boolean utf8) {
+        this.utf8 = utf8;
     }
 
     /**
@@ -463,7 +461,10 @@ public class NetRexxC extends MatchingTask {
             // if it's a source file, see if the destination class file
             // needs to be recreated via compilation
             if (filename.toLowerCase().endsWith(".nrx")) {
-                File classFile = new File(destDir, filename.substring(0, filename.lastIndexOf('.')) + ".class");
+                File classFile = 
+                    new File(destDir, 
+                             filename.substring(0, filename.lastIndexOf('.')) + ".class");
+
                 if (!compile || srcFile.lastModified() > classFile.lastModified()) {
                     filecopyList.put(srcFile.getAbsolutePath(), destFile.getAbsolutePath());
                     compileList.addElement(destFile.getAbsolutePath());
@@ -492,7 +493,7 @@ public class NetRexxC extends MatchingTask {
                     project.copyFile(fromFile, toFile);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
-                    + " due to " + ioe.getMessage();
+                        + " due to " + ioe.getMessage();
                     throw new BuildException(msg, ioe);
                 }
             }
@@ -554,8 +555,8 @@ public class NetRexxC extends MatchingTask {
 
         try {
             StringWriter out = new StringWriter(); 
-            int rc = COM.ibm.netrexx.process.NetRexxC.main(
-               new Rexx(compileArgs), new PrintWriter(out));
+            int rc = COM.ibm.netrexx.process.NetRexxC.
+                main(new Rexx(compileArgs), new PrintWriter(out));
 
             if (rc > 1) { // 1 is warnings from real NetRexxC
                 log(out.toString(), Project.MSG_ERR);
@@ -644,7 +645,7 @@ public class NetRexxC extends MatchingTask {
      */
     private void addExistingToClasspath(StringBuffer target,String source) {
         StringTokenizer tok = new StringTokenizer(source,
-        System.getProperty("path.separator"), false);
+                                                  System.getProperty("path.separator"), false);
         while (tok.hasMoreTokens()) {
             File f = project.resolveFile(tok.nextToken());
 
@@ -653,7 +654,7 @@ public class NetRexxC extends MatchingTask {
                 target.append(f.getAbsolutePath());
             } else {
                 log("Dropping from classpath: "+
-                f.getAbsolutePath(), Project.MSG_VERBOSE);
+                    f.getAbsolutePath(), Project.MSG_VERBOSE);
             }
         }
 

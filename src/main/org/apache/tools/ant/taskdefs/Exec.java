@@ -182,8 +182,8 @@ public class Exec extends Task {
         this.out = out;
     }
 
-    public void setFailonerror(String fail) {
-        failOnError = Project.toBoolean(fail);
+    public void setFailonerror(boolean fail) {
+        failOnError = fail;
     }
 
     protected void outputLog(String line, int messageLevel) {

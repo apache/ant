@@ -53,9 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.Commandline;
-import java.io.File;
 
 /**
  * Sign a archive.
@@ -119,16 +119,16 @@ public class SignJar extends Task {
         this.signedjar = signedjar;
     } 
 
-    public void setVerbose(final String verbose) {
-        this.verbose = project.toBoolean(verbose);
+    public void setVerbose(final boolean verbose) {
+        this.verbose = verbose;
     } 
 
-    public void setInternalsf(final String internalsf) {
-        this.internalsf = project.toBoolean(internalsf);
+    public void setInternalsf(final boolean internalsf) {
+        this.internalsf = internalsf;
     } 
 
-    public void setSectionsonly(final String sectionsonly) {
-        this.sectionsonly = project.toBoolean(sectionsonly);
+    public void setSectionsonly(final boolean sectionsonly) {
+        this.sectionsonly = sectionsonly;
     } 
 
     public void execute() throws BuildException {

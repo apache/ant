@@ -101,8 +101,8 @@ public class RenameExtensions extends MatchingTask {
      * store replace attribute - this determines whether the target file
      * should be overwritten if present
      */
-    public void setReplace(String replaceString) {
-        replace = Project.toBoolean(replaceString);
+    public void setReplace(boolean replace) {
+        this.replace = replace;
     }
 
     /**
@@ -119,7 +119,8 @@ public class RenameExtensions extends MatchingTask {
 
         // first off, make sure that we've got a from and to extension
         if (fromExtension == null || toExtension == null || srcDir == null) {
-            throw new BuildException("srcDir, fromExtension and toExtension attributes must be set!");
+            throw new BuildException( "srcDir, fromExtension and toExtension " +
+                                      "attributes must be set!" );
         }
 
         // scan source and dest dirs to build up rename list
@@ -136,7 +137,10 @@ public class RenameExtensions extends MatchingTask {
             fromFile = (File)e.nextElement();
             toFile = (File)renameList.get(fromFile);
             if (toFile.exists() && replace) toFile.delete();
-            if (!fromFile.renameTo(toFile)) throw new BuildException("Rename from: '" + fromFile + "' to '" + toFile + "' failed.");
+            if (!fromFile.renameTo(toFile)) {
+                throw new BuildException( "Rename from: '" + fromFile + "' to '" + 
+                                          toFile + "' failed." );
+            }
         }
 
     }
@@ -147,17 +151,22 @@ public class RenameExtensions extends MatchingTask {
             String filename = files[i];
             // if it's a file that ends in the fromExtension, copy to the rename list
             if (filename.toLowerCase().endsWith(fromExtension)) {
-                File destFile = new File(srcDir, filename.substring(0, filename.lastIndexOf(fromExtension)) + toExtension);
+                File destFile = 
+                    new File( srcDir, 
+                              filename.substring(0, filename.lastIndexOf(fromExtension)) + 
+                              toExtension );
+
                 if (replace || !destFile.exists()) {
                     list.put(srcFile, destFile);
                 } else {
-                    log("Rejecting file: '" + srcFile + "' for rename as replace is false and file exists", Project.MSG_VERBOSE);
+                    log( "Rejecting file: '" + srcFile + "' for rename as " + 
+                         "replace is false and file exists", Project.MSG_VERBOSE );
                 }
             } else {
-                log("File '"+ filename + "' doesn't match fromExtension: '" + fromExtension + "'", Project.MSG_VERBOSE);
+                log( "File '"+ filename + "' doesn't match fromExtension: '" + 
+                     fromExtension + "'", Project.MSG_VERBOSE );
             }
         }
         return list;
     }
-
 }

@@ -54,10 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.apache.tools.ant.*;
 
 /**
  * Get a particular file from a URL source. 
@@ -100,14 +100,14 @@ public class Get extends Task {
 
         try {
 
-	    log("Getting: " + source);
+            log("Getting: " + source);
 
-	    //set the timestamp to the file date.
-	    long timestamp=0;
+            //set the timestamp to the file date.
+            long timestamp=0;
 
             boolean hasTimestamp=false;
-	    if(useTimestamp && dest.exists()) {
-	        timestamp=dest.lastModified();
+            if(useTimestamp && dest.exists()) {
+                timestamp=dest.lastModified();
                 if (verbose)  {
                     Date t=new Date(timestamp);
                     log("local file date : "+t.toString());
@@ -115,7 +115,7 @@ public class Get extends Task {
                 
                 hasTimestamp=true;
             }
-	
+        
             //set up the URL connection
             URLConnection connection=source.openConnection();
             //modify the headers
@@ -128,7 +128,7 @@ public class Get extends Task {
             connection.connect();
             //next test for a 304 result (HTTP only)
             if(connection instanceof HttpURLConnection)  {
-           	HttpURLConnection httpConnection=(HttpURLConnection)connection;
+                HttpURLConnection httpConnection=(HttpURLConnection)connection;
                 if(httpConnection.getResponseCode()==HttpURLConnection.HTTP_NOT_MODIFIED)  {
                     //not modified so no file download. just return instead
                     //and trace out something so the user doesn't think that the 
@@ -141,45 +141,45 @@ public class Get extends Task {
             //REVISIT: at this point even non HTTP connections may support the if-modified-since
             //behaviour -we just check the date of the content and skip the write if it is not
             //newer. Some protocols (FTP) dont include dates, of course. 
-           	
-	    FileOutputStream fos = new FileOutputStream(dest);
+                   
+            FileOutputStream fos = new FileOutputStream(dest);
 
-	    InputStream is=null;
-	    for( int i=0; i< 3 ; i++ ) {
-		try {
-		    is = connection.getInputStream();
-		    break;
-		} catch( IOException ex ) {
-		    log( "Error opening connection " + ex );
-		}
-	    }
-	    if( is==null ) {
-		log( "Can't get " + source + " to " + dest);
-		if(ignoreErrors) 
+            InputStream is=null;
+            for( int i=0; i< 3 ; i++ ) {
+                try {
+                    is = connection.getInputStream();
+                    break;
+                } catch( IOException ex ) {
+                    log( "Error opening connection " + ex );
+                }
+            }
+            if( is==null ) {
+                log( "Can't get " + source + " to " + dest);
+                if(ignoreErrors) 
                     return;
-		throw new BuildException( "Can't get " + source + " to " + dest,
+                throw new BuildException( "Can't get " + source + " to " + dest,
                                           location);
-	    }
-		
-	    byte[] buffer = new byte[100 * 1024];
-	    int length;
-	    
-	    while ((length = is.read(buffer)) >= 0) {
-		fos.write(buffer, 0, length);
-		if (verbose) System.out.print(".");
-	    }
-	    if(verbose) System.out.println();
-	    fos.close();
-	    is.close();
+            }
+                
+            byte[] buffer = new byte[100 * 1024];
+            int length;
+            
+            while ((length = is.read(buffer)) >= 0) {
+                fos.write(buffer, 0, length);
+                if (verbose) System.out.print(".");
+            }
+            if(verbose) System.out.println();
+            fos.close();
+            is.close();
            
             //if (and only if) the use file time option is set, then the 
             //saved file now has its timestamp set to that of the downloaded file
             if(useTimestamp)  {
-           	long remoteTimestamp=connection.getLastModified();
+                long remoteTimestamp=connection.getLastModified();
                 if (verbose)  {
                     Date t=new Date(remoteTimestamp);
                     log("last modified = "+t.toString()
-                   	+((remoteTimestamp==0)?" - using current time instead":""));
+                        +((remoteTimestamp==0)?" - using current time instead":""));
                 }
                 if(remoteTimestamp!=0)
                     touchFile(dest,remoteTimestamp);
@@ -187,12 +187,12 @@ public class Get extends Task {
 
            
 
-	} catch (IOException ioe) {
-	    log("Error getting " + source + " to " + dest );
-	    if(ignoreErrors) 
+        } catch (IOException ioe) {
+            log("Error getting " + source + " to " + dest );
+            if(ignoreErrors) 
                 return;
-	    throw new BuildException(ioe, location);
-	}
+            throw new BuildException(ioe, location);
+        }
     }
     
     /** 
@@ -221,7 +221,7 @@ public class Get extends Task {
         } else {
             return false;
         }
-    }	
+    }        
 
     /**
      * Set the URL.
@@ -229,7 +229,7 @@ public class Get extends Task {
      * @param u URL for the file.
      */
     public void setSrc(URL u) {
-	this.source = u;
+        this.source = u;
     }
 
     /**
@@ -238,7 +238,7 @@ public class Get extends Task {
      * @param dest Path to file.
      */
     public void setDest(File dest) {
-	this.dest = dest;
+        this.dest = dest;
     }
 
     /**
@@ -247,7 +247,7 @@ public class Get extends Task {
      * @param v if "true" then be verbose
      */
     public void setVerbose(boolean v) {
-	verbose = v;
+        verbose = v;
     }
 
     /**
@@ -256,7 +256,7 @@ public class Get extends Task {
      * @param v if "true" then don't report download errors up to ant
      */
     public void setIgnoreErrors(boolean v) {
-	ignoreErrors = v;
+        ignoreErrors = v;
     }
 
     /**
