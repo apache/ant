@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -142,7 +142,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             exe.setCommandline(cmd.getCommandline());
             return exe.execute();
         } catch (java.io.IOException e) {
-            String msg = "Failed executing: " + cmd.toString() 
+            String msg = "Failed executing: " + cmd.toString()
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, getLocation());
         }
@@ -193,7 +193,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
         // default pvcs project is "/"
         if (getPvcsproject() == null && getPvcsprojects().isEmpty()) {
-            pvcsProject = "/";
+			pvcsProject = "/";
         }
 
         if (getPvcsproject() != null) {
@@ -204,7 +204,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             while (e.hasMoreElements()) {
                 String projectName = ((PvcsProject) e.nextElement()).getName();
                 if (projectName == null || (projectName.trim()).equals("")) {
-                    throw new BuildException("name is a required attribute " 
+                    throw new BuildException("name is a required attribute "
                         + "of pvcsproject");
                 }
                 commandLine.createArgument().setValue(projectName);
@@ -234,8 +234,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
             }
 
             if (!tmp.exists()) {
-                throw new BuildException("Communication between ant and pvcs " 
-                    + "failed. No output generated from executing PVCS " 
+                throw new BuildException("Communication between ant and pvcs "
+                    + "failed. No output generated from executing PVCS "
                     + "commandline interface \"pcli\" and \"get\"");
             }
 
@@ -257,7 +257,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             }
 
             if (getPromotiongroup() != null) {
-                commandLine.createArgument().setValue("-G" 
+                commandLine.createArgument().setValue("-G"
                     + getPromotiongroup());
             } else {
                 if (getLabel() != null) {
@@ -272,24 +272,24 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.createArgument().setValue("@" + tmp2.getAbsolutePath());
             log("Getting files", Project.MSG_INFO);
             log("Executing " + commandLine.toString(), Project.MSG_VERBOSE);
-            result = runCmd(commandLine, 
+            result = runCmd(commandLine,
                 new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
             if (result != 0 && !ignorerc) {
-                String msg = "Failed executing: " + commandLine.toString() 
+                String msg = "Failed executing: " + commandLine.toString()
                     + ". Return code was " + result;
                 throw new BuildException(msg, getLocation());
             }
 
         } catch (FileNotFoundException e) {
-            String msg = "Failed executing: " + commandLine.toString() 
+            String msg = "Failed executing: " + commandLine.toString()
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, getLocation());
         } catch (IOException e) {
-            String msg = "Failed executing: " + commandLine.toString() 
+            String msg = "Failed executing: " + commandLine.toString()
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, getLocation());
         } catch (ParseException e) {
-            String msg = "Failed executing: " + commandLine.toString() 
+            String msg = "Failed executing: " + commandLine.toString()
                 + ". Exception: " + e.getMessage();
             throw new BuildException(msg, getLocation());
         } finally {
@@ -315,7 +315,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
                 log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
                 if (line.startsWith("\"\\") ||
                     line.startsWith("\"/") ||
-                    line.startsWith(getLineStart())) {
+                    (line.length() >3 &&
+                     line.startsWith("\"") &&
+                     Character.isLetter(line.charAt(1)) &&
+                     String.valueOf(line.charAt(2)).equals(":") &&
+                     String.valueOf(line.charAt(3)).equals("\\"))) {
                     Object[] objs = mf.parse(line);
                     String f = (String) objs[1];
                     // Extract the name of the directory from the filename
@@ -355,10 +359,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
         
 
     /**
-     * Simple hack to handle the PVCS command-line tools botch when 
+     * Simple hack to handle the PVCS command-line tools botch when
      * handling UNC notation.
      */
-    private void massagePCLI(File in, File out) 
+    private void massagePCLI(File in, File out)
         throws FileNotFoundException, IOException {
         BufferedReader inReader = null;
         BufferedWriter outWriter = null;
@@ -636,3 +640,4 @@ public class Pvcs extends org.apache.tools.ant.Task {
         filenameFormat = "{0}-arc({1})";
     }
 }
+
