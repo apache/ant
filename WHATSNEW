@@ -109,6 +109,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Selector Elements now provide a way to create filesets based on 
+  sophisticated selection criteria.
+
 * Gzip and Bzip2 files can now be constructed in the fly when using
   the tar task without having to create the intermediate tar file on
   disk.  The Untar task can also untar GZip and BZip2 files on the fly

@@ -57,6 +57,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.selectors.*;
 
 import java.io.File;
 import java.util.Stack;
@@ -70,23 +71,26 @@ import java.util.Enumeration;
  *
  * <p>Common base class for DirSet and FileSet.</p>
  *
- * @author <a href="mailto:ajkuiper@wxs.nl">Arnout J. Kuiper</a> 
+ * @author <a href="mailto:ajkuiper@wxs.nl">Arnout J. Kuiper</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
-public abstract class AbstractFileSet extends DataType implements Cloneable {
-    
+public abstract class AbstractFileSet extends DataType implements Cloneable,
+        SelectorContainer {
+
     private PatternSet defaultPatterns = new PatternSet();
     private Vector additionalPatterns = new Vector();
+    private Vector selectors = new Vector();
 
     private File dir;
     private boolean useDefaultExcludes = true;
     private boolean isCaseSensitive = true;
 
-   
+
     public AbstractFileSet() {
         super();
     }
@@ -104,7 +108,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
      * Makes this instance in effect a reference to another instance.
      *
      * <p>You must not set another attribute or nest elements inside
-     * this element if you make it a reference.</p> 
+     * this element if you make it a reference.</p>
      */
     public void setRefid(Reference r) throws BuildException {
         if (dir != null || defaultPatterns.hasPatterns()) {
@@ -158,7 +162,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         }
         return defaultPatterns.createInclude();
     }
-    
+
     /**
      * add a name entry on the include files list
      */
@@ -168,7 +172,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         }
         return defaultPatterns.createIncludesFile();
     }
-    
+
     /**
      * add a name entry on the exclude list
      */
@@ -188,7 +192,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         }
         return defaultPatterns.createExcludesFile();
     }
-    
+
     /**
      * Appends <code>includes</code> to the current list of include
      * patterns.
@@ -224,7 +228,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
     /**
      * Sets the name of the file containing the includes patterns.
      *
-     * @param incl The file to fetch the include patterns from.  
+     * @param incl The file to fetch the include patterns from.
      */
      public void setIncludesfile(File incl) throws BuildException {
          if (isReference()) {
@@ -237,7 +241,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
     /**
      * Sets the name of the file containing the includes patterns.
      *
-     * @param excl The file to fetch the exclude patterns from.  
+     * @param excl The file to fetch the exclude patterns from.
      */
      public void setExcludesfile(File excl) throws BuildException {
          if (isReference()) {
@@ -250,7 +254,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
     /**
      * Sets whether default exclusions should be used or not.
      *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *                           should be used, "false"|"off"|"no" when they
      *                           shouldn't be used.
      */
@@ -272,8 +276,8 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         this.isCaseSensitive = isCaseSensitive;
     }
 
-    
-    
+
+
     /**
      * sets the name used for this datatype instance.
      */
@@ -290,14 +294,14 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
                 }
             }
         }
-            
+
         String classname = getClass().getName();
-        
+
         int dotIndex = classname.lastIndexOf(".");
         if (dotIndex == -1) {
             return classname;
         }
-        return classname.substring(dotIndex + 1); 
+        return classname.substring(dotIndex + 1);
     }
 
     /**
@@ -326,12 +330,12 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
         ds.scan();
         return ds;
     }
-    
+
     public void setupDirectoryScanner(FileScanner ds, Project p) {
         if (ds == null) {
             throw new IllegalArgumentException("ds cannot be null");
         }
-        
+
         ds.setBasedir(dir);
 
         final int count = additionalPatterns.size();
@@ -340,11 +344,16 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
             defaultPatterns.append((PatternSet) o, p);
         }
 
-        p.log(getDataTypeName() + ": Setup scanner in dir " + dir + 
+        p.log(getDataTypeName() + ": Setup scanner in dir " + dir +
             " with " + defaultPatterns, Project.MSG_DEBUG);
-        
+
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));
+        if (ds instanceof SelectorScanner) {
+            SelectorScanner ss = (SelectorScanner)ds;
+            ss.setSelectors(getSelectors(p));
+        }
+
         if (useDefaultExcludes) {
             ds.addDefaultExcludes();
         }
@@ -353,7 +362,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
 
     /**
      * Performs the check for circular references and returns the
-     * referenced FileSet.  
+     * referenced FileSet.
      */
     protected AbstractFileSet getRef(Project p) {
         if (!checked) {
@@ -361,15 +370,164 @@ public abstract class AbstractFileSet extends DataType implements Cloneable {
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
-        
+
         Object o = ref.getReferencedObject(p);
         if (!getClass().isAssignableFrom(o.getClass())) {
-            String msg = ref.getRefId() + " doesn\'t denote a " 
+            String msg = ref.getRefId() + " doesn\'t denote a "
                 + getDataTypeName();
             throw new BuildException(msg);
         } else {
             return (AbstractFileSet) o;
         }
+    }
+
+    // SelectorContainer methods
+
+    /**
+     * Indicates whether there are any selectors here.
+     *
+     * @return whether any selectors are in this container
+     */
+    public boolean hasSelectors() {
+        return !(selectors.isEmpty());
+    }
+
+    /**
+     * Gives the count of the number of selectors in this container
+     *
+     * @return the number of selectors in this container
+     */
+    public int selectorCount() {
+        return selectors.size();
+    }
+
+    /**
+     * Returns the set of selectors as an array.
+     *
+     * @return an array of selectors in this container
+     */
+    public FileSelector[] getSelectors(Project p) {
+        if (isReference()) {
+            return getRef(p).getSelectors(p);
+        } else {
+            FileSelector[] result = new FileSelector[selectors.size()];
+            selectors.copyInto(result);
+            return result;
+        }
+    }
+
+    /**
+     * Returns an enumerator for accessing the set of selectors.
+     *
+     * @return an enumerator that goes through each of the selectors
+     */
+    public Enumeration selectorElements() {
+        return selectors.elements();
+    }
+
+    /**
+     * Add a new selector into this container.
+     *
+     * @param selector the new selector to add
+     */
+    public void appendSelector(FileSelector selector) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        selectors.addElement(selector);
+    }
+
+    /* Methods below all implement the static selectors */
+
+    /**
+     * add an "And" selector entry on the selector list
+     */
+    public void addAnd(AndSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add an "Or" selector entry on the selector list
+     */
+    public void addOr(OrSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a "Not" selector entry on the selector list
+     */
+    public void addNot(NotSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a "None" selector entry on the selector list
+     */
+    public void addNone(NoneSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a majority selector entry on the selector list
+     */
+    public void addMajority(MajoritySelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a selector date entry on the selector list
+     */
+    public void addDateselect(DateSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a selector size entry on the selector list
+     */
+    public void addSizeselect(SizeSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a selector filename entry on the selector list
+     */
+    public void addFilenameselect(FilenameSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add an extended selector entry on the selector list
+     */
+    public void addExtendSelect(ExtendSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a contains selector entry on the selector list
+     */
+    public void addContainsSelect(ContainsSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a present selector entry on the selector list
+     */
+    public void addPresentSelect(PresentSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a depth selector entry on the selector list
+     */
+    public void addDepthSelect(DepthSelector selector) {
+        appendSelector(selector);
+    }
+
+    /**
+     * add a depends selector entry on the selector list
+     */
+    public void addDependSelect(DependSelector selector) {
+        appendSelector(selector);
     }
 
 }

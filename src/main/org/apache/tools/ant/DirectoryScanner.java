@@ -58,29 +58,37 @@ import java.io.File;
 import java.util.Vector;
 import java.util.StringTokenizer;
 
+import org.apache.tools.ant.types.selectors.SelectorScanner;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
+
 /**
  * Class for scanning a directory for files/directories which match certain
  * criteria.
  * <p>
- * These criteria consist of a set of include and exclude patterns. With these
- * patterns, you can select which files you want to have included, and which
- * files you want to have excluded.
+ * These criteria consist of selectors and patterns which have been specified.
+ * With the selectors you can select which files you want to have included.
+ * Files which are not selected are excluded. With patterns you can include
+ * or exclude files based on their filename.
  * <p>
  * The idea is simple. A given directory is recursively scanned for all files
- * and directories. Each file/directory is matched against a set of include
+ * and directories. Each file/directory is matched against a set of selectors,
+ * including special support for matching against filenames with include and
  * and exclude patterns. Only files/directories which match at least one
- * pattern of the include pattern list, and don't match any pattern of the
- * exclude pattern list will be placed in the list of files/directories found.
+ * pattern of the include pattern list or other file selector, and don't match
+ * any pattern of the exclude pattern list or fail to match against a required
+ * selector will be placed in the list of files/directories found.
  * <p>
  * When no list of include patterns is supplied, "**" will be used, which
  * means that everything will be matched. When no list of exclude patterns is
- * supplied, an empty list is used, such that nothing will be excluded.
+ * supplied, an empty list is used, such that nothing will be excluded. When
+ * no selectors are supplied, none are applied.
  * <p>
- * The pattern matching is done as follows:
+ * The filename pattern matching is done as follows:
  * The name to be matched is split up in path segments. A path segment is the
  * name of a directory or file, which is bounded by
  * <code>File.separator</code> ('/' under UNIX, '\' under Windows).
- * For example, "abc/def/ghi/xyz.java" is split up in the segments "abc", 
+ * For example, "abc/def/ghi/xyz.java" is split up in the segments "abc",
  * "def","ghi" and "xyz.java".
  * The same is done for the pattern against which should be matched.
  * <p>
@@ -136,11 +144,12 @@ import java.util.StringTokenizer;
  * This will scan a directory called test for .class files, but excludes all
  * files in all proper subdirectories of a directory called "modules"
  *
- * @author Arnout J. Kuiper 
+ * @author Arnout J. Kuiper
  * <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
-public class DirectoryScanner implements FileScanner {
+public class DirectoryScanner implements FileScanner, SelectorScanner {
 
     /**
      * Patterns which should be excluded by default.
@@ -170,36 +179,53 @@ public class DirectoryScanner implements FileScanner {
     /** The patterns for the files to be excluded. */
     protected String[] excludes;
 
-    /** The files which matched at least one include and no excludes. */
+    /** Selectors that will filter which files are in our candidate list. */
+    protected FileSelector[] selectors = null;
+
+    /** The files which matched at least one include and no excludes
+     *  and were selected.
+     */
     protected Vector filesIncluded;
 
-    /** The files which did not match any includes. */
+    /** The files which did not match any includes or selectors. */
     protected Vector filesNotIncluded;
 
-    /** 
-     * The files which matched at least one include and at least 
+    /**
+     * The files which matched at least one include and at least
      * one exclude.
      */
     protected Vector filesExcluded;
 
-    /** The directories which matched at least one include and no excludes. */
+    /** The directories which matched at least one include and no excludes
+     *  and were selected.
+     */
     protected Vector dirsIncluded;
 
     /** The directories which were found and did not match any includes. */
     protected Vector dirsNotIncluded;
 
-    /** 
-     * The directories which matched at least one include and at least one 
+    /**
+     * The directories which matched at least one include and at least one
      * exclude.
      */
     protected Vector dirsExcluded;
 
+    /** The files which matched at least one include and no excludes and
+     *  which a selector discarded.
+     */
+    protected Vector filesDeselected;
+
+    /** The directories which matched at least one include and no excludes
+     *  but which a selector discarded.
+     */
+    protected Vector dirsDeselected;
+
     /** Whether or not our results were built by a slow scan. */
     protected boolean haveSlowResults = false;
 
-    /** 
-     * Whether or not the file system should be treated as a case sensitive 
-     * one. 
+    /**
+     * Whether or not the file system should be treated as a case sensitive
+     * one.
      */
     protected boolean isCaseSensitive = true;
 
@@ -213,241 +239,87 @@ public class DirectoryScanner implements FileScanner {
     }
 
     /**
-     * Tests whether or not a given path matches the start of a given 
+     * Tests whether or not a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
-     * can live with false positives. For example, <code>pattern=**\a</code> 
+     * can live with false positives. For example, <code>pattern=**\a</code>
      * and <code>str=b</code> will yield <code>true</code>.
      *
-     * @param pattern The pattern to match against. Must not be 
+     * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
-     * @param str     The path to match, as a String. Must not be 
+     * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * 
-     * @return whether or not a given path matches the start of a given 
+     *
+     * @return whether or not a given path matches the start of a given
      * pattern up to the first "**".
      */
     protected static boolean matchPatternStart(String pattern, String str) {
-        return matchPatternStart(pattern, str, true);
+        return SelectorUtils.matchPatternStart(pattern, str);
     }
     /**
-     * Tests whether or not a given path matches the start of a given 
+     * Tests whether or not a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
-     * can live with false positives. For example, <code>pattern=**\a</code> 
+     * can live with false positives. For example, <code>pattern=**\a</code>
      * and <code>str=b</code> will yield <code>true</code>.
      *
-     * @param pattern The pattern to match against. Must not be 
+     * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
-     * @param str     The path to match, as a String. Must not be 
+     * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed 
+     * @param isCaseSensitive Whether or not matching should be performed
      *                        case sensitively.
-     * 
-     * @return whether or not a given path matches the start of a given 
+     *
+     * @return whether or not a given path matches the start of a given
      * pattern up to the first "**".
      */
     protected static boolean matchPatternStart(String pattern, String str,
                                                boolean isCaseSensitive) {
-        // When str starts with a File.separator, pattern has to start with a
-        // File.separator.
-        // When pattern starts with a File.separator, str has to start with a
-        // File.separator.
-        if (str.startsWith(File.separator) !=
-            pattern.startsWith(File.separator)) {
-            return false;
-        }
-
-        Vector patDirs = tokenizePath (pattern);
-        Vector strDirs = tokenizePath (str);
-
-        int patIdxStart = 0;
-        int patIdxEnd   = patDirs.size() - 1;
-        int strIdxStart = 0;
-        int strIdxEnd   = strDirs.size() - 1;
-
-        // up to first '**'
-        while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String) patDirs.elementAt(patIdxStart);
-            if (patDir.equals("**")) {
-                break;
-            }
-            if (!match(patDir, (String) strDirs.elementAt(strIdxStart), isCaseSensitive)) {
-                return false;
-            }
-            patIdxStart++;
-            strIdxStart++;
-        }
-
-        if (strIdxStart > strIdxEnd) {
-            // String is exhausted
-            return true;
-        } else if (patIdxStart > patIdxEnd) {
-            // String not exhausted, but pattern is. Failure.
-            return false;
-        } else {
-            // pattern now holds ** while string is not exhausted
-            // this will generate false positives but we can live with that.
-            return true;
-        }
+        return SelectorUtils.matchPatternStart(pattern, str, isCaseSensitive);
     }
 
     /**
      * Tests whether or not a given path matches a given pattern.
      *
-     * @param pattern The pattern to match against. Must not be 
+     * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
-     * @param str     The path to match, as a String. Must not be 
+     * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
      *
-     * @return <code>true</code> if the pattern matches against the string, 
+     * @return <code>true</code> if the pattern matches against the string,
      *         or <code>false</code> otherwise.
      */
     protected static boolean matchPath(String pattern, String str) {
-        return matchPath(pattern, str, true);
+        return SelectorUtils.matchPath(pattern, str);
     }
 
     /**
      * Tests whether or not a given path matches a given pattern.
      *
-     * @param pattern The pattern to match against. Must not be 
+     * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
-     * @param str     The path to match, as a String. Must not be 
+     * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed 
+     * @param isCaseSensitive Whether or not matching should be performed
      *                        case sensitively.
      *
-     * @return <code>true</code> if the pattern matches against the string, 
+     * @return <code>true</code> if the pattern matches against the string,
      *         or <code>false</code> otherwise.
      */
-    protected static boolean matchPath(String pattern, String str, 
+    protected static boolean matchPath(String pattern, String str,
                                        boolean isCaseSensitive) {
-        // When str starts with a File.separator, pattern has to start with a
-        // File.separator.
-        // When pattern starts with a File.separator, str has to start with a
-        // File.separator.
-        if (str.startsWith(File.separator) !=
-            pattern.startsWith(File.separator)) {
-            return false;
-        }
-
-        Vector patDirs = tokenizePath (pattern);
-        Vector strDirs = tokenizePath (str);
-
-        int patIdxStart = 0;
-        int patIdxEnd   = patDirs.size() - 1;
-        int strIdxStart = 0;
-        int strIdxEnd   = strDirs.size() - 1;
-
-        // up to first '**'
-        while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String) patDirs.elementAt(patIdxStart);
-            if (patDir.equals("**")) {
-                break;
-            }
-            if (!match(patDir, (String) strDirs.elementAt(strIdxStart), isCaseSensitive)) {
-                return false;
-            }
-            patIdxStart++;
-            strIdxStart++;
-        }
-        if (strIdxStart > strIdxEnd) {
-            // String is exhausted
-            for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!patDirs.elementAt(i).equals("**")) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            if (patIdxStart > patIdxEnd) {
-                // String not exhausted, but pattern is. Failure.
-                return false;
-            }
-        }
-
-        // up to last '**'
-        while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
-            String patDir = (String) patDirs.elementAt(patIdxEnd);
-            if (patDir.equals("**")) {
-                break;
-            }
-            if (!match(patDir, (String) strDirs.elementAt(strIdxEnd), isCaseSensitive)) {
-                return false;
-            }
-            patIdxEnd--;
-            strIdxEnd--;
-        }
-        if (strIdxStart > strIdxEnd) {
-            // String is exhausted
-            for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (!patDirs.elementAt(i).equals("**")) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
-            int patIdxTmp = -1;
-            for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
-                if (patDirs.elementAt(i).equals("**")) {
-                    patIdxTmp = i;
-                    break;
-                }
-            }
-            if (patIdxTmp == patIdxStart + 1) {
-                // '**/**' situation, so skip one
-                patIdxStart++;
-                continue;
-            }
-            // Find the pattern between padIdxStart & padIdxTmp in str between
-            // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp - patIdxStart - 1);
-            int strLength = (strIdxEnd - strIdxStart + 1);
-            int foundIdx  = -1;
-strLoop:
-            for (int i = 0; i <= strLength - patLength; i++) {
-                for (int j = 0; j < patLength; j++) {
-                    String subPat 
-                        = (String) patDirs.elementAt(patIdxStart + j + 1);
-                    String subStr 
-                        = (String) strDirs.elementAt(strIdxStart + i + j);
-                    if (!match(subPat, subStr, isCaseSensitive)) {
-                        continue strLoop;
-                    }
-                }
-
-                foundIdx = strIdxStart + i;
-                break;
-            }
-
-            if (foundIdx == -1) {
-                return false;
-            }
-
-            patIdxStart = patIdxTmp;
-            strIdxStart = foundIdx + patLength;
-        }
-
-        for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (!patDirs.elementAt(i).equals("**")) {
-                return false;
-            }
-        }
-
-        return true;
+        return SelectorUtils.matchPath(pattern, str, isCaseSensitive);
     }
 
     /**
-     * Tests whether or not a string matches against a pattern. 
+     * Tests whether or not a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
-     * 
-     * @param pattern The pattern to match against. 
+     *
+     * @param pattern The pattern to match against.
      *                Must not be <code>null</code>.
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
@@ -456,211 +328,62 @@ strLoop:
      *         or <code>false</code> otherwise.
      */
     public static boolean match(String pattern, String str) {
-        return match(pattern, str, true);
+        return SelectorUtils.match(pattern, str);
     }
 
     /**
-     * Tests whether or not a string matches against a pattern. 
+     * Tests whether or not a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
-     * 
-     * @param pattern The pattern to match against. 
+     *
+     * @param pattern The pattern to match against.
      *                Must not be <code>null</code>.
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed 
+     * @param isCaseSensitive Whether or not matching should be performed
      *                        case sensitively.
      *
      *
-     * @return <code>true</code> if the string matches against the pattern, 
+     * @return <code>true</code> if the string matches against the pattern,
      *         or <code>false</code> otherwise.
      */
-    protected static boolean match(String pattern, String str, 
+    protected static boolean match(String pattern, String str,
                                    boolean isCaseSensitive) {
-        char[] patArr = pattern.toCharArray();
-        char[] strArr = str.toCharArray();
-        int patIdxStart = 0;
-        int patIdxEnd   = patArr.length - 1;
-        int strIdxStart = 0;
-        int strIdxEnd   = strArr.length - 1;
-        char ch;
-
-        boolean containsStar = false;
-        for (int i = 0; i < patArr.length; i++) {
-            if (patArr[i] == '*') {
-                containsStar = true;
-                break;
-            }
-        }
-
-        if (!containsStar) {
-            // No '*'s, so we make a shortcut
-            if (patIdxEnd != strIdxEnd) {
-                return false; // Pattern and string do not have the same size
-            }
-            for (int i = 0; i <= patIdxEnd; i++) {
-                ch = patArr[i];
-                if (ch != '?') {
-                    if (isCaseSensitive && ch != strArr[i]) {
-                        return false;// Character mismatch
-                    }
-                    if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                        Character.toUpperCase(strArr[i])) {
-                        return false; // Character mismatch
-                    }
-                }
-            }
-            return true; // String matches against pattern
-        }
-
-        if (patIdxEnd == 0) {
-            return true; // Pattern contains only '*', which matches anything
-        }
-
-        // Process characters before first star
-        while ((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
-            if (ch != '?') {
-                if (isCaseSensitive && ch != strArr[strIdxStart]) {
-                    return false;// Character mismatch
-                }
-                if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                    Character.toUpperCase(strArr[strIdxStart])) {
-                    return false;// Character mismatch
-                }
-            }
-            patIdxStart++;
-            strIdxStart++;
-        }
-        if (strIdxStart > strIdxEnd) {
-            // All characters in the string are used. Check if only '*'s are
-            // left in the pattern. If so, we succeeded. Otherwise failure.
-            for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (patArr[i] != '*') {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // Process characters after last star
-        while ((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
-            if (ch != '?') {
-                if (isCaseSensitive && ch != strArr[strIdxEnd]) {
-                    return false;// Character mismatch
-                }
-                if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                    Character.toUpperCase(strArr[strIdxEnd])) {
-                    return false;// Character mismatch
-                }
-            }
-            patIdxEnd--;
-            strIdxEnd--;
-        }
-        if (strIdxStart > strIdxEnd) {
-            // All characters in the string are used. Check if only '*'s are
-            // left in the pattern. If so, we succeeded. Otherwise failure.
-            for (int i = patIdxStart; i <= patIdxEnd; i++) {
-                if (patArr[i] != '*') {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // process pattern between stars. padIdxStart and patIdxEnd point
-        // always to a '*'.
-        while (patIdxStart != patIdxEnd && strIdxStart <= strIdxEnd) {
-            int patIdxTmp = -1;
-            for (int i = patIdxStart + 1; i <= patIdxEnd; i++) {
-                if (patArr[i] == '*') {
-                    patIdxTmp = i;
-                    break;
-                }
-            }
-            if (patIdxTmp == patIdxStart + 1) {
-                // Two stars next to each other, skip the first one.
-                patIdxStart++;
-                continue;
-            }
-            // Find the pattern between padIdxStart & padIdxTmp in str between
-            // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp - patIdxStart - 1);
-            int strLength = (strIdxEnd - strIdxStart + 1);
-            int foundIdx  = -1;
-            strLoop:
-            for (int i = 0; i <= strLength - patLength; i++) {
-                for (int j = 0; j < patLength; j++) {
-                    ch = patArr[patIdxStart + j + 1];
-                    if (ch != '?') {
-                        if (isCaseSensitive 
-                             && ch != strArr[strIdxStart + i + j]) {
-                            continue strLoop;
-                        }
-                        if (!isCaseSensitive && Character.toUpperCase(ch) !=
-                            Character.toUpperCase(strArr[strIdxStart + i + j])) {
-                            continue strLoop;
-                        }
-                    }
-                }
-
-                foundIdx = strIdxStart + i;
-                break;
-            }
-
-            if (foundIdx == -1) {
-                return false;
-            }
-
-            patIdxStart = patIdxTmp;
-            strIdxStart = foundIdx + patLength;
-        }
-
-        // All characters in the string are used. Check if only '*'s are left
-        // in the pattern. If so, we succeeded. Otherwise failure.
-        for (int i = patIdxStart; i <= patIdxEnd; i++) {
-            if (patArr[i] != '*') {
-                return false;
-            }
-        }
-        return true;
+        return SelectorUtils.match(pattern, str, isCaseSensitive);
     }
 
     /**
      * Breaks a path up into a Vector of path elements, tokenizing on
      * <code>File.separator</code>.
-     * 
+     *
      * @param path Path to tokenize. Must not be <code>null</code>.
-     * 
+     *
      * @return a Vector of path elements from the tokenized path
      */
     private static Vector tokenizePath (String path) {
-        Vector ret = new Vector();
-        StringTokenizer st = new StringTokenizer(path, File.separator);
-        while (st.hasMoreTokens()) {
-            ret.addElement(st.nextToken());
-        }
-        return ret;
+        return SelectorUtils.tokenizePath(path);
     }
-    
+
     /**
      * Sets the base directory to be scanned. This is the directory which is
      * scanned recursively. All '/' and '\' characters are replaced by
      * <code>File.separatorChar</code>, so the separator used need not match
      * <code>File.separatorChar</code>.
      *
-     * @param basedir The base directory to scan. 
+     * @param basedir The base directory to scan.
      *                Must not be <code>null</code>.
      */
     public void setBasedir(String basedir) {
-        setBasedir(new File(basedir.replace('/', File.separatorChar).replace('\\', File.separatorChar)));
+        setBasedir(new File(basedir.replace('/', File.separatorChar).replace(
+                '\\', File.separatorChar)));
     }
 
     /**
-     * Sets the base directory to be scanned. This is the directory which is 
+     * Sets the base directory to be scanned. This is the directory which is
      * scanned recursively.
      *
-     * @param basedir The base directory for scanning. 
+     * @param basedir The base directory for scanning.
      *                Should not be <code>null</code>.
      */
     public void setBasedir(File basedir) {
@@ -668,7 +391,7 @@ strLoop:
     }
 
     /**
-     * Returns the base directory to be scanned. 
+     * Returns the base directory to be scanned.
      * This is the directory which is scanned recursively.
      *
      * @return the base directory to be scanned
@@ -680,7 +403,7 @@ strLoop:
     /**
      * Sets whether or not the file system should be regarded as case sensitive.
      *
-     * @param isCaseSensitive whether or not the file system should be 
+     * @param isCaseSensitive whether or not the file system should be
      *                        regarded as a case sensitive one
      */
     public void setCaseSensitive(boolean isCaseSensitive) {
@@ -688,16 +411,16 @@ strLoop:
     }
 
     /**
-     * Sets the list of include patterns to use. All '/' and '\' characters 
-     * are replaced by <code>File.separatorChar</code>, so the separator used 
+     * Sets the list of include patterns to use. All '/' and '\' characters
+     * are replaced by <code>File.separatorChar</code>, so the separator used
      * need not match <code>File.separatorChar</code>.
      * <p>
      * When a pattern ends with a '/' or '\', "**" is appended.
      *
      * @param includes A list of include patterns.
-     *                 May be <code>null</code>, indicating that all files 
+     *                 May be <code>null</code>, indicating that all files
      *                 should be included. If a non-<code>null</code>
-     *                 list is given, all elements must be 
+     *                 list is given, all elements must be
      * non-<code>null</code>.
      */
     public void setIncludes(String[] includes) {
@@ -707,7 +430,8 @@ strLoop:
             this.includes = new String[includes.length];
             for (int i = 0; i < includes.length; i++) {
                 String pattern;
-                pattern = includes[i].replace('/', File.separatorChar).replace('\\', File.separatorChar);
+                pattern = includes[i].replace('/', File.separatorChar).replace(
+                        '\\', File.separatorChar);
                 if (pattern.endsWith(File.separator)) {
                     pattern += "**";
                 }
@@ -716,16 +440,17 @@ strLoop:
         }
     }
 
+
     /**
-     * Sets the list of exclude patterns to use. All '/' and '\' characters 
-     * are replaced by <code>File.separatorChar</code>, so the separator used 
+     * Sets the list of exclude patterns to use. All '/' and '\' characters
+     * are replaced by <code>File.separatorChar</code>, so the separator used
      * need not match <code>File.separatorChar</code>.
      * <p>
      * When a pattern ends with a '/' or '\', "**" is appended.
      *
-     * @param excludes A list of exclude patterns. 
-     *                 May be <code>null</code>, indicating that no files 
-     *                 should be excluded. If a non-<code>null</code> list is 
+     * @param excludes A list of exclude patterns.
+     *                 May be <code>null</code>, indicating that no files
+     *                 should be excluded. If a non-<code>null</code> list is
      *                 given, all elements must be non-<code>null</code>.
      */
     public void setExcludes(String[] excludes) {
@@ -735,7 +460,8 @@ strLoop:
             this.excludes = new String[excludes.length];
             for (int i = 0; i < excludes.length; i++) {
                 String pattern;
-                pattern = excludes[i].replace('/', File.separatorChar).replace('\\', File.separatorChar);
+                pattern = excludes[i].replace('/', File.separatorChar).replace(
+                        '\\', File.separatorChar);
                 if (pattern.endsWith(File.separator)) {
                     pattern += "**";
                 }
@@ -744,11 +470,22 @@ strLoop:
         }
     }
 
+
+    /**
+     * Sets the selectors that will select the filelist.
+     *
+     * @param selectors specifies the selectors to be invoked on a scan
+     */
+    public void setSelectors(FileSelector[] selectors) {
+        this.selectors = selectors;
+    }
+
+
     /**
      * Returns whether or not the scanner has included all the files or
      * directories it has come across so far.
      *
-     * @return <code>true</code> if all files and directories which have 
+     * @return <code>true</code> if all files and directories which have
      *         been found so far have been included.
      */
     public boolean isEverythingIncluded() {
@@ -757,9 +494,10 @@ strLoop:
 
     /**
      * Scans the base directory for files which match at least one include
-     * pattern and don't match any exclude patterns.
+     * pattern and don't match any exclude patterns. If there are selectors
+     * then the files must pass muster there, as well.
      *
-     * @exception IllegalStateException if the base directory was set 
+     * @exception IllegalStateException if the base directory was set
      *            incorrectly (i.e. if it is <code>null</code>, doesn't exist,
      *            or isn't a directory).
      */
@@ -788,13 +526,19 @@ strLoop:
         filesIncluded    = new Vector();
         filesNotIncluded = new Vector();
         filesExcluded    = new Vector();
+        filesDeselected  = new Vector();
         dirsIncluded     = new Vector();
         dirsNotIncluded  = new Vector();
         dirsExcluded     = new Vector();
+        dirsDeselected   = new Vector();
 
         if (isIncluded("")) {
             if (!isExcluded("")) {
-                dirsIncluded.addElement("");
+                if (isSelected("",basedir)) {
+                    dirsIncluded.addElement("");
+                } else {
+                    dirsDeselected.addElement("");
+                }
             } else {
                 dirsExcluded.addElement("");
             }
@@ -806,8 +550,8 @@ strLoop:
 
     /**
      * Top level invocation for a slow scan. A slow scan builds up a full
-     * list of excluded/included files/directories, whereas a fast scan 
-     * will only have full results for included files, as it ignores 
+     * list of excluded/included files/directories, whereas a fast scan
+     * will only have full results for included files, as it ignores
      * directories which can't possibly hold any included files/directories.
      * <p>
      * Returns immediately if a slow scan has already been completed.
@@ -843,12 +587,12 @@ strLoop:
     /**
      * Scans the given directory for files and directories. Found files and
      * directories are placed in their respective collections, based on the
-     * matching of includes and excludes. When a directory is found, it is
-     * scanned recursively.
+     * matching of includes, excludes, and the selectors.  When a directory
+     * is found, it is scanned recursively.
      *
      * @param dir   The directory to scan. Must not be <code>null</code>.
-     * @param vpath The path relative to the base directory (needed to 
-     *              prevent problems with an absolute path when using 
+     * @param vpath The path relative to the base directory (needed to
+     *              prevent problems with an absolute path when using
      *              dir). Must not be <code>null</code>.
      * @param fast  Whether or not this call is part of a fast scan.
      *
@@ -881,10 +625,19 @@ strLoop:
             if (file.isDirectory()) {
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
-                        dirsIncluded.addElement(name);
-                        if (fast) {
-                            scandir(file, name + File.separator, fast);
+                        if (isSelected(name,file)) {
+                            dirsIncluded.addElement(name);
+                            if (fast) {
+                                scandir(file, name + File.separator, fast);
+                            }
+                        } else {
+                            everythingIncluded = false;
+                            dirsDeselected.addElement(name);
+                            if (fast && couldHoldIncluded(name)) {
+                                scandir(file, name + File.separator, fast);
+                            }
                         }
+
                     } else {
                         everythingIncluded = false;
                         dirsExcluded.addElement(name);
@@ -905,7 +658,12 @@ strLoop:
             } else if (file.isFile()) {
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
-                        filesIncluded.addElement(name);
+                        if (isSelected(name,file)) {
+                            filesIncluded.addElement(name);
+                        } else {
+                            everythingIncluded = false;
+                            filesDeselected.addElement(name);
+                        }
                     } else {
                         everythingIncluded = false;
                         filesExcluded.addElement(name);
@@ -919,7 +677,7 @@ strLoop:
     }
 
     /**
-     * Tests whether or not a name matches against at least one include 
+     * Tests whether or not a name matches against at least one include
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -936,11 +694,11 @@ strLoop:
     }
 
     /**
-     * Tests whether or not a name matches the start of at least one include 
+     * Tests whether or not a name matches the start of at least one include
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
-     * @return <code>true</code> when the name matches against the start of at 
+     * @return <code>true</code> when the name matches against the start of at
      *         least one include pattern, or <code>false</code> otherwise.
      */
     protected boolean couldHoldIncluded(String name) {
@@ -953,7 +711,7 @@ strLoop:
     }
 
     /**
-     * Tests whether or not a name matches against at least one exclude 
+     * Tests whether or not a name matches against at least one exclude
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -970,7 +728,26 @@ strLoop:
     }
 
     /**
-     * Returns the names of the files which matched at least one of the 
+     * Tests whether a name should be selected.
+     *
+     * @param name the filename to check for selecting
+     * @param file the java.io.File object for this filename
+     * @return <code>false</code> when the selectors says that the file
+     *         should not be selected, <code>true</code> otherwise.
+     */
+    protected boolean isSelected(String name, File file) {
+        if (selectors != null) {
+            for (int i = 0; i < selectors.length; i++) {
+                if ((selectors[i].isSelected(basedir, name, file)) == false) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns the names of the files which matched at least one of the
      * include patterns and none of the exclude patterns.
      * The names are relative to the base directory.
      *
@@ -981,19 +758,19 @@ strLoop:
         int count = filesIncluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String) filesIncluded.elementAt(i);
+            files[i] = (String)filesIncluded.elementAt(i);
         }
         return files;
     }
 
     /**
-     * Returns the names of the files which matched none of the include 
+     * Returns the names of the files which matched none of the include
      * patterns. The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
      *
-     * @return the names of the files which matched none of the include 
+     * @return the names of the files which matched none of the include
      *         patterns.
-     * 
+     *
      * @see #slowScan
      */
     public String[] getNotIncludedFiles() {
@@ -1001,20 +778,20 @@ strLoop:
         int count = filesNotIncluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String) filesNotIncluded.elementAt(i);
+            files[i] = (String)filesNotIncluded.elementAt(i);
         }
         return files;
     }
 
     /**
-     * Returns the names of the files which matched at least one of the 
+     * Returns the names of the files which matched at least one of the
      * include patterns and at least one of the exclude patterns.
      * The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
      *
-     * @return the names of the files which matched at least one of the 
+     * @return the names of the files which matched at least one of the
      *         include patterns and at at least one of the exclude patterns.
-     * 
+     *
      * @see #slowScan
      */
     public String[] getExcludedFiles() {
@@ -1022,13 +799,32 @@ strLoop:
         int count = filesExcluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            files[i] = (String) filesExcluded.elementAt(i);
+            files[i] = (String)filesExcluded.elementAt(i);
         }
         return files;
     }
 
     /**
-     * Returns the names of the directories which matched at least one of the 
+     * Returns the names of the files which were selected. The names
+     * are relative to the base directory. This involves performing
+     * a slow scan if one has not already been completed.
+     *
+     * @return the names of the files which were selected.
+     *
+     * @see #slowScan
+     */
+    public String[] getDeselectedFiles() {
+        slowScan();
+        int count = filesDeselected.size();
+        String[] files = new String[count];
+        for (int i = 0; i < count; i++) {
+            files[i] = (String)filesDeselected.elementAt(i);
+        }
+        return files;
+    }
+
+    /**
+     * Returns the names of the directories which matched at least one of the
      * include patterns and none of the exclude patterns.
      * The names are relative to the base directory.
      *
@@ -1039,7 +835,7 @@ strLoop:
         int count = dirsIncluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
-            directories[i] = (String) dirsIncluded.elementAt(i);
+            directories[i] = (String)dirsIncluded.elementAt(i);
         }
         return directories;
     }
@@ -1051,7 +847,7 @@ strLoop:
      *
      * @return the names of the directories which matched none of the include
      * patterns.
-     * 
+     *
      * @see #slowScan
      */
     public String[] getNotIncludedDirectories() {
@@ -1059,20 +855,20 @@ strLoop:
         int count = dirsNotIncluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
-            directories[i] = (String) dirsNotIncluded.elementAt(i);
+            directories[i] = (String)dirsNotIncluded.elementAt(i);
         }
         return directories;
     }
 
     /**
-     * Returns the names of the directories which matched at least one of the 
+     * Returns the names of the directories which matched at least one of the
      * include patterns and at least one of the exclude patterns.
      * The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
-     * 
-     * @return the names of the directories which matched at least one of the 
+     *
+     * @return the names of the directories which matched at least one of the
      * include patterns and at least one of the exclude patterns.
-     * 
+     *
      * @see #slowScan
      */
     public String[] getExcludedDirectories() {
@@ -1080,7 +876,26 @@ strLoop:
         int count = dirsExcluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
-            directories[i] = (String) dirsExcluded.elementAt(i);
+            directories[i] = (String)dirsExcluded.elementAt(i);
+        }
+        return directories;
+    }
+
+    /**
+     * Returns the names of the directories which were selected. The names
+     * are relative to the base directory. This involves performing a
+     * slow scan if one has not already been completed.
+     *
+     * @return the names of the directories which were selected.
+     *
+     * @see #slowScan
+     */
+    public String[] getDeselectedDirectories() {
+        slowScan();
+        int count = dirsDeselected.size();
+        String[] directories = new String[count];
+        for (int i = 0; i < count; i++) {
+            directories[i] = (String)dirsDeselected.elementAt(i);
         }
         return directories;
     }
@@ -1096,7 +911,8 @@ strLoop:
             System.arraycopy(excludes, 0, newExcludes, 0, excludesLength);
         }
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
-            newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].replace('/', File.separatorChar).replace('\\', File.separatorChar);
+            newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].replace('/',
+                    File.separatorChar).replace('\\', File.separatorChar);
         }
         excludes = newExcludes;
     }
