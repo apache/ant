@@ -380,7 +380,8 @@ public class Jar extends Zip {
         zipDir(null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE);
         // time to write the manifest
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(baos);
+        OutputStreamWriter osw = new OutputStreamWriter(baos, "UTF-8");
+        PrintWriter writer = new PrintWriter(osw);
         manifest.write(writer);
         writer.flush();
 
