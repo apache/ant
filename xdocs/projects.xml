@@ -329,7 +329,7 @@
             <td>Opensource</td>
           </tr>
         </table>
-      </subsection>	  
+      </subsection>
 
       <subsection name="NAnt">
 
@@ -379,6 +379,39 @@
           <tr>
             <th>License:</th>
             <td>MIT License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Savant">
+
+        <p>Savant helps simplify builds and codebases by handling the
+        resolution of project dependencies automatically. Savant supports
+        Maven style dependency downloads and various other methods of
+        retrieving dependencies, including fetching files from CVS modules.
+        Savant goes a step further than other dependency solutions and provides
+        the means for multiple internal projects to build each other in order
+        to resolve inter-project dependencies.</p>
+
+        <p>Savant can be used via various Ant types and tasks as well as used
+        from any Java application including those that do not make use of Ant.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.inversoft.com">http://www.inversoft.com</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.inversoft.com/contact.html">http://www.inversoft.com/contact.html</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
           </tr>
         </table>
       </subsection>
