@@ -3,6 +3,7 @@
 <project name="jar-test" basedir="." default="test1">
 
   <property name="tmp.jar" location="tmp.jar"/>
+  <property name="tmp.dir" location="jartmp"/>
 
   <target name="test1">
     <jar/>
@@ -41,7 +42,7 @@
 
   <target name="testRecreateNewerFileSetup" depends="test4">
     <touch file="jar.xml"/>
-    <sleep seconds="2"/>
+    <sleep seconds="3"/>
     <touch file="${tmp.jar}"/>
   </target>
 
@@ -79,8 +80,23 @@
     />
   </target>
 
+  <target name="testManifestStaysIntact">
+    <mkdir dir="${tmp.dir}"/>
+    <manifest file="${tmp.dir}/manifest">
+      <attribute name="Foo" value="bar"/>
+    </manifest>
+    <jar destfile="${tmp.jar}" basedir="." includes="jar.xml"
+         manifest="${tmp.dir}/manifest"/>
+    <sleep seconds="3"/>
+    <touch file="jar.xml"/>
+    <jar destfile="${tmp.jar}" basedir="." includes="jar.xml"
+         update="true"/>
+    <unjar src="${tmp.jar}" dest="${tmp.dir}"/>
+  </target>    
+
   <target name="cleanup">
     <delete file="${tmp.jar}" />
+    <delete dir="${tmp.dir}"/>
   </target>
 
 </project>

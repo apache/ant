@@ -55,6 +55,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import org.apache.tools.ant.BuildFileTest;
 
@@ -148,5 +150,17 @@ public class JarTest extends BuildFileTest {
         jarFile = new File(getProjectDir(), tempJar);
         assertTrue("jar has been recreated in " + secondTarget,
                    jarModifiedDate < jarFile.lastModified());
+    }
+
+    public void XtestManifestStaysIntact() 
+        throws IOException, ManifestException {
+        executeTarget("testManifestStaysIntact");
+        Manifest mf1 = 
+            new Manifest(new FileReader(getProject()
+                                        .resolveFile("jartmp/manifest")));
+        Manifest mf2 = 
+            new Manifest(new FileReader(getProject()
+                                        .resolveFile("jartmp/META-INF/MANIFEST.MF")));
+        assertEquals(mf1, mf2);
     }
 }
