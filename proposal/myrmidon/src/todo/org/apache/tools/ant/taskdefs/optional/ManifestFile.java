@@ -75,7 +75,7 @@ public class ManifestFile extends Task
      */
     public Entry createEntry()
     {
-        Entry entry = new Entry();
+        final Entry entry = new Entry();
         entries.add( entry );
         return entry;
     }
@@ -113,7 +113,8 @@ public class ManifestFile extends Task
         return method.equals( UPDATE_.toUpperCase() );
     }
 
-    private void addLine( String line )
+    private void addLine( final String line )
+        throws TaskException
     {
         Entry entry = new Entry();
 
