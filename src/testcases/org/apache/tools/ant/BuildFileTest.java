@@ -79,10 +79,21 @@ public abstract class BuildFileTest extends TestCase {
     private StringBuffer errBuffer;
     private BuildException buildException;
     
+    /**
+     *  Constructor for the BuildFileTest object
+     *
+     *@param  name string to pass up to TestCase constructor
+     */    
     public BuildFileTest(String name) {
         super(name);
     }
     
+    /**
+     *  run a target, expect for any build exception 
+     *
+     *@param  target target to run
+     *@param  cause  information string to reader of report
+     */    
     protected void expectBuildException(String target, String cause) { 
         expectSpecificBuildException(target, cause, null);
     }
@@ -97,6 +108,13 @@ public abstract class BuildFileTest extends TestCase {
         assertEquals(log, realLog);
     }
 
+    /**
+     *  Gets the log the BuildFileTest object.
+     *  only valid if configureProject() has
+     *  been called.
+     * @pre logBuffer!=null
+     * @return    The log value
+     */    
     protected String getLog() { 
         return logBuffer.toString();
     }
@@ -111,16 +129,38 @@ public abstract class BuildFileTest extends TestCase {
         assertEquals(log, realLog);
     }
 
+    /**
+     *  Gets the log the BuildFileTest object.
+     *  only valid if configureProject() has
+     *  been called.
+     * @pre fullLogBuffer!=null
+     * @return    The log value
+     */
     protected String getFullLog() { 
         return fullLogBuffer.toString();
     }
 
+    /**
+     *  execute the target, verify output matches expectations
+     *
+     *@param  target  target to execute
+     *@param  output  output to look for
+     */
+    
     protected void expectOutput(String target, String output) { 
         executeTarget(target);
         String realOutput = getOutput();
         assertEquals(output, realOutput);
     }
 
+    /**
+     *  execute the target, verify output matches expectations
+     *  and that we got the named error at the end
+     *@param  target  target to execute
+     *@param  output  output to look for
+     *@param  error   Description of Parameter
+     */
+     
     protected void expectOutputAndError(String target, String output, String error) { 
         executeTarget(target);
         String realOutput = getOutput();
@@ -160,6 +200,11 @@ public abstract class BuildFileTest extends TestCase {
         return cleanedBuffer.toString();
     }
     
+    /**
+     *  set up to run the named project
+     *
+     *@param  filename name of project file to run
+     */    
     protected void configureProject(String filename) { 
         logBuffer = new StringBuffer();
         fullLogBuffer = new StringBuffer();
@@ -170,6 +215,11 @@ public abstract class BuildFileTest extends TestCase {
         ProjectHelper.configureProject(project, new File(filename));
     }
     
+    /**
+     *  execute a target we have set up
+     *@pre configureProject has been called
+     *@param  targetName  target to run
+     */    
     protected void executeTarget(String targetName) { 
         PrintStream sysOut = System.out;
         PrintStream sysErr = System.err;
@@ -197,6 +247,14 @@ public abstract class BuildFileTest extends TestCase {
         return project.getBaseDir();
     }
 
+    /**
+     *  run a target, wait for a build exception 
+     *
+     *@param  target target to run
+     *@param  cause  information string to reader of report
+     *@param  msg    the message value of the build exception we are waiting for
+              set to null for any build exception to be valid
+     */    
     protected void expectSpecificBuildException(String target, String cause, String msg) { 
         try {
             executeTarget(target);
@@ -209,6 +267,15 @@ public abstract class BuildFileTest extends TestCase {
         fail("Should throw BuildException because: " + cause);
     }
     
+    /**
+     *  run a target, expect an exception string
+     *  containing the substring we look for (case sensitive match)
+     *
+     *@param  target target to run
+     *@param  cause  information string to reader of report
+     *@param  msg    the message value of the build exception we are waiting for
+     *@param  contains  substring of the build exception to look for
+     */
     protected void expectBuildExceptionContaining(String target, String cause, String contains) { 
         try {
             executeTarget(target);
