@@ -7,12 +7,15 @@ Changes that could break older environments:
 * Ant doesn't search for the buildfile anymore, unless you use the new
   -find argument.
 
+* <perforce> has been replaced by a number of new tasks.
+
 Other changes:
 --------------
 
 * A GUI Frontend: Antidote
 
-* New tasks: stylebook, propertyfile, depend, antlr, telnet, csc, ilasm, transform
+* New tasks: stylebook, propertyfile, depend, antlr, telnet, csc,
+  ilasm, transform, javah
 
 * Added output attribute to <java>.
 
