@@ -326,6 +326,8 @@ public class Javac extends MatchingTask {
                 doModernCompile();
             } else if (compiler.equalsIgnoreCase("jikes")) {
                 doJikesCompile();
+            } else if (compiler.equalsIgnoreCase("jvc")) {
+                doJvcCompile();
             } else {
                 String msg = "Don't know how to use compiler " + compiler;
                 throw new BuildException(msg);
@@ -776,5 +778,58 @@ public class Javac extends MatchingTask {
         }
     }
         
+    private void doJvcCompile() throws BuildException {
+        log("Using jvc compiler", Project.MSG_VERBOSE);
+
+        Path classpath = new Path(project);
+
+        // jvc doesn't support bootclasspath dir (-bootclasspath)
+        // so we'll emulate it for compatibility and convenience.
+        if (bootclasspath != null || bootClasspathReferences.size() > 0) {
+            addReferencesToPath(bootClasspathReferences, createBootclasspath());
+            classpath.append(bootclasspath);
+        }
+
+        classpath.append(getCompileClasspath(true));
+
+        // jvc doesn't support an extension dir (-extdir)
+        // so we'll emulate it for compatibility and convenience.
+        addExtdirsToClasspath(classpath);
+
+        // jvc has no option for source-path so we
+        // will add it to classpath.
+        classpath.append(src);
+
+        Commandline cmd = new Commandline();
+        cmd.setExecutable("jvc");
+
+        cmd.createArgument().setValue("/d");
+        cmd.createArgument().setFile(destDir);
+        // Add the Classpath before the "internal" one.
+        cmd.createArgument().setValue("/cp:p");
+        cmd.createArgument().setPath(classpath);
+
+        // Enable MS-Extensions and ...
+        cmd.createArgument().setValue("/x-");
+        // ... do not display a Message about this.
+        cmd.createArgument().setValue("/nomessage");
+        // Do not display Logo
+        cmd.createArgument().setValue("/nologo");
+
+        if (debug) {
+            cmd.createArgument().setValue("/g");
+        }
+        if (optimize) {
+            cmd.createArgument().setValue("/O");
+        }
+
+        int firstFileName = cmd.size();
+        logAndAddFilesToCompile(cmd);
+
+        if (executeJikesCompile(cmd.getCommandline(), firstFileName) != 0) {
+            String msg = "Compile failed, messages should have been provided.";
+            throw new BuildException(msg);
+        }
+    }
 }
 

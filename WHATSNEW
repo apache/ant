@@ -30,6 +30,8 @@ behavior has been dropped.
 
 * <ejbjar> task syntax has been changed significantly
 
+* build.compiler supports now jvc as well.
+
 Other changes:
 --------------
 
