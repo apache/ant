@@ -64,6 +64,7 @@ import java.util.jar.JarEntry;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -74,6 +75,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.FileUtils;
 
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
@@ -147,6 +149,9 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     /** The classpath to the weblogic classes. */
     private Path wlClasspath = null;
 
+    /** System properties for the JVM. */
+    private Vector sysprops = new Vector();
+
     /**
      * The weblogic.StdoutSeverityLevel to use when running the JVM that
      * executes ejbc. Set to 16 to avoid the warnings about EJB Home and
@@ -156,6 +161,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     /** File utilities instance for copying jars */
     private FileUtils fileUtils = FileUtils.newFileUtils();
+
+
+    /**
+     * Add a nested sysproperty element.
+     */
+    public void addSysproperty(Environment.Variable sysp) {
+        sysprops.add(sysp);
+    }
 
 
     /** Get the classpath to the weblogic classpaths  */
@@ -456,6 +469,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("ejbc");
 
+            if (!(sysprops.isEmpty())) {
+                for (Enumeration en = sysprops.elements() ; en.hasMoreElements();) {
+                    Environment.Variable entry 
+                        = (Environment.Variable) en.nextElement();
+                    javaTask.addSysproperty(entry);
+                }
+            }
+
             if (getJvmDebugLevel() != null) {
                 javaTask.createJvmarg().setLine(" -Dweblogic.StdoutSeverityLevel=" + jvmDebugLevel);
             }
@@ -494,7 +515,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
 
             Path combinedClasspath = getCombinedClasspath();
-            if (combinedClasspath != null
+            if (wlClasspath != null && combinedClasspath != null
                  && combinedClasspath.toString().trim().length() > 0) {
                 javaTask.createArg().setValue("-classpath");
                 javaTask.createArg().setPath(combinedClasspath);
