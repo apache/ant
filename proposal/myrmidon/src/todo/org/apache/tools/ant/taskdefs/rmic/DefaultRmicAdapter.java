@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;

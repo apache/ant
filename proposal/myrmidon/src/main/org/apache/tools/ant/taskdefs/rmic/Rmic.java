@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.rmic;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +16,12 @@ import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
-import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  * Task to compile RMI stubs and skeletons. This task can take the following
