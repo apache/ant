@@ -101,9 +101,6 @@
     <available property="xslp.present" 
                classname="com.kvisco.xsl.XSLProcessor" 
                classpathref="classpath" />
-    <available property="trax.present" 
-               classname="javax.xml.transform.Transformer" 
-               classpathref="classpath" />
     <available property="xalan.present" 
                classname="org.apache.xalan.xslt.XSLTProcessorFactory" 
                classpathref="classpath" />
@@ -184,7 +181,6 @@
       <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
       <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
       <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
-      <exclude name="${optional.package}/TraXLiaison.java" unless="trax.present" />
       <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
       <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
       <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
