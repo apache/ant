@@ -37,6 +37,9 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
+import org.apache.myrmidon.interfaces.service.ComponentManagerAdaptor;
+import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
+import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -142,7 +145,7 @@ public class DefaultWorkspace
     private TaskContext createBaseContext()
         throws TaskException
     {
-        final TaskContext context = new DefaultTaskContext( m_componentManager );
+        final TaskContext context = new DefaultTaskContext();
 
         final String[] names = m_parameters.getNames();
         for( int i = 0; i < names.length; i++ )
@@ -220,8 +223,11 @@ public class DefaultWorkspace
         }
     }
 
+    /**
+     * Creates an execution frame for a project.
+     */
     private ExecutionFrame createExecutionFrame( final Project project )
-        throws TaskException
+        throws TaskException, ComponentException
     {
         //Create per frame ComponentManager
         final DefaultComponentManager componentManager =
@@ -232,32 +238,11 @@ public class DefaultWorkspace
         final TypeManager typeManager = m_typeManager.createChildTypeManager();
         componentManager.put( TypeManager.ROLE, typeManager );
 
-        //try
-        //{
-        //    //Add VFS manager
-        //    // TODO - need to drive this from a typelib descriptor, plus
-        //    // should be adding services to the root frame, rather than here
-        //    final DefaultFileSystemManager vfsManager = new DefaultFileSystemManager();
-        //    vfsManager.setBaseFile( project.getBaseDirectory() );
-        //    componentManager.put( FileSystemManager.ROLE, vfsManager );
-        //}
-        //catch( Exception e )
-        //{
-        //    throw new TaskException( e.getMessage(), e );
-        //}
-
         //We need to create a new deployer so that it deploys
         //to project specific TypeManager
         final Deployer deployer;
-        try
-        {
-            deployer = m_deployer.createChildDeployer( componentManager );
-            componentManager.put( Deployer.ROLE, deployer );
-        }
-        catch( ComponentException e )
-        {
-            throw new TaskException( e.getMessage(), e );
-        }
+        deployer = m_deployer.createChildDeployer( componentManager );
+        componentManager.put( Deployer.ROLE, deployer );
 
         // Deploy the imported typelibs
         deployTypeLib( deployer, project );
@@ -275,32 +260,28 @@ public class DefaultWorkspace
             componentManager.put( Project.ROLE + "/" + name, other );
         }
 
+        // Create a service manager that aggregates the contents of the context's
+        // component manager, and service manager
+        final MultiSourceServiceManager serviceManager = new MultiSourceServiceManager();
+        serviceManager.add( (ServiceManager)componentManager.lookup( ServiceManager.ROLE ) );
+        serviceManager.add( new ComponentManagerAdaptor( componentManager ) );
+
         // Create and configure the context
         final DefaultTaskContext context =
-            new DefaultTaskContext( m_baseContext, componentManager );
+            new DefaultTaskContext( m_baseContext, serviceManager );
         context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
-        final DefaultExecutionFrame frame = new DefaultExecutionFrame();
+        // Create a logger
+        final Logger logger =
+            new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
+        m_projectID++;
 
-        try
-        {
-            final Logger logger =
-                new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
-            m_projectID++;
+        final DefaultExecutionFrame frame = new DefaultExecutionFrame( logger, context, typeManager );
 
-            frame.enableLogging( logger );
-            frame.contextualize( context );
-
-            /**
-             *  @todo Should no occur but done for the time being to simplify evolution.
-             */
-            componentManager.put( ExecutionFrame.ROLE, frame );
-        }
-        catch( final Exception e )
-        {
-            final String message = REZ.getString( "bad-frame.error" );
-            throw new TaskException( message, e );
-        }
+        /**
+         *  @todo Should no occur but done for the time being to simplify evolution.
+         */
+        componentManager.put( ExecutionFrame.ROLE, frame );
 
         return frame;
     }
@@ -312,9 +293,17 @@ public class DefaultWorkspace
 
         if( null == entry )
         {
-            final ExecutionFrame frame = createExecutionFrame( project );
-            entry = new ProjectEntry( project, frame );
-            m_entrys.put( project, entry );
+            try
+            {
+                final ExecutionFrame frame = createExecutionFrame( project );
+                entry = new ProjectEntry( project, frame );
+                m_entrys.put( project, entry );
+            }
+            catch( Exception e )
+            {
+                final String message = REZ.getString( "bad-frame.error" );
+                throw new TaskException( message, e );
+            }
         }
 
         return entry;

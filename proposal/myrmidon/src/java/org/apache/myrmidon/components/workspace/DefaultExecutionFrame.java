@@ -8,13 +8,8 @@
 package org.apache.myrmidon.components.workspace;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -25,29 +20,19 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @version $Revision$ $Date$
  */
 class DefaultExecutionFrame
-    implements ExecutionFrame, Component, LogEnabled, Contextualizable
+    implements ExecutionFrame, Component
 {
-    private Logger m_logger;
-    private TaskContext m_context;
-    private TypeManager m_typeManager;
+    private final Logger m_logger;
+    private final TaskContext m_context;
+    private final TypeManager m_typeManager;
 
-    public void enableLogging( final Logger logger )
+    public DefaultExecutionFrame( final Logger logger,
+                                  final TaskContext context,
+                                  final TypeManager typeManager )
     {
         m_logger = logger;
-    }
-
-    public void contextualize( final Context context )
-        throws ContextException
-    {
-        m_context = (TaskContext)context;
-        try
-        {
-            m_typeManager = (TypeManager)m_context.getService( TypeManager.class );
-        }
-        catch( TaskException te )
-        {
-            throw new ContextException( te.getMessage(), te );
-        }
+        m_context = context;
+        m_typeManager = typeManager;
     }
 
     public TypeManager getTypeManager()

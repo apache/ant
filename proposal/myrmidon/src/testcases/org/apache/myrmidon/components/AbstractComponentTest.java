@@ -33,6 +33,7 @@ import org.apache.myrmidon.components.deployer.ClassLoaderManager;
 import org.apache.myrmidon.components.extensions.DefaultExtensionManager;
 import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.components.type.DefaultTypeManager;
+import org.apache.myrmidon.components.service.DefaultServiceManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
@@ -42,6 +43,7 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
+import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 
@@ -131,6 +133,10 @@ public abstract class AbstractComponentTest
 
         component = new DefaultRoleManager();
         m_componentManager.put( RoleManager.ROLE, component );
+        components.add( component );
+
+        component = new DefaultServiceManager();
+        m_componentManager.put( ServiceManager.ROLE, component );
         components.add( component );
 
         // Log enable the components

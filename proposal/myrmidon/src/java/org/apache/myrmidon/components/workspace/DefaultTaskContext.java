@@ -13,13 +13,12 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.myrmidon.interfaces.service.ServiceManager;
 
 /**
  * Default implementation of TaskContext.
@@ -34,14 +33,14 @@ public class DefaultTaskContext
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
-    private ComponentManager m_componentManager;
+    private ServiceManager m_serviceManager;
 
     /**
      * Constructor for Context with no parent contexts.
      */
     public DefaultTaskContext()
     {
-        this( (TaskContext)null );
+        this( null, null );
     }
 
     /**
@@ -53,21 +52,21 @@ public class DefaultTaskContext
     }
 
     /**
-     * Constructor that specifies the ComponentManager for context.
+     * Constructor that specifies the service directory for context.
      */
-    public DefaultTaskContext( final ComponentManager componentManager )
+    public DefaultTaskContext( final ServiceManager serviceManager )
     {
-        this( null, componentManager );
+        this( null, serviceManager );
     }
 
     /**
      * Constructor that takes both parent context and a service directory.
      */
     public DefaultTaskContext( final TaskContext parent,
-                               final ComponentManager componentManager )
+                               final ServiceManager serviceManager )
     {
         super( parent );
-        m_componentManager = componentManager;
+        m_serviceManager = serviceManager;
     }
 
     /**
@@ -121,27 +120,15 @@ public class DefaultTaskContext
     {
         // Try this context first
         final String name = serviceClass.getName();
-        if( m_componentManager.hasComponent( name ) )
+        if( m_serviceManager != null && m_serviceManager.hasService( serviceClass ) )
         {
             try
             {
-                final Component service = m_componentManager.lookup( name );
-                if( !serviceClass.isInstance( service ) )
-                {
-                    final String message =
-                        REZ.getString( "bad-service-class.error",
-                                       name,
-                                       service.getClass().getName(),
-                                       serviceClass.getName() );
-                    throw new TaskException( message );
-                }
-
-                return service;
+                return m_serviceManager.getService( serviceClass );
             }
-            catch( final ComponentException ce )
+            catch( final ServiceException se )
             {
-                final String message = REZ.getString( "bad-find-service.error", name );
-                throw new TaskException( message, ce );
+                throw new TaskException( se.getMessage(), se );
             }
         }
 
@@ -236,8 +223,6 @@ public class DefaultTaskContext
 
     /**
      * Set property value.
-     *
-     * @param property the property
      */
     public void setProperty( final String name, final Object value, final ScopeEnum scope )
         throws TaskException

@@ -52,7 +52,7 @@ public class DefaultConfigurerTest
         m_configurer = (Configurer)getComponentManager().lookup( Configurer.ROLE );
 
         // Setup a context
-        m_context = new DefaultTaskContext( getComponentManager() );
+        m_context = new DefaultTaskContext();
         final File baseDir = new File( "." ).getAbsoluteFile();
         m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
     }
