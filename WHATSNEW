@@ -19,8 +19,11 @@ Fixed bugs:
 * sql task now handles REM statements correctly so that lines starying with rem
   but which are not comments are actually processed.
   
-* XMLLogger no uses the task's name rather than the classname
+* XMLLogger now uses the task's name rather than the classname
   
+* <mapper>s will now work as expected if the to pattern expands to an
+  absolute pathname.
+
 Other changes:
 --------------
 
