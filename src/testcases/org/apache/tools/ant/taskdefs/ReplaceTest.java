@@ -27,7 +27,6 @@ import junit.framework.AssertionFailedError;
  */
 public class ReplaceTest extends BuildFileTest {
 
-    private static final String TEST_PATH = "src/etc/testcases/taskdefs/replace/";
     public ReplaceTest(String name) {
         super(name);
     }
