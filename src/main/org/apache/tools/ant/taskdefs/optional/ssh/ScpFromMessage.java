@@ -122,14 +122,14 @@ public class ScpFromMessage extends AbstractSshMessage {
 
     private File parseAndCreateDirectory(String serverResponse,
                                          File localFile) {
-        StringTokenizer token = new StringTokenizer(serverResponse);
-        String command = token.nextToken();
-        token.nextToken();  // appears that this is not used and it's zero.
-        String directoryName = token.nextToken();
+        int start = serverResponse.indexOf(" ");
+        // appears that the next token is not used and it's zero.
+        start = serverResponse.indexOf(" ", start + 1);
+        String directoryName = serverResponse.substring(start + 1);
         if (localFile.isDirectory()) {
             File dir = new File(localFile, directoryName);
             dir.mkdir();
-
+            log("Creating: " + dir);
             return dir;
         }
         return null;
@@ -139,10 +139,13 @@ public class ScpFromMessage extends AbstractSshMessage {
                                    File localFile,
                                    OutputStream out,
                                    InputStream in) throws IOException {
-        StringTokenizer token = new StringTokenizer(serverResponse);
-        String command = token.nextToken();
-        int filesize = Integer.parseInt(token.nextToken());
-        String filename = token.nextToken();
+        int start = 0;
+        int end = serverResponse.indexOf(" ", start + 1);
+        String command = serverResponse.substring(start, end);
+        start = end + 1;
+        end = serverResponse.indexOf(" ", start + 1);
+        int filesize = Integer.parseInt(serverResponse.substring(start, end));
+        String filename = serverResponse.substring(end + 1);
         log("Receiving: " + filename + " : " + filesize);
         File transferFile = (localFile.isDirectory())
                 ? new File(localFile, filename)
