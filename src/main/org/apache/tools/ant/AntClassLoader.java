@@ -520,7 +520,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             
         if (resourceStream == null) {
             log("Couldn't load ResourceStream for " + name, 
-                Project.MSG_WARN);
+                Project.MSG_DEBUG);
         }
 
         return resourceStream;
@@ -678,7 +678,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         }
 
         if (url == null) {
-            log("Couldn't load Resource " + name, Project.MSG_WARN);
+            log("Couldn't load Resource " + name, Project.MSG_DEBUG);
         }
 
         return url;
