@@ -597,10 +597,6 @@
                classname="com.jcraft.jsch.Session"
                classpathref="classpath"/>
 
-    <condition property="running.in.gump">
-      <isset property="gump.merge"/>
-    </condition>
-
     <condition property="build.compiler" value="classic">
       <not>
         <isset property="jdk1.3+"/>
@@ -1643,9 +1639,10 @@
           <!-- test needs special setup -->
           <exclude name="${optional.package}/ssh/ScpTest.java"/>
 
-          <!-- test fails in Gump -->
+          <!-- test fails if build/classes and ant.jar are using the same
+               classloader  -->
           <exclude name="${ant.package}/util/ClasspathUtilsTest.java"
-                   if="running.in.gump"/>
+                   if="tests.and.ant.share.classloader"/>
         </fileset>
       </batchtest>
     </junit>
