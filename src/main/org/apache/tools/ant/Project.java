@@ -1982,10 +1982,20 @@ public class Project {
         }
         synchronized (this) {
             if (loggingMessage) {
-                throw new BuildException("Listener attempted to access "
-                    + (priority == MSG_ERR ? "System.err" : "System.out")
-                    + " with message [" + message
-                    + "] - infinite loop terminated");
+                /* 
+                 * One of the Listeners has attempted to access
+                 * System.err or System.out.
+                 *
+                 * We used to throw an exception in this case, but
+                 * sometimes Listeners can't prevent it(like our own
+                 * Log4jListener which invokes getLogger() which in
+                 * turn wants to write to the console).
+                 *
+                 * @see http://marc.theaimsgroup.com/?t=110538624200006&r=1&w=2
+                 *
+                 * We now (Ant 1.7 and 1.6.3) simply swallow the message.
+                 */
+                return;
             }
             try {
                 loggingMessage = true;

@@ -177,6 +177,11 @@ Other changes:
 * The jikes compiler adapter now supports -bootclasspath.  Bugzilla
   Report 32609.
 
+* When a BuildListener tried to access System.err or System.out, Ant
+  would have thrown an exception - this has been changed.  Ant now
+  silently ignores the message.  BuildListeners still should avoid
+  accessing either stream.
+
 Fixed bugs:
 -----------
 
