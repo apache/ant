@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -342,15 +342,15 @@ public class RExecTask extends Task {
             /** Keep reading input stream until end of it or time-out */
             rexec.waitForEOF(defaultTimeout);
        } finally {
-           if (rexec != null) {
-               try {
-                   rexec.disconnect();
-               } catch (IOException e) {
-                   throw new BuildException("Error disconnecting from " 
-                                            + server);
-               }
-           }
-       }
+            if (rexec != null && rexec.isConnected()) {
+                try {
+                    rexec.disconnect();
+                } catch (IOException e) {
+                    throw new BuildException("Error disconnecting from "
+                                             + server);
+                }
+            }
+        }
     }
     /**
      *  Process a 'typical' login.  If it differs, use the read

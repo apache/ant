@@ -200,6 +200,10 @@ Fixed bugs:
   <exec>, <apply>, or <java> tasks was always logged to System.out
   instead of to the managing Task.
 
+* <telnet> and <rexec> would try to disconnect from servers they never
+  connetced to, potentially leading to exceptions in commons-net.
+  Bugzilla Report 33618.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
