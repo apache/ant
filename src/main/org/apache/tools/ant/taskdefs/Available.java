@@ -107,6 +107,7 @@ public class Available extends Task {
             File f = new File(file);
             return f.exists();
         } catch (Exception e) {
+            project.log(e.toString(), "available", Project.MSG_VERBOSE);
             return false;
         }
     }
@@ -120,6 +121,7 @@ public class Available extends Task {
             Class.forName(classname);
             return true;
         } catch (Throwable t) {
+            project.log(t.toString(), "available", Project.MSG_VERBOSE);
             return false;
         }
     }
