@@ -62,6 +62,9 @@ import java.io.*;
  *
  * @author duncan@x180.com
  * @author rubys@us.ibm.com
+ *
+ * @deprected Instead of using this class, please extend ExecTask or
+ * delegate to Execute.  
  */
 public class Exec extends Task {
     private String os;

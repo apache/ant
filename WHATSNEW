@@ -19,8 +19,10 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 Other changes:
 --------------
 
-* New tasks: sql, junit, mparse, execon. All except sql pending
-documentation, most of them pending review.
+* New tasks: sql, genkey, cab.
+
+* New tasks junit, mparse, execon. All pending documentation, most of
+them pending review.
 
 * <java> uses ClassLoader of its own in no-fork mode if a classpath is
 specified.
@@ -55,3 +57,7 @@ respect to the Project's basedir.
 
 * Project didn't interpret the basedir attribute correctly in all
 cases.
+
+* Nested <src> in <javac> caused NullPointerException.
+
+* Corrupt Zip- and Jar-files ar now deleted if the task fails.

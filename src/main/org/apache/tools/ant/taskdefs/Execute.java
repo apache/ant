@@ -127,7 +127,8 @@ public class Execute {
         String[] commandLine = cmdl;
 
         if (workingDirectory != null && 
-            !antWorkingDirectory.equals(workingDirectory.getAbsolutePath())) {
+            !antWorkingDirectory.equals(workingDirectory.getAbsolutePath()) &&
+            !myos.equals("Mac OS")) {
 
             if (myos.toLowerCase().indexOf("windows") >= 0 &&
                 (myos.toLowerCase().indexOf("nt") >= 0 ||
@@ -200,6 +201,9 @@ public class Execute {
      * @param project the current project.
      */
     public void setAntRun(Project project) throws BuildException {
+    	if (myos.equals("Mac OS"))
+            return;
+
         String ant = project.getProperty("ant.home");
         if (ant == null) {
             throw new BuildException("Property 'ant.home' not found");
@@ -240,7 +244,19 @@ public class Execute {
 
 
     protected Process exec() throws IOException {
-        return Runtime.getRuntime().exec(getCommandline(), getEnvironment());
+        String userDir = System.getProperty("user.dir");
+        try {
+            if (myos.equals("Mac OS") && workingDirectory != null) {
+                System.getProperties().put("user.dir", 
+                                           workingDirectory.getAbsolutePath());
+            }
+
+            return Runtime.getRuntime().exec(getCommandline(), getEnvironment());
+        } finally {
+            if (myos.equals("Mac OS") && workingDirectory != null) {
+                System.getProperties().put("user.dir", userDir);
+            }
+        }
     }
 
     protected void waitFor(Process process) {
