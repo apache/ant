@@ -563,6 +563,7 @@
     <echo level="verbose"> wsdl.found=${wsdl.found}</echo>
     <condition property="csc.found">
       <or>
+        <available file="mcs"     filepath="${env.PATH}"/>
         <available file="csc"     filepath="${env.PATH}"/>
         <available file="csc.exe" filepath="${env.PATH}"/>
         <available file="csc.exe" filepath="${env.Path}"/>
