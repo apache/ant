@@ -23,12 +23,6 @@
           </tr>
 
           <tr>
-            <td>Selectors</td>
-            <td></td>
-            <td>Magesh</td>
-          </tr>
-
-          <tr>
             <td>Document Path datatype</td>
             <td>It's documented, but more hidden than the other types</td>
             <td>Erik</td>
@@ -78,6 +72,12 @@
             <th>Item</th>
             <th>Details</th>
             <th>Assigned</th>
+          </tr>
+
+          <tr>
+            <td>Selectors</td>
+            <td></td>
+            <td>Bruce</td>
           </tr>
 
           <tr>
