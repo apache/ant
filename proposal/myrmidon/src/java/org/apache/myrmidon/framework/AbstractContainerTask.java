@@ -17,6 +17,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
@@ -42,6 +43,7 @@ public abstract class AbstractContainerTask
 
     ///For executing sub-elements as tasks
     private Executor m_executor;
+    private ExecutionFrame m_frame;
 
     /**
      * Retrieve context from container.
@@ -55,6 +57,7 @@ public abstract class AbstractContainerTask
         m_configurer = (Configurer)getService( Configurer.class );
         m_converter = (Converter)getService( Converter.class );
         m_executor = (Executor)getService( Executor.class );
+        m_frame = (ExecutionFrame)getService( ExecutionFrame.class );
     }
 
     /**
@@ -70,7 +73,7 @@ public abstract class AbstractContainerTask
     {
         try
         {
-            return getConverter().convert( to, object, getContext() );
+            return m_converter.convert( to, object, getContext() );
         }
         catch( final ConverterException ce )
         {
@@ -89,7 +92,7 @@ public abstract class AbstractContainerTask
     protected final void configure( final Object object, final Configuration element )
         throws ConfigurationException
     {
-        getConfigurer().configure( object, element, getContext() );
+        m_configurer.configure( object, element, getContext() );
     }
 
     /**
@@ -103,7 +106,29 @@ public abstract class AbstractContainerTask
     protected final void configure( final Object object, final String name, final String value )
         throws ConfigurationException
     {
-        getConfigurer().configure( object, name, value, getContext() );
+        m_configurer.configure( object, name, value, getContext() );
+    }
+
+    /**
+     * Utility method to execute specified tasks in current ExecutionFrame.
+     */
+    protected final void executeTasks( final Configuration[] tasks )
+        throws TaskException
+    {
+        for( int i = 0; i < tasks.length; i++ )
+        {
+            final Configuration task = tasks[ i ];
+            executeTask( task );
+        }
+    }
+
+    /**
+     * Utility method to execute specified task in current ExecutionFrame.
+     */
+    protected final void executeTask( final Configuration task )
+        throws TaskException
+    {
+        m_executor.execute( task, m_frame );
     }
 
     /**
@@ -143,35 +168,5 @@ public abstract class AbstractContainerTask
             final String message = REZ.getString( "container.no-factory.error", roleType.getName() );
             throw new TaskException( message, te );
         }
-    }
-
-    /**
-     * Convenience method for sub-class to retrieve Configurer.
-     *
-     * @return the configurer
-     */
-    protected final Configurer getConfigurer()
-    {
-        return m_configurer;
-    }
-
-    /**
-     * Convenience method for sub-class to retrieve Converter.
-     *
-     * @return the converter
-     */
-    protected final Converter getConverter()
-    {
-        return m_converter;
-    }
-
-    /**
-     * Convenience method for sub-class to retrieve Executor.
-     *
-     * @return the executor
-     */
-    protected final Executor getExecutor()
-    {
-        return m_executor;
     }
 }
