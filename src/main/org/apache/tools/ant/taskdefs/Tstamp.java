@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -158,7 +158,7 @@ public class Tstamp extends Task {
                 if (st.hasMoreElements()) {
                     country = st.nextToken();
                     if (st.hasMoreElements()) {
-                        country = st.nextToken();
+                        variant = st.nextToken();
                         if (st.hasMoreElements()) {
                             throw new BuildException( "bad locale format", getLocation());
                         }
