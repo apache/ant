@@ -215,6 +215,8 @@ Other changes:
 
 * Add implicit nested element to <macrodef>. Bugzilla Report 25633.
 
+* Add deleteonexit attribute to <delete>.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
