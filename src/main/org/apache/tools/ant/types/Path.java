@@ -247,7 +247,7 @@ public class Path extends DataType implements Cloneable {
                 setLocation(f);
             } else {
                 log("dropping " + f + " from path as it doesn't exist", 
-                    Project.MSG_WARN);
+                    Project.MSG_VERBOSE);
             }
         }
     }
