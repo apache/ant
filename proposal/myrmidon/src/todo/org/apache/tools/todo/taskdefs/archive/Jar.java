@@ -19,14 +19,12 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Enumeration;
 import java.util.zip.ZipFile;
-import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.taskdefs.manifest.Manifest;
 import org.apache.tools.todo.taskdefs.manifest.ManifestException;
 import org.apache.tools.todo.taskdefs.manifest.ManifestUtil;
 import org.apache.tools.todo.types.FileScanner;
+import org.apache.avalon.excalibur.zip.ZipOutputStream;
 
 /**
  * Creates a JAR archive.

@@ -20,14 +20,11 @@ import java.util.Hashtable;
 import java.util.Stack;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
-import org.apache.aut.zip.ZipEntry;
-import org.apache.aut.zip.ZipOutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.avalon.excalibur.zip.ZipEntry;
+import org.apache.avalon.excalibur.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.taskdefs.archive.WhenEmpty;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.FileScanner;
 import org.apache.tools.todo.types.FileSet;
@@ -504,7 +501,7 @@ public class Zip
      * @param zOut The feature to be added to the Files attribute
      * @param prefix The feature to be added to the Files attribute
      * @param fullpath The feature to be added to the Files attribute
-     * @exception java.io.IOException Description of Exception
+     * @exception IOException Description of Exception
      */
     protected void addFiles( FileScanner scanner, ZipOutputStream zOut,
                              String prefix, String fullpath )
