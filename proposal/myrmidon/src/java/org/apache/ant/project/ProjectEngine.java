@@ -8,15 +8,16 @@
 package org.apache.ant.project;
 
 import org.apache.ant.AntException;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.avalon.framework.component.Component;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.model.Project;
 
 /**
  * This is the interface between ProjectEngine and rest of the system.
- * This is the interface that tasks/frontends must use to interact with 
+ * This is the interface that tasks/frontends must use to interact with
  * project execution.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface ProjectEngine

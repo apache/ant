@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.listeners;
 
 import org.apache.avalon.framework.ExceptionUtil;
 
@@ -25,14 +25,14 @@ public class DefaultProjectListener
     public void projectStarted()
     {
     }
-    
+
     /**
      * Notify listener of projectFinished event.
      */
     public void projectFinished()
     {
     }
-    
+
     /**
      * Notify listener of targetStarted event.
      *
@@ -42,14 +42,14 @@ public class DefaultProjectListener
     {
         output( targetName + ":\n" );
     }
-    
+
     /**
      * Notify listener of targetFinished event.
      */
     public void targetFinished()
     {
     }
-    
+
     /**
      * Notify listener of taskStarted event.
      *
@@ -59,7 +59,7 @@ public class DefaultProjectListener
     {
         setPrefix( taskName );
     }
-    
+
     /**
      * Notify listener of taskFinished event.
      */
@@ -67,7 +67,7 @@ public class DefaultProjectListener
     {
         setPrefix( null );
     }
-    
+
     /**
      * Notify listener of log message event.
      *
@@ -77,7 +77,7 @@ public class DefaultProjectListener
     {
         output( message );
     }
-    
+
     /**
      * Notify listener of log message event.
      *

@@ -25,7 +25,7 @@ import org.apache.ant.project.LogTargetToListenerAdapter;
 import org.apache.myrmidon.model.Project;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
-import org.apache.ant.project.ProjectListener;
+import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
 import org.apache.myrmidon.api.JavaVersion;
@@ -70,7 +70,7 @@ public class Main
     protected final static String  DEFAULT_FILENAME          = "build.ant";
 
     protected final static String  DEFAULT_LISTENER          =
-        "org.apache.ant.project.DefaultProjectListener";
+        "org.apache.myrmidon.listeners.DefaultProjectListener";
 
     //defines for the Command Line options
     private static final int       HELP_OPT                  = 'h';

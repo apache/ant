@@ -9,6 +9,7 @@ package org.apache.ant.project;
 
 import org.apache.log.LogEvent;
 import org.apache.log.LogTarget;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * Adapter between Avalon LogKit and Project listener interfaces.

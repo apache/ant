@@ -5,10 +5,10 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.listeners;
 
 /**
- * The interface to implement if you want to receive 
+ * The interface to implement if you want to receive
  * notification of project status.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>

@@ -24,6 +24,7 @@ import org.apache.log.Logger;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.model.Project;
 import org.apache.myrmidon.model.Target;
 

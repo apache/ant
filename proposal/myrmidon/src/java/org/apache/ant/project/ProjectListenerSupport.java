@@ -7,6 +7,8 @@
  */
 package org.apache.ant.project;
 
+import org.apache.myrmidon.listeners.ProjectListener;
+
 /**
  * Support for the project listener event dispatching.
  *
