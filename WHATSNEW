@@ -90,6 +90,8 @@ Fixed bugs:
 * -projecthelp swallowed (configuration) errors silently.
   Bugzilla report 27732.
 
+* filterset used by filtertask doesn't respect loglevel. Bugzilla Report 27568.
+
 Other changes:
 --------------
 

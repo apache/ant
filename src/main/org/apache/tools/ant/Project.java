@@ -137,6 +137,11 @@ public class Project {
     private Hashtable targets = new Hashtable();
     /** Set of global filters. */
     private FilterSet globalFilterSet = new FilterSet();
+    {
+        // Initialize the globalFileSet's project
+        globalFilterSet.setProject(this);
+    }
+
     /**
      * Wrapper around globalFilterSet. This collection only ever
      * contains one FilterSet, but the wrapper is needed in order to
