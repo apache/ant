@@ -73,6 +73,11 @@ II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
 
+* Main goals: Simplicity, Understandability, Extensibility
+
+  Simple and understandable for the target audience - developers,
+  build-engineers ...
+
 * remove magic properties if at all humanly possible
 
 * remove as much dependency on native scripts as possible.
@@ -92,6 +97,8 @@ decisions.
 * Ant should be cancelable
 
 * no commit without documentation (ouch 8-)
+
+* no commit without testcases
 
 III. Things that are simple, easy to implement, where we expect the
 committers to agree
