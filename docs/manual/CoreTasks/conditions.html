@@ -356,6 +356,42 @@ that is "true","yes", or "on"</p>
     <td valign="top" align="center">No</td>
   </tr>
   </table>
+  <h4>isfileselected</h4>
+  <p>
+    Test whether a file passes an embedded selector.
+  </p>
+  <p>
+    This condition has been added in Apache Ant 1.7.
+  </p>
+  <table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">
+      The file to check if is passes the embedded selector.
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">The base directory to use for name based selectors. It this is not set,
+      the project's basedirectory will be used.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  </table>
+  <p>
+    Example usage:
+  </p>
+  <blockquote>
+  <pre>
+    &lt;isfileselected file="a.xml"&gt;
+      &lt;date datetime="06/28/2000 2:02 pm" when="equal"/&gt;
+    &lt;/isfileselected&gt;
+  </pre></blockquote>
 <h4>typefound</h4>
 
 <p>Test whether a given type is defined, and that
