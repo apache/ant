@@ -57,6 +57,9 @@ Fixed bugs:
 * ExecTask executes checkConfiguration() even though os does not match.
   Bugzilla report 31805.
 
+* Concat task instance could not be run twice.
+  Bugzilla report 31814.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
