@@ -61,6 +61,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import java.io.File;
 import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -81,24 +82,24 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class P4Add extends P4Base {
 
-    private int m_changelist;
+    private int changelist;
     private String addCmd = "";
     private Vector filesets = new Vector();
-    private int m_cmdLength = 450;
+    private int cmdLength = 450;
 
     public void setCommandlength(int len) throws BuildException {
-        if(len <= 0) {
+        if (len <= 0) {
             throw new BuildException("P4Add: Commandlength should be a positive number");
         }
-        this.m_cmdLength = len;
+        this.cmdLength = len;
     }
 
     public void setChangelist(int changelist) throws BuildException {
-        if(changelist <= 0) {
+        if (changelist <= 0) {
             throw new BuildException("P4Add: Changelist# should be a positive number");
         }
 
-        this.m_changelist = changelist;
+        this.changelist = changelist;
     }
 
     public void addFileset(FileSet set) {
@@ -111,21 +112,21 @@ public class P4Add extends P4Base {
             addCmd = P4View;
         }
 
-        P4CmdOpts = (m_changelist > 0) ? ("-c " + m_changelist) : "";
+        P4CmdOpts = (changelist > 0) ? ("-c " + changelist) : "";
 
         StringBuffer filelist = new StringBuffer();
 
-        for (int i=0; i<filesets.size(); i++) {
+        for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             //File fromDir = fs.getDir(project);
 
             String[] srcFiles = ds.getIncludedFiles();
             if (srcFiles != null) {
-                for (int j=0; j < srcFiles.length; j++) {
+                for (int j = 0; j < srcFiles.length; j++) {
                     File f = new File(ds.getBasedir(), srcFiles[j]);
                     filelist.append(" ").append('"').append(f.getAbsolutePath()).append('"');
-                    if (filelist.length() > m_cmdLength) {
+                    if (filelist.length() > cmdLength) {
                         execP4Add(filelist);
                         filelist.setLength(0);
                     }
@@ -141,8 +142,8 @@ public class P4Add extends P4Base {
     }
 
     private void execP4Add(StringBuffer list) {
-        log("Execing add "+P4CmdOpts+" "+addCmd+list, Project.MSG_INFO);
+        log("Execing add " + P4CmdOpts + " " + addCmd + list, Project.MSG_INFO);
 
-        execP4Command("-s add "+P4CmdOpts+" "+addCmd+list, new SimpleP4OutputHandler(this));
+        execP4Command("-s add " + P4CmdOpts + " " + addCmd + list, new SimpleP4OutputHandler(this));
     }
 }
