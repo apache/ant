@@ -12,8 +12,5 @@ package org.apache.tools.ant;
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-interface Constants
-{
-    String  DATE     = "@DATE@";
-    String  VERSION  = "@VERSION@";
+interface Constants {
 }
