@@ -132,6 +132,11 @@ public class SQLExec extends Task {
     private Vector transactions = new Vector();
 
     /**
+     * SQL Statement delimiter
+     */
+    private String delimiter = ";";
+    
+    /**
      * Print SQL results.
      */
     private boolean print = false;
@@ -245,6 +250,13 @@ public class SQLExec extends Task {
      */
     public void setAutocommit(boolean autocommit) {
         this.autocommit = autocommit;
+    }
+
+    /**
+     * Set the statement delimiter.
+     */
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
     }
 
     /**
@@ -441,7 +453,7 @@ public class SQLExec extends Task {
                 // so we cannot just remove it, instead we must end it
                 if (line.indexOf("--") >= 0) sql += "\n";
 
-                if (sql.endsWith(";")){
+                if (sql.endsWith(delimiter)){
                     log("SQL: " + sql, Project.MSG_VERBOSE);
                     execSQL(sql.substring(0, sql.length()-1), out);
                     sql = "";
