@@ -8,50 +8,58 @@
 <body>
 
 <h1>Running Ant</h1>
-<p>Running Ant is simple, when you installed it as described in the previous
-section. Just type <code>ant</code>.</p>
-<p>When nothing is specified, Ant looks for a <code>build.xml</code>
-file in the current directory. If found, it uses that file as the
-buildfile. If you use the <code>-find</code> option,
-Ant will search for a buildfile in 
-the parent directory, and so on, until the root of the filesystem 
-has been reached. To make Ant use
-another buildfile, use the command-line
+<h2><a name="commandline">Command Line</a></h2>
+<p> If you've installed Ant as described in the
+<a href="install.html"> Installing Ant</a> section,
+running Ant from the command-line is simple: just type
+<code>ant</code>.</p>
+<p>When no arguments are specified, Ant looks for a <code>build.xml</code>
+file in the current directory and, if found, uses that file as the
+buildfile and runs the &quot;default&quot; target.
+If you use the <code>-find</code> option,
+Ant will search for a buildfile first in the current directory, then in
+the parent directory, and so on, until either a buildfile is found or the root
+of the filesystem has been reached. To make Ant use
+a buildfile other than <code>build.xml</code>, use the command-line
 option <code>-buildfile <i>file</i></code>,
-where <i>file</i> is the buildfile you want to use.</p>
+where <i>file</i> is the name of the buildfile you want to use.</p>
 
-<p>You can also set properties that override properties specified in the
+<p>You can also set <a href="using.html#properties">properties</a> that
+override properties specified in the
 buildfile (see the <a href="CoreTasks/property.html">property</a> task). 
 This can be done with
 the <nobr><code>-D<i>property</i>=<i>value</i></code></nobr> option,
 where <i>property</i> is the name of the property,
 and <i>value</i> is the value for that property.
-This can also be used to pass in the value of some environment variables.
-You can also access environment variables using the <a href="CoreTasks/property.html">
-property</a> task.
-
+This can also be used to pass in the value of environment variables.
 Just pass <nobr><code>-DMYVAR=%MYVAR%</code></nobr> (Windows) or
 <nobr><code>-DMYVAR=$MYVAR</code></nobr> (Unix)
 to Ant - you can then access
-these variables inside your buildfile as <code>${MYVAR}</code>.</p>
+these variables inside your buildfile as <code>${MYVAR}</code>.
+You can also access environment variables using the <a href="CoreTasks/property.html">
+property</a> task.
+</p>
 
-<p>Two more options are: <nobr><code>-quiet</code></nobr>,
+<p>Options that affect the amount of logging output by Ant are: <nobr><code>-quiet</code></nobr>,
 which instructs Ant to print less
-information on the console when running, and
+information on the console when running; 
 <nobr><code>-verbose</code></nobr>, which causes Ant to print
-additional information to the console.</p>
+additional information to the console; and <nobr><code>-debug</code></nobr>,
+which causes Ant to print considerably more additional information.
+</p>
 
 <p>It is also possible to specify one or more targets that should be executed.
 When omitted, the target that is specified in the
-<code>default</code> attribute of the <code>&lt;project&gt;</code> tag is
+<code>default</code> attribute of the
+<a href="using.html#projects"><code>project</code></a> tag is
 used.</p>
 
-<p>The <nobr><code>-projecthelp</code></nobr> option prints out the
-description of the project, if it exists, followed by a list of this
-project's targets. First those with a description, then those without
-one.</p>
+<p>The <nobr><code>-projecthelp</code></nobr> option prints out a list
+of the buildfile's targets, along with the
+text in the <code>description</code> attribute of the target,
+if one was specified, followed by a list of those targets without one.</p>
 
-<p>Command-line option summary:</p>
+<h3><a name="options">Command-line Options Summary</a></h3>
 <pre>ant [options] [target [target2 [target3] ...]]
 Options:
 -help                  print this message
@@ -91,7 +99,7 @@ target called <code>dist</code>.</p>
 target called <code>dist</code>, setting the <code>build</code> property to the
 value <code>build/classes</code>.</p>
 
-<h3>Files</h3>
+<h3><a name="files">Files</a></h3>
 
 <p>The Ant wrapper script for Unix will source (read and evaluate) the
 file <code>~/.antrc</code> before it does anything - the Windows batch
@@ -100,7 +108,7 @@ file invokes <code>%HOME%\antrc_pre.bat</code> at the start and
 files to set/unset environment variables that should only be visible
 during the execution of Ant.  See the next section for example.</p>
 
-<h3>Environment Variables</h3>
+<h3><a name="envvars">Environment Variables</a></h3>
 
 <p>The wrapper scripts use the following environment variables (if
 set):</p>
@@ -118,7 +126,7 @@ set):</p>
   include the <code>-find</code> flag.</li>
 </ul>
 
-<h2>Running Ant by Hand</h2>
+<h2><a name="viajava">Running Ant via Java</a></h2>
 <p>If you have installed Ant in the do-it-yourself way, Ant can be started
 with:</p>
 <blockquote>

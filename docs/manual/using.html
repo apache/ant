@@ -8,12 +8,13 @@
 <body>
 <h1>Using Ant</h1>
 <h2><a name="buildfile">Writing a Simple Buildfile</a></h2>
-<p>Ant's buildfiles are written in XML. Each buildfile contains one project.</p>
-<p>Each task element of the buildfile can have an <code>id</code> attribute and
+<p>Ant's buildfiles are written in XML. Each buildfile contains one project
+and at least one (default) target. Targets contain task elements.
+Each task element of the buildfile can have an <code>id</code> attribute and
 can later be referred to by the value supplied to this. The value has
 to be unique. (For additional information, see the
 <a href="#tasks"> Tasks</a> section below.)</p>
-<h3>Projects</h3>
+<h3><a name="projects">Projects</a></h3>
 <p>A <i>project</i> has three attributes:</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -43,7 +44,7 @@ to be unique. (For additional information, see the
   </tr>
 </table>
 <p>Optionally, a description for the project can be provided as a
-top-level &lt;description&gt; element (see the <a
+top-level <code>&lt;description&gt;</code> element (see the <a
 href="CoreTypes/description.html">description</a> type).</p>
 
 <p>Each project defines one or more <i>targets</i>.
@@ -52,7 +53,7 @@ to be executed. When starting Ant, you can select which target(s) you
 want to have executed. When no target is given,
 the project's default is used.</p>
 
-<h3>Targets</h3>
+<h3><a name="targets">Targets</a></h3>
 <p>A target can depend on other targets. You might have a target for compiling,
 for example, and a target for creating a distributable. You can only build a
 distributable when you have compiled first, so the distribute target
@@ -161,7 +162,7 @@ Tasks can be assigned an <code>id</code> attribute:
 <pre>&lt;<i>taskname</i> id="<i>taskID</i>" ... /&gt;</pre>
 </blockquote>
 where <i>taskname</i> is the name of the task, and <i>taskID</i> is
-a unique name for this task.
+a unique identifier for this task.
 You can refer to the
 corresponding task object in scripts or other tasks via this name.
 For example, in scripts you could do:
@@ -187,17 +188,17 @@ be backward-compatible with this behaviour, since there will likely be no
 task instances at all, only proxies.
 </p>
 
-<h3>Properties</h3>
+<h3><a name="properties">Properties</a></h3>
 <p>A project can have a set of properties. These might be set in the buildfile
-by the <a href="CoreTasks/property.html">property task</a>, or might be set outside Ant. A
-property has a name and a value, the name is case sensitive. Properties may be used in the value of
+by the <a href="CoreTasks/property.html">property</a> task, or might be set outside Ant. A
+property has a name and a value; the name is case-sensitive. Properties may be used in the value of
 task attributes. This is done by placing the property name between
 &quot;<code>${</code>&quot; and &quot;<code>}</code>&quot; in the
 attribute value. For example,
 if there is a &quot;builddir&quot; property with the value
 &quot;build&quot;, then this could be used in an attribute like this:
 <code>${builddir}/classes</code>.
-This is resolved as <code>build/classes</code>.</p>
+This is resolved at run-time as <code>build/classes</code>.</p>
 
 <h3><a name="built-in-props">Built-in Properties</a></h3>
 <p>Ant provides access to all system properties as if they had been
@@ -219,7 +220,7 @@ ant.java.version    the JVM version Ant detected; currently it can hold
                     the values &quot;1.1&quot;, &quot;1.2&quot;, &quot;1.3&quot; and &quot;1.4&quot;.
 </pre>
 
-<h3>Example</h3>
+<a name="example"><h3>Example Buildfile</h3></a>
 <pre>
 &lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
 
@@ -256,16 +257,16 @@ ant.java.version    the JVM version Ant detected; currently it can hold
 &lt;/project&gt;
 </pre>
 
-<h3>Token Filters</h3>
+<a name="filters"><h3>Token Filters</h3></a>
 <p>A project can have a set of tokens that might be automatically expanded if
 found when a file is copied, when the filtering-copy behavior is selected in the
 tasks that support this. These might be set in the buildfile
-by the <a href="CoreTasks/filter.html">filter task</a>.&nbsp;</p>
+by the <a href="CoreTasks/filter.html">filter</a> task.</p>
 <p>Since this can potentially be a very harmful behavior,
 the tokens in the files <b>must</b>
 be of the form <code>@</code><i>token</i><code>@</code>, where
 <i>token</i> is the token name that is set
-in the filter task. This token syntax matches the syntax of other build systems
+in the <code>&lt;filter&gt;</code> task. This token syntax matches the syntax of other build systems
 that perform such filtering and remains sufficiently orthogonal to most
 programming and scripting languages, as well as with documentation systems.</p>
 <p>Note: If a token with the format <code>@</code><i>token</i><code>@</code>
@@ -411,9 +412,9 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
 
 <h3><a name="references">References</a></h3>
 <p>The <code>id</code> attribute of the buildfile's elements can be
-used to refer to them. This can useful if you are going to replicate
+used to refer to them. This can be useful if you are going to replicate
 the same snippet of XML over and over again - using a
-<code>&lt;classpath&gt;</code> structure more than once for
+<code>&lt;classpath&gt;</code> structure more than once, for
 example.</p>
 <p>The following example:</p>
 <blockquote><pre>
