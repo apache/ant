@@ -220,7 +220,7 @@
              unless="log4j.present" />
   </patternset>
   <patternset id="needs.commons.logging">
-    <exclude name="${ant.package}/listener/CommongsLoggingListener.java"
+    <exclude name="${ant.package}/listener/CommonsLoggingListener.java"
              unless="commons.logging.present" />
   </patternset>
   <patternset id="needs.bsf">
