@@ -28,6 +28,8 @@ import org.apache.ant.project.Project;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.project.ProjectListener;
+import org.apache.ant.runtime.AntEngine;
+import org.apache.ant.runtime.DefaultAntEngine;
 import org.apache.ant.tasklet.JavaVersion;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
@@ -108,6 +110,7 @@ public class Main
     public static void main( final String[] args )
     {
         final Main main = new Main();
+        main.setLogger( LogKit.getLoggerFor( "default" ) );
 
         try { main.execute( args ); }
         catch( final AntException ae )
@@ -436,9 +439,10 @@ public class Main
         {
             //except for a few *special* files add all the 
             //.zip/.jars to classloader
-            if( !files[ i ].getName().equals( "ant.jar" ) &&
-                !files[ i ].getName().equals( "myrmidon.jar" ) &&
-                !files[ i ].getName().equals( "avalonapi.jar" ) )
+            final String name = files[ i ].getName();
+            if( !name.equals( "ant.jar" ) &&
+                !name.equals( "myrmidon.jar" ) &&
+                !name.equals( "avalonapi.jar" ) )
             {                
                 try { classLoader.addURL( files[ i ].toURL() ); }
                 catch( final MalformedURLException mue ) {}

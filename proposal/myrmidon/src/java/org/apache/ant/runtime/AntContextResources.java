@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant;
+package org.apache.ant.runtime;
 
 /**
  * Interface that holds constants used to access variables from context.
