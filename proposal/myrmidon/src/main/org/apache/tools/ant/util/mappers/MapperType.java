@@ -5,9 +5,10 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.types;
+package org.apache.tools.ant.util.mappers;
 
 import java.util.Properties;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Class as Argument to FileNameMapper.setType.
@@ -15,26 +16,26 @@ import java.util.Properties;
 public class MapperType
     extends EnumeratedAttribute
 {
-    private final Properties m_implementations;
+    private final Properties c_implementations;
 
     public MapperType()
     {
-        m_implementations = new Properties();
-        m_implementations.put( "identity",
+        c_implementations = new Properties();
+        c_implementations.put( "identity",
                                "org.apache.tools.ant.util.IdentityMapper" );
-        m_implementations.put( "flatten",
+        c_implementations.put( "flatten",
                                "org.apache.tools.ant.util.FlatFileNameMapper" );
-        m_implementations.put( "glob",
+        c_implementations.put( "glob",
                                "org.apache.tools.ant.util.GlobPatternMapper" );
-        m_implementations.put( "merge",
+        c_implementations.put( "merge",
                                "org.apache.tools.ant.util.MergingMapper" );
-        m_implementations.put( "regexp",
+        c_implementations.put( "regexp",
                                "org.apache.tools.ant.util.RegexpPatternMapper" );
     }
 
     public String getImplementation()
     {
-        return m_implementations.getProperty( getValue() );
+        return c_implementations.getProperty( getValue() );
     }
 
     public String[] getValues()

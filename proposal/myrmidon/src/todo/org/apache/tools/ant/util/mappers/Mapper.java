@@ -5,13 +5,13 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.types;
+package org.apache.tools.ant.util.mappers;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Element to define a FileNameMapper.

@@ -20,7 +20,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
-import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.util.mappers.Mapper;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.mappers.FlatFileNameMapper;
