@@ -32,6 +32,7 @@ import org.apache.tools.ant.BuildException;
 public abstract class AbstractSshMessage {
 
     private Session session;
+    private boolean verbose;
     private LogListener listener = new LogListener() {
         public void log(String message) {
             // do nothing;
@@ -39,6 +40,14 @@ public abstract class AbstractSshMessage {
     };
 
     public AbstractSshMessage(Session session) {
+        this(false, session);
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    public AbstractSshMessage(boolean verbose, Session session) {
+        this.verbose = verbose;
         this.session = session;
     }
 
@@ -114,4 +123,33 @@ public abstract class AbstractSshMessage {
             + " Average Rate: " + format.format(totalLength / duration)
             + " B/s");
     }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    protected final boolean getVerbose() {
+        return verbose;
+    }
+
+    /*
+     * Track progress every 10% if 100kb < filesize < 1mb. For larger
+     * files track progress for every percent transmitted.
+     */
+    protected final int trackProgress(int filesize, int totalLength, 
+                                      int percentTransmitted) {
+
+        int percent = (int) Math.round(Math.floor((totalLength 
+                                                   / (double)filesize) 
+                                                  * 100));
+        if (percent > percentTransmitted) {
+            if (filesize < 1048576 && (percent % 10 != 0)) {
+                // do not track between tenths
+            } else {
+                log("" + percent + "%");
+            }
+        }
+
+        return percent;
+    }
+
 }

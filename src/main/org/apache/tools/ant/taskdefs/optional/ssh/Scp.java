@@ -140,7 +140,7 @@ public class Scp extends SSHBase {
         try {
             session = openSession();
             ScpFromMessage message =
-                new ScpFromMessage(session, file,
+                new ScpFromMessage(getVerbose(), session, file,
                                    getProject().resolveFile(toPath),
                                    fromSshUri.endsWith("*"));
             log("Receiving file: " + file);
@@ -169,7 +169,8 @@ public class Scp extends SSHBase {
             }
             if (!list.isEmpty()) {
                 session = openSession();
-                ScpToMessage message = new ScpToMessage(session, list, file);
+                ScpToMessage message = new ScpToMessage(getVerbose(), session,
+                                                        list, file);
                 message.setLogListener(this);
                 message.execute();
             }
@@ -188,8 +189,8 @@ public class Scp extends SSHBase {
         try {
             session = openSession();
             ScpToMessage message =
-                new ScpToMessage(session, getProject().resolveFile(fromPath),
-                                 file);
+                new ScpToMessage(getVerbose(), session, 
+                                 getProject().resolveFile(fromPath), file);
             message.setLogListener(this);
             message.execute();
         } finally {

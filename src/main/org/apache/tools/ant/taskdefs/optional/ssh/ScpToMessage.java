@@ -36,22 +36,50 @@ public class ScpToMessage extends AbstractSshMessage {
     private String remotePath;
     private List directoryList;
 
+    /**
+     * @since Ant 1.6.2
+     */
+    public ScpToMessage(boolean verbose,
+                        Session session,
+                        File aLocalFile,
+                        String aRemotePath) {
+        this(verbose, session, aRemotePath);
+
+        this.localFile = aLocalFile;
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    public ScpToMessage(boolean verbose,
+                        Session session,
+                        List aDirectoryList,
+                        String aRemotePath) {
+        this(verbose, session, aRemotePath);
+
+        this.directoryList = aDirectoryList;
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    private ScpToMessage(boolean verbose,
+                         Session session,
+                         String aRemotePath) {
+        super(verbose, session);
+        this.remotePath = aRemotePath;
+    }
+
     public ScpToMessage(Session session,
                         File aLocalFile,
                         String aRemotePath) {
-        super(session);
-
-        this.localFile = aLocalFile;
-        this.remotePath = aRemotePath;
+        this(false, session, aLocalFile, aRemotePath);
     }
 
     public ScpToMessage(Session session,
                          List aDirectoryList,
                          String aRemotePath) {
-        super(session);
-
-        this.directoryList = aDirectoryList;
-        this.remotePath = aRemotePath;
+        this(false, session, aDirectoryList, aRemotePath);
     }
 
     public void execute() throws IOException, JSchException {
@@ -150,6 +178,14 @@ public class ScpToMessage extends AbstractSshMessage {
         byte[] buf = new byte[BUFFER_SIZE];
         long startTime = System.currentTimeMillis();
         int totalLength = 0;
+
+        // only track progress for files larger than 100kb in verbose mode
+        boolean trackProgress = getVerbose() && filesize > 102400;
+        // since filesize keeps on decreasing we have to store the
+        // initial filesize
+        int initFilesize = filesize;
+        int percentTransmitted = 0;
+
         try {
             log("Sending: " + localFile.getName() + " : " + localFile.length());
             while (true) {
@@ -159,6 +195,12 @@ public class ScpToMessage extends AbstractSshMessage {
                 }
                 out.write(buf, 0, len);
                 totalLength += len;
+
+                if (trackProgress) {
+                    percentTransmitted = trackProgress(initFilesize, 
+                                                       totalLength, 
+                                                       percentTransmitted);
+                }
             }
             out.flush();
             sendAck(out);
