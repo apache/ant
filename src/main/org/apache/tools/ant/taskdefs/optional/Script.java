@@ -49,13 +49,7 @@ public class Script extends Task {
             runner.addText(text);
         }
 
-        runner.addBeans(getProject().getProperties());
-        runner.addBeans(getProject().getUserProperties());
-        runner.addBeans(getProject().getTargets());
-        runner.addBeans(getProject().getReferences());
-
-        runner.addBean("project", getProject());
-        runner.addBean("self", this);
+        runner.bindToComponent(this);
 
         runner.executeScript("ANT");
     }

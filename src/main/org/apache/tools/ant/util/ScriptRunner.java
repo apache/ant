@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import java.io.IOException;
 import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.Project;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -189,5 +192,21 @@ public class ScriptRunner {
      */
     public void addText(String text) {
         this.script += text;
+    }
+
+    /**
+     * Bind the runner to a project component.
+     * Properties, targets and references are all added as beans;
+     * project is bound to project, and self to the component.
+     * @param component to become <code>self</code>
+     */
+    public void bindToComponent(ProjectComponent component) {
+        Project project=component.getProject();
+        addBeans(project.getProperties());
+        addBeans(project.getUserProperties());
+        addBeans(project.getTargets());
+        addBeans(project.getReferences());
+        addBean("project", project);
+        addBean("self", component);
     }
 }

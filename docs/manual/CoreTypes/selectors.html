@@ -927,7 +927,132 @@
         </tr>
       </table>
 
+      <a name="scriptselector"></a>
+      <h4>Script Selector</h4>
 
+      <p>
+        The <code>&lt;scriptselector&gt;</code> element enables you 
+        to write a complex selection algorithm in any
+        <a href="http://jakarta.apache.org/bsf" target="_top">Apache BSF</a>
+        supported language.</p>
+        See the <a href="../OptionalTasks/script.html">Script</a> task for
+        an explanation of scripts and dependencies.
+      </p>
+      <p>
+        This selector was added in Apache Ant 1.7.
+      </p>
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="top"><b>Attribute</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td align="center" valign="top"><b>Required</b></td>
+        </tr>
+        <tr>
+          <td valign="top">language</td>
+          <td valign="top">language of the script.</td>
+          <td valign="top" align="center">yes</td>
+        </tr>
+        <tr>
+          <td valign="top">src</td>
+          <td valign="top">filename of the script</td>
+          <td valign="top" align="center">no</td>
+        </tr>
+      </table>      
+      <p>
+      If no <code>src</code> attribute is supplied, the script must be nested
+      inside the selector declaration. 
+      </p>
+      <p>The embedded script is invoked for every test, with
+         the bean <code>self</code> 
+        is bound to the selector. It has an attribute <code>selected</code>
+        must can be set using <code>setSelected(boolean)</code> to select that
+        file.
+         
+      <p>
+      
+      The following beans are configured for every script, alongside
+      the classic set of project, properties, and targets.
+      
+      <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="top"><b>Bean</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td valign="top"><b>Type</b></td>
+        </tr>
+        <tr>
+          <td valign="top">self</td>
+          <td valign="top">selector instance</td>
+          <td valign="top">org.apache.tools.ant.types.optional</td>
+        </tr>
+        <tr>
+          <td valign="top">filename</td>
+          <td valign="top">filename of the selection</td>
+          <td valign="top" >String</td>
+        </tr>
+        <tr>
+          <td valign="top">file</td>
+          <td valign="top">file of the selection</td>
+          <td valign="top" >java.io.File</td>
+        </tr>
+        <tr>
+          <td valign="top">basedir</td>
+          <td valign="top">Fileset base directory</td>
+          <td valign="top" >java.io.File</td>
+        </tr>
+        
+      </table>       
+      <p>
+      The <code>self</code> bean maps to the selector, which has the following
+      attributes. Only the <code>selected</code> flag is writeable, the rest 
+      are read only via their getter methods.
+      
+            <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="top"><b>Attribute</b></td>
+          <td valign="top"><b>Description</b></td>
+          <td align="center" valign="top"><b>Type</b></td>
+        </tr>
+        <tr>
+          <td valign="top">selected</td>
+          <td valign="top">writeable flag to select this file</td>
+          <td valign="top" align="center">boolean</td>
+        </tr>
+        <tr>
+          <td valign="top">filename</td>
+          <td valign="top">filename of the selection</td>
+          <td valign="top" >String</td>
+        </tr>
+        <tr>
+          <td valign="top">file</td>
+          <td valign="top">file of the selection</td>
+          <td valign="top" >java.io.File</td>
+        </tr>
+        <tr>
+          <td valign="top">basedir</td>
+          <td valign="top">Fileset base directory</td>
+          <td valign="top" >java.io.File</td>
+        </tr>
+      </table>
+      
+      <p>
+      Example
+      </p>
+<pre>
+    &lt;scriptselector language=&quot;javascript&quot;&gt;
+      self.setSelected(true);
+    &lt;/scriptselector&gt;
+</pre>
+    <p>
+    Selects every file.
+    </p>
+
+<pre>
+    &lt;scriptselector language=&quot;javascript&quot;&gt;
+      self.setSelected((filename.length%2)==0);
+    &lt;/scriptselector&gt;
+</pre>
+Select files whose filename length is even.
+      
     <a name="selectcontainers"></a>
     <h3>Selector Containers</h3>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,14 +60,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
             return;
         }
         initialized = true;
-
-        runner.addBeans(getProject().getProperties());
-        runner.addBeans(getProject().getUserProperties());
-        runner.addBeans(getProject().getTargets());
-        runner.addBeans(getProject().getReferences());
-
-        runner.addBean("project", getProject());
-        runner.addBean("self", this);
+        runner.bindToComponent(this);
     }
 
     /**
