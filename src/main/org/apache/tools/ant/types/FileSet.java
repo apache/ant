@@ -116,12 +116,6 @@ public class FileSet extends DataType {
             throw tooManyAttributes();
         }
 
-        if (!dir.exists()) {
-            throw new BuildException(dir.getAbsolutePath()+" not found.");
-        }
-        if (!dir.isDirectory()) {
-            throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
-        }
         this.dir = dir;
     }
 
@@ -240,6 +234,13 @@ public class FileSet extends DataType {
 
         if (dir == null) {
             throw new BuildException("No directory specified for fileset.");
+        }
+
+        if (!dir.exists()) {
+            throw new BuildException(dir.getAbsolutePath()+" not found.");
+        }
+        if (!dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()+" is not a directory.");
         }
 
         DirectoryScanner ds = new DirectoryScanner();

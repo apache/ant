@@ -29,6 +29,10 @@ Fixed bugs:
 * <delete includeemptydirs="true"> now deletes more than just the leaf
   directories.
 
+* You can now specify a <fileset> for a directory that doesn't exist at
+  declaration time but will created before the fileset gets used for the
+  first time.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
