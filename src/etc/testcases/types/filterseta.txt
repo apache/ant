@@ -1,2 +1,0 @@
-This is a test file for filters @aaaa@
-It has two lines @bbbb@
