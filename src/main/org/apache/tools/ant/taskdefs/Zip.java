@@ -144,7 +144,7 @@ public class Zip extends MatchingTask {
      * create the file.
      * @since Ant 1.5
      * @deprecated Use setDestFile(File) instead
-     * @ant.attribute ignore="true"
+     * @ant.attribute ignored="true"
      */
     public void setFile(File file) {
         setDestFile(file);
