@@ -282,6 +282,8 @@ public class Main implements AntMain {
      *
      * @exception BuildException if the specified build file doesn't exist
      *                           or is a directory.
+     *
+     * @deprecated
      */
     protected Main(String[] args) throws BuildException {
         processArgs(args);
