@@ -44,6 +44,9 @@ Other changes:
   Compilers can be selected using the compiler attribute, which defaults
   to "microsoft" on windows, and "mono" on everything else.
 
+* Refactored Target invocation into org.apache.tools.ant.Executor
+  implementations.  Bugzilla Reports 21421, 29248.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

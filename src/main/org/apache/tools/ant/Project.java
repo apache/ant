@@ -33,6 +33,8 @@ import java.util.Set;
 import java.util.HashSet;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.helper.DefaultExecutor;
+import org.apache.tools.ant.helper.KeepGoingExecutor;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Description;
@@ -764,7 +766,9 @@ public class Project {
     /**
      * Sets "keep-going" mode. In this mode ANT will try to execute
      * as many targets as possible. All targets that do not depend
-     * on failed target(s) will be executed.
+     * on failed target(s) will be executed.  If the keepGoing settor/getter
+     * methods are used in conjunction with the <code>ant.executor.class</code>
+     * property, they will have no effect.
      * @param keepGoingMode "keep-going" mode
      * @since Ant 1.6
      */
@@ -773,7 +777,9 @@ public class Project {
     }
 
     /**
-     * Returns the keep-going mode.
+     * Returns the keep-going mode.  If the keepGoing settor/getter
+     * methods are used in conjunction with the <code>ant.executor.class</code>
+     * property, they will have no effect.
      * @return "keep-going" mode
      * @since Ant 1.6
      */
@@ -1054,19 +1060,38 @@ public class Project {
      */
     public void executeTargets(Vector targetNames) throws BuildException {
 
-        BuildException thrownException = null;
-        for (int i = 0; i < targetNames.size(); i++) {
+        Object o = getReference("ant.executor");
+        if (o == null) {
+            String classname = getProperty("ant.executor.class");
+            if (classname == null) {
+                classname = (keepGoingMode)
+                    ? KeepGoingExecutor.class.getName()
+                    : DefaultExecutor.class.getName();
+            }
+            log("Attempting to create object of type " + classname, MSG_DEBUG);
             try {
-                executeTarget((String) targetNames.elementAt(i));
-            } catch (BuildException ex) {
-                if (!(keepGoingMode)) {
-                    throw ex; // Throw further
+                o = Class.forName(classname, true, coreLoader).newInstance();
+            } catch (ClassNotFoundException seaEnEfEx) {
+                //try the current classloader
+                try {
+                    o = Class.forName(classname).newInstance();
+                } catch (Exception ex) {
+                    log(ex.toString(), MSG_ERR);
                 }
-                thrownException = ex;
+            } catch (Exception ex) {
+                log(ex.toString(), MSG_ERR);
+            }
+            if (o != null) {
+                addReference("ant.executor", o);
             }
         }
-        if (thrownException != null) {
-            throw thrownException;
+
+        if (o == null) {
+            throw new BuildException("Unable to obtain a Target Executor instance.");
+        } else {
+            String[] targetNameArray = (String[])(targetNames.toArray(
+                new String[targetNames.size()]));
+            ((Executor)o).executeTargets(this, targetNameArray);
         }
     }
 

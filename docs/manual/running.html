@@ -230,6 +230,13 @@ And I filtered out the <i>getPropertyHelper</i> access.</p>
   <th>description</th>
 </tr>
 <tr>
+  <td><code>ant.executor.class</code></td>
+  <td>classname; default is org.apache.tools.ant.helper.DefaultExecutor</td>
+  <td><b>Since Ant 1.6.3</b> Ant will delegate Target invocation to the
+org.apache.tools.ant.Executor implementation specified here.
+  </td>
+</tr>
+<tr>
   <td><code>ant.input.properties</code></td>
   <td>filename (required)</td>
   <td>Name of the file holding the values for the

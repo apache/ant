@@ -36,6 +36,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.helper.SingleCheckExecutor;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -61,6 +62,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @ant.task category="control"
  */
 public class Ant extends Task {
+
+    /** Target Executor */
+    private static SingleCheckExecutor executor = new SingleCheckExecutor();
 
     /** the basedir where is executed the build file */
     private File dir = null;
@@ -394,11 +398,8 @@ public class Ant extends Task {
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.fireSubBuildStarted();
-                    String[] nameArray =
-                        (String[])(locals.toArray(new String[locals.size()]));
-
-                    newProject.executeSortedTargets(newProject.topoSort(
-                        nameArray, newProject.getTargets(), false));
+                    executor.executeTargets(newProject,
+                        (String[])(locals.toArray(new String[locals.size()])));
 
                 } catch (BuildException ex) {
                     t = ProjectHelper
