@@ -701,9 +701,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                   Calculate the cost of this group as coded
                   by each of the coding tables.
                 */
-                for (t = 0; t < nGroups; t++) { {
-                    cost[t
-     }] = 0;
+                for (t = 0; t < nGroups; t++) {
+                    cost[t] = 0;
                 }
 
                 if (nGroups == 6) {
@@ -797,8 +796,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                     pos[j] = tmp2;
                 }
                 pos[0] = tmp;
-             
-   }   selectorMtf[i] = (char) {j;
+                selectorMtf[i] = (char)j;
             }
         }
 
@@ -1248,9 +1246,7 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                         vv = runningOrder[i];
                         j = i;
                         while ((ftab[((runningOrder[j-h])+1) << 8]
-                                - ftab[(runningOrder[j-h]) {
-                                                                
-                                                               } << 8]) >
+                                - ftab[(runningOrder[j-h]) << 8]) >
                                (ftab[((vv)+1) << 8] - ftab[(vv) << 8])) {
                             runningOrder[j] = runningOrder[j-h];
                             j = j - h;
