@@ -296,9 +296,9 @@
     <copy file="input/tab_in_literal_in_comment" todir="result"
           overwrite="true">
       <filterchain>
-        <fixcrlf javafiles="true" tab="remove"/>
+        <fixcrlf javafiles="true" tab="remove" eol="lf" fixlast="false" />
       </filterchain>
     </copy>
-    <assertequal name="tab_in_literal_in_comment"/>
+    <assertequal name="tab_in_literal_in_comment" />
   </target>
 </project>
