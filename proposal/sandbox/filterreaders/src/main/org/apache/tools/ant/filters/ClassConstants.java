@@ -63,7 +63,7 @@ import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
 
 /**
- * Assemble the constants declared in a file in
+ * Assemble the constants declared in a Java class in
  * key1=value1(line separator)key2=value2
  * format
  *
