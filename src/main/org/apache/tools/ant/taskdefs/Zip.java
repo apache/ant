@@ -750,6 +750,7 @@ public class Zip extends MatchingTask {
 
         for (int i = 0; i < filesets.length; i++) {
             if (initialResources[i].length == 0) {
+                newerResources[i] = new Resource[] {};
                 continue;
             }
             

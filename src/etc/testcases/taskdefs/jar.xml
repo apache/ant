@@ -5,6 +5,8 @@
   <property name="tmp.jar" location="tmp.jar"/>
   <property name="tmp.dir" location="jartmp"/>
   <property name="tmp.zip" location="tmp.zip"/>
+  <property name="tmp1.dir" location="jartmp1"/>
+  <property name="tmp2.dir" location="jartmp2"/>
 
   <target name="test1">
     <jar/>
@@ -166,6 +168,25 @@
     <delete file="${tmp.jar}" />
     <delete dir="${tmp.dir}"/>
     <delete file="${tmp.zip}" />
+    <delete dir="${tmp1.dir}"/>
+    <delete dir="${tmp2.dir}"/>
+  </target>
+
+  <target name="testCreateWithEmptyFilesetSetUp">
+    <mkdir dir="${tmp1.dir}"/>
+    <mkdir dir="${tmp2.dir}"/>
+    <echo file="${tmp2.dir}/foo.txt" message="foo"/>
+  </target>
+
+  <target name="testCreateWithEmptyFileset">
+    <jar destfile="${tmp.jar}">
+      <fileset dir="${tmp1.dir}">
+        <include name="**/*.doesNotExist"/>
+      </fileset>
+      <fileset dir="${tmp2.dir}">
+        <include name="**/foo.txt"/>
+      </fileset>
+    </jar>
   </target>
 
 </project>
