@@ -632,6 +632,12 @@ public class Javac extends MatchingTask {
         // will add it to classpath.
         classpath.append(src);
 
+        // if the user has set JIKESPATH we should add the contents as well
+        String jikesPath = System.getProperty("jikes.class.path");
+        if (jikesPath != null) {
+            classpath.append(new Path(project, jikesPath));
+        }
+        
         Vector argList = new Vector();
 
         if (deprecation == true)
@@ -690,6 +696,21 @@ public class Javac extends MatchingTask {
            warnings = false;
        }
 
+       /**
+        * Jikes can issue pedantic warnings. 
+        */
+       boolean pedantic = false;
+       String pedanticProperty = project.getProperty("build.compiler.pedantic");
+       if (pedanticProperty != null &&
+           (pedanticProperty.equalsIgnoreCase("on") ||
+            pedanticProperty.equalsIgnoreCase("true"))
+           ) {
+           pedantic = true;
+       }
+ 
+       if (pedantic)
+           argList.addElement("+P");
+ 
        if (emacsMode)
            argList.addElement("+E");
 

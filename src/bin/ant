@@ -58,5 +58,14 @@ else
   echo "  to the installation directory of java."
 fi
 
+# supply JIKESPATH to Ant as jikes.class.path
+if [ "$JIKESPATH" != "" ] ; then
+  if [ "$ANT_OPTS" != "" ] ; then
+    ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
+  else
+    ANT_OPTS=-Djikes.class.path=$JIKESPATH
+  fi
+fi
+
 $JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
 
