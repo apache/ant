@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,8 +60,10 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -170,10 +172,12 @@ public class ManifestTask extends Task {
         BuildException error = null;
 
         if (manifestFile.exists()) {
-            FileReader f = null;
+            FileInputStream fis = null;
+            InputStreamReader isr = null;
             try {
-                f = new FileReader(manifestFile);
-                current = new Manifest(f);
+                fis = new FileInputStream(manifestFile);
+                isr = new InputStreamReader(fis, "UTF-8");
+                current = new Manifest(isr);
             } catch (ManifestException m) {
                 error = new BuildException("Existing manifest " + manifestFile
                                            + " is invalid", m, location);
@@ -181,9 +185,9 @@ public class ManifestTask extends Task {
                 error = new BuildException("Failed to read " + manifestFile,
                                            e, location);
             } finally {
-                if (f != null) {
+                if (isr != null) {
                     try {
-                        f.close();
+                        isr.close();
                     } catch (IOException e) {}
                 }
             }
@@ -211,7 +215,9 @@ public class ManifestTask extends Task {
 
         PrintWriter w = null;
         try {
-            w = new PrintWriter(new FileWriter(manifestFile));
+            FileOutputStream fos = new FileOutputStream(manifestFile);
+            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+            w = new PrintWriter(osw);
             toWrite.write(w);
         } catch (IOException e) {
             throw new BuildException("Failed to write " + manifestFile,
