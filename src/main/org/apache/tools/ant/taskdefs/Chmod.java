@@ -75,6 +75,8 @@ import org.apache.tools.ant.types.PatternSet;
  * @since Ant 1.1
  *
  * @ant.task category="filesystem"
+ * @todo Refactor so it does not extend from ExecuteOn and then turn around
+ *       and unsupport several attributes.
  */
 public class Chmod extends ExecuteOn {
 
