@@ -409,7 +409,7 @@ public class ZipFile {
         cal.set(Calendar.YEAR, (int) ((dosTime >> 25) & 0x7f) + 1980);
         cal.set(Calendar.MONTH, (int) ((dosTime >> 21) & 0x0f) - 1);
         cal.set(Calendar.DATE, (int) (dosTime >> 16) & 0x1f);
-        cal.set(Calendar.HOUR, (int) (dosTime >> 11) & 0x1f);
+        cal.set(Calendar.HOUR_OF_DAY, (int) (dosTime >> 11) & 0x1f);
         cal.set(Calendar.MINUTE, (int) (dosTime >> 5) & 0x3f);
         cal.set(Calendar.SECOND, (int) (dosTime << 1) & 0x3e);
         return cal.getTime();
