@@ -29,6 +29,17 @@ inclusion/exclusion of files works, and how to write patterns.</p>
   attributes of <code>&lt;fileset&gt;</code> (<code>dir</code> becomes <code>basedir</code>)
   as well as the nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
   and <code>&lt;patternset&gt;</code> elements.</p>
+
+<p><b>Note</b>: Unlike other similar tasks, this task treats
+directories that have been matched by the include/exclude patterns of
+the implicit fileset in a special way.  It will apply the stylesheets
+to all files contain in them as well.  Since the default include
+pattern is <code>**</code> this means it will apply the stylesheet to
+all files.  If you specify an excludes pattern, it may still work on
+the files matched by those patterns because the parent directory has
+been matched.  If this behavior is not what you want, set the
+scanincludedirectories attribute to false.</p>
+
 <p>This task supports the use of a nested <code>&lt;param&gt;</code> element which is used to pass values
   to an <code>&lt;xsl:param&gt;</code> declaration.</p>
 <p>This task supports the use of a nested <a href="../CoreTypes/xmlcatalog.html">xmlcatalog</a>
