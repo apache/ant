@@ -122,6 +122,8 @@
   <patternset id="needs.sun.b64">
     <exclude name="${ant.package}/taskdefs/Get.java"
              unless="base64.present" />
+    <exclude name="${optional.package}/splash/SplashTask.java"
+             unless="base64.present" />
   </patternset>
 
   <!-- depends on external libraries -->
@@ -248,6 +250,9 @@
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline" />
   </patternset>
+  <patternset id="needs.swing">
+    <exclude name="${optional.package}/splash/*.java" unless="swing.present" />
+  </patternset>
 
   <!--
        ===================================================================
@@ -372,6 +377,16 @@
 
     <available property="base64.present" classname="sun.misc.BASE64Encoder" />
 
+    <condition property="jasper.present">
+      <and>
+        <available classname="org.apache.jasper.compiler.Compiler" />
+        <available classname="org.apache.jasper.JasperException" />
+      </and>
+    </condition>
+    
+    <available property="swing.present"
+               classname="javax.swing.ImageIcon"
+               classpathref="classpath"/>
   </target>
 
   <target name="ant1compat" depends="check_for_optional_packages">
@@ -417,6 +432,7 @@
       <patternset refid="needs.sun.tools" />
       <patternset refid="needs.sun.b64" />
       <patternset refid="needs.jakarta.bcel" />
+      <patternset refid="needs.swing" />
      </javac>
     <copy todir="${bin.dir}/ant1compat">
       <fileset dir="${bin.dir}/ant1src" excludes="**/*.java"/>

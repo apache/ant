@@ -75,6 +75,17 @@ public abstract class Task extends ProjectComponent
     protected String description = null;
 
     /**
+     * Called by the project to let the task do its work. This method may be 
+     * called more than once, if the task is invoked more than once. 
+     * For example, 
+     * if target1 and target2 both depend on target3, then running 
+     * "ant target1 target2" will run all tasks in target3 twice.
+     *
+     * @exception BuildException if something goes wrong with the build
+     */
+    public void execute() throws BuildException {}
+
+    /**
      * Set the name to use in logging messages.
      *
      * @param name the name to use in logging messages.

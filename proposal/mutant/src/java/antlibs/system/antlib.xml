@@ -8,8 +8,8 @@
   <taskdef name="ant" classname="org.apache.ant.antlib.system.Ant"/>
   <taskdef name="antcall" classname="org.apache.ant.antlib.system.AntCall"/>
  
-<!--  <taskdef name="parallel" classname="org.apache.ant.antlib.system.Parallel"/>
-  <taskdef name="sequential" classname="org.apache.ant.antlib.system.Sequential"/> -->
+  <taskdef name="parallel" classname="org.apache.ant.antlib.system.Parallel"/>
+  <taskdef name="sequential" classname="org.apache.ant.antlib.system.Sequential"/>
   
   <converter classname="org.apache.ant.antlib.system.FileConverter"/>          
   <converter classname="org.apache.ant.antlib.system.URLConverter"/>          
