@@ -139,15 +139,15 @@ public class FixCRLF extends MatchingTask {
      * <li>remove: remove all CR characters
      * </ul>
      */
-    public void setCr(String option) {
+    public void setCr(AddAsisRemove attr) {
+        String option = attr.getValue();
         if (option.equals("remove")) {
             addcr = -1;
         } else if (option.equals("asis")) {
             addcr = 0;
-        } else if (option.equals("add")) {
-            addcr = +1;
         } else {
-            throw new BuildException("Invalid option: " + option );
+            // must be "add"
+            addcr = +1;
         }
     }
 
@@ -161,15 +161,15 @@ public class FixCRLF extends MatchingTask {
      * <li>remove: convert tabs to spaces
      * </ul>
      */
-    public void setTab(String option) {
+    public void setTab(AddAsisRemove attr) {
+        String option = attr.getValue();
         if (option.equals("remove")) {
             addtab = -1;
         } else if (option.equals("asis")) {
             addtab = 0;
-        } else if (option.equals("add")) {
-            addtab = +1;
         } else {
-            throw new BuildException("Invalid option: " + option );
+            // must be "add"
+            addtab = +1;
         }
     }
 
@@ -196,15 +196,15 @@ public class FixCRLF extends MatchingTask {
      * <li>remove: remove any eof character found at the end
      * </ul>
      */
-    public void setEof(String option) {
+    public void setEof(AddAsisRemove attr) {
+        String option = attr.getValue();
         if (option.equals("remove")) {
             ctrlz = -1;
         } else if (option.equals("asis")) {
             ctrlz = 0;
-        } else if (option.equals("add")) {
-            ctrlz = +1;
         } else {
-            throw new BuildException("Invalid option: " + option );
+            // must be "add"
+            ctrlz = +1;
         }
     }
 
@@ -369,5 +369,14 @@ public class FixCRLF extends MatchingTask {
             }
 
         } /* end for */
+    }
+
+    /**
+     * Enumerated attribute with the values "asis", "add" and "remove".
+     */
+    public static class AddAsisRemove extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"add", "asis", "remove"};
+        }
     }
 }

@@ -438,6 +438,23 @@ public class IntrospectionHelper  {
 
                 };
 
+        // EnumeratedAttributes have their own helper class
+        } else if (org.apache.tools.ant.EnumeratedAttribute.class.isAssignableFrom(arg)) {
+            return new AttributeSetter() {
+                    public void set(Project p, Object parent, String value) 
+                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                        try {
+                            EnumeratedAttribute ea = 
+                                (EnumeratedAttribute)arg.newInstance();
+                            ea.setValue(value);
+                            m.invoke(parent, new EnumeratedAttribute[] {ea});
+                        } catch (InstantiationException ie) {
+                            throw new BuildException(ie);
+                        }
+                    }
+                };
+        
+
         // worst case. look for a public String constructor and use it
         } else {
 
