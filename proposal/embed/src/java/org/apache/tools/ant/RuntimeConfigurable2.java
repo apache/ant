@@ -65,8 +65,8 @@ import org.xml.sax.helpers.AttributeListImpl;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * Wrapper class that holds the attributes of an element, its children, and 
- * any text within it. It then takes care of configuring that element at 
+ * Wrapper class that holds the attributes of an element, its children, and
+ * any text within it. It then takes care of configuring that element at
  * runtime.
  *
  * This uses SAX2 and a more flexible substitution mechansim, based on
@@ -87,13 +87,15 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
     private Attributes attributes;
     /** Text appearing within the element. */
     private StringBuffer characters = new StringBuffer();
+    /** Indicates if the wrapped object has been configured */
+    private boolean proxyConfigured = false;
 
     Project project;
     protected Location location = Location.UNKNOWN_LOCATION;
     
     /**
      * Sole constructor creating a wrapper for the specified object.
-     * 
+     *
      * @param proxy The element to configure. Must not be <code>null</code>.
      * @param elementTag The tag name generating this element.
      *                   Should not be <code>null</code>.
@@ -101,12 +103,11 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
     public RuntimeConfigurable2(Project project, Location location, Object proxy, String elementTag) {
         super( proxy, elementTag );
         wrappedObject = proxy;
-        this.location=location;
-        this.project=project;
         this.elementTag = elementTag;
         // This should never happen - all objects are lazy
         if( proxy instanceof Task )
             ((Task)proxy).setRuntimeConfigurableWrapper( this );
+        proxyConfigured=false;
     }
 
     Project getProject() {
@@ -117,13 +118,14 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
         return location;
     }    
     /**
-     * Sets the element to configure. This is used when the real type of 
+     * Sets the element to configure. This is used when the real type of
      * an element isn't known at the time of wrapper creation.
-     * 
+     *
      * @param proxy The element to configure. Must not be <code>null</code>.
      */
     public void setProxy(Object proxy) {
         wrappedObject = proxy;
+        proxyConfigured=false;
     }
 
     public Object getProxy() {
@@ -132,7 +134,7 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
 
     /**
      * Sets the attributes for the wrapped element.
-     * 
+     *
      * @param attributes List of attributes defined in the XML for this
      *                   element. May be <code>null</code>.
      * @deprecated It shouldn't be called by anyone except ProjectHelper
@@ -250,8 +252,35 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
      *            an element which doesn't accept it.
      */
     public void maybeConfigure(Project p) throws BuildException {
+        maybeConfigure(p, true);
+    }
+
+    /**
+     * Configures the wrapped element.  The attributes and text for
+     * the wrapped element are configured.  Each time the wrapper is
+     * configured, the attributes and text for it are reset.
+     *
+     * If the element has an <code>id</code> attribute, a reference
+     * is added to the project as well.
+     *
+     * @param p The project containing the wrapped element.
+     *          Must not be <code>null</code>.
+     *
+     * @param configureChildren Whether to configure child elements as
+     * well.  if true, child elements will be configured after the
+     * wrapped element.
+     *
+     * @exception BuildException if the configuration fails, for instance due
+     *            to invalid attributes or children, or text being added to
+     *            an element which doesn't accept it.
+     */
+    public void maybeConfigure(Project p, boolean configureChildren) 
+        throws BuildException {
         String id = null;
 
+        if( proxyConfigured ) {
+            return;
+        }
         PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
 
         if (attributes != null) {
@@ -259,14 +288,8 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
             id = attributes.getValue("id");
             attributes = null;
         }
-        
         if (characters.length() != 0) {
-//             // First do substitution. This allows <echo>Message</echo> to work
-//             // like <echo message="..." />. And it's more fun.
-            String txt=characters.toString();
-//             txt=ph.replaceProperties( txt );
-            ProjectHelper.addText(p, wrappedObject, txt);
-            characters.setLength(0);
+            ProjectHelper.addText(p, wrappedObject, characters.toString());
         }
         Enumeration enum = children.elements();
         while (enum.hasMoreElements()) {
@@ -275,12 +298,19 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
             if (child.wrappedObject instanceof Task) {
                 Task childTask = (Task) child.wrappedObject;
                 childTask.setRuntimeConfigurableWrapper(child);
-                childTask.maybeConfigure();
-            } else {
-                child.maybeConfigure(p);
             }
-            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, 
-                                     child.getElementTag().toLowerCase(Locale.US));
+
+            if (configureChildren) {
+                if (child.wrappedObject instanceof Task) {
+                    Task childTask = (Task) child.wrappedObject;
+                    childTask.maybeConfigure();
+                } else {
+                    child.maybeConfigure(p);
+                }
+                ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject,
+                                         child.getElementTag()
+                                         .toLowerCase(Locale.US));
+            }
         }
 
         if (id != null) {
@@ -288,212 +318,10 @@ public class RuntimeConfigurable2 extends RuntimeConfigurable {
             p.getReferences().put( id, wrappedObject );
             //System.out.println("XXX updating reference " + this + " " + id + " " + wrappedObject );
         }
-    }
+
+        proxyConfigured = true; 
+   }
 
 
-    // -------------------- Merged from UE
-    RuntimeConfigurable getWrapper() {
-        return this;
-    }
-      
-    
-    /**
-     * Creates the real object instance and child elements, then configures
-     * the attributes and text of the real object. This unknown element
-     * is then replaced with the real object in the containing target's list
-     * of children.
-     *
-     * @exception BuildException if the configuration fails
-     */
-    protected void maybeConfigureTask() throws BuildException {
-//         wrappedObject = makeObject(this, getWrapper());
-
-//         getWrapper().setProxy(wrappedObject);
-//         if (wrappedObject instanceof Task) {
-//             ((Task) wrappedObject).setRuntimeConfigurableWrapper(getWrapper());
-//         }
-
-//         handleChildren(wrappedObject, getWrapper());
-
-//         getWrapper().maybeConfigure(getProject());
-    }
-
-    /**
-     * Creates child elements, creates children of the children
-     * (recursively), and sets attributes of the child elements.
-     *
-     * @param parent The configured object for the parent.
-     *               Must not be <code>null</code>.
-     *
-     * @param parentWrapper The wrapper containing child wrappers
-     *                      to be configured. Must not be <code>null</code>
-     *                      if there are any children.
-     *
-     * @exception BuildException if the children cannot be configured.
-     */
-    protected void handleChildren(Object parent,
-                                  RuntimeConfigurable parentWrapper)
-        throws BuildException {
-
-        if (parent instanceof TaskAdapter) {
-            parent = ((TaskAdapter) parent).getProxy();
-        }
-
-        Class parentClass = parent.getClass();
-        IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
-
-        for (int i = 0;  i < children.size(); i++) {
-            RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
-            UnknownElement child = (UnknownElement) children.elementAt(i);
-            Object realChild = null;
-
-            if (parent instanceof TaskContainer) {
-                realChild = makeTask(child, childWrapper, false);
-                ((TaskContainer) parent).addTask((Task) realChild);
-            } else {
-                realChild = ih.createElement(getProject(), parent, child.getTag());
-            }
-
-            childWrapper.setProxy(realChild);
-            if (parent instanceof TaskContainer) {
-                ((Task) realChild).setRuntimeConfigurableWrapper(childWrapper);
-            }
-
-            child.handleChildren(realChild, childWrapper);
-
-            if (parent instanceof TaskContainer) {
-                ((Task) realChild).maybeConfigure();
-            }
-        }
-    }
-
-    /**
-     * Creates a named task or data type. If the real object is a task,
-     * it is configured up to the init() stage.
-     *
-     * @param ue The unknown element to create the real object for.
-     *           Must not be <code>null</code>.
-     * @param w  Ignored in this implementation.
-     *
-     * @return the task or data type represented by the given unknown element.
-     */
-//     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
-//         Object o = makeTask(ue, w, true);
-//         if (o == null) {
-//             o = getProject().createDataType(ue.getTag());
-//         }
-//         if (o == null) {
-//             throw getNotFoundException("task or type", ue.getTag());
-//         }
-//         return o;
-//     }
-
-    /**
-     * Creates a named task and configures it up to the init() stage.
-     *
-     * @param ue The UnknownElement to create the real task for.
-     *           Must not be <code>null</code>.
-     * @param w  Ignored.
-     * @param onTopLevel Whether or not this is definitely trying to create
-     *                   a task. If this is <code>true</code> and the
-     *                   task name is not recognised, a BuildException
-     *                   is thrown.
-     *
-     * @return the task specified by the given unknown element, or
-     *         <code>null</code> if the task name is not recognised and
-     *         onTopLevel is <code>false</code>.
-     */
-    protected Task makeTask(UnknownElement ue, RuntimeConfigurable w,
-                            boolean onTopLevel) {
-        Task task = getProject().createTask(ue.getTag());
-        if (task == null && !onTopLevel) {
-            throw getNotFoundException("task", ue.getTag());
-        }
-
-        if (task != null) {
-            task.setLocation(getLocation());
-            // UnknownElement always has an associated target
-//            task.setOwningTarget(getOwningTarget());
-            task.init();
-        }
-        return task;
-    }
-    /**
-     * Returns a very verbose exception for when a task/data type cannot
-     * be found.
-     *
-     * @param what The kind of thing being created. For example, when
-     *             a task name could not be found, this would be
-     *             <code>"task"</code>. Should not be <code>null</code>.
-     * @param elementName The name of the element which could not be found.
-     *                    Should not be <code>null</code>.
-     *
-     * @return a detailed description of what might have caused the problem.
-     */
-    protected BuildException getNotFoundException(String what,
-                                                  String elementName) {
-        String lSep = System.getProperty("line.separator");
-        String msg = "Could not create " + what + " of type: " + elementName
-            + "." + lSep + lSep
-            + "Ant could not find the task or a class this "
-            + "task relies upon." + lSep + lSep
-            + "This is common and has a number of causes; the usual " + lSep
-            + "solutions are to read the manual pages then download and" + lSep
-            + "install needed JAR files, or fix the build file: " + lSep
-            + " - You have misspelt '" + elementName + "'." + lSep
-            + "   Fix: check your spelling." + lSep
-            + " - The task needs an external JAR file to execute" + lSep
-            + "   and this is not found at the right place in the classpath." + lSep
-            + "   Fix: check the documentation for dependencies." + lSep
-            + "   Fix: declare the task." + lSep
-            + " - The task is an Ant optional task and optional.jar is absent" + lSep
-            + "   Fix: look for optional.jar in ANT_HOME/lib, download if needed" + lSep
-            + " - The task was not built into optional.jar as dependent"  + lSep
-            + "   libraries were not found at build time." + lSep
-            + "   Fix: look in the JAR to verify, then rebuild with the needed" + lSep
-            + "   libraries, or download a release version from apache.org" + lSep
-            + " - The build file was written for a later version of Ant" + lSep
-            + "   Fix: upgrade to at least the latest release version of Ant" + lSep
-            + " - The task is not an Ant core or optional task " + lSep
-            + "   and needs to be declared using <taskdef>." + lSep
-            + lSep
-            + "Remember that for JAR files to be visible to Ant tasks implemented" + lSep
-            + "in ANT_HOME/lib, the files must be in the same directory or on the" + lSep
-            + "classpath" + lSep
-            + lSep
-            + "Please neither file bug reports on this problem, nor email the" + lSep
-            + "Ant mailing lists, until all of these causes have been explored," + lSep
-            + "as this is not an Ant bug.";
-
-
-        return new BuildException(msg, getLocation());
-    }
-
-    /**
-     * Returns the name to use in logging messages.
-     *
-     * @return the name to use in logging messages.
-     */
-    public String getTaskName() {
-//         return wrappedObject == null || !(wrappedObject instanceof Task) ?
-//             super.getTaskName() : ((Task) wrappedObject).getTaskName();
-        if( wrappedObject!=null && (wrappedObject instanceof Task))
-            return ((Task) wrappedObject).getTaskName();
-        else
-            return elementTag;
-    }
-
-    /**
-     * Returns the task instance after it has been created and if it is a task.
-     *
-     * @return a task instance or <code>null</code> if the real object is not
-     *         a task.
-     */
-//     public Task getTask() {
-//         if (wrappedObject instanceof Task) {
-//             return (Task) wrappedObject;
-//         }
-//         return null;
-//     }
 
 }
