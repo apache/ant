@@ -104,6 +104,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         
         project.addReference( "ant.parsing.context", context );
         parse(project, source,new RootHandler(context));
+        context.implicitTarget.execute();
     }
 
     /**
@@ -680,7 +681,8 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             Project project=context.project;
             
             target = new Target();
-            target.addDependency( "" );
+            // No need - it'll be handled explicitly
+            // target.addDependency( "" );
             target.setName(name);
             target.setIf(ifCond);
             target.setUnless(unlessCond);
@@ -1153,107 +1155,4 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             return new NestedElementHandler(element, wrapper, target);
         }
     }
-
-//     /**
-//      * Handler for the root element. Its only child must be the "project" element.
-//      */
-//     static class ImportHandler extends AntHandler {
-
-//         /**
-//          * Initialisation routine called after handler creation
-//          * with the element name and attributes. The attributes which
-//          * this handler can deal with are: <code>"default"</code>,
-//          * <code>"name"</code>, <code>"id"</code> and <code>"basedir"</code>.
-//          *
-//          * @param tag Name of the element which caused this handler
-//          *            to be created. Should not be <code>null</code>.
-//          *            Ignored in this implementation.
-//          * @param attrs Attributes of the element which caused this
-//          *              handler to be created. Must not be <code>null</code>.
-//          *
-//          * @exception SAXParseException if an unexpected attribute is
-//          *            encountered or if the <code>"default"</code> attribute
-//          *            is missing.
-//          */
-//         public void onStartElement(String uri, String tag, String qname,
-//                                    Attributes attrs,
-//                                    AntXmlContext context)
-//             throws SAXParseException
-//         {
-//             context._importlevel++;
-//             Project project=context.project;
-//             project.log("importlevel: "+(context._importlevel-1)+" -> "+(context._importlevel),
-//                         Project.MSG_DEBUG);
-//             String file = null;
-//             for (int i = 0; i < attrs.getLength(); i++) {
-//                 String key = attrs.getQName(i);
-//                 String value = attrs.getValue(i);
-//                 if (key.equals("file")) {
-//                     file = value;
-//                 } else {
-//                     throw new SAXParseException("Unexpected attribute \"" + key + "\"", context.locator);
-//                 }
-//             }
-
-//             if (file == null) {
-//                 throw new SAXParseException("import element appears without a file attribute",
-//                                             context.locator);
-//             }
-    
-//             file=project.replaceProperties(file);
-//             project.log("Importing file "+file+" from "+
-//                         context.buildFile.getAbsolutePath(),
-//                         Project.MSG_VERBOSE);
-
-//             // Paths are relative to the build file they're imported from,
-//             // *not* the current directory (same as entity includes).
-//             File importedFile = new File(file);
-//             if (!importedFile.isAbsolute()) {
-//                 importedFile = new File(context.buildFileParent, file);
-//             }
-//             if (!importedFile.exists()) {
-//                 throw new SAXParseException("Cannot find "+file+" imported from "+
-//                                             context.buildFile.getAbsolutePath(),
-//                                             context.locator);
-//             }
-
-//             // Add parent build file to the map to avoid cycles...
-//             String parentFilename = getPath(context.buildFile);
-//             if (!context._importedFiles.containsKey(parentFilename)) {
-//                 context._importedFiles.put(parentFilename, context.buildFile);
-//             }
-
-//             // Make sure we import the file only once
-//             String importedFilename = getPath(importedFile);
-//             if (context._importedFiles.containsKey(importedFilename)) {
-//                 project.log("\nSkipped already imported file:\n   "+importedFilename+"\n",
-//                             Project.MSG_WARN);
-//                 return;
-//             }
-//             else {
-//                 context._importedFiles.put(importedFilename, importedFile);
-//             }
-    
-//             org.xml.sax.XMLReader oldparser = context.parser;
-//             context.ignoreProjectTag=true;
-//             context.helper.parse(context.project, importedFile, new RootHandler(context));
-//             context.ignoreProjectTag=false;
-//             context.parser = oldparser;
-
-//             context._importlevel--;
-//             context.project.log("importlevel: "+context._importlevel+" <- "+
-//                                 (context._importlevel+1) ,Project.MSG_DEBUG);          
-//         }
-
-//         private static String getPath(File file) {
-//             try {
-//                 return file.getCanonicalPath();
-//             }
-//             catch (IOException e) {
-//                 return file.getAbsolutePath();
-//             }
-//         }
-//     }
-    
-
 }
