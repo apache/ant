@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,12 @@ import org.apache.tools.ant.BuildException;
  * This task compiles jsharp source (.java files), and
  * generates a .NET managed exe or dll.
  * <p>
+ *
+ * <p>For historical reasons the pattern
+ * <code>**</code><code>/*.java</code> is preset as includes list and
+ * you can not override it with an explicit includes attribute.  Use
+ * nested <code>&lt;src&gt;</code> elements instead of the basedir
+ * attribute if you need more control.</p>
  *
  * @see <A=ref="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dv_vjsharp/html/vjoriMicrosoftVisualJ.asp">
  * Visual J++ online documentation</a>
