@@ -275,6 +275,21 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
+     * Create a jonas nested element used to configure a
+     * deployment tool for JOnAS server.
+     *
+     * @return the deployment tool instance to be configured.
+     */
+    public JonasDeploymentTool createJonas() {
+        log("JOnAS deployment tools",  Project.MSG_VERBOSE);
+        
+        JonasDeploymentTool tool = new JonasDeploymentTool();
+        tool.setTask(this);
+        deploymentTools.add(tool);
+        return tool;
+    }    
+    
+    /**
      * Create a nested element for weblogic when using the Toplink
      * Object- Relational mapping.
      *
