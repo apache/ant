@@ -275,6 +275,11 @@ Other changes:
 * The .NET compilation tasks failed if filenames given as references
   contained spaces.  Bugzilla Report 27170.
 
+* <macrodef> with default values set by properties would be
+  seen as new definitions when called twice with different properties.
+  This was confusing so the definitions are now treated as similar.
+  Bugzilla Report 31215.
+
 Fixed bugs:
 -----------
 
