@@ -1,0 +1,6 @@
+<project>
+  <property name="foo" value="bar"/>
+  <path id="baz">
+    <pathelement location="."/>
+  </path>
+</project>

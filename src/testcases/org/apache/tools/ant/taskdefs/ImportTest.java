@@ -90,5 +90,17 @@ public class ImportTest extends BuildFileTest {
         assertLogContaining(
             "Unnamed2.xmlUnnamed1.xmlSkipped already imported file");
     }
+
+    public void testImportInTargetNoEffect() {
+        configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
+        expectPropertyUnset("no-import", "foo");
+        assertTrue(null == getProject().getReference("baz"));
+    }
+
+    public void testImportInTargetWithEffect() {
+        configureProject("src/etc/testcases/taskdefs/import/subdir/importintarget.xml");
+        expectPropertySet("do-import", "foo", "bar");
+        assertNotNull(getProject().getReference("baz"));
+    }
 }
 
