@@ -111,6 +111,9 @@ public class ExecTask extends Task {
      * The full commandline to execute, executable + arguments.
      */
     public void setCommand(Commandline cmdl) {
+        log("The command attribute is deprecated. " +
+            "Please use the executable attribute and nested arg elements.",
+            Project.MSG_WARN);
         this.cmdl = cmdl;
     }
 

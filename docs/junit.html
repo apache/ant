@@ -34,7 +34,7 @@ elements</a>.</p>
   </tr>
   <tr>
     <td valign="top">haltonerror</td> 
-    <td valign="top">Stop the build process if an error occures during the test
+    <td valign="top">Stop the build process if an error occurs during the test
        run.</td>
     <td align="center" valign="top">No, default is "off"</td>
   </tr>
@@ -85,32 +85,8 @@ VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:</p>
 </blockquote></pre>
 would run the test in a VM without JIT.</p>
 
-<table border="1" cellpadding="2" cellspacing="0">
-<tr>
-  <td width="12%" valign="top"><b>Attribute</b></td>
-  <td width="78%" valign="top"><b>Description</b></td>
-  <td width="10%" valign="top"><b>Required</b></td>
-</tr>
-  <tr>
-    <td valign="top">value</td> 
-    <td valign="top">a single command line argument.</td>
-    <td align="center" rowspan="4">Exactly one of these.</td>
-  </tr>
-  <tr>
-    <td valign="top">file</td> 
-    <td valign="top">The name of a file as a single command line argument.</td>
-  </tr>
-  <tr>
-    <td valign="top">path</td> 
-    <td valign="top">A string that shall be treated as a PATH
-      (i.e. the PATH separator will be set according to the plattform's
-      convention) as a single command line argument.</td>
-  </tr>
-  <tr>
-    <td valign="top">line</td> 
-    <td valign="top">a space delimited list of command line arguments.</td>
-  </tr>
-</table>
+<p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
+href="index.html#arg">Command line arguments</a>.</p>
 
 <h4>formatter</h4>
 
@@ -138,7 +114,7 @@ can be specified.</p>
   </tr>
   <tr>
     <td valign="top">classname</td> 
-    <td valign="top">Name of a custo formatter class.</td>
+    <td valign="top">Name of a custom formatter class.</td>
   </tr>
   <tr>
     <td valign="top">extension</td> 
@@ -170,7 +146,7 @@ can be specified.</p>
   </tr>
   <tr>
     <td valign="top">haltonerror</td> 
-    <td valign="top">Stop the build process if an error occures during the test
+    <td valign="top">Stop the build process if an error occurs during the test
        run. Overrides value set in <code>&lt;junit&gt;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -183,7 +159,7 @@ can be specified.</p>
   </tr>
   <tr>
     <td valign="top">outfile</td> 
-    <td valign="top">Basename of the test result. The full filename is
+    <td valign="top">Base name of the test result. The full filename is
       determined by this attribute and the extension of
       <code>formatter</code>.</td>
     <td align="center" valign="top">No, default is
@@ -228,7 +204,7 @@ class name for each file that ends in <code>.java</code> or
   </tr>
   <tr>
     <td valign="top">haltonerror</td> 
-    <td valign="top">Stop the build process if an error occures during the test
+    <td valign="top">Stop the build process if an error occurs during the test
        run. Overrides value set in <code>&lt;junit&gt;</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -301,7 +277,7 @@ stopped if the test fails.</p>
 
 <p>Runs <code>my.test.TestCase</code> in the same VM (ignoring the
 given CLASSPATH), only a warning is printed if this test fails. In
-addition to the plain text testresults, for this test a XML result
+addition to the plain text test results, for this test a XML result
 will be output to <code>result.xml</code>.</p>
 
 <p>For each matching file in the directory <code>${src.tests}</code> a
