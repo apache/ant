@@ -680,7 +680,7 @@ public class Manifest {
 
             Section rhsSection = (Section) rhs;
 
-            return attributes.equals(rhsSection.attributes);
+            return CollectionUtils.equals(attributes, rhsSection.attributes);
         }
     }
 
@@ -988,7 +988,7 @@ public class Manifest {
             return false;
         }
 
-        return sections.equals(rhsManifest.sections);
+        return CollectionUtils.equals(sections, rhsManifest.sections);
     }
 
     /**

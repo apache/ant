@@ -141,21 +141,23 @@ public class DependSelectorTest extends BaseSelectorTest {
             results = selectionString(s);
             assertEquals("FFFFFFFFFFFF", results);
 
-            s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.gz");
-            results = selectionString(s);
-            assertEquals("TFFFFTTTFFFF", results);
-
-            s = (DependSelector)getInstance();
-            s.setTargetdir(basedirname);
-            m = s.createMapper();
-            m.setType(merge);
-            m.setTo("asf-logo.gif.bz2");
-            results = selectionString(s);
-            assertEquals("TTFTTTTTTTTT", results);
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+                s = (DependSelector)getInstance();
+                s.setTargetdir(basedirname);
+                m = s.createMapper();
+                m.setType(merge);
+                m.setTo("asf-logo.gif.gz");
+                results = selectionString(s);
+                assertEquals("TFFFFTTTFFFF", results);
+                
+                s = (DependSelector)getInstance();
+                s.setTargetdir(basedirname);
+                m = s.createMapper();
+                m.setType(merge);
+                m.setTo("asf-logo.gif.bz2");
+                results = selectionString(s);
+                assertEquals("TTFTTTTTTTTT", results);
+            }
 
             s = (DependSelector)getInstance();
             s.setTargetdir(basedirname + "/tar/bz2");

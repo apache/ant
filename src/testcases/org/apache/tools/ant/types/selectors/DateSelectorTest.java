@@ -204,11 +204,13 @@ public class DateSelectorTest extends BaseSelectorTest {
             results = selectionString(s);
             assertEquals("TTTTTTTTTTTT", results);
 
-            s = (DateSelector)getInstance();
-            s.setDatetime("11/21/2001 4:54 AM");
-            s.setWhen(before);
-            results = selectionString(s);
-            assertEquals("TFTFFFFFFFFT", results);
+            if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+                s = (DateSelector)getInstance();
+                s.setDatetime("11/21/2001 4:54 AM");
+                s.setWhen(before);
+                results = selectionString(s);
+                assertEquals("TFTFFFFFFFFT", results);
+
 /*
             s = (DateSelector)getInstance();
             s.setDatetime("11/21/2001 4:55 AM");
@@ -237,23 +239,24 @@ public class DateSelectorTest extends BaseSelectorTest {
             results = selectionString(s);
             assertEquals("TTFFTFFFTTTT", results);
 */
-            s = (DateSelector)getInstance();
-            s.setDatetime("11/21/2001 4:56 AM");
-            s.setWhen(after);
-            results = selectionString(s);
-            assertEquals("TFFTFTTTFFFT", results);
+                s = (DateSelector)getInstance();
+                s.setDatetime("11/21/2001 4:56 AM");
+                s.setWhen(after);
+                results = selectionString(s);
+                assertEquals("TFFTFTTTFFFT", results);
 
-            s = (DateSelector)getInstance();
-            Parameter param1 = new Parameter();
-            Parameter param2 = new Parameter();
-            param1.setName("datetime");
-            param1.setValue("11/21/2001 4:56 AM");
-            param2.setName("when");
-            param2.setValue("after");
-            Parameter[] params = {param1,param2};
-            s.setParameters(params);
-            results = selectionString(s);
-            assertEquals("TFFTFTTTFFFT", results);
+                s = (DateSelector)getInstance();
+                Parameter param1 = new Parameter();
+                Parameter param2 = new Parameter();
+                param1.setName("datetime");
+                param1.setValue("11/21/2001 4:56 AM");
+                param2.setName("when");
+                param2.setValue("after");
+                Parameter[] params = {param1,param2};
+                s.setParameters(params);
+                results = selectionString(s);
+                assertEquals("TFFTFTTTFFFT", results);
+            }
 
         }
         finally {

@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
@@ -72,7 +73,8 @@ public class DirectoryScannerTest extends TestCase {
 
 
     // keep track of what operating systems are supported here.
-    private boolean supportsSymlinks = Os.isFamily("unix");
+    private boolean supportsSymlinks = Os.isFamily("unix") 
+        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
 
     /**
      * Test case for setFollowLinks() and associated funtionality.
@@ -154,7 +156,10 @@ public class DirectoryScannerTest extends TestCase {
                            !haveTaskdefsPackage);
                 
             } finally {
-                (new File("src/main/org/apache/tools/ThisIsALink")).delete();
+                File f = new File("src/main/org/apache/tools/ThisIsALink");
+                if (!f.delete()) {
+                    throw new RuntimeException("Failed to delete "+f);
+                }
             } 
         }
     }
