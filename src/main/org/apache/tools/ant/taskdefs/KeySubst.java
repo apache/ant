@@ -65,6 +65,8 @@ import java.util.*;
  * setKeys method to understand how to do the substitutions.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ *
+ * @deprecated KeySubst is deprecated. Use Filter + CopyDir instead.
  */
 public class KeySubst extends Task {
     private File source = null;

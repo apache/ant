@@ -961,8 +961,9 @@ listed as <code>#IMPLIED</code>.</p>
 <h3>Description</h3>
 <p>Sets a property if a resource is available at runtime. This resource can be a
 file resource, a class in classpath or a JVM system resource.</p>
-<p>The value part of the properties being set is <i>true</i> if the resource is
-present, otherwise, the property is not set.</p>
+<p>If the resource is present, the property value is set to true by
+default, otherwise the property is not set.  You can set the value to
+something specific by using the value attribute.</p>
 <p>Normally, this task is used to set properties that are useful to avoid target
 execution depending on system parameters.</p>
 <h3>Parameters</h3>
@@ -977,6 +978,11 @@ execution depending on system parameters.</p>
     <td valign="top">the name of the property to set.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the value to set the property to. Defaults to "true".</td>
+    <td valign="top" align="center">No</td>
+  </tr>
   <tr>
     <td valign="top">classname</td>
     <td valign="top">the class to look for in classpath.</td>

@@ -70,16 +70,14 @@ public class Available extends Task {
     private String classname;
     private File file;
     private String resource;
+    private String value = "true";
 
     public void setProperty(String property) {
         this.property = property;
     }
 
-    public void XsetClass(String classname) {
-        log("The class attribute is deprecated. " +
-            "Please use the classname attribute.",
-            Project.MSG_WARN);
-        this.classname = classname;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public void setClassname(String classname) {
@@ -99,7 +97,7 @@ public class Available extends Task {
         if ((file != null) && !checkFile(file)) return;
         if ((resource != null) && !checkResource(resource)) return;
 
-        this.project.setProperty(property, "true");
+        this.project.setProperty(property, value);
     }
 
     private boolean checkFile(File file) {
