@@ -52,12 +52,15 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 .pre { white-space: pre;}
 .nowrap { white-space: nowrap;}
 
+.main { 
+    margin-left: 280px;
+    margin-right: 5px;
+}
+
 .content { 
     padding: 5px 5px 5px 10px; 
     font : small Verdana, Helvetica, sans-serif;  
     font-size : 90%; 
-    margin-left: 280px;
-    margin-right: 5px;
 }
 
 .content .ForrestTable { width: 100%; background-color: #7099C5; color: #ffffff; font-size : 90%;}

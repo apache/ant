@@ -10,15 +10,19 @@
 <body>
 
 
-  <section name="Ant 1.5.3 Beta 1">
-    <h3>Ant 1.5.3 Beta 1 Available</h3>
-    <p>Apache Ant 1.5.3 Beta 1 is now available for 
+ <section name="Ant 1.5.3">
+    <p>Apache Ant 1.5.3 is now available for 
      <a href="http://ant.apache.org/beta/">download</a>. 
-     Please download it and try it out. If you have any issues
-     please raise a bug on 
-     <a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant">BugZilla</a>
-     or send an email to the Ant dev mailing list
-     </p>
+    </p>
+    
+    <div class="warning">
+    <div class="label">Note</div>
+    <div class="content">Ant 1.5.3 will be the last release that supports
+      JDK 1.1. The next major release of Ant, Ant 1.6, will require JDK 1.2 or
+      later
+    </div>
+    </div>
+    
   </section>
   
   <section name="Apache Ant">
