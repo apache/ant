@@ -204,6 +204,11 @@ public class NetCommand {
         }
     }
 
+    public void addArgument(String argument1,String argument2) {
+        if (argument2 != null && argument2.length() != 0) {
+            commandLine.createArgument().setValue(argument1+argument2);
+        }
+    }    
 
     /**
      *  set up the command sequence..
