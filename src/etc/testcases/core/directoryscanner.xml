@@ -5,6 +5,10 @@
         <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
         <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
     </target>
+    <target name="children-of-excluded-dir-setup" depends="setup">
+        <mkdir dir="${tmp.dir}/delta"/>
+        <touch file="${tmp.dir}/delta/delta.xml"/>
+    </target>
     <target name="cleanup">
         <delete dir="${tmp.dir}" quiet="true"/>
     </target>

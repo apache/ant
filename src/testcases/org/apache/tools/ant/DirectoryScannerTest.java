@@ -351,40 +351,25 @@ public class DirectoryScannerTest extends BuildFileTest {
      * Test inspired by Bug#1415.
      */
     public void testChildrenOfExcludedDirectory() {
-        File dir = new File("src/main/org/apache/tools");
+        getProject().executeTarget("children-of-excluded-dir-setup");
         DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(dir);
-        ds.setExcludes(new String[] {"ant/**"});
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setExcludes(new String[] {"alpha/**"});
+        ds.setFollowSymlinks(false);
         ds.scan();
-
-        boolean haveZipPackage = false;
-        boolean haveTaskdefsPackage = false;
-        String[] included = ds.getIncludedDirectories();
-        for (int i=0; i<included.length; i++) {
-            if (included[i].equals("zip")) {
-                haveZipPackage = true;
-            } else if (included[i].equals("ant"+File.separator+"taskdefs")) {
-                haveTaskdefsPackage = true;
-            }
-        }
-        assertTrue("(1) zip package included", haveZipPackage);
-        assertTrue("(1) taskdefs package not included", !haveTaskdefsPackage);
+        compareFiles(ds, new String[] {"delta/delta.xml"},
+                    new String[] {"", "delta"});
 
         ds = new DirectoryScanner();
-        ds.setBasedir(dir);
-        ds.setExcludes(new String[] {"ant"});
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setExcludes(new String[] {"alpha"});
+        ds.setFollowSymlinks(false);
         ds.scan();
-        haveZipPackage = false;
-        included = ds.getIncludedDirectories();
-        for (int i=0; i<included.length; i++) {
-            if (included[i].equals("zip")) {
-                haveZipPackage = true;
-            } else if (included[i].equals("ant"+File.separator+"taskdefs")) {
-                haveTaskdefsPackage = true;
-            }
-        }
-        assertTrue("(2) zip package included", haveZipPackage);
-        assertTrue("(2) taskdefs package included", haveTaskdefsPackage);
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
+                                       "alpha/beta/gamma/gamma.xml",
+                                        "delta/delta.xml"},
+                     new String[] {"", "alpha/beta", "alpha/beta/gamma", "delta"});
+
     }
 
     private void compareFiles(DirectoryScanner ds, String[] expectedFiles, 
