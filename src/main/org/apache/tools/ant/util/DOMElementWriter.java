@@ -75,7 +75,7 @@ import org.w3c.dom.Text;
  *
  * @author The original author of XmlLogger
  * @author Stefan Bodewig
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</tt>
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class DOMElementWriter {
 
@@ -90,7 +90,7 @@ public class DOMElementWriter {
 
     /**
      * Writes a DOM tree to a stream in UTF8 encoding. Note that
-     * it appends the &lt;?xml version='1.0' encoding='UTF-8'?&gt;.
+     * it prepends the &lt;?xml version='1.0' encoding='UTF-8'?&gt;.
      * The indent number is set to 0 and a 2-space indent.
      * @param root the root element of the DOM tree.
      * @param out the outputstream to write to.
@@ -105,6 +105,7 @@ public class DOMElementWriter {
 
     /**
      * Writes a DOM tree to a stream.
+     *
      * @param element the Root DOM element of the tree
      * @param out where to send the output
      * @param indent number of 
@@ -254,7 +255,8 @@ public class DOMElementWriter {
      */
     public String encodedata(final String value) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < value.length(); ++i) {
+        int len = value.length();
+        for (int i = 0; i < len; ++i) {
             char c = value.charAt(i);
             if (isLegalCharacter(c)) {
                 sb.append(c);
