@@ -43,71 +43,14 @@ public class Project
     private final static String VISITING = "VISITING";
     private final static String VISITED = "VISITED";
 
-    public final static String JAVA_1_0 = "1.0";
-    public final static String JAVA_1_1 = "1.1";
-    public final static String JAVA_1_2 = "1.2";
-    public final static String JAVA_1_3 = "1.3";
-    public final static String JAVA_1_4 = "1.4";
-
-    public final static String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
-    public final static String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
-
-    private static String javaVersion;
-
     private Hashtable properties = new Hashtable();
-    private Hashtable userProperties = new Hashtable();
-    private Hashtable references = new Hashtable();
-    private Hashtable dataClassDefinitions = new Hashtable();
-    private Hashtable taskClassDefinitions = new Hashtable();
-    private Hashtable createdTasks = new Hashtable();
-    private Hashtable targets = new Hashtable();
     private FilterSet globalFilterSet = new FilterSet();
-    private FilterSetCollection globalFilters = new FilterSetCollection( globalFilterSet );
-
-    private ArrayList listeners = new ArrayList();
-
-    /**
-     * The Ant core classloader - may be null if using system loader
-     */
-    private ClassLoader coreLoader;
 
     /**
      * Records the latest task on a thread
      */
     private Hashtable threadTasks = new Hashtable();
     private File baseDir;
-    private String defaultTarget;
-    private String description;
-
-    private String name;
-
-    static
-    {
-
-        // Determine the Java version by looking at available classes
-        // java.lang.StrictMath was introduced in JDK 1.3
-        // java.lang.ThreadLocal was introduced in JDK 1.2
-        // java.lang.Void was introduced in JDK 1.1
-        // Count up version until a NoClassDefFoundError ends the try
-
-        try
-        {
-            javaVersion = JAVA_1_0;
-            Class.forName( "java.lang.Void" );
-            javaVersion = JAVA_1_1;
-            Class.forName( "java.lang.ThreadLocal" );
-            javaVersion = JAVA_1_2;
-            Class.forName( "java.lang.StrictMath" );
-            javaVersion = JAVA_1_3;
-            Class.forName( "java.lang.CharSequence" );
-            javaVersion = JAVA_1_4;
-        }
-        catch( ClassNotFoundException cnfe )
-        {
-            // swallow as we've hit the max class version that
-            // we have
-        }
-    }
 
     public Logger hackGetLogger()
     {
@@ -125,11 +68,6 @@ public class Project
         return baseDir;
     }
 
-    public ClassLoader getCoreLoader()
-    {
-        return coreLoader;
-    }
-
     /**
      * get the current task definition hashtable
      *
@@ -137,7 +75,7 @@ public class Project
      */
     public Hashtable getDataTypeDefinitions()
     {
-        return dataClassDefinitions;
+        return null;
     }
 
     public FilterSet getGlobalFilterSet()
@@ -185,12 +123,7 @@ public class Project
      */
     public Object getReference( String key )
     {
-        return references.get( key );
-    }
-
-    public Hashtable getReferences()
-    {
-        return references;
+        return null;
     }
 
     /**
@@ -200,12 +133,12 @@ public class Project
      */
     public Hashtable getTaskDefinitions()
     {
-        return taskClassDefinitions;
+        return null;
     }
 
     public void addBuildListener( BuildListener listener )
     {
-        listeners.add( listener );
+
     }
 
     /**
@@ -263,121 +196,6 @@ public class Project
     public String replaceProperties( String value )
         throws TaskException
     {
-        return replaceProperties( this, value, getProperties() );
-    }
-
-    /**
-     * Replace ${} style constructions in the given value with the string value
-     * of the corresponding data types.
-     *
-     * @param value the string to be scanned for property references.
-     * @param project Description of Parameter
-     * @param keys Description of Parameter
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
-     */
-    private String replaceProperties( Project project, String value, Hashtable keys )
-        throws TaskException
-    {
-        if( value == null )
-        {
-            return null;
-        }
-
-        ArrayList fragments = new ArrayList();
-        ArrayList propertyRefs = new ArrayList();
-        parsePropertyString( value, fragments, propertyRefs );
-
-        StringBuffer sb = new StringBuffer();
-        Iterator i = fragments.iterator();
-        Iterator j = propertyRefs.iterator();
-        while( i.hasNext() )
-        {
-            String fragment = (String)i.next();
-            if( fragment == null )
-            {
-                String propertyName = (String)j.next();
-                if( !keys.containsKey( propertyName ) )
-                {
-                    project.getLogger().debug( "Property ${" + propertyName + "} has not been set" );
-                }
-                fragment = ( keys.containsKey( propertyName ) ) ? (String)keys.get( propertyName )
-                    : "${" + propertyName + "}";
-            }
-            sb.append( fragment );
-        }
-
-        return sb.toString();
-    }
-
-    /**
-     * This method will parse a string containing ${value} style property values
-     * into two lists. The first list is a collection of text fragments, while
-     * the other is a set of string property names null entries in the first
-     * list indicate a property reference from the second list.
-     *
-     * @param value Description of Parameter
-     * @param fragments Description of Parameter
-     * @param propertyRefs Description of Parameter
-     * @exception TaskException Description of Exception
-     */
-    private void parsePropertyString( String value, ArrayList fragments, ArrayList propertyRefs )
-        throws TaskException
-    {
-        int prev = 0;
-        int pos;
-        while( ( pos = value.indexOf( "$", prev ) ) >= 0 )
-        {
-            if( pos > 0 )
-            {
-                fragments.add( value.substring( prev, pos ) );
-            }
-
-            if( pos == ( value.length() - 1 ) )
-            {
-                fragments.add( "$" );
-                prev = pos + 1;
-            }
-            else if( value.charAt( pos + 1 ) != '{' )
-            {
-                fragments.add( value.substring( pos + 1, pos + 2 ) );
-                prev = pos + 2;
-            }
-            else
-            {
-                int endName = value.indexOf( '}', pos );
-                if( endName < 0 )
-                {
-                    throw new TaskException( "Syntax error in property: "
-                                             + value );
-                }
-                String propertyName = value.substring( pos + 2, endName );
-                fragments.add( null );
-                propertyRefs.add( propertyName );
-                prev = endName + 1;
-            }
-        }
-
-        if( prev < value.length() )
-        {
-            fragments.add( value.substring( prev ) );
-        }
-    }
-
-    /**
-     * Allows Project and subclasses to set a property unless its already
-     * defined as a user property. There are a few cases internally to Project
-     * that need to do this currently.
-     *
-     * @param name The new PropertyInternal value
-     * @param value The new PropertyInternal value
-     */
-    private void setPropertyInternal( String name, String value )
-    {
-        if( null != userProperties.get( name ) )
-        {
-            return;
-        }
-        properties.put( name, value );
+        return null;
     }
 }

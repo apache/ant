@@ -87,7 +87,8 @@ public class Script extends Task
         try
         {
             addBeans( getProject().getProperties() );
-            addBeans( getProject().getReferences() );
+            //In Ant2 there is no difference between properties and references
+            //addBeans( getProject().getReferences() );
 
             beans.put( "project", getProject() );
 
