@@ -499,43 +499,36 @@ public class Project {
     }
 
     /**
-        Translate a path into its native (platform specific)
-        path. This should be extremely fast, code is
-        borrowed from ECS project.
-        <p>
-        All it does is translate the : into ; and / into \
-        if needed. In other words, it isn't perfect.
-
-        @returns translated string or empty string if to_process is null or empty
-        @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
-    */
+     * Translate a path into its native (platform specific) format. 
+     * <p>
+     * This method uses the PathTokenizer class to separate the input path
+     * into its components. This handles DOS style paths in a relatively
+     * sensible way. The file separators are then converted to their platform
+     * specific versions.
+     *
+     * @param to_process the path to be converted   
+     *
+     * @return the native version of to_process or 
+     *         an empty string if to_process is null or empty
+     */
     static public String translatePath(String to_process) {
-        if ( to_process == null || to_process.length() == 0 ) return "";
-
-        StringBuffer bs = new StringBuffer(to_process.length() + 50);
-        StringCharacterIterator sci = new StringCharacterIterator(to_process);
-        String path = System.getProperty("path.separator");
-        String file = System.getProperty("file.separator");
-        String tmp = null;
-        for (char c = sci.first(); c != CharacterIterator.DONE; c = sci.next()) {
-            tmp = String.valueOf(c);
-
-            if (tmp.equals(":")) {
-                // could be a DOS drive or a Unix path separator...
-                // if followed by a backslash, assume it is a drive
-                c = sci.next();
-                tmp = String.valueOf(c);
-                bs.append( tmp.equals("\\") ? ":" : path );
-                if (c == CharacterIterator.DONE) break;
-            }
-
-            if (tmp.equals(":") || tmp.equals(";"))
-                tmp = path;
-            else if (tmp.equals("/") || tmp.equals ("\\"))
-                tmp = file;
-            bs.append(tmp);
+        if ( to_process == null || to_process.length() == 0 ) {
+            return "";
         }
-        return(bs.toString());
+
+        StringBuffer path = new StringBuffer(to_process.length() + 50);
+        PathTokenizer tokenizer = new PathTokenizer(to_process);
+        while (tokenizer.hasMoreTokens()) {
+            String pathComponent = tokenizer.nextToken();
+            pathComponent = pathComponent.replace('/', File.separatorChar);
+            pathComponent = pathComponent.replace('\\', File.separatorChar);
+            if (path.length() != 0) {
+                path.append(File.pathSeparatorChar);
+            }
+            path.append(pathComponent);
+        }
+        
+        return path.toString();
     }
 
     /**

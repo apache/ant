@@ -77,8 +77,15 @@ public class PathTokenizer {
      */
     private String lookahead = null;
 
+    /**
+     * Flag to indicate whether we are running on a platform with a DOS style
+     * filesystem
+     */
+    private boolean dosStyleFilesystem;
+
     public PathTokenizer(String path) {
        tokenizer = new StringTokenizer(path, ":;", false);
+       dosStyleFilesystem = File.pathSeparatorChar == ';'; 
     }
 
     public boolean hasMoreTokens() {
@@ -100,7 +107,7 @@ public class PathTokenizer {
         }            
             
         if (token.length() == 1 && Character.isLetter(token.charAt(0))
-                                && File.pathSeparator.equals(";") 
+                                && dosStyleFilesystem
                                 && tokenizer.hasMoreTokens()) {
             // we are on a dos style system so this path could be a drive
             // spec. We look at the next token
