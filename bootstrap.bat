@@ -18,8 +18,8 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-if exist lib\ant.jar erase lib\ant.jar
-if exist lib\optional.jar erase lib\optional.jar
+if     "%OS%" == "Windows_NT" if exist bootstrap rmdir/s/q bootstrap
+if not "%OS%" == "Windows_NT" if exist bootstrap deltree/y bootstrap
 
 SET LOCALCLASSPATH=lib\parser.jar;lib\jaxp.jar
 

@@ -39,11 +39,8 @@ fi
 
 echo ... Bootstrapping Ant Distribution
 
-if [ -f "lib/ant.jar" ] ; then
-  rm lib/ant.jar
-fi
-if [ -f "lib/optional.jar" ] ; then
-  rm lib/optional.jar
+if [ -d "bootstrap" ] ; then
+  rm -r bootstrap
 fi
 
 CLASSPATH=lib/parser.jar:lib/jaxp.jar:${CLASSPATH}
