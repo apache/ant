@@ -96,11 +96,17 @@ public class ANTLR extends Task {
         commandline.setClassname("antlr.Tool");
     }
 
+    /**
+     * file to process
+     */
     public void setTarget(File target) {
         log("Setting target to: " + target.toString(), Project.MSG_VERBOSE);
         this.target = target;
     }
 
+    /**
+     * Output directory
+     */
     public void setOutputdirectory(File outputDirectory) {
         log("Setting output directory to: " + outputDirectory.toString(), Project.MSG_VERBOSE);
         this.outputDirectory = outputDirectory;
@@ -110,7 +116,9 @@ public class ANTLR extends Task {
     // to System.exit() and there is nothing we can do
     // right now to avoid this. :-( (SBa)
     // I'm not removing this method to keep backward compatibility
-    // and
+    /**
+     * Ignored. Forking is no longer an option.
+     */
     public void setFork(boolean s) {
         //this.fork = s;
     }
@@ -123,8 +131,8 @@ public class ANTLR extends Task {
     }
 
     /**
-     * <code>&lt;classpath&gt;</code> allows classpath to be set
-     * because a directory might be given for Antlr debug...
+     * Allows classpath to be set
+     * because a directory might be given for Antlr debug.
      */
     public Path createClasspath() {
         return commandline.createClasspath(project).createPath();
