@@ -113,7 +113,11 @@ public class CvsTagDiff extends AbstractCvsTask {
     /**
      * Token to identify a new file in the rdiff log
      */
-    static final String FILE_IS_NEW = " is new; current revision ";
+    static final String FILE_IS_NEW = " is new;";
+    /**
+     * Token to identify the revision
+     */
+    static final String REVISION = "revision ";
 
     /**
      * Token to identify a modified file in the rdiff log
@@ -300,10 +304,18 @@ public class CvsTagDiff extends AbstractCvsTask {
                     line = line.substring(headerLength);
 
                     if ((index = line.indexOf(FILE_IS_NEW)) != -1) {
+//CVS 1.11
+//File apps/websphere/lib/something.jar is new; current revision 1.2
+//CVS 1.11.9
+//File apps/websphere/lib/something.jar is new; cvstag_2003_11_03_2 revision 1.2
                         // it is a new file
                         // set the revision but not the prevrevision
                         String filename = line.substring(0, index);
-                        String rev = line.substring(index + FILE_IS_NEW.length());
+                        String rev = null;
+                        int indexrev = -1;
+                        if ((indexrev = line.indexOf(REVISION, index)) != -1) {
+                            rev = line.substring(indexrev + REVISION.length());
+                        }
                         entry = new CvsTagEntry(filename, rev);
                         entries.addElement(entry);
                         log(entry.toString(), Project.MSG_VERBOSE);
