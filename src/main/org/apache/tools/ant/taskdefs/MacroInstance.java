@@ -62,6 +62,13 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     }
 
     /**
+     * @return the macro definition object for this macro instance.
+     */
+    public MacroDef getMacroDef() {
+        return macroDef;
+    }
+
+    /**
      * A parameter name value pair as a xml attribute.
      *
      * @param name the name of the attribute
