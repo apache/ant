@@ -25,13 +25,20 @@ To remove empty directories, use the <code>includeEmptyDirs</code> attribute.
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">The file to delete.</td>
-    <td align="center" valign="middle" rowspan="2">At least one of the two, unless a <code>&lt;fileset&gt;</code> is specified.</td>
+    <td valign="top">The file to delete, specified as either the simple
+     filename (if the file exists in the current base directory), a
+     relative-path filename, or a full-path filename.</td>
+    <td align="center" valign="middle" rowspan="2">At least one of the two,
+     unless a <code>&lt;fileset&gt;</code> is specified.</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
     <td valign="top">The directory to delete, including all its files and
-     subdirectories. <b>WARNING:</b> Do <b>not</b> set <code>dir</code> to
+     subdirectories.<br>
+     <b>Note:</b> <code>dir</code> is <em>not</em> used
+     to specify a directory name for <code>file</code>; <code>file</code>
+     and <code>dir</code> are independent of each other.<br>
+     <b>WARNING:</b> Do <b>not</b> set <code>dir</code> to
      <code>&quot;.&quot;</code>, <code>&quot;${basedir}&quot;</code>,
      or the full-pathname equivalent unless you truly <em>intend</em> to
      recursively remove the entire contents of the current base directory
@@ -46,8 +53,8 @@ To remove empty directories, use the <code>includeEmptyDirs</code> attribute.
   </tr>
   <tr>
     <td valign="top">quiet</td>
-    <td valign="top">If the file does not exist, do not display a diagnostic 
-     message (unless Ant
+    <td valign="top">If the specified file or directory does not exist,
+     do not display a diagnostic message (unless Ant
      has been invoked with the <code>&#x2011;verbose</code> or
      <code>&#x2011;debug</code> switches) or modify the exit status to
      reflect an error.
