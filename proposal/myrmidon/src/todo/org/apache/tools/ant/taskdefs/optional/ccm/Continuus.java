@@ -14,6 +14,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
+import java.io.IOException;
 
 /**
  * A base class for creating tasks for executing commands on Continuus 5.1 <p>
@@ -25,9 +26,9 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
-public abstract class Continuus extends Task
+public abstract class Continuus
+    extends Task
 {
-
     /**
      * Constant for the thing to execute
      */
@@ -55,8 +56,8 @@ public abstract class Continuus extends Task
      */
     public final static String COMMAND_DEFAULT_TASK = "default_task";
 
-    private String _ccmDir = "";
-    private String _ccmAction = "";
+    private String m_ccmDir = "";
+    private String m_ccmAction = "";
 
     /**
      * Set the directory where the ccm executable is located
@@ -65,7 +66,7 @@ public abstract class Continuus extends Task
      */
     public final void setCcmDir( String dir )
     {
-        _ccmDir = getProject().translatePath( dir );
+        m_ccmDir = getProject().translatePath( dir );
     }
 
     /**
@@ -73,9 +74,9 @@ public abstract class Continuus extends Task
      *
      * @param v Value to assign to ccmAction.
      */
-    public void setCcmAction( String v )
+    public void setCcmAction( final String ccmAction )
     {
-        this._ccmAction = v;
+        m_ccmAction = ccmAction;
     }
 
     /**
@@ -85,7 +86,7 @@ public abstract class Continuus extends Task
      */
     public String getCcmAction()
     {
-        return _ccmAction;
+        return m_ccmAction;
     }
 
     /**
@@ -95,7 +96,7 @@ public abstract class Continuus extends Task
      */
     protected final String getCcmCommand()
     {
-        String toReturn = _ccmDir;
+        String toReturn = m_ccmDir;
         if( !toReturn.equals( "" ) && !toReturn.endsWith( "/" ) )
         {
             toReturn += "/";
@@ -106,23 +107,24 @@ public abstract class Continuus extends Task
         return toReturn;
     }
 
-    protected int run( Commandline cmd, ExecuteStreamHandler handler )
+    protected int run( final Commandline cmd,
+                       final ExecuteStreamHandler handler )
         throws TaskException
     {
         try
         {
-            Execute exe = new Execute( handler );
+            final Execute exe = new Execute( handler );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd.getCommandline() );
             return exe.execute();
         }
-        catch( java.io.IOException e )
+        catch( final IOException ioe )
         {
-            throw new TaskException( "Error", e );
+            throw new TaskException( "Error", ioe );
         }
     }
 
-    protected int run( Commandline cmd )
+    protected int run( final Commandline cmd )
         throws TaskException
     {
         return run( cmd, new LogStreamHandler( this, Project.MSG_VERBOSE, Project.MSG_WARN ) );

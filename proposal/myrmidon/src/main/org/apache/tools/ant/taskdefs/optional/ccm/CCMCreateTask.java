@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
@@ -22,49 +21,49 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
-public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
+public class CCMCreateTask
+    extends Continuus
+    implements ExecuteStreamHandler
 {
-
     /**
      * /comment -- comments associated to the task
      */
-    public final static String FLAG_COMMENT = "/synopsis";
+    private final static String FLAG_COMMENT = "/synopsis";
 
     /**
      * /platform flag -- target platform
      */
-    public final static String FLAG_PLATFORM = "/plat";
+    private final static String FLAG_PLATFORM = "/plat";
 
     /**
      * /resolver flag
      */
-    public final static String FLAG_RESOLVER = "/resolver";
+    private final static String FLAG_RESOLVER = "/resolver";
 
     /**
      * /release flag
      */
-    public final static String FLAG_RELEASE = "/release";
+    private final static String FLAG_RELEASE = "/release";
 
     /**
      * /release flag
      */
-    public final static String FLAG_SUBSYSTEM = "/subsystem";
+    private final static String FLAG_SUBSYSTEM = "/subsystem";
 
     /**
      * -task flag -- associate checckout task with task
      */
-    public final static String FLAG_TASK = "/task";
+    private final static String FLAG_TASK = "/task";
 
-    private String comment = null;
-    private String platform = null;
-    private String resolver = null;
-    private String release = null;
-    private String subSystem = null;
-    private String task = null;
+    private String m_comment;
+    private String m_platform;
+    private String m_resolver;
+    private String m_release;
+    private String m_subSystem;
+    private String m_task;
 
     public CCMCreateTask()
     {
-        super();
         setCcmAction( COMMAND_CREATE_TASK );
     }
 
@@ -73,9 +72,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      *
      * @param v Value to assign to comment.
      */
-    public void setComment( String v )
+    public void setComment( final String comment )
     {
-        this.comment = v;
+        m_comment = comment;
     }
 
     /**
@@ -83,71 +82,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      *
      * @param v Value to assign to platform.
      */
-    public void setPlatform( String v )
+    public void setPlatform( final String platform )
     {
-        this.platform = v;
-    }
-
-    /**
-     * @param is The new ProcessErrorStream value
-     * @exception IOException Description of Exception
-     */
-    public void setProcessErrorStream( InputStream is )
-        throws IOException
-    {
-        BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
-        String s = reader.readLine();
-        if( s != null )
-        {
-            log( "err " + s, Project.MSG_DEBUG );
-        }// end of if ()
-    }
-
-    /**
-     * @param param1
-     * @exception IOException Description of Exception
-     */
-    public void setProcessInputStream( OutputStream param1 )
-        throws IOException
-    {
-    }
-
-    /**
-     * read the output stream to retrieve the new task number.
-     *
-     * @param is InputStream
-     * @exception IOException Description of Exception
-     */
-    public void setProcessOutputStream( InputStream is )
-        throws TaskException, IOException
-    {
-
-        String buffer = "";
-        try
-        {
-            BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
-            buffer = reader.readLine();
-            if( buffer != null )
-            {
-                log( "buffer:" + buffer, Project.MSG_DEBUG );
-                String taskstring = buffer.substring( buffer.indexOf( ' ' ) ).trim();
-                taskstring = taskstring.substring( 0, taskstring.lastIndexOf( ' ' ) ).trim();
-                setTask( taskstring );
-                log( "task is " + getTask(), Project.MSG_DEBUG );
-            }// end of if ()
-        }
-        catch( NullPointerException npe )
-        {
-            log( "error procession stream , null pointer exception", Project.MSG_ERR );
-            npe.printStackTrace();
-            throw new TaskException( npe.getClass().getName() );
-        }// end of catch
-        catch( Exception e )
-        {
-            log( "error procession stream " + e.getMessage(), Project.MSG_ERR );
-            throw new TaskException( e.getMessage() );
-        }// end of try-catch
-
+        m_platform = platform;
     }
 
     /**
@@ -155,9 +92,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      *
      * @param v Value to assign to release.
      */
-    public void setRelease( String v )
+    public void setRelease( final String release )
     {
-        this.release = v;
+        m_release = release;
     }
 
     /**
@@ -165,9 +102,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      *
      * @param v Value to assign to resolver.
      */
-    public void setResolver( String v )
+    public void setResolver( final String resolver )
     {
-        this.resolver = v;
+        m_resolver = resolver;
     }
 
     /**
@@ -175,9 +112,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      *
      * @param v Value to assign to subSystem.
      */
-    public void setSubSystem( String v )
+    public void setSubSystem( final String subSystem )
     {
-        this.subSystem = v;
+        m_subSystem = subSystem;
     }
 
     /**
@@ -185,69 +122,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      *
      * @param v Value to assign to task.
      */
-    public void setTask( String v )
+    public void setTask( final String task )
     {
-        this.task = v;
-    }
-
-    /**
-     * Get the value of comment.
-     *
-     * @return value of comment.
-     */
-    public String getComment()
-    {
-        return comment;
-    }
-
-    /**
-     * Get the value of platform.
-     *
-     * @return value of platform.
-     */
-    public String getPlatform()
-    {
-        return platform;
-    }
-
-    /**
-     * Get the value of release.
-     *
-     * @return value of release.
-     */
-    public String getRelease()
-    {
-        return release;
-    }
-
-    /**
-     * Get the value of resolver.
-     *
-     * @return value of resolver.
-     */
-    public String getResolver()
-    {
-        return resolver;
-    }
-
-    /**
-     * Get the value of subSystem.
-     *
-     * @return value of subSystem.
-     */
-    public String getSubSystem()
-    {
-        return subSystem;
-    }
-
-    /**
-     * Get the value of task.
-     *
-     * @return value of task.
-     */
-    public String getTask()
-    {
-        return task;
+        m_task = task;
     }
 
     /**
@@ -261,9 +138,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
     public void execute()
         throws TaskException
     {
-        Commandline commandLine = new Commandline();
-        Project aProj = getProject();
-        int result = 0;
+        final Commandline commandLine = new Commandline();
 
         // build the command line from what we got the format
         // as specified in the CCM.EXE help
@@ -272,7 +147,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
 
         checkOptions( commandLine );
 
-        result = run( commandLine, this );
+        final int result = run( commandLine, this );
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
@@ -280,76 +155,118 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         }
 
         //create task ok, set this task as the default one
-        Commandline commandLine2 = new Commandline();
+        final Commandline commandLine2 = new Commandline();
         commandLine2.setExecutable( getCcmCommand() );
         commandLine2.createArgument().setValue( COMMAND_DEFAULT_TASK );
-        commandLine2.createArgument().setValue( getTask() );
+        commandLine2.createArgument().setValue( m_task );
 
-        log( commandLine.toString(), Project.MSG_DEBUG );
+        getLogger().debug( commandLine.toString() );
 
-        result = run( commandLine2 );
-        if( result != 0 )
+        final int result2 = run( commandLine2 );
+        if( result2 != 0 )
         {
             String msg = "Failed executing: " + commandLine2.toString();
             throw new TaskException( msg );
         }
-
     }
-
 
     // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface
 
-    /**
-     * @exception IOException Description of Exception
-     */
     public void start()
         throws IOException
     {
     }
 
-    /**
-     */
     public void stop()
     {
     }
 
     /**
      * Check the command line options.
-     *
-     * @param cmd Description of Parameter
      */
-    private void checkOptions( Commandline cmd )
+    private void checkOptions( final Commandline cmd )
     {
-        if( getComment() != null )
+        if( m_comment != null )
         {
             cmd.createArgument().setValue( FLAG_COMMENT );
-            cmd.createArgument().setValue( "\"" + getComment() + "\"" );
+            cmd.createArgument().setValue( "\"" + m_comment + "\"" );
         }
 
-        if( getPlatform() != null )
+        if( m_platform != null )
         {
             cmd.createArgument().setValue( FLAG_PLATFORM );
-            cmd.createArgument().setValue( getPlatform() );
-        }// end of if ()
+            cmd.createArgument().setValue( m_platform );
+        }
 
-        if( getResolver() != null )
+        if( m_resolver != null )
         {
             cmd.createArgument().setValue( FLAG_RESOLVER );
-            cmd.createArgument().setValue( getResolver() );
-        }// end of if ()
+            cmd.createArgument().setValue( m_resolver );
+        }
 
-        if( getSubSystem() != null )
+        if( m_subSystem != null )
         {
             cmd.createArgument().setValue( FLAG_SUBSYSTEM );
-            cmd.createArgument().setValue( "\"" + getSubSystem() + "\"" );
-        }// end of if ()
+            cmd.createArgument().setValue( "\"" + m_subSystem + "\"" );
+        }
 
-        if( getRelease() != null )
+        if( m_release != null )
         {
             cmd.createArgument().setValue( FLAG_RELEASE );
-            cmd.createArgument().setValue( getRelease() );
-        }// end of if ()
+            cmd.createArgument().setValue( m_release );
+        }
     }
 
+    /**
+     * @param is The new ProcessErrorStream value
+     * @exception IOException Description of Exception
+     */
+    public void setProcessErrorStream( final InputStream error )
+        throws IOException
+    {
+        final BufferedReader reader = new BufferedReader( new InputStreamReader( error ) );
+        final String errorLine = reader.readLine();
+        if( errorLine != null )
+        {
+            getLogger().debug( "err " + errorLine );
+        }
+    }
+
+    public void setProcessInputStream( final OutputStream output )
+        throws IOException
+    {
+    }
+
+    /**
+     * read the output stream to retrieve the new task number.
+     */
+    public void setProcessOutputStream( final InputStream input )
+        throws TaskException, IOException
+    {
+        try
+        {
+            final BufferedReader reader =
+                new BufferedReader( new InputStreamReader( input ) );
+            final String buffer = reader.readLine();
+            if( buffer != null )
+            {
+                getLogger().debug( "buffer:" + buffer );
+                String taskstring = buffer.substring( buffer.indexOf( ' ' ) ).trim();
+                taskstring = taskstring.substring( 0, taskstring.lastIndexOf( ' ' ) ).trim();
+                setTask( taskstring );
+                getLogger().debug( "task is " + m_task );
+            }
+        }
+        catch( final NullPointerException npe )
+        {
+            getLogger().error( "error procession stream , null pointer exception", npe );
+            throw new TaskException( npe.getClass().getName(), npe );
+        }
+        catch( final Exception e )
+        {
+            getLogger().error( "error procession stream " + e.getMessage() );
+            throw new TaskException( e.getMessage(), e );
+        }
+    }
 }
 
