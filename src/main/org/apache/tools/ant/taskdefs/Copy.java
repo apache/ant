@@ -89,39 +89,40 @@ public class Copy extends Task {
     }
 
     /**
-     * @return the fileutils object
+     * Get the FileUtils for this task.
+     * @return the fileutils object.
      */
     protected FileUtils getFileUtils() {
         return fileUtils;
     }
 
     /**
-     * Sets a single source file to copy.
-     * @param file the file to copy
+     * Set a single source file to copy.
+     * @param file the file to copy.
      */
     public void setFile(File file) {
         this.file = file;
     }
 
     /**
-     * Sets the destination file.
-     * @param destFile the file to copy to
+     * Set the destination file.
+     * @param destFile the file to copy to.
      */
     public void setTofile(File destFile) {
         this.destFile = destFile;
     }
 
     /**
-     * Sets the destination directory.
-     * @param destDir the destination directory
+     * Set the destination directory.
+     * @param destDir the destination directory.
      */
     public void setTodir(File destDir) {
         this.destDir = destDir;
     }
 
     /**
-     * Adds a FilterChain.
-     * @return a filter chain object
+     * Add a FilterChain.
+     * @return a filter chain object.
      */
     public FilterChain createFilterChain() {
         FilterChain filterChain = new FilterChain();
@@ -130,8 +131,8 @@ public class Copy extends Task {
     }
 
     /**
-     * Adds a filterset.
-     * @return a filter set object
+     * Add a filterset.
+     * @return a filter set object.
      */
     public FilterSet createFilterSet() {
         FilterSet filterSet = new FilterSet();
@@ -141,7 +142,7 @@ public class Copy extends Task {
 
     /**
      * Give the copied files the same last modified time as the original files.
-     * @param preserve a boolean string
+     * @param preserve a boolean string.
      * @deprecated setPreserveLastModified(String) has been deprecated and
      *             replaced with setPreserveLastModified(boolean) to
      *             consistently let the Introspection mechanism work.
@@ -152,16 +153,17 @@ public class Copy extends Task {
 
     /**
      * Give the copied files the same last modified time as the original files.
-     * @param preserve if true perverse the modified time, default is false
+     * @param preserve if true preserve the modified time; default is false.
      */
     public void setPreserveLastModified(boolean preserve) {
         preserveLastModified = preserve;
     }
 
     /**
-     * Whether to give the copied files the same last modified time as
+     * Get whether to give the copied files the same last modified time as
      * the original files.
-     * @return the preserveLastModified attribute
+     * @return the whether destination files will inherit the modification
+     *         times of the corresponding source files.
      * @since 1.32, Ant 1.5
      */
     public boolean getPreserveLastModified() {
@@ -171,7 +173,7 @@ public class Copy extends Task {
     /**
      * Get the filtersets being applied to this operation.
      *
-     * @return a vector of FilterSet objects
+     * @return a vector of FilterSet objects.
      */
     protected Vector getFilterSets() {
         return filterSets;
@@ -180,22 +182,22 @@ public class Copy extends Task {
     /**
      * Get the filterchains being applied to this operation.
      *
-     * @return a vector of FilterChain objects
+     * @return a vector of FilterChain objects.
      */
     protected Vector getFilterChains() {
         return filterChains;
     }
 
     /**
-     * If true, enables filtering.
-     * @param filtering if true enable filtering, default is false
+     * Set filtering mode.
+     * @param filtering if true enable filtering; default is false.
      */
     public void setFiltering(boolean filtering) {
         this.filtering = filtering;
     }
 
     /**
-     * Overwrite any existing destination file(s).
+     * Set overwrite mode regarding existing destination file(s).
      * @param overwrite if true force overwriting of destination file(s)
      *                  even if the destination file(s) are younger than
      *                  the corresponding source file. Default is false.
@@ -205,7 +207,7 @@ public class Copy extends Task {
     }
 
     /**
-     * When copying directory trees, the files can be "flattened"
+     * Set whether files copied from directory trees will be "flattened"
      * into a single directory.  If there are multiple files with
      * the same name in the source directory tree, only the first
      * file will be copied into the "flattened" directory, unless
@@ -218,8 +220,9 @@ public class Copy extends Task {
     }
 
     /**
-     * Used to force listing of all names of copied files.
-     * @param verbose output the names of copied files. Default is false.
+     * Set verbose mode. Used to force listing of all names of copied files.
+     * @param verbose whether to output the names of copied files.
+     *                Default is false.
      */
     public void setVerbose(boolean verbose) {
         if (verbose) {
@@ -230,7 +233,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Used to copy empty directories.
+     * Set whether to copy empty directories.
      * @param includeEmpty if true copy empty directories. Default is true.
      */
     public void setIncludeEmptyDirs(boolean includeEmpty) {
@@ -238,7 +241,7 @@ public class Copy extends Task {
     }
 
     /**
-     * Attribute to handle mappers that return multiple
+     * Set method of handling mappers that return multiple
      * mappings for a given source path.
      * @param enableMultipleMappings If true the task will
      *        copy to all the mappings for a given source path, if
@@ -246,39 +249,41 @@ public class Copy extends Task {
      *        processed.
      *        By default, this setting is false to provide backward
      *        compatibility with earlier releases.
-     * @since 1.6
+     * @since Ant 1.6
      */
     public void setEnableMultipleMappings(boolean enableMultipleMappings) {
         this.enableMultipleMappings = enableMultipleMappings;
     }
 
     /**
-     * @return the value of the enableMultipleMapping attribute
+     * Get whether multiple mapping is enabled.
+     * @return true if multiple mapping is enabled; false otherwise.
      */
     public boolean isEnableMultipleMapping() {
         return enableMultipleMappings;
     }
 
     /**
-     * If false, note errors to the output but keep going.
-     * @param failonerror true or false
+     * Set whether to fail when errors are encountered. If false, note errors
+     * to the output but keep going. Default is true.
+     * @param failonerror true or false.
      */
     public void setFailOnError(boolean failonerror) {
         this.failonerror = failonerror;
     }
 
     /**
-     * Adds a set of files to copy.
-     * @param set a set of files to copy
+     * Add a set of files to copy.
+     * @param set a set of files to copy.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
 
     /**
-     * Defines the mapper to map source to destination files.
-     * @return a mapper to be configured
-     * @exception BuildException if more than one mapper is defined
+     * Define the mapper to map source to destination files.
+     * @return a mapper to be configured.
+     * @exception BuildException if more than one mapper is defined.
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
@@ -290,18 +295,17 @@ public class Copy extends Task {
     }
 
     /**
-     * A nested filenamemapper
-     * @param fileNameMapper the mapper to add
+     * Add a nested filenamemapper.
+     * @param fileNameMapper the mapper to add.
      * @since Ant 1.6.3
      */
     public void add(FileNameMapper fileNameMapper) {
         createMapper().add(fileNameMapper);
     }
 
-
     /**
-     * Sets the character encoding
-     * @param encoding the character encoding
+     * Set the character encoding.
+     * @param encoding the character encoding.
      * @since 1.32, Ant 1.5
      */
     public void setEncoding(String encoding) {
@@ -312,6 +316,7 @@ public class Copy extends Task {
     }
 
     /**
+     * Get the character encoding to be used.
      * @return the character encoding, <code>null</code> if not set.
      *
      * @since 1.32, Ant 1.5
@@ -321,8 +326,8 @@ public class Copy extends Task {
     }
 
     /**
-     * Sets the character encoding for output files.
-     * @param encoding the character encoding
+     * Set the character encoding for output files.
+     * @param encoding the output character encoding.
      * @since Ant 1.6
      */
     public void setOutputEncoding(String encoding) {
@@ -330,6 +335,7 @@ public class Copy extends Task {
     }
 
     /**
+     * Get the character encoding for output files.
      * @return the character encoding for output files,
      * <code>null</code> if not set.
      *
@@ -340,12 +346,12 @@ public class Copy extends Task {
     }
 
     /**
-     * The number of milliseconds leeway to give before deciding a
+     * Set the number of milliseconds leeway to give before deciding a
      * target is out of date.
      *
      * <p>Default is 1 second, or 2 seconds on DOS systems.</p>
      * @param granularity the granularity used to decide if a target is out of
-     * date.
+     *                    date.
      * @since Ant 1.6.2
      */
     public void setGranularity(long granularity) {
@@ -353,8 +359,8 @@ public class Copy extends Task {
     }
 
     /**
-     * Performs the copy operation.
-     * @exception BuildException if an error occurs
+     * Perform the copy operation.
+     * @exception BuildException if an error occurs.
      */
     public void execute() throws BuildException {
         File savedFile = file; // may be altered in validateAttributes
@@ -461,7 +467,7 @@ public class Copy extends Task {
      * Ensure we have a consistent and legal set of attributes, and set
      * any internal flags necessary based on different combinations
      * of attributes.
-     * @exception BuildException if an error occurs
+     * @exception BuildException if an error occurs.
      */
     protected void validateAttributes() throws BuildException {
         if (file == null && filesets.size() == 0) {
@@ -519,10 +525,10 @@ public class Copy extends Task {
      * Compares source files to destination files to see if they should be
      * copied.
      *
-     * @param fromDir  The source directory
-     * @param toDir    The destination directory
-     * @param files    A list of files to copy
-     * @param dirs     A list of directories to copy
+     * @param fromDir  The source directory.
+     * @param toDir    The destination directory.
+     * @param files    A list of files to copy.
+     * @param dirs     A list of directories to copy.
      */
     protected void scan(File fromDir, File toDir, String[] files,
                         String[] dirs) {
@@ -543,13 +549,13 @@ public class Copy extends Task {
     }
 
     /**
-     * Add to a map of files/directories to copy
+     * Add to a map of files/directories to copy.
      *
-     * @param fromDir the source directory
-     * @param toDir   the destination directory
-     * @param names   a list of filenames
-     * @param mapper  a <code>FileNameMapper</code> value
-     * @param map     a map of source file to array of destination files
+     * @param fromDir the source directory.
+     * @param toDir   the destination directory.
+     * @param names   a list of filenames.
+     * @param mapper  a <code>FileNameMapper</code> value.
+     * @param map     a map of source file to array of destination files.
      */
     protected void buildMap(File fromDir, File toDir, String[] names,
                             FileNameMapper mapper, Hashtable map) {
