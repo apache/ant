@@ -57,6 +57,7 @@ package org.apache.tools.ant.input;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 
@@ -75,8 +76,27 @@ public class DefaultInputHandler implements InputHandler {
     }
 
     public void handleInput(InputRequest request) throws BuildException {
+        String prompt = request.getPrompt();
+        if (request instanceof MultipleChoiceInputRequest) {
+            StringBuffer sb = new StringBuffer(prompt);
+            sb.append("(");
+            Enumeration enum = 
+                ((MultipleChoiceInputRequest) request).getChoices().elements();
+            boolean first = true;
+            while (enum.hasMoreElements()) {
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(",");
+                }
+                sb.append(enum.nextElement());
+            }
+            sb.append(")");
+            prompt = sb.toString();
+        }
+            
         do {
-            System.out.println(request.getPrompt());
+            System.out.println(prompt);
             try {
                 BufferedReader in = 
                     new BufferedReader(new InputStreamReader(System.in));

@@ -61,6 +61,16 @@ package org.apache.tools.ant.input;
  * @version $Revision$
  */
 public interface InputHandler {
+
+    /**
+     * Handle the request encapsulated in the argument.
+     *
+     * <p>Precondition: the request.getPrompt will return a non-null
+     * value.</p>
+     *
+     * <p>Postcondition: request.getInput will return a non-null
+     * value, request.isInputValid will return true.</p>
+     */
     void handleInput(InputRequest request) 
         throws org.apache.tools.ant.BuildException;
 }

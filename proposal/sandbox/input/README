@@ -46,11 +46,17 @@ ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.t
 
 You'll get the ugliest dialog you've ever seen, but it works ;-)
 
-Finally, use 
+Use 
 
-ANT_OPTS=-Dinput.properties=proposal/sandbox/input/src/testcases/works.properties
+ANT_OPTS=-Dant.input.properties=proposal/sandbox/input/src/testcases/works.properties
 ant -f proposal/sandbox/input/src/testcases/input.xml -inputhandler org.apache.tools.ant.input.PropertyFileInputHandler
 
 to see the non-interactive build process in action.  fails.properties
 provides a sample of possible input failures.
 
+The original testcase for <input> has been ported to the new framework
+as well, run it via
+
+ant run-test
+
+in this directory.

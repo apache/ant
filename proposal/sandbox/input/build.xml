@@ -23,4 +23,38 @@
       </fileset>
     </jar>
   </target>
+
+  <target name="setup-tests" depends="setup">
+    <property name="testcases.dir" value="build/testcases" />
+    <mkdir dir="${testcases.dir}" />
+    <ant dir="${main.ant}" inheritall="false" target="compile-tests" />
+    <copy toDir="${testcases.dir}" preservelastmodified="true" >
+      <fileset dir="${main.ant}/${testcases.dir}">
+	<include name='org/apache/tools/ant/BuildFileTest*.class' />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile-tests" depends="setup-tests,main">
+    <javac srcdir="src/testcases" destdir="${testcases.dir}"
+           includeantruntime="false">
+      <classpath>
+        <pathelement location="build/ant.jar" />
+        <pathelement location="${main.ant}/lib/optional/junit.jar" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="run-test" depends="compile-tests">
+    <junit fork="true" filtertrace="false" includeantruntime="false">
+      <classpath>
+        <pathelement location="${testcases.dir}" />
+        <pathelement location="build/ant.jar" />
+        <pathelement location="${main.ant}/lib/crimson.jar" />
+        <pathelement location="${main.ant}/lib/optional/junit.jar" />
+      </classpath>
+      <formatter type="plain" usefile="false" />
+      <test name="org.apache.tools.ant.taskdefs.InputTest" />
+    </junit>
+  </target>
 </project>

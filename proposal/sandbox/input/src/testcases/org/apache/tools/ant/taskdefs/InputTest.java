@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,40 +52,52 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.input;
+package org.apache.tools.ant.taskdefs;
 
-import java.util.Vector;
+import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.input.PropertyFileInputHandler;
 
 /**
- * Encapsulates an input request.
- *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @version $Revision$
+ * @author Ulrich Schmidt <usch@usch.net>
  */
-public class MultipleChoiceInputRequest extends InputRequest {
-    private Vector choices = new Vector();
+public class InputTest extends BuildFileTest {
 
-    /**
-     * @param prompt The prompt to show to the user.  Must not be null.
-     * @param choices holds all input values that are allowed.
-     *                Must not be null.
-     */
-    public MultipleChoiceInputRequest(String prompt, Vector choices) {
-        super(prompt);
-        if (choices == null) {
-            throw new IllegalArgumentException("choices must not be null");
+    public InputTest(String name) {
+        super(name);
+    }
+
+    public void setUp() {
+        System.getProperties().put(PropertyFileInputHandler.FILE_NAME_KEY,
+                                   "src/etc/testcases/taskdefs/input.properties");
+        configureProject("src/etc/testcases/taskdefs/input.xml");
+        getProject().setInputHandler(new PropertyFileInputHandler());
+    }
+
+    public void test1() {
+        executeTarget("test1");
+    }
+
+    public void test2() {
+        executeTarget("test1");
+    }
+
+    public void test3() {
+        try {
+            executeTarget("test3");
+            fail("Input for \"All data is going to be deleted from DB continue?\" should be invalid");
+        } catch (org.apache.tools.ant.BuildException e) {
+            assertEquals("Found invalid input test for All data is going to be deleted from DB continue?", 
+                         e.getMessage());
         }
-        this.choices = choices;
     }
 
-    /**
-     * The possible values.
-     */
-    public Vector getChoices() {
-        return choices;
+    public void test5() {
+        executeTarget("test5");
     }
 
-    public boolean isInputValid() {
-        return choices.contains(getInput());
+    public void test6() {
+        executeTarget("test6");
+        assertEquals("scott", project.getProperty("db.user"));
     }
+
 }

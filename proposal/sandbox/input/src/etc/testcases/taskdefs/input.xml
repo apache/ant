@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<project name="input-test" basedir="." default="test1">
+
+  <target name="test1">
+    <input>Press Return key to continue...</input>
+  </target>
+
+  <target name="test2">
+    <input message="Press Return key to continue..." />
+  </target>
+
+  <target name="test3">
+    <input message="All data is going to be deleted from DB continue?"
+           validargs="y,n"
+           />
+  </target>
+
+  <target name="test5">
+    <input message="All data is going to be deleted from db continue (y/n)?"
+           validargs="y,n"
+           />
+  </target>
+
+  <target name="test6">
+    <input message="Please enter db-username:"
+           addproperty="db.user"
+           />
+  </target>
+
+</project>

@@ -64,7 +64,14 @@ public class InputRequest {
     private String prompt;
     private String input;
 
+    /**
+     * @param prompt The prompt to show to the user.  Must not be null.
+     */
     public InputRequest(String prompt) {
+        if (prompt == null) {
+            throw new IllegalArgumentException("prompt must not be null");
+        }
+        
         this.prompt = prompt;
     }
 
