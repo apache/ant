@@ -14,8 +14,17 @@
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
 
+            <subsection name="Embeddor HOWTO">
+
+                <p>Assigned To: Peter</p>
+                <p>Write a HOWTO describing how to embed Myrmidon into other
+                applications.</p>
+
+            </subsection>
+
             <subsection name="Optional Dependencies">
 
+                <p>Assigned To: Peter</p>
                 <p>Extend Myrmidons library management facilities so that optional
                 dependencies may be declared for a library. ie The library will still
                 operate in absence of such libraries but can provide further features
