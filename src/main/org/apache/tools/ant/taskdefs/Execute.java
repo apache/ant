@@ -182,8 +182,9 @@ public class Execute {
                 // Just try to use what we got
             }
 
-            BufferedReader in =
-                new BufferedReader(new StringReader(out.toString()));
+            BufferedReader in = 
+                new BufferedReader(new StringReader(toString(out)));
+                
             String var = null;
             String line, lineSep = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
@@ -248,6 +249,23 @@ public class Execute {
             String[] cmd = null;
             return cmd;
         }
+    }
+
+    /**
+     * ByteArrayOutputStream#toString doesn't seem to work reliably on
+     * OS/390, at least not the way we use it in the execution
+     * context.
+     *
+     * @since Ant 1.5
+     */
+    public static String toString(ByteArrayOutputStream bos) {
+        if (Os.isFamily("z/os")) {
+            try {
+                bos.toString("Cp1047");
+            } catch (java.io.UnsupportedEncodingException e) {
+            }
+        }
+        return bos.toString();
     }
 
     /**

@@ -10,6 +10,10 @@ $$.
 
 * org.apache.tools.ant.taskdefs.Expand no longer extends MatchingTask.
 
+* Available#setFile now again uses a File argument as it did in 1.4,
+this may break environments that have been adapted to the String
+argument version present in 1.5beta1.
+
 Fixed bugs:
 -----------
 
