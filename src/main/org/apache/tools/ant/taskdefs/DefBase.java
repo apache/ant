@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -128,11 +128,8 @@ public abstract class DefBase extends AntlibDefinition {
         if (getAntlibClassLoader() != null && cpDelegate == null) {
             return getAntlibClassLoader();
         }
-        if (cpDelegate == null) {
-            cpDelegate = ClasspathUtils.getDelegate(this);
-        }
         if (createdLoader == null) {
-            createdLoader = cpDelegate.getClassLoader();
+            createdLoader = getDelegate().getClassLoader();
             // need to load Task via system classloader or the new
             // task we want to define will never be a Task but always
             // be wrapped into a TaskAdapter.
