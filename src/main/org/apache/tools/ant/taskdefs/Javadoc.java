@@ -273,7 +273,6 @@ public class Javadoc extends Task {
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
     private Vector tags = new Vector(5);
-    private Vector taglets = new Vector(2);
     private boolean useDefaultExcludes = true;
     private Html doctitle = null;
     private Html header = null;
@@ -428,7 +427,7 @@ public class Javadoc extends Task {
     }
 
     public void addTaglet(ExtensionInfo tagletInfo) {
-        taglets.addElement(tagletInfo);
+        tags.addElement(tagletInfo);
     }
     
     public void setOld(boolean b) {
@@ -666,9 +665,6 @@ public class Javadoc extends Task {
      * custom tags. This argument is only available for JavaDoc 1.4,
      * and will generate a verbose message (and then be ignored)
      * when run on Java versions below 1.4.
-     * 
-     * @todo Add -taglet as well - need to preserve the order
-     * of tag/taglet, so they need to be stored in the same list
      */
     public TagArgument createTag() {
         if (!javadoc4) {
@@ -1079,26 +1075,26 @@ public class Javadoc extends Task {
             
             // JavaDoc 1.4 parameters
             if (javadoc4) {
-                for (Enumeration e = taglets.elements(); e.hasMoreElements(); ) {
-                    ExtensionInfo tagletInfo 
-                        = (ExtensionInfo) e.nextElement();
-                    toExecute.createArgument().setValue("-taglet");
-                    toExecute.createArgument().setValue(tagletInfo.getName());
-                    if (tagletInfo.getPath() != null) {
-                        log("Taglet base path is " + tagletInfo.getPath(),
-                            MSG_DEBUG);
-                        Path tagletPath 
-                            = tagletInfo.getPath().concatSystemClasspath("ignore");
-                        if (tagletPath.size() != 0) {
-                            toExecute.createArgument().setValue("-tagletpath");
-                            toExecute.createArgument().setPath(tagletPath);
+                for (Enumeration e = tags.elements(); e.hasMoreElements(); ) {
+                    Object element = e.nextElement();
+                    if (element instanceof TagArgument) {
+                        TagArgument ta = (TagArgument) element;
+                        toExecute.createArgument().setValue ("-tag");
+                        toExecute.createArgument().setValue (ta.getParameter());
+                    } else {
+                        ExtensionInfo tagletInfo 
+                            = (ExtensionInfo) element;
+                        toExecute.createArgument().setValue("-taglet");
+                        toExecute.createArgument().setValue(tagletInfo.getName());
+                        if (tagletInfo.getPath() != null) {
+                            Path tagletPath 
+                                = tagletInfo.getPath().concatSystemClasspath("ignore");
+                            if (tagletPath.size() != 0) {
+                                toExecute.createArgument().setValue("-tagletpath");
+                                toExecute.createArgument().setPath(tagletPath);
+                            }
                         }
                     }
-                }
-                for (Enumeration e = tags.elements(); e.hasMoreElements(); ) {
-                    TagArgument ta = (TagArgument) e.nextElement();
-                    toExecute.createArgument().setValue ("-tag");
-                    toExecute.createArgument().setValue (ta.getParameter());
                 }
             }
 
