@@ -43,8 +43,6 @@ Other changes:
 * <echoproperties> now (alphanumerically) sorts the property list
   before echoing, when you request XML output (format="xml"). 
 
-* Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
-
 * A new base class DispatchTask has been added to facilitate elegant 
   creation of tasks with multiple actions.
 
@@ -173,6 +171,8 @@ Other changes:
 
 * Made the dest attribute of the apply task optional; mapped target
   filenames will be interpreted as absolute pathnames when dest is omitted.
+
+* Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
 Fixed bugs:
 -----------
