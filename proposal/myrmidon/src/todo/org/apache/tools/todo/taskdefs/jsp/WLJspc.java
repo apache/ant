@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.taskdefs.Java;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 import org.apache.tools.todo.taskdefs.MatchingTask;
-import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.Path;
 import org.apache.tools.todo.types.PathUtil;
@@ -172,9 +171,6 @@ public class WLJspc extends MatchingTask
         // Therefore, takes loads of time
         // Can pass directories at a time (*.jsp) but easily runs out of memory on hefty dirs
         // (even on  a Sun)
-        Java helperTask = null;//(Java)getProject().createTask( "java" );
-        helperTask.setFork( true );
-        helperTask.setClassname( "weblogic.jspc" );
         String[] args = new String[ 12 ];
 
         File jspFile = null;
@@ -220,19 +216,13 @@ public class WLJspc extends MatchingTask
             }
 
             args[ j + 2 ] = sourceDirectory + File.separator + (String)filesToDo.get( i );
-            arg = "";
 
-            for( int x = 0; x < 12; x++ )
-            {
-                arg += " " + args[ x ];
-            }
-
-            System.out.println( "arg = " + arg );
-
-            //helperTask.clearArgs();
-            helperTask.addArg( new Argument( arg ) );
-            helperTask.addClasspath( compileClasspath );
-            helperTask.executeJava();
+            ExecuteJava helperTask = new ExecuteJava();
+            helperTask.setFork( true );
+            helperTask.setClassName( "weblogic.jspc" );
+            helperTask.getArguments().addArguments( args );
+            helperTask.getClassPath().addPath( compileClasspath );
+            helperTask.execute( getContext() );
         }
     }
 

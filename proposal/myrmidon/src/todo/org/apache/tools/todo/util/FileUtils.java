@@ -189,7 +189,7 @@ public class FileUtils
      * @todo Move to {@link org.apache.aut.nativelib.Os}, and get rid of the
      * exception.
      */
-    public static String buildCommandLine( final String[] arguments )
+    public static String formatCommandLine( final String[] arguments )
         throws TaskException
     {
         final StringBuffer cmd = new StringBuffer();

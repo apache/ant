@@ -8,14 +8,9 @@
 package org.apache.tools.todo.taskdefs;
 
 import java.io.File;
-import java.util.ArrayList;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.CommandlineJava;
 import org.apache.tools.todo.types.EnvironmentVariable;
 import org.apache.tools.todo.types.Path;
 
@@ -26,20 +21,20 @@ import org.apache.tools.todo.types.Path;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">
  *      stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:task name="java"
  */
 public class Java
     extends AbstractTask
 {
-    private CommandlineJava m_cmdl = new CommandlineJava();
-    private boolean m_fork;
-    private File m_dir;
+    private final ExecuteJava m_exec = new ExecuteJava();
 
     /**
      * Set the class name.
      */
-    public void setClassname( String s )
+    public void setClassname( final String className )
     {
-        m_cmdl.setClassname( s );
+        m_exec.setClassName( className );
     }
 
     /**
@@ -48,7 +43,7 @@ public class Java
     public void addClasspath( final Path classpath )
         throws TaskException
     {
-        m_cmdl.createClasspath().addPath( classpath );
+        m_exec.getClassPath().addPath( classpath );
     }
 
     /**
@@ -58,7 +53,7 @@ public class Java
      */
     public void setDir( final File dir )
     {
-        m_dir = dir;
+        m_exec.setWorkingDirectory( dir );
     }
 
     /**
@@ -66,23 +61,23 @@ public class Java
      */
     public void setFork( final boolean fork )
     {
-        m_fork = fork;
+        m_exec.setFork( fork );
     }
 
     /**
-     * set the jar name...
+     * Set the jar name.
      */
     public void setJar( final File jar )
     {
-        m_cmdl.setJar( jar.getAbsolutePath() );
+        m_exec.setJar( jar );
     }
 
     /**
-     * Set the command used to start the VM (only if fork==false).
+     * Set the command used to start the VM (only if fork==true).
      */
     public void setJvm( final String jvm )
     {
-        m_cmdl.setVm( jvm );
+        m_exec.setJvm( jvm );
     }
 
     /**
@@ -90,7 +85,7 @@ public class Java
      */
     public void setMaxmemory( final String max )
     {
-        m_cmdl.setMaxmemory( max );
+        m_exec.setMaxMemory( max );
     }
 
     /**
@@ -98,7 +93,7 @@ public class Java
      */
     public void addSysproperty( final EnvironmentVariable sysp )
     {
-        m_cmdl.addSysproperty( sysp );
+        m_exec.getSysProperties().addVariable( sysp );
     }
 
     /**
@@ -106,7 +101,7 @@ public class Java
      */
     public void addArg( final Argument argument )
     {
-        m_cmdl.addArgument( argument );
+        m_exec.getArguments().addArgument( argument );
     }
 
     /**
@@ -114,102 +109,12 @@ public class Java
      */
     public void addJvmarg( final Argument argument )
     {
-        m_cmdl.addVmArgument( argument );
+        m_exec.getVmArguments().addArgument( argument );
     }
 
     public void execute()
         throws TaskException
     {
-        executeJava();
-    }
-
-    /**
-     * Do the execution.
-     *
-     * @exception org.apache.myrmidon.api.TaskException Description of Exception
-     */
-    public void executeJava()
-        throws TaskException
-    {
-        final String classname = m_cmdl.getClassname();
-        final String jar = m_cmdl.getJar();
-        if( classname != null && jar != null )
-        {
-            throw new TaskException( "Only one of Classname and Jar can be set." );
-        }
-        else if( classname == null && jar == null )
-        {
-            throw new TaskException( "Classname must not be null." );
-        }
-
-        if( !m_fork && jar != null )
-        {
-            throw new TaskException( "Cannot execute a jar in non-forked mode. Please set fork='true'. " );
-        }
-
-        if( m_fork )
-        {
-            getContext().debug( "Forking " + m_cmdl.toString() );
-            run( new Commandline( m_cmdl.getCommandline() ) );
-        }
-        else
-        {
-            if( m_cmdl.getVmCommand().size() > 1 )
-            {
-                getContext().warn( "JVM args ignored when same JVM is used." );
-            }
-            if( m_dir != null )
-            {
-                getContext().warn( "Working directory ignored when same JVM is used." );
-            }
-
-            getContext().debug( "Running in same VM " + m_cmdl.getJavaCommand().toString() );
-            run( m_cmdl );
-        }
-    }
-
-    /**
-     * Executes the given classname with the given arguments as it was a command
-     * line application.
-     */
-    protected void run( final String classname, final ArrayList args )
-        throws TaskException
-    {
-        final CommandlineJava java = new CommandlineJava();
-        java.setClassname( classname );
-
-        final int size = args.size();
-        for( int i = 0; i < size; i++ )
-        {
-            final String arg = (String)args.get( i );
-            java.addArgument( arg );
-        }
-        run( java );
-    }
-
-    /**
-     * Executes the given classname with the given arguments as it was a command
-     * line application.
-     */
-    private void run( final CommandlineJava command )
-        throws TaskException
-    {
-        final ExecuteJava exe = new ExecuteJava();
-        exe.setJavaCommand( command.getJavaCommand() );
-        exe.setClasspath( command.getClasspath() );
-        exe.setSystemProperties( command.getSystemProperties() );
-        exe.execute();
-    }
-
-    /**
-     * Executes the given classname with the given arguments in a separate VM.
-     */
-    private void run( final Commandline command )
-        throws TaskException
-    {
-        final Execute exe = new Execute();
-        exe.setWorkingDirectory( m_dir );
-        exe.setCommandline( command );
-        exe.execute( getContext() );
+        m_exec.execute( getContext() );
     }
 }

@@ -235,7 +235,7 @@ Legal:
             <patternset refid="myrmidon-api.include"/>
             <patternset refid="myrmidon-container.include"/>
             <patternset refid="aut.include"/>
-            <patternset refid="ant1.include"/>
+            <patternset refid="ant1.todo.include"/>
             <patternset refid="selftest.include"/>
             <patternset refid="selftest-extension1.include"/>
             <include name="org/apache/antlib/**"/>
@@ -281,7 +281,7 @@ Legal:
         <property name="util.package" value="${ant.package}/util"/>
         <property name="regexp.package" value="${util.package}/regexp"/>
 
-        <patternset id="ant1.include">
+        <patternset id="ant1.todo.include">
             <include name="org/apache/tools/**" />
             <exclude name="${regexp.package}/JakartaRegexp*.java"
                      unless="jakarta.regexp.present" />
@@ -450,10 +450,11 @@ Legal:
           <patternset refid="aut.include"/>
         </antlib-jar>
 
-        <jar jarfile="${build.lib}/ant1.jar"
-             basedir="${build.classes}" >
-          <patternset refid="ant1.include"/>
-        </jar>
+        <antlib-jar jarfile="${build.lib}/ant1_todo.jar"
+                    basedir="${build.classes}"
+                    descriptor="${manifest.dir}/ant1-ant-descriptor.xml" >
+          <patternset refid="ant1.todo.include"/>
+        </antlib-jar>
 
         <antlib-jar jarfile="${build.ext}/selftest.atl"
                     basedir="${build.classes}"

@@ -1,13 +1,12 @@
 <ant-lib version="1.0">
 
-  <types>
-    <data-type name="path" classname="org.apache.tools.ant.types.Path" />
-    <task name="path" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
-    <converter
-      classname="org.apache.tools.ant.types.converters.StringToPathConverter"
-      source="java.lang.String"
-      destination="org.apache.tools.ant.types.Path"
-    />
-  </types>
+    <types>
+        <task name="java" classname="org.apache.tools.todo.taskdefs.Java" />
+        <data-type name="path" classname="org.apache.tools.todo.types.Path" />
+        <task name="path" classname="org.apache.myrmidon.framework.TypeInstanceTask" />
+        <converter classname="org.apache.tools.ant.types.converters.StringToPathConverter"
+                   source="java.lang.String"
+                   destination="org.apache.tools.ant.types.Path" />
+    </types>
 
 </ant-lib>

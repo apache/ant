@@ -44,24 +44,13 @@ public class SysProperties
         }
     }
 
+    /**
+     * @todo move this to AUT
+     */
     public String[] getJavaVariables()
         throws TaskException
     {
-        String props[] = new String[ 0 ];
-        try
-        {
-            props = toNativeFormat( super.getVariables() );
-        }
-        catch( final ExecException ee )
-        {
-            throw new TaskException( ee.getMessage(), ee );
-        }
-
-        if( props == null )
-        {
-            return null;
-        }
-
+        String props[] = toNativeFormat( super.getVariables() );
         for( int i = 0; i < props.length; i++ )
         {
             props[ i ] = "-D" + props[ i ];
@@ -108,7 +97,6 @@ public class SysProperties
     }
 
     private String[] toNativeFormat( final Properties environment )
-        throws ExecException
     {
         final ArrayList newEnvironment = new ArrayList();
 

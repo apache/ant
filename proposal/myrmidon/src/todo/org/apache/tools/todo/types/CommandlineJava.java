@@ -7,12 +7,11 @@
  */
 package org.apache.tools.todo.types;
 
-import java.io.File;
-import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
+import org.apache.tools.todo.taskdefs.ExecuteJava;
 
 /**
  * A representation of a Java command line that is nothing more than a composite
@@ -39,7 +38,7 @@ public class CommandlineJava
 
     public CommandlineJava()
     {
-        setVm( getJavaExecutableName() );
+        setVm( ExecuteJava.getJavaExecutableName() );
     }
 
     /**
@@ -71,7 +70,7 @@ public class CommandlineJava
      */
     public void setMaxmemory( String max )
     {
-        this.m_maxMemory = max;
+        m_maxMemory = max;
     }
 
     public void setSystemProperties()
@@ -260,32 +259,5 @@ public class CommandlineJava
             actualVMCommand.addArgument( "-Xmx" + m_maxMemory );
         }
         return actualVMCommand;
-    }
-
-    private String getJavaExecutableName()
-    {
-        // This is the most common extension case - exe for windows and OS/2,
-        // nothing for *nix.
-        String extension = Os.isFamily( Os.OS_FAMILY_DOS ) ? ".exe" : "";
-
-        // Look for java in the java.home/../bin directory.  Unfortunately
-        // on Windows java.home doesn't always refer to the correct location,
-        // so we need to fall back to assuming java is somewhere on the
-        // PATH.
-        File jExecutable =
-            new File( System.getProperty( "java.home" ) +
-                      "/../bin/java" + extension );
-
-        if( jExecutable.exists() && !Os.isFamily( Os.OS_FAMILY_NETWARE ) )
-        {
-            // NetWare may have a "java" in that directory, but 99% of
-            // the time, you don't want to execute it -- Jeff Tulley
-            // <JTULLEY@novell.com>
-            return jExecutable.getAbsolutePath();
-        }
-        else
-        {
-            return "java";
-        }
     }
 }
