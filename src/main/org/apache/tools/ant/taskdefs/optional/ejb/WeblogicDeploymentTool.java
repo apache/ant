@@ -134,6 +134,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     private String additionalArgs = "";
 
+    /**
+     * additional args to pass to the spawned jvm
+     */
+    private String additionalJvmArgs = "";
+
     private boolean keepGeneric = false;
 
     private String compiler = null;
@@ -252,6 +257,13 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         this.additionalArgs = args;
     }
 
+    /**
+     * Set the additional arguments to pass to the weblogic JVM
+     * @param args the arguments to be passed to the JVM
+     */
+    public void setJvmargs(String args) {
+        this.additionalJvmArgs = args;
+    }
 
     /** Set the classname of the ejbc compiler  */
     public void setEjbcClass(String ejbcClass) {
@@ -449,7 +461,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *      jarfile.
      */
     private void buildWeblogicJar(File sourceJar, File destJar, String publicId) {
-        org.apache.tools.ant.taskdefs.Java javaTask = null;
+        Java javaTask = null;
 
         if (noEJBC) {
             try {
@@ -469,9 +481,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("ejbc");
 
+            javaTask.createJvmarg().setLine(additionalJvmArgs);
             if (!(sysprops.isEmpty())) {
                 for (Enumeration en = sysprops.elements() ; en.hasMoreElements();) {
-                    Environment.Variable entry 
+                    Environment.Variable entry
                         = (Environment.Variable) en.nextElement();
                     javaTask.addSysproperty(entry);
                 }

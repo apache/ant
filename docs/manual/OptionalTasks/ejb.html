@@ -1046,6 +1046,22 @@ define this as META-INF/Customer-weblogic-cmp-rdbms-jar.xml.</p>
                      &quot;weblogic.ejbc&quot; to avoid the deprecation warning.</td>
     <td valign="top" align="center">No.</td>
   </tr>
+  <tr>
+    <td valign="top">jvmargs</td>
+    <td valign="top">Any additional arguments to be passed to the Virtual Machine
+                     running weblogic.ejbc tool. For example to set the memory size,
+                     this could be jvmargs=&quot;-Xmx128m&quot;
+                     </td>
+    <td valign="top" align="center">No.</td>
+  </tr>
+  <tr>
+    <td valign="top">jvmdebuglevel</td>
+    <td valign="top">Sets the weblogic.StdoutSeverityLevel to use when running
+                     the Virtual Machine that executes ejbc. Set to 16 to avoid
+                     the warnings about EJB Home and Remotes being in the classpath
+                     </td>
+    <td valign="top" align="center">No.</td>
+  </tr>
 </table>
 
 <p>The weblogic nested element supports three nested elements. The

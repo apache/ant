@@ -36,7 +36,7 @@ Fixed bugs:
   that have been set by nested task seemed to be unset for the other
   tasks in the same <sequential> element.
 
-* <javac>'s sourcepath setting has been ignored by some compiler 
+* <javac>'s sourcepath setting has been ignored by some compiler
   implementations.
 
 * <javadoc>'s packagelist attribute didn't work.
@@ -53,6 +53,12 @@ Other changes:
 * The "Trying to override task definition" warning has been degraded
   to verbose level if the two task definitions only differ in the class
   loader instance that has loaded the definition.
+
+* Add a jvmargs to the ejbjar's weblogic element to allow additional
+  arguments to be provided to the VM runnign ejbc. Document the
+  jvmdebuglevel attribute which can be used to avoid warnings about
+  interface classess being found on the classpath. Document the new
+  <sysproperty> element which allows JVM properties to be defined.
 
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================
@@ -230,7 +236,7 @@ Changes that could break older environments:
 
 * The default value for build.compiler is now javac1.x with x
   depending on the JDK that is running Ant instead of classic/modern.
-  
+
 Fixed bugs:
 -----------
 * A bug existed that prevented generated log files from being deleted as
