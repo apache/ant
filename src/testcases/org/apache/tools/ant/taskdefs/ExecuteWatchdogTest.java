@@ -95,13 +95,13 @@ public class ExecuteWatchdogTest extends TestCase {
             classpath = System.getProperty("java.class.path");
         }
 
-                // JDK 1.1 needs classes.zip in -classpath argument
-                if (Project.getJavaVersion() == Project.JAVA_1_1) {
-                    classpath +=   File.pathSeparator
-                                 + System.getProperty("java.home")
-                                 + File.separator + "lib"
-                                 + File.separator + "classes.zip";
-                }
+        // JDK 1.1 needs classes.zip in -classpath argument
+        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+            classpath +=   File.pathSeparator
+                + System.getProperty("java.home")
+                + File.separator + "lib"
+                + File.separator + "classes.zip";
+        }
 
         return classpath;
     }
@@ -196,15 +196,5 @@ public class ExecuteWatchdogTest extends TestCase {
         // process should be dead and well finished
         assertEquals(0, process.exitValue());
         assertTrue("process should not have been killed", !watchdog.killedProcess());
-    }
-
-    public static class TimeProcess {
-        public static void main(String[] args) throws Exception {
-            int time = Integer.parseInt(args[0]);
-            if (time < 1) {
-                throw new IllegalArgumentException("Invalid time: " + time);
-            }
-            Thread.sleep(time);
-        }
     }
 }

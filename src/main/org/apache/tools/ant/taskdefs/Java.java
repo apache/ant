@@ -91,6 +91,7 @@ public class Java extends Task {
     private PrintStream outStream = null;
     private boolean failOnError = false;
     private boolean append = false;
+    private Long timeout = null;
     
     /**
      * Do the execution.
@@ -309,6 +310,15 @@ public class Java extends Task {
         this.append = append;
     }
 
+    /**
+     * Timeout in milliseconds after which the process will be killed.
+     *
+     * @since 1.37, Ant 1.5
+     */
+    public void setTimeout(Long value) {
+        timeout = value;
+    }
+
     protected void handleOutput(String line) {
         if (outStream != null) {
             outStream.println(line);
@@ -336,6 +346,7 @@ public class Java extends Task {
         exe.setJavaCommand(command.getJavaCommand());
         exe.setClasspath(command.getClasspath());
         exe.setSystemProperties(command.getSystemProperties());
+        exe.setTimeout(timeout);
         if (out != null) {
             try {
                 outStream = 
@@ -366,10 +377,11 @@ public class Java extends Task {
             if (out == null) {
                 exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
-                                  null);
+                                  createWatchdog());
             } else {
                 fos = new FileOutputStream(out.getAbsolutePath(), append);
-                exe = new Execute(new PumpStreamHandler(fos), null);
+                exe = new Execute(new PumpStreamHandler(fos),
+                                  createWatchdog());
             }
             
             exe.setAntRun(project);
@@ -395,7 +407,11 @@ public class Java extends Task {
 
             exe.setCommandline(command);
             try {
-                return exe.execute();
+                int rc = exe.execute();
+                if(exe.killedProcess()) {
+                    log("Timeout: killed the sub-process",Project.MSG_WARN); 
+                }
+                return rc;
             } catch (IOException e) {
                 throw new BuildException(e, location);
             }
@@ -427,4 +443,17 @@ public class Java extends Task {
     public void clearArgs() {
         cmdl.clearJavaArgs();
     }
+
+    /**
+     * Create the Watchdog to kill a runaway process.
+     *
+     * @since 1.37, Ant 1.5
+     */
+    protected ExecuteWatchdog createWatchdog() throws BuildException {
+        if (timeout == null) {
+          return null;
+        }
+        return new ExecuteWatchdog(timeout.longValue());
+    }
+
 }

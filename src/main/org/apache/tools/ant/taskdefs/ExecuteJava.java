@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,21 +62,28 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.TimeoutObserver;
+import org.apache.tools.ant.util.Watchdog;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.io.PrintStream;
 
-/*
+/**
  *
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class ExecuteJava {
+public class ExecuteJava implements Runnable, TimeoutObserver {
 
     private Commandline javaCommand = null;
     private Path classpath = null;
     private CommandlineJava.SysProperties sysProperties = null;
+    private Method main = null;
+    private Long timeout = null;
+    private Throwable caught = null;
+    private boolean timedOut = false;
+    private Thread thread = null;
 
     public void setJavaCommand(Commandline javaCommand) {
         this.javaCommand = javaCommand;
@@ -99,9 +106,15 @@ public class ExecuteJava {
     public void setOutput(PrintStream out) {
     }
 
+    /**
+     * @since 1.19, Ant 1.5
+     */
+    public void setTimeout(Long timeout) {
+        this.timeout = timeout;
+    }
+
     public void execute(Project project) throws BuildException{
         final String classname = javaCommand.getExecutable();
-        final Object[] argument = { javaCommand.getArguments() };
 
         AntClassLoader loader = null; 
         try {
@@ -120,21 +133,41 @@ public class ExecuteJava {
                 target = loader.forceLoadClass(classname);
                 AntClassLoader.initializeClass(target);
             }
-            final Method main = target.getMethod("main", param);
-            main.invoke(null, argument);
+            main = target.getMethod("main", param);
+
+            if (timeout == null) {
+                run();
+            } else {
+                thread = new Thread(this, "ExecuteJava");
+                Watchdog w = new Watchdog(timeout.longValue());
+                w.addTimeoutObserver(this);
+                synchronized (this) {
+                    thread.start();
+                    w.start();
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {}
+                    if (timedOut) {
+                        project.log("Timeout: killed the sub-process",
+                                    Project.MSG_WARN); 
+                    } else {
+                        thread = null;
+                        w.stop();
+                    }
+                }
+            }
+
+            if (caught != null) {
+                throw caught;
+            }
+
         } catch (NullPointerException e) {
             throw new BuildException("Could not find main() method in " + classname);
         } catch (ClassNotFoundException e) {
             throw new BuildException("Could not find " + classname + ". Make sure you have it in your classpath");
-        } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            if (!(t instanceof SecurityException)) {
-                throw new BuildException(t);
-            }
-            else {
-                throw (SecurityException)t;
-            }
-        } catch (Exception e) {
+        } catch (SecurityException e) {
+            throw e;
+        } catch (Throwable e) {
             throw new BuildException(e);
         } finally {
             if (loader != null) {
@@ -145,5 +178,44 @@ public class ExecuteJava {
                 sysProperties.restoreSystem();
             }
         }
+    }
+
+    /**
+     * @since 1.19, Ant 1.5
+     */
+    public void run() {
+        final Object[] argument = { javaCommand.getArguments() };
+        try {
+            main.invoke(null, argument);
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            if (!(t instanceof InterruptedException)) {
+                caught = t;
+            } /* else { swallow, probably due to timeout } */
+        } catch (Throwable t) {
+            caught = t;
+        } finally {
+            synchronized (this) {
+                notifyAll();
+            }
+        }
+    }
+
+    /**
+     * @since 1.19, Ant 1.5
+     */
+    public synchronized void timeoutOccured(Watchdog w) {
+        if (thread != null) {
+            timedOut = true;
+            thread.interrupt();
+        }
+        notifyAll();
+    }
+
+    /**
+     * @since 1.19, Ant 1.5
+     */
+    public boolean killedProcess() {
+        return timedOut;
     }
 }

@@ -57,7 +57,7 @@ package org.apache.tools.ant.util;
 /**
  * Interface for classes that want to be notified by Watchdog.
  *
- * @since 1.5
+ * @since Ant 1.5
  *
  * @see org.apache.tools.ant.util.Watchdog
  *

@@ -98,7 +98,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      *
      * @param timeout the timeout for the process in milliseconds. It must be greather than 0.
      */
-    public ExecuteWatchdog(int timeout) {
+    public ExecuteWatchdog(long timeout) {
         watchdog = new Watchdog(timeout);
         watchdog.addTimeoutObserver(this);
     }

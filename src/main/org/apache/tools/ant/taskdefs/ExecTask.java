@@ -88,7 +88,7 @@ public class ExecTask extends Task {
     private File dir;
     protected boolean failOnError = false;
     protected boolean newEnvironment = false;
-    private Integer timeout = null;
+    private Long timeout = null;
     private Environment env = new Environment();
     protected Commandline cmdl = new Commandline();
     private FileOutputStream fos = null;
@@ -104,7 +104,7 @@ public class ExecTask extends Task {
     /**
      * Timeout in milliseconds after which the process will be killed.
      */
-    public void setTimeout(Integer value) {
+    public void setTimeout(Long value) {
         timeout = value;
     }
 
@@ -377,7 +377,7 @@ public class ExecTask extends Task {
         if (timeout == null) {
           return null;
         }
-        return new ExecuteWatchdog(timeout.intValue());
+        return new ExecuteWatchdog(timeout.longValue());
     }
 
     /**
