@@ -1,6 +1,6 @@
 @echo off
 
-set _CP=CLASSPATH
+set _CP=%CLASSPATH%
 
 if exist build\classes\org\apache\tools\ant\Main.class goto doBuild
 
@@ -14,7 +14,7 @@ echo ----------------
 
 rem exit
 
-set LOCALCLASSPATH=lib\optional\junit.jar;build\classes
+set LOCALCLASSPATH=%CLASSPATH%;lib\optional\junit.jar;build\classes
 for %%i in (lib\*.jar) do call src\script\lcp.bat %%i
 
 if "%JAVA_HOME%" == "" goto noJavaHome
