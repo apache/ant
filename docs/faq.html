@@ -917,6 +917,17 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
 </pre>
                         <p>With AntContrib (external task library) you can do <code>
          &lt;propertycopy name="prop" from="${anotherprop}"/&gt;</code>.</p>
+                        <p>With Ant 1.6 you can simulate the AntContribs &lt;propertycopy&gt;
+         and avoid the need of an external library:</p>
+                        <pre class="code">
+&lt;macrodef name=&quot;propertycopy&quot;&gt;
+  &lt;attribute name=&quot;name&quot;/&gt;
+  &lt;attribute name=&quot;from&quot;/&gt;
+  &lt;sequential&gt;
+    &lt;property name=&quot;@{name}&quot; value=&quot;${@{from}}&quot;/&gt;
+  &lt;/sequential&gt;
+&lt;/macrodef&gt;
+</pre>
                                 <p class="faq">
       <a name="always-recompiles"></a>
       Why does Ant always recompile all my Java files?

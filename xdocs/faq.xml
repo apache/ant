@@ -581,6 +581,17 @@ shell-prompt> m4 foo.m4 > foo
 ]]></source>
          <p>With AntContrib (external task library) you can do <code>
          &lt;propertycopy name="prop" from="${anotherprop}"/&gt;</code>.</p>
+         <p>With Ant 1.6 you can simulate the AntContribs &lt;propertycopy&gt;
+         and avoid the need of an external library:</p>
+        <source><![CDATA[
+<macrodef name="propertycopy">
+  <attribute name="name"/>
+  <attribute name="from"/>
+  <sequential>
+    <property name="@{name}" value="${@{from}}"/>
+  </sequential>
+</macrodef>
+]]></source>
       </answer>
     </faq>
   </faqsection>
