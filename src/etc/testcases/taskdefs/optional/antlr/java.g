@@ -52,10 +52,6 @@
  *		java.tree.g didn't handle the expression of synchronized
  *			statements.
  *
- * Version tracking now done with following ID:
- *
- * $Id$
- *
  * BUG:
  * 		Doesn't like boolean.class!
  *

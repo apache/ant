@@ -1,5 +1,5 @@
 /*
- * Copyright  2002,2004 The Apache Software Foundation
+ * Copyright  2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ package org.apache.tools.ant.types;
  * conformance with the OASIS standard.</p>
  *
  * @see org.apache.xml.resolver.Catalog
- * @version $Id$
  */
 public class DTDLocation extends ResourceLocation {
 }
