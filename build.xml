@@ -143,6 +143,10 @@
     <available property="icontract.present"
                classname="com.reliablesystems.iContract.IContracted"
                classpathref="classpath"/>
+    <available property="jdepend.present" 
+               classname="jdepend.framework.JDepend"  
+               classpathref="classpath"/>
+               
   </target>
 
   <!-- 
@@ -204,6 +208,7 @@
                unless="xalan.present" />
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
                unless="xalan.present" />
+      <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
     </javac>
     
     <copy todir="${build.classes}">
