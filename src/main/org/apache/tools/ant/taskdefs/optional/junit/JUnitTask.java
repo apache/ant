@@ -1129,6 +1129,8 @@ public class JUnitTask extends Task {
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
         createClassLoader();
+        test.setCounts(1, 0, 1);
+        test.setProperties(getProject().getProperties());
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
             File outFile = getOutput(fe, test);
@@ -1158,7 +1160,6 @@ public class JUnitTask extends Task {
                             OutputStream out) {
         formatter.setOutput(out);
         formatter.startTestSuite(test);
-        test.setCounts(1, 0, 1);
         Test t = new Test() {
             public int countTestCases() { return 1; }
             public void run(TestResult r) {
