@@ -43,7 +43,7 @@
         If not specified the console will be used instead.
 	  </td>
 	  <td valign="top" align="center">
-	    No, 
+	    No
 	  </td>
 	</tr>
 
@@ -96,7 +96,7 @@
       <p><b>Concatenate a string to a file:</b></p>
 
       <pre>
-  &lt;concat tofile=&quot;README&quot;&gt;Hello, World!&lt;/concat&gt;
+  &lt;concat destfile=&quot;README&quot;&gt;Hello, World!&lt;/concat&gt;
       </pre>
 
       <p><b>Concatenate a series of files to the console:</b></p>
@@ -110,7 +110,7 @@
       <p><b>Concatenate a single file, appending if the destination file exists:</b></p>
 
       <pre>
-  &lt;concat tofile=&quot;NOTES&quot; append=&quot;true&quot;&gt;
+  &lt;concat destfile=&quot;NOTES&quot; append=&quot;true&quot;&gt;
     &lt;filelist dir=&quot;notes&quot; files=&quot;note.txt&quot; /&gt;
   &lt;/concat&gt;
       </pre>
@@ -119,7 +119,7 @@
       destination file exists:</b></p>
 
       <pre>
-  &lt;concat tofile=&quot;${docbook.dir}/all-sections.xml&quot;&gt;
+  &lt;concat destfile=&quot;${docbook.dir}/all-sections.xml&quot;&gt;
     &lt;filelist dir=&quot;${docbook.dir}/sections&quot; 
          files=&quot;introduction.xml,overview.xml&quot; /&gt;
     &lt;fileset dir=&quot;${docbook.dir}&quot; 
