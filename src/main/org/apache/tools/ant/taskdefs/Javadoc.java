@@ -890,12 +890,12 @@ public class Javadoc extends Task {
     	}
     
     	String[] files = dir.list(new FilenameFilter () {
-    			public boolean accept(File dir, String name) {
+    			public boolean accept(File dir1, String name) {
     				if (name.endsWith(".java")) {
     					foundJavaFile = true;
     					return false;
     				}
-    				File d = new File(dir, name);
+    				File d = new File(dir1, name);
     				if (d.isDirectory()) {
     					return true;
     				}
