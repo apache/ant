@@ -129,4 +129,11 @@ public abstract class CovBase extends Task {
     protected String getParamFileArgument() {
         return (!isJProbe4 ? "-jp_" : "") + "paramfile=";
     }
+
+    /**
+     * Are we running on a version of JProbe 4.x or higher?
+     */
+    protected boolean isJProbe4Plus() {
+        return isJProbe4;
+    }
 }

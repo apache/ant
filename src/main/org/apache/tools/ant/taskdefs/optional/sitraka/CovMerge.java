@@ -124,8 +124,11 @@ public class CovMerge extends CovBase {
             cmdl.createArgument().setValue(getParamFileArgument() 
                                            + paramfile.getAbsolutePath());
 
-            // last argument is the output snapshot
-            cmdl.createArgument().setValue(tofile.getPath()); 
+            if (isJProbe4Plus()) {
+                // last argument is the output snapshot - JProbe 4.x
+                // doesn't like it in the parameter file.
+                cmdl.createArgument().setValue(tofile.getPath()); 
+            }
 
             LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
@@ -198,6 +201,11 @@ public class CovMerge extends CovBase {
             PrintWriter pw = new PrintWriter(fw);
             for (int i = 0; i < snapshots.length; i++) {
                 pw.println(snapshots[i].getAbsolutePath());
+            }
+            if (!isJProbe4Plus()) {
+                // last file is the output snapshot - JProbe 4.x doesn't
+                // like it in the parameter file.
+                pw.println(getProject().resolveFile(tofile.getPath()));
             }
             pw.flush();
         } catch (IOException e) {
