@@ -1462,12 +1462,15 @@ public class Javadoc extends Task {
 
     /**
      * Enables the -source switch, will be ignored if javadoc is not
-     * the 1.4 version or a different doclet than the standard doclet
-     * is used.
+     * the 1.4 version.
      *
      * @since Ant 1.5
      */
     public void setSource(String source) {
+        if (!javadoc4) {
+            log ("-source option not supported on JavaDoc < 1.4", 
+                 Project.MSG_VERBOSE);
+        }
         this.source = source;
     }
 
@@ -1751,13 +1754,8 @@ public class Javadoc extends Task {
                 }
 
                 if (source != null) {
-                    if (doclet != null) {
-                        log("ignoring source option for custom doclet",
-                            Project.MSG_WARN);
-                    } else {
-                        toExecute.createArgument().setValue("-source");
-                        toExecute.createArgument().setValue(source);
-                    }
+                    toExecute.createArgument().setValue("-source");
+                    toExecute.createArgument().setValue(source);
                 }
             }
 
