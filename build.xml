@@ -32,6 +32,7 @@
   <property name="manifest" value="src/etc/manifest"/>
 
   <property name="build.compiler" value="classic"/>
+  <property name="build.compiler.emacs" value="on"/>
 
   <!-- =================================================================== -->
   <!-- Check to see what optional dependencies are available               -->

@@ -83,6 +83,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:kvisco@exoffice.com">Keith Visco</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
+ * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
  * @version $Revision$ $Date$
  */
 public class XSLTProcess extends MatchingTask {
@@ -138,38 +139,40 @@ public class XSLTProcess extends MatchingTask {
 
 	log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
-	try {
-	    // Create a new XSL processor with the specified stylesheet
-	    if (xslFile != null) {
-                String file = new File(baseDir,xslFile.toString()).toString();
-		log("Loading stylesheet " + file, Project.MSG_INFO);
-                liaison.setStylesheet( file );
-	    }
-	} catch (Exception ex) {
-	    log("Failed to read stylesheet " + xslFile, Project.MSG_INFO);
-            throw new BuildException(ex);
-	}
+        long styleSheetLastModified = 0;
+        if (xslFile != null) {
+            try {
+                // Create a new XSL processor with the specified stylesheet
+                File file = new File( baseDir, xslFile.toString() );
+                styleSheetLastModified = file.lastModified();
+                log( "Loading stylesheet " + file, Project.MSG_INFO);
+                liaison.setStylesheet( file.toString() );
+            } catch (Exception ex) {
+                log("Failed to read stylesheet " + xslFile, Project.MSG_INFO);
+                throw new BuildException(ex);
+            }
+        }
 
 	// Process all the files marked for styling
 	list = scanner.getIncludedFiles();
 	for (int i = 0;i < list.length; ++i) {
-	    process(baseDir,list[i],destDir);
+            process( baseDir, list[i], destDir, styleSheetLastModified );
 	}
-
+        
 	// Process all the directoried marked for styling
 	dirs = scanner.getIncludedDirectories();
 	for (int j = 0;j < dirs.length;++j){
 	    list=new File(baseDir,dirs[j]).list();
 	    for (int i = 0;i < list.length;++i)
-		process(baseDir,list[i],destDir);
+                process( baseDir, list[i], destDir, styleSheetLastModified );
 	}
     } //-- execute
 
     /**
      * Set the base directory.
     **/
-    public void setBasedir(String dirName) {
-	    baseDir = project.resolveFile(dirName);
+    public void setBasedir(File dir) {
+        baseDir = dir;
     } //-- setSourceDir
 
     /**
@@ -177,8 +180,8 @@ public class XSLTProcess extends MatchingTask {
      * files should be copied to
      * @param dirName the name of the destination directory
     **/
-    public void setDestdir(String dirName) {
-	    destDir = project.resolveFile(dirName);
+    public void setDestdir(File dir) {
+        destDir = dir;
     } //-- setDestDir
 
     /**
@@ -284,9 +287,10 @@ public class XSLTProcess extends MatchingTask {
      * Processes the given input XML file and stores the result
      * in the given resultFile.
     **/
-    private void process(File baseDir,String xmlFile,File destDir)
-        throws BuildException
-    {
+    private void process(File baseDir, String xmlFile, File destDir, 
+                         long styleSheetLastModified)
+        throws BuildException {
+
 	String fileExt=targetExtension;
 	File   outFile=null;
 	File   inFile=null;
@@ -294,7 +298,8 @@ public class XSLTProcess extends MatchingTask {
 	try {
 	    inFile = new File(baseDir,xmlFile);
 	    outFile = new File(destDir,xmlFile.substring(0,xmlFile.lastIndexOf('.'))+fileExt);
-	    if (inFile.lastModified() > outFile.lastModified()) {
+	    if (inFile.lastModified() > outFile.lastModified() ||
+                styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor( outFile );
 		//-- command line status
 		log("Processing " + xmlFile + " to " + outFile, Project.MSG_VERBOSE);
