@@ -853,11 +853,13 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     }
 
     /**
-     * Returns the names of the files which were selected. The names
-     * are relative to the base directory. This involves performing
-     * a slow scan if one has not already been completed.
+     * <p>Returns the names of the files which were selected out and
+     * therefore not ultimately included.</p>
      *
-     * @return the names of the files which were selected.
+     * <p>The names are relative to the base directory. This involves
+     * performing a slow scan if one has not already been completed.</p>
+     *
+     * @return the names of the files which were deselected.
      *
      * @see #slowScan
      */
@@ -930,11 +932,13 @@ public class DirectoryScanner implements FileScanner, SelectorScanner {
     }
 
     /**
-     * Returns the names of the directories which were selected. The names
-     * are relative to the base directory. This involves performing a
-     * slow scan if one has not already been completed.
+     * <p>Returns the names of the directories which were selected out and
+     * therefore not ultimately included.</p>
+     * 
+     * <p>The names are relative to the base directory. This involves
+     * performing a slow scan if one has not already been completed.</p>
      *
-     * @return the names of the directories which were selected.
+     * @return the names of the directories which were deselected.
      *
      * @see #slowScan
      */
