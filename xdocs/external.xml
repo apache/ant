@@ -474,6 +474,30 @@
         </table>
       </subsection>
 
+      <subsection name="AntMan">
+
+        <p>An AddIn that integrates Ant with the JDeveloper IDE</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.erudra.com/antman/index.html">http://www.erudra.com/antman/index.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:ashok@erudra.com">Ashok Sridhar</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="AntRunner">
 
         <p>An OpenTool that integrates Ant into the JBuilder IDE.</p>
