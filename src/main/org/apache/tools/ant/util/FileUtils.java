@@ -1030,22 +1030,15 @@ public class FileUtils {
     }
 
     /**
-     * Emulation of File.getParentFile for JDK 1.1
-     *
-     *
+     * This was originally an emulation of File.getParentFile for JDK 1.1,
+     * but it is now implemented using that method (Ant1.7 onwards).
      * @param f the file whose parent is required.
      * @return the given file's parent, or null if the file does not have a
      *         parent.
      * @since 1.10
      */
     public File getParentFile(File f) {
-        if (f != null) {
-            String p = f.getParent();
-            if (p != null) {
-                return new File(p);
-            }
-        }
-        return null;
+        return (f == null) ? null : f.getParentFile();
     }
 
     /**
@@ -1079,23 +1072,15 @@ public class FileUtils {
         }
         final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
-        String text = null;
         StringBuffer textBuffer = null;
         while (bufferLength != -1) {
             bufferLength = rdr.read(buffer);
-            if (bufferLength != -1) {
-                if (textBuffer == null) {
-                    textBuffer = new StringBuffer(
-                                                  new String(buffer, 0, bufferLength));
-                } else {
-                    textBuffer.append(new String(buffer, 0, bufferLength));
-                }
+            if (bufferLength > 0) {
+                textBuffer = (textBuffer == null) ? new StringBuffer() : textBuffer;
+                textBuffer.append(new String(buffer, 0, bufferLength));
             }
         }
-        if (textBuffer != null) {
-            text = textBuffer.toString();
-        }
-        return text;
+        return (textBuffer == null) ? null : textBuffer.toString();
     }
 
     /**
@@ -1158,12 +1143,7 @@ public class FileUtils {
         if (!l.endsWith(File.separator)) {
             l += File.separator;
         }
-
-        if (p.startsWith(l)) {
-            return p.substring(l.length());
-        } else {
-            return p;
-        }
+        return (p.startsWith(l)) ? p.substring(l.length()) : p;
     }
 
     /**
@@ -1191,7 +1171,6 @@ public class FileUtils {
             if (!path.startsWith(File.separator)) {
                 sb.append("/");
             }
-
         } catch (BuildException e) {
             // relative path
         }
@@ -1280,13 +1259,11 @@ public class FileUtils {
             throw new IOException("Failed to delete " + to
                                   + " while trying to rename " + from);
         }
-
         File parent = getParentFile(to);
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IOException("Failed to create directory " + parent
                                   + " while trying to rename " + from);
         }
-
         if (!from.renameTo(to)) {
             copyFile(from, to);
             if (!from.delete()) {
