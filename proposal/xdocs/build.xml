@@ -450,6 +450,8 @@
     <ant dir="dvsl"/>
   </target>
 
+  <target name="docs-from-scratch" depends="clean,gen,docs"/>
+
   <target name="default" depends="gen"/>
 
 </project>
