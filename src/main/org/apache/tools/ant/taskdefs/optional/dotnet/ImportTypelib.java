@@ -76,7 +76,9 @@ public class ImportTypelib extends Task {
     private String extraOptions = null;
 
     /**
-     * name the output file. required
+     * This method names the output file.
+     * 
+     * This is an operation which is required to have been performed.
      * @param destFile
      */
     public void setDestFile(File destFile) {
@@ -84,7 +86,8 @@ public class ImportTypelib extends Task {
     }
 
     /**
-     * what namespace is the typelib to be in. required
+     * This method sets what namespace the typelib is to be in.
+     * This is an operation which is required to have been performed.
      * @param namespace
      */
     public void setNamespace(String namespace) {
@@ -92,7 +95,8 @@ public class ImportTypelib extends Task {
     }
 
     /**
-     * what is the source .tlb file? required.
+     * This method sets which is the source .tlb file. 
+     * This is an operation which is required to have been performed.
      * @param srcFile
      */
     public void setSrcFile(File srcFile) {

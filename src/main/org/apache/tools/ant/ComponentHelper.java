@@ -235,9 +235,9 @@ public class ComponentHelper  {
     }
 
     /**
-     * Initialization code - implementing the original ant component
+     * This method is initialization code implementing the original ant component
      * loading from /org/apache/tools/ant/taskdefs/default.properties
-     * and .../types/default.properties
+     * and /org/apache/tools/ant/types/default.properties.
      */
     public void initDefaultDefinitions() {
         initTasks();

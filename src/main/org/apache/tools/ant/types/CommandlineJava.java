@@ -109,9 +109,9 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         * get the size of the sysproperties instance. This merges all
+         * This method gets the size of the sysproperties instance. This merges all
          * property sets, so is not an O(1) operation.
-         * @return
+         * @return the size of the sysproperties instance
          */
         public int size() {
             Properties p = mergePropertySets();
@@ -427,7 +427,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Get the VM command parameters, including memory settings
-     * @return
+     * @return the VM command parameters
      */
     private Commandline getActualVMCommand() {
         Commandline actualVMCommand = (Commandline) vmCommand.clone();
@@ -520,7 +520,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * get the system properties object
-     * @return
+     * @return The system properties object
      */
     public SysProperties getSystemProperties() {
         return sysProperties;

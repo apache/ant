@@ -98,7 +98,7 @@ public class DotnetResource {
 
     /**
      * build the C# style parameter (which has no public/private option)
-     * @return
+     * @return the built C# style parameter
      */
     public String getCSharpStyleParameter() {
         StringBuffer buffer = new StringBuffer();
@@ -117,8 +117,8 @@ public class DotnetResource {
     }
 
     /**
-     * get the style of param used by VB and javascript
-     * @return
+     * This method gets the style of param used by VB and javascript
+     * @return The style VB parameter being used.
      */
     public String getVbStyleParameter() {
         StringBuffer buffer = new StringBuffer();

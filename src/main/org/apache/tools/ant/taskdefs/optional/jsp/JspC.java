@@ -297,7 +297,7 @@ public class JspC extends MatchingTask {
 
     /**
      * Filename for web.xml.
-     * @return
+     * @return The filename for web.xml.
      */
     public File getWebxml() {
         return this.webxml;

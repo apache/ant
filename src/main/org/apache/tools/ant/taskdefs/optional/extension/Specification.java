@@ -108,9 +108,9 @@ public final class Specification {
         new Compatibility("REQUIRE_IMPLEMENTATION_CHANGE");
 
     /**
-     * Enum indicating that extension is incompatible with
+     * This enum indicates that an extension is incompatible with
      * other Package Specification in ways other than other enums
-     * indicate). ie For example the other Package Specification
+     * indicate. For example, the other Package Specification
      * may have a different ID.
      */
     public static final Compatibility INCOMPATIBLE =

@@ -155,7 +155,7 @@ public class ZipOutputStream extends FilterOutputStream {
     private static final byte[] LZERO = {0, 0, 0, 0};
 
     /**
-     * Holds the offsets of the LFH starts for each entry
+     * Holds the offsets of the LFH starts for each entry.
      *
      * @since 1.1
      */
@@ -173,7 +173,7 @@ public class ZipOutputStream extends FilterOutputStream {
     private String encoding = null;
 
     /**
-     * Deflater object for output
+     * This Deflater object is used for output.
      *
      * <p>This attribute is only protected to provide a level of API
      * backwards compatibility.  This class used to extend {@link
@@ -185,7 +185,7 @@ public class ZipOutputStream extends FilterOutputStream {
     protected Deflater def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
 
     /**
-     * Deflater buffer
+     * This buffer servers as a Deflater.
      *
      * <p>This attribute is only protected to provide a level of API
      * backwards compatibility.  This class used to extend {@link
@@ -197,7 +197,7 @@ public class ZipOutputStream extends FilterOutputStream {
     protected byte[] buf = new byte[512];
 
     /**
-     * Optional random access output
+     * Optional random access output.
      *
      * @since 1.14
      */
@@ -252,8 +252,8 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     /**
-     * Is this archive writing to a seekable stream (i.e. a random
-     * access file)?
+     * This method indicates whether this archive is writing to a seekable stream (i.e., to a random
+     * access file).
      *
      * <p>For seekable streams, you don't need to calculate the CRC or
      * uncompressed size for {@link #STORED STORED} entries before

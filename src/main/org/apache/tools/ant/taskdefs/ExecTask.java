@@ -327,9 +327,9 @@ public class ExecTask extends Task {
 
 
     /**
-     * Attempt to figure out where the executable is so that we can feed
-     * the full path - first try basedir, then the exec dir and then
-     * fallback to the straight executable name (i.e. on ther path)
+     * The method attempts to figure out where the executable is so that we can feed
+     * the full path. We first try basedir, then the exec dir, and then
+     * fallback to the straight executable name (i.e. on ther path).
      *
      * @param exec the name of the executable
      * @param searchPath if true, the excutable will be looked up in

@@ -711,8 +711,8 @@ public abstract class DotnetCompile
     }
 
     /**
-     * what is the executable?
-     * @return
+     * This method gets the name of the executable.
+     * @return the name of the executable
      */
     protected String getExecutable() {
         return executable;
@@ -764,7 +764,7 @@ public abstract class DotnetCompile
 
     /**
      * getter for flag
-     * @return
+     * @return The flag indicating whether the compilation is using a response file.
      */
     public boolean isUseResponseFile() {
         return useResponseFile;
@@ -922,8 +922,8 @@ public abstract class DotnetCompile
     protected abstract void addCompilerSpecificOptions(NetCommand command);
 
     /**
-     * override point for delimiting definitions
-     * @return
+     * override point for delimiting definitions.
+     * @return The definitions limiter, i.e., ";"
      */
     public String getDefinitionsDelimiter() {
         return ";";

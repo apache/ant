@@ -280,7 +280,7 @@ public class Ildasm extends Task {
         setSourceFile(sourceFile);
     }
     /**
-     * visibility options: one or more of the following, with + signs to
+     * This method sets the visibility options. It chooses one or more of the following, with + signs to
      * concatenate them:
      * <pre>
      * pub : Public
@@ -425,9 +425,9 @@ public class Ildasm extends Task {
         }
 
         /**
-         * map from an encoding enum to an encoding option
+         * This method maps from an encoding enum to an encoding option.
          * @param enumValue
-         * @return
+         * @return The encoding option indicated by the enum value.
          */
         public static String getEncodingOption(String enumValue) {
             if (UNICODE.equals(enumValue)) {

@@ -197,9 +197,10 @@ public class SubAnt
     }
 
     /**
-     * Build file name, to use in conjunction with directories.<br/>
-     * Defaults to "build.xml".<br/>
-     * If <code>genericantfile</code> is set, this attribute is ignored.
+     * This method builds the file name to use in conjunction with directories.
+     * 
+     * <p>Defaults to "build.xml".
+     * If <code>genericantfile</code> is set, this attribute is ignored.</p>
      *
      * @param  antfile the short build file name. Defaults to "build.xml".
      */
@@ -208,9 +209,10 @@ public class SubAnt
     }
 
     /**
-     * Build file path, to use in conjunction with directories.<br/>
-     * Use <code>genericantfile</code>, in order to run the same build file
-     * with different basedirs.<br/>
+     * This method builds a file path to use in conjunction with directories.
+     * 
+     * <p>Use <code>genericantfile</code>, in order to run the same build file
+     * with different basedirs.</p>
      * If this attribute is set, <code>antfile</code> is ignored.
      *
      * @param afile (path of the generic ant file, absolute or relative to

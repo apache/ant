@@ -540,7 +540,7 @@ public class Tar extends MatchingTask {
         /**
          * The uid for the tar entry
          * This is not the same as the User name.
-         * @param userName the user name for the tar entry.
+         * @param uid the id of the user for the tar entry.
          */
         public void setUid(int uid) {
             this.uid = uid;
@@ -572,7 +572,7 @@ public class Tar extends MatchingTask {
         /**
          * The GID for the tar entry; optional, default="0"
          * This is not the same as the group name.
-         * @param groupName the group name string.
+         * @param gid the group id.
          */
         public void setGid(int gid) {
             this.gid = gid;
