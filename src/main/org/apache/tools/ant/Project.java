@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.HashSet;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.loader.AntClassLoader2;
 import org.apache.tools.ant.helper.DefaultExecutor;
 import org.apache.tools.ant.helper.KeepGoingExecutor;
 import org.apache.tools.ant.types.FilterSet;
@@ -79,13 +80,6 @@ public class Project {
      * traversing a DFS of target dependencies.
      */
     private static final String VISITED = "VISITED";
-
-    /**
-     * The class name of the Ant class loader to use for
-     * JDK 1.2 and above
-     */
-    private static final String ANTCLASSLOADER_JDK12
-        = "org.apache.tools.ant.loader.AntClassLoader2";
 
     /**
      * Version constant for Java 1.0
@@ -269,31 +263,6 @@ public class Project {
     }
 
     /**
-     * Factory method to create a class loader for loading classes
-     *
-     * @return an appropriate classloader
-     */
-    private AntClassLoader createClassLoader() {
-        AntClassLoader loader = null;
-        try {
-            // 1.2+ - create advanced helper dynamically
-            Class loaderClass
-                    = Class.forName(ANTCLASSLOADER_JDK12);
-            loader = (AntClassLoader) loaderClass.newInstance();
-        } catch (Exception e) {
-            log("Unable to create Class Loader: "
-                    + e.getMessage(), Project.MSG_DEBUG);
-        }
-
-        if (loader == null) {
-            loader = new AntClassLoader();
-        }
-
-        loader.setProject(this);
-        return loader;
-    }
-
-    /**
      * Factory method to create a class loader for loading classes from
      * a given path
      *
@@ -302,7 +271,8 @@ public class Project {
      * @return an appropriate classloader
      */
     public AntClassLoader createClassLoader(Path path) {
-        AntClassLoader loader = createClassLoader();
+        AntClassLoader loader = new AntClassLoader2();
+        loader.setProject(this);
         loader.setClassPath(path);
         return loader;
     }
