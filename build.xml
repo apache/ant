@@ -848,13 +848,6 @@
           <exclude name="${optional.package}/ReplaceRegExpTest.java"
                    unless="some.regexp.support" />
 
-          <!-- defer for now -->
-          <exclude name="${regexp.package}/MatcherWrappedAsRegexpTest.java" 
-                   unless="invalid-some.regexp.support" />
-                   
-           <!-- run when you have the environment setup to support them -->
-          <exclude name="org/apache/tools/ant/taskdefs/optional/net/FtpTest.java" />
-
           <!-- it's an abstract class, not a test -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest.java" />
           <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" unless="xslp.present"/>
