@@ -69,6 +69,8 @@ enhancements of existing tasks.
 * Unify <available> and <uptodate> into a more general <condition>
   task, support AND/OR of several tests here.
 
+* Integration of the depends task and javac tasks
+
 * jsp-compilation task
 
   Sounds like a candidate for a facade task.
@@ -412,7 +414,7 @@ V. Things we probably don't agree on.
 * internationalization
 
 * Ignore any classes contained in the damned ext dirs of a JVM - possibly by launching
-  with something like <code>jar -Djava.ext.dir=foo -jar ant.jar</code>
+  with something like jar -Djava.ext.dir=foo -jar ant.jar
 
 * Set arithmetic for fileset/patternset/*set
 
