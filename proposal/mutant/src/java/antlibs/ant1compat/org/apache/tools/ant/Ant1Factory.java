@@ -96,7 +96,7 @@ public class Ant1Factory extends StandardLibFactory {
         project.init(context);
 
         EventService eventService =
-            (EventService)context.getCoreService(EventService.class);
+            (EventService) context.getCoreService(EventService.class);
         eventService.addBuildListener(project);
     }
 
@@ -130,7 +130,7 @@ public class Ant1Factory extends StandardLibFactory {
             }
 
             if (component instanceof ProjectComponent) {
-                ((ProjectComponent)component).setProject(project);
+                ((ProjectComponent) component).setProject(project);
             }
             return component;
         } catch (java.lang.reflect.InvocationTargetException ite) {
@@ -164,10 +164,10 @@ public class Ant1Factory extends StandardLibFactory {
         try {
             try {
                 c = converterClass.getConstructor(new Class[0]);
-                converter = (Converter)c.newInstance(new Object[0]);
+                converter = (Converter) c.newInstance(new Object[0]);
             } catch (NoSuchMethodException nse) {
                 c = converterClass.getConstructor(new Class[]{Project.class});
-                converter = (Converter)c.newInstance(new Object[]{project});
+                converter = (Converter) c.newInstance(new Object[]{project});
             }
 
             return converter;
@@ -193,7 +193,7 @@ public class Ant1Factory extends StandardLibFactory {
     public void registerCreatedElement(Object createdElement)
          throws ExecutionException {
         if (createdElement instanceof ProjectComponent) {
-            ProjectComponent component = (ProjectComponent)createdElement;
+            ProjectComponent component = (ProjectComponent) createdElement;
             component.setProject(project);
         }
     }

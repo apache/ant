@@ -169,12 +169,12 @@ public class BuildHelper {
         args[index++] = "-d";
         args[index++] = dest.getPath();
         if (classpathRef != null) {
-            String path = (String)paths.get(resolve(classpathRef));
+            String path = (String) paths.get(resolve(classpathRef));
             args[index++] = "-classpath";
             args[index++] = path;
         }
         for (Iterator i = javaFiles.iterator(); i.hasNext();) {
-            args[index++] = ((File)i.next()).getPath();
+            args[index++] = ((File) i.next()).getPath();
         }
 
         try {
@@ -222,7 +222,7 @@ public class BuildHelper {
      * @param fileSetRef the fileset to be copied
      */
     protected void copyFilesetRef(String fileSetRef, String toDir) {
-        FileSetInfo fileset = (FileSetInfo)filesets.get(resolve(fileSetRef));
+        FileSetInfo fileset = (FileSetInfo) filesets.get(resolve(fileSetRef));
         if (fileset != null) {
             File to = new File(resolve(toDir));
             copyFileList(fileset.root, fileset.files, to);
@@ -259,7 +259,7 @@ public class BuildHelper {
     protected void addFileSetToPath(String pathName, String filesetDir,
                                     String filesetIncludes) {
         File[] files = buildFileSet(filesetDir, filesetIncludes);
-        String currentPath = (String)paths.get(pathName);
+        String currentPath = (String) paths.get(pathName);
         for (int i = 0; i < files.length; ++i) {
             if (currentPath == null || currentPath.length() == 0) {
                 currentPath = files[i].getPath();
@@ -279,7 +279,7 @@ public class BuildHelper {
      */
     protected void addPathElementToPath(String pathName, String location) {
         String pathElement = resolve(location).replace('/', File.separatorChar);
-        String currentPath = (String)paths.get(pathName);
+        String currentPath = (String) paths.get(pathName);
         if (currentPath == null || currentPath.length() == 0) {
             currentPath = pathElement;
         } else {
@@ -295,12 +295,12 @@ public class BuildHelper {
      * @param pathNameToAdd the name of the path to be added.
      */
     protected void addPathToPath(String pathName, String pathNameToAdd) {
-        String pathToAdd = (String)paths.get(pathNameToAdd);
+        String pathToAdd = (String) paths.get(pathNameToAdd);
         if (pathToAdd == null || pathToAdd.length() == 0) {
             return;
         }
 
-        String currentPath = (String)paths.get(pathName);
+        String currentPath = (String) paths.get(pathName);
         if (currentPath == null || currentPath.length() == 0) {
             currentPath = pathToAdd;
         } else {
@@ -494,7 +494,7 @@ public class BuildHelper {
             int index = newValue.indexOf("${");
             int endIndex = newValue.indexOf("}", index);
             String propertyName = newValue.substring(index + 2, endIndex);
-            String repValue = (String)properties.get(propertyName);
+            String repValue = (String) properties.get(propertyName);
             newValue = newValue.substring(0, index) +
                 repValue + newValue.substring(endIndex + 1);
         }

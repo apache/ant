@@ -114,13 +114,13 @@ public abstract class ModelElement {
     public void setAspects(Map aspects) {
         aspectMaps = new HashMap();
         for (Iterator i = aspects.keySet().iterator(); i.hasNext();) {
-            String aspectName = (String)i.next();
+            String aspectName = (String) i.next();
             int separator = aspectName.indexOf(":");
             if (separator != -1) {
                 String prefix = aspectName.substring(0, separator);
                 String name = aspectName.substring(separator + 1);
                 if (prefix.length() != 0 && name.length() != 0) {
-                    Map prefixMap = (Map)aspectMaps.get(prefix);
+                    Map prefixMap = (Map) aspectMaps.get(prefix);
                     if (prefixMap == null) {
                         prefixMap = new HashMap();
                         aspectMaps.put(prefix, prefixMap);
@@ -176,7 +176,7 @@ public abstract class ModelElement {
      * @return a map of the attribute values for the given aspect.
      */
     public Map getAspectAttributes(String aspectPrefix) {
-        return (Map)aspectMaps.get(aspectPrefix);
+        return (Map) aspectMaps.get(aspectPrefix);
     }
 
     /**
@@ -191,7 +191,7 @@ public abstract class ModelElement {
         if (aspectAttributes == null) {
             return null;
         }
-        return (String)aspectAttributes.get(keyName);
+        return (String) aspectAttributes.get(keyName);
     }
 }
 

@@ -128,7 +128,7 @@ public class LoaderUtils {
                         }
                     }
                 }
-                urls = (URL[])jarList.toArray(new URL[0]);
+                urls = (URL[]) jarList.toArray(new URL[0]);
             } catch (IOException e) {
                 // use the default location
                 if (defaultFile != null) {
@@ -157,7 +157,7 @@ public class LoaderUtils {
     public static String getClasspath(ClassLoader loader) {
         StringBuffer pathBuffer = null;
         if (loader instanceof URLClassLoader) {
-            URLClassLoader urlLoader = (URLClassLoader)loader;
+            URLClassLoader urlLoader = (URLClassLoader) loader;
             URL[] urls = urlLoader.getURLs();
             for (int i = 0; i < urls.length; ++i) {
                 if (!urls[i].getProtocol().equals("file")) {
@@ -194,7 +194,7 @@ public class LoaderUtils {
      */
     public static void dumpLoader(PrintStream ps, ClassLoader loader) {
         if (loader instanceof URLClassLoader) {
-            URLClassLoader urlLoader = (URLClassLoader)loader;
+            URLClassLoader urlLoader = (URLClassLoader) loader;
             URL[] urls = urlLoader.getURLs();
             if (urls.length == 0) {
                 ps.println("   No URLs");

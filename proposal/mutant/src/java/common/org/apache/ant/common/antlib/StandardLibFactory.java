@@ -106,7 +106,7 @@ public class StandardLibFactory implements AntLibFactory {
     public Converter createConverter(Class converterClass)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
-        return (Converter)converterClass.newInstance();
+        return (Converter) converterClass.newInstance();
     }
 
     /**

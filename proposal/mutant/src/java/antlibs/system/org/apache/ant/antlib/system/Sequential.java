@@ -100,9 +100,9 @@ public class Sequential extends AbstractTask
     public void execute() throws ExecutionException {
         AntContext context = getAntContext();
         ExecService execService
-             = (ExecService)context.getCoreService(ExecService.class);
+             = (ExecService) context.getCoreService(ExecService.class);
         for (Iterator i = nestedTasks.iterator(); i.hasNext();) {
-            Task nestedTask = (Task)i.next();
+            Task nestedTask = (Task) i.next();
             execService.executeTask(nestedTask);
         }
     }

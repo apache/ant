@@ -74,7 +74,7 @@ public class DeferredSetter implements Setter {
      */
     public void setAttribute(Object obj, String attributeName,
                              String value) throws ExecutionException {
-        DeferredTask task = (DeferredTask)obj;
+        DeferredTask task = (DeferredTask) obj;
         task.setAttribute(attributeName, value);
     }
 
@@ -99,7 +99,7 @@ public class DeferredSetter implements Setter {
      */
     public void addText(Object obj, String text)
          throws ExecutionException {
-        DeferredTask task = (DeferredTask)obj;
+        DeferredTask task = (DeferredTask) obj;
         task.addText(text);
     }
 
@@ -114,7 +114,7 @@ public class DeferredSetter implements Setter {
      */
     public void addElement(Object obj, String elementName, Object value)
          throws ExecutionException {
-        DeferredTask task = (DeferredTask)obj;
+        DeferredTask task = (DeferredTask) obj;
         task.addElement(elementName, value);
     }
 

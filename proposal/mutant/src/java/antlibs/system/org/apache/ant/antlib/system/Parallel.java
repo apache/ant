@@ -118,7 +118,7 @@ public class Parallel extends AbstractTask
             try {
                 AntContext context = getAntContext();
                 ExecService execService
-                     = (ExecService)context.getCoreService(ExecService.class);
+                     = (ExecService) context.getCoreService(ExecService.class);
                 execService.executeTask(task);
             } catch (Throwable t) {
                 exception = t;
@@ -150,7 +150,7 @@ public class Parallel extends AbstractTask
         TaskThread[] threads = new TaskThread[nestedTasks.size()];
         int threadNumber = 0;
         for (Iterator i = nestedTasks.iterator(); i.hasNext(); threadNumber++) {
-            Task nestedTask = (Task)i.next();
+            Task nestedTask = (Task) i.next();
             threads[threadNumber] = new TaskThread(threadNumber, nestedTask);
         }
 
@@ -183,7 +183,7 @@ public class Parallel extends AbstractTask
                 }
                 if (t instanceof ExecutionException &&
                     firstLocation == Location.UNKNOWN_LOCATION) {
-                    firstLocation = ((ExecutionException)t).getLocation();
+                    firstLocation = ((ExecutionException) t).getLocation();
                 }
                 exceptionMessage.append(lSep);
                 exceptionMessage.append(t.getMessage());
@@ -192,7 +192,7 @@ public class Parallel extends AbstractTask
 
         if (numExceptions == 1) {
             if (firstException instanceof ExecutionException) {
-                throw (ExecutionException)firstException;
+                throw (ExecutionException) firstException;
             } else {
                 throw new ExecutionException(firstException);
             }

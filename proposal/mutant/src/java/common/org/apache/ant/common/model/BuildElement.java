@@ -136,7 +136,7 @@ public class BuildElement extends ModelElement {
      *      attribute.
      */
     public String getAttributeValue(String attributeName) {
-        return (String)attributes.get(attributeName);
+        return (String) attributes.get(attributeName);
     }
 
     /**

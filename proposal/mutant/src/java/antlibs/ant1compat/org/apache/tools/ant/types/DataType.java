@@ -197,7 +197,7 @@ public abstract class DataType extends ProjectComponent
                 throw circularReference();
             } else {
                 stk.push(o);
-                ((DataType)o).dieOnCircularReference(stk, p);
+                ((DataType) o).dieOnCircularReference(stk, p);
                 stk.pop();
             }
         }

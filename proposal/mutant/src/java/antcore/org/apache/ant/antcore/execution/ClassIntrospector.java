@@ -116,7 +116,7 @@ public class ClassIntrospector {
                  && returnType.equals(Void.TYPE)
                  && args.length == 1
                  && !args[0].isArray()) {
-                Integer depth = (Integer)classDepth.get(m.getDeclaringClass());
+                Integer depth = (Integer) classDepth.get(m.getDeclaringClass());
                 reflector.addAttributeMethod(m, depth.intValue(), 
                     getPropertyName(name, "set"), converters);
             } else if (name.startsWith("addConfigured")

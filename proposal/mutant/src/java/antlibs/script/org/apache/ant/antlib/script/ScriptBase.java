@@ -129,8 +129,8 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
             
             engine.exec(scriptName, 0, 0, script);
             for (Iterator i = attributes.keySet().iterator(); i.hasNext();) {
-                String attributeName = (String)i.next();
-                String value = (String)attributes.get(attributeName);
+                String attributeName = (String) i.next();
+                String value = (String) attributes.get(attributeName);
                 StringBuffer setter = new StringBuffer(attributeName);
                 setter.setCharAt(0, Character.toUpperCase(setter.charAt(0)));
                 engine.call(null, "set" + setter, new Object[]{value});
@@ -139,7 +139,7 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
             Iterator i = nestedElementNames.iterator();
             Iterator j = nestedElements.iterator();
             while (i.hasNext()) {
-                String nestedName = (String)i.next();
+                String nestedName = (String) i.next();
                 Object nestedElement = j.next();
                 StringBuffer adder = new StringBuffer(nestedName);
                 adder.setCharAt(0, Character.toUpperCase(adder.charAt(0)));
@@ -152,7 +152,7 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
             Throwable te = e.getTargetException();
             if (te != null) {
                 if (te instanceof ExecutionException) {
-                    throw (ExecutionException)te;
+                    throw (ExecutionException) te;
                 } else {
                     t = te;
                 }

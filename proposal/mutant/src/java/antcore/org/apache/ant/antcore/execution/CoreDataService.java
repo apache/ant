@@ -172,9 +172,9 @@ public class CoreDataService implements DataService {
         Iterator i = fragments.iterator();
         Iterator j = propertyRefs.iterator();
         while (i.hasNext()) {
-            String fragment = (String)i.next();
+            String fragment = (String) i.next();
             if (fragment == null) {
-                String propertyName = (String)j.next();
+                String propertyName = (String) j.next();
                 if (!isDataValueSet(propertyName)) {
                     if (!allowUnsetProperties) {
                         throw new ExecutionException("Property \""
@@ -215,9 +215,9 @@ public class CoreDataService implements DataService {
         Iterator i = fragments.iterator();
         Iterator j = propertyRefs.iterator();
         while (i.hasNext()) {
-            String fragment = (String)i.next();
+            String fragment = (String) i.next();
             if (fragment == null) {
-                String propertyName = (String)j.next();
+                String propertyName = (String) j.next();
                 if (!replacementValues.containsKey(propertyName)) {
                     fragment = "${" + propertyName + "}";
                 } else {

@@ -104,7 +104,7 @@ public class ProjectHelper {
         try {
             AntContext context = project.getContext();
             DataService dataService
-                 = (DataService)context.getCoreService(DataService.class);
+                 = (DataService) context.getCoreService(DataService.class);
             return dataService.replacePropertyRefs(value);
         } catch (ExecutionException e) {
             throw new BuildException(e);
@@ -126,7 +126,7 @@ public class ProjectHelper {
         try {
             AntContext context = project.getContext();
             DataService dataService
-                 = (DataService)context.getCoreService(DataService.class);
+                 = (DataService) context.getCoreService(DataService.class);
             return dataService.replacePropertyRefs(value, keys);
         } catch (ExecutionException e) {
             throw new BuildException(e);

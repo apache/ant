@@ -260,17 +260,17 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * sensible way. The file separators are then converted to their
      * platform specific versions.
      *
-     * @param to_process the path to be converted
+     * @param toProcess the path to be converted
      * @return the native version of to_process or an empty string if
      *      to_process is null or empty
      */
-    public static String translatePath(String to_process) {
-        if (to_process == null || to_process.length() == 0) {
+    public static String translatePath(String toProcess) {
+        if (toProcess == null || toProcess.length() == 0) {
             return "";
         }
 
-        StringBuffer path = new StringBuffer(to_process.length() + 50);
-        PathTokenizer tokenizer = new PathTokenizer(to_process);
+        StringBuffer path = new StringBuffer(toProcess.length() + 50);
+        PathTokenizer tokenizer = new PathTokenizer(toProcess);
         while (tokenizer.hasMoreTokens()) {
             String pathComponent = tokenizer.nextToken();
             pathComponent = pathComponent.replace('/', File.separatorChar);
@@ -473,7 +473,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         Map properties = dataService.getAllProperties();
         Hashtable result = new Hashtable();
         for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-            String name = (String)i.next();
+            String name = (String) i.next();
             Object value = properties.get(name);
             if (value instanceof String) {
                 result.put(name, value);
@@ -501,7 +501,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         Map properties = dataService.getAllProperties();
         Hashtable result = new Hashtable();
         for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-            String name = (String)i.next();
+            String name = (String) i.next();
             Object value = properties.get(name);
             if (!(value instanceof String)) {
                 result.put(name, value);
@@ -511,6 +511,34 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         return result;
     }
 
+    /**
+     * Register a task as the current task for a thread.
+     * If the task is null, the thread's entry is removed.
+     *
+     * @param thread the thread on which the task is registered.
+     * @param task the task to be registered.
+     * @since 1.102, Ant 1.5
+     */
+    public void registerThreadTask(Thread thread, Task task) {
+//        if (task != null) {
+//            threadTasks.put(thread, task);
+//        } else {
+//            threadTasks.remove(thread);
+//        }
+    }
+    
+    /**
+     * Get the current task assopciated with a thread, if any
+     *
+     * @param thread the thread for which the task is required.
+     * @return the task which is currently registered for the given thread or
+     *         null if no task is registered. 
+     */
+    public Task getThreadTask(Thread thread) {
+        return null;
+        // return (Task)threadTasks.get(thread);
+    }
+    
     /**
      * build started event
      *
@@ -537,7 +565,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public void targetStarted(org.apache.ant.common.event.BuildEvent event) {
         Target newTarget = new Target(this);
         org.apache.ant.common.model.Target realTarget =
-            (org.apache.ant.common.model.Target)event.getSource();
+            (org.apache.ant.common.model.Target) event.getSource();
         newTarget.setName(realTarget.getName());
         targetStack.push(newTarget);
         fireTargetStarted(newTarget);
@@ -550,8 +578,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public void targetFinished(org.apache.ant.common.event.BuildEvent event) {
         org.apache.ant.common.model.Target realTarget =
-            (org.apache.ant.common.model.Target)event.getSource();
-        Target currentTarget = (Target)targetStack.pop();
+            (org.apache.ant.common.model.Target) event.getSource();
+        Target currentTarget = (Target) targetStack.pop();
         fireTargetFinished(currentTarget, event.getCause());
         currentTarget = null;
     }
@@ -764,11 +792,11 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public void init(AntContext context) throws ExecutionException {
         this.context = context;
-        fileService = (FileService)context.getCoreService(FileService.class);
-        dataService = (DataService)context.getCoreService(DataService.class);
-        execService = (ExecService)context.getCoreService(ExecService.class);
-        componentService
-             = (ComponentService)context.getCoreService(ComponentService.class);
+        fileService = (FileService) context.getCoreService(FileService.class);
+        dataService = (DataService) context.getCoreService(DataService.class);
+        execService = (ExecService) context.getCoreService(ExecService.class);
+        componentService = (ComponentService) 
+            context.getCoreService(ComponentService.class);
 
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
 
@@ -783,7 +811,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
-                String key = (String)enum.nextElement();
+                String key = (String) enum.nextElement();
                 String value = props.getProperty(key);
                 try {
                     Class taskClass = Class.forName(value);
@@ -813,7 +841,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
-                String key = (String)enum.nextElement();
+                String key = (String) enum.nextElement();
                 String value = props.getProperty(key);
                 try {
                     Class dataClass = Class.forName(value);
@@ -937,7 +965,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public Task createTask(String taskType) throws BuildException {
         Task task = null;
-        Class taskClass = (Class)taskClassDefinitions.get(taskType);
+        Class taskClass = (Class) taskClassDefinitions.get(taskType);
 
         if (taskClass == null) {
             return null;
@@ -947,7 +975,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
             Object taskObject = componentService.createComponent(factory,
                 context.getClassLoader(), taskClass, false, taskType);
             if (taskObject instanceof Task) {
-                task = (Task)taskObject;
+                task = (Task) taskObject;
             } else {
                 TaskAdapter adapter = new TaskAdapter();
                 adapter.setProxy(taskObject);
@@ -972,7 +1000,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      *      instance creation fails.
      */
     public Object createDataType(String typeName) throws BuildException {
-        Class typeClass = (Class)dataClassDefinitions.get(typeName);
+        Class typeClass = (Class) dataClassDefinitions.get(typeName);
 
         if (typeClass == null) {
             return null;
@@ -991,7 +1019,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     protected void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
         }
     }
@@ -1005,7 +1033,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
         }
     }
@@ -1019,7 +1047,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
         }
     }
@@ -1034,7 +1062,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
         }
     }
@@ -1049,7 +1077,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         // threadTasks.put(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
         }
     }
@@ -1067,7 +1095,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
         }
     }
@@ -1122,7 +1150,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
                                         int priority) {
         event.setMessage(message, priority);
         for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.messageLogged(event);
         }
     }

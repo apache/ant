@@ -162,7 +162,7 @@ public class DefaultLogger implements BuildLogger {
      */
     public void reportException(Throwable t) {
         if (t instanceof AntException) {
-            AntException e = (AntException)t;
+            AntException e = (AntException) t;
             Location location = e.getLocation();
             Throwable cause = e.getCause();
             if (location != null && location != Location.UNKNOWN_LOCATION) {
@@ -218,7 +218,7 @@ public class DefaultLogger implements BuildLogger {
      */
     public void targetStarted(BuildEvent event) {
         if (MessageLevel.MSG_INFO <= messageOutputLevel) {
-            Target target = (Target)event.getSource();
+            Target target = (Target) event.getSource();
             out.println(lSep + target.getName() + ":");
         }
     }
@@ -262,11 +262,11 @@ public class DefaultLogger implements BuildLogger {
             String name = null;
             Object source = event.getSource();
             if (source instanceof Task) {
-                name = ((Task)source).getTaskName();
+                name = ((Task) source).getTaskName();
             }
 
             if (name == null && source instanceof ExecutionComponent) {
-                name = ((ExecutionComponent)source).getComponentType();
+                name = ((ExecutionComponent) source).getComponentType();
             }
 
             if (name != null) {

@@ -123,7 +123,7 @@ public abstract class ElementHandler extends DefaultHandler {
      *      snot defined.
      */
     public String getAttribute(String attributeName) {
-        return (String)elementAttributes.get(attributeName);
+        return (String) elementAttributes.get(attributeName);
     }
 
     /**

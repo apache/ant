@@ -178,7 +178,7 @@ public class AntLibrary implements ComponentLibrary {
      *      component's definition
      */
     public AntLibDefinition getDefinition(String definitionName) {
-        return (AntLibDefinition)definitions.get(definitionName);
+        return (AntLibDefinition) definitions.get(definitionName);
     }
 
     /**
@@ -218,7 +218,7 @@ public class AntLibrary implements ComponentLibrary {
                 Class factoryClass = Class.forName(factoryClassName,
                     true, getClassLoader());
                 libFactory
-                     = (AntLibFactory)factoryClass.newInstance();
+                     = (AntLibFactory) factoryClass.newInstance();
                 libFactory.init(context);
             }
             return libFactory;
@@ -271,7 +271,7 @@ public class AntLibrary implements ComponentLibrary {
         ClassLoader ourParent
              = extendsLibrary == null ? parentLoader
              : extendsLibrary.getClassLoader();
-        return new URLClassLoader((URL[])libraryURLs.toArray(new URL[0]),
+        return new URLClassLoader((URL[]) libraryURLs.toArray(new URL[0]),
             ourParent);
     }
 

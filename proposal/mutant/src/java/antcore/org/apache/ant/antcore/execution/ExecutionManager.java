@@ -112,6 +112,7 @@ public class ExecutionManager implements DemuxOutputReceiver {
          throws ExecutionException {
         this.config = config;
         this.initConfig = initConfig;
+        init();
     }
 
     /**
@@ -138,7 +139,7 @@ public class ExecutionManager implements DemuxOutputReceiver {
             // add any additional libraries.
             for (Iterator i = config.getLibraryLocations(); i.hasNext();) {
                 // try file first
-                String libLocation = (String)i.next();
+                String libLocation = (String) i.next();
                 libManager.loadLibs(librarySpecs, libLocation);
             }
             libManager.configLibraries(initConfig, librarySpecs, antLibraries,
@@ -162,14 +163,13 @@ public class ExecutionManager implements DemuxOutputReceiver {
          throws AntException {
         Throwable buildFailureCause = null;
         try {
-            init();
             
             // start by validating the project we have been given.
             project.validate();
 
             mainFrame = new Frame(antLibraries, initConfig, config);
             for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
-                BuildListener listener = (BuildListener)j.next();
+                BuildListener listener = (BuildListener) j.next();
                 mainFrame.addBuildListener(listener);
             }
 
@@ -222,11 +222,7 @@ public class ExecutionManager implements DemuxOutputReceiver {
      * @param isErr true if this content is from the thread's error stream.
      */
     public void threadOutput(String line, boolean isErr) {
-        if (mainFrame == null) {
-            eventSupport.threadOutput(line, isErr);
-        } else {
-            mainFrame.threadOutput(line, isErr);
-        }
+        eventSupport.threadOutput(line, isErr);
     }
 }
 

@@ -219,7 +219,7 @@ public class Project extends ModelElement {
      *      target.
      */
     public Target getTarget(String targetName) {
-        return (Target)targets.get(targetName);
+        return (Target) targets.get(targetName);
     }
 
 
@@ -242,7 +242,7 @@ public class Project extends ModelElement {
      *      null if there is no such project.
      */
     public Project getReferencedProject(String alias) {
-        return (Project)referencedProjects.get(alias);
+        return (Project) referencedProjects.get(alias);
     }
 
 
@@ -417,7 +417,7 @@ public class Project extends ModelElement {
             }
             checker.visitNode(targetGlobalName);
             for (Iterator i = target.getDependencies(); i.hasNext();) {
-                String dependency = (String)i.next();
+                String dependency = (String) i.next();
                 boolean localTarget = (dependency.indexOf(REF_DELIMITER) == -1);
                 Target dependencyTarget
                      = localTarget ? getTarget(dependency)
@@ -460,9 +460,9 @@ public class Project extends ModelElement {
     protected void validate(String globalName) throws ModelException {
         Set keys = referencedProjects.keySet();
         for (Iterator i = keys.iterator(); i.hasNext();) {
-            String refName = (String)i.next();
+            String refName = (String) i.next();
             Project referencedProject
-                 = (Project)referencedProjects.get(refName);
+                 = (Project) referencedProjects.get(refName);
             String refGlobalName = refName;
             if (globalName != null) {
                 refGlobalName = globalName + REF_DELIMITER + refName;
@@ -482,7 +482,7 @@ public class Project extends ModelElement {
         List dependencyOrder = new ArrayList();
 
         for (Iterator i = getTargets(); i.hasNext();) {
-            Target target = (Target)i.next();
+            Target target = (Target) i.next();
             target.validate();
             fillinDependencyOrder(globalName, target, dependencyOrder,
                 visited, checker);
@@ -527,7 +527,7 @@ public class Project extends ModelElement {
                      + " does not exist");
             }
             for (Iterator i = target.getDependencies(); i.hasNext();) {
-                String localDependencyName = (String)i.next();
+                String localDependencyName = (String) i.next();
                 String fullDependencyName
                      = fullProjectName == null ? localDependencyName
                      : fullProjectName + REF_DELIMITER + localDependencyName;

@@ -144,7 +144,7 @@ public class DynamicLibrary implements ComponentLibrary {
      *      component's definition
      */
     public AntLibDefinition getDefinition(String definitionName) {
-        return (AntLibDefinition)definitions.get(definitionName);
+        return (AntLibDefinition) definitions.get(definitionName);
     }
 
     /**

@@ -148,7 +148,7 @@ public class CoreExecService implements ExecService {
             throw new ExecutionException("The Task was not configured with an"
                  + " appropriate context");
         }
-        ExecutionContext execContext = (ExecutionContext)context;
+        ExecutionContext execContext = (ExecutionContext) context;
         
         frame.getEventSupport().fireTaskStarted(task);
         Throwable failureCause = null;

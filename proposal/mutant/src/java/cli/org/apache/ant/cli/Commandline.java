@@ -161,10 +161,10 @@ public class Commandline {
         execManager.addBuildListener(logger);
 
         for (Iterator i = listeners.iterator(); i.hasNext();) {
-            String className = (String)i.next();
+            String className = (String) i.next();
             try {
                 BuildListener listener =
-                    (BuildListener)Class.forName(className).newInstance();
+                    (BuildListener) Class.forName(className).newInstance();
                 execManager.addBuildListener(listener);
             } catch (ClassCastException e) {
                 System.err.println("The specified listener class "
@@ -226,7 +226,7 @@ public class Commandline {
                  + configFile, e);
         } catch (XMLParseException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                throw (FileNotFoundException)e.getCause();
+                throw (FileNotFoundException) e.getCause();
             }
 
             throw new ConfigException("Unable to parse config file from "
@@ -285,7 +285,7 @@ public class Commandline {
             }
 
             for (Iterator i = configFiles.iterator(); i.hasNext();) {
-                File configFile = (File)i.next();
+                File configFile = (File) i.next();
                 AntConfig runConfig = getAntConfigFile(configFile);
                 config.merge(runConfig);
             }
@@ -479,7 +479,7 @@ public class Commandline {
         if (loggerClassname != null) {
             try {
                 Class loggerClass = Class.forName(loggerClassname);
-                logger = (BuildLogger)(loggerClass.newInstance());
+                logger = (BuildLogger) loggerClass.newInstance();
             } catch (ClassCastException e) {
                 System.err.println("The specified logger class "
                      + loggerClassname +

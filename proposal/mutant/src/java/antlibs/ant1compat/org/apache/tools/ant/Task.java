@@ -168,9 +168,9 @@ public abstract class Task extends ProjectComponent
             throw new BuildException("Can't add tasks to this task");
         }
         // wrap the Ant2 task in a TaskAdapter
-        TaskContainer container = (TaskContainer)this;
+        TaskContainer container = (TaskContainer) this;
         if (task instanceof Task) {
-            container.addTask((Task)task);
+            container.addTask((Task) task);
         } else {
             TaskAdapter adapter = new TaskAdapter();
             adapter.setProxy(task);
@@ -223,7 +223,7 @@ public abstract class Task extends ProjectComponent
         try {
             AntContext context = getAntContext();
             ExecService execService
-                 = (ExecService)context.getCoreService(ExecService.class);
+                 = (ExecService) context.getCoreService(ExecService.class);
             execService.executeTask(this);
         } catch (ExecutionException e) {
             throw new BuildException(e);

@@ -180,7 +180,7 @@ public class Builder {
         files.remove(new File(TASKDEFS_ROOT, "SendEmail.java"));
         
         
-        return (File[])files.toArray(new File[0]);
+        return (File[]) files.toArray(new File[0]);
     }
 
     /**

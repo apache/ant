@@ -104,7 +104,7 @@ public class Ant1Converter extends AbstractConverter {
         } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
             try {
                 EnumeratedAttribute ea
-                     = (EnumeratedAttribute)type.newInstance();
+                     = (EnumeratedAttribute) type.newInstance();
                 ea.setValue(value);
                 return ea;
             } catch (InstantiationException e) {

@@ -119,7 +119,7 @@ public class DemuxOutputStream extends OutputStream {
      * @exception IOException if the data cannot be written to the stream
      */
     public void write(int cc) throws IOException {
-        final byte c = (byte)cc;
+        final byte c = (byte) cc;
 
         BufferInfo bufferInfo = getBufferInfo();
         if ((c == '\n') || (c == '\r')) {
@@ -179,7 +179,7 @@ public class DemuxOutputStream extends OutputStream {
      */
     private BufferInfo getBufferInfo() {
         Thread current = Thread.currentThread();
-        BufferInfo bufferInfo = (BufferInfo)buffers.get(current);
+        BufferInfo bufferInfo = (BufferInfo) buffers.get(current);
         if (bufferInfo == null) {
             bufferInfo = new BufferInfo();
             bufferInfo.buffer = new ByteArrayOutputStream();

@@ -131,7 +131,7 @@ public class ParseContext {
             if (e.getException() != null) {
                 Throwable nestedException = e.getException();
                 if (nestedException instanceof AntException) {
-                    location = ((AntException)nestedException).getLocation();
+                    location = ((AntException) nestedException).getLocation();
                 }
                 throw new XMLParseException(nestedException, location);
             } else {

@@ -134,7 +134,7 @@ public class AntConfig {
      *      library
      */
     public List getLibraryPathList(String libraryId) {
-        List libraryPathList = (List)libPaths.get(libraryId);
+        List libraryPathList = (List) libPaths.get(libraryId);
         if (libraryPathList == null) {
             libraryPathList = new ArrayList();
             libPaths.put(libraryId, libraryPathList);
@@ -252,7 +252,7 @@ public class AntConfig {
 
         Iterator i = otherConfig.libPaths.keySet().iterator();
         while (i.hasNext()) {
-            String libraryId = (String)i.next();
+            String libraryId = (String) i.next();
             List currentList = getLibraryPathList(libraryId);
             List combined = new ArrayList();
             combined.addAll(otherConfig.getLibraryPathList(libraryId));

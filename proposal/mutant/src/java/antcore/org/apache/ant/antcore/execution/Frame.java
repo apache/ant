@@ -87,7 +87,7 @@ import org.apache.ant.init.InitConfig;
  * @author Conor MacNeill
  * @created 14 January 2002
  */
-public class Frame implements DemuxOutputReceiver {
+public class Frame {
     /** the base dir of the project */
     private File baseDir;
 
@@ -188,7 +188,7 @@ public class Frame implements DemuxOutputReceiver {
         referencedFrames = new HashMap();
 
         for (Iterator i = project.getReferencedProjectNames(); i.hasNext();) {
-            String referenceName = (String)i.next();
+            String referenceName = (String) i.next();
             Project referencedProject
                  = project.getReferencedProject(referenceName);
             Frame referencedFrame = createFrame(referencedProject);
@@ -320,12 +320,12 @@ public class Frame implements DemuxOutputReceiver {
         Map allProperties = new HashMap(dataValues);
         Iterator i = referencedFrames.keySet().iterator();
         while (i.hasNext()) {
-            String refName = (String)i.next();
+            String refName = (String) i.next();
             Frame refFrame = getReferencedFrame(refName);
             Map refProperties = refFrame.getAllProperties();
             Iterator j = refProperties.keySet().iterator();
             while (j.hasNext()) {
-                String name = (String)j.next();
+                String name = (String) j.next();
                 Object value = refProperties.get(name);
                 allProperties.put(refName + Project.REF_DELIMITER + name,
                     value);
@@ -400,7 +400,7 @@ public class Frame implements DemuxOutputReceiver {
      *      if there is no such project.
      */
     protected Frame getReferencedFrame(String referenceName) {
-        return (Frame)referencedFrames.get(referenceName);
+        return (Frame) referencedFrames.get(referenceName);
     }
 
     /**
@@ -508,7 +508,7 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void addProperties(Map properties) throws ExecutionException {
         for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-            String name = (String)i.next();
+            String name = (String) i.next();
             Object value = properties.get(name);
             setDataValue(name, value, false);
         }
@@ -527,7 +527,7 @@ public class Frame implements DemuxOutputReceiver {
              = new Frame(standardLibs, initConfig, config);
         newFrame.setProject(project);
         for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
-            BuildListener listener = (BuildListener)j.next();
+            BuildListener listener = (BuildListener) j.next();
             newFrame.addBuildListener(listener);
         }
         return newFrame;
@@ -550,7 +550,7 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void addBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext();) {
-            Frame referencedFrame = (Frame)i.next();
+            Frame referencedFrame = (Frame) i.next();
             referencedFrame.addBuildListener(listener);
         }
         eventSupport.addBuildListener(listener);
@@ -563,7 +563,7 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void removeBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext();) {
-            Frame subFrame = (Frame)i.next();
+            Frame subFrame = (Frame) i.next();
             subFrame.removeBuildListener(listener);
         }
         eventSupport.removeBuildListener(listener);
@@ -589,7 +589,7 @@ public class Frame implements DemuxOutputReceiver {
             }
         } else {
             for (Iterator i = targets.iterator(); i.hasNext();) {
-                String targetName = (String)i.next();
+                String targetName = (String) i.next();
                 log("Executing target: " + targetName, MessageLevel.MSG_DEBUG);
                 executeTarget(targetName);
             }
@@ -612,7 +612,7 @@ public class Frame implements DemuxOutputReceiver {
             // firstly build a list of fully qualified target names to execute.
             List dependencyOrder = project.getTargetDependencies(targetName);
             for (Iterator i = dependencyOrder.iterator(); i.hasNext();) {
-                String fullTargetName = (String)i.next();
+                String fullTargetName = (String) i.next();
                 Frame frame = getContainingFrame(fullTargetName);
                 String localTargetName = getNameInFrame(fullTargetName);
                 frame.executeTargetTasks(localTargetName);
@@ -632,12 +632,12 @@ public class Frame implements DemuxOutputReceiver {
     protected void executeTasks(Iterator taskIterator)
          throws ExecutionException {
         while (taskIterator.hasNext()) {
-            BuildElement model = (BuildElement)taskIterator.next();
+            BuildElement model = (BuildElement) taskIterator.next();
             // what sort of element is this.
             try {
                 Object component = componentManager.createComponent(model);
                 if (component instanceof Task) {
-                    execService.executeTask((Task)component);
+                    execService.executeTask((Task) component);
                 } else {
                     String typeId
                          = model.getAspectValue(Constants.ANT_ASPECT, "id");
@@ -718,23 +718,11 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void initialize() throws ExecutionException {
         for (Iterator i = getReferencedFrames(); i.hasNext();) {
-            Frame referencedFrame = (Frame)i.next();
+            Frame referencedFrame = (Frame) i.next();
             referencedFrame.initialize();
         }
         Iterator taskIterator = project.getTasks();
         executeTasks(taskIterator);
-    }
-
-    /**
-     * Handle the content from a single thread. This method will be called
-     * by the thread producing the content. The content is broken up into
-     * separate lines
-     *
-     * @param line the content produce by the current thread.
-     * @param isErr true if this content is from the thread's error stream.
-     */
-    public void threadOutput(String line, boolean isErr) {
-        eventSupport.threadOutput(line, isErr);
     }
 
     /**
@@ -766,7 +754,7 @@ public class Frame implements DemuxOutputReceiver {
         setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
 
         for (Iterator i = getReferencedFrames(); i.hasNext();) {
-            Frame refFrame = (Frame)i.next();
+            Frame refFrame = (Frame) i.next();
             refFrame.determineBaseDirs();
         }
     }

@@ -102,7 +102,7 @@ public class CallTarget extends Task {
         try {
             ComponentService componentService = getComponentService();
             AntLibFactory factory = getProject().getFactory();
-            antCall = (AntCall)componentService.createComponent(factory,
+            antCall = (AntCall) componentService.createComponent(factory,
                 context.getClassLoader(), AntCall.class, false, "antcall");
         } catch (ExecutionException e) {
             throw new BuildException(e);
@@ -112,7 +112,7 @@ public class CallTarget extends Task {
     /** execute the call */
     public void execute() {
         for (Iterator i = properties.iterator(); i.hasNext();) {
-            Property property = (Property)i.next();
+            Property property = (Property) i.next();
             AntBase.Property newProperty = new AntBase.Property();
             newProperty.setName(property.getName());
             newProperty.setValue(property.getValue());
@@ -158,7 +158,8 @@ public class CallTarget extends Task {
      */
     private ComponentService getComponentService() throws ExecutionException {
         AntContext context = getAntContext();
-        return (ComponentService)context.getCoreService(ComponentService.class);
+        return 
+            (ComponentService) context.getCoreService(ComponentService.class);
     }
 }
 

@@ -153,7 +153,7 @@ public class Reflector implements Setter {
          throws ExecutionException {
         String name = attributeName.toLowerCase();
         AttributeSetter as
-             = (AttributeSetter)attributeSetters.get(name);
+             = (AttributeSetter) attributeSetters.get(name);
         if (as == null) {
             throw new ExecutionException("Class " + obj.getClass().getName()
                  + " doesn't support the \"" + attributeName + "\" attribute");
@@ -166,7 +166,7 @@ public class Reflector implements Setter {
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
             if (t instanceof ExecutionException) {
-                throw (ExecutionException)t;
+                throw (ExecutionException) t;
             }
             throw new ExecutionException(t);
         }
@@ -188,7 +188,7 @@ public class Reflector implements Setter {
      * @return the class instance representing the type of the element adder
      */
     public Class getType(String elementName) {
-        return (Class)elementTypes.get(elementName);
+        return (Class) elementTypes.get(elementName);
     }
 
     /**
@@ -214,7 +214,7 @@ public class Reflector implements Setter {
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
             if (t instanceof ExecutionException) {
-                throw (ExecutionException)t;
+                throw (ExecutionException) t;
             }
             throw new ExecutionException(t);
         }
@@ -232,7 +232,7 @@ public class Reflector implements Setter {
     public void addElement(Object obj, String elementName, Object value)
          throws ExecutionException {
         String name = elementName.toLowerCase();
-        ElementAdder adder = (ElementAdder)elementAdders.get(name);
+        ElementAdder adder = (ElementAdder) elementAdders.get(name);
         if (adder == null) {
             throw new ExecutionException("Class " + obj.getClass().getName()
                  + " doesn't support the \"" + elementName
@@ -246,7 +246,7 @@ public class Reflector implements Setter {
         } catch (InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
             if (t instanceof ExecutionException) {
-                throw (ExecutionException)t;
+                throw (ExecutionException) t;
             }
             throw new ExecutionException(t);
         }
@@ -266,7 +266,7 @@ public class Reflector implements Setter {
          throws ExecutionException {
 
         ElementCreator creator
-             = (ElementCreator)elementCreators.get(elementName.toLowerCase());
+             = (ElementCreator) elementCreators.get(elementName.toLowerCase());
         if (creator == null) {
             throw new ExecutionException("Class "
                  + container.getClass().getName()
@@ -285,7 +285,7 @@ public class Reflector implements Setter {
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t instanceof ExecutionException) {
-                throw (ExecutionException)t;
+                throw (ExecutionException) t;
             }
             throw new ExecutionException(t);
         }
@@ -346,7 +346,7 @@ public class Reflector implements Setter {
                                     AttributeSetter setter) {
         String name = attributeName.toLowerCase();
         AttributeSetter currentSetter 
-            = (AttributeSetter)attributeSetters.get(name);
+            = (AttributeSetter) attributeSetters.get(name);
         if (currentSetter != null) {
             // there is a setter, is it lower down in the class hierarchy
             int currentDepth = currentSetter.getDepth();
@@ -393,7 +393,7 @@ public class Reflector implements Setter {
         if (converters != null && converters.containsKey(type)) {
             // we have a converter to use to convert the String
             // value into something the set method expects.
-            Converter converter = (Converter)converters.get(type);
+            Converter converter = (Converter) converters.get(type);
             addConvertingSetter(m, depth, propertyName, converter);
             return;
         }
@@ -416,11 +416,11 @@ public class Reflector implements Setter {
             // desparate by now - try top find a converter which handles a super
             // class of this type and which supports subclass instantiation
             for (Iterator i = converters.keySet().iterator(); i.hasNext();) {
-                Class converterType = (Class)i.next();
+                Class converterType = (Class) i.next();
                 if (converterType.isAssignableFrom(type)) {
                     // could be a candidate
                     Converter converter
-                         = (Converter)converters.get(converterType);
+                         = (Converter) converters.get(converterType);
                     if (converter.canConvertSubType(type)) {
                         addConvertingSetter(m, depth, propertyName, converter);
                         return;

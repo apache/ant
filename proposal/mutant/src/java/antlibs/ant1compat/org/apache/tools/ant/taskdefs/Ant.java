@@ -163,7 +163,7 @@ public class Ant extends Task {
      */
     public void execute() throws BuildException {
         for (Iterator i = properties.iterator(); i.hasNext();) {
-            Property property = (Property)i.next();
+            Property property = (Property) i.next();
             AntBase.Property newProperty = new AntBase.Property();
             newProperty.setName(property.getName());
             newProperty.setValue(property.getValue());
@@ -209,7 +209,8 @@ public class Ant extends Task {
      */
     private ComponentService getComponentService() throws ExecutionException {
         AntContext context = getAntContext();
-        return (ComponentService)context.getCoreService(ComponentService.class);
+        return (ComponentService) 
+            context.getCoreService(ComponentService.class);
     }
 
 }

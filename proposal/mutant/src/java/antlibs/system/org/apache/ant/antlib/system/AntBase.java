@@ -260,7 +260,7 @@ public abstract class AntBase extends AbstractTask {
     public void init(AntContext context, String componentType)
          throws ExecutionException {
         super.init(context, componentType);
-        dataService = (DataService)getCoreService(DataService.class);
+        dataService = (DataService) getCoreService(DataService.class);
     }
 
     /**

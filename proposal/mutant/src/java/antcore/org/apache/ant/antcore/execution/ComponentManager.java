@@ -165,7 +165,7 @@ public class ComponentManager implements ComponentService {
             if (importAll) {
                 Iterator i = librarySpecs.keySet().iterator();
                 while (i.hasNext()) {
-                    String libraryId = (String)i.next();
+                    String libraryId = (String) i.next();
                     importLibrary(libraryId);
                 }
             }
@@ -219,7 +219,7 @@ public class ComponentManager implements ComponentService {
      */
     public void addLibPath(String libraryId, URL libPath)
          throws ExecutionException {
-        List libPaths = (List)libPathsMap.get(libraryId);
+        List libPaths = (List) libPathsMap.get(libraryId);
         if (libPaths == null) {
             libPaths = new ArrayList();
             libPathsMap.put(libraryId, libPaths);
@@ -227,7 +227,7 @@ public class ComponentManager implements ComponentService {
         libPaths.add(libPath);
 
         // If this library already exists give it the new path now
-        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        AntLibrary library = (AntLibrary) antLibraries.get(libraryId);
         if (library != null) {
             libManager.addLibPath(library, libPath);
         }
@@ -240,13 +240,13 @@ public class ComponentManager implements ComponentService {
      * @exception ExecutionException if the library cannot be imported
      */
     public void importLibrary(String libraryId) throws ExecutionException {
-        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        AntLibrary library = (AntLibrary) antLibraries.get(libraryId);
         if (library == null) {
             throw new ExecutionException("Unable to import library " + libraryId
                  + " as it has not been loaded");
         }
         for (Iterator i = library.getDefinitionNames(); i.hasNext();) {
-            String defName = (String)i.next();
+            String defName = (String) i.next();
             importLibraryDef(library, defName, null);
         }
         addLibraryConverters(library);
@@ -266,7 +266,7 @@ public class ComponentManager implements ComponentService {
      */
     public void importComponent(String libraryId, String defName,
                                 String alias) throws ExecutionException {
-        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        AntLibrary library = (AntLibrary) antLibraries.get(libraryId);
         if (library == null) {
             throw new ExecutionException("Unable to import component from "
                  + "library \"" + libraryId + "\" as it has not been loaded");
@@ -361,7 +361,7 @@ public class ComponentManager implements ComponentService {
 
         // go through the libraries and import all standard ant libraries
         for (Iterator i = antLibraries.keySet().iterator(); i.hasNext();) {
-            String libraryId = (String)i.next();
+            String libraryId = (String) i.next();
             if (libraryId.startsWith(Constants.ANT_LIB_PREFIX)) {
                 // standard library - import whole library
                 importLibrary(libraryId);
@@ -392,7 +392,7 @@ public class ComponentManager implements ComponentService {
          throws ExecutionException {
         String libraryId = componentLibrary.getLibraryId();
         if (libFactories.containsKey(libraryId)) {
-            return (AntLibFactory)libFactories.get(libraryId);
+            return (AntLibFactory) libFactories.get(libraryId);
         }
         ExecutionContext context
              = new ExecutionContext(frame, null, Location.UNKNOWN_LOCATION);
@@ -412,7 +412,7 @@ public class ComponentManager implements ComponentService {
      *      other details
      */
     protected ImportInfo getDefinition(String name) {
-        return (ImportInfo)definitions.get(name);
+        return (ImportInfo) definitions.get(name);
     }
 
     /**
@@ -510,7 +510,7 @@ public class ComponentManager implements ComponentService {
      */
     private Setter getSetter(Class c) {
         if (setters.containsKey(c)) {
-            return (Setter)setters.get(c);
+            return (Setter) setters.get(c);
         }
         Setter setter = null;
         if (DeferredTask.class.isAssignableFrom(c)) {
@@ -560,12 +560,12 @@ public class ComponentManager implements ComponentService {
             ExecutionComponent execComponent = null;
             if (addTaskAdapter) {
                 if (component instanceof Task) {
-                    execComponent = (Task)component;
+                    execComponent = (Task) component;
                 } else {
                     execComponent = new TaskAdapter(componentName, component);
                 }
             } else if (component instanceof ExecutionComponent) {
-                execComponent = (ExecutionComponent)component;
+                execComponent = (ExecutionComponent) component;
             }
 
             // set the context loader to that for the component
@@ -639,7 +639,8 @@ public class ComponentManager implements ComponentService {
                  = libFactory.createComponent(typeClass, localName);
 
             if (typeInstance instanceof ExecutionComponent) {
-                ExecutionComponent component = (ExecutionComponent)typeInstance;
+                ExecutionComponent component 
+                    = (ExecutionComponent) typeInstance;
                 ExecutionContext context = new ExecutionContext(frame,
                     component, model.getLocation());
                 component.init(context, localName);
@@ -772,7 +773,7 @@ public class ComponentManager implements ComponentService {
             factory.registerCreatedElement(nestedElement);
             if (nestedElement instanceof ExecutionComponent) {
                 ExecutionComponent component
-                     = (ExecutionComponent)nestedElement;
+                     = (ExecutionComponent) nestedElement;
                 ExecutionContext context = new ExecutionContext(frame,
                     component, model.getLocation());
                 component.init(context, nestedElementName);
@@ -806,7 +807,7 @@ public class ComponentManager implements ComponentService {
         Setter setter = getSetter(element.getClass());
         // start by setting the attributes of this element
         for (Iterator i = model.getAttributeNames(); i.hasNext();) {
-            String attributeName = (String)i.next();
+            String attributeName = (String) i.next();
             String attributeValue = model.getAttributeValue(attributeName);
             if (!setter.supportsAttribute(attributeName)) {
                 throw new ExecutionException(model.getType()
@@ -829,7 +830,7 @@ public class ComponentManager implements ComponentService {
 
         // now do the nested elements
         for (Iterator i = model.getNestedElements(); i.hasNext();) {
-            BuildElement nestedElementModel = (BuildElement)i.next();
+            BuildElement nestedElementModel = (BuildElement) i.next();
             String nestedElementName = nestedElementModel.getType();
             ImportInfo info = getDefinition(nestedElementName);
             if (element instanceof TaskContainer
@@ -838,8 +839,8 @@ public class ComponentManager implements ComponentService {
                  && !setter.supportsNestedElement(nestedElementName)) {
                 // it is a nested task
                 Task nestedTask
-                     = (Task)createComponent(nestedElementModel);
-                TaskContainer container = (TaskContainer)element;
+                     = (Task) createComponent(nestedElementModel);
+                TaskContainer container = (TaskContainer) element;
                 container.addNestedTask(nestedTask);
             } else {
                 if (setter.supportsNestedAdder(nestedElementName)) {
@@ -902,7 +903,7 @@ public class ComponentManager implements ComponentService {
             AntLibFactory libFactory = getLibFactory(library);
             ClassLoader converterLoader = library.getClassLoader();
             for (Iterator i = library.getConverterClassNames(); i.hasNext();) {
-                className = (String)i.next();
+                className = (String) i.next();
                 Class converterClass
                      = Class.forName(className, true, converterLoader);
                 if (!Converter.class.isAssignableFrom(converterClass)) {

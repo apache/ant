@@ -123,7 +123,7 @@ public class AntLibManager {
                     String libraryId = antLibrarySpec.getLibraryId();
                     if (librarySpecs.containsKey(libraryId)) {
                         AntLibrarySpec currentSpec 
-                            = (AntLibrarySpec)librarySpecs.get(libraryId);
+                            = (AntLibrarySpec) librarySpecs.get(libraryId);
                         throw new ExecutionException("Found more than one "
                              + "copy of library with id = " + libraryId 
                              + " (" + libURLs[i] + ") + existing library at ("
@@ -162,10 +162,10 @@ public class AntLibManager {
 
         // check if any already defined
         for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext();) {
-            String libraryId = (String)i.next();
+            String libraryId = (String) i.next();
             if (libraries.containsKey(libraryId)) {
                 AntLibrary currentVersion
-                     = (AntLibrary)libraries.get(libraryId);
+                     = (AntLibrary) libraries.get(libraryId);
                 throw new ExecutionException("Ant Library \"" + libraryId
                      + "\" is already loaded from "
                      + currentVersion.getDefinitionURL());
@@ -175,7 +175,7 @@ public class AntLibManager {
         CircularDependencyChecker configuring
              = new CircularDependencyChecker("configuring Ant libraries");
         for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext();) {
-            String libraryId = (String)i.next();
+            String libraryId = (String) i.next();
             if (!libraries.containsKey(libraryId)) {
                 configLibrary(initConfig, librarySpecs, libraryId,
                     configuring, libraries, libPathsMap);
@@ -272,7 +272,7 @@ public class AntLibManager {
             configuring.visitNode(libraryId);
 
             AntLibrarySpec librarySpec
-                 = (AntLibrarySpec)librarySpecs.get(libraryId);
+                 = (AntLibrarySpec) librarySpecs.get(libraryId);
             String extendsId = librarySpec.getExtendsLibraryId();
             if (extendsId != null) {
                 if (!libraries.containsKey(extendsId)) {
@@ -310,20 +310,20 @@ public class AntLibManager {
             }
 
             for (Iterator i = urlsList.iterator(); i.hasNext();) {
-                antLibrary.addLibraryURL((URL)i.next());
+                antLibrary.addLibraryURL((URL) i.next());
             }
             if (extendsId != null) {
                 AntLibrary extendsLibrary
-                     = (AntLibrary)libraries.get(extendsId);
+                     = (AntLibrary) libraries.get(extendsId);
                 antLibrary.setExtendsLibrary(extendsLibrary);
             }
             antLibrary.setParentLoader(initConfig.getCommonLoader());
             libraries.put(libraryId, antLibrary);
 
-            List libPaths = (List)libPathsMap.get(libraryId);
+            List libPaths = (List) libPathsMap.get(libraryId);
             if (libPaths != null) {
                 for (Iterator j = libPaths.iterator(); j.hasNext();) {
-                    URL pathURL = (URL)j.next();
+                    URL pathURL = (URL) j.next();
                     addLibPath(antLibrary, pathURL);
                 }
             }

@@ -105,9 +105,10 @@ public class Ant extends AntBase {
      * @exception ExecutionException if the build can't be run
      */
     public void execute() throws ExecutionException {
+        System.out.println("Starting Ant Task");
         if (baseDir == null) {
             ExecService execService
-                = (ExecService)getCoreService(ExecService.class);
+                = (ExecService) getCoreService(ExecService.class);
             baseDir = execService.getBaseDir();
         }
         
@@ -125,9 +126,10 @@ public class Ant extends AntBase {
         setProperty(MagicProperties.BASEDIR, baseDir.getAbsolutePath());
         
         ExecService execService
-             = (ExecService)getCoreService(ExecService.class);
+             = (ExecService) getCoreService(ExecService.class);
 
         execService.runBuild(antFile, getProperties(), getTargets());
+        System.out.println("Ending Ant Task");
     }
 }
 

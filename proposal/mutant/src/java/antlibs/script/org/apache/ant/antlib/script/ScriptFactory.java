@@ -124,8 +124,8 @@ public class ScriptFactory extends StandardLibFactory {
      */
     public void init(AntContext context) throws ExecutionException {
         super.init(context);
-        componentService
-             = (ComponentService)context.getCoreService(ComponentService.class);
+        componentService = (ComponentService) 
+            context.getCoreService(ComponentService.class);
         try {
             Class.forName("com.ibm.bsf.BSFManager");
         } catch (ClassNotFoundException e) {
@@ -155,10 +155,10 @@ public class ScriptFactory extends StandardLibFactory {
         Object component = super.createComponent(componentClass, localName);
 
         if (component instanceof ScriptDef) {
-            ScriptDef scriptDef = (ScriptDef)component;
+            ScriptDef scriptDef = (ScriptDef) component;
             scriptDef.setFactory(this);
         } else if (component instanceof ScriptBase) {
-            ScriptBase scriptBase = (ScriptBase)component;
+            ScriptBase scriptBase = (ScriptBase) component;
             scriptBase.setFactory(this);
             scriptBase.setScriptName(localName);
         }
@@ -172,7 +172,7 @@ public class ScriptFactory extends StandardLibFactory {
      * @return the script language name
      */
     protected String getScriptLanguage(String scriptName) {
-        ScriptInfo scriptInfo = (ScriptInfo)scripts.get(scriptName);
+        ScriptInfo scriptInfo = (ScriptInfo) scripts.get(scriptName);
         return scriptInfo.getLanguage();
     }
 
@@ -183,7 +183,7 @@ public class ScriptFactory extends StandardLibFactory {
      * @return the script text
      */
     protected String getScript(String scriptName) {
-        ScriptInfo scriptInfo = (ScriptInfo)scripts.get(scriptName);
+        ScriptInfo scriptInfo = (ScriptInfo) scripts.get(scriptName);
         return scriptInfo.getScript();
     }
 
