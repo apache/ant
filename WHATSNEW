@@ -42,6 +42,8 @@ Fixed bugs:
 
 * <property environment=... /> now works on OS/400.
 
+* <filterset> nested into <filterset>s didn't work.
+
 Other changes:
 --------------
 

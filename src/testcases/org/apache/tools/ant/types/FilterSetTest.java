@@ -62,6 +62,7 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
 import java.io.*;
+import java.util.Hashtable;
 
 /**
  * FilterSet testing
@@ -109,7 +110,6 @@ public class FilterSetTest extends BuildFileTest {
      * actually resolve.  
      */
     public void testRecursive() {
-        System.out.println("testRecursive");
         String result = "it works line";
         String line="@test@ line";
         FilterSet fs = new FilterSet();
@@ -126,7 +126,6 @@ public class FilterSetTest extends BuildFileTest {
      * infinite loop.
      */
     public void testInfinite() {
-        System.out.println("testInfinite");
         String result = "@test@ line testvalue";
         String line = "@test@ line @test3@";
         FilterSet fs = new FilterSet();
@@ -137,6 +136,31 @@ public class FilterSetTest extends BuildFileTest {
         fs.setBeginToken("@");
         fs.setEndToken("@");
         assertEquals(result, fs.replaceTokens(line));
+    }
+
+    public void testNestedFilterSets() {
+        executeTarget("test-nested-filtersets");
+
+        FilterSet fs = (FilterSet) getProject().getReference("1");
+        Hashtable filters = fs.getFilterHash();
+        assertEquals(1, filters.size());
+        assertEquals("value1", filters.get("token1"));
+
+        fs = (FilterSet) getProject().getReference("2");
+        filters = fs.getFilterHash();
+        assertEquals(2, filters.size());
+        assertEquals("1111", filters.get("aaaa"));
+        assertEquals("2222", filters.get("bbbb"));
+
+        fs = (FilterSet) getProject().getReference("3");
+        filters = fs.getFilterHash();
+        assertEquals(1, filters.size());
+        assertEquals("value4", filters.get("token4"));
+
+        fs = (FilterSet) getProject().getReference("5");
+        filters = fs.getFilterHash();
+        assertEquals(1, filters.size());
+        assertEquals("value1", filters.get("token1"));
     }
 
     private boolean compareFiles(String name1, String name2) {

@@ -14,9 +14,14 @@ or be read in from a file. FilterSets can appear inside tasks that support this
 feature or at the same level as <CODE>&lt;target&gt;</CODE> - i.e., as
 children of 
 <CODE>&lt;project&gt;</CODE>.</P>
-<P>FilterSets support the <code>id</code> and <code>refid</code> attributes.
-You can define a FilterSet with an <code>id</code> attribute and then refer
-to that definition from another FilterSet with a <code>refid</code> attribute.
+
+<p>FilterSets support the <code>id</code> and <code>refid</code>
+attributes.  You can define a FilterSet with an <code>id</code>
+attribute and then refer to that definition from another FilterSet
+with a <code>refid</code> attribute.  It is also possible to nest
+filtersets into filtersets to get a set union of the contained
+filters.</p>
+
 <p>In addition, FilterSets can specify
 <code>begintoken</code> and/or 
 <code>endtoken</code> attributes to define what to match.</p>
