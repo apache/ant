@@ -59,7 +59,7 @@ import java.io.InputStream;
 
 /**
  *
- * Passes input requests tot he project objetc for demuxing into
+ * Passes input requests tot he project object for demuxing into
  * individual tasks and threads.
  *
  * @since Ant 1.6

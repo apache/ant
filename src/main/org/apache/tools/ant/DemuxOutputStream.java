@@ -252,7 +252,7 @@ public class DemuxOutputStream extends OutputStream {
     /**
      * Write a block of characters to the output stream
      *
-     * @param b the array containg the data
+     * @param b the array containing the data
      * @param off the offset into the array where data starts
      * @param len the length of block
      *

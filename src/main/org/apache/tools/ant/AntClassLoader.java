@@ -73,7 +73,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 
 /**
- * Used to load classes within ant with a different claspath from
+ * Used to load classes within ant with a different classpath from
  * that used to start ant. Note that it is possible to force a class
  * into this loader even when that class is on the system classpath by
  * using the forceLoadClass method. Any subsequent classes loaded by that
@@ -372,7 +372,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * Set the classpath to search for classes to load. This should not be
      * changed once the classloader starts to server classes
      *
-     * @param classpath the serahc classpath consisting of directories and
+     * @param classpath the search classpath consisting of directories and
      *        jar/zip files.
      */
     public void setClassPath(Path classpath) {
@@ -637,7 +637,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * loader.
      *
      * This ensures that instances of the returned class will be compatible
-     * with instances which which have already been loaded on the parent
+     * with instances which have already been loaded on the parent
      * loader.
      *
      * @param classname The name of the class to be loaded.
@@ -1200,7 +1200,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * Finds a system class (which should be loaded from the same classloader
      * as the Ant core).
      *
-     * For JDK 1.1 compatability, this uses the findSystemClass method if
+     * For JDK 1.1 compatibility, this uses the findSystemClass method if
      * no parent classloader has been specified.
      *
      * @param name The name of the class to be loaded.

@@ -80,9 +80,9 @@ import org.apache.tools.ant.taskdefs.Typedef;
  * for backward compatibly.
  * Project will just delegate its calls to this class.
  *
- * A very simple hook mechnism is provided that allows users to plug
+ * A very simple hook mechanism is provided that allows users to plug
  * in custom code. It is also possible to replace the default behavior
- * ( for example in an app embeding ant )
+ * ( for example in an app embedding ant )
  *
  * @author Costin Manolache
  * @author Peter Reilly
@@ -90,7 +90,7 @@ import org.apache.tools.ant.taskdefs.Typedef;
  * @since Ant1.6
  */
 public class ComponentHelper  {
-    /** Map from compoennt name to anttypedefinition */
+    /** Map from component name to anttypedefinition */
     private AntTypeTable antTypeTable;
 
     /** Map of tasks generated from antTypeTable */
@@ -180,7 +180,7 @@ public class ComponentHelper  {
 
     /**
      * Used with creating child projects. Each child
-     * project inherites the component definitions
+     * project inherits the component definitions
      * from its parent.
      * @param helper the component helper of the parent project
      */
@@ -204,7 +204,7 @@ public class ComponentHelper  {
      * @param componentType The component type,
      *                       Also available as ue.getComponentName()
      * @return the created component
-     * @throws BuildException if an error occuries
+     * @throws BuildException if an error occurs
      */
     public Object createComponent(UnknownElement ue,
                                   String ns,
@@ -233,7 +233,7 @@ public class ComponentHelper  {
      *
      * @param componentName the name of the component, if
      *                      the component is in a namespace, the
-     *                      name is prefixed withe the namespace uri and ":"
+     *                      name is prefixed with the namespace uri and ":"
      * @return the class if found or null if not.
      */
     public Object createComponent(String componentName) {
@@ -249,7 +249,7 @@ public class ComponentHelper  {
      *
      * @param componentName the name of the component, if
      *                      the component is in a namespace, the
-     *                      name is prefixed withe the namespace uri and ":"
+     *                      name is prefixed with the namespace uri and ":"
      * @return the class if found or null if not.
      */
     public Class getComponentClass(String componentName) {
@@ -488,7 +488,7 @@ public class ComponentHelper  {
         Task task = createNewTask(taskType);
         if (task == null && taskType.equals("property")) {
             // quick fix for Ant.java use of property before
-            // initializeing the project
+            // initializing the project
             addTaskDefinition("property",
                               org.apache.tools.ant.taskdefs.Property.class);
             task = createNewTask(taskType);
@@ -822,7 +822,7 @@ public class ComponentHelper  {
             return; // namespace that does not contain antlib
         }
         if (checkedNamespaces.contains(uri)) {
-            return; // Alreay processed
+            return; // Already processed
         }
         checkedNamespaces.add(uri);
         Typedef definer = new Typedef();

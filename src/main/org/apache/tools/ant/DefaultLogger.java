@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -160,7 +160,7 @@ public class DefaultLogger implements BuildLogger {
 
     /**
      * Prints whether the build succeeded or failed,
-     * any errors the occured during the build, and
+     * any errors the occurred during the build, and
      * how long the build took.
      *
      * @param event An event with any relevant extra information.
@@ -304,7 +304,7 @@ public class DefaultLogger implements BuildLogger {
     /**
      * Convenience method to format a specified length of time.
      *
-     * @param millis Length of time to format, in milliseonds.
+     * @param millis Length of time to format, in milliseconds.
      *
      * @return the time as a formatted string.
      *

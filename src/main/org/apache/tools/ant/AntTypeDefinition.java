@@ -83,7 +83,7 @@ public class AntTypeDefinition {
 
     /**
      * return the definition's name
-     * @return the name of the defintion
+     * @return the name of the definition
      */
     public String getName() {
         return name;
@@ -162,7 +162,7 @@ public class AntTypeDefinition {
     /**
      * get the exposed class for this
      * definition. This will be a proxy class
-     * (adapted class) if there is an adpater
+     * (adapted class) if there is an adapter
      * class and the definition class is not
      * assignable from the assignable class.
      * @param project the current project
@@ -289,7 +289,7 @@ public class AntTypeDefinition {
     }
 
     /**
-     * get the constructor of the defintion
+     * get the constructor of the definition
      * and invoke it.
      */
     private Object createAndSet(Project project, Class c) {
