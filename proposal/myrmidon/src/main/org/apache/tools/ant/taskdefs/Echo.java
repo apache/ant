@@ -24,7 +24,6 @@ public class Echo
     private String m_message = "";// required
     private File m_file;
     private boolean m_append;
-    private EchoLevel m_echoLevel;
 
     /**
      * Shall we append to an existing file?
@@ -47,26 +46,6 @@ public class Echo
     }
 
     /**
-     * Set the logging level to one of
-     * <ul>
-     *   <li> error</li>
-     *   <li> warning</li>
-     *   <li> info</li>
-     *   <li> verbose</li>
-     *   <li> debug</li>
-     *   <ul><p>
-     *
-     *     The default is &quot;warning&quot; to ensure that messages are
-     *     displayed by default when using the -quiet command line option.</p>
-     *
-     * @param echoLevel The new Level value
-     */
-    public void setLevel( final EchoLevel echoLevel )
-    {
-        m_echoLevel = echoLevel;
-    }
-
-    /**
      * Sets the message variable.
      *
      * @param msg Sets the value for the message variable.
@@ -84,7 +63,7 @@ public class Echo
     public void addText( final String message )
         throws TaskException
     {
-        m_message += getProject().replaceProperties( message );
+        m_message = message;
     }
 
     /**
@@ -97,7 +76,7 @@ public class Echo
     {
         if( m_file == null )
         {
-            doLog();
+            throw new TaskException( "Echo only used to write to files now !");
         }
         else
         {
@@ -124,27 +103,6 @@ public class Echo
                     }
                 }
             }
-        }
-    }
-
-    private void doLog()
-    {
-        final String option = m_echoLevel.getValue();
-        if( option.equals( "error" ) )
-        {
-            getLogger().error( m_message );
-        }
-        else if( option.equals( "warning" ) )
-        {
-            getLogger().warn( m_message );
-        }
-        else if( option.equals( "info" ) )
-        {
-            getLogger().info( m_message );
-        }
-        else
-        {
-            getLogger().debug( m_message );
         }
     }
 }
