@@ -221,8 +221,8 @@ public class JUnitTask extends Task {
 
     /**
      * Set the maximum memory to be used by the TestRunner
-     * @param   max     the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
-     *                  in the java command line options.
+     * @param max the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
+     * in the java command line options.
      */
     public void setMaxmemory(String max) {
         if (Project.getJavaVersion().startsWith("1.1")) {
@@ -234,8 +234,8 @@ public class JUnitTask extends Task {
 
     /**
      * Create a new JVM argument. Ignored if no JVM is forked.
-     * @return  create a new JVM argument so that any argument can be passed to the JVM.
-     * @see #setFork(boolean)
+     * @return  create a new JVM argument so that any argument can be
+     * passed to the JVM.
      */
     public Commandline.Argument createJvmarg() {
         return cmd.createVmArgument();

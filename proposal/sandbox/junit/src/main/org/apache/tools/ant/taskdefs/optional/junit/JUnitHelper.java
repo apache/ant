@@ -87,6 +87,8 @@ public final class JUnitHelper {
 
     /**
      * Returns the Test corresponding to to the given class name
+     * @param loader classloader to use when loading the class or
+     * <tt>null</tt> for system classloader.
      * @param classname the classname of the test we want to extract.
      * @throws Exception a generic exception
      */

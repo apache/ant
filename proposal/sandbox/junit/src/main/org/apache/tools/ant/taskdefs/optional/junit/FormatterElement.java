@@ -110,7 +110,7 @@ public class FormatterElement {
 
     /**
      * Setting a comma separated list of filters in the specified order.
-     * @see #addFilter(FilterAttribute)
+     * @see #addFilter(FilterElement)
      * @see FilterAttribute
      */
     public void setFilters(String filters) {
