@@ -185,6 +185,7 @@ Legal:
 
 
     <property name="ant.package" value="org/apache/tools/ant"/>
+    <property name="antlib.package" value="org/apache/antlib"/>
     <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
     <property name="optional.type.package" value="${ant.package}/types/optional"/>
     <property name="util.package" value="${ant.package}/util"/>
@@ -224,11 +225,8 @@ Legal:
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
       <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
       <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
-      <exclude name="${optional.package}/TraXLiaison.java"
-               unless="trax.present" />
-      <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
-      <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
-      <exclude name="${optional.package}/AdaptxLiaison.java" unless="adaptx.present" />
+      <exclude name="${antlib.package}/xml/TraXLiaison.java" unless="trax.present" />
+      <exclude name="${antlib.package}/xml/XalanLiaison.java" unless="xalan.present" />
       <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
       <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
       <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
