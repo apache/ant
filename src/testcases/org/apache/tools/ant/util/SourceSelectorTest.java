@@ -94,6 +94,6 @@ public class SourceSelectorTest extends TestCase
     public void setFrom(String s) {}
     public void setTo(String s) {}
     public String[] mapFileName(String s) {
-        return new String[] {"fred colon", "carot"};
+        return new String[] {"fred colon", "carrot ironfoundersson"};
     }
 }
