@@ -60,6 +60,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.*;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
 import java.io.*;
 import java.util.*;
 
@@ -97,6 +98,7 @@ public class Javac extends MatchingTask {
      */
     private static final int
         MODERN_COMPILER_SUCCESS = 0;
+    private static final String FAIL_MSG = "Compile failed, messages should have been provided.";
 
     private Path src;
     private File destDir;
@@ -282,16 +284,19 @@ public class Javac extends MatchingTask {
         // first off, make sure that we've got a srcdir and destdir
 
         if (src == null) {
-            throw new BuildException("srcdir attribute must be set!");
+            throw new BuildException("srcdir attribute must be set!", location);
         }
         
         String [] list = src.list();
         if (list.length == 0) {
-            throw new BuildException("srcdir attribute must be set!");
+            throw new BuildException("srcdir attribute must be set!", location);
         }
         
         if (destDir == null) {
-            throw new BuildException("destdir attribute must be set!");
+            throw new BuildException("destdir attribute must be set!", location);
+        }
+        if (!destDir.isDirectory()) {
+            throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", location);
         }
 
         // scan source directories and dest directory to build up both copy lists and
@@ -300,7 +305,7 @@ public class Javac extends MatchingTask {
         for (int i=0; i<list.length; i++) {
             File srcDir = (File)project.resolveFile(list[i]);
             if (!srcDir.exists()) {
-                throw new BuildException("srcdir " + srcDir.getPath() + " does not exist!");
+                throw new BuildException("srcdir \"" + srcDir.getPath() + "\" does not exist!", location);
             }
 
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
@@ -337,7 +342,7 @@ public class Javac extends MatchingTask {
                 doJvcCompile();
             } else {
                 String msg = "Don't know how to use compiler " + compiler;
-                throw new BuildException(msg);
+                throw new BuildException(msg, location);
             }
         }
     }
@@ -411,7 +416,14 @@ public class Javac extends MatchingTask {
 
         classpath.addExisting(Path.systemClasspath);
         if (addRuntime) {
-            if (Project.getJavaVersion() == Project.JAVA_1_1) {
+            if (System.getProperty("java.vendor").toLowerCase().indexOf("microsoft") >= 0) {
+                // Pull in *.zip from packages directory
+                FileSet msZipFiles = new FileSet();
+                msZipFiles.setDir(new File(System.getProperty("java.home") + File.separator + "Packages"));
+                msZipFiles.setIncludes("*.ZIP");
+                classpath.addFileset(msZipFiles);
+            }
+            else if (Project.getJavaVersion() == Project.JAVA_1_1) {
                 classpath.addExisting(new Path(null,
                                                 System.getProperty("java.home")
                                                 + File.separator + "lib"
@@ -445,12 +457,36 @@ public class Javac extends MatchingTask {
         log("Using classic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJavacCommand();
 
+        // Use reflection to be able to build on all JDKs
+        /*
         // provide the compiler a different message sink - namely our own
         sun.tools.javac.Main compiler =
                 new sun.tools.javac.Main(new LogOutputStream(this, Project.MSG_WARN), "javac");
 
         if (!compiler.compile(cmd.getArguments())) {
             throw new BuildException("Compile failed");
+        }
+        */
+        try {
+            // Create an instance of the compiler, redirecting output to
+            // the project log
+            OutputStream logstr = new LogOutputStream(this, Project.MSG_WARN);
+            Class c = Class.forName("sun.tools.javac.Main");
+            Constructor cons = c.getConstructor(new Class[] { OutputStream.class, String.class });
+            Object compiler = cons.newInstance(new Object[] { logstr, "javac" });
+
+            // Call the compile() method
+            Method compile = c.getMethod("compile", new Class [] { String[].class });
+            Boolean ok = (Boolean)compile.invoke(compiler, new Object[] {cmd.getArguments()});
+            if (!ok.booleanValue()) {
+                throw new BuildException(FAIL_MSG, location);
+            }
+        }
+        catch (ClassNotFoundException ex) {
+            throw new BuildException("Cannot use classic compiler, as it is not available", location);
+        }
+        catch (Exception ex) {
+            throw new BuildException("Error starting classic compiler: ", ex, location);
         }
     }
 
@@ -462,6 +498,7 @@ public class Javac extends MatchingTask {
         try {
             Class.forName("com.sun.tools.javac.Main");
         } catch (ClassNotFoundException cnfe) {
+            log("Modern compiler is not available - using classic compiler", Project.MSG_WARN);
             doClassicCompile();
             return;
         }
@@ -483,12 +520,10 @@ public class Javac extends MatchingTask {
             int result = ((Integer) compile.invoke
                           (compiler, new Object[] {cmd.getArguments()})) .intValue ();
             if (result != MODERN_COMPILER_SUCCESS) {
-                String msg = 
-                    "Compile failed, messages should have been provided.";
-                throw new BuildException(msg);
+                throw new BuildException(FAIL_MSG, location);
             }
         } catch (Exception ex) {
-                throw new BuildException (ex);
+                throw new BuildException("Error starting modern compiler", ex, location);
         }
     }
 
@@ -698,8 +733,7 @@ public class Javac extends MatchingTask {
         logAndAddFilesToCompile(cmd);
 
         if (executeJikesCompile(cmd.getCommandline(), firstFileName) != 0) {
-            String msg = "Compile failed, messages should have been provided.";
-            throw new BuildException(msg);
+            throw new BuildException(FAIL_MSG, location);
         }
     }
 
@@ -734,7 +768,7 @@ public class Javac extends MatchingTask {
                     System.arraycopy(args, 0, commandArray, 0, firstFileName);
                     commandArray[firstFileName] = "@" + tmpFile.getAbsolutePath();
                 } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file", e);
+                    throw new BuildException("Error creating temporary file", e, location);
                 } finally {
                     if (out != null) {
                         try {out.close();} catch (Throwable t) {}
@@ -754,7 +788,7 @@ public class Javac extends MatchingTask {
                 exe.execute();
                 return exe.getExitValue();
             } catch (IOException e) {
-                throw new BuildException("Error running Jikes compiler", e);
+                throw new BuildException("Error running Jikes compiler", e, location);
             }
         } finally {
             if (tmpFile != null) {
@@ -841,8 +875,7 @@ public class Javac extends MatchingTask {
         logAndAddFilesToCompile(cmd);
 
         if (executeJikesCompile(cmd.getCommandline(), firstFileName) != 0) {
-            String msg = "Compile failed, messages should have been provided.";
-            throw new BuildException(msg);
+            throw new BuildException(FAIL_MSG, location);
         }
     }
 }
