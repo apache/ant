@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
 import java.io.*;
 
 /**
@@ -94,6 +95,16 @@ public class Cvs extends Task {
      * report only, don't change any files.
      */
     private boolean noexec = false;
+
+    /**
+     * CVS port
+     */
+    private int port = 0;
+
+    /**
+     * CVS password file
+     */
+    private File passFile = null;
 
     /**
      * the directory where the checked out files should be placed.
@@ -138,6 +149,22 @@ public class Cvs extends Task {
             toExecute.createArgument().setLine(pack);
         }
 
+        Environment env = new Environment();
+
+        if(port>0){
+            Environment.Variable var = new Environment.Variable();
+            var.setKey("CVS_CLIENT_PORT");
+            var.setValue(String.valueOf(port));
+            env.addVariable(var);
+        }
+
+        if(passFile!=null){
+            Environment.Variable var = new Environment.Variable();
+            var.setKey("CVS_PASSFILE");
+            var.setValue(String.valueOf(passFile));
+            env.addVariable(var);
+        }
+
         ExecuteStreamHandler streamhandler = null;
         OutputStream outputstream = null;
         OutputStream errorstream = null; 
@@ -177,6 +204,7 @@ public class Cvs extends Task {
         exe.setWorkingDirectory(dest);
 
         exe.setCommandline(toExecute.getCommandline());
+        exe.setEnvironment(env.getVariables());
         try {
             exe.execute();
         } catch (IOException e) {
@@ -203,6 +231,14 @@ public class Cvs extends Task {
         } 
 
         this.cvsRoot = root;
+    }
+
+    public void setPort(int port){
+        this.port = port;
+    }
+
+    public void setPassfile(File passFile){
+        this.passFile = passFile;
     }
 
     public void setDest(File dest) {
