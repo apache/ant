@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:tfennell@sapient.com">Tim Fennell</a>
  * @author Conor MacNeill
- * @author <a href="mailto:rvanoo@xs4all.nl">Rob van Oostrum</a>
+ * @author <a href="mailto:rob@springwellfarms.ca">Rob van Oostrum</a>
  * */
 public class EjbJar extends MatchingTask {
 

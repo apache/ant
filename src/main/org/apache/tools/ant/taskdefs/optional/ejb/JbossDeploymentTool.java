@@ -64,7 +64,7 @@ import org.apache.tools.ant.Project;
  * compilation.
  *
  * @author <a href="mailto:p.austin@talk21.com">Paul Austin</a>
- * @author <a href="mailto:rvanoo@xs4all.nl">Rob van Oostrum</a>
+ * @author <a href="mailto:rob@springwellfarms.ca">Rob van Oostrum</a>
  * @version 1.0
  * @see EjbJar#createJboss
  */
