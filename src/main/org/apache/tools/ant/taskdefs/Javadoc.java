@@ -789,7 +789,7 @@ public class Javadoc extends Task {
                     toExecute.createArgument().setValue(doclet.getName());
                     if (doclet.getPath() != null) {
                         toExecute.createArgument().setValue("-docletpath");
-                        toExecute.createArgument().setPath(doclet.getPath());
+                        toExecute.createArgument().setPath(doclet.getPath().concatSystemClasspath("ignore"));
                     }
                     for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
