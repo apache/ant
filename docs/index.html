@@ -23,7 +23,7 @@
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
 </ul>
 
-<p>Version 1.1 - 2000/07/18</p>
+<p>Version 1.2 - 2000/07/26</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -41,7 +41,7 @@
   <li><a href="#buildevents">Build Events</a>
   <li><a href="#writingowntask">Writing your own task</a></li>
   <li><a href="#faq">FAQ, DTD, external resources</a>
-  <li><a href="#license">License</a></li>
+  <li><a href="../LICENSE">License</a></li>
   <li><a href="#feedback">Feedback</a></li>
 </ul>
 
@@ -82,7 +82,7 @@ on.</p>
 href="http://jakarta.apache.org/builds/ant/release/v1.1/bin/">
 http://jakarta.apache.org/builds/ant/release/v1.1/bin/</a>.
 If you like living on the edge, you can download the latest version from <a
-href="http://jakarta.apache.org/builds/tomcat/nightly/ant.zip">http://jakarta.apache.org/builds/tomcat/nightly/ant.zip</a>.</p>
+href="http://jakarta.apache.org/builds/ant/nightly/">http://jakarta.apache.org/builds/ant/nightly/</a>.</p>
 <h3>Source edition</h3>
 <p>If you prefer the source edition, you can download Ant from <a
 href="http://jakarta.apache.org/builds/ant/release/v1.1/src/">
@@ -3211,134 +3211,6 @@ in the <code>${dist}</code> directory. Files/directories with the names <code>my
 and <code>todo.html</code> are excluded.</p>
 
 <hr>
-<h2><a name="buildevents">Build Events</a></h2>
-Ant is capable of generating build events as it performs the tasks necessary to build a project. 
-Listeners can be attached to ant to receive these events. This capability could be used, for example,
-to connect Ant to a GUI or to integrate Ant with an IDE. 
-
-<p>To use build events you need to create an ant <code>Project</code> object. You can then call the 
-<code>addBuildListener</code> method to add your listener to the project. Your listener must implement
-the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive BuildEvents 
-for the following events
-<ul>
-<li>Build started
-<li>Build finished
-<li>Target started
-<li>Target finished
-<li>Task started
-<li>Task finished
-<li>Message logged
-</ul>
-
-If you wish to attach a listener from the command line you may use the -listener option. For example
-<blockquote>
-  <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
-</blockquote>
-will run ant with a listener which generates an XML representaion of the build progress. This 
-listener is included with ant as is the default listener which generates the logging to standard
-output.
-
-
-<hr>
-<h2><a name="writingowntask">Writing your own task</a></h2>
-<p>It is very easy to write your own task:</p>
-<ol>
-  <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>.</li>
-  <li>For each attribute, write a setter method. The setter method must be a 
-    <code>public void</code> method that takes a single argument. The
-    name of the method must begin with &quot;set&quot;, followed by the
-    attribute name, with the first character in uppercase, and the rest in
-    lowercase. The type of the attribute can be <code>String</code>, any 
-    primitive type, <code>Class</code>, <code>File</code> (in which case the 
-    value of the attribute is interpreted relative to the project's basedir) 
-    or any other type that has a constructor with a single <code>String</code>
-    argument</li>
-  <li>If your task has enumerated attributes, you should consider using
-    a subclass of org.apache.tools.ant.types.EnumeratedAttribute as argument
-    to your setter method. See org.apache.tools.ant.taskdefs.FixCRLF for
-    an example.</li>
-  <li>If the task should support character data, write a <code>public void 
-    addText(String)</code> method.</li>
-  <li>For each nested element, write a create or add method. A create method 
-    must be a <code>public</code> method that takes no arguments and returns 
-    an Object type. The name of the create method must begin with 
-    &quot;create&quot;, followed by the element name. An add method must be 
-    a <code>public void</code> method that takes a single argument of an 
-    Object type with a no argument constructor. The name of the add method 
-    must begin with &quot;add&quot;, followed by the element name.
-  <li>Write a <code>public void execute</code> method, with no arguments, that
-    throws a <code>BuildException</code>. This method implements the task
-    itself.</li>
-</ol>
-<p>It is important to know that Ant first calls the setters for the attributes
-it encounters for a specific task in the buildfile, before it executes is.</p>
-<p>Let's write our own task, that prints a message on the System.out stream. The
-task has one attribute called &quot;message&quot;.</p>
-<blockquote>
-  <pre>package com.mydomain;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-
-public class MyVeryOwnTask extends Task {
-  private String msg;
-
-  // The method executing the task
-  public void execute() throws BuildException {
-    System.out.println(msg);
-  }
-
-  // The setter for the &quot;message&quot; attribute
-  public void setMessage(String msg) {
-    this.msg = msg;
-  }
-}</pre>
-</blockquote>
-<p>It's really this simple;-)</p>
-<p>Adding your task to the system is rather simple too:</p>
-<ol>
-  <li>Make sure the class that implements your task is in the classpath when
-    starting Ant.</li>
-  <li>In your initialization target, add a <i>taskdef</i> task. This actually adds
-    your task to the system.</li>
-  <li>Use your task in the rest of the buildfile.</li>
-</ol>
-<h3>Example</h3>
-<blockquote>
-  <pre>&lt;?xml version=&quot;1.0&quot;?&gt;
-
-&lt;project name=&quot;OwnTaskExample&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
-  &lt;target name=&quot;init&quot;&gt;
-    &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;main&quot; depends=&quot;init&quot;&gt;
-    &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot; /&gt;
-  &lt;/target&gt;
-&lt;/project&gt;
-</pre>
-</blockquote>
-<p>Another way to add a task (more permanently), is to add the task name and
-implementing class name to the <code>default.properties</code> file in the <code>org.apache.tools.ant.taskdefs</code>
-package. Then you can use it as if it were a built in task.</p>
-<hr>
-<h2><a name="faq">FAQ, DTD, external resources</a></h2>
-<p>There is an online FAQ for Ant at <a
-href="http://jakarta.apache.org/jyve-faq/Turbine/screen/DisplayTopics/action/SetAll/project_id/2/faq_id/16">jakarta.apache.org</a>. This
-FAQ is interactive, which means you can ask and answer questions
-online.</p>
-<p>One of the questions poping up quite often is "Is there a DTD for
-buildfiles?". Please refer to the FAQ for an answer.</p>
-<p>The FAQ contains lists of known custom tasks that don't ship with
-Ant and projects that use Ant. Feel free to add your own task or project
-there.</p>
-<h2><a name="feedback">Feedback</a></h2>
-<p>To provide feedback on this software, please subscribe to the Ant Development
-Mail List <a href="mailto:(ant-dev-subscribe@jakarta.apache.org">(ant-dev-subscribe@jakarta.apache.org</a>)</p>
-<hr>
-<p align="center">Copyright © 2000 Apache Software Foundation. All rights
-Reserved.</p>
-
 <h2><a name="optionaltasks">Optional tasks</a></h2>
 <ul>
   <li><a href="#netrexxc">NetRexxC</a></li>
@@ -3786,6 +3658,136 @@ The following attributes are interpretted:
 <blockquote>
   <p>None yet available</p>
 </blockquote>
+<hr>
+<h2><a name="buildevents">Build Events</a></h2>
+Ant is capable of generating build events as it performs the tasks necessary to build a project. 
+Listeners can be attached to ant to receive these events. This capability could be used, for example,
+to connect Ant to a GUI or to integrate Ant with an IDE. 
+
+<p>To use build events you need to create an ant <code>Project</code> object. You can then call the 
+<code>addBuildListener</code> method to add your listener to the project. Your listener must implement
+the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive BuildEvents 
+for the following events
+<ul>
+<li>Build started
+<li>Build finished
+<li>Target started
+<li>Target finished
+<li>Task started
+<li>Task finished
+<li>Message logged
+</ul>
+
+If you wish to attach a listener from the command line you may use the -listener option. For example
+<blockquote>
+  <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
+</blockquote>
+will run ant with a listener which generates an XML representaion of the build progress. This 
+listener is included with ant as is the default listener which generates the logging to standard
+output.
+
+
+<hr>
+<h2><a name="writingowntask">Writing your own task</a></h2>
+<p>It is very easy to write your own task:</p>
+<ol>
+  <li>Create a Java class that extends <code>org.apache.tools.ant.Task</code>.</li>
+  <li>For each attribute, write a setter method. The setter method must be a 
+    <code>public void</code> method that takes a single argument. The
+    name of the method must begin with &quot;set&quot;, followed by the
+    attribute name, with the first character in uppercase, and the rest in
+    lowercase. The type of the attribute can be <code>String</code>, any 
+    primitive type, <code>Class</code>, <code>File</code> (in which case the 
+    value of the attribute is interpreted relative to the project's basedir) 
+    or any other type that has a constructor with a single <code>String</code>
+    argument</li>
+  <li>If your task has enumerated attributes, you should consider using
+    a subclass of org.apache.tools.ant.types.EnumeratedAttribute as argument
+    to your setter method. See org.apache.tools.ant.taskdefs.FixCRLF for
+    an example.</li>
+  <li>If the task should support character data, write a <code>public void 
+    addText(String)</code> method.</li>
+  <li>For each nested element, write a create or add method. A create method 
+    must be a <code>public</code> method that takes no arguments and returns 
+    an Object type. The name of the create method must begin with 
+    &quot;create&quot;, followed by the element name. An add method must be 
+    a <code>public void</code> method that takes a single argument of an 
+    Object type with a no argument constructor. The name of the add method 
+    must begin with &quot;add&quot;, followed by the element name.
+  <li>Write a <code>public void execute</code> method, with no arguments, that
+    throws a <code>BuildException</code>. This method implements the task
+    itself.</li>
+</ol>
+<p>It is important to know that Ant first calls the setters for the attributes
+it encounters for a specific task in the buildfile, before it executes is.</p>
+<p>Let's write our own task, that prints a message on the System.out stream. The
+task has one attribute called &quot;message&quot;.</p>
+<blockquote>
+  <pre>package com.mydomain;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
+public class MyVeryOwnTask extends Task {
+  private String msg;
+
+  // The method executing the task
+  public void execute() throws BuildException {
+    System.out.println(msg);
+  }
+
+  // The setter for the &quot;message&quot; attribute
+  public void setMessage(String msg) {
+    this.msg = msg;
+  }
+}</pre>
+</blockquote>
+<p>It's really this simple;-)</p>
+<p>Adding your task to the system is rather simple too:</p>
+<ol>
+  <li>Make sure the class that implements your task is in the classpath when
+    starting Ant.</li>
+  <li>In your initialization target, add a <i>taskdef</i> task. This actually adds
+    your task to the system.</li>
+  <li>Use your task in the rest of the buildfile.</li>
+</ol>
+<h3>Example</h3>
+<blockquote>
+  <pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+
+&lt;project name=&quot;OwnTaskExample&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
+  &lt;target name=&quot;init&quot;&gt;
+    &lt;taskdef name=&quot;mytask&quot; classname=&quot;com.mydomain.MyVeryOwnTask&quot;/&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;main&quot; depends=&quot;init&quot;&gt;
+    &lt;mytask message=&quot;Hello World! MyVeryOwnTask works!&quot; /&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+</pre>
+</blockquote>
+<p>Another way to add a task (more permanently), is to add the task name and
+implementing class name to the <code>default.properties</code> file in the <code>org.apache.tools.ant.taskdefs</code>
+package. Then you can use it as if it were a built in task.</p>
+<hr>
+<h2><a name="faq">FAQ, DTD, external resources</a></h2>
+<p>There is an online FAQ for Ant at <a
+href="http://jakarta.apache.org/jyve-faq/Turbine/screen/DisplayTopics/action/SetAll/project_id/2/faq_id/16">jakarta.apache.org</a>. This
+FAQ is interactive, which means you can ask and answer questions
+online.</p>
+<p>One of the questions poping up quite often is "Is there a DTD for
+buildfiles?". Please refer to the FAQ for an answer.</p>
+<hr>
+<h2><a name="feedback">Feedback</a></h2>
+<p>To provide feedback on this software, please subscribe to the Ant User
+Mail List (<a href="mailto:ant-user-subscribe@jakarta.apache.org">ant-user-subscribe@jakarta.apache.org</a>)</p>
+<p>If you want to contribute to Ant or stay current with the latest
+development, join the Ant Development Mail List (<a
+href="mailto:ant-dev-subscribe@jakarta.apache.org">ant-dev-subscribe@jakarta.apache.org</a>)</p>
+<hr>
+<p align="center">Copyright © 2000 Apache Software Foundation. All rights
+Reserved.</p>
+
 </body>
 
 </html>
