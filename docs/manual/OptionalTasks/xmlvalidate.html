@@ -53,19 +53,48 @@
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h3><a name="nested">Nested Elements</a></h3>
+<h4>dtd</h4>
+&lt;dtd&gt; is used to specify different locations for DTD resolution.
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">publicId</td> 
+    <td valign="top">Public ID of the DTD to resolve</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">location</td> 
+    <td valign="top">Location of the DTD to use, which can be a file,
+    a resource, or a URL</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+
 <h3>Examples</h3>
 <blockquote><pre>
 &lt;xmlvalidate file="toto.xml"/&gt;
 
-    &lt;xmlvalidate failonerror="no" lenient="yes" warn="yes"
-	         classname="org.apache.xerces.parsers.SAXParser" &gt;
-	         classpath="lib/xerces.jar"&gt;
-        &lt;fileset dir="src" includes="style/*.xsl"/&gt;  
-    &lt;/xmlvalidate&gt;
+&lt;xmlvalidate failonerror="no" lenient="yes" warn="yes"
+             classname="org.apache.xerces.parsers.SAXParser" &gt;
+             classpath="lib/xerces.jar"&gt;
+  &lt;fileset dir="src" includes="style/*.xsl"/&gt;  
+&lt;/xmlvalidate&gt;
+    
+&lt;xmlvalidate file="struts-config.xml" warn="false"&gt;
+  &lt;dtd publicId="-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
+       location="struts-config_1_0.dtd"/&gt;
+&lt;/xmlvalidate&gt;
 </pre></blockquote>
 <hr>
 
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
