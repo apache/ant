@@ -103,6 +103,19 @@ public class ParallelTest extends BuildFileTest {
 
     }
 
+    /** tests basic operation of the parallel task */
+    public void testTreadCount() {
+        // should get no output at all
+        Project project = getProject();
+        project.setUserProperty("test.direct", DIRECT_MESSAGE);
+        project.setUserProperty("test.delayed", DELAYED_MESSAGE);
+        expectOutputAndError("testThreadCount", "", "");
+        String log = getLog();
+        assertEquals("parallel tasks did't block on threads properly", log,
+            "+1-1+2-2+3-3+1+2-1+3-2-3+1+2+3-1-2-3+1+2+3-1-2-3");
+
+    }
+
     /** tests the failure of a task within a parallel construction */
     public void testFail() {
         // should get no output at all
