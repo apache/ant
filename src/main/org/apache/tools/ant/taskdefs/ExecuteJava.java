@@ -139,6 +139,11 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 run();
             } else {
                 thread = new Thread(this, "ExecuteJava");
+                // if we run into a timout, the run-away thread shall not
+                // make the VM run forever - if no timeout occurs, Ant's
+                // main thread will still be there to let the new thread
+                // finish
+                thread.setDaemon(true);
                 Watchdog w = new Watchdog(timeout.longValue());
                 w.addTimeoutObserver(this);
                 synchronized (this) {
@@ -148,7 +153,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                         wait();
                     } catch (InterruptedException e) {}
                     if (timedOut) {
-                        project.log("Timeout: killed the sub-process",
+                        project.log("Timeout: sub-process interrupted",
                                     Project.MSG_WARN); 
                     } else {
                         thread = null;
