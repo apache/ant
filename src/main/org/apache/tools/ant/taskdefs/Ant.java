@@ -450,10 +450,12 @@ public class Ant extends Task {
         Set set = new HashSet();
         for (int i = properties.size() - 1; i >= 0; --i) {
             Property p = (Property) properties.get(i);
-            if (set.contains(p.getName())) {
-                properties.remove(i);
-            } else {
-                set.add(p.getName());
+            if (p.getName() != null && !p.getName().equals("")) {
+                if (set.contains(p.getName())) {
+                    properties.remove(i);
+                } else {
+                    set.add(p.getName());
+                }
             }
         }
         Enumeration e = properties.elements();
