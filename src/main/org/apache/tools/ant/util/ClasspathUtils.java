@@ -327,7 +327,7 @@ public class ClasspathUtils {
      * <li> attribute @classname </li></ul>
      *
      * <p> This class functions as a delegate handling the configuration
-     * issues for this recuring pattern.  It's usage pattern, as the name
+     * issues for this recuring pattern.  Its usage pattern, as the name
      * suggests is delegation, not inheritance. </p>
      *
      * @since Ant 1.6
