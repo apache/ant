@@ -90,6 +90,17 @@ public class Rpm extends Task {
     private File error;
 
     /**
+     * Halt on error return value from rpm build.
+     */
+    private boolean failOnError = false;
+
+    /**
+     * Show output of RPM build command on console. This does not affect
+     * the printing of output and error messages to files.
+     */
+    private boolean showoutput = true;
+
+    /**
      * Execute the task
      *
      * @throws BuildException is there is a problem in the task execution.
@@ -124,8 +135,13 @@ public class Rpm extends Task {
         OutputStream outputstream = null;
         OutputStream errorstream = null;
         if (error == null && output == null) {
-            streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
-                                                 Project.MSG_WARN);
+            if (showoutput) {
+                streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
+                                                     Project.MSG_WARN);
+            } else {
+                streamhandler = new LogStreamHandler(this, Project.MSG_DEBUG,
+                                                     Project.MSG_DEBUG);
+            }
         } else {
             if (output != null) {
                 try {
@@ -135,8 +151,10 @@ public class Rpm extends Task {
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
-            } else {
+            } else if (showoutput) {
                 outputstream = new LogOutputStream(this, Project.MSG_INFO);
+            } else {
+                outputstream = new LogOutputStream(this, Project.MSG_DEBUG);
             }
             if (error != null) {
                 try {
@@ -146,8 +164,10 @@ public class Rpm extends Task {
                 }  catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
-            } else {
+            } else if (showoutput) {
                 errorstream = new LogOutputStream(this, Project.MSG_WARN);
+            } else {
+                errorstream = new LogOutputStream(this, Project.MSG_DEBUG);
             }
             streamhandler = new PumpStreamHandler(outputstream, errorstream);
         }
@@ -164,10 +184,14 @@ public class Rpm extends Task {
         try {
             log("Building the RPM based on the " + specFile + " file");
             int returncode = exe.execute();
-            if (returncode != 0) {
-                throw new BuildException("'" +
-                        toExecute.getExecutable() +
-                        "' failed with exit code "+returncode);
+            if (Execute.isFailure(returncode)) {
+                String msg = "'" + toExecute.getExecutable() 
+                    + "' failed with exit code " + returncode;
+                if (failOnError) {
+                    throw new BuildException(msg);
+                } else {
+                    log(msg, Project.MSG_ERR);
+                }
             }
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
@@ -254,6 +278,29 @@ public class Rpm extends Task {
      */
     public void setRpmBuildCommand(String c) {
         this.rpmBuildCommand = c;
+    }
+
+    /**
+     * If true, stop the build process when the rpmbuild command exits with
+     * an error status.
+     * @param value <tt>true</tt> if it should halt, otherwise
+     * <tt>false</tt>
+     *
+     * @since Ant 1.6.3
+     */
+    public void setFailOnError(boolean value) {
+        failOnError = value;
+    }
+
+    /**
+     * If false, no output from the RPM build command will be logged. 
+     * @param value <tt>true</tt> if output should be logged, otherwise
+     * <tt>false</tt>
+     *
+     * @since Ant 1.6.3
+     */
+    public void setShowoutput(boolean value) {
+        showoutput = value;
     }
 
     /**

@@ -287,6 +287,8 @@ Other changes:
   used to document packages that don't hold source files but a
   package.html file.  Bugzilla Report 25339.
 
+* <rpm> has new attributes failonerror and showoutput attributes.
+
 Fixed bugs:
 -----------
 
