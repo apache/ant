@@ -104,6 +104,11 @@ public class Jar extends Zip {
     private boolean mergeManifests = false;
 
     /**
+     *  Whether to create manifest file on finalizeOutputStream?
+     */
+    private boolean manifestOnFinalize = true;
+
+    /**
      * whether to merge the main section of fileset manifests;
      * value is true if filesetmanifest is 'merge'
      */
@@ -223,8 +228,15 @@ public class Jar extends Zip {
 
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
-        String ls = System.getProperty("line.separator");
+        if (! (mergeManifests || mergeManifestsMain)) {
+            manifestOnFinalize = false;
+            createManifest(zOut);
+        }
+    }
 
+    private void createManifest(ZipOutputStream zOut)
+        throws IOException, BuildException {
+        String ls = System.getProperty("line.separator");
         try {
             Manifest finalManifest = Manifest.getDefaultManifest();
 
@@ -284,6 +296,10 @@ public class Jar extends Zip {
 
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
             throws IOException, BuildException {
+        if (manifestOnFinalize) {
+            createManifest(zOut);
+        }
+
         if (index) {
             createIndexList(zOut);
         }
