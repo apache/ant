@@ -572,6 +572,57 @@
         </table>
       </subsection>
 
+      <subsection name="DTDDoc">
+        <p>DTDDoc is here to help you to document your DTD's efficiently. It is a
+        straightforward extension of the javadoc concept to the DTD file format.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://dtddoc.sourceforge.net/">http://dtddoc.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/mail/?group_id=53704">Project Mailing List</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>X11 (Open Source)</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="EMMA">
+        <p>EMMA is an open-source toolkit for measuring and reporting
+        Java code coverage. EMMA distinguishes itself from other tools
+        by going after a unique feature combination: support large-scale
+        enterprise software development while keeping individual developers
+        work fast and iterative at the same time.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://emma.sourceforge.net/">http://emma.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:emma-users@lists.sourceforge.net">Mailinglist</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Common Public License 1.0</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="FMPP">
         <p>FMPP is a general-purpose text file preprocessor tool that
         uses FreeMarker templates. It is particularly designed for
@@ -899,114 +950,158 @@
         </table>
       </subsection>
 
+
       <subsection name="J2ME Ant Tasks">
 
-        <p>There are four different sets of tasks to help build <a
+        <p>There are different sets of tasks to help build <a
         href="http://java.sun.com/j2me/">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
 
-        <p>This set supports CLDC and the K Virtual Machine (KVM):</p>
+        <subsubsection name="Antenna">
+          <p>Antenna provides a set of Ant tasks suitable for developing
+          wireless Java applications targeted at the Mobile Information
+          Device Profile (MIDP). With Antenna, you can compile,
+          preverify, package, obfuscate, and run your MIDP applications
+          (aka MIDlets), manipulate Java Application Descriptor (JAD)
+          files, as well as convert JAR files to PRC files designed to
+          run on MIDP for Palm OS. Deployment is supported via a
+          deployment task and a corresponding HTTP servlet for
+          Over-the-Air (OTA) provisioning. A small preprocessor allows
+          to generate different variants of a MIDlet from a single
+          source.</p>
 
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.3</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.dribin.org/dave/j2me_ant/">http://www.dribin.org/dave/j2me_ant/</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:drib@enteract.com">Dave Dribin</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>Apache Software License</td>
-          </tr>
-        </table>
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Ant 1.4.1 or later</td>
+            </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://antenna.sourceforge.net/">http://antenna.sourceforge.net/</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:joerg@pleumann.de">J&#xF6;rg Pleumann</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>GNU Lesser General Public License</td>
+            </tr>
+          </table>
+        </subsubsection>
 
-        <p>And this set works with the J2ME Wireless Toolkit and MIDP
-        for PalmOS:</p>
+        <subsubsection name="Antic">
+          <p>Antic is a freely available task for packaging J2ME
+          applications. It produces both the Jar and Jad files in a
+          single step. This allows *all* entries to be correclty set in
+          the jad file, including the size of the jar file that is
+          produced. This task has been used and tested extensively with
+          Sun's Wireless Toolkit and also the Nokia SDK and
+          emulators.</p>
 
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.3</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.stampysoft.com/ant/">http://www.stampysoft.com/ant/</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:jeckels@stampysoft.com">Josh Eckels</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>MIT License</td>
-          </tr>
-        </table>
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Ant 1.5</td>
+            </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://www.smartkey.co.uk/tools/antic/antic.html">http://www.smartkey.co.uk/tools/antic/antic.html</a>
+              </td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:support@smartkey.co.uk">smartkey.co.uk</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>GNU General Public License</td>
+            </tr>
+          </table>
+        </subsubsection>
 
-        <p>Antenna provides a set of Ant tasks suitable for developing
-        wireless Java applications targeted at the Mobile Information
-        Device Profile (MIDP). With Antenna, you can compile,
-        preverify, package, obfuscate, and run your MIDP applications
-        (aka MIDlets), manipulate Java Application Descriptor (JAD)
-        files, as well as convert JAR files to PRC files designed to
-        run on MIDP for Palm OS. Deployment is supported via a
-        deployment task and a corresponding HTTP servlet for
-        Over-the-Air (OTA) provisioning. A small preprocessor allows
-        to generate different variants of a MIDlet from a single
-        source.</p>
+        <subsubsection name="Dave's J2ME Tasks">
+          <p>This set supports CLDC and the K Virtual Machine (KVM):</p>
 
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4.1 or later</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://antenna.sourceforge.net/">http://antenna.sourceforge.net/</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:joerg@pleumann.de">J&#xF6;rg Pleumann</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GNU Lesser General Public License</td>
-          </tr>
-        </table>
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Ant 1.3</td>
+            </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://www.dribin.org/dave/j2me_ant/">http://www.dribin.org/dave/j2me_ant/</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:drib@enteract.com">Dave Dribin</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>Apache Software License</td>
+            </tr>
+          </table>
+        </subsubsection>
 
-        <p>Antic is a freely available task for packaging J2ME
-        applications. It produces both the Jar and Jad files in a
-        single step. This allows *all* entries to be correclty set in
-        the jad file, including the size of the jar file that is
-        produced. This task has been used and tested extensively with
-        Sun's Wireless Toolkit and also the Nokia SDK and
-        emulators.</p>
+        <subsubsection name="J2ME Polish">
+          <p>J2ME Polish is an Ant-based tool for the creation of
+          MIDP applications. It covers the whole circle of preprocessing, compiling,
+          obfuscation, preverifying, packaging and JAD-creation. J2ME Polish is
+          ideal for creating device optimized applications with its powerful
+          preprocessing capabilities and the integrated device database.
+          With J2ME Polish no hardcoded values are needed and the portability of an
+          application is not sacrificed, even though highly opimized applications are
+          created from a single source.
+          <br/>
+          It contains a logging framework and an optional MIDP-compatible GUI
+          which can be designed using the web-standard CSS. With the J2ME Polish GUI
+          you can even use MIDP/2.0 features on MIDP/1.0 phones.
+          </p>
 
-        <table class="externals">
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.5</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.smartkey.co.uk/tools/antic/antic.html">http://www.smartkey.co.uk/tools/antic/antic.html</a>
-            </td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:support@smartkey.co.uk">smartkey.co.uk</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>GNU General Public License</td>
-          </tr>
-        </table>
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Ant 1.4.1 or later</td>
+            </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a
+              href="http://www.j2mepolish.org/">http://www.j2mepolish.org/</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:j2mepolish@enough.de">Enough Software</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>GNU General Public License; commercial licenses available</td>
+             </tr>
+           </table>
+        </subsubsection>
 
+        <subsubsection name="Stampysoft's J2ME Tasks">
+          <p>And this set works with the J2ME Wireless Toolkit and MIDP
+          for PalmOS:</p>
+
+          <table class="externals">
+            <tr>
+              <th>Compatibility:</th>
+              <td>Ant 1.3</td>
+            </tr>
+            <tr>
+              <th>URL:</th>
+              <td><a href="http://www.stampysoft.com/ant/">http://www.stampysoft.com/ant/</a></td>
+            </tr>
+            <tr>
+              <th>Contact:</th>
+              <td><a href="mailto:jeckels@stampysoft.com">Josh Eckels</a></td>
+            </tr>
+            <tr>
+              <th>License:</th>
+              <td>MIT License</td>
+            </tr>
+          </table>
+        </subsubsection>
       </subsection>
 
       <subsection name="Jacson">
@@ -1795,6 +1890,33 @@
           <tr>
             <th>License:</th>
             <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="RefactorIT">
+
+        <p>RefactorIT includes an Ant task for metrics and audits.
+        RefactorIT is a Java refactoring, audit and metrics tool.
+        It plugs into major Java IDEs, also runs stand-alone with
+        a GUI and a command line interface.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.refactorit.com/">http://www.refactorit.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:support@refactorit.com">support@refactorit.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial. (Free for accredited open source products, see
+            <a href="http://www.refactorit.com/osc">http://www.refactorit.com/osc</a>.)</td>
           </tr>
         </table>
       </subsection>
@@ -2841,6 +2963,14 @@
           </tr>
         </table>
       </subsection>
+
+    </section>
+
+
+    <section name="Source Control Systems">
+      <p>There are several integration with SCM systems. Some are
+      <a href="manual/tasksoverview.html#scm">build in</a>. But some are available as
+      external libraries. Here a list of task libraries we are aware of:</p>
 
     </section>
 
