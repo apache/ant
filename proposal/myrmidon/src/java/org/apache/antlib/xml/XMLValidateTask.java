@@ -54,17 +54,17 @@ public class XMLValidateTask
     // The crimson implementation is shipped with ant.
     public static String DEFAULT_XML_READER_CLASSNAME = "org.apache.crimson.parser.XMLReaderImpl";
 
-    protected static String INIT_FAILED_MSG = "Could not start xml validation: ";
+    private static String INIT_FAILED_MSG = "Could not start xml validation: ";
 
     // ant task properties
     // defaults
-    protected boolean failOnError = true;
-    protected boolean warn = true;
-    protected boolean lenient = false;
-    protected String readerClassName = DEFAULT_XML_READER_CLASSNAME;
+    private boolean failOnError = true;
+    private boolean warn = true;
+    private boolean lenient = false;
+    private String readerClassName = DEFAULT_XML_READER_CLASSNAME;
 
-    protected File file = null;// file to be validated
-    protected Vector filesets = new Vector();
+    private File file = null;// file to be validated
+    private Vector filesets = new Vector();
 
     /**
      * the parser is viewed as a SAX2 XMLReader. If a SAX1 parser is specified,
@@ -72,16 +72,16 @@ public class XMLValidateTask
      * 'standard' way of doing this would be to use the JAXP1.1 SAXParser
      * interface.
      */
-    protected XMLReader xmlReader = null;// XMLReader used to validation process
-    protected ValidatorErrorHandler errorHandler
+    private XMLReader xmlReader = null;// XMLReader used to validation process
+    private ValidatorErrorHandler errorHandler
         = new ValidatorErrorHandler();// to report sax parsing errors
-    protected Hashtable features = new Hashtable();
+    private Hashtable features = new Hashtable();
 
     /**
      * The list of configured DTD locations
      */
     public Vector dtdLocations = new Vector();// sets of file to be validated
-    protected Path classpath;
+    private Path classpath;
 
     /**
      * Specify the class name of the SAX parser to be used. (optional)
@@ -273,7 +273,7 @@ public class XMLValidateTask
         getLogger().info( fileProcessed + " file(s) have been successfully validated." );
     }
 
-    protected EntityResolver getEntityResolver()
+    private EntityResolver getEntityResolver()
     {
         LocalResolver resolver = new LocalResolver();
 
@@ -477,12 +477,12 @@ public class XMLValidateTask
      * <li> remember if an error occured
      * </ul>
      */
-    protected class ValidatorErrorHandler implements ErrorHandler
+    private class ValidatorErrorHandler
+        implements ErrorHandler
     {
-
-        protected File currentFile = null;
-        protected String lastErrorMessage = null;
-        protected boolean failed = false;
+        private File currentFile;
+        private String lastErrorMessage;
+        private boolean failed;
 
         // did an error happen during last parsing ?
         public boolean getFailure()
