@@ -638,18 +638,26 @@ public class Frame implements DemuxOutputReceiver {
      * @param name the name under which the project will be
      *      referenced.
      * @param project the project model.
+     * @param initialData the project's initial data load.
      * @exception ExecutionException if the project cannot be referenced.
      */
-    protected void createProjectReference(String name, Project project) 
+    protected void createProjectReference(String name, Project project,
+                                          Map initialData) 
         throws ExecutionException {
        Frame referencedFrame = createFrame(project);
 
+       if (initialData != null) {
+           referencedFrame.setInitialProperties(initialData);
+       }
+       
        // does the frame have any overrides?
        Map initialProperties = (Map) overrides.get(name);
        if (initialProperties != null) {
            referencedFrame.setInitialProperties(initialProperties);
            overrides.remove(name);
        }
+
+
         
        referencedFrames.put(name, referencedFrame);
        referencedFrame.initialize();

@@ -82,10 +82,11 @@ public interface ExecService {
      * @param referenceName the name under which the project will be
      *      referenced.
      * @param model the project model.
+     * @param initialData the project's initial data load.
      * @exception ExecutionException if the project cannot be referenced.
      */
-    void createProjectReference(String referenceName, Project model)
-         throws ExecutionException;
+    void createProjectReference(String referenceName, Project model, 
+                                Map initialData) throws ExecutionException;
 
 
     /**

@@ -65,17 +65,13 @@ import org.apache.ant.common.util.ExecutionException;
  * @author Conor MacNeill
  * @created 17 April 2002
  */
-public class Ref extends AbstractTask {
+public class Ref extends SubBuild {
 
     /** The project file containing the project to be referenced. */
     private File projectFile;
 
     /** THe name under which this project is to be referenced. */
     private String name;
-
-    /** The core's ExecutionService for running builds and external programs */
-    private ExecService execService;
-
 
     /**
      * Initialise this task
@@ -88,7 +84,6 @@ public class Ref extends AbstractTask {
     public void init(AntContext context, String componentType)
          throws ExecutionException {
         super.init(context, componentType);
-        execService = (ExecService) getCoreService(ExecService.class);
     }
 
 
@@ -119,9 +114,9 @@ public class Ref extends AbstractTask {
      * @exception ExecutionException if the project cannot be referenced.
      */
     public void execute() throws ExecutionException {
-        Project model = execService.parseXMLBuildFile(projectFile);
+        Project model = getExecService().parseXMLBuildFile(projectFile);
 
-        execService.createProjectReference(name, model);
+        getExecService().createProjectReference(name, model, getProperties());
     }
 }
 

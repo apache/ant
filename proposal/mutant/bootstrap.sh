@@ -27,5 +27,3 @@ java -jar bootstrap/lib/start.jar $*
 # Use the full build as the build used by the build script
 cp -r dist/lib bootstrap
 
-#clean up after bootstrap
-java -jar bootstrap/lib/start.jar clean

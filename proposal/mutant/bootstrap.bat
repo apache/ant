@@ -26,7 +26,5 @@ REM run full build using bootstrapped version
 java -jar bootstrap\lib\start.jar %*
 
 REM Use the full build as the build used by the build script
-xcopy /s dist bootstrap
+xcopy /s /y dist bootstrap
 
-REM clean up after bootstrap
-java -jar bootstrap\lib\start.jar clean
