@@ -57,6 +57,9 @@ package org.apache.tools.ant;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.Hashtable;
+import java.io.Serializable;
+
 import org.xml.sax.AttributeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributeListImpl;
@@ -69,19 +72,25 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class RuntimeConfigurable {
+public class RuntimeConfigurable implements Serializable {
 
     /** Name of the element to configure. */
     private String elementTag = null;
     /** List of child element wrappers. */
     private Vector children = new Vector();
-    /** The element to configure. */
-    private Object wrappedObject = null;
+    /** The element to configure. It is only used during
+     * maybeConfigure.
+     */
+    private transient Object wrappedObject = null;
+
     /** @@deprecated
      * XML attributes for the element. */
-    private AttributeList attributes;
-    /** XML attributes for the element. */
-    private Attributes attributes2;
+    private transient AttributeList attributes;
+
+    /** Attributes are stored in the attMap.
+     */
+    private Hashtable attMap=new Hashtable();
+
     /** Text appearing within the element. */
     private StringBuffer characters = new StringBuffer();
     /** Indicates if the wrapped object has been configured */
@@ -98,13 +107,13 @@ public class RuntimeConfigurable {
         wrappedObject = proxy;
         this.elementTag = elementTag;
         proxyConfigured = false;
+        // Most likely an UnknownElement
         if( proxy instanceof Task )
             ((Task)proxy).setRuntimeConfigurableWrapper( this );
     }
 
     /**
-     * Sets the element to configure. This is used when the real type of
-     * an element isn't known at the time of wrapper creation.
+     * Sets the element to configure.
      *
      * @param proxy The element to configure. Must not be <code>null</code>.
      */
@@ -120,24 +129,33 @@ public class RuntimeConfigurable {
     /**
      * Sets the attributes for the wrapped element.
      *
+     * @deprecated
      * @param attributes List of attributes defined in the XML for this
      *                   element. May be <code>null</code>.
      */
     public void setAttributes(AttributeList attributes) {
         this.attributes = new AttributeListImpl(attributes);
+        for (int i = 0; i < attributes.getLength(); i++) {
+            this.setAttribute( attributes.getName(i), attributes.getValue(i));
+        }
     }
 
-    public void setAttributes2(Attributes attributes) {
-        this.attributes2=new AttributesImpl( attributes );
+    public void setAttribute( String name, String value ) {
+        attMap.put( name, value );
     }
 
-    public Attributes getAttributes2() {
-        return attributes2;
+    /** Return the attribute map.
+     *
+     * @return Attribute name to attribute value map
+     */
+    public Hashtable getAttributeMap() {
+        return attMap;
     }
 
     /**
      * Returns the list of attributes for the wrapped element.
      *
+     * @deprecated
      * @return An AttributeList representing the attributes defined in the
      *         XML for this element. May be <code>null</code>.
      */
@@ -268,20 +286,32 @@ public class RuntimeConfigurable {
             return;
         }
 
-        //PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
+        // Configure the object
+        Object target=(wrappedObject instanceof TaskAdapter) ?
+                ((TaskAdapter)wrappedObject).getProxy() : wrappedObject;
 
-        if (attributes2 != null) {
-            ProjectHelper.configure(wrappedObject, attributes2, p);
-            //ph.configure(wrappedObject, attributes2, p);
-            id = attributes2.getValue("id");
-            // No way - this will be used on future calls ( if the task is used
-            // multiple times: attributes = null;
+        //PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
+        IntrospectionHelper ih =
+            IntrospectionHelper.getHelper(p, target.getClass());
+
+        Enumeration attNames=attMap.keys();
+        while( attNames.hasMoreElements() ) {
+            String name=(String) attNames.nextElement();
+            String value=(String) attMap.get(name);
+
+            // reflect these into the target
+            value = ProjectHelper.replaceProperties(p, value,p.getProperties());
+            try {
+                ih.setAttribute(p, target,
+                        name.toLowerCase(Locale.US), value);
+            } catch (BuildException be) {
+                // id attribute must be set externally
+                if (!name.equals("id")) {
+                    throw be;
+                }
+            }
         }
-        if (attributes != null) {
-            ProjectHelper.configure(wrappedObject, attributes, p);
-            //ph.configure(wrappedObject, attributes, p);
-            id = attributes.getValue("id");
-        }
+        id = (String)attMap.get("id");
 
         if (characters.length() != 0) {
             ProjectHelper.addText(p, wrappedObject, characters.toString());
