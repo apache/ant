@@ -540,7 +540,7 @@ public final class IntrospectionHelper implements BuildListener {
             }
         }
         try {
-            addText.invoke(element, new String[] {text});
+            addText.invoke(element, new Object[] {text});
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
@@ -1050,7 +1050,7 @@ public final class IntrospectionHelper implements BuildListener {
             return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new String[] {value});
+                        m.invoke(parent, (Object[])(new String[] {value}));
                     }
                 };
 
@@ -1064,7 +1064,8 @@ public final class IntrospectionHelper implements BuildListener {
                                 + "legal value for attribute \""
                                 + attrName + "\"");
                         }
-                        m.invoke(parent, new Character[] {new Character(value.charAt(0))});
+                        m.invoke(parent, (Object[])
+                            (new Character[] {new Character(value.charAt(0))}));
                     }
 
                 };
@@ -1074,9 +1075,9 @@ public final class IntrospectionHelper implements BuildListener {
             return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent,
+                        m.invoke(parent,(Object[])(
                                  new Boolean[] {Project.toBoolean(value)
-                                                ? Boolean.TRUE : Boolean.FALSE});
+                                                ? Boolean.TRUE : Boolean.FALSE}));
                     }
 
                 };
@@ -1087,7 +1088,7 @@ public final class IntrospectionHelper implements BuildListener {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                         try {
-                            m.invoke(parent, new Class[] {Class.forName(value)});
+                            m.invoke(parent, new Object[] {Class.forName(value)});
                         } catch (ClassNotFoundException ce) {
                             throw new BuildException(ce);
                         }
@@ -1099,7 +1100,7 @@ public final class IntrospectionHelper implements BuildListener {
             return new AttributeSetter(m) {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new File[] {p.resolveFile(value)});
+                        m.invoke(parent, new Object[] {p.resolveFile(value)});
                     }
 
                 };
@@ -1113,7 +1114,7 @@ public final class IntrospectionHelper implements BuildListener {
                             EnumeratedAttribute ea =
                                 (EnumeratedAttribute) reflectedArg.newInstance();
                             ea.setValue(value);
-                            m.invoke(parent, new EnumeratedAttribute[] {ea});
+                            m.invoke(parent, new Object[] {ea});
                         } catch (InstantiationException ie) {
                             throw new BuildException(ie);
                         }

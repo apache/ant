@@ -59,7 +59,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
             // don't have to check for interface, since then
             // taskClass would be abstract too.
             try {
-                final Method executeM = taskClass.getMethod("execute", null);
+                final Method executeM = taskClass.getMethod("execute", (Class[])null);
                 // don't have to check for public, since
                 // getMethod finds public method only.
                 // don't have to check for abstract, since then

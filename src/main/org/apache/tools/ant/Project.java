@@ -888,7 +888,7 @@ public class Project {
             throw new BuildException(message);
         }
         try {
-            taskClass.getConstructor(null);
+            taskClass.getConstructor((Class[])null);
             // don't have to check for public, since
             // getConstructor finds public constructors only.
         } catch (NoSuchMethodException e) {
