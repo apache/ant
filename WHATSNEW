@@ -238,6 +238,8 @@ Other changes:
 * <ftp> can now chmod files on a remote server that supports
   "site chmod", as well as set the umask before transferring files, if
   the server supports "site umask".
+  
+* New <ejbdeploy> "optional" task.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
