@@ -35,6 +35,7 @@ import org.apache.tools.ant.Executor;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.helper.SingleCheckExecutor;
@@ -441,6 +442,16 @@ public class Ant extends Task {
             Property p = (Property) e.nextElement();
             p.setProject(newProject);
             p.execute();
+        }
+        // Do local properties second
+        if (inheritAll) {
+            // Only copy them if they have not been set
+            PropertyHelper newHelper =
+                PropertyHelper.getPropertyHelper(newProject);
+            PropertyHelper oldHelper =
+                PropertyHelper.getPropertyHelper(getProject());
+            newHelper.setNotOverrideLocalProperties(
+                oldHelper.getLocalProperties().copy());
         }
         getProject().copyInheritedProperties(newProject);
     }

@@ -31,6 +31,7 @@ import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicAttribute;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
@@ -49,7 +50,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
     private Map      map = new HashMap();
     private Map      nsElements = null;
     private Map      presentElements;
-    private Hashtable localProperties;
+    private Hashtable localAttributes;
     private String    text = null;
     private String    implicitTag =     null;
     private List      unknownElements = new ArrayList();
@@ -262,10 +263,10 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             Map.Entry entry = (Map.Entry) i.next();
             rc.setAttribute(
                 (String) entry.getKey(),
-                macroSubs((String) entry.getValue(), localProperties));
+                macroSubs((String) entry.getValue(), localAttributes));
         }
         rc.addText(macroSubs(ue.getWrapper().getText().toString(),
-                             localProperties));
+                             localAttributes));
 
         Enumeration e = ue.getWrapper().getChildren();
         while (e.hasMoreElements()) {
@@ -321,10 +322,19 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      *
      */
     public void execute() {
+        PropertyHelper propertyHelper =
+            PropertyHelper.getPropertyHelper(getProject());
+        propertyHelper.enterLocalPropertyScope();
+        for (Iterator i = macroDef.getLocalProperties().values().iterator();
+             i.hasNext();) {
+            MacroDef.LocalPropertyElement el = (MacroDef.LocalPropertyElement) i.next();
+            propertyHelper.addLocalProperty(el.getName(), null);
+        }
+
         presentElements = new HashMap();
         getNsElements();
         processTasks();
-        localProperties = new Hashtable();
+        localAttributes = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
         for (Iterator i = macroDef.getAttributes().iterator(); i.hasNext();) {
             MacroDef.Attribute attribute = (MacroDef.Attribute) i.next();
@@ -334,7 +344,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             }
             if (value == null) {
                 value = attribute.getDefault();
-                value = macroSubs(value, localProperties);
+                value = macroSubs(value, localAttributes);
             } else if (attribute instanceof MacroDef.DefineAttribute) {
                 // Do not process given value, will fail as unknown attribute
                 continue;
@@ -343,7 +353,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
                 throw new BuildException(
                     "required attribute " + attribute.getName() + " not set");
             }
-            localProperties.put(attribute.getName(), value);
+            localAttributes.put(attribute.getName(), value);
             copyKeys.remove(attribute.getName());
         }
         if (copyKeys.contains("id")) {
@@ -360,7 +370,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             if (macroDef.getText().getTrim()) {
                 text = text.trim();
             }
-            localProperties.put(macroDef.getText().getName(), text);
+            localAttributes.put(macroDef.getText().getName(), text);
         } else {
             if (text != null && !text.trim().equals("")) {
                 throw new BuildException(
@@ -382,8 +392,10 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         } catch (BuildException ex) {
             throw ProjectHelper.addLocationToBuildException(
                 ex, getLocation());
+        } finally {
+            presentElements = null;
+            localAttributes = null;
+            propertyHelper.exitLocalPropertyScope();
         }
-        presentElements = null;
-        localProperties = null;
     }
 }

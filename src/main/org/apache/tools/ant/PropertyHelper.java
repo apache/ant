@@ -18,8 +18,13 @@
 package org.apache.tools.ant;
 
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.ArrayList;
 
 
 /* ISSUES:
@@ -35,7 +40,7 @@ import java.util.Enumeration;
  Need to discuss this and find if we need more.
  */
 
-/** NOT FINAL. API MAY CHANGE
+/**
  *
  * Deals with properties - substitution, dynamic properties, etc.
  *
@@ -46,11 +51,30 @@ import java.util.Enumeration;
  */
 public class PropertyHelper {
 
+    /**
+     * Opaque interface for localproperties
+     * Allows a user to retrive, copy and replace
+     * the localproperties - currently used by the
+     * parallel task.
+     */
+    public interface LocalProperties {
+        /**
+         * @return a copy of the local properties
+         */
+        LocalProperties copy();
+    }
+
+
+    /**   Local Properties */
+    private ThreadLocalProperties threadLocalProperties
+        = new ThreadLocalProperties();
+
+
     private Project project;
     private PropertyHelper next;
 
     /** Project properties map (usually String to String). */
-    private Hashtable properties = new Hashtable();
+    private HashMap properties = new HashMap(); // Contains normal and user properties
 
     /**
      * Map of "user" properties (as created in the Ant task, for example).
@@ -167,6 +191,14 @@ public class PropertyHelper {
                 return true;
             }
         }
+
+        // Check if this is a local property
+        LocalProperty l = threadLocalProperties.getLocalProperty(name);
+        if (l != null) {
+            l.setValue(value);
+            return true;
+        }
+
         return false;
     }
 
@@ -185,6 +217,11 @@ public class PropertyHelper {
                 return o;
             }
         }
+        LocalProperty l = threadLocalProperties.getLocalProperty(name);
+        if (l != null) {
+            return l.getValue();
+        }
+
         // Experimental/Testing, will be removed
         if (name.startsWith("toString:")) {
             name = name.substring("toString:".length());
@@ -192,6 +229,72 @@ public class PropertyHelper {
             return (v == null) ? null : v.toString();
         }
         return null;
+    }
+
+    /**
+     * @return the local properties
+     */
+    public LocalProperties getLocalProperties() {
+        return (LocalProperties) threadLocalProperties.get();
+    }
+
+    /**
+     * Set the local properties
+     * @param localProperties the new local properties, may be null.
+     */
+    public void setLocalProperties(LocalProperties localProperties) {
+        if (localProperties == null) {
+            localProperties = new LocalPropertyStack();
+        }
+        threadLocalProperties.set(localProperties);
+    }
+
+    /**
+     * Set the local properties without overriding the user props
+     * Used by ant.java to set the local properties, without
+     * modifing the user properties set in the param elements.
+     * @param localProperties the new local properties, may be null.
+     */
+    public void setNotOverrideLocalProperties(
+        LocalProperties localProperties) {
+        if (localProperties == null) {
+            localProperties = new LocalPropertyStack();
+        }
+        LocalPropertyStack s = (LocalPropertyStack) localProperties;
+        for (Iterator i = s.props.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            if (userProperties.get(entry.getKey()) != null) {
+                i.remove();
+            }
+        }
+        threadLocalProperties.set(localProperties);
+    }
+
+    /**
+     * Add a local property, with an optional initial value
+     *
+     * @param name the name of the local property
+     * @param value the initial value of the localproperty, may be null
+     */
+    public void addLocalProperty(String name, Object value) {
+        threadLocalProperties.addProperty(name, value);
+    }
+
+    /**
+     * A new scope for local properties.
+     *
+     */
+    public void enterLocalPropertyScope() {
+        threadLocalProperties.enterLocalPropertyScope();
+    }
+
+    /**
+     * Exit a scope of local properties, removing the
+     * local properties in the scope.
+     *
+     */
+    public void exitLocalPropertyScope() {
+        threadLocalProperties.exitLocalPropertyScope();
     }
 
     // -------------------- Optional methods   --------------------
@@ -341,9 +444,15 @@ public class PropertyHelper {
      */
     public synchronized void setNewProperty(String ns, String name,
                                             Object value) {
-        if (null != properties.get(name)) {
+        LocalProperty local = threadLocalProperties.getLocalProperty(name);
+        boolean localPropertySet =
+            local != null && local.getValue() != null;
+        boolean localProperty = local != null;
+
+        if ((properties.get(name) != null && !localProperty)
+            || localPropertySet) {
             project.log("Override ignored for property \"" + name
-                + "\"", Project.MSG_VERBOSE);
+                        + "\"", Project.MSG_VERBOSE);
             return;
         }
 
@@ -427,7 +536,7 @@ public class PropertyHelper {
         }
 
         Object o = getPropertyHook(ns, name, false);
-        if (o != null) {
+        if (o != null || threadLocalProperties.getLocalProperty(name) != null) {
             return o;
         }
 
@@ -451,6 +560,11 @@ public class PropertyHelper {
         if (o != null) {
             return o;
         }
+        // check if null local property
+        if (threadLocalProperties.getLocalProperty(name) != null) {
+            return null;
+        }
+
         return  userProperties.get(name);
     }
 
@@ -460,15 +574,32 @@ public class PropertyHelper {
     // deprecated, it is possible to use a better (more efficient)
     // mechanism to preserve the context.
 
-    // TODO: do we need to delegate ?
 
     /**
      * Returns a copy of the properties table.
      * @return a hashtable containing all properties
-     *         (including user properties).
+     *         (including user properties and local properties).
      */
     public Hashtable getProperties() {
-        return new Hashtable(properties);
+        System.out.println("GetProperties called");
+        Hashtable ret = new Hashtable(properties);
+        Map locals = threadLocalProperties.getProps();
+        for (Iterator i = locals.entrySet().iterator(); i.hasNext();) {
+            Map.Entry e = (Map.Entry) i.next();
+            List l = (List) e.getValue();
+            if (l != null && l.size() > 0) {
+                LocalProperty p = (LocalProperty) l.get(l.size() - 1);
+                if (p.getValue() == null) {
+                    if (ret.get(e.getKey()) != null) {
+                        ret.remove(e.getKey());
+                    }
+                } else {
+                    ret.put(e.getKey(), p.getValue());
+                }
+            }
+        }
+        return ret;
+
         // There is a better way to save the context. This shouldn't
         // delegate to next, it's for backward compatibility only.
     }
@@ -479,6 +610,24 @@ public class PropertyHelper {
      */
     public Hashtable getUserProperties() {
         return new Hashtable(userProperties);
+    }
+
+    /**
+     * Returns a copy of the local properties
+     * @return a map containing the local properties as string->string
+     */
+    public Map getLocalPropertiesCopy() {
+        Map copy = new HashMap();
+        Map locals = threadLocalProperties.getProps();
+        for (Iterator i = locals.entrySet().iterator(); i.hasNext();) {
+            Map.Entry e = (Map.Entry) i.next();
+            List l = (List) e.getValue();
+            if (l != null && l.size() > 0) {
+                LocalProperty p = (LocalProperty) l.get(l.size() - 1);
+                copy.put(e.getKey(), p.getValue());
+            }
+        }
+        return copy;
     }
 
     /**
@@ -591,6 +740,176 @@ public class PropertyHelper {
         //if there is any tail to the file, append it
         if (prev < value.length()) {
             fragments.addElement(value.substring(prev));
+        }
+    }
+
+    /**
+     * A holder class for a local property value
+     */
+    private class LocalProperty {
+        private int level;
+        private Object value;
+        public LocalProperty(int level, Object value) {
+            this.level = level;
+            this.value = value;
+        }
+
+        public LocalProperty copy() {
+            return new LocalProperty(level, value);
+        }
+
+        public int getLevel() {
+            return level;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        void setValue(Object value) {
+            this.value = value;
+        }
+    }
+
+    /**
+     * A class implementing a local property stack.
+     */
+    private class LocalPropertyStack
+        implements LocalProperties {
+        private int level = 0;
+        // HashMap<String, ListArray<LocalPropertyValue>>
+        private HashMap props = new HashMap();
+
+        // ArrayList<ArrayList<String>>
+        private List    stack = new ArrayList();
+
+        public LocalProperties copy() {
+            LocalPropertyStack copy = new LocalPropertyStack();
+            copy.stack = new ArrayList();
+            copy.level = level;
+            for (int i = 0; i < stack.size(); ++i) {
+                copy.stack.add(((ArrayList) stack.get(i)).clone());
+            }
+            copy.props = new HashMap();
+            for (Iterator i = props.entrySet().iterator(); i.hasNext();) {
+                Map.Entry entry = (Map.Entry) i.next();
+                ArrayList from = (ArrayList) entry.getValue();
+                List l2 = new ArrayList();
+                for (Iterator l = from.iterator(); l.hasNext();) {
+                    LocalProperty v = (LocalProperty) l.next();
+                    l2.add(v.copy());
+                }
+                copy.props.put(entry.getKey(), l2);
+            }
+            return copy;
+        }
+
+        public LocalProperties shallowCopy() {
+            LocalPropertyStack copy = new LocalPropertyStack();
+            copy.stack = new ArrayList();
+            copy.level = level;
+            for (int i = 0; i < stack.size(); ++i) {
+                copy.stack.add(((ArrayList) stack.get(i)).clone());
+            }
+            copy.props = new HashMap();
+            for (Iterator i = props.entrySet().iterator(); i.hasNext();) {
+                Map.Entry entry = (Map.Entry) i.next();
+                ArrayList from = (ArrayList) entry.getValue();
+                List l2 = new ArrayList();
+                for (Iterator l = from.iterator(); l.hasNext();) {
+                    LocalProperty v = (LocalProperty) l.next();
+                    l2.add(v);
+                }
+                copy.props.put(entry.getKey(), l2);
+            }
+            return copy;
+        }
+
+        public void enterLocalPropertyScope() {
+            stack.add(new ArrayList());
+            level++;
+        }
+
+        public void addProperty(String name, Object value) {
+            if (stack.size() == 0) {
+                return;
+            }
+            List list = (List) stack.get(stack.size() - 1);
+            list.add(name);
+            List local = (List) props.get(name);
+            if (local == null) {
+                local = new ArrayList();
+                props.put(name, local);
+            } else {
+                LocalProperty l = (LocalProperty) local.get(local.size() - 1);
+                if (l.getLevel() == level) {
+                    throw new BuildException(
+                        "Attempt to add another local of the same name");
+                }
+            }
+            LocalProperty l = new LocalProperty(level, value);
+            local.add(l);
+        }
+
+        public void exitLocalPropertyScope() {
+            if (stack.size() == 0) {
+                return;
+            }
+            level--;
+            List list = (List) stack.remove(stack.size() - 1);
+            for (Iterator i = list.iterator(); i.hasNext();) {
+                String name = (String) i.next();
+                List local = (List) props.get(name);
+                if (local != null && local.size() != 0) {
+                    local.remove(local.size() - 1);
+                    if (local.size() == 0) {
+                        props.remove(name);
+                    }
+                }
+            }
+        }
+
+        public LocalProperty getLocalProperty(String name) {
+            List l = (List) props.get(name);
+            if (l != null && l.size() != 0) {
+                return (LocalProperty) l.get(l.size() - 1);
+            }
+            return null;
+        }
+
+        public Map getProps() {
+            return props;
+        }
+    }
+
+    /**
+     * A set of local properties stack for each thread
+     */
+
+    private class ThreadLocalProperties extends InheritableThreadLocal {
+        protected synchronized Object initialValue() {
+            return new LocalPropertyStack();
+        }
+        protected synchronized Object childValue(Object obj) {
+            return ((LocalPropertyStack) obj).shallowCopy();
+        }
+        public LocalProperty getLocalProperty(String name) {
+            return ((LocalPropertyStack) get()).getLocalProperty(name);
+        }
+
+        public void enterLocalPropertyScope() {
+            ((LocalPropertyStack) get()).enterLocalPropertyScope();
+        }
+
+        public void addProperty(String name, Object value) {
+            ((LocalPropertyStack) get()).addProperty(name, value);
+        }
+
+        public void exitLocalPropertyScope() {
+            ((LocalPropertyStack) get()).exitLocalPropertyScope();
+        }
+        public Map getProps() {
+            return ((LocalPropertyStack) get()).getProps();
         }
     }
 
