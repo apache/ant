@@ -276,17 +276,16 @@ public abstract class AbstractCvsTask extends Task {
          * Need a better cross platform integration with <cvspass>, so
          * use the same filename.
          */
-        /* But currently we cannot because 'cvs log' is not working
-         * with a pass file.
-        if(passFile == null){
+        if(passFile == null) {
 
-            File defaultPassFile = new File(System.getProperty("user.home") 
+            File defaultPassFile = new File(
+                System.getProperty("cygwin.user.home",
+                    System.getProperty("user.home")) 
                 + File.separatorChar + ".cvspass");
 
             if(defaultPassFile.exists())
                 this.setPassfile(defaultPassFile);
         }
-         */
 
         if (passFile != null) {
             Environment.Variable var = new Environment.Variable();
@@ -313,6 +312,10 @@ public abstract class AbstractCvsTask extends Task {
         exe.setAntRun(project);
         if (dest == null) {
             dest = project.getBaseDir();
+        }
+
+        if (!dest.exists()) {
+            dest.mkdirs();
         }
 
         exe.setWorkingDirectory(dest);

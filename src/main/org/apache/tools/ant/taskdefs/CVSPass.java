@@ -110,7 +110,10 @@ public class CVSPass extends Task {
      * Create a CVS task using the default cvspass file location.
      */
     public CVSPass(){
-        passFile = new File(System.getProperty("user.home") + "/.cvspass");
+        passFile = new File(
+            System.getProperty("cygwin.user.home",
+                System.getProperty("user.home"))
+            + File.separatorChar + ".cvspass");
     }
 
     /**

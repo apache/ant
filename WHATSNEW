@@ -16,6 +16,7 @@ argument version present in 1.5beta1.
 
 Fixed bugs:
 -----------
+* Make CVS Tasks to work under Cygwin.
 
 * Fix LineContains to handle huge files elegantly without causing
 Stack Overflows.
