@@ -286,13 +286,13 @@
                     <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
                         <tr>
                             <th>Error Description</th>
-                            <th>Line</th>
+                            <th>Line:Column</th>
                         </tr>
                         <xsl:for-each select="error">
                             <tr>
                                 <xsl:call-template name="alternated-row"/>
                                 <td><a title="{@source}"><xsl:value-of select="@message"/></a></td>
-                                <td><xsl:value-of select="@line"/></td>
+                                <td align="center"><xsl:value-of select="@line"/><xsl:if test="@column">:<xsl:value-of select="@column"/></xsl:if></td>
                             </tr>
                         </xsl:for-each>
                     </table>
@@ -328,4 +328,3 @@
         </xsl:attribute>
     </xsl:template>
 </xsl:stylesheet>
-
