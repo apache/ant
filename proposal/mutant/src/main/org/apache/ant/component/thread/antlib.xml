@@ -1,4 +1,0 @@
-<antlib>
-   <taskdef name="parallel" classname="org.apache.ant.component.thread.Parallel"/>
-   <taskdef name="sequential" classname="org.apache.ant.component.thread.Sequential"/>
-</antlib>

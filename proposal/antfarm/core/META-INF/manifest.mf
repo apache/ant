@@ -1,2 +1,0 @@
-Main-Class: org.apache.tools.ant.cmdline.Main
-
