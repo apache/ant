@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ADDL_CLASSPATH=./lib/ant.jar:./lib/projectx-tr2.jar
+ADDL_CLASSPATH=./lib/ant.jar:./lib/xml.jar
 
 if [ "$CLASSPATH" != "" ] ; then
   CLASSPATH=$CLASSPATH:$ADDL_CLASSPATH

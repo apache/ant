@@ -1,7 +1,7 @@
 @ECHO OFF
 echo BOOTSTRAPPING ANT DISTRIBUTION
 
-set C=%CLASSPATH%;lib/projectx-tr2.jar
+set C=%CLASSPATH%;lib/xml.jar
 set SRCDIR=src\main\org\apache\tools\ant
 set TMPDIR=tmp
 
