@@ -4,10 +4,10 @@ Changes from current Ant 1.6 CVS version to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
-* Use org.apache.log4j.Logger instead of org.apache.log4j.Category. Category has
-  been deprecated for ~2 years and is been removed from the log4j code.
-  Logger was introduced in log4j 1.2 so users of log4j 1.1 and log4j 1.0 need
-  to upgrade to a newer version of log4j.
+* Use org.apache.log4j.Logger instead of org.apache.log4j.Category.
+  Category has been deprecated for ~2 years and is been removed from
+  the log4j code.  Logger was introduced in log4j 1.2 so users of
+  log4j 1.1 and log4j 1.0 need to upgrade to a newer version of log4j.
   Bugzilla Report 31951.
 
 * build.sysclasspath now also affects the bootclasspath handling of
@@ -184,24 +184,27 @@ Fixed bugs:
   Bugzilla 30097.
 
 * Impossible to use implicit classpath for <taskdef>
-  when Ant core loader != Java application loader and Path.systemClassPath taken from ${java.class.path}
-  Bugzilla 30161.
+  when Ant core loader != Java application loader and
+  Path.systemClassPath taken from ${java.class.path} Bugzilla 30161.
 
-* MacroInstance did not clean up nested elements correctly in the execute method, causing
-  multiple use of the same macro instance with nested elements to fail.
+* MacroInstance did not clean up nested elements correctly in the execute 
+  method, causing multiple use of the same macro instance with nested
+  elements to fail.
 
 * checksum fileext property doc wrong. Bugzilla 30787.
 
 * FTP task, getTimeDiff method was returning wrong value. Bugzilla 30595.
 
-* Zip task was not zipping when only empty directories were found. Bugzilla 30365.
+* Zip task was not zipping when only empty directories were found.
+  Bugzilla 30365.
 
-* Jar task was not including manifest files when duplicate="preserve" was chosen. Bugzilla 32802.
+* Jar task was not including manifest files when duplicate="preserve" was
+  chosen. Bugzilla 32802.
 
 * Classpath was treated in the same way as -lib options. Bugzilla 28046.
 
-* Manual page for cvsversion contained incorrect attributes and did not say since 1.6.1.
-  Bugzilla 31408.
+* Manual page for cvsversion contained incorrect attributes and did not
+  say since 1.6.1. Bugzilla 31408.
 
 * Typo in definition of <cvsversion> task causing it not to be defined.
   Bugzilla 31403.
@@ -224,12 +227,13 @@ Fixed bugs:
 * Target location is not set for default target.
   Bugzilla report 32267.
 
-* Incorrect classloader parent in junittask when using with ant-junit.jar and junit.jar
-  not in the project classloader. Bugzilla report 28474.
+* Incorrect classloader parent in junittask when using with
+  ant-junit.jar and junit.jar not in the project classloader. Bugzilla
+  report 28474.
 
-* getResources() on the classloader returned by ClasspathUtils would see each resource
-  twice - if the resource is in the project classpath and if the classloader is requested
-  with a null path.
+* getResources() on the classloader returned by ClasspathUtils would
+  see each resource twice - if the resource is in the project
+  classpath and if the classloader is requested with a null path.
 
 * XMLValidate used URL#getFile rather than the ant method FileUtils#fromURI
   Bugzilla report 32508
@@ -655,7 +659,8 @@ Changes that could break older environments:
   are resolved at a later stage. This causes some
   differences especially for user defined task containers.
 
-* <checksum> log message "Calculating checksum ..." has been degraded from INFO to VERBOSE.
+* <checksum> log message "Calculating checksum ..." has been degraded
+  from INFO to VERBOSE.
 
 Fixed bugs:
 -----------
@@ -1555,18 +1560,8 @@ Changes from Ant 1.5beta2 to Ant 1.5beta3
 Changes that could break older environments:
 --------------------------------------------
 
-* Project.getBuildListeners now returns a clone of the listener
-  list. Changes to the returned list will not affect the listeners
-  currently attached to the Project. It also means that it is safe to
-  iterate over the returned list if listeners are added or removed
-  during the traversal.
-
 * <pvcs> default filenameformat has been different from Ant 1.4.1.
   Now it is different from 1.5beta1 and 1.5beta2.
-
-* Some messages that are printed during startup will not be
-  written to the logfile specified via -logfile as they might destroy
-  the format of the file for special BuildLoggers (like XmlLogger).
 
 * <pathconvert> won't set the property if the result is the empty string.
 
@@ -1755,7 +1750,6 @@ Changes that could break older environments:
   during the traversal.
 
 * <pvcs> default filenameformat has been different from Ant 1.4.1.
-  Now it is different from 1.5beta1 and 1.5beta2.
 
 * Some messages that are printed during startup will not be
   written to the logfile specified via -logfile as they might destroy
@@ -2168,88 +2162,6 @@ Other changes:
   run the command.
 
 * <javadoc> now supports two new nested elements, <fileset> and <packageset>.
-
-
-Changes from Ant 1.5beta2 to Ant 1.5beta3
-=========================================
-
-Changes that could break older environments:
---------------------------------------------
-
-* Project.getBuildListeners now returns a clone of the listener
-  list. Changes to the returned list will not affect the listeners
-  currently attached to the Project. It also means that it is safe to
-  iterate over the returned list if listeners are added or removed
-  during the traversal.
-
-* <pvcs> default filenameformat has been different from Ant 1.4.1.
-  Now it is different from 1.5beta1 and 1.5beta2.
-
-* Some messages that are printed during startup will not be
-  written to the logfile specified via -logfile as they might destroy
-  the format of the file for special BuildLoggers (like XmlLogger).
-
-* <pathconvert> won't set the property if the result is the empty string.
-
-Fixed bugs:
------------
-
-* <available> could fail to find files or directories that happen to
-  start with the name of the project's basedir but are not children of
-  the basedir.
-
-* Nested <property>'s inside <ant> can now be overriden by subsequent
-  <ant> and <antcall> tasks.
-
-* <xslt>'s outputtype attribute wouldn't do anything.
-
-* <linecontains> filterreader could swallow lines.
-
-* <sequential> used to configure the tasks (set their attributes)
-  before the first task has been executed.  This means that properties
-  that have been set by nested task seemed to be unset for the other
-  tasks in the same <sequential> element.
-
-* <javac>'s sourcepath setting has been ignored by some compiler
-  implementations.
-
-* <javadoc>'s packagelist attribute didn't work.
-
-* the plain mailer would always use port 25 in <mail>.
-
-* Ant's default logger could swallow empty lines.
-
-* ejbjar's iPlanet nested element now can process multiple descriptors.
-
-* IPlanetEjbc was looking in the wrong place for four iiop files.
-
-* <javac> would pass the -source switch to JDK 1.3's javac, even
-  though it doesn't support it.
-
-Other changes:
---------------
-
-* <checksum> now uses a buffer (of configurable size).
-
-* The "Trying to override task definition" warning has been degraded
-  to verbose level if the two task definitions only differ in the class
-  loader instance that has loaded the definition.
-
-* Add a jvmargs to the ejbjar's weblogic element to allow additional
-  arguments to be provided to the VM runnign ejbc. Document the
-  jvmdebuglevel attribute which can be used to avoid warnings about
-  interface classess being found on the classpath. Document the new
-  <sysproperty> element which allows JVM properties to be defined.
-  Added an outputdir attribute to allow the destination to be a
-  directory into which the exploded jar is written.
-
-* ejbjar now supports Borland Enterprise Server 5 and Jonas 2.5
-
-Changes from Ant 1.5beta1 to Ant 1.5beta2
-=========================================
-
-Changes that could break older environments:
---------------------------------------------
 
 
 Changes from Ant 1.4 to Ant 1.4.1
