@@ -86,23 +86,19 @@ import java.util.Vector;
  * requires the Jakarta Oro Package).
  *
  * <pre>
- * For jdk  <= 1.3, there are two available implementations:
+ * For jdk  &lt;= 1.3, there are two available implementations:
  *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
  *        Requires  the jakarta-oro package
  *
  *   org.apache.tools.ant.util.regexp.JakartaRegexpRegexp
  *        Requires the jakarta-regexp package
  *
- * For jdk <= 1.4, and additional implementation is available:
+ * For jdk &gt;= 1.4 an additional implementation is available:
  *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp
  *        Requires the jdk 1.4 built in regular expression package.
  * </pre>
  *
  * Usage:
- *
- *   Task declaration in the project:
- *
- *     &lt;taskdef name="replaceregexp" class="com.sedona.ant.taskdef.ReplaceRegExp" /&gt;
  *
  *   Call Syntax:
  *
@@ -124,14 +120,14 @@ import java.util.Vector;
  *
  *   Attributes:
  *
- *     file    --> A single file to operation on (mutually exclusive with the fileset subelements)
- *     match   --> The Perl5 Regular expression to match (see perl5 documentation)
- *     replace --> The Perl5 Expression replacement string (see perl5 documentation)
- *     flags   --> The Perl5 options to give to the replacement (see perl5 documentation for full list)
+ *     file    --&gt; A single file to operation on (mutually exclusive with the fileset subelements)
+ *     match   --&gt; The Regular expression to match 
+ *     replace --&gt; The Expression replacement string 
+ *     flags   --&gt; The options to give to the replacement 
  *                 g = Substitute all occurrences. default is to replace only the first one
  *                 i = Case insensitive match
  *
- *     byline  --> Should this file be processed a single line at a time (default is false)
+ *     byline  --&gt; Should this file be processed a single line at a time (default is false)
  *                 "true" indicates to perform replacement on a line by line basis
  *                 "false" indicates to perform replacement on the whole file at once.
  *
@@ -139,12 +135,11 @@ import java.util.Vector;
  *
  *     The following call could be used to replace an old property name in a ".properties"
  *     file with a new name.  In the replace attribute, you can refer to any part of the
- *     match expression in parenthesis using the syntax appropriate for the specified
- *     implementation ('$$1' for org.apache.tools.ant.util.regexp.JakartaOroRegexp).
+ *     match expression in parenthesis using backslash followed by a number like '\1'.
  *
  *     &lt;replaceregexp file="test.properties"
  *                    match="MyProperty=(.*)"
- *                    replace="NewProperty=$$1"
+ *                    replace="NewProperty=\1"
  *                    byline="true" /&gt;
  *
  * </pre>
@@ -153,8 +148,6 @@ import java.util.Vector;
  */
 public class ReplaceRegExp extends Task
 {
-    // Don't extend SedonaTaskContainer until we can delay building of
-    // the subtasks so variable of the current token works.
 
     private File file;
     private String flags;

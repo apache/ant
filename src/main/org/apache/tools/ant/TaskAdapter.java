@@ -73,7 +73,7 @@ public class TaskAdapter extends Task {
      *
      * Checks conditions only, which are additionally required for a tasks
      * adapted by TaskAdapter. Thus, this method should be called by
-     * {@link Project.checkTaskClass}.
+     * {@link Project#checkTaskClass}.
      *
      * Throws a BuildException and logs as Project.MSG_ERR for
      * conditions, that will cause the task execution to fail.

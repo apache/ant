@@ -61,15 +61,14 @@ import org.apache.tools.ant.types.DataType;
 
 /***
  * A regular expression substitution datatype.  It is an expression
- * that is meant to replace a regular expression.  The syntax is the
- * same as Perl5.
- * @see org.apache.oro.text.regex.Perl5Substitition
+ * that is meant to replace a regular expression.
  *
  * <pre>
  *   &lt;substitition [ [id="id"] expression="expression" | refid="id" ] 
  *   /&gt;
  * </pre>
  *
+ * @see org.apache.oro.text.regex.Perl5Substitition
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class Substitution extends DataType

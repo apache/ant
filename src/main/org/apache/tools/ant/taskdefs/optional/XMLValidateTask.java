@@ -167,8 +167,8 @@ public class XMLValidateTask extends Task {
      * <p> if className is an implementation of <code>org.xml.sax.Parser</code>, {@link #setLenient(boolean)},
      * will be ignored.
      * <p> if not set, the default {@link #DEFAULT_XML_READER_CLASSNAME} will be used.
-     * @see org.xml.sax.XMLReader;
-     * @see org.xml.sax.Parser;
+     * @see org.xml.sax.XMLReader
+     * @see org.xml.sax.Parser
      */
     public void setClassName(String className) {
 
@@ -189,7 +189,7 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     * @see #setClassPath
+     * @see #setClasspath
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -199,7 +199,7 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     * @see #setClassPath
+     * @see #setClasspath
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);

@@ -70,26 +70,26 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * that will be used.
  *
  * <pre>
- * For jdk  <= 1.3, there are two available implementations:
+ * For jdk  &lt;= 1.3, there are two available implementations:
  *   org.apache.tools.ant.util.regexp.JakartaOroRegexp (the default)
  *        Based on the jakarta-oro package
  *
  *   org.apache.tools.ant.util.regexp.JakartaRegexpRegexp
  *        Based on the jakarta-regexp package
  *
- * For jdk <= 1.4, and additional implementation is available:
+ * For jdk &gt;= 1.4 an additional implementation is available:
  *   org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp
  *        Based on the jdk 1.4 built in regular expression package.
  * </pre>
- *
- * @see org.apache.oro.regex.Perl5Compiler
- * @see org.apache.regexp.RE
- * @see java.util.regex.Pattern
  *
  * <pre>
  *   &lt;regularexpression [ [id="id"] pattern="expression" | refid="id" ] 
  *   /&gt;
  * </pre>
+ *
+ * @see org.apache.oro.regex.Perl5Compiler
+ * @see org.apache.regexp.RE
+ * @see java.util.regex.Pattern
  *
  * @see org.apache.tools.ant.util.regexp.Regexp
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
