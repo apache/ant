@@ -127,7 +127,7 @@ public class CommandlineJava implements Cloneable {
             try {
                 sys = System.getProperties();
                 Properties p = new Properties();
-                for (Enumeration e = sys.keys(); e.hasMoreElements();) {
+                for (Enumeration e = sys.propertyNames(); e.hasMoreElements();) {
                     Object o = e.nextElement();
                     p.put(o, sys.get(o));
                 }
