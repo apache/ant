@@ -90,6 +90,15 @@ how interrelated your classes are. </p>
     missing. Inner classes are handled by the depend task.</li>
 </ul>
 
+The most obvious example of these limitations is that the task can't tell
+which classes to recompile when a constant primitive data type exported 
+by other classes is changed. For example, a change in the definition of
+something like
+<pre>
+public final class Constants {
+  public final static boolean DEBUG=false;
+}
+</pre> will not be picked up by other classes.
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
