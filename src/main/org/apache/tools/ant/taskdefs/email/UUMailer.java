@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,71 +51,45 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.taskdefs.email;
 
-package org.apache.tools.ant.taskdefs;
-
-import org.apache.tools.ant.taskdefs.email.EmailTask;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import org.apache.tools.ant.BuildException;
+import sun.misc.UUEncoder;
 
 /**
- * A task to send SMTP email.
- * <p>
- * <table border="1" cellpadding="3" cellspacing="0">
- * <tr bgcolor="#CCCCFF">
- * <th>Attribute</th>
- * <th>Description</th>
- * <th>Required</th>
- * </tr>
- * <tr>
- * <td>from</td>
- * <td>Email address of sender.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>mailhost</td>
- * <td>Host name of the mail server.</td>
- * <td>No, default to &quot;localhost&quot;</td>
- * </tr>
- * <tr>
- * <td>toList</td>
- * <td>Comma-separated list of recipients.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>subject</td>
- * <td>Email subject line.</td>
- * <td>No</td>
- * </tr>
- * <tr>
- * <td>files</td>
- * <td>Filename(s) of text to send in the body of the email. Multiple files are
- *     comma-separated.</td>
- * <td rowspan="2">One of these two attributes</td>
- * </tr>
- * <tr>
- * <td>message</td>
- * <td>Message to send inthe body of the email.</td>
- * </tr>
- * </table>
- * <tr>
- * <td>includefilenames</td>
- * <td>Includes filenames before file contents when set to true.</td>
- * <td>No, default is <I>false</I></td>
- * </tr>
- * <p>
+ * An emailer that uuencodes attachments.
  *
- * @author glenn_twiggs@bmc.com
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author roxspring@yahoo.com Rob Oxspring
+ * @since 1.5
  */
-public class SendEmail extends EmailTask
+class UUMailer
+    extends PlainMailer
 {
-    /**
-     * Sets the mailport parameter of this build task.
-     * @param value mail port name.
-     *
-     * @deprecated Use {@link #setMailport(int)} instead.
-     */
-    public void setMailport( Integer value )
+    protected void attach( File file, PrintStream out )
+        throws IOException
     {
-        setMailport( value.intValue() );
+        if( !file.exists() || !file.canRead() )
+        {
+            throw new BuildException( "File \"" + file.getName()
+                                      + "\" does not exist or is not readable." );
+        }
+
+        FileInputStream finstr = new FileInputStream( file );
+        try
+        {
+            BufferedInputStream in = new BufferedInputStream( finstr );
+            UUEncoder encoder = new UUEncoder( file.getName() );
+            encoder.encode( in, out );
+
+        }
+        finally
+        {
+            finstr.close();
+        }
     }
 }

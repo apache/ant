@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,71 +51,77 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-package org.apache.tools.ant.taskdefs;
-
-import org.apache.tools.ant.taskdefs.email.EmailTask;
+package org.apache.tools.ant.taskdefs.email;
 
 /**
- * A task to send SMTP email.
- * <p>
- * <table border="1" cellpadding="3" cellspacing="0">
- * <tr bgcolor="#CCCCFF">
- * <th>Attribute</th>
- * <th>Description</th>
- * <th>Required</th>
- * </tr>
- * <tr>
- * <td>from</td>
- * <td>Email address of sender.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>mailhost</td>
- * <td>Host name of the mail server.</td>
- * <td>No, default to &quot;localhost&quot;</td>
- * </tr>
- * <tr>
- * <td>toList</td>
- * <td>Comma-separated list of recipients.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>subject</td>
- * <td>Email subject line.</td>
- * <td>No</td>
- * </tr>
- * <tr>
- * <td>files</td>
- * <td>Filename(s) of text to send in the body of the email. Multiple files are
- *     comma-separated.</td>
- * <td rowspan="2">One of these two attributes</td>
- * </tr>
- * <tr>
- * <td>message</td>
- * <td>Message to send inthe body of the email.</td>
- * </tr>
- * </table>
- * <tr>
- * <td>includefilenames</td>
- * <td>Includes filenames before file contents when set to true.</td>
- * <td>No, default is <I>false</I></td>
- * </tr>
- * <p>
+ * Holds an email address.
  *
- * @author glenn_twiggs@bmc.com
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author roxspring@yahoo.com Rob Oxspring
+ * @since 1.5
  */
-public class SendEmail extends EmailTask
+public class EmailAddress
 {
-    /**
-     * Sets the mailport parameter of this build task.
-     * @param value mail port name.
-     *
-     * @deprecated Use {@link #setMailport(int)} instead.
+    private String name;
+    private String address;
+
+    /** Creates an empty email address
      */
-    public void setMailport( Integer value )
+    public EmailAddress()
     {
-        setMailport( value.intValue() );
+    }
+
+    /** Creates a new email address based on the given string
+     * @param address the email address
+     */
+    public EmailAddress( String address )
+    {
+        this.address = address;
+    }
+
+    /** sets the personal / display name of the address
+     * @param name the display name
+     */
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    /** sets the email address
+     * @param address the actual email address
+     */
+    public void setAddress( String address )
+    {
+        this.address = address;
+    }
+
+    /** Constructs a string "name &lt;address&gt;" or "address"
+     * @return a string representation of the address
+     */
+    public String toString()
+    {
+        if( name == null )
+        {
+            return address;
+        }
+        else
+        {
+            return name + " <" + address + ">";
+        }
+    }
+
+    /** returns the address
+     * @return the address part
+     */
+    public String getAddress()
+    {
+        return address;
+    }
+
+    /** returns the display name
+     * @return the display name part
+     */
+    public String getName()
+    {
+        return name;
     }
 }

@@ -8,10 +8,13 @@
 <body>
 
 <h2><a name="mimemail">MimeMail</a></h2>
+
+<h3><i>Deprecated</i></h3>
+<p><i>This task has been deprecated.  Use the <a href="../CoreTasks/mail.html">mail</a> task instead.</i></p>
+
 <h3>Description</h3>
-<p>Sends SMTP mail with MIME attachments.&nbsp;&nbsp; If&nbsp; no attachments
-are needed, use the built-in <a href="../CoreTasks/mail.html">Mail</a>
-task.&nbsp; <a href="http://java.sun.com/products/javamail/index.html">JavaMail</a>
+<p>Sends SMTP mail with MIME attachments.
+<a href="http://java.sun.com/products/javamail/index.html">JavaMail</a>
 and <a href="http://java.sun.com/products/javabeans/glasgow/jaf.html">Java
 Activation Framework</a> are required for this task.</p>
 <p>Multiple files can be attached using <a href="../CoreTypes/fileset.html">FileSets.</a></p>
@@ -79,7 +82,7 @@ Activation Framework</a> are required for this task.</p>
 </table>
 <h3>Examples</h3>
 <p><b>Send a single HTML file as the body of a message</b></p>
-<pre>    &lt;mimemail messageMimeType=&quot;text/html&quot; messageFile=&quot;overview-summary.html&quot; 
+<pre>    &lt;mimemail messageMimeType=&quot;text/html&quot; messageFile=&quot;overview-summary.html&quot;
         tolist=&quot;you&quot; subject=&quot;JUnit Test Results: ${TODAY}&quot; from=&quot;me&quot;/&gt;</pre>
 <p><b>Sends all files in a directory as attachments</b></p>
 <pre>    &lt;mimemail message=&quot;See attached files&quot; tolist=&quot;you&quot; subject=&quot;Attachments&quot; from=&quot;me&quot;&gt;
@@ -88,7 +91,7 @@ Activation Framework</a> are required for this task.</p>
         &lt;/fileset&gt;
     &lt;/mimemail&gt;
 </pre>
-<hr><p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

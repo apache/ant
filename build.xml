@@ -189,6 +189,9 @@
     <available property="bcel.present"
                classname="org.apache.bcel.Constants"
                classpathref="classpath" />
+    <available property="sunuue.present"
+               classname="sun.misc.UUEncoder"
+               classpathref="classpath" />
 
     <condition property="javamail.complete">
       <and>
@@ -269,6 +272,9 @@
       <exclude name="${ant.package}/listener/Log4jListener.java"
                unless="log4j.present" />
 
+      <exclude name="${ant.package}/taskdefs/email/UUMailer.java" unless="sunuue.present" />
+      <exclude name="${ant.package}/taskdefs/email/MimeMailer.java" unless="javamail.complete" />
+
       <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
       <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
@@ -286,7 +292,6 @@
       <exclude name="${optional.package}/ejb/IPlanet*.java" unless="ejbjar.support" />
       <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/junit/*" unless="junit.present" />
-      <exclude name="${optional.package}/net/MimeMail.java" unless="javamail.complete" />
       <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
       <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
       <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />

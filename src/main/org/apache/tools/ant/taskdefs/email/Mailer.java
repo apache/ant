@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,71 +51,123 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.taskdefs.email;
 
-package org.apache.tools.ant.taskdefs;
-
-import org.apache.tools.ant.taskdefs.email.EmailTask;
+import java.util.Vector;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
- * A task to send SMTP email.
- * <p>
- * <table border="1" cellpadding="3" cellspacing="0">
- * <tr bgcolor="#CCCCFF">
- * <th>Attribute</th>
- * <th>Description</th>
- * <th>Required</th>
- * </tr>
- * <tr>
- * <td>from</td>
- * <td>Email address of sender.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>mailhost</td>
- * <td>Host name of the mail server.</td>
- * <td>No, default to &quot;localhost&quot;</td>
- * </tr>
- * <tr>
- * <td>toList</td>
- * <td>Comma-separated list of recipients.</td>
- * <td>Yes</td>
- * </tr>
- * <tr>
- * <td>subject</td>
- * <td>Email subject line.</td>
- * <td>No</td>
- * </tr>
- * <tr>
- * <td>files</td>
- * <td>Filename(s) of text to send in the body of the email. Multiple files are
- *     comma-separated.</td>
- * <td rowspan="2">One of these two attributes</td>
- * </tr>
- * <tr>
- * <td>message</td>
- * <td>Message to send inthe body of the email.</td>
- * </tr>
- * </table>
- * <tr>
- * <td>includefilenames</td>
- * <td>Includes filenames before file contents when set to true.</td>
- * <td>No, default is <I>false</I></td>
- * </tr>
- * <p>
+ * Base class for the various emailing implementations.
  *
- * @author glenn_twiggs@bmc.com
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author roxspring@yahoo.com Rob Oxspring
+ * @since 1.5
  */
-public class SendEmail extends EmailTask
+public abstract class Mailer
 {
-    /**
-     * Sets the mailport parameter of this build task.
-     * @param value mail port name.
-     *
-     * @deprecated Use {@link #setMailport(int)} instead.
+    protected String host = null;
+    protected int port = -1;
+    protected Message message;
+    protected EmailAddress from;
+    protected Vector toList = null;
+    protected Vector ccList = null;
+    protected Vector bccList = null;
+    protected Vector files = null;
+    protected String subject = null;
+    protected Task task;
+    protected boolean includeFileNames = false;
+
+    /** sets the mail server
+     * @param host
      */
-    public void setMailport( Integer value )
+    public void setHost( String host )
     {
-        setMailport( value.intValue() );
+        this.host = host;
     }
+
+    /** sets the smtp port
+     * @param port
+     */
+    public void setPort( int port )
+    {
+        this.port = port;
+    }
+
+    /** sets the message
+     * @param m
+     */
+    public void setMessage( Message m )
+    {
+        this.message = m;
+    }
+
+    /** sets the address to send from
+     * @param from
+     */
+    public void setFrom( EmailAddress from )
+    {
+        this.from = from;
+    }
+
+    /** set the to addresses
+     * @param list
+     */
+    public void setToList( Vector list )
+    {
+        this.toList = list;
+    }
+
+    /** sets the cc addresses
+     * @param list
+     */
+    public void setCcList( Vector list )
+    {
+        this.ccList = list;
+    }
+
+    /** sets the bcc addresses
+     * @param list
+     */
+    public void setBccList( Vector list )
+    {
+        this.bccList = list;
+    }
+
+    /** sets the files to attach
+     * @param files
+     */
+    public void setFiles( Vector files )
+    {
+        this.files = files;
+    }
+
+    /** sets the subject
+     * @param subject
+     */
+    public void setSubject( String subject )
+    {
+        this.subject = subject;
+    }
+
+    /** sets the owning task
+     * @param task
+     */
+    public void setTask( Task task )
+    {
+        this.task = task;
+    }
+
+    /** indicates whether filenames should be listed in the body
+     * @param b
+     */
+    public void setIncludeFileNames( boolean b )
+    {
+        this.includeFileNames = b;
+    }
+
+    /** This method should send the email
+     * @throws BuildException
+     */
+    public abstract void send()
+        throws BuildException;
 }
