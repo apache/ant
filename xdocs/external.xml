@@ -306,6 +306,41 @@
         </table>
       </subsection>
 
+      <subsection name="Styler">
+
+        <p>The styler task makes useful combinations of XSLT transformations
+        easy to specify in an Ant build file. Like the built-in Ant task
+        style, styler can apply a single transformation to a set of XML files.
+        But it can also:</p>
+        <ul>
+          <li>handle multiple transformations, in parallel or pipelined.</li>
+          <li>enable transformations that split or merge files</li>
+          <li>process non-XML files, especially HTML (based on JTidy)</li>
+          <li>apply non-XSLT transformation, especially "regular
+          fragmentations"</li>
+          <li>use any custom XMLReader or XMLFilter class to handle new file
+          formats and transformation techniques.</li>
+        </ul>
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.langdale.com.au/styler/">http://www.langdale.com.au/styler/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:adv@langdale.com.au">Arnold deVos</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="TiniAnt">
 
         <p>TiniAnt is an Ant task to support building applications for
