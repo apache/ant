@@ -272,7 +272,9 @@ public class Javadoc extends Task {
      * for the sourcefiles.
      */
     public void setUseExternalFile(boolean b) {
-        useExternalFile = b;
+        if (!javadoc1) {
+            useExternalFile = b;
+        }
     }
 
     /**
