@@ -13,10 +13,20 @@
 only copied if the source file is newer than the destination file,
 or when the destination file does not exist.  However, you can explicitly
 overwrite files with the <code>overwrite</code> attribute.</p>
+
 <p><a href="../CoreTypes/fileset.html">FileSet</a>s are used to select a
 set of files to copy.
 To use a <code>&lt;fileset&gt;</code>, the <code>todir</code> attribute
 must be set.</p>
+
+<p>
+<strong>Note: </strong>If you employ filters in your copy operation, you should 
+limit the copy to text files. Binary files will be corrupted by the copy operation.
+This applies whether the filters are implicitly defined by the 
+<a href="filter.html">filter</a> task or explicitly provided to the copy
+operation as <a href="../CoreTypes/filterset.html">filtersets</a>
+</p>
+ 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>

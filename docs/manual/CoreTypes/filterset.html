@@ -28,6 +28,13 @@ filters.</p>
 <p>Filtersets are used for doing 
 replacements in tasks such as <code>&lt;copy&gt;</code>, etc.</p>
 
+<p>
+<strong>Note: </strong>When a filterset is used in an operation, the files are 
+processed in text mode and the filters applied line by line. This means that
+the copy operations will typically corrupt binary files. When applying filters
+you should ensure that the set of files being filtered are all text files.
+</p>
+
 <H2>Filterset</H2>
 
 <TABLE cellSpacing=0 cellPadding=2 border=1>
