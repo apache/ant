@@ -82,7 +82,7 @@ public class JavaEnvUtilsTest extends TestCase {
     public void testGetExecutableWindows() {
         if (Os.isFamily("windows")) {
             FileUtils fileUtils = FileUtils.newFileUtils();
-            String javaHome = 
+            String javaHome =
                 fileUtils.normalize(System.getProperty("java.home"))
                 .getAbsolutePath();
 
@@ -96,16 +96,16 @@ public class JavaEnvUtilsTest extends TestCase {
                 // java.home is bogus
                 assertEquals("java.exe", j);
             }
-            
+
             j = JavaEnvUtils.getJdkExecutable("javac");
             assertTrue(j.endsWith(".exe"));
-            assertTrue(j+" is absolute", (new File(j)).isAbsolute());
             try {
-                String javaHomeParent = 
+                assertTrue(j+" is absolute", (new File(j)).isAbsolute());
+                String javaHomeParent =
                     fileUtils.normalize(javaHome+"/..").getAbsolutePath();
                 assertTrue(j+" is normalized and in the JDK dir",
                            j.startsWith(javaHomeParent));
-                
+
                 if (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_0 ||
                     JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1) {
                     assertTrue(j+" is normalized and in the JRE dir",
@@ -114,12 +114,12 @@ public class JavaEnvUtilsTest extends TestCase {
                     assertTrue(j+" is normalized and not in the JRE dir",
                                !j.startsWith(javaHome));
                 }
-                
+
             } catch (AssertionFailedError e) {
                 // java.home is bogus
                 assertEquals("javac.exe", j);
             }
-            
+
             assertEquals("foo.exe", JavaEnvUtils.getJreExecutable("foo"));
             assertEquals("foo.exe", JavaEnvUtils.getJdkExecutable("foo"));
         }
@@ -128,7 +128,7 @@ public class JavaEnvUtilsTest extends TestCase {
     public void testGetExecutableMostPlatforms() {
         if (!Os.isName("netware") && !Os.isFamily("windows")) {
             FileUtils fileUtils = FileUtils.newFileUtils();
-            String javaHome = 
+            String javaHome =
                 fileUtils.normalize(System.getProperty("java.home"))
                 .getAbsolutePath();
 
@@ -149,7 +149,7 @@ public class JavaEnvUtilsTest extends TestCase {
             }
             assertTrue(j+" is absolute", (new File(j)).isAbsolute());
 
-            String javaHomeParent = 
+            String javaHomeParent =
                 fileUtils.normalize(javaHome+"/..").getAbsolutePath();
             assertTrue(j+" is normalized and in the JDK dir",
                        j.startsWith(javaHomeParent));
@@ -163,12 +163,12 @@ public class JavaEnvUtilsTest extends TestCase {
                            !j.startsWith(javaHome));
             }
 
-            assertEquals("foo"+extension, 
+            assertEquals("foo"+extension,
                          JavaEnvUtils.getJreExecutable("foo"));
-            assertEquals("foo"+extension, 
+            assertEquals("foo"+extension,
                          JavaEnvUtils.getJdkExecutable("foo"));
         }
-        
+
     }
 
 }
