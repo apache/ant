@@ -126,6 +126,8 @@ Fixed bugs:
 * I/O-intensive processes hung when executed via <exec spawn="true">.
   Bugzilla reports 23893/26852.
 
+* JDependTask did not close an output file. Bugzilla Report 28557.
+
 Other changes:
 --------------
 
