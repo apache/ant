@@ -29,7 +29,7 @@ if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat %JAVA_HOME%\lib\too
 if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
 
 set TOOLS=src\main\org\apache\tools
-set CLASSDIR=classes
+set CLASSDIR=build\classes
 
 SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
 
@@ -41,7 +41,6 @@ echo CLASSPATH=%CLASSPATH%
 if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
 if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
 
-if not exist %CLASSDIR%\nul mkdir %CLASSDIR%
 if not exist build\nul mkdir build
 if not exist build\classes\nul mkdir build\classes
 
@@ -58,8 +57,6 @@ copy %TOOLS%\ant\types\*.properties %CLASSDIR%\org\apache\tools\ant\types
 
 echo.
 echo ... Building Ant Distribution
-
-xcopy /s/q %CLASSDIR% build\classes
 
 "%JAVA%" %ANT_OPTS% org.apache.tools.ant.Main -emacs bootstrap
 

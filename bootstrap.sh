@@ -81,7 +81,7 @@ do
 done
 
 TOOLS=src/main/org/apache/tools
-CLASSDIR=classes
+CLASSDIR=build/classes
 
 CLASSPATH=${CLASSDIR}:src/main:${CLASSPATH}
 
@@ -92,8 +92,8 @@ fi
 
 export CLASSPATH
 
-mkdir -p ${CLASSDIR}
 mkdir -p build
+mkdir -p ${CLASSDIR}
 mkdir -p bin
 
 echo ... Compiling Ant Classes
@@ -116,8 +116,6 @@ cp src/script/antRun bin
 chmod +x bin/antRun
 
 echo ... Building Ant Distribution
-
-cp -r ${CLASSDIR} build
 
 "${JAVACMD}" -classpath "${CLASSPATH}" -Dant.home=. org.apache.tools.ant.Main -emacs bootstrap
 
