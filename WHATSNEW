@@ -8,10 +8,10 @@ Other changes:
 --------------
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
-  Jar, War and Ear tasks) have been deprecated and supersceded by a 
+  Jar, War and Ear tasks) have been deprecated and superseded by a 
   new attribute "file".
 
-* The attribute zipfile in GZip has been deprecated and supersceded 
+* The attribute zipfile in GZip has been deprecated and superseded 
   by "tofile" attribute.
 
 Fixed bugs:
