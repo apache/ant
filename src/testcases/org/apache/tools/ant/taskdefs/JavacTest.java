@@ -59,7 +59,9 @@ import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.Javac12;
+import org.apache.tools.ant.taskdefs.compilers.Javac13;
 import org.apache.tools.ant.taskdefs.compilers.JavacExternal;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 import junit.framework.TestCase;
 
@@ -138,10 +140,10 @@ public class JavacTest extends TestCase {
         assertEquals("implementation is jikes but build.compiler is null", 
                      0, args.length);
 
-        project.setProperty("build.compiler", "classic");
+        project.setProperty("build.compiler", "jvc");
         args = javac.getCurrentCompilerArgs();
         assertNotNull(args);
-        assertEquals("implementation is jikes but build.compiler is classic", 
+        assertEquals("implementation is jikes but build.compiler is jvc", 
                      0, args.length);
 
         project.setProperty("build.compiler", "jikes");
@@ -219,11 +221,25 @@ public class JavacTest extends TestCase {
     }
 
     public void testCompilerAdapter() {
-        javac.setCompiler("javac1.1");
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) 
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) 
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
+            javac.setCompiler("javac1.1");
+        } else {
+            javac.setCompiler("javac1.4");
+        }
+
         javac.setDepend(true);
         CompilerAdapter adapter = 
             CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
-        assertTrue(adapter instanceof Javac12);
+
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) 
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) 
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
+            assertTrue(adapter instanceof Javac12);
+        } else {
+            assertTrue(adapter instanceof Javac13);
+        }
 
         javac.setFork(true);
         adapter = 
