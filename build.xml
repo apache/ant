@@ -46,6 +46,7 @@
        =================================================================== 
   -->
   <property name="dist.name" value="jakarta-${name}-${version}"/>
+  <property name="dist.base" value="."/>
 
   <property name="java.dir" value="src/main"/>
   <property name="docs.dir" value="docs"/>
@@ -353,10 +354,15 @@
 
     <chmod dir="${dist.dir}" perm="go-rwx" />
 
-    <zip zipfile="${dist.name}-bin.zip" basedir="${dist.dir}/.." includes="${dist.dir}/**"/>
-    <tar tarfile="${dist.name}-bin.tar" basedir="${dist.dir}/.." includes="${dist.dir}/**"/>
-    <gzip zipfile="${dist.name}-bin.tar.gz" src="${dist.name}-bin.tar"/>
-    <delete file="${dist.name}-bin.tar"/>
+    <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
+         basedir="${dist.dir}/.." 
+         includes="${dist.dir}/**"/>
+    <tar tarfile="${dist.base}/${dist.name}-bin.tar" 
+         basedir="${dist.dir}/.." 
+         includes="${dist.dir}/**"/>
+    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
+          src="${dist.base}/${dist.name}-bin.tar"/>
+    <delete file="${dist.base}/${dist.name}-bin.tar"/>
   </target>
 
  <!--
@@ -410,15 +416,16 @@
 
     <fixcrlf srcdir="${src.dist.src}" includes="**/*.java" cr="remove"/>
     
-    <zip zipfile="${dist.name}-src.zip" 
+    <zip zipfile="${dist.base}/${dist.name}-src.zip" 
          basedir="${src.dist.dir}/.." 
          includes="${src.dist.dir}/**"/>
     <!--
-    <tar tarfile="${dist.name}-src.tar" 
+    <tar tarfile="${dist.base}/${dist.name}-src.tar" 
          basedir="${src.dist.dir}/.." 
          includes="${src.dist.dir}/**"/>
-    <gzip zipfile="${dist.name}-src.tar.gz" src="${dist.name}-src.tar"/>
-    <delete file="${dist.name}-src.tar"/>
+    <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
+          src="${dist.base}/${dist.name}-src.tar"/>
+    <delete file="${dist.base}/${dist.name}-src.tar"/>
     -->
     <delete dir="${src.dist.dir}" />    
   </target>
