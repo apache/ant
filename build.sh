@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$ANT_HOME" == "" ] ; then
+if [ "$ANT_HOME" = "" ] ; then
   ANT_HOME=`pwd`
 fi
 export ANT_HOME
