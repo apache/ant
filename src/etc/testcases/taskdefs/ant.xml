@@ -31,4 +31,26 @@
   <target name="dummy">
   </target>
 
+  <target name="inheritBasedir">
+    <ant antfile="ant/ant.xml" target="dummy" inheritAll="true" />
+  </target>
+
+  <target name="doNotInheritBasedir">
+    <ant antfile="ant/ant.xml" target="dummy" inheritAll="false" />
+  </target>
+
+  <target name="explicitBasedir1">
+    <ant antfile="taskdefs/ant/ant.xml" target="dummy" inheritAll="true" 
+         dir=".." />
+  </target>
+
+  <target name="explicitBasedir2">
+    <ant antfile="taskdefs/ant/ant.xml" target="dummy" inheritAll="false" 
+         dir=".." />
+  </target>
+
+  <target name="tripleCall">
+    <ant antfile="ant/ant.xml" target="callback" inheritAll="false" />
+  </target>
+
 </project>

@@ -54,17 +54,29 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+
+import junit.framework.AssertionFailedError;
+
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildListener;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @version $Revision$
  */
 public class AntTest extends TaskdefsTest { 
     
+    private static final String TESTCASES_DIR = "src/etc/testcases";
+    private static final String TASKDEFS_DIR = TESTCASES_DIR + "/taskdefs";
+
     public AntTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/ant.xml");
+        configureProject(TASKDEFS_DIR + "/ant.xml");
     }
     
     public void test1() { 
@@ -92,4 +104,91 @@ public class AntTest extends TaskdefsTest {
     public void test6() { 
         executeTarget("test6");
     }
+
+    public void testExplicitBasedir1() {
+        File dir1 = getProjectDir();
+        File dir2 = new File(TESTCASES_DIR);
+        testBaseDirs("explicitBasedir1", 
+                     new String[] {dir1.getAbsolutePath(), 
+                                   dir2.getAbsolutePath()
+                     });
+    }
+
+    public void testExplicitBasedir2() {
+        File dir1 = getProjectDir();
+        File dir2 = new File(TESTCASES_DIR);
+        testBaseDirs("explicitBasedir2",
+                     new String[] {dir1.getAbsolutePath(), 
+                                   dir2.getAbsolutePath()
+                     });
+    }
+
+    public void testInheritBasedir() {
+        String basedir = getProjectDir().getAbsolutePath();
+        testBaseDirs("inheritBasedir", new String[] {basedir, basedir});
+    }
+
+    public void testDoNotInheritBasedir() {
+        File dir1 = getProjectDir();
+        File dir2 = new File(TASKDEFS_DIR+"/ant");
+        String basedir = getProjectDir().getAbsolutePath();
+        testBaseDirs("doNotInheritBasedir",
+                     new String[] {dir1.getAbsolutePath(), 
+                                   dir2.getAbsolutePath()
+                     });
+    }
+
+    public void testBasedirTripleCall() {
+        File dir1 = getProjectDir();
+        File dir2 = new File(TASKDEFS_DIR+"/ant");
+        testBaseDirs("tripleCall", 
+                     new String[] {dir1.getAbsolutePath(), 
+                                   dir2.getAbsolutePath(),
+                                   dir1.getAbsolutePath()
+                     });
+    }
+
+    protected void testBaseDirs(String target, String[] dirs) {
+        BasedirChecker bc = new BasedirChecker(dirs);
+        project.addBuildListener(bc);
+        executeTarget(target);
+        AssertionFailedError ae = bc.getError();
+        if (ae != null) {
+            throw ae;
+        }
+    }
+
+    private class BasedirChecker implements BuildListener {
+        private String[] expectedBasedirs;
+        private int calls = 0;
+        private AssertionFailedError error;
+
+        BasedirChecker(String[] dirs) {
+            expectedBasedirs = dirs;
+        }
+
+        public void buildStarted(BuildEvent event) {}
+        public void buildFinished(BuildEvent event) {}
+        public void targetFinished(BuildEvent event){}
+        public void taskStarted(BuildEvent event) {}
+        public void taskFinished(BuildEvent event) {}
+        public void messageLogged(BuildEvent event) {}
+
+        public void targetStarted(BuildEvent event) {
+            if (error == null) {
+                try {
+                    assertEquals(expectedBasedirs[calls++],
+                                 event.getProject().getBaseDir().getAbsolutePath());
+                } catch (AssertionFailedError e) {
+                    error = e;
+                }
+            }
+        }
+
+        AssertionFailedError getError() {
+            return error;
+        }
+
+    }
+
 }

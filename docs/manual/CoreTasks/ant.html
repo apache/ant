@@ -67,6 +67,43 @@ setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+
+<h4>Basedir of the new project</h4>
+
+<p>The basedir value of the new project is affected by the two
+attributes dir and inheritall, see the following table for
+details:</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>dir attribute</b></td>
+    <td valign="top"><b>inheritAll attribute</b></td>
+    <td valign="top"><b>new project's basedir</b></td>
+  </tr>
+  <tr>
+    <td valign="top">value provided</td>
+    <td valign="top">true</td>
+    <td valign="top">value of dir attribute</td>
+  </tr>
+  <tr>
+    <td valign="top">value provided</td>
+    <td valign="top">false</td>
+    <td valign="top">value of dir attribute</td>
+  </tr>
+  <tr>
+    <td valign="top">omitted</td>
+    <td valign="top">true</td>
+    <td valign="top">basedir of calling project (the one whose build
+        file contains the &lt;ant&gt; task).</td>
+  </tr>
+  <tr>
+    <td valign="top">omitted</td>
+    <td valign="top">false</td>
+    <td valign="top">basedir attribute of the &lt;project&gt; element
+        of the new project</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 <pre>
   &lt;ant antfile=&quot;subproject/subbuild.xml&quot; dir=&quot;subproject&quot; target=&quot;compile&quot;/&gt;
