@@ -128,6 +128,7 @@ public class FTP
     private boolean skipFailedTransfers = false;
     private int skipped = 0;
     private boolean ignoreNoncriticalErrors = false;
+    private boolean preserveLastModified = false;
     private String chmod = null;
     private String umask = null;
     private FileUtils fileUtils = FileUtils.newFileUtils();
@@ -327,6 +328,14 @@ public class FTP
      */
     public void setNewer(boolean newer) {
         this.newerOnly = newer;
+    }
+
+
+    /**
+     * Set to true to preserve modification times for "gotten" files.
+     */
+    public void setPreserveLastModified(boolean preserveLastModified) {
+        this.preserveLastModified = preserveLastModified;
     }
 
 
@@ -822,6 +831,16 @@ public class FTP
                 log("File " + file.getAbsolutePath() + " copied from "
                      + server, Project.MSG_VERBOSE);
                 transferred++;
+                if (preserveLastModified) {
+                    outstream.close();
+                    outstream = null;
+                    FTPFile[] remote = ftp.listFiles(resolveFile(filename));
+                    if (remote.length > 0) {
+                        fileUtils.setFileLastModified(file,
+                                                      remote[0].getTimestamp()
+                                                      .getTime().getTime());
+                    }
+                }
             }
         } finally {
             if (outstream != null) {
