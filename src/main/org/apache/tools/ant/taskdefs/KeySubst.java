@@ -100,7 +100,6 @@ public class KeySubst extends Task {
 
             String line = null;
             String newline = null;
-            int length;
             line = br.readLine();
             while (line != null) {
                 if ( line.length() == 0 ) {

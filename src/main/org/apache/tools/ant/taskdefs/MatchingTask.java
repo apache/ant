@@ -171,7 +171,6 @@ public abstract class MatchingTask extends Task {
             "Please use the excludes attribute.",
             Project.MSG_WARN);
         if (ignoreString != null && ignoreString.length() > 0) {
-            Vector tmpExcludes = new Vector();
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
             while (tok.hasMoreTokens()) {
                 createExclude().setName("**/"+tok.nextToken().trim()+"/**");
