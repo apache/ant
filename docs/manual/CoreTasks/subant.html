@@ -349,11 +349,11 @@
         &lt;project name="subant" default="subant1"&gt;
         &lt;property name="build.dir" value="subant.build"/&gt;
         &lt;target name="subant1"&gt;
-              &lt;subant failonerror="false" target=""&gt;
-                  &lt;property name="build.dir" value="subant1.build"/&gt;
-                  &lt;property name="not.overloaded" value="not.overloaded"/&gt;
-                  &lt;dirset dir="." includes="*"/&gt;
-              &lt;/subant&gt;
+            &lt;subant target=""&gt;
+              &lt;property name="build.dir" value="subant1.build"/&gt;
+              &lt;property name="not.overloaded" value="not.overloaded"/&gt;
+              &lt;fileset dir="." includes="*/build.xml"/&gt;
+            &lt;/subant&gt;
         &lt;/target&gt;
         &lt;/project&gt;
         </pre>
