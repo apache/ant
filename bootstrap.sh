@@ -2,33 +2,12 @@
 
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-ANT_HOME=.
-export ANT_HOME
-
-if [ -z "$JAVAC" ] ; then
-  JAVAC=javac;
-fi
-
-echo ... Bootstrapping Ant Distribution
-
-if test -f lib/ant.jar ; then
-  rm lib/ant.jar
-fi
-
-LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
-
-if [ "$CLASSPATH" != "" ] ; then
-  CLASSPATH=$LOCALCLASSPATH:$CLASSPATH
-else
-  CLASSPATH=$LOCALCLASSPATH
-fi
-
 if [ "$JAVA_HOME" != "" ] ; then
-  if test -f $JAVA_HOME/lib/tools.jar ; then
+  if [ -f $JAVA_HOME/lib/tools.jar ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
   fi
  
-  if test -f $JAVA_HOME/lib/classes.zip ; then
+  if [ -f "$JAVA_HOME/lib/classes.zip" ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
 else
@@ -38,10 +17,54 @@ else
   echo "  to the installation directory of java."
 fi
 
+# More Cygwin support
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+  CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
+
+ANT_HOME=.
+export ANT_HOME
+
+if [ -z "$JAVAC" ] ; then
+  JAVAC=javac;
+fi
+
+echo ... Bootstrapping Ant Distribution
+
+if [ -f "lib/ant.jar" ] ; then
+  rm lib/ant.jar
+fi
+
+# add in the dependency .jar files
+DIRLIBS=${ANT_HOME}/lib/*.jar
+for i in ${DIRLIBS}
+do
+    # if the directory is empty, then it will return the input string
+    # this is stupid, so case for it
+    if [ "$i" != "${DIRLIBS}" ] ; then
+        CLASSPATH=$CLASSPATH:"$i"
+    fi
+done
+DIRCORELIBS=${ANT_HOME}/lib/core/*.jar
+for i in ${DIRCORELIBS}
+do
+    # if the directory is empty, then it will return the input string
+    # this is stupid, so case for it
+    if [ "$i" != "${DIRCORELIBS}" ] ; then
+        CLASSPATH=$CLASSPATH:"$i"
+    fi
+done
+
 TOOLS=src/main/org/apache/tools
 CLASSDIR=classes
 
 CLASSPATH=${CLASSDIR}:src/main:${CLASSPATH}
+
+# convert the unix path to windows
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+fi
+
 export CLASSPATH
 
 mkdir -p ${CLASSDIR}
@@ -62,7 +85,8 @@ cp src/main/org/apache/tools/ant/types/defaults.properties ${CLASSDIR}/org/apach
 
 echo ... Building Ant Distribution
 
-java ${ANT_OPTS} org.apache.tools.ant.Main clean main bootstrap
+${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
+                      -buildfile build.xml clean main bootstrap
 
 echo ... Cleaning Up Build Directories
 
