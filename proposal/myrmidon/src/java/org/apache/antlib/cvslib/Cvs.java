@@ -13,7 +13,6 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
@@ -149,7 +148,7 @@ public class Cvs
         final EnvironmentData env = buildEnvironment();
 
         //FIXME:
-        final ExecuteStreamHandler streamhandler =
+        final LogStreamHandler streamhandler =
             new LogStreamHandler( null, Project.MSG_INFO, Project.MSG_WARN );
 
         final Execute exe = new Execute( streamhandler, null );
