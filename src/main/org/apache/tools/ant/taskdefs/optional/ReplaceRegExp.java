@@ -416,17 +416,7 @@ public class ReplaceRegExp extends Task {
 
                 pw.flush();
             } else {
-                int flen = (int) f.length();
-                char tmpBuf[] = new char[flen];
-                int numread = 0;
-                int totread = 0;
-
-                while (numread != -1 && totread < flen) {
-                    numread = br.read(tmpBuf, totread, flen);
-                    totread += numread;
-                }
-
-                String buf = new String(tmpBuf);
+                String buf = fileUtils.readFully(br);
 
                 String res = doReplace(regex, subs, buf, options);
 

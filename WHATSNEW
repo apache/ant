@@ -106,6 +106,9 @@ Fixed bugs:
 * build.sh install had a problem on cygwin (with REALANTHOME). 
   Bugzilla Report 17257
 
+* <replaceregexp> didn't work for multi-byte encodings if byline was false.
+  Bugzilla Report 19187.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
