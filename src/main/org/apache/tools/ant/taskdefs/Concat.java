@@ -109,7 +109,8 @@ public class Concat extends Task {
     private File destinationFile = null;
 
     /**
-     * If the destination file exists, should the stream be appended? 
+     * Whether or not the stream should be appended if the destination file 
+     * exists.
      * Defaults to <code>false</code>.
      */
     private boolean append = false;
@@ -246,10 +247,10 @@ public class Concat extends Task {
                     // determine the files from the set which need to be
                     // concatenated.
                     DirectoryScanner scanner = 
-                        fileSet.getDirectoryScanner(project);
+                        fileSet.getDirectoryScanner(getProject());
                     
                     // Determine the root path.
-                    fileSetBase = fileSet.getDir(project);
+                    fileSetBase = fileSet.getDir(getProject());
                     
                     // Get the list of files.
                     srcFiles = scanner.getIncludedFiles();
@@ -259,10 +260,10 @@ public class Concat extends Task {
                     FileList fileList = (FileList) next;
                     
                     // Determine the root path.
-                    fileSetBase = fileList.getDir(project);
+                    fileSetBase = fileList.getDir(getProject());
                     
                     // Get the list of files.
-                    srcFiles = fileList.getFiles(project);
+                    srcFiles = fileList.getFiles(getProject());
                     
                 }
 
@@ -301,9 +302,8 @@ public class Concat extends Task {
     private void catFiles(File base, String[] files) {
 
         // First, create a list of absolute paths for the input files.
-        final int len = files.length;
-        String[] input = new String[len];
-        for (int i = 0; i < len; i++) {
+        Vector inputFileNames = new Vector();
+        for (int i = 0; i < files.length; i++) {
 
             File current = new File(base, files[i]);
 
@@ -317,8 +317,12 @@ public class Concat extends Task {
                 continue;
             }
 
-            input[i] = current.getAbsolutePath();
+            inputFileNames.addElement(current.getAbsolutePath());
         }
+
+        final int len = inputFileNames.size();
+        String[] input = new String[len];
+        inputFileNames.copyInto(input);
 
         // Next, perform the concatenation.
         if (encoding == null) {
@@ -455,8 +459,8 @@ public class Concat extends Task {
         String text = textBuffer.toString();
 
         // Replace ${property} strings.
-        text = ProjectHelper.replaceProperties(project, text, 
-                                               project.getProperties());
+        text = ProjectHelper.replaceProperties(getProject(), text,
+                                               getProject().getProperties());
 
         // Set up a writer if necessary.
         FileWriter writer = null;
