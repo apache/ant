@@ -87,17 +87,17 @@ import java.io.File;
  * <p>
  * When this task executes, it will recursively scan the sourcedir and
  * destdir looking for Java source files to compile. This task makes its
- * compile decision based on timestamp. 
+ * compile decision based on timestamp.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  */
 
 public class Javac extends MatchingTask {
 
-    private static final String FAIL_MSG 
+    private static final String FAIL_MSG
         = "Compile failed, messages should have been provided.";
 
     private Path src;
@@ -116,6 +116,8 @@ public class Javac extends MatchingTask {
     private boolean includeJavaRuntime = false;
     private boolean fork = false;
     private boolean nowarn = false;
+    private String memoryInitialSize;
+    private String memoryMaximumSize;
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
@@ -157,7 +159,7 @@ public class Javac extends MatchingTask {
         this.destDir = destDir;
     }
 
-    /** 
+    /**
      * Gets the destination directory into which the java source files
      * should be compiled.
      */
@@ -299,6 +301,30 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Set the memoryInitialSize flag.
+     */
+    public void setMemoryInitialSize(String memoryInitialSize) {
+        this.memoryInitialSize = memoryInitialSize;
+    }
+
+    /** Gets the memoryInitialSize flag. */
+    public String getMemoryInitialSize() {
+        return memoryInitialSize;
+    }
+
+    /**
+     * Set the memoryMaximumSize flag.
+     */
+    public void setMemoryMaximumSize(String memoryMaximumSize) {
+        this.memoryMaximumSize = memoryMaximumSize;
+    }
+
+    /** Gets the memoryMaximumSize flag. */
+    public String getMemoryMaximumSize() {
+        return memoryMaximumSize;
+    }
+
+    /**
      * Set the Java source file encoding name.
      */
     public void setEncoding(String encoding) {
@@ -334,21 +360,21 @@ public class Javac extends MatchingTask {
         return optimize;
     }
 
-    /** 
+    /**
      * Set the depend flag.
-     */ 
+     */
     public void setDepend(boolean depend) {
         this.depend = depend;
-    }  
+    }
 
     /** Gets the depend flag. */
     public boolean getDepend() {
         return depend;
     }
 
-    /** 
+    /**
      * Set the verbose flag.
-     */ 
+     */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
@@ -404,12 +430,12 @@ public class Javac extends MatchingTask {
 
     /**
      * Sets whether to fork the javac compiler.
-     */    
-    public void setFork(boolean fork) 
+     */
+    public void setFork(boolean fork)
     {
-	this.fork = fork;
+  this.fork = fork;
     }
-	
+
 
     /**
      * Sets whether the -nowarn option should be used.
@@ -438,12 +464,12 @@ public class Javac extends MatchingTask {
         if (list.length == 0) {
             throw new BuildException("srcdir attribute must be set!", location);
         }
-        
+
         if (destDir != null && !destDir.isDirectory()) {
             throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", location);
         }
 
-        // scan source directories and dest directory to build up 
+        // scan source directories and dest directory to build up
         // compile lists
         resetFileLists();
         for (int i=0; i<list.length; i++) {
@@ -458,13 +484,13 @@ public class Javac extends MatchingTask {
 
             scanDir(srcDir, destDir != null ? destDir : srcDir, files);
         }
-        
+
         // compile the source files
 
         String compiler = project.getProperty("build.compiler");
-	
-	if (fork) {
-	    if (compiler != null) {
+
+  if (fork) {
+      if (compiler != null) {
                 if (isJdkCompiler(compiler)) {
                     log("Since fork is true, ignoring build.compiler setting.",
                         Project.MSG_WARN);
@@ -473,13 +499,13 @@ public class Javac extends MatchingTask {
                 else {
                     log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
                 }
-	    }
+      }
             else {
                 compiler = "extJavac";
             }
-	} 
+  }
 
-	if (compiler == null) {
+  if (compiler == null) {
             if (Project.getJavaVersion() != Project.JAVA_1_1 &&
                 Project.getJavaVersion() != Project.JAVA_1_2) {
                 compiler = "modern";
@@ -492,14 +518,14 @@ public class Javac extends MatchingTask {
 
             CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
               compiler, this );
-            log("Compiling " + compileList.length + 
+            log("Compiling " + compileList.length +
                 " source file"
                 + (compileList.length == 1 ? "" : "s")
                 + (destDir != null ? " to " + destDir : ""));
 
             // now we need to populate the compiler adapter
             adapter.setJavac( this );
-            
+
             // finally, lets execute the compiler!!
             if (!adapter.execute()) {
                 if (failOnError) {
@@ -513,14 +539,14 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Clear the list of files to be compiled and copied.. 
+     * Clear the list of files to be compiled and copied..
      */
     protected void resetFileLists() {
         compileList = new File[0];
     }
 
     /**
-     * Scans the directory looking for source files to be compiled.  
+     * Scans the directory looking for source files to be compiled.
      * The results are returned in the class variable compileList
      */
     protected void scanDir(File srcDir, File destDir, String files[]) {
@@ -529,7 +555,7 @@ public class Javac extends MatchingTask {
         m.setTo("*.class");
         SourceFileScanner sfs = new SourceFileScanner(this);
         File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
-        
+
         if (newFiles.length > 0) {
             File[] newCompileList = new File[compileList.length +
                 newFiles.length];
