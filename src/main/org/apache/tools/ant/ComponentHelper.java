@@ -325,8 +325,7 @@ public class ComponentHelper  {
                     for (Iterator i = antTypeTable.keySet().iterator();
                          i.hasNext();) {
                         String name = (String) i.next();
-                        Class clazz =
-                            (Class) antTypeTable.getExposedClass(name);
+                        Class clazz = antTypeTable.getExposedClass(name);
                         if (clazz == null) {
                             continue;
                         }
@@ -358,8 +357,7 @@ public class ComponentHelper  {
                     for (Iterator i = antTypeTable.keySet().iterator();
                          i.hasNext();) {
                         String name = (String) i.next();
-                        Class clazz =
-                            (Class) antTypeTable.getExposedClass(name);
+                        Class clazz = antTypeTable.getExposedClass(name);
                         if (clazz == null) {
                             continue;
                         }
@@ -911,30 +909,29 @@ public class ComponentHelper  {
     private static class AntTypeTable extends Hashtable {
         private Project project;
 
-        public AntTypeTable(Project project) {
+        AntTypeTable(Project project) {
             this.project = project;
         }
 
-        public AntTypeDefinition getDefinition(String key) {
+        AntTypeDefinition getDefinition(String key) {
             return (AntTypeDefinition) (super.get(key));
         }
 
-        /** Equivalent to getTypeType */
         public Object get(Object key) {
             return getTypeClass((String) key);
         }
 
-        public Object create(String name) {
+        Object create(String name) {
             AntTypeDefinition def = getDefinition(name);
             return (def == null) ? null : def.create(project);
         }
 
-        public Class getTypeClass(String name) {
+        Class getTypeClass(String name) {
             AntTypeDefinition def = getDefinition(name);
             return (def == null) ? null : def.getTypeClass(project);
         }
 
-        public Class getExposedClass(String name) {
+        Class getExposedClass(String name) {
             AntTypeDefinition def = getDefinition(name);
             return (def == null) ? null : def.getExposedClass(project);
         }
