@@ -77,6 +77,7 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
+ * @author <a href="mailto:CHudak@arrowheadgrp.com">Charles Hudak</a>
  *
  * @since Ant 1.2
  *
@@ -103,6 +104,7 @@ public class Execute {
     private static CommandLauncher vmLauncher = null;
     private static CommandLauncher shellLauncher = null;
     private static Vector procEnvironment = null;
+    private boolean spawn = false;
 
     /** Used to destroy processes when the VM exits. */
     private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
@@ -171,6 +173,17 @@ public class Execute {
         }
     }
 
+    /**
+     * set whether or not you want the process to be spawned
+     * default is not spawned
+     *
+     * @param spawn if true you do not want ant to wait for the end of the process
+     *
+     * @since ant 1.6
+     */
+    public void setSpawn(boolean spawn) {
+        this.spawn = spawn;
+    }
 
     /**
      * Find the list of environment variables for this process.
@@ -504,6 +517,29 @@ public class Execute {
             //
             processDestroyer.remove(process);
         }
+    }
+
+    /**
+     * Starts a process defined by the command line.
+     * Ant will not wait for this process, nor log its output
+     *
+     * @throws java.io.IOException The exception is thrown, if launching
+     *            of the subprocess failed
+     * @since ant 1.6
+     */
+    public void spawn() throws IOException {
+        final Process process = launch(project, getCommandline(),
+                                       getEnvironment(), workingDirectory,
+                                       useVMLauncher);
+        if (Os.isFamily("windows")) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                project.log("interruption in the sleep after having spawned a process",
+                    Project.MSG_VERBOSE);
+            }
+        }
+        project.log("spawned process " + process.toString(), Project.MSG_VERBOSE);
     }
 
     /**

@@ -521,6 +521,9 @@ Other changes:
 * <exec> will now work on OpenVMS (please read the notes in
   <exec>'s manual page).  Bugzilla Report 21877.
 
+* <exec> will now have a new attribute spawn (default false).
+If set to true, the process will be spawned. Bugzilla Report 5907.
+
 * <parallel> now supports a timeout which can be used to recover
   from deadlocks, etc in the parallel threads. <parallel> also
   now supports a <daemons> nested element. This can be used to

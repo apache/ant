@@ -71,6 +71,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author thomas.haas@softwired-inc.com
  * @author Stefan Bodewig
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
+ * @author <a href="mailto:CHudak@arrowheadgrp.com">Charles Hudak</a>
  *
  * @since Ant 1.2
  *
@@ -90,6 +91,7 @@ public class ExecTask extends Task {
     private boolean failIfExecFails = true;
     private String executable;
     private boolean resolveExecutable = false;
+    private boolean spawn = false;
 
     private Redirector redirector = new Redirector(this);
 
@@ -98,6 +100,16 @@ public class ExecTask extends Task {
      * command
      */
     private boolean vmLauncher = true;
+
+    /**
+     * set whether or not you want the process to be spawned
+     * default is not spawned
+     * @param spawn if true you do not want ant to wait for the end of the process
+     * @since ant 1.6
+     */
+    public void setSpawn(boolean spawn) {
+        this.spawn = spawn;
+    }
 
     /**
      * Timeout in milliseconds after which the process will be killed.
@@ -455,6 +467,7 @@ public class ExecTask extends Task {
         exe.setAntRun(getProject());
         exe.setWorkingDirectory(dir);
         exe.setVMLauncher(vmLauncher);
+        exe.setSpawn(spawn);
         String[] environment = env.getVariables();
         if (environment != null) {
             for (int i = 0; i < environment.length; i++) {
@@ -479,22 +492,26 @@ public class ExecTask extends Task {
     protected final void runExecute(Execute exe) throws IOException {
         int returnCode = -1; // assume the worst
 
-        returnCode = exe.execute();
+        if (!spawn) {
+            returnCode = exe.execute();
 
-        //test for and handle a forced process death
-        if (exe.killedProcess()) {
-            log("Timeout: killed the sub-process", Project.MSG_WARN);
-        }
-        maybeSetResultPropertyValue(returnCode);
-        if (Execute.isFailure(returnCode)) {
-            if (failOnError) {
-                throw new BuildException(getTaskType() + " returned: "
-                    + returnCode, getLocation());
-            } else {
-                log("Result: " + returnCode, Project.MSG_ERR);
+            //test for and handle a forced process death
+            if (exe.killedProcess()) {
+                log("Timeout: killed the sub-process", Project.MSG_WARN);
             }
+            maybeSetResultPropertyValue(returnCode);
+            if (Execute.isFailure(returnCode)) {
+                if (failOnError) {
+                    throw new BuildException(getTaskType() + " returned: "
+                        + returnCode, getLocation());
+                } else {
+                    log("Result: " + returnCode, Project.MSG_ERR);
+                }
+            }
+            redirector.complete();
+        } else {
+            exe.spawn();
         }
-        redirector.complete();
     }
 
     /**
