@@ -130,7 +130,7 @@
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/IPlanet*.java"
              unless="jdk1.2+" />
-    <exclude name="${optional.package}/extension/*.java"
+    <exclude name="${optional.package}/extension/**/*.java"
              unless="jdk1.2+" />
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
