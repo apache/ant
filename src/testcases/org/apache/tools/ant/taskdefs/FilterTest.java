@@ -54,17 +54,25 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
 public class FilterTest extends TaskdefsTest { 
+    
+    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
     
     public FilterTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/filter.xml");
+        configureProject(TASKDEFS_DIR + "filter.xml");
     }
 
     public void test1() { 
@@ -83,4 +91,52 @@ public class FilterTest extends TaskdefsTest {
         executeTarget("test4");
     }
     
+    public void test5() {
+        executeTarget("test5");
+        assertEquals("2000",
+                     getFilteredFile("5", TASKDEFS_DIR + "filtered.tmp"));
+    }
+
+
+    public void test6() {
+        executeTarget("test6");
+        assertEquals("2000",
+                     getFilteredFile("6", TASKDEFS_DIR + "taskdefs.tmp/filter1.txt"));
+    }
+
+    public void test7() {
+        executeTarget("test7");
+        assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
+                     getFilteredFile("7", TASKDEFS_DIR + "filtered.tmp"));
+    }
+    
+    public void test8() {
+        executeTarget("test8");
+        assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
+                     getFilteredFile("8", TASKDEFS_DIR + "taskdefs.tmp/filter2.txt"));
+    }
+    
+    private String getFilteredFile(String testNumber, String filteredFile) {
+    
+        String line = null;
+        File f = new File(filteredFile);
+        if (!f.exists()) {
+            fail("filter test"+testNumber+" failed");
+        } else {
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new FileReader(f));
+            } catch (FileNotFoundException fnfe) {
+                fail("filter test"+testNumber+" failed, filtered file: " + f.toString() + " not found");
+            }
+            try {
+                line = in.readLine();
+                in.close();
+            } catch (IOException ioe) {
+                fail("filter test"+testNumber+" failed.  IOException while reading filtered file: " + ioe);
+            }
+        }
+        f.delete();
+        return line;
+    }
 }
