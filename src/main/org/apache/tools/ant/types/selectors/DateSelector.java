@@ -140,7 +140,7 @@ public class DateSelector extends BaseExtendSelector {
      * Sets the type of comparison to be done on the file's last modified
      * date.
      *
-     * @param cmp The comparison to perform, an EnumeratedAttribute.
+     * @param tcmp The comparison to perform, an EnumeratedAttribute.
      */
     public void setWhen(TimeComparisons tcmp) {
         this.cmp = tcmp.getIndex();
