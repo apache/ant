@@ -391,7 +391,7 @@ Legal:
     <mkdir dir="${dist.lib}"/>
     <mkdir dir="${dist.ext}"/>
 
-    <copy file="tools/lib/ant.jar" tofile="${dist.lib}/ant1-compat.jar" />
+    <copy file="${lib.dir}/ant.jar" tofile="${dist.lib}/ant1-compat.jar" />
     <copy file="${build.lib}/myrmidon-launcher.jar" tofile="${dist.bin}/myrmidon-launcher.jar" />
     <copy file="${build.lib}/myrmidon-container.jar" tofile="${dist.bin}/lib/myrmidon-container.jar" />
 
@@ -411,7 +411,9 @@ Legal:
     </copy>
 
     <copy todir="${dist.lib}">
-      <fileset dir="${lib.dir}"/>
+      <fileset dir="${lib.dir}">
+        <exclude name="ant.jar"/>
+      </fileset>
     </copy>
 
     <copy todir="${dist.bin}">
