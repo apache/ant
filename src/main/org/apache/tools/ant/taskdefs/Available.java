@@ -57,30 +57,67 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 import java.io.*;
 import java.util.*;
-import java.text.*;
 
 /**
- * Sets TSTAMP, DSTAMP and TODAY
+ * Will set the given property if the requested resource is available at runtime.
  *
- * @author costin@dnt.ro
- * @author stefano@apache.org
+ * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
-public class Tstamp extends Task {
+
+public class Available extends Task {
+
+    private String property;
+    private String classname;
+    private String file;
+    private String resource;
+
+    public void setProperty(String property) {
+        this.property = property;
+    }
+
+    public void setClass(String classname) {
+        this.classname = classname;
+    }
+
+    public void setFile(String filename) {
+        this.file = file;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
 
     public void init() throws BuildException {
+        if ((classname != null) && !checkClass(classname)) return;
+        if ((file != null) && !checkFile(file)) return;
+        if ((resource != null) && !checkResource(resource)) return;
+
+        this.project.setProperty(property, "true");
+    }
+
+    private boolean checkFile(String file) {
         try {
-            Date d = new Date();
-
-            SimpleDateFormat dstamp = new SimpleDateFormat ("yyyymmdd");
-            project.setProperty("DSTAMP", dstamp.format(d));
-
-            SimpleDateFormat tstamp = new SimpleDateFormat ("hhmm");
-            project.setProperty("TSTAMP", tstamp.format(d));
-
-            SimpleDateFormat today  = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
-            project.setProperty("TODAY", today.format(d));
+            File f = new File(file);
+            return f.exists();
         } catch (Exception e) {
-            throw new BuildException(e);
+            return false;
+        }
+    }
+
+    private boolean checkResource(String resource) {
+        try {
+            return (ClassLoader.getSystemResource(resource) != null);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean checkClass(String classname) {
+        try {
+            Class.forName(classname);
+            return true;
+        } catch (Throwable t) {
+            return false;
         }
     }
 }

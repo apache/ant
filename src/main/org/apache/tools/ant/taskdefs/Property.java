@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -57,100 +57,85 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.*;
 import java.io.*;
 import java.util.*;
+
 /**
  * Will set a Project property. Used to be a hack in ProjectHelper
  *
  * @author costin@dnt.ro
  */
 public class Property extends Task {
+
     private String name;
     private String value;
     private String file;
     private String resource;
 
-    /**
-     * Needs to be set at XML-reading time,
-     * no runtime action.
-     *
-     * @exception BuildException Thrown in unrecoverable error.
-     */
-    public void execute() throws BuildException {
+    public void setName(String name) {
+        this.name = name;
     }
 
-    // XXX ugly - needs to be fixed
-    /**
-     * Called after each setter, will set the property at read-time
-     */
-    private void initTimeSetProperty()  {
-	try {
-	    if((name!=null) && (value!=null) ) {
-		String value1= ProjectHelper.replaceProperties(value, project.getProperties());
-		project.setProperty( name,value1);
-	    }
-				
-	    if( file!=null)
-		loadFile( file );
-	    
-	    if( resource!=null)
-		loadResource( resource );
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public void setName( String name) {
-	this.name=name;
-	initTimeSetProperty();
+    public void setFile(String file) {
+        this.file = file;
     }
 
-    public void setValue(String v) {
-	value=v;
-	initTimeSetProperty();
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
-    public void setFile(String v) {
-	file=v;
-	initTimeSetProperty();
+    public void init() throws BuildException {
+        try {
+            if ((name != null) && (value != null)) {
+                String v = ProjectHelper.replaceProperties(value, project.getProperties());
+                project.setProperty(name, v);
+            }
+
+            if (file != null) loadFile(file);
+
+            if (resource != null) loadResource(resource);
+
+        } catch (Exception e) {
+            throw new BuildException(e);
+        }
     }
 
-    public void setResource(String v) {
-	resource=v;
-	initTimeSetProperty();
+    private void loadFile (String name) {
+        Properties props = new Properties();
+        project.log("Loading " + name, project.MSG_VERBOSE);
+        try {
+            if (new File(name).exists()) {
+                props.load(new FileInputStream(name));
+                addProperties(props);
+            }
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
-    
-    private void loadFile( String name ) {
-	Properties props = new Properties();
-	project.log("Loading " + name, project.MSG_VERBOSE);
-	try {
-	    if( new File(name).exists() )
-		props.load(new FileInputStream( name ));
-	} catch(Exception ex) {
-	    ex.printStackTrace();
-	}
-	addProperties( props );
-    }    
-	
-    private  void loadResource( String name ) {
-	Properties props = new Properties();
-	project.log("Resource Loading " + name,
-		    project.MSG_VERBOSE);
-	try {
-	    InputStream is=this.getClass().getResourceAsStream(name);
-	    if(is!=null)
-		props.load(is);
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
-	addProperties( props );
-    }    
 
-    private void addProperties( Properties props) {
-	Enumeration e=props.keys();
-	while( e.hasMoreElements() ) {
-	    String name=(String)e.nextElement();
-	    String value=(String)props.getProperty(name);
-	    String value1= ProjectHelper.replaceProperties(value, project.getProperties());
-	    project.setProperty( name, value1);
-	}
+    private void loadResource( String name ) {
+        Properties props = new Properties();
+        project.log("Resource Loading " + name, project.MSG_VERBOSE);
+        try {
+            InputStream is = this.getClass().getResourceAsStream(name);
+            if (is != null) {
+                props.load(is);
+                addProperties(props);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void addProperties(Properties props) {
+        Enumeration e = props.keys();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            String value = (String) props.getProperty(name);
+            String v = ProjectHelper.replaceProperties(value, project.getProperties());
+            project.setProperty(name, v);
+        }
     }
 }
