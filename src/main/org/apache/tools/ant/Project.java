@@ -288,11 +288,11 @@ public class Project {
             javaVersion = JAVA_1_2;
             Class.forName("java.lang.StrictMath");
             javaVersion = JAVA_1_3;
-            setProperty("ant.java.version", javaVersion);
         } catch (ClassNotFoundException cnfe) {
             // swallow as we've hit the max class version that
             // we have
         }
+        setProperty("ant.java.version", javaVersion);
 
         // sanity check
         if (javaVersion == JAVA_1_0) {
