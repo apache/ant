@@ -1315,6 +1315,10 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         <code>CLASSPATH</code> environment variable or
         <code>ANT_HOME/lib</code>" for the rest of this
         answer.</p>
+                        <p>Technically the sentence above isn't true for Ant 1.6
+        and later anymore, but the result is the same.  For the sake
+        of this discussion, <code>CLASSPATH</code> and
+        <code>ANT_HOME/lib</code> are identical.</p>
                         <p>This question collects a common type of problem: A task
         needs an external library and it has a nested classpath
         element so that you can point it to this external library, but
@@ -1367,6 +1371,8 @@ mv /tmp/foo $ANT_HOME/bin/antRun
           <li>remove the class that loads the external library from
           the <code>CLASSPATH</code>.</li>
         </ol>
+                        <p><strong>Using The Second Option with Ant 1.5.4 and
+        Earlier:</strong></p>
                         <p>The easiest way to do this is to remove
         <code>optional.jar</code> from <code>ANT_HOME/lib</code>.  If
         you do so, you will have to <code>&lt;taskdef&gt;</code> all
@@ -1393,8 +1399,20 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         directory, in the <code>&lt;style&gt;</code> case it is one of
         the <code>*Liaison</code> classes in
         <code>org/apache/tools/ant/taskdefs/optional</code>.</p>
+                        <p><strong>Using The Second Option with Ant 1.6 and
+        later:</strong></p>
+                        <p>In Ant 1.6 <code>optional.jar</code> has been split into
+        multiple jars, each one containing classes with the same
+        dependencies on external libraries.  You can move the
+        "offending" jar out of ANT_HOME/lib.  For the
+        <code>&lt;junit&gt;</code> task it would be
+        <code>ant-junit.jar</code> and for <code>&lt;style&gt;</code>
+        it would be <code>ant-trax.jar</code>,
+        <code>ant-xalan1.jar</code> or <code>ant-xslp.jar</code> -
+        depending on the processor you use.</p>
                         <p>If you use the option to break up <code>optional.jar</code>
-        for <code>&lt;junit&gt;</code>, you still have to use a
+        for <code>&lt;junit&gt;</code> or remove
+        <code>ant-junit.jar</code>, you still have to use a
         <code>&lt;taskdef&gt;</code> with a nested
         <code>&lt;classpath&gt;</code> to define the junit task.</p>
                     <p class="faq">
