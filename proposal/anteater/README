@@ -1,0 +1,14 @@
+README for Ant(Eater)
+---------------------------------------------------------------------------------
+
+Execution:
+
+    ant [args] target
+    
+Args:
+
+    -help
+    -quiet
+    -verbose
+    -taskpath [path]
+    -antfile [file]

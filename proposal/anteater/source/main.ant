@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<project name="Ant">
+
+  <target name="default">
+    <echo data="Echo In Default"/>
+  </target>
+
+  <target name="main">
+    <echo data="Echo In Main"/>
+  </target>
+
+</project>
