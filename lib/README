@@ -5,11 +5,11 @@ The dependencies are:
 junit.jar      - required for junit tasks, available at www.junit.org
 stylebook.jar  - required by stylebook task, available in CVS repository of xml.apache.org
 testlet.jar    - required for test task, available with Avalon via java.apache.org/framework
-jakarta-regexp-1.1.jar - required by some mappers, available at http://jakarta.apache.org/regexp/
-???oro.jar???  - required for some mappers, available at http://jakarta.apache.org/oro/
+jakarta-regexp-1.2.jar - required by some mappers, available at http://jakarta.apache.org/regexp/
+jakarta-oro-2.0.1.jar  - required for some mappers and the perforce tasks, available at http://jakarta.apache.org/oro/
 ???antlr.jar???- required for antlr task, available at www.antlr.org
 bsf.jar        - required for script task, available at http://oss.software.ibm.com/developerworks/opensource/bsf/
 netrexx.jar    - required for netrexx task, available at http://www2.hursley.ibm.com/netrexx
 rhino.jar      - required for script task if you want to use javascript, available at www.mozilla.org
 jpython.jar    - required for script task if you want to use python, available at www.jpython.org
-netcomponents.jar - required by ftp task, available at http://www.savarese.org/oro/downloads/index.html#NetComponents
+netcomponents.jar - required by ftp and telnet tasks, available at http://www.savarese.org/oro/downloads/index.html#NetComponents
