@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
-import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -31,24 +28,24 @@ import org.apache.tools.ant.types.Path;
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class MParse extends Task
+public class MParse
+    extends Task
 {
-
-    private Path classpath = null;
-    private Path sourcepath = null;
-    private File metahome = null;
-    private File target = null;
-    private boolean verbose = false;
-    private boolean debugparser = false;
-    private boolean debugscanner = false;
-    private boolean cleanup = false;
-    private CommandlineJava cmdl = new CommandlineJava();
-    private File optionsFile = null;
+    private Path m_classpath;
+    private Path m_sourcepath;
+    private File m_metahome;
+    private File m_target;
+    private boolean m_verbose;
+    private boolean m_debugparser;
+    private boolean m_debugscanner;
+    private boolean m_cleanup;
+    private CommandlineJava m_cmdl = new CommandlineJava();
+    private File m_optionsFile;
 
     public MParse()
     {
-        cmdl.setVm( "java" );
-        cmdl.setClassname( "com.metamata.jj.MParse" );
+        m_cmdl.setVm( "java" );
+        m_cmdl.setClassname( "com.metamata.jj.MParse" );
     }
 
     /**
@@ -71,7 +68,7 @@ public class MParse extends Task
      */
     public void setCleanup( boolean value )
     {
-        cleanup = value;
+        m_cleanup = value;
     }
 
     /**
@@ -81,7 +78,7 @@ public class MParse extends Task
      */
     public void setDebugparser( boolean flag )
     {
-        debugparser = flag;
+        m_debugparser = flag;
     }
 
     /**
@@ -91,7 +88,7 @@ public class MParse extends Task
      */
     public void setDebugscanner( boolean flag )
     {
-        debugscanner = flag;
+        m_debugscanner = flag;
     }
 
     /**
@@ -111,7 +108,7 @@ public class MParse extends Task
      */
     public void setMetamatahome( File metamatahome )
     {
-        this.metahome = metamatahome;
+        this.m_metahome = metamatahome;
     }
 
     /**
@@ -121,7 +118,7 @@ public class MParse extends Task
      */
     public void setTarget( File target )
     {
-        this.target = target;
+        this.m_target = target;
     }
 
     /**
@@ -131,7 +128,7 @@ public class MParse extends Task
      */
     public void setVerbose( boolean flag )
     {
-        verbose = flag;
+        m_verbose = flag;
     }
 
     /**
@@ -141,11 +138,11 @@ public class MParse extends Task
      */
     public Path createClasspath()
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = new Path();
+            m_classpath = new Path();
         }
-        return classpath;
+        return m_classpath;
     }
 
     /**
@@ -155,7 +152,7 @@ public class MParse extends Task
      */
     public Argument createJvmarg()
     {
-        return cmdl.createVmArgument();
+        return m_cmdl.createVmArgument();
     }
 
     /**
@@ -165,11 +162,11 @@ public class MParse extends Task
      */
     public Path createSourcepath()
     {
-        if( sourcepath == null )
+        if( m_sourcepath == null )
         {
-            sourcepath = new Path();
+            m_sourcepath = new Path();
         }
-        return sourcepath;
+        return m_sourcepath;
     }
 
     /**
@@ -183,8 +180,7 @@ public class MParse extends Task
         try
         {
             setUp();
-            ExecuteStreamHandler handler = createStreamHandler();
-            _execute( handler );
+            doExecute();
         }
         finally
         {
@@ -204,22 +200,22 @@ public class MParse extends Task
 
         // set the classpath as the jar files
         File[] jars = getMetamataLibs();
-        final Path classPath = cmdl.createClasspath( getProject() );
+        final Path classPath = m_cmdl.createClasspath();
         for( int i = 0; i < jars.length; i++ )
         {
             classPath.createPathElement().setLocation( jars[ i ] );
         }
 
         // set the metamata.home property
-        final Argument vmArgs = cmdl.createVmArgument();
-        vmArgs.setValue( "-Dmetamata.home=" + metahome.getAbsolutePath() );
+        final Argument vmArgs = m_cmdl.createVmArgument();
+        vmArgs.setValue( "-Dmetamata.home=" + m_metahome.getAbsolutePath() );
 
         // write all the options to a temp file and use it ro run the process
         String[] options = getOptions();
-        optionsFile = createTmpFile();
-        generateOptionsFile( optionsFile, options );
-        Argument args = cmdl.createArgument();
-        args.setLine( "-arguments " + optionsFile.getAbsolutePath() );
+        m_optionsFile = createTmpFile();
+        generateOptionsFile( m_optionsFile, options );
+        Argument args = m_cmdl.createArgument();
+        args.setLine( "-arguments " + m_optionsFile.getAbsolutePath() );
     }
 
     /**
@@ -231,13 +227,11 @@ public class MParse extends Task
      */
     protected File[] getMetamataLibs()
     {
-        ArrayList files = new ArrayList();
-        files.add( new File( metahome, "lib/metamata.jar" ) );
-        files.add( new File( metahome, "bin/lib/JavaCC.zip" ) );
+        final ArrayList files = new ArrayList();
+        files.add( new File( m_metahome, "lib/metamata.jar" ) );
+        files.add( new File( m_metahome, "bin/lib/JavaCC.zip" ) );
 
-        File[] array = new File[ files.size() ];
-        files.copyInto( array );
-        return array;
+        return (File[])files.toArray( new File[ files.size() ] );
     }
 
     /**
@@ -248,62 +242,58 @@ public class MParse extends Task
     protected String[] getOptions()
     {
         ArrayList options = new ArrayList();
-        if( verbose )
+        if( m_verbose )
         {
             options.add( "-verbose" );
         }
-        if( debugscanner )
+        if( m_debugscanner )
         {
             options.add( "-ds" );
         }
-        if( debugparser )
+        if( m_debugparser )
         {
             options.add( "-dp" );
         }
-        if( classpath != null )
+        if( m_classpath != null )
         {
             options.add( "-classpath" );
-            options.add( classpath.toString() );
+            options.add( m_classpath.toString() );
         }
-        if( sourcepath != null )
+        if( m_sourcepath != null )
         {
             options.add( "-sourcepath" );
-            options.add( sourcepath.toString() );
+            options.add( m_sourcepath.toString() );
         }
-        options.add( target.getAbsolutePath() );
+        options.add( m_target.getAbsolutePath() );
 
-        String[] array = new String[ options.size() ];
-        options.copyInto( array );
-        return array;
+        return (String[])options.toArray( new String[ options.size() ] );
     }
 
     /**
      * execute the process with a specific handler
-     *
-     * @param handler Description of Parameter
-     * @exception TaskException Description of Exception
      */
-    protected void _execute( ExecuteStreamHandler handler )
+    protected void doExecute()
         throws TaskException
     {
         // target has been checked as a .jj, see if there is a matching
         // java file and if it is needed to run to process the grammar
-        String pathname = target.getAbsolutePath();
+        String pathname = m_target.getAbsolutePath();
         int pos = pathname.length() - ".jj".length();
         pathname = pathname.substring( 0, pos ) + ".java";
         File javaFile = new File( pathname );
-        if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
+        if( javaFile.exists() && m_target.lastModified() < javaFile.lastModified() )
         {
-            getLogger().info( "Target is already build - skipping (" + target + ")" );
+            getLogger().info( "Target is already build - skipping (" + m_target + ")" );
             return;
         }
 
-        final Execute process = new Execute( handler );
-        getLogger().debug( cmdl.toString() );
-        process.setCommandline( cmdl.getCommandline() );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
+        getLogger().debug( m_cmdl.toString() );
+        exe.setCommandline( m_cmdl.getCommandline() );
         try
         {
-            if( process.execute() != 0 )
+            if( exe.execute() != 0 )
             {
                 throw new TaskException( "Metamata task failed." );
             }
@@ -323,11 +313,11 @@ public class MParse extends Task
         throws TaskException
     {
         // check that the home is ok.
-        if( metahome == null || !metahome.exists() )
+        if( m_metahome == null || !m_metahome.exists() )
         {
             throw new TaskException( "'metamatahome' must point to Metamata home directory." );
         }
-        metahome = resolveFile( metahome.getPath() );
+        m_metahome = resolveFile( m_metahome.getPath() );
 
         // check that the needed jar exists.
         File[] jars = getMetamataLibs();
@@ -340,11 +330,11 @@ public class MParse extends Task
         }
 
         // check that the target is ok and resolve it.
-        if( target == null || !target.isFile() || !target.getName().endsWith( ".jj" ) )
+        if( m_target == null || !m_target.isFile() || !m_target.getName().endsWith( ".jj" ) )
         {
-            throw new TaskException( "Invalid target: " + target );
+            throw new TaskException( "Invalid target: " + m_target );
         }
-        target = resolveFile( target.getPath() );
+        m_target = resolveFile( m_target.getPath() );
     }
 
     /**
@@ -352,35 +342,23 @@ public class MParse extends Task
      */
     protected void cleanUp()
     {
-        if( optionsFile != null )
+        if( m_optionsFile != null )
         {
-            optionsFile.delete();
-            optionsFile = null;
+            m_optionsFile.delete();
+            m_optionsFile = null;
         }
-        if( cleanup )
+        if( m_cleanup )
         {
-            String name = target.getName();
+            String name = m_target.getName();
             int pos = name.length() - ".jj".length();
             name = "__jj" + name.substring( 0, pos ) + ".sunjj";
-            final File sunjj = new File( target.getParent(), name );
+            final File sunjj = new File( m_target.getParent(), name );
             if( sunjj.exists() )
             {
                 getLogger().info( "Removing stale file: " + sunjj.getName() );
                 sunjj.delete();
             }
         }
-    }
-
-    /**
-     * return the default stream handler for this task
-     *
-     * @return Description of the Returned Value
-     */
-    protected ExecuteStreamHandler createStreamHandler()
-    {
-        final LogOutputStream output = new LogOutputStream( getLogger(), false );
-        final LogOutputStream error = new LogOutputStream( getLogger(), false );
-        return new LogStreamHandler( output, error );
     }
 
     /**

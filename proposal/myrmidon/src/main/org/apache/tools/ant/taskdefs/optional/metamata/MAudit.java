@@ -8,13 +8,8 @@
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -32,9 +27,9 @@ import org.apache.tools.ant.types.Path;
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class MAudit extends AbstractMetamataTask
+public class MAudit
+    extends AbstractMetamataTask
 {
-
     /*
      * As of Metamata 2.0, the command line of MAudit is as follows:
      * Usage
@@ -72,15 +67,11 @@ public class MAudit extends AbstractMetamataTask
     // (?:file:)?((?#filepath).+):((?#line)\\d+)\\s*:\\s+((?#message).*)
     final static String AUDIT_PATTERN = "(?:file:)?(.+):(\\d+)\\s*:\\s+(.*)";
 
-    protected File outFile = null;
-
-    protected Path searchPath = null;
-
-    protected boolean fix = false;
-
-    protected boolean list = false;
-
-    protected boolean unused = false;
+    private File m_outFile;
+    private Path m_searchPath;
+    private boolean m_fix;
+    private boolean m_list;
+    private boolean m_unused;
 
     /**
      * default constructor
@@ -90,78 +81,62 @@ public class MAudit extends AbstractMetamataTask
         super( "com.metamata.gui.rc.MAudit" );
     }
 
-    /**
-     * handy factory to create a violation
-     *
-     * @param line Description of Parameter
-     * @param msg Description of Parameter
-     * @return Description of the Returned Value
-     */
-    final static Violation createViolation( int line, String msg )
+    public void setFix( final boolean fix )
     {
-        Violation violation = new Violation();
-        violation.line = line;
-        violation.error = msg;
-        return violation;
+        m_fix = fix;
     }
 
-    public void setFix( boolean flag )
+    public void setList( final boolean list )
     {
-        this.fix = flag;
-    }
-
-    public void setList( boolean flag )
-    {
-        this.list = flag;
+        m_list = list;
     }
 
     /**
      * set the destination file which should be an xml file
-     *
-     * @param outFile The new Tofile value
      */
-    public void setTofile( File outFile )
+    public void setTofile( final File outFile )
     {
-        this.outFile = outFile;
+        m_outFile = outFile;
     }
 
-    public void setUnused( boolean flag )
+    public void setUnused( final boolean unused )
     {
-        this.unused = flag;
+        m_unused = unused;
     }
 
     public Path createSearchpath()
     {
-        if( searchPath == null )
+        if( m_searchPath == null )
         {
-            searchPath = new Path();
+            m_searchPath = new Path();
         }
-        return searchPath;
+        return m_searchPath;
     }
 
     protected ArrayList getOptions()
+        throws TaskException
     {
         ArrayList options = new ArrayList( 512 );
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
-        if( sourcePath != null )
+        if( getSourcePath() != null )
         {
-            sourcePath.append( classPath );// srcpath is prepended
-            classPath = sourcePath;
-            sourcePath = null;// prevent from using -sourcepath
+            getSourcePath().append( getClassPath() );// srcpath is prepended
+            setClassPath( getSourcePath() );
+            setSourcePath( null );// prevent from using -sourcepath
         }
 
         // don't forget to modify the pattern if you change the options reporting
-        if( classPath != null )
+        if( getClassPath() != null )
         {
             options.add( "-classpath" );
-            options.add( classPath.toString() );
+            options.add( getClassPath().toString() );
         }
         // suppress copyright msg when running, we will let it so that this
         // will be the only output to the console if in xml mode
         //      options.add("-quiet");
-        if( fix )
+        if( m_fix )
         {
             options.add( "-fix" );
         }
@@ -170,34 +145,34 @@ public class MAudit extends AbstractMetamataTask
         // generate .maudit files much more detailed than the report
         // I don't like it very much, I think it could be interesting
         // to get all .maudit files and include them in the XML.
-        if( list )
+        if( m_list )
         {
             options.add( "-list" );
         }
-        if( sourcePath != null )
+        if( getSourcePath() != null )
         {
             options.add( "-sourcepath" );
-            options.add( sourcePath.toString() );
+            options.add( getSourcePath().toString() );
         }
 
-        if( unused )
+        if( m_unused )
         {
             options.add( "-unused" );
-            options.add( searchPath.toString() );
+            options.add( m_searchPath.toString() );
         }
-        addAllArrayList( options, includedFiles.keySet().iterator() );
+        addAllArrayList( options, getIncludedFiles().keySet().iterator() );
         return options;
     }
 
-    protected void checkOptions()
+    protected void validate()
         throws TaskException
     {
-        super.checkOptions();
-        if( unused && searchPath == null )
+        super.validate();
+        if( m_unused && m_searchPath == null )
         {
             throw new TaskException( "'searchpath' element must be set when looking for 'unused' declarations." );
         }
-        if( !unused && searchPath != null )
+        if( !m_unused && m_searchPath != null )
         {
             getLogger().warn( "'searchpath' element ignored. 'unused' attribute is disabled." );
         }
@@ -218,44 +193,5 @@ public class MAudit extends AbstractMetamataTask
          * }
          */
     }
-
-    protected void setupStreamHandler( final Execute exe )
-        throws TaskException
-    {
-        // if we didn't specify a file, then use a screen report
-        if( outFile == null )
-        {
-            exe.setOutput( new LogOutputStream( getLogger(), false ) );
-            exe.setError( new LogOutputStream( getLogger(), true ) );
-        }
-        else
-        {
-            try
-            {
-                //XXX
-                OutputStream out = new FileOutputStream( outFile );
-                //handler = new MAuditStreamHandler( this, out );
-                //FIXME: should behave like in Ant1.x
-                exe.setOutput( out );
-                exe.setError( out );
-            }
-            catch( IOException e )
-            {
-                throw new TaskException( "Error", e );
-            }
-        }
-    }
-
-    /**
-     * the inner class used to report violation information
-     *
-     * @author RT
-     */
-    final static class Violation
-    {
-        String error;
-        int line;
-    }
-
 }
 

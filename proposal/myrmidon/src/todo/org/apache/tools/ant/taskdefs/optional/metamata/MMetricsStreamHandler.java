@@ -26,7 +26,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.tools.ant.Task;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -42,9 +42,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class MMetricsStreamHandler implements ExecuteStreamHandler
+public class MMetricsStreamHandler
+    extends AbstractLogEnabled
+    implements ExecuteStreamHandler
 {
-
     /**
      * CLASS construct, it should be named something like 'MyClass'
      */
@@ -88,25 +89,13 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
     protected InputStream metricsOutput;
 
     /**
-     * the task
-     */
-    protected Task task;
-
-    /**
      * this is where the XML output will go, should mostly be a file the caller
      * is responsible for flushing and closing this stream
      */
     protected OutputStream xmlOutputStream;
 
-    /**
-     * initialize this handler
-     *
-     * @param task Description of Parameter
-     * @param xmlOut Description of Parameter
-     */
-    MMetricsStreamHandler( Task task, OutputStream xmlOut )
+    MMetricsStreamHandler( OutputStream xmlOut )
     {
-        this.task = task;
         this.xmlOutputStream = xmlOut;
     }
 
@@ -322,7 +311,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
         {
             e.printStackTrace();
             // invalid lines are sent to the output as information, it might be anything,
-            task.getLogger().info( line );
+            getLogger().info( line );
         }
     }
 

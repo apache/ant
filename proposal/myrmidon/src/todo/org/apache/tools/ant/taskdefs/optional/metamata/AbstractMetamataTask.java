@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Random;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
@@ -31,48 +31,46 @@ import org.apache.tools.ant.types.Path;
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public abstract class AbstractMetamataTask extends Task
+public abstract class AbstractMetamataTask
+    extends AbstractTask
 {
-
-    //--------------------------- ATTRIBUTES -----------------------------------
-
     /**
      * The user classpath to be provided. It matches the -classpath of the
      * command line. The classpath must includes both the <tt>.class</tt> and
      * the <tt>.java</tt> files for accurate audit.
      */
-    protected Path classPath = null;
+    private Path m_classPath;
 
     /**
      * the path to the source file
      */
-    protected Path sourcePath = null;
+    private Path m_sourcePath;
 
     /**
      * Metamata home directory. It will be passed as a <tt>metamata.home</tt>
      * property and should normally matches the environment property <tt>
      * META_HOME</tt> set by the Metamata installer.
      */
-    protected File metamataHome = null;
+    private File m_metamataHome;
 
     /**
      * the command line used to run MAudit
      */
-    protected CommandlineJava cmdl = new CommandlineJava();
+    private CommandlineJava m_cmdl = new CommandlineJava();
 
     /**
      * the set of files to be audited
      */
-    protected ArrayList fileSets = new ArrayList();
+    private ArrayList m_fileSets = new ArrayList();
 
     /**
      * the options file where are stored the command line options
      */
-    protected File optionsFile = null;
+    private File m_optionsFile;
 
     // this is used to keep track of which files were included. It will
     // be set when calling scanFileSets();
-    protected Hashtable includedFiles = null;
+    private Hashtable m_includedFiles;
 
     public AbstractMetamataTask()
     {
@@ -85,8 +83,8 @@ public abstract class AbstractMetamataTask extends Task
      */
     protected AbstractMetamataTask( String className )
     {
-        cmdl.setVm( "java" );
-        cmdl.setClassname( className );
+        m_cmdl.setVm( "java" );
+        m_cmdl.setClassname( className );
     }
 
     /**
@@ -123,60 +121,50 @@ public abstract class AbstractMetamataTask extends Task
 
     /**
      * the metamata.home property to run all tasks.
-     *
-     * @param metamataHome The new Metamatahome value
      */
     public void setMetamatahome( final File metamataHome )
     {
-        this.metamataHome = metamataHome;
+        this.m_metamataHome = metamataHome;
     }
 
     /**
      * The java files or directory to be audited
-     *
-     * @param fs The feature to be added to the FileSet attribute
      */
-    public void addFileSet( FileSet fs )
+    public void addFileSet( final FileSet fileSet )
     {
-        fileSets.add( fs );
+        m_fileSets.add( fileSet );
     }
 
     /**
      * user classpath
-     *
-     * @return Description of the Returned Value
      */
     public Path createClasspath()
     {
-        if( classPath == null )
+        if( m_classPath == null )
         {
-            classPath = new Path();
+            m_classPath = new Path();
         }
-        return classPath;
+        return m_classPath;
     }
 
     /**
      * Creates a nested jvmarg element.
-     *
-     * @return Description of the Returned Value
      */
     public Argument createJvmarg()
     {
-        return cmdl.createVmArgument();
+        return m_cmdl.createVmArgument();
     }
 
     /**
      * create the source path for this task
-     *
-     * @return Description of the Returned Value
      */
     public Path createSourcepath()
     {
-        if( sourcePath == null )
+        if( m_sourcePath == null )
         {
-            sourcePath = new Path();
+            m_sourcePath = new Path();
         }
-        return sourcePath;
+        return m_sourcePath;
     }
 
     /**
@@ -198,44 +186,37 @@ public abstract class AbstractMetamataTask extends Task
         }
     }
 
-    //--------------------- PRIVATE/PROTECTED METHODS --------------------------
-
     /**
      * check the options and build the command line
-     *
-     * @exception TaskException Description of Exception
      */
     protected void setUp()
         throws TaskException
     {
-        checkOptions();
+        validate();
 
         // set the classpath as the jar file
-        File jar = getMetamataJar( metamataHome );
-        final Path classPath = cmdl.createClasspath( getProject() );
+        File jar = getMetamataJar( m_metamataHome );
+        final Path classPath = m_cmdl.createClasspath();
         classPath.createPathElement().setLocation( jar );
 
         // set the metamata.home property
-        final Argument vmArgs = cmdl.createVmArgument();
-        vmArgs.setValue( "-Dmetamata.home=" + metamataHome.getAbsolutePath() );
+        final Argument vmArgs = m_cmdl.createVmArgument();
+        vmArgs.setValue( "-Dmetamata.home=" + m_metamataHome.getAbsolutePath() );
 
         // retrieve all the files we want to scan
-        includedFiles = scanFileSets();
-        getLogger().debug( includedFiles.size() + " files added for audit" );
+        m_includedFiles = scanFileSets();
+        getLogger().debug( m_includedFiles.size() + " files added for audit" );
 
         // write all the options to a temp file and use it ro run the process
         ArrayList options = getOptions();
-        optionsFile = createTmpFile();
-        generateOptionsFile( optionsFile, options );
-        Argument args = cmdl.createArgument();
-        args.setLine( "-arguments " + optionsFile.getAbsolutePath() );
+        m_optionsFile = createTmpFile();
+        generateOptionsFile( m_optionsFile, options );
+        Argument args = m_cmdl.createArgument();
+        args.setLine( "-arguments " + m_optionsFile.getAbsolutePath() );
     }
 
     /**
      * return the location of the jar file used to run
-     *
-     * @param home Description of Parameter
-     * @return The MetamataJar value
      */
     protected final File getMetamataJar( File home )
     {
@@ -244,31 +225,30 @@ public abstract class AbstractMetamataTask extends Task
 
     protected Hashtable getFileMapping()
     {
-        return includedFiles;
+        return m_includedFiles;
     }
 
     /**
      * return all options of the command line as string elements
-     *
-     * @return The Options value
      */
-    protected abstract ArrayList getOptions();
+    protected abstract ArrayList getOptions()
+        throws TaskException;
 
     /**
      * validate options set
      *
      * @exception TaskException Description of Exception
      */
-    protected void checkOptions()
+    protected void validate()
         throws TaskException
     {
         // do some validation first
-        if( metamataHome == null || !metamataHome.exists() )
+        if( m_metamataHome == null || !m_metamataHome.exists() )
         {
             throw new TaskException( "'metamatahome' must point to Metamata home directory." );
         }
-        metamataHome = resolveFile( metamataHome.getPath() );
-        File jar = getMetamataJar( metamataHome );
+        m_metamataHome = resolveFile( m_metamataHome.getPath() );
+        File jar = getMetamataJar( m_metamataHome );
         if( !jar.exists() )
         {
             throw new TaskException( jar + " does not exist. Check your metamata installation." );
@@ -279,21 +259,14 @@ public abstract class AbstractMetamataTask extends Task
      * clean up all the mess that we did with temporary objects
      */
     protected void cleanUp()
+        throws TaskException
     {
-        if( optionsFile != null )
+        if( m_optionsFile != null )
         {
-            optionsFile.delete();
-            optionsFile = null;
+            m_optionsFile.delete();
+            m_optionsFile = null;
         }
     }
-
-    /**
-     * create a stream handler that will be used to get the output since
-     * metamata tools do not report with convenient files such as XML.
-     *
-     * @return Description of the Returned Value
-     */
-    protected abstract void setupStreamHandler( Execute exe );
 
     /**
      * execute the process with a specific handler
@@ -304,13 +277,13 @@ public abstract class AbstractMetamataTask extends Task
     protected void execute0()
         throws TaskException
     {
-        final Execute exe = new Execute();
-        setupStreamHandler( exe );
-        getLogger().debug( cmdl.toString() );
-        exe.setCommandline( cmdl.getCommandline() );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
+        getLogger().debug( m_cmdl.toString() );
+        exe.setCommandline( m_cmdl.getCommandline() );
         try
         {
-            if( exe.execute() != 0 )
+            if( 0 != exe.execute() )
             {
                 throw new TaskException( "Metamata task failed." );
             }
@@ -360,11 +333,12 @@ public abstract class AbstractMetamataTask extends Task
      *      audited.
      */
     protected Hashtable scanFileSets()
+        throws TaskException
     {
         Hashtable files = new Hashtable();
-        for( int i = 0; i < fileSets.size(); i++ )
+        for( int i = 0; i < m_fileSets.size(); i++ )
         {
-            FileSet fs = (FileSet)fileSets.get( i );
+            FileSet fs = (FileSet)m_fileSets.get( i );
             DirectoryScanner ds = fs.getDirectoryScanner();
             ds.scan();
             String[] f = ds.getIncludedFiles();
@@ -383,6 +357,36 @@ public abstract class AbstractMetamataTask extends Task
             }
         }
         return files;
+    }
+
+    protected ArrayList getFileSets()
+    {
+        return m_fileSets;
+    }
+
+    protected Hashtable getIncludedFiles()
+    {
+        return m_includedFiles;
+    }
+
+    protected Path getClassPath()
+    {
+        return m_classPath;
+    }
+
+    protected void setClassPath( Path classPath )
+    {
+        m_classPath = classPath;
+    }
+
+    protected Path getSourcePath()
+    {
+        return m_sourcePath;
+    }
+
+    protected void setSourcePath( Path sourcePath )
+    {
+        m_sourcePath = sourcePath;
     }
 
 }

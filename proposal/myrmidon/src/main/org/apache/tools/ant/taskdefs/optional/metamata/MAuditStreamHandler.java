@@ -7,10 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -19,6 +17,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.exec.ExecOutputHandler;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
@@ -43,95 +45,71 @@ import org.w3c.dom.Element;
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
-class MAuditStreamHandler implements ExecuteStreamHandler
+class MAuditStreamHandler
+    extends AbstractLogEnabled
+    implements ExecuteStreamHandler, ExecOutputHandler
 {
+    public void setProcessInputStream( OutputStream os )
+        throws IOException
+    {
+    }
+
+    public void setProcessErrorStream( InputStream is )
+        throws IOException
+    {
+    }
+
+    public void setProcessOutputStream( InputStream is )
+        throws TaskException, IOException
+    {
+    }
+
+    public void start()
+        throws IOException
+    {
+    }
 
     /**
      * this is where the XML output will go, should mostly be a file the caller
      * is responsible for flushing and closing this stream
      */
-    protected OutputStream xmlOut = null;
+    private OutputStream m_xmlOut;
 
     /**
      * the multimap. The key in the map is the filepath that caused the audit
      * error and the value is a vector of MAudit.Violation entries.
      */
-    protected Hashtable auditedFiles = new Hashtable();
-
-    /**
-     * reader for stdout
-     */
-    protected BufferedReader br;
+    private Hashtable m_auditedFiles = new Hashtable();
 
     /**
      * matcher that will be used to extract the info from the line
      */
-    protected RegexpMatcher matcher;
+    private RegexpMatcher m_matcher;
 
-    protected MAudit task;
+    private Hashtable m_fileMapping;
 
-    MAuditStreamHandler( MAudit task, OutputStream xmlOut )
+    MAuditStreamHandler( Hashtable fileMapping, OutputStream xmlOut )
+        throws TaskException
     {
-        this.task = task;
-        this.xmlOut = xmlOut;
+        m_fileMapping = fileMapping;
+        m_xmlOut = xmlOut;
         /**
          * the matcher should be the Oro one. I don't know about the other one
          */
-        matcher = ( new RegexpMatcherFactory() ).newRegexpMatcher();
-        matcher.setPattern( MAudit.AUDIT_PATTERN );
+        m_matcher = ( new RegexpMatcherFactory() ).newRegexpMatcher();
+        m_matcher.setPattern( MAudit.AUDIT_PATTERN );
     }
 
-    protected static DocumentBuilder getDocumentBuilder()
+    private static final DocumentBuilder getDocumentBuilder()
     {
         try
         {
             return DocumentBuilderFactory.newInstance().newDocumentBuilder();
         }
-        catch( Exception exc )
+        catch( ParserConfigurationException pce )
         {
-            throw new ExceptionInInitializerError( exc );
+            throw new ExceptionInInitializerError( pce );
         }
-    }
-
-    /**
-     * Ignore.
-     *
-     * @param is The new ProcessErrorStream value
-     */
-    public void setProcessErrorStream( InputStream is )
-    {
-    }
-
-    /**
-     * Ignore.
-     *
-     * @param os The new ProcessInputStream value
-     */
-    public void setProcessInputStream( OutputStream os )
-    {
-    }
-
-    /**
-     * Set the inputstream
-     *
-     * @param is The new ProcessOutputStream value
-     * @exception IOException Description of Exception
-     */
-    public void setProcessOutputStream( InputStream is )
-        throws IOException
-    {
-        br = new BufferedReader( new InputStreamReader( is ) );
-    }
-
-    /**
-     * Invokes parseOutput. This will block until the end :-(
-     *
-     * @exception IOException Description of Exception
-     */
-    public void start()
-        throws IOException
-    {
-        parseOutput( br );
     }
 
     /**
@@ -144,19 +122,18 @@ class MAuditStreamHandler implements ExecuteStreamHandler
         // this is the only code that could be needed to be overrided
         Document doc = getDocumentBuilder().newDocument();
         Element rootElement = doc.createElement( "classes" );
-        Iterator keys = auditedFiles.keys();
-        Hashtable filemapping = task.getFileMapping();
-        rootElement.setAttribute( "audited", String.valueOf( filemapping.size() ) );
-        rootElement.setAttribute( "reported", String.valueOf( auditedFiles.size() ) );
+        final Iterator keys = m_auditedFiles.keySet().iterator();
+        rootElement.setAttribute( "audited", String.valueOf( m_fileMapping.size() ) );
+        rootElement.setAttribute( "reported", String.valueOf( m_auditedFiles.size() ) );
         int errors = 0;
         while( keys.hasNext() )
         {
             String filepath = (String)keys.next();
-            ArrayList v = (ArrayList)auditedFiles.get( filepath );
-            String fullclassname = (String)filemapping.get( filepath );
+            ArrayList v = (ArrayList)m_auditedFiles.get( filepath );
+            String fullclassname = (String)m_fileMapping.get( filepath );
             if( fullclassname == null )
             {
-                task.getLogger().warn( "Could not find class mapping for " + filepath );
+                getLogger().warn( "Could not find class mapping for " + filepath );
                 continue;
             }
             int pos = fullclassname.lastIndexOf( '.' );
@@ -169,10 +146,10 @@ class MAuditStreamHandler implements ExecuteStreamHandler
             errors += v.size();
             for( int i = 0; i < v.size(); i++ )
             {
-                MAudit.Violation violation = (MAudit.Violation)v.get( i );
+                Violation violation = (Violation)v.get( i );
                 Element error = doc.createElement( "violation" );
-                error.setAttribute( "line", String.valueOf( violation.line ) );
-                error.setAttribute( "message", violation.error );
+                error.setAttribute( "line", String.valueOf( violation.getLine() ) );
+                error.setAttribute( "message", violation.getError() );
                 clazz.appendChild( error );
             }
             rootElement.appendChild( clazz );
@@ -180,23 +157,23 @@ class MAuditStreamHandler implements ExecuteStreamHandler
         rootElement.setAttribute( "violations", String.valueOf( errors ) );
 
         // now write it to the outputstream, not very nice code
-        if( xmlOut != null )
+        if( m_xmlOut != null )
         {
             Writer wri = null;
             try
             {
-                wri = new OutputStreamWriter( xmlOut, "UTF-8" );
+                wri = new OutputStreamWriter( m_xmlOut, "UTF-8" );
                 wri.write( "<?xml version=\"1.0\"?>\n" );
                 ( new DOMElementWriter() ).write( rootElement, wri, 0, "  " );
                 wri.flush();
             }
             catch( IOException exc )
             {
-                task.getLogger().error( "Unable to write log file" );
+                getLogger().error( "Unable to write log file" );
             }
             finally
             {
-                if( xmlOut != System.out && xmlOut != System.err )
+                if( m_xmlOut != System.out && m_xmlOut != System.err )
                 {
                     if( wri != null )
                     {
@@ -216,56 +193,63 @@ class MAuditStreamHandler implements ExecuteStreamHandler
 
     /**
      * add a violation entry for the file
-     *
-     * @param file The feature to be added to the ViolationEntry attribute
-     * @param entry The feature to be added to the ViolationEntry attribute
      */
-    protected void addViolationEntry( String file, MAudit.Violation entry )
+    protected void addViolationEntry( String file, Violation entry )
     {
-        ArrayList violations = (ArrayList)auditedFiles.get( file );
-        // if there is no decl for this file yet, create it.
+        ArrayList violations = (ArrayList)m_auditedFiles.get( file );
         if( violations == null )
         {
+            // if there is no decl for this file yet, create it.
             violations = new ArrayList();
-            auditedFiles.put( file, violations );
+            m_auditedFiles.put( file, violations );
         }
         violations.add( entry );
     }
 
     /**
-     * read each line and process it
-     *
-     * @param br Description of Parameter
-     * @exception IOException Description of Exception
+     * Receive notification about the process writing
+     * to standard error.
      */
-    protected void parseOutput( BufferedReader br )
-        throws IOException
+    public void stderr( String line )
     {
-        String line = null;
-        while( ( line = br.readLine() ) != null )
-        {
-            processLine( line );
-        }
     }
 
-    // we suppose here that there is only one report / line.
-    // There will obviouslly be a problem if the message is on several lines...
-    protected void processLine( String line )
+    /**
+     * Receive notification about the process writing
+     * to standard output.
+     */
+    public void stdout( final String line )
     {
-        ArrayList matches = matcher.getGroups( line );
+        // we suppose here that there is only one report / line.
+        // There will obviouslly be a problem if the message is on several lines...
+
+        final ArrayList matches = getGroups( line );
         if( matches != null )
         {
-            String file = (String)matches.get( 1 );
-            int lineNum = Integer.parseInt( (String)matches.get( 2 ) );
-            String msg = (String)matches.get( 3 );
-            addViolationEntry( file, MAudit.createViolation( lineNum, msg ) );
+            final String file = (String)matches.get( 1 );
+            final int lineNum = Integer.parseInt( (String)matches.get( 2 ) );
+            final String msg = (String)matches.get( 3 );
+            final Violation violation = new Violation( msg, lineNum );
+            addViolationEntry( file, violation );
         }
         else
         {
             // this doesn't match..report it as info, it could be
             // either the copyright, summary or a multiline message (damn !)
-            task.getLogger().info( line );
+            getLogger().info( line );
         }
     }
 
+    private ArrayList getGroups( final String line )
+    {
+        try
+        {
+            return m_matcher.getGroups( line );
+        }
+        catch( final TaskException te )
+        {
+            getLogger().error( "Failed to process matcher", te );
+            return new ArrayList();
+        }
+    }
 }

@@ -13,9 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -119,23 +117,24 @@ public class MMetrics extends AbstractMetamataTask
     }
 
     protected ArrayList getOptions()
+        throws TaskException
     {
         ArrayList options = new ArrayList( 512 );
         // there is a bug in Metamata 2.0 build 37. The sourcepath argument does
         // not work. So we will use the sourcepath prepended to classpath. (order
         // is important since Metamata looks at .class and .java)
-        if( sourcePath != null )
+        if( getSourcePath() != null )
         {
-            sourcePath.append( classPath );// srcpath is prepended
-            classPath = sourcePath;
-            sourcePath = null;// prevent from using -sourcepath
+            getSourcePath().append( getClassPath() );// srcpath is prepended
+            setClassPath( getSourcePath() );
+            setSourcePath( null );// prevent from using -sourcepath
         }
 
         // don't forget to modify the pattern if you change the options reporting
-        if( classPath != null )
+        if( getClassPath() != null )
         {
             options.add( "-classpath" );
-            options.add( classPath );
+            options.add( getClassPath() );
         }
         options.add( "-output" );
         options.add( tmpFile.toString() );
@@ -155,13 +154,13 @@ public class MMetrics extends AbstractMetamataTask
         options.add( "/" );
 
         // directories
-        String[] dirs = path.list();
+        final String[] dirs = path.list();
         for( int i = 0; i < dirs.length; i++ )
         {
             options.add( dirs[ i ] );
         }
         // files next.
-        addAllArrayList( options, includedFiles.keySet().iterator() );
+        addAllArrayList( options, getIncludedFiles().keySet().iterator() );
         return options;
     }
 
@@ -169,10 +168,10 @@ public class MMetrics extends AbstractMetamataTask
 
 
     // check for existing options and outfile, all other are optional
-    protected void checkOptions()
+    protected void validate()
         throws TaskException
     {
-        super.checkOptions();
+        super.validate();
 
         if( !"files".equals( granularity ) && !"methods".equals( granularity )
             && !"types".equals( granularity ) )
@@ -183,12 +182,12 @@ public class MMetrics extends AbstractMetamataTask
         {
             throw new TaskException( "Output XML file must be set via 'tofile' attribute." );
         }
-        if( path == null && fileSets.size() == 0 )
+        if( path == null && getFileSets().size() == 0 )
         {
             throw new TaskException( "Must set either paths (path element) or files (fileset element)" );
         }
         // I don't accept dirs and files at the same time, I cannot recognize the semantic in the result
-        if( path != null && fileSets.size() > 0 )
+        if( path != null && getFileSets().size() > 0 )
         {
             throw new TaskException( "Cannot set paths (path element) and files (fileset element) at the same time" );
         }
@@ -216,23 +215,10 @@ public class MMetrics extends AbstractMetamataTask
         }
     }
 
-    /**
-     * if the report is transform via a temporary txt file we should use a a
-     * normal logger here, otherwise we could use the metrics handler directly
-     * to capture and transform the output on stdout to XML.
-     *
-     * @return Description of the Returned Value
-     */
-    protected void setupStreamHandler( final Execute exe )
-    {
-        exe.setOutput( new LogOutputStream( getLogger(), false ) );
-        exe.setError( new LogOutputStream( getLogger(), false ) );
-    }
-
-    protected void execute0( ExecuteStreamHandler handler )
+    protected void execute0()
         throws TaskException
     {
-        super.execute0( handler );
+        super.execute0();
         transformFile();
     }
 
@@ -260,7 +246,8 @@ public class MMetrics extends AbstractMetamataTask
         try
         {
             xmlStream = new FileOutputStream( outFile );
-            ExecuteStreamHandler xmlHandler = new MMetricsStreamHandler( this, xmlStream );
+            ExecuteStreamHandler xmlHandler = new MMetricsStreamHandler( xmlStream );
+            setupLogger( xmlHandler );
             xmlHandler.setProcessOutputStream( tmpStream );
             xmlHandler.start();
             xmlHandler.stop();
@@ -293,5 +280,4 @@ public class MMetrics extends AbstractMetamataTask
             }
         }
     }
-
 }
