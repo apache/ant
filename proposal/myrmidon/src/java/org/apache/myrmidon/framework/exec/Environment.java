@@ -18,6 +18,7 @@ import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.taskdefs.exec.Execute;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * This is the class that can be used to retrieve the environment
@@ -29,8 +30,6 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
  */
 public final class Environment
 {
-    private static final String LINE_SEP = System.getProperty( "line.separator" );
-
     private static final String[] COMMAND_COM = new String[]{"command.com", "/c", "set"};
     private static final String[] CMD_EXE = new String[]{"cmd", "/c", "set"};
 
@@ -134,11 +133,11 @@ public final class Environment
                 // contain embedded new lines).
                 if( var == null )
                 {
-                    var = LINE_SEP + line;
+                    var = StringUtil.LINE_SEPARATOR + line;
                 }
                 else
                 {
-                    var += LINE_SEP + line;
+                    var += StringUtil.LINE_SEPARATOR + line;
                 }
             }
             else

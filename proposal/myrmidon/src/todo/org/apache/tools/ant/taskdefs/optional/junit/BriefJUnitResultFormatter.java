@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Prints plain text output of the test to a specified Writer. Inspired by the
@@ -139,10 +140,9 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter
     public void endTestSuite( JUnitTest suite )
         throws TaskException
     {
-        String newLine = System.getProperty( "line.separator" );
-        StringBuffer sb = new StringBuffer( "Testsuite: " );
+        final StringBuffer sb = new StringBuffer( "Testsuite: " );
         sb.append( suite.getName() );
-        sb.append( newLine );
+        sb.append( StringUtil.LINE_SEPARATOR );
         sb.append( "Tests run: " );
         sb.append( suite.runCount() );
         sb.append( ", Failures: " );
@@ -152,26 +152,26 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter
         sb.append( ", Time elapsed: " );
         sb.append( m_numberFormat.format( suite.getRunTime() / 1000.0 ) );
         sb.append( " sec" );
-        sb.append( newLine );
-        sb.append( newLine );
+        sb.append( StringUtil.LINE_SEPARATOR );
+        sb.append( StringUtil.LINE_SEPARATOR );
 
         // append the err and output streams to the log
         if( systemOutput != null && systemOutput.length() > 0 )
         {
             sb.append( "------------- Standard Output ---------------" )
-                .append( newLine )
+                .append( StringUtil.LINE_SEPARATOR )
                 .append( systemOutput )
                 .append( "------------- ---------------- ---------------" )
-                .append( newLine );
+                .append( StringUtil.LINE_SEPARATOR );
         }
 
         if( systemError != null && systemError.length() > 0 )
         {
             sb.append( "------------- Standard Error -----------------" )
-                .append( newLine )
+                .append( StringUtil.LINE_SEPARATOR )
                 .append( systemError )
                 .append( "------------- ---------------- ---------------" )
-                .append( newLine );
+                .append( StringUtil.LINE_SEPARATOR );
         }
 
         if( output() != null )

@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * PropertyFile task uses java.util.Properties to modify integer, String and
@@ -128,23 +129,11 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author Jeremy Mawson <a href="mailto:jem@loftinspace.com.au">
  *      jem@loftinspace.com.au</a>
  */
-public class PropertyFile extends Task
+public class PropertyFile
+    extends Task
 {
-
-    /*
-     * ========================================================================
-     *
-     * Static variables.
-     */
-    private final static String NEWLINE = System.getProperty( "line.separator" );
-
     private ArrayList entries = new ArrayList();
 
-    /*
-     * ========================================================================
-     *
-     * Instance variables.
-     */
     // Use this to prepend a message to the properties file
     private String m_comment;
 

@@ -18,6 +18,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -57,8 +58,6 @@ public class Javah extends Task
 {
 
     private final static String FAIL_MSG = "Compile failed, messages should have been provided.";
-    //private Path extdirs;
-    private static String lSep = System.getProperty( "line.separator" );
 
     private ArrayList classes = new ArrayList( 2 );
     private Path classpath = null;
@@ -300,7 +299,7 @@ public class Javah extends Task
             {
                 String aClass = tok.nextToken().trim();
                 cmd.createArgument().setValue( aClass );
-                niceClassList.append( "    " + aClass + lSep );
+                niceClassList.append( "    " + aClass + StringUtil.LINE_SEPARATOR );
                 n++;
             }
         }
@@ -311,7 +310,7 @@ public class Javah extends Task
             ClassArgument arg = (ClassArgument)enum.next();
             String aClass = arg.getName();
             cmd.createArgument().setValue( aClass );
-            niceClassList.append( "    " + aClass + lSep );
+            niceClassList.append( "    " + aClass + StringUtil.LINE_SEPARATOR );
             n++;
         }
 
@@ -321,7 +320,7 @@ public class Javah extends Task
             prefix.append( "es" );
         }
         prefix.append( " to be compiled:" );
-        prefix.append( lSep );
+        prefix.append( StringUtil.LINE_SEPARATOR );
 
         getLogger().debug( prefix.toString() + niceClassList.toString() );
     }

@@ -18,6 +18,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
@@ -26,10 +27,9 @@ import org.apache.tools.ant.Task;
  * @version $Revision$
  */
 
-public class AntStructure extends Task
+public class AntStructure
+    extends Task
 {
-    private final String lSep = System.getProperty( "line.separator" );
-
     private final String BOOLEAN = "%boolean;";
     private final String TASKS = "%tasks;";
     private final String TYPES = "%types;";

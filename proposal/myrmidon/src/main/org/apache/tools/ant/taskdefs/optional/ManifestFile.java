@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
@@ -29,12 +30,9 @@ import org.apache.tools.ant.Task;
  *     </manifest> </target> </pre>
  *
  * @author Thomas Kerle
- * @version 1.0 2001-10-11
  */
 public class ManifestFile extends Task
 {
-
-    private final static String newLine = System.getProperty( "line.separator" );
     private final static String keyValueSeparator = ":";
     private final static String UPDATE_ = "update";
     private final static String REPLACEALL_ = "replaceAll";
@@ -101,7 +99,7 @@ public class ManifestFile extends Task
     private StringTokenizer getLineTokens( StringBuffer buffer )
     {
         String manifests = buffer.toString();
-        StringTokenizer strTokens = new StringTokenizer( manifests, newLine );
+        StringTokenizer strTokens = new StringTokenizer( manifests, StringUtil.LINE_SEPARATOR );
         return strTokens;
     }
 
@@ -137,7 +135,7 @@ public class ManifestFile extends Task
             String value = (String)entry.getValue();
             String entry_string = key + keyValueSeparator + value;
 
-            buffer.append( entry_string + this.newLine );
+            buffer.append( entry_string + StringUtil.LINE_SEPARATOR );
         }
 
         return buffer;
@@ -208,9 +206,9 @@ public class ManifestFile extends Task
                     }
                     fis.close();
                     StringTokenizer lineTokens = getLineTokens( buffer );
-                    while( lineTokens.hasNext() )
+                    while( lineTokens.hasMoreElements() )
                     {
-                        String currentLine = (String)lineTokens.next();
+                        String currentLine = (String)lineTokens.nextElement();
                         addLine( currentLine );
                     }
                 }
@@ -351,8 +349,8 @@ public class ManifestFile extends Task
         private void split()
         {
             StringTokenizer st = new StringTokenizer( value, ManifestFile.keyValueSeparator );
-            key = (String)st.next();
-            val = (String)st.next();
+            key = (String)st.nextElement();
+            val = (String)st.nextElement();
         }
 
     }

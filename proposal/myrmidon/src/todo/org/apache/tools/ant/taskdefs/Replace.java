@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Replaces all occurrences of one or more string tokens with given values in
@@ -344,9 +345,8 @@ public class Replace extends MatchingTask
                 // line separators in values and tokens are "\n"
                 // in order to compare with the file contents, replace them
                 // as needed
-                String linesep = System.getProperty( "line.separator" );
-                String val = stringReplace( value.getText(), "\n", linesep );
-                String tok = stringReplace( token.getText(), "\n", linesep );
+                final String val = stringReplace( value.getText(), "\n", StringUtil.LINE_SEPARATOR );
+                final String tok = stringReplace( token.getText(), "\n", StringUtil.LINE_SEPARATOR );
 
                 // for each found token, replace with value
                 getLogger().debug( "Replacing in " + src.getPath() + ": " + token.getText() + " --> " + value.getText() );

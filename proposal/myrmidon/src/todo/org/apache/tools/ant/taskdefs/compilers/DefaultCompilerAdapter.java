@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
@@ -34,7 +35,6 @@ public abstract class DefaultCompilerAdapter
     extends AbstractLogEnabled
     implements CompilerAdapter
 {
-    protected static String LINE_SEP = System.getProperty( "line.separator" );
     protected boolean m_debug;
     protected boolean m_optimize;
     protected boolean m_deprecation;
@@ -429,13 +429,13 @@ public abstract class DefaultCompilerAdapter
         }
         niceSourceList.append( " to be compiled:" );
 
-        niceSourceList.append( LINE_SEP );
+        niceSourceList.append( StringUtil.LINE_SEPARATOR );
 
         for( int i = 0; i < m_compileList.length; i++ )
         {
             String arg = m_compileList[ i ].getAbsolutePath();
             cmd.createArgument().setValue( arg );
-            niceSourceList.append( "    " + arg + LINE_SEP );
+            niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 
         getLogger().debug( niceSourceList.toString() );

@@ -172,7 +172,6 @@ public class Available
 
         if( eval() )
         {
-            String lSep = System.getProperty( "line.separator" );
             if( null == getProject().getProperty( m_property ) )
             {
                 setProperty( m_property, m_value );

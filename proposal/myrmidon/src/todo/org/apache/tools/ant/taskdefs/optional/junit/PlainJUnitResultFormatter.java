@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -142,17 +143,13 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
 
     /**
      * The whole testsuite ended.
-     *
-     * @param suite Description of Parameter
-     * @exception TaskException Description of Exception
      */
     public void endTestSuite( JUnitTest suite )
         throws TaskException
     {
-        String newLine = System.getProperty( "line.separator" );
         StringBuffer sb = new StringBuffer( "Testsuite: " );
         sb.append( suite.getName() );
-        sb.append( newLine );
+        sb.append( StringUtil.LINE_SEPARATOR );
         sb.append( "Tests run: " );
         sb.append( suite.runCount() );
         sb.append( ", Failures: " );
@@ -162,28 +159,28 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
         sb.append( ", Time elapsed: " );
         sb.append( nf.format( suite.getRunTime() / 1000.0 ) );
         sb.append( " sec" );
-        sb.append( newLine );
+        sb.append( StringUtil.LINE_SEPARATOR );
 
         // append the err and output streams to the log
         if( systemOutput != null && systemOutput.length() > 0 )
         {
             sb.append( "------------- Standard Output ---------------" )
-                .append( newLine )
+                .append( StringUtil.LINE_SEPARATOR )
                 .append( systemOutput )
                 .append( "------------- ---------------- ---------------" )
-                .append( newLine );
+                .append( StringUtil.LINE_SEPARATOR );
         }
 
         if( systemError != null && systemError.length() > 0 )
         {
             sb.append( "------------- Standard Error -----------------" )
-                .append( newLine )
+                .append( StringUtil.LINE_SEPARATOR )
                 .append( systemError )
                 .append( "------------- ---------------- ---------------" )
-                .append( newLine );
+                .append( StringUtil.LINE_SEPARATOR );
         }
 
-        sb.append( newLine );
+        sb.append( StringUtil.LINE_SEPARATOR );
 
         if( out != null )
         {

@@ -18,6 +18,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import netrexx.lang.Rexx;
 import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -675,14 +676,13 @@ public class NetRexxC extends MatchingTask
         }
         getLogger().debug( compileOptions.toString() );
 
-        String eol = System.getProperty( "line.separator" );
-        StringBuffer niceSourceList = new StringBuffer( "Files to be compiled:" + eol );
+        StringBuffer niceSourceList = new StringBuffer( "Files to be compiled:" + StringUtil.LINE_SEPARATOR );
 
         for( int i = 0; i < compileList.size(); i++ )
         {
             niceSourceList.append( "    " );
             niceSourceList.append( compileList.get( i ).toString() );
-            niceSourceList.append( eol );
+            niceSourceList.append( StringUtil.LINE_SEPARATOR );
         }
 
         getLogger().debug( niceSourceList.toString() );

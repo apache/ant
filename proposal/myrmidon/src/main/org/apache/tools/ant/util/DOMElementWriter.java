@@ -9,6 +9,7 @@ package org.apache.tools.ant.util;
 
 import java.io.IOException;
 import java.io.Writer;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -29,8 +30,6 @@ import org.w3c.dom.Text;
  */
 public class DOMElementWriter
 {
-
-    private static String lSep = System.getProperty( "line.separator" );
     private StringBuffer sb = new StringBuffer();
 
     /**
@@ -187,7 +186,7 @@ public class DOMElementWriter
                 case Node.ELEMENT_NODE:
                     if( !hasChildren )
                     {
-                        out.write( lSep );
+                        out.write( StringUtil.LINE_SEPARATOR );
                         hasChildren = true;
                     }
                     write( (Element)child, out, indent + 1, indentWith );
@@ -234,7 +233,7 @@ public class DOMElementWriter
         out.write( "</" );
         out.write( element.getTagName() );
         out.write( ">" );
-        out.write( lSep );
+        out.write( StringUtil.LINE_SEPARATOR );
         out.flush();
     }
 }

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * CVSLogin Adds an new entry to a CVS password file
@@ -25,11 +26,6 @@ import org.apache.myrmidon.api.TaskException;
 public class CVSPass
     extends AbstractTask
 {
-    /**
-     * End of line character
-     */
-    private static final String EOL = System.getProperty( "line.separator" );
-
     /**
      * CVS Root
      */
@@ -141,7 +137,7 @@ public class CVSPass
                 {
                     if( !line.startsWith( m_cvsRoot ) )
                     {
-                        sb.append( line + EOL );
+                        sb.append( line + StringUtil.LINE_SEPARATOR );
                     }
                 }
 

@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.types.Commandline;
 
@@ -23,23 +24,16 @@ public abstract class DefaultCompilerAdapter
     extends AbstractLogEnabled
     implements CompilerAdapter
 {
-    /*
-     * ------------------------------------------------------------
-     */
-    private static String lSep = System.getProperty( "line.separator" );
-    /*
-     * ------------------------------------------------------------
-     */
-    protected JspC attributes;
+    private JspC m_attributes;
 
-    public void setJspc( JspC attributes )
+    public void setJspc( final JspC attributes )
     {
-        this.attributes = attributes;
+        this.m_attributes = attributes;
     }
 
     public JspC getJspc()
     {
-        return attributes;
+        return m_attributes;
     }
 
     /*
@@ -66,14 +60,14 @@ public abstract class DefaultCompilerAdapter
         }
         niceSourceList.append( " to be compiled:" );
 
-        niceSourceList.append( lSep );
+        niceSourceList.append( StringUtil.LINE_SEPARATOR );
 
         Iterator enum = compileList.iterator();
         while( enum.hasNext() )
         {
             String arg = (String)enum.next();
             cmd.createArgument().setValue( arg );
-            niceSourceList.append( "    " + arg + lSep );
+            niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 
         getLogger().debug( niceSourceList.toString() );

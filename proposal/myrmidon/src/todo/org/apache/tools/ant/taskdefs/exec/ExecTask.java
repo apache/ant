@@ -23,6 +23,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -33,10 +34,9 @@ import org.apache.tools.ant.types.EnvironmentVariable;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
  */
-public class ExecTask extends Task
+public class ExecTask
+    extends Task
 {
-    private static String LINE_SEP = System.getProperty( "line.separator" );
-
     private boolean m_newEnvironment;
     private Integer m_timeout;
     private EnvironmentData m_env = new EnvironmentData();
@@ -241,7 +241,7 @@ public class ExecTask extends Task
         {
             if( val.length() != 0 )
             {
-                val.append( LINE_SEP );
+                val.append( StringUtil.LINE_SEPARATOR );
             }
             val.append( line );
         }

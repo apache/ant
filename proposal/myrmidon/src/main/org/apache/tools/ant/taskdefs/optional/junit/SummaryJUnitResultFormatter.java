@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * Prints short summary output of the test to Ant's logging system.
@@ -119,7 +120,6 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
     public void endTestSuite( JUnitTest suite )
         throws TaskException
     {
-        String newLine = System.getProperty( "line.separator" );
         StringBuffer sb = new StringBuffer( "Tests run: " );
         sb.append( suite.runCount() );
         sb.append( ", Failures: " );
@@ -129,20 +129,20 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
         sb.append( ", Time elapsed: " );
         sb.append( nf.format( suite.getRunTime() / 1000.0 ) );
         sb.append( " sec" );
-        sb.append( newLine );
+        sb.append( StringUtil.LINE_SEPARATOR );
 
         if( withOutAndErr )
         {
             if( systemOutput != null && systemOutput.length() > 0 )
             {
-                sb.append( "Output:" ).append( newLine ).append( systemOutput )
-                    .append( newLine );
+                sb.append( "Output:" ).append( StringUtil.LINE_SEPARATOR ).append( systemOutput )
+                    .append( StringUtil.LINE_SEPARATOR );
             }
 
             if( systemError != null && systemError.length() > 0 )
             {
-                sb.append( "Error: " ).append( newLine ).append( systemError )
-                    .append( newLine );
+                sb.append( "Error: " ).append( StringUtil.LINE_SEPARATOR ).append( systemError )
+                    .append( StringUtil.LINE_SEPARATOR );
             }
         }
 
