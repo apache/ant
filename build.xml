@@ -74,6 +74,7 @@
     <available property="antlr.present" classname="antlr.Tool" />
     <available property="vaj.present" classname="com.ibm.ivj.util.base.Workspace" />
     <available property="stylebook.present" classname="org.apache.stylebook.Engine" />
+    <available property="jakarta.regexp.present" classname="org.apache.regexp.RE" />
   </target>
 
   <!-- =================================================================== -->
@@ -113,6 +114,7 @@
       <exclude name="**/AntStarTeam*.java" unless="starteam.present" />
       <exclude name="**/ANTLR.java" unless="antlr.present" />
       <exclude name="**/ide/VAJ*.java" unless="vaj.present" />
+      <exclude name="**/JakartaRegexpMatcher.java" unless="jakarta.regexp.present" />
     </javac>
  
     <copy todir="${build.classes}">
@@ -335,6 +337,7 @@
         <path refid="classpath" />
       </classpath>
       <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" unless="antlr.present" />
+      <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexpMatcherTest.java" unless="jakarta.regexp.present" />
     </javac>
    </target>
 
@@ -358,6 +361,7 @@
           <include name="**/*Test*" />
           <!-- abstract class, not a testcase -->
           <exclude name="org/apache/tools/ant/taskdefs/TaskdefsTest.java" />
+          <exclude name="org/apache/tools/ant/util/regexp/RegexpMatcherTest.java" />
 
           <!-- these depend on order -->
           <exclude name="org/apache/tools/ant/taskdefs/GUnzipTest.java" />
@@ -365,6 +369,8 @@
 
           <!-- only run this test if ANTLR is installed -->
           <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" unless="antlr.present" />
+
+          <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexpMatcherTest.java" unless="jakarta.regexp.present" />
         </fileset>
       </batchtest>
 
@@ -376,6 +382,7 @@
     <delete dir="src/etc/testcases/taskdefs/optional/antlr/antlr.tmp" />
     <delete dir="src/etc/testcases/taskdefs/taskdefs.tmp" />
     <delete dir="src/etc/testcases/taskdefs.tmp" />
+    <delete file="src/etc/testcases/taskdefs/tmp.jar" />
   </target>
 
   <target name="run.single.test" if="testcase" depends="compiletests">

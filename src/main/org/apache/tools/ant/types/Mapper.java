@@ -141,6 +141,8 @@ public class Mapper extends DataType {
             m.setFrom(from);
             m.setTo(to);
             return m;
+        } catch (BuildException be) {
+            throw be;
         } catch (Throwable t) {
             throw new BuildException(t);
         }
@@ -182,10 +184,12 @@ public class Mapper extends DataType {
                                 "org.apache.tools.ant.util.GlobPatternMapper");
             implementations.put("merge", 
                                 "org.apache.tools.ant.util.MergingMapper");
+            implementations.put("regexp", 
+                                "org.apache.tools.ant.util.RegexpPatternMapper");
         }
 
         public String[] getValues() {
-            return new String[] {"identity", "flatten", "glob", "merge"};
+            return new String[] {"identity", "flatten", "glob", "merge", "regexp"};
         }
 
         public String getImplementation() {
