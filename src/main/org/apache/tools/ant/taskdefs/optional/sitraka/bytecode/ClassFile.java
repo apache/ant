@@ -86,9 +86,9 @@ public final class ClassFile {
         DataInputStream dis = new DataInputStream(is);
         ConstantPool constantPool = new ConstantPool();
 
-        int magic = dis.readInt(); // 0xCAFEBABE
-        int minor = dis.readShort();
-        int major = dis.readShort();
+        /* int magic = */ dis.readInt(); // 0xCAFEBABE
+        /* int minor = */ dis.readShort();
+        /* int major = */ dis.readShort();
 
         constantPool.read(dis);
         constantPool.resolve();
@@ -97,7 +97,7 @@ public final class ClassFile {
         access_flags = dis.readShort();
         int this_class = dis.readShort();
         fullname = ((ClassCPInfo) constantPool.getEntry(this_class)).getClassName().replace('/', '.');
-        int super_class = dis.readShort();
+        /* int super_class = */ dis.readShort();
 
         // skip interfaces...
         int count = dis.readShort();

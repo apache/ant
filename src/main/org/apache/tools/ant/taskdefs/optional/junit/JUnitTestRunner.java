@@ -469,7 +469,6 @@ public class JUnitTestRunner implements TestListener {
      * </table> 
      */
     public static void main(String[] args) throws IOException {
-        boolean exitAtEnd = true;
         boolean haltError = false;
         boolean haltFail = false;
         boolean stackfilter = true;

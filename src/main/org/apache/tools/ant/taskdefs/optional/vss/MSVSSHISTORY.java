@@ -301,16 +301,6 @@ public class MSVSSHISTORY extends MSVSS {
         }
     }
 
-    /**
-     * Builds the User command.
-     * @param cmd the commandline the command is to be added to
-     */
-    private void getUserCommand(Commandline cmd) {
-        if (m_User != null) {
-            cmd.createArgument().setValue(FLAG_USER + m_User);
-        }
-    }
-
      /**
      * Calculates the start date for version comparison.
      * <p>
@@ -341,17 +331,6 @@ public class MSVSSHISTORY extends MSVSS {
      */
     public void setUser(String user) {
         m_User = user;
-    }
-
-    /**
-     * @return the 'recursive' command if the attribute was 'true', otherwise an empty string
-     */
-    private void getRecursiveCommand(Commandline cmd) {
-        if (!m_Recursive) {
-            return;
-        } else {
-            cmd.createArgument().setValue(FLAG_RECURSION);
-        }
     }
 
     /**

@@ -82,25 +82,6 @@ public class JarFileIterator implements ClassFileIterator {
     }
 
     /**
-     * Read a stream into an array of bytes
-     *
-     * @param stream the stream from which the bytes are read
-     * @return the stream's content as a byte array
-     * @exception IOException if the stream cannot be read
-     */
-    private byte[] getEntryBytes(InputStream stream) throws IOException {
-        byte[] buffer = new byte[8192];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
-        int n;
-
-        while ((n = stream.read(buffer, 0, buffer.length)) != -1) {
-            baos.write(buffer, 0, n);
-        }
-
-        return baos.toByteArray();
-    }
-
-    /**
      * Get the next ClassFile object from the jar
      *
      * @return a ClassFile object describing the class from the jar

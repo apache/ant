@@ -134,31 +134,31 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class AnsiColorLogger extends DefaultLogger {
-    private static final int ATTR_NORMAL = 0;
-    private static final int ATTR_BRIGHT = 1;
+    // private static final int ATTR_NORMAL = 0;
+    // private static final int ATTR_BRIGHT = 1;
     private static final int ATTR_DIM = 2;
-    private static final int ATTR_UNDERLINE = 3;
-    private static final int ATTR_BLINK = 5;
-    private static final int ATTR_REVERSE = 7;
-    private static final int ATTR_HIDDEN = 8;
+    // private static final int ATTR_UNDERLINE = 3;
+    // private static final int ATTR_BLINK = 5;
+    // private static final int ATTR_REVERSE = 7;
+    // private static final int ATTR_HIDDEN = 8;
 
-    private static final int FG_BLACK = 30;
+    // private static final int FG_BLACK = 30;
     private static final int FG_RED = 31;
     private static final int FG_GREEN = 32;
-    private static final int FG_YELLOW = 33;
+    // private static final int FG_YELLOW = 33;
     private static final int FG_BLUE = 34;
     private static final int FG_MAGENTA = 35;
     private static final int FG_CYAN = 36;
-    private static final int FG_WHITE = 37;
+    // private static final int FG_WHITE = 37;
 
-    private static final int BG_BLACK = 40;
-    private static final int BG_RED = 41;
-    private static final int BG_GREEN = 42;
-    private static final int BG_YELLOW = 44;
-    private static final int BG_BLUE = 44;
-    private static final int BG_MAGENTA = 45;
-    private static final int BG_CYAN = 46;
-    private static final int BG_WHITE = 47;
+    // private static final int BG_BLACK = 40;
+    // private static final int BG_RED = 41;
+    // private static final int BG_GREEN = 42;
+    // private static final int BG_YELLOW = 44;
+    // private static final int BG_BLUE = 44;
+    // private static final int BG_MAGENTA = 45;
+    // private static final int BG_CYAN = 46;
+    // private static final int BG_WHITE = 47;
 
     private static final String PREFIX = "\u001b[";
     private static final String SUFFIX = "m";

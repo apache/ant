@@ -1644,7 +1644,7 @@ public class Javadoc extends Task {
                         // is the href a valid URL
                         try {
                             URL base = new URL("file://.");
-                            URL testHref = new URL(base, la.getHref());
+                            new URL(base, la.getHref());
                         } catch (MalformedURLException mue) {
                             // ok - just skip
                             log("Link href \"" + la.getHref()

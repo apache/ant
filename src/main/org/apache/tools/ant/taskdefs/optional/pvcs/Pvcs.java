@@ -122,10 +122,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     private static final String PCLI_EXE = "pcli";
 
-    /**
+    /*
      * Constant for the PCLI listversionedfiles recursive i a format "get" understands
      */
-    private static final String PCLI_LVF_ARGS = "lvf -z -aw";
+    // private static final String PCLI_LVF_ARGS = "lvf -z -aw";
 
     /**
      * Constant for the thing to execute
@@ -164,7 +164,6 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * @exception org.apache.tools.ant.BuildException Something is stopping the build...
      */
     public void execute() throws org.apache.tools.ant.BuildException {
-        Project aProj = getProject();
         int result = 0;
 
         if (repository == null || repository.trim().equals("")) {

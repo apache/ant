@@ -320,8 +320,6 @@ public class jlink extends Object {
      */
     private void addFile(ZipOutputStream output, File file, String prefix, boolean compress) throws IOException {
         //Make sure file exists
-        long checksum = 0;
-
         if (!file.exists()) {
             return;
         }
@@ -417,7 +415,7 @@ public class jlink extends Object {
     private long calcChecksum(File f) throws IOException {
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(f));
 
-        return calcChecksum(in, f.length());
+        return calcChecksum(in);
     }
 
 
@@ -425,7 +423,7 @@ public class jlink extends Object {
      * Necessary in the case where you add a entry that
      * is not compressed.
      */
-    private long calcChecksum(InputStream in, long size) throws IOException {
+    private long calcChecksum(InputStream in) throws IOException {
         CRC32 crc = new CRC32();
         int len = buffer.length;
         int count = -1;

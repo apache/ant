@@ -113,7 +113,6 @@ import org.apache.tools.ant.types.Commandline;
 public class MSVSSCREATE extends MSVSS {
 
     private String m_AutoResponse = null;
-    private String m_Name = null;
     private String m_Comment = "-";
     private boolean m_Quiet = false;
   

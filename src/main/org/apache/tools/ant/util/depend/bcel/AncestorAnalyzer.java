@@ -72,7 +72,7 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
     public AncestorAnalyzer() {
         // force BCEL classes to load now
         try {
-            ClassParser parser = new ClassParser("force");
+            new ClassParser("force");
         } catch (IOException e) {
             // ignore
         }

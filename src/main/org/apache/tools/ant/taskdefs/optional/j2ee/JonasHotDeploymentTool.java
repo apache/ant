@@ -236,8 +236,6 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
             }
         }
 
-        String anAction = getTask().getAction();
-
         if (getServer() != null) {
             java.createArg().setLine("-n " + getServer());
         }

@@ -69,8 +69,6 @@ import org.apache.tools.ant.Task;
  * @author Conor MacNeill
  */
 public class Log4jListener implements BuildListener {
-    /** Log4j Configuration file */
-    private static final String LOG4J_CONFIG_PROPERTY = "log4j.configuration";
 
     /** Indicates if the listener was initialized. */
     private boolean initialized = false;

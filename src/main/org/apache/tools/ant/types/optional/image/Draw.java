@@ -120,7 +120,7 @@ public class Draw extends TransformOperation
                 BufferedImage child = op.getAsBufferedImage();
                 log("\tDrawing to x=" + xloc + " y=" + yloc);
                 graphics.drawImage(child, null, xloc, yloc);
-                PlanarImage test = PlanarImage.wrapRenderedImage(bi);
+                PlanarImage.wrapRenderedImage(bi);
             }
         }
         image = PlanarImage.wrapRenderedImage(bi);

@@ -72,7 +72,7 @@ public class FullAnalyzer extends AbstractAnalyzer {
     public FullAnalyzer() {
         // force BCEL classes to load now
         try {
-            ClassParser parser = new ClassParser("force");
+            new ClassParser("force");
         } catch (IOException e) {
             // ignore
         }

@@ -142,12 +142,12 @@ public class ClassNameReader extends Object {
         if (cookie != 0xCAFEBABE) {
             return null;
         }
-        int version = data.readInt();
+        /* int version = */ data.readInt();
         // read the constant pool.
         ConstantPool constants = new ConstantPool(data);
         Object[] values = constants.values;
         // read access flags and class index.
-        int accessFlags = data.readUnsignedShort();
+        /* int accessFlags = */ data.readUnsignedShort();
         int classIndex = data.readUnsignedShort();
         Integer stringIndex = (Integer) values[classIndex];
         String className = (String) values[stringIndex.intValue()];

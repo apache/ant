@@ -207,8 +207,6 @@ public class JlinkTask extends MatchingTask {
 
     private  boolean compress = false;
 
-    private  String ps = System.getProperty("path.separator");
-
 }
 
 

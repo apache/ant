@@ -134,7 +134,6 @@ public class CCMCheck extends Continuus {
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
-        Project aProj = getProject();
         int result = 0;
 
         // build the command line from what we got the format is

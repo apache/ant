@@ -149,14 +149,6 @@ public class PropertyFile extends Task {
 
     /* ========================================================================
     *
-    * Static variables.
-    */
-
-    private static final String NEWLINE = System.getProperty("line.separator");
-
-
-    /* ========================================================================
-    *
     * Instance variables.
     */
 

@@ -360,7 +360,6 @@ public class FileUtils {
                         in = new BufferedReader(rdr);
                     }
 
-                    int length;
                     String newline = null;
                     String line = in.readLine();
                     while (line != null) {

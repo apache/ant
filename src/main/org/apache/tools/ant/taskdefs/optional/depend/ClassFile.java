@@ -100,8 +100,8 @@ public class ClassFile {
         }
 
         // right we have a good looking class file.
-        int minorVersion = classStream.readUnsignedShort();
-        int majorVersion = classStream.readUnsignedShort();
+        /* int minorVersion = */ classStream.readUnsignedShort();
+        /* int majorVersion = */ classStream.readUnsignedShort();
 
         // read the constant pool in and resolve it
         constantPool = new ConstantPool();
@@ -109,9 +109,9 @@ public class ClassFile {
         constantPool.read(classStream);
         constantPool.resolve();
 
-        int accessFlags = classStream.readUnsignedShort();
+        /* int accessFlags = */ classStream.readUnsignedShort();
         int thisClassIndex = classStream.readUnsignedShort();
-        int superClassIndex = classStream.readUnsignedShort();
+        /* int superClassIndex = */ classStream.readUnsignedShort();
         ClassCPInfo classInfo 
             = (ClassCPInfo) constantPool.getEntry(thisClassIndex);
         className  = classInfo.getClassName();

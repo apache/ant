@@ -165,7 +165,6 @@ public class WLJspc extends MatchingTask {
         
         File jspFile = null;
         String parents = "";
-        String arg = "";
         int j = 0;
         //XXX  this array stuff is a remnant of prev trials.. gotta remove. 
         args[j++] = "-d";
