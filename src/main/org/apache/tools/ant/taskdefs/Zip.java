@@ -388,7 +388,9 @@ public class Zip extends MatchingTask {
 
                 // Add the implicit fileset to the archive.
                 if (baseDir != null) {
-                    addFiles(getDirectoryScanner(baseDir), zOut, "", "");
+                    addFiles(getDirectoryScanner(baseDir), zOut, "", "",
+                             ZipFileSet.DEFAULT_DIR_MODE,
+                             ZipFileSet.DEFAULT_FILE_MODE);
                 }
                 // Add the explicit filesets to the archive.
                 addFiles(filesets, zOut);
@@ -473,9 +475,27 @@ public class Zip extends MatchingTask {
      * prependig the given prefix to each filename.
      *
      * <p>Ensure parent directories have been added as well.
+     *
+     * @deprecated use six-arg version instead.
      */
     protected void addFiles(FileScanner scanner, ZipOutputStream zOut,
                             String prefix, String fullpath)
+        throws IOException {
+        addFiles(scanner, zOut, prefix, fullpath, ZipFileSet.DEFAULT_DIR_MODE,
+                 ZipFileSet.DEFAULT_FILE_MODE);
+    }
+
+    /**
+     * Add all files of the given FileScanner to the ZipOutputStream
+     * prependig the given prefix to each filename.
+     *
+     * <p>Ensure parent directories have been added as well.
+     *
+     * @since Ant 1.6
+     */
+    protected void addFiles(FileScanner scanner, ZipOutputStream zOut,
+                            String prefix, String fullpath, int dirMode,
+                            int fileMode)
         throws IOException {
 
         if (prefix.length() > 0 && fullpath.length() > 0) {
@@ -500,7 +520,7 @@ public class Zip extends MatchingTask {
             if (!name.endsWith("/")) {
                 name += "/";
             }
-            addParentDirs(thisBaseDir, name, zOut, prefix);
+            addParentDirs(thisBaseDir, name, zOut, prefix, dirMode);
         }
 
         // files that matched include patterns
@@ -514,13 +534,13 @@ public class Zip extends MatchingTask {
             File f = new File(thisBaseDir, files[i]);
             if (fullpath.length() > 0) {
                 // Add this file at the specified location.
-                addParentDirs(null, fullpath, zOut, "");
-                zipFile(f, zOut, fullpath);
+                addParentDirs(null, fullpath, zOut, "", dirMode);
+                zipFile(f, zOut, fullpath, fileMode);
             } else {
                 // Add this file with the specified prefix.
                 String name = files[i].replace(File.separatorChar, '/');
-                addParentDirs(thisBaseDir, name, zOut, prefix);
-                zipFile(f, zOut, prefix + name);
+                addParentDirs(thisBaseDir, name, zOut, prefix, dirMode);
+                zipFile(f, zOut, prefix + name, fileMode);
             }
         }
     }
@@ -550,13 +570,16 @@ public class Zip extends MatchingTask {
                 String vPath = entry.getName();
                 if (zipScanner.match(vPath)) {
                     if (fullpath.length() > 0) {
-                        addParentDirs(null, fullpath, zOut, "");
-                        zipFile(in, zOut, fullpath, entry.getTime(), zipSrc);
+                        addParentDirs(null, fullpath, zOut, "", 
+                                      fs.getDirMode());
+                        zipFile(in, zOut, fullpath, entry.getTime(), zipSrc,
+                                fs.getFileMode());
                     } else {
-                        addParentDirs(null, vPath, zOut, prefix);
+                        addParentDirs(null, vPath, zOut, prefix, 
+                                      fs.getDirMode());
                         if (!entry.isDirectory()) {
                             zipFile(in, zOut, prefix + vPath, entry.getTime(),
-                                    zipSrc);
+                                    zipSrc, fs.getFileMode());
                         }
                     }
                 }
@@ -701,7 +724,19 @@ public class Zip extends MatchingTask {
         return result;
     }
 
+    /**
+     * @deprecated use four-arg version instead.
+     */
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
+        throws IOException {
+        zipDir(dir, zOut, vPath, ZipFileSet.DEFAULT_DIR_MODE);
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
+                          int mode)
         throws IOException {
         if (addedDirs.get(vPath) != null) {
             // don't add directories we've already added.
@@ -723,16 +758,27 @@ public class Zip extends MatchingTask {
             ze.setMethod (ZipEntry.STORED);
             // This is faintly ridiculous:
             ze.setCrc (EMPTY_CRC);
-
-            // this is 040775 | MS-DOS directory flag in reverse byte order
-            ze.setExternalAttributes(0x41FD0010L);
+            ze.setUnixMode(mode);
 
             zOut.putNextEntry (ze);
         }
     }
 
+    /**
+     * @deprecated use six-arg version instead.
+     */
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
                            long lastModified, File file)
+        throws IOException {
+        zipFile(in, zOut, vPath, lastModified, file, 
+                ZipFileSet.DEFAULT_FILE_MODE);
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
+                           long lastModified, File file, int mode)
         throws IOException {
         if (entries.contains(vPath)) {
 
@@ -759,14 +805,15 @@ public class Zip extends MatchingTask {
             ze.setTime(lastModified);
 
             /*
-            * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
-            * size and the CRC sum before you start writing the data when using
-            * STORED mode.
+            * ZipOutputStream.putNextEntry expects the ZipEntry to
+            * know its size and the CRC sum before you start writing
+            * the data when using STORED mode.
             *
             * This forces us to process the data twice.
             *
-            * I couldn't find any documentation on this, just found out by try
-            * and error.
+            * In DEFLATED mode, it will take advantage of a Zip
+            * Version 2 feature where size can be stored after the
+            * data (as the data itself signals end of data).
             */
             if (!doCompress) {
                 long size = 0;
@@ -800,6 +847,7 @@ public class Zip extends MatchingTask {
                 ze.setCrc(cal.getValue());
             }
 
+            ze.setUnixMode(mode);
             zOut.putNextEntry(ze);
 
             byte[] buffer = new byte[8 * 1024];
@@ -814,7 +862,19 @@ public class Zip extends MatchingTask {
         addedFiles.addElement(vPath);
     }
 
+    /**
+     * @deprecated use six-arg version instead.
+     */
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+        throws IOException {
+        zipFile(file, zOut, vPath, ZipFileSet.DEFAULT_FILE_MODE);
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+                           int mode)
         throws IOException {
         if (file.equals(zipFile)) {
             throw new BuildException("A zip file cannot include itself",
@@ -823,17 +883,30 @@ public class Zip extends MatchingTask {
 
         FileInputStream fIn = new FileInputStream(file);
         try {
-            zipFile(fIn, zOut, vPath, file.lastModified(), null);
+            zipFile(fIn, zOut, vPath, file.lastModified(), null, mode);
         } finally {
             fIn.close();
         }
     }
 
     /**
-     * Ensure all parent dirs of a given entry have been added.
+     * @deprecated use five-arg version instead.
      */
     protected void addParentDirs(File baseDir, String entry,
                                  ZipOutputStream zOut, String prefix)
+        throws IOException {
+        addParentDirs(baseDir, entry, zOut, prefix, 
+                      ZipFileSet.DEFAULT_DIR_MODE);
+    }
+
+    /**
+     * Ensure all parent dirs of a given entry have been added.
+     *
+     * @since Ant 1.6
+     */
+    protected void addParentDirs(File baseDir, String entry,
+                                 ZipOutputStream zOut, String prefix,
+                                 int dirMode)
         throws IOException {
         if (!doFilesonly) {
             Stack directories = new Stack();
@@ -855,7 +928,7 @@ public class Zip extends MatchingTask {
                 } else {
                     f = new File(dir);
                 }
-                zipDir(f, zOut, prefix + dir);
+                zipDir(f, zOut, prefix + dir, dirMode);
             }
         }
     }
@@ -874,10 +947,14 @@ public class Zip extends MatchingTask {
 
             String prefix = "";
             String fullpath = "";
+            int fileMode = ZipFileSet.DEFAULT_FILE_MODE;
+            int dirMode = ZipFileSet.DEFAULT_DIR_MODE;
             if (fs instanceof ZipFileSet) {
                 ZipFileSet zfs = (ZipFileSet) fs;
                 prefix = zfs.getPrefix();
                 fullpath = zfs.getFullpath();
+                fileMode = zfs.getFileMode();
+                dirMode = zfs.getDirMode();
             }
 
             if (prefix.length() > 0
@@ -889,10 +966,10 @@ public class Zip extends MatchingTask {
             // Need to manually add either fullpath's parent directory, or
             // the prefix directory, to the archive.
             if (prefix.length() > 0) {
-                addParentDirs(null, prefix, zOut, "");
-                zipDir(null, zOut, prefix);
+                addParentDirs(null, prefix, zOut, "", dirMode);
+                zipDir(null, zOut, prefix, dirMode);
             } else if (fullpath.length() > 0) {
-                addParentDirs(null, fullpath, zOut, "");
+                addParentDirs(null, fullpath, zOut, "", dirMode);
             }
 
             if (fs instanceof ZipFileSet
@@ -900,7 +977,7 @@ public class Zip extends MatchingTask {
                 addZipEntries((ZipFileSet) fs, ds, zOut, prefix, fullpath);
             } else {
                 // Add the fileset.
-                addFiles(ds, zOut, prefix, fullpath);
+                addFiles(ds, zOut, prefix, fullpath, dirMode, fileMode);
             }
         }
     }

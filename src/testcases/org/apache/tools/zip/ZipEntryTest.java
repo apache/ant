@@ -131,12 +131,25 @@ public class ZipEntryTest extends TestCase {
                      (ze.getExternalAttributes() >> 16) & 0xFFFF);
         assertEquals(0, ze.getExternalAttributes()  & 0xFFFF);
 
+        ze.setUnixMode(0444);
+        assertEquals(3, ze.getPlatform());
+        assertEquals(0444, 
+                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(1, ze.getExternalAttributes()  & 0xFFFF);
+
         ze = new ZipEntry("foo/");
+        assertEquals(0, ze.getPlatform());
+        ze.setUnixMode(0777);
+        assertEquals(3, ze.getPlatform());
+        assertEquals(0777, 
+                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(0x10, ze.getExternalAttributes()  & 0xFFFF);
+
         ze.setUnixMode(0577);
         assertEquals(3, ze.getPlatform());
         assertEquals(0577, 
                      (ze.getExternalAttributes() >> 16) & 0xFFFF);
-        assertEquals(0x10, ze.getExternalAttributes()  & 0xFFFF);
+        assertEquals(0x11, ze.getExternalAttributes()  & 0xFFFF);
     }
 
 }

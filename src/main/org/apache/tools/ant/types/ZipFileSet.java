@@ -80,12 +80,28 @@ import org.apache.tools.zip.UnixStat;
  */
 public class ZipFileSet extends FileSet {
 
+    /**
+     * Default value for the dirmode attribute.
+     *
+     * @since Ant 1.6
+     */
+    public static final int DEFAULT_DIR_MODE =
+        UnixStat.DIR_FLAG  | UnixStat.DEFAULT_DIR_PERM;
+
+    /**
+     * Default value for the filemode attribute.
+     *
+     * @since Ant 1.6
+     */
+    public static final int DEFAULT_FILE_MODE =
+        UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
+
     private File srcFile          = null;
     private String prefix         = "";
     private String fullpath       = "";
     private boolean hasDir        = false;
-    private int fileMode =  UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
-    private int dirMode =   UnixStat.DIR_FLAG  | UnixStat.DEFAULT_DIR_PERM;
+    private int fileMode          = DEFAULT_FILE_MODE;
+    private int dirMode           = DEFAULT_DIR_MODE;
 
     public ZipFileSet() {
         super();

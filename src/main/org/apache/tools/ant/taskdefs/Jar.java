@@ -314,7 +314,7 @@ public class Jar extends Zip {
                 Project.MSG_WARN);
         }
 
-        zipDir(null, zOut, "META-INF/");
+        zipDir(null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE);
         // time to write the manifest
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(baos);
@@ -324,7 +324,8 @@ public class Jar extends Zip {
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
         super.zipFile(bais, zOut, "META-INF/MANIFEST.MF",
-                      System.currentTimeMillis(), null);
+                      System.currentTimeMillis(), null, 
+                      ZipFileSet.DEFAULT_FILE_MODE);
         super.initZipOutputStream(zOut);
     }
 
@@ -387,20 +388,22 @@ public class Jar extends Zip {
         writer.flush();
         ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
-        super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(), null);
+        super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(), null,
+                      ZipFileSet.DEFAULT_FILE_MODE);
     }
 
     /**
      * Overriden from Zip class to deal with manifests
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+                           int mode)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
            if (! doubleFilePass || (doubleFilePass && skipWriting)) {
                filesetManifest(file, null);
            }
         } else {
-            super.zipFile(file, zOut, vPath);
+            super.zipFile(file, zOut, vPath, mode);
         }
     }
 
@@ -408,14 +411,14 @@ public class Jar extends Zip {
      * Overriden from Zip class to deal with manifests
      */
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
-                           long lastModified, File file)
+                           long lastModified, File file, int mode)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
            if (! doubleFilePass || (doubleFilePass && skipWriting)) {
                filesetManifest(file, is);
            }
         } else {
-            super.zipFile(is, zOut, vPath, lastModified, null);
+            super.zipFile(is, zOut, vPath, lastModified, null, mode);
         }
     }
 

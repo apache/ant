@@ -134,7 +134,8 @@ public class Ear extends Jar {
         super.initZipOutputStream(zOut);
     }
 
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+                           int mode)
         throws IOException {
         // If the file being added is META-INF/application.xml, we
         // warn if it's not the one specified in the "appxml"
@@ -150,11 +151,11 @@ public class Ear extends Jar {
                     + " be ignored (please use appxml attribute to "
                     + archiveType + " task)", Project.MSG_WARN);
             } else {
-                super.zipFile(file, zOut, vPath);
+                super.zipFile(file, zOut, vPath, mode);
                 descriptorAdded = true;
             }
         } else {
-            super.zipFile(file, zOut, vPath);
+            super.zipFile(file, zOut, vPath, mode);
         }
     }
 

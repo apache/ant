@@ -172,7 +172,8 @@ public class War extends Jar {
     /**
      * add another file to the stream
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath,
+                           int mode)
         throws IOException {
         // If the file being added is WEB-INF/web.xml, we warn if it's
         // not the one specified in the "webxml" attribute - or if
@@ -187,11 +188,11 @@ public class War extends Jar {
                     + "(please use webxml attribute to "
                     + archiveType + " task)", Project.MSG_WARN);
             } else {
-                super.zipFile(file, zOut, vPath);
+                super.zipFile(file, zOut, vPath, mode);
                 descriptorAdded = true;
             }
         } else {
-            super.zipFile(file, zOut, vPath);
+            super.zipFile(file, zOut, vPath, mode);
         }
     }
 

@@ -132,6 +132,9 @@ Other changes:
 * <tarfileset> has a new dirmode attribute to specify the permissions
   for directories.
 
+* <zip> can now store Unix permissions in a way that can be
+  reconstructed by Info-Zip's unzip command.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

@@ -198,6 +198,8 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      */
     public void setUnixMode(int mode) {
         setExternalAttributes((mode << 16)
+                              // MS-DOS read-only attribute
+                              | ((mode & 0200) == 0 ? 1 : 0)
                               // MS-DOS directory flag
                               | (isDirectory() ? 0x10 : 0));
         platform = PLATFORM_UNIX;
