@@ -57,6 +57,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
 import java.io.File;
+import java.util.StringTokenizer;
 
 /**
  *  This is a launcher for Ant.
@@ -117,6 +118,36 @@ public class Launcher {
             throw new IllegalStateException("Ant home is set incorrectly or "
                 + "ant could not be located");
         }
+        String libPath = "";
+        String[] newargs = null;
+        int argcount = -1;
+        for (argcount = 0; argcount < args.length -1; argcount++) {
+            if (args[argcount].equals("-lib")) {
+                libPath = args[argcount + 1];
+                break;
+            }
+        }
+        if (libPath.equals("")) {
+           newargs = new String[args.length];
+           System.arraycopy(args, 0, newargs, 0, args.length);
+        } else {
+            newargs = new String[args.length - 2];
+            // copy the beginning of the args array
+            if (argcount > 0 ) {
+                System.arraycopy(args, 0, newargs, 0 ,argcount);
+            }
+            // copy the end of the args array
+            if ((argcount + 2 < args.length) && argcount > 0) {
+                System.arraycopy(args, argcount + 2, newargs, argcount, args.length - (argcount + 2));
+            }
+        }
+        StringTokenizer myTokenizer = new StringTokenizer(libPath, System.getProperty("path.separator"));
+        URL[] classPathJars = new URL[myTokenizer.countTokens()];
+        int classPathJarCount = 0;
+        while (myTokenizer.hasMoreElements()) {
+            String token = myTokenizer.nextToken();
+            classPathJars[classPathJarCount++] = new File(token).toURL();
+        }
 
 
         // Now try and find JAVA_HOME
@@ -129,13 +160,14 @@ public class Launcher {
         URL[] userJars = Locator.getLocationURLs(userLibDir);
 
 
-        int numJars = userJars.length + systemJars.length;
+        int numJars = classPathJars.length + userJars.length + systemJars.length;
         if (toolsJar != null) {
             numJars++;
         }
         URL[] jars = new URL[numJars];
-        System.arraycopy(userJars, 0, jars, 0, userJars.length);
-        System.arraycopy(systemJars, 0, jars, userJars.length,
+        System.arraycopy(classPathJars, 0, jars, 0, classPathJars.length);
+        System.arraycopy(userJars, 0, jars, classPathJars.length, userJars.length);
+        System.arraycopy(systemJars, 0, jars, userJars.length + classPathJars.length,
             systemJars.length);
 
         if (toolsJar != null) {
@@ -159,7 +191,7 @@ public class Launcher {
         try {
             Class mainClass = loader.loadClass(MAIN_CLASS);
             AntMain main = (AntMain) mainClass.newInstance();
-            main.startAnt(args, null, null);
+            main.startAnt(newargs, null, null);
         } catch (Throwable t) {
             t.printStackTrace();
         }
