@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -100,8 +100,23 @@ public class DOMElementWriterTest extends TestCase {
         assertEquals("&quot;", w.encode("\""));
         assertEquals("&lt;", w.encode("<"));
         assertEquals("&amp;", w.encode("&"));
-        assertEquals("&#x17;", w.encode("\u0017"));
+        assertEquals("", w.encode("\u0017"));
         assertEquals("&#20;\"20;&", w.encodedata("&#20;\"20;&"));
-        assertEquals("&#x17;", w.encodedata("\u0017"));
+        assertEquals("", w.encodedata("\u0017"));
+    }
+
+    public void testIsLegalCharacter() {
+        assertTrue("0x00", !w.isLegalCharacter('\u0000'));
+        assertTrue("0x09", w.isLegalCharacter('\t'));
+        assertTrue("0x0A", w.isLegalCharacter('\n'));
+        assertTrue("0x0C", w.isLegalCharacter('\r'));
+        assertTrue("0x1F", !w.isLegalCharacter('\u001F'));
+        assertTrue("0x20", w.isLegalCharacter('\u0020'));
+        assertTrue("0xD7FF", w.isLegalCharacter('\uD7FF'));
+        assertTrue("0xD800", !w.isLegalCharacter('\uD800'));
+        assertTrue("0xDFFF", !w.isLegalCharacter('\uDFFF'));
+        assertTrue("0xE000", w.isLegalCharacter('\uE000'));
+        assertTrue("0xFFFD", w.isLegalCharacter('\uFFFD'));
+        assertTrue("0xFFFE", !w.isLegalCharacter('\uFFFE'));
     }
 }

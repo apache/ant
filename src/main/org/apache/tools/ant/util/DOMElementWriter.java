@@ -201,8 +201,8 @@ public class DOMElementWriter {
     }
 
     /**
-     * Escape &lt;, &gt; &amp; &apos;, &quot; and control characters
-     * &lt; 0x20 as their entities.
+     * Escape &lt;, &gt; &amp; &apos;, &quot; as their entities and
+     * drop characters that are illegal in XML documents.
      */
     public String encode(String value) {
         sb.setLength(0);
@@ -230,17 +230,8 @@ public class DOMElementWriter {
                     sb.append('&');
                 }
                 break;
-            case '\t':
-            case '\n':
-            case '\r':
-                sb.append(c);
-                break;
             default:
-                if (c < 0x20) {
-                    sb.append("&#x");
-                    sb.append(Integer.toHexString(c));
-                    sb.append(';');
-                } else {
+                if (isLegalCharacter(c)) {
                     sb.append(c);
                 }
                 break;
@@ -250,7 +241,7 @@ public class DOMElementWriter {
     }
 
     /**
-     * Escape control characters &lt; x20 as their entities.
+     * Drop characters that are illegal in XML documents.
      *
      * <p>See XML 1.0 2.2 <a
      * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
@@ -259,22 +250,8 @@ public class DOMElementWriter {
         sb.setLength(0);
         for (int i = 0; i < value.length(); ++i) {
             char c = value.charAt(i);
-            switch (c) {
-            case '\t':
-            case '\n':
-            case '\r':
+            if (isLegalCharacter(c)) {
                 sb.append(c);
-                break;
-                
-            default:
-                if (c < 0x20) {
-                    sb.append("&#x");
-                    sb.append(Integer.toHexString(c));
-                    sb.append(';');
-                } else {
-                    sb.append(c);
-                }
-                break;
             }
         }
         return sb.toString();
@@ -311,6 +288,29 @@ public class DOMElementWriter {
             if (name.equals(knownEntities[i])) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Is the given character allowed inside an XML document?
+     *
+     * <p>See XML 1.0 2.2 <a
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
+     *
+     * @since 1.10, Ant 1.5
+     */
+    public boolean isLegalCharacter(char c) {
+        if (c == 0x9 || c == 0xA || c == 0xD) {
+            return true;
+        } else if (c < 0x20) {
+            return false;
+        } else if (c <= 0xD7FF) {
+            return true;
+        } else if (c < 0xE000) {
+            return false;
+        } else if (c <= 0xFFFD) {
+            return true;
         }
         return false;
     }

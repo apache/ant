@@ -225,6 +225,10 @@ for all test cases.  Custom formatters that need to implement
 <code>org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter</code>
 can be specified.</p>
 
+<p>If you use the XML formatter, it may not include the same output
+that your tests have written as some characters are illegal in XML
+documents and will be dropped.</p>
+
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>

@@ -231,7 +231,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         try {
             out = new FileOutputStream( file );
             wri = new PrintWriter(new OutputStreamWriter(out, "UTF8"));
-            wri.write("<?xml version=\"1.0\"?>\n");
+            wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             (new DOMElementWriter()).write(doc.getDocumentElement(), wri, 0, "  ");
             wri.flush();
             // writers do not throw exceptions, so check for them.
