@@ -79,11 +79,11 @@ public class UnknownElement extends Task {
      * Childelements, holds UnknownElement instances.
      */
     private Vector children = new Vector();
-    
+
     public UnknownElement (String elementName) {
         this.elementName = elementName;
     }
-    
+
     /**
      * return the corresponding XML element name.
      */
@@ -118,7 +118,7 @@ public class UnknownElement extends Task {
      */
     public void execute() {
         if (realThing == null) {
-            // plain impossible to get here, maybeConfigure should 
+            // plain impossible to get here, maybeConfigure should
             // have thrown an exception.
             throw new BuildException("Could not create task of type: "
                                      + elementName, location);
@@ -140,8 +140,8 @@ public class UnknownElement extends Task {
      * Creates child elements, creates children of the children, sets
      * attributes of the child elements.
      */
-    protected void handleChildren(Object parent, 
-                                  RuntimeConfigurable parentWrapper) 
+    protected void handleChildren(Object parent,
+                                  RuntimeConfigurable parentWrapper)
         throws BuildException {
 
         if (parent instanceof TaskAdapter) {
@@ -150,7 +150,7 @@ public class UnknownElement extends Task {
 
         Class parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
-        
+
         for (int i=0; i<children.size(); i++) {
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
             UnknownElement child = (UnknownElement) children.elementAt(i);
@@ -220,7 +220,11 @@ public class UnknownElement extends Task {
             + "your task, or, if this is an optional task," + lSep
             + "to put the optional.jar and all required libraries of" +lSep
             + "this task in the lib directory of" + lSep
-            + "your ant installation (ANT_HOME).";
+            + "your ant installation (ANT_HOME)." + lSep
+            + "There is also the possibility that your build file " + lSep
+            + "is written to work with a more recent version of ant " + lSep
+            + "than the one you are using, in which case you have to " + lSep
+            + "upgrade.";
         return new BuildException(msg, location);
     }
 
@@ -230,7 +234,7 @@ public class UnknownElement extends Task {
      * @return the name to use in logging messages.
      */
     public String getTaskName() {
-        return realThing == null || !(realThing instanceof Task) ? 
+        return realThing == null || !(realThing instanceof Task) ?
             super.getTaskName() : ((Task) realThing).getTaskName();
     }
 
