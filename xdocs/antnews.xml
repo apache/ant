@@ -5,30 +5,24 @@
     <author email="">Conor MacNeill</author>
     <author email="stefan.bodewig@freenet.de">Stefan Bodewig</author>
     <author email="">Magesh Umasankar</author>
+    <author email="">Antoine Levy-Lambert</author>
     <title>News</title>
   </properties>
 
 <body>
-   <section name="Ant 1.6beta3">
-    <h3>December 5, 2003 - Ant 1.6beta3 Available</h3>
-    <p>Apache Ant 1.6beta3 is now available for <a
-    href="http://cvs.apache.org/dist/ant/v1.6beta3/">download</a>.  As
+   <section name="Ant 1.6.0">
+    <h3>December 18, 2003 - Ant 1.6.0 Available</h3>
+    <p>Apache Ant 1.6.0 is now available for <a
+    href="http://ant.apache.org/bindownload.cgi">download</a>.  As
     we've already said in the announcements of Ant 1.5.4, this release
     requires JDK 1.2 or later to run.</p>
 
-    <p>We encourage user to give this beta a release a try and report
-    any bugs found so that we get a chance to fix them before we make
-    the final release of Ant 1.6.</p>
-
-    <p>Ant 1.6 adds a lot of new features, most prominently support
+    <p>Ant 1.6.0 adds a lot of new features, most prominently support
     for XML namespaces as well as a new concept of Ant libraries that
     makes use of namespaces to avoid name clashes of custom tasks.
     For a longer list of fixed bugs and new features see the release
     notes.</p>
     
-    <p>The manual of Ant 1.6 is available on line 
-    <a href="manual-1.6beta/"> here</a>.</p>
-
     <p>If you find anything that hasn't been covered in the manual (I bet you
 did) or could be explained better, feel free to help us out in the
 <a href="http://nagoya.apache.org/wiki/apachewiki.cgi?NewAntFeaturesInDetail">Wiki </a>.</p>
@@ -37,8 +31,8 @@ did) or could be explained better, feel free to help us out in the
 
   <section name="Ant 1.5.4">
     <h3>August 12, 2003 - Ant 1.5.4 Available</h3>
-    <p>Apache Ant 1.5.4 is now available for 
-     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+    <p>Apache Ant 1.5.4 is still available for
+     <a href="http://archive.apache.org/dist/ant">download</a>.
     </p>
     
     <p>This is a minor bugfix release that fixes a problem with the
@@ -48,8 +42,8 @@ did) or could be explained better, feel free to help us out in the
 
     <div class="warning">
     <div class="label">Note</div>
-    <div class="content">Ant 1.5.4 will be the last release that supports
-      JDK 1.1. The next major release of Ant, Ant 1.6, will require JDK 1.2 or
+    <div class="content">Ant 1.5.4 is the last release that supports
+      JDK 1.1. Ant 1.6.0 requires JDK 1.2 or
       later.
     </div>
     </div>
@@ -103,39 +97,17 @@ did) or could be explained better, feel free to help us out in the
   
   <section name="Ant 1.5.3">
     <h3>April 9, 2003 - Ant 1.5.3 Available</h3>
-    <p>Apache Ant 1.5.3 is now available for 
-     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+    <p>Apache Ant 1.5.3 is still available for
+     <a href="http://archive.apache.org/dist/ant">download</a>.
     </p>
-  </section>
-
-
-  <section name="Ant 1.5.3 Beta 1">
-    <h3>March 25, 2003 - Ant 1.5.3 Beta 1 Available</h3>
-    <p>Apache Ant 1.5.3 Beta 1 is now available for 
-     <a href="http://ant.apache.org/beta/">download</a>. 
-     Please download it and try it out. If you have any issues
-     please raise a bug on 
-     <a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant">BugZilla</a>
-     or send an email to the Ant dev mailing list
-     </p>
   </section>
 
 
   <section name="Ant 1.5.2">
     <h3>March 3, 2003 - Ant 1.5.2 Available!</h3>
-    <p>The final version of Ant 1.5.2 is now available for 
-     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+    <p>The final version of Ant 1.5.2 is available for
+     <a href="http://archive.apache.org/dist/ant">download</a>.
      If you have any feedback on this release, feel free to join the 
-     discussion on the dev and user mailing lists.
-     </p>
-  </section>
-
-  <section name="Ant 1.5.2Beta1">
-    <h3>February 21, 2003 - Ant 1.5.2 Beta1 Available!</h3>
-    <p>The first beta version of Ant 1.5.2 is now available for 
-     download at <a href="http://www.apache.org/dist/ant/v1.5.2beta1/">
-     http://www.apache.org/dist/ant/v1.5.2beta1</a>. 
-     If you have any feedback on the beta feel free to join the 
      discussion on the dev and user mailing lists.
      </p>
   </section>
@@ -154,17 +126,9 @@ did) or could be explained better, feel free to help us out in the
     
   <section name="Ant 1.5.1">
     <h3>October 3, 2002 - Ant 1.5.1 Available !</h3>
-    <p>The final version of Ant 1.5.1 is now available for 
-     <a href="http://ant.apache.org/bindownload.cgi">
+    <p>The final version of Ant 1.5.1 is still available for
+     <a href="http://archive.apache.org/dist/ant">
      download</a>. If you have any feedback on this release, feel free to join the 
-     discussion on the ant-dev and ant-user mailing lists.
-     </p>
-  </section>
-
-  <section name="Ant 1.5.1Beta1">
-    <h3>August 19, 2002 - Ant 1.5.1 Beta1 Available !</h3>
-    <p>The first beta version of Ant 1.5.1 is now available for 
-     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -179,30 +143,6 @@ did) or could be explained better, feel free to help us out in the
     <p>The final version of Ant 1.5 is now available for 
      <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5/">
      download</a>. If you have any feedback on this release, feel free to join the 
-     discussion on the ant-dev and ant-user mailing lists.
-     </p>
-  </section>
-
-  <section name="Ant 1.5Beta3">
-    <h3>June 24, 2002 - Ant 1.5 Beta3 Available!</h3>
-    <p>The third beta version of Ant 1.5 is now available for 
-     download. If you have any feedback on the beta feel free to join the 
-     discussion on the ant-dev and ant-user mailing lists.
-     </p>
-  </section>
-
-  <section name="Ant 1.5Beta2">
-    <h3>June 1, 2002 - Ant 1.5 Beta2 Available!</h3>
-    <p>The second beta version of Ant 1.5 is now available for 
-     download. If you have any feedback on the beta feel free to join the 
-     discussion on the ant-dev and ant-user mailing lists.
-     </p>
-  </section>
-
-  <section name="Ant 1.5Beta1">
-    <h3>Ant 1.5 Beta1 Available !</h3>
-    <p>The first beta version of Ant 1.5 is now available for 
-     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -257,68 +197,12 @@ did) or could be explained better, feel free to help us out in the
      </p>
   </section>
 
-  <section name="Ant 2.0 Requirements Collected - Next is Design">
-      <p>A commented version of the collected user requirements is now
-      available <a href="ant2/features.html">here</a> - it is not
-      complete as some details still have to be defined, but it should
-      give you an idea of what Ant2 is going to look like.</p>
-
-      <p>Several details can only be decided in the light of real code
-      and prototypes.  Several people are working on prototypes (that
-      can be found in Ant's CVS module in the proposals directory) and
-      discussion is going on on the Ant-Dev mailing list.</p>
-  </section>
-
   <section name="Best-Practices Profile of Ant at Sun&apos;s Dot-Com Builder">
       <p>Sun has released an introductory article on Ant on their
       Dot-Com Builder site on May&#160;30&#160;2001. See <a
       href="http://dcb.sun.com/practices/profiles/ant.jsp">http://dcb.sun.com/practices/profiles/ant.jsp</a></p>
   </section>
 
-  <section name="Ant 2.0 Requirements">
-    <p>Ant has been in use for quite some time and has been used in ways never conceived when it
-       was originally written. While Ant 1.x has continued to sucessfully evolve and grow, there 
-       are a number of limitations and inconsistencies that are now apparent and which need to 
-       be addressed. 
-    </p>
-    
-    <p>
-       As we continue to evolve and enhance Ant 1.x, it is now time to define what Ant 2.0 will
-       encompass. Ant 2.0 will be a major rearchitecting of Ant. It has a number of goals including:
-    </p>
-       <ul>
-         <li>Define the "contract" with build file writers to which Ant will be bound.</li>
-         <li>Define the "contract" between the Ant core and Task writers.</li>
-         <li>Make Ant more easily extendable by allowing additional tasks to be "dropped" in.</li>
-         <li>Allow Ant to function as a component to simplify integration with GUIs and IDEs.</li>
-         <li>Make Ant more regular and logical.</li>
-       </ul>
-     <p>       
-       It is expected that Ant 2.0 will break Ant 1.x based build files. The intention is to
-       make this the last time that will happen.
-     </p>
-     
-     <p>
-        To advance the definition of Ant, user requirements are now being accepted on the 
-        Ant-Dev mailing list. Any requirement will be accepted for consideration. The 
-        requirements are being collected into a document which is available 
-        <a href="ant2/requested-features.txt">on-line</a>. New features will be excepted 
-        until March 21st, 2001. At that time, each requirement will be discussed 
-        for inclusion in an Ant 2.0 requirement document.
-      </p>
-      
-      <p>
-        For your reference some of the goals which have shaped the development of Ant 1.x are
-        available <a href="ant2/original-specification.html">here</a>. These continue to be
-        relevant to Ant 2.0.
-      </p>
-      
-      <p>
-        If you want to shape the future of Ant, join the 
-        <a href="mail.html">Ant-Dev mailing list</a> and contribute
-        your ideas.
-      </p>
-  </section>
 
 </body>
 </document>
