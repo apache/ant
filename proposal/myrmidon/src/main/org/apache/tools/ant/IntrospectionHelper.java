@@ -87,20 +87,6 @@ public class IntrospectionHelper implements BuildListener
             Class returnType = m.getReturnType();
             Class[] args = m.getParameterTypes();
 
-            // not really user settable properties on tasks
-            if( org.apache.tools.ant.Task.class.isAssignableFrom( bean )
-                && args.length == 1 &&
-                (
-                (
-                "setLocation".equals( name ) && org.apache.tools.ant.Location.class.equals( args[ 0 ] )
-                ) || (
-                "setTaskType".equals( name ) && java.lang.String.class.equals( args[ 0 ] )
-                )
-                ) )
-            {
-                continue;
-            }
-
             // hide addTask for TaskContainers
             if( org.apache.tools.ant.TaskContainer.class.isAssignableFrom( bean )
                 && args.length == 1 && "addTask".equals( name )
