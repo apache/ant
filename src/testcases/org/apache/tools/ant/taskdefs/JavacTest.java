@@ -127,7 +127,7 @@ public class JavacTest extends TestCase {
         assertEquals("unconditional single arg", 1, args.length);
         assertEquals(testArg, args[0]);
 
-        arg.setImplementation("jikes");
+        arg.setCompiler("jikes");
         args = javac.getCurrentCompilerArgs();
         assertNotNull(args);
         assertEquals("implementation is jikes but build.compiler is null", 
@@ -161,7 +161,7 @@ public class JavacTest extends TestCase {
         String prefect = "Prefect";
         String testArg = ford + " " + prefect;
         arg.setValue(testArg);
-        arg.setImplementation("extJavac");
+        arg.setCompiler("extJavac");
         javac.setFork(true);
         String[] args = javac.getCurrentCompilerArgs();
         assertEquals("both are forked javac", 1, args.length);

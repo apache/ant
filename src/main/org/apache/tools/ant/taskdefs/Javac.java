@@ -850,7 +850,7 @@ public class Javac extends MatchingTask {
 
         private String impl;
 
-        public void setImplementation(String impl) {
+        public void setCompiler(String impl) {
             this.impl = impl;
         }
 
