@@ -15,9 +15,9 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
-public interface Regexp extends RegexpMatcher
+public interface Regexp
+    extends RegexpMatcher
 {
-
     /**
      * Replace only the first occurance of the regular expression
      */
