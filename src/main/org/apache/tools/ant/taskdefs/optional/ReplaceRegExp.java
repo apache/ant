@@ -354,7 +354,7 @@ public class ReplaceRegExp extends Task {
                     changes = true;
                 }
 
-                pw.println(res);
+                pw.print(res);
                 pw.flush();
             }
 
