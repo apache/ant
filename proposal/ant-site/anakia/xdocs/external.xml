@@ -395,60 +395,6 @@
         </table>
       </subsection>
 
-      <subsection name="Jalopy">
-        
-        <p>An Ant Plug-in for the Java Source Code Formatter
-        Jalopy.</p>
-
-        <table>
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4 (or higher)</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://jalopy.sourceforge.net">http://jalopy.sourceforge.net</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="http://jalopy.sf.net/contact.html">http://jalopy.sf.net/contact.html</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>Starting with release 1.0 Beta 6 the license is the
-            BSD License.  Prior releases were under the GNU General
-            Public License.</td>
-          </tr>
-        </table>
-      </subsection>
-
-      <subsection name="Javamake">
-
-        <p>A task to compile Java sources and manage class file
-        dependencies. Functionality is equivalent to that of standard
-        Javac and Depend tasks combined, with improved dependency
-        checking.</p>
-
-        <table>
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4.1</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://www.experimentalstuff.com/Technologies/JavaMake/index.html">http://www.experimentalstuff.com/Technologies/JavaMake/index.html</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td><a href="mailto:Mikhail.Dmitriev@eng.sun.com">Mikhail Dmitriev</a></td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>BSD-like License</td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="J2ME Ant Tasks">
 
         <p>There are three different sets of tasks to help build <a
@@ -524,6 +470,109 @@
           </tr>
         </table>
 
+      </subsection>
+
+      <subsection name="Jalopy">
+        
+        <p>An Ant Plug-in for the Java Source Code Formatter
+        Jalopy.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 (or higher)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jalopy.sourceforge.net">http://jalopy.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://jalopy.sf.net/contact.html">http://jalopy.sf.net/contact.html</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Starting with release 1.0 Beta 6 the license is the
+            BSD License.  Prior releases were under the GNU General
+            Public License.</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Java+ Precompile Task">
+
+        <p>Java+ is an open source Java preprocessorthat adds these
+        features to any Java compiler:</p>
+
+        <ul>
+          <li>Multi-line strings with executable inclusions like Perl
+          and Ruby. It eliminates the need for JSP or ASP and their
+          need for Java compilers on deployment servers (a security
+          concern) while adding no overhead in either space or
+          time. </li>
+
+          <li>Optionally supports localization by segregating Java+
+          strings into ResourceBundle files with invarient keys based
+          on the hash code of the strings's value. This is handled
+          automatically and transparently; no intervention is
+          required.</li>
+
+          <li>Fast. Negligible impact on build times. By default,
+          skips inputs whose outputs are up to date to avoid
+          triggering recompilations.</li>
+
+          <li>Pure Java code, portable to any platform, with
+          graphical, shell and ant interfaces.</li>
+
+          <li>Simple, general, recursive, digraph-driven string
+          syntax. Digraph characters are user-selectable.</li>
+        </ul>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://virtualschool.edu/java+/">http://virtualschool.edu/java+/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:bcox@virtualschool.edu">Brad Cox</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Javamake">
+
+        <p>A task to compile Java sources and manage class file
+        dependencies. Functionality is equivalent to that of standard
+        Javac and Depend tasks combined, with improved dependency
+        checking.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.experimentalstuff.com/Technologies/JavaMake/index.html">http://www.experimentalstuff.com/Technologies/JavaMake/index.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:Mikhail.Dmitriev@eng.sun.com">Mikhail Dmitriev</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like License</td>
+          </tr>
+        </table>
       </subsection>
 
       <subsection name="javarec">
@@ -737,6 +786,31 @@
           <tr>
             <th>License:</th>
             <td>GNU GPL 2.0</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="pack">
+
+        <p>pack is a task to build the smallest possible JAR to link
+        and run one or more classes.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sadun-util.sourceforge.net/pack.html">http://sadun-util.sourceforge.net/pack.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:cristiano@xtractor.com">Cristiano Sadun</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
           </tr>
         </table>
       </subsection>
