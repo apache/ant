@@ -69,7 +69,7 @@ import org.apache.tools.ant.*;
  * @created 07 January 2002
  */
 
-public class Hostname extends Task {
+public class hostname extends Task {
 
     /**
      * Description of the Field
