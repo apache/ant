@@ -136,7 +136,7 @@ public class Zip extends MatchingTask {
             throw new BuildException("basedir attribute must be set, or at least one fileset must be given!");
 
         if (zipFile == null) {
-            throw new BuildException("You must specify the " + archiveType + "file to create!");
+            throw new BuildException("You must specify the " + archiveType + " file to create!");
         }
 
         Vector dss = new Vector ();
