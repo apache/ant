@@ -69,24 +69,32 @@ import java.io.OutputStream;
  */
 public class PumpStreamHandler implements ExecuteStreamHandler {
 
-    private Thread inputThread;
+    private Thread outputThread;
     private Thread errorThread;
+    private Thread inputThread;
 
     private OutputStream out;
     private OutputStream err;
+    private InputStream input;
+    
     private boolean closeOutOnStop = false;
     private boolean closeErrOnStop = false;
+    private boolean closeInputOnStop = false;
 
     public PumpStreamHandler(OutputStream out, OutputStream err, 
-                             boolean closeOutOnStop, boolean closeErrOnStop) {
+                             InputStream input,
+                             boolean closeOutOnStop, boolean closeErrOnStop,
+                             boolean closeInputOnStop) {
         this.out = out;
         this.err = err;
+        this.input = input;
         this.closeOutOnStop = closeOutOnStop;
         this.closeErrOnStop = closeErrOnStop;
+        this.closeInputOnStop = closeInputOnStop;
     }
 
     public PumpStreamHandler(OutputStream out, OutputStream err) {
-        this(out, err, false, false);
+        this(out, err, null, false, false, false);
     }
 
     public PumpStreamHandler(OutputStream outAndErr) {
@@ -103,39 +111,70 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
 
     public void setProcessErrorStream(InputStream is) {
-        createProcessErrorPump(is, err);
+        if (err != null) {
+            createProcessErrorPump(is, err);
+        }
     }
-
 
     public void setProcessInputStream(OutputStream os) {
+        if (input != null) {
+            inputThread = createPump(input, os, true);
+        } else {
+            try {
+                os.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }            
     }
-
 
     public void start() {
-        inputThread.start();
+        outputThread.start();
         errorThread.start();
+        inputThread.start();
     }
-
 
     public void stop() {
         try {
-            inputThread.join();
-        } catch (InterruptedException e) {}
+            outputThread.join();
+        } catch (InterruptedException e) {
+            // ignore
+        }
         try {
             errorThread.join();
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+            // ignore
+        }
+
+        if (inputThread != null) {
+            try {
+                inputThread.join();
+                if (closeInputOnStop) {
+                    input.close();
+                }
+            } catch (InterruptedException e) {
+                // ignore
+            } catch (IOException e) {
+                // ignore
+            } 
+        }
+
         try {
             err.flush();
             if (closeErrOnStop) {
                 err.close();
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            // ignore
+        }
         try {
             out.flush();
             if (closeOutOnStop) {
                 out.close();
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            // ignore
+        }
     }
 
     protected OutputStream getErr() {
@@ -147,7 +186,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     }
 
     protected void createProcessOutputPump(InputStream is, OutputStream os) {
-        inputThread = createPump(is, os);
+        outputThread = createPump(is, os);
     }
 
     protected void createProcessErrorPump(InputStream is, OutputStream os) {
@@ -160,7 +199,17 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * given output stream.
      */
     protected Thread createPump(InputStream is, OutputStream os) {
-        final Thread result = new Thread(new StreamPumper(is, os));
+        return createPump(is, os, false);
+    }
+
+    /**
+     * Creates a stream pumper to copy the given input stream to the
+     * given output stream.
+     */
+    protected Thread createPump(InputStream is, OutputStream os, 
+                                boolean closeWhenExhausted) {
+        final Thread result 
+            = new Thread(new StreamPumper(is, os, closeWhenExhausted));
         result.setDaemon(true);
         return result;
     }

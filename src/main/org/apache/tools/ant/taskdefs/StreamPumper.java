@@ -66,14 +66,30 @@ import java.io.OutputStream;
  */
 public class StreamPumper implements Runnable {
 
-    // TODO: make SIZE and SLEEP instance variables.
+    // TODO: make SIZE an instance variable.
     // TODO: add a status flag to note if an error occured in run.
 
     private static final int SIZE = 128;
     private InputStream is;
     private OutputStream os;
     private boolean finished;
+    private boolean closeWhenExhausted;
 
+    /**
+     * Create a new stream pumper.
+     *
+     * @param is input stream to read data from
+     * @param os output stream to write data to.
+     * @param closeWhenExhausted if true, the output stream will be closed when
+     *        the input is exhausted.
+     */
+    public StreamPumper(InputStream is, OutputStream os, 
+                        boolean closeWhenExhausted) {
+        this.is = is;
+        this.os = os;
+        this.closeWhenExhausted = closeWhenExhausted;        
+    }
+    
     /**
      * Create a new stream pumper.
      *
@@ -81,8 +97,7 @@ public class StreamPumper implements Runnable {
      * @param os output stream to write data to.
      */
     public StreamPumper(InputStream is, OutputStream os) {
-        this.is = is;
-        this.os = os;
+        this(is, os, false);
     }
 
 
@@ -103,6 +118,9 @@ public class StreamPumper implements Runnable {
         try {
             while ((length = is.read(buf)) > 0) {
                 os.write(buf, 0, length);
+            }
+            if (closeWhenExhausted) {
+                os.close();
             }
         } catch (IOException e) {
             // ignore errors

@@ -59,9 +59,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.OutputStream;
+import java.io.InputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -89,6 +91,7 @@ public class ExecTask extends Task {
     private String os;
     private File out;
     private File error;
+    private File input;
 
     private boolean logError = false;
     
@@ -167,6 +170,13 @@ public class ExecTask extends Task {
         this.cmdl = cmdl;
     }
 
+    /**
+     * Set the input to use for the task
+     */
+    public void setInput(File input) {
+        this.input = input;
+    }
+    
     /**
      * File the output of the process is redirected to. If error is not 
      * redirected, it too will appear in the output
@@ -475,6 +485,7 @@ public class ExecTask extends Task {
     protected ExecuteStreamHandler createHandler() throws BuildException {
         OutputStream outputStream = null;
         OutputStream errorStream = null;
+        InputStream inputStream = null; 
         
         if (out == null && outputprop == null) {
             outputStream = new LogOutputStream(this, Project.MSG_INFO);
@@ -540,8 +551,18 @@ public class ExecTask extends Task {
         } else {
             errorBaos = null;
         }
+
+        if (input != null) {
+            try {
+                inputStream = new FileInputStream(input);
+            } catch (FileNotFoundException fne) {
+                throw new BuildException("Cannot read from " + input, fne,
+                                         getLocation());
+            }
+        }
         
-        return new PumpStreamHandler(outputStream, errorStream, true, true);         
+        return new PumpStreamHandler(outputStream, errorStream, inputStream, 
+                                     true, true, true);         
     }
 
     /**
