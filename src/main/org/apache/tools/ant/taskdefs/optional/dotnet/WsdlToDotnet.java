@@ -103,12 +103,12 @@ public class WsdlToDotnet extends Task  {
     /**
      *  flag to control action on execution trouble
      */
-    private boolean failOnError;
+    private boolean failOnError=true;
 
     /**
      *  any extra command options?
      */
-    protected String extraOptions;
+    protected String extraOptions=null;
     
     /**
      *
@@ -159,6 +159,10 @@ public class WsdlToDotnet extends Task  {
         if(destFile==null) {
             throw new BuildException("destination file must be specified");
         }
+        if(destFile.isDirectory() ) {
+            throw new BuildException(
+                "destination file is a directory");
+        }        
         if(url!=null && srcFile!=null) {
             throw new BuildException(
                     "you can not specify both a source file and a URL");
@@ -167,6 +171,17 @@ public class WsdlToDotnet extends Task  {
             throw new BuildException(
                     "you must specify either a source file or a URL");
         }
+        if(srcFile!=null) {
+            if(!srcFile.exists() ) {
+                throw new BuildException(
+                    "source file does not exist");
+            }
+            if(srcFile.isDirectory() ) {
+                throw new BuildException(
+                    "source file is a directory");
+            }
+        }
+
     }
 
     /**
@@ -183,7 +198,7 @@ public class WsdlToDotnet extends Task  {
         command.setTraceCommandLine(true);
         //fill in args
         command.addArgument("/nologo");
-        command.addArgument("/outfile:"+destFile);
+        command.addArgument("/out:"+destFile);
         command.addArgument("/language:",language);
         if(server) {
             command.addArgument("/server");
