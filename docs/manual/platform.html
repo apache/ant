@@ -8,11 +8,12 @@
 <h1>Platform Issues</h1>
 
 
-<h2>Unix</h2>
+<h2>Unix and Linux</h2>
 
 <ul>
-<li> You should use a GNU version of <tt>tar</tt> to untar the ant source tree,
-if you have downloaded this as a tar file.
+<li> You should use a GNU version of <tt>tar</tt> to untar the Apache 
+Ant source tree, if you have downloaded this as a tar file. If you get
+wierd errors about missing files, this is the problem. 
 </li>
 <li> Ant does not preserve file permissions when a file is copied, moved or 
 archived, because Java does not let it read or write the permissions.
@@ -22,6 +23,13 @@ to set the permissions in the tar file, or &lt;apply&gt; the real tar program.
 </li>
 <li> Ant is not symbolic link aware in moves, deletes and when recursing down a tree
 of directories to build up a list of files. Unexpected things can happen.
+
+<li> Linux on IA-64: apparently you need a larger heap than the default
+one (64M) to compile big projects. If you get out of heap
+errors, either increase the heap or use a forking javac. Better yet,
+use jikes for extra compilation speed.   
+
+
 </ul>
 
 <h2>Microsoft Windows</h2>
@@ -43,7 +51,7 @@ the shell before deleting directories.
 
 <h2>Cygwin</h2>
 
-Cygwin is not really an operating system; rather it is an application suite 
+Cygwin is not an operating system; rather it is an application suite 
 running under Windows and providing some UNIX like functionality. AFAIK, Sun did 
 not create any specific Java Development Kit or Java Runtime Environment for 
 cygwin. See this link : 
@@ -65,6 +73,11 @@ instance like that :
 &lt;/exec&gt;
 &lt;echo message=&quot;${windows.pathname}&quot;/&gt;
 </pre>
+
+We get lots of support calls from Cygwin users. Either it is incredibly
+popular, or it is trouble. If you do use it, remember that Java is a
+Windows application, so Ant is running in a Windows process, not a
+Cygwin one. This will save us having to mark your bug reports as invalid. 
 
 <h2>Apple MacOS X</h2>
 
