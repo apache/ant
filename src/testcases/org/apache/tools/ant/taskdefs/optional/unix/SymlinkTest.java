@@ -182,7 +182,9 @@ public class SymlinkTest extends BuildFileTest {
     }
 
     public void tearDown() {
-        executeTarget("teardown");
+        if (supportsSymlinks) {
+            executeTarget("teardown");
+        }
     }
 
 }
