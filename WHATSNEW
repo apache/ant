@@ -12,6 +12,8 @@ Fixed bugs:
   string, unless the new 'setonempty' attribute is set to false|no|off
   (default is "true").
 
+* The manifest task would crash XmlLogger
+
 Other changes:
 --------------
 
