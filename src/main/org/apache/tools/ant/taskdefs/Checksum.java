@@ -180,7 +180,7 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Whether or not to overwrite existing file irrespective of 
+     * Whether or not to overwrite existing file irrespective of
      * whether it is newer than
      * the source file.  Defaults to false.
      */
@@ -254,12 +254,12 @@ public class Checksum extends MatchingTask implements Condition {
 
             if (file != null) {
                 if (filesets.size() > 0) {
-                    throw new BuildException("Multiple files cannot be used " 
+                    throw new BuildException("Multiple files cannot be used "
                         + "when Property is specified");
                 }
             } else {
                 if (filesets.size() > 1) {
-                    throw new BuildException("Multiple files cannot be used " 
+                    throw new BuildException("Multiple files cannot be used "
                         + "when Property is specified");
                 }
             }
@@ -275,7 +275,7 @@ public class Checksum extends MatchingTask implements Condition {
         }
 
         if (isCondition && forceOverwrite) {
-            throw new BuildException("ForceOverwrite cannot be used when " 
+            throw new BuildException("ForceOverwrite cannot be used when "
                 + "conditions are being used.");
         }
 
@@ -310,7 +310,7 @@ public class Checksum extends MatchingTask implements Condition {
 
         try {
             addToIncludeFileMap(file);
-            
+
             int sizeofFileSet = filesets.size();
             for (int i = 0; i < sizeofFileSet; i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
@@ -337,7 +337,7 @@ public class Checksum extends MatchingTask implements Condition {
         if (file != null) {
             if (file.exists()) {
                 if (property == null) {
-                    File dest 
+                    File dest
                         = new File(file.getParent(), file.getName() + fileext);
                     if (forceOverwrite || isCondition ||
                         (file.lastModified() > dest.lastModified())) {
@@ -398,7 +398,8 @@ public class Checksum extends MatchingTask implements Condition {
                 if (destination instanceof java.lang.String) {
                     String prop = (String) destination;
                     if (isCondition) {
-                        checksumMatches = checksum.equals(property);
+                        checksumMatches = checksumMatches &&
+                            checksum.equals(property);
                     } else {
                         getProject().setNewProperty(prop, checksum);
                     }
@@ -414,7 +415,7 @@ public class Checksum extends MatchingTask implements Condition {
                             fis = null;
                             br.close();
                             isr.close();
-                            checksumMatches =
+                            checksumMatches = checksumMatches &&
                                 checksum.equals(suppliedChecksum);
                         } else {
                             checksumMatches = false;
