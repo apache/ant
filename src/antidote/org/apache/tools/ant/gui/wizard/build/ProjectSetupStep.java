@@ -51,9 +51,9 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard.build;
+package org.apache.tools.ant.gui.wizard.build;
 
-import org.apache.tools.ant.gui.wizzard.AbstractWizzardStep;
+import org.apache.tools.ant.gui.wizard.AbstractWizardStep;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -61,13 +61,13 @@ import java.awt.GridBagLayout;
 import org.apache.tools.ant.gui.acs.*;
 
 /**
- * Build file wizzard step for naming the project and 
+ * Build file wizard step for naming the project and 
  * selecting what features are desired.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ProjectSetupStep extends AbstractWizzardStep {
+public class ProjectSetupStep extends AbstractWizardStep {
 
     /** Name of the project. */
     private JTextField _name = null;

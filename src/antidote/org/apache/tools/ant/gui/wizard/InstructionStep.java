@@ -51,39 +51,52 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizard;
+import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.Insets;
 
 /**
- * Interface for classes interested in events from the WizzardNavigator.
+ * Wizard step whose only purpose is to display some text.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface NavigatorListener {
+public class InstructionStep extends AbstractWizardStep {
+
     /** 
-     * Called when the wizzard should show the next step.
+     * Initialize the contents of the container.
      * 
      */
-    void nextStep();
+    protected void init() {
+        setLayout(new BorderLayout());
+        String msg = getResources().getString(getID() + ".instructions");
+
+        JTextArea text = new JTextArea(msg);
+        text.setMargin(new Insets(30, 20, 5, 5));
+        text.setOpaque(false);
+        text.setFont(new Font("Serif", Font.PLAIN, 18));
+        text.setEditable(false);
+        text.setLineWrap(true);
+        text.setWrapStyleWord(true);
+        add(text);
+    }
+
     /** 
-     * Called when the wizzard should show the previous step.
+     * Called when the step should refresh its display based on the 
+     * current model setting.
      * 
      */
-    void backStep();
+    public void updateDisplay() {
+        // NOOP
+    }
     /** 
-     * Called when the wizzard should show the step with the given id.
-     * 
-     * @param stepID ID of step to show.
-     */
-    void gotoStep(String stepID);
-    /** 
-     * Called when the wizzard activity shold be cancelled.
+     * Called when the step should update the data model based on the
+     * settings of its widgets.
      * 
      */
-    void cancel();
-    /** 
-     * Called when the wizzard is finished.
-     * 
-     */
-    void finish();
+    public void updateDataModel() {
+        // NOOP
+    }
 }

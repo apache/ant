@@ -51,9 +51,16 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizard;
 
-public interface WizzardNavigator {
+/**
+ * Interface for classes that control the movement from one step of a 
+ * wizard to another.
+ * 
+ * @version $Revision$ 
+ * @author Simeon Fitch 
+ */
+public interface WizardNavigator {
     /** 
      * Add a navigator listener. 
      * 

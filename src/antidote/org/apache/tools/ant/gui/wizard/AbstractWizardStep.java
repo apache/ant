@@ -51,128 +51,203 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizard;
 import org.apache.tools.ant.gui.core.ResourceManager;
 import javax.swing.JComponent;
 
 
 /**
- * Interface for classes defining a step in a wizzard.
+ * Abstract class implementing the basic support for the WizardStep interface.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizzardStep {
+public abstract class  AbstractWizardStep extends JComponent 
+    implements WizardStep {
+    
+    /** Flag to indicate whether or not init has been called. */
+    private boolean _initialized = false;
+    /** Resources. */
+    private ResourceManager _resources = null;
+    /** Step id. */
+    private String _id = null;
+    /** Step display title. */
+    private String _title = null;
+    /** Description of the step. */
+    private String _description = null;
+    /** Data model. */
+    private Object _model = null;
+    /** ID of next step. */
+    private String _nextID = null;
+    /** ID of previous step. */
+    private String _prevID = null;
+
+    /** 
+     * Called when the instance should initialize its contents, e.g.
+     * create the widgets, etc. When this is called then all
+     * data values, including the ResourceManager, have been setup.
+     * 
+     */
+    protected abstract void init();
+
     /** 
      * Set the step's resources.
      * 
      */
-    void setResources(ResourceManager resources);
+    public void setResources(ResourceManager resources) {
+        _resources = resources;
+    }
 
     /** 
-     * Set the step id. The id must be unique among steps within the wizzard.
+     * Get the step's resources.
      * 
-     * @param id Wizzard id.
+     * @return Resources.
      */
-    void setID(String id);
+    protected ResourceManager getResources() {
+        return _resources;
+    }
+
+    /** 
+     * Set the step id. The id must be unique among steps within the wizard.
+     * 
+     * @param id Wizard id.
+     */
+    public void setID(String id) {
+        _id = id;
+    }
 
     /** 
      * Get the step id.
      * 
      * @return Step id.
      */
-    String getID();
+    public String getID() {
+        return _id;
+    }
 
     /** 
      * Set the step title.
      * 
      * @param title Step title.
      */
-    void setTitle(String title);
+    public void setTitle(String title) {
+        _title = title;
+    }
+
     /** 
      * Get the step title.
      * 
      * @return Step title.
      */
-    String getTitle();
+    public String getTitle() {
+        return _title;
+    }
 
     /** 
      * Set the step description.
      * 
      * @param desc Step description.
      */
-    void setDescription(String desc);
+    public void setDescription(String desc) {
+        _description = desc;
+    }
+
     /** 
      * Get the step description.
      * 
      * @return Step description.
      */
-    String getDescription();
+    public String getDescription() {
+        return _description;
+    }
 
     /** 
      * Set the default id of the next step.
      * 
      * @param nextID ID of next step.
      */
-    void setNext(String nextID);
+    public void setNext(String nextID) {
+        _nextID = nextID;
+    }
+
     /** 
      * Get the id of the next step.
      * 
      * @return ID of next step.
      */
-    String getNext();
+    public String getNext() {
+        return _nextID;
+    }
 
     /** 
      * Set the default id of the previous step.
      * 
      * @param prevID ID of previous step.
      */
-    void setPrevious(String prevID);
+    public void setPrevious(String prevID) {
+        _prevID = prevID;
+    }
 
     /** 
      * Get the id of the previous step.
      * 
      * @return Previous step.
      */
-    String getPrevious();
+    public String getPrevious() {
+        return _prevID;
+    }
 
     /** 
      * Set the data model object that the step will edit. It is assumed 
-     * that all steps initialized within a single wizzard agree on the
+     * that all steps initialized within a single wizard agree on the
      * data model type.
      * 
      * @param model Data model to edit.
      */
-    void setDataModel(Object model);
+    public void setDataModel(Object model) {
+        _model = model;
+    }
 
     /** 
      * Get the data model that should be passeed on to the next step.
      * 
      * @return Current data model.
      */
-    Object getDataModel();
+    public Object getDataModel() {
+        return _model;
+    }
 
     /** 
      * Get the component that should be displayed to the user for
      * editing the model. This component should <b>not</b> include the
-     * title and text display, which is handled by the wizzard container.
+     * title and text display, which is handled by the wizard container.
      * 
      * @return Editing component.
      */
-    JComponent getEditorComponent();
+    public JComponent getEditorComponent() {
+        if(!_initialized) {
+            init();
+            _initialized = true;
+        }
+
+        return this;
+    }
 
     /** 
-     * Called when the step should refresh its display based on the 
-     * current model setting.
+     * Get a string representation of this.
      * 
+     * @return String representation.
      */
-    void updateDisplay();
-
-    /** 
-     * Called when the step should update the data model based on the
-     * settings of its widgets.
-     * 
-     */
-    void updateDataModel();
+    public String toString() {
+        StringBuffer buf = new StringBuffer(getClass().getName());
+        buf.append("[id=");
+        buf.append(getID());
+        buf.append(",prev=");
+        buf.append(getPrevious());
+        buf.append(",next=");
+        buf.append(getNext());
+        buf.append("]");
+        return buf.toString();
+    }
 
 }

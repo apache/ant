@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizard;
 import org.apache.tools.ant.gui.core.ResourceManager;
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -59,7 +59,7 @@ import java.awt.event.ActionEvent;
 import java.awt.FlowLayout;
 import java.util.*;
 
-class ButtonNavigator extends JComponent implements WizzardNavigator {
+class ButtonNavigator extends JComponent implements WizardNavigator {
     public static final String NEXT = "next";
     public static final String BACK = "back";
     public static final String CANCEL = "cancel";

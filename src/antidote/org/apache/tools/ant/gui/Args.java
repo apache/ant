@@ -64,7 +64,7 @@ import org.apache.tools.ant.gui.core.ResourceManager;
 public class Args {
 
     private ResourceManager _resources = null;
-    private boolean _wizzardMode = false;
+    private boolean _wizardMode = false;
     private String _fileName = null;
     private boolean _debugMode = false;
 
@@ -83,8 +83,8 @@ public class Args {
                 System.out.println(getUsage());
                 System.exit(0);
             }
-            else if(arg.equals("-wizzard")) {
-                _wizzardMode = true;
+            else if(arg.equals("-wizard")) {
+                _wizardMode = true;
             }
             else if(arg.equals("-debug")) {
                 _debugMode = true;
@@ -140,13 +140,13 @@ public class Args {
     }
 
     /** 
-     * Determine if wizzard mode was requested for generating a new 
+     * Determine if wizard mode was requested for generating a new 
      * build file.
      * 
-     * @return True if wizzard mode, false otherwise.
+     * @return True if wizard mode, false otherwise.
      */
-    public boolean isWizzardMode() {
-        return _wizzardMode;
+    public boolean isWizardMode() {
+        return _wizardMode;
     }
 
     /** 

@@ -51,52 +51,39 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.Insets;
+package org.apache.tools.ant.gui.wizard;
 
 /**
- * Wizzard step whose only purpose is to display some text.
+ * Interface for classes interested in events from the WizardNavigator.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class InstructionStep extends AbstractWizzardStep {
-
+public interface NavigatorListener {
     /** 
-     * Initialize the contents of the container.
+     * Called when the wizard should show the next step.
      * 
      */
-    protected void init() {
-        setLayout(new BorderLayout());
-        String msg = getResources().getString(getID() + ".instructions");
-
-        JTextArea text = new JTextArea(msg);
-        text.setMargin(new Insets(30, 20, 5, 5));
-        text.setOpaque(false);
-        text.setFont(new Font("Serif", Font.PLAIN, 18));
-        text.setEditable(false);
-        text.setLineWrap(true);
-        text.setWrapStyleWord(true);
-        add(text);
-    }
-
+    void nextStep();
     /** 
-     * Called when the step should refresh its display based on the 
-     * current model setting.
+     * Called when the wizard should show the previous step.
      * 
      */
-    public void updateDisplay() {
-        // NOOP
-    }
+    void backStep();
     /** 
-     * Called when the step should update the data model based on the
-     * settings of its widgets.
+     * Called when the wizard should show the step with the given id.
+     * 
+     * @param stepID ID of step to show.
+     */
+    void gotoStep(String stepID);
+    /** 
+     * Called when the wizard activity shold be cancelled.
      * 
      */
-    public void updateDataModel() {
-        // NOOP
-    }
+    void cancel();
+    /** 
+     * Called when the wizard is finished.
+     * 
+     */
+    void finish();
 }

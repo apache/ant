@@ -51,17 +51,17 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizard;
 
 
 /**
  * Interface for classes desiring notifiction of when the user
- * completes his/her use of wizzard.
+ * completes his/her use of wizard.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public interface WizzardListener {
+public interface WizardListener {
     /** 
      * Called when the user has clicked the finish button.
      * 

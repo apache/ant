@@ -51,7 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui.wizzard;
+package org.apache.tools.ant.gui.wizard;
 import org.apache.tools.ant.gui.core.ResourceManager;
 
 import javax.swing.*;
@@ -64,13 +64,13 @@ import java.awt.Insets;
 import java.util.*;
 
 /**
- * Top level container and controller for wizzard-type GUI.
+ * Top level container and controller for wizard-type GUI.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Wizzard extends JComponent {
-    /** Resources defining the wizzard contents. Separate from the
+public class Wizard extends JComponent {
+    /** Resources defining the wizard contents. Separate from the
      *  application context resources. */
     private ResourceManager _resources = null;
     /** Container for the step editors. */
@@ -86,21 +86,21 @@ public class Wizzard extends JComponent {
     /** Progress meter. */
     private JProgressBar _progress = null;
     /** Widget for navigating through steps. */
-    private WizzardNavigator _nav = null;
+    private WizardNavigator _nav = null;
     /** The data model to pass on to each step. */
     private Object _model = null;
-    /** The current Wizzard step. */
-    private WizzardStep _curr = null;
-    /** The set of wizzard listeners. */
+    /** The current Wizard step. */
+    private WizardStep _curr = null;
+    /** The set of wizard listeners. */
     private List _listeners = new ArrayList(1);
 
     /** 
      * Standard ctor.
      * 
-     * @param resources Wizzard definition resources
+     * @param resources Wizard definition resources
      * @param dataModel Initial data model.
      */
-    public Wizzard(ResourceManager resources, Object dataModel) {
+    public Wizard(ResourceManager resources, Object dataModel) {
         setLayout(new BorderLayout());
         _resources = resources;
         _model = dataModel;
@@ -146,7 +146,7 @@ public class Wizzard extends JComponent {
         try {
             for(int i = 0; i < steps.length; i++) {
                 Class type = _resources.getClass(steps[i] + ".editor");
-                WizzardStep step = (WizzardStep) type.newInstance();
+                WizardStep step = (WizardStep) type.newInstance();
                 step.setResources(_resources);
                 step.setID(steps[i]);
                 step.setTitle(_resources.getString(steps[i]+ ".title"));
@@ -167,14 +167,14 @@ public class Wizzard extends JComponent {
             }
             // Initialize the first screen with the data model.
             if(steps.length > 0) {
-                WizzardStep first = (WizzardStep)_steps.get(steps[0]);
+                WizardStep first = (WizardStep)_steps.get(steps[0]);
                 first.setDataModel(_model);
                 _curr = first;
                 showStep(first);
             }
         }
         catch(Exception ex) {
-            // If we get here then the wizzard didn't initialize properly.
+            // If we get here then the wizard didn't initialize properly.
             // XXX log me.
             ex.printStackTrace();
         }
@@ -182,20 +182,20 @@ public class Wizzard extends JComponent {
     }
 
     /** 
-     * Add a wizzard listener.
+     * Add a wizard listener.
      * 
      * @param l Listener to add.
      */
-    public void addWizzardListener(WizzardListener l) {
+    public void addWizardListener(WizardListener l) {
         _listeners.add(l);
     }
 
     /** 
-     * Remove a wizzard listener.
+     * Remove a wizard listener.
      * 
      * @param l Listener to remove.
      */
-    public void removeWizzardListener(WizzardListener l) {
+    public void removeWizardListener(WizardListener l) {
         _listeners.remove(l);
     }
 
@@ -204,7 +204,7 @@ public class Wizzard extends JComponent {
      * 
      * @param step Step to go to.
      */
-    private void showStep(WizzardStep step) {
+    private void showStep(WizardStep step) {
         if(step == null) return;
 
         // Transfer data model (in case step wants to create a new one.
@@ -230,34 +230,34 @@ public class Wizzard extends JComponent {
         _curr = step;
     }
 
-    /** Handler for actions invoked by wizzard. */
+    /** Handler for actions invoked by wizard. */
     private class NavHandler implements NavigatorListener {
         public void nextStep() {
             String nextID = _curr.getNext();
             if(nextID != null) {
-                showStep((WizzardStep)_steps.get(nextID));
+                showStep((WizardStep)_steps.get(nextID));
             }
         }
         public void backStep() {
             String prevID = _curr.getPrevious();
             if(prevID != null) {
-                showStep((WizzardStep)_steps.get(prevID));
+                showStep((WizardStep)_steps.get(prevID));
             }
         }
         public void gotoStep(String stepID){
-            showStep((WizzardStep) _steps.get(stepID));
+            showStep((WizardStep) _steps.get(stepID));
         }
         public void cancel() {
             Iterator it = _listeners.iterator();
             while(it.hasNext()) {
-                WizzardListener l = (WizzardListener) it.next();
+                WizardListener l = (WizardListener) it.next();
                 l.canceled();
             }
         }
         public void finish() {
             Iterator it = _listeners.iterator();
             while(it.hasNext()) {
-                WizzardListener l = (WizzardListener) it.next();
+                WizardListener l = (WizardListener) it.next();
                 l.finished(_curr.getDataModel());
             }
         }

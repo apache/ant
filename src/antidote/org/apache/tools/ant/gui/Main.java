@@ -54,8 +54,8 @@
 package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.core.*;
 import org.apache.tools.ant.gui.util.XMLHelper;
-import org.apache.tools.ant.gui.wizzard.Wizzard;
-import org.apache.tools.ant.gui.wizzard.WizzardListener;
+import org.apache.tools.ant.gui.wizard.Wizard;
+import org.apache.tools.ant.gui.wizard.WizardListener;
 import org.apache.tools.ant.gui.command.LoadFileCmd;
 import org.apache.tools.ant.gui.event.EventBus;
 import org.apache.tools.ant.gui.acs.ACSFactory;
@@ -86,7 +86,7 @@ public class Main {
             f.setDefaultCloseOperation(3 /*JFrame.EXIT_ON_CLOSE*/);
             AppContext context = new AppContext(f);
 
-            if(!settings.isWizzardMode()) {
+            if(!settings.isWizardMode()) {
                 EventResponder resp = new EventResponder(context);
                 Antidote gui = new Antidote(context);
 
@@ -114,15 +114,15 @@ public class Main {
                 }
             }
             else {
-                // We are in wizzard mode. Create it.
+                // We are in wizard mode. Create it.
                 ResourceManager resources = new ResourceManager(
-                    "org.apache.tools.ant.gui.resources.buildFileWizzard");
-                Wizzard wiz = new Wizzard(
+                    "org.apache.tools.ant.gui.resources.buildFileWizard");
+                Wizard wiz = new Wizard(
                     resources, ACSFactory.getInstance().createProject());
                 // XXX this is temporary for testing. Eventually
                 // it will launch the regular antidote screen with the
-                // results of the wizzard.
-                wiz.addWizzardListener(new WizzardListener() {
+                // results of the wizard.
+                wiz.addWizardListener(new WizardListener() {
                         public void finished(Object model) {
                             System.out.println(model);
                             System.exit(0);
