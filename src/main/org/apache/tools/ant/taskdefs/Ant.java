@@ -193,9 +193,11 @@ public class Ant extends Task {
      * project, configures a possible logfile, transfers task and
      * data-type definitions, transfers properties (either all or just
      * the ones specified as user properties to the current project,
-     * depending on inheritall).
+     * depending on inheritall), transfers the input handler.
      */
     private void initializeProject() {
+        newProject.setInputHandler(getProject().getInputHandler());
+
         Vector listeners = project.getBuildListeners();
         final int count = listeners.size();
         for (int i = 0; i < count; i++) {

@@ -61,6 +61,8 @@ import junit.framework.AssertionFailedError;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -237,6 +239,19 @@ public class AntTest extends BuildFileTest {
         }
     }
 
+    public void testInputHandlerInheritance() {
+        InputHandler ih = new PropertyFileInputHandler();
+        getProject().setInputHandler(ih);
+        InputHandlerChecker ic = new InputHandlerChecker(ih);
+        getProject().addBuildListener(ic);
+        executeTarget("tripleCall");
+        AssertionFailedError ae = ic.getError();
+        if (ae != null) {
+            throw ae;
+        }
+        getProject().removeBuildListener(ic);
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
@@ -329,6 +344,54 @@ public class AntTest extends BuildFileTest {
                             }
                         }
                     }
+                } catch (AssertionFailedError e) {
+                    error = e;
+                }
+            }
+        }
+
+        AssertionFailedError getError() {
+            return error;
+        }
+
+    }
+
+    private class InputHandlerChecker implements BuildListener {
+        private InputHandler ih;
+        private AssertionFailedError error;
+
+        InputHandlerChecker(InputHandler value) {
+            ih = value;
+        }
+
+        public void buildStarted(BuildEvent event) {
+            check(event);
+        }
+        public void buildFinished(BuildEvent event) {
+            check(event);
+        }
+        public void targetFinished(BuildEvent event) {
+            check(event);
+        }
+        public void taskStarted(BuildEvent event) {
+            check(event);
+        }
+        public void taskFinished(BuildEvent event) {
+            check(event);
+        }
+        public void messageLogged(BuildEvent event) {
+            check(event);
+        }
+
+        public void targetStarted(BuildEvent event) {
+            check(event);
+        }
+
+        private void check(BuildEvent event) {
+            if (error == null) {
+                try {
+                    assertNotNull(event.getProject().getInputHandler());
+                    assertSame(ih, event.getProject().getInputHandler());
                 } catch (AssertionFailedError e) {
                     error = e;
                 }
