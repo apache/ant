@@ -295,6 +295,14 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         this.trace = trace;
     }
 
+    /**
+     * Set the rmic options.
+     *
+     * @param options
+     */
+    public void setRmicoptions(String options) { 
+        this.rmicOptions = options; 
+    }
 
     /**
      * Flag to use the WebSphere 3.5 compatible mapping rules ; optional, default false.
