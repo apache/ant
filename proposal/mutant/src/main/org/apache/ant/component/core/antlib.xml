@@ -1,0 +1,8 @@
+<antlib>
+   <taskdef name="property" classname="org.apache.ant.component.core.Property"/>
+   <taskdef name="echo" classname="org.apache.ant.component.core.Echo"/>
+   <converter target="java.io.File" classname="org.apache.ant.component.core.FileConverter"/>
+   <converter target="java.net.URL" classname="org.apache.ant.component.core.URLConverter"/>
+   <converter target="org.apache.ant.core.types.EnumeratedAttribute" 
+              classname="org.apache.ant.component.core.EnumeratedAttributeConverter"/>
+</antlib>

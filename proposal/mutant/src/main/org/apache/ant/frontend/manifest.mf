@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: Ant 2.0alpha
+Main-Class: org.apache.ant.frontend.Launcher
+Class-Path: core.jar
+Sealed: true
