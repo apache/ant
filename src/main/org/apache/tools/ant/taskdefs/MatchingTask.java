@@ -65,6 +65,7 @@ import java.util.*;
  *
  * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a> 
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  */
 
@@ -74,7 +75,18 @@ public abstract class MatchingTask extends Task {
     protected Vector excludeList = new Vector();
     protected boolean useDefaultExcludes = true;
 
-    // inner class to hold a name on list
+    /**
+     * provide access to properties from within the inner class
+     */
+    protected String getProperty(String name) { 
+        return project.getProperty(name);
+    }
+
+    /**
+     * inner class to hold a name on list.  "If" and "Unless" attributes
+     * may be used to invalidate the entry based on the existence of a 
+     * property (typically set thru the use of the Available task).
+     */
     public class NameEntry {
         private boolean valid = true;
         private String name;
@@ -82,20 +94,12 @@ public abstract class MatchingTask extends Task {
         public String getName() { return valid ? name : null; }
         public void setName(String name) { this.name = name; }
 
-        public void setIfClassFound(String name) {
-            try {
-              Class.forName(name);
-            } catch (ClassNotFoundException cnf) {
-              valid = false;
-            }
+        public void setIf(String name) {
+            if (getProperty(name) == null) valid = false;
         }
 
-        public void setUnlessClassFound(String name) {
-            try {
-              Class.forName(name);
-              valid = false;
-            } catch (ClassNotFoundException cnf) {
-            }
+        public void setUnless(String name) {
+            if (getProperty(name) != null) valid = false;
         }
     }
 
