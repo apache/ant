@@ -737,7 +737,7 @@ public class SQLExec
             while( ( line = in.readLine() ) != null )
             {
                 line = line.trim();
-                line = getProject().replaceProperties( line );
+                line = "" + resolveValue( line );
                 if( line.startsWith( "//" ) )
                     continue;
                 if( line.startsWith( "--" ) )
