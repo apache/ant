@@ -32,6 +32,7 @@ public class Fail
 
     public void addContent( final String message )
     {
+        System.out.println( message );
         checkNullMessage();
         m_message = message;
     }
@@ -51,15 +52,14 @@ public class Fail
     public void execute()
         throws TaskException
     {
-        if( null == m_condition )
-        {
-            throw new TaskException( "Use did not specify a condition" );
-        }
-
         try
         {
-            final boolean failed =
-                m_condition.evaluate( getContext() );
+            boolean failed = true;
+
+            if( null != m_condition )
+            {
+                failed = m_condition.evaluate( getContext() );
+            }
 
             if( failed )
             {
