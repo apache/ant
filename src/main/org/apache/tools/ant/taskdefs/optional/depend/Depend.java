@@ -632,8 +632,16 @@ public class Depend extends MatchingTask {
             int count = deleteAllAffectedFiles();
 
             long duration = (System.currentTimeMillis() - start) / 1000;
+            
+            final int summaryLogLevel;
+            if(count>0) {
+                summaryLogLevel = Project.MSG_INFO;
+            }  else {
+                summaryLogLevel = Project.MSG_DEBUG;
+            }
+            
             log("Deleted " + count + " out of date files in "
-                + duration + " seconds");
+                + duration + " seconds", summaryLogLevel);
         } catch (Exception e) {
             throw new BuildException(e);
         }
