@@ -208,6 +208,7 @@ public class Get extends Task {
             }
 
             FileOutputStream fos = new FileOutputStream(dest);
+            boolean finished = false;
             try {
                 byte[] buffer = new byte[100 * 1024];
                 int length;
@@ -221,11 +222,18 @@ public class Get extends Task {
                 if (verbose) {
                     System.out.println();
                 }
+                finished = true;
             } finally {
                 if (fos != null) {
                     fos.close();
                 }
                 is.close();
+                // we have started to (over)write dest, but failed.
+                // Try to delete the garbage we'd otherwise leave
+                // behind.
+                if (!finished) {
+                    dest.delete();
+                }
             }
 
             //if (and only if) the use file time option is set, then
