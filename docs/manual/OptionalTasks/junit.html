@@ -133,7 +133,11 @@ elements</a>).</p>
   <tr>
     <td valign="top">includeantruntime</td>
     <td valign="top">Implicitly add the Ant classes required to run
-      the tests and JUnit to the classpath in forked mode.</td>
+      the tests and JUnit to the classpath in forked mode.
+      <b>Note:</b> Please read the <a
+      href="../../faq.html#junit-no-runtime-xml">Ant FAQ</a> if you
+      want to set this to <code>false</code> and use the XML formatter
+      at the same time.</td>
     <td align="center" valign="top">No; default is <code>true</code>.</td>
   </tr>
   <tr>
@@ -282,6 +286,12 @@ can be specified.</p>
 <p>If you use the XML formatter, it may not include the same output
 that your tests have written as some characters are illegal in XML
 documents and will be dropped.</p>
+
+<p><b>Note:</b> Please read the <a
+href="../../faq.html#junit-no-runtime-xml">Ant FAQ</a> if you want to
+set the fork attribute to <code>true</code>, the includeAntRuntime
+attribute to <code>false</code> and use the XML formatter at the same
+time.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>

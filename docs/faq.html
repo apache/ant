@@ -345,6 +345,12 @@
         can't seem to get the full stack trace.
       
       </a></li>
+                <li><a href="#junit-no-runtime-xml">
+  
+        Using format="xml", &lt;junit&gt; fails with a
+        <code>NoClassDefFoundError</code> if forked.
+      
+      </a></li>
             </ul>
     
       <h3 class="section">Answers</h3>
@@ -1619,6 +1625,31 @@ mv /tmp/foo $ANT_HOME/bin/antRun
                         <p>As a workaround, run your &lt;java&gt; task with
         <code>fork="true"</code> and Ant will display the full
         trace.</p>
+                    <p class="faq">
+      <a name="junit-no-runtime-xml"></a>
+      
+        Using format="xml", &lt;junit&gt; fails with a
+        <code>NoClassDefFoundError</code> if forked.
+      
+    </p>
+                  <p>The XML formatter needs the <a href="http://www.w3.org/DOM/">DOM classes</a> to work.  If you
+        are using JDK 1.4 or later they are included with your Java
+        Runtime and this problem won't occur.  If you are running JDK
+        1.3 or earlier, the DOM classes have to be on your
+        &lt;junit&gt; task's &lt;classpath&gt;.</p>
+                        <p>Prior to Ant 1.6.0 Ant would include the DOM classes from
+        the XML parser that is used by Ant itself if you set the
+        includeAntRuntime attribute to true (the default).  With Ant
+        1.6.0 this has been changed as this behavior made it
+        impossible to use a different XML parser in your tests.</p>
+                        <p>This means that you have to take care of the DOM classes
+        explicitly starting with Ant 1.6.0.  If you don't need to set
+        up a different XML parser for your tests, the easiest solution
+        is to add</p>
+                        <pre class="code">
+&lt;pathelement path=&quot;${ant.home}/lib/xml-apis.jar:${ant.home}/lib/xercesImpl.jar&quot;/&gt;
+</pre>
+                        <p>to your task's &lt;classpath&gt;.</p>
                     </div>
   </div>
 
