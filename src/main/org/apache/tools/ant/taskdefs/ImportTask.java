@@ -114,7 +114,7 @@ public class ImportTask extends Task {
 //        File buildFileParent=context.buildFileParent;
         File buildFile=(File)currentSource;
         buildFile=new File( buildFile.getAbsolutePath());
-        System.out.println("Importing from " + currentSource);
+        //System.out.println("Importing from " + currentSource);
         File buildFileParent=new File(buildFile.getParent());
 
         project.log("Importing file "+ file +" from "+
