@@ -9,7 +9,7 @@
         <link type="text/css" href="page.css" rel="stylesheet">
         </head>
 
-    <body marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" text="#000000" bgcolor="#ffffff">
+    <body text="#000000" bgcolor="#ffffff">
       <table summary="navigation path" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td nowrap="nowrap" valign="middle" bgcolor="#CFDCED" height="20"><img height="1" width="5" alt="" border="0" src="images/spacer.gif"><font size="2" face="Arial, Helvetica, Sans-serif"><script src="breadcrumbs.js" language="JavaScript" type="text/javascript"></script></font></td>
@@ -50,8 +50,8 @@
                 <tr>
 
                   <td width="8"><img alt="" height="8" width="8" src="images/spacer.gif"></td><td valign="bottom">
-                    <table summary="selected tab" height="30" border="0" cellpadding="0" cellspacing="0">
-                      <tr>
+                    <table summary="selected tab" border="0" cellpadding="0" cellspacing="0">
+                      <tr height="30">
                       <td valign="top" width="5" bgcolor="#4C6C8F"><img height="5" width="5" alt="" src="images/tabSel-left.gif"></td><td valign="middle" bgcolor="#4C6C8F"><font color="#ffffff" size="2" face="Arial, Helvetica, Sans-serif"><b>Home</b></font></td><td valign="top" width="5" bgcolor="#4C6C8F"><img height="5" width="5" alt="" src="images/tabSel-right.gif"></td>
                       </tr>
                     </table>
@@ -141,7 +141,7 @@
                     <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant">Bug Database</a>
                 </li>
             <li>
-                    <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&bug_severity=Enhancement">Enhancement Requests</a>
+                    <a href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;bug_severity=Enhancement">Enhancement Requests</a>
                 </li>
           </ul>
     </li>
@@ -161,7 +161,7 @@
                 </li>
           </ul>
     </li>
-    </ul>
+    </ul></div>
                 </td><td valign="bottom" bgcolor="#4C6C8F"><img width="10" height="10" alt="" src="images/spacer.gif"></td><td bgcolor="#294563"><img width="1" height="1" alt="" src="images/spacer.gif"></td>
               </tr>
               <tr>
@@ -196,8 +196,7 @@
           </td>
         </tr>
       </table>
-              <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+          <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Downloading Ant"><strong>Downloading Ant</strong></a></font></td></tr>
   </table>
 
@@ -215,9 +214,7 @@ Thus they must be untarred with a GNU compatible version of
                                 <p>If you do not see the file you need in the links below, please see
 the <a href="http://www.apache.org/dist/ant/">master distribution
 directory</a> or, preferably, its <a href="[preferred]/ant/">mirror</a>.</p>
-                    </p>
-            <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+                      <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Mirror"><strong>Mirror</strong></a></font></td></tr>
   </table>
 
@@ -239,9 +236,7 @@ Other mirrors: <select name="Preferred">
 </select>
 <input type="submit" value="Change" />     
 </form>
-                    </p>
-            <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+                      <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Current Release of Ant"><strong>Current Release of Ant</strong></a></font></td></tr>
   </table>
 
@@ -263,18 +258,14 @@ Other mirrors: <select name="Preferred">
 [<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.tar.bz2.asc">PGP</a>]
 [<a href="http://www.apache.org/dist/ant/source/jakarta-ant-1.5.1-src.tar.bz2.md5">MD5</a>]</li>
 </ul>
-                    </p>
-            <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+                      <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Nightly Builds"><strong>Nightly Builds</strong></a></font></td></tr>
   </table>
 
                         <p>If you wish to use the latest Ant features, you can try downloading a
 <a href="http://cvs.apache.org/builds/jakarta-ant/nightly/">nightly build</a>.
 </p>
-                    </p>
-            <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+                      <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Old Ant Releases"><strong>Old Ant Releases</strong></a></font></td></tr>
   </table>
 
@@ -282,9 +273,7 @@ Other mirrors: <select name="Preferred">
 releases are only provided as <code>zip</code> archives that can be
 extracted by <code>jar xf </code><em>archive.zip</em> - we highly
 recommend to not use those releases but upgrade to Ant's <a href="[location]#Current Release of Ant">latest</a> release.</p>
-                    </p>
-            <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+                      <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Verify Releases"><strong>Verify Releases</strong></a></font></td></tr>
   </table>
 
@@ -317,8 +306,7 @@ included in many unix distributions.  It is also available as part of
 Textutils</a>.  Windows users can get binary md5 programs from <a href="http://www.fourmilab.ch/md5/">here</a>, <a href="http://www.pc-tools.net/win32/freeware/console/">here</a>, or
 <a href="http://www.slavasoft.com/fsum/">here</a>.</p>
                                 <p>We highly recommend to verify the PGP signature, though.</p>
-                    </p>
-  
+                
   
                     </div>
                 </td><td width="10"><img width="10" height="1" alt="" src="images/spacer.gif"></td>
@@ -327,8 +315,8 @@ Textutils</a>.  Windows users can get binary md5 programs from <a href="http://w
           </td>
         </tr>
       </table>
-      <table summary="footer" cellspacing="0" cellpadding="0" width="100%" height="20" border="0">
-        <tr>
+      <table summary="footer" cellspacing="0" cellpadding="0" width="100%" border="0">
+        <tr height="20">
           <td colspan="2" height="1" bgcolor="#4C6C8F"><img height="1" width="1" alt="" src="images/spacer.gif"><a href="images/label.gif"></a><a href="images/page.gif"></a><a href="images/chapter.gif"></a><a href="images/chapter_open.gif"></a><a href="images/current.gif"></a><a href="/favicon.ico"></a></td>
         </tr>
         <tr>

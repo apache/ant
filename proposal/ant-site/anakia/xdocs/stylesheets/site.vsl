@@ -94,8 +94,7 @@
 #end
 
 #macro ( section $section)
-      <p>
-  <table nowrap border="0" cellspacing="0" cellpadding="2" width="100%">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="$blue3"><font color="$lightfg"><a name="$escape.getText($section.getAttributeValue("name"))"><strong>$section.getAttributeValue("name")</strong></a></font></td></tr>
   </table>
 
@@ -112,7 +111,6 @@
           $xmlout.outputString($items)
         #end
       #end
-      </p>
 #end
 
 ## This is where the FAQ specific macro's live
