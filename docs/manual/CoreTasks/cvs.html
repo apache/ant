@@ -23,8 +23,14 @@ preferred over the <i>checkout</i> command, because of speed.</p>
   <tr>
     <td valign="top">command</td>
     <td valign="top">the CVS command to execute.</td>
-    <td align="center" valign="top">No, default &quot;checkout&quot;</td>
+    <td align="center" valign="top">No, default &quot;checkout&quot;.</td>
   </tr>
+  <tr>
+    <td valign="top">commpression</td>
+    <td valign="top"><code>true</code>, <code>false</code>, or the number 1-9 (corresponding to possible values for CVS&apos; <code>-z#</code> argument). Any other value is treated as false</td>
+    <td align="center" valign="top">No. Defaults to no compression. if passed <code>true</code>, level 3 compression is assumed.</td>
+  </tr>
+
   <tr>
     <td valign="top">cvsRoot</td>
     <td valign="top">the CVSROOT variable.</td>
@@ -107,8 +113,37 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
 <pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot;/&gt;</pre>
 <p>updates the package/module that has previously been checked out into
 &quot;${ws.dir}&quot;.</p>
+
 <pre>  &lt;cvs command=&quot;-q diff -u -N&quot; output=&quot;patch.txt&quot;/&gt;</pre>
-<p>silently (-q) creates a file called patch.txt which contains a unified (-u) diff which includes new files added via &quot;cvs add&quot; (-N) and can be used as input to patch.</p>
+
+<p>silently (-q) creates a file called patch.txt which contains a unified (-u) diff which includes new files added via &quot;cvs add&quot; (-N) and can be used as input to patch.
+The equivalent, using  &lt;commandline&gt; elements, is:
+</p>
+<pre>
+&lt;cvs output="patch"&gt;
+    &lt;commandline&gt;
+        &lt;argument value="-q"/&gt;
+        &lt;argument value="diff"/&gt;
+        &lt;argument value="-u"/&gt;
+        &lt;argument value="-N"/&gt;
+    &lt;/commandline&gt;
+&lt;/cvs&gt;
+</pre>
+or:
+<pre>
+&lt;cvs output="patch"&gt;
+    &lt;commandline&gt;
+        &lt;argument line="-q diff -u -N"/&gt;
+    &lt;/commandline&gt;
+&lt;/cvs&gt;
+</pre>
+<p>
+You may include as many &lt;commandline&gt; elements as you like. 
+Each will inherit the <code>failonerror</code>, <code>compression</code>, and other &quot;global&quot; parameters
+from the <code>&lt;cvs&gt;</code> element.
+</p>
+
+
 <pre>  &lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
 <p>Updates from the head of repository ignoring sticky bits (-A) and creating any new directories as necessary (-d).</p>
 <p>Note: the text of the command is passed to cvs &quot;as-is&quot; so any cvs options should appear
