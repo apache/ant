@@ -1,0 +1,56 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Nice Task</title>
+</head>
+
+<body>
+
+<h2><a name="echo">Nice</a></h2>
+<h3>Description</h3>
+<p>Provide "nice-ness" to the current thread
+   and/or query the current value.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">currentpriority</td>
+    <td valign="top">the name of the property whose value should be
+                     set to the current &quot;nice-ness&quot; level.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">newpriority</td>
+    <td valign="top">the value to which the
+                     &quot;nice-ness&quot; level should be set.
+                     Must be a valid Java Thread priority.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>   &lt;nice newpriority=&quot;10&quot; /&gt;</pre>
+Set the Thread priority to 10.
+<pre>   &lt;nice currentpriority=&quot;priority&quot; /&gt;</pre>
+Store the current Thread priority in the user property "priority".
+<pre>
+   &lt;nice currentpriority=&quot;currentpriority&quot; newpriority=&quot;1&quot; /&gt;
+</pre>
+<p>Set the current Thread priority to 1, storing the original
+priority in the user property "currentpriority".  This
+can be used to set the priority back to its original value later.
+</p>
+<hr>
+
+<p align="center">Copyright &copy; 2004 The Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

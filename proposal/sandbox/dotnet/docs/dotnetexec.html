@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>DotNetExec Task</title>
+  </head>
+
+  <body>
+    <h2><a name="dotnetexec">DotNetExec</a></h2>
+
+    <h3>Description</h3>
+
+    <p>Executes a .NET assembly that's on your PATH or pointed to
+    directly by the executable attribute.</p>
+
+    <p>This task is an extension of Ant's <a
+    href="http://ant.apache.org/manual/CoreTasks/exec.html">exec</a>
+    task and supports all attributes and nested child elements of that
+    task.  Use the executable attribute to specify the name of the
+    assembly (including the extension).</p>
+
+    <p>This task allows you to choose the .NET framework via the
+    <code>vm</code> attribute.  The default value is "microsoft" on
+    Windows and "mono" on all other platforms.  "microsoft" is a magic
+    name that means "run the assembly as executable directly" - this
+    may also work for Mono on Linux systems with the binfmt feature
+    described in the <a
+    href="http://www.go-mono.org/faq.html#q86">Mono FAQ</a>.</p>
+
+    <hr/>
+      <p align="center">Copyright &copy; 2003-2004 The Apache Software Foundation. All rights Reserved.</p>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!-- Copyright 2004 The Apache Software Foundation. -->
+<project name="redirector" basedir=".">
+
+	<target name="test1" description="create ref">
+		<redirector id="test1" output="out" />
+	</target>
+
+	<target name="test2" depends="test1" description="fail">
+		<redirector refid="test1" output="out" />
+	</target>
+
+	<target name="test3" depends="test1" description="fail">
+		<redirector refid="test1">
+			<outputmapper type="flatten" />
+		</redirector>
+	</target>
+
+	<target name="test4" depends="test1" description="pass">
+		<redirector>
+			<outputmapper type="flatten" />
+		</redirector>
+	</target>
+
+</project>

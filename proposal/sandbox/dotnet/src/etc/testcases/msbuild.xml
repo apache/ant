@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+ Copyright  2003-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="msbuild" basedir="." default="echo"
+  xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet">
+
+  <taskdef 
+    uri="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+    resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml">
+    <classpath>
+      <pathelement location="../../../build/lib/dotnet.jar"/>
+    </classpath>
+  </taskdef>
+
+  <property environment="env"/>
+  <condition property="msbuild.found">
+    <or>
+      <available file="MSBuild.exe" filepath="${env.PATH}"/>
+      <available file="MSBuild.exe" filepath="${env.Path}"/>
+      <available file="MSBuild.exe"/>
+    </or>
+  </condition>
+
+  <target name="echo">
+    <msbuild 
+      buildfile="src/msbuild.proj" 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <target name="echo"/>
+      <property name="foo" value="bar"/>
+    </msbuild>
+  </target>
+
+  <target name="nested-file">
+    <property name="foo" value="bar"/>
+    <msbuild 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <build>
+        <Project DefaultTargets="echo">
+          <Target Name="echo">
+            <Task Name="Echo" Message="foo is ${foo}"/>
+          </Target>
+        </Project>
+      </build>
+    </msbuild>
+  </target>
+
+  <target name="nested-task">
+    <property name="foo" value="bar"/>
+    <msbuild 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <build>
+        <Task Name="Echo" Message="foo is ${foo}"/>
+      </build>
+    </msbuild>
+  </target>
+
+</project>

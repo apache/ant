@@ -1,0 +1,40 @@
+dotnet sandbox README
+=====================
+
+Author:
+-------
+
+Stefan Bodewig, but feel free to go ahead and modify to your liking.
+
+Goal:
+-----
+
+Provide a simple infrastructure to execute .NET applications from
+within Ant for different VMs so that the user doesn't have to change
+the build file when she wants to run Mono on Linux and Microsoft's VM
+on Windows.
+
+This sounds far more ambitioned than it actually is.
+
+Short term goals are:
+
+* A <dotnetexec> task that can be used as
+
+  <dotnetexec executable="ExampleCsc.exe"/>
+
+  without testing for the environment (see the dotnet.xml build file
+  for Ant's tests as an example for what may become simpler with
+  this).
+
+* A <nant> task.
+
+* A <msbuild> task - if only for the fun of having it.
+
+* A <wix> task.
+
+Mid term goals:
+
+* A <nunit> task.
+
+Those tasks should end up in an antlib of their own in order to be
+distributable independent of Ant.

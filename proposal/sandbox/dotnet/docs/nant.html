@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>NAnt Task</title>
+  </head>
+
+  <body>
+    <h2><a name="dotnetexec">NAnt</a></h2>
+
+    <h3>Description</h3>
+
+    <p>Runs the <a href="http://nant.sourceforge.net/">NAnt</a> build
+    tool.</p>
+
+    <p>You can either use an existing build file or nest a build file
+    (snippet) as a child into the task.  If you don't specify either,
+    NAnt's default build file search algorithm will apply.</p>
+
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">buildfile</td>
+        <td valign="top">External build file to invoke NAnt on.</td>
+        <td align="center">No.</td>
+      </tr>
+      <tr>
+        <td valign="top">vm</td>
+        <td valign="top">Same as <a
+            href="dotnetexec.html">dotnetexec</a>'s vm attribute.
+          Specify the framework to use.</td>
+        <td align="center">No.</td>
+      </tr>
+    </table>
+
+    <h3>Parameters specified as nested elements</h3>
+    <h4>target</h4>
+
+    <p><code>target</code> has a single required attribute name -
+    specifies a target to be run.</p>
+
+    <h4>property</h4>
+
+    <p><code>property</code> has two required attributes.  name and
+    value that specify name and value of a property that is to be
+    defined in the NAnt invocation.</p>
+
+    <h4>build</h4>
+
+    <p>This element allows no attributes.  You can nest a NAnt build
+    file into it and NAnt will be executed on that.  You can also nest
+    a build file snippet instead and Ant will wrap the necessary NAnt
+    <code>&lt;project&gt; around it.</code></p>
+
+    <h3>Examples</h3>
+
+    <p>Let NAnt search for a *.build file in the (Ant) project's base
+    directory and execute the default target in it:</p>
+
+    <pre>&lt;nant/&gt;</pre>
+    
+    <p>Let NAnt execute the targets named foo and bar in the build
+    file nant.build in Ant's basedir and pass the property
+    <code>-D:test=testvalue</code> to it:</p>
+
+    <pre>
+      &lt;nant buildfile="nant.build"&gt;
+        &lt;target name="foo"/&gt;
+        &lt;target name="bar"/&gt;
+        &lt;property name="test" value="testvalue"/&gt;
+      &lt;/nant&gt;
+    </pre>
+
+    <p>Define a build file embeded into the task, let NAnt execute the
+    echo target of that build file.</p>
+
+    <pre>
+      &lt;nant&gt;
+        &lt;target name="echo"&gt;
+        &lt;build&gt;
+          &lt;project basedir="." default="empty"&gt;
+            &lt;target name="empty"/&gt;
+            &lt;target name="echo"&gt;
+              &lt;echo message="this is NAnt"/&gt;
+            &lt;/target&gt;
+          &lt;/project&gt;
+        &lt;/build&gt;
+      &lt;/nant&gt;
+    </pre>
+
+    <p>Run NAnt's echo task:</p>
+
+    <pre>
+      &lt;nant&gt;
+        &lt;build&gt;
+          &lt;echo message="this is NAnt"/&gt;
+        &lt;/build&gt;
+      &lt;/nant&gt;
+    </pre>
+
+    <hr/>
+      <p align="center">Copyright &copy; 2003-2004 The Apache Software Foundation. All rights Reserved.</p>
+  </body>
+</html>
