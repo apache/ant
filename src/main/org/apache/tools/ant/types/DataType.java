@@ -76,11 +76,11 @@ public abstract class DataType extends ProjectComponent {
     /**
      * The descriptin the user has set.
      */
-    protected String description = null;
+    protected String description;
     /**
      * Value to the refid attribute.
      */
-    protected Reference ref = null;
+    protected Reference ref;
     /**
      * Are we sure we don't hold circular references?
      *
