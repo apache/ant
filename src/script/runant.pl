@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 #
-#   Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+#   Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
 #   reserved.
 #
 #######################################################################
@@ -18,7 +18,7 @@
 # the code is not included. 
 #
 # created:         2000-8-24
-# last modified:   2000-8-24
+# last modified:   $Date$
 # author:          Steve Loughran steve_l@sourceforge.net
 #######################################################################
 #
@@ -86,38 +86,11 @@ if ($onnetware == 1)
   $localpath="";
 } 
 
-#add jar files. I am sure there is a perl one liner to do this.
-my $jarpattern="$HOME/lib/*.jar";
-my @jarfiles =glob($jarpattern);
-print "jarfiles=@jarfiles\n" if ($debug);
-my $jar;
-foreach $jar (@jarfiles )
-        {
-        $localpath.="$s$jar";
-        }
-
-#if Java home is defined, look for tools.jar & classes.zip and add to classpath
-my $JAVA_HOME = $ENV{JAVA_HOME};
-if ($JAVA_HOME ne "")
-        {
-        my $tools="$JAVA_HOME/lib/tools.jar";
-        if (-e "$tools")
-                {
-                $localpath .= "$s$tools";
-                }
-        my $classes="$JAVA_HOME/lib/classes.zip";
-        if (-e $classes)
-                {
-                $localpath .= "$s$classes";
-                }
-        }
-else
-        {
-    print "\n\nWarning: JAVA_HOME environment variable is not set.\n".
-                "If the build fails because sun.* classes could not be found\n".
-                "you will need to set the JAVA_HOME environment variable\n".
-                "to the installation directory of java\n";
-        }
+if ($localpath eq "") {
+  $localpath = "$HOME/lib/ant-launcher.jar";
+} else {
+  $localpath = "$HOME/lib/ant-launcher.jar$s$localpath";
+}
 
 #set JVM options and Ant arguments, if any
 my @ANT_OPTS=split(" ", $ENV{ANT_OPTS});
@@ -131,6 +104,7 @@ if($ENV{JIKESPATH} ne "")
 
 #construct arguments to java
 my @ARGS;
+push @ARGS, @ANT_OPTS;
 if ($onnetware == 1)
 {
 # make classpath literally $CLASSPATH; and then the contents of $localpath
@@ -143,8 +117,7 @@ else
   push @ARGS, "-classpath", "$localpath";
 }
 push @ARGS, "-Dant.home=$HOME";
-push @ARGS, @ANT_OPTS;
-push @ARGS, "org.apache.tools.ant.Main", @ANT_ARGS;
+push @ARGS, "org.apache.tools.ant.launch.Launcher", @ANT_ARGS;
 push @ARGS, @ARGV;
 
 print "\n $JAVACMD @ARGS\n\n" if ($debug);
