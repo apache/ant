@@ -203,8 +203,12 @@ public class PropertyFile extends Task
             if (m_propertyfile.exists())
             {
                 log("Updating property file: "+m_propertyfile.getAbsolutePath());
-                m_properties.load(new BufferedInputStream(
-                                    new FileInputStream(m_propertyfile)));
+                FileInputStream fis = new FileInputStream(m_propertyfile);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                m_properties.load(bis);
+                if (fis != null) {
+                    fis.close();
+                }
             }
             else
             {
