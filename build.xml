@@ -899,6 +899,8 @@
                unless="xalan.present"/>
       <exclude name="${optional.package}/TraXLiaisonTest.java"
                unless="trax.present"/>
+      <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
+               unless="jdk1.2+"/>
 
       <exclude name="${optional.package}/perforce/*.java"
                unless="jakarta.oro.present" />
@@ -992,6 +994,8 @@
                    unless="xslp.present"/>
           <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
                    unless="xalan.present"/>
+          <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
+                   unless="jdk1.2+"/>
 
           <exclude name="${optional.package}/perforce/*.java"
                    unless="jakarta.oro.present" />
