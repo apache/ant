@@ -50,4 +50,16 @@
             <property-test-type value="value 3"/>
         </property>
     </target>
+
+    <!-- Test properties with invalid names -->
+    <target name="bad-prop-name1">
+        <property name="badname!" value="value"/>
+    </target>
+    <target name="bad-prop-name2">
+        <property name="bad name" value="value"/>
+    </target>
+    <target name="bad-prop-name3">
+        <property name="" value="value"/>
+    </target>
+
 </project>

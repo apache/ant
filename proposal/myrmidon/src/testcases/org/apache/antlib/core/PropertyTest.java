@@ -12,6 +12,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.LogMessageTracker;
+import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 
 /**
  * Test cases for <property> task.
@@ -89,6 +90,28 @@ public class PropertyTest
         executeTargetExpectError( projectFile, "too-many-values1", messages );
         executeTargetExpectError( projectFile, "too-many-values2", messages );
         executeTargetExpectError( projectFile, "too-many-values3", messages );
+    }
+
+    /**
+     * Tests basic validation of property names.
+     */
+    public void testNameValidation() throws Exception
+    {
+        final File projectFile = getTestResource( "property.ant" );
+
+        final Resources contextResources
+            = ResourceManager.getPackageResources( DefaultTaskContext.class );
+
+        // Invalid names
+        String[] messages = new String[]
+        {
+            null,
+            contextResources.getString( "bad-property-name.error" ),
+            null
+        };
+        executeTargetExpectError( projectFile, "bad-prop-name1", messages );
+        executeTargetExpectError( projectFile, "bad-prop-name2", messages );
+        executeTargetExpectError( projectFile, "bad-prop-name3", messages );
     }
 
 }

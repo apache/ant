@@ -20,6 +20,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
 import org.apache.myrmidon.interfaces.workspace.PropertyResolver;
 
 /**
@@ -33,6 +34,12 @@ public class DefaultTaskContext
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
+
+    // Property name validator allows digits, but no internal whitespace.
+    private static DefaultNameValidator m_propertyNameValidator = new DefaultNameValidator();
+    static {
+        m_propertyNameValidator.setAllowInternalWhitespace( false );
+    }
 
     private final Map m_contextData = new Hashtable();
     private final TaskContext m_parent;
@@ -199,6 +206,7 @@ public class DefaultTaskContext
     public void setProperty( final String name, final Object value )
         throws TaskException
     {
+        checkPropertyName( name );
         checkPropertyValid( name, value );
         m_contextData.put( name, value );
     }
@@ -360,6 +368,22 @@ public class DefaultTaskContext
             throw new ContextException( message );
         }
         return value;
+    }
+
+    /**
+     * Checks that the supplied property name is valid.
+     */
+    private void checkPropertyName( final String name ) throws TaskException
+    {
+        try
+        {
+            m_propertyNameValidator.validate( name );
+        }
+        catch( Exception e )
+        {
+            String message = REZ.getString( "bad-property-name.error" );
+            throw new TaskException( message, e );
+        }
     }
 
     /**

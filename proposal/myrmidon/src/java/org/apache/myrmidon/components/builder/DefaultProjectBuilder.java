@@ -8,6 +8,7 @@
 package org.apache.myrmidon.components.builder;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,11 +23,13 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.framework.conditions.AndCondition;
+import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.framework.conditions.IsSetCondition;
 import org.apache.myrmidon.framework.conditions.NotCondition;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
+import org.apache.myrmidon.interfaces.builder.ProjectException;
+import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
@@ -37,6 +40,7 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ *
  * @ant:type type="project-builder" name="xml"
  * @ant:type type="project-builder" name="ant"
  */
@@ -54,36 +58,37 @@ public class DefaultProjectBuilder
     private final static int IMPLICIT_TASKS = 2;
     private final static int TARGETS = 3;
 
+    // Use a name validator with the default rules.
+    private DefaultNameValidator m_nameValidator = new DefaultNameValidator();
+
     /**
      * build a project from file.
      *
      * @param source the source
      * @return the constructed Project
-     * @exception Exception if an error occurs
+     * @exception ProjectException if an error occurs
      */
     public Project build( final String source )
-        throws Exception
+        throws ProjectException
     {
         final File file = new File( source );
         return build( file, new HashMap() );
     }
 
     private Project build( final File file, final HashMap projects )
-        throws Exception
+        throws ProjectException
     {
-        final URL systemID = file.toURL();
+        final URL systemID = extractURL( file );
         final Project result = (Project)projects.get( systemID.toString() );
         if( null != result )
         {
             return result;
         }
 
-        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+        // Parse the project file
+        final Configuration configuration = parseProject( systemID );
 
-        process( systemID, handler );
-
-        final Configuration configuration = handler.getConfiguration();
-
+        // Build the project model
         final DefaultProject project = buildProject( file, configuration );
 
         projects.put( systemID.toString(), project );
@@ -94,20 +99,33 @@ public class DefaultProjectBuilder
         return project;
     }
 
-    protected void process( final URL systemID,
-                            final SAXConfigurationHandler handler )
-        throws Exception
+    /**
+     * Parses the project.
+     */
+    private Configuration parseProject( final URL systemID )
+        throws ProjectException
     {
-        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        final SAXParser saxParser = saxParserFactory.newSAXParser();
-        final XMLReader parser = saxParser.getXMLReader();
-        parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
-        parser.setFeature( "http://xml.org/sax/features/namespaces", false );
-        //parser.setFeature( "http://xml.org/sax/features/validation", false );
+        try
+        {
+            final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+            final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+            final SAXParser saxParser = saxParserFactory.newSAXParser();
+            final XMLReader parser = saxParser.getXMLReader();
+            parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+            parser.setFeature( "http://xml.org/sax/features/namespaces", false );
+            //parser.setFeature( "http://xml.org/sax/features/validation", false );
 
-        parser.setContentHandler( handler );
-        parser.setErrorHandler( handler );
-        parser.parse( systemID.toString() );
+            parser.setContentHandler( handler );
+            parser.setErrorHandler( handler );
+            parser.parse( systemID.toString() );
+
+            return handler.getConfiguration();
+        }
+        catch( Exception e )
+        {
+            String message = REZ.getString( "ant.project-parse.error" );
+            throw new ProjectException( message, e );
+        }
     }
 
     /**
@@ -116,23 +134,20 @@ public class DefaultProjectBuilder
      * @param file the file from which configuration was loaded
      * @param configuration the configuration loaded
      * @return the created Project
-     * @exception Exception if an error occurs
-     * @exception Exception if an error occurs
-     * @exception ConfigurationException if an error occurs
+     * @exception ProjectException if an error occurs building the project
      */
     private DefaultProject buildProject( final File file,
                                          final Configuration configuration )
-        throws Exception
+        throws ProjectException
     {
         if( !configuration.getName().equals( "project" ) )
         {
             final String message = REZ.getString( "ant.no-project-element.error" );
-            throw new Exception( message );
+            throw new ProjectException( message );
         }
 
         //get project-level attributes
-        final String projectName = configuration.getAttribute( "name",
-                                                               FileUtil.removeExtension( file.getName() ) );
+        final String projectName = getProjectName( configuration, file );
         final String baseDirectoryName = configuration.getAttribute( "basedir", null );
         final String defaultTarget = configuration.getAttribute( "default", "main" );
         final Version version = getVersion( configuration );
@@ -141,7 +156,7 @@ public class DefaultProjectBuilder
         {
             final String message =
                 REZ.getString( "ant.bad-version.error", VERSION, version );
-            throw new Exception( message );
+            throw new ProjectException( message );
         }
 
         //determine base directory for project.  Use the directory containing
@@ -169,11 +184,51 @@ public class DefaultProjectBuilder
     }
 
     /**
+     * Get the project name from the configuration, or create a default name if none
+     * was supplied.
+     */
+    private String getProjectName( final Configuration configuration, final File file )
+        throws ProjectException
+    {
+        String projectName = configuration.getAttribute( "name", null );
+
+        if( projectName == null )
+        {
+            // Create a name based on the file name.
+            String fileNameBase = FileUtil.removeExtension( file.getName() );
+            try
+            {
+                projectName = m_nameValidator.makeValidName( fileNameBase );
+            }
+            catch( Exception e )
+            {
+                String message = REZ.getString( "ant.project-create-name.error" );
+                throw new ProjectException( message, e );
+            }
+        }
+        else
+        {
+            // Make sure the supplied name is valid.
+            try
+            {
+                m_nameValidator.validate( projectName );
+            }
+            catch( Exception e )
+            {
+                String message = REZ.getString( "ant.project-bad-name.error" );
+                throw new ProjectException( message, e );
+            }
+        }
+        return projectName;
+
+    }
+
+    /**
      * Retrieve the version attribute from the specified configuration element.
      * Throw exceptions with meaningful errors if malformed or missing.
      */
     private Version getVersion( final Configuration configuration )
-        throws Exception
+        throws ProjectException
     {
         try
         {
@@ -183,7 +238,7 @@ public class DefaultProjectBuilder
         catch( final ConfigurationException ce )
         {
             final String message = REZ.getString( "ant.version-missing.error" );
-            throw new ConfigurationException( message, ce );
+            throw new ProjectException( message, ce );
         }
     }
 
@@ -191,7 +246,7 @@ public class DefaultProjectBuilder
      * Utility function to extract version
      */
     private Version parseVersion( final String versionString )
-        throws Exception
+        throws ProjectException
     {
 
         try
@@ -202,8 +257,7 @@ public class DefaultProjectBuilder
         {
             final String message =
                 REZ.getString( "ant.malformed.version", versionString );
-            getLogger().warn( message );
-            throw new ConfigurationException( message, e );
+            throw new ProjectException( message, e );
         }
     }
 
@@ -212,12 +266,12 @@ public class DefaultProjectBuilder
      *
      * @param project the project
      * @param configuration the Configuration
-     * @exception Exception if an error occurs
+     * @exception ProjectException if an error occurs
      */
     private void buildTopLevelProject( final DefaultProject project,
                                        final Configuration configuration,
                                        final HashMap projects )
-        throws Exception
+        throws ProjectException
     {
         final ArrayList implicitTaskList = new ArrayList();
         final Configuration[] children = configuration.getChildren();
@@ -277,7 +331,7 @@ public class DefaultProjectBuilder
             {
                 final String message =
                     REZ.getString( "ant.unknown-toplevel-element.error", name, element.getLocation() );
-                throw new Exception( message );
+                throw new ProjectException( message );
             }
         }
 
@@ -291,7 +345,7 @@ public class DefaultProjectBuilder
     private void buildProjectRef( final DefaultProject project,
                                   final Configuration element,
                                   final HashMap projects )
-        throws Exception
+        throws ProjectException
     {
         final String name = element.getAttribute( "name", null );
         final String location = element.getAttribute( "location", null );
@@ -300,27 +354,31 @@ public class DefaultProjectBuilder
         {
             final String message =
                 REZ.getString( "ant.projectref-no-name.error", element.getLocation() );
-            throw new Exception( message );
+            throw new ProjectException( message );
         }
 
-        if( !validName( name ) )
+        try
+        {
+            m_nameValidator.validate( name );
+        }
+        catch( Exception e )
         {
             final String message =
                 REZ.getString( "ant.projectref-bad-name.error", element.getLocation() );
-            throw new Exception( message );
+            throw new ProjectException( message, e );
         }
 
         if( null == location )
         {
             final String message =
                 REZ.getString( "ant.projectref-no-location.error", element.getLocation() );
-            throw new Exception( message );
+            throw new ProjectException( message );
         }
 
         // Build the URL of the referenced projects
         final File baseDirectory = project.getBaseDirectory();
         final File file = FileUtil.resolveFile( baseDirectory, location );
-        final String systemID = file.toURL().toString();
+        final String systemID = extractURL( file ).toString();
 
         // Locate the referenced project, building it if necessary
         Project other = (Project)projects.get( systemID );
@@ -333,9 +391,22 @@ public class DefaultProjectBuilder
         project.addProject( name, other );
     }
 
+    private URL extractURL( final File file ) throws ProjectException
+    {
+        try
+        {
+            return file.toURL();
+        }
+        catch( MalformedURLException e )
+        {
+            final String message = REZ.getString( "ant.project-unexpected.error" );
+            throw new ProjectException( message, e );
+        }
+    }
+
     private void buildTypeLib( final DefaultProject project,
                                final Configuration element )
-        throws Exception
+        throws ProjectException
     {
         final String library = element.getAttribute( "library", null );
         final String name = element.getAttribute( "name", null );
@@ -345,7 +416,7 @@ public class DefaultProjectBuilder
         {
             final String message =
                 REZ.getString( "ant.import-no-library.error", element.getLocation() );
-            throw new Exception( message );
+            throw new ProjectException( message );
         }
 
         if( null == name || null == type )
@@ -354,7 +425,7 @@ public class DefaultProjectBuilder
             {
                 final String message =
                     REZ.getString( "ant.import-malformed.error", element.getLocation() );
-                throw new Exception( message );
+                throw new ProjectException( message );
             }
         }
 
@@ -368,14 +439,14 @@ public class DefaultProjectBuilder
      * @param target the Configuration
      */
     private void buildTarget( final DefaultProject project, final Configuration target )
-        throws Exception
+        throws ProjectException
     {
         final String name = target.getAttribute( "name", null );
         final String depends = target.getAttribute( "depends", null );
         final String ifCondition = target.getAttribute( "if", null );
         final String unlessCondition = target.getAttribute( "unless", null );
 
-        verifyName( name, target );
+        verifyTargetName( name, target );
 
         if( getLogger().isDebugEnabled() )
         {
@@ -392,24 +463,30 @@ public class DefaultProjectBuilder
         project.addTarget( name, defaultTarget );
     }
 
-    private void verifyName( final String name, final Configuration target ) throws Exception
+    private void verifyTargetName( final String name, final Configuration target )
+        throws ProjectException
     {
         if( null == name )
         {
             final String message =
                 REZ.getString( "ant.target-noname.error", target.getLocation() );
-            throw new Exception( message );
+            throw new ProjectException( message );
         }
 
-        if( !validName( name ) )
+        try
+        {
+            m_nameValidator.validate( name );
+        }
+        catch( Exception e )
         {
             final String message =
                 REZ.getString( "ant.target-bad-name.error", target.getLocation() );
-            throw new Exception( message );
+            throw new ProjectException( message, e );
         }
     }
 
-    private String[] buildDependsList( final String depends, final Configuration target ) throws Exception
+    private String[] buildDependsList( final String depends, final Configuration target )
+        throws ProjectException
     {
         String[] dependencies = null;
 
@@ -428,7 +505,7 @@ public class DefaultProjectBuilder
                     final String message = REZ.getString( "ant.target-bad-dependency.error",
                                                           target.getName(),
                                                           target.getLocation() );
-                    throw new Exception( message );
+                    throw new ProjectException( message );
                 }
 
                 if( getLogger().isDebugEnabled() )
@@ -447,7 +524,6 @@ public class DefaultProjectBuilder
 
     private Condition buildCondition( final String ifCondition,
                                       final String unlessCondition )
-        throws Exception
     {
         final AndCondition condition = new AndCondition();
 
@@ -474,17 +550,5 @@ public class DefaultProjectBuilder
         }
 
         return condition;
-    }
-
-    protected boolean validName( final String name )
-    {
-        if( -1 != name.indexOf( "->" ) )
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
     }
 }

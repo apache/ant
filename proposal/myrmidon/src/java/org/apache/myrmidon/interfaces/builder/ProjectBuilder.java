@@ -25,8 +25,8 @@ public interface ProjectBuilder
      *
      * @param source the source
      * @return the constructed Project
-     * @exception Exception if an error occurs
+     * @exception ProjectException if an error occurs
      */
     Project build( String source )
-        throws Exception;
+        throws ProjectException;
 }

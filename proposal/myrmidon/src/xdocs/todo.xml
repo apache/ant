@@ -209,12 +209,6 @@
                     <li>Fire ProjectListener events projectStarted() and projectFinished()
                     events on start and finish of referenced projects, adding indicator methods
                     to ProjectEvent.</li>
-                    <li>Validate project and target names in DefaultProjectBuilder - reject dodgy
-                    names like "," or "", or "  ".  Probably want to reject names that start or
-                    end with white-space (though internal whitespace is probably fine).  We also
-                    want to reserve certain punctuation characters like , : ? $ [ ] { } &lt; &gt;, etc for
-                    future use.</li>
-                    <li>Similarly, validate property names, using the same rules.</li>
                     <li>Detect duplicate type names.</li>
                     <li>Add fully qualified type names, based on antlib name and type shorthand name.
                     Allow these to be used in build files in addition to the shorthand names.</li>
