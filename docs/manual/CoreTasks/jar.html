@@ -44,6 +44,12 @@ attribute of a zipfileset in a Zip task. The one difference is that if the
 <i>manifest</i> attribute is not specified, the Jar task will 
 include an empty one for you.)</p>
 
+<p>Manifests are processed by the Jar task according to the 
+<a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html">Jar file specification.</a>
+Note in particular that this may result in manifest lines greater than 72 bytes 
+being wrapped and continued on the next line.
+</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -121,6 +127,7 @@ include an empty one for you.)</p>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
+
 <h3>Nested elements</h3>
 <h4>metainf</h4>
 <p>The nested <code>metainf</code> element specifies a <a
@@ -128,6 +135,75 @@ href="../CoreTypes/fileset.html">FileSet</a>. All files included in this fileset
 end up in the <code>META-INF</code> directory of the jar file. If this
 fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
+
+<h4>Manifest</h4>
+<p>
+The manifest nested element allows the manifest for the Jar file to be 
+provided inline in the build file rather than in an external file. This 
+makes it easy to produce Jar manifests which take values from Ant properties.
+If both an inline manifest and an external file are both specified, the
+manifests are merged. 
+</p>
+<p>
+The manifest element supports nested elements to reflect the structure of
+manifests, according to the 
+<a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html">Jar file 
+specification</a>. Specifically, a manifest
+element consists of a set of attributes and sections. These sections in turn
+may contain attributes.
+</p>
+
+<p>When using inline manifests, the Jar task will check whether the build
+file is more recent that the Jar file when deciding whether to rebuild the
+Jar. This will not take into account property file changes which may affect 
+the resulting Jar.
+</p>
+
+<p> The manifest element itself does not support any attributes. It serves
+merely as a container for the attribute and section elements that make up the 
+manifest. The attributes of those elements are as follows:
+</p>  
+<p>
+<b>Section</b>
+</p>
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">Name</td>
+    <td valign="top">The name of the section</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+</p>
+
+<p>
+<b>Attribute</b>
+</p>
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">Name</td>
+    <td valign="top">The name of the attribute</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">Value</td>
+    <td valign="top">The value of the attribute</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+</p>
+
 <h3>Examples</h3>
 <pre>  &lt;jar file=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 <p>jars all files in the <code>${build}/classes</code> directory into a file
@@ -162,6 +238,27 @@ If there are files such as <code>${build}/classes/mypackage/MyClass.class</code>
 and <code>${src}/resources/mypackage/image.gif</code>, they will appear
 in the same directory in the JAR (and thus be considered in the same package
 by Java).</p>
+
+<pre>  &lt;jar jarfile=&quot;test.jar&quot; basedir=&quot;.&quot;&gt;
+    &lt;include name=&quot;build&quot;/&gt;
+    &lt;manifest&gt;
+      &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;
+      &lt;section name=&quot;common/class1.class&quot;&gt;
+        &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
+      &lt;/section&gt;
+    &lt;/manifest&gt;
+  &lt;/jar&gt;</pre>
+<p>
+This is an example of an inline manifest specification. Note that the Built-By
+attribute will take the value of the Ant property ${user.name}. The manifest 
+produced by the above would look like this:
+</p>
+<pre><code>Manifest-Version: 1.0
+Built-By: conor
+Created-By: Apache Ant 1.5alpha
+
+Name: common/class1.class
+Sealed: false</code></pre>
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
