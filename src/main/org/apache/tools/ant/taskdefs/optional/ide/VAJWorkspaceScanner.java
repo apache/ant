@@ -85,13 +85,9 @@ import org.apache.tools.ant.DirectoryScanner;
  *
  * @author Wolf Siberski, TUI Infotec (based on Arnout J. Kuipers DirectoryScanner)
  */
-public class VAJWorkspaceScanner extends DirectoryScanner {
+class VAJWorkspaceScanner extends DirectoryScanner {
 
-    /**
-     * Patterns that should be excluded by default.
-     *
-     * @see #addDefaultExcludes()
-     */
+    // Patterns that should be excluded by default.
     private final static String[] DEFAULTEXCLUDES = 
     {
         "IBM*/**", 
@@ -101,10 +97,8 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
         "VisualAge*/**", 
     }; 
 
-    /**
-     * The packages that where found and matched at least one includes, and
-     * matched no excludes.
-     */
+    // The packages that where found and matched at least 
+    // one includes, and matched no excludes.
     private Vector packagesIncluded = new Vector();
    
     /**
@@ -119,18 +113,19 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
         }
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].
-                replace( '/', File.separatorChar ).replace( '\\', File.separatorChar ); 
+                replace( '/', File.separatorChar ).
+                replace( '\\', File.separatorChar ); 
         }
         excludes = newExcludes;
     }
-        
+		
     /**
      * Finds all Projects specified in include patterns.
      *
      * @return the projects
      */
     public Vector findMatchingProjects() {
-        Project[] projects = VAJUtil.getWorkspace().getProjects();
+        Project[] projects = VAJLocalUtil.getWorkspace().getProjects();
 
         Vector matchingProjects = new Vector();
 
@@ -138,7 +133,8 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
         for (int i = 0; i < projects.length; i++) {
             Project project = projects[i];
             for (int j = 0; j < includes.length && !allProjectsMatch; j++) {
-                StringTokenizer tok = new StringTokenizer(includes[j], File.separator);
+                StringTokenizer tok = 
+                    new StringTokenizer(includes[j], File.separator);
                 String projectNamePattern = tok.nextToken();
                 if (projectNamePattern.equals("**")) {
                     // if an include pattern starts with '**', 
@@ -161,7 +157,7 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
 
         return matchingProjects;
     }
-        
+		
     /**
      * Get the names of the packages that matched at least one of the include
      * patterns, and didn't match one of the exclude patterns.
@@ -176,7 +172,7 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
         }
         return packages;
     }
-        
+		
     /**
      * Matches a string against a pattern. The pattern contains two special
      * characters:
@@ -193,6 +189,7 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
     protected static boolean match(String pattern, String str) {
         return DirectoryScanner.match(pattern, str);
     }
+
     /**
      * Scans the workspace for packages that match at least one include
      * pattern, and don't match any exclude patterns.
@@ -215,7 +212,7 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
             scanProject(project);
         }
     }
-        
+		
     /**
      * Scans a project for packages that match at least one include
      * pattern, and don't match any exclude patterns.
@@ -240,7 +237,7 @@ public class VAJWorkspaceScanner extends DirectoryScanner {
                 }
             }
         } catch (IvjException e) {
-            throw VAJUtil.createBuildException("VA Exception occured: ", e);
+            throw VAJLocalUtil.createBuildException("VA Exception occured: ", e);
         }
     }
 }

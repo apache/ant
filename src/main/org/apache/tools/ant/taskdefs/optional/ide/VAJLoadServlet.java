@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,48 +55,52 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 import java.util.Vector;
-import java.io.File;
 
 /**
- * Helper interface for VAJ tasks. Encapsulates
- * the interface to the VAJ tool API.
+ * A Remote Access to Tools Servlet to load a Project
+ * from the Repository into the Workbench. The following 
+ * table describes the servlet parameters.
  *
- * @author Wolf Siberski, TUI Infotec GmbH
+ * <table>
+ *   <tr>
+ *     <td>Parameter</td>
+ *     <td>Description</td>
+ *   </tr>
+ *   <tr>
+ *     <td>project</td>
+ *     <td>The name of the Project you want to load into
+ *         the Workbench.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>version</td>
+ *     <td>The version of the package you want to load into
+ *         the Workbench.</td>
+ *   </tr>
+ * </table>
+ * 
+ * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
-interface VAJUtil {
-		// log levels
-	public static final int MSG_DEBUG = 4;
-	public static final int MSG_ERR = 0;
-	public static final int MSG_INFO = 2;
-	public static final int MSG_VERBOSE = 3;
-	public static final int MSG_WARN = 1;
+public class VAJLoadServlet extends VAJToolsServlet {
 
-	/**
-	 * export the array of Packages
-	 */
-	void exportPackages(
-		File dest, 
-		String[] includePatterns, String[] excludePatterns,
-		boolean exportClasses, boolean exportDebugInfo, 
-		boolean exportResources, boolean exportSources, 
-		boolean useDefaultExcludes, boolean overwrite);
+    // constants for servlet param names
+    public static final String VERSION_PARAM = "version";
 
-	/**
-	 * Do the import.
-	 */
-	void importFiles(
-		String importProject, File srcDir, 
-		String[] includePatterns, String[] excludePatterns, 
-		boolean importClasses, boolean importResources, 
-		boolean importSources, boolean useDefaultExcludes);
+    /**
+     * Respond to a request to load a project from the Repository
+     * into the Workbench.
+     */
+    protected void executeRequest() {
+        String[] projectNames = getParamValues(PROJECT_NAME_PARAM);
+        String[] versionNames = getParamValues(VERSION_PARAM);
 
-	/**
-	 * Load specified projects.
-	 */
-	void loadProjects(Vector projectDescriptions);
+        Vector projectDescriptions = new Vector(projectNames.length);
+        for (int i = 0; i < projectNames.length && i < versionNames.length; i++) {
+            VAJProjectDescription desc = new VAJProjectDescription();
+            desc.setName(projectNames[i]);
+            desc.setVersion(versionNames[i]);
+            projectDescriptions.addElement(desc);
+        }
 
-	/**
-	 * Logs a message with the specified log level.
-	 */
-	void log(String msg, int level);
+        util.loadProjects(projectDescriptions);
+    }
 }

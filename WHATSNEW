@@ -4,6 +4,16 @@ Changes from Ant 1.4.1 to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+Fixed bugs:
+-----------
+
+* Fixed bug where ant would not copy system properties into new Project
+  in ant/antcall tasks when inheritall="false" is set.
+
+* <propertyfile> would not close the original property file.
+
+* <ant> will no longer override a subbuilds basedir with inheritall="true". 
+
 Other changes:
 --------------
 
@@ -23,15 +33,9 @@ Other changes:
 * <taskdef> and <typedef> will now emit a warning if a task/type of
   the given name already exists.
 
-Fixed bugs:
------------
-
-* Fixed bug where ant would not copy system properties into new Project
-  in ant/antcall tasks when inheritall="false" is set.
-
-* <propertyfile> would not close the original property file.
-
-* <ant> will no longer override a subbuilds basedir with inheritall="true". 
+* A new revision of VAJ tasks: The most important new feature
+  is the ability to execute VAJ tasks from the command line by
+  exploiting the Remote Tool Access feature of VAJ.
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================

@@ -1,5 +1,3 @@
-package org.apache.tools.ant.taskdefs.optional.ide;
-
 /*
  * The Apache Software License, Version 1.1
  *
@@ -53,11 +51,23 @@ package org.apache.tools.ant.taskdefs.optional.ide;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import java.util.Hashtable;
+
+package org.apache.tools.ant.taskdefs.optional.ide;
+
+ 
 import java.util.Vector;
 import java.util.Enumeration;
-import org.apache.tools.ant.*;
+import java.util.StringTokenizer;
 import java.io.File;
+import java.beans.PropertyChangeSupport;
+import java.beans.PropertyChangeListener;
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Target;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.BuildEvent;
 
 /**
  * This class wraps the Ant project information needed to
@@ -68,276 +78,443 @@ import java.io.File;
  *   as ToolData in the VA repository)
  * - wraps Project functions for the GUI (get target list,
  *   execute target)
+ * - manages a seperate thread for Ant project execution
+ *   this allows interrupting a running build from a GUI
  *    
  * @author Wolf Siberski, TUI Infotec GmbH
  */
 
-public class VAJBuildInfo {
-	// name of the VA project this BuildInfo belongs to
-	private String vajProjectName = "";
-	
-		// name of the Ant build file
-	private String buildFileName = "";
+class VAJBuildInfo implements Runnable {
+    /**
+     * This exception is thrown when a build is interrupted
+     */
+    static public class BuildInterruptedException extends BuildException {
+        public String toString() {
+            return "BUILD INTERRUPTED";
+        }
+    }
 
-		// main targets found in the build file
-	private Vector projectTargets = new Vector();
-
-		// target selected for execution
-	private java.lang.String target = "";
-
-		// log level
-	private int outputMessageLevel = Project.MSG_INFO;
-
-		// Ant Project created from build file
-	private transient Project project;
-
-		// is true if Project initialization was successful
-	private transient boolean projectInitialized = false;
-
-		// Support for bound properties
-	protected transient java.beans.PropertyChangeSupport propertyChange;
-/**
- * The addPropertyChangeListener method was generated to support the propertyChange field.
- */
-public synchronized void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-	getPropertyChange().addPropertyChangeListener(listener);
-}
-/**
- * Returns the BuildInfo information as String. The BuildInfo can
- * be rebuilt from that String by calling parse().
- * @return java.lang.String
- */
-public String asDataString() {
-	String result = getOutputMessageLevel() + "|" + getBuildFileName() + "|" + getTarget();
-	for ( Enumeration e = getProjectTargets().elements(); e.hasMoreElements(); ) {
-		result = result + "|" + e.nextElement();
-	}
-
-	return result;
-}
-/**
- * Executes the target set by setTarget().
- * @param listener  BuildListener for the output of the build
- */
-public void executeProject( BuildListener listener ) {
-	Throwable error = null;
-	try {
-		if (!isProjectInitialized()) {
-			project = new Project();
-		}
-		project.addBuildListener( listener );
-		// Chris: HACK: replace when Ant-Refactoring is finished!
-//		project.fireBuildStarted();
-		if (!isProjectInitialized()) {
-			initProject();
-		}
-		project.executeTarget(target);
+    /**
+     * BuildListener which checks for interruption and throws Exception
+     * if build process is interrupted. This class is a wrapper around
+     * a 'real' listener.
+     */
+    private class InterruptedChecker implements BuildListener {
+        // the real listener
+        BuildListener wrappedListener;
 		
-	} catch (RuntimeException exc) {
-		error = exc;
-		throw exc;
-	} catch (Error err) {
-		error = err;
-		throw err;
-	} finally {
-		// Chris: HACK: replace when Ant-Refactoring is finished!
-//		project.fireBuildFinished(error);
-		project.removeBuildListener( listener );
-	}
-}
-	/**
-	 * Search for the insert position to keep names a sorted list of Strings
-	 * This method has been copied from org.apache.tools.ant.Main
-	 */
-	private static int findTargetPosition(Vector names, String name) {
-		int res = names.size();
-		for (int i=0; i<names.size() && res == names.size(); i++) {
-			if (name.compareTo((String)names.elementAt(i)) < 0) {
-				res = i;
-			}
-		}
-		return res;
-	}
-/**
- * The firePropertyChange method was generated to support the propertyChange field.
- */
-public void firePropertyChange(java.lang.String propertyName, java.lang.Object oldValue, java.lang.Object newValue) {
-	getPropertyChange().firePropertyChange(propertyName, oldValue, newValue);
-}
-/**
- * Returns the build file name.
- * @return build file name.
- */
-public String getBuildFileName() {
-	return buildFileName;
-}
-/**
- * Returns the log level
- * @return log level.
- */
-public int getOutputMessageLevel() {
-	return outputMessageLevel;
-}
-/**
- * Returns the Ant project
- * @return org.apache.tools.ant.Project
- */
-private Project getProject() {
-	return project;
-}
-/**
- * return a list of all targets in the current buildfile
- */
-public Vector getProjectTargets() {
-	return projectTargets;
-}
-/**
- * Accessor for the propertyChange field.
- */
-protected java.beans.PropertyChangeSupport getPropertyChange() {
-	if (propertyChange == null) {
-		propertyChange = new java.beans.PropertyChangeSupport(this);
-	};
-	return propertyChange;
-}
-/**
- * Insert the method's description here.
- * Creation date: (07.11.2000 10:34:18)
- * @return java.lang.String
- */
-public java.lang.String getTarget() {
-	return target;
-}
-/**
- * returns the VA project name
- * @return The projectName property value.
- */
-public String getVAJProjectName() {
-	return vajProjectName;
-}
-/**
- * Initializes the Ant project. Assumes that the
- * project attribute is already set.
- */
-private void initProject() {
-	try {
-		project.init();
-		File buildFile = new File(getBuildFileName());
-		project.setUserProperty("ant.file", buildFile.getAbsolutePath());
-		ProjectHelper.configureProject(project, buildFile);
-		setProjectInitialized(true);
-	} catch (RuntimeException exc) {
-		setProjectInitialized(false);
-		throw exc;
-	} catch (Error err) {
-		setProjectInitialized(false);
-		throw err;
-	}
-}
-/**
- * Returns true, if the Ant project is initialized
- * (i.e. buildfile loaded)
- */
-public boolean isProjectInitialized() {
-	return projectInitialized;
-}
-/**
- * Creates a BuildInfo object from a String
- * The String must be in the format
- * outputMessageLevel'|'buildFileName'|'defaultTarget'|'(project target'|')*
- *
- * @return org.apache.tools.ant.taskdefs.optional.vaj.BuildInfo
- * @param data java.lang.String
- */
-public static VAJBuildInfo parse(String data) {
-	VAJBuildInfo result = new VAJBuildInfo();
+        /**
+         * Can only be constructed as wrapper around a real listener
+         * @param listener the real listener
+         */
+        public InterruptedChecker( BuildListener listener) {
+            super();
+            wrappedListener = listener;
+        }
 
-	try {
-		java.util.StringTokenizer tok = new java.util.StringTokenizer( data, "|" );
-		result.setOutputMessageLevel( tok.nextToken() );
-		result.setBuildFileName( tok.nextToken() );
-		result.setTarget( tok.nextToken() );
-		while( tok.hasMoreTokens() ) {
-			result.projectTargets.addElement( tok.nextToken() );
-		}
-	} catch ( Throwable t ) {
-	}
-	return result;
-}
-/**
- * The removePropertyChangeListener method was generated to support the propertyChange field.
- */
-public synchronized void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-	getPropertyChange().removePropertyChangeListener(listener);
-}
-/**
- * Sets the build file name
- * @param buildFileName build file name
- */
-public void setBuildFileName(String newBuildFileName) {
-	String oldValue = buildFileName;
-	buildFileName = newBuildFileName;
-	setProjectInitialized(false);
-	firePropertyChange("buildFileName", oldValue, buildFileName);
-}
-/**
- * Sets the log level (value must be one of the constants in Project)
- * @param outputMessageLevel log level.
- */
-public void setOutputMessageLevel(int newOutputMessageLevel) {
-	int oldValue = outputMessageLevel;
-	outputMessageLevel = newOutputMessageLevel;
-	firePropertyChange("outputMessageLevel", new Integer(oldValue), new Integer(outputMessageLevel));
-}
-/**
- * Sets the log level (value must be one of the constants in Project)
- * @param outputMessageLevel log level as String.
- */
-private void setOutputMessageLevel(String outputMessageLevel) {
-	int level = Integer.parseInt( outputMessageLevel );
-	setOutputMessageLevel( level );
-}
-/**
-  */
-private void setProjectInitialized(boolean initialized) {
-	Boolean oldValue = new Boolean(projectInitialized);
-	projectInitialized = initialized;
-	firePropertyChange("projectInitialized", oldValue, new Boolean(projectInitialized));
-}
-/**
- * Sets the target to execute when executeBuild is called
- * @param newTarget build target
- */
-public void setTarget(String newTarget) {
-	String oldValue = target;
-	target = newTarget;
-	firePropertyChange("target", oldValue, target);
-}
-/**
- * Sets the name of the Visual Age for Java project where
- * this BuildInfo belongs to
- * @param newProjectName VAJ project
- */
-public void setVAJProjectName(String newVAJProjectName) {
-	String oldValue = vajProjectName;
-	vajProjectName = newVAJProjectName;
-	firePropertyChange("VAJProjectName", oldValue, vajProjectName);
-}
-/**
- * reloads the build file and updates the target list
- */
-public void updateTargetList() {
-	project = new Project();
-	initProject();
-	projectTargets.removeAllElements();
-	Enumeration ptargets = project.getTargets().elements();
-	while (ptargets.hasMoreElements()) {
-		Target currentTarget = (Target) ptargets.nextElement();
-		if ( currentTarget.getDescription() != null ) {
-			String targetName = currentTarget.getName();
-			int pos = findTargetPosition( projectTargets, targetName );
-			projectTargets.insertElementAt(targetName, pos);
-		}
-	}
-}
+        /**
+         * checks if the thread was interrupted. When an
+         * interrupt occured, throw an Exception to stop
+         * the execution.
+         */
+        protected void checkInterrupted() {
+            if ( buildThread.isInterrupted() ) {
+                throw new BuildInterruptedException();
+            }
+        }
+
+        /**
+         *  Fired after the last target has finished. This event
+         *  will still be thrown if an error occured during the build.
+         */
+        public void buildFinished(BuildEvent event) {
+            wrappedListener.buildFinished( event );
+            checkInterrupted();
+        }
+
+        /**
+         *  Fired before any targets are started.
+         */
+        public void buildStarted(BuildEvent event) {
+            wrappedListener.buildStarted( event );
+            checkInterrupted();
+        }
+
+        /**
+         *  Fired whenever a message is logged.
+         */
+        public void messageLogged(BuildEvent event) {
+            wrappedListener.messageLogged( event );
+            checkInterrupted();
+        }
+
+        /**
+         *  Fired when a target has finished. This event will
+         *  still be thrown if an error occured during the build.
+         */
+        public void targetFinished(BuildEvent event) {
+            wrappedListener.targetFinished( event );
+            checkInterrupted();
+        }
+
+        /**
+         *  Fired when a target is started.
+         */
+        public void targetStarted(BuildEvent event) {
+            wrappedListener.targetStarted( event );
+            checkInterrupted();
+        }
+
+        /**
+         *  Fired when a task has finished. This event will still
+         *  be throw if an error occured during the build.
+         */
+        public void taskFinished(BuildEvent event) {
+            wrappedListener.taskFinished( event );
+            checkInterrupted();
+        }
+
+        /**
+         *  Fired when a task is started.
+         */
+        public void taskStarted(BuildEvent event) {
+            wrappedListener.taskStarted( event );
+            checkInterrupted();
+        }
+    }
+	
+	
+    // name of the VA project this BuildInfo belongs to
+    private String vajProjectName = "";
+	
+    // name of the Ant build file
+    private String buildFileName = "";
+
+    // main targets found in the build file
+    private Vector projectTargets = new Vector();
+
+    // target selected for execution
+    private java.lang.String target = "";
+
+    // log level
+    private int outputMessageLevel = Project.MSG_INFO;
+
+    // Ant Project created from build file
+    private transient Project project;
+
+    // is true if Project initialization was successful
+    private transient boolean projectInitialized = false;
+
+    // Support for bound properties
+    protected transient PropertyChangeSupport propertyChange;
+
+    // thread for Ant build execution 
+    private Thread buildThread;
+
+    // the listener used to log output.
+    private BuildListener projectLogger;
+
+		
+    /**
+     * The addPropertyChangeListener method was generated to support the 
+     * propertyChange field.
+     */
+    public synchronized void addPropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChange().addPropertyChangeListener(listener);
+    }
+	
+    /**
+     * Returns the BuildInfo information as String. The BuildInfo can
+     * be rebuilt from that String by calling parse().
+     * @return java.lang.String
+     */
+    public String asDataString() {
+        String result = getOutputMessageLevel() + "|" + getBuildFileName() 
+            + "|" + getTarget();
+        for ( Enumeration e = getProjectTargets().elements(); 
+              e.hasMoreElements(); ) {
+            result = result + "|" + e.nextElement();
+        }
+
+        return result;
+    }
+
+    /**
+     * Search for the insert position to keep names a sorted list of Strings
+     * This method has been copied from org.apache.tools.ant.Main
+     */
+    private static int findTargetPosition(Vector names, String name) {
+        int res = names.size();
+        for (int i=0; i<names.size() && res == names.size(); i++) {
+            if (name.compareTo((String)names.elementAt(i)) < 0) {
+                res = i;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * The firePropertyChange method was generated to support the propertyChange field.
+     */
+    public void firePropertyChange(java.lang.String propertyName, java.lang.Object oldValue, java.lang.Object newValue) {
+        getPropertyChange().firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    /**
+     * Returns the build file name.
+     * @return build file name.
+     */
+    public String getBuildFileName() {
+        return buildFileName;
+    }
+
+    /**
+     * Returns the log level
+     * @return log level.
+     */
+    public int getOutputMessageLevel() {
+        return outputMessageLevel;
+    }
+
+    /**
+     * Returns the Ant project
+     * @return org.apache.tools.ant.Project
+     */
+    private Project getProject() {
+        if ( project == null ) {
+            project = new Project();
+        }
+        return project;
+    }
+	
+    /**
+     * return a list of all targets in the current buildfile
+     */
+    public Vector getProjectTargets() {
+        return projectTargets;
+    }
+	
+    /**
+     * Accessor for the propertyChange field.
+     */
+    protected PropertyChangeSupport getPropertyChange() {
+        if (propertyChange == null) {
+            propertyChange = new PropertyChangeSupport(this);
+        }
+        return propertyChange;
+    }
+
+    /**
+     * returns the selected target.
+     */
+    public java.lang.String getTarget() {
+        return target;
+    }
+
+    /**
+     * returns the VA project name
+     */
+    public String getVAJProjectName() {
+        return vajProjectName;
+    }
+
+    /**
+     * Initializes the Ant project. Assumes that the
+     * project attribute is already set.
+     */
+    private void initProject() {
+        try {
+            project.init();
+            File buildFile = new File(getBuildFileName());
+            project.setUserProperty("ant.file", buildFile.getAbsolutePath());
+            ProjectHelper.configureProject(project, buildFile);
+            setProjectInitialized(true);
+        } catch (RuntimeException exc) {
+            setProjectInitialized(false);
+            throw exc;
+        } catch (Error err) {
+            setProjectInitialized(false);
+            throw err;
+        }
+    }
+
+    /**
+     * Returns true, if the Ant project is initialized
+     * (i.e. buildfile loaded)
+     */
+    public boolean isProjectInitialized() {
+        return projectInitialized;
+    }
+
+    /**
+     * Creates a BuildInfo object from a String
+     * The String must be in the format
+     * outputMessageLevel'|'buildFileName'|'defaultTarget'|'(project target'|')*
+     *
+     * @return org.apache.tools.ant.taskdefs.optional.vaj.BuildInfo
+     * @param data java.lang.String
+     */
+    public static VAJBuildInfo parse(String data) {
+        VAJBuildInfo result = new VAJBuildInfo();
+
+        try {
+            StringTokenizer tok = new StringTokenizer( data, "|" );
+            result.setOutputMessageLevel( tok.nextToken() );
+            result.setBuildFileName( tok.nextToken() );
+            result.setTarget( tok.nextToken() );
+            while( tok.hasMoreTokens() ) {
+                result.projectTargets.addElement( tok.nextToken() );
+            }
+        } catch ( Throwable t ) {
+            // if parsing the info fails, just return
+            // an empty VAJBuildInfo
+        }
+        return result;
+    }
+
+    /**
+     * The removePropertyChangeListener method was generated 
+     * to support the propertyChange field.
+     */
+    public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
+        getPropertyChange().removePropertyChangeListener(listener);
+    }
+	
+    /**
+     * Sets the build file name
+     * @param buildFileName build file name
+     */
+    public void setBuildFileName(String newBuildFileName) {
+        String oldValue = buildFileName;
+        buildFileName = newBuildFileName;
+        setProjectInitialized(false);
+        firePropertyChange("buildFileName", oldValue, buildFileName);
+    }
+	
+    /**
+     * Sets the log level (value must be one of the constants in Project)
+     * @param outputMessageLevel log level.
+     */
+    public void setOutputMessageLevel(int newOutputMessageLevel) {
+        int oldValue = outputMessageLevel;
+        outputMessageLevel = newOutputMessageLevel;
+        firePropertyChange("outputMessageLevel", 
+                           new Integer(oldValue), new Integer(outputMessageLevel));
+    }
+
+    /**
+     * Sets the log level (value must be one of the constants in Project)
+     * @param outputMessageLevel log level as String.
+     */
+    private void setOutputMessageLevel(String outputMessageLevel) {
+        int level = Integer.parseInt( outputMessageLevel );
+        setOutputMessageLevel( level );
+    }
+	
+    /**
+     * sets the initialized flag
+     */
+    private void setProjectInitialized(boolean initialized) {
+        Boolean oldValue = new Boolean(projectInitialized);
+        projectInitialized = initialized;
+        firePropertyChange("projectInitialized", oldValue, new Boolean(projectInitialized));
+    }
+
+    /**
+     * Sets the target to execute when executeBuild is called
+     * @param newTarget build target
+     */
+    public void setTarget(String newTarget) {
+        String oldValue = target;
+        target = newTarget;
+        firePropertyChange("target", oldValue, target);
+    }
+
+    /**
+     * Sets the name of the Visual Age for Java project where
+     * this BuildInfo belongs to
+     * @param newProjectName VAJ project
+     */
+    public void setVAJProjectName(String newVAJProjectName) {
+        String oldValue = vajProjectName;
+        vajProjectName = newVAJProjectName;
+        firePropertyChange("VAJProjectName", oldValue, vajProjectName);
+    }
+
+    /**
+     * reloads the build file and updates the target list
+     */
+    public void updateTargetList() {
+        project = new Project();
+        initProject();
+        projectTargets.removeAllElements();
+        Enumeration ptargets = project.getTargets().elements();
+        while (ptargets.hasMoreElements()) {
+            Target currentTarget = (Target) ptargets.nextElement();
+            if ( currentTarget.getDescription() != null ) {
+                String targetName = currentTarget.getName();
+                int pos = findTargetPosition( projectTargets, targetName );
+                projectTargets.insertElementAt(targetName, pos);
+            }
+        }
+    }
+
+
+    /**
+     * cancels a build. 
+     */
+    public void cancelBuild() {
+        buildThread.interrupt();
+    }
+
+    /**
+     * Executes the target set by setTarget().
+     * @param listener  BuildListener for the output of the build
+     */
+    public void executeProject( BuildListener logger ) {
+        Throwable error;
+        projectLogger = logger;
+        try {
+            buildThread = new Thread( this );
+            buildThread.setPriority(Thread.MIN_PRIORITY);
+            buildThread.start();
+        } catch (RuntimeException exc) {
+            error = exc;
+            throw exc;
+        } catch (Error err) {
+            error = err;
+            throw err;
+        } 
+    }
+
+    /**
+     * Executes a build. This method is executed by
+     * the Ant execution thread
+     */
+    public void run() {
+        try {
+            InterruptedChecker ic = new InterruptedChecker( projectLogger );
+            BuildEvent e = new BuildEvent( getProject() );
+            try {
+                ic.buildStarted(e);
+
+                if (!isProjectInitialized()) {
+                    initProject();
+                }
+		
+                project.addBuildListener( ic );
+                project.executeTarget(target);
+
+                ic.buildFinished( e );
+            } catch (Throwable t) {
+                e.setException( t );
+                ic.buildFinished( e );
+            } finally {
+                project.removeBuildListener( ic );
+            }
+        } catch ( Throwable t2 ) {
+            System.out.println("unexpected exception!");
+            t2.printStackTrace();
+        }
+    }
 }

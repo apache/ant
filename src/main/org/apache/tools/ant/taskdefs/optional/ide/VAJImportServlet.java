@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,49 +54,49 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
 import java.io.File;
 
+
 /**
- * Helper interface for VAJ tasks. Encapsulates
- * the interface to the VAJ tool API.
+ * A Remote Access to Tools Servlet to import a Project
+ * from files into the Repository. The following 
+ * table describes the servlet parameters.
  *
- * @author Wolf Siberski, TUI Infotec GmbH
+ * <table>
+ *   <tr>
+ *     <td>Parameter</td>
+ *     <td>Description</td>
+ *   </tr>
+ *   <tr>
+ *     <td>project</td>
+ *     <td>The name of the project where you want the imported
+ *         items to go.
+ *     </td>
+ *   </tr>
+ *   <tr>
+ *     <td>dir</td>
+ *     <td>The directory you want to import from.</td>
+ *   </tr>
+ * </table>
+ *
+ * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
-interface VAJUtil {
-		// log levels
-	public static final int MSG_DEBUG = 4;
-	public static final int MSG_ERR = 0;
-	public static final int MSG_INFO = 2;
-	public static final int MSG_VERBOSE = 3;
-	public static final int MSG_WARN = 1;
-
-	/**
-	 * export the array of Packages
-	 */
-	void exportPackages(
-		File dest, 
-		String[] includePatterns, String[] excludePatterns,
-		boolean exportClasses, boolean exportDebugInfo, 
-		boolean exportResources, boolean exportSources, 
-		boolean useDefaultExcludes, boolean overwrite);
-
-	/**
-	 * Do the import.
-	 */
-	void importFiles(
-		String importProject, File srcDir, 
-		String[] includePatterns, String[] excludePatterns, 
-		boolean importClasses, boolean importResources, 
-		boolean importSources, boolean useDefaultExcludes);
-
-	/**
-	 * Load specified projects.
-	 */
-	void loadProjects(Vector projectDescriptions);
-
-	/**
-	 * Logs a message with the specified log level.
-	 */
-	void log(String msg, int level);
+public class VAJImportServlet extends VAJToolsServlet {
+    /**
+     * Respond to a request to import files to the Repository
+     */
+    protected void executeRequest() {
+        getUtil().importFiles(
+                      getFirstParamValueString(PROJECT_NAME_PARAM),
+                      new File(getFirstParamValueString(DIR_PARAM)),
+                      getParamValues(INCLUDE_PARAM),
+                      getParamValues(EXCLUDE_PARAM),
+                      getBooleanParam(CLASSES_PARAM, false),
+                      getBooleanParam(RESOURCES_PARAM, true),
+                      getBooleanParam(SOURCES_PARAM, true),
+                      false // no default excludes, because they
+		      // are already added on client side
+                      //			getBooleanParam(DEFAULT_EXCLUDES_PARAM, true)
+                      );
+    }
 }

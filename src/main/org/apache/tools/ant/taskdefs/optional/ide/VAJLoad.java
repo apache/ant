@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,49 +54,39 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
+
 import java.util.Vector;
-import java.io.File;
 
 /**
- * Helper interface for VAJ tasks. Encapsulates
- * the interface to the VAJ tool API.
+ * Load specific project versions into the Visual Age for Java workspace.
+ * Each project and version name has to be specified completely.
+ * Example:  
+ * <blockquote> 
+ * &lt;vajload>
+ * &nbsp;&lt;project name="MyVAProject" version="2.1"/>
+ * &nbsp;&lt;project name="Apache Xerces" version="1.2.0"/>
+ * &lt;/vajload>
+ * </blockquote>
  *
  * @author Wolf Siberski, TUI Infotec GmbH
  */
-interface VAJUtil {
-		// log levels
-	public static final int MSG_DEBUG = 4;
-	public static final int MSG_ERR = 0;
-	public static final int MSG_INFO = 2;
-	public static final int MSG_VERBOSE = 3;
-	public static final int MSG_WARN = 1;
 
-	/**
-	 * export the array of Packages
-	 */
-	void exportPackages(
-		File dest, 
-		String[] includePatterns, String[] excludePatterns,
-		boolean exportClasses, boolean exportDebugInfo, 
-		boolean exportResources, boolean exportSources, 
-		boolean useDefaultExcludes, boolean overwrite);
+public class VAJLoad extends VAJTask {
+    Vector projectDescriptions = new Vector();
 
-	/**
-	 * Do the import.
-	 */
-	void importFiles(
-		String importProject, File srcDir, 
-		String[] includePatterns, String[] excludePatterns, 
-		boolean importClasses, boolean importResources, 
-		boolean importSources, boolean useDefaultExcludes);
+    /**
+     * Load specified projects.
+     */
+    public void execute() {
+        getUtil().loadProjects( projectDescriptions );
+    }
 
-	/**
-	 * Load specified projects.
-	 */
-	void loadProjects(Vector projectDescriptions);
-
-	/**
-	 * Logs a message with the specified log level.
-	 */
-	void log(String msg, int level);
+    /**
+     * Add a project description entry on the project list.
+     */
+    public VAJProjectDescription createVAJProject() {
+        VAJProjectDescription d = new VAJProjectDescription();
+        projectDescriptions.addElement(d);
+        return d;
+    }
 }

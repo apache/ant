@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,49 +54,50 @@
 
 package org.apache.tools.ant.taskdefs.optional.ide;
 
-import java.util.Vector;
-import java.io.File;
-
 /**
- * Helper interface for VAJ tasks. Encapsulates
- * the interface to the VAJ tool API.
- *
- * @author Wolf Siberski, TUI Infotec GmbH
+ * Super class for all VAJ tasks. Contains common
+ * attributes (remoteServer) and util methods
+ * 
+ * @author: Wolf Siberski
  */
-interface VAJUtil {
-		// log levels
-	public static final int MSG_DEBUG = 4;
-	public static final int MSG_ERR = 0;
-	public static final int MSG_INFO = 2;
-	public static final int MSG_VERBOSE = 3;
-	public static final int MSG_WARN = 1;
+import org.apache.tools.ant.Task;
 
-	/**
-	 * export the array of Packages
-	 */
-	void exportPackages(
-		File dest, 
-		String[] includePatterns, String[] excludePatterns,
-		boolean exportClasses, boolean exportDebugInfo, 
-		boolean exportResources, boolean exportSources, 
-		boolean useDefaultExcludes, boolean overwrite);
+ 
+public class VAJTask extends Task {
+    /**
+     * Adaption of VAJLocalUtil to Task context.
+     */
+    class VAJLocalToolUtil extends VAJLocalUtil {
+        public void log(String msg, int level) {
+            VAJTask.this.log( msg, level );
+        }
+    }
 
-	/**
-	 * Do the import.
-	 */
-	void importFiles(
-		String importProject, File srcDir, 
-		String[] includePatterns, String[] excludePatterns, 
-		boolean importClasses, boolean importResources, 
-		boolean importSources, boolean useDefaultExcludes);
+    // server name / port of VAJ remote tool api server
+    protected String remoteServer = null;
 
-	/**
-	 * Load specified projects.
-	 */
-	void loadProjects(Vector projectDescriptions);
+    // holds the appropriate VAJUtil implementation
+    private VAJUtil util = null;
 
-	/**
-	 * Logs a message with the specified log level.
-	 */
-	void log(String msg, int level);
+	
+    /**
+     * returns the VAJUtil implementation
+     */
+    protected VAJUtil getUtil() {
+        if ( util == null ) {
+            if ( remoteServer == null ) {
+                util = new VAJLocalToolUtil();
+            } else {
+                util = new VAJRemoteUtil( this, remoteServer );
+            }
+        }
+        return util;
+    }
+	
+    /**
+     * Set remote server attribute
+     */
+    public void setRemote(String remoteServer) {
+        this.remoteServer = remoteServer;
+    }
 }

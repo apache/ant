@@ -55,17 +55,9 @@
 package org.apache.tools.ant.taskdefs.optional.ide;
 
 
-
-
-import com.ibm.ivj.util.base.ExportCodeSpec;
-import com.ibm.ivj.util.base.IvjException;
-import com.ibm.ivj.util.base.Package;
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.PatternSet;
 
 /**
@@ -96,146 +88,125 @@ import org.apache.tools.ant.types.PatternSet;
  * @author Wolf Siberski, TUI Infotec GmbH
  */
 
-public class VAJExport extends Task {
-    protected File destDir;
-    protected boolean exportSources = true;
-    protected boolean exportResources = true;
-    protected boolean exportClasses = false;
-    protected boolean exportDebugInfo = false;
-    protected boolean useDefaultExcludes = true;
+public class VAJExport extends VAJTask {
+		//set set... method comments for description
+	protected File destDir;
+	protected boolean exportSources = true;
+	protected boolean exportResources = true;
+	protected boolean exportClasses = false;
+	protected boolean exportDebugInfo = false;
+	protected boolean useDefaultExcludes = true;
+	protected boolean overwrite = true;
 
-    protected PatternSet patternSet = new PatternSet();
+	protected PatternSet patternSet = new PatternSet();
 
-    /**
-     * add a name entry on the exclude list
-     */
-    public PatternSet.NameEntry createExclude() {
-        return patternSet.createExclude();
-    }
+	/**
+	 * add a name entry on the exclude list
+	 */
+	public PatternSet.NameEntry createExclude() {
+		return patternSet.createExclude();
+	}
 
-    /**
-     * add a name entry on the include list
-     */
-    public PatternSet.NameEntry createInclude() {
-        return patternSet.createInclude();
-    }
+	/**
+	 * add a name entry on the include list
+	 */
+	public PatternSet.NameEntry createInclude() {
+		return patternSet.createInclude();
+	}
 
-    /**
-     * do the export
-     */
-    public void execute() throws BuildException {
-        // first off, make sure that we've got a destdir
-        if (destDir == null) {
-            throw new BuildException("destdir attribute must be set!");
-        }
+	/**
+	 * do the export
+	 */
+	public void execute() throws BuildException {
+		// first off, make sure that we've got a destdir
+		if (destDir == null) {
+			throw new BuildException("destdir attribute must be set!");
+		}
 
-        VAJWorkspaceScanner ds = this.getWorkspaceScanner();
+		// delegate the export to the VAJUtil object.
+		getUtil().exportPackages(destDir,
+			patternSet.getIncludePatterns(getProject()),
+			patternSet.getExcludePatterns(getProject()),
+		    exportClasses, exportDebugInfo, 
+		    exportResources, exportSources,  
+		    useDefaultExcludes, overwrite);
+	}
 
-        Package[] packages = ds.getIncludedPackages();
+	/**
+	 * Sets whether default exclusions should be used or not.
+	 *
+	 * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+	 *                           should be used, "false"|"off"|"no" when they
+	 *                           shouldn't be used.
+	 */
+	public void setDefaultexcludes(boolean useDefaultExcludes) {
+		this.useDefaultExcludes = useDefaultExcludes;
+	}
 
-        export(packages);
-    }
+	/**
+	 * Set the destination directory into which the selected
+	 * items should be exported
+	 */
+	public void setDestdir(File destDir) {
+		this.destDir = destDir;
+	}
 
-    /**
-     * export the array of Packages
-     */
-    public void export(Package[] packages) {
-        try {
-            String dest = destDir.getAbsolutePath();
+	/**
+	 * Sets the set of exclude patterns. Patterns may be separated by a comma
+	 * or a space. Currently only patterns denoting packages are
+	 * supported
+	 *
+	 * @param excludes the string containing the exclude patterns
+	 */
+	public void setExcludes(String excludes) {
+		patternSet.setExcludes(excludes);
+	}
 
-            log("Exporting " + packages.length + " package(s) to " + dest);
-            for (int i = 0; i < packages.length; i++) {
-                log("    " + packages[i].getName(), Project.MSG_VERBOSE);
-            }
+	/**
+	 * if exportClasses is set, class files are exported
+	 */
+	public void setExportClasses(boolean doExport) {
+		exportClasses = doExport;
+	}
 
-            ExportCodeSpec exportSpec = new ExportCodeSpec();
+	/**
+	 * if exportDebugInfo is set, the exported class files contain
+	 * debug info
+	 */
+	public void setExportDebugInfo(boolean doExport) {
+		exportDebugInfo = doExport;
+	}
 
-            exportSpec.setPackages(packages);
-            exportSpec.includeJava(exportSources);
-            exportSpec.includeClass(exportClasses);
-            exportSpec.includeResources(exportResources);
-            exportSpec.includeClassDebugInfo(exportDebugInfo);
-            exportSpec.useSubdirectories(true);
-            exportSpec.overwriteFiles(true);
-            exportSpec.setExportDirectory(dest);
-            VAJUtil.getWorkspace().exportData(exportSpec);
-        } catch (IvjException ex) {
-            throw VAJUtil.createBuildException("Exporting failed!", ex);
-        }
-    }
+	/**
+	 * if exportResources is set, resource file will be exported
+	 */
+	public void setExportResources(boolean doExport) {
+		exportResources = doExport;
+	}
 
-    /**
-     * Returns the directory scanner needed to access the files to process.
-     */
-    protected VAJWorkspaceScanner getWorkspaceScanner() {
-        VAJWorkspaceScanner scanner = new VAJWorkspaceScanner();
-        scanner.setIncludes(patternSet.getIncludePatterns(getProject()));
-        scanner.setExcludes(patternSet.getExcludePatterns(getProject()));
-        if (useDefaultExcludes)
-            scanner.addDefaultExcludes();
-        scanner.scan();
-        return scanner;
-    }
+	/**
+	 * if exportSources is set, java files will be exported
+	 */
+	public void setExportSources(boolean doExport) {
+		exportSources = doExport;
+	}
 
-    /**
-     * Sets whether default exclusions should be used or not.
-     *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
-     *                           should be used, "false"|"off"|"no" when they
-     *                           shouldn't be used.
-     */
-    public void setDefaultexcludes(boolean useDefaultExcludes) {
-        this.useDefaultExcludes = useDefaultExcludes;
-    }
+	/**
+	 * Sets the set of include patterns. Patterns may be separated by a comma
+	 * or a space.Currently only patterns denoting packages are
+	 * supported
+	 *
+	 * @param includes the string containing the include patterns
+	 */
+	public void setIncludes(String includes) {
+		patternSet.setIncludes(includes);
+	}
 
-    /**
-     * Set the destination directory into which the Java source
-     * files should be compiled.
-     */
-    public void setDestdir(File destDir) {
-        this.destDir = destDir;
-    }
-
-    /**
-     * Sets the set of exclude patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param excludes the string containing the exclude patterns
-     */
-    public void setExcludes(String excludes) {
-        patternSet.setExcludes(excludes);
-    }
-
-    /**
-     */
-    public void setExportClasses(boolean doExport) {
-        exportClasses = doExport;
-    }
-
-    /**
-     */
-    public void setExportDebugInfo(boolean doExport) {
-        exportDebugInfo = doExport;
-    }
-
-    /**
-     */
-    public void setExportResources(boolean doExport) {
-        exportResources = doExport;
-    }
-
-    /**
-     */
-    public void setExportSources(boolean doExport) {
-        exportSources = doExport;
-    }
-    /**
-     * Sets the set of include patterns. Patterns may be separated by a comma
-     * or a space.
-     *
-     * @param includes the string containing the include patterns
-     */
-    public void setIncludes(String includes) {
-        patternSet.setIncludes(includes);
-    }
+	/**
+	 * if Overwrite is set, files will be overwritten during export
+	 */
+	public void setOverwrite(boolean doOverwrite) {
+		overwrite = doOverwrite;
+	}
+	
 }
