@@ -173,8 +173,13 @@ public class CompilerAdapterFactory {
             Class.forName("com.sun.tools.javac.Main");
             return true;
         } catch (ClassNotFoundException cnfe) {
-            return false;
+            try {
+                CompilerAdapterFactory.class.getClassLoader().loadClass( "com.sun.tools.javac.Main" );
+                return true;
+            } catch (ClassNotFoundException cnfe2) {
+            }
         }
+        return false;
     }
     
     /**
