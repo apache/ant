@@ -6,6 +6,7 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* <translate> was not ignoring comment lines.
 
 * <manifest> wouldn't update an existing manifest if only an attribute
   of an existing section changed.
