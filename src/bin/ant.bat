@@ -2,6 +2,19 @@
 
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
 
+if not "%OS%"=="Windows_NT" goto start
+
+rem %~dp0 is name of current script under NT
+set DEFAULT_ANT_HOME=%~dp0
+
+rem : operator works similar to make : operator
+set DEFAULT_ANT_HOME=%DEFAULT_ANT_HOME:\bin\=%
+
+if "%ANT_HOME%"=="" set ANT_HOME=%DEFAULT_ANT_HOME%
+set DEFAULT_ANT_HOME=
+
+:start
+
 rem Slurp the command line arguments.  This loop allows for an unlimited number of 
 rem agruments (up to the command line limit, anyway).
 
