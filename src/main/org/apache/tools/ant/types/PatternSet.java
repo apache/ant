@@ -121,6 +121,32 @@ public class PatternSet extends DataType {
             }
             return true;
         }
+
+	public String toString()
+	{
+	    StringBuffer buf = new StringBuffer();
+	    buf.append( name );
+	    if ((ifCond != null) || (unlessCond != null))
+	    {
+		buf.append(":");
+		String connector = "";
+		
+		if (ifCond != null)
+		{
+		    buf.append("if->");
+		    buf.append(ifCond);
+		    connector = ";";
+		}
+		if (unlessCond != null)
+		{
+		    buf.append(connector);
+		    buf.append("unless->");
+		    buf.append(unlessCond);
+		}
+	    }
+
+	    return buf.toString();
+	}
     }
 
     public PatternSet() {
@@ -375,6 +401,12 @@ public class PatternSet extends DataType {
             readPatterns(excl, excludeList, p);
             excl = null;
         }
+    }
+
+    public String toString()
+    {
+        return "patternSet{ includes: " + includeList + 
+            " excludes: " + excludeList + " }";
     }
 
 }

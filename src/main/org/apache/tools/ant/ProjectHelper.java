@@ -611,13 +611,13 @@ public class ProjectHelper {
                     throw new BuildException("Unknown data type "+propType);
                 }
                 
-                configureId(element, attrs);
                 if (target != null) {
                     wrapper = new RuntimeConfigurable(element);
                     wrapper.setAttributes(attrs);
                     target.addDataType(wrapper);
                 } else {
                     configure(element, attrs, project);
+                    configureId(element, attrs);
                 }
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);

@@ -260,6 +260,9 @@ public class FileSet extends DataType {
             Object o = additionalPatterns.elementAt(i);
             defaultPatterns.append((PatternSet) o, p);
         }
+
+        p.log( "FileSet: Setup file scanner in dir " + dir + 
+            " with " + defaultPatterns, p.MSG_DEBUG );
         
         ds.setIncludes(defaultPatterns.getIncludePatterns(p));
         ds.setExcludes(defaultPatterns.getExcludePatterns(p));

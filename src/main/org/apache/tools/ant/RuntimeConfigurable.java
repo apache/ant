@@ -130,8 +130,11 @@ public class RuntimeConfigurable {
      * Configure the wrapped element and all children.
      */
     public void maybeConfigure(Project p) throws BuildException {
+	String id = null;
+	
         if (attributes != null) {
             ProjectHelper.configure(wrappedObject, attributes, p);
+            id = attributes.getValue("id");
             attributes = null;
         }
         if (characters.length() != 0) {
@@ -142,6 +145,10 @@ public class RuntimeConfigurable {
         while (enum.hasMoreElements()) {
             RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
             child.maybeConfigure(p);
+        }
+
+        if (id != null) {
+            p.addReference(id, wrappedObject);
         }
     }
 
