@@ -9,88 +9,114 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
+import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 
 /**
  * Abstract Base class for pack tasks.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-
-public abstract class Pack extends Task
+public abstract class Pack
+    extends AbstractTask
 {
-    protected File source;
+    private File m_src;
+    private File m_zipFile;
 
-    protected File zipFile;
-
-    public void setSrc( File src )
+    public void setSrc( final File src )
     {
-        source = src;
+        m_src = src;
     }
 
-    public void setZipfile( File zipFile )
+    public void setZipfile( final File zipFile )
     {
-        this.zipFile = zipFile;
+        m_zipFile = zipFile;
     }
 
     public void execute()
         throws TaskException
     {
         validate();
-        getLogger().info( "Building: " + zipFile.getAbsolutePath() );
+        final String message = "Building: " + m_zipFile.getAbsolutePath();
+        getLogger().info( message );
         pack();
     }
 
-    protected abstract void pack()
-        throws TaskException;
-
-    protected void zipFile( File file, OutputStream zOut )
-        throws IOException
+    private void pack()
+        throws TaskException
     {
-        FileInputStream fIn = new FileInputStream( file );
+        OutputStream output = null;
         try
         {
-            zipFile( fIn, zOut );
+            final FileOutputStream fileOutput = new FileOutputStream( getZipFile() );
+            output = getPackingStream( fileOutput );
+            copy( getSrc(), output );
+        }
+        catch( final IOException ioe )
+        {
+            final String message = "Problem creating " + getName() +
+                ":" + ioe.getMessage();
+            throw new TaskException( message, ioe );
         }
         finally
         {
-            fIn.close();
+            IOUtil.shutdownStream( output );
+        }
+    }
+
+    protected abstract OutputStream getPackingStream( OutputStream output )
+        throws TaskException, IOException;
+
+    protected final void copy( final File file, final OutputStream output )
+        throws IOException
+    {
+        final FileInputStream input = new FileInputStream( file );
+        try
+        {
+            IOUtil.copy( input, output );
+        }
+        finally
+        {
+            IOUtil.shutdownStream( input );
         }
     }
 
     private void validate()
         throws TaskException
     {
-        if( zipFile == null )
+        if( null == m_zipFile )
         {
-            throw new TaskException( "zipfile attribute is required" );
+            final String message = "zipfile attribute is required";
+            throw new TaskException( message );
         }
 
-        if( source == null )
+        if( null == m_src )
         {
-            throw new TaskException( "src attribute is required" );
+            final String message = "src attribute is required";
+            throw new TaskException( message );
         }
 
-        if( source.isDirectory() )
+        if( m_src.isDirectory() )
         {
-            throw new TaskException( "Src attribute must not " +
-                                     "represent a directory!" );
+            final String message = "Src attribute must not " +
+                "represent a directory!";
+            throw new TaskException( message );
         }
     }
 
-    private void zipFile( InputStream in, OutputStream zOut )
-        throws IOException
+    protected final File getSrc()
     {
-        byte[] buffer = new byte[ 8 * 1024 ];
-        int count = 0;
-        do
-        {
-            zOut.write( buffer, 0, count );
-            count = in.read( buffer, 0, buffer.length );
-        } while( count != -1 );
+        return m_src;
+    }
+
+    protected final File getZipFile()
+    {
+        return m_zipFile;
     }
 }

@@ -7,9 +7,8 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
@@ -18,42 +17,17 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  * non-compressed archives such as TAR files.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-
 public class BZip2
     extends Pack
 {
-    protected void pack()
-        throws TaskException
+    private static final byte[] HEADER = new byte[]{(byte)'B', (byte)'Z'};
+
+    protected OutputStream getPackingStream( OutputStream output )
+        throws TaskException, IOException
     {
-        CBZip2OutputStream zOut = null;
-        try
-        {
-            BufferedOutputStream bos =
-                new BufferedOutputStream( new FileOutputStream( zipFile ) );
-            bos.write( 'B' );
-            bos.write( 'Z' );
-            zOut = new CBZip2OutputStream( bos );
-            zipFile( source, zOut );
-        }
-        catch( IOException ioe )
-        {
-            String msg = "Problem creating bzip2 " + ioe.getMessage();
-            throw new TaskException( msg, ioe );
-        }
-        finally
-        {
-            if( zOut != null )
-            {
-                try
-                {
-                    // close up
-                    zOut.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-        }
+        output.write( HEADER );
+        return new CBZip2OutputStream( output );
     }
 }
