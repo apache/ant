@@ -18,26 +18,75 @@ import org.apache.myrmidon.api.TaskException;
 public class Log
     extends AbstractTask
 {
+    /**
+     * The message to printout when logging
+     */
     private String m_message;
 
+    /**
+     * The level at which to print out messages.
+     */
+    private LogLevel m_level = LogLevel.WARN;
+
+    /**
+     * Set the level at which the message will be logged.
+     *
+     * @param the level at which message will be logged
+     */
+    public void setLevel( final LogLevel level )
+    {
+        m_level = level;
+    }
+
+    /**
+     * Set the message to print out when logging message
+     */
     public void setMessage( final String message )
     {
         checkNullMessage();
         m_message = message;
     }
 
+    /**
+     * Set the message to print out when logging message
+     */
     public void addContent( final String message )
     {
         checkNullMessage();
         m_message = message;
     }
 
+    /**
+     * Log message at specified level.
+     */
     public void execute()
         throws TaskException
     {
-        getLogger().warn( m_message );
+        if( LogLevel.FATAL_ERROR == m_level )
+        {
+            getLogger().fatalError( m_message );
+        }
+        else if( LogLevel.ERROR == m_level )
+        {
+            getLogger().error( m_message );
+        }
+        else if( LogLevel.WARN == m_level )
+        {
+            getLogger().warn( m_message );
+        }
+        else if( LogLevel.INFO == m_level )
+        {
+            getLogger().info( m_message );
+        }
+        else
+        {
+            getLogger().debug( m_message );
+        }
     }
 
+    /**
+     * Utility message to verify that the message has not already been set.
+     */
     private void checkNullMessage()
     {
         if( null != m_message )
