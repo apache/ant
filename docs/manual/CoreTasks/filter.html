@@ -15,7 +15,7 @@ Token filters are used by all tasks that perform file copying operations
 through the Project commodity methods.</p>
 <p>Note 1: the token string must not contain the separators chars (@).<br>
 Note 2: Either token and value attributes must be provided, or only the
-filterfile attribute.</p>
+filtersfile attribute.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -50,7 +50,7 @@ filterfile attribute.</p>
 <p>will copy recursively all the files from the <i>src.dir</i> directory into
 the <i>dest.dir</i> directory replacing all the occurences of the string <i>@year@</i>
 with <i>2000.</i></p>
-<pre>  &lt;filter filterfile=&quot;deploy_env.properties&quot;/&gt;</pre>
+<pre>  &lt;filter filtersfile=&quot;deploy_env.properties&quot;/&gt;</pre>
 will read all property entries from the <i>deploy_env.properties</i> file
 and set these as filters.
 
