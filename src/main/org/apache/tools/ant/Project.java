@@ -127,6 +127,8 @@ public class Project {
                 try {
                     Class taskClass = Class.forName(value);
                     addTaskDefinition(key, taskClass);
+                } catch (NoClassDefFoundError ncdfe) {
+                    // ignore...
                 } catch (ClassNotFoundException cnfe) {
                     // ignore...
                 }
