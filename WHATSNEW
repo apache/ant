@@ -16,8 +16,13 @@ Changes that could break older environments:
   represents a directory.  Support for nested filesets is provided
   instead.
 
+* Some loopholes in the immutability rule have been closed. It is no longer
+  possible to overwrite a property using tasks like <available> or <condition>.  
+
 Fixed bugs:
 -----------
+* Fixed bug with 4NT shell support
+
 * Fixed bug where ant would not perform ftp without remotedir being
   specified even though this was not mandatory.
 
@@ -47,6 +52,11 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Exec task has extra attribute "resultproperty" to get the return code
+  into a property.
+  
+* Exec task prints a message when a timed out process is killed.  
+  
 * Added optional attributes - name, arch and version to <os>
 
 * Unjar, Untar, Unwar and Unzip now support patternsets to 
