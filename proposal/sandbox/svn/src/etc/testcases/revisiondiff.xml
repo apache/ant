@@ -21,7 +21,6 @@
 
   <property name="tmpdir" value="tmpdir"/>
   <property name="trunkdir" value="${tmpdir}/trunk"/>
-  <property name="file" value="ebcdic.h"/>
 
   <target name="dir-prep">
     <mkdir dir="${tmpdir}"/>
@@ -44,8 +43,7 @@
       destfile="${tmpdir}/diff.xml" start="152904" end="153682"/>
   </target>
 
-  <target name="report">
-  <!--target name="report" depends="diff-using-url"-->
+  <target name="report" depends="diff-using-url">
     <style in="${tmpdir}/diff.xml" 
       out="${tmpdir}/diff.html" 
       style="src/etc/revisiondiff.xsl">

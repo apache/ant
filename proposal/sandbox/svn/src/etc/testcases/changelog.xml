@@ -21,7 +21,6 @@
 
   <property name="tmpdir" value="tmpdir"/>
   <property name="trunkdir" value="${tmpdir}/trunk"/>
-  <property name="file" value="ebcdic.h"/>
 
   <target name="setup">
     <mkdir dir="${tmpdir}"/>
