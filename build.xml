@@ -343,6 +343,14 @@
     <exclude unless="run.failing.tests" name="${optional.package}/WsdlToDotnetTest.java"/>
   </patternset>
 
+  <!--tests that need an XML Schema-supporting parser to work-->
+  <selector id="needs.xmlschema">
+    <or>
+      <filename name="${optional.package}/SchemaValidateTest.*"/>
+      <filename name="${optional.package}/XmlValidateTest.*"/>
+    </or>
+  </selector>
+
   <!--
        ===================================================================
          Set up a patternsets that matches the parts of our JUnit testsuite
@@ -599,6 +607,18 @@
       </not>
     </condition>
     <property name="build.compiler" value="modern"/>
+
+    <!--check for XSD support in the parser-->
+    <condition property="xmlschema.present">
+      <or>
+        <parsersupports
+          feature="http://apache.org/xml/features/validation/schema"/>
+        <parsersupports
+          feature="http://java.sun.com/xml/jaxp/properties/schemaSource"/>
+      </or>
+    </condition>
+
+
   </target>
 
 
@@ -681,6 +701,7 @@
             <selector refid="needs.jdepend" unless="jdepend.present"/>
             <selector refid="needs.swing"  unless="swing.present"/>
             <selector refid="needs.jsch" unless="jsch.present"/>
+            <selector refid="needs.xmlschema" unless="xmlschema.present"/>
           </or>
         </not>
       </selector>
