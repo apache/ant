@@ -7,7 +7,7 @@
   </properties>
 
   <body>
-    
+
     <section name="External Tools and Tasks">
 
       <p>This page lists external resources for Apache Ant: <a
@@ -303,7 +303,7 @@
         <p>Recursive build support (call ant on every package level,
         and only build files in that package or in that package and
         everything below) with seperation of source and output.</p>
-        
+
         <p>The task generates build files in any subdirectory (except
         for CVS-directories) for you. Only place one build.xml file in
         the top and call target &apos;setup&apos; or
@@ -574,7 +574,7 @@
         </table>
       </subsection>
 
-      <subsection name="Interactive"> 
+      <subsection name="Interactive">
 
         <p>Task allowing to run a dialog within a build used to setup
         some properties.  This way you can fill a property with the
@@ -631,7 +631,7 @@
         <p>There are four different sets of tasks to help build <a
         href="http://java.sun.com/j2me/">Java 2 Platform, Micro
         Edition</a> (J2ME) applications.</p>
-        
+
         <p>This set supports CLDC and the K Virtual Machine (KVM):</p>
 
         <table class="externals">
@@ -737,7 +737,7 @@
       </subsection>
 
       <subsection name="Jacson">
-        
+
         <p>Jacson is a configurable and plugable tool (much like Ant
         itself) to create filters for text (line based) files without
         programming.</p>
@@ -764,7 +764,7 @@
       </subsection>
 
       <subsection name="Jalopy">
-        
+
         <p>An Ant Plug-in for the Java Source Code Formatter
         Jalopy.</p>
 
@@ -956,7 +956,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant &gt;= 1.5</td>  
+            <td>Ant &gt;= 1.5</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -1026,14 +1026,14 @@
       <subsection name="Jing Task">
 
         <p> Validates XML files against the RELAX NG alternative to XML Schema.
-        The Jing task for Ant allows you to efficiently validate 
-        multiple files against multiple RELAX NG patterns and integrate 
+        The Jing task for Ant allows you to efficiently validate
+        multiple files against multiple RELAX NG patterns and integrate
         RELAX NG validation with other XML processing.</p>
 
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.4 and later</td>  
+            <td>Ant 1.4 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -1118,7 +1118,7 @@
       <subsection name="JNI">
 
         <p>
-        
+
           JNI is a free toolkit that makes easy work of
           integrating Java and C through the Java Native
           Interface (JNI). It includes a code generator that
@@ -1160,7 +1160,7 @@
         <p>JRun 4 SP1 ships with lib/jrun-ant-tasks.jar, which defines
         three Ant tasks: jrun, jrunapp, and jrunjmx.  Documentation
         for the tasks can be found in JRun under
-        docs/ant/jrun.html.</p> 
+        docs/ant/jrun.html.</p>
 
         <p>Note that the service pack must be installed on top of an
         existing JRun 4 installation.</p>
@@ -1187,9 +1187,9 @@
 
       <subsection name="Just4log Ant Task">
 
-        <p>Just4log is a ant task to optimize JVM bytecode with regards 
+        <p>Just4log is a ant task to optimize JVM bytecode with regards
         for Logs ( be it, Log4j, Apache Commons or JDK 1.4 )
-        It depends on apache BCEL for Bytecode engineering.</p> 
+        It depends on apache BCEL for Bytecode engineering.</p>
 
         <table class="externals">
           <tr>
@@ -1210,7 +1210,7 @@
           </tr>
         </table>
       </subsection>
-      
+
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
@@ -1294,8 +1294,8 @@
 
       <subsection name="Purge">
 
-        <p>Purge deletes all but the most recent few files from a fileset. 
-        For example: if you have generated files (logs, .ear, .war, .jar 
+        <p>Purge deletes all but the most recent few files from a fileset.
+        For example: if you have generated files (logs, .ear, .war, .jar
         etc) accumulating in a directory, the purge task will allow you
         to delete the older files, keeping just the most recent ones.</p>
         <table class="externals">
@@ -1314,6 +1314,32 @@
           <tr>
             <th>License:</th>
             <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Roxes Ant Tasks">
+
+        <p>The collections contain 3 Tasks for simplifying application
+        deployment: <i>sfx</i> creates native self extracting executables
+        out of ZIP archives; <i>jstub</i> creates native executables;
+        <i>jnlp</i> simplifies the creation of JNLP files for Java Web Start.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.roxes.com/produkte/rat.html">http://www.roxes.com/produkte/rat.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:info@roxes.com">info@roxes.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL)</td>
           </tr>
         </table>
       </subsection>
@@ -1471,7 +1497,7 @@
         declarations. Tim is capable of removing unused imports,
         expanding or collapsing imports and even organising them into
         pre-determined groups.</p>
-        
+
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
@@ -1496,7 +1522,7 @@
 
         <p>TiniAnt is an Ant task to support building applications for
         the <a href="http://www.ibutton.com/TINI/">TINI</a>.</p>
-        
+
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
@@ -1545,7 +1571,7 @@
           </tr>
         </table>
       </subsection>
-      
+
       <subsection name="Version_Tool">
         <p>A versioning tool for Ant.</p>
         <table class="externals">
@@ -1598,14 +1624,14 @@
 
       <subsection name="WOProject">
 
-        <p>WOProject provides a set of tools to work with 
-        <a href="http://webobjects.com/">WebObjects 5.1</a> 
-        independent from platform and IDE. It significantly 
+        <p>WOProject provides a set of tools to work with
+        <a href="http://webobjects.com/">WebObjects 5.1</a>
+        independent from platform and IDE. It significantly
         improves developer productivity
         and makes complex project structures more flexible compared to
         traditional Makefile-based approach.
         </p>
-        
+
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
@@ -1629,12 +1655,12 @@
       <subsection name="XDoclet">
 
         <p>XDoclet is an extended Javadoc Doclet engine for use in Ant.
-           It lets you create custom Javadoc @tags and based on those tags 
-           generates source code or other files (such as xml-ish deployment 
+           It lets you create custom Javadoc @tags and based on those tags
+           generates source code or other files (such as xml-ish deployment
            descriptors). Templates and matching tasks are provided to generate
            EJB and web application deployment descriptors.
            </p>
-        
+
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
@@ -1650,7 +1676,7 @@
           </tr>
         </table>
       </subsection>
-      
+
       <subsection name="XInclude">
         <p><a href="http://www.jeckle.de/freeStuff/xia/index.html">XInclude</a> is
           a W3C standardized vocabulary for including arbitrary text or XML
@@ -1680,7 +1706,7 @@
       </subsection>
 
       <subsection name="XmlTask">
-        
+
         <p>XmlTask provides a simple means to modify XML documents
         without having to learn XSLT. A simple path reference to an
         XML node specifies the node you want to change, and how you
@@ -1691,7 +1717,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.4 and later</td>  
+            <td>Ant 1.4 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -1722,7 +1748,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.5 and later</td>  
+            <td>Ant 1.5 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -1746,7 +1772,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.4.1 and later</td>  
+            <td>Ant 1.4.1 and later</td>
           </tr>
           <tr>
             <th>URL:</th>
@@ -1758,7 +1784,7 @@
           </tr>
         </table>
       </subsection>
-      
+
     </section>
 
     <section name="Compiler Implementations">
@@ -1970,12 +1996,12 @@
       <subsection name="HP RadPak">
 
         <p>
-        RadPak comes with the (free) HP Bluestone HPAS J2EE server, and is primarily 
+        RadPak comes with the (free) HP Bluestone HPAS J2EE server, and is primarily
         a GUI tool for packaging and deploying java web and EJB applications
         as WAR and EAR files. The tool is ant based, and can be used with
-        as a GUI for general ant development, providing form based entry 
+        as a GUI for general ant development, providing form based entry
         of task attributes, and an animated display of task
-        execution. 
+        execution.
         </p>
 
         <table class="externals">
@@ -2141,6 +2167,6 @@
       </subsection>
 
     </section>
-    
+
   </body>
 </document>
