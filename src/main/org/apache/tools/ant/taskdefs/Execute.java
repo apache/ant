@@ -563,7 +563,7 @@ public class Execute {
                 Object[] arguments = { cmd, env, workingDir };
                 return (Process)_execWithCWD.invoke(Runtime.getRuntime(), arguments);
             } 
-            catch ( InvocationTargetException exc ) {
+            catch (InvocationTargetException exc) {
                 Throwable realexc = exc.getTargetException();
                 if ( realexc instanceof ThreadDeath ) {
                     throw (ThreadDeath)realexc;
@@ -572,12 +572,12 @@ public class Execute {
                     throw (IOException)realexc;
                 } 
                 else {
-                    throw new IOException(realexc.getMessage());
+                    throw new BuildException("Unable to execute command", realexc);
                 }
             } 
-            catch ( Exception exc ) {
+            catch (Exception exc) {
                 // IllegalAccess, IllegalArgument, ClassCast
-                throw new IOException(exc.getMessage());
+                throw new BuildException("Unable to execute command", exc);
             }
         }
         
