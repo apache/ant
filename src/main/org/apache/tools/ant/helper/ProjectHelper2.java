@@ -939,8 +939,9 @@ public class ProjectHelper2 extends ProjectHelper {
             UnknownElement task = new UnknownElement(tag);
             task.setProject(context.getProject());
             task.setNamespace(uri);
-            //XXX task.setTaskType(qname);
             task.setQName(qname);
+            task.setTaskType(
+                ProjectHelper.genComponentName(task.getNamespace(), tag));
             task.setTaskName(qname);
 
             Location location = new Location(context.getLocator().getSystemId(),
