@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us">
+    <title>Ant2 feature list</title>
+  </head>
+
+  <body>
+    <h1>Ant2 Goals</h1>
+
+    <p>Even though Ant2 is expected to be incompatible with the
+    current Ant1 series, it still has the same goals. Ant is a Java
+    based build tool and this remains the main focus of it. The
+    original goals of simplicity, understandability and extensibility
+    still stand and Ant2 will try to achieve them even better than
+    Ant1 does.</p>
+
+    <h2>Simplicity and Understandability</h2>
+
+    <p>These two goals are closely related. Ant build files shall be
+    easy to read and understand - at the same time it should be easy
+    to write a custom Ant task and to use the utility classes that
+    Ant2 provides.</p>
+
+    <p>Ant2 shall be more consistent than Ant1 is - this means:</p>
+
+    <ul>
+
+      <li>core tasks will use the same attribute names for common
+      functionality</li>
+
+      <li>similar tasks will be unified to use similar forms.</li>
+
+      <li>different implementations for the same functionality will be
+      hidden behind facade tasks.</li>
+
+      <li>properties and data types will be unified so that they share
+      the same namespace and inheritance rules.</li>
+
+    </ul>
+
+    <p>Furthermore some things will have to become more explicit:</p>
+
+    <ul>
+
+      <li>remove all magic properties</li>
+
+      <li>make build file writers explicitly state which
+      filters/filtersets a copy task will use</li>
+
+      <li>add scoping rules for properties so that not all of them
+      will be inherited by sub-builds, only those that have been
+      specified explicitly.</li>
+
+    </ul>
+
+    <h2>Extensibility</h2>
+
+    <p>Ant2 like Ant1 uses build files written in XML as its main
+    input, but it will not be restricted to it. The core of Ant2 will
+    work on an object model of Project/Target/Task that is independent
+    of any external representation.</p> 
+
+    <p>As an extension of the current <code>&lt;taskdef&gt;</code>
+    concept, tasks can be bundled into task libraries (together with
+    data types and other utility classes). These task libraries are
+    special JAR archives that somehow describe the contained tasks to
+    Ant. Ant will automatically know all tasks contained in task
+    libraries that have been placed into a special directory - in
+    addition task libraries can be referenced and used in a build file
+    explicitly.</p>
+
+    <h1>New/Modified Features</h1>
+
+    <p>Ant2 is going to break Ant1 in several ways:</p>
+
+    <ul>
+
+      <li>Tasks written for Ant1 won't work in Ant2 as the API of
+      Ant's core and the names of utility classes are going to
+      change. There will probably be adaptors and utility classes to
+      ease the transition for task writers.</li>
+
+      <li>Build files written for Ant1 will probably not be valid in
+      Ant2 or at least not yield the same results. It is expected that
+      Ant2 will come with a tool to translate Ant1 build files into
+      equivalent Ant2 versions</li>
+
+      <li>magic properties like <code>build.compiler</code> may
+      disappear and be replaced by a different customization
+      concept.</li>
+
+      <li>Ant2 is going to require a JDK version 1.2 or above and a
+      JAXP compliant parser version 1.1 or above.</li>
+
+    </ul>
+
+    <h1>Rejected Features</h1>
+
+    <hr>
+      <p align="center">$Id$</p>
+      <p align="center">Copyright &copy; 2001 Apache Software
+        Foundation. All rights Reserved.</p>
+  </body>
+</html>
