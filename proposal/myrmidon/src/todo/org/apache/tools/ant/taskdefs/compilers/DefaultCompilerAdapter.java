@@ -64,7 +64,7 @@ public abstract class DefaultCompilerAdapter
 
     public void setJavac( Javac attributes )
     {
-        this.m_attributes = attributes;
+        m_attributes = attributes;
         src = attributes.getSrcdir();
         m_destDir = attributes.getDestdir();
         m_encoding = attributes.getEncoding();
