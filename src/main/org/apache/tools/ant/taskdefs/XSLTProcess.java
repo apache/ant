@@ -153,7 +153,14 @@ public class XSLTProcess extends MatchingTask {
         long styleSheetLastModified = 0;
         if (xslFile != null) {
             try {
-                File file = project.resolveFile(xslFile, baseDir);
+                File file = project.resolveFile(xslFile, project.getBaseDir());
+
+                if (!file.exists()) {
+                    log("DEPRECATED - the style attribute should be relative to the project\'s");
+                    log("             basedir, not the tasks\'s basedir.");
+                    file = project.resolveFile(xslFile, baseDir);
+                }
+                
                 // Create a new XSL processor with the specified stylesheet
                 styleSheetLastModified = file.lastModified();
                 log( "Loading stylesheet " + file, Project.MSG_INFO);
