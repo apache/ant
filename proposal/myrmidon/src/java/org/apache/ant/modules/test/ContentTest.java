@@ -26,7 +26,7 @@ public class ContentTest
     /*
       public void addContent( final String blah )
       {
-      System.out.println( "String: " + blah );
+      System.out.println( "String content: " + blah );
       }
     */
 
