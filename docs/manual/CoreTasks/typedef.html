@@ -42,7 +42,8 @@
   </pre>
     
   <p>
-    The xml format is described below in the <a href="#antlib">Antlib</a>
+    The xml format is described in the
+    <a href="../CoreTypes/antlib.html">Antlib</a>
     section.
   </p>
 
@@ -81,7 +82,7 @@
       are "properties" or "xml". If the value is "properties" the file/resource
       is a property file contains name to classname pairs. If the value
       is "xml", the file/resource is an xml file/resource structured according
-      to   <a href="#antlib">Antlib</a>.
+      to   <a href="../CoreTypes/antlib.html">Antlib</a>.
       The default is "properties" unless the file/resorce name ends with
       ".xml", in which case the format attribute will have the value "xml".
       (introduced in ant1.6)
@@ -167,29 +168,6 @@
              classname="com.acme.ant.RunClock"
              adapter="org.acme.ant.RunnableAdapter"/&gt;
   </pre>
-  <h3><a name="antlib">Antlib xml format</a></h3>
-  An antlib file is an xml file with a root element of "antlib".
-  Antlib is actually a <a href="sequential.html">Sequential</a> task with
-  special treatment for tasks that are ant definition tasks - like typedef
-  and <a href="taskdef.html">Taskdef</a>.
-
-    A group of tasks and types may be defined together in an antlib
-    file. For example the file <i>sample.xml</i> contains the following:
-  <pre>
-    &lt;?xml version="1.0"?&gt;
-    &lt;antlib&gt;
-      &lt;typedef name="if" classname="org.acme.ant.If"/&gt;
-      &lt;typedef name="scriptpathmapper"
-               classname="org.acme.ant.ScriptPathMapper"
-               onerror="ignore"/&gt;
-    &lt;/antlib&gt;
-  </pre>
-    It defines two types or tasks, <i>if</i> and <i>scriptpathmapper</i>.
-    This antlib file may be used in a build script as follows:
-    <pre>
-      &lt;typedef file="sample.xml"/&gt;
-    </pre>
-
 <hr>
 <p align="center">Copyright &copy; 2001-2003 Apache Software
 Foundation. All rights Reserved.</p>
