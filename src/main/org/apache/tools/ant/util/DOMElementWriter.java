@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -243,8 +243,15 @@ public class DOMElementWriter {
     /**
      * Drop characters that are illegal in XML documents.
      *
+     * <p>Also ensure that we are not including an <code>]]&gt;</code>
+     * marker by replacing that sequence with
+     * <code>&amp;x5d;&amp;x5d;&amp;gt;</code>.</p>
+     *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>. and
+     * 2.7 <a
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a></p>
+
      */
     public String encodedata(final String value) {
         sb.setLength(0);
@@ -254,7 +261,18 @@ public class DOMElementWriter {
                 sb.append(c);
             }
         }
-        return sb.toString();
+
+        String result = sb.toString();
+        int cdEnd = result.indexOf("]]>");
+        while (cdEnd != -1) {
+            sb.setLength(cdEnd);
+            sb.append("&x5d;&x5d;&gt;")
+                .append(result.substring(cdEnd+3));
+            result = sb.toString();
+            cdEnd = result.indexOf("]]>");
+        }
+        
+        return result;
     }
 
     /**
