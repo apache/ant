@@ -54,6 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
+import java.rmi.Remote;
+import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -67,11 +71,6 @@ import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.facade.FacadeTaskHelper;
-
-import java.io.File;
-import java.io.IOException;
-import java.rmi.Remote;
-import java.util.Vector;
 
 /**
  * Runs the rmic compiler against classes.</p>
@@ -102,7 +101,7 @@ import java.util.Vector;
  * <ul>
  *   <li>sun (the standard compiler of the JDK)</li>
  *   <li>kaffe (the standard compiler of 
- *       {@ link <a href="http://www.kaffe.org">Kaffe</a>})</li>
+ *       {@link <a href="http://www.kaffe.org">Kaffe</a>})</li>
  *   <li>weblogic</li>
  * </ul>
  * 
@@ -259,7 +258,7 @@ public class Rmic extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+            compileClasspath = new Path(getProject());
         }
         return compileClasspath.createPath();
     }
@@ -363,9 +362,9 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Include ant's own classpath in this task's classpath?
-     * sets whether to include the Ant run-time libraries;
-     * optional defaults to true.
+     * Sets whether or not to include ant's own classpath in this task's 
+     * classpath.
+     * Optional; default is <code>true</code>.
      */
     public void setIncludeantruntime(boolean include) {
         includeAntRuntime = include;
@@ -414,7 +413,7 @@ public class Rmic extends MatchingTask {
      */
     public Path createExtdirs() {
         if (extdirs == null) {
-            extdirs = new Path(project);
+            extdirs = new Path(getProject());
         }
         return extdirs.createPath();
     }
@@ -477,10 +476,10 @@ public class Rmic extends MatchingTask {
      */
     public void execute() throws BuildException {
         if (baseDir == null) {
-            throw new BuildException("base attribute must be set!", location);
+            throw new BuildException("base attribute must be set!", getLocation());
         }
         if (!baseDir.exists()) {
-            throw new BuildException("base does not exist!", location);
+            throw new BuildException("base does not exist!", getLocation());
         }
 
         if (verify) {
@@ -493,7 +492,7 @@ public class Rmic extends MatchingTask {
         adapter.setRmic(this);
 
         Path classpath = adapter.getClasspath();
-        loader = new AntClassLoader(project, classpath);
+        loader = new AntClassLoader(getProject(), classpath);
 
         try {
             // scan base dirs to build up compile lists only if a
@@ -519,7 +518,7 @@ public class Rmic extends MatchingTask {
                 
                 // finally, lets execute the compiler!!
                 if (!adapter.execute()) {
-                    throw new BuildException(FAIL_MSG, location);
+                    throw new BuildException(FAIL_MSG, getLocation());
                 }
             }
             
@@ -565,15 +564,16 @@ public class Rmic extends MatchingTask {
             adapter.getMapper().mapFileName(classFileName);
 
         for (int i = 0; i < generatedFiles.length; i++) {
-            if (!generatedFiles[i].endsWith(".class")) {
+            final String generatedFile = generatedFiles[i];
+            if (!generatedFile.endsWith(".class")) {
                 // don't know how to handle that - a IDL file doesn't
                 // have a corresponding Java source for example.
                 continue;
             }
-            
-            String sourceFileName = 
-                generatedFiles[i].substring(0, classFileName.length() - 6)
-                + ".java";
+
+            final int pos = generatedFile.length() - ".class".length();
+            String sourceFileName =
+                generatedFile.substring(0, pos) + ".java";
 
             File oldFile = new File(baseDir, sourceFileName);
             if (!oldFile.exists()) {
@@ -594,7 +594,7 @@ public class Rmic extends MatchingTask {
             } catch (IOException ioe) {
                 String msg = "Failed to copy " + oldFile + " to " +
                     newFile + " due to " + ioe.getMessage();
-                throw new BuildException(msg, ioe, location);
+                throw new BuildException(msg, ioe, getLocation());
             }
         }
     }
