@@ -39,8 +39,8 @@ echo CLASSPATH=%CLASSPATH%
 if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
 if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
 
-mkdir %CLASSDIR%
-mkdir build
+if not exist %CLASSDIR% mkdir %CLASSDIR%
+if not exist build mkdir build
 
 echo.
 echo ... Compiling Ant Classes

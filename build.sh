@@ -4,7 +4,7 @@ REALANTHOME=$ANT_HOME
 ANT_HOME=.
 export ANT_HOME
 
-if test ! -f lib/ant.jar -o  ! -x bin/ant -o ! -x bin/antRun ; then
+if test ! -f bootstrap/lib/ant.jar -o  ! -x bootstrap/bin/ant -o ! -x bootstrap/bin/antRun ; then
   /bin/sh ./bootstrap.sh
 fi    
 
@@ -12,5 +12,5 @@ if [ "$REALANTHOME" != "" ] ; then
   ANT_INSTALL="-Dant.install=$REALANTHOME"
 fi
 
-bin/ant $ANT_INSTALL $*
+bootstrap/bin/ant $ANT_INSTALL $*
 

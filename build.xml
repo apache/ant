@@ -2,7 +2,7 @@
 
 <!-- 
   =======================================================================
-  Ant own build file                                                      
+    Ant own build file                                                      
   ======================================================================= 
 -->
 <project name="Ant" default="main" basedir=".">
@@ -23,7 +23,7 @@
 
   <!-- 
        ===================================================================
-       Set the properties related to the source tree
+         Set the properties related to the source tree
        =================================================================== 
   -->
   <property name="src.dir" value="src"/>
@@ -41,10 +41,11 @@
 
   <!-- 
        ===================================================================
-       Set the properties for the build area
+         Set the properties for the build area
        =================================================================== 
   -->
   <property name="build.dir" value="build"/>
+  <property name="bootstrap.dir" value="bootstrap"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
@@ -61,7 +62,7 @@
 
  <!-- 
        ===================================================================
-       Set up properties for the distribution area
+         Set up properties for the distribution area
        =================================================================== 
   -->
   <property name="dist.name" value="jakarta-${name}-${version}"/>
@@ -83,7 +84,7 @@
 
   <!-- 
        ===================================================================
-       Check to see what optional dependencies are available              
+         Check to see what optional dependencies are available              
        =================================================================== 
   -->
   <target name="check_for_optional_packages">
@@ -142,13 +143,20 @@
                classpathref="classpath"/>
   </target>
 
-  <!-- =================================================================== -->
-  <!-- Prepares the build directory                                        -->
-  <!-- =================================================================== -->
+  <!-- 
+       ===================================================================
+         Prepare the build              
+       =================================================================== 
+  -->
   <target name="prepare">
     <tstamp />
   </target>
 
+  <!-- 
+       ===================================================================
+         Build the code           
+       =================================================================== 
+  -->
   <target name="build" depends="prepare, check_for_optional_packages">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
@@ -207,8 +215,7 @@
   
   <!-- 
        =================================================================== 
-       Creates the lib directory including the ant jars, ant.jar and       
-       optional.jar                                                        
+         Create the ant jars: ant.jar and optional.jar                                                 
        =================================================================== 
   -->
   <target name="jars" depends="build">
@@ -229,7 +236,7 @@
 
   <!--
        ===================================================================
-                         Create the essential distribution
+         Create the essential distribution that can run ant
        ===================================================================
   -->
   <target name="dist-lite" depends="jars, setup-distproperties">
@@ -261,7 +268,7 @@
 
  <!--
        ===================================================================
-                         Create the complete distribution
+         Create the complete distribution
        ===================================================================
   -->
   <target name="dist" depends="dist-lite,javadocs">
@@ -301,19 +308,19 @@
 
   <!--
        ===================================================================
-                Target to create bootstrap libraries
+         Target to create bootstrap build
        ===================================================================
   -->
   <target name="bootstrap">
     <antcall target="dist-lite">
-      <param name="dist.dir" value="." />
+      <param name="dist.dir" value="${bootstrap.dir}" />
     </antcall>
   </target>
 
 
   <!--
        ===================================================================
-                            Create the source distribution
+         Create the source distribution
        ===================================================================
   -->
   <target name="src-dist" depends="setup-distproperties">
@@ -363,7 +370,7 @@
 
   <!--
        ===================================================================
-                 Create the binary distribution
+         Create the binary distribution
        ===================================================================
   -->
   <target name="distribution">
@@ -406,12 +413,13 @@
 
   <!--
        ===================================================================
-                 Cleans up build and distribution directories
+         Cleans up build and distribution directories
        ===================================================================
   -->
-  <target name="clean">
+  <target name="clean" depends="setup-distproperties">
     <delete dir="${build.dir}" />
     <delete dir="${dist.dir}" />
+    <delete dir="${dist.base}" />
     <delete> 
       <fileset dir="." includes="**/*~" defaultexcludes="no"/>
     </delete>
@@ -419,7 +427,17 @@
 
   <!--
        ===================================================================
-                 Installs ant
+         Cleans everything
+       ===================================================================
+  -->
+  <target name="allclean" depends="clean">
+    <delete file="${bootstrap.dir}/bin/antRun" />
+    <delete file="${bootstrap.dir}/bin/antRun.bat" />
+  </target> 
+
+  <!--
+       ===================================================================
+         Installs ant
        ===================================================================
   -->
   <target name="install" if="ant.install">
@@ -436,7 +454,7 @@
 
   <!-- 
        ===================================================================
-                Creates the API documentation                             
+         Creates the API documentation                             
        =================================================================== 
   -->
   
@@ -466,7 +484,7 @@
   
   <!-- 
        =================================================================== 
-       Compile testcases                                                   
+         Compile testcases                                                   
        =================================================================== 
   -->
   <target name="compile-tests" depends="build" if="junit.present">
@@ -489,7 +507,7 @@
 
   <!-- 
        =================================================================== 
-       Run testcase                                                        
+         Run testcase                                                        
        =================================================================== 
   -->
   <target name="run-tests" depends="compile-tests" if="junit.present">
@@ -548,6 +566,11 @@
     </junit>
   </target>
 
+  <!-- 
+       =================================================================== 
+         Main target - runs dist-lite by default                                               
+       =================================================================== 
+  -->
   <target name="main" depends="dist-lite"/>
 
 </project>
