@@ -163,4 +163,41 @@ public class JarTest extends BuildFileTest {
                                         .resolveFile("jartmp/META-INF/MANIFEST.MF")));
         assertEquals(mf1, mf2);
     }
+
+    public void testNoRecreateBasedirExcludesWithUpdate() {
+        testNoRecreate("testNoRecreateBasedirExcludesWithUpdate");
+    }
+
+    public void testNoRecreateBasedirExcludesWithoutUpdate() {
+        testNoRecreate("testNoRecreateBasedirExcludesWithoutUpdate");
+    }
+
+    public void testNoRecreateZipfilesetExcludesWithUpdate() {
+        testNoRecreate("testNoRecreateZipfilesetExcludesWithUpdate");
+    }
+
+    public void testNoRecreateZipfilesetExcludesWithoutUpdate() {
+        testNoRecreate("testNoRecreateZipfilesetExcludesWithoutUpdate");
+    }
+
+    public void testRecreateZipfilesetWithoutUpdateAdditionalFiles() {
+        testRecreate("test4",
+                     "testRecreateZipfilesetWithoutUpdateAdditionalFiles");
+    }
+
+    public void testRecreateZipfilesetWithUpdateAdditionalFiles() {
+        testRecreate("test4",
+                     "testRecreateZipfilesetWithUpdateAdditionalFiles");
+    }
+
+    public void testRecreateZipfilesetWithoutUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateZipfilesetWithoutUpdateNewerFile");
+    }
+
+    public void testRecreateZipfilesetWithUpdateNewerFile() {
+        testRecreate("testRecreateNewerFileSetup",
+                     "testRecreateZipfilesetWithUpdateNewerFile");
+    }
+
 }
