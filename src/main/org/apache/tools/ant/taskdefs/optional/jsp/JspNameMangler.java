@@ -57,13 +57,13 @@ import java.io.IOException;
 
 /**
  * this is a class derived from the Jasper code to map from a JSP filename
- * to a valid java classname
+ * to a valid java classname.
  *
  * @author Steve Loughran
  * @author Danno Ferrin
  * @see org.apache.jasper.compiler.CommandLineCompiler;
  */
-public class JspNameMangler {
+public class JspNameMangler implements JspMangler {
 
     /**
      * this is the list of keywords which can not be used as classnames
@@ -103,7 +103,7 @@ public class JspNameMangler {
      * @param jspFile jspFile file
      * @return exensionless potentially remapped name
      */
-    public String mapJspToBaseName(File jspFile) {
+    private String mapJspToBaseName(File jspFile) {
         String className;
         className = stripExtension(jspFile);
 
@@ -184,5 +184,13 @@ public class JspNameMangler {
         return new String(result);
     }
 
+    /**
+     * taking in the substring representing the path relative to the source dir
+     * return a new string representing the destination path
+     * @todo
+     */
+    public String mapPath(String path) {
+        return null;
+    }
 }
 

@@ -64,21 +64,22 @@ import java.util.Enumeration;
 import java.io.File;
 
 /**
- * This is the default implementation for the CompilerAdapter interface.
+ * This is the default implementation for the JspCompilerAdapter interface.
  * This is currently very light on the ground since only one compiler type is
  * supported.
  *
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
-public abstract class DefaultCompilerAdapter
-    implements CompilerAdapter
-{
+public abstract class DefaultJspCompilerAdapter
+    implements JspCompilerAdapter {
+
     /* ------------------------------------------------------------ */
     private static String lSep = System.getProperty("line.separator");
+
     /* ------------------------------------------------------------ */
     /**
      * Logs the compilation parameters, adds the files to compile and logs the 
-     * &qout;niceSourceList&quot;
+     * &quot;niceSourceList&quot;
      */
     protected void logAndAddFilesToCompile(JspC jspc,
                                            Vector compileList,
@@ -103,11 +104,22 @@ public abstract class DefaultCompilerAdapter
 
         jspc.log(niceSourceList.toString(), Project.MSG_VERBOSE);
     }
+
+    /**
+     * our owner
+     */
     protected JspC owner;
 
+    /**
+     * set the owner
+     */
     public void setJspc( JspC owner ) {
         this.owner = owner;
     }
+
+    /** get the owner
+     * @return the owner; should never be null
+     */
     public JspC getJspc() {
         return owner;
     }
@@ -149,6 +161,15 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setValue(argument);
             cmd.createArgument().setFile(file);
         }
-    }    
+    }
+
+    /**
+     * ask if compiler can sort out its own dependencies
+     * @return true if the compiler wants to do its own
+     * depends
+     */
+    public boolean implementsOwnDependencyChecking() {
+        return false;
+    }
 }
 

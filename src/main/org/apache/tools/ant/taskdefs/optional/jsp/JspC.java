@@ -58,13 +58,15 @@ import java.io.File;
 import java.util.Date;
 
 import java.util.Vector;
+import java.util.Enumeration;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
-import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
+import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapter;
+import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFactory;
 
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
@@ -117,7 +119,7 @@ public class JspC extends MatchingTask
     private File destDir;
     private String packageName ;
     /** name of the compiler to use */
-    private String compiler="jasper";
+    private String compilerName="jasper";
 
     /**
      *  -ieplugin <clsid>Java Plugin classid for Internet Explorer
@@ -126,6 +128,8 @@ public class JspC extends MatchingTask
     private boolean mapped ;
     private int verbose = 0;
     protected Vector compileList = new Vector();
+    Vector javaFiles=new Vector();
+
     /**
      *  flag to control action on execution trouble
      */
@@ -349,7 +353,7 @@ public class JspC extends MatchingTask
      *  set the compiler. optional: default=jasper
      */
     public void setCompiler(String compiler) {
-        this.compiler=compiler;
+        this.compilerName=compiler;
     }
 
     /**
@@ -383,15 +387,20 @@ public class JspC extends MatchingTask
                                location);
         }
 
-        // calculate where the files will end up:
-        File dest = null;
-        if (packageName == null) {
-            dest = destDir;
-        } else {
-            String path = destDir.getPath() + File.separatorChar +
-                packageName.replace('.', File.separatorChar);
-            dest = new File(path);
+        File dest = getActualDestDir();
+
+        //bind to a compiler
+        JspCompilerAdapter compiler =
+            JspCompilerAdapterFactory.getCompiler(compilerName, this);
+
+        // if the compiler does its own dependency stuff, we just call it right now
+        if(compiler.implementsOwnDependencyChecking()) {
+            doCompilation(compiler);
+            return;
         }
+
+        //the remainder of this method is only for compilers that need their dependency work done
+        JspMangler mangler=compiler.createMangler();
 
         // scan source directories and dest directory to build up both copy
         // lists and compile lists
@@ -403,12 +412,10 @@ public class JspC extends MatchingTask
                 throw new BuildException("srcdir \"" + srcDir.getPath() +
                                          "\" does not exist!", location);
             }
-
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-
             String[] files = ds.getIncludedFiles();
             filecount=files.length;
-            scanDir(srcDir, dest, files);
+            scanDir(srcDir, dest, mangler, files);
         }
 
         // compile the source files
@@ -417,25 +424,12 @@ public class JspC extends MatchingTask
 
         if (compileList.size() > 0) {
 
-            CompilerAdapter adapter =
-                CompilerAdapterFactory.getCompiler(compiler, this);
             log("Compiling " + compileList.size() +
                 " source file"
                 + (compileList.size() == 1 ? "" : "s")
-                + (destDir != null ? " to " + destDir : ""));
+                + dest);
+            doCompilation(compiler);
 
-            // now we need to populate the compiler adapter
-            adapter.setJspc( this );
-
-            // finally, lets execute the compiler!!
-            if (!adapter.execute()) {
-                if (failOnError) {
-                    throw new BuildException(FAIL_MSG, location);
-                }
-                else {
-                    log(FAIL_MSG, Project.MSG_ERR);
-                }
-            }
         }
         else {
             if(filecount==0) {
@@ -446,6 +440,42 @@ public class JspC extends MatchingTask
             }
         }
     }
+
+    /**
+     * calculate where the files will end up:
+     * this is destDir or it id destDir + the package name
+     */
+    private File getActualDestDir() {
+        File dest = null;
+        if (packageName == null) {
+            dest = destDir;
+        } else {
+            String path = destDir.getPath() + File.separatorChar +
+                packageName.replace('.', File.separatorChar);
+            dest = new File(path);
+        }
+        return dest;
+    }
+
+    /**
+     * do the compile
+     */
+    private void doCompilation(JspCompilerAdapter compiler)
+            throws BuildException {
+        // now we need to populate the compiler adapter
+        compiler.setJspc( this );
+
+        // finally, lets execute the compiler!!
+        if (!compiler.execute()) {
+            if (failOnError) {
+                throw new BuildException(FAIL_MSG, location);
+            }
+            else {
+                log(FAIL_MSG, Project.MSG_ERR);
+            }
+        }
+    }
+
     /* ------------------------------------------------------------ */
     /**
      * Clear the list of files to be compiled and copied..
@@ -453,54 +483,106 @@ public class JspC extends MatchingTask
     protected void resetFileLists() {
         compileList.removeAllElements();
     }
+
     /* ------------------------------------------------------------ */
     /**
      * Scans the directory looking for source files to be compiled.
      * The results are returned in the class variable compileList
      */
-    protected void scanDir(File srcDir, File destDir, String files[]) {
+    protected void scanDir(File srcDir, File dest, JspMangler mangler, String files[]) {
 
         long now = (new Date()).getTime();
 
         for (int i = 0; i < files.length; i++) {
             String filename=files[i];
             File srcFile = new File(srcDir, filename);
-            File javaFile=mapToJavaFile(srcFile);
+            File javaFile=mapToJavaFile(mangler,srcFile, srcDir, dest);
 
             if (srcFile.lastModified() > now) {
                     log("Warning: file modified in the future: " +filename,
                             Project.MSG_WARN);
             }
             boolean shouldCompile=false;
-
-            if (!javaFile.exists()) {
-                shouldCompile=true;
-                log("Compiling " + srcFile.getPath() +
-                        " because java file "+ javaFile.getPath() + " does not exist",
-                        Project.MSG_DEBUG);
-                } else {
-                    if( srcFile.lastModified() > javaFile.lastModified()) {
-                        shouldCompile=true;
-                        log("Compiling " + srcFile.getPath() +
-                            " because it is out of date with respect to " + javaFile.getPath(),
-                            Project.MSG_DEBUG);
-                    }
-            }
+            shouldCompile=isCompileNeeded(srcFile, javaFile);
             if(shouldCompile) {
-                compileList.addElement(srcFile.getAbsolutePath());
+               compileList.addElement(srcFile.getAbsolutePath());
+               javaFiles.addElement(javaFile);
             }
         }
     }
 
     /**
-     * get a filename from our jsp file
+     * test for compilation needed. true means yes, false means
+     * our tests do not indicate this, but as the TLDs are
+     * not used for dependency checking this is not guaranteed.
+     * The current tests are
+     * <ol>
+     * <li>no dest file
+     * <li>dest file out of date w.r.t source
+     * <li>dest file zero bytes long
+     * </ol>
+     * @param srcFile JSP source file
+     * @param javaFile JSP dest file
+     * @return true if a compile is definately needed.
+     *
      */
-    protected File mapToJavaFile(File srcFile) {
+    private boolean isCompileNeeded(File srcFile, File javaFile) {
+        boolean shouldCompile=false;
+        if (!javaFile.exists()) {
+            shouldCompile=true;
+            log("Compiling " + srcFile.getPath() +
+                    " because java file "+ javaFile.getPath() + " does not exist",
+                    Project.MSG_VERBOSE);
+            } else {
+                if( srcFile.lastModified() > javaFile.lastModified()) {
+                    shouldCompile=true;
+                    log("Compiling " + srcFile.getPath() +
+                        " because it is out of date with respect to " + javaFile.getPath(),
+                        Project.MSG_VERBOSE);
+                } else {
+                    if( javaFile.length()==0) {
+                        shouldCompile=true;
+                        log("Compiling " + srcFile.getPath() +
+                                " because java file "+ javaFile.getPath()
+                                + " is empty",
+                                Project.MSG_VERBOSE);
+                    }
+                }
+        }
+        return shouldCompile;
+    }
+
+
+    /**
+     * get a filename from our jsp file
+     * @todo support packages and subdirs
+     */
+    protected File mapToJavaFile(JspMangler mangler, File srcFile, File srcDir, File dest) {
         if (!srcFile.getName().endsWith(".jsp")) {
             return null;
         }
-        JspNameMangler mangler=new JspNameMangler();
-        return new File(destDir, mangler.mapJspToJavaName(srcFile));
+        String javaFileName=mangler.mapJspToJavaName(srcFile);
+//        String srcFileDir=srcFile.getParent();
+        String packageNameIn=srcFile.getAbsolutePath();
+        return new File(dest, javaFileName);
+    }
+
+    /**
+     * delete any java output files that are empty
+     * this is to get around a little defect in jasper: when it
+     * fails, it leaves incomplete files around.
+     */
+    public void deleteEmptyJavaFiles() {
+        if(javaFiles!=null) {
+            Enumeration enum = javaFiles.elements();
+            while (enum.hasMoreElements()) {
+                File file = (File )enum.nextElement();
+                if(file.exists() && file.length()==0) {
+                    log("deleting empty output file "+file);
+                    file.delete();
+                }
+            }
+        }
     }
 
     /**
@@ -529,6 +611,7 @@ public class JspC extends MatchingTask
         }
     //end inner class    
     }
+
 
 //end class
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,33 +54,72 @@
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
+import org.apache.tools.ant.Task;
+
 
 /**
- * The interface that all jsp compiler adapters must adher to.  
+ * Creates the necessary compiler adapter, given basic criteria.
  *
- * <p>A compiler adapter is an adapter that interprets the jspc's
- * parameters in preperation to be passed off to the compier this
- * adapter represents.  As all the necessary values are stored in the
- * Jspc task itself, the only thing all adapters need is the jsp
- * task, the execute command and a parameterless constructor (for
- * reflection).</p>
- *
- * @author Jay Dickon Glanville <a href="mailto:jayglanville@home.com">jayglanville@home.com</a>
+ * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
+public class JspCompilerAdapterFactory {
 
-public interface CompilerAdapter {
-
-    /**
-     * Sets the compiler attributes, which are stored in the Jspc task.
-     */
-    void setJspc( JspC attributes );
+    /** This is a singleton -- can't create instances!! */
+    private JspCompilerAdapterFactory() {
+    }
 
     /**
-     * Executes the task.
+     * Based on the parameter passed in, this method creates the necessary
+     * factory desired.
      *
-     * @return has the compilation been successful
+     * The current mapping for compiler names are as follows:
+     * <ul><li>jasper = jasper compiler (the default)
+     * <li><i>a fully quallified classname</i> = the name of a jsp compiler
+     * adapter
+     * </ul>
+     *
+     * @param compilerType either the name of the desired compiler, or the
+     * full classname of the compiler's adapter.
+     * @param task a task to log through.
+     * @throws BuildException if the compiler type could not be resolved into
+     * a compiler adapter.
      */
-    boolean execute() throws BuildException;
+    public static JspCompilerAdapter getCompiler( String compilerType, Task task )
+        throws BuildException {
+        /* If I've done things right, this should be the extent of the
+         * conditional statements required.
+         */
+        if ( compilerType.equalsIgnoreCase("jasper") ) {
+            return new JasperC();
+        }
+        return resolveClassName( compilerType );
+    }
+
+    /**
+     * Tries to resolve the given classname into a compiler adapter.
+     * Throws a fit if it can't.
+     *
+     * @param className The fully qualified classname to be created.
+     * @throws BuildException This is the fit that is thrown if className
+     * isn't an instance of JspCompilerAdapter.
+     */
+    private static JspCompilerAdapter resolveClassName( String className )
+        throws BuildException {
+        try {
+            Class c = Class.forName( className );
+            Object o = c.newInstance();
+            return (JspCompilerAdapter) o;
+        } catch ( ClassNotFoundException cnfe ) {
+            throw new BuildException( className + " can\'t be found.", cnfe );
+        } catch ( ClassCastException cce ) {
+            throw new BuildException(className + " isn\'t the classname of "
+                                     + "a compiler adapter.", cce);
+        } catch ( Throwable t ) {
+            // for all other possibilities
+            throw new BuildException(className + " caused an interesting "
+                                     + "exception.", t);
+        }
+    }
+
 }

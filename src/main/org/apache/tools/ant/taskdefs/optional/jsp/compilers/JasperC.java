@@ -59,6 +59,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
 import org.apache.tools.ant.taskdefs.Java;
 
 import java.io.File;
@@ -71,7 +73,7 @@ import java.io.File;
  * @author steve loughran
  * @since ant1.5
  */
-public class JasperC extends DefaultCompilerAdapter
+public class JasperC extends DefaultJspCompilerAdapter
 {
     /**
      * our execute method
@@ -113,6 +115,9 @@ public class JasperC extends DefaultCompilerAdapter
                                          ex, getJspc().getLocation());
             }
         }
+        finally {
+            getJspc().deleteEmptyJavaFiles();
+        }
     }
     
 
@@ -130,6 +135,8 @@ public class JasperC extends DefaultCompilerAdapter
         addArg(cmd,"-uriroot",jspc.getUriroot());
         addArg(cmd,"-uribase",jspc.getUribase());
         addArg(cmd,"-ieplugin",jspc.getIeplugin());
+        addArg(cmd,"-die9");
+
         if (jspc.isMapped()){
             addArg(cmd,"-mapped");
         }       
@@ -139,5 +146,13 @@ public class JasperC extends DefaultCompilerAdapter
         }
         logAndAddFilesToCompile(getJspc(), getJspc().getCompileList(), cmd);
         return cmd;
+    }
+
+    /**
+     * @return an instance of the mangler this compiler uses
+     */
+
+    public JspMangler createMangler() {
+        return new JspNameMangler();
     }
 }
