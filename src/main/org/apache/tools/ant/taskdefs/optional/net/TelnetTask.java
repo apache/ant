@@ -246,7 +246,15 @@ public class TelnetTask extends Task {
         {
             throw new BuildException("Shouldn't be able instantiate a SubTask directly");
         }
-        public void addText(String s) { setString(s);}
+        /**
+         *  nested text elements need their properties explicitly expanded
+         */
+        public void addText(String s) {
+            setString(project.replaceProperties(s));
+        }
+        /**
+         * attribute assignment of properties
+         */
         public void setString(String s)
         {
            taskString += s; 

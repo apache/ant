@@ -4,6 +4,11 @@ Changes from Ant 1.4.1 to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* <telnet> was fixed to expand properties inside nested <read> and
+  <write> elements; before this only happened when you assigned the text
+  to the string attribute. If you had $ signs in the string, they may
+  need escaping. 
+
 * the RegexpMatcher interface has been extended to support case
   insensitive matches and other options - custom implementations of
   this interface won't work any longer.  We recommend to use the new
