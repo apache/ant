@@ -248,6 +248,9 @@ Other changes:
 
 * Added isfileselected condition.
 
+* Added verbose="true|false" attribute to <subant>. When verbose is enabled,
+  the directory name is logged on entry and exit of the sub-build. Bugzilla 33787.
+
 Fixed bugs:
 -----------
 

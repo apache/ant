@@ -65,6 +65,7 @@ public class SubAnt
     private String subTarget = null;
     private String antfile = "build.xml";
     private File genericantfile = null;
+    private boolean verbose = false;
     private boolean inheritAll = false;
     private boolean inheritRefs = false;
     private boolean failOnError = true;
@@ -180,11 +181,16 @@ public class SubAnt
         BuildException buildException = null;
         for (int i = 0; i < count; ++i) {
             File file = null;
+	    String subdirPath = null;
             Throwable thrownException = null;
             try {
                 File directory = null;
                 file = new File(filenames[i]);
                 if (file.isDirectory()) {
+		    if (verbose) {
+			subdirPath = file.getPath();
+			log("Entering directory: " + subdirPath + "\n", Project.MSG_INFO);
+		    }
                     if (genericantfile != null) {
                         directory = file;
                         file = genericantfile;
@@ -193,13 +199,22 @@ public class SubAnt
                     }
                 }
                 execute(file, directory);
+		if (verbose && subdirPath != null) {
+		    log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+		}
             } catch (RuntimeException ex) {
                 if (!(getProject().isKeepGoingMode())) {
+		    if (verbose && subdirPath != null) {
+			log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+		    }
                     throw ex; // throw further
                 }
                 thrownException = ex;
             } catch (Throwable ex) {
                 if (!(getProject().isKeepGoingMode())) {
+		    if (verbose && subdirPath != null) {
+			log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+		    }
                     throw new BuildException(ex);
                 }
                 thrownException = ex;
@@ -223,6 +238,9 @@ public class SubAnt
                             new BuildException(thrownException);
                     }
                 }
+		if (verbose && subdirPath != null) {
+		    log("Leaving directory: " + subdirPath + "\n", Project.MSG_INFO);
+		}
             }
         }
         // check if one of the builds failed in keep going mode
@@ -321,6 +339,15 @@ public class SubAnt
     //     REVISIT: Defaults to the target name that contains this task if not specified.
     public void setTarget(String target) {
         this.subTarget = target;
+    }
+
+    /**
+     * Enable/ disable verbose log messages showing when each sub-build path is entered/ exited.
+     * The default value is "false".
+     * @param on true to enable verbose mode, false otherwise (default).
+     */
+    public void setVerbose(boolean on) {
+        this.verbose = on;
     }
 
     /**
