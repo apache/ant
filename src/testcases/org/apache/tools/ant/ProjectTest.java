@@ -71,6 +71,7 @@ public class ProjectTest extends TestCase {
 
     private Project p;
     private String root;
+    private MockBuildListener mbl;
 
     public ProjectTest(String name) {
         super(name);
@@ -80,6 +81,7 @@ public class ProjectTest extends TestCase {
         p = new Project();
         p.init();
         root = new File(File.separator).getAbsolutePath();
+        mbl = new MockBuildListener(p);
     }
 
     public void testDataTypes() throws BuildException {
@@ -155,4 +157,78 @@ public class ProjectTest extends TestCase {
         path = root + path.substring(1);
         return path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
     }
+    
+
+    private void assertTaskDefFails(final Class taskClass, 
+                                       final String message) {
+        final String dummyName = "testTaskDefinitionDummy";
+        try {
+            mbl.addBuildEvent(message, Project.MSG_ERR);
+            p.addTaskDefinition(dummyName, taskClass);
+            fail("expected BuildException(\""+message+"\", Project.MSG_ERR) when adding task " + taskClass);
+        }
+        catch(BuildException e) {
+            assertEquals(message, e.getMessage());
+            mbl.assertEmpty();
+            assertTrue(!p.getTaskDefinitions().containsKey(dummyName));
+        }
+    }
+    
+    public void testAddTaskDefinition() {
+        p.addBuildListener(mbl);
+
+        p.addTaskDefinition("Ok", DummyTaskOk.class);
+        assertEquals(DummyTaskOk.class, p.getTaskDefinitions().get("Ok"));
+        p.addTaskDefinition("OkNonTask", DummyTaskOkNonTask.class);
+        assertEquals(DummyTaskOkNonTask.class, p.getTaskDefinitions().get("OkNonTask"));
+        mbl.assertEmpty();
+
+        assertTaskDefFails(DummyTaskPrivate.class,   DummyTaskPrivate.class   + " is not public");
+
+        if (p.getJavaVersion() != Project.JAVA_1_1) {
+            assertTaskDefFails(DummyTaskProtected.class, 
+                               DummyTaskProtected.class + " is not public");
+        } else {
+            /*
+             * I don't understand this, but this is what happens with
+             * > java -fullversion
+             * java full version "Linux_JDK_1.1.8_v3_green_threads"
+             */
+            assertTaskDefFails(DummyTaskProtected.class, 
+                               "No public default constructor in " 
+                               + DummyTaskProtected.class);
+        }
+        
+        assertTaskDefFails(DummyTaskPackage.class,   DummyTaskPackage.class   + " is not public");
+
+        assertTaskDefFails(DummyTaskAbstract.class,  DummyTaskAbstract.class  + " is abstract"); 
+        assertTaskDefFails(DummyTaskInterface.class, DummyTaskInterface.class + " is abstract");
+
+        assertTaskDefFails(DummyTaskWithoutDefaultConstructor.class, "No public default constructor in " + DummyTaskWithoutDefaultConstructor.class);
+        assertTaskDefFails(DummyTaskWithoutPublicConstructor.class,  "No public default constructor in " + DummyTaskWithoutPublicConstructor.class);
+        
+        assertTaskDefFails(DummyTaskWithoutExecute.class,       "No public execute() in " + DummyTaskWithoutExecute.class);
+        assertTaskDefFails(DummyTaskWithNonPublicExecute.class, "No public execute() in " + DummyTaskWithNonPublicExecute.class);
+        
+        mbl.addBuildEvent("return type of execute() should be void but was \"int\" in " + DummyTaskWithNonVoidExecute.class, Project.MSG_WARN);
+        p.addTaskDefinition("NonVoidExecute", DummyTaskWithNonVoidExecute.class);
+        mbl.assertEmpty();
+        assertEquals(DummyTaskWithNonVoidExecute.class, p.getTaskDefinitions().get("NonVoidExecute"));
+    }
+        
+    private class DummyTaskPrivate extends Task {
+        public DummyTaskPrivate() {}
+        public void execute() {}
+    }
+
+    protected class DummyTaskProtected extends Task {
+        public DummyTaskProtected() {}
+        public void execute() {}
+    }
+
+}
+
+class DummyTaskPackage extends Task {
+    public DummyTaskPackage() {}
+    public void execute() {}
 }

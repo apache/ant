@@ -62,6 +62,7 @@ import java.util.Vector;
 import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Stack;
+import java.lang.reflect.Modifier;
 
 
 import org.apache.tools.ant.types.FilterSet; 
@@ -414,7 +415,37 @@ public class Project {
 
         String msg = " +User task: " + taskName + "     " + taskClass.getName();
         log(msg, MSG_DEBUG);
+        checkTaskClass(taskClass); 
         taskClassDefinitions.put(taskName, taskClass);
+    }
+
+    /**
+     * Checks a class, whether it is suitable for serving as ant task.
+     * Throws a BuildException and logs as Project.MSG_ERR for
+     * conditions, that will cause the task execution to fail.
+     */
+    public void checkTaskClass(final Class taskClass) {
+        if(!Modifier.isPublic(taskClass.getModifiers())) {
+            final String message = taskClass + " is not public";
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
+        if(Modifier.isAbstract(taskClass.getModifiers())) {
+            final String message = taskClass + " is abstract";
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
+        try {
+            taskClass.getConstructor( null );
+            // don't have to check for public, since
+            // getConstructor finds public constructors only.
+        } catch(NoSuchMethodException e) {
+            final String message = "No public default constructor in " + taskClass;
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
+        if( !Task.class.isAssignableFrom(taskClass) )
+            TaskAdapter.checkTaskClass(taskClass, this);
     }
 
     public Hashtable getTaskDefinitions() {

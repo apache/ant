@@ -528,7 +528,7 @@ public class Path extends DataType implements Cloneable {
             msZipFiles.setDir(new File(System.getProperty("java.home") + File.separator + "Packages"));
             msZipFiles.setIncludes("*.ZIP");
             addFileset(msZipFiles);
-        } else if(System.getProperty("java.vm.name").equals("Kaffe")) {
+        } else if("Kaffe".equals(System.getProperty("java.vm.name"))) {
             FileSet kaffeJarFiles = new FileSet();
             kaffeJarFiles.setDir(new File(System.getProperty("java.home") 
                                           + File.separator + "share"
@@ -549,7 +549,7 @@ public class Path extends DataType implements Cloneable {
                                  System.getProperty("java.home")
                                  + File.separator + "lib"
                                  + File.separator + "rt.jar"));
-            // Just keep the old version as well and let addExistingToPath
+            // Just keep the old version as well and let addExisting
             // sort it out.
             addExisting(new Path(null,
                                  System.getProperty("java.home")

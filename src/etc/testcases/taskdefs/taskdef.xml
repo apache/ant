@@ -22,6 +22,10 @@
     <taskdef name="test" classname="org.apache.tools.ant.Project" />
   </target>
 
+  <target name="test5a">
+    <taskdef name="test" classname="org.apache.tools.ant.taskdefs.Copy" />
+  </target>
+
   <target name="test6">
     <echo message="${build.test}" />
     <taskdef name="test6"

@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 
 /**
@@ -66,6 +67,37 @@ import java.lang.reflect.Method;
 public class TaskAdapter extends Task {
 
     Object proxy;
+    
+    /**
+     * Checks a class, whether it is suitable to be adapted by TaskAdapter.
+     *
+     * Checks conditions only, which are additionally required for a tasks
+     * adapted by TaskAdapter. Thus, this method should be called by
+     * {@link Project.checkTaskClass}.
+     *
+     * Throws a BuildException and logs as Project.MSG_ERR for
+     * conditions, that will cause the task execution to fail.
+     * Logs other suspicious conditions with Project.MSG_WARN.
+     */
+    public static void checkTaskClass(final Class taskClass, final Project project) {
+        // don't have to check for interface, since then
+        // taskClass would be abstract too.
+        try {
+            final Method executeM = taskClass.getMethod( "execute", null );
+            // don't have to check for public, since
+            // getMethod finds public method only.
+            // don't have to check for abstract, since then
+            // taskClass would be abstract too.
+            if(!Void.TYPE.equals(executeM.getReturnType())) {
+                final String message = "return type of execute() should be void but was \""+executeM.getReturnType()+"\" in " + taskClass;
+                project.log(message, Project.MSG_WARN);
+            }
+        } catch(NoSuchMethodException e) {
+            final String message = "No public execute() in " + taskClass;
+            project.log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
+    }
     
     /**
      * Do the execution.
@@ -94,8 +126,8 @@ public class TaskAdapter extends Task {
             Class c=proxy.getClass();
             executeM=c.getMethod( "execute", new Class[0] );
             if( executeM == null ) {
-                log("No execute in " + proxy.getClass(), Project.MSG_ERR);
-                throw new BuildException("No execute in " + proxy.getClass());
+                log("No public execute() in " + proxy.getClass(), Project.MSG_ERR);
+                throw new BuildException("No public execute() in " + proxy.getClass());
             }
             executeM.invoke(proxy, null);
             return; 

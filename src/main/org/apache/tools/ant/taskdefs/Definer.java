@@ -173,7 +173,8 @@ public abstract class Definer extends Task {
         }
     }
     
-    private void addDefinition( ClassLoader al, String name, String value ) {
+    private void addDefinition( ClassLoader al, String name, String value )
+        throws BuildException {
         try {
             Class c = al.loadClass(value);
             AntClassLoader.initializeClass(c);

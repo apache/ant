@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -52,17 +52,48 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant;
 
-import org.apache.tools.ant.BuildException;
+import java.util.Vector;
 
-/**
- * Define a new task.
- *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
- */
-public class Taskdef extends Definer {
-    protected void addDefinition(String name, Class c) throws BuildException {
-        project.addTaskDefinition(name, c);
+import junit.framework.Assert;
+
+public class MockBuildListener extends Assert implements BuildListener {
+  
+    private final Vector buffer = new Vector();
+    private final Project project;
+    
+    public MockBuildListener(final Project project) {
+        this.project = project;
     }
+    
+    public void buildStarted(BuildEvent event) {}
+    public void buildFinished(BuildEvent event) {}
+    public void targetStarted(BuildEvent event) {}
+    public void targetFinished(BuildEvent event) {}
+    public void taskStarted(BuildEvent event) {}
+    public void taskFinished(BuildEvent event) {}
+            
+    public void messageLogged(final BuildEvent actual) {
+        if(actual.getPriority()==Project.MSG_DEBUG)
+            return;
+        assertTrue("unexpected messageLogged: "+actual.getMessage(), !buffer.isEmpty());
+        assertEquals("unexpected project ", project, actual.getProject());
+
+        BuildEvent expected = (BuildEvent) buffer.elementAt(0);
+        buffer.removeElementAt(0);
+        assertEquals("unexpected messageLogged ", expected.getMessage(), actual.getMessage());
+        assertEquals("unexpected priority ", expected.getPriority(), actual.getPriority());
+    }
+    
+    public void assertEmpty() {
+        assertTrue("MockBuilListener is not empty", buffer.isEmpty());
+    }
+    
+    public void addBuildEvent(final String message, final int priority) {
+        final BuildEvent be = new BuildEvent(project);
+        be.setMessage(message, priority);
+        buffer.addElement(be);
+    }
+    
 }

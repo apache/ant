@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.Project;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
@@ -84,7 +86,11 @@ public class TaskdefTest extends TaskdefsTest {
     }
 
     public void test5() { 
-        executeTarget("test5");
+        expectBuildException("test5", "No public execute() in " + Project.class);
+    }
+
+    public void test5a() { 
+        executeTarget("test5a");
     }
 
     /* disabled until I know why they fail when run via the junit task --SB
