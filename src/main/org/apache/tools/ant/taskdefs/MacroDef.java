@@ -68,6 +68,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
 
+import org.apache.tools.ant.types.EnumeratedAttribute;
+
 /**
  * Describe class <code>MacroDef</code> here.
  *
@@ -78,9 +80,10 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     private UnknownElement nestedTask;
     private String     name;
     private String     componentName;
-    private List       params = new ArrayList();
+    private List       attributes = new ArrayList();
     private Map        elements = new HashMap();
-    private String         uri;
+    private String     uri;
+    private int        attributeStyle = AttributeStyle.ANT;
 
     /**
      * Name of the definition
@@ -103,6 +106,46 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
             throw new BuildException("Attempt to use a reserved URI " + uri);
         }
         this.uri = uri;
+    }
+
+    /**
+     * Enumerated type for attributeStyle attribute
+     *
+     * @see EnumeratedAttribute
+     */
+    public static class AttributeStyle extends EnumeratedAttribute {
+        /** Enumerated values */
+        public static final int ANT = 0, XPATH = 1;
+
+        /**
+         * get the values
+         * @return an array of the allowed values for this attribute.
+         */
+        public String[] getValues() {
+            return new String[] {"ant", "xpath"};
+        }
+    }
+
+    /**
+     * <em>Expermential</em>
+     * I am uncertain at the moment how to encode attributes
+     * using ant style ${attribute} or xpath style @attribute.
+     * The first may get mixed up with ant properties and
+     * the second may get mixed up with xpath.
+     * The default at the moment is ant s
+     *
+     * @param style an <code>AttributeStyle</code> value
+     */
+    public void setAttributeStyle(AttributeStyle style) {
+        attributeStyle = style.getIndex();
+    }
+
+    /**
+     * <em>Expermential</em>
+     * @return the attribute style
+     */
+    public int getAttributeStyle() {
+        return attributeStyle;
     }
 
     /**
@@ -139,10 +182,10 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     }
 
     /**
-     * @return the nested Params
+     * @return the nested Attributes
      */
-    public List getParams() {
-        return params;
+    public List getAttributes() {
+        return attributes;
     }
 
     /**
@@ -153,16 +196,46 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
     }
 
     /**
-     * Add a param element.
-     *
-     * @param param a param nested element.
+     * Check if a character is a valid character for an element or
+     * attribute name
+     * @param c the character to check
+     * @return true if the character is a letter or digit or '.' or '-'
+     *         attribute name
      */
-    public void addConfiguredParam(Param param) {
-        if (param.getName() == null) {
-            throw new BuildException(
-                "the param nested element needed a \"name\" attribute");
+    public static boolean isValidNameCharacter(char c) {
+        // ? is there an xml api for this ?
+        return Character.isLetterOrDigit(c) || c == '.' || c == '-';
+    }
+
+    /**
+     * Check if a string is a valid name for an element or
+     * attribute
+     * @param name the string to check
+     * @return true if the name consists of valid name characters
+     */
+    private static boolean isValidName(String name) {
+        if (name.length() == 0) {
+            return false;
         }
-        params.add(param);
+        for (int i = 0; i < name.length(); ++i) {
+            if (!isValidNameCharacter(name.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Add an attribute element.
+     *
+     * @param attribute an attribute nested element.
+     */
+    public void addConfiguredAttribute(Attribute attribute) {
+        if (attribute.getName() == null) {
+            throw new BuildException(
+                "the attribute nested element needed a \"name\" attribute");
+        }
+        attributes.add(attribute);
     }
 
     /**
@@ -207,20 +280,24 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
      * A nested element for the MacroDef task.
      *
      */
-    public static class Param {
+    public static class Attribute {
         private String name;
         private String defaultValue;
         /**
-         * The name of the parameter.
+         * The name of the attribute.
          *
-         * @param name the name of the parameter
+         * @param name the name of the attribute
          */
         public void setName(String name) {
+            if (!isValidName(name)) {
+                throw new BuildException(
+                    "Illegal name [" + name + "] for attribute");
+            }
             this.name = name;
         }
 
         /**
-         * @return the name of the parameter.
+         * @return the name of the attribute
          */
         public String getName() {
             return name;
@@ -257,6 +334,10 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
          * @param name the name of the element.
          */
         public void setName(String name) {
+            if (!isValidName(name)) {
+                throw new BuildException(
+                    "Illegal name [" + name + "] for attribute");
+            }
             this.name = name;
         }
 
@@ -315,6 +396,18 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
             }
             ((MacroInstance) o).setTemplate(template);
             return o;
+        }
+
+        /**
+         * Equality method for this definition
+         * This only checks for pointer equality.
+         *
+         * @param other another definition
+         * @param project the current project
+         * @return true if the definitions are the same
+         */
+        public boolean sameDefinition(AntTypeDefinition other, Project project) {
+            return this == other;
         }
     }
 }

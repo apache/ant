@@ -85,5 +85,9 @@ public class MacroDefTest extends BuildFileTest {
     public void testNested() {
         expectLog("nested", "A nested element");
     }
+
+    public void testXPathStyle() {
+        expectLog("xpathstyle", "attribute is this is a testthis is a test");
+    }
 }
 

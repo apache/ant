@@ -146,7 +146,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
     }
 
-    private static String macroSubs(String s, Map macroMapping) {
+    private String macroSubsAnt(String s, Map macroMapping) {
         StringBuffer ret = new StringBuffer();
         StringBuffer macroName = new StringBuffer();
         boolean inMacro = false;
@@ -177,6 +177,59 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
 
         return ret.toString();
+    }
+
+    private String macroSubsXPath(String s, Map macroMapping) {
+        StringBuffer ret = new StringBuffer();
+        StringBuffer macroName = new StringBuffer();
+        boolean inMacro = false;
+        for (int i = 0; i < s.length(); ++i) {
+            char c = s.charAt(i);
+            if (!inMacro) {
+                if (c == '@') {
+                    inMacro = true;
+                } else {
+                    ret.append(c);
+                }
+            } else {
+                if (MacroDef.isValidNameCharacter(c)) {
+                    macroName.append(c);
+                } else {
+                    inMacro = false;
+                    String name = macroName.toString();
+                    String value = (String) macroMapping.get(name);
+                    if (value == null) {
+                        ret.append("@" + name);
+                    } else {
+                        ret.append(value);
+                    }
+                    if (c == '@') {
+                        inMacro = true;
+                    } else {
+                        ret.append(c);
+                    }
+                    macroName = new StringBuffer();
+                }
+            }
+        }
+        if (inMacro) {
+            String name = macroName.toString();
+            String value = (String) macroMapping.get(name);
+            if (value == null) {
+                ret.append("@" + name);
+            } else {
+                ret.append(value);
+            }
+        }
+        return ret.toString();
+    }
+
+    private String macroSubs(String s, Map macroMapping) {
+        if (template.getAttributeStyle() == MacroDef.AttributeStyle.ANT) {
+            return macroSubsAnt(s, macroMapping);
+        } else {
+            return macroSubsXPath(s, macroMapping);
+        }
     }
 
     private UnknownElement copy(UnknownElement ue) {
@@ -234,25 +287,26 @@ public class MacroInstance extends Task implements DynamicConfigurator {
 
     /**
      * Execute the templates instance.
-     * Copies the unknown element, substitutes the parameters,
+     * Copies the unknown element, substitutes the attributes,
      * and calls perform on the unknown element.
      *
      */
     public void execute() {
         localProperties = new Hashtable();
         Set copyKeys = new HashSet(map.keySet());
-        for (int i = 0; i < template.getParams().size(); ++i) {
-            MacroDef.Param param = (MacroDef.Param) template.getParams().get(i);
-            String value = (String) map.get(param.getName());
+        for (int i = 0; i < template.getAttributes().size(); ++i) {
+            MacroDef.Attribute attribute =
+                (MacroDef.Attribute) template.getAttributes().get(i);
+            String value = (String) map.get(attribute.getName());
             if (value == null) {
-                value = param.getDefault();
+                value = attribute.getDefault();
             }
             if (value == null) {
                 throw new BuildException(
-                    "required parameter " + param.getName() + " not set");
+                    "required attribute " + attribute.getName() + " not set");
             }
-            localProperties.put(param.getName(), value);
-            copyKeys.remove(param.getName());
+            localProperties.put(attribute.getName(), value);
+            copyKeys.remove(attribute.getName());
         }
         if (copyKeys.size() != 0) {
             throw new BuildException(

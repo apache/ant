@@ -11,7 +11,7 @@
     <h3>Description</h3>
     <p>
       This defines a new task using a &lt;sequential&gt; or &lt;parallel&gt;
-      nested task as a template. Nested elements &lt;param&gt; and
+      nested task as a template. Nested elements &lt;attribute&gt; and
       &lt;element&gt; are used to specify attributes and elements of
       the new task. These get substituted into the  &lt;sequential&gt;
       or &lt;parallel&gt; task when the new task is run.
@@ -28,7 +28,7 @@
       </tr>
       <tr>
         <td valign="top">name</td>
-        <td valign="top">the name of the new definition</td>
+        <td valign="top">The name of the new definition</td>
         <td valign="top" align="center">Yes</td>
       </tr>
       <tr>
@@ -38,9 +38,20 @@
         </td>
         <td valign="top" align="center">No</td>
       </tr>
+      <tr>
+        <td valign="top">attributestyle</td>
+        <td valign="top">
+          <em>Temporary</em>
+          this attribute specifies if the attribute is in ant style
+          (i.e. ${attributeName}) or xpath style (i.e @attributeName).
+          Valid values are "ant" and "xpath". The default value
+          is "ant".
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
     </table>
       <h3>Parameters specified as nested elements</h3>
-    <h4>param</h4>
+    <h4>attribute</h4>
     <p>
       This is used to specify attributes of the new task. The values
       of the attributes get substituted into the templated task.
@@ -52,6 +63,11 @@
       task using the ant property notation - ${attribute name}.
       Note that is not an actual ant property.
     </p>
+    <p>
+      If the attribute style is set to "xpath", the attribute is
+      specified in the body of the template task by prefixing the
+      name with a "@".
+    </p>
     <h3>Parameters</h3>
     <table border="1" cellpadding="2" cellspacing="0">
       <tr>
@@ -61,13 +77,13 @@
       </tr>
       <tr>
         <td valign="top">name</td>
-        <td valign="top">the name of the new attribute</td>
+        <td valign="top">The name of the new attribute</td>
         <td valign="top" align="center">Yes</td>
       </tr>
       <tr>
         <td valign="top">default</td>
         <td valign="top">
-          the default value of the attribute.
+          The default value of the attribute.
         </td>
         <td valign="top" align="center">No</td>
       </tr>
@@ -87,13 +103,13 @@
       </tr>
       <tr>
         <td valign="top">name</td>
-        <td valign="top">the name of the new attribute</td>
+        <td valign="top">The name of the new attribute</td>
         <td valign="top" align="center">Yes</td>
       </tr>
       <tr>
         <td valign="top">optional</td>
         <td valign="top">
-          if true this nested element is optional. Default is
+          If true this nested element is optional. Default is
           false - i.e the nested element is required in
           the new task.
         </td>
@@ -109,7 +125,7 @@
     <blockquote>
       <pre>
 &lt;macrodef name="testing"&gt;
-   &lt;param name="v" default="NOT SET"/&gt;
+   &lt;attribute name="v" default="NOT SET"/&gt;
    &lt;element name="some-tasks" optional="yes"/&gt;
    &lt;sequential&gt;
       &lt;echo&gt;v is ${v}&lt;/echo&gt;
@@ -125,6 +141,23 @@
       </pre>
     </blockquote>
     <p>
+      The following fragment sets the attribute style to "xpath"
+      for the macro definition &lt;testing&gt; and calls the
+      macro. The fragment should output "attribute is this is a test".
+    </p>
+    <blockquote>
+      <pre>
+&lt;macrodef name="testing" attributestyle="xpath"&gt;
+   &lt;attribute name="abc"/&gt;
+   &lt;sequential&gt;
+      &lt;echo&gt;attribute is @abc&lt;/echo&gt;
+   &lt;/sequential&gt;
+&lt;/macrodef&gt;
+
+&lt;testing abc="this is a test"/&gt;
+      </pre>
+    </blockquote>
+    <p>
       The following fragment defines a task called &lt;call-cc&gt; which
       take the attributes "target", "link" and "target.dir" and the
       nested element "cc-elements". The body of the task
@@ -134,9 +167,9 @@
     <blockquote>
       <pre>
 &lt;macrodef name="call-cc"&gt;
-   &lt;param name="target"/&gt;
-   &lt;param name="link"/&gt;
-   &lt;param name="target.dir"/&gt;
+   &lt;attribute name="target"/&gt;
+   &lt;attribute name="link"/&gt;
+   &lt;attribute name="target.dir"/&gt;
    &lt;element name="cc-elements"/&gt;
    &lt;sequential&gt;
       &lt;mkdir dir="${obj.dir}/${target}"/&gt;

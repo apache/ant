@@ -2,7 +2,7 @@
 
   <target name="simple">
     <macrodef name="my.echo">
-      <param name="text"/>
+      <attribute name="text"/>
       <sequential>
         <echo message="${text}"/>
       </sequential>
@@ -12,7 +12,7 @@
 
   <target name="text">
     <macrodef name="my.echo">
-      <param name="text"/>
+      <attribute name="text"/>
       <sequential>
         <echo>${text}</echo>
       </sequential>
@@ -22,7 +22,7 @@
 
   <target name="uri">
     <macrodef name="echo" uri="abc">
-      <param name="text"/>
+      <attribute name="text"/>
       <sequential>
         <echo message="${text}"/>
       </sequential>
@@ -43,5 +43,16 @@
         <echo>A nested element</echo>
       </nested>
     </nested>
+  </target>
+
+  <target name="xpathstyle">
+    <macrodef name="testing" attributestyle="xpath">
+      <attribute name="abc"/>
+      <sequential>
+        <echo>attribute is @abc@abc</echo>
+      </sequential>
+    </macrodef>
+
+    <testing abc="this is a test"/>
   </target>
 </project>
