@@ -592,7 +592,7 @@ public class Javac extends MatchingTask {
         // compile lists
         resetFileLists();
         for (int i=0; i<list.length; i++) {
-            File srcDir = (File)project.resolveFile(list[i]);
+            File srcDir = project.resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \"" + srcDir.getPath() + "\" does not exist!", location);
             }
@@ -643,7 +643,7 @@ public class Javac extends MatchingTask {
      * Scans the directory looking for source files to be compiled.
      * The results are returned in the class variable compileList
      */
-    protected void scanDir(File srcDir, File destDir, String files[]) {
+    protected void scanDir(File srcDir, File destDir, String[] files) {
         GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("*.java");
         m.setTo("*.class");
