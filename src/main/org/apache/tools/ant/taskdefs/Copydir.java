@@ -146,7 +146,7 @@ public class Copydir extends Task {
                     }
                 }
             } else {
-                project.log("Copydir Ignored: " + filename, Project.MSG_WARN);
+                project.log("Copydir Ignored: " + filename, Project.MSG_VERBOSE);
             }
         }
     }
