@@ -18,6 +18,9 @@
     <converter classname="org.apache.antlib.core.StringToFileConverter"
                source="java.lang.String"
                destination="java.io.File" />
+    <converter classname="org.apache.antlib.core.StringToBooleanConverter"
+               source="java.lang.String"
+               destination="java.lang.Boolean" />
     <converter classname="org.apache.antlib.core.StringToLongConverter"
                source="java.lang.String"
                destination="java.lang.Long" />
