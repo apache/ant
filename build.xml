@@ -256,6 +256,9 @@
     <copy file="${java.dir}/${ant.package}/taskdefs/defaults.properties"
           todir="${build.classes}/${ant.package}/taskdefs" />
 
+    <copy file="${java.dir}/${ant.package}/types/defaults.properties"
+          todir="${build.classes}/${ant.package}/types" />
+
   </target>
 
   <!-- 
