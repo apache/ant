@@ -105,6 +105,29 @@
         </table>
       </subsection>
 
+      <subsection name="CleanImports">
+        <p>Removes unneeded imports. Formats your import
+        sections. Flags ambiguous imports.</p>
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.euronet.nl/users/tomb/cleanImports/index.html">http://www.euronet.nl/users/tomb/cleanImports/index.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:tomb@euronet.nl">Tom Brus</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Configure">
 
         <p>Recursive build support (call ant on every package level,
