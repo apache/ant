@@ -268,18 +268,23 @@
       <fileset dir="${script.dir}/" />
     </copy>
 
-    <chmod dir="${dist.dir}" perm="go-rwx" />
-    <chmod perm="u+x">
+    <fixcrlf srcdir="${dist.bin}" cr="add" includes="*.bat" />
+    <fixcrlf srcdir="${dist.bin}" cr="remove">
+      <include name="ant" />
+      <include name="antRun" />
+    </fixcrlf>
+    <fixcrlf srcdir="${dist.bin}" includes="runant.pl" />
+
+    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" />
+    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" />
+    <chmod perm="ugo+x" type="file">
        <fileset dir="${dist.bin}">
          <include name="**/ant" />
          <include name="**/antRun" />
+         <include name="**/runant.pl" />
        </fileset>
-     </chmod>
+    </chmod>
 
-    <fixcrlf srcdir="${dist.bin}" cr="add" includes="*.bat" />
-    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="*.sh" />
-    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="ant" />
-    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="antRun" />
   </target>
 
  <!--
@@ -324,7 +329,15 @@
       </fileset>
     </copy>
 
-    <chmod dir="${dist.dir}" perm="go-rwx" />
+    <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" />
+    <chmod perm="ugo+r" dir="${dist.dir}" type="file" includes="**" />
+    <chmod perm="ugo+x" type="file">
+       <fileset dir="${dist.bin}">
+         <include name="**/ant" />
+         <include name="**/antRun" />
+         <include name="**/runant.pl" />
+       </fileset>
+    </chmod>
 
   </target>
 
@@ -380,18 +393,28 @@
       </fileset>
     </copy>
 
-    <fixcrlf srcdir="${src.dist.dir}" includes="*.sh" cr="remove"/>
-    <fixcrlf srcdir="${src.dist.dir}" includes="ant" cr="remove"/>
-    <fixcrlf srcdir="${src.dist.dir}" includes="antRun" cr="remove"/>
-    <fixcrlf srcdir="${src.dist.dir}" includes="*.bat" cr="add"/>
-    <chmod perm="+x">
-      <fileset dir="${src.dist.dir}">
-        <include name="*.sh" />
-      </fileset>
+    <fixcrlf srcdir="${src.dist.dir}" cr="add" includes="*.bat" />
+    <fixcrlf srcdir="${src.dist.dir}" cr="remove">
+      <include name="**/*.sh" />
+      <include name="**/ant" />
+      <include name="**/antRun" />
+    </fixcrlf>
+    <fixcrlf srcdir="${src.dist.dir}">
+      <include name="**/runant.pl" />
+      <include name="**/*.java" />
+    </fixcrlf>
+
+    <chmod perm="ugo+x" dir="${src.dist.dir}" type="dir"/>
+    <chmod perm="ugo+r" dir="${src.dist.dir}" />
+    <chmod perm="ugo+x">
+       <fileset dir="${src.dist.dir}">
+         <include name="**/.sh" />
+         <include name="**/ant" />
+         <include name="**/antRun" />
+         <include name="**/runant.pl" />
+       </fileset>
     </chmod>
 
-    <fixcrlf srcdir="${src.dist.src}" includes="**/*.java" cr="remove"/>
-    
   </target>
 
   <!--
