@@ -622,8 +622,8 @@ public class Javadoc extends Task {
                 String msg = "destDir attribute must be set!";
                 throw new BuildException(msg);
             }
-            cmd.createArgument().setValue("-d");
-            cmd.createArgument().setFile(destDir);
+            toExecute.createArgument().setValue("-d");
+            toExecute.createArgument().setFile(destDir);
         }
 
 // --------------------------------- javadoc2 arguments for default doclet
