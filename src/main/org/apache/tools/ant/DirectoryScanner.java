@@ -66,6 +66,7 @@ import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Class for scanning a directory for files/directories which match certain
@@ -694,6 +695,22 @@ public class DirectoryScanner
             String currentelement = (String) enum2.nextElement();
             String originalpattern = (String) newroots.get(currentelement);
             File myfile = new File(basedir, currentelement);
+            // we need to call getCanonicalFile here for DOS systems
+            // the reason being that otherwise File will be influenced
+            // by the case of currentelement, which we want to avoid
+            if (Os.isFamily("dos") && myfile.exists()) {
+                try {
+                    // getAbsoluteFile() is not enough here unfortunately
+                    myfile = myfile.getCanonicalFile();
+                }
+                catch (Exception ex) {
+                    throw new BuildException(ex);
+                }
+                // the variable currentelement is actually telling what
+                // the scan results will contain
+                currentelement = fileUtils.removeLeadingPath(basedir,
+                                                             myfile);
+            }
             if (!myfile.exists() && !isCaseSensitive) {
                 File f = findFileCaseInsensitive(basedir, currentelement);
                 if (f.exists()) {
