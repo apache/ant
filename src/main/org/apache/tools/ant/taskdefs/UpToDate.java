@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.FileSet;
@@ -79,7 +80,7 @@ import java.util.Vector;
  * @ant.task category="control"
  */
 
-public class UpToDate extends MatchingTask implements Condition {
+public class UpToDate extends Task implements Condition {
 
     private String _property;
     private String _value;
