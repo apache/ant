@@ -56,6 +56,8 @@ Changes that could break older environments:
 * Output stored from a <java> or <exec> task is now exactly as generated. No
   conversion to platform end-of-line characters is performed.
 
+* <translate> will now preserve line endings.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla
