@@ -255,6 +255,9 @@ Fixed bugs:
   
 * The FTP task could crash with an ArrayIndexOutOfBoundsException
   Bugzilla Report 28797
+  
+* Improved handling of paths on cygwin
+  Bugzilla Report 31245
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
