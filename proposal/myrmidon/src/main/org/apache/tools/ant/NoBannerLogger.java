@@ -14,7 +14,6 @@ package org.apache.tools.ant;
  */
 public class NoBannerLogger extends DefaultLogger
 {
-
     private final static String lSep = System.getProperty( "line.separator" );
 
     protected String targetName;
