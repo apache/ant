@@ -1011,6 +1011,28 @@
         </table>
       </subsection>
       
+      <subsection name="Version_Tool">
+	<p>A versioning tool for Ant.</p>
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://ant.ryangrier.com/">http://ant.ryangrier.com/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:version_tool@ryangrier.com">version_tool@ryangrier.com</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD license</td>
+          </tr>
+	</table>
+      </subsection>
+
       <subsection name="WOProject">
 
         <p>WOProject provides a set of tools to work with 
