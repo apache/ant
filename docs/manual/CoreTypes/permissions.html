@@ -98,26 +98,27 @@ If the actions are left empty all actions match, and are revoked.
 <h3><a name="baseset">Base set</a></h3>
 A permissions set implictly contains the following permissions:
 <blockquote><pre>
-&lt;grant class=&quot;java.net.SocketPermission&quot; name=localhost:1024-&quot; actions=&quot;listen&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.version&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vendor&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vendor.url&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.class.version&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=os.name&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=os.version&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=os.arch&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=file.separator&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=path.separator&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=line.separator&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.specification.version&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.specification.vendor&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.specification.name&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vm.specification.version&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vm.specification.vendor&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vm.specification.name&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vm.version&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vm.vendor&quot; actions=&quot;read&quot;&gt;
-&lt;grant class=&quot;java.util.PropertyPermission&quot; name=java.vm.name&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.net.SocketPermission&quot; name=&quot;localhost:1024-&quot; actions=&quot;listen&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.version&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vendor&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vendor.url&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.class.version&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;os.name&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;os.version&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;os.arch&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;file.encoding&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;file.separator&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;path.separator&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;line.separator&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.specification.version&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.specification.vendor&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.specification.name&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.specification.version&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.specification.vendor&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.specification.name&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.version&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.vendor&quot; actions=&quot;read&quot;&gt;
+&lt;grant class=&quot;java.util.PropertyPermission&quot; name=&quot;java.vm.name&quot; actions=&quot;read&quot;&gt;
 </blockquote></pre>
 These permissions can be revoked via &lt;revoke&gt; elements if necessary.
 
