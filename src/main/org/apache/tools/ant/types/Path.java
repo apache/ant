@@ -181,6 +181,7 @@ public class Path {
      * Append the contents of the other Path instance to this.
      */
     public void append(Path other) {
+        if (other == null) return;
         String[] l = other.list();
         for (int i=0; i<l.length; i++) {
             if (elements.indexOf(l[i]) == -1) {
