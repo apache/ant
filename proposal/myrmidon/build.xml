@@ -93,6 +93,12 @@ Legal:
         <src path="${build.src}" />
     </javac>
 
+    <copy todir="${build.classes}">
+      <fileset dir="${java.dir}">
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+
   </target>
 
   <!-- Creates the jars file -->
