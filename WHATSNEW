@@ -59,6 +59,8 @@ Other changes:
   fileset to be constructed without having to specify its parent
   directory separately.
 
+* New condition <isreference>
+
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
 
