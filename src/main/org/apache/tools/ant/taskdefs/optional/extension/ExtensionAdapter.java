@@ -276,6 +276,6 @@ public class ExtensionAdapter
 
     public String toString()
     {
-        return toExtension().toString();
+        return "{" + toExtension().toString() + "}";
     }
 }
