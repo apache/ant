@@ -1797,6 +1797,43 @@ public class Project {
         }
     }
 
+    /**
+     * Sends a "subbuild started" event to the build listeners for
+     * this project.
+     *
+     * @since Ant 1.6.2
+     */
+    public void fireSubBuildStarted() {
+        BuildEvent event = new BuildEvent(this);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            Object listener = iter.next();
+            if (listener instanceof SubBuildListener) {
+                ((SubBuildListener) listener).subBuildStarted(event);
+            }
+        }
+    }
+
+    /**
+     * Sends a "subbuild finished" event to the build listeners for
+     * this project.
+     * @param exception an exception indicating a reason for a build
+     *                  failure. May be <code>null</code>, indicating
+     *                  a successful build.
+     *
+     * @since Ant 1.6.2
+     */
+    public void fireSubBuildFinished(Throwable exception) {
+        BuildEvent event = new BuildEvent(this);
+        event.setException(exception);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            Object listener = iter.next();
+            if (listener instanceof SubBuildListener) {
+                ((SubBuildListener) listener).subBuildFinished(event);
+            }
+        }
+    }
 
     /**
      * Sends a "target started" event to the build listeners for this project.

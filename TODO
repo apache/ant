@@ -7,8 +7,6 @@ remove items from this list once they are complete.
 
 * Fix or at least document support for tomcat 5.0 jsp
 
-* review claimed AntClassLoader memory leak [Stefan]
-
 * AntClassLoader parent loader [Start thread, Peter]
 
 * delete - do not follow symlinks [Peter, may be dropped for 1.6.2]

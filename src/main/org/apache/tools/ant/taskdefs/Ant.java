@@ -24,6 +24,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.Set;
 import java.util.HashSet;
@@ -148,10 +149,9 @@ public class Ant extends Task {
     private void initializeProject() {
         newProject.setInputHandler(getProject().getInputHandler());
 
-        Vector listeners = getProject().getBuildListeners();
-        final int count = listeners.size();
-        for (int i = 0; i < count; i++) {
-            newProject.addBuildListener((BuildListener) listeners.elementAt(i));
+        Iterator iter = getBuildListeners();
+        while (iter.hasNext()) {
+            newProject.addBuildListener((BuildListener) iter.next());
         }
 
         if (output != null) {
@@ -379,14 +379,18 @@ public class Ant extends Task {
             addReferences();
 
             if (target != null && !"".equals(target)) {
+                Throwable t = null;
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
+                    newProject.fireSubBuildStarted();
                     newProject.executeTarget(target);
                 } catch (BuildException ex) {
-                    throw ProjectHelper.addLocationToBuildException(
-                        ex, getLocation());
-              } finally {
+                    t = ProjectHelper
+                        .addLocationToBuildException(ex, getLocation());
+                    throw (BuildException) t;
+                } finally {
                     log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
+                    newProject.fireSubBuildFinished(t);
                 }
             }
         } finally {
@@ -645,6 +649,13 @@ public class Ant extends Task {
      */
     public void addPropertyset(PropertySet ps) {
         propertySets.addElement(ps);
+    }
+
+    /**
+     * @since Ant 1.6.2
+     */
+    private Iterator getBuildListeners() {
+        return getProject().getBuildListeners().iterator();
     }
 
     /**

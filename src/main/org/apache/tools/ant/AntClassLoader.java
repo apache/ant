@@ -44,7 +44,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  * class will then use this loader rather than the system class loader.
  *
  */
-public class AntClassLoader extends ClassLoader implements BuildListener {
+public class AntClassLoader extends ClassLoader implements SubBuildListener {
 
     private static final FileUtils fileUtils = FileUtils.newFileUtils();
 
@@ -1217,6 +1217,31 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      */
     public void buildFinished(BuildEvent event) {
         cleanup();
+    }
+
+    /**
+     * Cleans up any resources held by this classloader at the end of
+     * a subbuild if it has been created for the subbuild's project
+     * instance.
+     *
+     * @param event the buildFinished event
+     *
+     * @since Ant 1.6.2
+     */
+    public void subBuildFinished(BuildEvent event) {
+        if (event.getProject() == project) {
+            cleanup();
+        }
+    }
+
+    /**
+     * Empty implementation to satisfy the BuildListener interface.
+     *
+     * @param event the buildStarted event
+     *
+     * @since Ant 1.6.2
+     */
+    public void subBuildStarted(BuildEvent event) {
     }
 
     /**

@@ -435,6 +435,22 @@ for the following events</P>
 <li>Message logged</li>
 </ul>
 
+<p>If the build file invokes another build file via <a
+href="CoreTasks/ant.html">&lt;ant&gt;</a> or <a
+href="CoreTasks/subant.html">&lt;subant&gt;</a> or uses <a
+href="CoreTasks/antcall.html">&lt;antcall&gt;</a>, you are creating a
+new Ant "project" that will send target and task level events of its
+own but never sends build started/finished events.  Ant 1.6.2
+introduces an extension of the BuildListener interface named
+SubBuildListener that will receive two new events for</p>
+<ul>
+<li>SubBuild started</li>
+<li>SubBuild finished</li>
+</ul>
+<p>If you are interested in those events, all you need to do is to
+implement the new interface instead of BuildListener (and register the
+listener, of course).</p>
+
 <p>
 If you wish to attach a listener from the command line you may use the
 <code>-listener</code> option. For example:</p>

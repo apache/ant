@@ -211,7 +211,7 @@ public class Recorder extends Task {
                 throw new BuildException("Problems creating a recorder entry",
                     ioe);
             }
-            proj.addBuildListener(entry);
+            entry.setProject(proj);
             recorderEntries.put(name, entry);
         } else {
             entry = (RecorderEntry) o;
