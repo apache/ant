@@ -251,6 +251,9 @@ decide between several possible options.
 V. Things we probably don't agree on. 
 ======================================================================
 
+[DISC] Datatypes
+----------------
+
  * Allow mappers to be genericised so that particular features can be modified 
  during mapping. Something similar to 
  
@@ -279,8 +282,6 @@ V. Things we probably don't agree on.
                 value="29th Feb 2003"/>
  </include>
 
-  2003 is no leap year 8-)
-
 * provide datatypes through property tag and remove need for separate free
   standing entities. ie
   <property name="foo">
@@ -289,29 +290,9 @@ V. Things we probably don't agree on.
     </fileset>
   </property>
 
-* make it possible to reuse taskengine for other things. ie
-  Installshield type app, Peter's cron-server and other task based
-  operations. 
-
- * provide support for non-hardwired (ie loadable) low-level 
+* provide support for non-hardwired (ie loadable) low-level 
  components (mappers/itemset-filters/converters). Allow them to be 
  loaded in either global or a new classloader.
-
- * force resolution of classes on loading to identify classloader 
- issues early. (At least in global classloader).
-
-* create the concept of workspace so that projects can be built in a
-  DAG and thus enable projects like catalina/tomcat to have an easy
-  build process. It also helps CJAN to a lesser degree and would
-  partially solve the JARs in CVS thing.
-
-* provide support for CJAN
-
-  Q: In what way?
-  A: Probably by supplying a set of tasks that download versioned 
-  binaries and their associated dependencies, caching the downloads
-  in a known place and updating binaries when required. ("When required"
-  being indicated by a change in property values).
 
 * provide support for non-hardwired (ie loadable) converters.
 
@@ -324,27 +305,49 @@ V. Things we probably don't agree on.
   relevent if you build ant based testing systems and use ant in certain
   web-related areas.
 
-* generate docs by anakia/XSLT
+* Make all datatypes interfaces to allow them to be customized in many
+  ways.
 
-  Corollary of "move to a system that allows docs to be generated"?
+* Set arithmetic for fileset/patternset/*set
 
-* tasks provide some way to identify their attributes from the
-  outside. 
+* inheritance of ant properties/datatypes/context etc in project hierarchy
 
-  Possible solutions include a special method like getProperties(), an
-  external describing file shipping with the task class or special
-  javadoc comments parsed by a custom doclet. Whatever the method it
-  should not impose any cost on runtime as it is only used a small 
-  proportion of the time (design-time).  
+* inheritance of between ant datatypes. ie fileset A inherits from fileset B (includes 
+  all entries in A).
 
-* allow build file writers to modify logging (verbosity for example)
-  on a target by target or task by task basis.
+* Homogenize notion of PATHs and filesets.
 
-* Simple flow control (if-then-else, for)
+[DISC] Ant's goals
+------------------
 
-* Multithreaded execution of tasks within the same target.
+* make it possible to reuse taskengine for other things. ie
+  Installshield type app, Peter's cron-server and other task based
+  operations. 
 
-* Multithreaded execution of targets.
+* provide support for CJAN
+
+  Q: In what way?
+  A: Probably by supplying a set of tasks that download versioned 
+  binaries and their associated dependencies, caching the downloads
+  in a known place and updating binaries when required. ("When required"
+  being indicated by a change in property values).
+
+[DISC] class loading
+--------------------
+
+ * force resolution of classes on loading to identify classloader 
+ issues early. (At least in global classloader).
+
+* Ignore any classes contained in the damned ext dirs of a JVM - possibly by launching
+  with something like jar -Djava.ext.dir=foo -jar ant.jar
+
+[DISC] workspace/subbuild issues
+--------------------------------
+
+* create the concept of workspace so that projects can be built in a
+  DAG and thus enable projects like catalina/tomcat to have an easy
+  build process. It also helps CJAN to a lesser degree and would
+  partially solve the JARs in CVS thing.
 
 * Project inheritance
 
@@ -357,21 +360,80 @@ V. Things we probably don't agree on.
 * Add an attribute to <ant> to feed back the environment (properties and
   taskdefs) from the child build to the parent.
 
+* Allow a target to depend on a target which is in another buildfile.  
+
+* Allow a target to reference properties defined in another buildfile.
+
+[DISC] documentation system
+---------------------------
+
+* generate docs by anakia/XSLT
+
+  Corollary of "move to a system that allows docs to be generated"?
+
+[DISC] Task API
+---------------
+
+* tasks provide some way to identify their attributes from the
+  outside. 
+
+  Possible solutions include a special method like getProperties(), an
+  external describing file shipping with the task class or special
+  javadoc comments parsed by a custom doclet. Whatever the method it
+  should not impose any cost on runtime as it is only used a small 
+  proportion of the time (design-time).  
+
+* tasks should have access to its own XML representation.
+
+* Task level if and unless attributes.
+
+* Allow tasks to find out, whether another task has completed successfully.
+
+* provide failonerror like functionality to all tasks. (Provide this as an aspect??
+  much like logging aspect or classloader aspect).
+
+[DISC] logging
+--------------
+
+* allow build file writers to modify logging (verbosity for example)
+  on a target by target or task by task basis.
+
+* Make loggers configurable via build.xml.
+
+[DISC] multithrading
+--------------------
+
+* Multithreaded execution of tasks within the same target.
+
+* Multithreaded execution of targets.
+
+[DISC] procedural versus purely declarative
+-------------------------------------------
+
+* Simple flow control (if-then-else, for)
+
+* targets should be like methods including a return value
+
+* build files should be purely declarative
+
+[DISC] Properties
+-----------------
+
 * Ability to manage scopping of properties in general (ie target/project/workspace).
+
+[DISC] Templates
+----------------
 
 * it should be possible to provide general /(template?)/ build
   specifications, and to declare for a concrete item that it should be
   built according to such a general specification.
 
+[DISC] XML issues
+-----------------
+
 * a built-in mechanism to include build-file fragments - something
   that doesn't use SYSTEM entities at all and therefore is XSchema
   friendly, allows for property expansions ...
-
-* Make loggers configurable via build.xml.
-
-* tasks should have access to its own XML representation.
-
-* Allow named tasks to be defined by <script> elements.
 
 * Let Ant ignore - but warn - if unknown XML elements or attributes
   occur in a build file.
@@ -379,6 +441,11 @@ V. Things we probably don't agree on.
 * Allow ant to farm out attributes and elements that are NOT in the ant 
   namespace to other components. ie hand doc: elements to the Documentation
   component or log: attributes to Log policy component etc
+
+[DISC] core extensions
+----------------------
+
+* Allow named tasks to be defined by <script> elements.
 
 * specify an onfail task or target that runs in case of a build
   failure.
@@ -390,15 +457,19 @@ V. Things we probably don't agree on.
   target - as proposed by Thomas Christen in
   <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>.
 
-* Task level if and unless attributes.
-
-* Make all datatypes interfaces to allow them to be customized in many
-  ways.
-
-* Allow tasks to find out, whether another task has completed successfully.
-
 * Make if/unless attributes to check for the value of a property, not
   only its existance.
+
+* check for more than one condition in if/unless attributes.
+
+* provide a way to define the order in which targets a given target
+  depends upon get executed.
+
+* define task contexts that define various common aspects (logging,
+  failure handling ...) and assign them to tasks.
+
+[DISC] organization
+-------------------
 
 * separate CVSes and code hierarchies for
   - task engine [ org.apache.task.* ]
@@ -406,35 +477,8 @@ V. Things we probably don't agree on.
     [ org.apache.ant.* ]
   - core tasks (ie tasks supported by ant contributors) [ org.apache.??? ]
 
-* check for more than one condition in if/unless attributes.
-
-* provide failonerror like functionality to all tasks. (Provide this as an aspect??
-  much like logging aspect or classloader aspect).
+[DISC] misc
+-----------
 
 * internationalization
 
-* Ignore any classes contained in the damned ext dirs of a JVM - possibly by launching
-  with something like jar -Djava.ext.dir=foo -jar ant.jar
-
-* Set arithmetic for fileset/patternset/*set
-
-* inheritance of ant properties/datatypes/context etc in project hierarchy
-
-* inheritance of between ant datatypes. ie fileset A inherits from fileset B (includes 
-  all entries in A).
-
-* Homogenize notion of PATHs and filesets.
-
-* build files should be purely declarative
-
-* provide a way to define the order in which targets a given target
-  depends upon get executed.
-
-* Allow a target to depend on a target which is in another buildfile.  
-
-* Allow a target to reference properties defined in another buildfile.
-
-* targets should be like methods including a return value
-
-* define task contexts that define various common aspects (logging,
-  failure handling ...) and assign them to tasks.
