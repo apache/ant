@@ -465,9 +465,13 @@
       </and>
     </condition>
 
-    <available property="swing.present"
-               classname="javax.swing.ImageIcon"
-               classpathref="classpath"/>
+    <condition property="swing.present">
+      <or>
+        <isset property="jdk1.2+" />
+        <available classname="javax.swing.ImageIcon"
+                   classpathref="classpath"/>
+      </or>
+    </condition>
 
    <condition property="wsdl.found">
       <or>
