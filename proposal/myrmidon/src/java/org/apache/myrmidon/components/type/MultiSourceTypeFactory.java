@@ -81,7 +81,7 @@ public class MultiSourceTypeFactory
 
             if( !m_type.isInstance( object ) )
             {
-                final String message = REZ.getString( "no-factory.error", name, m_type.getName() );
+                final String message = REZ.getString( "mismatched-type.error", name, object.getClass().getName() );
                 throw new TypeException( message );
             }
 
