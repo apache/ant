@@ -60,6 +60,7 @@ Other changes:
   As it tests for the implementation, it can be used to check for optional
   tasks being available. 
 
+* added textname attribute to <macrodef>
   
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
