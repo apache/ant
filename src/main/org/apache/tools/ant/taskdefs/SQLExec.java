@@ -66,11 +66,6 @@ import java.sql.ResultSetMetaData;
  * The possible values are: <b>continue</b> execution, only show the error;
  * <b>stop</b> execution and commit transaction;
  * and <b>abort</b> execution and transaction and fail task.</p>
-
- *
- * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
- * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
- * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
  *
  * @since Ant 1.2
  *
@@ -82,8 +77,9 @@ public class SQLExec extends JDBCTask {
      * delimiters we support, "normal" and "row"
      */
     public static class DelimiterType extends EnumeratedAttribute {
-        public static final String NORMAL = "normal";
-        public static final String ROW = "row";
+        /** The enumerated strings */
+        public static final String NORMAL = "normal", ROW = "row";
+        /** @return the enumerated strings */
         public String[] getValues() {
             return new String[] {NORMAL, ROW};
         }
@@ -182,6 +178,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
+     * @param srcFile the file containing the SQL command.
      */
     public void setSrc(File srcFile) {
         this.srcFile = srcFile;
@@ -190,6 +187,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Set an inline SQL command to execute.
      * NB: Properties are not expanded in this text.
+     * @param sql a inline string containing the SQL command.
      */
     public void addText(String sql) {
         this.sqlCommand += sql;
@@ -197,6 +195,8 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Adds a set of files (nested fileset attribute).
+     * @param set a set of files contains SQL commands, each File is run in
+     *            a separate transaction.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -205,6 +205,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Add a SQL transaction to execute
+     * @return a Transaction to be configured.
      */
     public Transaction createTransaction() {
         Transaction t = new Transaction();
@@ -227,6 +228,7 @@ public class SQLExec extends JDBCTask {
      *
      * <p>For example, set this to "go" and delimitertype to "ROW" for
      * Sybase ASE or MS SQL Server.</p>
+     * @param delimiter the separator.
      */
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
@@ -239,6 +241,7 @@ public class SQLExec extends JDBCTask {
      * means that any occurrence of the delimiter terminate the SQL
      * command whereas with row, only a line containing just the
      * delimiter is recognized as the end of the command.</p>
+     * @param delimiterType the type of delimiter - "normal" or "row".
      */
     public void setDelimiterType(DelimiterType delimiterType) {
         this.delimiterType = delimiterType.getValue();
@@ -247,6 +250,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Print result sets from the statements;
      * optional, default false
+     * @param print if true print result sets.
      */
     public void setPrint(boolean print) {
         this.print = print;
@@ -255,6 +259,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Print headers for result sets from the
      * statements; optional, default true.
+     * @param showheaders if true print headers of result sets.
      */
     public void setShowheaders(boolean showheaders) {
         this.showheaders = showheaders;
@@ -263,6 +268,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Set the output file;
      * optional, defaults to the Ant log.
+     * @param output the output file to use for logging messages.
      */
     public void setOutput(File output) {
         this.output = output;
@@ -273,6 +279,7 @@ public class SQLExec extends JDBCTask {
      * an existing file.  Defaults to false.
      *
      * @since Ant 1.5
+     * @param append if true append to an existing file.
      */
     public void setAppend(boolean append) {
         this.append = append;
@@ -282,6 +289,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Action to perform when statement fails: continue, stop, or abort
      * optional; default &quot;abort&quot;
+     * @param action the action to perform on statement failure.
      */
     public void setOnerror(OnError action) {
         this.onError = action.getValue();
@@ -299,7 +307,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Set escape processing for statements.
-     *
+     * @param enable if true enable escape processing, default is true.
      * @since Ant 1.6
      */
     public void setEscapeProcessing(boolean enable) {
@@ -308,6 +316,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Load the sql file and then execute it
+     * @throws BuildException on error.
      */
     public void execute() throws BuildException {
         Vector savedTransaction = (Vector) transactions.clone();
@@ -424,6 +433,10 @@ public class SQLExec extends JDBCTask {
 
     /**
      * read in lines and execute them
+     * @param reader the reader contains sql lines.
+     * @param out the place to output results.
+     * @throws SQLException on sql problems
+     * @throws IOException on io problems
      */
     protected void runStatements(Reader reader, PrintStream out)
         throws SQLException, IOException {
@@ -486,6 +499,9 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Exec the sql statement.
+     * @param sql the SQL statement to execute
+     * @param out the place to put output
+     * @throws SQLException on SQL problems
      */
     protected void execSQL(String sql, PrintStream out) throws SQLException {
         // Check and ignore empty statements
@@ -546,8 +562,10 @@ public class SQLExec extends JDBCTask {
 
     /**
      * print any results in the statement.
+     * @param out the place to print results
+     * @throws SQLException on SQL problems.
      */
-    protected void printResults(PrintStream out) throws java.sql.SQLException {
+    protected void printResults(PrintStream out) throws SQLException {
         ResultSet rs = null;
         rs = statement.getResultSet();
         if (rs != null) {
@@ -591,6 +609,7 @@ public class SQLExec extends JDBCTask {
      * one of "continue", "stop" and "abort"
      */
     public static class OnError extends EnumeratedAttribute {
+        /** @return the enumerated values */
         public String[] getValues() {
             return new String[] {"continue", "stop", "abort"};
         }
@@ -607,14 +626,16 @@ public class SQLExec extends JDBCTask {
         private String tSqlCommand = "";
 
         /**
-         *
+         * Set the source file attribute.
+         * @param src the source file
          */
         public void setSrc(File src) {
             this.tSrcFile = src;
         }
 
         /**
-         *
+         * Set inline text
+         * @param sql the inline text
          */
         public void addText(String sql) {
             this.tSqlCommand += sql;
