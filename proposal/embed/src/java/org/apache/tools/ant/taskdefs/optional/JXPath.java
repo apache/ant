@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.*;
 
 import java.io.*;
@@ -70,48 +71,16 @@ import org.apache.commons.jxpath.*;
  * @author Costin Manolache
  * @author Nicola Ken Barozzi
  */
-public class JXPath extends Task implements PropertyInterceptor {
+public class JXPath extends Task {
 
     public static String PREFIX="jxpath:";
     JXPathContext jxpathCtx;
-    
+
     public JXPath() {
     }
 
     public JXPathContext getJXPathContext() {
         return jxpathCtx;
-    }
-    
-    public boolean setProperty( Object c, String ns, String name, Object v ) {
-        return false;
-    }
-    
-    public Object getProperty( Object p, String ns, String name ) {
-        if( ! name.startsWith(PREFIX) )
-            return null;
-        name=name.substring( PREFIX.length() );
-
-
-        //Object o=jxpathCtx.getValue( name );
-        //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
-
-        String result = "";
-        
-        Iterator iter = jxpathCtx.iterate(name);
-        
-        if(iter==null){
-            return "null";
-        }
-        
-        result += iter.next();
-        
-        while (iter.hasNext()) {
-            Object o = iter.next();
-            //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
-            result += ", "+o;
-        }
-        
-        return result;
     }
 
     // testing
@@ -124,24 +93,71 @@ public class JXPath extends Task implements PropertyInterceptor {
     public String getFoo() {
         return foo;
     }
-    
+
     public void execute() {
         JXPathIntrospector.registerDynamicClass(Hashtable.class, JXPathHashtableHandler.class);
+        jxpathCtx=JXPathContext.newContext( project );
+        jxpathCtx.setVariables(new AntVariables());
 
-        PropertyHelper2 phelper=PropertyHelper2.getPropertyHelper( project );
-        phelper.addPropertyInterceptor( this );
+        PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+        JXPathPropertyHelper hook=new JXPathPropertyHelper(jxpathCtx);
+        hook.setNext( phelper.getNext() );
+        phelper.setNext( hook );
 
         project.addReference( "jxpathTask", this );
-        
-        jxpathCtx=JXPathContext.newContext( project );
-        
-        jxpathCtx.setVariables(new AntVariables());
+
     }
+
+
+    static class JXPathPropertyHelper extends PropertyHelper {
+        JXPathContext jxpathCtx;
+
+        public JXPathPropertyHelper( JXPathContext jxCtx ) {
+            this.jxpathCtx=jxCtx;
+        }
+
+        public boolean setProperty( String ns, String name, Object v, boolean inh,
+                                    boolean user, boolean isNew)
+        {
+            return false;
+        }
+
+        public Object getPropertyHook( String ns, String name , boolean user) {
+            if( ! name.startsWith(PREFIX) )
+                return null;
+            name=name.substring( PREFIX.length() );
+
+
+            //Object o=jxpathCtx.getValue( name );
+            //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
+
+            String result = "";
+
+            Iterator iter = jxpathCtx.iterate(name);
+
+            if(iter==null){
+                return "null";
+            }
+
+            result += iter.next();
+
+            while (iter.hasNext()) {
+                Object o = iter.next();
+                //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
+                result += ", "+o;
+            }
+
+            return result;
+        }
+
+
+    }
+
 
     public static class JXPathHashtableHandler implements DynamicPropertyHandler {
 
         private static final String[] STRING_ARRAY = new String[0];
-        
+
         /**
          * Returns string representations of all keys in the map.
          */
@@ -155,7 +171,7 @@ public class JXPath extends Task implements PropertyInterceptor {
             }
             return names;
         }
-        
+
         /**
          * Returns the value for the specified key.
          */
@@ -163,7 +179,7 @@ public class JXPath extends Task implements PropertyInterceptor {
             //  System.out.println("getProperty " + object + " " + propertyName);
             return ((Hashtable) object).get(propertyName);
         }
-        
+
         /**
          * Sets the specified key value.
          */
@@ -171,28 +187,28 @@ public class JXPath extends Task implements PropertyInterceptor {
             ((Hashtable)object).put(propertyName, value);
         }
     }
-    
+
     public class AntVariables implements Variables {
-    
+
          protected AntVariables(){
          }
-    
+
          public void declareVariable(String varName, Object value){
            project.setNewProperty(varName, value.toString());
          }
-         
+
          public Object getVariable(String varName){
            return project.getProperty(varName);
          }
-         
+
          public boolean isDeclaredVariable(String varName){
            return project.getProperty(varName) == null ? false : true ;
          }
-         
+
          public void undeclareVariable(String varName){
            throw new UnsupportedOperationException("Cannot undeclare variables in Ant.");
          }
-    
+
     }
-    
+
 }
