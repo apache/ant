@@ -350,13 +350,12 @@ public class Project {
     }
 
     /**
-     * Returns a list of build listeners for the project. The returned
-     * vector is "live" and so should not be modified.
+     * Returns a list of build listeners for the project. 
      *
      * @return a list of build listeners for the project
      */
     public Vector getBuildListeners() {
-        return listeners;
+        return (Vector) listeners.clone();
     }
 
     /**

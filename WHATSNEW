@@ -1,3 +1,13 @@
+Changes from Ant 1.5 to current CVS 1.5 Branch
+==============================================
+Changes that could break older environments:
+--------------------------------------------
+* Project.getBuildListeners now returns a clone of the listener list. Changes to 
+  the returned list will not affect the listeners currently attached to the 
+  Project. It also means that it is safe to iterate over the returned list
+  if listeners are added or removed during the traversal.
+
+
 Changes from Ant 1.5beta1 to Ant 1.5beta2
 =========================================
 
