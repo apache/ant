@@ -30,8 +30,6 @@ Short term goals are:
 
 * A <msbuild> task - if only for the fun of having it.
 
-Mid term goals:
-
 * A <wix> task.
 
 * A <nunit> task.

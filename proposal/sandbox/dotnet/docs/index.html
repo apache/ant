@@ -10,12 +10,32 @@
     <p>This is a library of Ant tasks that support using .NET
     executables accross different platforms and in particular support
     using common .NET development tools like <a
-    href="http://nant.sourceforge.net/">NAnt</a> from within Ant.</p>
+    href="http://nant.sourceforge.net/">NAnt</a> or <a
+    href="http://www.nunit.org/">NUnit</a> from within Ant.</p>
 
     <h2>Requirements</h2>
 
-    <p><a href="http://ant.apache.org/bindownload.cgi">Ant 1.6.2</a>
-    is required.</p>
+    <p>The current version requires Ant 1.6.2 or later and may even
+    work better for a CVS build of Ant created from CVS HEAD.</p>
+
+    <h2>Where is it?</h2>
+
+    <p>The source code for the library currently lives in the
+    developer sandbox in Ant's CVS - <a
+    href="http://cvs.apache.org/viewcvs.cgi/ant/proposal/sandbox/dotnet/">http://cvs.apache.org/viewcvs.cgi/ant/proposal/sandbox/dotnet/</a>.
+    A binary can be found at <a
+    href="http://cvs.apache.org/~bodewig/dotnet/dotnet.jar">http://cvs.apache.org/~bodewig/dotnet/dotnet.jar</a>.
+    A zip file containing the docs is also <a
+    href="http://cvs.apache.org/~bodewig/dotnet/docs.zip">available</a>.</p>
+
+    <p>Note that these are temporary locations and may change later.</p>
+
+    <h2>Feedback</h2>
+
+    <p>Right now direct any feedback either directly to <a
+    href="mailto:bodewig@apache.org">me</a> or the <a
+    href="http://ant.apache.org/mail.html#Developer List">Ant
+    developer list</a>.
 
     <h2>Installation</h2>
 
@@ -108,6 +128,12 @@
 
       <li><a href="msbuild.html">msbuild</a> - execute the MSBuild build
       tool, untested.</li>
+
+      <li><a href="wix.html">wix</a> - execute the WiX toolset, untested.</li>
+
+      <li><a href="nunit.html">nunit</a> - execute the
+      nunit-console.exe <a href="http://www.nunit.org/">NUnit</a>
+      test runner.</li>
     </ul>
 
     <hr/>

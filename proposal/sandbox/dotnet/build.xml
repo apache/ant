@@ -71,6 +71,7 @@
       printsummary="false"
       haltonfailure="false"
       failureproperty="tests.failed"
+      filtertrace="false"
       >
       <classpath>
         <pathelement location="${jarname}"/>
