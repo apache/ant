@@ -1,2 +1,28 @@
-Copy the files in o.a.t.ant, recompile.
+Features
+
+- SAX2 support
+- namespaces ( not used - pending decision on semantics of ns )
+- import ( with package.target, not super.target )
+- classloader hack for optional 
+- dynamic properties ( only interface + hooks, no real binding )
+
+
+Todo
+
+- start the JMX support, MBeans for Project, Target and Tasks ( using the dynamic
+mbean tool in tomcat ). 
+
+- add JmxTaskAdapter that will wrap mbeans ( similar with the Beans wrapped by task adapter )
+
+- add support for Jmx attributes as dynamic properties.
+
+
+Build
+
+The build.xml file will copy the files in the main tree and compile 
+a package - ant-sax2.jar. 
+
+Install
+
+Copy ant-sax2.jar to jakarta-ant-1.5/lib. 
 
