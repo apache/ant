@@ -455,21 +455,8 @@ public class ReplaceRegExp extends Task {
                 log("No change made", Project.MSG_DEBUG);
             }
         } finally {
-            try {
-                if (r != null) {
-                    r.close();
-                }
-            } catch (Exception e) {
-                // ignore any secondary exceptions
-            }
-
-            try {
-                if (w != null) {
-                    w.close();
-                }
-            } catch (Exception e) {
-                // ignore any secondary exceptions
-            }
+            FileUtils.close(r);
+            FileUtils.close(w);
             if (temp != null) {
                 temp.delete();
             }
