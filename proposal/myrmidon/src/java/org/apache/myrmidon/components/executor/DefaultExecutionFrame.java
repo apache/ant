@@ -22,9 +22,9 @@ import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.deployer.Deployer;
-import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.components.type.TypeManager;
 
 /**
@@ -60,38 +60,6 @@ public class DefaultExecutionFrame
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-/*
-        final RoleManager roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
-        m_componentManager.put( RoleManager.ROLE, roleManager );
-
-        final Configurer configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
-        m_componentManager.put( Configurer.ROLE, configurer );
-
-        final MasterConverter masterConverter =
-            (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
-        m_componentManager.put( MasterConverter.ROLE, masterConverter );
-
-        final AspectManager aspectManager = (AspectManager)componentManager.lookup( AspectManager.ROLE );
-        m_componentManager.put( AspectManager.ROLE, aspectManager );
-
-        final Deployer deployer = (Deployer)componentManager.lookup( Deployer.ROLE );
-        m_componentManager.put( Deployer.ROLE, deployer );
-
-        final Executor executor = (Executor)componentManager.lookup( Executor.ROLE );
-        m_componentManager.put( Executor.ROLE, executor );
-
-        final ProjectManager projectManager =
-            (ProjectManager)componentManager.lookup( ProjectManager.ROLE );
-        m_componentManager.put( ProjectManager.ROLE, projectManager );
-
-        final ProjectBuilder projectBuilder =
-            (ProjectBuilder)componentManager.lookup( ProjectBuilder.ROLE );
-        m_componentManager.put( ProjectBuilder.ROLE, projectBuilder );
-
-        final ConverterRegistry converterRegistry =
-            (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
-        m_componentManager.put( ConverterRegistry.ROLE, converterRegistry );
-*/
         m_componentManager = componentManager;
 
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.framework;
 
-import org.apache.myrmidon.api.DataType;
-
 /**
  * Interface for Mappers.
  * Mappers are responsible for mapping source items to targets items.

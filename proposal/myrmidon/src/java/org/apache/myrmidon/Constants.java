@@ -14,7 +14,7 @@ package org.apache.myrmidon;
  */
 public interface Constants
 {
-    //Constants to indicate the build of Ant/Myrmidon
+    //Constants to indicate the build of Myrmidon
     String  BUILD_DATE         = "@@DATE@@";
     String  BUILD_VERSION      = "@@VERSION@@";
 

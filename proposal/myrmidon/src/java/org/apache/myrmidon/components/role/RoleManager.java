@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.components.deployer;
+package org.apache.myrmidon.components.role;
 
 import org.apache.avalon.framework.component.Component;
 
@@ -23,7 +23,7 @@ public interface RoleManager
 {
     String ROLE = "org.apache.myrmidon.components.deployer.RoleManager";
 
-   /**
+    /**
      * Find Role name based on shorthand name.
      *
      * @param shorthandName the shorthand name

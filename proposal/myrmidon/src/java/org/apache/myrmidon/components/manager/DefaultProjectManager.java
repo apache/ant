@@ -157,7 +157,7 @@ public class DefaultProjectManager
         componentManager.put( TypeManager.ROLE, m_typeManager.createChildTypeManager() );
 
         //We need to place projects and ProjectManager
-        //in ComponentManager so as to support project-local antcall
+        //in ComponentManager so as to support project-local call()
         componentManager.put( ProjectManager.ROLE, this );
         componentManager.put( Project.ROLE, project );
 

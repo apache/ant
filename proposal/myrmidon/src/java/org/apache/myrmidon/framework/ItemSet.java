@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.framework;
 
-import org.apache.myrmidon.api.DataType;
-
 /**
  * Interface for ItemSet.
  * An item set contains a number of items. Example item sets include

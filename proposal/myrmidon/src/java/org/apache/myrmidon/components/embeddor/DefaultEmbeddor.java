@@ -27,7 +27,7 @@ import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.deployer.Deployer;
 import org.apache.myrmidon.components.deployer.DeploymentException;
-import org.apache.myrmidon.components.deployer.RoleManager;
+import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.type.TypeFactory;
@@ -228,7 +228,7 @@ public class DefaultEmbeddor
         defaults.setParameter( AspectManager.ROLE,
                                "org.apache.myrmidon.components.aspect.DefaultAspectManager" );
         defaults.setParameter( RoleManager.ROLE,
-                               "org.apache.myrmidon.components.deployer.DefaultRoleManager" );
+                               "org.apache.myrmidon.components.role.DefaultRoleManager" );
         defaults.setParameter( MasterConverter.ROLE,
                                "org.apache.myrmidon.components.converter.DefaultMasterConverter" );
         defaults.setParameter( ConverterRegistry.ROLE,
@@ -240,9 +240,6 @@ public class DefaultEmbeddor
                                "org.apache.myrmidon.components.executor.AspectAwareExecutor" );
         defaults.setParameter( ProjectManager.ROLE,
                                "org.apache.myrmidon.components.manager.DefaultProjectManager" );
-        //defaults.setParameter( ProjectBuilder.ROLE,
-        //"org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
-        //"org.apache.myrmidon.components.builder.XSLProjectBuilder" );
         defaults.setParameter( Deployer.ROLE,
                                "org.apache.myrmidon.components.deployer.DefaultDeployer" );
         defaults.setParameter( Configurer.ROLE,

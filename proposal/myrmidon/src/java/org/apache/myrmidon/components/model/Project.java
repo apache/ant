@@ -25,13 +25,13 @@ public interface Project
     String ROLE = "org.apache.myrmidon.components.model.Project";
 
     // the name of currently executing project
-    String PROJECT          = "ant.project.name";
+    String PROJECT          = "myrmidon.project.name";
 
     // the name of currently executing project
-    //String PROJECT_FILE     = "ant.project.file";
+    //String PROJECT_FILE     = "myrmidon.project.file";
 
     // the name of currently executing target
-    //String TARGET           = "ant.target.name";
+    //String TARGET           = "myrmidon.target.name";
 
     /**
      * Get the imports for project.

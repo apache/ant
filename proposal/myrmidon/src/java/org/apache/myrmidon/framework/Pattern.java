@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.framework;
 
-import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.model.Condition;
 
@@ -44,7 +43,7 @@ public class Pattern
 
     /**
      * Setter method for name/value of pattern.
-     * Conforms to ant setter patterns
+     * Conforms to setter patterns
      *
      * @param name the value
      */

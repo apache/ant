@@ -70,7 +70,7 @@ public class DefaultConfigurer
      * configurers.
      * This one does it by first checking if object implements Configurable
      * and if it does will pass the task the configuration - else it will use
-     * ants rules to map configuration to types
+     * mapping rules to map configuration to types
      *
      * @param object the object
      * @param configuration the configuration

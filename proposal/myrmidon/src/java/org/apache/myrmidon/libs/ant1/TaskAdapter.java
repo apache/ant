@@ -10,7 +10,6 @@ package org.apache.myrmidon.libs.ant1;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.type.TypeException;
@@ -20,7 +19,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.tools.ant.Task;
 
 /**
- * Adapter of Ant1 tasks to ant2.
+ * Adapter of Ant1 tasks to myrmidon.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
@@ -28,17 +27,17 @@ public class TaskAdapter
     extends AbstractContainerTask
     implements Configurable
 {
-    private Task         m_ant1Task;
+    private Task         m_task;
     private Ant1Project  m_project = new Ant1Project();
 
-    public TaskAdapter( final Task ant1Task )
+    public TaskAdapter( final Task task )
     {
-        m_ant1Task = ant1Task;
+        m_task = task;
     }
 
     protected final Task getTask()
     {
-        return m_ant1Task;
+        return m_task;
     }
 
     protected final Ant1Project getProject()
