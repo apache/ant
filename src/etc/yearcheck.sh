@@ -3,7 +3,7 @@
 # 
 #  The Apache Software License, Version 1.1
 # 
-#  Copyright (c) 2002 The Apache Software Foundation.  All rights
+#  Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
 #  reserved.
 # 
 #  Redistribution and use in source and binary forms, with or without
@@ -81,6 +81,10 @@ else
 fi
 
 YEAR=`basename $0`
+
+if [ $YEAR = yearcheck.sh ]; then
+    YEAR=`date -R | cut -d ' ' -f 4`
+fi
 
 if [ -z "$1" ]; then
   cvs -z3 update -dP | fgrep -v proposal | cut -f 2 -d ' ' > $TEMP_FILE
