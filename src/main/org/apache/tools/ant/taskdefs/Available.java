@@ -61,6 +61,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
@@ -69,6 +70,7 @@ import org.apache.tools.ant.util.FileUtils;
  * Will set the given property if the requested resource is available at runtime.
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 
 public class Available extends Task implements Condition {
@@ -78,7 +80,7 @@ public class Available extends Task implements Condition {
     private String file;
     private Path filepath;
     private String resource;
-    private String type;
+    private FileDir type;
     private Path classpath;
     private AntClassLoader loader;
     private String value = "true";
@@ -101,7 +103,7 @@ public class Available extends Task implements Condition {
     public void setFilepath(Path filepath) {
         createFilepath().append(filepath);
     }
-    
+
     public Path createFilepath() {
         if (this.filepath == null) {
             this.filepath = new Path(project);
@@ -131,7 +133,20 @@ public class Available extends Task implements Condition {
         this.resource = resource;
     }
 
+    /**
+     * @deprecated setType(String) is deprecated and is replaced with
+     *             setType(Available.FileDir) to make Ant's Introspection
+     *             mechanism do the work and also to encapsulate operations on
+     *             the type in its own class.
+     */
     public void setType(String type) {
+        log("DEPRECATED - The setType(String) method has been deprecated."
+            + " Use setType(Available.FileDir) instead.");
+        this.type = new FileDir();
+        this.type.setValue(type);
+    }
+
+    public void setType(FileDir type) {
         this.type = type;
     }
 
@@ -144,7 +159,7 @@ public class Available extends Task implements Condition {
             this.project.setProperty(property, value);
         }
     }
-        
+
     public boolean eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|resource) is required", location);
@@ -153,9 +168,6 @@ public class Available extends Task implements Condition {
         if (type != null){
             if (file == null){
                 throw new BuildException("The type attribute is only valid when specifying the file attribute.");
-            }
-            if (!type.equalsIgnoreCase("file") && !type.equalsIgnoreCase("dir")){
-                throw new BuildException("Type must be one of either dir or file");
             }
         }
 
@@ -168,7 +180,7 @@ public class Available extends Task implements Condition {
             log("Unable to load class " + classname + " to set property " + property, Project.MSG_VERBOSE);
             return false;
         }
-        
+
         if ((file != null) && !checkFile()) {
             if (type != null) {
                 log("Unable to find " + type + " " + file + " to set property " + property, Project.MSG_VERBOSE);
@@ -177,7 +189,7 @@ public class Available extends Task implements Condition {
             }
             return false;
         }
-        
+
         if ((resource != null) && !checkResource(resource)) {
             log("Unable to load resource " + resource + " to set property " + property, Project.MSG_VERBOSE);
             return false;
@@ -197,7 +209,7 @@ public class Available extends Task implements Condition {
             String[] paths = filepath.list();
             for(int i = 0; i < paths.length; ++i) {
                 log("Searching " + paths[i], Project.MSG_DEBUG);
-                /* 
+                /*
                 ** filepath can be a list of directory and/or
                 ** file names (gen'd via <fileset>)
                 **
@@ -218,11 +230,11 @@ public class Available extends Task implements Condition {
                     if (type == null) {
                         log("Found: " + path, Project.MSG_VERBOSE);
                         return true;
-                    } else if (type.equalsIgnoreCase("dir") 
+                    } else if (type.isDir()
                                && path.isDirectory()) {
                         log("Found directory: " + path, Project.MSG_VERBOSE);
                         return true;
-                    } else if (type.equalsIgnoreCase("file") 
+                    } else if (type.isFile()
                                && path.isFile()) {
                         log("Found file: " + path, Project.MSG_VERBOSE);
                         return true;
@@ -230,16 +242,16 @@ public class Available extends Task implements Condition {
                     // not the requested type
                     return false;
                 }
-                
+
                 FileUtils fileUtils = FileUtils.newFileUtils();
                 File parent = fileUtils.getParentFile(path);
                 // **   full-pathname specified == parent dir of path in list
-                if (parent != null && parent.exists() 
+                if (parent != null && parent.exists()
                     && file.equals(parent.getAbsolutePath())) {
                     if (type == null) {
                         log("Found: " + parent, Project.MSG_VERBOSE);
                         return true;
-                    } else if (type.equalsIgnoreCase("dir")) {
+                    } else if (type.isDir()) {
                         log("Found directory: " + parent, Project.MSG_VERBOSE);
                         return true;
                     }
@@ -249,25 +261,25 @@ public class Available extends Task implements Condition {
 
                 // **   simple name specified   == path in list + name
                 if (path.exists() && path.isDirectory()) {
-                    if (checkFile(new File(path, file), 
+                    if (checkFile(new File(path, file),
                                   file + " in " + path)) {
                         return true;
                     }
                 }
-                
+
                 // **   simple name specified   == parent dir + name
                 if (parent != null && parent.exists()) {
-                    if (checkFile(new File(parent, file), 
+                    if (checkFile(new File(parent, file),
                                   file + " in " + parent)) {
                         return true;
                     }
                 }
-                
+
                 // **   simple name specified   == parent of parent dir + name
                 if (parent != null) {
                     File grandParent = fileUtils.getParentFile(parent);
                     if (grandParent != null && grandParent.exists()) {
-                        if (checkFile(new File(grandParent, file), 
+                        if (checkFile(new File(grandParent, file),
                                       file + " in " + grandParent)) {
                             return true;
                         }
@@ -280,12 +292,12 @@ public class Available extends Task implements Condition {
 
     private boolean checkFile(File f, String text) {
         if (type != null) {
-            if (type.equalsIgnoreCase("dir")) {
+            if (type.isDir()) {
                 if( f.isDirectory()) {
                     log("Found directory: " + text, Project.MSG_VERBOSE);
                 }
                 return f.isDirectory();
-            } else if (type.equalsIgnoreCase("file")) {
+            } else if (type.isFile()) {
                 if( f.isFile()) {
                     log("Found file: " + text, Project.MSG_VERBOSE);
                 }
@@ -306,7 +318,7 @@ public class Available extends Task implements Condition {
             if (cL != null) {
                 return (cL.getResourceAsStream(resource) != null);
             } else {
-                return 
+                return
                     (ClassLoader.getSystemResourceAsStream(resource) != null);
             }
         }
@@ -331,6 +343,27 @@ public class Available extends Task implements Condition {
             return false;
         } catch (NoClassDefFoundError e) {
             return false;
+        }
+    }
+
+    public static class FileDir extends EnumeratedAttribute {
+
+        private final static String[] values = {"file", "dir"};
+
+        public String[] getValues() {
+            return values;
+        }
+
+        public boolean isDir() {
+            return "dir".equalsIgnoreCase(getValue());
+        }
+
+        public boolean isFile() {
+            return "file".equalsIgnoreCase(getValue());
+        }
+
+        public String toString() {
+            return getValue();
         }
     }
 }

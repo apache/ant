@@ -56,42 +56,46 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
-public class TarTest extends BuildFileTest { 
-    
-    public TarTest(String name) { 
+public class TarTest extends BuildFileTest {
+
+    public TarTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/tar.xml");
     }
-    
-    public void test1() { 
+
+    public void test1() {
         expectBuildException("test1", "required argument not specified");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument not specified");
     }
 
-    public void test3() { 
+    public void test3() {
         expectBuildException("test3", "required argument not specified");
     }
 
-    public void test4() { 
+    public void test4() {
         expectBuildException("test4", "tar cannot include itself");
     }
 
     public void test5() {
         executeTarget("test5");
-        java.io.File f 
+        java.io.File f
             = new java.io.File("src/etc/testcases/taskdefs/test5.tar");
 
         if (!f.exists()) {
             fail("Tarring a directory failed");
         }
+    }
+
+    public void test6() {
+        expectBuildException("test6", "Invalid value specified for longfile attribute.");
     }
 
     public void tearDown() {

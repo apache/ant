@@ -26,7 +26,11 @@
          basedir="."
          includes="test5dir"/>
   </target>
-  
+
+  <target name="test6">
+    <tar tarfile="blah" longfile="Foo"/>
+  </target>
+
   <target name="cleanup"> 
     <delete file="test4.tar"/>
     <delete file="test5.tar"/>

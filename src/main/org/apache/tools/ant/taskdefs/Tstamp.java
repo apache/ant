@@ -58,15 +58,17 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
-import java.util.Vector;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Enumeration;
 import java.util.Calendar;
-import java.util.StringTokenizer;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.Vector;
 import java.text.SimpleDateFormat;
 
 /**
@@ -76,12 +78,13 @@ import java.text.SimpleDateFormat;
  * @author stefano@apache.org
  * @author roxspring@yahoo.com
  * @author conor@cognet.com.au
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class Tstamp extends Task {
 
     private Vector customFormats = new Vector();
     private String prefix = "";
-    
+
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         if (!this.prefix.endsWith(".")) {
@@ -119,7 +122,7 @@ public class Tstamp extends Task {
         customFormats.addElement(cts);
         return cts;
     }
-    
+
     public class CustomFormat
     {
         private TimeZone timeZone;
@@ -131,22 +134,22 @@ public class Tstamp extends Task {
         private int offset = 0;
         private int field = Calendar.DATE;
         private String prefix="";
-        
+
         public CustomFormat(String prefix)
         {
             this.prefix = prefix;
         }
-        
+
         public void setProperty(String propertyName)
         {
             this.propertyName = prefix + propertyName;
         }
-        
+
         public void setPattern(String pattern)
         {
             this.pattern = pattern;
         }
-        
+
         public void setLocale(String locale)
         {
             StringTokenizer st = new StringTokenizer( locale, " \t\n\r\f,");
@@ -177,47 +180,35 @@ public class Tstamp extends Task {
         public void setOffset(int offset) {
             this.offset = offset;
         }
-        
+
+        /**
+         * @deprecated setUnit(String) is deprecated and is replaced with
+         *             setUnit(Tstamp.Unit) to make Ant's Introspection
+         *             mechanism do the work and also to encapsulate operations on
+         *             the unit in its own class.
+         */
         public void setUnit(String unit) {
-            if (unit.equalsIgnoreCase("millisecond")) {
-                field = Calendar.MILLISECOND;
-            }
-            else if (unit.equalsIgnoreCase("second")) {
-                field = Calendar.SECOND;
-            }
-            else if (unit.equalsIgnoreCase("minute")) {
-                field = Calendar.MINUTE;
-            }
-            else if (unit.equalsIgnoreCase("hour")) {
-                field = Calendar.HOUR_OF_DAY;
-            }
-            else if (unit.equalsIgnoreCase("day")) {
-                field = Calendar.DATE;
-            }
-            else if (unit.equalsIgnoreCase("week")) {
-                field = Calendar.WEEK_OF_YEAR;
-            }
-            else if (unit.equalsIgnoreCase("month")) {
-                field = Calendar.MONTH;
-            }
-            else if (unit.equalsIgnoreCase("year")) {
-                field = Calendar.YEAR;
-            }
-            else {
-                throw new BuildException(unit + " is not a unit supported by the tstamp task", getLocation());
-            }
-        }            
-        
+            log("DEPRECATED - The setUnit(String) method has been deprecated."
+                + " Use setUnit(Tstamp.Unit) instead.");
+            Unit u = new Unit();
+            u.setValue(unit);
+            field = u.getCalendarField();
+        }
+
+        public void setUnit(Unit unit) {
+            field = unit.getCalendarField();
+        }
+
         public void execute(Project project, Date date, Location location)
         {
             if (propertyName == null) {
                 throw new BuildException("property attribute must be provided", location);
             }
-            
+
             if (pattern == null) {
                 throw new BuildException("pattern attribute must be provided", location);
             }
-            
+
             SimpleDateFormat sdf;
             if (language == null) {
                 sdf = new SimpleDateFormat(pattern);
@@ -238,6 +229,53 @@ public class Tstamp extends Task {
                 sdf.setTimeZone(timeZone);
             }
             project.setNewProperty(propertyName, sdf.format(date));
+        }
+    }
+
+    public static class Unit extends EnumeratedAttribute {
+
+        private static final String MILLISECOND = "millisecond";
+        private static final String SECOND = "second";
+        private static final String MINUTE = "minute";
+        private static final String HOUR = "hour";
+        private static final String DAY = "day";
+        private static final String WEEK = "week";
+        private static final String MONTH = "month";
+        private static final String YEAR = "year";
+
+        private final static String[] units = {
+                                                MILLISECOND,
+                                                SECOND,
+                                                MINUTE,
+                                                HOUR,
+                                                DAY,
+                                                WEEK,
+                                                MONTH,
+                                                YEAR
+                                              };
+
+        private Hashtable calendarFields = new Hashtable();
+
+        public Unit() {
+            calendarFields.put(MILLISECOND,
+                                    new Integer(Calendar.MILLISECOND));
+            calendarFields.put(SECOND, new Integer(Calendar.SECOND));
+            calendarFields.put(MINUTE, new Integer(Calendar.MINUTE));
+            calendarFields.put(HOUR, new Integer(Calendar.HOUR_OF_DAY));
+            calendarFields.put(DAY, new Integer(Calendar.DATE));
+            calendarFields.put(WEEK, new Integer(Calendar.WEEK_OF_YEAR));
+            calendarFields.put(MONTH, new Integer(Calendar.MONTH));
+            calendarFields.put(YEAR, new Integer(Calendar.YEAR));
+        }
+
+        public int getCalendarField() {
+            String key = getValue().toLowerCase();
+            Integer i = (Integer) calendarFields.get(key);
+            return i.intValue();
+        }
+
+        public String[] getValues() {
+            return units;
         }
     }
 }

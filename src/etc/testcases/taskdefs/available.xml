@@ -98,4 +98,9 @@
                file="../this_dir_should_never_exist" type="dir"/>
   </target>
 
+  <target name="test19">
+    <available property="test" 
+               file="available.xml" type="Foo"/>
+  </target>
+
 </project>
