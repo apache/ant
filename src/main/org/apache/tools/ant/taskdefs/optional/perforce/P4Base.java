@@ -136,9 +136,15 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
             commandline.setExecutable("p4");
 
             //Check API for these - it's how CVS does it...
-            commandline.createArgument().setValue(P4Port);
-            commandline.createArgument().setValue(P4User);
-            commandline.createArgument().setValue(P4Client);
+            if (P4Port != null && P4Port.length() != 0) {
+                commandline.createArgument().setValue(P4Port);
+            }
+            if (P4User != null && P4User.length() != 0) {
+                commandline.createArgument().setValue(P4User);
+            }
+            if (P4Client != null && P4Client.length() != 0) {
+                commandline.createArgument().setValue(P4Client);
+            }
             commandline.createArgument().setLine(command);
 
 	        log("Execing "+commandline.getCommandline(), Project.MSG_VERBOSE);
