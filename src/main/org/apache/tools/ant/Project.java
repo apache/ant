@@ -242,8 +242,10 @@ public class Project {
 
     public void setProperty(String name, String value) {
         // command line properties take precedence
-        if (null != userProperties.get(name))
+        if (null != userProperties.get(name)) {
+            log("Override ignored for user property " + name, MSG_VERBOSE);
             return;
+        }
         log("Setting project property: " + name + " -> " +
             value, MSG_DEBUG);
         properties.put(name, value);
@@ -1034,6 +1036,10 @@ public class Project {
     }
 
     public void addReference(String name, Object value) {
+        if (null != references.get(name)) {
+            log("Overriding previous definition of reference to " + name, 
+                MSG_WARN);
+        }
         log("Adding reference: " + name + " -> " + value, MSG_DEBUG);
         references.put(name,value);
     }

@@ -93,18 +93,6 @@ public interface RmicAdapter {
      */
     public FileNameMapper getMapper();
 
-    /** 
-     * Difference between original class file name and the generated
-     * stub class.
-     */
-    public String getStubClassSuffix();
-
-    /** 
-     * Difference between original class file name and the generated
-     * skel class.
-     */
-    public String getSkelClassSuffix();
-
     /**
      * The CLASSPATH this rmic process will use.
      */

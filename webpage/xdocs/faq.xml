@@ -114,7 +114,7 @@
 
   <faqsection title="Using Ant">
     <faq id="always-recompiles">
-      <question>Why does Ant always recompile all my Java files</question>
+      <question>Why does Ant always recompile all my Java files?</question>
       <answer>
 
         <p>In order to find out which files should be compiled, Ant

@@ -90,12 +90,16 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         return attributes;
     }
 
-    public String getStubClassSuffix() {
+    protected String getStubClassSuffix() {
         return "_Stub";
     }        
 
-    public String getSkelClassSuffix() {
+    protected String getSkelClassSuffix() {
         return "_Skel";
+    }        
+
+    protected String getTieClassSuffix() {
+        return "_Tie";
     }        
 
     /**
@@ -321,21 +325,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      */
     private class RmicFileNameMapper implements FileNameMapper {
 
-        private GlobPatternMapper stubMapper;
-        private GlobPatternMapper skelMapper;
-
-        RmicFileNameMapper() {
-            stubMapper = new GlobPatternMapper();
-            stubMapper.setFrom("*.class");
-            stubMapper.setTo("*"+getStubClassSuffix()+".class");
-
-            // no _Skel file in stub version 1.2
-            if (!"1.2".equals(attributes.getStubVersion())) {
-                skelMapper = new GlobPatternMapper();
-                skelMapper.setFrom("*.class");
-                skelMapper.setTo("*"+getSkelClassSuffix()+".class");
-            }
-        }
+        RmicFileNameMapper() {}
 
         /**
          * Empty implementation.
@@ -347,28 +337,55 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         public void setTo(String s) {}
 
         public String[] mapFileName(String name) {
-            String[] stubName = stubMapper.mapFileName(name);
-
-            if (stubName == null
+            if (name == null
+                || !name.endsWith(".class")
                 || name.endsWith(getStubClassSuffix()+".class") 
-                || name.endsWith(getSkelClassSuffix()+".class")) {
-                // Not a .class file
+                || name.endsWith(getSkelClassSuffix()+".class") 
+                || name.endsWith(getTieClassSuffix()+".class")) {
+                // Not a .class file or the one we'd generate
                 return null;
             }
 
-            String classname = name.replace(File.separatorChar, '.');
-            classname = classname.substring(0, classname.indexOf(".class"));
+            String base = name.substring(0, name.indexOf(".class"));
+            String classname = base.replace(File.separatorChar, '.');
             if (attributes.getVerify() &&
                 !attributes.isValidRmiRemote(classname)) {
                 return null;
             }
-            if (skelMapper != null) {
-                return new String[] {
-                    stubName[0], 
-                    skelMapper.mapFileName(name)[0]
-                };
+
+            if (!attributes.getIiop()) {
+                if ("1.2".equals(attributes.getStubVersion())) {
+                    return new String[] {
+                        base + getStubClassSuffix() + ".class"
+                    };
+                } else {
+                    return new String[] {
+                        base + getStubClassSuffix() + ".class",
+                        base + getSkelClassSuffix() + ".class",
+                    };
+                }
             } else {
-                return stubName;
+                int lastSlash = base.lastIndexOf("/");
+
+                String dirname = "";
+                /*
+                 * I know, this is not necessary, but I prefer it explicit (SB)
+                 */
+                int index = -1;
+                if (lastSlash == -1) {
+                    // no package
+                    index = 0;
+                } else {
+                    index = lastSlash + 1;
+                    dirname = base.substring(0, index);
+                }
+
+                String filename = base.substring(index);
+
+                return new String[] {
+                    dirname + "_" + filename + getStubClassSuffix() + ".class",
+                    dirname + "_" + filename + getTieClassSuffix() + ".class"
+                };
             }
         }
     }

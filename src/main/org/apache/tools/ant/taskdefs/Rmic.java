@@ -418,29 +418,23 @@ public class Rmic extends MatchingTask {
                                     String classname,
                                     RmicAdapter adapter)
         throws BuildException {
-        String stubFileName = classname.replace('.', File.separatorChar)
-            + adapter.getStubClassSuffix()+".java";
-        File oldStubFile = new File(baseDir, stubFileName);
-        File newStubFile = new File(sourceBaseFile, stubFileName);
-        try {
-            project.copyFile(oldStubFile, newStubFile, filtering);
-            oldStubFile.delete();
-        } catch (IOException ioe) {
-            String msg = "Failed to copy " + oldStubFile + " to " +
-                newStubFile + " due to " + ioe.getMessage();
-            throw new BuildException(msg, ioe, location);
-        }
-        if (!"1.2".equals(stubVersion)) {
-            String skelFileName = classname.replace('.', File.separatorChar)
-                + adapter.getSkelClassSuffix()+".java";
-            File oldSkelFile = new File(baseDir, skelFileName);
-            File newSkelFile = new File(sourceBaseFile, skelFileName);
+
+        String classFileName = 
+            classname.replace('.', File.separatorChar) + ".class";
+        String[] generatedFiles = 
+            adapter.getMapper().mapFileName(classFileName);
+
+        for (int i=0; i<generatedFiles.length; i++) {
+            String sourceFileName = 
+                classFileName.substring(0, classFileName.length()-6) + ".java";
+            File oldFile = new File(baseDir, sourceFileName);
+            File newFile = new File(sourceBaseFile, sourceFileName);
             try {
-                project.copyFile(oldSkelFile, newSkelFile, filtering);
-                oldSkelFile.delete();
+                project.copyFile(oldFile, newFile, filtering);
+                oldFile.delete();
             } catch (IOException ioe) {
-                String msg = "Failed to copy " + oldSkelFile + " to " +
-                    newSkelFile + " due to " + ioe.getMessage();
+                String msg = "Failed to copy " + oldFile + " to " +
+                    newFile + " due to " + ioe.getMessage();
                 throw new BuildException(msg, ioe, location);
             }
         }
