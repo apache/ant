@@ -68,6 +68,7 @@ public abstract class Task {
     protected Location location = Location.UNKNOWN_LOCATION;
     protected String taskName = null;
     protected String taskType = null;
+    protected RuntimeConfigurable wrapper;
 
     /**
      * Sets the project object of this task. This method is used by
@@ -192,6 +193,25 @@ public abstract class Task {
      */
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    /**
+     * Returns the wrapper class for runtime configuration.
+     */
+    public RuntimeConfigurable getRuntimeConfigurableWrapper() {
+        if (wrapper == null) {
+            wrapper = new RuntimeConfigurable(this);
+        }
+        return wrapper;
+    }
+
+    /**
+     * Configure this task - if it hasn't been done already.
+     */
+    public void maybeConfigure() throws BuildException {
+        if (wrapper != null) {
+            wrapper.maybeConfigure(project);
+        }
     }
 }
 

@@ -67,7 +67,7 @@ import java.text.*;
  */
 public class Tstamp extends Task {
 
-    public void init() throws BuildException {
+    public void execute() throws BuildException {
         try {
             Date d = new Date();
 

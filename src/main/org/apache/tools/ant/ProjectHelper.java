@@ -354,6 +354,7 @@ public class ProjectHelper {
     private class TaskHandler extends AbstractHandler {
         private Target target;
         private Task task;
+        private RuntimeConfigurable wrapper = null;
 
         public TaskHandler(DocumentHandler parentHandler, Target target) {
             super(parentHandler);
@@ -363,35 +364,37 @@ public class ProjectHelper {
 
         public void init(String tag, AttributeList attrs) throws SAXParseException {
             task = project.createTask(tag);
-            configure(task, attrs);
+
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
+            configureId(task, attrs);
             task.init();
 
             // Top level tasks don't have associated targets
             if (target != null) {
                 task.setOwningTarget(target);
                 target.addTask(task);
+                wrapper = task.getRuntimeConfigurableWrapper();
+                wrapper.setAttributes(attrs);
             } else {
+                configure(task, attrs, project);
                 task.execute();
             }
         }
 
         public void characters(char[] buf, int start, int end) throws SAXParseException {
-            String text = new String(buf, start, end).trim();
-            if (text.length() == 0) return;
-
-            IntrospectionHelper ih = 
-                IntrospectionHelper.getHelper(task.getClass());
-
-            try {
-                ih.addText(task, text);
-            } catch (BuildException exc) {
-                throw new SAXParseException(exc.getMessage(), locator, exc);
+            if (wrapper == null) {
+                try {
+                    addText(task, buf, start, end);
+                } catch (BuildException exc) {
+                    throw new SAXParseException(exc.getMessage(), locator, exc);
+                }
+            } else {
+                wrapper.addText(buf, start, end);
             }
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, task).init(name, attrs);
+            new NestedElementHandler(this, task, wrapper).init(name, attrs);
         }
     }
 
@@ -401,11 +404,16 @@ public class ProjectHelper {
     private class NestedElementHandler extends AbstractHandler {
         private Object target;
         private Object child;
+        private RuntimeConfigurable parentWrapper;
+        private RuntimeConfigurable childWrapper = null;
 
-        public NestedElementHandler(DocumentHandler parentHandler, Object target) {
+        public NestedElementHandler(DocumentHandler parentHandler, 
+                                    Object target,
+                                    RuntimeConfigurable parentWrapper) {
             super(parentHandler);
 
             this.target = target;
+            this.parentWrapper = parentWrapper;
         }
 
         public void init(String propType, AttributeList attrs) throws SAXParseException {
@@ -415,28 +423,34 @@ public class ProjectHelper {
 
             try {
                 child = ih.createElement(target, propType.toLowerCase());
-                configure(child, attrs);
+                configureId(child, attrs);
+
+                if (parentWrapper != null) {
+                    childWrapper = new RuntimeConfigurable(child);
+                    childWrapper.setAttributes(attrs);
+                    parentWrapper.addChild(childWrapper);
+                } else {
+                    configure(child, attrs, project);
+                }
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
             }
         }
 
         public void characters(char[] buf, int start, int end) throws SAXParseException {
-            String text = new String(buf, start, end).trim();
-            if (text.length() == 0) return;
-
-            IntrospectionHelper ih = 
-                IntrospectionHelper.getHelper(child.getClass());
-
-            try {
-                ih.addText(child, text);
-            } catch (BuildException exc) {
-                throw new SAXParseException(exc.getMessage(), locator, exc);
+            if (parentWrapper == null) {
+                try {
+                    addText(child, buf, start, end);
+                } catch (BuildException exc) {
+                    throw new SAXParseException(exc.getMessage(), locator, exc);
+                }
+            } else {
+                childWrapper.addText(buf, start, end);
             }
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, child).init(name, attrs);
+            new NestedElementHandler(this, child, childWrapper).init(name, attrs);
         }
     }
 
@@ -457,32 +471,28 @@ public class ProjectHelper {
                     throw new BuildException("Unknown data type "+propType);
                 }
                 
-                configure(element, attrs);
+                configureId(element, attrs);
+                configure(element, attrs, project);
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
             }
         }
 
         public void characters(char[] buf, int start, int end) throws SAXParseException {
-            String text = new String(buf, start, end).trim();
-            if (text.length() == 0) return;
-
-            IntrospectionHelper ih = 
-                IntrospectionHelper.getHelper(element.getClass());
-
             try {
-                ih.addText(element, text);
+                addText(element, buf, start, end);
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
             }
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, element).init(name, attrs);
+            new NestedElementHandler(this, element, null).init(name, attrs);
         }
     }
 
-    private void configure(Object target, AttributeList attrs) throws BuildException {
+    public static void configure(Object target, AttributeList attrs, 
+                                 Project project) throws BuildException {
         if( target instanceof TaskAdapter )
             target=((TaskAdapter)target).getProxy();
 
@@ -498,16 +508,36 @@ public class ProjectHelper {
                                 attrs.getName(i).toLowerCase(), value);
 
             } catch (BuildException be) {
-                if (attrs.getName(i).equals("id")) {
-                    project.addReference(attrs.getValue(i), target);
-                } else {
-                    be.setLocation(new Location(buildFile.toString(), 
-                                                locator.getLineNumber(), 
-                                                locator.getColumnNumber()));
+                // id attribute must be set externally
+                if (!attrs.getName(i).equals("id")) {
                     throw be;
                 }
             }
         }
+    }
+
+    /**
+     * Adds the content of #PCDATA sections to an element.
+     */
+    public static void addText(Object target, char[] buf, int start, int end)
+        throws BuildException {
+        addText(target, new String(buf, start, end).trim());
+    }
+
+    /**
+     * Adds the content of #PCDATA sections to an element.
+     */
+    public static void addText(Object target, String text)
+        throws BuildException {
+
+        if (text == null || text.length() == 0) {
+            return;
+        }
+
+        if(target instanceof TaskAdapter)
+            target = ((TaskAdapter) target).getProxy();
+
+        IntrospectionHelper.getHelper(target.getClass()).addText(target, text);
     }
 
 
@@ -562,4 +592,19 @@ public class ProjectHelper {
 
         return parserFactory;
     }
+
+    /**
+     * Scan AttributeList for the id attribute and maybe add a
+     * reference to project.  
+     *
+     * <p>Moved out of {@link #configure configure} to make it happen
+     * at parser time.</p> 
+     */
+    private void configureId(Object target, AttributeList attr) {
+        String id = attr.getValue("id");
+        if (id != null) {
+            project.addReference(id, target);
+        }
+    }
+
 }

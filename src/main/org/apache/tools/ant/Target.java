@@ -138,6 +138,7 @@ public class Target {
 
                 try {
                     project.fireTaskStarted(task);
+                    task.maybeConfigure();
                	    task.execute();
                     project.fireTaskFinished(task, null);
 		}

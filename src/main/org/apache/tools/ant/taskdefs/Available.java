@@ -94,7 +94,7 @@ public class Available extends Task {
         this.resource = resource;
     }
 
-    public void init() throws BuildException {
+    public void execute() throws BuildException {
         if ((classname != null) && !checkClass(classname)) return;
         if ((file != null) && !checkFile(file)) return;
         if ((resource != null) && !checkResource(resource)) return;

@@ -25,7 +25,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/09/07</p>
+<p>Version 1.2 - 2000/09/14</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -4778,8 +4778,44 @@ output.
     throws a <code>BuildException</code>. This method implements the task
     itself.</li>
 </ol>
-<p>It is important to know that Ant first calls the setters for the attributes
-it encounters for a specific task in the buildfile, before it executes is.</p>
+<h3>The life cycle of a task</h3>
+<ol>
+  <li>The task gets instantiated using a no-arg constructor at parser
+    time. This means even tasks that are never executed get
+    instantiated.</li>
+
+  <li>The tasks gets references to its project and location inside the
+    build file via their inherited <code>project</code> and
+    <code>location</code> variables.</li>
+
+  <li>If the user specified an id attribute to this task, the project
+    registers a reference to this newly created task - at parser
+    time.</li>
+
+  <li><code>init()</code> is called at parser time.</li>
+
+  <li>The task gets a reference to the target it belongs to via its
+    inherited <code>target</code> variable.</li>
+
+  <li>All child elements of the XML element corresponding to this task
+    are created via this task's <code>createXXX()</code> methods or
+    instantiated and added to this task via its <code>addXXX()</code>
+    methods - at parser time.</li>
+
+  <li>All attributes of this task get set via their corresponding
+    <code>setXXX</code> methods - at runtime.</li>
+
+  <li>The content character data sections inside the XML element
+    corresponding to this task is added to the task via its
+    <code>addText</code> method - at runtime.</li>
+
+  <li>All attributes of all child elements get set via their corresponding
+    <code>setXXX</code> methods - at runtime.</li>
+
+  <li><code>execute()</code> is called at runtime.</li>
+
+</ol>
+<h3>Example</h3>
 <p>Let's write our own task, that prints a message on the System.out stream. The
 task has one attribute called &quot;message&quot;.</p>
 <blockquote>

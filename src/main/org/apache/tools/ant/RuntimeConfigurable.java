@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,30 +52,79 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant;
 
-import org.apache.tools.ant.*;
+import java.util.Enumeration;
+import java.util.Vector;
+import org.xml.sax.AttributeList;
+import org.xml.sax.helpers.AttributeListImpl;
 
 /**
- * This task set a token filter that is used by the file copy methods
- * of the project to do token substitution.
+ * Wrapper class that holds the attributes of a Task (or elements
+ * nested below that level) and takes care of configuring that element
+ * at runtime.
  *
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author <a href="stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class Filter extends Task {
+public class RuntimeConfigurable {
 
-    private String token;
-    private String value;
+    private Vector children = new Vector();
+    private Object wrappedObject = null;
+    private AttributeList attributes;
+    private StringBuffer characters = new StringBuffer();
 
-    public void setToken(String token) {
-        this.token = token;
+    /**
+     * @param proxy The element to wrap.
+     */
+    public RuntimeConfigurable(Object proxy) {
+        wrappedObject = proxy;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    /**
+     * Set's the attributes for the wrapped element.
+     */
+    public void setAttributes(AttributeList attributes) {
+        this.attributes = new AttributeListImpl(attributes);
     }
 
-    public void execute() throws BuildException {
-        project.addFilter(token, value);
+    /**
+     * Adds child elements to the wrapped element.
+     */
+    public void addChild(RuntimeConfigurable child) {
+        children.addElement(child);
     }
+
+    /**
+     * Add characters from #PCDATA areas to the wrapped element.
+     */
+    public void addText(String data) {
+        characters.append(data);
+    }
+
+    /**
+     * Add characters from #PCDATA areas to the wrapped element.
+     */
+    public void addText(char[] buf, int start, int end) {
+        addText(new String(buf, start, end).trim());
+    }
+
+    /**
+     * Configure the wrapped element and all children.
+     */
+    public void maybeConfigure(Project p) throws BuildException {
+        if (attributes != null) {
+            ProjectHelper.configure(wrappedObject, attributes, p);
+            attributes = null;
+        }
+        if (characters.length() != 0) {
+            ProjectHelper.addText(wrappedObject, characters.toString());
+            characters.setLength(0);
+        }
+        Enumeration enum = children.elements();
+        while (enum.hasMoreElements()) {
+            RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
+            child.maybeConfigure(p);
+        }
+    }
+
 }

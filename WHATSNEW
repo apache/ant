@@ -3,6 +3,16 @@ Changes from Ant 1.1 to the current sources
 Changes that could break older environments:
 --------------------------------------------
 
+* Semantics of <property> has changed again in the hope to be more
+intuitive. ${} expansion now happens at runtime and <property> tags
+living inside of targets only take effect if they are visited at
+runtime.
+
+As a side effect of this change, task's attributes get set at runtime
+not at parser time as well, which might change the results of
+<script>s or other custom tasks that reference other tasks by their id
+attribute.
+
 * copying of support files in <javac> has been removed - as well as
 the filtering attribute.
 
