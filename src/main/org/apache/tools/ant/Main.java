@@ -829,12 +829,21 @@ public class Main {
 
     /**
      * Writes a formatted list of target names to <code>System.out</code>
-     * with an optional description
+     * with an optional description.
      *
-     * @param names the names to be printed.
-     * @param descriptions the associated target descriptions.
-     * @param heading the heading for the print.
-     * @param maxlen the maximum length of the names of the targets.
+     * @param names The names to be printed.
+     *              Must not be <code>null</code>.
+     * @param descriptions The associated target descriptions.
+     *                     May be <code>null</code>, in which case
+     *                     no descriptions are displayed. 
+     *                     If non-<code>null</code>, this should have
+     *                     as many elements as <code>names</code>.
+     * @param heading The heading to display. 
+     *                Should not be <code>null</code>.
+     * @param maxlen The maximum length of the names of the targets.
+     *               If descriptions are given, they are padded to this
+     *               position so they line up (so long as the names really
+     *               <i>are</i> shorter than this).
      */
     private static void printTargets(Vector names, Vector descriptions, 
                                      String heading, int maxlen) {
