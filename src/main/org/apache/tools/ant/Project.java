@@ -189,9 +189,9 @@ public class Project {
                     Class taskClass = Class.forName(value);
                     addTaskDefinition(key, taskClass);
                 } catch (NoClassDefFoundError ncdfe) {
-                    // ignore...
+                    log("Could not load a dependent class (" + ncdfe.getMessage() + ") for task " + key, MSG_DEBUG); 
                 } catch (ClassNotFoundException cnfe) {
-                    // ignore...
+                    log("Could not load class (" + value + ") for task " + key, MSG_DEBUG); 
                 }
             }
         } catch (IOException ioe) {
@@ -739,8 +739,10 @@ public class Project {
     public Task createTask(String taskType) throws BuildException {
         Class c = (Class) taskClassDefinitions.get(taskType);
 
-        if (c == null)
+        if (c == null) {
             return null;
+        }
+        
         try {
             Object o = c.newInstance();
             Task task = null;
