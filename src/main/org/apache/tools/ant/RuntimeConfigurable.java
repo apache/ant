@@ -63,6 +63,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Iterator;
 
 import org.apache.tools.ant.util.CollectionUtils;
 import org.xml.sax.AttributeList;
@@ -222,7 +223,6 @@ public class RuntimeConfigurable implements Serializable {
      * @return Attribute name to attribute value map
      */
     public Hashtable getAttributeMap() {
-        // Nobody calls this method, maybe it could just be deleted?
         if (attributeMap != null) {
             return new Hashtable(attributeMap);
         } else {
@@ -463,5 +463,47 @@ public class RuntimeConfigurable implements Serializable {
     public void reconfigure(Project p) {
         proxyConfigured = false;
         maybeConfigure(p);
+    }
+
+
+    /**
+     * Apply presets, attributes and text are set if not currently set.
+     * nested elements are prepended.
+     *
+     * @param r a <code>RuntimeConfigurable</code> value
+     */
+    public void applyPreSet(RuntimeConfigurable r) {
+        // Attributes
+        if (r.attributeMap != null) {
+            for (Iterator i = r.attributeMap.keySet().iterator(); i.hasNext();) {
+                String name = (String) i.next();
+                if (attributeMap == null || attributeMap.get(name) == null) {
+                    setAttribute(name, (String) r.attributeMap.get(name));
+                }
+            }
+        }
+        // poly type
+        if (r.polyType != null && polyType == null) {
+            polyType = r.polyType;
+        }
+
+        // Children (this is a shadow of unknownElement#children)
+        if (r.children != null) {
+            List newChildren = new ArrayList();
+            newChildren.addAll(r.children);
+            if (children != null) {
+                newChildren.addAll(children);
+            }
+            children = newChildren;
+        }
+
+        // Text
+        if (r.characters != null) {
+            if (characters == null
+                || characters.toString().trim().length() == 0) {
+                characters =
+                    new StringBuffer(r.characters.toString());
+            }
+        }
     }
 }
