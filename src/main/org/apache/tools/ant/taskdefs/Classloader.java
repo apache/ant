@@ -59,22 +59,6 @@ import org.apache.tools.ant.types.*;
 
 import java.io.*;
 import java.util.*;
-import org.xml.sax.Locator;
-import org.xml.sax.InputSource;
-//import org.xml.sax.HandlerBase;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.SAXException;
-import org.xml.sax.DocumentHandler;
-import org.xml.sax.Attributes;
-import org.xml.sax.AttributeList;
-import org.xml.sax.helpers.XMLReaderAdapter;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.AttributeListImpl;
-
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * EXPERIMENTAL

@@ -57,7 +57,6 @@ package org.apache.tools.ant.types.resolver;
 import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.CatalogEntry;
 
-import org.apache.xml.resolver.helpers.Debug;
 import org.apache.xml.resolver.helpers.PublicId;
 
 /**

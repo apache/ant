@@ -66,7 +66,6 @@ import java.util.zip.ZipException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 
 /**
  * ZipScanner accesses the pattern matching algorithm in DirectoryScanner,

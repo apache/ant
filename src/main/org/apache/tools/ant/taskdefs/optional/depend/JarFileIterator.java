@@ -53,7 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;

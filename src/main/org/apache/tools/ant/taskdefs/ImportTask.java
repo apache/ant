@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
-import org.apache.tools.ant.helper.ProjectHelper2;
 
 import java.io.File;
 import java.io.IOException;

@@ -55,7 +55,6 @@ package org.apache.tools.ant.types.optional.image;
 
 import javax.media.jai.JAI;
 import javax.media.jai.PlanarImage;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.renderable.ParameterBlock;
 

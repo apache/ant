@@ -62,7 +62,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;

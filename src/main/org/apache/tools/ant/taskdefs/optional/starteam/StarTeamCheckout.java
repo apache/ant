@@ -53,11 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
-import com.starbase.starteam.File;
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Item;
 import com.starbase.starteam.Status;
-import com.starbase.starteam.TypeNames;
 import com.starbase.starteam.View;
 import com.starbase.starteam.ViewConfiguration;
 import java.io.IOException;

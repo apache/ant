@@ -64,7 +64,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.ResourceLocation;
 
-import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.CatalogManager;
 
 import org.apache.xml.resolver.tools.CatalogResolver;

@@ -57,16 +57,10 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 import com.jcraft.jsch.*;
 
 import java.io.*;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.FileSet;
 
 /**
  * Base class for Ant tasks using jsch.

@@ -54,8 +54,6 @@
 package org.apache.tools.ant.types.optional.image;
 
 import org.apache.tools.ant.types.DataType;
-import javax.media.jai.RenderedOp;
-import javax.media.jai.PlanarImage;
 import java.util.Vector;
 
 /**

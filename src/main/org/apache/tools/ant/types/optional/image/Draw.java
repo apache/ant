@@ -53,9 +53,7 @@
  */
 package org.apache.tools.ant.types.optional.image;
 
-import javax.media.jai.RenderedOp;
 import javax.media.jai.PlanarImage;
-import javax.media.jai.JAI;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

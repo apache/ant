@@ -67,7 +67,6 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.FileUtils;
-import javax.xml.transform.URIResolver;
 
 /**
  * Processes a set of XML documents via XSLT. This is

@@ -62,7 +62,6 @@ import com.starbase.starteam.ViewConfiguration;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 

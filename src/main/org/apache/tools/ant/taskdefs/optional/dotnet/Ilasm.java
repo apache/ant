@@ -64,11 +64,9 @@ import java.io.File;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
  *  Assembles .NET Intermediate Language files. The task will only work

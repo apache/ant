@@ -57,8 +57,6 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.helper.ProjectHelperImpl;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
 import java.util.Vector;
 
 

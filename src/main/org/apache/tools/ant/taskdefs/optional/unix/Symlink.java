@@ -66,9 +66,7 @@
 package org.apache.tools.ant.taskdefs.optional.unix;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -91,7 +89,6 @@ import org.apache.tools.ant.util.FileUtils;
 
 import org.apache.tools.ant.types.FileSet;
 
-import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.Execute;
 
 /**

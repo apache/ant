@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import com.jcraft.jsch.UserInfo;
-import org.apache.tools.ant.Project;
 
 /**
  * @author rhanderson

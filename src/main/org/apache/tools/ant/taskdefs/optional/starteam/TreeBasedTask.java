@@ -54,17 +54,14 @@
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
 import com.starbase.starteam.Folder;
-import com.starbase.starteam.Item;
 import com.starbase.starteam.Label;
 import com.starbase.starteam.StarTeamFinder;
 import com.starbase.starteam.View;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectComponent;
 
 /**
  * FileBasedTask.java

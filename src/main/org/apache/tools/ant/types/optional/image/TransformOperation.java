@@ -52,7 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.types.optional.image;
-import javax.media.jai.RenderedOp;
 import javax.media.jai.PlanarImage;
 
 /**
