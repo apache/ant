@@ -329,22 +329,6 @@
         </table>
       </subsection>
 
-      <subsection name="An Introduction to Ant">
-        <p>This article is a short introduction into the basic
-        concepts of Ant.</p>
-
-        <table>
-          <tr>
-            <th>Author:</th>
-            <td>Jayakrishnan Nair</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://varnam.org/articles/ant.html">http://varnam.org/articles/ant.html</a></td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="Using JavaScript with Ant">
         <p>A tutorial about using JavaScript and XSLT with Ant.</p>
 
