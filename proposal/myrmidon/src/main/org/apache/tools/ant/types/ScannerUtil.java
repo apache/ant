@@ -15,6 +15,8 @@ import java.util.StringTokenizer;
  *
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$ $Date$
  */
 public class ScannerUtil
