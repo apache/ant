@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -116,7 +116,8 @@ public class Touch extends Task {
 
     /**
      * the new modification time of the file
-     * in the format MM/DD/YYYY HH:MM AM <i>or</i> PM;
+     * in the format &quot;MM/DD/YYYY HH:MM AM <i>or</i> PM&quot; 
+     * or &quot;MM/DD/YYYY HH:MM:SS AM <i>or</i> PM&quot;.
      * Optional, default=now
      */
     public void setDatetime(String dateTime) {
@@ -148,22 +149,42 @@ public class Touch extends Task {
 
         try {
             if (dateTime != null) {
+                /*
+                 * The initial version used DateFormat.SHORT for the
+                 * time format, which ignores seconds.  If we want
+                 * seconds as well, we need DateFormat.MEDIUM, which
+                 * in turn would break all old build files.
+                 *
+                 * First try to parse with DateFormat.SHORT and if
+                 * that fails with MEDIUM - throw an exception if both
+                 * fail.
+                 */
                 DateFormat df = 
                     DateFormat.getDateTimeInstance(DateFormat.SHORT,
                                                    DateFormat.SHORT,
                                                    Locale.US);
                 try {
                     setMillis(df.parse(dateTime).getTime());
-                    if (millis < 0) {
-                        throw new BuildException("Date of " + dateTime
-                                                 + " results in negative "
-                                                 + "milliseconds value "
-                                                 + "relative to epoch "
-                                                 + "(January 1, 1970, "
-                                                 + "00:00:00 GMT).");
-                    }
                 } catch (ParseException pe) {
-                    throw new BuildException(pe.getMessage(), pe, getLocation());
+                    df = 
+                        DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                                                       DateFormat.MEDIUM,
+                                                       Locale.US);
+                    try {
+                        setMillis(df.parse(dateTime).getTime());
+                    } catch (ParseException pe2) {
+                        throw new BuildException(pe2.getMessage(), pe, 
+                                                 getLocation());
+                    }
+                }
+
+                if (millis < 0) {
+                    throw new BuildException("Date of " + dateTime
+                                             + " results in negative "
+                                             + "milliseconds value "
+                                             + "relative to epoch "
+                                             + "(January 1, 1970, "
+                                             + "00:00:00 GMT).");
                 }
             }
 

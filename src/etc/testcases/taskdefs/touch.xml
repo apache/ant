@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<project default="cleanup" basedir=".">
+
+  <target name="cleanup">
+    <delete file="touchtest" />
+  </target>
+
+  <target name="noSeconds">
+    <touch file="touchtest" datetime="2003/06/24 2:20 pm"/>
+  </target>
+
+  <target name="seconds">
+    <touch file="touchtest" datetime="2003/06/24 2:20:12 pm"/>
+  </target>
+</project>

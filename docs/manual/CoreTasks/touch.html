@@ -37,7 +37,7 @@ of now works, all other cases will emit a warning.</p>
   <tr>
     <td valign="top">datetime</td>
     <td valign="top">specifies the new modification time of the file
-       in the format MM/DD/YYYY HH:MM AM_or_PM.</td>
+       in the format MM/DD/YYYY HH:MM AM_or_PM or MM/DD/YYYY HH:MM:SS AM_or_PM.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
@@ -56,8 +56,13 @@ hour times).</p>
   &lt;/touch&gt;</pre>
 <p>changes the modification time to Oct, 09 1974 4:30 pm of all files and directories 
   found in <code>src_dir</code>. </p>
+<pre>  &lt;touch file=&quot;myfile&quot; datetime=&quot;06/28/2000 2:02:17 pm&quot;/&gt;</pre>
+<p>creates <code>myfile</code> if it doesn't exist and changes the
+modification time to Jun, 28 2000 2:02:17 pm (14:02:17 for those used to 24
+hour times), if the filesystem allows a precision of one second - a
+time close to it otherwise.</p>
 <hr>
-<p align="center">Copyright &copy; 2000-2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2001,2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
