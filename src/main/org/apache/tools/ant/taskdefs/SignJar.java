@@ -60,7 +60,7 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Sign a archive.
  * 
- * @author Peter Donald <a href="mailto:donaldp@mad.scientist.com">donaldp@mad.scientist.com</a>
+ * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
  */
 public class SignJar extends Task {
 
@@ -148,6 +148,8 @@ public class SignJar extends Task {
             throw new BuildException("storepass attribute must be set");
         } 
 
+        if(isUpToDate()) return;
+
         final StringBuffer sb = new StringBuffer();
 
         final ExecTask cmd = (ExecTask) project.createTask("exec");
@@ -204,6 +206,23 @@ public class SignJar extends Task {
         cmd.setFailonerror(true);
         cmd.setTaskName( getTaskName() );
         cmd.execute();
-    } 
+    }
+
+    protected boolean isUpToDate() {
+
+        if( null != jar && null != signedjar ) {
+
+            final File jarFile = new File(jar);
+            final File signedjarFile = new File(signedjar);
+            
+            if(!jarFile.exists()) return false;
+            if(!signedjarFile.exists()) return false;
+            if(jarFile.equals(signedjarFile)) return false;
+            if(signedjarFile.lastModified() > jarFile.lastModified())
+                return true;
+        }
+
+        return false;
+    }
 }
 
