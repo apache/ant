@@ -13,12 +13,15 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
+import org.apache.myrmidon.interfaces.configurer.TaskContextAdapter;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 
 /**
@@ -34,6 +37,7 @@ public class DefaultConfigurerTest
 
     private Configurer m_configurer;
     private DefaultTaskContext m_context;
+    private Context m_adaptor;
 
     public DefaultConfigurerTest( String name )
     {
@@ -55,6 +59,7 @@ public class DefaultConfigurerTest
         m_context = new DefaultTaskContext();
         final File baseDir = new File( "." ).getAbsoluteFile();
         m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
+        m_adaptor = new TaskContextAdapter( m_context );
     }
 
     /**
@@ -73,7 +78,7 @@ public class DefaultConfigurerTest
         final ConfigTest1 test = new ConfigTest1();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check result
         final ConfigTest1 expected = new ConfigTest1();
@@ -102,7 +107,7 @@ public class DefaultConfigurerTest
         final ConfigTest10 test = new ConfigTest10();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check result
         final ConfigTest10 expected = new ConfigTest10();
@@ -126,7 +131,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -156,7 +161,7 @@ public class DefaultConfigurerTest
         final ConfigTest2 test = new ConfigTest2();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check result
         final ConfigTest2 expected = new ConfigTest2();
@@ -185,7 +190,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -209,7 +214,7 @@ public class DefaultConfigurerTest
         final ConfigTest1 test = new ConfigTest1();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check result
         final ConfigTest1 expected = new ConfigTest1();
@@ -232,7 +237,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -257,7 +262,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "other" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check the configured object
         final ConfigTest1 expected = new ConfigTest1();
@@ -279,7 +284,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "some value" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check the configured object
         final ConfigTest1 expected = new ConfigTest1();
@@ -303,7 +308,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "some value" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check the configured object
         final ConfigTest1 expected = new ConfigTest1();
@@ -329,7 +334,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( ConfigurationException e )
@@ -354,7 +359,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -380,7 +385,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -415,7 +420,7 @@ public class DefaultConfigurerTest
         final ConfigTest6 test = new ConfigTest6();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         final ConfigTest6 expected = new ConfigTest6();
         expected.add( new MyType1() );
@@ -435,13 +440,14 @@ public class DefaultConfigurerTest
 
         // Set up the converter and role
         RoleManager roleMgr = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
-        roleMgr.addNameRoleMapping( "my-role1", MyRole1.ROLE );
+        final RoleInfo roleInfo = new RoleInfo("my-role1", MyRole1.class );
+        roleMgr.addRole( roleInfo );
         registerConverter( StringToMyRole1Converter.class, String.class, MyRole1.class );
 
         final ConfigTest6 test = new ConfigTest6();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check result
         final ConfigTest6 expected = new ConfigTest6();
@@ -465,7 +471,7 @@ public class DefaultConfigurerTest
         final ConfigTest7 test = new ConfigTest7();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         final ConfigTest7 expected = new ConfigTest7();
         expected.add( child1 );
@@ -489,7 +495,7 @@ public class DefaultConfigurerTest
         final ConfigTest8 test = new ConfigTest8();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         final ConfigTest8 expected = new ConfigTest8();
         expected.addConfig( child1 );
@@ -509,7 +515,7 @@ public class DefaultConfigurerTest
         final ConfigTest9 test = new ConfigTest9();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         final ConfigTest9 expected = new ConfigTest9();
         expected.configure( config );
@@ -532,7 +538,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "some indirect value" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Check the configured object
         final ConfigTest1 expected = new ConfigTest1();
@@ -555,7 +561,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( ConfigurationException e )
@@ -583,7 +589,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( ConfigurationException e )
@@ -612,14 +618,15 @@ public class DefaultConfigurerTest
 
         // Add role mapping, and add to reference to context
         final RoleManager roleMgr = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
-        roleMgr.addNameRoleMapping( "my-role1", MyRole1.class.getName() );
+        final RoleInfo roleInfo = new RoleInfo( "my-role1", MyRole1.class );
+        roleMgr.addRole( roleInfo );
         m_context.setProperty( "id", new MyType1() );
         m_context.setProperty( "id2", new MyType2() );
 
         final ConfigTest6 test = new ConfigTest6();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Compare against expected value
         final ConfigTest6 expected = new ConfigTest6();
@@ -644,7 +651,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configure( test, config, m_adaptor );
             fail();
         }
         catch( ConfigurationException e )
@@ -675,7 +682,7 @@ public class DefaultConfigurerTest
         final ConfigTest3 test = new ConfigTest3();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configure( test, config, m_adaptor );
 
         // Test expected value
         final ConfigTest3 expected = new ConfigTest3();

@@ -25,6 +25,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
@@ -468,7 +469,7 @@ public class DefaultConfigurer
     private PropertyConfigurer getConfigurerFromName( final ObjectConfigurer configurer,
                                                       final String name,
                                                       boolean ignoreRoleName )
-        throws NoSuchPropertyException
+        throws Exception
     {
         // Try a named property
         final NoSuchPropertyException exc;
@@ -486,8 +487,8 @@ public class DefaultConfigurer
         final PropertyConfigurer propertyConfigurer = configurer.getTypedProperty();
         if( !ignoreRoleName )
         {
-            final String roleShorthand = m_roleManager.getNameForRole( propertyConfigurer.getType().getName() );
-            if( !name.equalsIgnoreCase( roleShorthand ) )
+            final RoleInfo roleInfo = m_roleManager.getRoleByType( propertyConfigurer.getType() );
+            if( roleInfo == null || !name.equalsIgnoreCase( roleInfo.getShorthand() ) )
             {
                 // Rethrow the original exception
                 throw exc;

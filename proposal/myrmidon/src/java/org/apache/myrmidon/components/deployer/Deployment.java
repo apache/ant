@@ -267,15 +267,25 @@ class Deployment
      * Deploys the roles from a role descriptor.
      */
     private void deployRoles( final RoleDescriptor descriptor )
+        throws DeploymentException
     {
-        final String message = REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
-        getLogger().info( message );
 
-        final RoleDefinition[] definitions = descriptor.getDefinitions();
-        for( int i = 0; i < definitions.length; i++ )
+        try
         {
-            final RoleDefinition definition = definitions[ i ];
-            m_deployer.deployRole( this, definition );
+            final String message = REZ.getString( "url-deploy-roles.notice", descriptor.getUrl() );
+            getLogger().info( message );
+
+            final RoleDefinition[] definitions = descriptor.getDefinitions();
+            for( int i = 0; i < definitions.length; i++ )
+            {
+                final RoleDefinition definition = definitions[ i ];
+                m_deployer.deployRole( this, definition );
+            }
+        }
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "deploy-roles.error", descriptor.getUrl() );
+            throw new DeploymentException( message, e );
         }
     }
 

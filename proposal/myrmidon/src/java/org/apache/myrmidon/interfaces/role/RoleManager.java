@@ -8,12 +8,13 @@
 package org.apache.myrmidon.interfaces.role;
 
 /**
- * Interface to manage roles and mapping to shorthand names.
+ * Interface to manage roles.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:ricardo@apache,org">Ricardo Rocha</a>
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version CVS $Revision$ $Date$
  */
 public interface RoleManager
@@ -21,27 +22,31 @@ public interface RoleManager
     String ROLE = RoleManager.class.getName();
 
     /**
-     * Find Role name based on shorthand name.
+     * Find role based on shorthand name.
      *
      * @param name the shorthand name
-     * @return the role
+     * @return the role, or null if the role cannot be found.
      */
-    String getRoleForName( String name );
+    RoleInfo getRoleByShorthandName( String name );
 
     /**
-     * Find name based on role.
+     * Find role based on role type.
      *
-     * @param role the role
-     * @return the name
+     * @param type the role type.
+     * @return the role, or null if the role cannot be found.
      */
-    String getNameForRole( String role );
+    RoleInfo getRoleByType( Class type );
 
     /**
-     * Adds a role mapping.
+     * Find role based on name.
      *
-     * @param name the shorthand name.
-     * @param role the role name.
+     * @param name the role name
+     * @return the role, or null if the role cannot be found.
      */
-    void addNameRoleMapping( String name, String role )
-        throws IllegalArgumentException;
+    RoleInfo getRole( String name );
+
+    /**
+     * Adds a role definition.
+     */
+    void addRole( RoleInfo role ) throws RoleException;
 }

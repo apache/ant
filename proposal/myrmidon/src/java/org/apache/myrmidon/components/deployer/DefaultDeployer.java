@@ -24,6 +24,7 @@ import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.interfaces.service.AntServiceManager;
 import org.apache.myrmidon.interfaces.service.ServiceFactory;
@@ -146,12 +147,10 @@ public class DefaultDeployer
                                final ServiceDefinition definition )
         throws Exception
     {
-        // Determine the service interface class name
-        String serviceTypeName = getRoleForName( definition.getRoleShorthand() );
-
-        // Register the service factory
+        final String roleShorthand = definition.getRoleShorthand();
+        final Class serviceType = getRoleType( roleShorthand );
         final String factoryClassName = definition.getFactoryClass();
-        handleType( deployment, ServiceFactory.class, serviceTypeName, factoryClassName );
+        handleType( deployment, ServiceFactory.class, serviceType.getName(), factoryClassName );
     }
 
     /**
@@ -206,8 +205,7 @@ public class DefaultDeployer
             }
 
             // Deploy general-purpose type
-            final String role = getRoleForName( roleShorthand );
-            final Class roleType = deployment.getClassLoader().loadClass( role );
+            final Class roleType = getRoleType( roleShorthand );
             handleType( deployment, roleType, typeName, className );
 
             if( getLogger().isDebugEnabled() )
@@ -261,10 +259,13 @@ public class DefaultDeployer
      */
     public void deployRole( final Deployment deployment,
                             final RoleDefinition roleDef )
+        throws Exception
     {
         final String name = roleDef.getShortHand();
         final String role = roleDef.getRoleName();
-        m_roleManager.addNameRoleMapping( name, role );
+        final Class type = deployment.getClassLoader().loadClass( role );
+        final RoleInfo roleInfo = new RoleInfo( role, name, type );
+        m_roleManager.addRole( roleInfo );
 
         if( getLogger().isDebugEnabled() )
         {
@@ -274,19 +275,17 @@ public class DefaultDeployer
     }
 
     /**
-     * Determines the role name from shorthand name.
+     * Determines the type for a role, from its shorthand.
      */
-    private String getRoleForName( final String name )
+    private Class getRoleType( final String roleShorthand )
         throws DeploymentException
     {
-        final String role = m_roleManager.getRoleForName( name );
-
-        if( null == role )
+        final RoleInfo roleInfo =  m_roleManager.getRoleByShorthandName( roleShorthand );
+        if( null == roleInfo )
         {
-            final String message = REZ.getString( "unknown-role4name.error", name );
+            final String message = REZ.getString( "unknown-role4name.error", roleShorthand );
             throw new DeploymentException( message );
         }
-
-        return role;
+        return roleInfo.getType();
     }
 }

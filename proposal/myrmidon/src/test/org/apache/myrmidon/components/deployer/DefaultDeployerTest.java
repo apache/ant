@@ -15,6 +15,7 @@ import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.role.RoleManager;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.type.TypeException;
@@ -32,6 +33,7 @@ public class DefaultDeployerTest
 {
     private static final String TEST_TYPE1_NAME = "test-type1";
     private static final String DATA_TYPE_ROLE = "data-type";
+    private static final String CONVERTER_ROLE = "converter";
 
     private Deployer m_deployer;
     private RoleManager m_roleManager;
@@ -54,8 +56,8 @@ public class DefaultDeployerTest
 
         // Add some core roles
         m_roleManager = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
-        m_roleManager.addNameRoleMapping( DATA_TYPE_ROLE, DataType.ROLE );
-        m_roleManager.addNameRoleMapping( "converter", Converter.ROLE );
+        m_roleManager.addRole( new RoleInfo( DataType.ROLE, DATA_TYPE_ROLE, DataType.class ) );
+        m_roleManager.addRole( new RoleInfo( Converter.ROLE, CONVERTER_ROLE, Converter.class ) );
     }
 
     /**
