@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+
+<!--
+
+/*
+ * Since the initial version of this file was deveolped on the clock on
+ * an NSF grant I should say the following boilerplate:
+ *
+ * This material is based upon work supported by the National Science
+ * Foundaton under Grant No. EIA-0196404. Any opinions, findings, and
+ * conclusions or recommendations expressed in this material are those
+ * of the author and do not necessarily reflect the views of the
+ * National Science Foundation.
+ */
+
+-->
+
+<project name="symlink-test" basedir="." default="all">
+
+  <!-- 
+       Since the symlink task and some of these targets rely on
+       calls to exec, it may be possible for the JVM to outrun the 
+       execution of the command line  system calls, so this value is
+       the number of seconds we give the operating system to
+       catch up before executing a task that depends on the 
+       completion of previous tasks. This delay is also added to
+       the end of each target so junit doesn't go testing things
+       before they have finnished (hopefully). Tweak if needed.
+  -->
+
+  <property name="delay" value="3"/>
+ 
+  <property name="tdir" value="${basedir}/test-working"/>
+
+  <target name="setup">
+      <delete dir="${tdir}"/>
+      <mkdir dir="${tdir}"/>
+  </target>
+
+  <!-- test for action = single -->
+  <!-- 
+    Creates:
+         File: ${tdir}/symlink.test
+         Link: ${tdir}/singletest
+  -->
+  <target name="test-single">
+    <touch file="${tdir}/symlink.test"/>
+    <symlink resource="${tdir}/symlink.test" 
+             link="${tdir}/singletest" 
+             failonerror="yes"/>
+    <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
+    <available file="${tdir}/symlink.test" 
+               property="test.single.file.created"/>
+    <available file="${tdir}/singletest" 
+               property="test.single.link.created"/>
+  </target>
+
+
+
+  <!-- test for action = delete  (no calls to command line so no sleep) -->
+
+  <!-- 
+    Creates:
+         (none)
+    Deletes:
+         Link: ${tdir}/singletest
+  -->
+
+  <target name="test-delete">
+    <touch file="${tdir}/symlink.test"/>
+    <symlink resource="${tdir}/symlink.test" 
+             link="${tdir}/singletest" 
+             failonerror="yes"/>
+    <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
+
+    <symlink action="delete" link="${tdir}/singletest" failonerror="yes"/>
+    <symlink action="delete" link="${tdir}/symlink.test" failonerror="no"/>
+    <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
+
+    <available file="${tdir}/symlink.test" 
+               property="test.delete.file.still.there"/>
+    <available file="${tdir}/singletest" 
+               property="test.delete.link.still.there"
+               value="ERROR: link deletion failed"/>
+    
+  </target>
+
+
+
+  <!-- test for action = record -->
+
+  <!-- 
+    Creates:
+         Dir:  ${tdir}/symtest1
+         Dir:  ${tdir}/symtest1/symtest2
+         Dir:  ${tdir}/symtest1/symtest3
+         File: ${tdir}/symtest1/file1
+         File: ${tdir}/symtest1/symtest2/file2
+         File: ${tdir}/symtest1/symtest3/fileA
+         File: ${tdir}/symtest1/symtest3/fileB
+         File: ${tdir}/symtest1/symtest3/fileC
+         Link: ${tdir}/symtest1/link1==>${tdir}/symtest1/file1
+         Link: ${tdir}/symtest1/link2==>${tdir}/symtest1/symtest2/file2
+         Link: ${tdir}/symtest1/symtest2/link3==>
+                                           ${tdir}/symtest1/symtest2/file2
+         Link: ${tdir}/symtest1/dirlink==>${tdir}/symtest1/symtest3
+         File: ${tdir}/symtest1/recorded.links
+         File: ${tdir}/symtest1/symtest2/recorded.links
+    Deletes:
+         (none)
+  -->
+
+  <target name="test-record">
+
+    <mkdir dir="${tdir}/symtest1"/>
+    <mkdir dir="${tdir}/symtest1/symtest2"/>
+    <mkdir dir="${tdir}/symtest1/symtest3"/>
+    <touch file="${tdir}/symtest1/file1"/>
+    <touch file="${tdir}/symtest1/symtest2/file2"/>
+
+    <touch file="${tdir}/symtest1/symtest3/fileA"/>
+    <touch file="${tdir}/symtest1/symtest3/fileB"/>
+    <touch file="${tdir}/symtest1/symtest3/fileC"/>
+
+    <symlink resource="${tdir}/symtest1/file1" 
+             link="${tdir}/symtest1/link1" 
+             failonerror="no" />
+    <symlink resource="${tdir}/symtest1/symtest2/file2" 
+             link="${tdir}/symtest1/link2" 
+             failonerror="no" />
+    <symlink resource="${tdir}/symtest1/symtest2/file2" 
+             link="${tdir}/symtest1/symtest2/link3" 
+             failonerror="no" />
+    <symlink resource="${tdir}/symtest1/symtest3"
+             link="${tdir}/symtest1/dirlink"
+             failonerror="no" />
+
+    <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
+
+    <symlink action="record" linkfilename="recorded.links">
+       <fileset dir="${tdir}/symtest1" includes="**/**"/>
+    </symlink>
+
+    <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
+
+    <!-- Test to see if the directories were created -->
+
+    <available file="${tdir}/symtest1"
+               type="dir"
+               property="test.record.dir1.created"/>
+
+    <available file="${tdir}/symtest1/symtest2"
+               type="dir"
+               property="test.record.dir2.created"/>
+
+    <available file="${tdir}/symtest1/symtest3"
+               type="dir"
+               property="test.record.dir3.created"/>
+
+    <!-- Test to see if the Files were created -->
+
+    <available file="${tdir}/symtest1/file1"
+               property="test.record.file1.created"/>
+
+    <available file="${tdir}/symtest1/symtest2/file2"
+               property="test.record.file2.created"/>
+
+    <available file="${tdir}/symtest1/symtest3/fileA"
+               property="test.record.fileA.created"/>
+
+    <available file="${tdir}/symtest1/symtest3/fileB"
+               property="test.record.fileB.created"/>
+
+    <available file="${tdir}/symtest1/symtest3/fileC"
+               property="test.record.fileC.created"/>
+
+    <!-- Test to see if the links were created -->
+
+    <available file="${tdir}/symtest1/link1"
+               property="test.record.link1.created"/>
+
+    <available file="${tdir}/symtest1/link2"
+               property="test.record.link2.created"/>
+
+    <available file="${tdir}/symtest1/symtest2/link3"
+               property="test.record.link3.created"/>
+
+    <available file="${tdir}/symtest1/dirlink"
+               property="test.record.dirlink.created"/>
+
+    <!-- Test to see if the linkfiles were created -->
+
+    <available file="${tdir}/symtest1/recorded.links"
+               property="test.record.dir1.recorded"/>
+
+    <available file="${tdir}/symtest1/symtest2/recorded.links"
+               property="test.record.dir2.recorded"/>
+
+    <!-- THIS should not be set -->
+
+    <available file="${tdir}/symtest1/symtest3/recorded.links"
+               property="test.record.dir3.recorded"
+               value="ERROR: symtest3/recorded.links should not exist"/>
+
+
+  </target>
+
+  <!-- test for action = recreate -->
+
+  <!-- 
+    Deletes:
+         Link: ${tdir}/symtest1/link1==>${tdir}/symtest1/file1
+         Link: ${tdir}/symtest1/link2==>${tdir}/symtest1/symtest2/file2
+         Link: ${tdir}/symtest1/symtest2/link3==>
+                                           ${tdir}/symtest1/symtest2/file2
+         Link: ${tdir}/sumtest1/dirlink==>${tdir}/symtest1/symtest3
+
+    Recreates:
+         Link: ${tdir}/symtest1/link1==>${tdir}/symtest1/file1
+         Link: ${tdir}/symtest1/link2==>${tdir}/symtest1/symtest2/file2
+         Link: ${tdir}/symtest1/symtest2/link3==>
+                                           ${tdir}/symtest1/symtest2/file2
+         Link: ${tdir}/sumtest1/dirlink==>${tdir}/symtest1/symtest3
+  -->
+
+  <target name="test-recreate" depends="test-record">
+
+    <symlink action="delete" link="${tdir}/symtest1/link1"/>
+    <symlink action="delete" link="${tdir}/symtest1/link2"/>
+    <symlink action="delete" link="${tdir}/symtest1/symtest2/link3"/>
+    <symlink action="delete" link="${tdir}/symtest1/dirlink"/>
+
+    <available file="${tdir}/symtest1/link1"
+               property="test.recreate.link1.not.removed"
+               value="ERROR: rm -f symtest1/link1 failed"/>
+
+    <available file="${tdir}/symtest1/link2"
+               property="test.recreate.link2.not.removed"
+               value="ERROR: rm -f symtest1/link2 failed"/>
+
+    <available file="${tdir}/symtest1/symtest2/link3"
+               property="test.recreate.link3.not.removed"
+               value="ERROR: rm -f symtest1/symtest2/link3 failed"/>
+
+     <available file="${tdir}/symtest1/zdirlink"
+               property="test.recreate.zdirlink.not.removed"
+               value="ERROR: rm -f symtest1/zdirlink failed"/>
+
+    <sleep seconds="${delay}"/>  <!-- make sure OS has time to do the execs -->
+
+    <symlink action="recreate">
+      <fileset dir="${tdir}/symtest1" includes="**/recorded.links"/>
+    </symlink>
+
+    <sleep seconds="${delay}"/>  <!-- make sure OS has time to catch up -->
+
+    <available file="${tdir}/symtest1/link1"
+               property="test.recreate.link1.recreated"/>
+
+    <available file="${tdir}/symtest1/link2"
+               property="test.recreate.link2.recreated"/>
+
+    <available file="${tdir}/symtest1/symtest2/link3"
+               property="test.recreate.link3.recreated"/>
+
+    <available file="${tdir}/symtest1/dirlink"
+               property="test.recreate.dirlink.recreated"/>
+  </target>
+
+
+<!-- CALL THIS to clean things up afterwards -->
+
+  <target name="teardown">
+    <delete dir="${tdir}"/>
+  </target>
+
+</project>

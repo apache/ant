@@ -85,6 +85,8 @@ Other changes:
   Checkouts now have the option of using repository timestamps, instead
   of current.
 
+* new task <symlink> that creates and maintains symbolic links.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
