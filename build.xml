@@ -52,6 +52,8 @@
   <property name="regexp.package" value="${util.package}/regexp"/>
 
   <property name="manifest" value="src/etc/manifest"/>
+  
+  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico"/>
 
 
   <!--
@@ -294,7 +296,7 @@
   </patternset>
   <patternset id="teststhatfail">
   </patternset>
-
+  
   <!--
        ===================================================================
          Check to see what optional dependencies are available
@@ -756,16 +758,12 @@
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
 
     <copy todir="${dist.docs}">
-      <fileset dir="${docs.dir}">
-        <exclude name="**/images/**"/>
-      </fileset>
+      <fileset dir="${docs.dir}" excludes="${unfiltered.files}"/>
       <filterchain refid="ant.filters"/>
     </copy>
 
     <copy todir="${dist.docs}" filtering="false">
-      <fileset dir="${docs.dir}">
-        <include name="**/images/**"/>
-      </fileset>
+      <fileset dir="${docs.dir}" includes="${unfiltered.files}"/>
     </copy>
 
     <copy todir="${dist.dir}">
