@@ -115,7 +115,7 @@ public class JUnitTestRunner implements TestListener {
     public static final int FAILURES = 1;
 
     /**
-     * An error occured.
+     * An error occurred.
      */
     public static final int ERRORS = 2;
 
@@ -398,7 +398,7 @@ public class JUnitTestRunner implements TestListener {
     /**
      * Interface TestListener.
      *
-     * <p>An error occured while running the test.
+     * <p>An error occurred while running the test.
      */
     public void addError(Test test, Throwable t) {
         if (haltOnError) {

@@ -953,13 +953,13 @@ public class JUnitTask extends Task {
                     Test t = new Test() {
                         public int countTestCases() { return 0; }
                         public void run(TestResult r) { 
-                            throw new AssertionFailedError("Timeout occured");
+                            throw new AssertionFailedError("Timeout occurred");
                         }
                     };
                     formatter.startTest(t);
                     formatter
                         .addError(t, 
-                                  new AssertionFailedError("Timeout occured"));
+                                  new AssertionFailedError("Timeout occurred"));
 
                     formatter.endTestSuite(test);
                 } catch (IOException e) {}
