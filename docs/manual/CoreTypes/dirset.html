@@ -77,7 +77,7 @@ elements of <code>&lt;patternset&gt;</code> directly, as well as
 that have the text <code>Test</code> in their name.</p>
 <blockquote><pre>
 &lt;dirset dir=&quot;${build.dir}&quot;&gt;
-  &lt;patternset id=&quot;non.test.sources&quot;&gt;
+  &lt;patternset id=&quot;non.test.classes&quot;&gt;
     &lt;include name=&quot;apps/**/classes&quot;/&gt;
     &lt;exclude name=&quot;apps/**/*Test*&quot;/&gt;
   &lt;/patternset&gt;
@@ -87,11 +87,11 @@ that have the text <code>Test</code> in their name.</p>
 a PatternSet that can be referenced in other
 <code>&lt;dirset&gt;</code> elements, rooted at a different directory.</p>
 <blockquote><pre>
-&lt;dirset dir=&quot;${debug_build.src}&quot; &gt;
-  &lt;patternset refid=&quot;non.test.sources&quot;/&gt;
+&lt;dirset dir=&quot;${debug_build.dir}&quot; &gt;
+  &lt;patternset refid=&quot;non.test.classes&quot;/&gt;
 &lt;/dirset&gt;
 </pre></blockquote>
-<p>Groups all files in directory <code>${debug_build.src}</code>, using the
+<p>Groups all files in directory <code>${debug_build.dir}</code>, using the
 same patterns as the above example.</p>
 
 <hr>
