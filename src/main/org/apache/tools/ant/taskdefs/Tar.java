@@ -74,8 +74,7 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
 import org.apache.tools.tar.TarConstants;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarOutputStream;
-
-
+import org.apache.tools.zip.UnixStat;
 
 /**
  * Creates a tar archive.
@@ -403,6 +402,8 @@ public class Tar extends MatchingTask {
             if (!file.isDirectory()) {
                 te.setSize(file.length());
                 te.setMode(tarFileSet.getMode());
+            } else {
+                te.setMode(tarFileSet.getDirMode());
             }
             te.setUserName(tarFileSet.getUserName());
             te.setGroupName(tarFileSet.getGroup());
@@ -441,7 +442,8 @@ public class Tar extends MatchingTask {
     public static class TarFileSet extends FileSet {
         private String[] files = null;
 
-        private int mode = 0100644;
+        private int fileMode = UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
+        private int dirMode = UnixStat.DIR_FLAG | UnixStat.DEFAULT_DIR_PERM;
 
         private String userName = "";
         private String groupName = "";
@@ -482,11 +484,31 @@ public class Tar extends MatchingTask {
          * optional, default=0644
          */
         public void setMode(String octalString) {
-            this.mode = 0100000 | Integer.parseInt(octalString, 8);
+            this.fileMode = 
+                UnixStat.FILE_FLAG | Integer.parseInt(octalString, 8);
         }
 
         public int getMode() {
-            return mode;
+            return fileMode;
+        }
+
+        /**
+         * A 3 digit octal string, specify the user, group and 
+         * other modes in the standard Unix fashion; 
+         * optional, default=0755
+         *
+         * @since Ant 1.6
+         */
+        public void setDirMode(String octalString) {
+            this.dirMode = 
+                UnixStat.DIR_FLAG | Integer.parseInt(octalString, 8);
+        }
+
+        /**
+         * @since Ant 1.6
+         */
+        public int getDirMode() {
+            return dirMode;
         }
 
         /**

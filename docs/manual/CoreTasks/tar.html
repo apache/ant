@@ -121,8 +121,16 @@ attributes
   </tr>
   <tr>
     <td valign="top">mode</td>
-    <td valign="top">A 3 digit octal string, specify the user, group and other modes in
-                     the standard Unix fashion</td>
+    <td valign="top">A 3 digit octal string, specify the user, group
+    and other modes in the standard Unix fashion.  Only applies to
+    plain files.  Default is 644.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dirmode</td>
+    <td valign="top">A 3 digit octal string, specify the user, group
+    and other modes in the standard Unix fashion.  Only applies to
+    directories.  Default is 755. <em>since Ant 1.6</em>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>

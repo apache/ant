@@ -118,6 +118,9 @@ Other changes:
 * <style> has a new attribute reuseloadedstylesheet to work around a
   bug in widespread Xalan versions.
 
+* <tarfileset> has a new dirmode attribute to specify the permissions
+  for directories.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
