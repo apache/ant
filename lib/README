@@ -2,6 +2,7 @@ The required libraries should be placed here.
 
 The dependencies are:
 
+xerces.jar     - required for building Ant and other various things http://xml.apache.org/xerces-j/
 junit.jar      - required for junit tasks, available at www.junit.org
 stylebook.jar  - required by stylebook task, available in CVS repository of xml.apache.org
 testlet.jar    - required for test task, available with Avalon via java.apache.org/framework
