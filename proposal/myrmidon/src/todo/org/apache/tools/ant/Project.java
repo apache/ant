@@ -30,18 +30,12 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * @author duncan@x180.com
  */
 public class Project
-    extends AbstractLogEnabled
 {
     public final static int MSG_ERR = 0;
     public final static int MSG_WARN = 1;
     public final static int MSG_INFO = 2;
     public final static int MSG_VERBOSE = 3;
     public final static int MSG_DEBUG = 4;
-
-    // private set of constants to represent the state
-    // of a DFS of the Target dependencies
-    private final static String VISITING = "VISITING";
-    private final static String VISITED = "VISITED";
 
     private Hashtable properties = new Hashtable();
     private FilterSet globalFilterSet = new FilterSet();
@@ -51,11 +45,6 @@ public class Project
      */
     private Hashtable threadTasks = new Hashtable();
     private File baseDir;
-
-    public Logger hackGetLogger()
-    {
-        return super.getLogger();
-    }
 
     /**
      * get the base directory of the project as a file object
