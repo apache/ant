@@ -10,11 +10,10 @@ package org.apache.tools.todo.taskdefs.archive;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import org.apache.aut.tar.TarEntry;
-import org.apache.aut.tar.TarInputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.avalon.excalibur.tar.TarEntry;
+import org.apache.avalon.excalibur.tar.TarInputStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.taskdefs.archive.Expand;
 
 /**
  * Untar a file. Heavily based on the Expand task.
