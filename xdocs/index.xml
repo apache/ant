@@ -9,26 +9,24 @@
 
 <body>
 
- <section name="Ant wins Java Pro award">
-    <a href="http://www.ftponline.com/javapro/">
-      <img style="padding: 5px" src="images/jp_rcwinner_2003.gif" alt="" 
-           border="0" height="80" width="139" align="right"/>
-    </a>
-
+<section name="ApacheCon 2003">
+  <a href="http://apachecon.com/2003/US/index.html">
+    <img align="right"
+         border="0" src="http://jakarta.apache.org/images/logos/ac2003-150.gif"/>
+  </a>
     <p>
-    Following on from recently winning the Javaworld Editors' award, Ant has 
-    been awarded the Java Pro 2003 Readers' Choice Award for
-    </p>
-    <p>
-          <strong>Most Valuable Java Deployment Technology</strong>
+    <a href="http://apachecon.com/2003/US/index.html">ApacheCon US 2003</a>
+    is now open for registration. ApacheCon is the conference for all things
+    Apache. Come along and learn about a range of new technologies, meet some
+    Apache folks and share the knowledge.
     </p>
 </section>
-    
+
  <section name="Ant 1.5.4">
-    <p>Apache Ant 1.5.4 is now available for 
-     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+    <p>Apache Ant 1.5.4 is now available for
+     <a href="http://ant.apache.org/bindownload.cgi">download</a>.
     </p>
-    
+
     <div class="warning">
     <div class="label">Note</div>
     <div class="content">Ant 1.5.4 will be the last release that supports
@@ -36,7 +34,7 @@
       later
     </div>
     </div>
-    
+
   </section>
 
   <section name="Apache Ant">
@@ -86,28 +84,28 @@ on.
 </p>
 
   </section>
-  
+
   <section name="Documentation">
-  
+
 <p>
 You can view the documentation for the current release (Apache Ant 1.5.4)
 <a href="manual/index.html">online</a>
 </p>
 
 <p>
-Comprehensive documentation is included in the source and binary distributions. 
+Comprehensive documentation is included in the source and binary distributions.
 </p>
 
   </section>
 
   <section name="Nightly Builds">
     <p>
-    If you wish to use the latest Ant features, you can try downloading a nightly 
+    If you wish to use the latest Ant features, you can try downloading a nightly
     build from <a href="http://cvs.apache.org/builds/ant/nightly/">here</a>
     </p>
-    
+
   </section>
-  
+
   <section name="Get Involved">
 <ul>
 <li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>

@@ -1,9 +1,9 @@
-body {  
+body {
     background-color: #FFFFFF;
     color: #000000;
-    margin: 0px 0px 0px 0px; 
-    font-family: Verdana, Helvetica, sans-serif;  
-    font-size : 90%;  
+    margin: 0px 0px 0px 0px;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size : 90%;
 }
 
 a:link { color: #0F3660; }
@@ -12,15 +12,15 @@ a:active { color: #000066; }
 a:hover { color: #000066; }
 
 .menucontainer {
-    float: left; 
-    background-color: #4C6C8F; 
-    margin: 0px 5px; 
-    width: 250px; 
+    float: left;
+    background-color: #4C6C8F;
+    margin: 0px 5px;
+    width: 250px;
 }
 
 .menu {
-    font-size : 90%; 
-    padding: 3px 8px 5px 3px; 
+    font-size : 90%;
+    padding: 3px 8px 5px 3px;
     border-right: 1px solid #294563;
     border-left: 1px solid #294563;
 }
@@ -52,15 +52,15 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 .pre { white-space: pre;}
 .nowrap { white-space: nowrap;}
 
-.main { 
+.main {
     margin-left: 280px;
     margin-right: 5px;
 }
 
-.content { 
-    padding: 5px 5px 5px 10px; 
-    font : small Verdana, Helvetica, sans-serif;  
-    font-size : 90%; 
+.content {
+    padding: 5px 5px 5px 10px;
+    font : small Verdana, Helvetica, sans-serif;
+    font-size : 90%;
 }
 
 .content .ForrestTable { width: 100%; background-color: #7099C5; color: #ffffff; font-size : 90%;}
@@ -112,7 +112,7 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
     font-family: arial,helvetica,sanserif;
     background-color: #4C6C8F;
     color: #ffffff;
-    font-weight: bold; 
+    font-weight: bold;
     padding: 2px;
     clear: right;
 }
@@ -153,20 +153,20 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
     clear: both;
     text-align: center;
     margin: 0px;
-    border-top: thin solid #4C6C8F; 
+    border-top: thin solid #4C6C8F;
 }
 
 .bluebar {
-    padding: 5px 5px 5px 10px; 
+    padding: 5px 5px 5px 10px;
     background-color: #4C6C8F;
     margin: 0px;
 }
 
 .lightbluebar {
-    padding: 5px 5px 5px 10px; 
+    padding: 5px 5px 5px 10px;
     background-color: #CFDCED;
     margin: 0px;
-    border-top: 1px solid #294563; 
+    border-top: 1px solid #294563;
     border-bottom: 1px solid #294563;
 }
 
