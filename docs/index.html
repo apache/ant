@@ -5000,10 +5000,10 @@ output.
     registers a reference to this newly created task - at parser
     time.</li>
 
-  <li><code>init()</code> is called at parser time.</li>
-
   <li>The task gets a reference to the target it belongs to via its
     inherited <code>target</code> variable.</li>
+
+  <li><code>init()</code> is called at parser time.</li>
 
   <li>All child elements of the XML element corresponding to this task
     are created via this task's <code>createXXX()</code> methods or

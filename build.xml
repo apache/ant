@@ -324,5 +324,9 @@
     </junit>
   </target>
 
+  <target name="testcall">
+    <antcall target="testcall" />
+  </target>
+
 </project>
 

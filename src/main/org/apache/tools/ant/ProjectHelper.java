@@ -377,15 +377,16 @@ public class ProjectHelper {
 
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
             configureId(task, attrs);
-            task.init();
 
             // Top level tasks don't have associated targets
             if (target != null) {
                 task.setOwningTarget(target);
                 target.addTask(task);
+                task.init();
                 wrapper = task.getRuntimeConfigurableWrapper();
                 wrapper.setAttributes(attrs);
             } else {
+                task.init();
                 configure(task, attrs, project);
                 task.execute();
             }

@@ -141,9 +141,17 @@ public class Ant extends Task {
             p1.addTaskDefinition(taskName, taskClass);
         }
 
+        Hashtable typedefs = project.getDataTypeDefinitions();
+        Enumeration e = typedefs.keys();
+        while (e.hasMoreElements()) {
+            String typeName = (String) e.nextElement();
+            Class typeClass = (Class) typedefs.get(typeName);
+            p1.addDataTypeDefinition(typeName, typeClass);
+        }
+
         // set user-define properties
         Hashtable prop1 = project.getProperties();
-        Enumeration e = prop1.keys();
+        e = prop1.keys();
         while (e.hasMoreElements()) {
             String arg = (String) e.nextElement();
             String value = (String) prop1.get(arg);
@@ -188,6 +196,14 @@ public class Ant extends Task {
             
             if (target == null) {
                 target = p1.getDefaultTarget();
+            }
+
+            // Are we trying to call the target in which we are defined?
+            if (p1.getBaseDir().equals(project.getBaseDir()) &&
+                p1.getProperty("ant.file").equals(project.getProperty("ant.file")) &&
+                target.equals(this.getOwningTarget().getName())) { 
+
+                throw new BuildException("ant task calling it's own parent target");
             }
 
             p1.executeTarget(target);
