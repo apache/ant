@@ -99,8 +99,8 @@ public class DefaultPropertyResolver
      * @return the reolved property
      * @exception TaskException if an error occurs
      */
-    protected Object recursiveResolveProperty( final String content,
-                                               final Context context )
+    private Object recursiveResolveProperty( final String content,
+                                             final Context context )
         throws TaskException
     {
         int start = findNextProperty( content, 0 );

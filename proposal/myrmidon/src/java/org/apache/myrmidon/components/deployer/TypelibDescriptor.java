@@ -17,7 +17,7 @@ class TypelibDescriptor
 {
     private final String m_url;
 
-    public TypelibDescriptor( final String url )
+    protected TypelibDescriptor( final String url )
     {
         m_url = url;
     }

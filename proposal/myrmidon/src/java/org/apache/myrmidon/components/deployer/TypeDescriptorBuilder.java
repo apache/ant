@@ -72,7 +72,7 @@ class TypeDescriptorBuilder
     /**
      * Creates a type definition.
      */
-    public TypeDefinition createTypeDefinition( final Configuration configuration )
+    private TypeDefinition createTypeDefinition( final Configuration configuration )
         throws ConfigurationException
     {
         final String roleShorthand = configuration.getName();

@@ -31,6 +31,6 @@ public interface AspectManager
     void addAspectHandler( String name, AspectHandler handler )
         throws TaskException;
 
-    void removeAspectHandler( String name, AspectHandler handler )
+    void removeAspectHandler( String name )
         throws TaskException;
 }

@@ -117,7 +117,7 @@ public class DefaultExtensionManager
         return tools;
     }
 
-    private Extension createToolsExtension()
+    private static Extension createToolsExtension()
     {
         return new Extension( "com.sun.tools",
                               "1.0",

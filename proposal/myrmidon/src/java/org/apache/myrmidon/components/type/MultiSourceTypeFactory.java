@@ -111,12 +111,12 @@ public class MultiSourceTypeFactory
      *
      * @return the type class
      */
-    protected final Class getType()
+    private final Class getType()
     {
         return m_type;
     }
 
-    protected final TypeFactory getTypeFactory( final String name )
+    private final TypeFactory getTypeFactory( final String name )
     {
         return (TypeFactory)m_factories.get( name );
     }

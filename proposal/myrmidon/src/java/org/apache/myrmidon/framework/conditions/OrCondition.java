@@ -26,7 +26,7 @@ import org.apache.myrmidon.api.TaskContext;
 public class OrCondition
     implements Condition
 {
-    final ArrayList m_conditions = new ArrayList();
+    private final ArrayList m_conditions = new ArrayList();
 
     /**
      * Adds a condition.

@@ -59,7 +59,7 @@ class DefaultObjectConfigurer
      * created configurer will not handle any attributes, elements, or content.
      * Use the various <code>enable</code> methods to enable handling of these.
      */
-    public DefaultObjectConfigurer( final Class classInfo )
+    private DefaultObjectConfigurer( final Class classInfo )
     {
         m_class = classInfo;
     }
@@ -67,7 +67,7 @@ class DefaultObjectConfigurer
     /**
      * Enables all properties and content handling.
      */
-    public void enableAll()
+    private void enableAll()
         throws ConfigurationException
     {
         enableProperties();

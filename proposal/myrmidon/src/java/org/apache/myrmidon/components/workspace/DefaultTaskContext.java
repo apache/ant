@@ -391,7 +391,7 @@ public class DefaultTaskContext
      * @param value the value of proeprty
      * @exception TaskException if an error occurs
      */
-    protected void checkPropertyValid( final String name, final Object value )
+    private void checkPropertyValid( final String name, final Object value )
         throws TaskException
     {
         if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )

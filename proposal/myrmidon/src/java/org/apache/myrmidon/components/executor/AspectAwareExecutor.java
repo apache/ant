@@ -328,7 +328,7 @@ public class AspectAwareExecutor
         return parameters;
     }
 
-    protected final AspectManager getAspectManager()
+    private final AspectManager getAspectManager()
     {
         return m_aspectManager;
     }

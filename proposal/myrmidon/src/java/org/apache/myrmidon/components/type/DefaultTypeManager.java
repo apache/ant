@@ -44,7 +44,7 @@ public class DefaultTypeManager
         this( null );
     }
 
-    public DefaultTypeManager( final DefaultTypeManager parent )
+    private DefaultTypeManager( final DefaultTypeManager parent )
     {
         m_parent = parent;
         if( m_parent != null )
@@ -79,7 +79,7 @@ public class DefaultTypeManager
         return new DefaultTypeManager( this );
     }
 
-    protected final MultiSourceTypeFactory lookupFactory( final String roleName )
+    private final MultiSourceTypeFactory lookupFactory( final String roleName )
     {
         return (MultiSourceTypeFactory)m_roleMap.get( roleName );
     }

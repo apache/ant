@@ -51,7 +51,7 @@ public class DefaultAspectManager
         rebuildArrays();
     }
 
-    public synchronized void removeAspectHandler( final String name, final AspectHandler handler )
+    public synchronized void removeAspectHandler( final String name )
         throws TaskException
     {
         final AspectHandler entry = (AspectHandler)m_aspectMap.remove( name );
