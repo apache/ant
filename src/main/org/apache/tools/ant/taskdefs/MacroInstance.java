@@ -335,6 +335,9 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
             if (value == null) {
                 value = attribute.getDefault();
                 value = macroSubs(value, localProperties);
+            } else if (attribute instanceof MacroDef.DefineAttribute) {
+                // Do not process given value, will fail as unknown attribute
+                continue;
             }
             if (value == null) {
                 throw new BuildException(

@@ -226,18 +226,48 @@ public class MacroDef extends AntlibDefinition  {
         }
         if (attribute.getName().equals(textName)) {
             throw new BuildException(
-                "the attribute name \"" + attribute.getName()
+                "the name \"" + attribute.getName()
                 + "\" has already been used by the text element");
         }
         for (int i = 0; i < attributes.size(); ++i) {
-            if (((Attribute) attributes.get(i)).getName().equals(
-                    attribute.getName())) {
+            Attribute att = (Attribute) attributes.get(i);
+            if (att.getName().equals(attribute.getName())) {
                 throw new BuildException(
-                    "the attribute " + attribute.getName()
-                    + " has already been specified");
+                    "the name \"" + attribute.getName()
+                        + "\" has already been used in "
+                        + (att instanceof DefineAttribute ? "a define element"
+                           : "another attribute element"));
             }
         }
         attributes.add(attribute);
+    }
+
+    /**
+     * Add a define element.
+     *
+     * @param def a define nested element.
+     */
+    public void addConfiguredDefine(DefineAttribute def) {
+        if (def.getName() == null) {
+            throw new BuildException(
+                "the define nested element needed a \"name\" attribute");
+        }
+        if (def.getName().equals(textName)) {
+            throw new BuildException(
+                "the name \"" + def.getName()
+                + "\" has already been used by the text element");
+        }
+        for (int i = 0; i < attributes.size(); ++i) {
+            Attribute att = (Attribute) attributes.get(i);
+            if (att.getName().equals(def.getName())) {
+                throw new BuildException(
+                    "the name \"" + def.getName()
+                    + "\" has already been used in "
+                    + (att instanceof DefineAttribute ? "another define element"
+                       : "an attribute element"));
+            }
+        }
+        attributes.add(def);
     }
 
     /**
@@ -388,6 +418,46 @@ public class MacroDef extends AntlibDefinition  {
          */
         public int hashCode() {
             return objectHashCode(defaultValue) + objectHashCode(name);
+        }
+    }
+
+    /**
+     * A nested define element for the MacroDef task.
+     * It provides an attribute with a guatanteed unique value on every instantiation of the macro.
+     * @since ant 1.7
+     */
+    public static class DefineAttribute extends Attribute {
+        private static long count = 0;
+        private String prefix = "";
+
+        /**
+         * Set a prefix for the generated name
+         * @param prefixValue the prefix to use.
+         */
+        public void setPrefix(String prefixValue) {
+            prefix = prefixValue;
+        }
+
+        /**
+         * Set the default value.
+         * This is not allowed for the define nested element.
+         * @param defaultValue not used
+         */
+        public void setDefault(String defaultValue) {
+            throw new BuildException(
+                "Illegal attribute \"default\" for define element");
+        }
+
+        /**
+         * Get the default value for this attibute.
+         * This returns the name "prefix#this classname#<a counter>.
+         * @return the generated name
+         */
+        public String getDefault() {
+            synchronized (DefineAttribute.class) {
+                // Make sure counter is managed globally
+                return prefix + "#" + DefineAttribute.class.getName() + "#" + (++count);
+            }
         }
     }
 
