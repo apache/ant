@@ -144,7 +144,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
-        
     } //-- XSLTProcess
 
     /**
@@ -163,7 +162,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      *
      * <p>Setting this to true may get around a bug in certain
      * Xalan-J versions, default is false.</p>
-     *
+     * @param b a <code>boolean</code> value
      * @since Ant 1.5.2
      */
     public void setReloadStylesheet(boolean b) {
@@ -172,6 +171,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Defines the mapper to map source to destination files.
+     * @param mapper the mapper to use
      * @exception BuildException if more than one mapper is defined
      * @since Ant 1.6.2
      */
@@ -201,7 +201,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         if (inFile != null && !inFile.exists()) {
-            throw new BuildException("input file " + inFile.toString() + " does not exist", getLocation());
+            throw new BuildException(
+                "input file " + inFile.toString() + " does not exist", getLocation());
         }
 
         try {
@@ -588,6 +589,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         return xmlCatalog;
     }
 
+    /**
+     * Get an enumeration on the outputproperties.
+     * @return the outputproperties
+     */
     public Enumeration getOutputProperties() {
         return outputProperties.elements();
     }
@@ -728,6 +733,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         /**
          * Ensures that the param passes the conditions placed
          * on it with <code>if</code> and <code>unless</code> properties.
+         * @return true if the task passes the "if" and "unless" parameters
          */
         public boolean shouldUse() {
             if (ifProperty != null && project.getProperty(ifProperty) == null) {
@@ -801,6 +807,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Initialize internal instance of XMLCatalog
+     * @throws BuildException on error
      */
     public void init() throws BuildException {
         super.init();
@@ -882,7 +889,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
         /**
          * Create an instance of a factory attribute.
-         * the newly created factory attribute
+         * @param attr the newly created factory attribute
          */
         public void addAttribute(Attribute attr) {
             attributes.addElement(attr);
@@ -926,10 +933,23 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 return value;
             }
 
+            /**
+             * Not used.
+             * @param name not used
+             * @return null
+             * @throws BuildException never
+             */
             public Object createDynamicElement(String name) throws BuildException {
                 return null;
             }
 
+            /**
+             * Set an attribute.
+             * Only "name" and "value" are supported as names.
+             * @param name the name of the attribute
+             * @param value the value of the attribute
+             * @throws BuildException on error
+             */
             public void setDynamicAttribute(String name, String value)
                     throws BuildException {
                 // only 'name' and 'value' exist.
@@ -938,9 +958,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 } else if ("value".equalsIgnoreCase(name)) {
                     // a value must be of a given type
                     // say boolean|integer|string that are mostly used.
-                    if ("true".equalsIgnoreCase(value)
-                            || "false".equalsIgnoreCase(value)) {
-                        this.value = new Boolean(value);
+                    if ("true".equalsIgnoreCase(value)) {
+                        this.value = Boolean.TRUE;
+                    } else if ("false".equalsIgnoreCase(value)) {
+                        this.value = Boolean.FALSE;
                     } else {
                         try {
                             this.value = new Integer(value);
