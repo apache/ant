@@ -25,7 +25,7 @@
   <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/07/28</p>
+<p>Version 1.2 - 2000/08/09</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -1160,6 +1160,56 @@ systems.</p>
   <p><code>&lt;exec dir=&quot;${src}&quot; command=&quot;dir&quot; os=&quot;windows&quot;
   output=&quot;dir.txt&quot; /&gt;</code></p>
 </blockquote>
+
+<h3>Parameters specified as nested elements</h3>
+<h4><a name="env">env</a></h4>
+<p>It is possible to specify environment variables to pass to the
+system command via nested <code>&lt;env&gt;</code> elements.</p>
+<p>Please note that the environment of the current Ant process is
+<b>not</b> passed to the system command if you specify variables using
+<code>&lt;env&gt;</code>.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">key</td>
+    <td valign="top">The name of the environment variable.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The literal value for the environment variable.</td>
+    <td align="center" rowspan="3">Exactly one of these.</td>
+  </tr>
+  <tr>
+    <td valign="top">path</td>
+    <td valign="top">The value for a PATH like environment
+      variable. You can use ; or : as path separators and Ant will
+      convert it to the platform's local conventions.</td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">The value for the environment variable. Will be
+      replaced by the absolute filename of the file by Ant.</td>
+  </tr>
+</table>
+<h5>Examples</h5>
+<blockquote><pre>
+&lt;exec command="emacs" &gt;
+  &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot; /&gt;
+&lt;/exec&gt;
+</pre></blockquote>
+<p>starts <code>emacs</code> on display 1 of the X Window System.</p>
+<blockquote><pre>
+&lt;exec ... &gt;
+  &lt;env key=&quot;PATH&quot; path=&quot;${java.library.path}:${basedir}/bin&quot; /&gt;
+&lt;/exec&gt;
+</pre></blockquote>
+<p>adds <code>${basedir}/bin</code> to the <code>PATH</code> of the
+system command.</p>
 <hr>
 <h2><a name="unzip">Expand/Unzip/Unjar</a></h2>
 <h3>Description</h3>

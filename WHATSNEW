@@ -13,7 +13,7 @@ org.apache.tools.ant to org.apache.tools.ant.types.
 
 * the class attribute of <java> has been removed.
 
-* <patch> has lost some of its attributes.
+* <patch> and <javadoc> have lost some of their attributes.
 
 * <java> and <cvs> have lost some undocumented attributes.
 
@@ -34,10 +34,9 @@ all files if the stylesheet changes.
 * New data types fileset and patternset - expected to get a broader
 use, pending documentation.
 
-* You can specify environment variables to the exec task - pending
-documentation.
+* You can specify environment variables to <exec>.
 
-* Get can check whether a remote file is actually newer than a local
+* <get> can check whether a remote file is actually newer than a local
 copy before it starts a download (HTTP only).
 
 * Added a -logger option to allow the class which performs logging to be 
