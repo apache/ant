@@ -172,13 +172,19 @@ public class Chmod extends ExecuteOn {
 
     public void execute() throws BuildException {
         if (defaultSetDefined || defaultSet.getDir(project) == null) {
-            super.execute();
+            try {
+                super.execute();
+            } finally {
+                filesets.removeElement(defaultSet);
+            }
         } else if (isValidOs()) {
             // we are chmodding the given directory
-            createArg().setValue(defaultSet.getDir(project).getPath());
             Execute execute = prepareExec();
+            Commandline cloned = (Commandline) cmdl.clone();
+            cloned.createArgument().setValue(defaultSet.getDir(project)
+                                             .getPath());
             try {
-                execute.setCommandline(cmdl.getCommandline());
+                execute.setCommandline(cloned.getCommandline());
                 runExecute(execute);
             } catch (IOException e) {
                 throw new BuildException("Execute failed: " + e, e, location);
