@@ -27,4 +27,31 @@
       <property name="foo" value="bar"/>
     </msbuild>
   </target>
+
+  <target name="nested-file">
+    <property name="foo" value="bar"/>
+    <msbuild 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <build>
+        <Project DefaultTargets="echo">
+          <Target Name="echo">
+            <Task Name="Echo" Message="foo is ${foo}"/>
+          </Target>
+        </Project>
+      </build>
+    </msbuild>
+  </target>
+
+  <target name="nested-task">
+    <property name="foo" value="bar"/>
+    <msbuild 
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <build>
+        <Task Name="Echo" Message="foo is ${foo}"/>
+      </build>
+    </msbuild>
+  </target>
+
 </project>

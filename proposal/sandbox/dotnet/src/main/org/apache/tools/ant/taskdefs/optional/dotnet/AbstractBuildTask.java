@@ -54,9 +54,18 @@
 
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.XMLFragment;
+
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +90,11 @@ public abstract class AbstractBuildTask extends Task {
     private List properties = new ArrayList(1);
 
     /**
+     * Nested build file fragment.
+     */
+    private XMLFragment buildSnippet;
+
+    /**
      * Empty constructor.
      */
     protected AbstractBuildTask() {
@@ -91,6 +105,18 @@ public abstract class AbstractBuildTask extends Task {
      */
     public final void setBuildfile(File f) {
         buildFile = f;
+    }
+
+    /**
+     * Adds a build file fragment.
+     */
+    public void addBuild(XMLFragment f) {
+        if (buildSnippet == null) {
+            buildSnippet = f;
+        } else {
+            throw new BuildException("You must not specify more than one "
+                                     + "build element");
+        }
     }
 
     /**
@@ -181,9 +207,24 @@ public abstract class AbstractBuildTask extends Task {
     protected abstract String[] getPropertyArguments(List properties);
 
     /**
+     * Turn the DoucmentFragment into a DOM tree suitable as a build
+     * file when serialized.
+     *
+     * <p>Must throw a BuildException if the snippet can not be turned
+     * into a build file.</p>
+     */
+    protected abstract Element makeTree(DocumentFragment f);
+
+    /**
      * Perform the build.
      */
     public void execute() {
+        if (buildFile != null && buildSnippet != null) {
+            throw new BuildException("You must not specify the build file"
+                                     + " attribute and a nested build at the"
+                                     + " same time");
+        }
+
         DotNetExecTask exec = new DotNetExecTask();
         exec.setProject(getProject());
         exec.setExecutable(getExecutable());
@@ -196,10 +237,48 @@ public abstract class AbstractBuildTask extends Task {
         for (int i = 0; i < args.length; i++) {
             exec.createArg().setValue(args[i]);
         }
-        args = getBuildfileArguments(buildFile);
+
+        File generatedFile = null;
+        if (buildSnippet != null) {
+            try {
+                generatedFile = getBuildFile();
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+            args = getBuildfileArguments(generatedFile);
+        } else {
+            args = getBuildfileArguments(buildFile);
+        }        
+
         for (int i = 0; i < args.length; i++) {
             exec.createArg().setValue(args[i]);
         }
-        exec.execute();
+
+        try {
+            exec.execute();
+        } finally {
+            if (generatedFile != null) {
+                generatedFile.delete();
+            }
+        }
+    }
+
+    private File getBuildFile() throws IOException {
+        File f = null;
+        if (buildSnippet != null) {
+            Element e = makeTree(buildSnippet.getFragment());
+            f = FileUtils.newFileUtils().createTempFile("build", ".xml", null);
+            f.deleteOnExit();
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(f);
+                (new DOMElementWriter()).write(e, out);
+            } finally {
+                if (out != null) {
+                    out.close();
+                }
+            }
+        }
+        return f;
     }
 }

@@ -59,6 +59,11 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Runs a NAnt build process.
  */
@@ -101,5 +106,26 @@ public class NAntTask extends AbstractBuildTask {
             al.add("-D:" + p.getName() + "=" + p.getValue());
         }
         return (String[]) al.toArray(new String[al.size()]);
+    }
+
+    /**
+     * Turn the DocumentFragment into a DOM tree suitable as a build
+     * file when serialized.
+     *
+     * <p>If we have exactly one <project> child, return that.
+     * Otherwise assume that this is a valid build file snippet that
+     * just needs an empty project wrapped around it.</p>
+     */
+    protected Element makeTree(DocumentFragment f) {
+        NodeList nl = f.getChildNodes();
+        if (nl.getLength() == 1 
+            && nl.item(0).getNodeType() == Node.ELEMENT_NODE
+            && nl.item(0).getNodeName().equals("project")) {
+            return (Element) nl.item(0);
+        } else {
+            Element e = f.getOwnerDocument().createElement("project");
+            e.appendChild(f);
+            return e;
+        }
     }
 }

@@ -27,4 +27,30 @@
       <property name="foo" value="bar"/>
     </nant>
   </target>
+
+  <target name="nested-file">
+    <property name="foo" value="bar"/>
+    <nant
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <build>
+        <project basedir="." default="echo">
+          <target name="echo">
+            <echo message="foo is ${foo}"/>
+          </target>
+        </project>
+      </build>
+    </nant>
+  </target>
+
+  <target name="nested-task">
+    <property name="foo" value="bar"/>
+    <nant
+      xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+      >
+      <build>
+        <echo message="foo is ${foo}"/>
+      </build>
+    </nant>
+  </target>
 </project>

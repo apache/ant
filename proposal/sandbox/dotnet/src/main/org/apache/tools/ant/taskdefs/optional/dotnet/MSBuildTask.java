@@ -59,10 +59,17 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Runs a MSBuild build process.
  */
 public class MSBuildTask extends AbstractBuildTask {
+
+    private static final String TARGET = "generated-by-ant";
 
     public MSBuildTask() {
         super();
@@ -117,6 +124,34 @@ public class MSBuildTask extends AbstractBuildTask {
             return new String[]{sb.toString()};
         } else {
             return new String[0];
+        }
+    }
+
+    /**
+     * Turn the DocumentFragment into a DOM tree suitable as a build
+     * file when serialized.
+     *
+     * <p>If we have exactly one <Project> child, return that.
+     * Otherwise if we have only <Task> children, wrap them into a
+     * <Target> which in turn gets wrapped into a <Project>.
+     * Otherwise, fail.</p>
+     */
+    protected Element makeTree(DocumentFragment f) {
+        NodeList nl = f.getChildNodes();
+        if (nl.getLength() == 1 
+            && nl.item(0).getNodeType() == Node.ELEMENT_NODE
+            && nl.item(0).getNodeName().equals("Project")) {
+            return (Element) nl.item(0);
+        } else {
+            Element p = f.getOwnerDocument().createElement("Project");
+            p.setAttribute("DefaultTargets", TARGET);
+
+            Element t = f.getOwnerDocument().createElement("Target");
+            t.setAttribute("Name", TARGET);
+
+            p.appendChild(t);
+            t.appendChild(f);
+            return p;
         }
     }
 }
