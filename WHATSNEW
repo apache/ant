@@ -15,7 +15,7 @@ Other changes:
 
 * Ant now uses JAXP 1.1
 
-* rmic now supports Kaffe's version of rmic.
+* rmic now supports Kaffe's and Weblogic's version of rmic.
 
 * new magic property build.rmic to chose the rmic implementation
 

@@ -401,7 +401,9 @@ public class Rmic extends MatchingTask {
         // Move the generated source file to the base directory
         if (null != sourceBase) {
             for (int j = 0; j < fileCount; j++) {
-                moveGeneratedFile(baseDir, sourceBase, (String) compileList.elementAt(j));
+                moveGeneratedFile(baseDir, sourceBase,
+                                  (String) compileList.elementAt(j),
+                                  adapter);
             }
         }
         compileList.removeAllElements();
@@ -412,9 +414,12 @@ public class Rmic extends MatchingTask {
      *
      * @exception org.apache.tools.ant.BuildException When error copying/removing files.
      */
-    private void moveGeneratedFile (File baseDir, File sourceBaseFile, String classname)
+    private void moveGeneratedFile (File baseDir, File sourceBaseFile,
+                                    String classname,
+                                    RmicAdapter adapter)
         throws BuildException {
-        String stubFileName = classname.replace('.', File.separatorChar) + "_Stub.java";
+        String stubFileName = classname.replace('.', File.separatorChar)
+            + adapter.getStubClassSuffix()+".java";
         File oldStubFile = new File(baseDir, stubFileName);
         File newStubFile = new File(sourceBaseFile, stubFileName);
         try {
@@ -426,7 +431,8 @@ public class Rmic extends MatchingTask {
             throw new BuildException(msg, ioe, location);
         }
         if (!"1.2".equals(stubVersion)) {
-            String skelFileName = classname.replace('.', '/') + "_Skel.java";
+            String skelFileName = classname.replace('.', File.separatorChar)
+                + adapter.getSkelClassSuffix()+".java";
             File oldSkelFile = new File(baseDir, skelFileName);
             File newSkelFile = new File(sourceBaseFile, skelFileName);
             try {

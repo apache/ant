@@ -76,21 +76,34 @@ import java.util.Vector;
 public abstract class DefaultRmicAdapter implements RmicAdapter {
 
     private Rmic attributes;
+    private FileNameMapper mapper;
+
+    public DefaultRmicAdapter() {
+    }
 
     public void setRmic( Rmic attributes ) {
         this.attributes = attributes;
+        mapper = new RmicFileNameMapper();
     }
 
     public Rmic getRmic() {
         return attributes;
     }
 
+    public String getStubClassSuffix() {
+        return "_Stub";
+    }        
+
+    public String getSkelClassSuffix() {
+        return "_Skel";
+    }        
+
     /**
-     * This implementation maps *.class to *_Stub.class and - if
-     * stubversion is not 1.2 - to _Skel.class.
+     * This implementation maps *.class to *getStubClassSuffix().class and - if
+     * stubversion is not 1.2 - to *getSkelClassSuffix().class.
      */
     public FileNameMapper getMapper() {
-        return new RmicFileNameMapper();
+        return mapper;
     }
 
     /**
@@ -297,13 +310,13 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         RmicFileNameMapper() {
             stubMapper = new GlobPatternMapper();
             stubMapper.setFrom("*.class");
-            stubMapper.setTo("*_Stub.class");
+            stubMapper.setTo("*"+getStubClassSuffix()+".class");
 
             // no _Skel file in stub version 1.2
             if (!"1.2".equals(attributes.getStubVersion())) {
                 skelMapper = new GlobPatternMapper();
                 skelMapper.setFrom("*.class");
-                skelMapper.setTo("*_Skel.class");
+                skelMapper.setTo("*"+getSkelClassSuffix()+".class");
             }
         }
 
@@ -319,8 +332,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         public String[] mapFileName(String name) {
             String[] stubName = stubMapper.mapFileName(name);
 
-            if (stubName == null || name.endsWith("_Stub.class") 
-                || name.endsWith("_Skel.class")) {
+            if (stubName == null
+                || name.endsWith(getStubClassSuffix()+".class") 
+                || name.endsWith(getSkelClassSuffix()+".class")) {
                 // Not a .class file
                 return null;
             }

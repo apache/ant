@@ -110,8 +110,10 @@ public class RmicAdapterFactory {
 
         if ( rmicType.equalsIgnoreCase("sun") ) {
             return new SunRmic();
-        } if ( rmicType.equalsIgnoreCase("kaffe") ) {
+        } else if ( rmicType.equalsIgnoreCase("kaffe") ) {
             return new KaffeRmic();
+        } else if ( rmicType.equalsIgnoreCase("weblogic") ) {
+            return new WLRmic();
         }
         return resolveClassName( rmicType );
     }
