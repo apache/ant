@@ -26,161 +26,92 @@ import org.apache.tools.ant.Task;
  * @author Nick Pellow
  * @version $Revision$, $Date$
  */
-
-public class SoundTask extends Task
+public class SoundTask
+    extends Task
 {
-
-    private BuildAlert success = null;
-    private BuildAlert fail = null;
-
-    public SoundTask()
-    {
-    }
+    private BuildAlert m_success;
+    private BuildAlert m_fail;
 
     public BuildAlert createFail()
     {
-        fail = new BuildAlert();
-        return fail;
+        m_fail = new BuildAlert();
+        return m_fail;
     }
 
     public BuildAlert createSuccess()
     {
-        success = new BuildAlert();
-        return success;
+        m_success = new BuildAlert();
+        return m_success;
     }
 
     public void execute()
     {
-
-        AntSoundPlayer soundPlayer = new AntSoundPlayer();
-
-        if( success == null )
+        final AntSoundPlayer soundPlayer = new AntSoundPlayer();
+        if( null == m_success )
         {
             getLogger().warn( "No nested success element found." );
         }
         else
         {
-            soundPlayer.addBuildSuccessfulSound( success.getSource(),
-                                                 success.getLoops(), success.getDuration() );
+            soundPlayer.addBuildSuccessfulSound( getRandomSource( m_success ),
+                                                 m_success.getLoops(), m_success.getDuration() );
         }
 
-        if( fail == null )
+        if( null == m_fail )
         {
             getLogger().warn( "No nested failure element found." );
         }
         else
         {
-            soundPlayer.addBuildFailedSound( fail.getSource(),
-                                             fail.getLoops(), fail.getDuration() );
+            soundPlayer.addBuildFailedSound( getRandomSource( m_fail ),
+                                             m_fail.getLoops(), m_fail.getDuration() );
         }
 
-        getProject().addBuildListener( soundPlayer );
-
+        getProject().addProjectListener( soundPlayer );
     }
 
     /**
-     * A class to be extended by any BuildAlert's that require the output of
-     * sound.
+     * Gets the location of the file to get the audio.
+     *
+     * @return The Source value
      */
-    public class BuildAlert
+    private File getRandomSource( final BuildAlert alert )
     {
-        private File source = null;
-        private int loops = 0;
-        private Long duration = null;
-
-        /**
-         * Sets the duration in milliseconds the file should be played.
-         *
-         * @param duration The new Duration value
-         */
-        public void setDuration( Long duration )
+        final File source = alert.getSource();
+        // Check if source is a directory
+        if( source.exists() )
         {
-            this.duration = duration;
-        }
-
-        /**
-         * Sets the number of times the source file should be played.
-         *
-         * @param loops the number of loops to play the source file
-         */
-        public void setLoops( int loops )
-        {
-            this.loops = loops;
-        }
-
-        /**
-         * Sets the location of the file to get the audio.
-         *
-         * @param source the name of a sound-file directory or of the audio file
-         */
-        public void setSource( File source )
-        {
-            this.source = source;
-        }
-
-        /**
-         * Gets the duration in milliseconds the file should be played.
-         *
-         * @return The Duration value
-         */
-        public Long getDuration()
-        {
-            return this.duration;
-        }
-
-        /**
-         * Sets the number of times the source file should be played.
-         *
-         * @return the number of loops to play the source file
-         */
-        public int getLoops()
-        {
-            return this.loops;
-        }
-
-        /**
-         * Gets the location of the file to get the audio.
-         *
-         * @return The Source value
-         */
-        public File getSource()
-        {
-            File nofile = null;
-            // Check if source is a directory
-            if( source.exists() )
+            if( source.isDirectory() )
             {
-                if( source.isDirectory() )
+                // get the list of files in the dir
+                final String[] entries = source.list();
+                ArrayList files = new ArrayList();
+                for( int i = 0; i < entries.length; i++ )
                 {
-                    // get the list of files in the dir
-                    String[] entries = source.list();
-                    ArrayList files = new ArrayList();
-                    for( int i = 0; i < entries.length; i++ )
+                    File f = new File( source, entries[ i ] );
+                    if( f.isFile() )
                     {
-                        File f = new File( source, entries[ i ] );
-                        if( f.isFile() )
-                        {
-                            files.add( f );
-                        }
+                        files.add( f );
                     }
-                    if( files.size() < 1 )
-                    {
-                        throw new TaskException( "No files found in directory " + source );
-                    }
-                    int numfiles = files.size();
-                    // get a random number between 0 and the number of files
-                    Random rn = new Random();
-                    int x = rn.nextInt( numfiles );
-                    // set the source to the file at that location
-                    this.source = (File)files.get( x );
                 }
+                if( files.size() < 1 )
+                {
+                    throw new TaskException( "No files found in directory " + source );
+                }
+                final int numfiles = files.size();
+                // get a random number between 0 and the number of files
+                final Random random = new Random();
+                final int x = random.nextInt( numfiles );
+                // set the source to the file at that location
+                source = (File)files.get( x );
             }
-            else
-            {
-                getLogger().warn( source + ": invalid path." );
-                this.source = nofile;
-            }
-            return this.source;
         }
+        else
+        {
+            getLogger().warn( source + ": invalid path." );
+            source = null;
+        }
+        return source;
     }
 }
 
