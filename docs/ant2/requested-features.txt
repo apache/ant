@@ -184,3 +184,10 @@ V. Things we probably don't agree on.
 
 * Multithreaded execution of targets.
 
+* Project inheritance
+
+  What's this?
+
+* Target inheritance
+
+  What's this?
