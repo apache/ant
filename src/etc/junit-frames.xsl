@@ -67,6 +67,7 @@
 
  @author Stephane Bailliez <a href="mailto:sbailliez@apache.org"/>
  @author Erik Hatcher <a href="mailto:ehatcher@apache.org"/>
+ @author Martijn Kruithof <a href="mailto:martijn@kruithof.xs4all.nl"/>
 
 -->
 <xsl:param name="output.dir" select="'.'"/>
@@ -350,7 +351,10 @@ h6 {
             <table width="100%">
                 <tr>
                     <td nowrap="nowrap">
-                        <h2><a href="package-summary.html" target="classFrame"><xsl:value-of select="$name"/></a></h2>
+                        <h2><a href="package-summary.html" target="classFrame">
+                            <xsl:value-of select="$name"/>
+                            <xsl:if test="$name = ''">&lt;none&gt;</xsl:if>
+                        </a></h2>
                     </td>
                 </tr>
             </table>
@@ -439,8 +443,9 @@ h6 {
 <xsl:template match="testsuite" mode="all.packages">
     <tr>
         <td nowrap="nowrap">
-            <a href="{translate(@package,'.','/')}/package-summary.html" target="classFrame">
+            <a href="./{translate(@package,'.','/')}/package-summary.html" target="classFrame">
                 <xsl:value-of select="@package"/>
+                <xsl:if test="@package = ''">&lt;none&gt;</xsl:if>
             </a>
         </td>
     </tr>
@@ -520,7 +525,10 @@ h6 {
                             <xsl:otherwise>Pass</xsl:otherwise>
                         </xsl:choose>
                     </xsl:attribute>
-                    <td><a href="{translate(@package,'.','/')}/package-summary.html"><xsl:value-of select="@package"/></a></td>
+                    <td><a href="./{translate(@package,'.','/')}/package-summary.html">
+                        <xsl:value-of select="@package"/>
+                        <xsl:if test="@package = ''">&lt;none&gt;</xsl:if>
+                    </a></td>
                     <td><xsl:value-of select="sum($insamepackage/@tests)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@errors)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@failures)"/></td>

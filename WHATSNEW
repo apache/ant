@@ -224,6 +224,10 @@ Fixed bugs:
 
 * replace would change \r\n into \r\r\n under Windows.
 
+* junitreport with frames did not display a link for classes without a package
+  or in the top package.
+  Bugzilla Report 21915.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
