@@ -115,11 +115,12 @@ public class CompilerAdapterFactory {
                 if (isClassicCompilerSupported) {
                     return new Javac12();
                 } else {
-                    throw new BuildException("This version of java does "
+                    task.log("This version of java does "
                                              + "not support the classic "
-                                             + "compiler");
+                                             + "compiler; upgrading to modern",
+                                             Project.MSG_WARN);
+                    compilerType="modern";
                 }
-
             }
             //on java<=1.3 the modern falls back to classic if it is not found
             //but on java>=1.4 we just bail out early
