@@ -130,7 +130,6 @@ public class MacroInstance extends Task implements DynamicConfigurator {
     private static final int STATE_NORMAL         = 0;
     private static final int STATE_EXPECT_BRACKET = 1;
     private static final int STATE_EXPECT_NAME    = 2;
-    private static final int STATE_EXPECT_EXCAPE  = 3;
 
     private String macroSubs(String s, Map macroMapping) {
         if (s == null) {
@@ -155,7 +154,8 @@ public class MacroInstance extends Task implements DynamicConfigurator {
                         state = STATE_EXPECT_NAME;
                         macroName = new StringBuffer();
                     } else if (ch == '@') {
-                        state = STATE_EXPECT_EXCAPE;
+                        state = STATE_NORMAL;
+                        ret.append('@');
                     } else {
                         state = STATE_NORMAL;
                         ret.append('@');
@@ -177,15 +177,6 @@ public class MacroInstance extends Task implements DynamicConfigurator {
                         macroName.append(ch);
                     }
                     break;
-                case STATE_EXPECT_EXCAPE:
-                    state = STATE_NORMAL;
-                    if (ch == '{') {
-                        ret.append("@");
-                    } else {
-                        ret.append("@@");
-                    }
-                    ret.append(ch);
-                    break;
                 default:
                     break;
             }
@@ -199,9 +190,6 @@ public class MacroInstance extends Task implements DynamicConfigurator {
             case STATE_EXPECT_NAME:
                 ret.append("@{");
                 ret.append(macroName.toString());
-                break;
-            case STATE_EXPECT_EXCAPE:
-                ret.append("@@");
                 break;
             default:
                 break;
