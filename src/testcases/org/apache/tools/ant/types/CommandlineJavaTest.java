@@ -106,7 +106,8 @@ public class CommandlineJavaTest extends TestCase {
         }
 
         c.createClasspath(project).setLocation(project.resolveFile("lib/optional/junit.jar"));
-        c.createClasspath(project).setLocation(project.resolveFile("bootstrap/lib/ant.jar"));
+        c.createClasspath(project).setLocation(project.resolveFile(
+            System.getProperty("ant.home")+"/lib/ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
         //        assertEquals("with classpath", "java", s[0]);
