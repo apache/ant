@@ -47,10 +47,10 @@ public class RedirectorElement extends DataType {
     private boolean usingError = false;
 
     /**
-      * Indicates if standard error should be logged to Ant's log system
-      * rather than the output. This has no effect if standard error is
-      * redirected to a file or property.
-      */
+     * Indicates if standard error should be logged to Ant's log system
+     * rather than the output. This has no effect if standard error is
+     * redirected to a file or property.
+     */
     private Boolean logError;
 
     /** The name of the property into which output is to be stored */
@@ -165,6 +165,10 @@ public class RedirectorElement extends DataType {
             || inputString != null
             || logError != null
             || append != null
+            || createEmptyFiles != null
+            || inputEncoding != null
+            || outputEncoding != null
+            || errorEncoding != null
             || outputProperty != null
             || errorProperty != null) {
             throw tooManyAttributes();

@@ -130,7 +130,7 @@ public class ReaderInputStream extends InputStream {
 
         System.arraycopy(slack, begin, b, off, len);
 
-        if ((begin+= len) >= slack.length) {
+        if ((begin += len) >= slack.length) {
             slack = null;
         }
 

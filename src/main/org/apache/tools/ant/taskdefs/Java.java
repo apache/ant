@@ -332,6 +332,7 @@ public class Java extends Task {
      */
     public void setResultProperty(String resultProperty) {
         this.resultProperty = resultProperty;
+        incompatibleWithSpawn = true;
     }
 
     /**
@@ -474,7 +475,7 @@ public class Java extends Task {
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
-        incompatibleWithSpawn = true;
+        incompatibleWithSpawn |= logError;
     }
 
     /**

@@ -78,7 +78,7 @@ public class Redirector {
 
     /**
      * The file(s) from which standard input is being taken.
-     * If > 1, files' content will be concatenated in the order received.
+     * If &gt; 1, files' content will be concatenated in the order received.
      */
     private File[] input;
 
@@ -137,7 +137,7 @@ public class Redirector {
     /** The stream for input */
     private InputStream inputStream = null;
 
-    /** Stream which are used for line oriented output */
+    /** Stream which is used for line oriented output */
     private PrintStream outPrintStream = null;
 
     /** Stream which is used for line oriented error output */
