@@ -81,12 +81,12 @@ import org.apache.tools.ant.types.Commandline;
  * PVCS is a version control system
  * developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
  * <br>
- * Before using this tag, the user running ant must have access to the commands 
+ * Before using this tag, the user running ant must have access to the commands
  * of PVCS (get and pcli) and must have access to the repository. Note that the way to specify
  * the repository is platform dependent so use property to specify location of repository.
  * <br>
  * This version has been tested agains PVCS version 6.5 and 6.6 under Windows and Solaris.
- 
+
  *
  * <b>19-04-2001</b> <p>The task now has a more robust
  * parser. It allows for platform independant file paths
@@ -107,6 +107,7 @@ import org.apache.tools.ant.types.Commandline;
  * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
  * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
  * @author <a href="mailto:snewton@standard.com">Steven E. Newton</a>
+ * @author <a href="mailto:dickinson.j@ucles.org.uk">Jon Dickinson</a>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;
@@ -123,6 +124,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private String filenameFormat;
     private String lineStart;
     private String userId;
+    private String config;
     /**
      * Constant for the thing to execute
      */
@@ -199,7 +201,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
         // default pvcs project is "/"
         if (getPvcsproject() == null && getPvcsprojects().isEmpty()) {
-			pvcsProject = "/";
+            pvcsProject = "/";
         }
 
         if (getPvcsproject() != null) {
@@ -226,14 +228,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
             tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
             log(commandLine.describeCommand(), Project.MSG_VERBOSE);
             try {
-                result = runCmd(commandLine, 
-                                new PumpStreamHandler(fos, 
+                result = runCmd(commandLine,
+                                new PumpStreamHandler(fos,
                                     new LogOutputStream(this,
                                                         Project.MSG_WARN)));
             } finally {
                 fos.close();
             }
-            
+
             if (result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
                 throw new BuildException(msg, getLocation());
@@ -255,6 +257,11 @@ public class Pvcs extends org.apache.tools.ant.Task {
             // Launch get on output captured from PCLI lvf
             commandLine.clearArgs();
             commandLine.setExecutable(getExecutable(GET_EXE));
+
+            if(getConfig() != null && getConfig().length()>0)
+            {
+                commandLine.createArgument().setValue("-c" + getConfig());
+            }
 
             if (getForce() != null && getForce().equals("yes")) {
                 commandLine.createArgument().setValue("-Y");
@@ -338,18 +345,18 @@ public class Pvcs extends org.apache.tools.ant.Task {
                     if (index > -1) {
                         File dir = new File(f.substring(0, index));
                         if (!dir.exists()) {
-                            log("Creating " + dir.getAbsolutePath(), 
+                            log("Creating " + dir.getAbsolutePath(),
                                 Project.MSG_VERBOSE);
                             if (dir.mkdirs()) {
-                                log("Created " + dir.getAbsolutePath(), 
+                                log("Created " + dir.getAbsolutePath(),
                                     Project.MSG_INFO);
                             } else {
-                                log("Failed to create " 
-                                    + dir.getAbsolutePath(), 
+                                log("Failed to create "
+                                    + dir.getAbsolutePath(),
                                     Project.MSG_INFO);
                             }
                         } else {
-                            log(dir.getAbsolutePath() + " exists. Skipping", 
+                            log(dir.getAbsolutePath() + " exists. Skipping",
                                 Project.MSG_VERBOSE);
                         }
                     } else {
@@ -367,7 +374,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
             }
         }
     }
-        
+
 
     /**
      * Simple hack to handle the PVCS command-line tools botch when
@@ -416,7 +423,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * The format of the folder names; optional.
-     * This must be in a format suitable for 
+     * This must be in a format suitable for
      * <code>java.text.MessageFormat</code>.
      *  Index 1 of the format will be used as the file name.
      *  Defaults to <code>{0}-arc({1})</code>
@@ -445,7 +452,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * need to change this value, UNC names will always be
      * accepted.
      */
-        
+
     public void setLineStart(String l) {
         lineStart = l;
     }
@@ -492,10 +499,10 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Workspace to use; optional.  
+     * Workspace to use; optional.
      * By specifying a workspace, the files are extracted to that location.
-     * A PVCS workspace is a name for a location of the workfiles and 
-     * isn't as such the location itself. 
+     * A PVCS workspace is a name for a location of the workfiles and
+     * isn't as such the location itself.
      * You define the location for a workspace using the PVCS GUI clients.
      * If this isn't specified the default workspace for the current user is used.
      * @param ws String
@@ -536,12 +543,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Specifies the value of the force argument; optional.
-     * If set to <i>yes</i> all files that exists and are 
-     * writable are overwritten. Default <i>no</i> causes the files 
-     * that are writable to be ignored. This stops the PVCS command 
+     * If set to <i>yes</i> all files that exists and are
+     * writable are overwritten. Default <i>no</i> causes the files
+     * that are writable to be ignored. This stops the PVCS command
      * <i>get</i> to stop asking questions!
      * @todo make a boolean setter
-     * @param repo String (yes/no)
+     * @param f String (yes/no)
      */
     public void setForce(String f) {
         if (f != null && f.equalsIgnoreCase("yes")) {
@@ -561,7 +568,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Specifies the name of the promotiongroup argument
-     * @param repo String
+     * @param w String
      */
     public void setPromotiongroup(String w) {
         promotiongroup = w;
@@ -577,7 +584,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Only files marked with this label are extracted; optional.
-     * @param repo String
+     * @param l String
      */
     public void setLabel(String l) {
         label = l;
@@ -617,7 +624,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Specify a project within the PVCS repository to extract files from.
-     * @param PvcsProject
+     * @param p
      */
     public void addPvcsproject(PvcsProject p) {
         pvcsProjects.addElement(p);
@@ -628,12 +635,30 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * If set to <i>true</i> files are fetched only if 
+     * If set to <i>true</i> files are fetched only if
      * newer than existing local files; optional, default false.
      */
     public void setUpdateOnly(boolean l) {
         updateOnly = l;
     }
+
+    /**
+     * returns the path of the configuration file to be used
+     * @return the path of the config file
+     */
+    public String getConfig() {
+        return config;
+    }
+
+    /**
+     * Sets a configuration file other than the default to be used.
+     * These files have a .cfg extension and are often found in archive or pvcsprop folders.
+     * @param f config file - can be given absolute or relative to ant basedir
+     */
+    public void setConfig(File f) {
+        config = f.toString();
+    }
+
 
     public String getUserId() {
         return userId;
@@ -643,7 +668,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * User ID; unused.
      * @ant.attribute ignore="true"
      */
-     
+
     public void setUserId(String u) {
         userId = u;
     }

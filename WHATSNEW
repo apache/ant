@@ -395,6 +395,9 @@ Bugzilla Report 19180.
   if ejbjar has cmpversion="2.0" set
   Bugzilla Reports 14707 and 14709.
 
+* <pvcs> config attribute added to set the location of a specific PVCS .cfg file
+  Bugzilla Report 9752
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
