@@ -231,6 +231,7 @@ public class Project {
      *
      * @param defaultInputStream the default input stream to use when input 
      *        is reuested.
+     * @since Ant 1.6
      */
     public void setDefaultInputStream(InputStream defaultInputStream) {
         this.defaultInputStream = defaultInputStream;
@@ -1293,6 +1294,7 @@ public class Project {
      * @return the number of bytes read
      * 
      * @exception IOException if the data cannot be read
+     * @since Ant 1.6
      */
     public int defaultInput(byte[] buffer, int offset, int length) 
         throws IOException {
@@ -1313,6 +1315,7 @@ public class Project {
      * @return the number of bytes read
      * 
      * @exception IOException if the data cannot be read
+     * @since Ant 1.6
      */     
     public int demuxInput(byte[] buffer, int offset, int length) 
         throws IOException {

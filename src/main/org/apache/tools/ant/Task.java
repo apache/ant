@@ -323,6 +323,7 @@ public abstract class Task extends ProjectComponent {
      * @return the number of bytes read
      * 
      * @exception IOException if the data cannot be read
+     * @since Ant 1.6
      */
     protected int handleInput(byte[] buffer, int offset, int length) 
         throws IOException {

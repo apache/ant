@@ -298,6 +298,8 @@ public class Ant extends Task {
 
     /**
      * @see Task#handleInput(byte[], int, int)
+     * 
+     * @since Ant 1.6
      */
     public int handleInput(byte[] buffer, int offset, int length) 
         throws IOException {

@@ -158,15 +158,9 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Handle an input request by this element
-     *
-     * @param buffer the buffer into which data is to be read.
-     * @param offset the offset into the buffer at which data is stored.
-     * @param length the amount of data to read
-     *
-     * @return the number of bytes read
+     * @see Task#handleInput(byte[], int, int)
      * 
-     * @exception IOException if the data cannot be read
+     * @since Ant 1.6
      */
     protected int handleInput(byte[] buffer, int offset, int length) 
         throws IOException {
