@@ -1,6 +1,12 @@
 Changes from Ant 1.5.1 to current CVS version
 =============================================
 
+Fixed bugs:
+-----------
+
+* <manifest> wouldn't update an existing manifest if only an attribute
+  of an existing section changed.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
