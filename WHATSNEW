@@ -161,6 +161,8 @@ Other changes:
   
 * <tstamp> now supports a new "prefix" attribute to prefix properties set.
 
+* you can now specify the -sourcepath for <javac> explicitly.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -111,6 +111,7 @@ public class Javac extends MatchingTask {
     private Path src;
     private File destDir;
     private Path compileClasspath;
+    private Path compileSourcepath;
     private String encoding;
     private boolean debug = false;
     private boolean optimize = false;
@@ -220,6 +221,39 @@ public class Javac extends MatchingTask {
      */
     public File getDestdir() {
         return destDir;
+    }
+
+    /**
+     * Set the sourcepath to be used for this compilation.
+     */
+    public void setSourcepath(Path sourcepath) {
+        if (compileSourcepath == null) {
+            compileSourcepath = sourcepath;
+        } else {
+            compileSourcepath.append(sourcepath);
+        }
+    }
+
+    /** Gets the sourcepath to be used for this compilation. */
+    public Path getSourcepath() {
+        return compileSourcepath;
+    }
+
+    /**
+     * Maybe creates a nested sourcepath element.
+     */
+    public Path createSourcepath() {
+        if (compileSourcepath == null) {
+            compileSourcepath = new Path(project);
+        }
+        return compileSourcepath.createPath();
+    }
+
+    /**
+     * Adds a reference to a CLASSPATH defined elsewhere.
+     */
+    public void setSourcepathRef(Reference r) {
+        createSourcepath().setRefid(r);
     }
 
     /**

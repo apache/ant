@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,6 +97,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected Path bootclasspath;
     protected Path extdirs;
     protected Path compileClasspath;
+    protected Path compileSourcepath;
     protected Project project;
     protected Location location;
     protected boolean includeAntRuntime;
@@ -125,6 +126,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         extdirs = attributes.getExtdirs();
         compileList = attributes.getFileList();
         compileClasspath = attributes.getClasspath();
+        compileSourcepath = attributes.getSourcepath();
         project = attributes.getProject();
         location = attributes.getLocation();
         includeAntRuntime = attributes.getIncludeantruntime();
@@ -184,6 +186,14 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     protected Commandline setupJavacCommandlineSwitches(Commandline cmd,
                                                         boolean useDebugLevel) {
         Path classpath = getCompileClasspath();
+        // For -sourcepath, use the "sourcepath" value if present.
+        // Otherwise default to the "srcdir" value.
+        Path sourcepath = null;
+        if (compileSourcepath != null) {
+            sourcepath = compileSourcepath;
+        } else {
+            sourcepath = src;
+        }
 
         // we cannot be using Java 1.0 when forking, so we only have to
         // distinguish between Java 1.1, and Java 1.2 and higher, as Java 1.1
@@ -237,12 +247,15 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cp.addExtdirs(extdirs);
             }
             cp.append(classpath);
-            cp.append(src);
+            cp.append(sourcepath);
             cmd.createArgument().setPath(cp);
         } else {
             cmd.createArgument().setPath(classpath);
-            cmd.createArgument().setValue("-sourcepath");
-            cmd.createArgument().setPath(src);
+            // If the buildfile specifies sourcepath="", then don't output any sourcepath.
+            if (sourcepath.size() > 0) {
+                cmd.createArgument().setValue("-sourcepath");
+                cmd.createArgument().setPath(sourcepath);
+            }
             if (target != null) {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
