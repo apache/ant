@@ -174,6 +174,7 @@ public class JUnitTask extends Task {
     private Path antRuntimeClasses = null;
 
     private boolean showOutput = false;
+    private File tmpDir;
 
     /**
      * If true, smartly filter the stack frames of
@@ -502,6 +503,15 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Where Ant should place temporary files.
+     *
+     * @since Ant 1.6
+     */
+    public void setTempdir(File tmpDir) {
+        this.tmpDir = tmpDir;
+    }
+
+    /**
      * Adds the jars or directories containing Ant, this task and
      * JUnit to the classpath - this should make the forked JVM work
      * without having to specify them directly.
@@ -636,6 +646,7 @@ public class JUnitTask extends Task {
         // forked test
         File propsFile =
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
+                                                    tmpDir != null ? tmpDir :
                                                     getProject().getBaseDir());
         cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());

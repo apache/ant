@@ -196,6 +196,9 @@ Other changes:
 * <concat> now supports filtering and can check timestamps before
   overriding a file.  Bugzilla Report 18166.
 
+* <junit> has a new attribute tempdir that controls the placement of
+  temporary files.  Bugzilla Report 15454.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
