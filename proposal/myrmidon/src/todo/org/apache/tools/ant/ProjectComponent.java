@@ -7,9 +7,10 @@
  */
 package org.apache.tools.ant;
 
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Base class for components of a project, including tasks and data types.
@@ -46,6 +47,7 @@ public abstract class ProjectComponent
     }
 
     protected File resolveFile( final String name )
+        throws TaskException
     {
         return FileUtils.newFileUtils().resolveFile( project.getBaseDir(), name );
     }
