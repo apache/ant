@@ -2277,8 +2277,11 @@ systems.</p>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;exec dir=&quot;${src}&quot; executable=&quot;dir&quot; os=&quot;windows&quot;
-  output=&quot;dir.txt&quot;/&gt;</code></p>
+  <p>
+<pre>
+&lt;exec dir=&quot;${src}&quot; executable=&quot;cmd.exe&quot; os=&quot;Windows 2000&quot; output=&quot;dir.txt&quot;&gt;
+  &lt;arg line=&quot;/c dir&quot;/&gt;
+&lt;/exec&gt;</pre></p>
 </blockquote>
 <h3>Parameters specified as nested elements</h3>
 <h4>arg</h4>
@@ -5464,6 +5467,10 @@ current directory as <code>docs/ChangeLog.txt</code>, and includes all the html 
 
 <hr>
 <h2><a name="optionaltasks">Optional tasks</a></h2>
+<p>The tasks listed here are not included in the ant.jar included in the binary distribution
+of Ant. To use them you should download optional.jar and put in the lib-subdirectory of your
+Ant-installation. Additionaly some of these tasks require external libraries to be put on 
+your CLASSPATH.</p>
 <ul>
   <li><a href="dotnet.html">.NET Tasks</a></li>
   <li><a href="antlr.html">ANTLR</a></li>
@@ -5600,6 +5607,8 @@ output.</p>
 <hr>
 <h2><a name="ftp">FTP</a></h2>
 <h3>Description</h3>
+<p><b>Note:</b> The ftp-task uses the NetComponents-Package which you will need to download from
+<a href="http://www.savarese.org">http://www.savarese.org</a> and add to your classpath.</p>
 <p>The ftp task implements a basic FTP client that can send, receive,
 list, and delete files.  See below for descriptions and examples of how
 to perform each task.</p>
