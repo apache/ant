@@ -29,6 +29,11 @@ Other changes:
 
 * <fail> supports nested text
 
+* <fixcrlf> won't override files that are already in the correct
+   format.
+
+* <sql> now supports REM comments as well as // and --
+
 Fixed bugs:
 -----------
 

@@ -68,9 +68,10 @@ import java.sql.*;
 /**
  * Reads in a text file containing SQL statements seperated with semicolons
  * and executes it in a given db.
- * Both -- and // maybe used as comments.
+ * Comments may be created with REM -- or //.
  * 
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
+ * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  */
 public class SQLExec extends Task {
     
@@ -425,8 +426,12 @@ public class SQLExec extends Task {
  
         try{
             while ((line=in.readLine()) != null){
-                if (line.trim().startsWith("//")) continue;
-                if (line.trim().startsWith("--")) continue;
+                line = line.trim();
+                if (line.startsWith("//")) continue;
+                if (line.startsWith("--")) continue;
+                if ( line.length() > 2 ) {
+                  if (line.substring(0,3).equalsIgnoreCase("REM")) continue;
+                }
 
                 sql += " " + line;
                 sql = sql.trim();
@@ -535,7 +540,7 @@ public class SQLExec extends Task {
         do {
             rs = statement.getResultSet();
             if (rs != null) {
-      	        log("Processing new result set.", Project.MSG_VERBOSE);
+                log("Processing new result set.", Project.MSG_VERBOSE);
                 ResultSetMetaData md = rs.getMetaData();
                 int columnCount = md.getColumnCount();
                 StringBuffer line = new StringBuffer();
