@@ -44,6 +44,14 @@
     </copy>
   </target>
   
+  <target name="testFilterSet">
+    <copy file="copy.filterset" tofile="copy.filterset.tmp">
+      <filterset>
+        <filter token="TITLE" value="Apache Ant Project"/>
+      </filterset>
+    </copy>
+  </target>
+
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>
@@ -51,6 +59,7 @@
     <delete file="copytest3b.tmp"/>
     <delete file="copytest3c.tmp"/>
     <delete file="copytest_single_file_fileset.tmp"/>
+    <delete file="copy.filterset.tmp"/>
     <delete dir="copytest1dir"/>
   </target>
 

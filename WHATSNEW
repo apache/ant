@@ -38,6 +38,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Fixed bug where <move> ignored <filterset>s.
+
 * Ant works properly with the combination of Java1.4/WindowsXP
 
 * Fixed bug where <java> used to sometimes invoke class constructors twice.

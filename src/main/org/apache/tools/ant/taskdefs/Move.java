@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.FileSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Moves a file or directory to a new file or directory.  By default,
@@ -87,6 +88,8 @@ import java.util.Enumeration;
  */
 public class Move extends Copy {
 
+    private Vector filterSets = null;
+
     public Move() {
         super();
         forceOverwrite = true;
@@ -97,6 +100,8 @@ public class Move extends Copy {
 //************************************************************************
 
     protected void doFileOperations() {
+        filterSets = getFilterSets();
+
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
             Enumeration e = completeDirMap.keys();
@@ -274,26 +279,30 @@ public class Move extends Copy {
         throws IOException, BuildException {
 
         boolean renamed = true;
-        if (!filtering) {
-            // ensure that parent dir of dest file exists!
-            // not using getParentFile method to stay 1.1 compat
-            String parentPath = destFile.getParent();
-            if (parentPath != null) {
-                File parent = new File(parentPath);
-                if (!parent.exists()) {
-                    parent.mkdirs();
-                }
-            }
-
-            if (destFile.exists()) {
-                if (!destFile.delete()) {
-                    throw new BuildException("Unable to remove existing file "
-                                             + destFile);
-                }
-            }
-            renamed = sourceFile.renameTo(destFile);
-        } else {
+        if (filterSets != null && filterSets.size() > 0) {
             renamed = false;
+        } else {
+            if (!filtering) {
+                // ensure that parent dir of dest file exists!
+                // not using getParentFile method to stay 1.1 compat
+                String parentPath = destFile.getParent();
+                if (parentPath != null) {
+                    File parent = new File(parentPath);
+                    if (!parent.exists()) {
+                        parent.mkdirs();
+                    }
+                }
+
+                if (destFile.exists()) {
+                    if (!destFile.delete()) {
+                        throw new BuildException("Unable to remove existing file "
+                                                 + destFile);
+                    }
+                }
+                renamed = sourceFile.renameTo(destFile);
+            } else {
+                renamed = false;
+            }
         }
         return renamed;
     }

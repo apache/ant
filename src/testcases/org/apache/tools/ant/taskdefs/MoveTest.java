@@ -57,88 +57,33 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Tests FileSet using the Copy task.
+ * Tests the Move task.
  *
- * @author David Rees <dave@ubiqsoft.com>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public class CopyTest extends BuildFileTest {
+public class MoveTest extends BuildFileTest {
 
-    public CopyTest(String name) {
+    public MoveTest(String name) {
         super(name);
     }
 
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/copy.xml");
-    }
-
-    public void test1() {
-        executeTarget("test1");
-        File f = new File(getProjectDir(), "copytest1.tmp");
-        if ( !f.exists()) {
-            fail("Copy failed");
-        }
+        configureProject("src/etc/testcases/taskdefs/move.xml");
     }
 
     public void tearDown() {
         executeTarget("cleanup");
     }
 
-    public void test2() {
-        executeTarget("test2");
-        File f = new File(getProjectDir(), "copytest1dir/copy.xml");
-        if ( !f.exists()) {
-            fail("Copy failed");
-        }
-    }
-
-    public void test3() {
-        executeTarget("test3");
-        File file3  = new File(getProjectDir(), "copytest3.tmp");
-        assertTrue(file3.exists());
-        File file3a = new File(getProjectDir(), "copytest3a.tmp");
-        assertTrue(file3a.exists());
-        File file3b = new File(getProjectDir(), "copytest3b.tmp");
-        assertTrue(file3b.exists());
-        File file3c = new File(getProjectDir(), "copytest3c.tmp");
-        assertTrue(file3c.exists());
-
-        //file length checks rely on touch generating a zero byte file
-        if(file3.length()==0) {
-            fail("could not overwrite an existing, older file");
-        }
-        if(file3c.length()!=0) {
-            fail("could not force overwrite an existing, newer file");
-        }
-        if(file3b.length()==0) {
-            fail("unexpectedly overwrote an existing, newer file");
-        }
-
-        //file time checks for java1.2+
-        if (Project.getJavaVersion() != Project.JAVA_1_1) {
-            assertTrue(file3a.lastModified()==file3.lastModified());
-            assertTrue(file3c.lastModified()<file3a.lastModified());
-        }
-
-    }
-
-    public void testSingleFileFileset() {
-        executeTarget("test_single_file_fileset");
-        File file  = new File(getProjectDir(),
-                                        "copytest_single_file_fileset.tmp");
-        assertTrue(file.exists());
-    }
-
     public void testFilterSet() throws IOException {
         executeTarget("testFilterSet");
         FileUtils fileUtils = FileUtils.newFileUtils();
-        File tmp  = new File(getProjectDir(), "copy.filterset.tmp");
-        File check  = new File(getProjectDir(),
-                        "expected/copy.filterset.filtered");
+        File tmp  = new File(getProjectDir(), "move.filterset.tmp");
+        File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(fileUtils.contentEquals(tmp, check));
     }

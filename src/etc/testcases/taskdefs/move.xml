@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<project name="move-test" basedir="." default="testFilterSet">
+
+  <target name="testFilterSet">
+    <copy file="copy.filterset" tofile="move.filterset"/>
+    <move file="move.filterset" tofile="move.filterset.tmp">
+      <filterset>
+        <filter token="TITLE" value="Apache Ant Project"/>
+      </filterset>
+    </move>
+  </target>
+
+  <target name="cleanup"> 
+    <delete file="move.filterset.tmp"/>
+  </target>
+
+</project>
