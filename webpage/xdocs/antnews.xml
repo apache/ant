@@ -3,6 +3,7 @@
 
   <properties>
     <author email="conor@cortexebusiness.com.au">Conor MacNeill</author>
+    <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
     <title>Ant News</title>
   </properties>
 
@@ -10,7 +11,7 @@
 
   <section name="Best-Practices Profile of Ant at Sun&apos;s Dot-Com Builder">
       <p>Sun has released an introductory article on Ant on their
-      Dot-Com Builder site on May 18 2001. See <a
+      Dot-Com Builder site on May&#160;30&#160;2001. See <a
       href="http://dcb.sun.com/practices/profiles/ant.jsp">http://dcb.sun.com/practices/profiles/ant.jsp</a></p>
   </section>
 
