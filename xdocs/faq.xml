@@ -688,6 +688,11 @@ shell-prompt> m4 foo.m4 > foo
 
         <p>If you extract (or just check) the archive with jar, you
         will see that the names have the correct case.</p>
+
+        <p>With WinZIP (version 8.1 at least), this can be corrected in the
+        configuration.  In the Options/Configuration menu, in the View tab, General
+        section, check the "Allow all upper case files names" box.  The META-INF and
+        WEB-INF will look correct.</p>
       </answer>
     </faq>
   </faqsection>
