@@ -23,7 +23,6 @@ import org.apache.myrmidon.api.TaskException;
  */
 public interface FileNameMapper
 {
-
     /**
      * Sets the from part of the transformation rule.
      *

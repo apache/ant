@@ -15,9 +15,10 @@ package org.apache.tools.ant.util;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class MergingMapper implements FileNameMapper
+public class MergingMapper
+    implements FileNameMapper
 {
-    protected String[] mergedFile = null;
+    private String[] m_mergedFile;
 
     /**
      * Ignored.
@@ -35,7 +36,7 @@ public class MergingMapper implements FileNameMapper
      */
     public void setTo( String to )
     {
-        mergedFile = new String[]{to};
+        m_mergedFile = new String[]{to};
     }
 
     /**
@@ -44,9 +45,8 @@ public class MergingMapper implements FileNameMapper
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( String sourceFileName )
+    public String[] mapFileName( final String sourceFileName )
     {
-        return mergedFile;
+        return m_mergedFile;
     }
-
 }

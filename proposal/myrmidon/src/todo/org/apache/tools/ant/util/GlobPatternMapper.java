@@ -19,58 +19,59 @@ package org.apache.tools.ant.util;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class GlobPatternMapper implements FileNameMapper
+public class GlobPatternMapper
+    implements FileNameMapper
 {
     /**
      * Part of &quot;from&quot; pattern before the *.
      */
-    protected String fromPrefix = null;
+    private String m_fromPrefix;
 
     /**
      * Part of &quot;from&quot; pattern after the *.
      */
-    protected String fromPostfix = null;
+    private String m_fromPostfix;
 
     /**
      * Part of &quot;to&quot; pattern before the *.
      */
-    protected String toPrefix = null;
+    private String m_toPrefix;
 
     /**
      * Part of &quot;to&quot; pattern after the *.
      */
-    protected String toPostfix = null;
+    private String m_toPostfix;
 
     /**
      * Length of the postfix (&quot;from&quot; pattern).
      */
-    protected int postfixLength;
+    private int m_postfixLength;
 
     /**
      * Length of the prefix (&quot;from&quot; pattern).
      */
-    protected int prefixLength;
+    private int m_prefixLength;
 
     /**
      * Sets the &quot;from&quot; pattern. Required.
      *
      * @param from The new From value
      */
-    public void setFrom( String from )
+    public void setFrom( final String from )
     {
-        int index = from.lastIndexOf( "*" );
+        final int index = from.lastIndexOf( "*" );
         if( index == -1 )
         {
-            fromPrefix = from;
-            fromPostfix = "";
+            m_fromPrefix = from;
+            m_fromPostfix = "";
         }
         else
         {
-            fromPrefix = from.substring( 0, index );
-            fromPostfix = from.substring( index + 1 );
+            m_fromPrefix = from.substring( 0, index );
+            m_fromPostfix = from.substring( index + 1 );
         }
-        prefixLength = fromPrefix.length();
-        postfixLength = fromPostfix.length();
+        m_prefixLength = m_fromPrefix.length();
+        m_postfixLength = m_fromPostfix.length();
     }
 
     /**
@@ -78,18 +79,18 @@ public class GlobPatternMapper implements FileNameMapper
      *
      * @param to The new To value
      */
-    public void setTo( String to )
+    public void setTo( final String to )
     {
-        int index = to.lastIndexOf( "*" );
+        final int index = to.lastIndexOf( "*" );
         if( index == -1 )
         {
-            toPrefix = to;
-            toPostfix = "";
+            m_toPrefix = to;
+            m_toPostfix = "";
         }
         else
         {
-            toPrefix = to.substring( 0, index );
-            toPostfix = to.substring( index + 1 );
+            m_toPrefix = to.substring( 0, index );
+            m_toPostfix = to.substring( index + 1 );
         }
     }
 
@@ -100,17 +101,20 @@ public class GlobPatternMapper implements FileNameMapper
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( String sourceFileName )
+    public String[] mapFileName( final String sourceFileName )
     {
-        if( fromPrefix == null
-            || !sourceFileName.startsWith( fromPrefix )
-            || !sourceFileName.endsWith( fromPostfix ) )
+        if( m_fromPrefix == null ||
+            !sourceFileName.startsWith( m_fromPrefix ) ||
+            !sourceFileName.endsWith( m_fromPostfix ) )
         {
             return null;
         }
-        return new String[]{toPrefix
-            + extractVariablePart( sourceFileName )
-            + toPostfix};
+        else
+        {
+            final String result = m_toPrefix +
+                extractVariablePart( sourceFileName ) + m_toPostfix;
+            return new String[]{result};
+        }
     }
 
     /**
@@ -120,9 +124,9 @@ public class GlobPatternMapper implements FileNameMapper
      * @param name Description of Parameter
      * @return Description of the Returned Value
      */
-    protected String extractVariablePart( String name )
+    protected String extractVariablePart( final String name )
     {
-        return name.substring( prefixLength,
-                               name.length() - postfixLength );
+        return name.substring( m_prefixLength,
+                               name.length() - m_postfixLength );
     }
 }

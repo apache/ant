@@ -15,15 +15,15 @@ package org.apache.tools.ant.util;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class IdentityMapper implements FileNameMapper
+public class IdentityMapper
+    implements FileNameMapper
 {
-
     /**
      * Ignored.
      *
      * @param from The new From value
      */
-    public void setFrom( String from )
+    public void setFrom( final String from )
     {
     }
 
@@ -32,7 +32,7 @@ public class IdentityMapper implements FileNameMapper
      *
      * @param to The new To value
      */
-    public void setTo( String to )
+    public void setTo( final String to )
     {
     }
 
@@ -42,7 +42,7 @@ public class IdentityMapper implements FileNameMapper
      * @param sourceFileName Description of Parameter
      * @return Description of the Returned Value
      */
-    public String[] mapFileName( String sourceFileName )
+    public String[] mapFileName( final String sourceFileName )
     {
         return new String[]{sourceFileName};
     }
