@@ -116,7 +116,7 @@ Fixed bugs:
 * <scp> now has (local|remote)tofile attributes to rename files on the
   fly.  Bugzilla Report 26758.
 
-* <telnet> didn't close the session.  Bugzilla Report 25935.
+* <telnet> and <rexec> didn't close the session.  Bugzilla Report 25935.
 
 Other changes:
 --------------

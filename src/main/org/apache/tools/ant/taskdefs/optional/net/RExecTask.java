@@ -62,11 +62,6 @@ public class RExecTask extends Task {
     private int port = RExecClient.DEFAULT_PORT;
 
     /**
-     *  The Object which handles the rexec session.
-     */
-    private AntRExecClient rexec = null;
-
-    /**
      *  The list of read/write commands for this session
      */
     private Vector rexecTasks = new Vector();
@@ -322,34 +317,46 @@ public class RExecTask extends Task {
         }
 
         /**  Create the telnet client object */
-        rexec = new AntRExecClient();
+        AntRExecClient rexec = null;
         try {
-            rexec.connect(server, port);
-        } catch (IOException e) {
-            throw new BuildException("Can't connect to " + server);
-        }
-        /**  Login if userid and password were specified */
-        if (userid != null && password != null) {
-            login();
-        }
-        /**  Process each sub command */
-        Enumeration tasksToRun = rexecTasks.elements();
-        while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-            RExecSubTask task = (RExecSubTask) tasksToRun.nextElement();
-            if (task instanceof RExecRead && defaultTimeout != null) {
-                ((RExecRead) task).setDefaultTimeout(defaultTimeout);
+            rexec = new AntRExecClient();
+            try {
+                rexec.connect(server, port);
+            } catch (IOException e) {
+                throw new BuildException("Can't connect to " + server);
             }
-            task.execute(rexec);
-        }
+            /**  Login if userid and password were specified */
+            if (userid != null && password != null) {
+                login(rexec);
+            }
+            /**  Process each sub command */
+            Enumeration tasksToRun = rexecTasks.elements();
+            while (tasksToRun != null && tasksToRun.hasMoreElements()) {
+                RExecSubTask task = (RExecSubTask) tasksToRun.nextElement();
+                if (task instanceof RExecRead && defaultTimeout != null) {
+                    ((RExecRead) task).setDefaultTimeout(defaultTimeout);
+                }
+                task.execute(rexec);
+            }
 
-        /** Keep reading input stream until end of it or time-out */
-        rexec.waitForEOF(defaultTimeout);
+            /** Keep reading input stream until end of it or time-out */
+            rexec.waitForEOF(defaultTimeout);
+       } finally {
+           if (rexec != null) {
+               try {
+                   rexec.disconnect();
+               } catch (IOException e) {
+                   throw new BuildException("Error disconnecting from " 
+                                            + server);
+               }
+           }
+       }
     }
     /**
      *  Process a 'typical' login.  If it differs, use the read
      *  and write tasks explicitely
      */
-    private void login() {
+    private void login(AntRExecClient rexec) {
         if (addCarriageReturn) {
             rexec.sendString("\n", true);
         }
