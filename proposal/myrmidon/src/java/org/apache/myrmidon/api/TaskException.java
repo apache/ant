@@ -20,6 +20,14 @@ public class TaskException
     extends CascadingException
 {
     /**
+     * Basic constructor for exception that does not specify a message
+     */
+    public TaskException()
+    {
+        this( "", null );
+    }
+
+    /**
      * Basic constructor with a message
      *
      * @param message the message
