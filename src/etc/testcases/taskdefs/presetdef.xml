@@ -49,6 +49,22 @@
     <dd attribute="true"/>
   </target>
 
+  <target name="antTypeTest">
+    <taskdef name="anttypetest"
+             classname="org.apache.tools.ant.taskdefs.PreSetDefTest$AntTypeTest"
+             classpathref="test-classes"/>
+    <presetdef name="java.fileset">
+      <fileset>
+        <include name="**/*.java"/>
+      </fileset>
+    </presetdef>
+    
+    <anttypetest>
+      <fileset ant-type="java.fileset" dir="."/>
+      <configured ant-type="java.fileset" dir="."/>
+    </anttypetest>
+  </target>
+
   <target name="text.optional">
     <presetdef name="echo.mytext">
       <echo>MyText</echo>
