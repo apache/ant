@@ -189,5 +189,71 @@ public class ConditionTest extends BuildFileTest {
     public void testFilesmatchMatch() {
         expectPropertySet("filesmatch-match","filesmatch-match"); 
     }   
+    
+    
+    public void testContains() {
+        expectPropertySet("contains","contains"); 
+    }   
+        
+    
+    public void testContainsDoesnt() {
+        expectPropertyUnset("contains-doesnt","contains-doesnt"); 
+    }   
+
+    public void testContainsAnycase() {
+        expectPropertySet("contains-anycase","contains-anycase"); 
+    } 
+
+    
+    public void testContainsIncomplete1() {
+        expectSpecificBuildException("contains-incomplete1", 
+                    "Missing contains attribute",
+                    "both string and substring are required in contains"); 
+    } 
+    
+    public void testContainsIncomplete2() {
+        expectSpecificBuildException("contains-incomplete2", 
+                    "Missing contains attribute",
+                    "both string and substring are required in contains"); 
+    } 
+    
+    public void testIstrue() {
+        expectPropertySet("istrue","istrue"); 
+    } 
+
+    public void testIstrueNot() {
+        expectPropertyUnset("istrue-not","istrue-not"); 
+    } 
+ 
+    public void testIstrueFalse() {
+        expectPropertyUnset("istrue-false","istrue-false"); 
+    } 
+
+    
+    public void testIstrueIncomplete1() {
+        expectSpecificBuildException("istrue-incomplete", 
+                    "Missing attribute",
+                    "Nothing to test for truth"); 
+    } 
+
+    public void testIsfalseTrue() {
+        expectPropertyUnset("isfalse-true","isfalse-true"); 
+    } 
+
+    public void testIsfalseNot() {
+        expectPropertySet("isfalse-not","isfalse-not"); 
+    } 
+ 
+    public void testIsfalseFalse() {
+        expectPropertySet("isfalse-false","isfalse-false"); 
+    } 
+
+    
+    public void testIsfalseIncomplete1() {
+        expectSpecificBuildException("isfalse-incomplete", 
+                    "Missing attribute",
+                    "Nothing to test for falsehood"); 
+    }     
+    
 }
 
