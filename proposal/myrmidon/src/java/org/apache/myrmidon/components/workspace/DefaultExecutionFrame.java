@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.executor;
+package org.apache.myrmidon.components.workspace;
 
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -22,7 +22,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class DefaultExecutionFrame
+class DefaultExecutionFrame
     implements ExecutionFrame, LogEnabled, Contextualizable
 {
     private Logger m_logger;
