@@ -605,7 +605,7 @@ public class ComponentHelper  {
                 Class oldClass = antTypeTable.getExposedClass(name);
                 boolean isTask =
                     (oldClass != null && Task.class.isAssignableFrom(oldClass));
-                project.log( "Trying to override old definition of "
+                project.log("Trying to override old definition of "
                     + (isTask ? "task " : "datatype ") + name,
                     (def.similarDefinition(old, project))
                     ? Project.MSG_VERBOSE : Project.MSG_WARN);
