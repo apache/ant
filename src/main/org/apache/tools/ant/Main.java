@@ -509,7 +509,7 @@ public class Main implements AntMain {
             out = logTo;
             err = logTo;
             System.setOut(out);
-            System.setErr(out);
+            System.setErr(err);
         }
         readyToRun = true;
     }
