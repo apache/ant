@@ -159,6 +159,8 @@
   <patternset id="needs.sun.b64">
     <exclude name="${ant.package}/taskdefs/Get.java"
              unless="base64.present" />
+    <exclude name="${optional.package}/splash/SplashTask.java"
+             unless="base64.present" />
   </patternset>
 
   <!-- depends on external libraries -->
@@ -284,6 +286,9 @@
   </patternset>
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline" />
+  </patternset>
+  <patternset id="needs.swing">
+    <exclude name="${optional.package}/splash/*.java" unless="swing.present" />
   </patternset>
 
   <!--
@@ -435,6 +440,9 @@
       </and>
     </condition>
     
+    <available property="swing.present"
+               classname="javax.swing.ImageIcon"
+               classpathref="classpath"/>
   </target>
 
 
@@ -503,6 +511,7 @@
       <patternset refid="needs.sun.tools" />
       <patternset refid="needs.sun.b64" />
       <patternset refid="needs.jakarta.bcel" />
+      <patternset refid="needs.swing" />
     </javac>
 
     <copy todir="${build.classes}">
@@ -577,6 +586,10 @@
                      value="Apache Software Foundation" />
         </section>
       </manifest>
+
+      <fileset dir="${docs.dir}">
+        <include name="images/ant_logo_large.gif" />
+      </fileset>
     </jar>
 
     <jar destfile="${build.lib}/optional.jar"
