@@ -124,6 +124,9 @@ public class CovMerge extends CovBase {
             cmdl.createArgument().setValue(getParamFileArgument() 
                                            + paramfile.getAbsolutePath());
 
+            // last argument is the output snapshot
+            cmdl.createArgument().setValue(tofile.getPath()); 
+
             LogStreamHandler handler = new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN);
             Execute exec = new Execute(handler);
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
@@ -196,8 +199,6 @@ public class CovMerge extends CovBase {
             for (int i = 0; i < snapshots.length; i++) {
                 pw.println(snapshots[i].getAbsolutePath());
             }
-            // last file is the output snapshot
-            pw.println(getProject().resolveFile(tofile.getPath()));
             pw.flush();
         } catch (IOException e) {
             throw new BuildException("I/O error while writing to " + file, e);
