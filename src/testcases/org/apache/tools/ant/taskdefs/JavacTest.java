@@ -68,7 +68,7 @@ import junit.framework.TestCase;
 /**
  * Testcase for <javac>.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$ $Date$
  */
 public class JavacTest extends TestCase {

@@ -94,7 +94,7 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * <p> Summary output is generated at the end. 
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  *
  * @since Ant 1.2

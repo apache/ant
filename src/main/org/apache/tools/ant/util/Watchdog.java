@@ -64,7 +64,7 @@ import java.util.Vector;
  *
  * @see org.apache.tools.ant.taskdefs.ExecuteWatchdog
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */

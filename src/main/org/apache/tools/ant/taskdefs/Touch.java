@@ -77,7 +77,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <p>Note: Setting the modification time of files is not supported in
  * JDK 1.1.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
  * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
  *

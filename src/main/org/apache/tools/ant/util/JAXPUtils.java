@@ -69,7 +69,7 @@ import org.xml.sax.XMLReader;
  *
  * <p>This class will create only a single factory instance.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.5
  */

@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
  * <p>Iterates over all conditions and returns true as soon as one
  * evaluates to true.</p>
  * 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */

@@ -63,7 +63,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.IntrospectionHelper.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 
 public class IntrospectionHelperTest extends TestCase {

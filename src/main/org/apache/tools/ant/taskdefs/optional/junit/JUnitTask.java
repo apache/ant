@@ -141,7 +141,7 @@ import junit.framework.TestResult;
  * number of attributes and elements allow you to set up how this JVM
  * runs.
  * @author Thomas Haas
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a>
  * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>

@@ -75,7 +75,7 @@ import org.apache.tools.ant.BuildException;
  * the project level and referenced via their ID attribute.</p>
  * <p>Custom data types usually need custom tasks to put them to good use.</p>
  
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.4
  * @ant.task category="internal"
  */

@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public class FailTest extends BuildFileTest { 
     

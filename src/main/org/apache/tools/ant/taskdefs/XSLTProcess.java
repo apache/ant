@@ -78,7 +78,7 @@ import javax.xml.transform.URIResolver;
  * @author <a href="mailto:kvisco@exoffice.com">Keith Visco</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  *
  * @since Ant 1.1

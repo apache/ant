@@ -62,7 +62,7 @@ import org.apache.tools.ant.BuildException;
  * This Interface describes classes that format the results of a JUnit
  * testrun.
  * 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public interface JUnitResultFormatter extends TestListener {
     /**

@@ -61,7 +61,7 @@ package org.apache.tools.ant.util;
  *
  * @see org.apache.tools.ant.util.Watchdog
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public interface TimeoutObserver {
 

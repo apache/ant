@@ -74,7 +74,7 @@ import org.w3c.dom.Text;
  * XMLJUnitResultFormatter}.</p>
  *
  * @author The original author of XmlLogger
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</tt>
  */
 public class DOMElementWriter {

@@ -66,7 +66,7 @@ package org.apache.tools.ant.util;
  * <p>This is one of the more useful Mappers, it is used by javac for
  * example.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class GlobPatternMapper implements FileNameMapper {
     /**

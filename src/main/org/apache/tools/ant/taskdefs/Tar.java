@@ -81,7 +81,7 @@ import org.apache.tools.zip.UnixStat;
  *
  * @author Stefano Mazzocchi
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author Magesh Umasankar
  *
  * @since Ant 1.1

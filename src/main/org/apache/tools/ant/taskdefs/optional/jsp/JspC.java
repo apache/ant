@@ -101,7 +101,7 @@ import org.apache.tools.ant.types.Reference;
  * <p> Large Amount of cutting and pasting from the Javac task...
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since 1.5
  */

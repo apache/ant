@@ -68,7 +68,7 @@ import org.apache.tools.ant.BuildException;
  * <pre>
  * taskname=fully.qualified.java.classname
  * </pre>
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.1
  * @ant.task category="internal"
  */

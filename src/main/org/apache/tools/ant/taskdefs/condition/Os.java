@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Condition that tests the OS type.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author Magesh Umasankar
  * @since Ant 1.4
  * @version $Revision$

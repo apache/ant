@@ -59,7 +59,7 @@ import junit.framework.TestCase;
 /**
  * Testcase for the &lt;contains&gt; condition.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ContainsTest extends TestCase {

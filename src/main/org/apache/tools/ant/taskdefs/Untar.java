@@ -83,7 +83,7 @@ import org.apache.tools.tar.TarInputStream;
  * <p>File permissions will not be restored on extracted files.</p>
  * <p>The untar task recognizes the long pathname entries used by GNU tar.<p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author Magesh Umasankar
  *
  * @since Ant 1.1

@@ -72,7 +72,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * Manifest file, optionally replacing or updating an existing file.
  *
  * @author Conor MacNeill
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
  *
  * @since Ant 1.5

@@ -64,7 +64,7 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.CommandLine
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class CommandlineTest extends TestCase {
 

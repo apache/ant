@@ -68,7 +68,7 @@ import java.util.TimeZone;
  * or a plurialization correct elapsed time in minutes and seconds.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.5
  * 

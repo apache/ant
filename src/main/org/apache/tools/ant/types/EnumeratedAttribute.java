@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
  * <p>See {@link org.apache.tools.ant.taskdefs.FixCRLF FixCRLF} for an
  * example.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public abstract class EnumeratedAttribute {
 

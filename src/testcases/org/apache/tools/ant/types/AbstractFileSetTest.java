@@ -67,7 +67,7 @@ import java.io.File;
  *
  * <p>This doesn't actually test much, mainly reference handling.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 
 public abstract class AbstractFileSetTest extends TestCase {

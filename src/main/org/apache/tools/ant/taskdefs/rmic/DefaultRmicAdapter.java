@@ -72,7 +72,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @author duncan@x180.com
  * @author ludovic.claude@websitewatchers.co.uk
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  * @author <a href="tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @since Ant 1.4
  */

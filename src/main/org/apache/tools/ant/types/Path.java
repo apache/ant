@@ -92,7 +92,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * to define a path from an environment variable.
  *
  * @author Thomas.Haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 
 public class Path extends DataType implements Cloneable {

@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @version $Revision$
  *

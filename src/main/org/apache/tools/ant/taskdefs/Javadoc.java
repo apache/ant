@@ -107,7 +107,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @author Patrick Chanezon
  *         <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.1
  *

@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <p> Either the <code>type</code> or the <code>classname</code> attribute
  * must be set. 
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @see JUnitTask
  * @see XMLJUnitResultFormatter

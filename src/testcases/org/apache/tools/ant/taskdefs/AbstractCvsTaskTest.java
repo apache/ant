@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author stephan <stephan@wanderinghorse.net>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class AbstractCvsTaskTest extends BuildFileTest {

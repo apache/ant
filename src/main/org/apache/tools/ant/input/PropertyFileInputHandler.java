@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
  * Reads input from a property file, the file name is read from the
  * system property ant.input.properties, the prompt is the key for input.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  * @since Ant 1.5
  */

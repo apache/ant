@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests the examples of the &lt;script&gt; task docs.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.5.2
  */
 public class BeanShellScriptTest extends BuildFileTest {

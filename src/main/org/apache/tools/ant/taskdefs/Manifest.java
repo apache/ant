@@ -81,7 +81,7 @@ import org.apache.tools.ant.util.CollectionUtils;
  * line. If an application can not handle the continuation mechanism, it
  * is a defect in the application, not this task.
  * @author Conor MacNeill
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
  *
  * @since Ant 1.4

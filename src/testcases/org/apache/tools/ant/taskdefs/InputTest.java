@@ -60,7 +60,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * @author Ulrich Schmidt <usch@usch.net>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class InputTest extends BuildFileTest {
 

@@ -70,7 +70,7 @@ import junit.framework.TestSuite;
 /**
  * Very limited test class for Project. Waiting to be extended.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public class ProjectTest extends TestCase {
 

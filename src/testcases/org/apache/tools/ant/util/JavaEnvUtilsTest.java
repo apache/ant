@@ -63,7 +63,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * TestCase for JavaEnvUtils.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class JavaEnvUtilsTest extends TestCase {
     public JavaEnvUtilsTest(String s) {

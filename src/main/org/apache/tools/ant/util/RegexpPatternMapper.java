@@ -63,7 +63,7 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
  * Implementation of FileNameMapper that does regular expression
  * replacements.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class RegexpPatternMapper implements FileNameMapper {
     protected RegexpMatcher reg = null;

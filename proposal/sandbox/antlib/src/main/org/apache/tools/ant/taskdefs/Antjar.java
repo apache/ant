@@ -69,7 +69,7 @@ import java.util.*;
  *
  * @author doc and layout changes by steve loughran, steve_l@iseran.com
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  *      
  * @since ant1.5
  */

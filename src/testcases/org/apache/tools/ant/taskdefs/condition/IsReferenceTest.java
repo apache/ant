@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Testcases for the &lt;isreference&gt; condition.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class IsReferenceTest extends BuildFileTest {
 

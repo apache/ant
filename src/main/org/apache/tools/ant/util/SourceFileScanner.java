@@ -70,7 +70,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * subset of the files given as a parameter and holds only those that
  * are newer than their corresponding target files.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  */
 public class SourceFileScanner implements ResourceFactory {

@@ -59,7 +59,7 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * @author Nico Seessle <nico@seessle.de> 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class GUnzipTest extends BuildFileTest { 

@@ -61,7 +61,7 @@ import junit.framework.TestSuite;
 /**
  * Tests for org.apache.tools.ant.util.DOMElementWriter.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public class DOMElementWriterTest extends TestCase {
 

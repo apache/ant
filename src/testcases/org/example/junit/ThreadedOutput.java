@@ -59,7 +59,7 @@ import junit.framework.TestCase;
  * Not really a test of Ant but a test that is run by the test of the
  * junit task.  Confused?
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.5
  */
 public class ThreadedOutput extends TestCase {

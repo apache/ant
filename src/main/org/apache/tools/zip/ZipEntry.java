@@ -63,7 +63,7 @@ import java.util.zip.ZipException;
  * Extension that adds better handling of extra fields and provides
  * access to the internal and external file attributes.
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ZipEntry extends java.util.zip.ZipEntry {

@@ -61,7 +61,7 @@ import java.util.zip.ZipException;
 /**
  * ZipExtraField related methods
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ExtraFieldUtils {

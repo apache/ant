@@ -68,7 +68,7 @@ import junit.framework.TestCase;
  * ExecuteWatchdogTest.
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class ExecuteJavaTest extends TestCase {
 

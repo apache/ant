@@ -57,7 +57,7 @@ package org.apache.tools.zip;
 /**
  * Constants from stat.h on Unix systems.
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public interface UnixStat {

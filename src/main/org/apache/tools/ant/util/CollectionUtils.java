@@ -60,7 +60,7 @@ import java.util.Vector;
 /**
  * A set of helper methods related to collection manipulation.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:stein@xtramind.com">Ingmar Stein</a>
  *
  * @since Ant 1.5

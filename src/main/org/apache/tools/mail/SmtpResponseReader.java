@@ -66,7 +66,7 @@ import java.io.InputStreamReader;
  * <p>The same rules used here would apply to FTP and other Telnet
  * based protocols as well.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public class SmtpResponseReader {
 

@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.Reference;
  *
  * @author Stefano Mazzocchi 
  *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.1
  *

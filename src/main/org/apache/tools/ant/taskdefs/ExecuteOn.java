@@ -71,7 +71,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 /**
  * Executes a given command, supplying a set of files as arguments. 
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
  *
  * @since Ant 1.2

@@ -112,7 +112,7 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * @author duncan@x180.com
  * @author ludovic.claude@websitewatchers.co.uk
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author Takashi Okamoto tokamoto@rd.nttdata.co.jp
  *
  * @since Ant 1.1

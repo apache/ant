@@ -69,7 +69,7 @@ import org.apache.tools.ant.types.Path;
  * holds to set attributes, create nested elements or hold PCDATA
  * elements.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class IntrospectionHelper implements BuildListener {
 

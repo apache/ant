@@ -59,7 +59,7 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ExtraFieldUtils.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public class ExtraFieldUtilsTest extends TestCase implements UnixStat {
     public ExtraFieldUtilsTest(String name) {

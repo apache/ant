@@ -79,7 +79,7 @@ import java.util.zip.ZipException;
  * information is required before {@link #putNextEntry putNextEntry}
  * will be called.</p>
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ZipOutputStream extends DeflaterOutputStream {

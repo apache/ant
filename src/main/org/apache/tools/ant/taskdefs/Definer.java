@@ -72,7 +72,7 @@ import org.apache.tools.ant.types.Reference;
  * handling and and class loading.
  *
  * @author Costin Manolache
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.4
  */

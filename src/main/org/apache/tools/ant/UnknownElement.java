@@ -62,7 +62,7 @@ import java.io.IOException;
  * or data type that did not exist when Ant started, or one which
  * has had its definition updated to use a different implementation class.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class UnknownElement extends Task {
 

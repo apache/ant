@@ -86,7 +86,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
  *
  * @author Glenn McAllister
  *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  * @author Magesh Umasankar
  *

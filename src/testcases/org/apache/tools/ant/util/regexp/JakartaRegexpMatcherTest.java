@@ -63,7 +63,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * Tests for the jakarta-regexp implementation of the RegexpMatcher interface.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public class JakartaRegexpMatcherTest extends RegexpMatcherTest {
 

@@ -71,7 +71,7 @@ import org.apache.tools.ant.types.FileSet;
  * inherited from the parent <code>BatchTest</code>.
  *
  * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  *
  * @see JUnitTest

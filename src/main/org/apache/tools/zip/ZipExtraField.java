@@ -65,7 +65,7 @@ import java.util.zip.ZipException;
  * java.util.zip.ZipOutputStream java.util.zip.ZipOutputStream} will
  * only use the local file data in both places.</p>
  *
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public interface ZipExtraField {

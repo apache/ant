@@ -64,7 +64,7 @@ import junit.framework.TestSuite;
 /**
  * Tests for all implementations of the RegexpMatcher interface.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public abstract class RegexpMatcherTest extends TestCase {
 

@@ -82,7 +82,7 @@ import org.apache.tools.ant.util.StringUtils;
  * <code>createAcommandline</code> which returns an instance of this class.
  *
  * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class Commandline implements Cloneable {
 

@@ -58,7 +58,7 @@ package org.apache.tools.zip;
  * Utility class that represents a four byte integer with conversion
  * rules for the big endian byte order of ZIP files.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  */
 public final class ZipLong implements Cloneable {

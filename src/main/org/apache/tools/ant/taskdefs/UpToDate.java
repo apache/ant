@@ -76,7 +76,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
  *         <a href="mailto:williamf@mincom.com">williamf@mincom.com</a> 
  * @author Hiroaki Nakamura 
  *         <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.2
  *

@@ -61,7 +61,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * A set of helper methods related to locating executables or checking
  * conditons of a given Java installation.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.5
  */

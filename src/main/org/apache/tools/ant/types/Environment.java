@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Wrapper for environment variables.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class Environment {
 

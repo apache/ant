@@ -66,7 +66,7 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * conditions - ensures that the types of conditions inside the task
  * and the "container" conditions are in sync.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */

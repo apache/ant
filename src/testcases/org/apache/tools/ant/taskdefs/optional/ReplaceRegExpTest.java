@@ -64,7 +64,7 @@ import java.io.IOException;
 /**
  * JUnit Testcase for the optional replaceregexp task.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  * @version $Revision$
  */
 public class ReplaceRegExpTest extends BuildFileTest {

@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Reference;
  *
  * <p>Optionally tests whether it is of a given type/class.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.6
  * @version $Revision$
  */

@@ -60,7 +60,7 @@ import org.apache.tools.ant.types.Commandline;
  * Extension of Commandline.Argument with a new attribute that choses
  * a specific implementation of the facade.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @version $Revision$
  *

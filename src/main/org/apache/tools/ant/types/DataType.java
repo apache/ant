@@ -70,7 +70,7 @@ import org.apache.tools.ant.ProjectComponent;
  * nested inside elements of the same type (i.e. &lt;patternset&gt;
  * but not &lt;path&gt;).</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  */
 public abstract class DataType extends ProjectComponent {
     /**

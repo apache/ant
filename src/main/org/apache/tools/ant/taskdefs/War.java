@@ -72,7 +72,7 @@ import org.apache.tools.zip.ZipOutputStream;
  * attributes of zipfilesets in a Zip or Jar task.)</p>
  * <p>The extended zipfileset element from the zip task (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>) is available in the War task.</p>
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @since Ant 1.2
  *

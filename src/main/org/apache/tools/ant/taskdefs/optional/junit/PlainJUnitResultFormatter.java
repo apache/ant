@@ -68,7 +68,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Prints plain text output of the test to a specified Writer.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 
 public class PlainJUnitResultFormatter implements JUnitResultFormatter {

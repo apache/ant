@@ -60,7 +60,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Interface describing a regular expression matcher.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public interface RegexpMatcher {

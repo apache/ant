@@ -71,7 +71,7 @@ import org.apache.tools.ant.util.Watchdog;
 /**
  *
  * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.2
  */
 public class ExecuteJava implements Runnable, TimeoutObserver {

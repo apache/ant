@@ -59,7 +59,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Is one string part of another string?
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  *
  * @since Ant 1.5

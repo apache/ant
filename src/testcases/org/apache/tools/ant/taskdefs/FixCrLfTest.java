@@ -63,7 +63,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class FixCrLfTest extends BuildFileTest {
 

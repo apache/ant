@@ -62,7 +62,7 @@ import java.util.Vector;
  * explicit implementation choices, magic properties and
  * implementation specific command line arguments.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  *
  * @version $Revision$
  *

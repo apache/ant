@@ -63,7 +63,7 @@ import junit.framework.TestCase;
  * TestCase for DateUtils.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class DateUtilsTest extends TestCase {
     public DateUtilsTest(String s) {

@@ -63,7 +63,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Prompts on System.err, reads input from System.in
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @version $Revision$
  * @since Ant 1.5
  */

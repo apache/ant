@@ -70,7 +70,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * any text within it. It then takes care of configuring that element at
  * runtime.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  */
 public class RuntimeConfigurable implements Serializable {
 

@@ -91,7 +91,7 @@ import org.apache.tools.ant.types.selectors.SizeSelector;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @author Magesh Umasankar
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */

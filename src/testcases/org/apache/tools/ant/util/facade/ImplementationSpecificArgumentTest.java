@@ -57,7 +57,7 @@ package org.apache.tools.ant.util.facade;
 import junit.framework.TestCase;
 
 /**
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.5
  */
 public class ImplementationSpecificArgumentTest extends TestCase {

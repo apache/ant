@@ -67,7 +67,7 @@ import org.apache.tools.ant.Project;
  * So read the doc comments for that class :)
  *
  * @author Thomas Haas
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>,
+ * @author Stefan Bodewig,
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  *
  * @since Ant 1.2

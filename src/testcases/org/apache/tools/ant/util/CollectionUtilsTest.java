@@ -64,7 +64,7 @@ import junit.framework.TestCase;
 /**
  * Tests for org.apache.tools.ant.util.CollectionUtils.
  *
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Stefan Bodewig 
  * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
  */
 public class CollectionUtilsTest extends TestCase {

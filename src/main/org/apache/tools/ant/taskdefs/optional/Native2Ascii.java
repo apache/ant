@@ -69,7 +69,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * Converts files from native encodings to ASCII.
  *
  * @author <a href="asudell@acm.org">Drew Sudell</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author Stefan Bodewig
  * @since Ant 1.2
  */
 public class Native2Ascii extends MatchingTask {
