@@ -267,6 +267,7 @@ public class Project {
 
     /**
      * inits a sub project - used by taskdefs.Ant
+     * @param subProject the subproject to initialize
      */
     public void initSubProject(Project subProject) {
         ComponentHelper.getComponentHelper(subProject)
@@ -1479,9 +1480,9 @@ public class Project {
      *         <code>false</code> otherwise.
      */
     public static boolean toBoolean(String s) {
-        return (s.equalsIgnoreCase("on") ||
-                s.equalsIgnoreCase("true") ||
-                s.equalsIgnoreCase("yes"));
+        return (s.equalsIgnoreCase("on")
+                || s.equalsIgnoreCase("true")
+                || s.equalsIgnoreCase("yes"));
     }
 
     /**
@@ -1978,17 +1979,17 @@ public class Project {
      * are called
      * @param obj the object to invoke setProject(this) on
      */
-    public final void setProjectReference( final Object obj ) {
-        if ( obj instanceof ProjectComponent ) {
-            ( (ProjectComponent) obj ).setProject( this );
+    public final void setProjectReference(final Object obj) {
+        if (obj instanceof ProjectComponent) {
+            ((ProjectComponent) obj).setProject(this);
             return;
         }
         try {
             Method method =
                 obj.getClass().getMethod(
-                    "setProject", new Class[] {Project.class} );
-            if ( method != null ) {
-                method.invoke( obj, new Object[] { this } );
+                    "setProject", new Class[] {Project.class});
+            if (method != null) {
+                method.invoke(obj, new Object[] {this});
             }
         } catch (Throwable e) {
             // ignore this if the object does not have
