@@ -154,7 +154,6 @@ public final class ChainReaderHelper {
                         if (classpath == null) {
                             clazz = Class.forName(className);
                         } else {
-                            System.out.println(project + " " + classpath);
                             AntClassLoader al = new AntClassLoader(project,
                                                                    classpath);
                             clazz = al.loadClass(className);

@@ -9,34 +9,34 @@ import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 
 /**
- * This is a line comment stripper reader
+ * Filter Reader to fetch only those lines that contain user specified
+ * strings.
  *
  * Example:
  * =======
  *
- * &lt;filterreader classname="org.apache.tools.ant.filters.StripLineComments"&gt;
- *    &lt;param type="comment" value="#"/&gt;
- *    &lt;param type="comment" value="--"/&gt;
- *    &lt;param type="comment" value="REM "/&gt;
- *    &lt;param type="comment" value="rem "/&gt;
- *    &lt;param type="comment" value="//"/&gt;
+ * &lt;filterreader classname="org.apache.tools.ant.filters.LineContains"&gt;
+ *    &lt;param type="contains" value="foo"/&gt;
+ *    &lt;param type="contains" value="bar"/&gt;
  * &lt;/filterreader&gt;
+ *
+ * This will fetch all those lines that contain foo and bar
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class StripLineComments
+public final class LineContains
     extends FilterReader
     implements Parameterizable
 {
-    private static final String COMMENTS_KEY = "comment";
+    private static final String CONTAINS_KEY = "contains";
 
     private Parameter[] parameters;
 
     private boolean initialized = false;
 
-    private final Vector comments = new Vector();
+    private final Vector contains = new Vector();
 
-    private int commentsSize = 0;
+    private int containsSize = 0;
 
     private String line = null;
 
@@ -45,7 +45,7 @@ public final class StripLineComments
      *
      * @param in  a Reader object providing the underlying stream.
      */
-    public StripLineComments(final Reader in) {
+    public LineContains(final Reader in) {
         super(in);
     }
 
@@ -78,13 +78,14 @@ public final class StripLineComments
             }
 
             if (line != null) {
-                for (int i = 0; i < commentsSize; i++) {
-                    String comment = (String) comments.elementAt(i);
-                    if (line.startsWith(comment)) {
+                for (int i = 0; i < containsSize; i++) {
+                    String containsStr = (String) contains.elementAt(i);
+                    if (line.indexOf(containsStr) == -1) {
                         line = null;
                         break;
                     }
                 }
+
                 return read();
             }
         }
@@ -126,11 +127,11 @@ public final class StripLineComments
     private final void initialize() {
         if (parameters != null) {
             for (int i = 0; i < parameters.length; i++) {
-                if (COMMENTS_KEY.equals(parameters[i].getType())) {
-                    comments.addElement(parameters[i].getValue());
+                if (CONTAINS_KEY.equals(parameters[i].getType())) {
+                    contains.addElement(parameters[i].getValue());
                 }
             }
-            commentsSize = comments.size();
+            containsSize = contains.size();
         }
     }
 }

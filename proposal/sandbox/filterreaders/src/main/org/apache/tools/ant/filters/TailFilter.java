@@ -66,9 +66,9 @@ import org.apache.tools.ant.types.Parameterizable;
  * Example:
  * =======
  *
- * <filterreader classname="org.apache.tools.ant.filters.TailFilter">
- *    <param name="lines" value="3"/>
- * </filterreader>
+ * &lt;filterreader classname="org.apache.tools.ant.filters.TailFilter"&gt;
+ *    &lt;param name="lines" value="3"/&gt;
+ * &lt;/filterreader&gt;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */

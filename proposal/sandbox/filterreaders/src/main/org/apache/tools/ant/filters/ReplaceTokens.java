@@ -66,11 +66,11 @@ import org.apache.tools.ant.types.Parameterizable;
  *
  * Example Usage:
  * =============
- * <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
- *    <param type="tokenchar" name="begintoken" value="#"/>
- *    <param type="tokenchar" name="endtoken" value="#"/>
- *    <param type="token" name="DATE" value="${DATE}"/>
- * </filterreader>
+ * &lt;filterreader classname="org.apache.tools.ant.filters.ReplaceTokens"&gt;
+ *    &lt;param type="tokenchar" name="begintoken" value="#"/&gt;
+ *    &lt;param type="tokenchar" name="endtoken" value="#"/&gt;
+ *    &lt;param type="token" name="DATE" value="${DATE}"/&gt;
+ * &lt;/filterreader&gt;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
