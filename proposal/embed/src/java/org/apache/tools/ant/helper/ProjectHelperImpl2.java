@@ -105,8 +105,8 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             project.addTaskDefinition( "systemPath" , c );
             c=Class.forName("org.apache.tools.ant.taskdefs.Import");
             project.addTaskDefinition( "import" , c );
-            c=Class.forName("org.apache.tools.ant.taskdefs.optional.JXPath");
-            project.addTaskDefinition( "jxpath" , c );
+            c=Class.forName("org.apache.tools.ant.taskdefs.Taskdef2");
+            project.addTaskDefinition( "taskdef" , c );
         } catch (Exception ex ) {
             ex.printStackTrace();
         }

@@ -145,7 +145,7 @@ public class PropertyHelper {
                         + "} has not been set", Project.MSG_VERBOSE);
                     fragment="${" + propertyName + "}"; 
                 } else {
-                    fragment = (String) repl;
+                    fragment = repl.toString();
                 }
             }
             sb.append(fragment);
