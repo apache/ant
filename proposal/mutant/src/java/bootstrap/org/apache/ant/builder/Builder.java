@@ -139,6 +139,7 @@ public class Builder {
         addJavaFiles(files, TYPES_ROOT);
         addJavaFiles(files, FILTERS_ROOT);
         addJavaFiles(files, UTIL_ROOT);
+        addJavaFiles(files, new File(UTIL_ROOT, "depend"));
         addJavaFiles(files, ZIP_ROOT);
 
         files.add(new File(PACKAGE_ROOT, "BuildException.java"));
