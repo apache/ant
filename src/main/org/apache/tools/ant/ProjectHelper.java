@@ -86,7 +86,7 @@ import org.xml.sax.AttributeList;
  */
 public class ProjectHelper {
     /** The URI for ant name space */
-    public static final String ANT_CORE_URI       = "ant:core";
+    public static final String ANT_CORE_URI    = "antlib:org.apache.tools.ant";
 
     /** The URI for antlib current definitions */
     public static final String ANT_CURRENT_URI      = "ant:current";

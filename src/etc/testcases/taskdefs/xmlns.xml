@@ -26,7 +26,7 @@
   <target name="core">
     <typedef file="test.antlib.xml"
              classpathref="testclasses"
-             uri="ant:core" />
+             uri="antlib:org.apache.tools.ant" />
     <mytask/>
   </target>
 
