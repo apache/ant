@@ -129,9 +129,20 @@ public class Available extends Task {
             this.loader = new AntClassLoader(project, classpath, false);
         }
 
-        if ((classname != null) && !checkClass(classname)) return;
-        if ((file != null) && !checkFile(file)) return;
-        if ((resource != null) && !checkResource(resource)) return;
+        if ((classname != null) && !checkClass(classname)) {
+            log("Unable to load class " + classname + " to set property " + property, Project.MSG_VERBOSE);
+            return;
+        }
+        
+        if ((file != null) && !checkFile(file)) {
+            log("Unable to find file " + file + " to set property " + property, Project.MSG_VERBOSE);
+            return;
+        }
+        
+        if ((resource != null) && !checkResource(resource)) {
+            log("Unable to load resource " + resource + " to set property " + property, Project.MSG_VERBOSE);
+            return;
+        }
 
         this.project.setProperty(property, value);
     }
@@ -170,10 +181,8 @@ public class Available extends Task {
             }
             return true;
         } catch (ClassNotFoundException e) {
-            log("Class not found: " + classname, Project.MSG_VERBOSE);
             return false;
         } catch (NoClassDefFoundError e) {
-            log("Class cound not be loaded: " + classname, Project.MSG_VERBOSE);
             return false;
         }
     }
