@@ -113,7 +113,7 @@ public class JspcTest extends BuildFileTest {
      * A unit test for JUnit
      */
     public void testSimple() throws Exception {
-        executeJspCompile("testSimple", "simple.java");
+        executeJspCompile("testSimple", "simple_jsp.java");
     }
 
 
@@ -121,7 +121,7 @@ public class JspcTest extends BuildFileTest {
      * A unit test for JUnit
      */
     public void testUriroot() throws Exception {
-        executeJspCompile("testUriroot", "uriroot.java");
+        executeJspCompile("testUriroot", "uriroot_jsp.java");
     }
 
 
@@ -129,7 +129,7 @@ public class JspcTest extends BuildFileTest {
      * A unit test for JUnit
      */
     public void testXml() throws Exception {
-        executeJspCompile("testXml", "xml.java");
+        executeJspCompile("testXml", "xml_jsp.java");
     }
 
 
@@ -137,7 +137,7 @@ public class JspcTest extends BuildFileTest {
      * try a keyword in a file
      */
     public void testKeyword() throws Exception {
-        executeJspCompile("testKeyword", "default_00025.java");
+        executeJspCompile("testKeyword", "default_jsp.java");
     }
 
 
@@ -146,7 +146,7 @@ public class JspcTest extends BuildFileTest {
      */
     public void testInvalidClassname() throws Exception {
         executeJspCompile("testInvalidClassname", 
-                "_00031nvalid_0002dclassname.java");
+                "_1nvalid_0002dclassname_jsp.java");
     }
 
     
@@ -154,9 +154,12 @@ public class JspcTest extends BuildFileTest {
      * A unit test for JUnit
      */
     public void testNoTld() throws Exception {
-        expectBuildExceptionContaining("testNoTld",
-                "Jasper found an error in a file",
-                "Java returned: 9");
+//         expectBuildExceptionContaining("testNoTld",
+//                 "Jasper found an error in a file",
+//                 "Java returned: 9");
+         expectBuildExceptionContaining("testNoTld",
+                 "not found",
+                 "Java returned: 9");
     }
 
 
