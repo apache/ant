@@ -248,9 +248,10 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
             endTest(test);
         }
 
-        resultWriter().println(formatTest(test) + ":" + type);
+        resultWriter().println(formatTest(test) + type);
         resultWriter().println(error.getMessage());
-        error.printStackTrace(resultWriter());
+        String strace = JUnitTestRunner.getFilteredTrace(error);
+        resultWriter().println(strace);
         resultWriter().println("");
     }
 }
