@@ -82,6 +82,8 @@ Fixed bugs:
 * <property env> will now work on Unices with /bin/env instead of
   /usr/bin/env.  Bugzilla Report 17642.
 
+* <jar index="on"> could include multiple index lists.  Bugzilla 10262.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces 2.4.0

@@ -466,7 +466,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Overriden from Zip class to deal with manifests
+     * Overriden from Zip class to deal with manifests and index lists.
      */
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)
@@ -475,6 +475,10 @@ public class Jar extends Zip {
             if (! doubleFilePass || (doubleFilePass && skipWriting)) {
                 filesetManifest(fromArchive, is);
             }
+        } else if (INDEX_NAME.equalsIgnoreCase(vPath) && index) {
+            log("Warning: selected " + archiveType
+                + " files include a META-INF/INDEX.LIST which will"
+                + " be replaced by a newly generated one.", Project.MSG_WARN);
         } else {
             super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode);
         }
