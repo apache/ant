@@ -43,23 +43,6 @@
              templatePath="${templ.path}"
              velocityPropertiesFile="${velocity.props}">
         </anakia>
-
-        <!-- Copy resources -->
-        <copy todir="${docs.dest}" filtering="no">
-            <fileset dir="${docs.src}">
-                <include name="**/*.html"/>
-                <include name="**/*.css"/>
-                <include name="**/*.gif"/>
-                <include name="**/*.png"/>
-                <include name="**/*.jpeg"/>
-                <include name="**/*.jpg"/>
-                <include name="**/*.swf"/>
-                <include name="**/*.pdf"/>
-                <include name="**/*.zip"/>
-                <include name="**/*.js"/>
-                <include name="**/*.ico"/>
-            </fileset>
-        </copy>
     </target>
     
     <target name="javadocs">
