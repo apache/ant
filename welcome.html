@@ -78,7 +78,7 @@ defects if they stand a significant chance of breaking existing
 builds. Its sad, but there are lots of little minor faults with Ant
 that we don't dare fix because, well, things might break. For
 example, why don't if= and unless= clauses also support
-if="${property}" clauses? Alternatively, why isn't it an
+<code>if="${property}"</code> clauses? Alternatively, why isn't it an
 error to use a property that isn't defined. Everyone that has ever
 seen directories called ${build.dir} popping up the source tree will
 understand why that behaviour is not always what you want. Well, we
@@ -205,6 +205,33 @@ use the &lt;taskdef&gt; task to load them into your projects.</P>
 scalability; antlibs can be imported into their own namespaces, and
 so you can avoid namespace clashes with other libraries. If you do
 not know what namespaces are, do not worry -they are not compulsory.</P>
+
+<h3>All tasks can go in at the toplevel</h3>
+<p>
+ 
+Prior to Ant1.6, only three tasks were allowed outside 
+targets : &lt;taskdef&gt;,&lt;typedef&gt; and &lt;property&gt;.
+Ant 1.6 puts an end to this distinction; anything can go in at the top
+level. This is partly because there were many more tasks that merited the 
+option based on the original rationale of "global initialization tasks":
+&lt;import&gt; and &lt;antlib&gt; were the new additions, but existing
+tasks like &lt;condition&gt;, &lt;available&gt;, &lt;xmlproperties&gt; 
+and &lt;loadproperties&gt; had equal rights. 
+</p>
+<p>
+Rather that expand the set slightly, now all tasks are allowed outside
+targets. This gives external tasks the same rights as built in code,
+eliminates sporadic bug reports, and annoying error messages. It gives
+users the ability to write build files without any targets at all; the
+top-level declarations are processed in sequence. 
+</p>
+
+On a style note, we strongly advocate using this feature carefully. It
+is best if zero-side-effect, initialization-only tasks get put into the
+top level. Remember also that all top level statements are processed in
+order, before any targets are executed. Even tasks at the end of the
+file will get executed before targets declared above them. 
+
 <H2>New Tasks</H2>
 <P>As usual, the task base is growing and expanding. These days the
 ant core is resisting adopting many of the highly worthy donations of
@@ -274,7 +301,7 @@ that it should.
 	release! 
 	</P>
 	<LI><P>Thank you to everyone who supplies the components we use in
-	Ant, particularly JUnit, commons-logging, log4J, Xerces, and Xalan. 
+	Ant, particularly JUnit, commons-logging, log4J, bcel, ORO, Xerces, and Xalan. 
 	</P>
 	<LI><P>Everyone who has supplied bug reports, especially those with
 	patches and tests.</P>
@@ -284,23 +311,20 @@ that it should.
 	our memory leaks :)</P>
 </UL>
 <H3>Call to Action</H3>
-<P>It is an interesting time for Java. .NET is a serious challenger,
-and will get better. Microsoft are fully committed to .NET; as a
-software company it is their future. Sun, on the other hand, are
-still a hardware vendor who are trying to challenge both Microsoft
-and the PC vendors, and by implication Intel too. With those hardware
-margins under serious pressure from x86 and Linux+Win2K3, they cannot
-afford to cross-subsidize Java development the way they have done
-since 1995. We cannot rely on Sun alone for the survival of Java. So
-what then? IBM? In places, yes. IBM do contribute a lot. But the core
-strength of Java over .NET is its community. It is the community that
-gave the world leading edge development tools and other core
-components: Ant, JUnit, XDoclet, hsqldb, Hibernate, Struts, etc.
-These things weren't created by JCP committees, or built according to
-the strategic vision of a Fortune 100 company. They were written by
-Java developers, for Java developers, usually to meet their own
-tactical goals. 
+
+<P>
+
+It is an interesting time for Java. .NET is a serious challenger, and
+will get better. A core strength of Java over .NET is its community. It
+is the community that gave the world leading edge development tools and
+other core components: Ant, JUnit, XDoclet, hsqldb, Hibernate, Struts,
+etc. These things weren't created by JCP committees, or built according
+to the strategic vision of a Fortune 100 company. They were written by
+Java developers, for Java developers, usually to meet their own tactical
+goals.
+
 </P>
+
 <P>If Java is to survive -and we think it ought to- everyone who can
 needs to become active members of that community. It could be helping
 with Ant, but it could just as easily be helping with any other open
